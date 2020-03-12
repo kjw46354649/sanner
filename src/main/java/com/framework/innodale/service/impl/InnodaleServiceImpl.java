@@ -1,0 +1,122 @@
+package com.framework.innodale.service.impl;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.framework.innodale.dao.InnodaleDao;
+import com.framework.innodale.service.InnodaleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Service
+public class InnodaleServiceImpl implements InnodaleService {
+
+    @Autowired
+    private InnodaleDao innodaleDao;
+
+    @Override
+    public int createKeyReturn(Map<String, Object> hashMap) throws Exception {
+        return this.innodaleDao.createKeyReturn(hashMap);
+    }
+
+    @Override
+    public void create(Map<String, Object> hashMap) throws Exception {
+        this.innodaleDao.create(hashMap);
+    }
+
+    @Override
+    public void update(Map<String, Object> hashMap) throws Exception {
+        this.innodaleDao.update(hashMap);
+    }
+
+    @Override
+    public void remove(Map<String, Object> hashMap) throws Exception {
+        this.innodaleDao.remove(hashMap);
+    }
+
+    @Override
+    public Map<String, Object> getInfo(Map<String, Object> hashMap) throws Exception {
+        return this.innodaleDao.getInfo(hashMap);
+    }
+
+    /*@Override
+    public int getPageTotalCount() throws Exception{
+        return this.yframeDao.getPageTotalCount();
+    }*/
+
+    @Override
+    public List<Map<String, Object>> getList(Map<String, Object> hashMap) throws Exception {
+        return this.innodaleDao.getList(hashMap);
+    }
+
+    @Override
+    public void getPageList(Map<String, Object> hashMap) throws Exception {
+        this.innodaleDao.getPageList(hashMap);
+    }
+
+    /**
+     * 그리드 삽입/갱신
+     *
+     * @param map
+     * @throws Exception
+     */
+    @Override
+    public void modifyGrid(Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+        String[] queryId = {};
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        ArrayList<HashMap<String, Object>> addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
+        ArrayList<HashMap<String, Object>> updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+        HashMap<String, Object> queryIdList = (HashMap<String, Object>) jsonMap.get("queryIdList");
+
+        if (addList.size() > 0) {
+            for (HashMap<String, Object> hashMap : addList) {
+                queryId = queryIdList.get("insertQueryId").toString().split(":");
+                for (int iTmp=0; iTmp<queryId.length; iTmp++) {
+                    hashMap.put("queryId", queryId[iTmp]);
+                    this.innodaleDao.insertGrid(hashMap);
+                }
+            }
+        }
+        if (updateList.size() > 0) {
+            for (HashMap<String, Object> hashMap : updateList) {
+                queryId = queryIdList.get("updateQueryId").toString().split(":");
+                for (int iTmp=0; iTmp<queryId.length; iTmp++) {
+                    hashMap.put("queryId", queryId[iTmp]);
+                    this.innodaleDao.updateGrid(hashMap);
+                }
+
+            }
+        }
+    }
+
+    /**
+     * 그리드 삭제
+     *
+     * @param map
+     * @throws Exception
+     */
+    @Override
+    public void deleteGrid(Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayList<Map<String, Object>> jsonMap = null;
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<Map<String, Object>>>() {});
+
+        for (Map<String, Object> hashMap : jsonMap) {
+            this.innodaleDao.deleteGrid(hashMap);
+        }
+    }
+
+}

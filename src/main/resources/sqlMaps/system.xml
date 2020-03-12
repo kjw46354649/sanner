@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="systemMapper">
+
+    <select id="getUserAuthorize" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT DATE_FORMAT(NOW(), '%Y%m%d') AS CURDATE FROM DUAL
+	</select>
+
+	<select id="test1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT USER_ID,
+			   USER_NM,
+			   USER_PWD,
+			   DEL_YN
+		FROM TBL_USER
+		WHERE 1=1
+		<if test="user_id != null and user_id != ''">
+			AND USER_ID LIKE CONCAT('%', #{user_id}, '%')
+		</if>
+		LIMIT 20
+	</select>
+
+	<insert id="insertGridTest" parameterType="java.util.HashMap">
+		INSERT INTO TBL_USER
+            (USER_ID, USER_NM, USER_PWD, DEL_YN, ROLE_SEQ, INSERT_DT, INSERT_ID, UPDATE_DT, UPDATE_ID)
+        VALUES(#{USER_ID}, #{USER_NM}, #{USER_PWD}, 'N', NULL, current_timestamp(), NULL, NULL, NULL);
+	</insert>
+
+	<update id="updateGridTest" parameterType="java.util.HashMap">
+      UPDATE TBL_USER
+      SET USER_NM = #{USER_NM},
+          USER_PWD = #{USER_PWD}
+      WHERE USER_ID = #{USER_ID}
+   </update>
+
+	<delete id="deleteGridTest" parameterType="java.util.HashMap">
+      DELETE FROM TBL_USER
+      WHERE USER_ID = #{USER_ID}
+           AND USER_NM = #{USER_NM}
+   </delete>
+
+	<select id="selectSessionCodeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+      SELECT `TBL_CODE`.`HIGH_CD`,
+         `TBL_CODE`.`CODE_CD`,
+         `TBL_CODE`.`ABBR_NM`,
+         `TBL_CODE`.`REF_CD`,
+         `TBL_CODE`.`SORT_NUM`,
+         `TBL_CODE`.`DEL_YN`,
+         `TBL_CODE`.`NOTE`,
+         `TBL_CODE`.`INSERT_DT`,
+         `TBL_CODE`.`INSERT_ID`,
+         `TBL_CODE`.`UPDATE_DT`,
+         `TBL_CODE`.`UPDATE_ID`
+      FROM `jmes`.`TBL_CODE`;
+
+    </select>
+
+	<select id="selectUserMenuList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+      SELECT
+         A.MENU_SEQ, A.MENU_LINK, A.PARENT_MENU_SEQ, A.SORT_NUM, A.DEL_YN, A.NOTE,
+         B.MENU_NM
+      FROM TBL_MENU A
+         -- INNER JOIN TBL_MENU_LANG B ON A.MENU_SEQ = B.MENU_SEQ
+      WHERE A.PARENT_MENU_SEQ = 1
+    </select>
+
+	<select id="getSystemSubMenuList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+      SELECT
+         A.MENU_SEQ, A.MENU_LINK, A.PARENT_MENU_SEQ, A.SORT_NUM, A.DEL_YN, A.NOTE,
+         B.MENU_NM
+      FROM TBL_MENU A
+         -- INNER JOIN TBL_MENU_LANG B ON A.MENU_SEQ = B.MENU_SEQ
+      WHERE A.PARENT_MENU_SEQ = #{PARENT_MENU_SEQ}
+    </select>
+
+	<update id="updateTopMenuList_I"  parameterType="java.util.HashMap" >
+       INSERT INTO TBL_MENU
+         (MENU_SEQ, MENU_LINK, PARENT_MENU_SEQ, SORT_NUM, DEL_YN, NOTE, INSERT_ID)
+      VALUES
+         (NEXTVAL(SEQ_MENU), #{MENU_LINK}, '1', #{SORT_NUM}, '0', #{NOTE}, #{LOGIN_USER_ID})
+   </update>
+
+    <update id="updateTopMenuList_U"  parameterType="java.util.HashMap" >
+       UPDATE TBL_MENU
+      SET
+         MENU_LINK = #{MENU_LINK},
+         -- PARENT_MENU_SEQ = #{PARENT_MENU_SEQ},
+         SORT_NUM = #{SORT_NUM},
+         DEL_YN = #{DEL_YN},
+         NOTE = #{NOTE},
+         UPDATE_DT = NOW(),
+         UPDATE_ID = #{LOGIN_USER_ID}
+      WHERE MENU_CD = #{MENU_CD}
+   </update>
+
+
+    <update id="updateSubMenuList_I"  parameterType="java.util.HashMap" >
+    	INSERT INTO mpm.TB_MENU
+			(MENU_CD, PRT_MENU_CD, MENU_NM_EN, MENU_NM_CH, MENU_NM_VN, MENU_NM_KR, LVL, URL, ICON, SORT_NUM, USE_YN, INSERT_ID)
+		VALUES
+			(NEXTVAL(SEQ_MENU), #{PRT_MENU_CD}, #{MENU_NM_EN}, #{MENU_NM_CH}, #{MENU_NM_VN}, #{MENU_NM_KR}, '2', #{URL}, #{ICON}, #{SORT_NUM}, #{USE_YN}, #{LOGIN_USER_ID})
+	</update>
+
+    <update id="updateSubMenuList_U"  parameterType="java.util.HashMap" >
+    	UPDATE mpm.TB_MENU
+		SET
+			MENU_NM_EN = #{MENU_NM_EN},
+			MENU_NM_CH = #{MENU_NM_CH},
+			MENU_NM_VN = #{MENU_NM_VN},
+			MENU_NM_KR = #{MENU_NM_KR},
+			URL = #{URL},
+			ICON = #{ICON},
+			SORT_NUM = #{SORT_NUM},
+			USE_YN = #{USE_YN},
+			UPDATE_DT = NOW(),
+			UPDATE_ID = #{LOGIN_USER_ID}
+		WHERE MENU_CD = #{MENU_CD}
+	</update>
+</mapper>
