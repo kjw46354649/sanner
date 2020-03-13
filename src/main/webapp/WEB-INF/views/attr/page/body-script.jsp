@@ -40,3 +40,113 @@
 
 <script src="/resource/plugins/paramquery/pqgrid.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+<script>
+    /**
+     * @description
+     * @param {string} gridId
+     * @param {object} postData
+     * @param {object} colModel
+     * @param {object} toolbar
+     */
+    var fnCreatePQGrid = function (gridId, postData, colModel, toolbar) {
+        'use strict';
+        var obj = {
+            // width: 700,
+            // height: 400,
+            resizable: true,
+            // title: '',
+            numberCell: {title: 'No.'},
+            scrollModel: {autoFit: true},
+            trackModel: {on: true}, //to turn on the track changes.
+            colModel: colModel,
+            dataModel: {
+                location: 'remote',
+                dataType: 'json',
+                method: 'GET',
+                url: '/paramQueryGridSelect',
+                postData: postData,
+                // recIndx: 'USER_ID',
+                getData: function (dataJSON) {
+                    var data = dataJSON.data;
+                    return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
+                }
+            },
+            toolbar: toolbar
+        };
+        $('#' + gridId).pqGrid(obj);
+    };
+    /**
+     * @description
+     * @param {string} gridId
+     * @param {array} insertQueryList
+     * @param {array} updateQueryList
+     */
+    var fnModifyPQGrid = function (gridId, insertQueryList, updateQueryList) {
+        'use strict';
+        var grid = $('#' + gridId).pqGrid('getInstance').grid;
+        //추가 또는 수정된 값이 있으면 true
+        if (grid.isDirty()) {
+            var changes = grid.getChanges({format: 'byVal'});
+            var QUERY_ID_ARRAY = {
+                'insertQueryId': insertQueryList,
+                'updateQueryId': updateQueryList,
+            };
+            changes.queryIdList = QUERY_ID_ARRAY;
+
+            $.ajax({
+                type: 'POST',
+                url: '/paramQueryModifyGrid',
+                async: true,
+                dataType: 'json',
+                data: {'data': JSON.stringify(changes)},
+                success: function (result) {
+                    $('#' + gridId).pqGrid('refreshDataAndView');
+                    // $('#' + gridId).pqGrid('refresh');
+                },
+                error: function (e) {
+                    console.error(e);
+                }
+            });
+        }
+    };
+    /**
+     * @description
+     * @param {string} gridId
+     * @param {array} selectedRowIndex
+     * @param {string} QUERY_ID
+     */
+    var fnDeletePQGrid = function (gridId, selectedRowIndex, QUERY_ID) {
+        'use strict';
+        var rowDataArray = [];
+        var selectedRowCount = selectedRowIndex.length;
+
+        for (var i = 0; i < selectedRowCount; i++) {
+            rowDataArray[i] = $('#' +gridId).pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+            rowDataArray[i].queryId = QUERY_ID;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/paramQueryDeleteGrid',
+            async: true,
+            dataType: 'json',
+            data: {'data': JSON.stringify(rowDataArray)},
+            success: function (result) {
+                console.log(result);
+                if (selectedRowCount > 0) {
+                    var rowListConvert = [];
+
+                    for (var row of selectedRowIndex) {
+                        rowListConvert.push({'rowIndx': row});
+                    }
+
+                    $('#' + gridId).pqGrid('deleteRow', {rowList: rowListConvert});
+                }
+            },
+            error: function (e) {
+                console.error(e);
+            }
+        });
+    };
+</script>

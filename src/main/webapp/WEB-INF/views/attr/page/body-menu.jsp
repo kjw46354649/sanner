@@ -404,21 +404,31 @@
                                     </a>
                                     <ul class="nav dk">
                                         <li >
-                                            <a href="/paramQuerySample" class="auto">
+                                            <a href="/userManger" class="auto">
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>
 
-                                                <span>paramquery sample</span>
+                                                <span>userManger</span>
                                             </a>
                                         </li>
                                     </ul>
                                     <ul class="nav dk">
                                         <li >
-                                            <a href="/userManager" class="auto">
+                                            <a href="/menuManager" class="auto">
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>
 
-                                                <span>userManager</span>
+                                                <span>menuManager</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <ul class="nav dk">
+                                        <li >
+                                            <a href="/commonReferenceCode" class="auto">
+                                                <b class="badge bg-success lt pull-right">2</b>
+                                                <i class="i i-dot"></i>
+
+                                                <span>commonReferenceCode</span>
                                             </a>
                                         </li>
                                     </ul>

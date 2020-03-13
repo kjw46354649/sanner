@@ -22,20 +22,28 @@ public class MainController {
         return "pages/main/main.tiles";
     }
 
-    @RequestMapping(value="/paramQuerySample")
-    public String testhi1(Model model, HttpServletRequest request, Locale locale) throws Exception {
+    @RequestMapping(value="/userManger")
+    public String userManger(Model model, HttpServletRequest request, Locale locale) throws Exception {
 
         logger.info("logger");
 
-        return "pages/sample/paramQuerySample.tiles";
+        return "pages/system/user-manger-list.tiles";
     }
 
-    @RequestMapping(value="/userManager")
-    public String userManager(Model model, HttpServletRequest request, Locale locale) throws Exception {
+    @RequestMapping(value="/menuManager")
+    public String menuManager(Model model, HttpServletRequest request, Locale locale) throws Exception {
 
         logger.info("logger");
 
-        return "pages/system/menu_manager_list.tiles";
+        return "pages/system/menu-manager-list.tiles";
+    }
+
+    @RequestMapping(value="/commonReferenceCode")
+    public String commonReferenceCode(Model model, HttpServletRequest request, Locale locale) throws Exception {
+
+        logger.info("logger");
+
+        return "pages/system/common-reference-code-list.tiles";
     }
 
 }

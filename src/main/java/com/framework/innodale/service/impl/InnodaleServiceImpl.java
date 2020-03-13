@@ -69,7 +69,6 @@ public class InnodaleServiceImpl implements InnodaleService {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
-        String[] queryId = {};
 
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
@@ -79,22 +78,23 @@ public class InnodaleServiceImpl implements InnodaleService {
         HashMap<String, Object> queryIdList = (HashMap<String, Object>) jsonMap.get("queryIdList");
 
         if (addList.size() > 0) {
+            ArrayList<String> queryId = (ArrayList<String>) queryIdList.get("insertQueryId");
+
             for (HashMap<String, Object> hashMap : addList) {
-                queryId = queryIdList.get("insertQueryId").toString().split(":");
-                for (int iTmp=0; iTmp<queryId.length; iTmp++) {
-                    hashMap.put("queryId", queryId[iTmp]);
+                for (int i = 0, queryCount = queryId.size(); i < queryCount; i++) {
+                    hashMap.put("queryId", queryId.get(i));
                     this.innodaleDao.insertGrid(hashMap);
                 }
             }
         }
         if (updateList.size() > 0) {
+            ArrayList<String> queryId = (ArrayList<String>) queryIdList.get("updateQueryId");
+
             for (HashMap<String, Object> hashMap : updateList) {
-                queryId = queryIdList.get("updateQueryId").toString().split(":");
-                for (int iTmp=0; iTmp<queryId.length; iTmp++) {
-                    hashMap.put("queryId", queryId[iTmp]);
+                for (int i = 0, queryCount = queryId.size(); i < queryCount; i++) {
+                    hashMap.put("queryId", queryId.get(i));
                     this.innodaleDao.updateGrid(hashMap);
                 }
-
             }
         }
     }
