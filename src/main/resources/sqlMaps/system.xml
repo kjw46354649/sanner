@@ -145,9 +145,43 @@
     </select>
 
     <insert id="insertCommonCode" parameterType="java.util.HashMap">
-        INSERT INTO jmes.TBL_CODE
-            (HIGH_CD, CODE_CD, ABBR_NM, REF_CD, SORT_NUM, DEL_YN, NOTE, INSERT_DT, INSERT_ID, UPDATE_DT, UPDATE_ID)
-        VALUES(#{HIGH_CD}, #{CODE_CD}, #{ABBR_NM}, #{REF_CD}, #{SORT_NUM}, #{DEL_YN}, #{NOTE}, current_timestamp(), NULL, NULL, NULL)
+        INSERT INTO TBL_CODE (
+            HIGH_CD,
+            CODE_CD,
+            REF_CD,
+            SORT_NUM,
+            DEL_YN,
+            NOTE,
+            INSERT_DT,
+            INSERT_ID,
+        ) VALUES(
+            #{HIGH_CD},
+            #{CODE_CD},
+            #{REF_CD},
+            #{SORT_NUM},
+            #{DEL_YN},
+            #{NOTE},
+            current_timestamp(),
+            'xmaseve96'
+        )
+	</insert>
+
+    <insert id="insertCommonCodeLangCode" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CODE_LANG (
+            HIGH_CD,
+            CODE_CD,
+            LANG_CD,
+            CODE_NM,
+            INSERT_DT,
+            INSERT_ID
+        ) VALUES (
+            #{HIGH_CD},
+            #{CODE_CD},
+            #{LANG_CD},
+            #{CODE_NM},
+            current_timestamp(),
+            'xmaseve96'
+        )
 	</insert>
 
     <update id="updateCommonCode"  parameterType="java.util.HashMap" >
@@ -160,4 +194,68 @@
         WHERE HIGH_CD = #{HIGH_CD}
               AND CODE_CD= #{CODE_CD}
    </update>
+
+    <update id="updateCommonCodeLangCode"  parameterType="java.util.HashMap" >
+        UPDATE TBL_CODE_LANG
+        SET CODE_CD = #{CODE_CD},
+            CODE_NM = #{CODE_NM},
+            UPDATE_DT = current_timestamp(),
+            UPDATE_ID = 'xmaseve96'
+        WHERE HIGH_CD = #{HIGH_CD}
+              AND CODE_CD= #{CODE_CD}
+              AND LANG_CD = {LANG_CD}
+   </update>
+
+    <select id="selectAuthorityGroupList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROLE_SEQ,
+               ROLE_NM,
+               DEL_YN,
+               NOTE
+        FROM TBL_ROLE
+        WHERE 1 = 1
+        <if test="ROLE_NM != null and ROLE_NM != ''">
+            AND ROLE_NM LIKE CONCAT('%', #{ROLE_NM}, '%')
+        </if>
+    </select>
+
+    <insert id="insertAuthorityGroup" parameterType="java.util.HashMap">
+        INSERT INTO TBL_ROLE (
+            ROLE_SEQ,
+            ROLE_NM,
+            DEL_YN,
+            NOTE,
+            INSERT_DT,
+            INSERT_ID
+        ) VALUES(
+            #{ROLE_SEQ},
+            #{ROLE_NM},
+            #{DEL_YN},
+            #{NOTE},
+            current_timestamp(),
+            'xmaseve96'
+        )
+	</insert>
+
+    <update id="updateAuthorityGroup"  parameterType="java.util.HashMap" >
+        UPDATE TBL_ROLE
+        SET ROLE_NM = #{ROLE_NM},
+            DEL_YN = #{DEL_YN},
+            NOTE = #{NOTE},
+            UPDATE_DT = current_timestamp(),
+            UPDATE_ID = 'xmaseve96'
+        WHERE ROLE_SEQ = #{ROLE_SEQ}
+   </update>
+
+    <select id="selectAuthorityMenuManagementList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+
+    </select>
+
+    <insert id="insertAuthorityMenuManagement" parameterType="java.util.HashMap">
+
+	</insert>
+
+    <update id="updateAuthorityMenuManagement"  parameterType="java.util.HashMap" >
+
+   </update>
+
 </mapper>

@@ -12,11 +12,8 @@
 <script>
     $(function () {
         'use strict';
-        /* global variable */
         var selectedRowIndex = [];
         var gridId = 'user-manager-grid';
-        var g_code;
-        /* global variable */
         var postData = {queryId: 'selectUserManagerList'};
         var colModel = [
             {title: 'USER_ID', dataType: 'string', dataIndx: 'USER_ID', editable: true},
@@ -49,25 +46,20 @@
                             var insertQueryList = ['insertUser'];
                             var updateQueryList = ['updateUser'];
 
-//                            fnModifyPQGrid(gridId, insertQueryList, updateQueryList);
-                            $('#' + gridId).pqGrid('refreshDataAndView');
+                            fnModifyPQGrid(gridId, insertQueryList, updateQueryList);
                         }
                     }
                 }
             ]
         };
 
-        setTimeout(function () {
-            $('#user-manager-grid').pqGrid('refreshDataAndView');
-        }, 5000);
-
         fnCreatePQGrid(gridId, postData, colModel, toolbar);
         $('#' + gridId).pqGrid({
+            title: '유저 관리',
             dataModel: {
                 recIndx: 'USER_ID',
             },
             selectChange: function (event, ui) {
-                //FIXME: undefined?
                 if (ui.selection.iCells.ranges[0] !== undefined) {
                     selectedRowIndex = [];
                     var firstRow = ui.selection.iCells.ranges[0].r1;

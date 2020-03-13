@@ -14,7 +14,7 @@ public class MainController {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-    @RequestMapping(value="/main")
+    @RequestMapping(value = "/main")
     public String index(Model model, HttpServletRequest request, Locale locale) throws Exception {
 
         logger.info("logger");
@@ -22,7 +22,7 @@ public class MainController {
         return "pages/main/main.tiles";
     }
 
-    @RequestMapping(value="/userManger")
+    @RequestMapping(value = "/userManger")
     public String userManger(Model model, HttpServletRequest request, Locale locale) throws Exception {
 
         logger.info("logger");
@@ -30,7 +30,7 @@ public class MainController {
         return "pages/system/user-manger-list.tiles";
     }
 
-    @RequestMapping(value="/menuManager")
+    @RequestMapping(value = "/menuManager")
     public String menuManager(Model model, HttpServletRequest request, Locale locale) throws Exception {
 
         logger.info("logger");
@@ -38,12 +38,28 @@ public class MainController {
         return "pages/system/menu-manager-list.tiles";
     }
 
-    @RequestMapping(value="/commonReferenceCode")
+    @RequestMapping(value = "/commonReferenceCode")
     public String commonReferenceCode(Model model, HttpServletRequest request, Locale locale) throws Exception {
 
         logger.info("logger");
 
         return "pages/system/common-reference-code-list.tiles";
+    }
+
+    @RequestMapping(value = "/authorityGroupMaster")
+    public String authorityGroupMaster(Model model, HttpServletRequest request, Locale locale) throws Exception {
+
+        logger.info("logger");
+
+        return "pages/system/authority-group-master.tiles";
+    }
+
+    @RequestMapping(value = "/authorityMenuManagement")
+    public String authorityMenuManagement(Model model, HttpServletRequest request, Locale locale) throws Exception {
+
+        logger.info("logger");
+
+        return "pages/system/authority-menu-management.tiles";
     }
 
 }

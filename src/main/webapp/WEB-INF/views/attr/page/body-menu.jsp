@@ -408,7 +408,7 @@
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>
 
-                                                <span>userManger</span>
+                                                <span>유저 관리</span>
                                             </a>
                                         </li>
                                     </ul>
@@ -418,7 +418,7 @@
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>
 
-                                                <span>menuManager</span>
+                                                <span>메뉴 관리</span>
                                             </a>
                                         </li>
                                     </ul>
@@ -428,7 +428,27 @@
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>
 
-                                                <span>commonReferenceCode</span>
+                                                <span>공통 참조 코드</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <ul class="nav dk">
+                                        <li >
+                                            <a href="/authorityGroupMaster" class="auto">
+                                                <b class="badge bg-success lt pull-right">2</b>
+                                                <i class="i i-dot"></i>
+
+                                                <span>권한 그룹 마스터</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <ul class="nav dk">
+                                        <li >
+                                            <a href="/authorityMenuManagement" class="auto">
+                                                <b class="badge bg-success lt pull-right">2</b>
+                                                <i class="i i-dot"></i>
+
+                                                <span>권한별 메뉴 관리</span>
                                             </a>
                                         </li>
                                     </ul>

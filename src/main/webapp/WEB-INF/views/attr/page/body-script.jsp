@@ -14,7 +14,7 @@
 
 
 <link rel="stylesheet"
-      href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" />
+      href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css"/>
 <script src="/resource/main/js/jquery.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
 <!-- Bootstrap -->
@@ -43,7 +43,7 @@
 
 <script>
     /**
-     * @description
+     * @description 그리드 생성
      * @param {string} gridId
      * @param {object} postData
      * @param {object} colModel
@@ -54,8 +54,10 @@
         var obj = {
             // width: 700,
             // height: 400,
+            collapsible: false,
             resizable: true,
             // title: '',
+            // pageModel: {type: "remote"},
             numberCell: {title: 'No.'},
             scrollModel: {autoFit: true},
             trackModel: {on: true}, //to turn on the track changes.
@@ -69,7 +71,8 @@
                 // recIndx: 'USER_ID',
                 getData: function (dataJSON) {
                     var data = dataJSON.data;
-                    return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
+                    return {data: data};
+                    // return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                 }
             },
             toolbar: toolbar
@@ -77,7 +80,7 @@
         $('#' + gridId).pqGrid(obj);
     };
     /**
-     * @description
+     * @description 그리드 데이터 삽입/갱신
      * @param {string} gridId
      * @param {array} insertQueryList
      * @param {array} updateQueryList
@@ -101,8 +104,8 @@
                 dataType: 'json',
                 data: {'data': JSON.stringify(changes)},
                 success: function (result) {
+                    //FIXME: 캡슐화 후 refresh 안 됨
                     $('#' + gridId).pqGrid('refreshDataAndView');
-                    // $('#' + gridId).pqGrid('refresh');
                 },
                 error: function (e) {
                     console.error(e);
@@ -111,7 +114,7 @@
         }
     };
     /**
-     * @description
+     * @description 그리드 데이터 삭제
      * @param {string} gridId
      * @param {array} selectedRowIndex
      * @param {string} QUERY_ID
@@ -122,7 +125,7 @@
         var selectedRowCount = selectedRowIndex.length;
 
         for (var i = 0; i < selectedRowCount; i++) {
-            rowDataArray[i] = $('#' +gridId).pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+            rowDataArray[i] = $('#' + gridId).pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
             rowDataArray[i].queryId = QUERY_ID;
         }
 
@@ -141,8 +144,31 @@
                         rowListConvert.push({'rowIndx': row});
                     }
 
+                    //FIXME: 캡슐화 후 deletRow 안 됨
                     $('#' + gridId).pqGrid('deleteRow', {rowList: rowListConvert});
                 }
+            },
+            error: function (e) {
+                console.error(e);
+            }
+        });
+    };
+    /**
+     * @description 그리드 검색조건 조회
+     * @param {string} gridId
+     * @param {object} postData
+     */
+    var fnRequestGidData = function (gridId, postData) {
+        'use strict';
+        $.ajax({
+            type: 'POST',
+            url: '/json-list',
+            async: true,
+            dataType: 'json',
+            data: postData,
+            success: function (dataJSON) {
+                $('#' + gridId).pqGrid("option", "dataModel.data", dataJSON.list);
+                $('#' + gridId).pqGrid('refreshDataAndView');
             },
             error: function (e) {
                 console.error(e);
