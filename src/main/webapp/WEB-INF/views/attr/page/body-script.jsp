@@ -70,8 +70,7 @@
                 postData: postData,
                 // recIndx: 'USER_ID',
                 getData: function (dataJSON) {
-                    var data = dataJSON.data;
-                    return {data: data};
+                    return {data: dataJSON.data};
                     // return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                 }
             },

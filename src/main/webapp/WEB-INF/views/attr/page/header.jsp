@@ -17,11 +17,13 @@
 <link rel="stylesheet" href="/resource/main/css/font.css" type="text/css"/>
 <link rel="stylesheet" href="/resource/main/css/app.css" type="text/css"/>
 <link rel="stylesheet" href="/resource/main/js/calendar/bootstrap_calendar.css" type="text/css"/>
- <!--ParamQuery Grid files-->
-<link rel="stylesheet" href="/resource/plugins/paramquery/pqgrid.min.css" type="text/css"/>
-<link rel="stylesheet" href="/resource/plugins/paramquery/pqgrid.ui.min.css" type="text/css"/>
+<!--jQueryUI version >= 1.11.4 only -->
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css" />
-<link rel="stylesheet" href="/resource/plugins/paramquery/themes/office/pqgrid.css" />
+<link rel="stylesheet" href="/resource/plugins/paramquery/themes/bootstrap/pqgrid.css" />
+<!--ParamQuery Grid css files-->
+<link rel="stylesheet" href="/resource/plugins/paramquery/pqgrid.min.css" type="text/css"/>
+<!--add pqgrid.ui.css for jQueryUI theme support-->
+<link rel="stylesheet" href="/resource/plugins/paramquery/pqgrid.ui.min.css" type="text/css"/>
 
 <!--[if lt IE 9]>
 <script src="/resource/main/js/ie/html5shiv.js"></script>

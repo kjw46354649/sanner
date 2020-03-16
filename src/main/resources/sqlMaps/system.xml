@@ -121,21 +121,21 @@
 
     <select id="selectCommonCodeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT HIGH_CD,
-        CODE_CD,
-        (SELECT CODE_NM
-        FROM TBL_CODE_LANG
-        WHERE HIGH_CD = A.HIGH_CD
-        AND CODE_CD = A.CODE_CD
-        AND LANG_CD = 'KR') AS HIGH_NM_KR,
-        (SELECT CODE_NM
-        FROM TBL_CODE_LANG
-        WHERE HIGH_CD = A.HIGH_CD
-        AND CODE_CD = A.CODE_CD
-        AND LANG_CD = 'EN') AS HIGH_NM_EN,
-        DEL_YN,
-        SORT_NUM,
-        REF_CD,
-        NOTE
+               CODE_CD,
+               (SELECT CODE_NM
+                FROM TBL_CODE_LANG
+                WHERE HIGH_CD = A.HIGH_CD
+                AND CODE_CD = A.CODE_CD
+                AND LANG_CD = 'KR') AS HIGH_NM_KR,
+               (SELECT CODE_NM
+                FROM TBL_CODE_LANG
+                WHERE HIGH_CD = A.HIGH_CD
+                AND CODE_CD = A.CODE_CD
+                AND LANG_CD = 'EN') AS HIGH_NM_EN,
+               DEL_YN,
+               SORT_NUM,
+               REF_CD,
+               NOTE
         FROM TBL_CODE A
         WHERE 1 = 1
         <if test="HIGH_CD != null and HIGH_CD != ''">

@@ -8,6 +8,7 @@
 <%@ page pageEncoding='UTF-8' contentType='text/html; charset=UTF-8' %>
 
 <div id='user-manager-grid' style='margin:5px auto;'></div>
+<%--<button onclick="refresh()">리프레쉬</button>--%>
 
 <script>
     $(function () {
@@ -75,5 +76,39 @@
                 }
             }
         });
+
+        /*
+        var obj = {
+            // width: 700,
+            // height: 400,
+            collapsible: false,
+            resizable: true,
+            // title: '',
+            // pageModel: {type: "remote"},
+            numberCell: {title: 'No.'},
+            scrollModel: {autoFit: true},
+            trackModel: {on: true}, //to turn on the track changes.
+            colModel: colModel,
+            dataModel: {
+                location: 'remote',
+                dataType: 'json',
+                method: 'GET',
+                url: '/paramQueryGridSelect',
+                postData: postData,
+                // recIndx: 'USER_ID',
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                    // return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
+                }
+            },
+            toolbar: toolbar
+        };
+        $('#' + gridId).pqGrid(obj);
+         */
     });
+    /*
+    function refresh() {
+        $('#user-manager-grid').pqGrid('refreshDataAndView');
+    }
+    */
 </script>
