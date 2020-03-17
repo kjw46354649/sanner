@@ -62,6 +62,7 @@
             data: param.data,
             success: function (data, textStatus, jqXHR) {
                 if (textStatus === 'success') {
+                    alert("ddd");
                     // if (data.exception === null) {
                     callback.add(callFunction);
                     callback.fire(data, callFunctionParam);
