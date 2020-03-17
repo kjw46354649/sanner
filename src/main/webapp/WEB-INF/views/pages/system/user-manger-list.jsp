@@ -58,13 +58,30 @@
                 }
             ]
         };
-
-        grid = fnCreatePQGrid(gridId, postData, colModel, toolbar);
-        $("#user-manager-grid").pqGrid({
-            title: '유저 관리',
+        var obj = {
+            // width: 700,
+            // height: 400,
+            collapsible: false,
+            resizable: true,
+            // title: '',
+            // pageModel: {type: "remote"},
+            numberCell: {title: 'No.'},
+            scrollModel: {autoFit: true},
+            trackModel: {on: true}, //to turn on the track changes.
+            colModel: colModel,
             dataModel: {
-                recIndx: 'USER_ID',
+                location: 'remote',
+                dataType: 'json',
+                method: 'GET',
+                url: '/paramQueryGridSelect',
+                postData: postData,
+                // recIndx: 'USER_ID',
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                    // return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
+                }
             },
+            toolbar: toolbar,
             selectChange: function (event, ui) {
                 if (ui.selection.iCells.ranges[0] !== undefined) {
                     selectedRowIndex = [];
@@ -80,6 +97,7 @@
                     }
                 }
             }
-        });
+        };
+        grid = $('#' + gridId).pqGrid(obj);
     });
 </script>
