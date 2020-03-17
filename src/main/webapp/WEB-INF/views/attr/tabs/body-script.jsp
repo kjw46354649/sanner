@@ -79,9 +79,12 @@
 
         $(window).resize( function() {
             addRoyalTabCallBackMethod();
+
+            console.log(parseInt($("#view-scroller").outerHeight(true)));
         } );
 
     });
+
     /**
      * @description Ajax Post
      * @param {function} callFunction - 리텅 Function 처리
@@ -189,8 +192,14 @@
             changes.queryIdList = QUERY_ID_ARRAY;
             parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}}
 
+            console.log(grid);
+
             fnPostAjax(function (data, callFunctionParam) {
-                grid.pqGrid('refreshDataAndView');
+
+                console.log(grid);
+                console.log(gridInstance);
+                grid.pqGrid('option', 'dataModel.data', data).pqGrid('refreshDataAndView')
+                //gridInstance.pqGrid('refreshDataAndView');
             }, parameters, '');
         }
     };
