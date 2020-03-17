@@ -6,7 +6,13 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page pageEncoding='UTF-8' contentType='text/html; charset=UTF-8' %>
-<div id='user-manager-grid' style='margin:5px auto;'></div>
+<div class="container-fluid wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div id='user-manager-grid' style='margin:5px auto;'></div>
+        </div>
+    </div>
+</div>
 
 <script>
     $(function () {

@@ -6,8 +6,12 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
-<div class="wrapper">
-    <div id="authority-group-grid"></div>
+<div class="container-fluid wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="authority-group-grid"></div>
+        </div>
+    </div>
 </div>
 
 <script>

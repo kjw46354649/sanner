@@ -43,6 +43,42 @@
 
 <script>
     /**
+     * @description Ajax Post
+     * @param {function} callFunction - 리텅 Function 처리
+     * @param {object} params - 호출 URL에 Parameter 정보
+     * @param {*} callFunctionParam - 리텅 Function 전달 Parameter
+     */
+    var fnPostAjax = function (callFunction, params, callFunctionParam) {
+        'use strict';
+        var callback = $.Callbacks();
+        var param = $.extend({url: null, data: ''}, params || {});
+
+        $.ajax({
+            type: 'POST',
+            url: param.url,
+            dataType: 'json',
+            data: param.data,
+            success: function (data, textStatus, jqXHR) {
+                if (textStatus === 'success') {
+                    // if (data.exception === null) {
+                    callback.add(callFunction);
+                    callback.fire(data, callFunctionParam);
+                    // } else {
+                    <%--alert('<spring:message code='com.alert.default.failText' />');--%>
+                    // }
+                } else {
+                    // alert('fail=[' + json.msg + ']111');
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                // alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
+                // if (errorThrown == 'Forbidden') {
+                //     $(this).fnHiddenFormPageAction('/');
+                // }
+            }
+        });
+    };
+    /**
      * @description 그리드 생성
      * @param {string} gridId
      * @param {object} postData
@@ -80,6 +116,20 @@
         return $('#' + gridId).pqGrid(obj);
     };
     /**
+     * @description 그리드 검색조건 조회
+     * @param {object | jQuery} grid
+     * @param {object} postData
+     */
+    var fnRequestGidData = function (grid, postData) {
+        'use strict';
+        var parameter = {'url': '/json-list', 'data': postData}
+
+        fnPostAjax(function (data, callFunctionParam) {
+            grid.pqGrid("option", "dataModel.data", data.list);
+            grid.pqGrid('refreshDataAndView');
+        }, parameter, '');
+    };
+    /**
      * @description 그리드 데이터 삽입/갱신
      * @param {object | jQuery} grid
      * @param {array} insertQueryList
@@ -87,6 +137,7 @@
      */
     var fnModifyPQGrid = function (grid, insertQueryList, updateQueryList) {
         'use strict';
+        var parameters;
         var gridInstance = grid.pqGrid('getInstance').grid;
         //추가 또는 수정된 값이 있으면 true
         if (gridInstance.isDirty()) {
@@ -96,20 +147,11 @@
                 'updateQueryId': updateQueryList,
             };
             changes.queryIdList = QUERY_ID_ARRAY;
+            parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}}
 
-            $.ajax({
-                type: 'POST',
-                url: '/paramQueryModifyGrid',
-                async: true,
-                dataType: 'json',
-                data: {'data': JSON.stringify(changes)},
-                success: function (result) {
-                    grid.pqGrid('refreshDataAndView');
-                },
-                error: function (e) {
-                    console.error(e);
-                }
-            });
+            fnPostAjax(function (data, callFunctionParam) {
+                grid.pqGrid('refreshDataAndView');
+            }, parameters, '');
         }
     };
     /**
@@ -120,6 +162,7 @@
      */
     var fnDeletePQGrid = function (grid, selectedRowIndex, QUERY_ID) {
         'use strict';
+        var parameters;
         var rowDataArray = [];
         var selectedRowCount = selectedRowIndex.length;
 
@@ -128,49 +171,18 @@
             rowDataArray[i].queryId = QUERY_ID;
         }
 
-        $.ajax({
-            type: 'POST',
-            url: '/paramQueryDeleteGrid',
-            async: true,
-            dataType: 'json',
-            data: {'data': JSON.stringify(rowDataArray)},
-            success: function (result) {
-                console.log(result);
-                if (selectedRowCount > 0) {
-                    var rowListConvert = [];
+        parameters = {'url': '/paramQueryDeleteGrid', 'data': {data: JSON.stringify(rowDataArray)}}
 
-                    for (var row of selectedRowIndex) {
-                        rowListConvert.push({'rowIndx': row});
-                    }
+        fnPostAjax(function (data, callFunctionParam) {
+            if (selectedRowCount > 0) {
+                var rowListConvert = [];
 
-                    grid.pqGrid('deleteRow', {rowList: rowListConvert});
+                for (var row of selectedRowIndex) {
+                    rowListConvert.push({'rowIndx': row});
                 }
-            },
-            error: function (e) {
-                console.error(e);
+
+                grid.pqGrid('deleteRow', {rowList: rowListConvert});
             }
-        });
-    };
-    /**
-     * @description 그리드 검색조건 조회
-     * @param {object | jQuery} grid
-     * @param {object} postData
-     */
-    var fnRequestGidData = function (grid, postData) {
-        'use strict';
-        $.ajax({
-            type: 'POST',
-            url: '/json-list',
-            async: true,
-            dataType: 'json',
-            data: postData,
-            success: function (dataJSON) {
-                grid.pqGrid("option", "dataModel.data", dataJSON.list);
-                grid.pqGrid('refreshDataAndView');
-            },
-            error: function (e) {
-                console.error(e);
-            }
-        });
+        }, parameters, '');
     };
 </script>

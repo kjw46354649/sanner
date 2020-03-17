@@ -6,9 +6,14 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
-<div class="wrapper">
-    <div id="authority-role-grid"></div>
-    <div id="authority-menu-grid"></div>
+<div class="container-fluid wrapper">
+    <div class="row">
+        <div class="col-md-6">
+            <div id="authority-role-grid"></div>
+        </div>
+        <div class="col-md-6">
+            <div id="authority-menu-grid"></div>
+        </div>
 </div>
 
 <script>
@@ -30,7 +35,6 @@
                 {
                     type: 'button', label: 'Search', icon: 'ui-icon-search', listener: {
                         'click': function (evt, ui) {
-
                             leftPostData.ROLE_NM = $('#' + searchTextId).val();
 
                             fnRequestGidData(leftGrid, leftPostData);
