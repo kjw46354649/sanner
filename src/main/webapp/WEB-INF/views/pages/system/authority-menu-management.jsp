@@ -6,24 +6,44 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
-<div class="wrapper">
-    <input type="text" id="authority-menu-management-search">
-    <button id="authority-menu-management-search-btn">검색(임시)</button>
-    <div id="authority-role-grid"></div>
-    <div id="authority-menu-grid"></div>
+<div class="container-fluid wrapper">
+    <div class="row">
+        <div class="col-md-6">
+            <div id="authority-role-grid"></div>
+        </div>
+        <div class="col-md-6">
+            <div id="authority-menu-grid"></div>
+        </div>
 </div>
 
 <script>
     $(function () {
         'use strict';
         var searchTextId = 'authority-menu-management-search';
-        var searchBtnId = 'authority-menu-management-search-btn';
+        var leftGrid;
         var leftGridId = 'authority-role-grid';
-        var leftPostData = {queryId: 'selectAuthorityMenuManagementList'};
+        var leftPostData = {queryId: 'selectAuthorityGroupList'};
         var leftColModel = [
-            {title: 'Access Code', dataType: 'string', dataIndx: 'ROLE_SEQ', editable: true},
+            {title: 'Access Code', dataType: 'string', dataIndx: 'ROLE_SEQ'},
             {title: 'Access Name', dataType: 'string', dataIndx: 'ROLE_NM'}
         ];
+        var leftToolbar = {
+            items: [
+                {
+                    type: 'textbox', label: 'Access Name', attr: 'id="authority-menu-management-search"'
+                },
+                {
+                    type: 'button', label: 'Search', icon: 'ui-icon-search', listener: {
+                        'click': function (evt, ui) {
+                            leftPostData.ROLE_NM = $('#' + searchTextId).val();
+
+                            fnRequestGidData(leftGrid, leftPostData);
+                        }
+                    }
+                }
+            ]
+        };
+        var rightGrid;
         var rightGridId = 'authority-menu-grid';
         var rightPostData = {queryId: 'selectAuthorityMenuManagementList'};
         var rightColModel = [
@@ -39,35 +59,29 @@
                             var insertQueryList = ['insertAuthorityMenuManagement'];
                             var updateQueryList = ['updateAuthorityMenuManagement'];
 
-                            fnModifyPQGrid(leftGridId, insertQueryList, updateQueryList);
+                            fnModifyPQGrid(leftGrid, insertQueryList, updateQueryList);
                         }
                     }
                 }
             ]
         };
 
-        fnCreatePQGrid(leftGridId, leftPostData, leftColModel, '');
-        $('#' + leftGridId).pqGrid({
+        leftGrid = fnCreatePQGrid(leftGridId, leftPostData, leftColModel, leftToolbar);
+        leftGrid.pqGrid({
             title: '권한',
+            numberCell: {
+                show: false
+            },
             dataModel: {
                 recIndx: 'ROLE_SEQ',
             }
         });
-        fnCreatePQGrid(rightGridId, rightPostData, rightColModel, rightToolbar);
-        $('#' + rightGridId).pqGrid({
+        rightGrid = fnCreatePQGrid(rightGridId, rightPostData, rightColModel, rightToolbar);
+        rightGrid.pqGrid({
             title: '권한 & 메뉴',
             dataModel: {
                 recIndx: '',
             }
         });
-
-        /**
-         * @description Access Name 검색
-         */
-        $('#' + searchBtnId).on('click', function (event) {
-            leftPostData.ROLE_NM = $('#' + searchTextId).val();
-            fnRequestGidData(leftGridId, leftPostData);
-        });
-
     });
 </script>

@@ -6,17 +6,19 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
-<div class="wrapper">
-    <input type="text" id="authority-group-search">
-    <button id="authority-group-search-btn">검색(임시)</button>
-    <div id="authority-group-grid"></div>
+<div class="container-fluid wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="authority-group-grid"></div>
+        </div>
+    </div>
 </div>
 
 <script>
     $(function () {
         'use strict';
         var searchTextId = 'authority-group-search';
-        var searchBtnId = 'authority-group-search-btn';
+        var grid;
         var gridId = 'authority-group-grid';
         var postData = {queryId: 'selectAuthorityGroupList'};
         var colModel = [
@@ -29,9 +31,21 @@
             cls: 'pq-toolbar-crud',
             items: [
                 {
+                    type: 'textbox', label: 'Access Name', attr: 'id="authority-group-search"'
+                },
+                {
+                    type: 'button', label: 'Search', icon: 'ui-icon-search', listener: {
+                        'click': function (evt, ui) {
+                            postData.ROLE_NM = $('#' + searchTextId).val();
+
+                            fnRequestGidData(grid, postData);
+                        }
+                    }
+                },
+                {
                     type: 'button', label: 'Add', icon: 'ui-icon-plus', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            $('#' + gridId).pqGrid('addNodes', [{}], 0);
+                            grid.pqGrid('addNodes', [{}], 0);
                         }
                     }
                 },
@@ -41,28 +55,19 @@
                             var insertQueryList = ['insertAuthorityGroup'];
                             var updateQueryList = ['updateAuthorityGroup'];
 
-                            fnModifyPQGrid(gridId, insertQueryList, updateQueryList);
+                            fnModifyPQGrid(grid, insertQueryList, updateQueryList);
                         }
                     }
                 }
             ]
         };
 
-        fnCreatePQGrid(gridId, postData, colModel, toolbar);
-        $('#' + gridId).pqGrid({
+        grid = fnCreatePQGrid(gridId, postData, colModel, toolbar);
+        grid.pqGrid({
             title: '권한 그룹 마스터',
             dataModel: {
                 recIndx: 'ROLE_SEQ',
             }
         });
-
-        /**
-         * @description Access Name 검색
-         */
-        $('#' + searchBtnId).on('click', function (event) {
-            postData.ROLE_NM = $('#' + searchTextId).val();
-            fnRequestGidData(gridId, postData);
-        });
-
     });
 </script>
