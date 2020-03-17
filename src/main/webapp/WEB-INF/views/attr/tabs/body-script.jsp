@@ -62,11 +62,24 @@
         });
 
         function addRoyalTabCallBackMethod(){
-            var activeViewItemHeight = parseInt($(".active_view_item").height();
-            if(activeViewItemHeight < 10650) activeViewItemHeight = 10650;
-            $("#view-scroller").height(parseInt($(".active_view_item").height()));
-            $(".active_view_item").height(parseInt($(".active_view_item").height()) + 100);
+            let windows
+            let viewScrollerHeight = parseInt($("#view-scroller").outerHeight(true));
+            let activeViewItemHeight = parseInt($(".active_view_item").outerHeight(true));
+            let addValue = 100;
+
+            console.log(viewScrollerHeight);
+            console.log(activeViewItemHeight);
+
+            if(activeViewItemHeight > 905) {
+                $(".active_view_item").height(activeViewItemHeight + (905 - activeViewItemHeight));
+            }
+            //$("#view-scroller").height(activeViewItemHeight);
+            //$(".active_view_item").height(activeViewItemHeight);
         }
+
+        $(window).resize( function() {
+            addRoyalTabCallBackMethod();
+        } );
 
     });
 

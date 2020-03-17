@@ -459,38 +459,37 @@
                                         </li>
                                     </ul>
                                     <ul class="nav dk">
-                                        <li >
-                                            <a href="/menuManager" class="auto">
+                                        <li  class="tabMenuClick" url="/static/system/menu-manager-list" tname="메뉴 관리" pid="03">
+                                            <a href="#" class="auto">
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>
-
                                                 <span>메뉴 관리</span>
                                             </a>
                                         </li>
                                     </ul>
                                     <ul class="nav dk">
-                                        <li >
-                                            <a href="/commonReferenceCode" class="auto">
+                                        <li class="tabMenuClick" url="/static/system/common-reference-code-list" tname="공통 참조코드" pid="04">
+                                            <a href="#" class="auto">
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>
 
-                                                <span>공통 참조 코드</span>
+                                                <span>공통 참조코드</span>
                                             </a>
                                         </li>
                                     </ul>
                                     <ul class="nav dk">
-                                        <li >
-                                            <a href="/authorityGroupMaster" class="auto">
+                                        <li class="tabMenuClick" url="/static/system/authority-group-master" tname="권한그룹 관리" pid="05">
+                                            <a href="#" class="auto">
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>
 
-                                                <span>권한 그룹 마스터</span>
+                                                <span>권한그룹 관리</span>
                                             </a>
                                         </li>
                                     </ul>
                                     <ul class="nav dk">
-                                        <li >
-                                            <a href="/authorityMenuManagement" class="auto">
+                                        <li class="tabMenuClick" url="/static/system/authority-menu-management" tname="권한별 메뉴 관리" pid="06">
+                                            <a href="#" class="auto">
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>
 

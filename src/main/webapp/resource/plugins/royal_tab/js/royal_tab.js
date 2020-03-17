@@ -22,7 +22,6 @@ var docCookies = {
         if (!sKey || !this.hasItem(sKey)) {
             return null;
         }
-
         return unescape(document.cookie.replace(new RegExp("(?:^|.*;\\s*)" + escape(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*((?:[^;](?!;))*[^;]?).*"), "$1"));
     },
 

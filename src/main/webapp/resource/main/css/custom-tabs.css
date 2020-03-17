@@ -1,8 +1,9 @@
 /*** Start royaltab ***/
 
-div.royal_tab > div.views > div.scroller { overflow: auto; }
+div.royal_tab > div.views > #view-scroller { min-height: 905px; }
+div.royal_tab > div.views > #view-scroller > div.active_view_item { overflow: auto; min-height: 905px;}
 /*div.royal_tab > div.views > div.scroller > div.active { height: 1005px}*/
-div.royal_tab > div.views > div.scroller > div > div { overflow: scroll; height: 100%; margin:0px 0px;}
+/*div.royal_tab > div.views > div.scroller > div > div { overflow: scroll; height: 100%; margin:0px 0px;}*/
 
 div.royal_tab{font-family: Verdana, Arial, Helvetica, Sans-Serif, Meiryo, "MS Gothic";}
 
@@ -19,7 +20,7 @@ div.royal_tab > div.tabs > div.scroller > ul > li{float:left;display:block;heigh
     padding:0 10px;
     width:187px;
     box-sizing:border-box;
-    overflow:hidden;
+    /*overflow:hidden;*/
 }
 
 .fixedleft:after{clear:both;content:"";display:block;}

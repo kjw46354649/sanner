@@ -60,7 +60,7 @@
         };
 
         grid = fnCreatePQGrid(gridId, postData, colModel, toolbar);
-        grid.pqGrid({
+        $("#user-manager-grid").pqGrid({
             title: '유저 관리',
             dataModel: {
                 recIndx: 'USER_ID',
