@@ -126,12 +126,12 @@
                 FROM TBL_CODE_LANG
                 WHERE HIGH_CD = A.HIGH_CD
                 AND CODE_CD = A.CODE_CD
-                AND LANG_CD = 'KR') AS HIGH_NM_KR,
+                AND LANG_CD = 'KR') AS CODE_NM_KR,
                (SELECT CODE_NM
                 FROM TBL_CODE_LANG
                 WHERE HIGH_CD = A.HIGH_CD
                 AND CODE_CD = A.CODE_CD
-                AND LANG_CD = 'EN') AS HIGH_NM_EN,
+                AND LANG_CD = 'EN') AS CODE_NM_EN,
                DEL_YN,
                SORT_NUM,
                REF_CD,
@@ -246,6 +246,13 @@
         WHERE ROLE_SEQ = #{ROLE_SEQ}
    </update>
 
+    <select id="'getCommonLangList'" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT LANG_CD
+        FROM TBL_CODE_LANG A
+        INNER JOIN TBL_CODE B ON A.HIGH_CD = B.HIGH_CD
+                                 AND A.CODE_CD = B.CODE_CD
+        WHERE A.HIGH_CD = #{HIGH_CD}
+    </select>
     <select id="selectAuthorityMenuManagementList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
 
     </select>

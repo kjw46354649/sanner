@@ -6,14 +6,13 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page pageEncoding='UTF-8' contentType='text/html; charset=UTF-8' %>
-
 <div id='user-manager-grid' style='margin:5px auto;'></div>
-<%--<button onclick="refresh()">리프레쉬</button>--%>
 
 <script>
     $(function () {
         'use strict';
         var selectedRowIndex = [];
+        var grid;
         var gridId = 'user-manager-grid';
         var postData = {queryId: 'selectUserManagerList'};
         var colModel = [
@@ -28,7 +27,7 @@
                 {
                     type: 'button', label: 'Add', icon: 'ui-icon-plus', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            $('#' + gridId).pqGrid('addNodes', [{}], 0);
+                            grid.pqGrid('addNodes', [{}], 0);
                         }
                     }
                 },
@@ -37,7 +36,7 @@
                         'click': function (evt, ui) {
                             var QUERY_ID = 'deleteUser';
 
-                            fnDeletePQGrid(gridId, selectedRowIndex, QUERY_ID);
+                            fnDeletePQGrid(grid, selectedRowIndex, QUERY_ID);
                         }
                     }
                 },
@@ -47,15 +46,15 @@
                             var insertQueryList = ['insertUser'];
                             var updateQueryList = ['updateUser'];
 
-                            fnModifyPQGrid(gridId, insertQueryList, updateQueryList);
+                            fnModifyPQGrid(grid, insertQueryList, updateQueryList);
                         }
                     }
                 }
             ]
         };
 
-        fnCreatePQGrid(gridId, postData, colModel, toolbar);
-        $('#' + gridId).pqGrid({
+        grid = fnCreatePQGrid(gridId, postData, colModel, toolbar);
+        grid.pqGrid({
             title: '유저 관리',
             dataModel: {
                 recIndx: 'USER_ID',
@@ -76,39 +75,5 @@
                 }
             }
         });
-
-        /*
-        var obj = {
-            // width: 700,
-            // height: 400,
-            collapsible: false,
-            resizable: true,
-            // title: '',
-            // pageModel: {type: "remote"},
-            numberCell: {title: 'No.'},
-            scrollModel: {autoFit: true},
-            trackModel: {on: true}, //to turn on the track changes.
-            colModel: colModel,
-            dataModel: {
-                location: 'remote',
-                dataType: 'json',
-                method: 'GET',
-                url: '/paramQueryGridSelect',
-                postData: postData,
-                // recIndx: 'USER_ID',
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                    // return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
-                }
-            },
-            toolbar: toolbar
-        };
-        $('#' + gridId).pqGrid(obj);
-         */
     });
-    /*
-    function refresh() {
-        $('#user-manager-grid').pqGrid('refreshDataAndView');
-    }
-    */
 </script>

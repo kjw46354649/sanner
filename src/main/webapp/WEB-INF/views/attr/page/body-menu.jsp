@@ -408,7 +408,7 @@
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>
 
-                                                <span>유저 관리</span>
+                                                <span>사용자 관리</span>
                                             </a>
                                         </li>
                                     </ul>
