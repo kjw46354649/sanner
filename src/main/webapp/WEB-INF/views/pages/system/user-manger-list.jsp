@@ -58,9 +58,13 @@
                 }
             ]
         };
+        /* hyoung seok 01 */
+        /* hyoung seok 02 */
+
+
         var obj = {
-            // width: 700,
-            // height: 400,
+            width: 700,
+            height: 400,
             collapsible: false,
             resizable: true,
             // title: '',
