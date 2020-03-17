@@ -19,7 +19,7 @@ public class MainController {
 
         logger.info("logger");
 
-        return "pages/main/main.tiles";
+        return "tab/tabs.tiles";
     }
 
     @RequestMapping(value = "/userManger")

@@ -450,7 +450,7 @@
                                         <span class="font-bold">시스템</span>
                                     </a>
                                     <ul class="nav dk">
-                                        <li class="tabMenuClick" url="/tabs/system/user-manger-list" tname="사용자 관리" pid="02">
+                                        <li class="tabMenuClick" url="/static/system/user-manger-list" tname="사용자 관리" pid="02">
                                             <a href="#" class="auto">
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>

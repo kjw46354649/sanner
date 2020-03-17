@@ -20,9 +20,7 @@
                 <section id="content">
                     <div class="royal_tab" data-position="top" data-alignment="left" data-animation="slide">
                         <div class="tabs">
-                            <ul id="royal_tab_more" class="fixedleft">
-                                <!-- <li class="active">Welcome YKK</li> -->
-                            </ul>
+                            <ul id="royal_tab_more" class="fixedleft"></ul>
                         </div>
                         <div class="views"></div>
                     </div>
@@ -31,5 +29,4 @@
         </section>
     </section>
 </body>
-<tiles:insertAttribute name="bottom"/>
 </html>

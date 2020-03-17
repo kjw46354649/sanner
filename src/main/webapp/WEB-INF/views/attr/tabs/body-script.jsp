@@ -13,12 +13,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 
-<link rel="stylesheet"
-      href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css"/>
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css"/>
 <script src="/resource/main/js/jquery.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
 <!-- Bootstrap -->
 <script src="/resource/main/js/bootstrap.js"></script>
+<!-- royal tab -->
+<script src="/resource/plugins/royal_tab/js/royal_tab.js"></script>
 <!-- App -->
 <script src="/resource/main/js/app.js"></script>
 <script src="/resource/main/js/slimscroll/jquery.slimscroll.min.js"></script>
@@ -43,6 +44,31 @@
 
 
 <script type="text/javascript">
+
+    var royal_tab_api = null;
+
+    $(document).ready(function() {
+
+        royal_tab_api = new Royal_Tab_Api($('div.royal_tab'));
+        royal_tab_api.add(0, true, "MAIN", "/static/main/main", true, "01", addRoyalTabCallBackMethod);
+        // royal_tab_api.add(0, true, "${authUserFMenu.MENUNM}", "${authUserFMenu.PATHFILE}", true, "${authUserFMenu.MENUID}");
+
+        $("#royal_tab_more").delegate("i", "click", function(){
+            royal_tab_api.remove($('#royal_tab_more > li > i').index(this));
+        });
+
+        $("#left_menu_wide_list").find('.tabMenuClick').on('click', function() {
+            royal_tab_api.add(0, true, $(this).attr("tname"), $(this).attr("url"), true, $(this).attr("pid"), addRoyalTabCallBackMethod);
+        });
+
+        function addRoyalTabCallBackMethod(){
+            var activeViewItemHeight = parseInt($(".active_view_item").height();
+            if(activeViewItemHeight < 10650) activeViewItemHeight = 10650;
+            $("#view-scroller").height(parseInt($(".active_view_item").height()));
+            $(".active_view_item").height(parseInt($(".active_view_item").height()) + 100);
+        }
+
+    });
 
     /**
      * @description 그리드 생성
