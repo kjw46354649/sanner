@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="systemMapper">
+
+    <select id="getUserAuthorize" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT DATE_FORMAT(NOW(), '%Y%m%d') AS CURDATE FROM DUAL
+	</select>
+
+    <select id="selectUserManagerList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT USER_ID,
+        USER_NM,
+        USER_PWD,
+        DEL_YN
+        FROM TBL_USER
+        WHERE 1=1
+        <if test="user_id != null and user_id != ''">
+            AND USER_ID LIKE CONCAT('%', #{user_id}, '%')
+        </if>
+        LIMIT 20
+    </select>
+
+    <insert id="insertUser" parameterType="java.util.HashMap">
+		INSERT INTO TBL_USER
+            (USER_ID, USER_NM, USER_PWD, DEL_YN, ROLE_SEQ, INSERT_DT, INSERT_ID, UPDATE_DT, UPDATE_ID)
+        VALUES(#{USER_ID}, #{USER_NM}, #{USER_PWD}, 'N', NULL, current_timestamp(), NULL, NULL, NULL)
+	</insert>
+
+    <update id="updateUser" parameterType="java.util.HashMap">
+      UPDATE TBL_USER
+      SET USER_NM = #{USER_NM},
+          USER_PWD = #{USER_PWD}
+      WHERE USER_ID = #{USER_ID}
+   </update>
+
+    <delete id="deleteUser" parameterType="java.util.HashMap">
+      DELETE FROM TBL_USER
+      WHERE USER_ID = #{USER_ID}
+           AND USER_NM = #{USER_NM}
+   </delete>
+
+    <select id="selectSessionCodeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.HIGH_CD, A.CODE_CD, B.CODE_NM AS CODE_NM_KR, C.CODE_NM AS CODE_NM_EN
+        FROM TBL_CODE A
+            INNER JOIN TBL_CODE_LANG B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = 'KR'
+            INNER JOIN TBL_CODE_LANG C ON A.HIGH_CD = C.HIGH_CD AND A.CODE_CD = C.CODE_CD AND C.LANG_CD = 'EN'
+        WHERE A.DEL_YN = 'N'
+    </select>
+
+    <select id="selectUserTopMenuList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.MENU_SEQ, A.MENU_LINK, A.PARENT_MENU_SEQ, A.SORT_NUM, A.DEL_YN, A.NOTE,
+			B.MENU_NM AS MENU_NM_KR, C.MENU_NM AS MENU_NM_EN,
+			SF_GET_CODE_NM(10000, A.DEL_YN, 'EN') AS DEL_YN_NM
+        FROM TBL_MENU A
+            INNER JOIN TBL_MENU_LANG B ON A.MENU_SEQ = B.MENU_SEQ AND B.LANG_CD = 'KR'
+            INNER JOIN TBL_MENU_LANG C ON A.MENU_SEQ = C.MENU_SEQ AND C.LANG_CD = 'EN'
+        WHERE A.PARENT_MENU_SEQ = 1
+    </select>
+
+    <select id="selectUserSubMenuList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+      SELECT
+            A.MENU_SEQ, A.MENU_SEQ AS MENU_SUB_SEQ, A.MENU_LINK, #{PARENT_MENU_SEQ} AS PARENT_MENU_SEQ, A.SORT_NUM, A.DEL_YN, A.NOTE,
+			B.MENU_NM AS MENU_NM_KR, C.MENU_NM AS MENU_NM_EN,
+			SF_GET_CODE_NM(10000, A.DEL_YN, 'EN') AS DEL_YN_NM
+        FROM TBL_MENU A
+            INNER JOIN TBL_MENU_LANG B ON A.MENU_SEQ = B.MENU_SEQ AND B.LANG_CD = 'KR'
+            INNER JOIN TBL_MENU_LANG C ON A.MENU_SEQ = C.MENU_SEQ AND C.LANG_CD = 'EN'
+        WHERE A.PARENT_MENU_SEQ = #{PARENT_MENU_SEQ}
+    </select>
+
+    <insert id="insertTopMenuCode" parameterType="java.util.HashMap" >
+       INSERT INTO TBL_MENU
+         (MENU_SEQ, MENU_LINK, PARENT_MENU_SEQ, SORT_NUM, DEL_YN, NOTE, INSERT_ID)
+      VALUES
+         (NEXTVAL(SEQ_MENU), #{MENU_LINK}, '1', #{SORT_NUM}, #{DEL_YN_NM}, #{NOTE}, NULL)
+   </insert>
+
+    <insert id="insertTopMenuKr" parameterType="java.util.HashMap">
+       INSERT INTO TBL_MENU_LANG(MENU_SEQ, LANG_CD, MENU_NM, INSERT_DT, INSERT_ID)
+       VALUES(LASTVAL(SEQ_MENU), 'KR', #{MENU_NM_KR}, NOW(), NULL)
+   </insert>
+
+    <insert id="insertTopMenuEn" parameterType="java.util.HashMap">
+       INSERT INTO TBL_MENU_LANG(MENU_SEQ, LANG_CD, MENU_NM, INSERT_DT, INSERT_ID)
+       VALUES(LASTVAL(SEQ_MENU), 'EN', #{MENU_NM_EN}, NOW(), NULL)
+   </insert>
+
+    <update id="updateTopMenuCode" parameterType="java.util.HashMap" >
+        UPDATE TBL_MENU
+            SET MENU_LINK = #{MENU_LINK},
+                SORT_NUM = #{SORT_NUM},
+                DEL_YN = #{DEL_YN_NM},
+                NOTE = #{NOTE},
+                UPDATE_DT = NOW(),
+                UPDATE_ID = NULL
+            WHERE MENU_SEQ = #{MENU_SEQ}
+   </update>
+
+    <update id="updateTopMenuKr" parameterType="java.util.HashMap" >
+        UPDATE TBL_MENU_LANG
+            SET MENU_NM = #{MENU_NM_KR},
+                UPDATE_DT = NOW(),
+                UPDATE_ID = NULL
+        WHERE MENU_SEQ = #{MENU_SEQ}
+            AND LANG_CD = 'KR'
+    </update>
+
+    <update id="updateTopMenuEn" parameterType="java.util.HashMap" >
+        UPDATE TBL_MENU_LANG
+            SET MENU_NM = #{MENU_NM_EN},
+                UPDATE_DT = NOW(),
+                UPDATE_ID = NULL
+        WHERE MENU_SEQ = #{MENU_SEQ}
+            AND LANG_CD = 'EN'
+    </update>
+
+    <insert id="insertSubMenuCode" parameterType="java.util.HashMap" >
+    	INSERT INTO TBL_MENU
+            (MENU_SEQ, MENU_LINK, PARENT_MENU_SEQ, SORT_NUM, DEL_YN, NOTE, INSERT_ID)
+        VALUES
+            (NEXTVAL(SEQ_MENU), #{MENU_LINK}, #{PARENT_MENU_SEQ}, #{SORT_NUM}, #{DEL_YN_NM}, #{NOTE}, NULL)
+	</insert>
+
+    <update id="updateSubMenuCode" parameterType="java.util.HashMap" >
+    	UPDATE TBL_MENU
+            SET MENU_LINK = #{MENU_LINK},
+                PARENT_MENU_SEQ = #{PARENT_MENU_SEQ},
+                SORT_NUM = #{SORT_NUM},
+                DEL_YN = #{DEL_YN_NM},
+                NOTE = #{NOTE},
+                UPDATE_DT = NOW(),
+                UPDATE_ID = NULL
+        WHERE MENU_SEQ = #{MENU_SEQ}
+	</update>
+
+    <select id="selectCommonGroupCodeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT HIGH_CD,
+        HIGH_NM,
+        DEL_YN,
+        NOTE
+        FROM TBL_CODE_GROUP
+        WHERE 1 = 1
+        <if test="HIGH_NM != null and HIGH_NM != ''">
+            AND HIGH_NM LIKE CONCAT('%', #{HIGH_NM}, '%')
+        </if>
+    </select>
+
+    <insert id="insertCommonGroupCode" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CODE_GROUP
+            (HIGH_CD, HIGH_NM, DEL_YN, NOTE, INSERT_DT, INSERT_ID, UPDATE_DT, UPDATE_ID)
+        VALUES(#{HIGH_CD}, #{HIGH_NM}, #{DEL_YN}, #{NOTE}, current_timestamp(), NULL, NULL, NULL)
+	</insert>
+
+    <update id="updateCommonGroupCode"  parameterType="java.util.HashMap" >
+        UPDATE TBL_CODE_GROUP
+        SET HIGH_NM = #{HIGH_NM},
+            DEL_YN = #{DEL_YN},
+            NOTE = #{NOTE},
+            UPDATE_DT = current_timestamp(),
+            UPDATE_ID = NULL
+        WHERE HIGH_CD = #{HIGH_CD}
+   </update>
+
+    <select id="selectCommonCodeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT HIGH_CD,
+               CODE_CD,
+               (SELECT CODE_NM
+                FROM TBL_CODE_LANG
+                WHERE HIGH_CD = A.HIGH_CD
+                AND CODE_CD = A.CODE_CD
+                AND LANG_CD = 'KR') AS CODE_NM_KR,
+               (SELECT CODE_NM
+                FROM TBL_CODE_LANG
+                WHERE HIGH_CD = A.HIGH_CD
+                AND CODE_CD = A.CODE_CD
+                AND LANG_CD = 'EN') AS CODE_NM_EN,
+               DEL_YN,
+               SORT_NUM,
+               REF_CD,
+               NOTE
+        FROM TBL_CODE A
+        WHERE 1 = 1
+        <if test="HIGH_CD != null and HIGH_CD != ''">
+            AND HIGH_CD = #{HIGH_CD}
+        </if>
+        ORDER BY SORT_NUM
+    </select>
+
+    <insert id="insertCommonCode" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CODE (
+            HIGH_CD,
+            CODE_CD,
+            REF_CD,
+            SORT_NUM,
+            DEL_YN,
+            NOTE,
+            INSERT_DT,
+            INSERT_ID,
+        ) VALUES(
+            #{HIGH_CD},
+            #{CODE_CD},
+            #{REF_CD},
+            #{SORT_NUM},
+            #{DEL_YN},
+            #{NOTE},
+            current_timestamp(),
+            'xmaseve96'
+        )
+	</insert>
+
+    <insert id="insertCommonCodeLangCode" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CODE_LANG (
+            HIGH_CD,
+            CODE_CD,
+            LANG_CD,
+            CODE_NM,
+            INSERT_DT,
+            INSERT_ID
+        ) VALUES (
+            #{HIGH_CD},
+            #{CODE_CD},
+            #{LANG_CD},
+            #{CODE_NM},
+            current_timestamp(),
+            'xmaseve96'
+        )
+	</insert>
+
+    <update id="updateCommonCode"  parameterType="java.util.HashMap" >
+        UPDATE TBL_CODE
+        SET ABBR_NM = #{ABBR_NM},
+            SORT_NUM = #{SORT_NUM},
+            DEL_YN = #{DEL_YN},
+            NOTE = #{NOTE},
+            UPDATE_DT = current_timestamp(),
+        WHERE HIGH_CD = #{HIGH_CD}
+              AND CODE_CD= #{CODE_CD}
+   </update>
+
+    <update id="updateCommonCodeLangCode"  parameterType="java.util.HashMap" >
+        UPDATE TBL_CODE_LANG
+        SET CODE_CD = #{CODE_CD},
+            CODE_NM = #{CODE_NM},
+            UPDATE_DT = current_timestamp(),
+            UPDATE_ID = 'xmaseve96'
+        WHERE HIGH_CD = #{HIGH_CD}
+              AND CODE_CD= #{CODE_CD}
+              AND LANG_CD = {LANG_CD}
+   </update>
+
+    <select id="selectAuthorityGroupList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROLE_SEQ,
+               ROLE_NM,
+               DEL_YN,
+               NOTE
+        FROM TBL_ROLE
+        WHERE 1 = 1
+        <if test="ROLE_NM != null and ROLE_NM != ''">
+            AND ROLE_NM LIKE CONCAT('%', #{ROLE_NM}, '%')
+        </if>
+    </select>
+
+    <insert id="insertAuthorityGroup" parameterType="java.util.HashMap">
+        INSERT INTO TBL_ROLE (
+            ROLE_SEQ,
+            ROLE_NM,
+            DEL_YN,
+            NOTE,
+            INSERT_DT,
+            INSERT_ID
+        ) VALUES(
+            #{ROLE_SEQ},
+            #{ROLE_NM},
+            #{DEL_YN},
+            #{NOTE},
+            current_timestamp(),
+            'xmaseve96'
+        )
+	</insert>
+
+    <update id="updateAuthorityGroup"  parameterType="java.util.HashMap" >
+        UPDATE TBL_ROLE
+        SET ROLE_NM = #{ROLE_NM},
+            DEL_YN = #{DEL_YN},
+            NOTE = #{NOTE},
+            UPDATE_DT = current_timestamp(),
+            UPDATE_ID = 'xmaseve96'
+        WHERE ROLE_SEQ = #{ROLE_SEQ}
+   </update>
+
+    <select id="'getCommonLangList'" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT LANG_CD
+        FROM TBL_CODE_LANG A
+        INNER JOIN TBL_CODE B ON A.HIGH_CD = B.HIGH_CD
+                                 AND A.CODE_CD = B.CODE_CD
+        WHERE A.HIGH_CD = #{HIGH_CD}
+    </select>
+    <select id="selectAuthorityMenuManagementList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+
+    </select>
+
+    <insert id="insertAuthorityMenuManagement" parameterType="java.util.HashMap">
+
+	</insert>
+
+    <update id="updateAuthorityMenuManagement"  parameterType="java.util.HashMap" >
+
+   </update>
+
+</mapper>
