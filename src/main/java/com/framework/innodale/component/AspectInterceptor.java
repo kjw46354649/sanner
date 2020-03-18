@@ -1,5 +1,6 @@
 package com.framework.innodale.component;
 
+import com.framework.innodale.service.InnodaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.LocaleEditor;
 import org.springframework.web.servlet.LocaleResolver;
@@ -16,6 +17,9 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
     private LocaleResolver localeResolver;
+
+    @Autowired
+    public InnodaleService innodaleService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -39,6 +43,13 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
                 }
             }else{
                 localeNat = "en";
+            }
+
+            if(session.getAttribute("HIGHCD") == null){
+                Map<String, Object> hashMap = new HashMap<String, Object>();
+                hashMap.put("queryId", "systemMapper.selectSessionCodeList");
+                HashMap<String, Object> highCode = CommonUtility.getCode(innodaleService.getList(hashMap));
+                session.setAttribute("HIGHCD", highCode);
             }
 
             LocaleEditor localeEditor = new LocaleEditor();

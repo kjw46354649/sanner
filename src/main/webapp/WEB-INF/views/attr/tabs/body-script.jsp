@@ -46,8 +46,6 @@
 <script type="text/javascript">
 
     var royal_tab_api = null;
-    var g_code;
-
     $(document).ready(function() {
 
         royal_tab_api = new Royal_Tab_Api($('div.royal_tab'));
@@ -250,8 +248,7 @@
 
     let fnGetCommCodeSelectBox = function (highCd) {
         'use strict';
-        var selectBoxContents = [];
-
+        let selectBoxContents = [];
         for(var i=0; i < g_code.length; i++){
             if(g_code[i].HIGH_CD == highCd){
                 selectBoxContents.push({'value':g_code[i].CODE_CD, 'text':g_code[i].CODE_NM_EN});

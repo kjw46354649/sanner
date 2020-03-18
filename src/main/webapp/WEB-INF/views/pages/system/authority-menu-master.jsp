@@ -14,33 +14,34 @@
         <div class="col-md-9">
             <div id="authority_right_grid"></div>
         </div>
+    </div>
 </div>
 
 <script type="text/javascript">
     $(function () {
         'use strict';
-        var click_seq;
-        var leftGrid = $("#authority_left_grid");
-        var rightGrid = $("#authority_right_grid");
+        let click_seq;
+        let authorityLeftGrid = $("#authority_left_grid");
+        let authorityRightGrid = $("#authority_right_grid");
 
-        var leftColModel = [
+        let leftColModel = [
             {title: 'Access Code', dataType: 'string', dataIndx: 'ROLE_SEQ', hidden: true},
             {title: 'Access Name', dataType: 'string', dataIndx: 'ROLE_NM', editable: false}
         ];
-        var rightColModel = [
+        let rightColModel = [
             {title: '', dataType: 'string', dataIndx: 'MENU_SEQ', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'PARNET_MENU_SEQ', hidden: true},
             {title: 'Top Menu', dataType: 'string', dataIndx: 'PARENT_MENU_NM', editable: false},
             {title: 'Menu', dataType: 'string', dataIndx: 'MENU_NM', editable: false},
             {title: 'Del YN' 	 , dataType: 'string', dataIndx: 'ACCESS_NM', width: '7%',
                 editable: function(ui) {
-                    var rowData = rightGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                    let rowData = authorityRightGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
                     if (rowData["PARENT_MENU_SEQ"] == 1) return false;
 
                     return true;
                 },
                 render: function(ui) {
-                    var rowData = rightGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                    let rowData = authorityRightGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
                     if (rowData["PARENT_MENU_SEQ"] == 1) return "";
 
                     return rowData["ACCESS_NM"];
@@ -50,10 +51,10 @@
                     mapIndices: { name: "ACCESS_NM", id: "ACCESS_CD" },
                     valueIndx: "value",
                     labelIndx: "text",
-                    options: g_selectBox('10001'),
+                    options: fnGetCommCodeSelectBox('10001'),
                     getData: function(ui) {
-                        var clave = ui.$cell.find("select").val();
-                        var rowData = rightGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = authorityRightGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
                         rowData["ACCESS_CD"]=clave;
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
@@ -61,20 +62,20 @@
             }
         ];
 
-        var leftToolbar = {
+        let leftToolbar = {
             items: []
         };
-        var rightToolbar = {
+        let rightToolbar = {
             cls: 'pq-leftToolbar-crud',
             items: [
                 {
                     type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            var grid = rightGrid.pqGrid('getInstance').grid;
+                            let grid = authorityRightGrid.pqGrid('getInstance').grid;
                             //추가 또는 수정된 값이 있으면 true
                             if (grid.isDirty()) {
-                                var changes = grid.getChanges({format: 'byVal'});
-                                var QUERY_ID_ARRAY = {
+                                let changes = grid.getChanges({format: 'byVal'});
+                                let QUERY_ID_ARRAY = {
                                     'updateQueryId': ['insertAuthorityMenuManagement']
                                 };
 
@@ -87,7 +88,7 @@
                                     dataType: 'json',
                                     data: {'data': JSON.stringify(changes)},
                                     success: function (result) {
-                                        rightGrid.pqGrid("refreshDataAndView");
+                                        authorityRightGrid.pqGrid("refreshDataAndView");
                                     },
                                     error: function (e) {
                                         console.error(e);
@@ -101,19 +102,19 @@
             ]
         };
 
-        leftGrid.pqGrid({
+        authorityLeftGrid.pqGrid({
             width: "100%",
             //height: 350,
             scrollModel: {autoFit: true},
             dataModel: {
                 location: "remote",
                 dataType: "json",
-                method: "GET",
+                method: "POST",
                 url: "/paramQueryGridSelect",
                 postData: { 'queryId': 'selectAuthorityGroupList'},
                 recIndx: 'ROLE_SEQ',
                 getData: function (dataJSON) {
-                    var data = dataJSON.data;
+                    let data = dataJSON.data;
                     return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                 }
             },
@@ -124,11 +125,11 @@
             trackModel: {on: true},
             resizable: true,
             complete: function(event, ui) {
-                leftGrid.pqGrid('setSelection', {rowIndx:0} );
+                authorityLeftGrid.pqGrid('setSelection', {rowIndx:0} );
             },
             rowSelect: function( event, ui ) {
                 if(ui.addList.length > 0 ) {
-                    var role_seq = ui.addList[0].rowData.ROLE_SEQ;
+                    let role_seq = ui.addList[0].rowData.ROLE_SEQ;
                     click_seq=role_seq;
                     selectRightList(role_seq);
                 }
@@ -137,19 +138,19 @@
         });
 
         function selectRightList(ROLE_SEQ){
-            rightGrid.pqGrid({
+            authorityRightGrid.pqGrid({
                 width: "100%",
                 //height: 400,
                 scrollModel: {autoFit: true},
                 dataModel: {
                     location: "remote",
                     dataType: "json",
-                    method: "GET",
+                    method: "POST",
                     url: "/paramQueryGridSelect",
                     postData: { 'queryId': 'selectAuthorityMenuManagementList', 'ROLE_SEQ': ROLE_SEQ},
                     recIndx: 1,
                     getData: function (dataJSON) {
-                        var data = dataJSON.data;
+                        let data = dataJSON.data;
                         return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                     }
                 },
@@ -162,7 +163,7 @@
                 toolbar: rightToolbar
             });
 
-            rightGrid.pqGrid("refreshDataAndView");
+            authorityRightGrid.pqGrid("refreshDataAndView");
         };
 
     });
