@@ -36,13 +36,13 @@
             {title: 'Del YN' 	 , dataType: 'string', dataIndx: 'ACCESS_NM', width: '7%',
                 editable: function(ui) {
                     let rowData = authorityRightGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                    if (rowData["PARENT_MENU_SEQ"] == 1) return false;
+                    if(rowData["PARENT_MENU_SEQ"] == 0) return false;
 
                     return true;
                 },
                 render: function(ui) {
                     let rowData = authorityRightGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                    if (rowData["PARENT_MENU_SEQ"] == 1) return "";
+                    if(rowData["PARENT_MENU_SEQ"] == 0) return "";
 
                     return rowData["ACCESS_NM"];
                 },
