@@ -9,10 +9,10 @@
 <div class="container-fluid wrapper">
     <div class="row">
         <div class="col-md-3">
-            <div id="authority-left-grid"></div>
+            <div id="authority_left_grid"></div>
         </div>
         <div class="col-md-9">
-            <div id="authority-right-grid"></div>
+            <div id="authority_right_grid"></div>
         </div>
 </div>
 
@@ -20,8 +20,8 @@
     $(function () {
         'use strict';
         var click_seq;
-        var leftGrid = $("#authority-left-grid");
-        var rightGrid = $("#authority-right-grid");
+        var leftGrid = $("#authority_left_grid");
+        var rightGrid = $("#authority_right_grid");
 
         var leftColModel = [
             {title: 'Access Code', dataType: 'string', dataIndx: 'ROLE_SEQ', hidden: true},
@@ -164,16 +164,6 @@
 
             rightGrid.pqGrid("refreshDataAndView");
         };
-
-        function g_selectBox(HIGH_CD){
-            var selectBoxContents = [];
-            for(var i=0; i < g_code.length; i++){
-                if(g_code[i].HIGH_CD == HIGH_CD){
-                    selectBoxContents.push({'value':g_code[i].CODE_CD, 'text':g_code[i].CODE_NM_EN});
-                }
-            }
-            return selectBoxContents;
-        }
 
     });
 

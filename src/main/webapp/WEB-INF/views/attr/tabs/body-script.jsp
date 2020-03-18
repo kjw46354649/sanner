@@ -247,4 +247,17 @@
             }
         }, parameters, '');
     };
+
+    let fnGetCommCodeSelectBox = function (highCd) {
+        'use strict';
+        var selectBoxContents = [];
+
+        for(var i=0; i < g_code.length; i++){
+            if(g_code[i].HIGH_CD == highCd){
+                selectBoxContents.push({'value':g_code[i].CODE_CD, 'text':g_code[i].CODE_NM_EN});
+            }
+        }
+        return selectBoxContents;
+    }
+
 </script>

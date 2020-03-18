@@ -78,7 +78,7 @@
                                         <span class="font-bold">견적 관리</span>
                                     </a>
                                     <ul class="nav dk">
-                                        <li class="tabMenuClick" url="/static/biz/estimate_mater" tname="권한그룹 관리" pid="05">
+                                        <li class="tabMenuClick" url="/static/biz/estimate-master" tname="권한그룹 관리" pid="05">
                                             <a href="#" class="auto">
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>
@@ -459,7 +459,7 @@
                                         </li>
                                     </ul>
                                     <ul class="nav dk">
-                                        <li  class="tabMenuClick" url="/static/system/menu-manager-list" tname="메뉴 관리" pid="03">
+                                        <li  class="tabMenuClick" url="/static/system/menu-master" tname="메뉴 관리" pid="03">
                                             <a href="#" class="auto">
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>
@@ -488,7 +488,7 @@
                                         </li>
                                     </ul>
                                     <ul class="nav dk">
-                                        <li class="tabMenuClick" url="/static/system/authority-menu-management" tname="권한별 메뉴 관리" pid="06">
+                                        <li class="tabMenuClick" url="/static/system/authority-menu-master" tname="권한별 메뉴 관리" pid="06">
                                             <a href="#" class="auto">
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>

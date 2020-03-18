@@ -2,7 +2,7 @@
 <div class="container-fluid wrapper">
 	<div class="col-md-3">
 		<div class="row">
-			<h5 class="title"><i class="i i-menu"></i><span> TOP Menu </span></h5>
+			<h5 class="title"><i class="i i-menu"></i><span> 견적관리 </span></h5>
 		</div>
 	</div>
 	<div class="col-md-12">
@@ -215,21 +215,7 @@
 					]
 				}
 			});
-
 			menuSubGrid.pqGrid("refreshDataAndView");
-
-		}
-
-		function g_selectBox(HIGH_CD){
-			var selectBoxContents = [];
-
-			for(var i=0; i < g_code.length; i++){
-				if(g_code[i].HIGH_CD == HIGH_CD){
-					selectBoxContents.push({'value':g_code[i].CODE_CD, 'text':g_code[i].CODE_NM_EN});
-				}
-			}
-
-			return selectBoxContents;
 		}
 
 	});
