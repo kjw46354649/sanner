@@ -472,7 +472,6 @@
                                             <a href="#" class="auto">
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>
-
                                                 <span>공통 참조코드</span>
                                             </a>
                                         </li>
@@ -482,7 +481,6 @@
                                             <a href="#" class="auto">
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>
-
                                                 <span>권한그룹 관리</span>
                                             </a>
                                         </li>
@@ -492,8 +490,16 @@
                                             <a href="#" class="auto">
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>
-
                                                 <span>권한별 메뉴 관리</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <ul class="nav dk">
+                                        <li class="tabMenuClick" url="/static/system/company-master" tname="업체 정보 관리" pid="07">
+                                            <a href="#" class="auto">
+                                                <b class="badge bg-success lt pull-right">2</b>
+                                                <i class="i i-dot"></i>
+                                                <span>업체 정보 관리</span>
                                             </a>
                                         </li>
                                     </ul>

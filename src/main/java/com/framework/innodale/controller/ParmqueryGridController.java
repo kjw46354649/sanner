@@ -26,7 +26,7 @@ public class ParmqueryGridController {
     /**
      * Simply selects the home view to render by returning its name.
      */
-    @RequestMapping(value = "/paramQueryGridSelect")
+    @RequestMapping(value = "/paramQueryGridSelect", method = RequestMethod.POST)
     public String dHtmlGridList(Model model, HttpServletRequest request, HttpSession session) throws Exception {
         Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
 
