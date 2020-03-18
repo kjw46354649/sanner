@@ -153,7 +153,7 @@
             height: 650, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             numberCell: {title: '<br>No.', styleHead: {'vertical-align':'middle', 'padding-top':'10px'}}, scrollModel: {autoFit: true}, trackModel: {on: true},
             colModel: colModel, toolbar: toolbar,
-            pageModel: { type: "remote", rPP: 20, strRpp: "{0}" },
+            pageModel: { type: "local", rPP: 20, strRpp: "{0}", strDisplay: "{0} to {1} of {2}" },
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: postData,

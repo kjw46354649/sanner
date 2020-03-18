@@ -459,7 +459,7 @@
                                         </li>
                                     </ul>
                                     <ul class="nav dk">
-                                        <li  class="tabMenuClick" url="/static/system/menu-manager-list" tname="메뉴 관리" pid="03">
+                                        <li  class="tabMenuClick" url="/static/system/menu-master" tname="메뉴 관리" pid="03">
                                             <a href="#" class="auto">
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>

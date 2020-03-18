@@ -78,7 +78,7 @@
 			dataModel: {
 				location: "remote",
 				dataType: "json",
-				method: "GET",
+				method: "POST",
 				url: "/paramQueryGridSelect",
 				postData: { "queryId" : "systemMapper.selectUserTopMenuList"},
 				recIndx: 'MENU_SEQ',
@@ -158,7 +158,7 @@
 				dataModel: {
 					location: "remote",
 					dataType: "json",
-					method: "GET",
+					method: "POST",
 					url: "/paramQueryGridSelect",
 					postData: { "queryId" : "systemMapper.selectUserSubMenuList", "PARENT_MENU_SEQ": MENU_SEQ},
 					recIndx: 'MENU_SUB_SEQ',
