@@ -27,7 +27,7 @@ public class MainController {
 
         logger.info("logger");
 
-        return "pages/system/user-manger-list.tiles";
+        return "pages/system/user-master.tiles";
     }
 
     @RequestMapping(value = "/menuManager")
@@ -43,7 +43,7 @@ public class MainController {
 
         logger.info("logger");
 
-        return "pages/system/common-reference-code-list.tiles";
+        return "pages/system/common-code-master.tiles";
     }
 
     @RequestMapping(value = "/authorityGroupMaster")
@@ -59,7 +59,7 @@ public class MainController {
 
         logger.info("logger");
 
-        return "pages/system/authority-menu-management.tiles";
+        return "pages/system/authority-menu-master.tiles";
     }
 
 }

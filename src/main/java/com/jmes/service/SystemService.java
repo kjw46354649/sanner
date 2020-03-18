@@ -5,4 +5,6 @@ import java.util.Map;
 
 public interface SystemService {
     List<Map<String, Object>> getCommonCodeList(Map<String, Object> hashMap) throws Exception;
+
+    void commonCodeModifyGrid(Map<String, Object> map) throws Exception;
 }

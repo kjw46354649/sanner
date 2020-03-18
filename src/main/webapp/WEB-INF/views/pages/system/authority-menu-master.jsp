@@ -9,10 +9,10 @@
 <div class="container-fluid wrapper">
     <div class="row">
         <div class="col-md-3">
-            <div id="authority-left-grid"></div>
+            <div id="authority_left_grid"></div>
         </div>
         <div class="col-md-9">
-            <div id="authority-right-grid"></div>
+            <div id="authority_right_grid"></div>
         </div>
 </div>
 
@@ -20,8 +20,8 @@
     $(function () {
         'use strict';
         var click_seq;
-        var leftGrid = $("#authority-left-grid");
-        var rightGrid = $("#authority-right-grid");
+        var leftGrid = $("#authority_left_grid");
+        var rightGrid = $("#authority_right_grid");
 
         var leftColModel = [
             {title: 'Access Code', dataType: 'string', dataIndx: 'ROLE_SEQ', hidden: true},
@@ -108,7 +108,7 @@
             dataModel: {
                 location: "remote",
                 dataType: "json",
-                method: "GET",
+                method: "POST",
                 url: "/paramQueryGridSelect",
                 postData: { 'queryId': 'selectAuthorityGroupList'},
                 recIndx: 'ROLE_SEQ',
@@ -144,7 +144,7 @@
                 dataModel: {
                     location: "remote",
                     dataType: "json",
-                    method: "GET",
+                    method: "POST",
                     url: "/paramQueryGridSelect",
                     postData: { 'queryId': 'selectAuthorityMenuManagementList', 'ROLE_SEQ': ROLE_SEQ},
                     recIndx: 1,
