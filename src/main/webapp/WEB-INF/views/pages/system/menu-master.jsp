@@ -2,14 +2,14 @@
 <div class="container-fluid wrapper">
 	<div class="col-md-3">
 		<div class="row">
-			<h5 class="title"><i class="i i-menu"></i><span> TOP Menu </span></h5>
+			<h5 class="title"><i class="i i-menu"></i><span> 견적관리 </span></h5>
 		</div>
 	</div>
 	<div class="col-md-12">
 		<div id="menu_master_top_grid" class="jqx-refresh"></div>
 	</div>
 	<div class="col-md-12">
-		<div id="menu_master_sub_grid" class="jqx-refresh"></div>
+		<div id="menu_master_bot_grid" class="jqx-refresh"></div>
 	</div>
 	<!--content-->
 </div>
@@ -18,12 +18,11 @@
 
 	$(document).ready(function() {
 		'use strict';
-		var click_seq;
+		let click_seq;
+		let menuMasterTopGrid = $("#menu_master_top_grid");
+		let menuMasterBotGrid = $("#menu_master_bot_grid");
 
-		var menuTopGrid = $("#menu_master_top_grid");
-		var menuSubGrid = $("#menu_master_sub_grid");
-
-		var topColModel= [
+		let topColModel= [
 			{title: 'MENU_SEQ'			, dataType: 'string',  dataIndx: 'MENU_SEQ'			, hidden: true},
 			{title: 'PARENT_MENU_SEQ'	, dataType: 'string',  dataIndx: 'PARENT_MENU_SEQ'	, hidden: true},
 			{title: 'Menu Name(EN)'		, dataType: 'string', width: '25%'	, dataIndx: 'MENU_NM_EN'},
@@ -36,17 +35,18 @@
 					mapIndices: { name: "DEL_YN_NM", id: "DEL_YN" },
 					valueIndx: "value",
 					labelIndx: "text",
-					options: g_selectBox('10000'),
+					options: fnGetCommCodeSelectBox('10000'),
 					getData: function(ui) {
-						var clave = ui.$cell.find("select").val();
-						var rowData = menuTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+						let clave = ui.$cell.find("select").val();
+						let rowData = menuMasterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
 						rowData["DEL_YN"]=clave;
 						return ui.$cell.find("select option[value='"+clave+"']").text();
 					}
 				}
 			}
 		];
-		var subColModel= [
+
+		let botColModel= [
 			{title: 'MENU_SEQ'			, dataType: 'string',  dataIndx: 'MENU_SEQ'			, hidden: true},
 			{title: 'MENU_SUB_SEQ'		, dataType: 'string',  dataIndx: 'MENU_SUB_SEQ'		, hidden: true},
 			{title: 'PARENT_MENU_SEQ'	, dataType: 'string',  dataIndx: 'PARENT_MENU_SEQ'	, hidden: true},
@@ -60,10 +60,10 @@
 					mapIndices: { name: "DEL_YN_NM", id: "DEL_YN" },
 					valueIndx: "value",
 					labelIndx: "text",
-					options: g_selectBox('10000'),
+					options: fnGetCommCodeSelectBox('10000'),
 					getData: function(ui) {
-						var clave = ui.$cell.find("select").val();
-						var rowData = menuSubGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+						let clave = ui.$cell.find("select").val();
+						let rowData = menuMasterBotGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
 						rowData["DEL_YN"]=clave;
 						return ui.$cell.find("select option[value='"+clave+"']").text();
 					}
@@ -71,7 +71,7 @@
 			}
 		];
 
-		menuTopGrid.pqGrid({
+		menuMasterTopGrid.pqGrid({
 			width: "100%",
 			height: 350,
 			scrollModel: {autoFit: true},
@@ -83,7 +83,7 @@
 				postData: { "queryId" : "systemMapper.selectUserTopMenuList"},
 				recIndx: 'MENU_SEQ',
 				getData: function (dataJSON) {
-					var data = dataJSON.data;
+					let data = dataJSON.data;
 					return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
 				}
 			},
@@ -94,11 +94,11 @@
 			trackModel: {on: true},
 			resizable: true,
 			complete: function(event, ui) {
-				menuTopGrid.pqGrid('setSelection', {rowIndx:0} );
+				menuMasterTopGrid.pqGrid('setSelection', {rowIndx:0} );
 			},
 			rowSelect: function( event, ui ) {
 				if(ui.addList.length > 0 ) {
-					var menu_seq = ui.addList[0].rowData.MENU_SEQ;
+					let menu_seq = ui.addList[0].rowData.MENU_SEQ;
 					click_seq=menu_seq;
 					selectSubList(menu_seq);
 				}
@@ -109,19 +109,19 @@
 					{
 						type: 'button', label: 'add', listener: {
 							'click': function (evt, ui) {
-								menuTopGrid.pqGrid('addNodes', [{}], 0);
+								menuMasterTopGrid.pqGrid('addNodes', [{}], 0);
 							}
 						}
 					},
 					{
 						type: 'button', label: 'save', listener: {
 							'click': function (evt, ui) {
-								var grid = menuTopGrid.pqGrid('getInstance').grid;
+								let grid = menuMasterTopGrid.pqGrid('getInstance').grid;
 								//추가 또는 수정된 값이 있으면 true
 								console.log(grid);
 								if (grid.isDirty()) {
-									var changes = grid.getChanges({format: 'byVal'});
-									var QUERY_ID_ARRAY = {
+									let changes = grid.getChanges({format: 'byVal'});
+									let QUERY_ID_ARRAY = {
 										'insertQueryId': ['insertTopMenuCode','insertTopMenuKr','insertTopMenuEn'],
 										'updateQueryId': ['updateTopMenuCode','updateTopMenuKr','updateTopMenuEn']
 									};
@@ -135,7 +135,7 @@
 										dataType: 'json',
 										data: {'data': JSON.stringify(changes)},
 										success: function (result) {
-											menuTopGrid.pqGrid("refreshDataAndView");
+											menuMasterTopGrid.pqGrid("refreshDataAndView");
 										},
 										error: function (e) {
 											console.error(e);
@@ -151,7 +151,7 @@
 		});
 
 		function selectSubList(MENU_SEQ){
-			menuSubGrid.pqGrid({
+			menuMasterBotGrid.pqGrid({
 				width: "100%",
 				height: 400,
 				scrollModel: {autoFit: true},
@@ -163,13 +163,13 @@
 					postData: { "queryId" : "systemMapper.selectUserSubMenuList", "PARENT_MENU_SEQ": MENU_SEQ},
 					recIndx: 'MENU_SUB_SEQ',
 					getData: function (dataJSON) {
-						var data = dataJSON.data;
+						let data = dataJSON.data;
 						return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
 					}
 				},
 				selectionModel: { type: 'row', mode: 'single'} ,
 				//swipeModel: {on: false},
-				colModel: subColModel,
+				colModel: botColModel,
 				numberCell: {width: 30, title: "No" , show: true},
 				trackModel: {on: true},
 				resizable: true,
@@ -178,18 +178,18 @@
 						{
 							type: 'button', label: 'add', listener: {
 								'click': function (evt, ui) {
-									menuSubGrid.pqGrid('addNodes', [{"PARENT_MENU_SEQ": click_seq}], 0);
+									menuMasterBotGrid.pqGrid('addNodes', [{"PARENT_MENU_SEQ": click_seq}], 0);
 								}
 							}
 						},
 						{
 							type: 'button', label: 'save', listener: {
 								'click': function (evt, ui) {
-									var grid = menuSubGrid.pqGrid('getInstance').grid;
+									let grid = menuMasterBotGrid.pqGrid('getInstance').grid;
 									//추가 또는 수정된 값이 있으면 true
 									if (grid.isDirty()) {
-										var changes = grid.getChanges();
-										var QUERY_ID_ARRAY = {
+										let changes = grid.getChanges();
+										let QUERY_ID_ARRAY = {
 											'insertQueryId': ['insertSubMenuCode','insertTopMenuKr','insertTopMenuEn'],
 											'updateQueryId': ['updateSubMenuCode','updateTopMenuKr','updateTopMenuEn']
 										};
@@ -202,7 +202,7 @@
 											dataType: 'json',
 											data: {'data': JSON.stringify(changes)},
 											success: function (result) {
-												menuTopGrid.pqGrid("refreshDataAndView");
+												menuMasterTopGrid.pqGrid("refreshDataAndView");
 											},
 											error: function (e) {
 												console.error(e);
@@ -215,21 +215,7 @@
 					]
 				}
 			});
-
-			menuSubGrid.pqGrid("refreshDataAndView");
-
-		}
-
-		function g_selectBox(HIGH_CD){
-			var selectBoxContents = [];
-
-			for(var i=0; i < g_code.length; i++){
-				if(g_code[i].HIGH_CD == HIGH_CD){
-					selectBoxContents.push({'value':g_code[i].CODE_CD, 'text':g_code[i].CODE_NM_EN});
-				}
-			}
-
-			return selectBoxContents;
+			menuMasterBotGrid.pqGrid("refreshDataAndView");
 		}
 
 	});

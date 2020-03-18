@@ -78,7 +78,7 @@
                                         <span class="font-bold">견적 관리</span>
                                     </a>
                                     <ul class="nav dk">
-                                        <li >
+                                        <li class="tabMenuClick" url="/tabs/biz/estimate-master" tname="견적서 관리" pid="04">
                                             <a href="#" class="auto">
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>
