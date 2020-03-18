@@ -5,45 +5,45 @@
   Time: 오전 10:43
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ page pageEncoding='UTF-8' contentType='text/html; charset=UTF-8' %>
+<%@ taglib uri='http://www.springframework.org/tags' prefix='spring' %>
+<%@ taglib uri='http://www.springframework.org/tags/form' prefix='form' %>
+<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
+<%@ taglib uri='http://java.sun.com/jsp/jstl/fmt' prefix='fmt' %>
+<%@ taglib uri='http://java.sun.com/jsp/jstl/functions' prefix='fn' %>
 
 
-<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css"/>
-<script src="/resource/main/js/jquery.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+<link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css'/>
+<script src='/resource/main/js/jquery.min.js'></script>
+<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js'></script>
 <!-- Bootstrap -->
-<script src="/resource/main/js/bootstrap.js"></script>
+<script src='/resource/main/js/bootstrap.js'></script>
 <!-- royal tab -->
-<script src="/resource/plugins/royal_tab/js/royal_tab.js"></script>
+<script src='/resource/plugins/royal_tab/js/royal_tab.js'></script>
 <!-- App -->
-<script src="/resource/main/js/app.js"></script>
-<script src="/resource/main/js/slimscroll/jquery.slimscroll.min.js"></script>
-<script src="/resource/main/js/charts/easypiechart/jquery.easy-pie-chart.js"></script>
-<script src="/resource/main/js/charts/sparkline/jquery.sparkline.min.js"></script>
-<script src="/resource/main/js/charts/flot/jquery.flot.min.js"></script>
-<script src="/resource/main/js/charts/flot/jquery.flot.tooltip.min.js"></script>
-<script src="/resource/main/js/charts/flot/jquery.flot.spline.js"></script>
-<script src="/resource/main/js/charts/flot/jquery.flot.pie.min.js"></script>
-<script src="/resource/main/js/charts/flot/jquery.flot.resize.js"></script>
-<script src="/resource/main/js/charts/flot/jquery.flot.grow.js"></script>
-<script src="/resource/main/js/charts/flot/demo.js"></script>
+<script src='/resource/main/js/app.js'></script>
+<script src='/resource/main/js/slimscroll/jquery.slimscroll.min.js'></script>
+<script src='/resource/main/js/charts/easypiechart/jquery.easy-pie-chart.js'></script>
+<script src='/resource/main/js/charts/sparkline/jquery.sparkline.min.js'></script>
+<script src='/resource/main/js/charts/flot/jquery.flot.min.js'></script>
+<script src='/resource/main/js/charts/flot/jquery.flot.tooltip.min.js'></script>
+<script src='/resource/main/js/charts/flot/jquery.flot.spline.js'></script>
+<script src='/resource/main/js/charts/flot/jquery.flot.pie.min.js'></script>
+<script src='/resource/main/js/charts/flot/jquery.flot.resize.js'></script>
+<script src='/resource/main/js/charts/flot/jquery.flot.grow.js'></script>
+<script src='/resource/main/js/charts/flot/demo.js'></script>
 
-<script src="/resource/main/js/calendar/bootstrap_calendar.js"></script>
-<script src="/resource/main/js/calendar/demo.js"></script>
+<script src='/resource/main/js/calendar/bootstrap_calendar.js'></script>
+<script src='/resource/main/js/calendar/demo.js'></script>
 
-<script src="/resource/main/js/sortable/jquery.sortable.js"></script>
-<script src="/resource/main/js/app.plugin.js"></script>
+<script src='/resource/main/js/sortable/jquery.sortable.js'></script>
+<script src='/resource/main/js/app.plugin.js'></script>
 <!-- paramQuery Grid -->
-<script src="/resource/plugins/paramquery/pqgrid.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script src='/resource/plugins/paramquery/pqgrid.min.js'></script>
+<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js'></script>
 
 
-<script type="text/javascript">
+<script type='text/javascript'>
 
     var royal_tab_api = null;
     var g_code;
@@ -51,37 +51,37 @@
     $(document).ready(function() {
 
         royal_tab_api = new Royal_Tab_Api($('div.royal_tab'));
-        royal_tab_api.add(0, true, "MAIN", "/static/main/main", true, "01", addRoyalTabCallBackMethod);
-        // royal_tab_api.add(0, true, "${authUserFMenu.MENUNM}", "${authUserFMenu.PATHFILE}", true, "${authUserFMenu.MENUID}");
+        royal_tab_api.add(0, true, 'MAIN', '/static/main/main', true, '01', addRoyalTabCallBackMethod);
+        // royal_tab_api.add(0, true, '${authUserFMenu.MENUNM}', '${authUserFMenu.PATHFILE}', true, '${authUserFMenu.MENUID}');
 
-        $("#royal_tab_more").delegate("i", "click", function(){
+        $('#royal_tab_more').delegate('i', 'click', function(){
             royal_tab_api.remove($('#royal_tab_more > li > i').index(this));
         });
 
-        $("#left_menu_wide_list").find('.tabMenuClick').on('click', function() {
-            royal_tab_api.add(0, true, $(this).attr("tname"), $(this).attr("url"), true, $(this).attr("pid"), addRoyalTabCallBackMethod);
+        $('#left_menu_wide_list').find('.tabMenuClick').on('click', function() {
+            royal_tab_api.add(0, true, $(this).attr('tname'), $(this).attr('url'), true, $(this).attr('pid'), addRoyalTabCallBackMethod);
         });
 
         function addRoyalTabCallBackMethod(){
             let windows
-            let viewScrollerHeight = parseInt($("#view-scroller").outerHeight(true));
-            let activeViewItemHeight = parseInt($(".active_view_item").outerHeight(true));
+            let viewScrollerHeight = parseInt($('#view-scroller').outerHeight(true));
+            let activeViewItemHeight = parseInt($('.active_view_item').outerHeight(true));
             let addValue = 100;
 
             console.log(viewScrollerHeight);
             console.log(activeViewItemHeight);
 
             if(activeViewItemHeight > 905) {
-                $(".active_view_item").height(activeViewItemHeight + (905 - activeViewItemHeight));
+                $('.active_view_item').height(activeViewItemHeight + (905 - activeViewItemHeight));
             }
-            //$("#view-scroller").height(activeViewItemHeight);
-            //$(".active_view_item").height(activeViewItemHeight);
+            //$('#view-scroller').height(activeViewItemHeight);
+            //$('.active_view_item').height(activeViewItemHeight);
         }
 
         $(window).resize( function() {
             addRoyalTabCallBackMethod();
 
-            console.log(parseInt($("#view-scroller").outerHeight(true)));
+            console.log(parseInt($('#view-scroller').outerHeight(true)));
         } );
 
         $.ajax({
@@ -105,7 +105,7 @@
      * @param {*} callFunctionParam - 리텅 Function 전달 Parameter
      */
     var fnPostAjax = function (callFunction, params, callFunctionParam) {
-        'use strict';
+        // 'use strict';
         var callback = $.Callbacks();
         var param = $.extend({url: null, data: ''}, params || {});
 
@@ -150,7 +150,7 @@
             collapsible: false,
             resizable: true,
             // title: '',
-            // pageModel: {type: "remote"},
+            // pageModel: {type: 'remote'},
             numberCell: {title: 'No.'},
             scrollModel: {autoFit: true},
             trackModel: {on: true}, //to turn on the track changes.
@@ -181,7 +181,7 @@
         var parameter = {'url': '/json-list', 'data': postData}
 
         fnPostAjax(function (data, callFunctionParam) {
-            grid.pqGrid("option", "dataModel.data", data.list);
+            grid.pqGrid('option', 'dataModel.data', data.data);
             grid.pqGrid('refreshDataAndView');
         }, parameter, '');
     };
@@ -205,14 +205,8 @@
             changes.queryIdList = QUERY_ID_ARRAY;
             parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}}
 
-            console.log(grid);
-
             fnPostAjax(function (data, callFunctionParam) {
-
-                console.log(grid);
-                console.log(gridInstance);
-                grid.pqGrid('option', 'dataModel.data', data).pqGrid('refreshDataAndView')
-                //gridInstance.pqGrid('refreshDataAndView');
+                grid.pqGrid('refreshDataAndView');
             }, parameters, '');
         }
     };
