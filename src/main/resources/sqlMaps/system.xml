@@ -346,4 +346,45 @@
             UPDATE_DT = NOW()
 	</insert>
 
+    <update id="updateAuthorityMenuManagement"  parameterType="java.util.HashMap" >
+
+    </update>
+
+    <select id="getCompanyMasterList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.COMP_CD, A.COMP_CLASS, A.COMP_NM, A.CEO_NM, A.COMP_NUM, A.COMP_TYPE, A.CHARGE_USER_ID, A.COMP_TEL, A.COMP_ADDRESS, A.COMP_EMAIL,
+            A.LOGO_FILE_SEQ, A.SIGN_FILE_SEQ, A.ETC_GFILE_SEQ, A.ACTIVE_YN, A.NOTE,
+            B.STAFF_NM, B.STAFF_EMAIL,
+            DATE_FORMAT(A.INSERT_DT, '%Y/%m/%d') AS INSERT_DT, A.INSERT_ID, DATE_FORMAT(A.UPDATE_DT, '%Y/%m/%d') AS UPDATE_DT, A.UPDATE_ID
+        FROM jmes.TBL_COMPANY A
+            LEFT OUTER JOIN jmes.TBL_COMPANY_STAFF B ON A.COMP_CD = B.COMP_CD
+                AND STAFF_SEQ = (SELECT STAFF_SEQ FROM jmes.TBL_COMPANY_STAFF C
+                                    WHERE B.COMP_CD = C.COMP_CD AND C.DEL_YN = 'N' AND C.MAIN_YN = 'Y' ORDER BY C.UPDATE_DT DESC LIMIT 1
+                                )
+        WHERE A.DEL_YN = 'Y'
+            <if test="SEL_COMP_CLASS != null and SEL_COMP_CLASS != ''">
+                AND A.COMP_CLASS LIKE CONCAT('%', #{SEL_COMP_CLASS}, '%')
+            </if>
+            <if test="SEL_COMP_TYPE != null and SEL_COMP_TYPE != ''">
+                AND A.COMP_TYPE LIKE CONCAT('%', #{SEL_COMP_TYPE}, '%')
+            </if>
+            <if test="SEL_COMP_NM != null and SEL_COMP_NM != ''">
+                AND A.COMP_NM LIKE CONCAT('%', #{SEL_COMP_NM}, '%')
+            </if>
+            <if test="SEL_COMP_NUM != null and SEL_COMP_NUM != ''">
+                AND A.COMP_NUM LIKE CONCAT('%', #{SEL_COMP_NUM}, '%')
+            </if>
+            <if test="SEL_STAFF_NM != null and SEL_STAFF_NM != ''">
+                AND EXISTS (SELECT * FROM jmes.TBL_COMPANY_STAFF D
+                            WHERE D.COMP_CD = A.COMP_CD AND D.DEL_YN = 'N' AND D.STAFF_NM LIKE CONCAT('%', #{SEL_STAFF_NM}, '%')
+                    )
+            </if>
+            <if test="SEL_CEO_NM != null and SEL_CEO_NM != ''">
+                AND A.CEO_NM LIKE CONCAT('%', #{SEL_CEO_NM}, '%')
+            </if>
+            <if test="SEL_ACTIVE_YN != null and SEL_ACTIVE_YN != ''">
+                AND A.ACTIVE_YN =  #{SEL_ACTIVE_YN}
+            </if>
+    </select>
+
 </mapper>

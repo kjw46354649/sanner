@@ -158,7 +158,7 @@
             dataModel: {
                 location: 'remote',
                 dataType: 'json',
-                method: 'GET',
+                method: 'POST',
                 url: '/paramQueryGridSelect',
                 postData: postData,
                 // recIndx: 'USER_ID',
