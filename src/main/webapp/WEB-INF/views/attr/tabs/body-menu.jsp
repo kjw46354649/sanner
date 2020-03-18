@@ -109,7 +109,7 @@
                                         <span class="font-bold">주문 관리</span>
                                     </a>
                                     <ul class="nav dk">
-                                        <li >
+                                        <li class="tabMenuClick" url="/static/order/order-manage" tname="주문 관리" pid="99">
                                             <a href="#" class="auto">
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>
@@ -450,7 +450,7 @@
                                         <span class="font-bold">시스템</span>
                                     </a>
                                     <ul class="nav dk">
-                                        <li class="tabMenuClick" url="/static/system/user-manger-list" tname="사용자 관리" pid="02">
+                                        <li class="tabMenuClick" url="/static/system/user-master" tname="사용자 관리" pid="02">
                                             <a href="#" class="auto">
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>
@@ -468,7 +468,7 @@
                                         </li>
                                     </ul>
                                     <ul class="nav dk">
-                                        <li class="tabMenuClick" url="/static/system/common-reference-code-list" tname="공통 참조코드" pid="04">
+                                        <li class="tabMenuClick" url="/static/system/common-code-master" tname="공통 참조코드" pid="04">
                                             <a href="#" class="auto">
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>

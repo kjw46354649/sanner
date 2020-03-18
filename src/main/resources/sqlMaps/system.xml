@@ -7,11 +7,12 @@
 		SELECT DATE_FORMAT(NOW(), '%Y%m%d') AS CURDATE FROM DUAL
 	</select>
 
-    <select id="selectUserManagerList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    <select id="selectUserMasterList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT USER_ID,
-        USER_NM,
-        USER_PWD,
-        DEL_YN
+               USER_NM,
+               USER_PWD,
+               DEL_YN,
+               SF_GET_CODE_NM(10000, DEL_YN, 'EN') AS DEL_YN_NM
         FROM TBL_USER
         WHERE 1=1
         <if test="user_id != null and user_id != ''">
@@ -136,9 +137,10 @@
 
     <select id="selectCommonGroupCodeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT HIGH_CD,
-        HIGH_NM,
-        DEL_YN,
-        NOTE
+               HIGH_NM,
+               DEL_YN,
+               SF_GET_CODE_NM(10000, DEL_YN, 'EN') AS DEL_YN_NM,
+               NOTE
         FROM TBL_CODE_GROUP
         WHERE 1 = 1
         <if test="HIGH_NM != null and HIGH_NM != ''">
@@ -165,17 +167,15 @@
     <select id="selectCommonCodeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT HIGH_CD,
                CODE_CD,
-               (SELECT CODE_NM
-                FROM TBL_CODE_LANG
-                WHERE HIGH_CD = A.HIGH_CD
-                AND CODE_CD = A.CODE_CD
-                AND LANG_CD = 'KR') AS CODE_NM_KR,
-               (SELECT CODE_NM
-                FROM TBL_CODE_LANG
-                WHERE HIGH_CD = A.HIGH_CD
-                AND CODE_CD = A.CODE_CD
-                AND LANG_CD = 'EN') AS CODE_NM_EN,
+                <foreach item="item" index="index" collection="LANG_CD">
+                    (SELECT CODE_NM
+                    FROM TBL_CODE_LANG
+                    WHERE HIGH_CD = A.HIGH_CD
+                    AND CODE_CD = A.CODE_CD
+                    AND LANG_CD = #{item}) AS CODE_NM_${item},
+                </foreach>
                DEL_YN,
+               SF_GET_CODE_NM(10000, DEL_YN, 'EN') AS DEL_YN_NM,
                SORT_NUM,
                REF_CD,
                NOTE
@@ -196,7 +196,7 @@
             DEL_YN,
             NOTE,
             INSERT_DT,
-            INSERT_ID,
+            INSERT_ID
         ) VALUES(
             #{HIGH_CD},
             #{CODE_CD},
@@ -209,7 +209,7 @@
         )
 	</insert>
 
-    <insert id="insertCommonCodeLangCode" parameterType="java.util.HashMap">
+    <insert id="insertCommonLangCode" parameterType="java.util.HashMap">
         INSERT INTO TBL_CODE_LANG (
             HIGH_CD,
             CODE_CD,
@@ -229,30 +229,31 @@
 
     <update id="updateCommonCode"  parameterType="java.util.HashMap" >
         UPDATE TBL_CODE
-        SET ABBR_NM = #{ABBR_NM},
+    	SET REF_CD = #{REF_CD},
             SORT_NUM = #{SORT_NUM},
             DEL_YN = #{DEL_YN},
             NOTE = #{NOTE},
             UPDATE_DT = current_timestamp(),
+            UPDATE_ID = 'xmaseve96'
         WHERE HIGH_CD = #{HIGH_CD}
-              AND CODE_CD= #{CODE_CD}
+        	  AND CODE_CD = #{CODE_CD}
    </update>
 
-    <update id="updateCommonCodeLangCode"  parameterType="java.util.HashMap" >
+    <update id="updateCommonLangCode"  parameterType="java.util.HashMap" >
         UPDATE TBL_CODE_LANG
-        SET CODE_CD = #{CODE_CD},
-            CODE_NM = #{CODE_NM},
+        SET CODE_NM = #{CODE_NM},
             UPDATE_DT = current_timestamp(),
             UPDATE_ID = 'xmaseve96'
         WHERE HIGH_CD = #{HIGH_CD}
               AND CODE_CD= #{CODE_CD}
-              AND LANG_CD = {LANG_CD}
+              AND LANG_CD = #{LANG_CD}
    </update>
 
     <select id="selectAuthorityGroupList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT ROLE_SEQ,
                ROLE_NM,
                DEL_YN,
+               SF_GET_CODE_NM(10000, DEL_YN, 'EN') AS DEL_YN_NM,
                NOTE
         FROM TBL_ROLE
         WHERE 1 = 1
@@ -289,12 +290,13 @@
         WHERE ROLE_SEQ = #{ROLE_SEQ}
    </update>
 
-    <select id="'getCommonLangList'" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT LANG_CD
+    <select id="selectCommonLangList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.LANG_CD
         FROM TBL_CODE_LANG A
         INNER JOIN TBL_CODE B ON A.HIGH_CD = B.HIGH_CD
                                  AND A.CODE_CD = B.CODE_CD
         WHERE A.HIGH_CD = #{HIGH_CD}
+        GROUP BY A.HIGH_CD, A.LANG_CD
     </select>
     <select id="selectAuthorityMenuManagementList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         WITH RECURSIVE MENU_CTE AS

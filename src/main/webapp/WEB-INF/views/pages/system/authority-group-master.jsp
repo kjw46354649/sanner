@@ -9,7 +9,7 @@
 <div class="container-fluid wrapper">
     <div class="row">
         <div class="col-md-12">
-            <div id="authority-group-grid"></div>
+            <div id="authority_group_grid"></div>
         </div>
     </div>
 </div>
@@ -17,17 +17,17 @@
 <script>
     $(function () {
         'use strict';
-        var searchTextId = 'authority-group-search';
-        var grid;
-        var gridId = 'authority-group-grid';
-        var postData = {queryId: 'selectAuthorityGroupList'};
-        var colModel = [
+        let authorityGroupSearchTextId = 'authority-group-search';
+        let authorityGroupGrid;
+        let authorityGroupGridId = 'authority_group_grid';
+        let authorityGroupPostData = {queryId: 'selectAuthorityGroupList'};
+        let authorityGroupColModel = [
             {title: 'Access Code', dataType: 'string', dataIndx: 'ROLE_SEQ', editable: true},
             {title: 'Access Name', dataType: 'string', dataIndx: 'ROLE_NM'},
             {title: '삭제여부', dataType: 'string', dataIndx: 'DEL_YN'},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'}
         ];
-        var toolbar = {
+        let authorityGroupToolbar = {
             cls: 'pq-toolbar-crud',
             items: [
                 {
@@ -36,38 +36,52 @@
                 {
                     type: 'button', label: 'Search', icon: 'ui-icon-search', listener: {
                         'click': function (evt, ui) {
-                            postData.ROLE_NM = $('#' + searchTextId).val();
+                            authorityGroupPostData.ROLE_NM = $('#' + authorityGroupSearchTextId).val();
 
-                            fnRequestGidData(grid, postData);
+                            fnRequestGidData(authorityGroupGrid, authorityGroupPostData);
                         }
                     }
                 },
                 {
                     type: 'button', label: 'Add', icon: 'ui-icon-plus', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            grid.pqGrid('addNodes', [{}], 0);
+                            authorityGroupGrid.pqGrid('addNodes', [{}], 0);
                         }
                     }
                 },
                 {
                     type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            var insertQueryList = ['insertAuthorityGroup'];
-                            var updateQueryList = ['updateAuthorityGroup'];
+                            let insertQueryList = ['insertAuthorityGroup'];
+                            let updateQueryList = ['updateAuthorityGroup'];
 
-                            fnModifyPQGrid(grid, insertQueryList, updateQueryList);
+                            fnModifyPQGrid(authorityGroupGrid, insertQueryList, updateQueryList);
                         }
                     }
                 }
             ]
         };
-
-        grid = fnCreatePQGrid(gridId, postData, colModel, toolbar);
-        grid.pqGrid({
+        let authorityGroupObj = {
+            collapsible: false,
+            resizable: true,
             title: '권한 그룹 마스터',
+            numberCell: {title: 'No.'},
+            scrollModel: {autoFit: true},
+            trackModel: {on: true}, //to turn on the track changes.
+            colModel: authorityGroupColModel,
             dataModel: {
+                location: 'remote',
+                dataType: 'json',
+                method: 'POST',
+                url: '/paramQueryGridSelect',
+                postData: authorityGroupPostData,
                 recIndx: 'ROLE_SEQ',
-            }
-        });
+                getData: function (response, textStatus, jqXHR) {
+                    return {data: response.data};
+                }
+            },
+            toolbar: authorityGroupToolbar
+        };
+        authorityGroupGrid = $('#' + authorityGroupGridId).pqGrid(authorityGroupObj);
     });
 </script>

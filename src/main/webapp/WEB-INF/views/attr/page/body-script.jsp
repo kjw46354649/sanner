@@ -89,6 +89,7 @@
      * @param {object} toolbar
      * @returns {object | jQuery} grid
      */
+    /*
     var fnCreatePQGrid = function (gridId, postData, colModel, toolbar) {
         'use strict';
         var obj = {
@@ -118,6 +119,7 @@
         };
         return $('#' + gridId).pqGrid(obj);
     };
+    */
     /**
      * @description 그리드 검색조건 조회
      * @param {object | jQuery} grid
