@@ -287,7 +287,7 @@
             UPDATE_DT = current_timestamp(),
             UPDATE_ID = 'xmaseve96'
         WHERE ROLE_SEQ = #{ROLE_SEQ}
-    </update>
+   </update>
 
     <select id="'getCommonLangList'" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT LANG_CD
@@ -297,11 +297,53 @@
         WHERE A.HIGH_CD = #{HIGH_CD}
     </select>
     <select id="selectAuthorityMenuManagementList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-
+        WITH RECURSIVE MENU_CTE AS
+		(
+			SELECT
+                A.MENU_SEQ, A.MENU_LINK, A.PARENT_MENU_SEQ, A.SORT_NUM, A.DEL_YN, A.NOTE,
+				B.MENU_NM AS MENU_NM_KR, C.MENU_NM AS MENU_NM_EN,
+				SF_GET_CODE_NM(10000, A.DEL_YN, 'EN') AS DEL_YN_NM,
+                CONCAT(A.SORT_NUM, 0) AS CD_NO
+			FROM TBL_MENU A
+				INNER JOIN TBL_MENU_LANG B ON A.MENU_SEQ = B.MENU_SEQ AND B.LANG_CD = 'KR'
+				INNER JOIN TBL_MENU_LANG C ON A.MENU_SEQ = C.MENU_SEQ AND C.LANG_CD = 'EN'
+			WHERE 1 = 1
+				AND A.DEL_YN = 'N' AND A.PARENT_MENU_SEQ = 1
+			UNION ALL
+			SELECT
+                A.MENU_SEQ, A.MENU_LINK, A.PARENT_MENU_SEQ, A.SORT_NUM, A.DEL_YN, A.NOTE,
+				B.MENU_NM AS MENU_NM_KR, C.MENU_NM AS MENU_NM_EN,
+				SF_GET_CODE_NM(10000, A.DEL_YN, 'EN') AS DEL_YN_NM,
+                CONCAT(D.SORT_NUM, A.SORT_NUM) AS CD_NO
+			FROM TBL_MENU A
+				INNER JOIN TBL_MENU_LANG B ON A.MENU_SEQ = B.MENU_SEQ AND B.LANG_CD = 'KR'
+				INNER JOIN TBL_MENU_LANG C ON A.MENU_SEQ = C.MENU_SEQ AND C.LANG_CD = 'EN'
+				INNER JOIN TBL_MENU D ON A.PARENT_MENU_SEQ = D.MENU_SEQ
+				INNER JOIN MENU_CTE E ON E.MENU_SEQ = A.PARENT_MENU_SEQ
+			WHERE 1 = 1
+				AND A.DEL_YN = 'N'
+				AND A.PARENT_MENU_SEQ > 1
+		)
+		SELECT
+			A.MENU_SEQ,
+			CASE WHEN A.PARENT_MENU_SEQ = '1' THEN A.MENU_NM_EN ELSE '' END PARENT_MENU_NM,
+			CASE WHEN A.PARENT_MENU_SEQ = '1' THEN '' ELSE A.MENU_NM_EN END MENU_NM,
+			A.PARENT_MENU_SEQ, #{ROLE_SEQ} AS ROLE_SEQ, CONCAT(#{ROLE_SEQ}, CD_NO) AS CD_NO,
+            IFNULL(C.ACCESS_CD, '0') AS ACCESS_CD, SF_GET_CODE_NM('10001', IFNULL(C.ACCESS_CD, '0'), 'EN') AS ACCESS_NM
+		FROM MENU_CTE A
+			LEFT OUTER JOIN TBL_MENU B ON A.PARENT_MENU_SEQ = B.MENU_SEQ
+			LEFT OUTER JOIN TBL_ROLE_MENU C ON A.MENU_SEQ = C.MENU_SEQ AND ROLE_SEQ = #{ROLE_SEQ}
+		WHERE 1 = 1
+		ORDER BY A.CD_NO
     </select>
 
     <insert id="insertAuthorityMenuManagement" parameterType="java.util.HashMap">
-
+        INSERT INTO TBL_ROLE_MENU(ROLE_SEQ, MENU_SEQ, ACCESS_CD, INSERT_ID)
+        VALUES(#{ROLE_SEQ}, #{MENU_SEQ}, #{ACCESS_CD}, NULL)
+        ON DUPLICATE KEY UPDATE
+            ACCESS_CD = #{ACCESS_CD},
+            UPDATE_ID = NULL,
+            UPDATE_DT = NOW()
 	</insert>
 
     <update id="updateAuthorityMenuManagement"  parameterType="java.util.HashMap" >

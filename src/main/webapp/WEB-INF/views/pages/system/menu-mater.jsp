@@ -1,38 +1,27 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
-<div class="wrapper">
-	<div class="tit_box">
-		<h5 class="title"><i class="i i-menu"></i><span> TOP Menu </span></h5>
+<div class="container-fluid wrapper">
+	<div class="col-md-3">
+		<div class="row">
+			<h5 class="title"><i class="i i-menu"></i><span> TOP Menu </span></h5>
+		</div>
 	</div>
-	<div id="system_top_menu_grid" class="jqx-refresh"></div>
-	<div class="tit_box">
-		<h5 class="title sub"><i class="i i-menu"></i><span>SUB Menu </span></h5>
+	<div class="col-md-12">
+		<div id="menu_master_top_grid" class="jqx-refresh"></div>
 	</div>
-	<div id="system_sub_menu_grid" class="jqx-refresh"></div>
+	<div class="col-md-12">
+		<div id="menu_master_sub_grid" class="jqx-refresh"></div>
+	</div>
 	<!--content-->
 </div>
 
 <script type="text/javascript">
 
 	$(document).ready(function() {
+		'use strict';
 		var click_seq;
 
-		var menuTopGrid = $("#system_top_menu_grid");
-		var menuSubGrid = $("#system_sub_menu_grid");
-
-		var g_code;
-		$.ajax({
-			url: '/json-list',
-			cache: false,
-			type: "POST",
-			data: {'queryId': 'systemMapper.selectSessionCodeList'},
-			dataType: "json",
-			async: false,
-			success: function(data) {
-				g_code = data.list;
-				console.log(g_code);
-			},
-			complete: function(){}
-		});
+		var menuTopGrid = $("#menu_master_top_grid");
+		var menuSubGrid = $("#menu_master_sub_grid");
 
 		var topColModel= [
 			{title: 'MENU_SEQ'			, dataType: 'string',  dataIndx: 'MENU_SEQ'			, hidden: true},
@@ -41,7 +30,7 @@
 			{title: 'Menu Name(KR)'		, dataType: 'string', width: '25%'	, dataIndx: 'MENU_NM_KR'},
 			{title: 'URL' 				, dataType: 'string', width: '25%'	, dataIndx: 'MENU_LINK'},
 			{title: 'Sort Num' 			, dataType: 'string', width: '7%'	, dataIndx: 'SORT_NUM'},
-			{title: 'Use YN' 			, dataType: 'select', width: '7%'	, dataIndx: 'DEL_YN_NM',
+			{title: 'Del YN' 			, dataType: 'select', width: '7%'	, dataIndx: 'DEL_YN_NM',
 				editor: {
 					type: 'select',
 					mapIndices: { name: "DEL_YN_NM", id: "DEL_YN" },
@@ -65,7 +54,7 @@
 			{title: 'Menu Name(KR)'		, dataType: 'string', width: '25%'	, dataIndx: 'MENU_NM_KR'},
 			{title: 'URL' 				, dataType: 'string', width: '25%'	, dataIndx: 'MENU_LINK'},
 			{title: 'Sort Num' 			, dataType: 'string', width: '7%'	, dataIndx: 'SORT_NUM'},
-			{title: 'Use YN' 			, dataType: 'string', width: '7%'	, dataIndx: 'DEL_YN_NM',
+			{title: 'Del YN' 			, dataType: 'string', width: '7%'	, dataIndx: 'DEL_YN_NM',
 				editor: {
 					type: 'select',
 					mapIndices: { name: "DEL_YN_NM", id: "DEL_YN" },

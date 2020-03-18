@@ -46,6 +46,7 @@
 <script type="text/javascript">
 
     var royal_tab_api = null;
+    var g_code;
 
     $(document).ready(function() {
 
@@ -83,6 +84,18 @@
             console.log(parseInt($("#view-scroller").outerHeight(true)));
         } );
 
+        $.ajax({
+            url: '/json-list',
+            cache: false,
+            type: "POST",
+            data: {'queryId': 'systemMapper.selectSessionCodeList'},
+            dataType: "json",
+            async: false,
+            success: function(data) {
+                g_code = data.list;
+            },
+            complete: function(){}
+        });
     });
 
     /**
