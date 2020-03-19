@@ -102,10 +102,10 @@
      * @param {object} params - 호출 URL에 Parameter 정보
      * @param {*} callFunctionParam - 리텅 Function 전달 Parameter
      */
-    var fnPostAjax = function (callFunction, params, callFunctionParam) {
+    let fnPostAjax = function (callFunction, params, callFunctionParam) {
         // 'use strict';
-        var callback = $.Callbacks();
-        var param = $.extend({url: null, data: ''}, params || {});
+        let callback = $.Callbacks();
+        let param = $.extend({url: null, data: ''}, params || {});
 
         $.ajax({
             type: 'POST',
@@ -140,9 +140,9 @@
      * @param {object} toolbar
      * @returns {object | jQuery} grid
      */
-    var fnCreatePQGrid = function (gridId, postData, colModel, toolbar) {
+    let fnCreatePQGrid = function (gridId, postData, colModel, toolbar) {
         'use strict';
-        var obj = {
+        let obj = {
             // width: 700,
             // height: 400,
             collapsible: false,
@@ -174,9 +174,9 @@
      * @param {object | jQuery} grid
      * @param {object} postData
      */
-    var fnRequestGidData = function (grid, postData) {
+    let fnRequestGidData = function (grid, postData) {
         'use strict';
-        var parameter = {'url': '/json-list', 'data': postData}
+        let parameter = {'url': '/json-list', 'data': postData}
 
         fnPostAjax(function (data, callFunctionParam) {
             grid.pqGrid('option', 'dataModel.data', data.data);
@@ -189,14 +189,14 @@
      * @param {array} insertQueryList
      * @param {array} updateQueryList
      */
-    var fnModifyPQGrid = function (grid, insertQueryList, updateQueryList) {
+    let fnModifyPQGrid = function (grid, insertQueryList, updateQueryList) {
         'use strict';
-        var parameters;
-        var gridInstance = grid.pqGrid('getInstance').grid;
+        let parameters;
+        let gridInstance = grid.pqGrid('getInstance').grid;
         //추가 또는 수정된 값이 있으면 true
         if (gridInstance.isDirty()) {
-            var changes = gridInstance.getChanges({format: 'byVal'});
-            var QUERY_ID_ARRAY = {
+            let changes = gridInstance.getChanges({format: 'byVal'});
+            let QUERY_ID_ARRAY = {
                 'insertQueryId': insertQueryList,
                 'updateQueryId': updateQueryList,
             };
@@ -214,13 +214,13 @@
      * @param {array} selectedRowIndex
      * @param {string} QUERY_ID
      */
-    var fnDeletePQGrid = function (grid, selectedRowIndex, QUERY_ID) {
+    let fnDeletePQGrid = function (grid, selectedRowIndex, QUERY_ID) {
         'use strict';
-        var parameters;
-        var rowDataArray = [];
-        var selectedRowCount = selectedRowIndex.length;
+        let parameters;
+        let rowDataArray = [];
+        let selectedRowCount = selectedRowIndex.length;
 
-        for (var i = 0; i < selectedRowCount; i++) {
+        for (let i = 0; i < selectedRowCount; i++) {
             rowDataArray[i] = grid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
             rowDataArray[i].queryId = QUERY_ID;
         }
@@ -229,9 +229,9 @@
 
         fnPostAjax(function (data, callFunctionParam) {
             if (selectedRowCount > 0) {
-                var rowListConvert = [];
+                let rowListConvert = [];
 
-                for (var row of selectedRowIndex) {
+                for (let row of selectedRowIndex) {
                     rowListConvert.push({'rowIndx': row});
                 }
 

@@ -18,13 +18,27 @@
     $(function () {
         'use strict';
         let authorityGroupSearchTextId = 'authority-group-search';
-        let authorityGroupGrid;
+        let $authorityGroupGrid;
         let authorityGroupGridId = 'authority_group_grid';
         let authorityGroupPostData = {queryId: 'selectAuthorityGroupList'};
         let authorityGroupColModel = [
             {title: 'Access Code', dataType: 'string', dataIndx: 'ROLE_SEQ', editable: true},
             {title: 'Access Name', dataType: 'string', dataIndx: 'ROLE_NM'},
-            {title: '삭제여부', dataType: 'string', dataIndx: 'DEL_YN'},
+            {title: 'Del YN' 			, dataType: 'select', width: '7%'	, dataIndx: 'DEL_YN_NM',
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "DEL_YN_NM", id: "DEL_YN" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeSelectBox('10000'),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find('select').val();
+                        let rowData = $authorityGroupGrid.pqGrid('getRowData', {rowIndx: ui.rowIndx});
+                        rowData['DEL_YN']=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'}
         ];
         let authorityGroupToolbar = {
@@ -38,14 +52,14 @@
                         'click': function (evt, ui) {
                             authorityGroupPostData.ROLE_NM = $('#' + authorityGroupSearchTextId).val();
 
-                            fnRequestGidData(authorityGroupGrid, authorityGroupPostData);
+                            fnRequestGidData($authorityGroupGrid, authorityGroupPostData);
                         }
                     }
                 },
                 {
                     type: 'button', label: 'Add', icon: 'ui-icon-plus', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            authorityGroupGrid.pqGrid('addNodes', [{}], 0);
+                            $authorityGroupGrid.pqGrid('addNodes', [{}], 0);
                         }
                     }
                 },
@@ -55,7 +69,7 @@
                             let insertQueryList = ['insertAuthorityGroup'];
                             let updateQueryList = ['updateAuthorityGroup'];
 
-                            fnModifyPQGrid(authorityGroupGrid, insertQueryList, updateQueryList);
+                            fnModifyPQGrid($authorityGroupGrid, insertQueryList, updateQueryList);
                         }
                     }
                 }
@@ -82,6 +96,6 @@
             },
             toolbar: authorityGroupToolbar
         };
-        authorityGroupGrid = $('#' + authorityGroupGridId).pqGrid(authorityGroupObj);
+        $authorityGroupGrid = $('#' + authorityGroupGridId).pqGrid(authorityGroupObj);
     });
 </script>

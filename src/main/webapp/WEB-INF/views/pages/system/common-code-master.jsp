@@ -22,37 +22,9 @@
 <script>
     $(function () {
         'use strict';
-        let g_code;
-        $.ajax({
-            url: '/json-list',
-            cache: false,
-            type: 'POST',
-            data: {'queryId': 'systemMapper.selectSessionCodeList'},
-            dataType: 'json',
-            async: false,
-            success: function (data) {
-                g_code = data.list;
-                console.log(g_code);
-            },
-            complete: function () {
-            }
-        });
-
-        function g_selectBox(HIGH_CD) {
-            let selectBoxContents = [];
-
-            for (let i = 0; i < g_code.length; i++) {
-                if (g_code[i].HIGH_CD === HIGH_CD) {
-                    selectBoxContents.push({'value': g_code[i].CODE_CD, 'text': g_code[i].CODE_NM_EN});
-                }
-            }
-
-            return selectBoxContents;
-        }
-
         let commonCodeSelectedGroupCode = null;
         let commonCodeSearchTextId = 'common-group-code-search';
-        let commonCodeTopGrid;
+        let $commonCodeTopGrid;
         let commonCodeTopGridId = 'common_group_code_grid';
         let commonCodeTopColModel = [
             {title: '그룹코드', dataType: 'string', dataIndx: 'HIGH_CD', editable: true},
@@ -64,10 +36,10 @@
                     mapIndices: {name: 'DEL_YN_NM', id: 'DEL_YN'},
                     valueIndx: 'value',
                     labelIndx: 'text',
-                    options: g_selectBox('10000'),
+                    options: fnGetCommCodeSelectBox('10000'),
                     getData: function (ui) {
                         let clave = ui.$cell.find('select').val();
-                        let rowData = commonCodeTopGrid.pqGrid('getRowData', {rowIndx: ui.rowIndx});
+                        let rowData = $commonCodeTopGrid.pqGrid('getRowData', {rowIndx: ui.rowIndx});
                         rowData['DEL_YN'] = clave;
                         return ui.$cell.find("select option[value='" + clave + "']").text();
                     }
@@ -89,21 +61,21 @@
                         'click': function (evt, ui) {
                             commonCodeTopPostData.HIGH_NM = $('#' + commonCodeSearchTextId).val();
 
-                            fnRequestGidData(commonCodeTopGrid, commonCodeTopPostData);
+                            fnRequestGidData($commonCodeTopGrid, commonCodeTopPostData);
                         }
                     }
                 },
                 {
                     type: 'button', label: 'Add', icon: 'ui-icon-plus', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            commonCodeTopGrid.pqGrid('addNodes', [{}], 0);
+                            $commonCodeTopGrid.pqGrid('addNodes', [{}], 0);
                         }
                     }
                 },
                 {
                     type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            fnModifyPQGrid(commonCodeTopGrid, commonCodeTopInsertQueryList, commonCodeTopUpdateQueryList);
+                            fnModifyPQGrid($commonCodeTopGrid, commonCodeTopInsertQueryList, commonCodeTopUpdateQueryList);
                         }
                     }
                 }
@@ -114,9 +86,14 @@
             resizable: true,
             title: '그룹코드',
             numberCell: {title: 'No.'},
-            selectionModel: { type: 'row', mode: 'single'} ,
+            selectionModel: {type: 'row', mode: 'single'},
             scrollModel: {autoFit: true},
             trackModel: {on: true}, //to turn on the track changes.
+            columnTemplate: {
+                align: 'center', // haeder + cell
+                // halign: 'center', // only header
+                hvalign: 'center' //to vertically center align the header cells.
+            },
             colModel: commonCodeTopColModel,
             dataModel: {
                 location: 'remote',
@@ -135,16 +112,16 @@
                 let parameter = {'url': '/getCommonCodeList', 'data': commonCodeBotPostData};
 
                 fnPostAjax(function (data, callFunctionParam) {
-                    commonCodeBotGrid.pqGrid('option', 'dataModel.data', data.data);
-                    commonCodeBotGrid.pqGrid('refreshDataAndView');
+                    $commonCodeBotGrid.pqGrid('option', 'dataModel.data', data.data);
+                    $commonCodeBotGrid.pqGrid('refreshDataAndView');
                 }, parameter, '');
             }
         };
-        commonCodeTopGrid = $('#' + commonCodeTopGridId).pqGrid(commonCodeTopObj);
-        let commonCodeBotGrid;
+        $commonCodeTopGrid = $('#' + commonCodeTopGridId).pqGrid(commonCodeTopObj);
+        let $commonCodeBotGrid;
         let commonCodeBotGridId = 'common_code_grid';
         let commonCodeBotColModel = [
-            {title: '그룹코드', dataType: 'string', dataIndx: 'HIGH_CD', hidden: false},
+            {title: '그룹코드', dataType: 'string', dataIndx: 'HIGH_CD', hidden: true},
             {title: '코드', dataType: 'string', dataIndx: 'CODE_CD'},
             {title: '코드명(한글)', dataType: 'string', dataIndx: 'CODE_NM_KR'},
             {title: '코드명(영문)', dataType: 'string', dataIndx: 'CODE_NM_EN'},
@@ -155,10 +132,10 @@
                     mapIndices: {name: 'DEL_YN_NM', id: 'DEL_YN'},
                     valueIndx: 'value',
                     labelIndx: 'text',
-                    options: g_selectBox('10000'),
+                    options: fnGetCommCodeSelectBox('10000'),
                     getData: function (ui) {
                         let clave = ui.$cell.find('select').val();
-                        let rowData = commonCodeBotGrid.pqGrid('getRowData', {rowIndx: ui.rowIndx});
+                        let rowData = $commonCodeBotGrid.pqGrid('getRowData', {rowIndx: ui.rowIndx});
                         rowData['DEL_YN'] = clave;
                         return ui.$cell.find("select option[value='" + clave + "']").text();
                     }
@@ -175,21 +152,24 @@
                 {
                     type: 'button', label: 'Add', icon: 'ui-icon-plus', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            commonCodeBotGrid.pqGrid('addNodes', [{'HIGH_CD': commonCodeSelectedGroupCode}], 0);
+                            $commonCodeBotGrid.pqGrid('addNodes', [{'HIGH_CD': commonCodeSelectedGroupCode}], 0);
                         }
                     }
                 },
                 {
                     type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            let gridInstance = commonCodeBotGrid.pqGrid('getInstance').grid;
+                            let gridInstance = $commonCodeBotGrid.pqGrid('getInstance').grid;
                             //추가 또는 수정된 값이 있으면 true
                             if (gridInstance.isDirty()) {
                                 let changes = gridInstance.getChanges({format: 'byVal'});
-                                let parameters = {'url': '/commonCodeModifyGrid', 'data': {data: JSON.stringify(changes)}};
+                                let parameters = {
+                                    'url': '/commonCodeModifyGrid',
+                                    'data': {data: JSON.stringify(changes)}
+                                };
 
                                 fnPostAjax(function (data, callFunctionParam) {
-                                    commonCodeBotGrid.pqGrid('refreshDataAndView');
+                                    $commonCodeBotGrid.pqGrid('refreshDataAndView');
                                 }, parameters, '');
                             }
                         }
@@ -210,6 +190,6 @@
                 recIndx: 'CODE_CD'
             }
         };
-        commonCodeBotGrid = $('#' + commonCodeBotGridId).pqGrid(commonCodeBotObj);
+        $commonCodeBotGrid = $('#' + commonCodeBotGridId).pqGrid(commonCodeBotObj);
     });
 </script>
