@@ -109,7 +109,7 @@
                                         <span class="font-bold">주문 관리</span>
                                     </a>
                                     <ul class="nav dk">
-                                        <li class="tabMenuClick" url="/static/order/order-manage" tname="주문 관리" pid="99">
+                                        <li class="tabMenuClick" url="/static/order/control-manage" tname="주문 관리" pid="99">
                                             <a href="#" class="auto">
                                                 <b class="badge bg-success lt pull-right">2</b>
                                                 <i class="i i-dot"></i>

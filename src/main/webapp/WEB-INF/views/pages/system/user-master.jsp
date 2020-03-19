@@ -17,36 +17,8 @@
 <script>
     $(function () {
         'use strict';
-        let g_code;
-        $.ajax({
-            url: '/json-list',
-            cache: false,
-            type: 'POST',
-            data: {'queryId': 'systemMapper.selectSessionCodeList'},
-            dataType: 'json',
-            async: false,
-            success: function (data) {
-                g_code = data.list;
-                console.log(g_code);
-            },
-            complete: function () {
-            }
-        });
-
-        function g_selectBox(HIGH_CD) {
-            let selectBoxContents = [];
-
-            for (let i = 0; i < g_code.length; i++) {
-                if (g_code[i].HIGH_CD === HIGH_CD) {
-                    selectBoxContents.push({'value': g_code[i].CODE_CD, 'text': g_code[i].CODE_NM_EN});
-                }
-            }
-
-            return selectBoxContents;
-        }
-
         let userMasterSelectedRowIndex = [];
-        let userMasterGrid;
+        let $userMasterGrid;
         let userMasterGridId = 'user_manager_grid';
         let userMasterPostData = {queryId: 'selectUserMasterList'};
         let userMasterColModel = [
@@ -60,10 +32,10 @@
                     mapIndices: {name: 'DEL_YN_NM', id: 'DEL_YN'},
                     valueIndx: 'value',
                     labelIndx: 'text',
-                    options: g_selectBox('10000'),
+                    options: fnGetCommCodeSelectBox('10000'),
                     getData: function (ui) {
                         let clave = ui.$cell.find('select').val();
-                        let rowData = userMasterGrid.pqGrid('getRowData', {rowIndx: ui.rowIndx});
+                        let rowData = $userMasterGrid.pqGrid('getRowData', {rowIndx: ui.rowIndx});
                         rowData['DEL_YN'] = clave;
                         return ui.$cell.find("select option[value='" + clave + "']").text();
                     }
@@ -76,7 +48,7 @@
                 {
                     type: 'button', label: 'Add', icon: 'ui-icon-plus', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            userMasterGrid.pqGrid('addNodes', [{}], 0);
+                            $userMasterGrid.pqGrid('addNodes', [{}], 0);
                         }
                     }
                 },
@@ -85,7 +57,7 @@
                         'click': function (evt, ui) {
                             let USER_MASTER_QUERY_ID = 'deleteUser';
 
-                            fnDeletePQGrid(userMasterGrid, userMasterSelectedRowIndex, USER_MASTER_QUERY_ID);
+                            fnDeletePQGrid($userMasterGrid, userMasterSelectedRowIndex, USER_MASTER_QUERY_ID);
                         }
                     }
                 },
@@ -95,7 +67,7 @@
                             let userMasterInsertQueryList = ['insertUser'];
                             let userMasterUpdateQueryList = ['updateUser'];
 
-                            fnModifyPQGrid(userMasterGrid, userMasterInsertQueryList, userMasterUpdateQueryList);
+                            fnModifyPQGrid($userMasterGrid, userMasterInsertQueryList, userMasterUpdateQueryList);
                         }
                     }
                 }
@@ -108,6 +80,10 @@
             numberCell: {title: 'No.'},
             scrollModel: {autoFit: true},
             trackModel: {on: true}, //to turn on the track changes.
+            columnTemplate: {
+                align: 'center',
+                hvalign: 'center' //to vertically center align the header cells.
+            },
             colModel: userMasterColModel,
             dataModel: {
                 location: 'remote',
@@ -137,6 +113,6 @@
                 }
             }
         };
-        userMasterGrid = $('#' + userMasterGridId).pqGrid(userMasterObj);
+        $userMasterGrid = $('#' + userMasterGridId).pqGrid(userMasterObj);
     });
 </script>
