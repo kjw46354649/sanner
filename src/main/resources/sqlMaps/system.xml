@@ -363,7 +363,7 @@
                 AND STAFF_SEQ = (SELECT STAFF_SEQ FROM jmes.TBL_COMPANY_STAFF C
                                     WHERE B.COMP_CD = C.COMP_CD AND C.DEL_YN = 'N' AND C.MAIN_YN = 'Y' ORDER BY C.UPDATE_DT DESC LIMIT 1
                                 )
-        WHERE A.DEL_YN = 'Y'
+        WHERE A.DEL_YN = 'N'
             <if test="SEL_COMP_CLASS != null and SEL_COMP_CLASS != ''">
                 AND A.COMP_CLASS LIKE CONCAT('%', #{SEL_COMP_CLASS}, '%')
             </if>

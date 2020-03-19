@@ -16,29 +16,43 @@ public class CommandExecuteUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(CommandExecuteUtil.class);
 
-    private static String OS = System.getProperty("os.name").toLowerCase();
-    private static List<String> cmdList = null;
+    private String OS = System.getProperty("os.name").toLowerCase();
 
-    public int execCommand(String... cmd) throws IOException, InterruptedException {
+    /**
+     * Os Check and Execute Commander
+     * @param cmd
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public int execCommand(String... cmdList) throws IOException, InterruptedException {
 
         if (OS.contains("win")) {
             String[] use = { "cmd", "/c" };
-            return runCommand(new String[]{"cmd", "/c"}, cmd);
+            return runCommand(new String[]{"cmd", "/c"}, cmdList);
         } else if (OS.contains("nix") || OS.contains("nux") || OS.contains("aix")) {
             String[] use = { "/bin/sh", "-c" };
-            return runCommand(new String[]{"/bin/sh", "-c"}, cmd);
+            return runCommand(new String[]{"/bin/sh", "-c"}, cmdList);
         } else {
             return -1;
         }
     }
 
-    public int runCommand(String[] use, String... cmd) throws IOException, InterruptedException {
+    /**
+     * Run Commander
+     * @param use
+     * @param cmd
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public int runCommand(String[] use, String... cmdLists) throws IOException, InterruptedException {
 
         StringBuffer sbOut = new StringBuffer();
         String line;
 
         List<String> cmdList = new ArrayList<String>(Arrays.asList(use));
-        cmdList.addAll(Arrays.asList(cmd));
+        cmdList.addAll(Arrays.asList(cmdLists));
 
         ProcessBuilder builder = new ProcessBuilder(cmdList.toArray(new String[0]));
         builder.redirectErrorStream(true);

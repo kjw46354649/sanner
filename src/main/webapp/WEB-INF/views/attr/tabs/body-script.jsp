@@ -64,10 +64,6 @@
             let windows
             let viewScrollerHeight = parseInt($('#view-scroller').outerHeight(true));
             let activeViewItemHeight = parseInt($('.active_view_item').outerHeight(true));
-            let addValue = 100;
-
-            console.log(viewScrollerHeight);
-            console.log(activeViewItemHeight);
 
             if(activeViewItemHeight > 905) {
                 $('.active_view_item').height(activeViewItemHeight + (905 - activeViewItemHeight));
@@ -102,10 +98,10 @@
      * @param {object} params - 호출 URL에 Parameter 정보
      * @param {*} callFunctionParam - 리텅 Function 전달 Parameter
      */
-    var fnPostAjax = function (callFunction, params, callFunctionParam) {
+    let fnPostAjax = function (callFunction, params, callFunctionParam) {
         // 'use strict';
-        var callback = $.Callbacks();
-        var param = $.extend({url: null, data: ''}, params || {});
+        let callback = $.Callbacks();
+        let param = $.extend({url: null, data: ''}, params || {});
 
         $.ajax({
             type: 'POST',
@@ -132,6 +128,50 @@
             }
         });
     };
+
+    /* form에 JsonData를 셋팅 한다.
+		/* formid : form 아이디
+		/* data : json return data
+		*/
+    let fnFormToJsonArrayData = function (formid) {
+        if(formid.indexOf("#") == -1) formid = "#"+formid;
+        let elementArray = {};
+        let formArr = $(formid).serializeArray();
+        for(let i=0; i < formArr.length; i++) {
+            let tmp = formArr[i];
+            let name = tmp.name;
+            let value = "";
+            if(name != null){
+                let $ctrl = $(formid).find('[name='+name+']');
+                if ($ctrl.is('select')){
+                    value = $ctrl.val();
+                } else if ($ctrl.is('textarea')) {
+                    value = $ctrl.val();
+                } else {
+                    switch($ctrl.attr("type")) {
+                        case "text":
+                        case "date":
+                        case "password":
+                        case "hidden":
+                            value = $ctrl.val();
+                            break;
+                        case "checkbox":
+                            if($ctrl.prop('checked')) value = true;
+                            else value = false;
+                            break;
+                        case 'radio':
+                            value = $("input:radio[name=" + name + "]:checked").val();
+                            break;
+                    }
+                }
+                elementArray[name] = value;
+            }
+        }
+        return elementArray;
+    };
+
+
+
     /**
      * @description 그리드 생성
      * @param {string} gridId
