@@ -42,6 +42,9 @@
           <element id="library" level="project" name="Gradle: org.apache.pdfbox:pdfbox-tools:2.0.19" />
           <element id="library" level="project" name="Gradle: org.apache.pdfbox:pdfbox-debugger:2.0.19" />
           <element id="library" level="project" name="Gradle: org.apache.pdfbox:pdfbox:2.0.19" />
+          <element id="library" level="project" name="Gradle: com.google.zxing:javase:3.4.0" />
+          <element id="library" level="project" name="Gradle: com.google.zxing:core:3.4.0" />
+          <element id="library" level="project" name="Gradle: org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16" />
           <element id="library" level="project" name="Gradle: org.springframework:spring-tx:5.2.3.RELEASE" />
           <element id="library" level="project" name="Gradle: org.springframework:spring-context:5.2.3.RELEASE" />
           <element id="library" level="project" name="Gradle: org.springframework:spring-aop:5.2.3.RELEASE" />
@@ -54,9 +57,13 @@
           <element id="library" level="project" name="Gradle: commons-digester:commons-digester:2.0" />
           <element id="library" level="project" name="Gradle: org.apache.pdfbox:fontbox:2.0.19" />
           <element id="library" level="project" name="Gradle: commons-logging:commons-logging:1.2" />
+          <element id="library" level="project" name="Gradle: com.beust:jcommander:1.72" />
           <element id="library" level="project" name="Gradle: org.springframework:spring-jcl:5.2.3.RELEASE" />
           <element id="library" level="project" name="Gradle: org.apache.tiles:tiles-autotag-core-runtime:1.2" />
+          <element id="library" level="project" name="Gradle: com.github.jai-imageio:jai-imageio-core:1.4.0" />
           <element id="library" level="project" name="Gradle: commons-beanutils:commons-beanutils:1.8.0" />
+          <element id="file-copy" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.11.2/6c2fb3f5b7cd27504726aef1b674b542a0c9cf53/log4j-core-2.11.2.jar" />
+          <element id="file-copy" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.11.2/f5e9a2ffca496057d6891a3de65128efc636e26e/log4j-api-2.11.2.jar" />
         </element>
       </element>
     </root>
