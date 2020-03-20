@@ -336,7 +336,7 @@
 			LEFT OUTER JOIN TBL_MENU B ON A.PARENT_MENU_SEQ = B.MENU_SEQ
 			LEFT OUTER JOIN TBL_ROLE_MENU C ON A.MENU_SEQ = C.MENU_SEQ AND ROLE_SEQ = #{ROLE_SEQ}
 		WHERE 1 = 1
-		ORDER BY A.CD_NO
+		ORDER BY CAST(A.CD_NO AS DOUBLE)
     </select>
 
     <insert id="insertAuthorityMenuManagement" parameterType="java.util.HashMap">
@@ -387,6 +387,29 @@
             <if test="SEL_ACTIVE_YN != null and SEL_ACTIVE_YN != ''">
                 AND A.ACTIVE_YN =  #{SEL_ACTIVE_YN}
             </if>
+    </select>
+
+    <select id="selectEstimateMasterList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.EST_STATUS, A.ORDER_COMP_CD, A.ORDER_STAFF_SEQ, A.EST_NUM, A.COMP_CD, A.EST_VER, A.EST_TITLE,
+            COUNT(B.SEQ) AS DTL_CNT, SUM(B.FINAL_EST_UNIT_PRICE) AS DTL_AMOUNT, EST_USER_ID,
+            A.INSERT_DT, A.EST_USER_ID, A.SEND_DT
+        FROM TBL_ESTIMATE A
+            INNER JOIN TBL_ESTIMATE_DETAIL B ON A.EST_SEQ = B.EST_SEQ AND A.EST_VER = B.EST_VER
+        GROUP BY A.EST_NUM
+        ORDER BY A.EST_NUM
+    </select>
+
+    <select id="selectEstimateDetailList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+			MODULE_NM, ITEM_NM, DRAWING_NUM, PART_NUM, SIZE_TYPE, SIZE_W, SIZE_H, SIZE_T, SIZE_D, SIZE_L, ITEM_QTY,
+            WORK_TYPE, MATERIAL_TYPE, MATERIAL_DETAIL, SURFACE_TREAT, COMP_SUPPLY_YN, HEAT_TREAT_YN,
+            MATERIAL_UNIT_COST, TOUCH_UNIT_COST, SURFACE_UNIT_COST, PROCESS_UNIT_COST, ETC_UNIT_COST, FINAL_EST_UNIT_PRICE,
+            NOTE, DWG_GFILE_SEQ, PDF_GFILE_SEQ
+        FROM TBL_ESTIMATE_DETAIL
+        WHERE 1=1
+			AND EST_NUM = #{EST_NUM}
+            AND EST_VER = #{EST_VER}
     </select>
 
 </mapper>
