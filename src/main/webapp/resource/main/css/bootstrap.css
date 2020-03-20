@@ -6024,9 +6024,14 @@ button.close {
     width: 300px;
   }
 }
-@media (min-width: 992px) {
+/*@media (min-width: 992px) {
   .modal-lg {
     width: 900px;
+  }
+}*/
+@media (min-width: 1200px) {
+  .modal-lg {
+    width: 1200px;
   }
 }
 .tooltip {
