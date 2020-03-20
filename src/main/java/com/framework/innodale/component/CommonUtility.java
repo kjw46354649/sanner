@@ -61,10 +61,12 @@ public class CommonUtility {
             String[] values = request.getParameterValues(key);
             if (values.length == 1) {
                 paramMap.put(key, values[0].trim());
-                // System.out.println("key=[" + key + "][" + values[0].trim() + "]");
+
+                System.out.println("key=[" + key + "][" + values[0].trim() + "]");
             } else {
                 paramMap.put(key, values);
-                // System.out.println("key=[" + key + "][" + values + "]");
+
+                System.out.println("key=[" + key + "][" + values + "]");
             }
         }
 
@@ -74,6 +76,9 @@ public class CommonUtility {
             String key = (String) attributeNames.nextElement();
             Object obj = request.getAttribute(key);
             if(obj instanceof java.lang.String){
+
+                System.out.println("key=[" + key + "][" + obj + "]");
+
                 paramMap.put(key, obj);
             }
         }

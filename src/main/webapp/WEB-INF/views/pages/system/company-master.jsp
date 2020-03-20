@@ -21,40 +21,42 @@
                 </header>
                 <div class="panel-body">
                     <form class="form-inline" id="company-master-search-form" name="company-master-search-form" role="form">
+                        <input type="hidden" id="queryId" name="queryId" value="getCompanyMasterList">
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="SEL_COMP_CLASS">대외구분</label>
-                                <input type="email" class="form-control" id="SEL_COMP_CLASS" placeholder="Enter email">
+                                <input type="text" class="form-control" id="SEL_COMP_CLASS" name="SEL_COMP_CLASS" value="" placeholder="Enter email">
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="SEL_COMP_TYPE">업체종류</label>
-                                <input type="password" class="form-control" id="SEL_COMP_TYPE" placeholder="Password">
+                                <input type="text" class="form-control" id="SEL_COMP_TYPE" name="SEL_COMP_TYPE" placeholder="Password">
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="SEL_COMP_NM">업체명</label>
-                                <input type="password" class="form-control" id="SEL_COMP_NM" placeholder="Password">
+                                <input type="text" class="form-control" id="SEL_COMP_NM" name="SEL_COMP_NM" placeholder="Password">
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="SEL_COMP_NUM">사업자번호</label>
-                                <input type="password" class="form-control" id="SEL_COMP_NUM" placeholder="Password">
+                                <input type="text" class="form-control" id="SEL_COMP_NUM" name="SEL_COMP_NUM" placeholder="Password">
                             </div>
                         </div>
                         <div class="line line-dashed b-b line-xs"></div>
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="SEL_STAFF_NM">담당자명</label>
-                                <input type="email" class="form-control" id="SEL_STAFF_NM" placeholder="Enter email">
+                                <input type="text" class="form-control" id="SEL_STAFF_NM" name="SEL_STAFF_NM" placeholder="Enter email">
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="SEL_CEO_NM">대표자명</label>
-                                <input type="password" class="form-control" id="SEL_CEO_NM" placeholder="Password">
+                                <input type="text" class="form-control" id="SEL_CEO_NM" name="SEL_CEO_NM" placeholder="Password">
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="SEL_ACTIVE_YN">활성여부</label>
-                                <input type="password" class="form-control" id="SEL_ACTIVE_YN" placeholder="Password">
+                                <input type="text" class="form-control" id="SEL_ACTIVE_YN" name="SEL_ACTIVE_YN" placeholder="Password">
                             </div>
                             <div class="form-group col-md-3 text-right">
                                 <div type="submit" class="btn btn-success btn-sm btn-default">SEARCH</div>
+                                <%--<img src="/barcode/qrcode/123456" width="300px" height="150px">--%>
                             </div>
                             <%--<div class="form-group col-md-4">
                                 <button type="submit" class="btn btn-sm btn-default">Submit</button>
@@ -148,18 +150,19 @@
                 }
             ]
         };
-        var obj = {
+
+        let obj = {
             // width: 700,
             height: 650, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            selectionModel : {type: 'row', mode: 'single'},
             numberCell: {title: '<br>No.', styleHead: {'vertical-align':'middle', 'padding-top':'10px'}}, scrollModel: {autoFit: true}, trackModel: {on: true},
             colModel: colModel, toolbar: toolbar,
             pageModel: { type: "local", rPP: 20, strRpp: "{0}", strDisplay: "{0} to {1} of {2}" },
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: postData,
+                postData: fnFormToJsonArrayData('#company-master-search-form'),
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
-                    // return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                 }
             },
             selectChange: function (event, ui) {
