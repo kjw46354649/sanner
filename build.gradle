@@ -43,8 +43,10 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14
     testCompile group: 'org.slf4j', name: 'slf4j-jdk14', version: '1.7.30'
+
     // https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client
     compile group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.5.4'
+
     // https://mvnrepository.com/artifact/org.aspectj/aspectjweaver
     compile group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.5'
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
@@ -57,12 +59,32 @@ dependencies {
     compile group: 'org.apache.tiles', name: 'tiles-core', version: '3.0.8'
     // https://mvnrepository.com/artifact/javax.servlet/jstl
     compile group: 'javax.servlet', name: 'jstl', version: '1.2'
+
+    // cat to pdf convert
     // https://mvnrepository.com/artifact/com.aspose/aspose-cad
     compile group: 'com.aspose', name: 'aspose-cad', version: '20.1'
+
+    // pdf to image convert
     // https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
     compile group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.19'
     // https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox-tools
     compile group: 'org.apache.pdfbox', name: 'pdfbox-tools', version: '2.0.19'
+
+    // barcode library
+    // https://mvnrepository.com/artifact/com.google.zxing/core
+    compile group: 'com.google.zxing', name: 'core', version: '3.4.0'
+    // https://mvnrepository.com/artifact/com.google.zxing/javase
+    compile group: 'com.google.zxing', name: 'javase', version: '3.4.0'
+
+    // DBMS logger trace
+    // https://mvnrepository.com/artifact/log4j/log4j
+    compile group: 'log4j', name: 'log4j', version: '1.2.15'
+    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.2'
+    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.11.2'
+    // https://mvnrepository.com/artifact/org.bgee.log4jdbc-log4j2/log4jdbc-log4j2-jdbc4.1
+    compile group: 'org.bgee.log4jdbc-log4j2', name: 'log4jdbc-log4j2-jdbc4.1', version: '1.16'
 }
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8' //인코딩을 UTF-8로 통일
