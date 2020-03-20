@@ -30,7 +30,7 @@
                     mapIndices: { name: "DEL_YN_NM", id: "DEL_YN" },
                     valueIndx: "value",
                     labelIndx: "text",
-                    options: fnGetCommCodeSelectBox('10000'),
+                    options: fnGetCommCodeGridSelectBox('10000'),
                     getData: function(ui) {
                         let clave = ui.$cell.find('select').val();
                         let rowData = $authorityGroupGrid.pqGrid('getRowData', {rowIndx: ui.rowIndx});
