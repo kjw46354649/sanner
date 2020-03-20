@@ -24,11 +24,11 @@
         let authorityLeftGrid = $("#authority_left_grid");
         let authorityRightGrid = $("#authority_right_grid");
 
-        let leftColModel = [
+        let authorityLeftColModel = [
             {title: 'Access Code', dataType: 'string', dataIndx: 'ROLE_SEQ', hidden: true},
             {title: 'Access Name', dataType: 'string', dataIndx: 'ROLE_NM', editable: false}
         ];
-        let rightColModel = [
+        let authorityRightColModel = [
             {title: '', dataType: 'string', dataIndx: 'MENU_SEQ', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'PARNET_MENU_SEQ', hidden: true},
             {title: 'Top Menu', dataType: 'string', dataIndx: 'PARENT_MENU_NM', editable: false},
@@ -120,7 +120,7 @@
             },
             selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
-            colModel: leftColModel,
+            colModel: authorityLeftColModel,
             numberCell: {width: 30, title: "No", show: true },
             trackModel: {on: true},
             resizable: true,
@@ -131,13 +131,13 @@
                 if(ui.addList.length > 0 ) {
                     let role_seq = ui.addList[0].rowData.ROLE_SEQ;
                     click_seq=role_seq;
-                    selectRightList(role_seq);
+                    selectAuthorityRightList(role_seq);
                 }
             },
             toolbar: leftToolbar
         });
 
-        function selectRightList(ROLE_SEQ){
+        function selectAuthorityRightList(ROLE_SEQ){
             authorityRightGrid.pqGrid({
                 width: "100%",
                 //height: 400,
@@ -155,8 +155,7 @@
                     }
                 },
                 selectionModel: { type: 'row', mode: 'single'} ,
-                //swipeModel: {on: false},
-                colModel: rightColModel,
+                colModel: authorityRightColModel,
                 numberCell: {width: 30, title: "No" , show: true},
                 trackModel: {on: true},
                 resizable: true,
