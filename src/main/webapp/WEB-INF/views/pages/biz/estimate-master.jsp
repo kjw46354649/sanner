@@ -159,14 +159,14 @@
         let topToolbar = {
             items: [
                 {
-                    type: 'button', label: 'Delete', listener: {
+                    type: 'button', label: 'Delete', icon: 'ui-icon-minus', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
                             estimateMasterTopGrid.pqGrid('addNodes', [{}], 0);
                         }
                     }
                 },
                 {
-                    type: 'button', label: 'save', listener: {
+                    type: 'button', label: 'save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
                             let grid = estimateMasterTopGrid.pqGrid('getInstance').grid;
                             //추가 또는 수정된 값이 있으면 true
