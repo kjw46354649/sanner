@@ -38,7 +38,7 @@
                                                         <input type="text" data-notblank="true" class="form-control" placeholder="Title">
                                                     </div>
                                                 </div>
-                                                <div class="line line-dashed b-b line-lg pull-in"></div>
+                                                <div class="line line-dashed b-b pull-in"></div>
                                                 <div class="form-group col-md-4 col-sm-4">
                                                     <label class="col-md-4 col-sm-4 control-label">구매 담당자</label>
                                                     <div class="col-md-8 col-sm-8">
@@ -57,7 +57,7 @@
                                                         <input type="text" class="form-control" placeholder="등록일시">
                                                     </div>
                                                 </div>
-                                                <div class="line line-dashed b-b line-lg pull-in"></div>
+                                                <div class="line line-dashed b-b pull-in"></div>
                                                 <div class="form-group col-md-4 col-sm-4">
                                                     <label class="col-md-4 col-sm-4 control-label">견적번호</label>
                                                     <div class="col-md-8 col-sm-8">
@@ -76,7 +76,7 @@
                                                         <input type="text" class="form-control" placeholder="min = 6">
                                                     </div>
                                                 </div>
-                                                <div class="line line-dashed b-b line-lg pull-in"></div>
+                                                <div class="line line-dashed b-b pull-in"></div>
                                                 <div class="form-group col-md-4 col-sm-4">
                                                     <label class="col-md-4 col-sm-4 control-label">견적금액 계</label>
                                                     <div class="col-md-8 col-sm-8">
@@ -214,6 +214,7 @@
                                 <input type="password" class="form-control" id="DRAWING_NUM" placeholder="">
                             </div>
                             <div class="form-group col-md-4">
+                                <label class="control-label" for="ITEM_NM">품명</label>
                                 <input type="password" class="form-control" id="ITEM_NM" placeholder="">
                             </div>
                         </div>
@@ -272,8 +273,6 @@
         let estimateMasterPopTopGrid = $("#estimate_master_record_popup #estimate_master_popup_top_grid");
         let estimateMasterPopBotGrid = $("#estimate_master_record_popup #estimate_master_popup_bot_grid");
 
-        let basicHeaderStyle = { 'text-align':'center','vertical-align':'middle', 'padding-top':'28px'};
-
         let estimateMasterTopColModel= [
             //{title: 'No.', dataType: 'string', dataIndx: 'EST_SEQ'},
             {title: 'Status', dataType: 'string', dataIndx: 'EST_STATUS'},
@@ -294,10 +293,10 @@
         ];
 
         let estimateMasterBotColModel= [
-            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', styleHead: basicHeaderStyle } ,
-            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', styleHead: basicHeaderStyle } ,
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', styleHead: basicHeaderStyle } ,
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', styleHead: basicHeaderStyle } ,
+            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM' } ,
+            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM' } ,
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM' } ,
+            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM' } ,
             {title: '규격', align: "center", colModel: [
                 {title: '타입', dataType: 'string', dataIndx: 'SIZE_TYPE'},
                 {title: '가로', dataType: 'string', dataIndx: 'SIZE_W'},
@@ -306,13 +305,13 @@
                 {title: '지름', dataType: 'string', dataIndx: 'SIZE_D'},
                 {title: '길이', dataType: 'string', dataIndx: 'SIZE_L'},
             ]},
-            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY', styleHead: basicHeaderStyle},
-            {title: '작업구분', dataType: 'string', dataIndx: 'WORK_TYPE', styleHead: basicHeaderStyle},
-            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_TYPE', styleHead: basicHeaderStyle},
-            {title: '소재상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', styleHead: basicHeaderStyle},
-            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', styleHead: basicHeaderStyle},
-            {title: '사급', dataType: 'string', dataIndx: 'COMP_SUPPLY_YN', styleHead: basicHeaderStyle},
-            {title: '열처리', dataType: 'string', dataIndx: 'HEAT_TREAT_YN', styleHead: basicHeaderStyle},
+            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
+            {title: '작업구분', dataType: 'string', dataIndx: 'WORK_TYPE'},
+            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_TYPE'},
+            {title: '소재상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
+            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT'},
+            {title: '사급', dataType: 'string', dataIndx: 'COMP_SUPPLY_YN'},
+            {title: '열처리', dataType: 'string', dataIndx: 'HEAT_TREAT_YN'},
             {title: '항목별 견적정보', align: "center", colModel: [
                 {title: '소재비', dataType: 'string', dataIndx: 'MATERIAL_UNIT_COST'},
                 {title: 'TM각비', dataType: 'string', dataIndx: 'TOUCH_UNIT_COST'},
@@ -320,12 +319,12 @@
                 {title: '가공비', dataType: 'string', dataIndx: 'PROCESS_UNIT_COST'},
                 {title: '기타추가', dataType: 'string', dataIndx: 'ETC_UNIT_COST'}
             ]},
-            {title: '계산견적단가', dataType: 'string', dataIndx: 'FINAL_EST_UNIT_PRICE', styleHead: basicHeaderStyle},
-            {title: '최종견적가', dataType: 'string', dataIndx: '', styleHead: basicHeaderStyle},
-            {title: '금액 계', dataType: 'string', dataIndx: '', styleHead: basicHeaderStyle},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', styleHead: basicHeaderStyle},
-            {title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ', styleHead: basicHeaderStyle},
-            {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', styleHead: basicHeaderStyle}
+            {title: '계산견적단가', dataType: 'string', dataIndx: 'FINAL_EST_UNIT_PRICE'},
+            {title: '최종견적가', dataType: 'string', dataIndx: ''},
+            {title: '금액 계', dataType: 'string', dataIndx: ''},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
+            {title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ'},
+            {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ'}
         ];
 
         let estimateMasterPopTopColModel= [
@@ -413,6 +412,7 @@
                     return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                 }
             },
+            columnTemplate: {align: 'center', hvalign: 'center'},
             scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'row', mode: 'single'} ,

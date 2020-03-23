@@ -81,7 +81,6 @@
                                         <ul class="nav dk">
                                             <li class="tabMenuClick" url="${menu.MENU_LINK}" tname="${menu.MENU_NM}" pid="${menu.CD_NO}">
                                                 <a href="#" class="auto">
-                                                    <b class="badge bg-success lt pull-right">2</b>
                                                     <i class="i i-dot"></i>
 
                                                     <span>${menu.MENU_NM}</span>
