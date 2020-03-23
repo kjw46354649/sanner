@@ -51,7 +51,7 @@
                     mapIndices: { name: "ACCESS_NM", id: "ACCESS_CD" },
                     valueIndx: "value",
                     labelIndx: "text",
-                    options: fnGetCommCodeSelectBox('10001'),
+                    options: fnGetCommCodeGridSelectBox('10001'),
                     getData: function(ui) {
                         let clave = ui.$cell.find("select").val();
                         let rowData = authorityRightGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
@@ -123,7 +123,7 @@
             colModel: authorityLeftColModel,
             numberCell: {width: 30, title: "No", show: true },
             trackModel: {on: true},
-            resizable: true,
+            //resizable: true,
             complete: function(event, ui) {
                 authorityLeftGrid.pqGrid('setSelection', {rowIndx:0} );
             },
@@ -158,7 +158,7 @@
                 colModel: authorityRightColModel,
                 numberCell: {width: 30, title: "No" , show: true},
                 trackModel: {on: true},
-                resizable: true,
+                //resizable: true,
                 toolbar: rightToolbar
             });
 

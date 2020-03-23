@@ -280,15 +280,40 @@
         }, parameters, '');
     };
 
-    let fnGetCommCodeSelectBox = function (highCd) {
+    let fnGetCommCodeGridSelectBox = function (highCd) {
         'use strict';
         let selectBoxContents = [];
         for(var i=0; i < g_code.length; i++){
             if(g_code[i].HIGH_CD == highCd){
-                selectBoxContents.push({'value':g_code[i].CODE_CD, 'text':g_code[i].CODE_NM_EN});
+                selectBoxContents.push({'value':g_code[i].CODE_CD, 'text':g_code[i].CODE_NM_KR});
             }
         }
         return selectBoxContents;
+    }
+
+    let fnGetCommCodeBasicSelectBox = function (selectBox, highCd, refCd, selectType) {
+        'use strict';
+        let selectOptionHtml = '<option value=\"\">Select</option>';
+        if(selectType == 'A'){
+            selectOptionHtml = '<option value=\"\">All</option>';
+        }
+
+        if(refCd !='' || refCd != null){
+            for(var i=0; i < g_code.length; i++){
+                if(g_code[i].REF_CD == refCd){
+                    selectOptionHtml += '<option value=":g_code[i].CODE_CD">'+g_code[i].CODE_NM_KR+'</option>';
+                }
+            }
+        }else{
+            for(var i=0; i < g_code.length; i++){
+                if(g_code[i].HIGH_CD == highCd){
+                    selectOptionHtml += '<option value=":g_code[i].CODE_CD">'+g_code[i].CODE_NM_KR+'</option>';
+                }
+            }
+        }
+
+        selectBox.empty();
+        selectBox.html(selectOptionHtml);
     }
 
 </script>
