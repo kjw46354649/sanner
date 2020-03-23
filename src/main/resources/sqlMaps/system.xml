@@ -451,4 +451,47 @@
             AND EST_VER = #{EST_VER}
     </select>
 
+    <select id="selectControlManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+        -- 		OP.ORDER_STATUS,
+        --        OP.STATUS_DT,
+               C.COMP_CD,
+               (SELECT CODE_NM
+                FROM TBL_CODE_LANG
+                WHERE CODE_CD = C.COMP_CD
+                      AND LANG_CD = 'KR') AS COMP_NM,
+               C.ORDER_COMP_CD, -- 발주업체
+               (SELECT COMP_NM
+                FROM TBL_COMPANY
+                WHERE ORDER_COMP_CD = C.ORDER_COMP_CD) AS ORDER_COMP_NM, -- 발주업체이름(JOIN)
+               C.ORDER_STAFF_SEQ,
+               (SELECT STAFF_NM
+                FROM TBL_COMPANY_STAFF
+                WHERE STAFF_SEQ = C.ORDER_STAFF_SEQ) AS ORDER_STAFF_NM,
+               C.DESIGNER_NM, -- 설계자
+               C.NOTE, -- 비고
+        --        '',-- 거래명세서 no ㅇㄷ?
+               C.CONTROL_NUM,
+               CP.PART_NUM,
+               CP.DRAWING_NUM,
+               CP.ITEM_NM,
+               CP.WORK_TYPE,
+               (SELECT CODE_NM
+                FROM TBL_CODE_LANG
+                WHERE HIGH_CD = '1013'
+                      AND CODE_CD = CP.WORK_TYPE
+                      AND LANG_CD = 'KR') AS WORK_NM,
+               CP.OUT_YN,
+               CP.PART_UNIT_QTY,
+               CD.ORDER_NUM,
+               CD.ORDER_QTY,
+               CP.MATERIAL_UNIT_PRICE,
+               CP.SURFACE_UNIT_PRICE
+        FROM TBL_CONTROL C
+        -- INNER JOIN TBL_ORDER_PROGRESS OP ON C.CONTROL_SEQ = OP.CONTROL_SEQ
+        INNER JOIN TBL_CONTROL_PART CP ON C.CONTROL_SEQ = CP.CONTROL_SEQ
+        INNER JOIN TBL_CONTROL_ORDER CD ON CP.CONTROL_SEQ = CD.CONTROL_SEQ
+                                           AND CP.CONTROL_DETAIL_SEQ = CD.CONTROL_DETAIL_SEQ
+    </select>
+
 </mapper>
