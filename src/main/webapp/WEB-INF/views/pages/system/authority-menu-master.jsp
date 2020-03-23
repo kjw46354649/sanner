@@ -51,7 +51,7 @@
                     mapIndices: { name: "ACCESS_NM", id: "ACCESS_CD" },
                     valueIndx: "value",
                     labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('10001'),
+                    options: fnGetCommCodeGridSelectBox('1046'),
                     getData: function(ui) {
                         let clave = ui.$cell.find("select").val();
                         let rowData = authorityRightGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});

@@ -35,7 +35,7 @@
 					mapIndices: { name: "DEL_YN_NM", id: "DEL_YN" },
 					valueIndx: "value",
 					labelIndx: "text",
-					options: fnGetCommCodeGridSelectBox('10000'),
+					options: fnGetCommCodeGridSelectBox('1045'),
 					getData: function(ui) {
 						let clave = ui.$cell.find("select").val();
 						let rowData = menuMasterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
@@ -60,7 +60,7 @@
 					mapIndices: { name: "DEL_YN_NM", id: "DEL_YN" },
 					valueIndx: "value",
 					labelIndx: "text",
-					options: fnGetCommCodeGridSelectBox('10000'),
+					options: fnGetCommCodeGridSelectBox('1045'),
 					getData: function(ui) {
 						let clave = ui.$cell.find("select").val();
 						let rowData = menuMasterBotGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
