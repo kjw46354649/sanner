@@ -16,7 +16,7 @@ public class CommandExecuteUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(CommandExecuteUtil.class);
 
-    private String OS = System.getProperty("os.name").toLowerCase();
+    private static String OS = System.getProperty("os.name").toLowerCase();
 
     /**
      * Os Check and Execute Commander
@@ -25,7 +25,7 @@ public class CommandExecuteUtil {
      * @throws IOException
      * @throws InterruptedException
      */
-    public int execCommand(String... cmdList) throws IOException, InterruptedException {
+    public static int execCommand(String... cmdList) throws IOException, InterruptedException {
 
         if (OS.contains("win")) {
             String[] use = { "cmd", "/c" };
@@ -46,7 +46,7 @@ public class CommandExecuteUtil {
      * @throws IOException
      * @throws InterruptedException
      */
-    public int runCommand(String[] use, String... cmdLists) throws IOException, InterruptedException {
+    public static int runCommand(String[] use, String... cmdLists) throws IOException, InterruptedException {
 
         StringBuffer sbOut = new StringBuffer();
         String line;

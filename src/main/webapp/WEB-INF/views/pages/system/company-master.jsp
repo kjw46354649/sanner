@@ -25,38 +25,38 @@
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="SEL_COMP_CLASS">대외구분</label>
-                                <input type="text" class="form-control" id="SEL_COMP_CLASS" name="SEL_COMP_CLASS" value="" placeholder="Enter email">
+                                <input type="text" class="form-control" id="SEL_COMP_CLASS" name="SEL_COMP_CLASS" value="" placeholder="대외구분">
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="SEL_COMP_TYPE">업체종류</label>
-                                <input type="text" class="form-control" id="SEL_COMP_TYPE" name="SEL_COMP_TYPE" placeholder="Password">
+                                <input type="text" class="form-control" id="SEL_COMP_TYPE" name="SEL_COMP_TYPE" placeholder="업체종류">
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="SEL_COMP_NM">업체명</label>
-                                <input type="text" class="form-control" id="SEL_COMP_NM" name="SEL_COMP_NM" placeholder="Password">
+                                <input type="text" class="form-control" id="SEL_COMP_NM" name="SEL_COMP_NM" placeholder="업체명">
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="SEL_COMP_NUM">사업자번호</label>
-                                <input type="text" class="form-control" id="SEL_COMP_NUM" name="SEL_COMP_NUM" placeholder="Password">
+                                <input type="text" class="form-control" id="SEL_COMP_NUM" name="SEL_COMP_NUM" placeholder="사업자번호">
                             </div>
                         </div>
                         <div class="line line-dashed b-b line-xs"></div>
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="SEL_STAFF_NM">담당자명</label>
-                                <input type="text" class="form-control" id="SEL_STAFF_NM" name="SEL_STAFF_NM" placeholder="Enter email">
+                                <input type="text" class="form-control" id="SEL_STAFF_NM" name="SEL_STAFF_NM" placeholder="담당자명">
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="SEL_CEO_NM">대표자명</label>
-                                <input type="text" class="form-control" id="SEL_CEO_NM" name="SEL_CEO_NM" placeholder="Password">
+                                <input type="text" class="form-control" id="SEL_CEO_NM" name="SEL_CEO_NM" placeholder="대표자명">
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="SEL_ACTIVE_YN">활성여부</label>
-                                <input type="text" class="form-control" id="SEL_ACTIVE_YN" name="SEL_ACTIVE_YN" placeholder="Password">
+                                <input type="text" class="form-control" id="SEL_ACTIVE_YN" name="SEL_ACTIVE_YN" placeholder="활성여부">
                             </div>
                             <div class="form-group col-md-3 text-right">
                                 <div type="submit" class="btn btn-success btn-sm btn-default">SEARCH</div>
-                                <%--<img src="/barcode/qrcode/123456" width="300px" height="150px">--%>
+                                <img src="/barcode/code128/123456" width="300px" height="150px">
                             </div>
                             <%--<div class="form-group col-md-4">
                                 <button type="submit" class="btn btn-sm btn-default">Submit</button>
@@ -78,42 +78,41 @@
 <script>
     $(function () {
         'use strict';
-        let selectedRowIndex = [];
+        let companyMasterSelectedRowIndex = [];
         let $companyMasterGrid;
-        var gridId = 'company-master-grid';
-        var postData = {queryId: 'getCompanyMasterList'};
-        var colModel = [
-            {title: '관계구분', datatype: 'string', dataIndx: 'COMP_CD', editable: true,
+        let companyMasterGridId = 'company-master-grid';
+        let companyMasterColModel = [
+            {title: '관계구분', datatype: 'string', dataIndx: 'COMP_CLASS_NM', editable: true,
                 styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
             },
-            {title: '업체명', dataType: 'string', dataIndx: 'COMP_CLASS',
+            {title: '업체명', dataType: 'string', dataIndx: 'COMP_NM',
                 styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
             },
-            {title: '사업자<br>등록번호', align: 'center', dataType: 'string', dataIndx: 'COMP_NM',
+            {title: '사업자<br>등록번호', align: 'center', dataType: 'string', dataIndx: 'COMP_NUM',
                 styleHead: { 'text-align':'center','vertical-align':'middle'}
             },
-            {title: '업체종류', align: 'center', dataType: 'string', dataIndx: 'CEO_NM',
+            {title: '업체종류', align: 'center', dataType: 'string', dataIndx: 'COMP_TYPE_NM',
                 styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
             },
-            {title: '대표 담당자', align: 'center', dataType: 'string', dataIndx: 'COMP_NUM',
+            {title: '대표 담당자', align: 'center', dataType: 'string', dataIndx: 'CHARGE_USER_ID',
                 styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
             },
-            {title: '전화번호', align: 'center', dataType: 'string', dataIndx: 'COMP_TYPE',
+            {title: '전화번호', align: 'center', dataType: 'string', dataIndx: 'COMP_TEL',
                 styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
             },
-            {title: '담당자 Email', align: 'center', dataType: 'string', dataIndx: 'CHARGE_USER_ID',
+            {title: '담당자 Email', align: 'center', dataType: 'string', dataIndx: 'STAFF_EMAIL',
                 styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
             },
-            {title: '대표자', align: 'center', dataType: 'string', dataIndx: 'COMP_TEL',
+            {title: '대표자', align: 'center', dataType: 'string', dataIndx: 'CEO_NM',
                 styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
             },
             {title: '주소', align: 'center', dataType: 'string', dataIndx: 'COMP_ADDRESS',
                 styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
             },
-            {title: '비고', align: 'center', dataType: 'string', dataIndx: 'COMP_EMAIL',
+            {title: '비고', align: 'center', dataType: 'string', dataIndx: 'NOTE',
                 styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
             },
-            {title: '대표이메일', align: 'center', dataType: 'string', dataIndx: 'LOGO_FILE_SEQ',
+            {title: '대표이메일', align: 'center', dataType: 'string', dataIndx: 'COMP_EMAIL',
                 styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
             },
             {title: '로고', align: 'center', dataType: 'string', dataIndx: 'SIGN_FILE_SEQ',
@@ -122,20 +121,20 @@
             {title: '직인', align: 'center', dataType: 'string', dataIndx: 'ETC_GFILE_SEQ',
                 styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
             },
-            {title: '최근거래<br>일시', align: 'center', dataType: 'string', dataIndx: 'ACTIVE_YN',
+            {title: '최근거래<br>일시', align: 'center', dataType: 'string', dataIndx: 'INSERT_DT',
                 styleHead: { 'text-align':'center','vertical-align':'middle'}
             },
-            {title: '등록일시', align: 'center', ataType: 'string', dataIndx: 'NOTE',
+            {title: '등록일시', align: 'center', ataType: 'string', dataIndx: 'INSERT_DT',
                 styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
             },
-            {title: '업데이트<br>일시', align: 'center', dataType: 'string', dataIndx: 'STAFF_NM',
+            {title: '업데이트<br>일시', align: 'center', dataType: 'string', dataIndx: 'UPDATE_ID',
                 styleHead: { 'text-align':'center','vertical-align':'middle'}
             },
-            {title: '활성<br>여부', align: 'center', dataType: 'string', dataIndx: 'STAFF_EMAIL',
+            {title: '활성<br>여부', align: 'center', dataType: 'string', dataIndx: 'ACTIVE_YN_NM',
                 styleHead: { 'text-align':'center','vertical-align':'middle'}
             }
         ];
-        var toolbar = {
+        let companyMasterToolbar = {
             cls: 'pq-toolbar-crud',
             items: [
                 {
@@ -156,7 +155,7 @@
             height: 650, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'},
             numberCell: {title: '<br>No.', styleHead: {'vertical-align':'middle', 'padding-top':'10px'}}, scrollModel: {autoFit: true}, trackModel: {on: true},
-            colModel: colModel, toolbar: toolbar,
+            colModel: companyMasterColModel, toolbar: companyMasterToolbar,
             pageModel: { type: "local", rPP: 20, strRpp: "{0}", strDisplay: "{0} to {1} of {2}" },
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -167,21 +166,21 @@
             },
             selectChange: function (event, ui) {
                 if (ui.selection.iCells.ranges[0] !== undefined) {
-                    selectedRowIndex = [];
+                    companyMasterSelectedRowIndex = [];
                     var firstRow = ui.selection.iCells.ranges[0].r1;
                     var lastRow = ui.selection.iCells.ranges[0].r2;
 
                     if (firstRow === lastRow) {
-                        selectedRowIndex[0] = firstRow;
+                        companyMasterSelectedRowIndex[0] = firstRow;
                     } else {
                         for (var i = firstRow; i <= lastRow; i++) {
-                            selectedRowIndex.push(i);
+                            companyMasterSelectedRowIndex.push(i);
                         }
                     }
                 }
             }
         };
-        $companyMasterGrid = $('#' + gridId).pqGrid(obj);
+        $companyMasterGrid = $('#' + companyMasterGridId).pqGrid(obj);
     });
 </script>
 
