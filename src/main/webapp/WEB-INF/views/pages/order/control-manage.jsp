@@ -20,14 +20,14 @@
                     주문 관리
                 </header>
                 <div class="panel-body">
-                    <form class="form-inline" id="company-master-search-form" name="company-master-search-form"
-                          role="form">
+                    <form class="form-inline" id="CONTROL_MANAGE_SEARCH_FORM" role="form">
+                        <input type="hidden" name="queryId" id="queryId" value="selectControlManageList">
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="CORPORATION">사업자</label>
                                 <select class="form-control" id="CORPORATION">
                                     <option value="">- ALL -</option>
-                                    <c:forEach var="code" items="${HIGHCD.H_1007}">
+                                    <c:forEach var="code" items="${HighCode.H_1007}">
                                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                     </c:forEach>
                                 </select>
@@ -62,17 +62,20 @@
                                 <select class="form-control" id="STANDARD">
                                     <option></option>
                                 </select>
-                                <label for="standard_1"></label><input type="text" class="form-control" id="STANDARD_1" size="3">
+                                <label for="standard_1"></label><input type="text" class="form-control" id="STANDARD_1"
+                                                                       size="3">
                                 *
-                                <label for="standard_2"></label><input type="text" class="form-control" id="STANDARD_2" size="3">
+                                <label for="standard_2"></label><input type="text" class="form-control" id="STANDARD_2"
+                                                                       size="3">
                                 *
-                                <label for="standard_3"></label><input type="text" class="form-control" id="STANDARD_3" size="3">
+                                <label for="standard_3"></label><input type="text" class="form-control" id="STANDARD_3"
+                                                                       size="3">
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="SHAPE">형태</label>
                                 <select class="form-control" id="SHAPE">
                                     <option value="">- ALL -</option>
-                                    <c:forEach var="code" items="${HIGHCD.H_1013}">
+                                    <c:forEach var="code" items="${HighCode.H_1013}">
                                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                     </c:forEach>
                                 </select>
@@ -87,36 +90,32 @@
                                     </select>
                                     <div class="radio i-checks">
                                         <label>
-                                            <input type="radio" name="a" value="option1">
+                                            <input type="radio" name="CONTROL_MANAGE_TERM" value="today" checked>
                                             <i></i>
                                             오늘
                                         </label>
                                     </div>
                                     <div class="radio i-checks">
                                         <label>
-                                            <input type="radio" name="a" value="option1">
+                                            <input type="radio" name="CONTROL_MANAGE_TERM" value="current_month">
                                             <i></i>
                                             현재월
                                         </label>
                                     </div>
                                     <div class="radio i-checks">
                                         <label>
-                                            <input type="radio" name="a" value="option1">
+                                            <input type="radio" name="CONTROL_MANAGE_TERM" value="three_months">
                                             <i></i>
                                             3개월
                                         </label>
                                     </div>
-                                    <label>
-                                        <input class="input-sm input-s datepicker-input form-control" size="16" type="text"
-                                               value="12-02-2013" data-date-format="dd-mm-yyyy">
-                                    </label> ~ <label>
-                                    <input
-                                 class="input-sm input-s datepicker-input form-control" size="16" type="text"
-                                 value="12-02-2013" data-date-format="dd-mm-yyyy">
-                                </label>
-                                    <%--                                    <input type="date" name="" id=""> ~ <input type="date" name="" id="">--%>
+                                    <input type="text" name="CONTROL_MANAGE_START_DATE" id="CONTROL_MANAGE_START_DATE"
+                                           readonly> ~
+                                    <input type="text"
+                                           name="CONTROL_MANAGE_END_DATE"
+                                           id="CONTROL_MANAGE_END_DATE" readonly>
                                     <label class="checkbox-inline i-checks">
-                                        <input type="checkbox" id="inlinecheckbox1" value="option1"><i></i>
+                                        <input type="checkbox" id="CONTROL_MANAGE_DATEPICKER_READ_ONLY" checked><i></i>
                                     </label>
                                 </div>
                                 <div class="form-group col-md-3">
@@ -159,7 +158,9 @@
                                     <input type="text" class="form-control" id="AMOUNT_SUM">
                                 </div>
                                 <div class="form-group col-md-3 text-right">
-                                    <div type="submit" class="btn btn-success btn-sm btn-default">search</div>
+                                    <div type="submit" class="btn btn-success btn-sm btn-default" id="testSearch">
+                                        search
+                                    </div>
                                 </div>
                             </div>
 
@@ -174,7 +175,10 @@
         <div class="row">&nbsp;
             <section>
                 <div class="col-md-12">
-                    <a href="#modal-form" class="btn btn-s-md btn-default" id="NEW_ORDER_REGISTRATION" data-toggle="modal" style="text-decoration:none">신규 주문 등록</a>
+                    <a href="#CONTROL_MANGE_POPUP" class="" id="" data-target="" data-toggle="modal"
+                       data-refform="CONTROL_MANGE_POPUP">
+                        <input type="button" value="신규 주문 등록">
+                    </a>
                     <button id="DELETE">Delete</button>
                     <button id="DRAWING_REGISTRATION">도면 등록</button>
                     <button id="DRAWING_CHANGE">도면변경(Rev. up)</button>
@@ -208,7 +212,7 @@
         <div class="row">&nbsp;
             <section>
                 <div class="col-md-12">
-<%--                    <i class="fa fa-plus-circle"></i>--%>
+                    <%--                    <i class="fa fa-plus-circle"></i>--%>
                     <div id="CONTROL_MANAGE_GRID"></div>
                 </div>
             </section>
@@ -217,16 +221,21 @@
 </div>
 
 <%-- modal --%>
-<div class="modal fade" id="modal-form">
-    <div class="modal-dialog">
+<div class="modal" id="CONTROL_MANGE_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-body wrapper-lg">
-                <div class="row">
-                    <div id="NEW_ORDER_REGISTRATION_GRID"></div>
-                </div>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title">신규 주문 등록</h4>
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
+            <div class="modal-body">
+                <div id="NEW_ORDER_REGISTRATION_GRID"></div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
 </div>
 
 <script>
@@ -235,47 +244,65 @@
         let selectedRowIndex = [];
         let $orderManagementGrid;
         const gridId = 'CONTROL_MANAGE_GRID';
-        let postData = {queryId: 'getCompanyMasterList'};
+        let postData = fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM');
         let colModel = [
-            {title: '주문상태', align: 'center', colModel: [
-                {title: '상태', datatype: 'string', dataIndx: 'COMP_CD', editable: false},
-                {title: '변경일시', datatype: 'string', dataIndx: 'COMP_CD', editable: false}
-            ]},
-            {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CLASS', editable: false, colModel: []},
-            {title: '발주업체', dataType: 'string', dataIndx: 'COMP_NM', editable: false, colModel: []},
-            {title: '구매담당', dataType: 'string', dataIndx: 'CEO_NM', editable: false, colModel: []},
-            {title: '설계자', dataType: 'string', dataIndx: 'COMP_NUM', colModel: []},
-            {title: '비고', dataType: 'string', dataIndx: 'COMP_TYPE', colModel: []},
-            {title: 'INV No.<br>(거래명세No.)', dataType: 'string', dataIndx: 'CHARGE_USER_ID', editable: false, colModel: []},
-            {title: '관리번호', dataType: 'string', dataIndx: 'COMP_TEL', colModel: []},
-            {title: 'Part', dataType: 'string', dataIndx: 'COMP_ADDRESS', colModel: [], render: function (ui) {
-                // if(ui.data)
-                return "<span class=\"glyphicon glyphicon-plus-sign\" aria-hidden=\"true\"></span>"
-            }},
-            {title: '도면번호', dataType: 'string', dataIndx: 'COMP_EMAIL', colModel: []},
-            {title: '품명', dataType: 'string', dataIndx: 'LOGO_FILE_SEQ', colModel: []},
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'SIGN_FILE_SEQ', editable: false, colModel: []},
-            {title: '외주', dataType: 'string', dataIndx: 'ETC_GFILE_SEQ', colModel: []},
-            {title: 'Part<br>단위<br>수량', dataType: 'string', dataIndx: 'ACTIVE_YN', editable: false, colModel: []},
-            {title: '발주번호', ataType: 'string', dataIndx: 'NOTE', editable: false, colModel: []},
-            {title: '주문<br>수량', dataType: 'string', dataIndx: 'STAFF_NM', colModel: []},
-            {title: '상세가공요건', align: 'center', hidden:true, colModel: [
-                {title: '선반', datatype: 'string', dataIndx: 'COMP_CD'},
-                {title: '가공면', datatype: 'string', dataIndx: 'COMP_CD'},
-                {title: '클램핑', datatype: 'string', dataIndx: 'COMP_CD'},
-                {title: '포켓', datatype: 'string', dataIndx: 'COMP_CD'},
-                {title: '드릴', datatype: 'string', dataIndx: 'COMP_CD'},
-                {title: '난도', datatype: 'string', dataIndx: 'COMP_CD'}
-            ]},
-            {title: '예상소재 Size', align: 'center', hidden:true, colModel: [
-                {title: '가로', datatype: 'string', dataIndx: 'COMP_CD', editable: false},
-                {title: '세로', datatype: 'string', dataIndx: 'COMP_CD', editable: false},
-                {title: '높이', datatype: 'string', dataIndx: 'COMP_CD', editable: false},
-                {title: '중량(KG)', datatype: 'string', dataIndx: 'COMP_CD', editable: false},
-                {title: '부피(cm3)', datatype: 'string', dataIndx: 'COMP_CD', editable: false}
-            ]},
-            {title: '소재비', dataType: 'string', dataIndx: 'STAFF_EMAIL', colModel: []},
-            {title: '표면<br>처리비', dataType: 'string', dataIndx: 'STAFF_EMAIL', colModel: []}
+            {
+                title: '주문상태', align: 'center', colModel: [
+                    {title: '상태', datatype: 'string', dataIndx: 'COMP_CD', editable: false},
+                    {title: '변경일시', datatype: 'string', dataIndx: 'COMP_CD', editable: false}
+                ]
+            },
+            {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: true, editable: false, colModel: []},
+            {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_NM', editable: false, colModel: []},
+            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true, editable: false, colModel: []},
+            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', editable: false, colModel: []},
+            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', hidden: true, editable: false, colModel: []},
+            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', editable: false, colModel: []},
+            {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', colModel: []},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', colModel: []},
+            {
+                title: 'INV No.<br>(거래명세No.)',
+                dataType: 'string',
+                dataIndx: 'CHARGE_USER_ID',
+                editable: false,
+                colModel: []
+            },
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', colModel: []},
+            {
+                title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', colModel: [], render: function (ui) {
+                    // if(ui.data)
+                    return "<span class=\"glyphicon glyphicon-plus-sign\" aria-hidden=\"true\"></span>"
+                }
+            },
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', colModel: []},
+            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', colModel: []},
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true, editable: false, colModel: []},
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_NM', editable: false, colModel: []},
+            {title: '외주', dataType: 'string', dataIndx: 'OUT_YN', colModel: []},
+            {title: 'Part<br>단위<br>수량', dataType: 'string', dataIndx: 'PART_UNIT_QTY', editable: false, colModel: []},
+            {title: '발주번호', ataType: 'string', dataIndx: 'ORDER_NUM', editable: false, colModel: []},
+            {title: '주문<br>수량', dataType: 'string', dataIndx: 'ORDER_QTY', colModel: []},
+            {
+                title: '상세가공요건', align: 'center', hidden: true, colModel: [
+                    {title: '선반', datatype: 'string', dataIndx: 'COMP_CD'},
+                    {title: '가공면', datatype: 'string', dataIndx: 'COMP_CD'},
+                    {title: '클램핑', datatype: 'string', dataIndx: 'COMP_CD'},
+                    {title: '포켓', datatype: 'string', dataIndx: 'COMP_CD'},
+                    {title: '드릴', datatype: 'string', dataIndx: 'COMP_CD'},
+                    {title: '난도', datatype: 'string', dataIndx: 'COMP_CD'}
+                ]
+            },
+            {
+                title: '예상소재 Size', align: 'center', hidden: true, colModel: [
+                    {title: '가로', datatype: 'string', dataIndx: 'COMP_CD', editable: false},
+                    {title: '세로', datatype: 'string', dataIndx: 'COMP_CD', editable: false},
+                    {title: '높이', datatype: 'string', dataIndx: 'COMP_CD', editable: false},
+                    {title: '중량(KG)', datatype: 'string', dataIndx: 'COMP_CD', editable: false},
+                    {title: '부피(cm3)', datatype: 'string', dataIndx: 'COMP_CD', editable: false}
+                ]
+            },
+            {title: '소재비', dataType: 'string', dataIndx: 'MATERIAL_UNIT_PRICE', colModel: []},
+            {title: '표면<br>처리비', dataType: 'string', dataIndx: 'SURFACE_UNIT_PRICE', colModel: []}
         ];
         let toolbar = {
             cls: 'pq-toolbar-crud',
@@ -298,7 +325,7 @@
                             for (let i = 0; i < selectedRowCount; i++) {
                                 let thisRowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
 
-                                if(thisRowData.상태컬럼 === '' && thisRowData.상태컬럼 === '확정취소') {
+                                if (thisRowData.상태컬럼 === '' && thisRowData.상태컬럼 === '확정취소') {
                                     alert('확정상태가 빈칸(임시저장)이나 확정취소인 경우에만 가능');
                                     return false;
                                 }
@@ -360,16 +387,16 @@
             }
         };
         $orderManagementGrid = $('#' + gridId).pqGrid(obj);
-        $('#NEW_ORDER_REGISTRATION_GRID').pqGrid(obj);
+        let tempGrid = $('#NEW_ORDER_REGISTRATION_GRID').pqGrid(obj);
 
         $('#DETAIL_ESTIMATE_REQUIRE').on('click', function () {
             let $orderManagementGridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
             let Cols = $orderManagementGridInstance.Columns();
             let titles = ['상세가공요건', '예상소재 Size'];
 
-            Cols.alter(function(){
-                for(let i = 0; i < titles.length; i++) {
-                    let col = Cols.find(function(col){
+            Cols.alter(function () {
+                for (let i = 0; i < titles.length; i++) {
+                    let col = Cols.find(function (col) {
                         return col.title === titles[i];
                     });
                     col.hidden = !col.hidden;
@@ -379,6 +406,134 @@
                     }
                 }
             })
+        });
+
+        // console.log($('[name=CONTROL_MANAGE_TERM]:checked').val());
+        $('[name=CONTROL_MANAGE_TERM]').change(function () {
+            let value = $(this).val();
+            let today = new Date();
+            let newDate = new Date();
+
+            switch (value) {
+                case 'today':
+                    changeDate(newDate, today);
+                    break;
+                case 'current_month':
+                    newDate.setMonth(newDate.getMonth() - 1);
+
+                    changeDate(newDate, today);
+                    break;
+                case 'three_months':
+                    newDate.setMonth(newDate.getMonth() - 3);
+
+                    changeDate(newDate, today);
+                    break;
+            }
+        });
+
+        let changeDate = function (newDate, today) {
+            $('#CONTROL_MANAGE_START_DATE').val(newDate.format('MM/dd/yyyy'));
+            $('#CONTROL_MANAGE_END_DATE').val(today.format('MM/dd/yyyy'));
+        };
+
+
+        Date.prototype.format = function (f) {
+            if (!this.valueOf()) {
+                return ' ';
+            }
+
+            let weekKorName = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+            let weekKorShortName = ['일', '월', '화', '수', '목', '금', '토'];
+            let weekEngName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            let weekEngShortName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            let d = this;
+
+            return f.replace(/(yyyy|yy|MM|dd|KS|KL|ES|EL|HH|hh|mm|ss|a\/p)/gi, function ($1) {
+                switch ($1) {
+                    case 'yyyy':
+                        return d.getFullYear(); // 년 (4자리)
+                    case 'yy':
+                        return (d.getFullYear() % 1000).zf(2); // 년 (2자리)
+                    case 'MM':
+                        return (d.getMonth() + 1).zf(2); // 월 (2자리)
+                    case 'dd':
+                        return d.getDate().zf(2); // 일 (2자리)
+                    case 'KS':
+                        return weekKorShortName[d.getDay()]; // 요일 (짧은 한글)
+                    case 'KL':
+                        return weekKorName[d.getDay()]; // 요일 (긴 한글)
+                    case 'ES':
+                        return weekEngShortName[d.getDay()]; // 요일 (짧은 영어)
+                    case 'EL':
+                        return weekEngName[d.getDay()]; // 요일 (긴 영어)
+                    case 'HH':
+                        return d.getHours().zf(2); // 시간 (24시간 기준, 2자리)
+                    case 'hh':
+                        return ((h = d.getHours() % 12) ? h : 12).zf(2); // 시간 (12시간 기준, 2자리)
+                    case 'mm':
+                        return d.getMinutes().zf(2); // 분 (2자리)
+                    case 'ss':
+                        return d.getSeconds().zf(2); // 초 (2자리)
+                    case 'a/p':
+                        return d.getHours() < 12 ? '오전' : '오후'; // 오전/오후 구분
+                    default:
+                        return $1;
+                }
+            });
+        };
+
+        String.prototype.string = function (len) {
+            let s = '';
+            let i = 0;
+
+            while (i++ < len) {
+                s += this;
+            }
+
+            return s;
+        };
+        String.prototype.zf = function (len) {
+            return '0'.string(len - this.length) + this;
+        };
+        Number.prototype.zf = function (len) {
+            return this.toString().zf(len);
+        };
+
+
+        $('#CONTROL_MANAGE_DATEPICKER_READ_ONLY').on('click', function () {
+            let checked = $('#CONTROL_MANAGE_DATEPICKER_READ_ONLY').prop('checked');
+            if (checked) {
+                $('[id^=CONTROL_MANAGE][id$=DATE]').datepicker('destroy');
+            } else {
+                $('[id^=CONTROL_MANAGE][id$=DATE]').datepicker();
+            }
+        });
+
+        $('#CONTROL_MANGE_POPUP').on('show.bs.modal', function () {
+            console.log($('#NEW_ORDER_REGISTRATION_GRID'));
+            $('#NEW_ORDER_REGISTRATION_GRID').pqGrid({
+                collapsible: false,
+                resizable: true,
+                showTitle: false,
+                numberCell: {title: 'No.'},
+                scrollModel: {autoFit: true},
+                trackModel: {on: true},
+                columnTemplate: {
+                    align: 'center',
+                    halign: 'center',
+                    hvalign: 'center' //to vertically center align the header cells.
+                },
+                colModel: colModel,
+                toolbar: toolbar,
+                dataModel: {
+                    location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                    postData: postData,
+                    getData: function (dataJSON) {
+                        debugger;
+                        return {data: dataJSON.data};
+                    }
+                }
+            });
         });
     });
 </script>

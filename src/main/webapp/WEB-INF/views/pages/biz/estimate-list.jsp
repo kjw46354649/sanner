@@ -7,17 +7,17 @@
 --%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
-<div class="modal fade" id="estimate_master_record_popup" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal" id="estimate_master_record_popup" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title">견적 상세 정보</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">주문으로 이동</span><span class="sr-only">Close</span></button>
             </div>
             <div class="modal-body">
-                <form class="form-inline gridmenu" role="form" id="estimate_master_record_popup_search_form" name="estimate_master_record_popup_search_form">
+                <form class="form-inline" role="form" id="estimate_master_record_popup_search_form" name="estimate_master_record_popup_search_form">
                     <div class="panel-body line_tit portlet-body form bg-light">
-                        <section class="bg-light topmenu">
+                        <section class="bg-light">
                             <div class="row">
                                 <div class="col-md-12 col-sm-12">
                                     <form class="form-horizontal" data-validate="parsley" action="#">
@@ -38,7 +38,7 @@
                                                         <input type="text" data-notblank="true" class="form-control" placeholder="Title">
                                                     </div>
                                                 </div>
-                                                <div class="line line-dashed b-b line-lg pull-in"></div>
+                                                <div class="line line-dashed b-b pull-in"></div>
                                                 <div class="form-group col-md-4 col-sm-4">
                                                     <label class="col-md-4 col-sm-4 control-label">구매 담당자</label>
                                                     <div class="col-md-8 col-sm-8">
@@ -57,7 +57,7 @@
                                                         <input type="text" class="form-control" placeholder="등록일시">
                                                     </div>
                                                 </div>
-                                                <div class="line line-dashed b-b line-lg pull-in"></div>
+                                                <div class="line line-dashed b-b pull-in"></div>
                                                 <div class="form-group col-md-4 col-sm-4">
                                                     <label class="col-md-4 col-sm-4 control-label">견적번호</label>
                                                     <div class="col-md-8 col-sm-8">
@@ -76,7 +76,7 @@
                                                         <input type="text" class="form-control" placeholder="min = 6">
                                                     </div>
                                                 </div>
-                                                <div class="line line-dashed b-b line-lg pull-in"></div>
+                                                <div class="line line-dashed b-b pull-in"></div>
                                                 <div class="form-group col-md-4 col-sm-4">
                                                     <label class="col-md-4 col-sm-4 control-label">견적금액 계</label>
                                                     <div class="col-md-8 col-sm-8">
@@ -100,7 +100,6 @@
                                 </div>
                             </div>
                         </section>
-
                         <!-- grid table -->
                         <section class="bg-light">
                             <div class="row">
@@ -185,7 +184,7 @@
                                 <label class="control-label" for="SEL_COMP_CLASS">사업자구분</label>
                                 <select id="SEL_COMP_CLASS" name="SEL_COMP_CLASS" data-required="true" class="form-control parsley-validated">
                                     <option value="">Select</option>
-                                    <c:forEach var="code" items="${HIGHCD.H_1001}">
+                                    <c:forEach var="code" items="${HighCode.H_1007}">
                                         <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
                                     </c:forEach>
                                 </select>
@@ -194,7 +193,7 @@
                                 <label class="control-label" for="SEL_COMP_TYPE">발주사</label>
                                 <select id="SEL_COMP_TYPE" name="SEL_COMP_TYPE" data-required="true" class="form-control parsley-validated">
                                     <option value="">Select</option>
-                                    <c:forEach var="code" items="${HIGHCD.H_1042}">
+                                    <c:forEach var="code" items="${HighCode.H_1042}">
                                         <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
                                     </c:forEach>
                                 </select>
@@ -228,7 +227,7 @@
                             <div class="form-group col-md-4">
                                 <select id="SEARCH_DATE" name="SEARCH_DATE" data-required="true" class="form-control parsley-validated">
                                     <option value="">Select</option>
-                                    <c:forEach var="code" items="${HIGHCD.H_10002}">
+                                    <c:forEach var="code" items="${HighCode.H_10002}">
                                         <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
                                     </c:forEach>
                                 </select>
@@ -271,10 +270,8 @@
         let estimateMasterTopGrid = $("#estimate_master_top_grid");
         let estimateMasterBotGrid = $("#estimate_master_bot_grid");
 
-        let estimateMaterPopTopGrid = $("#estimate_master_popup_top_grid");
-        let estimateMaterPopBotGrid = $("#estimate_master_popup_bot_grid");
-
-        let basicHeaderStyle = { 'text-align':'center','vertical-align':'middle', 'padding-top':'28px'};
+        let estimateMasterPopTopGrid = $("#estimate_master_record_popup #estimate_master_popup_top_grid");
+        let estimateMasterPopBotGrid = $("#estimate_master_record_popup #estimate_master_popup_bot_grid");
 
         let estimateMasterTopColModel= [
             //{title: 'No.', dataType: 'string', dataIndx: 'EST_SEQ'},
@@ -296,10 +293,10 @@
         ];
 
         let estimateMasterBotColModel= [
-            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', styleHead: basicHeaderStyle } ,
-            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', styleHead: basicHeaderStyle } ,
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', styleHead: basicHeaderStyle } ,
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', styleHead: basicHeaderStyle } ,
+            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM' } ,
+            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM' } ,
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM' } ,
+            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM' } ,
             {title: '규격', align: "center", colModel: [
                 {title: '타입', dataType: 'string', dataIndx: 'SIZE_TYPE'},
                 {title: '가로', dataType: 'string', dataIndx: 'SIZE_W'},
@@ -308,13 +305,13 @@
                 {title: '지름', dataType: 'string', dataIndx: 'SIZE_D'},
                 {title: '길이', dataType: 'string', dataIndx: 'SIZE_L'},
             ]},
-            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY', styleHead: basicHeaderStyle},
-            {title: '작업구분', dataType: 'string', dataIndx: 'WORK_TYPE', styleHead: basicHeaderStyle},
-            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_TYPE', styleHead: basicHeaderStyle},
-            {title: '소재상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', styleHead: basicHeaderStyle},
-            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', styleHead: basicHeaderStyle},
-            {title: '사급', dataType: 'string', dataIndx: 'COMP_SUPPLY_YN', styleHead: basicHeaderStyle},
-            {title: '열처리', dataType: 'string', dataIndx: 'HEAT_TREAT_YN', styleHead: basicHeaderStyle},
+            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
+            {title: '작업구분', dataType: 'string', dataIndx: 'WORK_TYPE'},
+            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_TYPE'},
+            {title: '소재상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
+            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT'},
+            {title: '사급', dataType: 'string', dataIndx: 'COMP_SUPPLY_YN'},
+            {title: '열처리', dataType: 'string', dataIndx: 'HEAT_TREAT_YN'},
             {title: '항목별 견적정보', align: "center", colModel: [
                 {title: '소재비', dataType: 'string', dataIndx: 'MATERIAL_UNIT_COST'},
                 {title: 'TM각비', dataType: 'string', dataIndx: 'TOUCH_UNIT_COST'},
@@ -322,15 +319,15 @@
                 {title: '가공비', dataType: 'string', dataIndx: 'PROCESS_UNIT_COST'},
                 {title: '기타추가', dataType: 'string', dataIndx: 'ETC_UNIT_COST'}
             ]},
-            {title: '계산견적단가', dataType: 'string', dataIndx: 'FINAL_EST_UNIT_PRICE', styleHead: basicHeaderStyle},
-            {title: '최종견적가', dataType: 'string', dataIndx: '', styleHead: basicHeaderStyle},
-            {title: '금액 계', dataType: 'string', dataIndx: '', styleHead: basicHeaderStyle},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', styleHead: basicHeaderStyle},
-            {title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ', styleHead: basicHeaderStyle},
-            {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', styleHead: basicHeaderStyle}
+            {title: '계산견적단가', dataType: 'string', dataIndx: 'FINAL_EST_UNIT_PRICE'},
+            {title: '최종견적가', dataType: 'string', dataIndx: ''},
+            {title: '금액 계', dataType: 'string', dataIndx: ''},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
+            {title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ'},
+            {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ'}
         ];
 
-        let estimateMaterPopTopColModel= [
+        let estimateMasterPopTopColModel= [
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM' },
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM' },
             {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY' },
@@ -342,16 +339,10 @@
             {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ' }
         ];
 
-        let estimateMaterPopBotColModel= [
-            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM' },
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM' },
-            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY' },
-            {title: '견적단가', dataType: 'string', dataIndx: 'FINAL_EST_UNIT_PRICE' },
-            {title: '최종단가', dataType: 'string', dataIndx: '' },
-            {title: '최종금액 계', dataType: 'string', dataIndx: '' },
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE' },
-            {title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ' },
-            {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ' }
+        let estimateMasterPopBotColModel= [
+            {title: '성함', dataType: 'string', dataIndx: 'ITEM_NM' },
+            {title: '메일주소', dataType: 'string', dataIndx: 'DRAWING_NUM' },
+            {title: '전화번호', dataType: 'string', dataIndx: 'ITEM_QTY' }
         ];
 
         let estimateMasterTopToolbar = {
@@ -402,139 +393,129 @@
             items: []
         };
 
-        let estimateMaterPopTopToolbar = {
+        let estimateMasterPopTopToolbar = {
             items: []
         };
 
-        let estimateMaterPopBotToolbar = {
-            items: []
+        let estimateMasterPopBotToolbar = {
+            items: [{ type: 'checkbox', label: '자동메일 발송', style: 'float: right;' }]
         };
 
         estimateMasterTopGrid.pqGrid({
-            width: "100%",
-            height: 350,
-            scrollModel: {autoFit: true},
+            width: "100%", height: 200,
             dataModel: {
-                location: "remote",
-                dataType: "json",
-                method: "POST",
+                location: "remote", dataType: "json", method: "POST", recIndx: 'EST_SEQ',
                 url: "/paramQueryGridSelect",
                 postData: { 'queryId': 'selectEstimateMasterList'},
-                recIndx: 'EST_NUM',
                 getData: function (dataJSON) {
                     let data = dataJSON.data;
                     return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                 }
             },
+            columnTemplate: {align: 'center', hvalign: 'center'},
+            scrollModel: {autoFit: true},
+            numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
-            colModel: estimateMasterTopColModel,
-            numberCell: {width: 30, title: "No", show: true },
+            resizable: false,
             //trackModel: {on: true},
             //resizable: true,
+            colModel: estimateMasterTopColModel,
+            toolbar: estimateMasterTopToolbar,
             complete: function(event, ui) {
                 estimateMasterTopGrid.pqGrid('setSelection', {rowIndx:0} );
             },
             rowSelect: function( event, ui ) {
                 //if(ui.addList.length > 0 ) {
-                    let EST_SEQ = ui.addList[0].rowData.EST_SEQ;
-                    let EST_VER = ui.addList[0].rowData.EST_VER;
-                    click_seq=EST_SEQ;
-                    selectEstimateBotList(EST_SEQ, EST_VER);
+                let EST_SEQ = ui.addList[0].rowData.EST_SEQ;
+                let EST_VER = ui.addList[0].rowData.EST_VER;
+                click_seq=EST_SEQ;
+                selectEstimateBotList(EST_SEQ, EST_VER);
                 //}
             },
-            toolbar: estimateMasterTopToolbar
         });
 
         selectEstimateBotList('', '');
 
         function selectEstimateBotList(EST_SEQ, EST_VER) {
             estimateMasterBotGrid.pqGrid({
-                width: "100%",
-                height: 200,
-                scrollModel: {autoFit: true},
+                width: "100%", height: 350,
                 dataModel: {
-                    location: "remote",
-                    dataType: "json",
-                    method: "POST",
+                    location: "remote", dataType: "json", method: "POST", recIndx: 'EST_SEQ',
                     url: "/paramQueryGridSelect",
-                    postData: { 'queryId': 'selectEstimateDetailList', 'EST_NUM': EST_SEQ, 'EST_VER': EST_VER },
-                    recIndx: 'EST_NUM',
+                    postData: { 'queryId': 'selectEstimateDetailList', 'EST_SEQ': EST_SEQ, 'EST_VER': EST_VER },
                     getData: function (dataJSON) {
                         let data = dataJSON.data;
                         return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                     }
                 },
+                scrollModel: {autoFit: true},
+                numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'row', mode: 'single'} ,
                 swipeModel: {on: false},
-                colModel: estimateMasterBotColModel,
-                numberCell: {width: 30, title: "No", show: true },
+                resizable: false,
                 //trackModel: {on: true},
                 //resizable: true,
+                colModel: estimateMasterBotColModel,
                 toolbar: estimateMasterBotToolbar
             });
 
             estimateMasterBotGrid.pqGrid("refreshDataAndView");
         };
 
+        $('#estimate_master_record_popup').on('hide.bs.modal', function() {
+            estimateMasterPopTopGrid.pqGrid( "destroy" );
+            estimateMasterPopBotGrid.pqGrid( "destroy" );
+        });
 
-        $('#estimate_master_record_popup').on('show.bs.modal',function(evt) {
-            alert("OPEN");
-            estimateMaterPopTopGrid.pqGrid({
-                width: "100%",
-                height: 200,
-                scrollModel: {autoFit: true},
+        $('#estimate_master_record_popup').on('show.bs.modal',function() {
+            estimateMasterPopTopGrid.pqGrid({
+                width: "100%", height: 200,
                 dataModel: {
-                    location: "remote",
-                    dataType: "json",
-                    method: "POST",
+                    location: "remote", dataType: "json", method: "POST", recIndx: 'MODULE_NM',
                     url: "/paramQueryGridSelect",
                     postData: { 'queryId': 'selectEstimateMasterList' },
-                    recIndx: 'EST_NUM',
                     getData: function (dataJSON) {
-                        let data = dataJSON.data;
-                        return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
+                        return {data: dataJSON.data};
                     }
                 },
+                scrollModel: {autoFit: true},
+                numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'row', mode: 'single'} ,
                 swipeModel: {on: false},
-                colModel: estimateMaterPopTopColModel,
-                numberCell: {width: 30, title: "No", show: true },
-                //trackModel: {on: true},
-                //resizable: true,
-                toolbar: estimateMaterPopTopToolbar
+                resizable: false,
+                colModel: estimateMasterPopTopColModel,
+                toolbar: estimateMasterPopTopToolbar
             });
 
-            estimateMaterPopBotGrid.pqGrid({
-                width: "100%",
-                //height: 350,
-                scrollModel: {autoFit: true},
+            estimateMasterPopBotGrid.pqGrid({
+                width: "100%", height: 150,
                 dataModel: {
-                    location: "remote",
-                    dataType: "json",
-                    method: "POST",
+                    location: "remote", dataType: "json", method: "POST", recIndx: 'EST_SEQ',
                     url: "/paramQueryGridSelect",
                     postData: { 'queryId': 'selectEstimateMasterList'},
-                    recIndx: 'EST_NUM',
                     getData: function (dataJSON) {
-                        let data = dataJSON.data;
-                        return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
+                        return {data: dataJSON.data};
                     }
                 },
+                scrollModel: {autoFit: true},
+                numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'row', mode: 'single'} ,
                 swipeModel: {on: false},
-                colModel: estimateMaterPopBotColModel,
-                numberCell: {width: 30, title: "No", show: true },
-                //trackModel: {on: true},
-                //resizable: true,
-                toolbar: estimateMaterPopBotToolbar
+                resizable: false,
+                colModel: estimateMasterPopBotColModel,
+                toolbar: estimateMasterPopBotToolbar
             });
-        });
 
+            estimateMasterPopTopGrid.pqGrid("refreshDataAndView");
+            estimateMasterPopBotGrid.pqGrid("refreshDataAndView");
+
+        });
 
         $("#SEL_COMP_CLASS").on("change", function(){
-            fnGetCommCodeBasicSelectBox( $("#SEL_COMP_TYPE"), '', $(this).val(), 'A');
+            //fnGetCommCodeBasicSelectBox( $("#SEL_COMP_TYPE"), '', $(this).val(), 'A');
         });
+
 
     });
 
