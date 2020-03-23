@@ -7,12 +7,12 @@
 --%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
-<div class="modal fade" id="estimate_master_record_popup" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal" id="estimate_master_record_popup" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title">견적 상세 정보</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">주문으로 이동</span><span class="sr-only">Close</span></button>
             </div>
             <div class="modal-body">
                 <form class="form-inline" role="form" id="estimate_master_record_popup_search_form" name="estimate_master_record_popup_search_form">
@@ -184,7 +184,7 @@
                                 <label class="control-label" for="SEL_COMP_CLASS">사업자구분</label>
                                 <select id="SEL_COMP_CLASS" name="SEL_COMP_CLASS" data-required="true" class="form-control parsley-validated">
                                     <option value="">Select</option>
-                                    <c:forEach var="code" items="${HIGHCD.H_1007}">
+                                    <c:forEach var="code" items="${HighCode.H_1007}">
                                         <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
                                     </c:forEach>
                                 </select>
@@ -193,7 +193,7 @@
                                 <label class="control-label" for="SEL_COMP_TYPE">발주사</label>
                                 <select id="SEL_COMP_TYPE" name="SEL_COMP_TYPE" data-required="true" class="form-control parsley-validated">
                                     <option value="">Select</option>
-                                    <c:forEach var="code" items="${HIGHCD.H_1042}">
+                                    <c:forEach var="code" items="${HighCode.H_1042}">
                                         <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
                                     </c:forEach>
                                 </select>
@@ -226,7 +226,7 @@
                             <div class="form-group col-md-4">
                                 <select id="SEARCH_DATE" name="SEARCH_DATE" data-required="true" class="form-control parsley-validated">
                                     <option value="">Select</option>
-                                    <c:forEach var="code" items="${HIGHCD.H_10002}">
+                                    <c:forEach var="code" items="${HighCode.H_10002}">
                                         <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
                                     </c:forEach>
                                 </select>
@@ -266,36 +266,15 @@
     $(function () {
         'use strict';
         let click_seq;
-        let estimateMasterTopGrid = $("#estimate_master_top_grid");
-        let estimateMasterBotGrid = $("#estimate_master_bot_grid");
-
-        let estimateMasterPopTopGrid = $("#estimate_master_record_popup #estimate_master_popup_top_grid");
-        let estimateMasterPopBotGrid = $("#estimate_master_record_popup #estimate_master_popup_bot_grid");
+        let estimateRegisterTopGrid = $("#estimate_master_top_grid");
+        let estimateRegisterBotGrid = $("#estimate_master_bot_grid");
 
         let basicHeaderStyle = { 'text-align':'center','vertical-align':'middle', 'padding-top':'28px'};
 
-        let estimateMasterTopColModel= [
-            //{title: 'No.', dataType: 'string', dataIndx: 'EST_SEQ'},
-            {title: 'Status', dataType: 'string', dataIndx: 'EST_STATUS'},
-            {title: '발주사', dataType: 'string', dataIndx: 'ORDER_COMP_CD'},
-            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ'},
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD'},
-            {title: '견적번호', dataType: 'string', dataIndx: 'EST_NUM'},
-            {title: '차수', dataType: 'string', dataIndx: 'EST_VER'},
-            {title: '', dataType: 'string', dataIndx: ''},
-            {title: '제목', dataType: 'string', dataIndx: 'EST_TITLE'},
-            {title: '품수', dataType: 'string', dataIndx: 'DTL_CNT'},
-            {title: '금액 계', dataType: 'string', dataIndx: 'DTL_AMOUNT'},
-            {title: '등록일시', dataType: 'string', dataIndx: 'INSERT_DT'},
-            {title: '견적담당', dataType: 'string', dataIndx: 'EST_USER_ID'},
-            {title: '발송일시', dataType: 'string', dataIndx: 'SEND_DT'},
-            {title: '', dataType: 'string', dataIndx: ''},
-            {title: '주문접수', dataType: 'string', dataIndx: ''}
-        ];
-
-        let estimateMasterBotColModel= [
+        let estimateRegisterTopColModel= [
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', styleHead: basicHeaderStyle } ,
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', styleHead: basicHeaderStyle } ,
+            {title: '', dataType: 'string', dataIndx: 'DRAWING_YN', styleHead: basicHeaderStyle } ,
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', styleHead: basicHeaderStyle } ,
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', styleHead: basicHeaderStyle } ,
             {title: '규격', align: "center", colModel: [
@@ -328,37 +307,25 @@
             {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', styleHead: basicHeaderStyle}
         ];
 
-        let estimateMasterPopTopColModel= [
-            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM' },
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM' },
-            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY' },
-            {title: '견적단가', dataType: 'string', dataIndx: 'FINAL_EST_UNIT_PRICE' },
-            {title: '최종단가', dataType: 'string', dataIndx: '' },
-            {title: '최종금액 계', dataType: 'string', dataIndx: '' },
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE' },
-            {title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ' },
-            {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ' }
-        ];
-
-        let estimateMasterPopBotColModel= [
+        let estimateRegisterBotColModel= [
             {title: '성함', dataType: 'string', dataIndx: 'ITEM_NM' },
             {title: '메일주소', dataType: 'string', dataIndx: 'DRAWING_NUM' },
             {title: '전화번호', dataType: 'string', dataIndx: 'ITEM_QTY' }
         ];
 
-        let estimateMasterTopToolbar = {
+        let estimateRegisterTopToolbar = {
             items: [
                 {
                     type: 'button', label: 'Delete', icon: 'ui-icon-minus', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            estimateMasterTopGrid.pqGrid('addNodes', [{}], 0);
+                            estimateRegisterTopGrid.pqGrid('addNodes', [{}], 0);
                         }
                     }
                 },
                 {
                     type: 'button', label: 'save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            let grid = estimateMasterTopGrid.pqGrid('getInstance').grid;
+                            let grid = estimateRegisterTopGrid.pqGrid('getInstance').grid;
                             //추가 또는 수정된 값이 있으면 true
                             console.log(grid);
                             if (grid.isDirty()) {
@@ -377,7 +344,7 @@
                                     dataType: 'json',
                                     data: {'data': JSON.stringify(changes)},
                                     success: function (result) {
-                                        estimateMasterTopGrid.pqGrid("refreshDataAndView");
+                                        estimateRegisterTopGrid.pqGrid("refreshDataAndView");
                                     },
                                     error: function (e) {
                                         console.error(e);
@@ -390,147 +357,70 @@
                 }
             ]
         };
-        let estimateMasterBotToolbar = {
-            items: []
+        let estimateRegisterBotToolbar = {
+            items: [{ type: 'checkbox', label: '자동메일 발송', style: 'float: right;' }]
         };
 
-        let estimateMasterPopTopToolbar = {
-            items: []
-        };
-
-        let estimateMasterPopBotToolbar = {
-            items: []
-        };
-
-        estimateMasterTopGrid.pqGrid({
-            width: "100%",
-            height: 200,
-            scrollModel: {autoFit: true},
+        estimateRegisterTopGrid.pqGrid({
+            width: "100%", height: 200,
             dataModel: {
-                location: "remote",
-                dataType: "json",
-                method: "POST",
+                location: "remote", dataType: "json", method: "POST", recIndx: 'EST_SEQ',
                 url: "/paramQueryGridSelect",
                 postData: { 'queryId': 'selectEstimateMasterList'},
-                recIndx: 'EST_SEQ',
                 getData: function (dataJSON) {
                     let data = dataJSON.data;
                     return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                 }
             },
+            scrollModel: {autoFit: true},
+            numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
-            colModel: estimateMasterTopColModel,
-            numberCell: {width: 30, title: "No", show: true },
+            resizable: false,
             //trackModel: {on: true},
             //resizable: true,
+            colModel: estimateRegisterTopColModel,
+            toolbar: estimateRegisterTopToolbar,
             complete: function(event, ui) {
-                estimateMasterTopGrid.pqGrid('setSelection', {rowIndx:0} );
+                estimateRegisterTopGrid.pqGrid('setSelection', {rowIndx:0} );
             },
             rowSelect: function( event, ui ) {
                 //if(ui.addList.length > 0 ) {
-                    let EST_SEQ = ui.addList[0].rowData.EST_SEQ;
-                    let EST_VER = ui.addList[0].rowData.EST_VER;
-                    click_seq=EST_SEQ;
-                    selectEstimateBotList(EST_SEQ, EST_VER);
+                let EST_SEQ = ui.addList[0].rowData.EST_SEQ;
+                let EST_VER = ui.addList[0].rowData.EST_VER;
+                click_seq=EST_SEQ;
+                selectEstimateBotList(EST_SEQ, EST_VER);
                 //}
             },
-            toolbar: estimateMasterTopToolbar
         });
 
         selectEstimateBotList('', '');
 
         function selectEstimateBotList(EST_SEQ, EST_VER) {
-            estimateMasterBotGrid.pqGrid({
-                width: "100%",
-                height: 350,
-                scrollModel: {autoFit: true},
+            estimateRegisterBotGrid.pqGrid({
+                width: "100%", height: 350,
                 dataModel: {
-                    location: "remote",
-                    dataType: "json",
-                    method: "POST",
+                    location: "remote", dataType: "json", method: "POST", recIndx: 'EST_SEQ',
                     url: "/paramQueryGridSelect",
                     postData: { 'queryId': 'selectEstimateDetailList', 'EST_SEQ': EST_SEQ, 'EST_VER': EST_VER },
-                    recIndx: 'EST_SEQ',
                     getData: function (dataJSON) {
                         let data = dataJSON.data;
                         return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                     }
                 },
+                scrollModel: {autoFit: true},
+                numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'row', mode: 'single'} ,
                 swipeModel: {on: false},
-                colModel: estimateMasterBotColModel,
-                numberCell: {width: 30, title: "No", show: true },
-                //trackModel: {on: true},
                 resizable: false,
-                toolbar: estimateMasterBotToolbar
+                //trackModel: {on: true},
+                //resizable: true,
+                colModel: estimateRegisterBotColModel,
+                toolbar: estimateRegisterBotToolbar
             });
 
-            estimateMasterBotGrid.pqGrid("refreshDataAndView");
+            estimateRegisterBotGrid.pqGrid("refreshDataAndView");
         };
-
-
-        $('#estimate_master_record_popup').on('show.bs.modal',function() {
-            estimateMasterPopTopGrid.pqGrid({
-                width: "100%",
-                height: 200,
-                scrollModel: {autoFit: true},
-                dataModel: {
-                    location: "remote",
-                    dataType: "json",
-                    method: "POST",
-                    url: "/paramQueryGridSelect",
-                    postData: { 'queryId': 'selectEstimateMasterList' },
-                    recIndx: 'MODULE_NM',
-                    getData: function (dataJSON) {
-                        return {data: dataJSON.data};
-                    }
-                },
-                selectionModel: { type: 'row', mode: 'single'} ,
-                swipeModel: {on: false},
-                colModel: estimateMasterPopTopColModel,
-                numberCell: {width: 30, title: "No", show: true },
-                //trackModel: {on: true},
-                //resizable: true,
-                complete: function(event, ui) {
-                    alert("complete");
-                    estimateMasterPopTopGrid.pqGrid("refreshHeader");
-                },
-                toolbar: estimateMasterPopTopToolbar
-            });
-
-            estimateMasterPopBotGrid.pqGrid({
-                width: "100%",
-                height: 150,
-                scrollModel: {autoFit: true},
-                dataModel: {
-                    location: "local",
-                    dataType: "json",
-                    method: "POST",
-                    url: "/paramQueryGridSelect",
-                    postData: { 'queryId': 'selectEstimateMasterList'},
-                    //recIndx: 'EST_SEQ',
-                    getData: function (dataJSON) {
-                        return {data: dataJSON.data};
-                    }
-                },
-                selectionModel: { type: 'row', mode: 'single'} ,
-                //swipeModel: {on: false},
-                colModel: estimateMasterPopBotColModel,
-                numberCell: {width: 30, title: "No", show: true },
-                //trackModel: {on: true},
-                //resizable: true,
-                complete: function(event, ui) {
-                    alert("complete");
-                    estimateMasterPopTopGrid.pqGrid("refreshHeader");
-                },
-                toolbar: estimateMasterPopBotToolbar
-            });
-
-            //estimateMasterPopTopGrid.pqGrid("refreshDataAndView");
-            //estimateMasterPopBotGrid.pqGrid("refreshDataAndView");
-
-        });
 
         $("#SEL_COMP_CLASS").on("change", function(){
             //fnGetCommCodeBasicSelectBox( $("#SEL_COMP_TYPE"), '', $(this).val(), 'A');

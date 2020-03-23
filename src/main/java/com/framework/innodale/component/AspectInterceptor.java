@@ -45,13 +45,6 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
                 localeNat = "en";
             }
 
-            if(session.getAttribute("HIGHCD") == null){
-                Map<String, Object> hashMap = new HashMap<String, Object>();
-                hashMap.put("queryId", "systemMapper.selectSessionCodeList");
-                HashMap<String, Object> highCode = CommonUtility.getCode(innodaleService.getList(hashMap));
-                session.setAttribute("HIGHCD", highCode);
-            }
-
             LocaleEditor localeEditor = new LocaleEditor();
             localeEditor.setAsText(localeNat);
             localeResolver.setLocale(request, response, (Locale) localeEditor.getValue());
@@ -62,10 +55,21 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
         return true;
     }
 
-    //after the handler is executed /makeToShippingmarkOZReport
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         HttpSession session = request.getSession();
+        Map<String, Object> hashMap = new HashMap<String, Object>();
+
+        if(session.getAttribute("HighCode") == null){
+            hashMap.put("queryId", "systemMapper.selectSessionCodeList");
+            session.setAttribute("HighCode", CommonUtility.getCode(innodaleService.getList(hashMap)));
+        }
+
+        if(session.getAttribute("LocalMenu") == null){
+            hashMap.put("queryId", "systemMapper.selectSessionMenuList");
+            session.setAttribute("LocalMenu", innodaleService.getList(hashMap));
+        }
+
         System.out.println("postHandle session.getId()=[" + session.getId() + "]" );
     }
 
