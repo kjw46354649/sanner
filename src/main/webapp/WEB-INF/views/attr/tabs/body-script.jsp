@@ -44,7 +44,7 @@
 
 
 <script type='text/javascript'>
-
+    var g_code;
     var royal_tab_api = null;
     $(document).ready(function() {
 
@@ -99,7 +99,7 @@
      * @param {*} callFunctionParam - 리텅 Function 전달 Parameter
      */
     let fnPostAjax = function (callFunction, params, callFunctionParam) {
-        // 'use strict';
+        'use strict';
         let callback = $.Callbacks();
         let param = $.extend({url: null, data: ''}, params || {});
 
