@@ -25,7 +25,7 @@
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="CORPORATION">사업자</label>
-                                <select class="form-control" id="CORPORATION">
+                                <select class="form-control" name="CORPORATION" id="CORPORATION">
                                     <option value="">- ALL -</option>
                                     <c:forEach var="code" items="${HighCode.H_1007}">
                                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -34,28 +34,28 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="CLIENT">발주사</label>
-                                <select class="form-control" id="CLIENT">
+                                <select class="form-control" name="CLIENT" id="CLIENT">
                                     <option value="">- ALL -</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="DRAWING_NUMBER">도면번호</label>
-                                <input type="text" class="form-control" id="DRAWING_NUMBER">
+                                <input type="text" class="form-control" name="DRAWING_NUMBER" id="DRAWING_NUMBER">
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="PRODUCT_NAME">품명</label>
-                                <input type="text" class="form-control" id="PRODUCT_NAME">
+                                <input type="text" class="form-control" name="PRODUCT_NAME" id="PRODUCT_NAME">
                             </div>
                         </div>
                         <div class="line line-dashed b-b line-xs"></div>
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="MANAGEMENT_NUMBER">관리번호</label>
-                                <input type="text" class="form-control" id="MANAGEMENT_NUMBER">
+                                <label class="control-label" for="CONTROL_NUMBER">관리번호</label>
+                                <input type="text" class="form-control" name="CONTROL_NUMBER" id="CONTROL_NUMBER">
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="ORDER_NUMBER">발주번호</label>
-                                <input type="text" class="form-control" id="ORDER_NUMBER">
+                                <input type="text" class="form-control" name="ORDER_NUMBER" id="ORDER_NUMBER">
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="STANDARD">규격</label>
@@ -72,8 +72,8 @@
                                                                        size="3">
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="SHAPE">형태</label>
-                                <select class="form-control" id="SHAPE">
+                                <label class="control-label" for="WORK_TYPE">형태</label>
+                                <select class="form-control" name="WORK_TYPE" id="WORK_TYPE">
                                     <option value="">- ALL -</option>
                                     <c:forEach var="code" items="${HighCode.H_1013}">
                                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -163,10 +163,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <%--<div class="form-group col-md-4">
-                                <button type="submit" class="btn btn-sm btn-default">Submit</button>
-                            </div>--%>
                         </div>
                     </form>
                 </div>
@@ -182,7 +178,7 @@
                     <button id="DELETE">Delete</button>
                     <button id="DRAWING_REGISTRATION">도면 등록</button>
                     <button id="DRAWING_CHANGE">도면변경(Rev. up)</button>
-                    <button id="CONFIRMATION">확정</button>
+                    <button id="CONFIRMATION" onclick="changeOrderStatus();">확정</button>
                     <button id="CANCEL">취소</button>
                     <button id="TERMINATION">종료</button>
                     <button id="DEADLINE">마감</button>
@@ -230,7 +226,7 @@
                 <h4 class="modal-title">신규 주문 등록</h4>
             </div>
             <div class="modal-body">
-                <div id="NEW_ORDER_REGISTRATION_GRID"></div>
+                <div id="ORDER_REGISTER_GRID"></div>
             </div>
             <!-- /.modal-content -->
         </div>
@@ -241,6 +237,7 @@
 <script>
     $(function () {
         'use strict';
+        /* variable */
         let selectedRowIndex = [];
         let $orderManagementGrid;
         const gridId = 'CONTROL_MANAGE_GRID';
@@ -248,8 +245,8 @@
         let colModel = [
             {
                 title: '주문상태', align: 'center', colModel: [
-                    {title: '상태', datatype: 'string', dataIndx: 'COMP_CD', editable: false},
-                    {title: '변경일시', datatype: 'string', dataIndx: 'COMP_CD', editable: false}
+                    {title: '상태', datatype: 'string', dataIndx: 'ORDER_STATUS', editable: false},
+                    {title: '변경일시', datatype: 'string', dataIndx: 'CHANGE_DATE', editable: false}
                 ]
             },
             {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: true, editable: false, colModel: []},
@@ -270,8 +267,14 @@
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', colModel: []},
             {
                 title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', colModel: [], render: function (ui) {
+                    // if (ui.rowData.WORK_NM === '가공조립') {
+                    //     return "<i class=\"fa fa-plus\" onclick='addpart(event);'></i>";
+                        return "<span name='test114'>123</span>";
+                    // }
+
+
                     // if(ui.data)
-                    return "<span class=\"glyphicon glyphicon-plus-sign\" aria-hidden=\"true\"></span>"
+
                 }
             },
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', colModel: []},
@@ -366,6 +369,146 @@
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: postData,
+                // recIndx: 'USER_ID',
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            },
+            cellClick: function (event, ui) {
+                let rowData = ui.rowData;
+                console.log(rowData);
+
+                if (ui.dataIndx === 'PART_NUM') {
+                    // delete rowData.pq_ht;
+                    // delete rowData.pq_ri;
+
+                    // FIXME: pqgrid.min.js:13 Uncaught same data can't be added twice.
+                    $orderManagementGrid.pqGrid('addNodes', [rowData], ui.rowIndx + 1);
+                }
+            },
+            selectChange: function (event, ui) {
+                if (ui.selection.iCells.ranges[0] !== undefined) {
+                    selectedRowIndex = [];
+                    let firstRow = ui.selection.iCells.ranges[0].r1;
+                    let lastRow = ui.selection.iCells.ranges[0].r2;
+
+                    if (firstRow === lastRow) {
+                        selectedRowIndex[0] = firstRow;
+                    } else {
+                        for (let i = firstRow; i <= lastRow; i++) {
+                            selectedRowIndex.push(i);
+                        }
+                    }
+                }
+            }
+        };
+        let $orderRegisterGrid;
+        const popupGridId = 'ORDER_REGISTER_GRID';
+
+        // let postData = fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM');
+        let popupColModel = [
+            {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_NM', colModel: []},
+            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', colModel: []},
+            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', colModel: []},
+            {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', colModel: []},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', colModel: []},
+            {title: '모듈명', dataType: 'string', dataIndx: '', colModel: []},
+            {title: '주요 검사품', dataType: 'string', dataIndx: '', colModel: []},
+            {title: '긴급', dataType: 'string', dataIndx: '', colModel: []},
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', colModel: []},
+            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', colModel: []},
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_NM', colModel: []},
+            {title: '외주', dataType: 'string', dataIndx: 'OUT_YN', colModel: []},
+            {title: '수행<br>공장', dataType: 'string', dataIndx: '', colModel: []},
+            {title: '소재 사급', dataType: 'string', dataIndx: '', colModel: []},
+            {title: '요망납기', dataType: 'string', dataIndx: '', colModel: []},
+            {title: '가공납기', dataType: 'string', dataIndx: '', colModel: []},
+            {title: '규격', dataType: 'string', dataIndx: '', colModel: []},
+            {title: '소재상세종류', dataType: 'string', dataIndx: '', colModel: []},
+            {title: '소재형태', dataType: 'string', dataIndx: '', colModel: []},
+            {title: '표면처리', dataType: 'string', dataIndx: '', colModel: []},
+            {title: '열처리', dataType: 'string', dataIndx: '', colModel: []},
+            {title: 'Part<br>단위<br>수량', dataType: 'string', dataIndx: '', colModel: []},
+            {
+                title: '대칭', align: 'center', colModel: [
+                    {title: '원칭', datatype: 'string', dataIndx: ''},
+                    {title: '대칭', datatype: 'string', dataIndx: ''}
+                ]
+            },
+            {
+                title: '발주정보', align: 'center', colModel: [
+                    {title: '발주번호', datatype: 'string', dataIndx: ''},
+                    {title: '수량', datatype: 'string', dataIndx: ''},
+                    {title: '납품확인', datatype: 'string', dataIndx: ''}
+                ]
+            },
+            {title: '최종<br>견적단가', dataType: 'string', dataIndx: '', colModel: []},
+            {title: '최종<br>공급단가', dataType: 'string', dataIndx: '', colModel: []},
+            {title: '변경전<br>도면번호', dataType: 'string', dataIndx: '', colModel: []}
+        ];
+        let popupToolbar = {
+            cls: 'pq-toolbar-crud',
+            items: [
+                // {
+                //     cls: 'title-hidden',
+                //     type: 'textbox',
+                //     label: '업체 리스트',
+                //     style: 'font-size: 1.3rem;padding: 4px;font-weight: bold;'
+                // },
+                {
+                    type: 'button', label: 'Delete', icon: 'ui-icon-minus', style: 'float: right;', listener: {
+                        'click': function (evt, ui) {
+                            const DELETE_QUERY_ID = '';
+                            let selectedRowCount = selectedRowIndex.length;
+
+                            /*
+                            selectedRowIndex 중에 확정상태가 빈칸(임시저장)이나 확정취소인 경우에만 가능
+                             */
+                            for (let i = 0; i < selectedRowCount; i++) {
+                                let thisRowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+
+                                if (thisRowData.상태컬럼 === '' && thisRowData.상태컬럼 === '확정취소') {
+                                    alert('확정상태가 빈칸(임시저장)이나 확정취소인 경우에만 가능');
+                                    return false;
+                                }
+                            }
+
+                            fnDeletePQGrid($orderManagementGrid, selectedRowIndex, DELETE_QUERY_ID);
+                        }
+                    }
+                },
+                {
+                    type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
+                        'click': function (evt, ui) {
+                            const insertQueryList = ['insertUser'];
+                            const updateQueryList = ['updateUser'];
+
+                            fnModifyPQGrid($orderManagementGrid, insertQueryList, updateQueryList);
+                        }
+                    }
+                }
+            ]
+        };
+        let popoupObj = {
+            // width: 700,
+            // height: 600,
+            collapsible: false,
+            resizable: true,
+            showTitle: false,
+            numberCell: {title: 'No.'},
+            scrollModel: {autoFit: true},
+            // trackModel: {on: true},
+            columnTemplate: {
+                align: 'center',
+                halign: 'center',
+                hvalign: 'center' //to vertically center align the header cells.
+            },
+            colModel: popupColModel,
+            // editModel:{clicksToEdit: 2},
+            toolbar: popupToolbar,
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: postData,
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -386,56 +529,13 @@
                 }
             }
         };
-        $orderManagementGrid = $('#' + gridId).pqGrid(obj);
-        let tempGrid = $('#NEW_ORDER_REGISTRATION_GRID').pqGrid(obj);
+        /* variable */
 
-        $('#DETAIL_ESTIMATE_REQUIRE').on('click', function () {
-            let $orderManagementGridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
-            let Cols = $orderManagementGridInstance.Columns();
-            let titles = ['상세가공요건', '예상소재 Size'];
-
-            Cols.alter(function () {
-                for (let i = 0; i < titles.length; i++) {
-                    let col = Cols.find(function (col) {
-                        return col.title === titles[i];
-                    });
-                    col.hidden = !col.hidden;
-
-                    for (let j = 0; j < col.colModel.length; j++) {
-                        col.colModel[j].hidden = col.hidden;
-                    }
-                }
-            })
-        });
-
-        // console.log($('[name=CONTROL_MANAGE_TERM]:checked').val());
-        $('[name=CONTROL_MANAGE_TERM]').change(function () {
-            let value = $(this).val();
-            let today = new Date();
-            let newDate = new Date();
-
-            switch (value) {
-                case 'today':
-                    changeDate(newDate, today);
-                    break;
-                case 'current_month':
-                    newDate.setMonth(newDate.getMonth() - 1);
-
-                    changeDate(newDate, today);
-                    break;
-                case 'three_months':
-                    newDate.setMonth(newDate.getMonth() - 3);
-
-                    changeDate(newDate, today);
-                    break;
-            }
-        });
-
+        /* function */
         let changeDate = function (newDate, today) {
             $('#CONTROL_MANAGE_START_DATE').val(newDate.format('MM/dd/yyyy'));
             $('#CONTROL_MANAGE_END_DATE').val(today.format('MM/dd/yyyy'));
         };
-
 
         Date.prototype.format = function (f) {
             if (!this.valueOf()) {
@@ -499,9 +599,62 @@
             return this.toString().zf(len);
         };
 
+        $('#CONFIRMATION').on('click', function () {
+            console.log(selectedRowIndex);
+        });
+        /* function */
+
+        /* ??? */
+        $orderManagementGrid = $('#' + gridId).pqGrid(obj);
+        /* ??? */
+
+        /* event */
+        $('#DETAIL_ESTIMATE_REQUIRE').on('click', function () {
+            let $orderManagementGridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
+            let Cols = $orderManagementGridInstance.Columns();
+            let titles = ['상세가공요건', '예상소재 Size'];
+
+            Cols.alter(function () {
+                for (let i = 0; i < titles.length; i++) {
+                    let col = Cols.find(function (col) {
+                        return col.title === titles[i];
+                    });
+                    col.hidden = !col.hidden;
+
+                    for (let j = 0; j < col.colModel.length; j++) {
+                        col.colModel[j].hidden = col.hidden;
+                    }
+                }
+            })
+        });
+
+        // console.log($('[name=CONTROL_MANAGE_TERM]:checked').val());
+        $('[name=CONTROL_MANAGE_TERM]').change(function () {
+            let value = $(this).val();
+            let today = new Date();
+            let newDate = new Date();
+
+            switch (value) {
+                case 'today':
+                    changeDate(newDate, today);
+                    break;
+                case 'current_month':
+                    newDate.setMonth(newDate.getMonth() - 1);
+
+                    changeDate(newDate, today);
+                    break;
+                case 'three_months':
+                    newDate.setMonth(newDate.getMonth() - 3);
+
+                    changeDate(newDate, today);
+                    break;
+            }
+        });
+
 
         $('#CONTROL_MANAGE_DATEPICKER_READ_ONLY').on('click', function () {
             let checked = $('#CONTROL_MANAGE_DATEPICKER_READ_ONLY').prop('checked');
+
             if (checked) {
                 $('[id^=CONTROL_MANAGE][id$=DATE]').datepicker('destroy');
             } else {
@@ -510,30 +663,18 @@
         });
 
         $('#CONTROL_MANGE_POPUP').on('show.bs.modal', function () {
-            console.log($('#NEW_ORDER_REGISTRATION_GRID'));
-            $('#NEW_ORDER_REGISTRATION_GRID').pqGrid({
-                collapsible: false,
-                resizable: true,
-                showTitle: false,
-                numberCell: {title: 'No.'},
-                scrollModel: {autoFit: true},
-                trackModel: {on: true},
-                columnTemplate: {
-                    align: 'center',
-                    halign: 'center',
-                    hvalign: 'center' //to vertically center align the header cells.
-                },
-                colModel: colModel,
-                toolbar: toolbar,
-                dataModel: {
-                    location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                    postData: postData,
-                    getData: function (dataJSON) {
-                        debugger;
-                        return {data: dataJSON.data};
-                    }
-                }
-            });
+            $orderRegisterGrid = $('#' + popupGridId).pqGrid(popoupObj);
         });
+
+        $('#testSearch').on('click', function () {
+            postData = fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM');
+
+            fnRequestGidData($orderManagementGrid, postData);
+        });
+
+        $(document).on('click', "[name='test114']", function (e) {
+            console.log(e);
+        });
+        /* event */
     });
 </script>
