@@ -454,6 +454,14 @@
             AND EST_VER = #{EST_VER}
     </select>
 
+    <insert id="insertEstimateMaster" parameterType="java.util.HashMap">
+        INSERT INTO TBL_ESTIMATE
+            (EST_SEQ, EST_VER, EST_NUM, EST_TITLE, EST_STATUS, ORDER_COMP_CD, ORDER_STAFF_SEQ, COMP_CD,EST_USER_ID,
+            SEND_DT, EMAIL_TITLE, EMAIL_CONTENT, ETC_GFILE_SEQ, DEL_YN, INSERT_DT, INSERT_ID, UPDATE_DT, UPDATE_ID)
+        VALUES(NEXTVAL(SEQ_MENU), )
+
+    </insert>
+
     <select id="selectControlManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
         -- 		OP.ORDER_STATUS,
