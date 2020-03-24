@@ -32,68 +32,85 @@
                                                 <div class="panel-body">
                                                     <div class="form-group col-md-4 col-sm-4">
                                                         <label class="col-md-4 col-sm-4 control-label" for="SEL_COMP_TYPE">발주사</label>
-                                                        <select id="SEL_COMP_TYPE" name="SEL_COMP_TYPE" data-required="true" class="form-control parsley-validated">
-                                                            <option value="">Select</option>
-                                                            <c:forEach var="code" items="${HighCode.H_1042}">
-                                                                <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
-                                                            </c:forEach>
-                                                        </select>
+                                                        <div class="col-md-8 col-sm-8">
+                                                            <select id="SEL_COMP_TYPE" name="SEL_COMP_TYPE" data-required="true" class="form-control parsley-validated">
+                                                                <option value="">Select</option>
+                                                                <c:forEach var="code" items="${HighCode.H_1042}">
+                                                                    <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
+                                                                </c:forEach>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                     <div class="form-group col-md-8 col-sm-8">
                                                         <label class="col-md-2 col-sm-2 control-label">제목</label>
                                                         <div class="col-md-10 col-sm-10">
-                                                            <input type="text" data-notblank="true" class="form-control" placeholder="Title">
+                                                            <input type="text" data-notblank="true" class="form-control" id="EST_TITLE" name="EST_TITLE">
                                                         </div>
                                                     </div>
                                                     <div class="line line-dashed b-b pull-in"></div>
                                                     <div class="form-group col-md-4 col-sm-4">
                                                         <label class="col-md-4 col-sm-4 control-label">구매 담당자</label>
                                                         <div class="col-md-8 col-sm-8">
-                                                            <input type="text" class="form-control" placeholder="구매 담당자">
+                                                            <select id="SEL_ORDER_STAFF_SEQ" name="SEL_ORDER_STAFF_SEQ" data-required="true" class="form-control parsley-validated">
+                                                                <option value="">Select</option>
+                                                                <c:forEach var="code" items="${HighCode.H_1042}">
+                                                                    <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
+                                                                </c:forEach>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-4 col-sm-4">
                                                         <label class="col-md-4 col-sm-4 control-label">사업자구분</label>
                                                         <div class="col-md-8 col-sm-8">
-                                                            <input type="text" class="form-control" placeholder="사업자구분">
+                                                            <select id="SEL_COMP_CD" name="SEL_COMP_CD" data-required="true" class="form-control parsley-validated">
+                                                       W         <option value="">Select</option>
+                                                                <c:forEach var="code" items="${HighCode.H_1007}">
+                                                                    <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
+                                                                </c:forEach>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-4 col-sm-4">
                                                         <label class="col-md-4 col-sm-4 control-label">견적 담당자</label>
                                                         <div class="col-md-8 col-sm-8">
-                                                            <input type="text" class="form-control" placeholder="견적 담당자">
+                                                            <select id="SEL_EST_USER_ID" name="SEL_EST_USER_ID" data-required="true" class="form-control parsley-validated">
+                                                                <option value="">Select</option>
+                                                                <c:forEach var="code" items="${HighCode.H_1042}">
+                                                                    <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
+                                                                </c:forEach>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     <div class="line line-dashed b-b pull-in"></div>
                                                     <div class="form-group col-md-4 col-sm-4">
                                                         <label class="col-md-4 col-sm-4 control-label">견적번호 (차수)</label>
                                                         <div class="col-md-8 col-sm-8">
-                                                            <input type="text" class="form-control" placeholder="">
+                                                            <input type="text" class="form-control" id="EST_VER" name="EST_VER" readonly>
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-4 col-sm-4">
                                                         <label class="col-md-4 col-sm-4 control-label">품수</label>
                                                         <div class="col-md-8 col-sm-8">
-                                                            <input type="text" class="form-control" placeholder="">
+                                                            <input type="text" class="form-control" id="DTL_CNT" name="DTL_CNT" readonly>
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-4 col-sm-4">
-                                                        <label class="col-md-4 col-sm-4 control-label">경적금액 계</label>
+                                                        <label class="col-md-4 col-sm-4 control-label">견적금액 계</label>
                                                         <div class="col-md-8 col-sm-8">
-                                                            <input type="text" class="form-control" placeholder="">
+                                                            <input type="text" class="form-control" id="DTL_AMOUNT" name="DTL_AMOUNT" readonly>
                                                         </div>
                                                     </div>
                                                     <div class="line line-dashed b-b pull-in"></div>
                                                     <div class="form-group col-md-4 col-sm-4">
                                                         <label class="col-md-4 col-sm-4 control-label">업데이트 일시</label>
                                                         <div class="col-md-8 col-sm-8">
-                                                            <input type="text" class="form-control" placeholder="">
+                                                            <input type="text" class="form-control" id="INSERT_DT" name="INSERT_DT" readonly>
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-4 col-sm-4">
                                                         <label class="col-md-4 col-sm-4 control-label">회신일시</label>
                                                         <div class="col-md-8 col-sm-8">
-                                                            <input type="text" class="form-control" placeholder="">
+                                                            <input type="text" class="form-control" id="SEND_DT" name="SEND_DT" readonly>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -111,10 +128,8 @@
                                                 <strong>상세 리스트</strong>
                                             </header>
                                             <div class="row">
-                                                <div class="col-md-12 col-sm-12">
-                                                    <div class="gridWrap">
-                                                        <div id="estimate_register_top_grid" class="jqx-refresh"></div>
-                                                    </div>
+                                                <div class="gridWrap">
+                                                    <div id="estimate_register_top_grid" class="jqx-refresh"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -130,9 +145,7 @@
                                             </header>
                                             <div class="row">
                                                 <div class="gridWrap">
-                                                <textarea class="col-md-12 col-sm-12">
-                                                    Text Test
-                                                </textarea>
+                                                    <textarea class="col-md-12 col-sm-12" id="EMAIL_CONTENT" name="EMAIL_CONTENT"></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -168,6 +181,7 @@
                 </div>
             </section>
         </div>
+    </div>
 </div>
 
 <script type="text/javascript">
@@ -222,7 +236,7 @@
                 {title: '가공비', dataType: 'string', dataIndx: 'PROCESS_UNIT_COST'},
                 {title: '기타추가', dataType: 'string', dataIndx: 'ETC_UNIT_COST'}
             ], hidden: true},
-            {title: '계산견적단가', dataType: 'string', dataIndx: 'FINAL_EST_UNIT_PRICE'},
+            {title: '계산견적단가', dataType: 'string', dataIndx: 'FINALwq_EST_UNIT_PRICE'},
             {title: '최종견적가', dataType: 'string', dataIndx: '13'},
             {title: '금액 계', dataType: 'string', dataIndx: '14'},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
@@ -351,10 +365,16 @@
         });
 
         $("#btn_estimate_register_save").on("click", function(){
-            console.log($("#estimate_register_info_form").serialize());
+            //console.log($("#estimate_register_info_form").serialize());
+            fnPostAjax();
+            console.log(fnFormToJsonArrayData("#estimate_register_info_form"));
+/*
+            let userMasterInsertQueryList = ['insertUser'];
+            let userMasterUpdateQueryList = ['updateUser'];
+
+            fnModifyPQGrid($userMasterGrid, userMasterInsertQueryList, userMasterUpdateQueryList);
+*/
         });
 
     });
-
-
 </script>
