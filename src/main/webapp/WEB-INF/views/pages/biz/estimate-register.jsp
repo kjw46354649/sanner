@@ -14,11 +14,10 @@
                 <header class="panel-heading font-bold">
                     업체 정보 관리
                     <div class="btnSaveCloseBox">
-                        <div type="button" class="btn btn-success btn-sm btn-default">Save</div>
-                        <div type="submit" class="btn btn-success btn-sm btn-default">Submit</div>
+                        <div type="button" class="btn btn-success btn-sm btn-default" id="btn_estimate_register_save">Save</div>
+                        <div type="button" class="btn btn-success btn-sm btn-default" id="btn_estimate_register_submit">Submit</div>
                     </div>
                 </header>
-
                 <div class="panel-body">
                     <form class="form-inline" role="form" id="estimate_register_info_form" name="estimate_register_info_form">
                         <div class="panel-body line_tit portlet-body form bg-light">
@@ -32,10 +31,13 @@
                                                 </header>
                                                 <div class="panel-body">
                                                     <div class="form-group col-md-4 col-sm-4">
-                                                        <label class="col-md-4 col-sm-4 control-label">발주사</label>
-                                                        <div class="col-md-8 col-sm-8">
-                                                            <input type="text" data-notblank="true" class="form-control" placeholder="발주사">
-                                                        </div>
+                                                        <label class="col-md-4 col-sm-4 control-label" for="SEL_COMP_TYPE">발주사</label>
+                                                        <select id="SEL_COMP_TYPE" name="SEL_COMP_TYPE" data-required="true" class="form-control parsley-validated">
+                                                            <option value="">Select</option>
+                                                            <c:forEach var="code" items="${HighCode.H_1042}">
+                                                                <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
+                                                            </c:forEach>
+                                                        </select>
                                                     </div>
                                                     <div class="form-group col-md-8 col-sm-8">
                                                         <label class="col-md-2 col-sm-2 control-label">제목</label>
@@ -348,6 +350,9 @@
             //fnGetCommCodeBasicSelectBox( $("#SEL_COMP_TYPE"), '', $(this).val(), 'A');
         });
 
+        $("#btn_estimate_register_save").on("click", function(){
+            console.log($("#estimate_register_info_form").serialize());
+        });
 
     });
 
