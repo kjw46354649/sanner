@@ -13,9 +13,7 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/functions' prefix='fn' %>
 
 
-<link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css'/>
 <script src='/resource/main/js/jquery.min.js'></script>
-<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js'></script>
 <!-- Bootstrap -->
 <script src='/resource/main/js/bootstrap.js'></script>
 <!-- royal tab -->
@@ -39,9 +37,8 @@
 <script src='/resource/main/js/sortable/jquery.sortable.js'></script>
 <script src='/resource/main/js/app.plugin.js'></script>
 <!-- paramQuery Grid -->
+<script src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script>
 <script src='/resource/plugins/paramquery/pqgrid.min.js'></script>
-<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js'></script>
-
 
 <script type='text/javascript'>
     var g_code;
