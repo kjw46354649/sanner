@@ -454,6 +454,14 @@
             AND EST_VER = #{EST_VER}
     </select>
 
+    <insert id="insertEstimateMaster" parameterType="java.util.HashMap">
+        INSERT INTO TBL_ESTIMATE
+            (EST_SEQ, EST_VER, EST_NUM, EST_TITLE, EST_STATUS, ORDER_COMP_CD, ORDER_STAFF_SEQ, COMP_CD,EST_USER_ID,
+            SEND_DT, EMAIL_TITLE, EMAIL_CONTENT, ETC_GFILE_SEQ, DEL_YN, INSERT_DT, INSERT_ID, UPDATE_DT, UPDATE_ID)
+        VALUES(NEXTVAL(SEQ_MENU), )
+
+    </insert>
+
     <select id="selectControlManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
         -- 		OP.ORDER_STATUS,
@@ -495,6 +503,24 @@
         INNER JOIN TBL_CONTROL_PART CP ON C.CONTROL_SEQ = CP.CONTROL_SEQ
         INNER JOIN TBL_CONTROL_ORDER CD ON CP.CONTROL_SEQ = CD.CONTROL_SEQ
                                            AND CP.CONTROL_DETAIL_SEQ = CD.CONTROL_DETAIL_SEQ
+        WHERE 1 = 1
+        <if test="CONTROL_NUMBER != null and CONTROL_NUMBER != ''">
+            AND C.CONTROL_NUM = #{CONTROL_NUMBER}
+        </if>
+        <if test="CORPORATION != null and CORPORATION != ''">
+              AND C.COMP_CD = #{CORPORATION}
+        </if>
+        <if test="DRAWING_NUMBER != null and DRAWING_NUMBER != ''">
+              AND CP.DRAWING_NUM = #{DRAWING_NUMBER}
+        </if>
+        <if test="PRODUCT_NAME != null and PRODUCT_NAME != ''">
+              AND CP.ITEM_NM = #{PRODUCT_NAME}
+        </if>
+        <if test="WORK_TYPE != null and WORK_TYPE != ''">
+              AND CP.WORK_TYPE = #{WORK_TYPE}
+        </if>
+        <if test="ORDER_NUMBER != null and ORDER_NUMBER != ''">
+              AND CD.ORDER_NUM = #{ORDER_NUMBER}
+        </if>
     </select>
-
 </mapper>

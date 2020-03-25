@@ -350,7 +350,7 @@
                 {
                     type: 'button', label: 'Delete', icon: 'ui-icon-minus', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            estimateMasterTopGrid.pqGrid('addNodes', [{}], 0);
+
                         }
                     }
                 },
@@ -386,7 +386,42 @@
                             }
                         }
                     }
-                }
+                },
+                {
+                    type: 'button', label: '도면 View', style: 'float: right;', listener: {
+                        'click': function (evt, ui) {
+
+                        }
+                    }
+                },
+                {   type: 'select', style: 'float: right;'  },
+                {
+                    type: 'button', label: '견적서추출', style: 'float: right;', listener: {
+                        'click': function (evt, ui) {
+
+                        }
+                    }
+                },
+                {
+                    type: 'button', label: '견적서 신규 작성', style: 'float: left;', listener: {
+                        'click': function (evt, ui) {
+                            $("li .tabMenuClick[pid='100012']").trigger('click');
+                            if(!$("li .tabMenuClick[pid='100012']").hasClass("active")){
+                                $("li .tabMenuClick[pid='100012']").addClass("active");
+                            }
+
+                        }
+                    }
+                },
+                {
+                    type: 'button', label: '차수생성', style: 'float: left;', listener: {
+                        'click': function (evt, ui) {
+
+                        }
+                    }
+                },
+                { type: 'checkbox', label: '상세견적요건', style: 'float: left;' }
+
             ]
         };
         let estimateMasterBotToolbar = {
@@ -406,6 +441,7 @@
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'EST_SEQ',
                 url: "/paramQueryGridSelect",
+                //postData: fnFormToJsonArrayData(),
                 postData: { 'queryId': 'selectEstimateMasterList'},
                 getData: function (dataJSON) {
                     let data = dataJSON.data;
@@ -433,6 +469,9 @@
                 selectEstimateBotList(EST_SEQ, EST_VER);
                 //}
             },
+            cellClick: function( event, ui ) {
+
+            }
         });
 
         selectEstimateBotList('', '');
@@ -443,6 +482,7 @@
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'EST_SEQ',
                     url: "/paramQueryGridSelect",
+                    //postData: fnFormToJsonArrayData(),
                     postData: { 'queryId': 'selectEstimateDetailList', 'EST_SEQ': EST_SEQ, 'EST_VER': EST_VER },
                     getData: function (dataJSON) {
                         let data = dataJSON.data;

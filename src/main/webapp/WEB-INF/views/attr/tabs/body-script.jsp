@@ -219,8 +219,8 @@
         let parameter = {'url': '/json-list', 'data': postData}
 
         fnPostAjax(function (data, callFunctionParam) {
-            grid.pqGrid('option', 'dataModel.data', data.data);
-            grid.pqGrid('refreshDataAndView');
+            grid.pqGrid('option', 'dataModel.data', data.list);
+            grid.pqGrid('refreshView');
         }, parameter, '');
     };
     /**
