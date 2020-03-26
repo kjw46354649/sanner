@@ -20,6 +20,7 @@
                 </header>
                 <div class="panel-body">
                     <form class="form-inline" role="form" id="estimate_register_info_form" name="estimate_register_info_form">
+                        <input type="hidden" id="queryId" name="queryId" value="insertEstimateMaster"/>
                         <div class="panel-body line_tit portlet-body form bg-light">
                             <section class="bg-light">
                                 <div class="row">
@@ -31,9 +32,9 @@
                                                 </header>
                                                 <div class="panel-body">
                                                     <div class="form-group col-md-4 col-sm-4">
-                                                        <label class="col-md-4 col-sm-4 control-label" for="SEL_COMP_TYPE">발주사</label>
+                                                        <label class="col-md-4 col-sm-4 control-label">발주사</label>
                                                         <div class="col-md-8 col-sm-8">
-                                                            <select id="SEL_COMP_TYPE" name="SEL_COMP_TYPE" data-required="true" class="form-control parsley-validated">
+                                                            <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" data-required="true" class="form-control parsley-validated">
                                                                 <option value="">Select</option>
                                                                 <c:forEach var="code" items="${HighCode.H_1042}">
                                                                     <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
@@ -51,7 +52,7 @@
                                                     <div class="form-group col-md-4 col-sm-4">
                                                         <label class="col-md-4 col-sm-4 control-label">구매 담당자</label>
                                                         <div class="col-md-8 col-sm-8">
-                                                            <select id="SEL_ORDER_STAFF_SEQ" name="SEL_ORDER_STAFF_SEQ" data-required="true" class="form-control parsley-validated">
+                                                            <select id="ORDER_STAFF_SEQ" name="ORDER_STAFF_SEQZ" data-required="true" class="form-control parsley-validated">
                                                                 <option value="">Select</option>
                                                                 <c:forEach var="code" items="${HighCode.H_1042}">
                                                                     <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
@@ -62,7 +63,7 @@
                                                     <div class="form-group col-md-4 col-sm-4">
                                                         <label class="col-md-4 col-sm-4 control-label">사업자구분</label>
                                                         <div class="col-md-8 col-sm-8">
-                                                            <select id="SEL_COMP_CD" name="SEL_COMP_CD" data-required="true" class="form-control parsley-validated">
+                                                            <select id="COMP_CD" name="COMP_CD" data-required="true" class="form-control parsley-validated">
                                                        W         <option value="">Select</option>
                                                                 <c:forEach var="code" items="${HighCode.H_1007}">
                                                                     <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
@@ -73,7 +74,7 @@
                                                     <div class="form-group col-md-4 col-sm-4">
                                                         <label class="col-md-4 col-sm-4 control-label">견적 담당자</label>
                                                         <div class="col-md-8 col-sm-8">
-                                                            <select id="SEL_EST_USER_ID" name="SEL_EST_USER_ID" data-required="true" class="form-control parsley-validated">
+                                                            <select id="EST_USER_ID" name="EST_USER_ID" data-required="true" class="form-control parsley-validated">
                                                                 <option value="">Select</option>
                                                                 <c:forEach var="code" items="${HighCode.H_1042}">
                                                                     <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
@@ -193,13 +194,14 @@
         let estimateRegisterBotGrid = $("#estimate_register_bot_grid");
 
         let estimateRegisterTopColModel= [
+            {title: 'EST_SEQ', dataType: 'string', dataIndx: 'EST_SEQ' , hidden:true} ,
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM' } ,
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM' } ,
             {title: '', dataType: 'string', dataIndx: 'DRAWING_YN' } ,
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM' } ,
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM' } ,
             {title: '규격', align: "center", colModel: [
-                {title: '타입', dataType: 'string', dataIndx: 'SIZE_TYPE'},
+                //{title: '타입', dataType: 'string', dataIndx: 'SIZE_TYPE'},
                 {title: '가로', dataType: 'string', dataIndx: 'SIZE_W'},
                 {title: '세로', dataType: 'string', dataIndx: 'SIZE_H'},
                 {title: '두꼐', dataType: 'string', dataIndx: 'SIZE_T'},
@@ -207,27 +209,111 @@
                 {title: '길이', dataType: 'string', dataIndx: 'SIZE_L'},
             ]},
             {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
-            {title: '작업구분', dataType: 'string', dataIndx: 'WORK_TYPE'},
-            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_TYPE'},
-            {title: '소재상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
-            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT'},
-            {title: '사급', dataType: 'string', dataIndx: 'COMP_SUPPLY_YN'},
-            {title: '열처리', dataType: 'string', dataIndx: 'HEAT_TREAT_YN'},
+            {title: '작업구분', dataType: 'string', dataIndx: 'WORK_TYPE',
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "WORK_TYPE", id: "WORK_TYPE" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1013'),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["WORK_TYPE"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
+            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_TYPE',
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "COMP_SUPPLY_YN", id: "COMP_SUPPLY_YN" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1004'),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["COMP_SUPPLY_YN"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
+            {title: '소재상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "MATERIAL_DETAIL", id: "MATERIAL_DETAIL" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1000'),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["MATERIAL_DETAIL"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
+            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT',
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "COMP_SUPPLY_YN", id: "COMP_SUPPLY_YN" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1002'),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["COMP_SUPPLY_YN"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
+            {title: '사급', dataType: 'string', dataIndx: 'COMP_SUPPLY_YN',
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "COMP_SUPPLY_YN", id: "COMP_SUPPLY_YN" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1045'),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["COMP_SUPPLY_YN"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
+            {title: '열처리', dataType: 'string', dataIndx: 'HEAT_TREAT_YN',
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "HEAT_TREAT_YN", id: "HEAT_TREAT_YN" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1045'),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["HEAT_TREAT_YN"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
             {title: '상세 가공요건', align: "center", colModel:[
-                {title:'선반', dataType: 'string', dataIndx: '1'},
-                {title:'가공면', dataType: 'string', dataIndx: '2'},
-                {title:'클램핑', dataType: 'string', dataIndx: '3'},
-                {title:'포켓', dataType: 'string', dataIndx: '4'},
-                {title:'공차', dataType: 'string', dataIndx: '5'},
-                {title:'드릴', dataType: 'string', dataIndx: '6'},
-                {title:'난도', dataType: 'string', dataIndx: '7'}
+                {title:'선반', dataType: 'string', dataIndx: 'DETAIL_LATHE'},
+                {title:'가공면', dataType: 'string', dataIndx: 'DETAIL_SURFACE'},
+                {title:'클램핑', dataType: 'string', dataIndx: 'DETAIL_CLAMPING'},
+                {title:'포켓', dataType: 'string', dataIndx: 'DETAIL_POCKET'},
+                //{title:'공차', dataType: 'string', dataIndx: 'DETAIL_TOLERANCE'},
+                {title:'드릴', dataType: 'string', dataIndx: 'DETAIL_DRILL'},
+                {title:'난도', dataType: 'string', dataIndx: 'DETAIL_DIFFICULTY'}
             ]},
             {title: '예상소재 Size', align: "center", colModel:[
-                {title:'가로', dataType: 'string', dataIndx: '8'},
-                {title:'세로', dataType: 'string', dataIndx: '9'},
-                {title:'높이', dataType: 'string', dataIndx: '10'},
-                {title:'중량(KG)', dataType: 'string', dataIndx: '11'},
-                {title:'부피(cm3)', dataType: 'string', dataIndx: '12'}
+                {title:'가로', dataType: 'string', dataIndx: 'SIZE_W'},
+                {title:'세로', dataType: 'string', dataIndx: 'SIZE_H'},
+                {title:'높이', dataType: 'string', dataIndx: 'SIZE_T'},
+                {title:'중량(KG)', dataType: 'string', dataIndx: 'SIZE_D'},
+                {title:'부피(cm3)', dataType: 'string', dataIndx: 'SIZE_L'}
             ], hidden: true},
             {title: '항목별 견적정보', align: "center", colModel: [
                 {title: '소재비', dataType: 'string', dataIndx: 'MATERIAL_UNIT_COST'},
@@ -255,7 +341,7 @@
                 {
                     type: 'button', label: 'Delete', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            let USER_MASTER_QUERY_ID = 'deleteUser';
+                            let USER_MASTER_QUERY_ID = 'deleteEstimateDetail';
 
                             fnDeletePQGrid(estimateRegisterTopGrid, estimateRegisterSelectedRowIndex, USER_MASTER_QUERY_ID);
                         }
@@ -297,7 +383,7 @@
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'EST_SEQ',
                 url: "/paramQueryGridSelect",
-                postData: { 'queryId': 'selectEstimateMasterList'},
+                postData: { 'queryId': 'selectEstimateDetailList'},
                 getData: function (dataJSON) {
                     let data = dataJSON.data;
                     return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
@@ -307,10 +393,10 @@
             //scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'row', mode: 'single'} ,
-            //swipeModel: {on: false},
+            swipeModel: {on: false},
             collapsible: false,
             resizable: false,
-            //trackModel: {on: true},
+            trackModel: {on: true},
             //resizable: true,
             colModel: estimateRegisterTopColModel,
             toolbar: estimateRegisterTopToolbar,
@@ -331,15 +417,15 @@
             }
         });
 
-        selectEstimateBotList('', '');
+        selectEstimateBotList('');
 
-        function selectEstimateBotList(EST_SEQ, EST_VER) {
+        function selectEstimateBotList(EST_SEQ) {
             estimateRegisterBotGrid.pqGrid({
                 width: "100%", height: 200,
                 dataModel: {
-                    location: "remote", dataType: "json", method: "POST", recIndx: 'EST_SEQ',
+                    location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
                     url: "/paramQueryGridSelect",
-                    postData: { 'queryId': 'selectEstimateDetailList', 'EST_SEQ': EST_SEQ, 'EST_VER': EST_VER },
+                    postData: { 'queryId': 'selectEstimateDetailList', 'EST_SEQ': EST_SEQ},
                     getData: function (dataJSON) {
                         let data = dataJSON.data;
                         return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
@@ -351,7 +437,7 @@
                 collapsible: false,
                 swipeModel: {on: false},
                 resizable: false,
-                //trackModel: {on: true},
+                trackModel: {on: true},
                 //resizable: true,
                 colModel: estimateRegisterBotColModel,
                 toolbar: estimateRegisterBotToolbar
@@ -364,16 +450,17 @@
             //fnGetCommCodeBasicSelectBox( $("#SEL_COMP_TYPE"), '', $(this).val(), 'A');
         });
 
-        $("#btn_estimate_register_save").on("click", function(){
-            //console.log($("#estimate_register_info_form").serialize());
-            fnPostAjax();
-            console.log(fnFormToJsonArrayData("#estimate_register_info_form"));
-/*
-            let userMasterInsertQueryList = ['insertUser'];
-            let userMasterUpdateQueryList = ['updateUser'];
+        function estimateRegisterSaveCallBack(response, callMethodParam){
+            let estimateRegisterInsertQueryList = ['insertEstimateDetail'];
+            let estimateRegisterUpdateQueryList = ['updateEstimateDetail'];
 
-            fnModifyPQGrid($userMasterGrid, userMasterInsertQueryList, userMasterUpdateQueryList);
-*/
+            fnModifyPQGrid(estimateRegisterTopGrid, estimateRegisterInsertQueryList, estimateRegisterUpdateQueryList);
+        };
+
+        $("#btn_estimate_register_save").on("click", function(){
+            let parameters = {'url': '/json-create', 'data': $("#estimate_register_info_form").serialize()};
+
+            fnPostAjax(estimateRegisterSaveCallBack, parameters, '');
         });
 
     });

@@ -242,7 +242,7 @@
             </section>
         </div>
         <div class="row">
-            <a href="#estimate_master_record_popup" class="" id="" data-target="" data-toggle="modal" data-refform="estimate_master_record_popup">
+            <a href="#estimate_master_record_popup" class="" id="estimatePopupOpen" data-target="" data-toggle="modal" data-refform="estimate_master_record_popup">
                 <input type="button" value="POP">
             </a>
         </div>
@@ -263,10 +263,16 @@
     </div>
 </div>
 
+<form class="form-inline" id="estimate_master_hidden_form" name="estimate_master_hidden_form" role="form">
+    <input type="hidden" id="queryId" name="queryId" value="insertEstimateVersion"/>
+    <input type="hidden" id="EST_SEQ" name="EST_SEQ"/>
+    <input type="hidden" id="EST_VER" name="EST_VER"/>
+</form>
 <script type="text/javascript">
     $(function () {
         'use strict';
         let click_seq;
+        let estimateMasterSelectedRowIndex;
         let estimateMasterTopGrid = $("#estimate_master_top_grid");
         let estimateMasterBotGrid = $("#estimate_master_bot_grid");
 
@@ -275,10 +281,38 @@
 
         let estimateMasterTopColModel= [
             //{title: 'No.', dataType: 'string', dataIndx: 'EST_SEQ'},
-            {title: 'Status', dataType: 'string', dataIndx: 'EST_STATUS'},
-            {title: '발주사', dataType: 'string', dataIndx: 'ORDER_COMP_CD'},
+            {title: 'Status', dataType: 'string', dataIndx: 'EST_STATUS_NM', editable: false},
+            {title: '발주사', dataType: 'string', dataIndx: 'ORDER_COMP_NM',
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "ORDER_COMP_NM", id: "ORDER_COMP_CD" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('H_1042'),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateMasterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["ORDER_COMP_CD"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
             {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ'},
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD'},
+            {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM',
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "COMP_NM", id: "COMP_CD" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('H_1007'),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateMasterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["COMP_CD"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
             {title: '견적번호', dataType: 'string', dataIndx: 'EST_NUM'},
             {title: '차수', dataType: 'string', dataIndx: 'EST_VER'},
             {title: '', dataType: 'string', dataIndx: ''},
@@ -350,40 +384,24 @@
                 {
                     type: 'button', label: 'Delete', icon: 'ui-icon-minus', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
+                            let ESTIMATE_MASTER_QUERY_ID = ['deleteEstimateMaster', 'deleteEstimateDetail'];
 
+                            fnDeletePQGrid(estimateMasterTopGrid, estimateMasterSelectedRowIndex, ESTIMATE_MASTER_QUERY_ID);
                         }
                     }
                 },
                 {
                     type: 'button', label: 'save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            let grid = estimateMasterTopGrid.pqGrid('getInstance').grid;
-                            //추가 또는 수정된 값이 있으면 true
-                            console.log(grid);
-                            if (grid.isDirty()) {
-                                let changes = grid.getChanges({format: 'byVal'});
-                                let QUERY_ID_ARRAY = {
-                                    'insertQueryId': ['insertTopMenuCode','insertTopMenuKr','insertTopMenuEn'],
-                                    'updateQueryId': ['updateTopMenuCode','updateTopMenuKr','updateTopMenuEn']
-                                };
 
-                                changes.queryIdList = QUERY_ID_ARRAY;
-                                console.log(changes);
-                                $.ajax({
-                                    type: 'POST',
-                                    url: '/paramQueryModifyGrid',
-                                    async: true,
-                                    dataType: 'json',
-                                    data: {'data': JSON.stringify(changes)},
-                                    success: function (result) {
-                                        estimateMasterTopGrid.pqGrid("refreshDataAndView");
-                                    },
-                                    error: function (e) {
-                                        console.error(e);
-                                    }
-                                });
+                            let estimateMasterInsertQueryList = ['insertEstimateMaster'];
+                            let estimateMasterUpdateQueryList = ['updateEstimateMaster'];
+                            fnModifyPQGrid(estimateMasterTopGrid, estimateMasterInsertQueryList, estimateMasterUpdateQueryList);
 
-                            }
+                            estimateMasterInsertQueryList = ['insertEstimateMaster'];
+                            estimateMasterUpdateQueryList = ['updateEstimateMaster'];
+                            fnModifyPQGrid(estimateMasterBotGrid, estimateMasterInsertQueryList, estimateMasterUpdateQueryList);
+
                         }
                     }
                 },
@@ -416,6 +434,21 @@
                 {
                     type: 'button', label: '차수생성', style: 'float: left;', listener: {
                         'click': function (evt, ui) {
+                            let data = {
+                                'queryId': 'insertEstimateMasterVersion',
+                                'EST_SEQ': $("#estimate_master_hidden_form #EST_SEQ").val(),
+                                'ESR_VER' : $("#estimate_master_hidden_form #EST_SEQ").val()
+                            }
+                            let parameters = {'url': '/json-create', 'data': data};
+                            fnPostAjax('', parameters, '');
+
+                            data = {
+                                'queryId': 'insertEstimateDetailVersion',
+                                'EST_SEQ': $("#estimate_master_hidden_form #EST_SEQ").val(),
+                                'ESR_VER' : $("#estimate_master_hidden_form #EST_SEQ").val()
+                            }
+                            parameters = {'url': '/json-create', 'data': data};
+                            fnPostAjax(testFunction, parameters, '');
 
                         }
                     }
@@ -461,29 +494,49 @@
             complete: function(event, ui) {
                 estimateMasterTopGrid.pqGrid('setSelection', {rowIndx:0} );
             },
+            selectChange: function (event, ui) {
+                if (ui.selection.iCells.ranges[0] !== undefined) {
+                    estimateMasterSelectedRowIndex = [];
+                    let estimateMasterGridFirstRow = ui.selection.iCells.ranges[0].r1;
+                    let estimateMasterGridLastRow = ui.selection.iCells.ranges[0].r2;
+
+                    if (estimateMasterGridFirstRow === estimateMasterGridLastRow) {
+                        estimateMasterSelectedRowIndex[0] = estimateMasterGridFirstRow;
+                    } else {
+                        for (let i = estimateMasterGridFirstRow; i <= estimateMasterGridLastRow; i++) {
+                            estimateMasterSelectedRowIndex.push(i);
+                        }
+                    }
+                }
+            },
             rowSelect: function( event, ui ) {
                 //if(ui.addList.length > 0 ) {
                 let EST_SEQ = ui.addList[0].rowData.EST_SEQ;
                 let EST_VER = ui.addList[0].rowData.EST_VER;
-                click_seq=EST_SEQ;
-                selectEstimateBotList(EST_SEQ, EST_VER);
+                $("#estimate_master_hidden_form #EST_SEQ").val(EST_SEQ);
+                $("#estimate_master_hidden_form #EST_VER").val(EST_VER);
+
+                selectEstimateBotList(EST_SEQ);
                 //}
             },
             cellClick: function( event, ui ) {
-
+                let colIndex = ui.colIndx;
+                if(colIndex == '6'){
+                    $("#estimatePopupOpen").trigger('click');
+                }
             }
         });
 
         selectEstimateBotList('', '');
 
-        function selectEstimateBotList(EST_SEQ, EST_VER) {
+        function selectEstimateBotList(EST_SEQ) {
             estimateMasterBotGrid.pqGrid({
                 width: "100%", height: 350,
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'EST_SEQ',
                     url: "/paramQueryGridSelect",
                     //postData: fnFormToJsonArrayData(),
-                    postData: { 'queryId': 'selectEstimateDetailList', 'EST_SEQ': EST_SEQ, 'EST_VER': EST_VER },
+                    postData: { 'queryId': 'selectEstimateDetailList', 'EST_SEQ': EST_SEQ},
                     getData: function (dataJSON) {
                         let data = dataJSON.data;
                         return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
@@ -509,16 +562,19 @@
         });
 
         $('#estimate_master_record_popup').on('show.bs.modal',function() {
+            let EST_SEQ = $("#estimate_master_hidden_form #EST_SEQ").val();
+
             estimateMasterPopTopGrid.pqGrid({
                 width: "100%", height: 200,
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'MODULE_NM',
                     url: "/paramQueryGridSelect",
-                    postData: { 'queryId': 'selectEstimateMasterList' },
+                    postData: { 'queryId': 'selectEstimateDetailList', 'EST_SEQ' : EST_SEQ },
                     getData: function (dataJSON) {
                         return {data: dataJSON.data};
                     }
                 },
+                filterModel: { on: true, mode: "AND", header: true, type: "local" },
                 scrollModel: {autoFit: true},
                 numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'row', mode: 'single'} ,
@@ -533,14 +589,15 @@
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'EST_SEQ',
                     url: "/paramQueryGridSelect",
-                    postData: { 'queryId': 'selectEstimateMasterList'},
+                    postData: { 'queryId': 'selectEstimateDetailList'},
                     getData: function (dataJSON) {
                         return {data: dataJSON.data};
                     }
                 },
+                virtualX: true, virtualY: true,
                 scrollModel: {autoFit: true},
                 numberCell: {width: 30, title: "No", show: true },
-                selectionModel: { type: 'row', mode: 'single'} ,
+                selectionModel: { type: 'row', mode: 'single', column: true } ,
                 swipeModel: {on: false},
                 resizable: false,
                 colModel: estimateMasterPopBotColModel,
@@ -556,7 +613,9 @@
             //fnGetCommCodeBasicSelectBox( $("#SEL_COMP_TYPE"), '', $(this).val(), 'A');
         });
 
-
+        function testFunction(){
+            estimateMasterTopGrid.pqGrid('refreshDataAndView');
+        };
     });
 
 
