@@ -313,4 +313,55 @@
         selectBox.html(selectOptionHtml);
     };
 
+    /**
+     * Common code to Select box create
+     * @param $formId
+     * @param highCd
+     * @param selectType
+     */
+    let fnCommCodeDynamicSelectBoxCreate = function ($formId, highCd, selectType) {
+        'use strict';
+        $formId[0].options.length = 0;
+        fnSelectBoxTopSetting($formId, selectType);
+        for(let i=0; i < g_code.length; i++){
+            if(g_code[i].HIGH_CD == highCd){
+                $formId[0].add(new Option(g_code[i].CODE_NM_KR, g_code[i].CODE_CD));
+            }
+        }
+    };
+
+    /**
+     * Data Query to Select box create
+     * @param $formId
+     * @param highCd
+     * @param selectType
+     * @param queryId
+     */
+    let fnCommCodeDatasourceSelectBoxCreate = function ($formId, selectType, parmamData) {
+        'use strict';
+        fnPostAjax(function (data, callFunctionParam) {
+            $formId[0].options.length = 0;
+            fnSelectBoxTopSetting($formId, selectType);
+            for(let i=0; i < data.list.length; i++){
+                $formId[0].add(new Option(data.list[i].CODE_NM, data.list[i].CODE_CD));
+            }
+        }, parmamData, '');
+    };
+
+    /**
+     * Select box option setting
+     * @param $formId
+     * @param selectType
+     */
+    let fnSelectBoxTopSetting = function ($formId, selectType) {
+        switch (selectType) {
+            case 'all':
+                $formId[0].add(new Option('<spring:message code="com.form.top.all.option" />', ''));
+                break;
+            case 'sel':
+                $formId[0].add(new Option('<spring:message code="com.form.top.sel.option" />', ''));
+                break;
+        }
+    };
+
 </script>

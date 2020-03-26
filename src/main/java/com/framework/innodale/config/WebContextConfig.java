@@ -112,7 +112,8 @@ public class WebContextConfig implements WebMvcConfigurer {
     @Bean
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasenames("classpath:/messages/common");
+//        messageSource.setBasenames("classpath:/messages/common");
+        messageSource.setBasenames("/WEB-INF/messages/common");
         messageSource.setDefaultEncoding("UTF-8");
         messageSource.setCacheSeconds(5);
         return messageSource;

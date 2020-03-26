@@ -77,4 +77,22 @@ public class LoginController {
 
     }
 
+    @RequestMapping(value="/userLotout", method = RequestMethod.GET)
+    public String userLotout(Model model, HttpSession session, HttpServletRequest request) throws Exception {
+        String result = "redirect:/";
+
+        /** Session clear **/
+        if(session.getAttribute("HighCode") != null){
+
+            session.removeAttribute("authUserInfo");
+            session.removeAttribute("LocalMenu");
+            session.removeAttribute("HighCode");
+            session.invalidate();
+
+        }
+
+        return result;
+
+    }
+
 }

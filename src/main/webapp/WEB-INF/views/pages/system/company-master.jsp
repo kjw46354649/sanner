@@ -15,6 +15,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">업체 상세 정보</h4>
             </div>
             <div class="modal-body">
@@ -65,14 +66,21 @@
                                                 <div class="form-group col-md-6 col-sm-6">
                                                     <label class="col-md-4 col-sm-4 control-label">영업담당자</label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        <input type="text" data-notblank="true" class="form-control" placeholder="영업담당자">
+                                                        <select id="STAFF_NM" name="STAFF_NM" data-required="true" class="form-control parsley-validated">
+                                                            <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="line line-dashed b-b pull-in"></div>
                                                 <div class="form-group col-md-6 col-sm-6">
                                                     <label class="col-md-4 col-sm-4 control-label">관계 구분</label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        <input type="text" data-notblank="true" class="form-control" placeholder="관계구분">
+                                                        <select id="COMP_CLASS" name="COMP_CLASS" data-required="true" class="form-control parsley-validated">
+                                                            <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                                            <c:forEach var="vlocale" items="${HighCode.H_1049}">
+                                                                <option value="${vlocale.CODE_CD}" <c:if test="${fn:toUpperCase(LocalInfo) eq vlocale.CODE_CD}"> selected="selected"</c:if>>${vlocale.CODE_NM_KR}</option>
+                                                            </c:forEach>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-6 col-sm-6">
@@ -85,7 +93,9 @@
                                                 <div class="form-group col-md-6 col-sm-6">
                                                     <label class="col-md-4 col-sm-4 control-label">업체종류</label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        <input type="text" data-notblank="true" class="form-control" placeholder="업체종류">
+                                                        <select id="COMP_TYPE" name="COMP_TYPE" data-required="true" class="form-control parsley-validated">
+                                                            <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-6 col-sm-6">
@@ -209,21 +219,23 @@
                     업체 정보 관리
                 </header>
                 <div class="panel-body">
-                    <form class="form-inline" id="company-master-search-form" name="company-master-search-form" role="form">
+                    <form class="form-inline" id="company_master_search_form" name="company_master_search_form" role="form">
                         <input type="hidden" id="queryId" name="queryId" value="getCompanyMasterList">
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="SEL_COMP_CLASS">대외구분</label>
                                 <select id="SEL_COMP_CLASS" name="SEL_COMP_CLASS" data-required="true" class="form-control parsley-validated">
                                     <option value=""><spring:message code="com.form.top.sel.option" /></option>
-                                    <c:forEach var="vlocale" items="${HighCode.H_1043}">
+                                    <c:forEach var="vlocale" items="${HighCode.H_1049}">
                                         <option value="${vlocale.CODE_CD}" <c:if test="${fn:toUpperCase(LocalInfo) eq vlocale.CODE_CD}"> selected="selected"</c:if>>${vlocale.CODE_NM_KR}</option>
                                     </c:forEach>
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="SEL_COMP_TYPE">업체종류</label>
-                                <input type="text" class="form-control" id="SEL_COMP_TYPE" name="SEL_COMP_TYPE" placeholder="업체종류">
+                                <select id="SEL_COMP_TYPE" name="SEL_COMP_TYPE" data-required="true" class="form-control parsley-validated">
+                                    <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                </select>
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="SEL_COMP_NM">업체명</label>
@@ -238,7 +250,9 @@
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="SEL_STAFF_NM">담당자명</label>
-                                <input type="text" class="form-control" id="SEL_STAFF_NM" name="SEL_STAFF_NM" placeholder="담당자명">
+                                <select id="SEL_STAFF_NM" name="SEL_STAFF_NM" data-required="true" class="form-control parsley-validated">
+                                    <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                </select>
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="SEL_CEO_NM">대표자명</label>
@@ -367,7 +381,7 @@
             colModel: systemCompanyMasterColModel, toolbar: systemCompanyMasterToolbar,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: fnFormToJsonArrayData('#company-master-search-form'),
+                postData: fnFormToJsonArrayData('#company_master_search_form'),
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -443,7 +457,7 @@
             colModel: systemCompanyRegisterColModel, toolbar: systemCompanyRegisterToolbar,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: fnFormToJsonArrayData('#company-master-search-form'),
+                postData: fnFormToJsonArrayData('#company_master_search_form'),
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -464,6 +478,30 @@
                 }
             }
         };
+
+        $("#company_master_search_form").find("#SEL_COMP_CLASS").change(function(){
+            let comptype = 0;
+            if(this.value == "CLS010")
+                comptype = '1042';
+            else if(this.value == "CLS020")
+                comptype = '1043';
+            fnCommCodeDynamicSelectBoxCreate($("#company_master_search_form").find("#SEL_COMP_TYPE"), comptype, 'sel');
+        });
+
+        $("#estimate_master_record_popup_search_form").find("#COMP_CLASS").change(function(){
+            let comptype = 0;
+            if(this.value == "CLS010")
+                comptype = '1042';
+            else if(this.value == "CLS020")
+                comptype = '1043';
+            fnCommCodeDynamicSelectBoxCreate($("#estimate_master_record_popup_search_form").find("#COMP_TYPE"), comptype, 'sel');
+        });
+
+        /** 공통 코드 이외의 처리 부분 **/
+        let commonCodeBotGridId = 'dataSource.getCompanyUserList';
+        let paramData = {"url":"/json-list", "data": {"queryId": commonCodeBotGridId}};
+        fnCommCodeDatasourceSelectBoxCreate($("#company_master_search_form").find("#SEL_STAFF_NM"), 'all', paramData);
+        fnCommCodeDatasourceSelectBoxCreate($("#estimate_master_record_popup_search_form").find("#STAFF_NM"), 'all', paramData);
     });
 </script>
 
