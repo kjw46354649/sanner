@@ -47,14 +47,14 @@ public class SystemController {
         return "jsonView";
     }
 
-    @RequestMapping(value = "/company-master", method = RequestMethod.POST)
-    public String companyMaster(Model model, HttpServletRequest request) throws Exception {
-
-        HashMap<String, Object> map = new HashMap<String, Object>();
-
-        map.put("queryId", "dataSource.getCompanyUserList");
-        model.addAttribute("companyUserList", innodaleService.getList(map));
-
-        return "/pages/system/company-master";
-    }
+//    @RequestMapping(value = "/company-master", method = RequestMethod.POST)
+//    public String companyMaster(Model model, HttpServletRequest request) throws Exception {
+//
+//        HashMap<String, Object> map = new HashMap<String, Object>();
+//
+//        map.put("queryId", "dataSource.getCompanyUserList");
+//        model.addAttribute("companyUserList", innodaleService.getList(map));
+//
+//        return "/pages/system/company-master";
+//    }
 }
