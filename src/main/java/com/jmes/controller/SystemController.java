@@ -1,6 +1,7 @@
 package com.jmes.controller;
 
 import com.framework.innodale.component.CommonUtility;
+import com.framework.innodale.service.InnodaleService;
 import com.jmes.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,13 +11,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Controller
 public class SystemController {
+
     @Autowired
-    public SystemService systemService;
+    private SystemService systemService;
+
+    @Autowired
+    private InnodaleService innodaleService;
 
     @RequestMapping(value = "/getCommonCodeList")
     public String getCommonCodeList(Model model, HttpServletRequest request, HttpSession session) throws Exception {
@@ -40,4 +46,15 @@ public class SystemController {
 
         return "jsonView";
     }
+
+//    @RequestMapping(value = "/company-master", method = RequestMethod.POST)
+//    public String companyMaster(Model model, HttpServletRequest request) throws Exception {
+//
+//        HashMap<String, Object> map = new HashMap<String, Object>();
+//
+//        map.put("queryId", "dataSource.getCompanyUserList");
+//        model.addAttribute("companyUserList", innodaleService.getList(map));
+//
+//        return "/pages/system/company-master";
+//    }
 }

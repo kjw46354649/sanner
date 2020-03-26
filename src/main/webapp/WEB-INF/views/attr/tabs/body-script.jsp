@@ -13,9 +13,7 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/functions' prefix='fn' %>
 
 
-<link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css'/>
 <script src='/resource/main/js/jquery.min.js'></script>
-<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js'></script>
 <!-- Bootstrap -->
 <script src='/resource/main/js/bootstrap.js'></script>
 <!-- royal tab -->
@@ -39,9 +37,8 @@
 <script src='/resource/main/js/sortable/jquery.sortable.js'></script>
 <script src='/resource/main/js/app.plugin.js'></script>
 <!-- paramQuery Grid -->
+<script src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script>
 <script src='/resource/plugins/paramquery/pqgrid.min.js'></script>
-<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js'></script>
-
 
 <script type='text/javascript'>
     var g_code;
@@ -219,8 +216,8 @@
         let parameter = {'url': '/json-list', 'data': postData}
 
         fnPostAjax(function (data, callFunctionParam) {
-            grid.pqGrid('option', 'dataModel.data', data.data);
-            grid.pqGrid('refreshDataAndView');
+            grid.pqGrid('option', 'dataModel.data', data.list);
+            grid.pqGrid('refreshView');
         }, parameter, '');
     };
     /**
@@ -314,6 +311,57 @@
 
         selectBox.empty();
         selectBox.html(selectOptionHtml);
+    };
+
+    /**
+     * Common code to Select box create
+     * @param $formId
+     * @param highCd
+     * @param selectType
+     */
+    let fnCommCodeDynamicSelectBoxCreate = function ($formId, highCd, selectType) {
+        'use strict';
+        $formId[0].options.length = 0;
+        fnSelectBoxTopSetting($formId, selectType);
+        for(let i=0; i < g_code.length; i++){
+            if(g_code[i].HIGH_CD == highCd){
+                $formId[0].add(new Option(g_code[i].CODE_NM_KR, g_code[i].CODE_CD));
+            }
+        }
+    };
+
+    /**
+     * Data Query to Select box create
+     * @param $formId
+     * @param highCd
+     * @param selectType
+     * @param queryId
+     */
+    let fnCommCodeDatasourceSelectBoxCreate = function ($formId, selectType, parmamData) {
+        'use strict';
+        fnPostAjax(function (data, callFunctionParam) {
+            $formId[0].options.length = 0;
+            fnSelectBoxTopSetting($formId, selectType);
+            for(let i=0; i < data.list.length; i++){
+                $formId[0].add(new Option(data.list[i].CODE_NM, data.list[i].CODE_CD));
+            }
+        }, parmamData, '');
+    };
+
+    /**
+     * Select box option setting
+     * @param $formId
+     * @param selectType
+     */
+    let fnSelectBoxTopSetting = function ($formId, selectType) {
+        switch (selectType) {
+            case 'all':
+                $formId[0].add(new Option('<spring:message code="com.form.top.all.option" />', ''));
+                break;
+            case 'sel':
+                $formId[0].add(new Option('<spring:message code="com.form.top.sel.option" />', ''));
+                break;
+        }
     };
 
 </script>

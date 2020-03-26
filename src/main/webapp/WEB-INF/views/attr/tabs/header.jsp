@@ -18,7 +18,7 @@
 <link rel="stylesheet" href="/resource/main/css/app.css" type="text/css"/>
 <link rel="stylesheet" href="/resource/main/js/calendar/bootstrap_calendar.css" type="text/css"/>
 <!--jQueryUI version >= 1.11.4 only -->
-<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css" />
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css" />
 <link rel="stylesheet" href="/resource/plugins/paramquery/themes/bootstrap/pqgrid.css" />
 <!--ParamQuery Grid css files-->
 <link rel="stylesheet" href="/resource/plugins/paramquery/pqgrid.min.css" type="text/css"/>
