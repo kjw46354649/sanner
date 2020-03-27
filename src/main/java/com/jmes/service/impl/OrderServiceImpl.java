@@ -48,7 +48,7 @@ public class OrderServiceImpl implements OrderService {
         this.orderDao.insertControlMaster(hashMap);
         this.orderDao.insertControlPart(hashMap);
         this.orderDao.insertControlPartOrder(hashMap);
-        this.orderDao.insertControlProgress(hashMap);
-        this.orderDao.insertControlPartProgress(hashMap);
+        this.orderDao.insertControlProgressConfirm(hashMap);
+        this.orderDao.insertControlPartProgressConfirm(hashMap);
     }
 }

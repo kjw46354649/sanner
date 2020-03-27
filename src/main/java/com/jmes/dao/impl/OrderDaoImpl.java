@@ -38,4 +38,14 @@ public class OrderDaoImpl implements OrderDao {
     public void insertControlPartProgress(Map<String, Object> hashMap) throws SQLException {
         sqlSessionTemplate.insert("insertControlPartProgress", hashMap);
     }
+
+    @Override
+    public void insertControlProgressConfirm(Map<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("insertControlProgressConfirm", hashMap);
+    }
+
+    @Override
+    public void insertControlPartProgressConfirm(Map<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("insertControlPartProgressConfirm", hashMap);
+    }
 }

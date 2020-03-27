@@ -3,88 +3,118 @@
 
 <mapper namespace="orderMapper">
     <select id="selectControlManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT ROW_NUMBER () OVER () AS ROWNUM,
-               CPRO.ORDER_STATUS,
-               (SELECT CODE_NM
-                FROM TBL_CODE_LANG
-                WHERE HIGH_CD = '1024'
-                AND CODE_CD = CPRO.ORDER_STATUS
-                AND LANG_CD = 'KR') AS ORDER_STATUS_NM,
-               DATE_FORMAT(CPRO.STATUS_DT, '%m-%d %H:%i') AS STATUS_DT,
-               C.COMP_CD,
-               (SELECT CODE_NM
-                FROM TBL_CODE_LANG
-                WHERE CODE_CD = C.COMP_CD
-                      AND LANG_CD = 'KR' LIMIT 1) AS COMP_NM, -- LIMIT 1 임시
-               C.ORDER_COMP_CD, -- 발주업체
-               (SELECT COMP_NM
-                FROM TBL_COMPANY
-                WHERE ORDER_COMP_CD = C.ORDER_COMP_CD LIMIT 1) AS ORDER_COMP_NM, -- 발주업체이름(JOIN)
-               C.ORDER_STAFF_SEQ,
-               (SELECT STAFF_NM
-                FROM TBL_COMPANY_STAFF
-                WHERE STAFF_SEQ = C.ORDER_STAFF_SEQ LIMIT 1) AS ORDER_STAFF_NM,
-               C.DESIGNER_NM, -- 설계자
-               C.NOTE, -- 비고
-               --        '',-- 거래명세서 no ㅇㄷ?
-               C.CONTROL_NUM,
-               CP.PART_NUM,
-               CP.DRAWING_NUM,
-               CP.ITEM_NM,
-               CP.WORK_TYPE,
-               (SELECT CODE_NM
-               FROM TBL_CODE_LANG
-               WHERE HIGH_CD = '1013'
-               AND CODE_CD = CP.WORK_TYPE
-               AND LANG_CD = 'KR') AS WORK_NM,
-               CP.OUTSIDE_YN,
-               CP.PART_UNIT_QTY,
-               CPO.ORDER_NUM,
-               CPO.ORDER_QTY,
-               CP.MATERIAL_UNIT_PRICE,
-               CP.SURFACE_UNIT_PRICE
-               FROM TBL_CONTROL C
-               INNER JOIN TBL_CONTROL_PROGRESS CPRO ON C.CONTROL_SEQ = CPRO.CONTROL_SEQ
-               INNER JOIN TBL_CONTROL_PART CP ON C.CONTROL_SEQ = CP.CONTROL_SEQ
-               INNER JOIN TBL_CONTROL_PART_ORDER CPO ON CP.CONTROL_SEQ = CPO.CONTROL_SEQ
-                                                        AND CP.CONTROL_DETAIL_SEQ = CPO.CONTROL_DETAIL_SEQ
-               WHERE 1 = 1
-               <if test="CONTROL_NUMBER != null and CONTROL_NUMBER != ''">
-                     AND C.CONTROL_NUM = #{CONTROL_NUMBER}
-               </if>
-               <if test="CORPORATION != null and CORPORATION != ''">
-                     AND C.COMP_CD = #{CORPORATION}
-               </if>
-               <if test="DRAWING_NUMBER != null and DRAWING_NUMBER != ''">
-                     AND CP.DRAWING_NUM = #{DRAWING_NUMBER}
-               </if>
-               <if test="PRODUCT_NAME != null and PRODUCT_NAME != ''">
-                     AND CP.ITEM_NM = #{PRODUCT_NAME}
-               </if>
-               <if test="WORK_TYPE != null and WORK_TYPE != ''">
-                     AND CP.WORK_TYPE = #{WORK_TYPE}
-               </if>
-               <if test="ORDER_NUMBER != null and ORDER_NUMBER != ''">
-                     AND CPO.ORDER_NUM = #{ORDER_NUMBER}
-               </if>
-               ORDER BY C.CONTROL_SEQ, CP.PART_NUM
+        SELECT
+            ROW_NUMBER () OVER () AS ROWNUM,
+            C.CONTROL_SEQ,
+            CP.CONTROL_DETAIL_SEQ,
+            CPO.ORDER_SEQ,
+            C.CONTROL_STATUS AS CONTROL_STATUS_CD,
+            CASE
+                WHEN (SELECT CODE_NM
+                      FROM TBL_CODE_LANG
+                      WHERE HIGH_CD = '1024'
+                            AND CODE_CD = C.CONTROL_STATUS
+                            AND LANG_CD = 'KR') = '저장상태' THEN ''
+                ELSE (SELECT CODE_NM
+                      FROM TBL_CODE_LANG
+                      WHERE HIGH_CD = '1024'
+                            AND CODE_CD = C.CONTROL_STATUS
+                            AND LANG_CD = 'KR')
+            END AS CONTROL_STATUS_NM,
+            DATE_FORMAT(C.STATUS_DT, '%m-%d %H:%i') AS STATUS_DT,
+            C.COMP_CD,
+            (SELECT CODE_NM
+            FROM TBL_CODE_LANG
+            WHERE CODE_CD = C.COMP_CD
+                  AND LANG_CD = 'KR' LIMIT 1) AS COMP_NM, -- LIMIT 1 임시
+            C.ORDER_COMP_CD, -- 발주업체
+            (SELECT COMP_NM
+            FROM TBL_COMPANY
+            WHERE ORDER_COMP_CD = C.ORDER_COMP_CD LIMIT 1) AS ORDER_COMP_NM, -- 발주업체이름(JOIN)
+            C.ORDER_STAFF_SEQ,
+            (SELECT STAFF_NM
+            FROM TBL_COMPANY_STAFF
+            WHERE STAFF_SEQ = C.ORDER_STAFF_SEQ LIMIT 1) AS ORDER_STAFF_NM,
+            C.DESIGNER_NM, -- 설계자
+            C.NOTE, -- 비고
+            --        '',-- 거래명세서 no ㅇㄷ?
+            C.MODULE_NM,--  모듈명
+            C.MAIN_INSPECTION_YN, -- 주요 검사품
+            C.EMERGENCY_YN, -- 긴급
+            C.CONTROL_NUM,
+            CP.PART_NUM,
+            CP.DRAWING_NUM,
+            CP.ITEM_NM,
+            CP.WORK_TYPE,
+            (SELECT CODE_NM
+            FROM TBL_CODE_LANG
+            WHERE HIGH_CD = '1013'
+            AND CODE_CD = CP.WORK_TYPE
+            AND LANG_CD = 'KR') AS WORK_NM,
+            CP.OUTSIDE_YN,
+            CP.WORK_FACTORY,
+            CP.MATERIAL_SUPPLY_YN,
+            -- '', 가공 납기
+            -- '', 규격 조인!
+            CP.MATERIAL_DETAIL,
+            CP.MATERIAL_KIND,
+            CP.SURFACE_TREAT,
+            CP.HEAT_TREAT_YN,
+            CP.PART_UNIT_QTY,
+            CPO.ORDER_NUM,
+            CPO.ORDER_QTY,
+            CP.ORIGINAL_SIDE_QTY,
+            CP.OTHER_SIDE_QTY,
+            -- '', 출고
+            -- '', 납기
+            CPO.DELIVERY_DT,
+            CP.PREV_DRAWING_NUM
+            --         CP.MATERIAL_UNIT_PRICE, 소재비
+            --         CP.SURFACE_UNIT_PRICE 가공비
+        FROM TBL_CONTROL C
+        --                INNER JOIN TBL_CONTROL_PROGRESS CPRO ON C.CONTROL_SEQ = CPRO.CONTROL_SEQ
+        INNER JOIN TBL_CONTROL_PART CP ON C.CONTROL_SEQ = CP.CONTROL_SEQ
+        INNER JOIN TBL_CONTROL_PART_ORDER CPO ON CP.CONTROL_SEQ = CPO.CONTROL_SEQ
+                                                AND CP.CONTROL_DETAIL_SEQ = CPO.CONTROL_DETAIL_SEQ
+        WHERE 1 = 1
+        <if test="CONTROL_NUMBER != null and CONTROL_NUMBER != ''">
+             AND C.CONTROL_NUM = #{CONTROL_NUMBER}
+        </if>
+        <if test="CORPORATION != null and CORPORATION != ''">
+             AND C.COMP_CD = #{CORPORATION}
+        </if>
+        <if test="DRAWING_NUMBER != null and DRAWING_NUMBER != ''">
+             AND CP.DRAWING_NUM = #{DRAWING_NUMBER}
+        </if>
+        <if test="PRODUCT_NAME != null and PRODUCT_NAME != ''">
+             AND CP.ITEM_NM = #{PRODUCT_NAME}
+        </if>
+        <if test="WORK_TYPE != null and WORK_TYPE != ''">
+             AND CP.WORK_TYPE = #{WORK_TYPE}
+        </if>
+        <if test="ORDER_NUMBER != null and ORDER_NUMBER != ''">
+             AND CPO.ORDER_NUM = #{ORDER_NUMBER}
+        </if>
+        ORDER BY C.CONTROL_SEQ, CP.PART_NUM
     </select>
 
     <insert id="insertControlMaster" parameterType="java.util.HashMap" >
         INSERT IGNORE INTO TBL_CONTROL (
-        CONTROL_SEQ,
-        CONTROL_NUM,
-        CONTROL_VER,
-        COMP_CD,
-        ORDER_COMP_CD,
-        ORDER_STAFF_SEQ,
-        DESIGNER_NM,
-        NOTE,
-        MODULE_NM,
-        MAIN_INSPECTION_YN,
-        EMERGENCY_YN,
-        INSERT_DT
-        -- ,INSERT_ID
+            CONTROL_SEQ,
+            CONTROL_NUM,
+            CONTROL_VER,
+            COMP_CD,
+            ORDER_COMP_CD,
+            ORDER_STAFF_SEQ,
+            DESIGNER_NM,
+            NOTE,
+            MODULE_NM,
+            MAIN_INSPECTION_YN,
+            EMERGENCY_YN,
+            CONTROL_STATUS,
+            STATUS_DT,
+            INSERT_DT
+            -- ,INSERT_ID
         ) VALUES
         <foreach collection="list" item="item" separator=",">
         (
@@ -112,7 +142,9 @@
             #{item.MODULE_NM},
             #{item.MAIN_INSPECTION_YN},
             #{item.EMERGENCY_YN},
-            current_timestamp()
+            #{item.CONTROL_STATUS},
+            CURRENT_TIMESTAMP(),
+            CURRENT_TIMESTAMP()
             -- ,NULL
             )
         </foreach>
@@ -183,7 +215,7 @@
             #{item.INNER_DUE_DT},
             (SELECT IF(#{item.ORIGINAL_SIDE_QTY} = '', NULL, CAST(#{item.ORIGINAL_SIDE_QTY} AS UNSIGNED INTEGER))),
             (SELECT IF(#{item.OTHER_SIDE_QTY} = '', NULL, CAST(#{item.OTHER_SIDE_QTY} AS UNSIGNED INTEGER))),
-            current_timestamp()
+            CURRENT_TIMESTAMP()
             -- ,NULL
             )
         </foreach>
@@ -222,14 +254,75 @@
             #{item.DELIVERY_DT},
             (SELECT IF(#{item.EST_UNIT_PRICE} = '', NULL, CAST(REPLACE(#{item.EST_UNIT_PRICE}, ',', '') AS UNSIGNED INTEGER))),
             (SELECT IF(#{item.SUPPLY_UNIT_PRICE} = '', NULL, CAST(REPLACE(#{item.SUPPLY_UNIT_PRICE}, ',', '') AS UNSIGNED INTEGER))),
-            current_timestamp()
+            CURRENT_TIMESTAMP()
             -- ,NULL
         )
         </foreach>
     </insert>
 
     <insert id="insertControlProgress" parameterType="java.util.HashMap" >
-        INSERT INTO TBL_CONTROL_PROGRESS (
+        INSERT IGNORE INTO TBL_CONTROL_PROGRESS (
+            CONTROL_SEQ,
+            SEQ,
+            ORDER_STATUS,
+            STATUS_DT,
+            INSERT_DT
+            -- ,INSERT_ID
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+        (
+            (SELECT A.CONTROL_SEQ
+             FROM TBL_CONTROL A
+             WHERE A.CONTROL_NUM = #{item.CONTROL_NUM}),
+            (SELECT IFNULL(max(B.SEQ), NEXT VALUE FOR SEQ_CONTROL_PROGRESS)
+            FROM TBL_CONTROL_PROGRESS B
+            INNER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+             WHERE C.CONTROL_NUM = #{item.CONTROL_NUM}),
+            'PRO00',
+            CURRENT_TIMESTAMP(),
+            CURRENT_TIMESTAMP()
+            -- ,NULL
+        )
+        </foreach>
+    </insert>
+
+    <insert id="insertControlPartProgress" parameterType="java.util.HashMap" >
+        INSERT IGNORE INTO TBL_CONTROL_PART_PROGRESS (
+            CONTROL_SEQ,
+            CONTROL_DETAIL_SEQ,
+            SEQ,
+            PART_STATUS,
+            STATUS_DT,
+            INSERT_DT
+        -- ,INSERT_ID,
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+        (
+            (SELECT A.CONTROL_SEQ
+            FROM TBL_CONTROL A
+            WHERE A.CONTROL_NUM = #{item.CONTROL_NUM}),
+            (SELECT B.CONTROL_DETAIL_SEQ
+            FROM TBL_CONTROL_PART B
+            INNER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+            WHERE C.CONTROL_NUM = #{item.CONTROL_NUM}
+            AND B.CONTROL_DETAIL_SEQ NOT IN (SELECT D.CONTROL_DETAIL_SEQ
+            FROM TBL_CONTROL_PART_PROGRESS D
+            WHERE D.CONTROL_SEQ = B.CONTROL_SEQ)
+            ORDER BY B.CONTROL_DETAIL_SEQ
+            LIMIT 1),
+            (SELECT IFNULL(max(E.SEQ), NEXT VALUE FOR SEQ_CONTROL_PART_PROGRESS)
+            FROM TBL_CONTROL_PART_PROGRESS E
+            INNER JOIN TBL_CONTROL F ON E.CONTROL_SEQ = F.CONTROL_SEQ
+            WHERE F.CONTROL_NUM = #{item.CONTROL_NUM}),
+            'PRO00',
+            CURRENT_TIMESTAMP(),
+            CURRENT_TIMESTAMP()
+        )
+        </foreach>
+    </insert>
+
+    <insert id="insertControlProgressConfirm" parameterType="java.util.HashMap" >
+        INSERT IGNORE INTO TBL_CONTROL_PROGRESS (
             CONTROL_SEQ,
             SEQ,
             ORDER_STATUS,
@@ -247,15 +340,15 @@
             INNER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
              WHERE C.CONTROL_NUM = #{item.CONTROL_NUM}),
             'PRO01',
-            current_timestamp(),
-            current_timestamp()
+            CURRENT_TIMESTAMP(),
+            CURRENT_TIMESTAMP()
             -- ,NULL
         )
         </foreach>
     </insert>
 
-    <insert id="insertControlPartProgress" parameterType="java.util.HashMap" >
-        INSERT INTO TBL_CONTROL_PART_PROGRESS (
+    <insert id="insertControlPartProgressConfirm" parameterType="java.util.HashMap" >
+        INSERT IGNORE INTO TBL_CONTROL_PART_PROGRESS (
             CONTROL_SEQ,
             CONTROL_DETAIL_SEQ,
             SEQ,
@@ -283,9 +376,66 @@
             INNER JOIN TBL_CONTROL F ON E.CONTROL_SEQ = F.CONTROL_SEQ
             WHERE F.CONTROL_NUM = #{item.CONTROL_NUM}),
             'PRO01',
-            current_timestamp(),
-            current_timestamp()
+            CURRENT_TIMESTAMP(),
+            CURRENT_TIMESTAMP()
         )
         </foreach>
     </insert>
+
+    <update id="updateControlMaster" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL
+        SET
+            CONTROL_NUM = #{CONTROL_NUM},
+            CONTROL_VER = #{CONTROL_VER},
+            COMP_CD = #{COMP_CD},
+            ORDER_COMP_CD = #{ORDER_COMP_CD},
+            ORDER_STAFF_SEQ = #{ORDER_STAFF_SEQ},
+            DESIGNER_NM = #{DESIGNER_NM},
+            NOTE = #{NOTE},
+            MODULE_NM = #{MODUL_NM},
+            MAIN_INSPECTION_YN = #{MAIN_INSPECTION_YN},
+            EMERGENCY_YN = #{EMERENCY_YN},
+            CONTROL_STATUS = #{CONTROL_STATUS_CD},
+            STATUS_DT = CURRENT_TIMESTAMP(),
+            UPDATE_DT = CURRENT_TIMESTAMP()
+            -- ,UPDATE_ID = NULL
+        WHERE
+            CONTROL_SEQ = #{CONTROL_SEQ}
+    </update>
+    <update id="updateControlPart" parameterType="java.util.HashMap">
+        UPDATE
+            TBL_CONTROL_PART
+        SET
+            PART_NUM = #{PART_NUM, jdbcType=INTEGER},
+            DRAWING_NUM = #{DRAWING_NUM, jdbcType=VARCHAR},
+            DRAWING_VER = #{DRAWING_VER, jdbcType=INTEGER},
+            PREV_DRAWING_NUM = #{PREV_DRAWING_NUM, jdbcType=VARCHAR},
+            ITEM_NM = #{ITEM_NM, jdbcType=VARCHAR},
+            WORK_TYPE = #{WORK_TYPE, jdbcType=VARCHAR},
+            OUTSIDE_YN = #{OUTSIDE_YN, jdbcType=VARCHAR},
+            WORK_FACTORY = #{WORK_FACTORY, jdbcType=VARCHAR},
+            MATERIAL_SUPPLY_YN = #{MATERIAL_SUPPLY_YN, jdbcType=VARCHAR},
+        -- 	MATERIAL_KIND = #{MATERIAL_KIND},
+        -- 	SIZE_W = #{SIZE_W},
+        -- 	SIZE_H = #{SIZE_H},
+        -- 	SIZE_T = #{SIZE_T},
+        -- 	SIZE_D = #{SIZE_D},
+        -- 	SIZE_L = #{SIZE_L},
+            MATERIAL_TYPE = #{MATERIAL_TYPE, jdbcType=VARCHAR},
+            MATERIAL_DETAIL = #{MATERIAL_DETAIL, jdbcType=VARCHAR},
+            SURFACE_TREAT = #{SURFACE_TREAT, jdbcType=VARCHAR},
+            HEAT_TREAT_YN = #{HEAT_TREAT_YN, jdbcType=VARCHAR},
+            PART_UNIT_QTY = #{PART_UNIT_QTY, jdbcType=INTEGER},
+            HOPE_DUE_DT = #{HOPE_DUE_DT, jdbcType=VARCHAR},
+            INNER_DUE_DT = #{INNER_DUE_DT, jdbcType=VARCHAR},
+            ORIGINAL_SIDE_QTY = #{ORIGINAL_SIDE_QTY, jdbcType=INTEGER},
+            OTHER_SIDE_QTY = #{OTHER_SIDE_QTY, jdbcType=INTEGER},
+            PART_STATUS = #{CONTROL_STATUS_CD, jdbcType=VARCHAR},
+            STATUS_DT = CURRENT_TIMESTAMP(),
+            UPDATE_DT = CURRENT_TIMESTAMP()
+            -- ,UPDATE_ID #{UPDATE_ID}
+        WHERE
+            CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </update>
 </mapper>

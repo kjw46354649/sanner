@@ -14,4 +14,8 @@ public interface OrderDao {
     void insertControlProgress(Map<String, Object> hashMap) throws SQLException;
 
     void insertControlPartProgress(Map<String, Object> hashMap) throws SQLException;
+
+    void insertControlProgressConfirm(Map<String, Object> hashMap) throws SQLException;
+
+    void insertControlPartProgressConfirm(Map<String, Object> hashMap) throws SQLException;
 }
