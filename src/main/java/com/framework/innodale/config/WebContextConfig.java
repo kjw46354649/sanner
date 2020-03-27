@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
@@ -104,10 +105,10 @@ public class WebContextConfig implements WebMvcConfigurer {
      * 파일 업로드시에 사용한다.
      * @return
      */
-//    @Bean(name = "multipartResolver")
-//    public CommonsMultipartResolver getMultipartResolver() {
-//        return new CommonsMultipartResolver();
-//    }
+    @Bean(name = "multipartResolver")
+    public CommonsMultipartResolver getMultipartResolver() {
+        return new CommonsMultipartResolver();
+    }
 
     @Bean
     public MessageSource messageSource() {

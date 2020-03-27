@@ -4,3 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<form id="common_formdata_multi_upload_form" method="post">
+    <input type="file" id="click_singfile_chose_btn" name="click_singfile_chose_btn" style="display: none;">
+    <input type="file" id="click_multifile_chose_btn" name="click_multifile_chose_btn" multiple  style="display: none;">
+</form>

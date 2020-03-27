@@ -43,6 +43,8 @@
 <script type='text/javascript'>
     var g_code;
     var royal_tab_api = null;
+    var multiFileUploadBox = [];    // 임시 형태의 file upload 저장소
+
     $(document).ready(function() {
 
         royal_tab_api = new Royal_Tab_Api($('div.royal_tab'));
@@ -125,6 +127,37 @@
             }
         });
     };
+
+    let fnFormDataFileUploadAjax = function (callFunction, formData) {
+        'use strict';
+        let callback = $.Callbacks();
+        $.ajax({
+            type: 'POST',
+            url: '/uploadNormalFile',
+            contentType : false,
+            processData: false,
+            data: formData,
+            success: function (data, textStatus, jqXHR) {
+                if (textStatus === 'success') {
+                    // if (data.exception === null) {
+                    callback.add(callFunction);
+                    callback.fire(data);
+                    // } else {
+                    <%--alert('<spring:message code='com.alert.default.failText' />');--%>
+                    // }
+                } else {
+                    // alert('fail=[' + json.msg + ']111');
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                // alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
+                // if (errorThrown == 'Forbidden') {
+                //     $(this).fnHiddenFormPageAction('/');
+                // }
+            }
+        });
+    };
+
 
     /* form에 JsonData를 셋팅 한다.
 		/* formid : form 아이디

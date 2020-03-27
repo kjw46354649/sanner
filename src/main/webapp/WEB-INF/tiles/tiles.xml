@@ -16,6 +16,7 @@
         <put-attribute name="body-top" 	        		value="/WEB-INF/views/attr/tabs/body-top.jsp"/>
         <put-attribute name="body-menu" 	    		value="/WEB-INF/views/attr/tabs/body-menu.jsp"/>
         <put-attribute name="body" 	            		value="/WEB-INF/views/attr/tabs/body-tab.jsp"/>
+        <put-attribute name="bottom"	 	   			value="/WEB-INF/views/attr/tabs/bottom.jsp"/>
     </definition>
 
     <definition name=".pagesPageLayout"         	 template="/WEB-INF/views/attr/template-page.jsp">

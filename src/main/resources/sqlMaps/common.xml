@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="common">
+
+    <insert id="insertFileGroup" parameterType="java.util.HashMap">
+        <selectKey keyProperty="GFILE_SEQ" resultType="int" order="BEFORE">
+            SELECT NEXTVAL(SEQ_GFILE) FROM DUAL
+        </selectKey>
+        INSERT INTO jmes.TBL_FILE_GROUP (GFILE_SEQ,
+            <if test="GFILE_TYPE != null and GFILE_TYPE != ''">
+                GFILE_TYPE,
+            </if>
+            INSERT_ID)
+        VALUES(#{GFILE_SEQ},
+            <if test="GFILE_TYPE != null and GFILE_TYPE != ''">
+                #{GFILE_TYPE},
+            </if>
+            'admin')
+    </insert>
+
+    <delete id="deleteFileGroup" parameterType="java.util.HashMap">
+        DELETE FROM jmes.TBL_FILE_GROUP
+        WHERE GFILE_SEQ = #{GFILE_SEQ}
+    </delete>
+
+    <update id="updateFileGroup" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_FILE_GROUP
+        SET
+            <if test="GFILE_TYPE != null and GFILE_TYPE != ''">
+                GFILE_TYPE = #{GFILE_TYPE},
+            </if>
+            UPDATE_DT = NOW(),
+            UPDATE_ID = 'admin'
+        WHERE GFILE_SEQ = #{GFILE_SEQ}
+    </update>
+
+    <insert id="insertFile" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_FILE
+        (FILE_SEQ, FILE_NM, FILE_PATH, ORGINAL_FILE_NM, FILE_TYPE, FILE_EXT, FILE_SIZE,
+            GFILE_SEQ, INSERT_ID)
+        VALUES
+        (NEXTVAL(SEQ_FILE), #{FILE_NM}, #{FILE_PATH}, #{ORGINAL_FILE_NM}, #{FILE_TYPE}, #{FILE_EXT}, #{FILE_SIZE},
+            #{GFILE_SEQ}, 'admin')
+    </insert>
+
+    <update id="updateFile" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_FILE
+        SET
+            FILE_NM = #{FILE_NM},
+            FILE_PATH = #{FILE_PATH},
+            ORGINAL_FILE_NM = #{ORGINAL_FILE_NM},
+            FILE_TYPE = #{FILE_TYPE},
+            FILE_EXT = #{FILE_EXT},
+            FILE_SIZE = #{FILE_SIZE},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = 'admin'
+        WHERE FILE_SEQ = #{FILE_SEQ}
+    </update>
+
+    <delete id="deleteGFileKey" parameterType="java.util.HashMap">
+        DELETE FROM jmes.TBL_FILE
+        WHERE GFILE_SEQ = #{GFILE_SEQ}
+    </delete>
+
+    <delete id="deleteFileKey" parameterType="java.util.HashMap">
+        DELETE FROM jmes.TBL_FILE
+        WHERE FILE_SEQ = #{FILE_SEQ}
+    </delete>
+
+    <select id="selectGfileFileImageInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.GFILE_SEQ, B.FILE_SEQ, B.ORGINAL_FILE_NM, B.FILE_PATH
+        FROM jmes.TBL_FILE_GROUP A
+            INNER JOIN jmes.TBL_FILE B ON A.GFILE_SEQ = B.GFILE_SEQ
+        WHERE A.GFILE_SEQ  = #{GFILE_SEQ}
+    </select>
+
+</mapper>

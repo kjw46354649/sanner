@@ -1,21 +1,27 @@
 package com.framework.innodale.controller;
 
-import com.framework.innodale.component.CreateBarcodeStream;
-import com.framework.innodale.component.Pagging;
+import com.framework.innodale.service.InnodaleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class StaticUrlController {
+
+    @Autowired
+    private InnodaleService innodaleService;
+
+    @Autowired
+    private Environment environment;
 
     @RequestMapping(value = "/static/{pathName}/{fileName}")
     public String staticUrlController(Model model, HttpServletRequest request, HttpServletResponse response,
@@ -31,6 +37,21 @@ public class StaticUrlController {
         modelAndView.setViewName("barcodeView");
         modelAndView.addObject("codeType", codeType);
         modelAndView.addObject("barcode", barcode);
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/image/{gfileSeq}")
+    public ModelAndView imageFileView(@PathVariable("gfileSeq") String GFILE_SEQ) throws Exception {
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        HashMap<String, Object> fileInfo = new HashMap<String, Object>();
+        fileInfo.put("GFILE_SEQ", GFILE_SEQ);
+        fileInfo.put("queryId", "common.selectGfileFileImageInfo");
+        modelAndView.setViewName("imageView");
+        modelAndView.addObject("imageInfo", innodaleService.getInfo(fileInfo));
+        modelAndView.addObject("blank_image", environment.getRequiredProperty("blank.image.path"));
 
         return modelAndView;
     }

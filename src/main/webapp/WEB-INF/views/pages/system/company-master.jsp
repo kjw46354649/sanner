@@ -19,7 +19,7 @@
                 <h4 class="modal-title">업체 상세 정보</h4>
             </div>
             <div class="modal-body">
-                <form class="" role="form" id="estimate_master_record_popup_search_form" name="estimate_master_record_popup_search_form">
+                <form class="" role="form" id="company_master_regisger_form" name="company_master_regisger_form">
                     <div class="panel-body line_tit portlet-body form bg-light">
                         <section class="bg-light">
                             <div class="panel-body">
@@ -75,7 +75,7 @@
                                                 <div class="form-group col-md-6 col-sm-6">
                                                     <label class="col-md-4 col-sm-4 control-label">관계 구분</label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        <select id="COMP_CLASS" name="COMP_CLASS" data-required="true" class="form-control parsley-validated">
+                                                        <select id="COMP_KIND" name="COMP_KIND" data-required="true" class="form-control parsley-validated">
                                                             <option value=""><spring:message code="com.form.top.sel.option" /></option>
                                                             <c:forEach var="vlocale" items="${HighCode.H_1049}">
                                                                 <option value="${vlocale.CODE_CD}" <c:if test="${fn:toUpperCase(LocalInfo) eq vlocale.CODE_CD}"> selected="selected"</c:if>>${vlocale.CODE_NM_KR}</option>
@@ -141,14 +141,16 @@
                                                 <div class="form-group col-md-12 col-sm-12">
                                                     <label class="col-md-2 col-sm-2 control-label">비고</label>
                                                     <div class="col-md-10 col-sm-10">
-                                                        <input type="text" data-notblank="true" class="form-control" placeholder="비고">
+                                                        <input type="text" class="form-control" placeholder="비고">
                                                     </div>
                                                 </div>
                                                 <div class="line line-dashed b-b pull-in"></div>
                                                 <div class="form-group col-md-12 col-sm-12">
                                                     <label class="col-md-2 col-sm-2 control-label">첨부파일</label>
                                                     <div class="col-md-10 col-sm-10">
-                                                        <input type="file" class="filestyle" data-icon="false" data-classButton="btn btn-default" data-classInput="form-control inline v-middle input-s">
+                                                        <input type="hidden" id="ETC_GFILE_SEQ" name="ETC_GFILE_SEQ" value="">
+                                                        <input type="text" id="ETC_GFILE_SEQ_NM" name="ETC_GFILE_SEQ_NM" class="form-control" placeholder="첨부파일" readonly>
+                                                        <input type="button" id="compnay_etc_attach_file" name="compnay_etc_attach_file" value="fileUpload">
                                                     </div>
                                                 </div>
                                             </div>
@@ -159,9 +161,10 @@
                                     <div class="hbox">
                                         <aside class="aside-md">
                                             <div class="text-center">
-                                                <img src="/resource/main/images/p0.jpg" width="200px" alt="..." class="img-circle m-b">
+                                                <input type="hidden" id="LOGO_GFILE_SEQ" name="LOGO_GFILE_SEQ" value="">
+                                                <img src="/image/999" id="LOGO_GFILE_SRC" width="200px" alt="..." class="img-circle m-b">
                                                 <div class="">
-                                                    <button class="btn btn-default" id="company_logo_upload" href="#" >
+                                                    <button type="button" class="btn btn-default" id="company_logo_upload" href="#" >
                                                         <i class="fa fa-cloud-upload text"></i>
                                                         <span class="text">Upload</span>
                                                     </button>
@@ -223,8 +226,8 @@
                         <input type="hidden" id="queryId" name="queryId" value="getCompanyMasterList">
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="SEL_COMP_CLASS">대외구분</label>
-                                <select id="SEL_COMP_CLASS" name="SEL_COMP_CLASS" data-required="true" class="form-control parsley-validated">
+                                <label class="control-label" for="SEL_COMP_KIND">대외구분</label>
+                                <select id="SEL_COMP_KIND" name="SEL_COMP_KIND" data-required="true" class="form-control parsley-validated">
                                     <option value=""><spring:message code="com.form.top.sel.option" /></option>
                                     <c:forEach var="vlocale" items="${HighCode.H_1049}">
                                         <option value="${vlocale.CODE_CD}" <c:if test="${fn:toUpperCase(LocalInfo) eq vlocale.CODE_CD}"> selected="selected"</c:if>>${vlocale.CODE_NM_KR}</option>
@@ -293,18 +296,18 @@
     let systemCompanyMasterColModel;
     let systemCompanyMasterToolbar;
     let systemCompanyMasterObj;
-    let $systemCompanyMasterGrid;
+    let systemCompanyMasterGrid;
 
     let systemCompanyRegisterGridId = 'system-company-register-popup-grid';
     let systemCompanyRegisterColModel;
     let systemCompanyRegisterToolbar;
     let systemCompanyRegisterObj;
-    let $systemCompanyRegisterGrid;
+    let systemCompanyRegisterGrid;
 
     $(function () {
         'use strict';
         systemCompanyMasterColModel = [
-            {title: '관계구분', datatype: 'string', dataIndx: 'COMP_CLASS_NM', editable: true,
+            {title: '관계구분', datatype: 'string', dataIndx: 'COMP_KIND_NM', editable: true,
                 styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
             },
             {title: '업체명', dataType: 'string', dataIndx: 'COMP_NM',
@@ -365,7 +368,7 @@
                 {
                     type: 'button', label: 'NEW COMPANY', icon: 'ui-icon-plus', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            $systemCompanyRegisterGrid = $('#' + systemCompanyRegisterGridId).pqGrid(systemCompanyRegisterObj);
+                            systemCompanyRegisterGrid = $('#' + systemCompanyRegisterGridId).pqGrid(systemCompanyRegisterObj);
                             $('#system_company_popup').modal('show');
                         }
                     }
@@ -402,10 +405,11 @@
                 }
             }
         };
-        $systemCompanyMasterGrid = $('#' + systemCompanyMasterGridId).pqGrid(systemCompanyMasterObj);
+
+        systemCompanyMasterGrid = $('#' + systemCompanyMasterGridId).pqGrid(systemCompanyMasterObj);
 
         systemCompanyRegisterColModel = [
-            {title: '담당자명', datatype: 'string', dataIndx: 'COMP_CLASS_NM', editable: true,
+            {title: '담당자명', datatype: 'string', dataIndx: 'COMP_KIND_NM', editable: true,
                 styleHead: { 'text-align':'center','vertical-align':'middle'}
             },
             {title: '직급', dataType: 'string', dataIndx: 'COMP_NM',
@@ -479,7 +483,7 @@
             }
         };
 
-        $("#company_master_search_form").find("#SEL_COMP_CLASS").change(function(){
+        $("#company_master_search_form").find("#SEL_COMP_KIND").change(function(){
             let comptype = 0;
             if(this.value == "CLS010")
                 comptype = '1042';
@@ -488,20 +492,66 @@
             fnCommCodeDynamicSelectBoxCreate($("#company_master_search_form").find("#SEL_COMP_TYPE"), comptype, 'sel');
         });
 
-        $("#estimate_master_record_popup_search_form").find("#COMP_CLASS").change(function(){
+        $("#company_master_regisger_form").find("#COMP_KIND").change(function(){
             let comptype = 0;
             if(this.value == "CLS010")
                 comptype = '1042';
             else if(this.value == "CLS020")
                 comptype = '1043';
-            fnCommCodeDynamicSelectBoxCreate($("#estimate_master_record_popup_search_form").find("#COMP_TYPE"), comptype, 'sel');
+            fnCommCodeDynamicSelectBoxCreate($("#company_master_regisger_form").find("#COMP_TYPE"), comptype, 'sel');
         });
 
         /** 공통 코드 이외의 처리 부분 **/
         let commonCodeBotGridId = 'dataSource.getCompanyUserList';
         let paramData = {"url":"/json-list", "data": {"queryId": commonCodeBotGridId}};
         fnCommCodeDatasourceSelectBoxCreate($("#company_master_search_form").find("#SEL_STAFF_NM"), 'all', paramData);
-        fnCommCodeDatasourceSelectBoxCreate($("#estimate_master_record_popup_search_form").find("#STAFF_NM"), 'all', paramData);
+        fnCommCodeDatasourceSelectBoxCreate($("#company_master_regisger_form").find("#STAFF_NM"), 'all', paramData);
+
+        /** 업체 기타 파일 업로드 */
+        $("#company_master_regisger_form").find("#compnay_etc_attach_file").click(function (e) {
+            let companyEtcFile = $("#common_formdata_multi_upload_form").find("#click_singfile_chose_btn");
+            companyEtcFile.trigger("click");
+            companyEtcFile.change(function () {
+                var input = $(this);
+                var files = input.get(0).files;
+                if (files.length > 0) {
+                    let formData = new FormData();
+                    for (var i = 0; i < files.length; i++) {
+                        formData.append("file" + i, files[i]);
+                    }
+                    fnFormDataFileUploadAjax(function (data) {
+                        console
+                        let fileInfo = data.fileUploadList[0];
+                        $("#company_master_regisger_form").find("#ETC_GFILE_SEQ_NM").val(fileInfo.ORGINAL_FILE_NM);
+                        $("#company_master_regisger_form").find("#ETC_GFILE_SEQ").val(fileInfo.GFILE_SEQ);
+                    }, formData);
+                }
+            });
+        });
+
+        /** 로고 파일 파일 업로드 */
+        $("#company_master_regisger_form").find("#company_logo_upload").click(function (e) {
+            let companyEtcFile = $("#common_formdata_multi_upload_form").find("#click_singfile_chose_btn");
+            companyEtcFile.trigger("click");
+            companyEtcFile.change(function () {
+                var input = $(this);
+                var files = input.get(0).files;
+                if (files.length > 0) {
+                    let formData = new FormData();
+                    for (var i = 0; i < files.length; i++) {
+                        formData.append("file" + i, files[i]);
+                    }
+                    fnFormDataFileUploadAjax(function (data) {
+                        console.log(data["fileUploadList"]);
+                        let fileInfo = data.fileUploadList[0];
+                        console.log(data.fileUploadList[0]);
+                        console.log(fileInfo);
+                        $("#company_master_regisger_form").find("#LOGO_GFILE_SRC").attr("src", "/image/" + fileInfo.GFILE_SEQ);
+                        $("#company_master_regisger_form").find("#LOGO_GFILE_SEQ").val(fileInfo.GFILE_SEQ);
+                    }, formData);
+                }
+            });
+        });
     });
 </script>
 

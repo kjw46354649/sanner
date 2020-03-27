@@ -10,4 +10,6 @@
 
     <beans:bean name="barcodeView" class="com.framework.innodale.controller.BarcodeView" p:contentType="text/html" />
 
+    <beans:bean name="imageView" class="com.framework.innodale.controller.ImageView" p:contentType="text/html" />
+
 </beans>

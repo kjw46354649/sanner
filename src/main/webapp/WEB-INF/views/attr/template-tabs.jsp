@@ -28,5 +28,6 @@
             </div>
         </section>
     </section>
+    <tiles:insertAttribute name="bottom"/>
 </body>
 </html>

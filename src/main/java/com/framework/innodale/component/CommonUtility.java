@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
@@ -50,9 +51,9 @@ public class CommonUtility {
      * @throws Exception
      */
     @SuppressWarnings("static-access")
-    public static Map<String, Object> getParameterMap(HttpServletRequest request)throws IOException {
+    public static HashMap<String, Object> getParameterMap(HttpServletRequest request)throws IOException {
 
-        Map<String, Object> paramMap = new HashMap<String, Object>();
+        HashMap<String, Object> paramMap = new HashMap<String, Object>();
 
         Enumeration<String> e = request.getParameterNames();
 
@@ -512,5 +513,11 @@ public class CommonUtility {
         }
 
         return sb.toString();
+    }
+
+    public static File getMultiPartFileToFile(MultipartFile multipartFile) throws IOException {
+        File file = new File(multipartFile.getOriginalFilename());
+        multipartFile.transferTo(file);
+        return file;
     }
 }
