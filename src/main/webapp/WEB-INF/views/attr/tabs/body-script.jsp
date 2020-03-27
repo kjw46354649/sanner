@@ -141,7 +141,7 @@
                 if (textStatus === 'success') {
                     // if (data.exception === null) {
                     callback.add(callFunction);
-                    callback.fire(data);
+                    callback.fire(jQuery.parseJSON(data));
                     // } else {
                     <%--alert('<spring:message code='com.alert.default.failText' />');--%>
                     // }

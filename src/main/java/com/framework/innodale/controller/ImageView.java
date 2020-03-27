@@ -30,10 +30,11 @@ public class ImageView extends AbstractView {
 
         String fileName = (String)model.get("blank_image");
 
-        if(fileInfo != null && fileInfo.containsKey("ORGINAL_FILE_NM")){
-            fileName = (String)fileInfo.get("ORGINAL_FILE_NM");
+        if(fileInfo != null && fileInfo.containsKey("FILE_PATH")){
+            fileName = (String)fileInfo.get("FILE_PATH");
         }
 
+        System.out.println("fileName=[" + fileName + "]");
         System.out.println("fileName=[" + fileName + "]");
 
         // InputStream in = getClass().getResourceAsStream(fileName);

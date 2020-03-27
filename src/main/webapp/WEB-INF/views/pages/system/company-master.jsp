@@ -520,7 +520,6 @@
                         formData.append("file" + i, files[i]);
                     }
                     fnFormDataFileUploadAjax(function (data) {
-                        console
                         let fileInfo = data.fileUploadList[0];
                         $("#company_master_regisger_form").find("#ETC_GFILE_SEQ_NM").val(fileInfo.ORGINAL_FILE_NM);
                         $("#company_master_regisger_form").find("#ETC_GFILE_SEQ").val(fileInfo.GFILE_SEQ);
@@ -542,10 +541,8 @@
                         formData.append("file" + i, files[i]);
                     }
                     fnFormDataFileUploadAjax(function (data) {
-                        console.log(data["fileUploadList"]);
+                        console.log(data);
                         let fileInfo = data.fileUploadList[0];
-                        console.log(data.fileUploadList[0]);
-                        console.log(fileInfo);
                         $("#company_master_regisger_form").find("#LOGO_GFILE_SRC").attr("src", "/image/" + fileInfo.GFILE_SEQ);
                         $("#company_master_regisger_form").find("#LOGO_GFILE_SEQ").val(fileInfo.GFILE_SEQ);
                     }, formData);
