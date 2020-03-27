@@ -52,11 +52,7 @@
                                                     <div class="form-group col-md-4 col-sm-4">
                                                         <label class="col-md-4 col-sm-4 control-label">구매 담당자</label>
                                                         <div class="col-md-8 col-sm-8">
-                                                            <select id="ORDER_STAFF_SEQ" name="ORDER_STAFF_SEQZ" data-required="true" class="form-control parsley-validated">
-                                                                <option value="">Select</option>
-                                                                <c:forEach var="code" items="${HighCode.H_1042}">
-                                                                    <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
-                                                                </c:forEach>
+                                                            <select id="ORDER_STAFF_SEQ" name="ORDER_STAFF_SEQ" data-required="true" class="form-control parsley-validated">
                                                             </select>
                                                         </div>
                                                     </div>
@@ -185,6 +181,11 @@
     </div>
 </div>
 
+<form id="estimate_register_excel_download" method="POST">
+    <input type="hidden" id="sqlId" name="sqlId" value=""/>
+    <input type="hidden" id="paramName" name="paramName" value="EST_SEQ"/>
+    <input type="hidden" id="paramData" name="paramData" value=""/>
+</form>
 <script type="text/javascript">
     $(function () {
         'use strict';
@@ -370,6 +371,14 @@
                             estimateRegisterTopGrid.pqGrid( "refresh" );
                         }
                     }
+                },
+                {
+                    type: 'button', label: '견적List 출력', icon: 'ui-icon-plus', style: 'float: right;', listener: {
+                        'click': function (evt, ui) {
+
+                            fnReportFormToHiddenFormPageAction("packing_history_list_search_form", "/downloadExcel");
+                        }
+                    }
                 }
 
             ]
@@ -392,7 +401,7 @@
             columnTemplate: {align: 'center', hvalign: 'center'},
             //scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true },
-            selectionModel: { type: 'row', mode: 'single'} ,
+            //selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
             collapsible: false,
             resizable: false,
@@ -462,6 +471,11 @@
 
             fnPostAjax(estimateRegisterSaveCallBack, parameters, '');
         });
+
+        /** 공통 코드 이외의 처리 부분 **/
+        fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getCompanyList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#EST_USER_ID"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#ORDER_STAFF_SEQ"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getCompanyStaffList'}});
 
     });
 </script>

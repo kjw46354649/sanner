@@ -241,24 +241,20 @@
                 </div>
             </section>
         </div>
-        <div class="row">
+        <%--<div class="row">
             <a href="#estimate_master_record_popup" class="" id="estimatePopupOpen" data-target="" data-toggle="modal" data-refform="estimate_master_record_popup">
                 <input type="button" value="POP">
             </a>
+        </div>--%>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="estimate_master_top_grid" class="jqx-refresh"></div>
+            </div>
         </div>
         <div class="row">&nbsp;
-            <section>
-                <div class="col-md-12">
-                    <div id="estimate_master_top_grid" class="jqx-refresh"></div>
-                </div>
-            </section>
-        </div>
-        <div class="row">&nbsp;
-            <section>
-                <div class="col-md-12">
-                    <div id="estimate_master_bot_grid" class="jqx-refresh"></div>
-                </div>
-            </section>
+            <div class="col-md-12">
+                <div id="estimate_master_bot_grid" class="jqx-refresh"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -268,6 +264,13 @@
     <input type="hidden" id="EST_SEQ" name="EST_SEQ"/>
     <input type="hidden" id="EST_VER" name="EST_VER"/>
 </form>
+
+<form id="estimate_master_excel_download" method="POST">
+    <input type="hidden" id="sqlId" name="sqlId" value=""/>
+    <input type="hidden" id="paramName" name="paramName" value="EST_SEQ"/>
+    <input type="hidden" id="paramData" name="paramData" value=""/>
+</form>
+
 <script type="text/javascript">
     $(function () {
         'use strict';
@@ -314,16 +317,26 @@
                 }
             },
             {title: '견적번호', dataType: 'string', dataIndx: 'EST_NUM'},
-            {title: '차수', dataType: 'string', dataIndx: 'EST_VER'},
-            {title: '', dataType: 'string', dataIndx: ''},
+            {title: '차수', dataType: 'string', dataIndx: 'EST_VER', editable: false},
+            {title: '', dataType: 'string', dataIndx: '', editable: false,
+                render: function(ui){
+                    return '<a href="#estimate_master_record_popup" class="" id="estimatePopupOpen" data-target="" data-toggle="modal" data-refform="estimate_master_record_popup">' +
+                        '<span class="ui-icon ui-icon-circle-zoomin"></span>' +
+                        '</a>';
+                }
+            },
             {title: '제목', dataType: 'string', dataIndx: 'EST_TITLE'},
-            {title: '품수', dataType: 'string', dataIndx: 'DTL_CNT'},
+            {title: '품수', dataType: 'string', dataIndx: 'DTL_CNT', editable: false},
             {title: '금액 계', dataType: 'string', dataIndx: 'DTL_AMOUNT'},
-            {title: '등록일시', dataType: 'string', dataIndx: 'INSERT_DT'},
+            {title: '등록일시', dataType: 'date', dataIndx: 'INSERT_DT', editable: false},
             {title: '견적담당', dataType: 'string', dataIndx: 'EST_USER_ID'},
-            {title: '발송일시', dataType: 'string', dataIndx: 'SEND_DT'},
-            {title: '', dataType: 'string', dataIndx: ''},
-            {title: '주문접수', dataType: 'string', dataIndx: ''}
+            {title: '발송일시', dataType: 'string', dataIndx: 'SEND_DT', editable: false},
+            {title: '', dataType: 'string', dataIndx: '', editable: false},
+            {title: '주문접수', dataType: 'date', dataIndx: '', editable: false,
+                render: function(ui){
+                    return '<a href="#"><span class="ui-icon ui-icon-arrowthick-1-e"></span></a>';
+                }
+            }
         ];
 
         let estimateMasterBotColModel= [
@@ -416,7 +429,7 @@
                 {
                     type: 'button', label: '견적서추출', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-
+                            fnReportFormToHiddenFormPageAction("estimate_master_excel_download", "/downloadExcel");
                         }
                     }
                 },
@@ -486,6 +499,7 @@
             numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
+            collapsible: false,
             resizable: false,
             //trackModel: {on: true},
             //resizable: true,
@@ -515,16 +529,13 @@
                 let EST_VER = ui.addList[0].rowData.EST_VER;
                 $("#estimate_master_hidden_form #EST_SEQ").val(EST_SEQ);
                 $("#estimate_master_hidden_form #EST_VER").val(EST_VER);
-
+                $("#estimate_master_excel_download #paramData").val(EST_SEQ);
                 selectEstimateBotList(EST_SEQ);
                 //}
-            },
-            cellClick: function( event, ui ) {
-                let colIndex = ui.colIndx;
-                if(colIndex == '6'){
-                    $("#estimatePopupOpen").trigger('click');
-                }
             }
+            /*cellDblClick: function( event, ui ) {
+                $("#estimatePopupOpen").trigger('click');
+            }*/
         });
 
         selectEstimateBotList('', '');
@@ -546,6 +557,7 @@
                 numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'row', mode: 'single'} ,
                 swipeModel: {on: false},
+                collapsible: false,
                 resizable: false,
                 //trackModel: {on: true},
                 //resizable: true,
@@ -579,6 +591,7 @@
                 numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'row', mode: 'single'} ,
                 swipeModel: {on: false},
+                collapsible: false,
                 resizable: false,
                 colModel: estimateMasterPopTopColModel,
                 toolbar: estimateMasterPopTopToolbar
@@ -599,6 +612,7 @@
                 numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'row', mode: 'single', column: true } ,
                 swipeModel: {on: false},
+                collapsible: false,
                 resizable: false,
                 colModel: estimateMasterPopBotColModel,
                 toolbar: estimateMasterPopBotToolbar
