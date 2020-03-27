@@ -20,12 +20,22 @@
           AND A.DEL_YN = 'N'
     </select>
 
-    <select id="getCompanyList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    <select id="getOrderCompanyList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             COMP_CD AS CODE_CD, COMP_NM AS CODE_NM
         FROM TBL_COMPANY
         WHERE 1 = 1
-          AND DEL_YN = 'N'
+            AND COMP_KIND = 'CLS010'
+            AND DEL_YN = 'N'
+    </select>
+
+    <select id="getBusinessCompanyList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            COMP_CD AS CODE_CD, COMP_NM AS CODE_NM
+        FROM TBL_COMPANY
+        WHERE 1 = 1
+            AND COMP_KIND = 'CLS030'
+            AND DEL_YN = 'N'
     </select>
 
 </mapper>

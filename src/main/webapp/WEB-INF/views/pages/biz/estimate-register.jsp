@@ -7,6 +7,46 @@
 --%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
+<div class="modal" id="estimate_master_record_popup" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Mail Box</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">X</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-inline" role="form" id="estimate_register_email_popup_form" name="estimate_register_email_popup_form">
+                    <div class="panel-body line_tit portlet-body form bg-light">
+                        <section class="bg-light">
+                            <div class="row">
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="panel panel-default">
+                                        <header class="panel-heading">
+                                            <strong>메일 내용</strong>
+                                        </header>
+                                        <div class="row">
+                                            <div class="gridWrap">
+                                                <textarea class="col-md-12 col-sm-12">
+                                                    Text Test
+                                                </textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
 <div class="page-context">
     <div class="row m-b-md">
         <div class="col-sm-12">&nbsp;
@@ -35,17 +75,13 @@
                                                         <label class="col-md-4 col-sm-4 control-label">발주사</label>
                                                         <div class="col-md-8 col-sm-8">
                                                             <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" data-required="true" class="form-control parsley-validated">
-                                                                <option value="">Select</option>
-                                                                <c:forEach var="code" items="${HighCode.H_1042}">
-                                                                    <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
-                                                                </c:forEach>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-8 col-sm-8">
                                                         <label class="col-md-2 col-sm-2 control-label">제목</label>
                                                         <div class="col-md-10 col-sm-10">
-                                                            <input type="text" data-notblank="true" class="form-control" id="EST_TITLE" name="EST_TITLE">
+                                                            <input type="text" data-notblank="true" class="form-control" data-required="true" id="EST_TITLE" name="EST_TITLE">
                                                         </div>
                                                     </div>
                                                     <div class="line line-dashed b-b pull-in"></div>
@@ -60,10 +96,6 @@
                                                         <label class="col-md-4 col-sm-4 control-label">사업자구분</label>
                                                         <div class="col-md-8 col-sm-8">
                                                             <select id="COMP_CD" name="COMP_CD" data-required="true" class="form-control parsley-validated">
-                                                       W         <option value="">Select</option>
-                                                                <c:forEach var="code" items="${HighCode.H_1007}">
-                                                                    <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
-                                                                </c:forEach>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -71,10 +103,6 @@
                                                         <label class="col-md-4 col-sm-4 control-label">견적 담당자</label>
                                                         <div class="col-md-8 col-sm-8">
                                                             <select id="EST_USER_ID" name="EST_USER_ID" data-required="true" class="form-control parsley-validated">
-                                                                <option value="">Select</option>
-                                                                <c:forEach var="code" items="${HighCode.H_1042}">
-                                                                    <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
-                                                                </c:forEach>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -182,7 +210,7 @@
 </div>
 
 <form id="estimate_register_excel_download" method="POST">
-    <input type="hidden" id="sqlId" name="sqlId" value=""/>
+    <input type="hidden" id="sqlId" name="sqlId" value="selectEstimateDetailListExcel"/>
     <input type="hidden" id="paramName" name="paramName" value="EST_SEQ"/>
     <input type="hidden" id="paramData" name="paramData" value=""/>
 </form>
@@ -196,6 +224,7 @@
 
         let estimateRegisterTopColModel= [
             {title: 'EST_SEQ', dataType: 'string', dataIndx: 'EST_SEQ' , hidden:true} ,
+            {title: 'SEQ', dataType: 'string', dataIndx: 'SEQ' , hidden:true} ,
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM' } ,
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM' } ,
             {title: '', dataType: 'string', dataIndx: 'DRAWING_YN' } ,
@@ -228,14 +257,14 @@
             {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_TYPE',
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "COMP_SUPPLY_YN", id: "COMP_SUPPLY_YN" },
+                    mapIndices: { name: "MATERIAL_TYPE", id: "MATERIAL_TYPE" },
                     valueIndx: "value",
                     labelIndx: "text",
                     options: fnGetCommCodeGridSelectBox('1004'),
                     getData: function(ui) {
                         let clave = ui.$cell.find("select").val();
                         let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["COMP_SUPPLY_YN"]=clave;
+                        rowData["MATERIAL_TYPE"]=clave;
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
                 }
@@ -258,29 +287,29 @@
             {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT',
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "COMP_SUPPLY_YN", id: "COMP_SUPPLY_YN" },
+                    mapIndices: { name: "SURFACE_TREAT", id: "SURFACE_TREAT" },
                     valueIndx: "value",
                     labelIndx: "text",
                     options: fnGetCommCodeGridSelectBox('1002'),
                     getData: function(ui) {
                         let clave = ui.$cell.find("select").val();
                         let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["COMP_SUPPLY_YN"]=clave;
+                        rowData["SURFACE_TREAT"]=clave;
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
                 }
             },
-            {title: '사급', dataType: 'string', dataIndx: 'COMP_SUPPLY_YN',
+            {title: '사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "COMP_SUPPLY_YN", id: "COMP_SUPPLY_YN" },
+                    mapIndices: { name: "MATERIAL_SUPPLY_YN", id: "MATERIAL_SUPPLY_YN" },
                     valueIndx: "value",
                     labelIndx: "text",
                     options: fnGetCommCodeGridSelectBox('1045'),
                     getData: function(ui) {
                         let clave = ui.$cell.find("select").val();
                         let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["COMP_SUPPLY_YN"]=clave;
+                        rowData["MATERIAL_SUPPLY_YN"]=clave;
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
                 }
@@ -308,24 +337,24 @@
                 //{title:'공차', dataType: 'string', dataIndx: 'DETAIL_TOLERANCE'},
                 {title:'드릴', dataType: 'string', dataIndx: 'DETAIL_DRILL'},
                 {title:'난도', dataType: 'string', dataIndx: 'DETAIL_DIFFICULTY'}
-            ]},
+            ], hidden: true},
             {title: '예상소재 Size', align: "center", colModel:[
-                {title:'가로', dataType: 'string', dataIndx: 'SIZE_W'},
-                {title:'세로', dataType: 'string', dataIndx: 'SIZE_H'},
-                {title:'높이', dataType: 'string', dataIndx: 'SIZE_T'},
-                {title:'중량(KG)', dataType: 'string', dataIndx: 'SIZE_D'},
-                {title:'부피(cm3)', dataType: 'string', dataIndx: 'SIZE_L'}
+                {title:'가로', dataType: 'float', dataIndx: 'SIZE_W'},
+                {title:'세로', dataType: 'float', dataIndx: 'SIZE_H'},
+                {title:'높이', dataType: 'float', dataIndx: 'SIZE_T'},
+                {title:'중량(KG)', dataType: 'float', dataIndx: 'SIZE_D'},
+                {title:'부피(cm3)', dataType: 'float', dataIndx: 'SIZE_L'}
             ], hidden: true},
             {title: '항목별 견적정보', align: "center", colModel: [
-                {title: '소재비', dataType: 'string', dataIndx: 'MATERIAL_UNIT_COST'},
-                {title: 'TM각비', dataType: 'string', dataIndx: 'TOUCH_UNIT_COST'},
-                {title: '표면 처리비', dataType: 'string', dataIndx: 'SURFACE_UNIT_COST'},
-                {title: '가공비', dataType: 'string', dataIndx: 'PROCESS_UNIT_COST'},
-                {title: '기타추가', dataType: 'string', dataIndx: 'ETC_UNIT_COST'}
-            ], hidden: true},
-            {title: '계산견적단가', dataType: 'string', dataIndx: 'FINALwq_EST_UNIT_PRICE'},
-            {title: '최종견적가', dataType: 'string', dataIndx: '13'},
-            {title: '금액 계', dataType: 'string', dataIndx: '14'},
+                {title: '소재비', dataType: 'int', dataIndx: 'MATERIAL_UNIT_COST'},
+                {title: 'TM각비', dataType: 'int', dataIndx: 'TOUCH_UNIT_COST'},
+                {title: '표면 처리비', dataType: 'int', dataIndx: 'SURFACE_UNIT_COST'},
+                {title: '가공비', dataType: 'int', dataIndx: 'PROCESS_UNIT_COST'},
+                {title: '기타추가', dataType: 'int', dataIndx: 'ETC_UNIT_COST'}
+            ]},
+            {title: '계산견적단가', dataType: 'float', dataIndx: 'CALCUL_EST_UNIT_COST'},
+            {title: '최종견적가', dataType: 'float', dataIndx: 'FINAL_EST_UNIT_PRICE'},
+            {title: '금액 계', dataType: 'float', dataIndx: '14'},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
             {title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ'},
             {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ'}
@@ -340,26 +369,26 @@
         let estimateRegisterTopToolbar = {
             items: [
                 {
-                    type: 'button', label: 'Delete', icon: 'ui-icon-disk', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {
-                            let USER_MASTER_QUERY_ID = 'deleteEstimateDetail';
-
-                            fnDeletePQGrid(estimateRegisterTopGrid, estimateRegisterSelectedRowIndex, USER_MASTER_QUERY_ID);
-                        }
+                    type: 'button', label: '도면 보기', icon: '', style: 'float: right;', listener: {
+                        'click': function (evt, ui) {}
                     }
                 },
                 {
-                    type: 'button', label: 'Add', icon: 'ui-icon-plus', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {
-                            estimateRegisterTopGrid.pqGrid('addNodes', [{}], 0);
-                        }
+                    type: 'button', label: '도면 등록', icon: '', style: 'float: right;', listener: {
+                        'click': function (evt, ui) {}
                     }
                 },
+                {
+                    type: 'button', label: '계산견적적용', icon: '', style: 'float: right;', listener: {
+                        'click': function (evt, ui) {}
+                    }
+                },
+                {   type: 'select', label: '', style: 'float: right;', option: fnGetCommCodeGridSelectBox('1045')   },
                 {
                     type: 'checkbox', label: '상세견적요건', style: 'float: right;', listener: {
                         'change': function (evt, ui) {
                             let colM = estimateRegisterTopGrid.pqGrid("option", "colModel");
-                            let listM = [14,15];
+                            let listM = [15,16];
                             let hiddenYn = evt.target.checked == true ? false : true;
                             for(let tmpI = 0; tmpI < listM.length; tmpI++) {
                                 for(let colCnt = 0; colCnt < colM[listM[tmpI]].colModel.length; colCnt++){
@@ -373,14 +402,29 @@
                     }
                 },
                 {
-                    type: 'button', label: '견적List 출력', icon: 'ui-icon-plus', style: 'float: right;', listener: {
+                    type: 'button', label: 'Delete', icon: 'ui-icon-disk', style: 'float: left;', listener: {
+                        'click': function (evt, ui) {
+                            let USER_MASTER_QUERY_ID = 'deleteEstimateDetail';
+
+                            fnDeletePQGrid(estimateRegisterTopGrid, estimateRegisterSelectedRowIndex, USER_MASTER_QUERY_ID);
+                        }
+                    }
+                },
+                {
+                    type: 'button', label: 'Add', icon: 'ui-icon-plus', style: 'float: left;', listener: {
+                        'click': function (evt, ui) {
+                            estimateRegisterTopGrid.pqGrid('addNodes', [{}], 0);
+                        }
+                    }
+                },
+                {
+                    type: 'button', label: '견적List 출력', icon: 'ui-icon-plus', style: 'float: left;', listener: {
                         'click': function (evt, ui) {
 
                             fnReportFormToHiddenFormPageAction("packing_history_list_search_form", "/downloadExcel");
                         }
                     }
                 }
-
             ]
         };
         let estimateRegisterBotToolbar = {
@@ -390,7 +434,7 @@
         estimateRegisterTopGrid.pqGrid({
             width: "100%", height: 200,
             dataModel: {
-                location: "remote", dataType: "json", method: "POST", recIndx: 'EST_SEQ',
+                location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
                 url: "/paramQueryGridSelect",
                 postData: { 'queryId': 'selectEstimateDetailList'},
                 getData: function (dataJSON) {
@@ -455,15 +499,12 @@
             estimateRegisterBotGrid.pqGrid("refreshDataAndView");
         };
 
-        $("#SEL_COMP_CLASS").on("change", function(){
-            //fnGetCommCodeBasicSelectBox( $("#SEL_COMP_TYPE"), '', $(this).val(), 'A');
-        });
-
         function estimateRegisterSaveCallBack(response, callMethodParam){
             let estimateRegisterInsertQueryList = ['insertEstimateDetail'];
             let estimateRegisterUpdateQueryList = ['updateEstimateDetail'];
 
             fnModifyPQGrid(estimateRegisterTopGrid, estimateRegisterInsertQueryList, estimateRegisterUpdateQueryList);
+            estimateRegisterReloadPageData();
         };
 
         $("#btn_estimate_register_save").on("click", function(){
@@ -472,10 +513,39 @@
             fnPostAjax(estimateRegisterSaveCallBack, parameters, '');
         });
 
+        function estimateRegisterReloadPageData(){
+            let postData = { 'queryId': 'estimate.selectLastValEstimateMasterInfo'};
+            let parameter = {'url': '/json-list', 'data': postData};
+
+            let EST_SEQ = "";
+            fnPostAjax(function (data, callFunctionParam) {
+                let list = data.list[0];
+                EST_SEQ = list.EST_SEQ;
+                $("#ORDER_COMP_CD").val(list.ORDER_COMP_CD);
+                $("#EST_TITLE").val(list.EST_TITLE);
+                $("#ORDER_STAFF_SEQ").val(list.ORDER_STAFF_SEQ);
+                $("#COMP_CD").val(list.COMP_CD);
+                $("#EST_USER_ID").val(list.EST_USER_ID);
+                $("#EST_VER").val(list.EST_NUM + ' (' + list.EST_VER + ')');
+                $("#DTL_CNT").val(list.DTL_CNT);
+                $("#DTL_AMOUNT").val(list.DTL_AMOUNT);
+                $("#INSERT_DT").val(list.INSERT_DT);
+                $("#SEND_DT").val(list.SEND_DT);
+
+                postData = { 'queryId': 'estimate.selectLastValEstimateDetailList', 'EST_SEQ': EST_SEQ };
+                fnRequestGidData(estimateRegisterTopGrid, postData);
+
+                $("#estimate_register_excel_download #EST_SEQ").val(EST_SEQ);
+            }, parameter, '');
+        };
+
+
         /** 공통 코드 이외의 처리 부분 **/
-        fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getCompanyList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
         fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#EST_USER_ID"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}});
         fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#ORDER_STAFF_SEQ"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getCompanyStaffList'}});
 
+        estimateRegisterReloadPageData();
     });
 </script>

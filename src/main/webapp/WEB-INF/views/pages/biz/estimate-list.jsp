@@ -29,58 +29,58 @@
                                                 <div class="form-group col-md-4 col-sm-4">
                                                     <label class="col-md-4 col-sm-4 control-label">발주사</label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        <input type="text" data-notblank="true" class="form-control" placeholder="발주사">
+                                                        <input type="text" data-notblank="true" id="P_ORDER_COMP_CD" name="ORDER_COMP_CD" class="form-control" placeholder="발주사">
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-8 col-sm-8">
                                                     <label class="col-md-2 col-sm-2 control-label">제목</label>
                                                     <div class="col-md-10 col-sm-10">
-                                                        <input type="text" data-notblank="true" class="form-control" placeholder="Title">
+                                                        <input type="text" data-notblank="true" id="EST_TITLE" name="EST_TITLE" class="form-control" placeholder="Title">
                                                     </div>
                                                 </div>
                                                 <div class="line line-dashed b-b pull-in"></div>
                                                 <div class="form-group col-md-4 col-sm-4">
                                                     <label class="col-md-4 col-sm-4 control-label">구매 담당자</label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" placeholder="구매 담당자">
+                                                        <input type="text" class="form-control" id="ORDER_STAFF_NM" name="ORDER_STAFF_NM" placeholder="구매 담당자">
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-4 col-sm-4">
                                                     <label class="col-md-4 col-sm-4 control-label">품수</label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" placeholder="품수">
+                                                        <input type="text" class="form-control" id="DTL_CNT" name="DTL_CNT" placeholder="품수">
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-4 col-sm-4">
                                                     <label class="col-md-4 col-sm-4 control-label">등록일시</label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" placeholder="등록일시">
+                                                        <input type="text" class="form-control" id="INSERT_DT" name="INSERT_DT" placeholder="등록일시">
                                                     </div>
                                                 </div>
                                                 <div class="line line-dashed b-b pull-in"></div>
                                                 <div class="form-group col-md-4 col-sm-4">
                                                     <label class="col-md-4 col-sm-4 control-label">견적번호</label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" placeholder="min = 6">
+                                                        <input type="text" class="form-control" id="EST_NUM" name="EST_NUM" placeholder="견적번호">
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-4 col-sm-4">
                                                     <label class="col-md-4 col-sm-4 control-label">차수</label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" placeholder="min = 6">
+                                                        <input type="text" class="form-control" id="P_EST_VER" name="EST_VER" placeholder="차수">
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-4 col-sm-4">
                                                     <label class="col-md-4 col-sm-4 control-label">견적 담당자</label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" placeholder="min = 6">
+                                                        <input type="text" class="form-control" id="EST_USER_ID" name="EST_USER_ID" placeholder="견적 담당자">
                                                     </div>
                                                 </div>
                                                 <div class="line line-dashed b-b pull-in"></div>
                                                 <div class="form-group col-md-4 col-sm-4">
                                                     <label class="col-md-4 col-sm-4 control-label">견적금액 계</label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" placeholder="min = 6">
+                                                        <input type="text" class="form-control" id="DTL_AMOUNT" name="DTL_AMOUNT" placeholder="견적금액 계">
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-4 col-sm-4">
@@ -91,7 +91,7 @@
                                                 <div class="form-group col-md-4 col-sm-4">
                                                     <label class="col-md-4 col-sm-4 control-label">회신일시</label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" placeholder="min = 6">
+                                                        <input type="text" class="form-control" id="SEND_DT" name="SEND_DT" placeholder="회신일시">
                                                     </div>
                                                 </div>
                                             </div>
@@ -167,7 +167,7 @@
             <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
-</div>
+    </div>
 </div>
 
 <div class="page-context">
@@ -181,21 +181,14 @@
                     <form class="form-inline" id="estimate_master_search_form" name="estimate_master_search_form" role="form">
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label class="control-label" for="SEL_COMP_CLASS">사업자구분</label>
-                                <select id="SEL_COMP_CLASS" name="SEL_COMP_CLASS" data-required="true" class="form-control parsley-validated">
-                                    <option value="">Select</option>
-                                    <c:forEach var="code" items="${HighCode.H_1007}">
-                                        <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
-                                    </c:forEach>
+                                <label class="control-label" for="COMP_CD">사업자구분</label>
+                                <select id="COMP_CD" name="COMP_CD" data-required="true" class="form-control parsley-validated">
                                 </select>
                             </div>
                             <div class="form-group col-md-4">
-                                <label class="control-label" for="SEL_COMP_TYPE">발주사</label>
-                                <select id="SEL_COMP_TYPE" name="SEL_COMP_TYPE" data-required="true" class="form-control parsley-validated">
+                                <label class="control-label" for="ORDER_COMP_CD">발주사</label>
+                                <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" data-required="true" class="form-control parsley-validated">
                                     <option value="">Select</option>
-                                    <c:forEach var="code" items="${HighCode.H_1042}">
-                                        <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
-                                    </c:forEach>
                                 </select>
                             </div>
                             <div class="form-group col-md-4">
@@ -266,9 +259,11 @@
 </form>
 
 <form id="estimate_master_excel_download" method="POST">
-    <input type="hidden" id="sqlId" name="sqlId" value=""/>
+    <input type="hidden" id="sqlId" name="sqlId" value="selectEstimateDetailListExcel:selectEstimateMasterInfoExcel"/>
+    <input type="hidden" id="mapInputId" name="mapInputId" value="data:info"/>
     <input type="hidden" id="paramName" name="paramName" value="EST_SEQ"/>
     <input type="hidden" id="paramData" name="paramData" value=""/>
+    <input type="hidden" id="template" name="template" value="estimate_template"/>
 </form>
 
 <script type="text/javascript">
@@ -291,7 +286,7 @@
                     mapIndices: { name: "ORDER_COMP_NM", id: "ORDER_COMP_CD" },
                     valueIndx: "value",
                     labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('H_1042'),
+                    options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}}),
                     getData: function(ui) {
                         let clave = ui.$cell.find("select").val();
                         let rowData = estimateMasterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
@@ -307,7 +302,7 @@
                     mapIndices: { name: "COMP_NM", id: "COMP_CD" },
                     valueIndx: "value",
                     labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('H_1007'),
+                    options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}}),
                     getData: function(ui) {
                         let clave = ui.$cell.find("select").val();
                         let rowData = estimateMasterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
@@ -340,12 +335,14 @@
         ];
 
         let estimateMasterBotColModel= [
+            {title: 'EST_SEQ', dataType: 'string', dataIndx: 'EST_SEQ' , hidden:true} ,
+            {title: 'SEQ', dataType: 'string', dataIndx: 'SEQ' , hidden:true} ,
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM' } ,
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM' } ,
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM' } ,
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM' } ,
             {title: '규격', align: "center", colModel: [
-                {title: '타입', dataType: 'string', dataIndx: 'SIZE_TYPE'},
+                //{title: '타입', dataType: 'string', dataIndx: 'SIZE_TYPE'},
                 {title: '가로', dataType: 'string', dataIndx: 'SIZE_W'},
                 {title: '세로', dataType: 'string', dataIndx: 'SIZE_H'},
                 {title: '두꼐', dataType: 'string', dataIndx: 'SIZE_T'},
@@ -353,12 +350,112 @@
                 {title: '길이', dataType: 'string', dataIndx: 'SIZE_L'},
             ]},
             {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
-            {title: '작업구분', dataType: 'string', dataIndx: 'WORK_TYPE'},
-            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_TYPE'},
-            {title: '소재상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
-            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT'},
-            {title: '사급', dataType: 'string', dataIndx: 'COMP_SUPPLY_YN'},
-            {title: '열처리', dataType: 'string', dataIndx: 'HEAT_TREAT_YN'},
+            {title: '작업구분', dataType: 'string', dataIndx: 'WORK_TYPE',
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "WORK_TYPE", id: "WORK_TYPE" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1013'),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateMasterBotGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["WORK_TYPE"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
+            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_TYPE',
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "MATERIAL_TYPE", id: "MATERIAL_TYPE" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1004'),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateMasterBotGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["MATERIAL_TYPE"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
+            {title: '소재상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "MATERIAL_DETAIL", id: "MATERIAL_DETAIL" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1000'),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateMasterBotGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["MATERIAL_DETAIL"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
+            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT',
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "COMP_SUPPLY_YN", id: "COMP_SUPPLY_YN" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1002'),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateMasterBotGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["COMP_SUPPLY_YN"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
+            {title: '사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "MATERIAL_SUPPLY_YN", id: "MATERIAL_SUPPLY_YN" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1045'),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateMasterBotGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["MATERIAL_SUPPLY_YN"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
+            {title: '열처리', dataType: 'string', dataIndx: 'HEAT_TREAT_YN',
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "HEAT_TREAT_YN", id: "HEAT_TREAT_YN" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1045'),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateMasterBotGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["HEAT_TREAT_YN"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
+            {title: '상세 가공요건', align: "center", colModel:[
+                {title:'선반', dataType: 'string', dataIndx: 'DETAIL_LATHE'},
+                {title:'가공면', dataType: 'string', dataIndx: 'DETAIL_SURFACE'},
+                {title:'클램핑', dataType: 'string', dataIndx: 'DETAIL_CLAMPING'},
+                {title:'포켓', dataType: 'string', dataIndx: 'DETAIL_POCKET'},
+                //{title:'공차', dataType: 'string', dataIndx: 'DETAIL_TOLERANCE'},
+                {title:'드릴', dataType: 'string', dataIndx: 'DETAIL_DRILL'},
+                {title:'난도', dataType: 'string', dataIndx: 'DETAIL_DIFFICULTY'}
+            ], hidden: true},
+            {title: '예상소재 Size', align: "center", colModel:[
+                {title:'가로', dataType: 'float', dataIndx: 'SIZE_W'},
+                {title:'세로', dataType: 'float', dataIndx: 'SIZE_H'},
+                {title:'높이', dataType: 'float', dataIndx: 'SIZE_T'},
+                {title:'중량(KG)', dataType: 'float', dataIndx: 'SIZE_D'},
+                {title:'부피(cm3)', dataType: 'float', dataIndx: 'SIZE_L'}
+            ], hidden: true},
             {title: '항목별 견적정보', align: "center", colModel: [
                 {title: '소재비', dataType: 'string', dataIndx: 'MATERIAL_UNIT_COST'},
                 {title: 'TM각비', dataType: 'string', dataIndx: 'TOUCH_UNIT_COST'},
@@ -367,7 +464,7 @@
                 {title: '기타추가', dataType: 'string', dataIndx: 'ETC_UNIT_COST'}
             ]},
             {title: '계산견적단가', dataType: 'string', dataIndx: 'FINAL_EST_UNIT_PRICE'},
-            {title: '최종견적가', dataType: 'string', dataIndx: ''},
+            {title: '최종견적가', dataType: 'string', dataIndx: 'FINAL_EST_UNIT_PRICE'},
             {title: '금액 계', dataType: 'string', dataIndx: ''},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
             {title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ'},
@@ -461,13 +558,28 @@
                                 'ESR_VER' : $("#estimate_master_hidden_form #EST_SEQ").val()
                             }
                             parameters = {'url': '/json-create', 'data': data};
-                            fnPostAjax(testFunction, parameters, '');
+                            fnPostAjax(estimateMasterVersionUpCallBack, parameters, '');
 
                         }
                     }
                 },
-                { type: 'checkbox', label: '상세견적요건', style: 'float: left;' }
-
+                {
+                    type: 'checkbox', label: '상세견적요건', style: 'float: left;', listener: {
+                        'change': function (evt, ui) {
+                            let colM = estimateMasterBotGrid.pqGrid("option", "colModel");
+                            let listM = [14, 15];
+                            let hiddenYn = evt.target.checked == true ? false : true;
+                            for (let tmpI = 0; tmpI < listM.length; tmpI++) {
+                                for (let colCnt = 0; colCnt < colM[listM[tmpI]].colModel.length; colCnt++) {
+                                    colM[listM[tmpI]].colModel[colCnt].hidden = hiddenYn;
+                                }
+                                colM[listM[tmpI]].hidden = hiddenYn;
+                            }
+                            estimateMasterBotGrid.pqGrid("option", "colModel", colM);
+                            estimateMasterBotGrid.pqGrid("refresh");
+                        }
+                    }
+                }
             ]
         };
         let estimateMasterBotToolbar = {
@@ -501,7 +613,7 @@
             swipeModel: {on: false},
             collapsible: false,
             resizable: false,
-            //trackModel: {on: true},
+            trackModel: {on: true},
             //resizable: true,
             colModel: estimateMasterTopColModel,
             toolbar: estimateMasterTopToolbar,
@@ -544,7 +656,7 @@
             estimateMasterBotGrid.pqGrid({
                 width: "100%", height: 350,
                 dataModel: {
-                    location: "remote", dataType: "json", method: "POST", recIndx: 'EST_SEQ',
+                    location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
                     url: "/paramQueryGridSelect",
                     //postData: fnFormToJsonArrayData(),
                     postData: { 'queryId': 'selectEstimateDetailList', 'EST_SEQ': EST_SEQ},
@@ -553,13 +665,14 @@
                         return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                     }
                 },
+                columnTemplate: {align: 'center', hvalign: 'center'},
                 scrollModel: {autoFit: true},
                 numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'row', mode: 'single'} ,
                 swipeModel: {on: false},
                 collapsible: false,
                 resizable: false,
-                //trackModel: {on: true},
+                trackModel: {on: true},
                 //resizable: true,
                 colModel: estimateMasterBotColModel,
                 toolbar: estimateMasterBotToolbar
@@ -575,6 +688,23 @@
 
         $('#estimate_master_record_popup').on('show.bs.modal',function() {
             let EST_SEQ = $("#estimate_master_hidden_form #EST_SEQ").val();
+
+            let postData = { 'queryId': 'estimate.selectEstimateMasterListPop', 'EST_SEQ':EST_SEQ};
+            let parameter = {'url': '/json-list', 'data': postData};
+            fnPostAjax(function (data, callFunctionParam) {
+                let list = data.list[0];
+                $("#estimate_master_record_popup #P_ORDER_COMP_CD").val(list.ORDER_COMP_NM);
+                $("#estimate_master_record_popup #EST_TITLE").val(list.EST_TITLE);
+                $("#estimate_master_record_popup #EST_NUM").val(list.EST_NUM);
+                $("#estimate_master_record_popup #ORDER_STAFF_NM").val(list.ORDER_STAFF_NM);
+                $("#estimate_master_record_popup #COMP_CD").val(list.COMP_NM);
+                $("#estimate_master_record_popup #EST_USER_ID").val(list.EST_USER_ID);
+                $("#estimate_master_record_popup #P_EST_VER").val(list.EST_VER);
+                $("#estimate_master_record_popup #DTL_CNT").val(list.DTL_CNT);
+                $("#estimate_master_record_popup #DTL_AMOUNT").val(list.DTL_AMOUNT);
+                $("#estimate_master_record_popup #INSERT_DT").val(list.INSERT_DT);
+                $("#estimate_master_record_popup #SEND_DT").val(list.SEND_DT);
+            }, parameter, '');
 
             estimateMasterPopTopGrid.pqGrid({
                 width: "100%", height: 200,
@@ -627,9 +757,14 @@
             //fnGetCommCodeBasicSelectBox( $("#SEL_COMP_TYPE"), '', $(this).val(), 'A');
         });
 
-        function testFunction(){
+        function estimateMasterVersionUpCallBack(){
             estimateMasterTopGrid.pqGrid('refreshDataAndView');
         };
+
+        /** 공통 코드 이외의 처리 부분 **/
+        fnCommCodeDatasourceSelectBoxCreate($("#estimate_master_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#estimate_master_search_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
+
     });
 
 

@@ -398,6 +398,24 @@
     };
 
     /**
+     * Data Query to Select box create
+     * @param $formId
+     * @param highCd
+     * @param selectType
+     * @param queryId
+     */
+    let fnCommCodeDatasourceGridSelectBoxCreate = function (parmamData) {
+        'use strict';
+        let selectBoxContents = [];
+        fnPostAjax(function (data, callFunctionParam) {
+            for(let i=0; i < data.list.length; i++){
+                selectBoxContents.push({'value':data.list[i].CODE_CD, 'text':data.list[i].CODE_NM});
+            }
+        }, parmamData, '');
+        return selectBoxContents;
+    };
+
+    /**
      *	Hidden Action 처리
      *   actionURL : 서버 호출 URL
      *	param : 호출 URL에 Parameter 정보
