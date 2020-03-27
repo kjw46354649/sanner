@@ -76,6 +76,9 @@ dependencies {
     // https://mvnrepository.com/artifact/com.google.zxing/javase
     compile group: 'com.google.zxing', name: 'javase', version: '3.4.0'
 
+    // https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload
+    compile group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+
     // DBMS logger trace
     // https://mvnrepository.com/artifact/log4j/log4j
     compile group: 'log4j', name: 'log4j', version: '1.2.15'
@@ -88,3 +91,8 @@ dependencies {
 }
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8' //인코딩을 UTF-8로 통일
+
+war {
+    archiveName 'jmes.war'
+    from 'webapp' // adds a file-set to the root of the archive
+}
