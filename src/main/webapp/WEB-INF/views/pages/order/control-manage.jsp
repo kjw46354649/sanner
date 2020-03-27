@@ -175,25 +175,20 @@
                        data-refform="CONTROL_MANGE_POPUP">
                         <input type="button" value="신규 주문 등록">
                     </a>
-                    <button id="DELETE">Delete</button>
                     <button id="DRAWING_REGISTRATION">도면 등록</button>
                     <button id="DRAWING_CHANGE">도면변경(Rev. up)</button>
-                    <button id="CONFIRMATION" onclick="changeOrderStatus();">확정</button>
-                    <button id="CANCEL">취소</button>
-                    <button id="TERMINATION">종료</button>
-                    <button id="DEADLINE">마감</button>
+                    <button name="CHANGE_STATUS" id="CONFIRMATION" data-order_status_cd="PRO01" data-order_status_nm="주문확정">확정</button>
+                    <button name="CHANGE_STATUS" id="CANCEL" data-order_status_cd="PRO00" data-order_status_nm="확정취소">취소</button>
+                    <button name="CHANGE_STATUS" id="TERMINATION" data-order_status_cd="2" data-order_status_nm="종료">종료</button>
+                    <button name="CHANGE_STATUS" id="DEADLINE" data-order_status_cd="3" data-order_status_nm="마감">마감</button>
                     <button id="QUOTATION_REGISTRATION">견적등록</button>
                     <button id="SPECIFICATION_ON_TRANSACTION">거래명세표</button>
                     <button id="DRAWING_VIEW">도면 View</button>
                     <button id="DRAWING_PRINT">도면 출력</button>
                     <button id="BARCODE_DRAWING_PRINT">바코드도면 출력</button>
                     <button id="LABEL_PRINT">라벨 출력</button>
-                    <button id="SAVE">save</button>
                 </div>
                 <div class="col-md-12">
-                    <button id="MATERIAL">소재</button>
-                    <button id="SURFACE_TREATMENT">표면처리</button>
-                    <button id="PROCESSING_COST">가공비</button>
                     <button id="ESTIMATE_LIST_PRINT">견적List출력</button>
                     <label class="checkbox-inline i-checks">
                         <input type="checkbox" id="DETAIL_ESTIMATE_REQUIRE" value="option1"><i></i> 상세견적요건
@@ -243,47 +238,56 @@
         const gridId = 'CONTROL_MANAGE_GRID';
         let postData = fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM');
         let colModel = [
+            {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true, editable: true, colModel: []},
             {
                 title: '주문상태', align: 'center', colModel: [
-                    {title: '상태', datatype: 'string', dataIndx: 'ORDER_STATUS', editable: false},
-                    {title: '변경일시', datatype: 'string', dataIndx: 'CHANGE_DATE', editable: false}
+                    {title: '상태', datatype: 'string', dataIndx: 'ORDER_STATUS_CD', hidden: true},
+                    {title: '상태', datatype: 'string', dataIndx: 'ORDER_STATUS_NM'},
+                    {title: '변경일시', datatype: 'date', dataIndx: 'STATUS_DT', editable: true}
                 ]
             },
-            {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: true, editable: false, colModel: []},
-            {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_NM', editable: false, colModel: []},
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true, editable: false, colModel: []},
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', editable: false, colModel: []},
-            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', hidden: true, editable: false, colModel: []},
-            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', editable: false, colModel: []},
+            {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: true, editable: true, colModel: []},
+            {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_NM', editable: true, colModel: []},
+            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true, editable: true, colModel: []},
+            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', editable: true, colModel: []},
+            {
+                title: '구매담당',
+                dataType: 'string',
+                dataIndx: 'ORDER_STAFF_SEQ',
+                hidden: true,
+                editable: true,
+                colModel: []
+            },
+            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', editable: true, colModel: []},
             {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', colModel: []},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', colModel: []},
             {
                 title: 'INV No.<br>(거래명세No.)',
                 dataType: 'string',
                 dataIndx: 'CHARGE_USER_ID',
-                editable: false,
+                editable: true,
                 colModel: []
             },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', colModel: []},
             {
-                title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', colModel: [], render: function (ui) {
-                    // if (ui.rowData.WORK_NM === '가공조립') {
-                    //     return "<i class=\"fa fa-plus\" onclick='addpart(event);'></i>";
-                        return "<span name='test114'>123</span>";
-                    // }
-
-
-                    // if(ui.data)
-
+                title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', colModel: [],
+                render: function (ui) {
+                    if (ui.rowData.WORK_NM === '가공조립') {
+                        return "<span>플러스버튼</span>";
+                    }
                 }
             },
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', colModel: []},
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', colModel: []},
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true, editable: false, colModel: []},
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_NM', editable: false, colModel: []},
-            {title: '외주', dataType: 'string', dataIndx: 'OUT_YN', colModel: []},
-            {title: 'Part<br>단위<br>수량', dataType: 'string', dataIndx: 'PART_UNIT_QTY', editable: false, colModel: []},
-            {title: '발주번호', ataType: 'string', dataIndx: 'ORDER_NUM', editable: false, colModel: []},
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true, editable: true, colModel: []},
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_NM', editable: true, colModel: []},
+            {title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN', colModel: []},
+            {title: 'Part<br>단위<br>수량', dataType: 'string', dataIndx: 'PART_UNIT_QTY', editable: true, colModel: []},
+            {title: '발주번호', align: 'center', editable: true, colModel: [
+                    {title: '', datatype: 'string', dataIndx: 'tsakljdfjkl123'},
+                    {title: '발주번호', datatype: 'string', dataIndx: 'ORDER_NUM'},
+                ]
+            },
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'ORDER_QTY', colModel: []},
             {
                 title: '상세가공요건', align: 'center', hidden: true, colModel: [
@@ -297,11 +301,11 @@
             },
             {
                 title: '예상소재 Size', align: 'center', hidden: true, colModel: [
-                    {title: '가로', datatype: 'string', dataIndx: 'COMP_CD', editable: false},
-                    {title: '세로', datatype: 'string', dataIndx: 'COMP_CD', editable: false},
-                    {title: '높이', datatype: 'string', dataIndx: 'COMP_CD', editable: false},
-                    {title: '중량(KG)', datatype: 'string', dataIndx: 'COMP_CD', editable: false},
-                    {title: '부피(cm3)', datatype: 'string', dataIndx: 'COMP_CD', editable: false}
+                    {title: '가로', datatype: 'string', dataIndx: 'COMP_CD', editable: true},
+                    {title: '세로', datatype: 'string', dataIndx: 'COMP_CD', editable: true},
+                    {title: '높이', datatype: 'string', dataIndx: 'COMP_CD', editable: true},
+                    {title: '중량(KG)', datatype: 'string', dataIndx: 'COMP_CD', editable: true},
+                    {title: '부피(cm3)', datatype: 'string', dataIndx: 'COMP_CD', editable: true}
                 ]
             },
             {title: '소재비', dataType: 'string', dataIndx: 'MATERIAL_UNIT_PRICE', colModel: []},
@@ -369,21 +373,21 @@
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: postData,
-                // recIndx: 'USER_ID',
+                recIndx: 'ROWNUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
             },
             cellClick: function (event, ui) {
                 let rowData = ui.rowData;
-                console.log(rowData);
 
                 if (ui.dataIndx === 'PART_NUM') {
-                    // delete rowData.pq_ht;
-                    // delete rowData.pq_ri;
-
-                    // FIXME: pqgrid.min.js:13 Uncaught same data can't be added twice.
-                    $orderManagementGrid.pqGrid('addNodes', [rowData], ui.rowIndx + 1);
+                    if (rowData.WORK_NM === '가공조립') {
+                        // FIXME: pqgrid.min.js:13 Uncaught same data can't be added twice. --delete rowData.ROWNUM
+                        // $orderManagementGrid.pqGrid('addNodes', [rowData], ui.rowIndx + 1);
+                        delete rowData.ROWNUM;
+                        $orderManagementGrid.pqGrid("addRow", {newRow: rowData, rowIndx: ui.rowIndx + 1, checkEditable: true});
+                    }
                 }
             },
             selectChange: function (event, ui) {
@@ -404,47 +408,47 @@
         };
         let $orderRegisterGrid;
         const popupGridId = 'ORDER_REGISTER_GRID';
-
-        // let postData = fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM');
         let popupColModel = [
             {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_NM', colModel: []},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', colModel: []},
             {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', colModel: []},
             {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', colModel: []},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', colModel: []},
-            {title: '모듈명', dataType: 'string', dataIndx: '', colModel: []},
-            {title: '주요 검사품', dataType: 'string', dataIndx: '', colModel: []},
-            {title: '긴급', dataType: 'string', dataIndx: '', colModel: []},
+            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', colModel: []},
+            {title: '주요 검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION_YN', colModel: []},
+            {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN', colModel: []},
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', colModel: []},
+            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', colModel: []},
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', colModel: []},
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', colModel: []},
             {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_NM', colModel: []},
-            {title: '외주', dataType: 'string', dataIndx: 'OUT_YN', colModel: []},
-            {title: '수행<br>공장', dataType: 'string', dataIndx: '', colModel: []},
-            {title: '소재 사급', dataType: 'string', dataIndx: '', colModel: []},
-            {title: '요망납기', dataType: 'string', dataIndx: '', colModel: []},
-            {title: '가공납기', dataType: 'string', dataIndx: '', colModel: []},
-            {title: '규격', dataType: 'string', dataIndx: '', colModel: []},
-            {title: '소재상세종류', dataType: 'string', dataIndx: '', colModel: []},
-            {title: '소재형태', dataType: 'string', dataIndx: '', colModel: []},
-            {title: '표면처리', dataType: 'string', dataIndx: '', colModel: []},
-            {title: '열처리', dataType: 'string', dataIndx: '', colModel: []},
-            {title: 'Part<br>단위<br>수량', dataType: 'string', dataIndx: '', colModel: []},
+            {title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN', colModel: []},
+            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', colModel: []},
+            {title: '소재 사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', colModel: []},
+            {title: '가공납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', colModel: []},
+            {title: '규격', dataType: 'string', dataIndx: 'STANDARD', colModel: []},
+            {title: '소재상세종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', colModel: []},
+            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_TYPE', colModel: []},
+            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', colModel: []},
+            {title: '열처리', dataType: 'string', dataIndx: 'HEAT_TREAT_YN', colModel: []},
+            {title: 'Part<br>단위<br>수량', dataType: 'string', dataIndx: 'PART_UNIT_QTY', colModel: []},
             {
                 title: '대칭', align: 'center', colModel: [
-                    {title: '원칭', datatype: 'string', dataIndx: ''},
-                    {title: '대칭', datatype: 'string', dataIndx: ''}
+                    {title: '원칭', datatype: 'string', dataIndx: 'ORIGINAL_SIDE_QTY'},
+                    {title: '대칭', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY'}
                 ]
             },
             {
                 title: '발주정보', align: 'center', colModel: [
-                    {title: '발주번호', datatype: 'string', dataIndx: ''},
-                    {title: '수량', datatype: 'string', dataIndx: ''},
-                    {title: '납품확인', datatype: 'string', dataIndx: ''}
+                    {title: '발주번호', datatype: 'string', dataIndx: 'ORDER_NUM'},
+                    {title: '수량', datatype: 'string', dataIndx: 'ORDER_QTY'},
+                    {title: '수량', datatype: 'string', dataIndx: 'HOPE_DUE_DT'},
+                    {title: '납품확인', datatype: 'string', dataIndx: 'DELIVERY_DT'}
                 ]
             },
-            {title: '최종<br>견적단가', dataType: 'string', dataIndx: '', colModel: []},
-            {title: '최종<br>공급단가', dataType: 'string', dataIndx: '', colModel: []},
-            {title: '변경전<br>도면번호', dataType: 'string', dataIndx: '', colModel: []}
+            {title: '최종<br>견적단가', dataType: 'string', dataIndx: 'EST_UNIT_PRICE', colModel: []},
+            {title: '최종<br>공급단가', dataType: 'string', dataIndx: 'SUPPLY_UNIT_PRICE', colModel: []},
+            {title: '변경전<br>도면번호', dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', colModel: []}
         ];
         let popupToolbar = {
             cls: 'pq-toolbar-crud',
@@ -456,34 +460,32 @@
                 //     style: 'font-size: 1.3rem;padding: 4px;font-weight: bold;'
                 // },
                 {
-                    type: 'button', label: 'Delete', icon: 'ui-icon-minus', style: 'float: right;', listener: {
+                    type: 'button', label: 'Save & 확정', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            const DELETE_QUERY_ID = '';
-                            let selectedRowCount = selectedRowIndex.length;
+                            let data = $orderRegisterGrid.pqGrid('option', 'dataModel.data');
+                            let parameters = {
+                                'url': '/registerNewOrderConfirm',
+                                'data': {data: JSON.stringify(data)}
+                            };
 
-                            /*
-                            selectedRowIndex 중에 확정상태가 빈칸(임시저장)이나 확정취소인 경우에만 가능
-                             */
-                            for (let i = 0; i < selectedRowCount; i++) {
-                                let thisRowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
-
-                                if (thisRowData.상태컬럼 === '' && thisRowData.상태컬럼 === '확정취소') {
-                                    alert('확정상태가 빈칸(임시저장)이나 확정취소인 경우에만 가능');
-                                    return false;
-                                }
-                            }
-
-                            fnDeletePQGrid($orderManagementGrid, selectedRowIndex, DELETE_QUERY_ID);
+                            fnPostAjax(function (data, callFunctionParam) {
+                                $orderRegisterGrid.pqGrid('refreshDataAndView');
+                            }, parameters, '');
                         }
                     }
                 },
                 {
                     type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            const insertQueryList = ['insertUser'];
-                            const updateQueryList = ['updateUser'];
+                            let data = $orderRegisterGrid.pqGrid('option', 'dataModel.data');
+                            let parameters = {
+                                'url': '/registerNewOrder',
+                                'data': {data: JSON.stringify(data)}
+                            };
 
-                            fnModifyPQGrid($orderManagementGrid, insertQueryList, updateQueryList);
+                            fnPostAjax(function (data, callFunctionParam) {
+                                $orderRegisterGrid.pqGrid('refreshDataAndView');
+                            }, parameters, '');
                         }
                     }
                 }
@@ -496,7 +498,8 @@
             resizable: true,
             showTitle: false,
             numberCell: {title: 'No.'},
-            scrollModel: {autoFit: true},
+            // scrollModel: {autoFit: true},
+            dragColumns: {enabled: false},
             // trackModel: {on: true},
             columnTemplate: {
                 align: 'center',
@@ -532,7 +535,7 @@
         /* variable */
 
         /* function */
-        let changeDate = function (newDate, today) {
+        let changeDate = function (newDate = new Date(), today = new Date()) {
             $('#CONTROL_MANAGE_START_DATE').val(newDate.format('MM/dd/yyyy'));
             $('#CONTROL_MANAGE_END_DATE').val(today.format('MM/dd/yyyy'));
         };
@@ -599,17 +602,34 @@
             return this.toString().zf(len);
         };
 
-        $('#CONFIRMATION').on('click', function () {
-            console.log(selectedRowIndex);
-        });
+        let getOrderStatusButton = function (event) {
+            let orderStatusCd = event.target.dataset.order_status_cd;
+            let orderStatusNm = event.target.dataset.order_status_nm;
+
+            updateOrderStatus(orderStatusCd, orderStatusNm);
+        };
+
+        let updateOrderStatus = function (orderStatusCd, orderStatusNm) {
+            let selectedRowCount = selectedRowIndex.length;
+            let rowListConvert = [];
+
+            for (let i = 0; i < selectedRowCount; i++) {
+                let tempObject = {
+                    rowIndx: selectedRowIndex[i],
+                    newRow: {'ORDER_STATUS_CD': orderStatusCd, 'ORDER_STATUS_NM': orderStatusNm}
+                };
+                rowListConvert.push(tempObject);
+            }
+
+            $orderManagementGrid.pqGrid('updateRow', {rowList: rowListConvert});
+        };
         /* function */
 
-        /* ??? */
-        $orderManagementGrid = $('#' + gridId).pqGrid(obj);
-        /* ??? */
-
         /* event */
-        $('#DETAIL_ESTIMATE_REQUIRE').on('click', function () {
+        /**
+         * @description 상세자격 요건 클릭
+         */
+        $('#DETAIL_ESTIMATE_REQUIRE').on('click', function (event) {
             let $orderManagementGridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
             let Cols = $orderManagementGridInstance.Columns();
             let titles = ['상세가공요건', '예상소재 Size'];
@@ -628,7 +648,9 @@
             })
         });
 
-        // console.log($('[name=CONTROL_MANAGE_TERM]:checked').val());
+        /**
+         * @description 날짜 라디오 변경
+         */
         $('[name=CONTROL_MANAGE_TERM]').change(function () {
             let value = $(this).val();
             let today = new Date();
@@ -649,10 +671,12 @@
                     changeDate(newDate, today);
                     break;
             }
+
+            $('#CONTROL_MANAGE_DATEPICKER_READ_ONLY').prop('checked', true);
+            createOrDestoryDatepicker();
         });
 
-
-        $('#CONTROL_MANAGE_DATEPICKER_READ_ONLY').on('click', function () {
+        let createOrDestoryDatepicker = function () {
             let checked = $('#CONTROL_MANAGE_DATEPICKER_READ_ONLY').prop('checked');
 
             if (checked) {
@@ -660,10 +684,21 @@
             } else {
                 $('[id^=CONTROL_MANAGE][id$=DATE]').datepicker();
             }
+        }
+
+        /**
+         * @description 날짜 라디오 변경
+         */
+        $('#CONTROL_MANAGE_DATEPICKER_READ_ONLY').on('change', function () {
+            createOrDestoryDatepicker();
         });
 
         $('#CONTROL_MANGE_POPUP').on('show.bs.modal', function () {
             $orderRegisterGrid = $('#' + popupGridId).pqGrid(popoupObj);
+        });
+
+        $('#CONTROL_MANGE_POPUP').on('hide.bs.modal', function() {
+            $orderRegisterGrid.pqGrid('destroy');
         });
 
         $('#testSearch').on('click', function () {
@@ -672,9 +707,76 @@
             fnRequestGidData($orderManagementGrid, postData);
         });
 
-        $(document).on('click', "[name='test114']", function (e) {
-            console.log(e);
+        /**
+         * @description 확정버튼 클릭
+         */
+        $('#CONFIRMATION').on('click', function (event) {
+            let selectedRowCount = selectedRowIndex.length;
+
+            for(let i = 0; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+
+                //TODO: 필수데이터가 입력되어 있어야만 확정 가능
+                // if (rowData.OUTSIDE_YN === 'Y') {
+                //     //TODO: 문구수정
+                //     alert('외주가 ‘Y’ 인 상태에서는 외주관리화면에서 대상을 먼저 삭제해야만 확정취소가 가능');
+                //     return false;
+                // }
+            }
+
+            getOrderStatusButton(event);
+        });
+
+        /**
+         * @description 취소버튼 클릭
+         */
+        $('#CANCEL').on('click', function (event) {
+            let selectedRowCount = selectedRowIndex.length;
+
+            for(let i = 0; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+
+                if (rowData.OUTSIDE_YN === 'Y') {
+                    //TODO: 문구수정
+                    alert('외주가 ‘Y’ 인 상태에서는 외주관리화면에서 대상을 먼저 삭제해야만 확정취소가 가능');
+                    return false;
+                }
+            }
+
+            getOrderStatusButton(event);
+        });
+
+        /**
+         * @description 종료버튼 클릭
+         */
+        $('#TERMINATION').on('click', function (event) {
+            let selectedRowCount = selectedRowIndex.length;
+
+            for(let i = 0; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+
+                //TODO: 마감대상이 아닌 대상 중 기록이 필요한 대상은 종료 처리
+                // if (rowData.OUTSIDE_YN === 'Y') {
+                //     //TODO: 문구수정
+                //     alert('외주가 ‘Y’ 인 상태에서는 외주관리화면에서 대상을 먼저 삭제해야만 확정취소가 가능');
+                //     return false;
+                // }
+            }
+
+            getOrderStatusButton(event);
+        });
+
+        /**
+         * @description 마감버튼 클릭
+         */
+        $('#DEADLINE').on('click', function (event) {
+            getOrderStatusButton(event);
         });
         /* event */
+
+        /* init */
+        changeDate();
+        $orderManagementGrid = $('#' + gridId).pqGrid(obj);
+        /* init */
     });
 </script>
