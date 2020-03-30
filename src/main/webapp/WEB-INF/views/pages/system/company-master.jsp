@@ -176,7 +176,7 @@
                                     <div class="hbox">
                                         <aside class="aside-md">
                                             <div class="text-center">
-                                                <img src="/resource/main/images/p0.jpg" width="200px" alt="..." class="img-circle m-b">
+                                                <img src="/image/999" width="200px" alt="..." class="img-circle m-b">
                                                 <div class="">
                                                     <button class="btn btn-default" id="company_stamp_upload" href="#" >
                                                         <i class="fa fa-cloud-upload text"></i>
@@ -483,6 +483,12 @@
             }
         };
 
+        $("#system_company_popup").on('hide.bs.modal', function(){
+            fnResetFrom("company_master_regisger_form");
+            $("#company_master_regisger_form").find("#LOGO_GFILE_SRC").attr("src", "/image/999");
+            $("#company_master_regisger_form").find("#LOGO_GFILE_SRC").attr("src", "/image/999");
+        });
+
         $("#company_master_search_form").find("#SEL_COMP_KIND").change(function(){
             let comptype = 0;
             if(this.value == "CLS010")
@@ -541,7 +547,6 @@
                         formData.append("file" + i, files[i]);
                     }
                     fnFormDataFileUploadAjax(function (data) {
-                        console.log(data);
                         let fileInfo = data.fileUploadList[0];
                         $("#company_master_regisger_form").find("#LOGO_GFILE_SRC").attr("src", "/image/" + fileInfo.GFILE_SEQ);
                         $("#company_master_regisger_form").find("#LOGO_GFILE_SEQ").val(fileInfo.GFILE_SEQ);

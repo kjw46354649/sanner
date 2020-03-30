@@ -200,7 +200,32 @@
         return elementArray;
     };
 
+    /**
+     *	Form reset 처리
+     *	formId : form Id
+     **/
+    let fnResetFrom = function (formid){
+        if(formid.indexOf("#") == -1) formid = $("#"+formid);
+        formid.find('input:text, input:password, input:file, textarea').val('');
+        formid.find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
+        // select box 첫번째 값이 공백이 아니면 첫번째 값으로 셋팅
+        $('select', formid).each(function() {
+            $(this).val($(this).prop('defaultSelected'));
+            if($(this).find('option:first').val() == ''){
+                $(this).val('');
+            } else {
+                $(this).val($(this).find('option:first').val());
+            }
+        });
 
+        // hidden value가 queryId, url 제외 나머지 clear
+        $('input:hidden', formid).each(function() {
+            if($(this).attr("id") == "url" || $(this).attr("id") == "queryId"){
+            }else{
+                $(this).val('');
+            }
+        });
+    }
 
     /**
      * @description 그리드 생성

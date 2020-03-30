@@ -33,10 +33,6 @@ public class ImageView extends AbstractView {
         if(fileInfo != null && fileInfo.containsKey("FILE_PATH")){
             fileName = (String)fileInfo.get("FILE_PATH");
         }
-
-        System.out.println("fileName=[" + fileName + "]");
-        System.out.println("fileName=[" + fileName + "]");
-
         // InputStream in = getClass().getResourceAsStream(fileName);
         InputStream in = new FileInputStream(new File(fileName));
         FileCopyUtils.copy(in, out);
