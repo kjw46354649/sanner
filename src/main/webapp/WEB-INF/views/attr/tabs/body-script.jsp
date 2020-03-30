@@ -476,4 +476,12 @@
         document.body.appendChild(excelForm);
         excelForm.submit();
     };
+
+    /**
+     * @description 레퍼런스 참조 없는 배열 복사
+     * @param obj
+     */
+    let fnCloneObj = function (obj) {
+        return {...obj}
+    };
 </script>

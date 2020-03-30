@@ -2,31 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 
 <mapper namespace="orderMapper">
+    <select id="emptyGrid" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT 1 FROM DUAL WHERE FALSE
+    </select>
+
     <select id="selectControlManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER () OVER () AS ROWNUM,
             C.CONTROL_SEQ,
             CP.CONTROL_DETAIL_SEQ,
             CPO.ORDER_SEQ,
+            CPRO.ORDER_STATUS,
             C.CONTROL_STATUS AS CONTROL_STATUS_CD,
-            CASE
-                WHEN (SELECT CODE_NM
-                      FROM TBL_CODE_LANG
-                      WHERE HIGH_CD = '1024'
-                            AND CODE_CD = C.CONTROL_STATUS
-                            AND LANG_CD = 'KR') = '저장상태' THEN ''
-                ELSE (SELECT CODE_NM
-                      FROM TBL_CODE_LANG
-                      WHERE HIGH_CD = '1024'
-                            AND CODE_CD = C.CONTROL_STATUS
-                            AND LANG_CD = 'KR')
-            END AS CONTROL_STATUS_NM,
-            DATE_FORMAT(C.STATUS_DT, '%m-%d %H:%i') AS STATUS_DT,
+            (SELECT CODE_NM
+            FROM TBL_CODE_LANG
+            WHERE HIGH_CD = '1024'
+            AND CODE_CD = CPRO.ORDER_STATUS
+            AND LANG_CD = 'KR') AS ORDER_STATUS_NM,
+            DATE_FORMAT(CPRO.STATUS_DT, '%m-%d %H:%i') AS ORDER_STATUS_DT,
             C.COMP_CD,
             (SELECT CODE_NM
             FROM TBL_CODE_LANG
             WHERE CODE_CD = C.COMP_CD
-                  AND LANG_CD = 'KR' LIMIT 1) AS COMP_NM, -- LIMIT 1 임시
+            AND LANG_CD = 'KR') AS COMP_NM,
             C.ORDER_COMP_CD, -- 발주업체
             (SELECT COMP_NM
             FROM TBL_COMPANY
@@ -34,7 +32,7 @@
             C.ORDER_STAFF_SEQ,
             (SELECT STAFF_NM
             FROM TBL_COMPANY_STAFF
-            WHERE STAFF_SEQ = C.ORDER_STAFF_SEQ LIMIT 1) AS ORDER_STAFF_NM,
+            WHERE STAFF_SEQ = C.ORDER_STAFF_SEQ) AS ORDER_STAFF_NM,
             C.DESIGNER_NM, -- 설계자
             C.NOTE, -- 비고
             --        '',-- 거래명세서 no ㅇㄷ?
@@ -43,6 +41,7 @@
             C.EMERGENCY_YN, -- 긴급
             C.CONTROL_NUM,
             CP.PART_NUM,
+            CP.DRAWING_VER,
             CP.DRAWING_NUM,
             CP.ITEM_NM,
             CP.WORK_TYPE,
@@ -58,6 +57,7 @@
             -- '', 규격 조인!
             CP.MATERIAL_DETAIL,
             CP.MATERIAL_KIND,
+            CP.MATERIAL_TYPE,
             CP.SURFACE_TREAT,
             CP.HEAT_TREAT_YN,
             CP.PART_UNIT_QTY,
@@ -65,14 +65,21 @@
             CPO.ORDER_QTY,
             CP.ORIGINAL_SIDE_QTY,
             CP.OTHER_SIDE_QTY,
-            -- '', 출고
-            -- '', 납기
+            CP.HOPE_DUE_DT,-- '', 출고
+            CP.INNER_DUE_DT, -- '', 납기
             CPO.DELIVERY_DT,
-            CP.PREV_DRAWING_NUM
-            --         CP.MATERIAL_UNIT_PRICE, 소재비
-            --         CP.SURFACE_UNIT_PRICE 가공비
+            CP.DETAIL_LATHE,
+            CP.DETAIL_SURFACE,
+            CP.DETAIL_CLAMPING,
+            CP.DETAIL_POCKET,
+            CP.DETAIL_DRILL,
+            CP.DETAIL_DIFFICULTY,
+            CP.PREV_DRAWING_NUM,
+        <!-- CP.MATERIAL_UNIT_PRICE, 소재비 -->
+        <!-- CP.SURFACE_UNIT_PRICE 가공비 -->
+        DATE_FORMAT(C.STATUS_DT, '%m-%d %H:%i') AS STATUS_DT
         FROM TBL_CONTROL C
-        --                INNER JOIN TBL_CONTROL_PROGRESS CPRO ON C.CONTROL_SEQ = CPRO.CONTROL_SEQ
+        LEFT OUTER JOIN TBL_CONTROL_PROGRESS CPRO ON C.CONTROL_SEQ = CPRO.CONTROL_SEQ
         INNER JOIN TBL_CONTROL_PART CP ON C.CONTROL_SEQ = CP.CONTROL_SEQ
         INNER JOIN TBL_CONTROL_PART_ORDER CPO ON CP.CONTROL_SEQ = CPO.CONTROL_SEQ
                                                 AND CP.CONTROL_DETAIL_SEQ = CPO.CONTROL_DETAIL_SEQ
@@ -163,12 +170,12 @@
             OUTSIDE_YN,
             WORK_FACTORY,
             MATERIAL_SUPPLY_YN,
-            --         SIZE_TYPE,
-            --         SIZE_W,
-            --         SIZE_H,
-            --         SIZE_T,
-            --         SIZE_D,
-            --         SIZE_L,
+            <!-- SIZE_TYPE, -->
+            <!-- SIZE_W, -->
+            <!-- SIZE_H, -->
+            <!-- SIZE_T, -->
+            <!-- SIZE_D, -->
+            <!-- SIZE_L, -->
             MATERIAL_TYPE,
             MATERIAL_DETAIL,
             SURFACE_TREAT,
@@ -179,7 +186,6 @@
             ORIGINAL_SIDE_QTY,
             OTHER_SIDE_QTY,
             INSERT_DT
-            -- , INSERT_ID
         ) VALUES
         <foreach collection="list" item="item" separator=",">
         (
@@ -200,12 +206,12 @@
             #{item.OUTSIDE_YN},
             #{item.WORK_FACTORY},
             #{item.MATERIAL_SUPPLY_YN},
-            --             NULL,
-            --             NULL,
-            --             NULL,
-            --             NULL,
-            --             NULL,
-            --             NULL,
+            <!-- NULL, -->
+            <!-- NULL, -->
+            <!-- NULL, -->
+            <!-- NULL, -->
+            <!-- NULL, -->
+            <!-- NULL, -->
             #{item.MATERIAL_TYPE},
             #{item.MATERIAL_DETAIL},
             #{item.SURFACE_TREAT},
@@ -216,7 +222,6 @@
             (SELECT IF(#{item.ORIGINAL_SIDE_QTY} = '', NULL, CAST(#{item.ORIGINAL_SIDE_QTY} AS UNSIGNED INTEGER))),
             (SELECT IF(#{item.OTHER_SIDE_QTY} = '', NULL, CAST(#{item.OTHER_SIDE_QTY} AS UNSIGNED INTEGER))),
             CURRENT_TIMESTAMP()
-            -- ,NULL
             )
         </foreach>
     </insert>
@@ -232,7 +237,7 @@
             EST_UNIT_PRICE,
             SUPPLY_UNIT_PRICE,
             INSERT_DT
-            -- ,INSERT_ID
+            <!-- ,INSERT_ID -->
         ) VALUES
         <foreach collection="list" item="item" separator=",">
         (
@@ -255,7 +260,7 @@
             (SELECT IF(#{item.EST_UNIT_PRICE} = '', NULL, CAST(REPLACE(#{item.EST_UNIT_PRICE}, ',', '') AS UNSIGNED INTEGER))),
             (SELECT IF(#{item.SUPPLY_UNIT_PRICE} = '', NULL, CAST(REPLACE(#{item.SUPPLY_UNIT_PRICE}, ',', '') AS UNSIGNED INTEGER))),
             CURRENT_TIMESTAMP()
-            -- ,NULL
+            <!-- ,NULL -->
         )
         </foreach>
     </insert>
@@ -267,7 +272,7 @@
             ORDER_STATUS,
             STATUS_DT,
             INSERT_DT
-            -- ,INSERT_ID
+            <!-- ,INSERT_ID -->
         ) VALUES
         <foreach collection="list" item="item" separator=",">
         (
@@ -281,7 +286,7 @@
             'PRO00',
             CURRENT_TIMESTAMP(),
             CURRENT_TIMESTAMP()
-            -- ,NULL
+            <!-- ,NULL -->
         )
         </foreach>
     </insert>
@@ -294,7 +299,7 @@
             PART_STATUS,
             STATUS_DT,
             INSERT_DT
-        -- ,INSERT_ID,
+        <!-- ,INSERT_ID, -->
         ) VALUES
         <foreach collection="list" item="item" separator=",">
         (
@@ -328,7 +333,7 @@
             ORDER_STATUS,
             STATUS_DT,
             INSERT_DT
-            -- ,INSERT_ID
+            <!-- ,INSERT_ID -->
         ) VALUES
         <foreach collection="list" item="item" separator=",">
         (
@@ -342,7 +347,7 @@
             'PRO01',
             CURRENT_TIMESTAMP(),
             CURRENT_TIMESTAMP()
-            -- ,NULL
+            <!-- ,NULL -->
         )
         </foreach>
     </insert>
@@ -355,7 +360,7 @@
             PART_STATUS,
             STATUS_DT,
             INSERT_DT
-        -- ,INSERT_ID,
+        <!-- ,INSERT_ID, -->
         ) VALUES
         <foreach collection="list" item="item" separator=",">
         (
@@ -398,44 +403,45 @@
             CONTROL_STATUS = #{CONTROL_STATUS_CD},
             STATUS_DT = CURRENT_TIMESTAMP(),
             UPDATE_DT = CURRENT_TIMESTAMP()
-            -- ,UPDATE_ID = NULL
+            <!-- ,UPDATE_ID = NULL -->
         WHERE
             CONTROL_SEQ = #{CONTROL_SEQ}
     </update>
+
     <update id="updateControlPart" parameterType="java.util.HashMap">
         UPDATE
             TBL_CONTROL_PART
         SET
-            PART_NUM = #{PART_NUM, jdbcType=INTEGER},
-            DRAWING_NUM = #{DRAWING_NUM, jdbcType=VARCHAR},
-            DRAWING_VER = #{DRAWING_VER, jdbcType=INTEGER},
-            PREV_DRAWING_NUM = #{PREV_DRAWING_NUM, jdbcType=VARCHAR},
-            ITEM_NM = #{ITEM_NM, jdbcType=VARCHAR},
-            WORK_TYPE = #{WORK_TYPE, jdbcType=VARCHAR},
-            OUTSIDE_YN = #{OUTSIDE_YN, jdbcType=VARCHAR},
-            WORK_FACTORY = #{WORK_FACTORY, jdbcType=VARCHAR},
-            MATERIAL_SUPPLY_YN = #{MATERIAL_SUPPLY_YN, jdbcType=VARCHAR},
-        -- 	MATERIAL_KIND = #{MATERIAL_KIND},
-        -- 	SIZE_W = #{SIZE_W},
-        -- 	SIZE_H = #{SIZE_H},
-        -- 	SIZE_T = #{SIZE_T},
-        -- 	SIZE_D = #{SIZE_D},
-        -- 	SIZE_L = #{SIZE_L},
-            MATERIAL_TYPE = #{MATERIAL_TYPE, jdbcType=VARCHAR},
-            MATERIAL_DETAIL = #{MATERIAL_DETAIL, jdbcType=VARCHAR},
-            SURFACE_TREAT = #{SURFACE_TREAT, jdbcType=VARCHAR},
-            HEAT_TREAT_YN = #{HEAT_TREAT_YN, jdbcType=VARCHAR},
-            PART_UNIT_QTY = #{PART_UNIT_QTY, jdbcType=INTEGER},
-            HOPE_DUE_DT = #{HOPE_DUE_DT, jdbcType=VARCHAR},
-            INNER_DUE_DT = #{INNER_DUE_DT, jdbcType=VARCHAR},
-            ORIGINAL_SIDE_QTY = #{ORIGINAL_SIDE_QTY, jdbcType=INTEGER},
-            OTHER_SIDE_QTY = #{OTHER_SIDE_QTY, jdbcType=INTEGER},
-            PART_STATUS = #{CONTROL_STATUS_CD, jdbcType=VARCHAR},
+            PART_NUM = #{PART_NUM},
+            DRAWING_NUM = #{DRAWING_NUM},
+            DRAWING_VER = #{DRAWING_VER},
+            PREV_DRAWING_NUM = #{PREV_DRAWING_NUM},
+            ITEM_NM = #{ITEM_NM},
+            WORK_TYPE = #{WORK_TYPE},
+            OUTSIDE_YN = #{OUTSIDE_YN},
+            WORK_FACTORY = #{WORK_FACTORY},
+            MATERIAL_SUPPLY_YN = #{MATERIAL_SUPPLY_YN},
+            <!-- MATERIAL_KIND = #{MATERIAL_KIND}, -->
+        <!--SIZE_W = #{SIZE_W},-->
+        <!--SIZE_H = #{SIZE_H},-->
+            <!--SIZE_T = #{SIZE_T},-->
+            <!--SIZE_D = #{SIZE_D},-->
+            <!--SIZE_L = #{SIZE_L},-->
+            MATERIAL_TYPE = #{MATERIAL_TYPE},
+            MATERIAL_DETAIL = #{MATERIAL_DETAIL},
+            SURFACE_TREAT = #{SURFACE_TREAT},
+            HEAT_TREAT_YN = #{HEAT_TREAT_YN},
+            <!-- PART_UNIT_QTY = #{PART_UNIT_QTY}, -->
+            HOPE_DUE_DT = #{HOPE_DUE_DT},
+            INNER_DUE_DT = #{INNER_DUE_DT},
+            ORIGINAL_SIDE_QTY = #{ORIGINAL_SIDE_QTY},
+            OTHER_SIDE_QTY = #{OTHER_SIDE_QTY},
+            <!-- PART_STATUS = #{CONTROL_STATUS_CD}, -->
             STATUS_DT = CURRENT_TIMESTAMP(),
             UPDATE_DT = CURRENT_TIMESTAMP()
-            -- ,UPDATE_ID #{UPDATE_ID}
+            <!--              ,UPDATE_ID #{UPDATE_ID} -->
         WHERE
             CONTROL_SEQ = #{CONTROL_SEQ}
-            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+                AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </update>
 </mapper>
