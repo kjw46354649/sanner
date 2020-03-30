@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="excel">
+
+    <select id="selectEstimateMasterInfoExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.EST_TITLE, A.EST_NUM,
+            IFNULL(B.COMP_NUM, SPACE(0)) ORDER_COMP_NUM,
+            IFNULL(B.COMP_NM, SPACE(0)) ORDER_COMP_NM,
+            IFNULL(B.CEO_NM, SPACE(0)) ORDER_CEO_NM,
+            IFNULL(B.COMP_ADDRESS, SPACE(0)) ORDER_COMP_ADDRESS,
+            IFNULL(B.COMP_TYPE, SPACE(0)) ORDER_COMP_TYPE,
+            IFNULL(C.COMP_NM, SPACE(0)) COMP_NM,
+            IFNULL(C.CEO_NM, SPACE(0)) CEO_NM,
+            SUM(D.FINAL_EST_UNIT_PRICE) AS FINAL_EST_UNIT_PRICE
+        FROM TBL_ESTIMATE A
+            INNER JOIN TBL_COMPANY B ON A.COMP_CD = B.COMP_CD
+            INNER JOIN TBL_COMPANY C ON A.ORDER_COMP_CD = C.COMP_CD
+            INNER JOIN TBL_ESTIMATE_DETAIL D ON A.EST_SEQ = D.EST_SEQ
+         WHERE 1=1
+			AND A.EST_SEQ = #{EST_SEQ}
+    </select>
+
+    <select id="selectEstimateDetailListExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+       SELECT
+			EST_SEQ, MODULE_NM, ITEM_NM, DRAWING_NUM, PART_NUM, SIZE_W, SIZE_H, SIZE_T, SIZE_D, SIZE_L, ITEM_QTY,
+            WORK_TYPE, MATERIAL_TYPE, MATERIAL_DETAIL, SURFACE_TREAT, MATERIAL_SUPPLY_YN, HEAT_TREAT_YN,
+            MATERIAL_UNIT_COST, TOUCH_UNIT_COST, SURFACE_UNIT_COST, PROCESS_UNIT_COST, ETC_UNIT_COST, FINAL_EST_UNIT_PRICE,
+            NOTE, DWG_GFILE_SEQ, DXF_GFILE_SEQ, PDF_GFILE_SEQ, IMG_GFILE_SEQ
+        FROM TBL_ESTIMATE_DETAIL
+        WHERE 1=1
+			AND EST_SEQ = #{EST_SEQ}
+    </select>
+
+</mapper>

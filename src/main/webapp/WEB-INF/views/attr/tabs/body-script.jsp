@@ -422,4 +422,83 @@
         }
     };
 
+    /**
+     * Data Query to Select box create
+     * @param $formId
+     * @param highCd
+     * @param selectType
+     * @param queryId
+     */
+    let fnCommCodeDatasourceGridSelectBoxCreate = function (parmamData) {
+        'use strict';
+        let selectBoxContents = [];
+        fnPostAjax(function (data, callFunctionParam) {
+            for(let i=0; i < data.list.length; i++){
+                selectBoxContents.push({'value':data.list[i].CODE_CD, 'text':data.list[i].CODE_NM});
+            }
+        }, parmamData, '');
+        return selectBoxContents;
+    };
+
+    /**
+     *	Hidden Action 처리
+     *   actionURL : 서버 호출 URL
+     *	param : 호출 URL에 Parameter 정보
+     **/
+    let fnReportFormToHiddenFormPageAction = function(sourceForm, targetAction) {
+        let elem = document.getElementById('excelForm');
+        if(elem != null && typeof(elem) !== undefined){
+            $('#excelForm').remove()
+        }
+        let excelForm = document.createElement("form");
+        excelForm.setAttribute("id", "excelForm");
+        excelForm.setAttribute("name", "excelForm");
+        excelForm.hidden=true;
+        excelForm.name='excelForm';
+        excelForm.method='POST';
+        excelForm.target='_self';
+        excelForm.action= targetAction;
+
+        $("#" + sourceForm).find('input,select,textarea').each(function(){
+
+            let $ctrl = $(this);
+            let name = $ctrl.prop('name');
+            let value = "";
+
+            if(name != ""){
+
+                if ($ctrl.is('select')){
+                    value = $ctrl.val();
+                } else if ($ctrl.is('textarea')) {
+                    value = $ctrl.val();
+                } else {
+                    switch($ctrl.attr("type")) {
+                        case "text":
+                        case "date":
+                        case "password":
+                        case "hidden":
+                            value = $ctrl.val();
+                            break;
+                        case "checkbox":
+                            if($ctrl.prop('checked')) value = true;
+                            else value = false;
+                            break;
+                        case 'radio':
+                            value = $("input:radio[name=" + name + "]:checked").val();
+                            break;
+                    }
+                }
+
+                if(value != ""){
+                    inputElement = document.createElement("input");
+                    inputElement.value = value;
+                    inputElement.name = name;
+                    excelForm.appendChild(inputElement);
+                }
+            }
+        });
+
+        document.body.appendChild(excelForm);
+        excelForm.submit();
+    };
 </script>

@@ -3,12 +3,39 @@
 
 <mapper namespace="dataSource">
 
-    <select id="getCompanyUserList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    <select id="getUserList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             USER_ID AS CODE_CD, USER_NM AS CODE_NM
         FROM jmes.TBL_USER
         WHERE 1 = 1
           AND DEL_YN = 'N'
+    </select>
+
+    <select id="getCompanyStaffList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            B.STAFF_SEQ AS CODE_CD, STAFF_NM AS CODE_NM
+        FROM TBL_COMPANY A
+            INNER JOIN TBL_COMPANY_STAFF B ON A.COMP_CD = B.COMP_CD AND B.DEL_YN = 'N'
+        WHERE 1 = 1
+          AND A.DEL_YN = 'N'
+    </select>
+
+    <select id="getOrderCompanyList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            COMP_CD AS CODE_CD, COMP_NM AS CODE_NM
+        FROM TBL_COMPANY
+        WHERE 1 = 1
+            AND COMP_KIND = 'CLS010'
+            AND DEL_YN = 'N'
+    </select>
+
+    <select id="getBusinessCompanyList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            COMP_CD AS CODE_CD, COMP_NM AS CODE_NM
+        FROM TBL_COMPANY
+        WHERE 1 = 1
+            AND COMP_KIND = 'CLS030'
+            AND DEL_YN = 'N'
     </select>
 
 </mapper>
