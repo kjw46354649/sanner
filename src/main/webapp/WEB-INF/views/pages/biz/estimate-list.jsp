@@ -560,6 +560,7 @@
                             parameters = {'url': '/json-create', 'data': data};
                             fnPostAjax(estimateMasterVersionUpCallBack, parameters, '');
 
+                            royal_tab_api.add(0, true, '견적관리', '/static/biz/estimate-register', true, '100012', upVersionEstimateCallBackMethod);
                         }
                     }
                 },
@@ -757,8 +758,22 @@
             //fnGetCommCodeBasicSelectBox( $("#SEL_COMP_TYPE"), '', $(this).val(), 'A');
         });
 
-        function estimateMasterVersionUpCallBack(){
+        function estimateMasterVersionUpCallBack() {
             estimateMasterTopGrid.pqGrid('refreshDataAndView');
+
+            $("li .tabMenuClick[pid='100012']").trigger('click');
+            if (!$("li .tabMenuClick[pid='100012']").hasClass("active")) {
+                $("li .tabMenuClick[pid='100012']").addClass("active");
+            }
+
+            $(document).on('upVersionEstimateCallBackMethod', function (e) {
+
+            });
+
+        };
+
+        function upVersionEstimateCallBackMethod(){
+          $("#test").trigger('click');
         };
 
         /** 공통 코드 이외의 처리 부분 **/
