@@ -60,7 +60,8 @@
                 </header>
                 <div class="panel-body">
                     <form class="form-inline" role="form" id="estimate_register_info_form" name="estimate_register_info_form">
-                        <input type="hidden" id="queryId" name="queryId" value="insertEstimateMaster"/>
+                        <input type="hidden" id="queryId" name="queryId" value="selectEstimateNextSequence"/>
+                        <input type="hidden" id="EST_SEQ" name="EST_SEQ" value=""/>
                         <div class="panel-body line_tit portlet-body form bg-light">
                             <section class="bg-light">
                                 <div class="row">
@@ -110,7 +111,7 @@
                                                     <div class="form-group col-md-4 col-sm-4">
                                                         <label class="col-md-4 col-sm-4 control-label">견적번호 (차수)</label>
                                                         <div class="col-md-8 col-sm-8">
-                                                            <input type="text" class="form-control" id="EST_VER" name="EST_VER" readonly>
+                                                            <input type="text" class="form-control" id="EST_NUM" name="EST_NUM" readonly>
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-4 col-sm-4">
@@ -209,6 +210,7 @@
     </div>
 </div>
 
+<input type="button" id="test">
 <form id="estimate_register_excel_download" method="POST">
     <input type="hidden" id="sqlId" name="sqlId" value="selectEstimateDetailListExcel"/>
     <input type="hidden" id="paramName" name="paramName" value="EST_SEQ"/>
@@ -223,7 +225,7 @@
         let estimateRegisterBotGrid = $("#estimate_register_bot_grid");
 
         let estimateRegisterTopColModel= [
-            {title: 'EST_SEQ', dataType: 'string', dataIndx: 'EST_SEQ' , hidden:true} ,
+            {title: 'EST_SEQ', dataType: 'string', dataIndx: 'EST_SEQ' , hidden:false} ,
             {title: 'SEQ', dataType: 'string', dataIndx: 'SEQ' , hidden:true} ,
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM' } ,
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM' } ,
@@ -361,9 +363,10 @@
         ];
 
         let estimateRegisterBotColModel= [
-            {title: '성함', dataType: 'string', dataIndx: 'ITEM_NM' },
-            {title: '메일주소', dataType: 'string', dataIndx: 'DRAWING_NUM' },
-            {title: '전화번호', dataType: 'string', dataIndx: 'ITEM_QTY' }
+            {title: '', dataType: 'string', dataIndx: 'STAFF_SEQ', hidden: true },
+            {title: '성함', dataType: 'string', dataIndx: 'STAFF_NM' },
+            {title: '메일주소', dataType: 'string', dataIndx: 'STAFF_EMAIL' },
+            {title: '전화번호', dataType: 'string', dataIndx: 'STAFF_TEL' }
         ];
 
         let estimateRegisterTopToolbar = {
@@ -428,7 +431,14 @@
             ]
         };
         let estimateRegisterBotToolbar = {
-            items: [{ type: 'checkbox', label: '자동메일 발송', style: 'float: right;' }]
+            items: [
+                {
+                type: 'button', label: 'Delete', icon: 'ui-icon-disk', style: 'float: right;', listener: {
+                    'click': function (evt, ui) {
+
+                    }
+                }
+            }]
         };
 
         estimateRegisterTopGrid.pqGrid({
@@ -472,13 +482,13 @@
 
         selectEstimateBotList('');
 
-        function selectEstimateBotList(EST_SEQ) {
+        function selectEstimateBotList(COMP_CD) {
             estimateRegisterBotGrid.pqGrid({
                 width: "100%", height: 200,
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
                     url: "/paramQueryGridSelect",
-                    postData: { 'queryId': 'selectEstimateDetailList', 'EST_SEQ': EST_SEQ},
+                    postData: { 'queryId': 'selectCompanyStaffEmailList', 'COMP_CD': COMP_CD},
                     getData: function (dataJSON) {
                         let data = dataJSON.data;
                         return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
@@ -499,21 +509,60 @@
             estimateRegisterBotGrid.pqGrid("refreshDataAndView");
         };
 
+
+        $("#estimate_register_info_form #ORDER_COMP_CD").on('change', function(){
+            let compCd = $(this).val();
+
+            fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#ORDER_STAFF_SEQ"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getCompanyStaffList', 'COMP_CD': compCd }});
+            selectEstimateBotList(compCd);
+        });
+
         function estimateRegisterSaveCallBack(response, callMethodParam){
             let estimateRegisterInsertQueryList = ['insertEstimateDetail'];
             let estimateRegisterUpdateQueryList = ['updateEstimateDetail'];
+            let EST_SEQ = $("#estimate_register_info_form #EST_SEQ").val();
 
+            let gridInstance = estimateRegisterTopGrid.pqGrid('getInstance').grid;
+
+            let $tr = estimateRegisterTopGrid.closest( 'tr' );
+            let obj = gridInstance.pqGrid('getRowIndx', {$tr: $tr } );
+            console.log(obj);
+            let rowData = gridInstance.pqGrid('getRowData', obj );
+            console.log(rowData);
+
+            //estimateRegisterTopGrid.pqGrid('updateRow', {rowList: {'EST_SEQ':EST_SEQ}});
+            //estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': current_row , row: { 'Area': value } });
+            /*
             fnModifyPQGrid(estimateRegisterTopGrid, estimateRegisterInsertQueryList, estimateRegisterUpdateQueryList);
             estimateRegisterReloadPageData();
+            */
+            console.log(response);
+            console.log(callMethodParam);
         };
 
         $("#btn_estimate_register_save").on("click", function(){
-            let parameters = {'url': '/json-create', 'data': $("#estimate_register_info_form").serialize()};
+            $("#estimate_register_info_form #queryId").val('selectEstimateNextSequence');
 
-            fnPostAjax(estimateRegisterSaveCallBack, parameters, '');
+            let parameters = {'url': '/json-list', 'data': $("#estimate_register_info_form").serialize()};
+            let EST_SEQ = "";
+
+            fnPostAjax(function (data, callFunctionParam) {
+                let list = data.list[0];
+                EST_SEQ = list.EST_SEQ;
+
+                $("#estimate_register_info_form #queryId").val('insertEstimateMaster');
+                $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
+
+                alert(EST_SEQ);
+
+                parameters = {'url': '/json-create', 'data': $("#estimate_register_info_form").serialize()};
+                fnPostAjax(estimateRegisterSaveCallBack, parameters, '');
+
+            }, parameters, '');
         });
 
         function estimateRegisterReloadPageData(){
+
             let postData = { 'queryId': 'estimate.selectLastValEstimateMasterInfo'};
             let parameter = {'url': '/json-list', 'data': postData};
 
@@ -526,7 +575,7 @@
                 $("#ORDER_STAFF_SEQ").val(list.ORDER_STAFF_SEQ);
                 $("#COMP_CD").val(list.COMP_CD);
                 $("#EST_USER_ID").val(list.EST_USER_ID);
-                $("#EST_VER").val(list.EST_NUM + ' (' + list.EST_VER + ')');
+                $("#EST_NUM").val(list.EST_NUM + ' (' + list.EST_VER + ')');
                 $("#DTL_CNT").val(list.DTL_CNT);
                 $("#DTL_AMOUNT").val(list.DTL_AMOUNT);
                 $("#INSERT_DT").val(list.INSERT_DT);
@@ -539,6 +588,9 @@
             }, parameter, '');
         };
 
+        $(document).on('click', '#test', function(){
+           alert("dd");
+        });
 
         /** 공통 코드 이외의 처리 부분 **/
         fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
@@ -546,6 +598,6 @@
         fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#EST_USER_ID"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}});
         fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#ORDER_STAFF_SEQ"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getCompanyStaffList'}});
 
-        estimateRegisterReloadPageData();
+        //estimateRegisterReloadPageData();
     });
 </script>
