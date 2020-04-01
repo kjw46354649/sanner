@@ -10,16 +10,19 @@
         SELECT
             ROW_NUMBER () OVER () AS ROWNUM,
             C.CONTROL_SEQ,
+            C.CONTROL_STATUS,
             CP.CONTROL_DETAIL_SEQ,
             CPO.ORDER_SEQ,
+            CPRO.SEQ AS CONTROL_PROGRESS_SEQ,
             CPRO.ORDER_STATUS,
-            C.CONTROL_STATUS AS CONTROL_STATUS_CD,
+            CPPRO.SEQ AS PART_PROGRESS_SEQ,
+            CPPRO.PART_STATUS,
             (SELECT CODE_NM
             FROM TBL_CODE_LANG
             WHERE HIGH_CD = '1024'
-            AND CODE_CD = CPRO.ORDER_STATUS
+            AND CODE_CD = C.CONTROL_STATUS
             AND LANG_CD = 'KR') AS ORDER_STATUS_NM,
-            DATE_FORMAT(CPRO.STATUS_DT, '%m-%d %H:%i') AS ORDER_STATUS_DT,
+            DATE_FORMAT(C.STATUS_DT, '%m-%d %H:%i') AS ORDER_STATUS_DT,
             C.COMP_CD,
             (SELECT CODE_NM
             FROM TBL_CODE_LANG
@@ -27,18 +30,20 @@
             AND LANG_CD = 'KR') AS COMP_NM,
             C.ORDER_COMP_CD, -- 발주업체
             (SELECT COMP_NM
-            FROM TBL_COMPANY
-            WHERE ORDER_COMP_CD = C.ORDER_COMP_CD LIMIT 1) AS ORDER_COMP_NM, -- 발주업체이름(JOIN)
+             FROM TBL_COMPANY
+             WHERE COMP_CD = C.ORDER_COMP_CD) AS ORDER_COMP_NM, -- 발주업체이름(JOIN)
             C.ORDER_STAFF_SEQ,
             (SELECT STAFF_NM
-            FROM TBL_COMPANY_STAFF
-            WHERE STAFF_SEQ = C.ORDER_STAFF_SEQ) AS ORDER_STAFF_NM,
+             FROM TBL_COMPANY_STAFF
+             WHERE STAFF_SEQ = C.ORDER_STAFF_SEQ) AS ORDER_STAFF_NM,
             C.DESIGNER_NM, -- 설계자
             C.NOTE, -- 비고
             --        '',-- 거래명세서 no ㅇㄷ?
             C.MODULE_NM,--  모듈명
             C.MAIN_INSPECTION_YN, -- 주요 검사품
+            SF_GET_CODE_NM(1045, C.MAIN_INSPECTION_YN, 'EN') AS MAIN_INSPECTION_YN_NM,
             C.EMERGENCY_YN, -- 긴급
+            SF_GET_CODE_NM(1045, C.EMERGENCY_YN, 'EN') AS EMERGENCY_YN_NM,
             C.CONTROL_NUM,
             CP.PART_NUM,
             CP.DRAWING_VER,
@@ -53,20 +58,20 @@
             CP.OUTSIDE_YN,
             CP.WORK_FACTORY,
             CP.MATERIAL_SUPPLY_YN,
-            -- '', 가공 납기
-            -- '', 규격 조인!
+            CP.INNER_DUE_DT, -- '', 가공 납기
+            CP.SIZE_TXT, -- 규격
             CP.MATERIAL_DETAIL,
             CP.MATERIAL_KIND,
             CP.MATERIAL_TYPE,
             CP.SURFACE_TREAT,
-            CP.HEAT_TREAT_YN,
+            CP.MATERIAL_FINISH_HEAT,
             CP.PART_UNIT_QTY,
             CPO.ORDER_NUM,
             CPO.ORDER_QTY,
             CP.ORIGINAL_SIDE_QTY,
             CP.OTHER_SIDE_QTY,
-            CP.HOPE_DUE_DT,-- '', 출고
-            CP.INNER_DUE_DT, -- '', 납기
+            CPO.ORDER_DUE_DT, -- 발주납기
+            CP.INNER_DUE_DT, -- 납기(가공납기)
             CPO.DELIVERY_DT,
             CP.DETAIL_LATHE,
             CP.DETAIL_SURFACE,
@@ -75,14 +80,14 @@
             CP.DETAIL_DRILL,
             CP.DETAIL_DIFFICULTY,
             CP.PREV_DRAWING_NUM,
-        <!-- CP.MATERIAL_UNIT_PRICE, 소재비 -->
-        <!-- CP.SURFACE_UNIT_PRICE 가공비 -->
-        DATE_FORMAT(C.STATUS_DT, '%m-%d %H:%i') AS STATUS_DT
+            DATE_FORMAT(C.STATUS_DT, '%m-%d %H:%i') AS STATUS_DT
         FROM TBL_CONTROL C
         LEFT OUTER JOIN TBL_CONTROL_PROGRESS CPRO ON C.CONTROL_SEQ = CPRO.CONTROL_SEQ
         INNER JOIN TBL_CONTROL_PART CP ON C.CONTROL_SEQ = CP.CONTROL_SEQ
+        LEFT OUTER JOIN TBL_CONTROL_PART_PROGRESS CPPRO ON C.CONTROL_SEQ = CPPRO.CONTROL_SEQ
+                                                           AND CP.CONTROL_DETAIL_SEQ = CPPRO.CONTROL_DETAIL_SEQ
         INNER JOIN TBL_CONTROL_PART_ORDER CPO ON CP.CONTROL_SEQ = CPO.CONTROL_SEQ
-                                                AND CP.CONTROL_DETAIL_SEQ = CPO.CONTROL_DETAIL_SEQ
+                                                 AND CP.CONTROL_DETAIL_SEQ = CPO.CONTROL_DETAIL_SEQ
         WHERE 1 = 1
         <if test="CONTROL_NUMBER != null and CONTROL_NUMBER != ''">
              AND C.CONTROL_NUM = #{CONTROL_NUMBER}
@@ -101,6 +106,12 @@
         </if>
         <if test="ORDER_NUMBER != null and ORDER_NUMBER != ''">
              AND CPO.ORDER_NUM = #{ORDER_NUMBER}
+        </if>
+        <if test="ORDER_STATUS != null and ORDER_STATUS != ''">
+             AND CPRO.ORDER_STATUS = #{ORDER_STATUS}
+        </if>
+        <if test="OUTSIDE_YN != null and OUTSIDE_YN != ''">
+            AND CP.OUTSIDE_YN NOT IN ('Y')
         </if>
         ORDER BY C.CONTROL_SEQ, CP.PART_NUM
     </select>
@@ -121,7 +132,7 @@
             CONTROL_STATUS,
             STATUS_DT,
             INSERT_DT
-            -- ,INSERT_ID
+            <!-- ,INSERT_ID -->
         ) VALUES
         <foreach collection="list" item="item" separator=",">
         (
@@ -152,7 +163,7 @@
             #{item.CONTROL_STATUS},
             CURRENT_TIMESTAMP(),
             CURRENT_TIMESTAMP()
-            -- ,NULL
+            <!-- ,NULL -->
             )
         </foreach>
     </insert>
@@ -179,12 +190,13 @@
             MATERIAL_TYPE,
             MATERIAL_DETAIL,
             SURFACE_TREAT,
-            HEAT_TREAT_YN,
+            MATERIAL_FINISH_HEAT,
             PART_UNIT_QTY,
-            HOPE_DUE_DT,
             INNER_DUE_DT,
             ORIGINAL_SIDE_QTY,
             OTHER_SIDE_QTY,
+            UNIT_FINAL_EST_AMT,
+            UNIT_FINAL_AMT,
             INSERT_DT
         ) VALUES
         <foreach collection="list" item="item" separator=",">
@@ -215,12 +227,13 @@
             #{item.MATERIAL_TYPE},
             #{item.MATERIAL_DETAIL},
             #{item.SURFACE_TREAT},
-            #{item.HEAT_TREAT_YN},
+            #{item.MATERIAL_FINISH_HEAT},
             (SELECT IF(#{item.PART_UNIT_QTY} = '', NULL, CAST(#{item.PART_UNIT_QTY} AS UNSIGNED INTEGER))),
-            #{item.HOPE_DUE_DT},
             #{item.INNER_DUE_DT},
             (SELECT IF(#{item.ORIGINAL_SIDE_QTY} = '', NULL, CAST(#{item.ORIGINAL_SIDE_QTY} AS UNSIGNED INTEGER))),
             (SELECT IF(#{item.OTHER_SIDE_QTY} = '', NULL, CAST(#{item.OTHER_SIDE_QTY} AS UNSIGNED INTEGER))),
+            (SELECT IF(#{item.UNIT_FINAL_EST_AMT} = '', NULL, CAST(REPLACE(#{item.UNIT_FINAL_EST_AMT}, ',', '') AS UNSIGNED INTEGER))),
+            (SELECT IF(#{item.UNIT_FINAL_AMT} = '', NULL, CAST(REPLACE(#{item.UNIT_FINAL_AMT}, ',', '') AS UNSIGNED INTEGER))),
             CURRENT_TIMESTAMP()
             )
         </foreach>
@@ -234,8 +247,6 @@
             ORDER_NUM,
             ORDER_QTY,
             DELIVERY_DT,
-            EST_UNIT_PRICE,
-            SUPPLY_UNIT_PRICE,
             INSERT_DT
             <!-- ,INSERT_ID -->
         ) VALUES
@@ -257,8 +268,6 @@
             #{item.ORDER_NUM},
             (SELECT IF(#{item.ORDER_QTY} = '', NULL, CAST(#{item.ORDER_QTY} AS UNSIGNED INTEGER))),
             #{item.DELIVERY_DT},
-            (SELECT IF(#{item.EST_UNIT_PRICE} = '', NULL, CAST(REPLACE(#{item.EST_UNIT_PRICE}, ',', '') AS UNSIGNED INTEGER))),
-            (SELECT IF(#{item.SUPPLY_UNIT_PRICE} = '', NULL, CAST(REPLACE(#{item.SUPPLY_UNIT_PRICE}, ',', '') AS UNSIGNED INTEGER))),
             CURRENT_TIMESTAMP()
             <!-- ,NULL -->
         )
@@ -400,7 +409,7 @@
             MODULE_NM = #{MODUL_NM},
             MAIN_INSPECTION_YN = #{MAIN_INSPECTION_YN},
             EMERGENCY_YN = #{EMERENCY_YN},
-            CONTROL_STATUS = #{CONTROL_STATUS_CD},
+            CONTROL_STATUS = #{CONTROL_STATUS},
             STATUS_DT = CURRENT_TIMESTAMP(),
             UPDATE_DT = CURRENT_TIMESTAMP()
             <!-- ,UPDATE_ID = NULL -->
@@ -436,7 +445,7 @@
             INNER_DUE_DT = #{INNER_DUE_DT},
             ORIGINAL_SIDE_QTY = #{ORIGINAL_SIDE_QTY},
             OTHER_SIDE_QTY = #{OTHER_SIDE_QTY},
-            <!-- PART_STATUS = #{CONTROL_STATUS_CD}, -->
+            PART_STATUS = #{PART_STATUS},
             STATUS_DT = CURRENT_TIMESTAMP(),
             UPDATE_DT = CURRENT_TIMESTAMP()
             <!--              ,UPDATE_ID #{UPDATE_ID} -->
@@ -444,4 +453,217 @@
             CONTROL_SEQ = #{CONTROL_SEQ}
                 AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </update>
+
+    <select id="selectConfirmOrderList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            ROW_NUMBER () OVER () AS ROWNUM,
+            C.CONTROL_SEQ,
+            C.CONTROL_STATUS,
+            CP.CONTROL_DETAIL_SEQ,
+            CPPRO.SEQ AS PART_PROGRESS_SEQ,
+            CPRO.ORDER_STATUS, -- 주문 상태
+            (SELECT CODE_NM
+             FROM TBL_CODE_LANG
+             WHERE HIGH_CD = '1024'
+             AND CODE_CD = CPRO.ORDER_STATUS
+             AND LANG_CD = 'KR') AS ORDER_STATUS_NM, -- 주문 상태
+            CPRO.STATUS_DT AS ORDER_STATUS_DT, -- 변경 일시
+            C.ORDER_COMP_CD, -- 발주업체
+            (SELECT COMP_NM
+             FROM TBL_COMPANY
+             WHERE COMP_CD = C.ORDER_COMP_CD) AS ORDER_COMP_NM, -- 발주업체
+            C.CONTROL_SEQ, -- 관리번호
+            CP.PART_NUM, -- Part
+            CP.WORK_FACTORY, -- 수행 공장
+            CP.MATERIAL_SUPPLY_YN, -- 자재 사급
+            CPO.ORDER_DUE_DT, -- 납기
+            CP.INNER_DUE_DT, -- 가공납기
+            C.EMERGENCY_YN, -- 긴급
+            C.MAIN_INSPECTION_YN, -- 주요
+            CP.WORK_TYPE, -- 형태
+            CP.SIZE_TXT,-- 규격
+            CP.MATERIAL_DETAIL, -- 소재종류
+            CP.SURFACE_TREAT, -- 표면처리
+            CP.MATERIAL_FINISH_HEAT, -- 열처리
+            C.NOTE -- 비고
+        FROM
+            TBL_CONTROL C
+        LEFT OUTER JOIN TBL_CONTROL_PROGRESS CPRO ON C.CONTROL_SEQ = CPRO.CONTROL_SEQ
+        INNER JOIN TBL_CONTROL_PART CP ON C.CONTROL_SEQ = CP.CONTROL_SEQ
+        INNER JOIN TBL_CONTROL_PART_ORDER CPO ON CP.CONTROL_SEQ = CPO.CONTROL_SEQ
+                                                 AND CP.CONTROL_DETAIL_SEQ = CP.CONTROL_DETAIL_SEQ
+        LEFT OUTER JOIN TBL_CONTROL_PART_PROGRESS CPPRO ON CPO.CONTROL_SEQ = CPPRO.CONTROL_SEQ
+                                                           AND CPO.CONTROL_DETAIL_SEQ = CPPRO.CONTROL_DETAIL_SEQ
+        WHERE 1 = 1
+            AND CP.OUTSIDE_YN NOT IN ('Y')
+        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+            AND C.ORDER_COMP_CD = #{ORDER_COMP_CD}
+        </if>
+        <if test="MATERIAL_TYPE != null and MATERIAL_TYPE != ''">
+        	AND CP.MATERIAL_TYPE = #{MATERIAL_TYPE}
+        </if>
+        GROUP BY
+            CP.CONTROL_DETAIL_SEQ
+        ORDER BY
+        <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
+            C.EMERGENCY_YN DESC,
+        </if>
+            C.CONTROL_SEQ,
+            CP.PART_NUM,
+            CPO.ORDER_DUE_DT
+    </select>
+
+    <update id="updateControlStatus" parameterType="java.util.HashMap">
+        UPDATE
+            TBL_CONTROL
+        SET
+            CONTROL_STATUS = #{CONTROL_STATUS},
+            STATUS_DT = CURRENT_TIMESTAMP(),
+            UPDATE_DT = CURRENT_TIMESTAMP()
+        WHERE
+            CONTROL_SEQ = #{CONTROL_SEQ}
+    </update>
+
+    <update id="updateControlPartStatus" parameterType="java.util.HashMap">
+        UPDATE
+            TBL_CONTROL_PART
+        SET
+            PART_STATUS = #{PART_STATUS},
+            STATUS_DT = CURRENT_TIMESTAMP(),
+            UPDATE_DT = CURRENT_TIMESTAMP()
+        WHERE
+            CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ  = #{CONTROL_DETAIL_SEQ}
+    </update>
+
+    <update id="updateControlPartProgressStatus" parameterType="java.util.HashMap">
+        UPDATE
+            TBL_CONTROL_PART_PROGRESS
+        SET
+            PART_STATUS = #{PART_STATUS},
+            STATUS_DT = CURRENT_TIMESTAMP(),
+            UPDATE_DT = CURRENT_TIMESTAMP()
+        WHERE
+            CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ  = #{CONTROL_SEQ}
+            AND SEQ = #{PART_PROGRESS_SEQ}
+    </update>
+
+    <select id="selectProcessConfirmList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            ROW_NUMBER () OVER () AS ROWNUM,
+            C.CONTROL_SEQ,
+            C.CONTROL_STATUS,
+            CP.CONTROL_DETAIL_SEQ,
+            CPPRO.SEQ AS PART_PROGRESS_SEQ,
+            C.ORDER_COMP_CD, <!-- 발주업체 -->
+            (SELECT COMP_NM
+            FROM TBL_COMPANY
+            WHERE COMP_CD = C.ORDER_COMP_CD) AS ORDER_COMP_NM, <!-- 발주업체이름 -->
+            C.CONTROL_NUM, <!-- 관리번호 -->
+            CP.PART_NUM, <!-- Part -->
+            CP.WORK_FACTORY, <!-- 수행공장 -->
+            CP.MATERIAL_SUPPLY_YN, <!-- 자재사급 -->
+            CPO.ORDER_DUE_DT, <!-- 요망납기 -->
+            CP.INNER_DUE_DT, <!-- 가공납기 -->
+            C.EMERGENCY_YN, <!-- 긴급 -->
+            C.MAIN_INSPECTION_YN, <!-- 주요 -->
+            CP.WORK_TYPE, <!-- 형태 -->
+            (SELECT CODE_NM
+            FROM TBL_CODE_LANG
+            WHERE HIGH_CD = '1013'
+            AND CODE_CD = CP.WORK_TYPE
+            AND LANG_CD = 'KR') AS WORK_NM, <!-- 형태이름 -->
+            CP.SIZE_TXT, <!-- 규격 -->
+            CP.MATERIAL_KIND, <!-- 소재 종류 -->
+            CP.SURFACE_TREAT, <!-- 표면처리 -->
+            CP.MATERIAL_FINISH_HEAT, <!-- 열 처리 -->
+            CPO.ORDER_QTY, <!-- 주문수량 -->
+            CP.STATUS_DT, <!-- 발생일시 -->
+            CP.PART_STATUS, <!-- 소재주문 -->
+            (SELECT CODE_NM
+            FROM TBL_CODE_LANG
+            WHERE HIGH_CD = '1024'
+            AND CODE_CD = CP.PART_STATUS
+            AND LANG_CD = 'KR') AS PART_STATUS_NM <!-- 소재주문 -->
+        FROM TBL_CONTROL C
+        LEFT OUTER JOIN TBL_CONTROL_PART_PROGRESS CPPRO ON C.CONTROL_SEQ = CPPRO.CONTROL_SEQ
+        INNER JOIN TBL_CONTROL_PART CP ON C.CONTROL_SEQ = CP.CONTROL_SEQ
+        INNER JOIN TBL_CONTROL_PART_ORDER CPO ON CP.CONTROL_SEQ = CPO.CONTROL_SEQ
+                                                 AND CP.CONTROL_DETAIL_SEQ = CPO.CONTROL_DETAIL_SEQ
+        WHERE 1 = 1
+            AND CPPRO.PART_STATUS IN ('PRO02', 'PRO03')
+            AND CP.WORK_TYPE NOT IN ('FCT02')
+            AND CP.OUTSIDE_YN NOT IN ('Y')
+        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+            AND C.ORDER_COMP_CD = #{ORDER_COMP_CD}
+        </if>
+        <if test="MATERIAL_TYPE != null and MATERIAL_KIND != ''">
+            AND CP.MATERIAL_TYPE = #{MATERIAL_TYPE}
+        </if>
+        ORDER BY
+        <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
+            C.EMERGENCY_YN DESC,
+        </if>
+            C.CONTROL_SEQ,
+            CP.PART_NUM
+            <!-- CP.HOPE_DUE_DT -->
+    </select>
+
+    <select id="selectOutsourcingProcessingList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            ROW_NUMBER () OVER () AS ROWNUM,
+            C.CONTROL_SEQ,
+            C.CONTROL_STATUS,
+            CP.CONTROL_DETAIL_SEQ,
+            CPPRO.SEQ AS PART_PROGRESS_SEQ,
+            C.ORDER_COMP_CD, <!-- 발주업체 -->
+            (SELECT COMP_NM
+            FROM TBL_COMPANY
+            WHERE COMP_CD = C.ORDER_COMP_CD) AS ORDER_COMP_NM, <!-- 발주업체이름 -->
+            C.CONTROL_NUM, <!-- 관리번호 -->
+            CP.PART_NUM, <!-- Part -->
+            CP.OUTSIDE_COMP_CD, <!-- 외주업체명 -->
+            (SELECT COMP_NM
+            FROM TBL_COMPANY
+            WHERE COMP_CD = CP.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM, <!-- 외주업체명 -->
+            CP.OUTSIDE_HOPE_DUE_DT, <!-- 외주 요망납기 -->
+            CP.MATERIAL_SUPPLY_YN, <!-- 자재사급 -->
+            CPO.ORDER_DUE_DT, <!-- 요망납기 -->
+            CP.INNER_DUE_DT, <!-- 가공납기 -->
+            C.EMERGENCY_YN, <!-- 긴급 -->
+            C.MAIN_INSPECTION_YN, <!-- 주요 -->
+            CP.WORK_TYPE, <!-- 형태 -->
+            (SELECT CODE_NM
+            FROM TBL_CODE_LANG
+            WHERE HIGH_CD = '1013'
+                  AND CODE_CD = CP.WORK_TYPE
+                  AND LANG_CD = 'KR') AS WORK_NM, <!-- 형태이름 -->
+            CP.SIZE_TXT, <!-- 규격 -->
+            CP.MATERIAL_KIND, <!-- 소재 종류 -->
+            CP.SURFACE_TREAT, <!-- 표면처리 -->
+            CP.MATERIAL_FINISH_HEAT, <!-- 열 처리 -->
+            CPO.ORDER_QTY, <!-- 주문수량 -->
+            CP.STATUS_DT <!-- 발생일시 -->
+        FROM TBL_CONTROL C
+        LEFT OUTER JOIN TBL_CONTROL_PART_PROGRESS CPPRO ON C.CONTROL_SEQ = CPPRO.CONTROL_SEQ
+        INNER JOIN TBL_CONTROL_PART CP ON C.CONTROL_SEQ = CP.CONTROL_SEQ
+        INNER JOIN TBL_CONTROL_PART_ORDER CPO ON CP.CONTROL_SEQ = CPO.CONTROL_SEQ
+        AND CP.CONTROL_DETAIL_SEQ = CPO.CONTROL_DETAIL_SEQ
+        WHERE 1 = 1
+              AND CPPRO.PART_STATUS IN ('PRO01')
+              AND CP.WORK_TYPE NOT IN ('FCT02')
+              AND CP.OUTSIDE_YN = 'Y'
+        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+            AND C.ORDER_COMP_CD = #{ORDER_COMP_CD}
+        </if>
+        <if test="MATERIAL_TYPE != null and MATERIAL_KIND != ''">
+            AND CP.MATERIAL_TYPE = #{MATERIAL_TYPE}
+        </if>
+        ORDER BY
+            C.CONTROL_SEQ,
+            CP.PART_NUM
+            <!-- CP.HOPE_DUE_DT -->
+    </select>
+
 </mapper>
