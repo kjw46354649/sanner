@@ -218,6 +218,13 @@
 </form>
 <script type="text/javascript">
     $(function () {
+
+        /** 공통 코드 이외의 처리 부분 **/
+        fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#EST_USER_ID"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#ORDER_STAFF_SEQ"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getCompanyStaffList'}});
+
         'use strict';
         let estimateRegisterSelectedRowIndex;
 
@@ -225,13 +232,15 @@
         let estimateRegisterBotGrid = $("#estimate_register_bot_grid");
 
         let estimateRegisterTopColModel= [
-            {title: 'EST_SEQ', dataType: 'string', dataIndx: 'EST_SEQ' , hidden:false} ,
+            {title: 'EST_SEQ', dataType: 'string', dataIndx: 'EST_SEQ' , hidden:true} ,
             {title: 'SEQ', dataType: 'string', dataIndx: 'SEQ' , hidden:true} ,
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM' } ,
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM' } ,
             {title: '', dataType: 'string', dataIndx: 'DRAWING_YN' } ,
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM' } ,
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', validations: [{ type: 'minLen', value: 1, msg: "Required"}] } ,
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM' } ,
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT' } ,
+            /*
             {title: '규격', align: "center", colModel: [
                 //{title: '타입', dataType: 'string', dataIndx: 'SIZE_TYPE'},
                 {title: '가로', dataType: 'string', dataIndx: 'SIZE_W'},
@@ -240,7 +249,7 @@
                 {title: '지름', dataType: 'string', dataIndx: 'SIZE_D'},
                 {title: '길이', dataType: 'string', dataIndx: 'SIZE_L'},
             ]},
-            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
+            */
             {title: '작업구분', dataType: 'string', dataIndx: 'WORK_TYPE',
                 editor: {
                     type: 'select',
@@ -256,22 +265,8 @@
                     }
                 }
             },
-            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_TYPE',
-                editor: {
-                    type: 'select',
-                    mapIndices: { name: "MATERIAL_TYPE", id: "MATERIAL_TYPE" },
-                    valueIndx: "value",
-                    labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1004'),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["MATERIAL_TYPE"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
-                    }
-                }
-            },
-            {title: '소재상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
+            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE' },
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
                 editor: {
                     type: 'select',
                     mapIndices: { name: "MATERIAL_DETAIL", id: "MATERIAL_DETAIL" },
@@ -282,6 +277,21 @@
                         let clave = ui.$cell.find("select").val();
                         let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
                         rowData["MATERIAL_DETAIL"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
+            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND',
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "MATERIAL_KIND", id: "MATERIAL_KIND" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1004'),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["MATERIAL_KIND"]=clave;
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
                 }
@@ -301,36 +311,8 @@
                     }
                 }
             },
-            {title: '사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
-                editor: {
-                    type: 'select',
-                    mapIndices: { name: "MATERIAL_SUPPLY_YN", id: "MATERIAL_SUPPLY_YN" },
-                    valueIndx: "value",
-                    labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1045'),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["MATERIAL_SUPPLY_YN"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
-                    }
-                }
-            },
-            {title: '열처리', dataType: 'string', dataIndx: 'HEAT_TREAT_YN',
-                editor: {
-                    type: 'select',
-                    mapIndices: { name: "HEAT_TREAT_YN", id: "HEAT_TREAT_YN" },
-                    valueIndx: "value",
-                    labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1045'),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["HEAT_TREAT_YN"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
-                    }
-                }
-            },
+            {title: '소재 비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE' },
+            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
             {title: '상세 가공요건', align: "center", colModel:[
                 {title:'선반', dataType: 'string', dataIndx: 'DETAIL_LATHE'},
                 {title:'가공면', dataType: 'string', dataIndx: 'DETAIL_SURFACE'},
@@ -341,25 +323,30 @@
                 {title:'난도', dataType: 'string', dataIndx: 'DETAIL_DIFFICULTY'}
             ], hidden: true},
             {title: '예상소재 Size', align: "center", colModel:[
-                {title:'가로', dataType: 'float', dataIndx: 'SIZE_W'},
-                {title:'세로', dataType: 'float', dataIndx: 'SIZE_H'},
-                {title:'높이', dataType: 'float', dataIndx: 'SIZE_T'},
-                {title:'중량(KG)', dataType: 'float', dataIndx: 'SIZE_D'},
-                {title:'부피(cm3)', dataType: 'float', dataIndx: 'SIZE_L'}
+                {title:'가로', dataType: 'float', dataIndx: 'SIZE_W_M'},
+                {title:'세로', dataType: 'float', dataIndx: 'SIZE_H_M'},
+                {title:'두께', dataType: 'float', dataIndx: 'SIZE_T_M'},
+                {title:'지름', dataType: 'float', dataIndx: 'SIZE_D_M'},
+                {title:'길이', dataType: 'float', dataIndx: 'SIZE_L_M'}
             ], hidden: true},
             {title: '항목별 견적정보', align: "center", colModel: [
-                {title: '소재비', dataType: 'int', dataIndx: 'MATERIAL_UNIT_COST'},
-                {title: 'TM각비', dataType: 'int', dataIndx: 'TOUCH_UNIT_COST'},
-                {title: '표면 처리비', dataType: 'int', dataIndx: 'SURFACE_UNIT_COST'},
-                {title: '가공비', dataType: 'int', dataIndx: 'PROCESS_UNIT_COST'},
-                {title: '기타추가', dataType: 'int', dataIndx: 'ETC_UNIT_COST'}
-            ]},
+                    {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT'},
+                    {title: 'TM각비', dataType: 'integer', dataIndx: 'UNIT_TM_AMT'},
+                    {title: '연마비', dataType: 'integer', dataIndx: 'UNIT_GRIND_AMT'},
+                    {title: '열처리', dataType: 'integer', dataIndx: 'UNIT_HEAT_AMT'},
+                    {title: '표면 처리비', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT'},
+                    {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT'},
+                    {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_NOTE'},
+                    {title: '견적비고', dataType: 'integer', dataIndx: 'UNIT_AMT_NOTE'}
+                ]},
             {title: '계산견적단가', dataType: 'float', dataIndx: 'CALCUL_EST_UNIT_COST'},
             {title: '최종견적가', dataType: 'float', dataIndx: 'FINAL_EST_UNIT_PRICE'},
-            {title: '금액 계', dataType: 'float', dataIndx: '14'},
+            {title: '금액 계', dataType: 'float', dataIndx: 'FINAL_AMOUNT'},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
             {title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ'},
-            {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ'}
+            {title: 'DWF', dataType: 'string', dataIndx: 'DWF_GFILE_SEQ'},
+            {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ'},
+            {title: 'IMG', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ'}
         ];
 
         let estimateRegisterBotColModel= [
@@ -477,6 +464,27 @@
                         }
                     }
                 }
+            },
+            change: function( event, ui ) {
+                if(ui.source == 'edit'){
+                    let rowIndx = ui.updateList[0].rowIndx;
+                    let calculateEstimateAmt = 0;
+                    let dataColumn = ['ITEM_QTY', 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT'];
+                    let data = estimateRegisterTopGrid.pqGrid( "getData", { dataIndx: dataColumn } );
+
+                    calculateEstimateAmt += data[0].UNIT_MATERIAL_AMT == undefined ? 0 : parseFloat(data[0].UNIT_MATERIAL_AMT);
+                    calculateEstimateAmt += data[0].UNIT_TM_AMT == undefined ? 0 : parseFloat(data[0].UNIT_TM_AMT);
+                    calculateEstimateAmt += data[0].UNIT_GRIND_AMT == undefined ? 0 : parseFloat(data[0].UNIT_GRIND_AMT);
+                    calculateEstimateAmt += data[0].UNIT_HEAT_AMT == undefined ? 0 : parseFloat(data[0].UNIT_HEAT_AMT);
+                    calculateEstimateAmt += data[0].UNIT_SURFACE_AMT == undefined ? 0 : parseFloat(data[0].UNIT_SURFACE_AMT);
+                    calculateEstimateAmt += data[0].UNIT_PROCESS_AMT == undefined ? 0 : parseFloat(data[0].UNIT_PROCESS_AMT);
+                    calculateEstimateAmt += data[0].UNIT_ETC_AMT == undefined ? 0 : parseFloat(data[0].UNIT_ETC_AMT);
+                    estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'CALCUL_EST_UNIT_COST': calculateEstimateAmt } });
+
+                    calculateEstimateAmt *= parseFloat(data[0].ITEM_QTY);
+                    estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'FINAL_AMOUNT': calculateEstimateAmt } });
+
+                }
             }
         });
 
@@ -520,40 +528,32 @@
         function estimateRegisterSaveCallBack(response, callMethodParam){
             let estimateRegisterInsertQueryList = ['insertEstimateDetail'];
             let estimateRegisterUpdateQueryList = ['updateEstimateDetail'];
-            let EST_SEQ = $("#estimate_register_info_form #EST_SEQ").val();
+            let EST_SEQ = $("#estimate_version_up_sequence_form #hidden_est_seq").val();
 
-            let gridInstance = estimateRegisterTopGrid.pqGrid('getInstance').grid;
+            let data = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data');
+            let totalRecords = data.length;
+            for(let tempI=0; tempI<totalRecords; tempI++){
+                estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': tempI , row: { 'EST_SEQ': EST_SEQ } });
+            }
 
-            let $tr = estimateRegisterTopGrid.closest( 'tr' );
-            let obj = gridInstance.pqGrid('getRowIndx', {$tr: $tr } );
-            console.log(obj);
-            let rowData = gridInstance.pqGrid('getRowData', obj );
-            console.log(rowData);
-
-            //estimateRegisterTopGrid.pqGrid('updateRow', {rowList: {'EST_SEQ':EST_SEQ}});
-            //estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': current_row , row: { 'Area': value } });
-            /*
             fnModifyPQGrid(estimateRegisterTopGrid, estimateRegisterInsertQueryList, estimateRegisterUpdateQueryList);
             estimateRegisterReloadPageData();
-            */
-            console.log(response);
-            console.log(callMethodParam);
         };
 
         $("#btn_estimate_register_save").on("click", function(){
             $("#estimate_register_info_form #queryId").val('selectEstimateNextSequence');
 
             let parameters = {'url': '/json-list', 'data': $("#estimate_register_info_form").serialize()};
-            let EST_SEQ = "";
-
+            let EST_SEQ = $("#estimate_register_info_form #EST_SEQ").val();
             fnPostAjax(function (data, callFunctionParam) {
                 let list = data.list[0];
-                EST_SEQ = list.EST_SEQ;
+                if(EST_SEQ == '' || EST_SEQ == null){
+                    EST_SEQ = list.EST_SEQ;
+                }
 
                 $("#estimate_register_info_form #queryId").val('insertEstimateMaster');
                 $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
-
-                alert(EST_SEQ);
+                $("#estimate_version_up_sequence_form #hidden_est_seq").val(EST_SEQ);
 
                 parameters = {'url': '/json-create', 'data': $("#estimate_register_info_form").serialize()};
                 fnPostAjax(estimateRegisterSaveCallBack, parameters, '');
@@ -562,41 +562,34 @@
         });
 
         function estimateRegisterReloadPageData(){
+            let EST_SEQ = $("#estimate_version_up_sequence_form #hidden_est_seq").val();
+            let postData = { 'queryId': 'estimate.selectLastValEstimateMasterInfo', 'EST_SEQ': EST_SEQ};
 
-            let postData = { 'queryId': 'estimate.selectLastValEstimateMasterInfo'};
             let parameter = {'url': '/json-list', 'data': postData};
-
-            let EST_SEQ = "";
             fnPostAjax(function (data, callFunctionParam) {
                 let list = data.list[0];
-                EST_SEQ = list.EST_SEQ;
-                $("#ORDER_COMP_CD").val(list.ORDER_COMP_CD);
-                $("#EST_TITLE").val(list.EST_TITLE);
-                $("#ORDER_STAFF_SEQ").val(list.ORDER_STAFF_SEQ);
-                $("#COMP_CD").val(list.COMP_CD);
-                $("#EST_USER_ID").val(list.EST_USER_ID);
-                $("#EST_NUM").val(list.EST_NUM + ' (' + list.EST_VER + ')');
-                $("#DTL_CNT").val(list.DTL_CNT);
-                $("#DTL_AMOUNT").val(list.DTL_AMOUNT);
-                $("#INSERT_DT").val(list.INSERT_DT);
-                $("#SEND_DT").val(list.SEND_DT);
+                $("#estimate_register_info_form #ORDER_COMP_CD").val(list.ORDER_COMP_CD);
+                $("#estimate_register_info_form #EST_TITLE").val(list.EST_TITLE);
+                $("#estimate_register_info_form #ORDER_STAFF_SEQ").val(list.ORDER_STAFF_SEQ);
+                $("#estimate_register_info_form #COMP_CD").val(list.COMP_CD);
+                $("#estimate_register_info_form #EST_USER_ID").val(list.EST_USER_ID);
+                $("#estimate_register_info_form #EST_NUM").val(list.EST_NUM + ' (' + list.EST_VER + ')');
+                $("#estimate_register_info_form #DTL_CNT").val(list.DTL_CNT);
+                $("#estimate_register_info_form #DTL_AMOUNT").val(list.DTL_AMOUNT);
+                $("#estimate_register_info_form #INSERT_DT").val(list.INSERT_DT);
+                $("#estimate_register_info_form #SEND_DT").val(list.SEND_DT);
 
                 postData = { 'queryId': 'estimate.selectLastValEstimateDetailList', 'EST_SEQ': EST_SEQ };
                 fnRequestGidData(estimateRegisterTopGrid, postData);
 
                 $("#estimate_register_excel_download #EST_SEQ").val(EST_SEQ);
+                $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
             }, parameter, '');
         };
 
         $(document).on('click', '#test', function(){
-           alert("dd");
+            estimateRegisterReloadPageData();
         });
-
-        /** 공통 코드 이외의 처리 부분 **/
-        fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
-        fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
-        fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#EST_USER_ID"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}});
-        fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#ORDER_STAFF_SEQ"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getCompanyStaffList'}});
 
         //estimateRegisterReloadPageData();
     });
