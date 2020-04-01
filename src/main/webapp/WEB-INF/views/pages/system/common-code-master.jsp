@@ -68,7 +68,15 @@
                 {
                     type: 'button', label: 'Add', icon: 'ui-icon-plus', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            $commonCodeTopGrid.pqGrid('addNodes', [{}], 0);
+                            let postData = { 'queryId': 'selectCommoGroupNextSequence'};
+                            let parameter = {'url': '/json-list', 'data': postData};
+
+                            fnPostAjax(function (data, callFunctionParam) {
+                                let seq = data.list[0].SEQ;
+                                let totalRecords = $commonCodeTopGrid.pqGrid('option', 'dataModel.data').length;
+
+                                $commonCodeTopGrid.pqGrid('addNodes', [{'HIGH_CD': seq}], totalRecords + 1);
+                            }, parameter, '');
                         }
                     }
                 },
