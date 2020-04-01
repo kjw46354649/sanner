@@ -7,207 +7,52 @@
 --%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
-<div class="modal" id="estimate_master_record_popup" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">견적 상세 정보</h4>
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">주문으로 이동</span><span class="sr-only">Close</span></button>
-            </div>
-            <div class="modal-body">
-                <form class="form-inline" role="form" id="estimate_master_record_popup_search_form" name="estimate_master_record_popup_search_form">
-                    <div class="panel-body line_tit portlet-body form bg-light">
-                        <section class="bg-light">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    <form class="form-horizontal" data-validate="parsley" action="#">
-                                        <section class="panel panel-default">
-                                            <header class="panel-heading">
-                                                <strong>기본 정보</strong>
-                                            </header>
-                                            <div class="panel-body">
-                                                <div class="form-group col-md-4 col-sm-4">
-                                                    <label class="col-md-4 col-sm-4 control-label">발주사</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" data-notblank="true" id="P_ORDER_COMP_CD" name="ORDER_COMP_CD" class="form-control" placeholder="발주사">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-8 col-sm-8">
-                                                    <label class="col-md-2 col-sm-2 control-label">제목</label>
-                                                    <div class="col-md-10 col-sm-10">
-                                                        <input type="text" data-notblank="true" id="EST_TITLE" name="EST_TITLE" class="form-control" placeholder="Title">
-                                                    </div>
-                                                </div>
-                                                <div class="line line-dashed b-b pull-in"></div>
-                                                <div class="form-group col-md-4 col-sm-4">
-                                                    <label class="col-md-4 col-sm-4 control-label">구매 담당자</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" id="ORDER_STAFF_NM" name="ORDER_STAFF_NM" placeholder="구매 담당자">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-4 col-sm-4">
-                                                    <label class="col-md-4 col-sm-4 control-label">품수</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" id="DTL_CNT" name="DTL_CNT" placeholder="품수">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-4 col-sm-4">
-                                                    <label class="col-md-4 col-sm-4 control-label">등록일시</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" id="INSERT_DT" name="INSERT_DT" placeholder="등록일시">
-                                                    </div>
-                                                </div>
-                                                <div class="line line-dashed b-b pull-in"></div>
-                                                <div class="form-group col-md-4 col-sm-4">
-                                                    <label class="col-md-4 col-sm-4 control-label">견적번호</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" id="EST_NUM" name="EST_NUM" placeholder="견적번호">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-4 col-sm-4">
-                                                    <label class="col-md-4 col-sm-4 control-label">차수</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" id="P_EST_VER" name="EST_VER" placeholder="차수">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-4 col-sm-4">
-                                                    <label class="col-md-4 col-sm-4 control-label">견적 담당자</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" id="EST_USER_ID" name="EST_USER_ID" placeholder="견적 담당자">
-                                                    </div>
-                                                </div>
-                                                <div class="line line-dashed b-b pull-in"></div>
-                                                <div class="form-group col-md-4 col-sm-4">
-                                                    <label class="col-md-4 col-sm-4 control-label">견적금액 계</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" id="DTL_AMOUNT" name="DTL_AMOUNT" placeholder="견적금액 계">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-4 col-sm-4">
-                                                    <label class="col-md-4 col-sm-4 control-label"></label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-4 col-sm-4">
-                                                    <label class="col-md-4 col-sm-4 control-label">회신일시</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" id="SEND_DT" name="SEND_DT" placeholder="회신일시">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </section>
-                                    </form>
-                                </div>
-                            </div>
-                        </section>
-                        <!-- grid table -->
-                        <section class="bg-light">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="panel panel-default">
-                                        <header class="panel-heading">
-                                            <strong>상세 리스트</strong>
-                                        </header>
-                                        <div class="row">
-                                            <div class="col-md-12 col-sm-12">
-                                                <div class="gridWrap">
-                                                    <div id="estimate_master_popup_top_grid" class="jqx-refresh"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                        <section class="bg-light">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="panel panel-default">
-                                        <header class="panel-heading">
-                                            <strong>메일 내용</strong>
-                                        </header>
-                                        <div class="row">
-                                            <div class="gridWrap">
-                                                <textarea class="col-md-12 col-sm-12">
-                                                    Text Test
-                                                </textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                        <section class="bg-light">
-                            <div class="row">
-                                <div class="col-md-6 col-sm-6">
-                                    <div class="panel panel-default">
-                                        <header class="panel-heading">
-                                            <strong>메인 수신처</strong>
-                                        </header>
-                                        <div class="gridWrap">
-                                            <div id="estimate_master_popup_bot_grid" class="jqx-refresh"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-sm-6">
-                                    <div class="panel panel-default">
-                                        <header class="panel-heading">
-                                            <strong>첨부파일</strong>
-                                        </header>
-                                        <div class="gridWrap">
-                                            <input type="file">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                </form>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-</div>
-
 <div class="page-context">
     <div class="row m-b-md">
         <div class="col-sm-12">&nbsp;
             <section class="panel panel-default">
                 <header class="panel-heading font-bold">
-                    업체 정보 관리
+                    소재 주문 관리
                 </header>
                 <div class="panel-body">
-                    <form class="form-inline" id="estimate_master_search_form" name="estimate_master_search_form" role="form">
+                    <form class="form-inline" id="item-order-register_search_form" name="item-order-register_search_form" role="form">
                         <div class="row">
-                            <div class="form-group col-md-4">
-                                <label class="control-label" for="COMP_CD">사업자구분</label>
+                            <div class="form-group col-md-3">
+                                <label class="control-label" for="COMP_CD">사업자</label>
                                 <select id="COMP_CD" name="COMP_CD" data-required="true" class="form-control parsley-validated">
                                 </select>
                             </div>
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-3">
                                 <label class="control-label" for="ORDER_COMP_CD">발주사</label>
                                 <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" data-required="true" class="form-control parsley-validated">
                                     <option value="">Select</option>
                                 </select>
                             </div>
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-3">
                                 <label class="control-label" for="MODULE_NM">견적번호</label>
                                 <input type="password" class="form-control" id="MODULE_NM" placeholder="">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="control-label" for="ITEM_NM">품명</label>
+                                <input type="password" class="form-control" id="ITEM_NM" placeholder="">
                             </div>
                         </div>
                         <div class="line line-dashed b-b line-xs"></div>
                         <div class="row">
-                            <div class="form-group col-md-4">
-                                <label class="control-label" for="TITLE">제목</label>
+                            <div class="form-group col-md-3">
+                                <label class="control-label" for="TITLE">관리번호</label>
                                 <input type="email" class="form-control" id="TITLE" placeholder="">
                             </div>
-                            <div class="form-group col-md-4">
-                                <label class="control-label" for="DRAWING_NUM">도면번호</label>
+                            <div class="form-group col-md-3">
+                                <label class="control-label" for="DRAWING_NUM">소재주문번호</label>
                                 <input type="password" class="form-control" id="DRAWING_NUM" placeholder="">
                             </div>
-                            <div class="form-group col-md-4">
-                                <label class="control-label" for="ITEM_NM">품명</label>
+                            <div class="form-group col-md-3">
+                                <label class="control-label" for="ITEM_NM">소재주문업체</label>
+                                <input type="password" class="form-control" id="ITEM_NM" placeholder="">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="control-label" for="ITEM_NM">소재종류</label>
                                 <input type="password" class="form-control" id="ITEM_NM" placeholder="">
                             </div>
                         </div>
@@ -235,48 +80,33 @@
             </section>
         </div>
         <%--<div class="row">
-            <a href="#estimate_master_record_popup" class="" id="estimatePopupOpen" data-target="" data-toggle="modal" data-refform="estimate_master_record_popup">
+            <a href="#item-order-register_record_popup" class="" id="estimatePopupOpen" data-target="" data-toggle="modal" data-refform="item-order-register_record_popup">
                 <input type="button" value="POP">
             </a>
         </div>--%>
         <div class="row">
             <div class="col-md-12">
-                <div id="estimate_master_top_grid" class="jqx-refresh"></div>
+                <div id="item-order-register_top_grid" class="jqx-refresh"></div>
             </div>
         </div>
         <div class="row">&nbsp;
             <div class="col-md-12">
-                <div id="estimate_master_bot_grid" class="jqx-refresh"></div>
+                <div id="item-order-register_bot_grid" class="jqx-refresh"></div>
             </div>
         </div>
     </div>
 </div>
-
-<form class="form-inline" id="estimate_master_hidden_form" name="estimate_master_hidden_form" role="form">
-    <input type="hidden" id="queryId" name="queryId" value="insertEstimateVersion"/>
-    <input type="hidden" id="EST_SEQ" name="EST_SEQ"/>
-    <input type="hidden" id="EST_VER" name="EST_VER"/>
-    <input type="hidden" id="N_EST_SEQ" name="N_EST_SEQ"/>
-</form>
-
-<form id="estimate_master_excel_download" method="POST">
-    <input type="hidden" id="sqlId" name="sqlId" value="selectEstimateDetailListExcel:selectEstimateMasterInfoExcel"/>
-    <input type="hidden" id="mapInputId" name="mapInputId" value="data:info"/>
-    <input type="hidden" id="paramName" name="paramName" value="EST_SEQ"/>
-    <input type="hidden" id="paramData" name="paramData" value=""/>
-    <input type="hidden" id="template" name="template" value="estimate_template"/>
-</form>
 
 <script type="text/javascript">
     $(function () {
         'use strict';
         let click_seq;
         let estimateMasterSelectedRowIndex;
-        let estimateMasterTopGrid = $("#estimate_master_top_grid");
-        let estimateMasterBotGrid = $("#estimate_master_bot_grid");
+        let estimateMasterTopGrid = $("#item-order-register_top_grid");
+        let estimateMasterBotGrid = $("#item-order-register_bot_grid");
 
-        let estimateMasterPopTopGrid = $("#estimate_master_record_popup #estimate_master_popup_top_grid");
-        let estimateMasterPopBotGrid = $("#estimate_master_record_popup #estimate_master_popup_bot_grid");
+        let estimateMasterPopTopGrid = $("#item-order-register_record_popup #item-order-register_popup_top_grid");
+        let estimateMasterPopBotGrid = $("#item-order-register_record_popup #item-order-register_popup_bot_grid");
 
         let estimateMasterTopColModel= [
             //{title: 'No.', dataType: 'string', dataIndx: 'EST_SEQ'},
@@ -316,7 +146,7 @@
             {title: '차수', dataType: 'string', dataIndx: 'EST_VER', editable: false},
             {title: '', dataType: 'string', dataIndx: '', editable: false,
                 render: function(ui){
-                    return '<a href="#estimate_master_record_popup" class="" id="estimatePopupOpen" data-target="" data-toggle="modal" data-refform="estimate_master_record_popup">' +
+                    return '<a href="#item-order-register_record_popup" class="" id="estimatePopupOpen" data-target="" data-toggle="modal" data-refform="item-order-register_record_popup">' +
                         '<span class="ui-icon ui-icon-circle-zoomin"></span>' +
                         '</a>';
                 }
@@ -343,13 +173,13 @@
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM' } ,
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM' } ,
             {title: '규격', align: "center", colModel: [
-                //{title: '타입', dataType: 'string', dataIndx: 'SIZE_TYPE'},
-                {title: '가로', dataType: 'string', dataIndx: 'SIZE_W'},
-                {title: '세로', dataType: 'string', dataIndx: 'SIZE_H'},
-                {title: '두꼐', dataType: 'string', dataIndx: 'SIZE_T'},
-                {title: '지름', dataType: 'string', dataIndx: 'SIZE_D'},
-                {title: '길이', dataType: 'string', dataIndx: 'SIZE_L'},
-            ]},
+                    //{title: '타입', dataType: 'string', dataIndx: 'SIZE_TYPE'},
+                    {title: '가로', dataType: 'string', dataIndx: 'SIZE_W'},
+                    {title: '세로', dataType: 'string', dataIndx: 'SIZE_H'},
+                    {title: '두꼐', dataType: 'string', dataIndx: 'SIZE_T'},
+                    {title: '지름', dataType: 'string', dataIndx: 'SIZE_D'},
+                    {title: '길이', dataType: 'string', dataIndx: 'SIZE_L'},
+                ]},
             {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
             {title: '작업구분', dataType: 'string', dataIndx: 'WORK_TYPE',
                 editor: {
@@ -442,28 +272,28 @@
                 }
             },
             {title: '상세 가공요건', align: "center", colModel:[
-                {title:'선반', dataType: 'string', dataIndx: 'DETAIL_LATHE'},
-                {title:'가공면', dataType: 'string', dataIndx: 'DETAIL_SURFACE'},
-                {title:'클램핑', dataType: 'string', dataIndx: 'DETAIL_CLAMPING'},
-                {title:'포켓', dataType: 'string', dataIndx: 'DETAIL_POCKET'},
-                //{title:'공차', dataType: 'string', dataIndx: 'DETAIL_TOLERANCE'},
-                {title:'드릴', dataType: 'string', dataIndx: 'DETAIL_DRILL'},
-                {title:'난도', dataType: 'string', dataIndx: 'DETAIL_DIFFICULTY'}
-            ], hidden: true},
+                    {title:'선반', dataType: 'string', dataIndx: 'DETAIL_LATHE'},
+                    {title:'가공면', dataType: 'string', dataIndx: 'DETAIL_SURFACE'},
+                    {title:'클램핑', dataType: 'string', dataIndx: 'DETAIL_CLAMPING'},
+                    {title:'포켓', dataType: 'string', dataIndx: 'DETAIL_POCKET'},
+                    //{title:'공차', dataType: 'string', dataIndx: 'DETAIL_TOLERANCE'},
+                    {title:'드릴', dataType: 'string', dataIndx: 'DETAIL_DRILL'},
+                    {title:'난도', dataType: 'string', dataIndx: 'DETAIL_DIFFICULTY'}
+                ], hidden: true},
             {title: '예상소재 Size', align: "center", colModel:[
-                {title:'가로', dataType: 'float', dataIndx: 'SIZE_W'},
-                {title:'세로', dataType: 'float', dataIndx: 'SIZE_H'},
-                {title:'높이', dataType: 'float', dataIndx: 'SIZE_T'},
-                {title:'중량(KG)', dataType: 'float', dataIndx: 'SIZE_D'},
-                {title:'부피(cm3)', dataType: 'float', dataIndx: 'SIZE_L'}
-            ], hidden: true},
+                    {title:'가로', dataType: 'float', dataIndx: 'SIZE_W'},
+                    {title:'세로', dataType: 'float', dataIndx: 'SIZE_H'},
+                    {title:'높이', dataType: 'float', dataIndx: 'SIZE_T'},
+                    {title:'중량(KG)', dataType: 'float', dataIndx: 'SIZE_D'},
+                    {title:'부피(cm3)', dataType: 'float', dataIndx: 'SIZE_L'}
+                ], hidden: true},
             {title: '항목별 견적정보', align: "center", colModel: [
-                {title: '소재비', dataType: 'string', dataIndx: 'MATERIAL_UNIT_COST'},
-                {title: 'TM각비', dataType: 'string', dataIndx: 'TOUCH_UNIT_COST'},
-                {title: '표면 처리비', dataType: 'string', dataIndx: 'SURFACE_UNIT_COST'},
-                {title: '가공비', dataType: 'string', dataIndx: 'PROCESS_UNIT_COST'},
-                {title: '기타추가', dataType: 'string', dataIndx: 'ETC_UNIT_COST'}
-            ]},
+                    {title: '소재비', dataType: 'string', dataIndx: 'MATERIAL_UNIT_COST'},
+                    {title: 'TM각비', dataType: 'string', dataIndx: 'TOUCH_UNIT_COST'},
+                    {title: '표면 처리비', dataType: 'string', dataIndx: 'SURFACE_UNIT_COST'},
+                    {title: '가공비', dataType: 'string', dataIndx: 'PROCESS_UNIT_COST'},
+                    {title: '기타추가', dataType: 'string', dataIndx: 'ETC_UNIT_COST'}
+                ]},
             {title: '계산견적단가', dataType: 'string', dataIndx: 'FINAL_EST_UNIT_PRICE'},
             {title: '최종견적가', dataType: 'string', dataIndx: 'FINAL_EST_UNIT_PRICE'},
             {title: '금액 계', dataType: 'string', dataIndx: ''},
@@ -495,9 +325,9 @@
                 {
                     type: 'button', label: 'Delete', icon: 'ui-icon-minus', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            let ESTIMATE_MASTER_QUERY_ID = ['deleteEstimateMaster', 'deleteEstimateDetail'];
+                            let item-order-register_QUERY_ID = ['deleteEstimateMaster', 'deleteEstimateDetail'];
 
-                            fnDeletePQGrid(estimateMasterTopGrid, estimateMasterSelectedRowIndex, ESTIMATE_MASTER_QUERY_ID);
+                            fnDeletePQGrid(estimateMasterTopGrid, estimateMasterSelectedRowIndex, item-order-register_QUERY_ID);
                         }
                     }
                 },
@@ -527,7 +357,7 @@
                 {
                     type: 'button', label: '견적서추출', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            fnReportFormToHiddenFormPageAction("estimate_master_excel_download", "/downloadExcel");
+                            fnReportFormToHiddenFormPageAction("item-order-register_excel_download", "/downloadExcel");
                         }
                     }
                 },
@@ -552,20 +382,20 @@
                                 let list = data.list[0];
                                 EST_SEQ = list.EST_SEQ;
 
-                                $("#estimate_master_hidden_form #N_EST_SEQ").val(EST_SEQ);
+                                $("#item-order-register_hidden_form #N_EST_SEQ").val(EST_SEQ);
                                 $("#estimate_version_up_sequence_form #hidden_est_seq").val(EST_SEQ);
 
                                 let parameter = {
                                     'queryId': 'insertEstimateMasterVersion',
-                                    'EST_SEQ': $("#estimate_master_hidden_form #EST_SEQ").val(),
-                                    'N_EST_SEQ' : $("#estimate_master_hidden_form #N_EST_SEQ").val()
+                                    'EST_SEQ': $("#item-order-register_hidden_form #EST_SEQ").val(),
+                                    'N_EST_SEQ' : $("#item-order-register_hidden_form #N_EST_SEQ").val()
                                 };
                                 parameters = {'url': '/json-create', 'data': parameter};
                                 fnPostAjax(function (data, callFunctionParam) {
                                     parameter = {
                                         'queryId': 'insertEstimateDetailVersion',
-                                        'EST_SEQ': $("#estimate_master_hidden_form #EST_SEQ").val(),
-                                        'N_EST_SEQ' : $("#estimate_master_hidden_form #N_EST_SEQ").val()
+                                        'EST_SEQ': $("#item-order-register_hidden_form #EST_SEQ").val(),
+                                        'N_EST_SEQ' : $("#item-order-register_hidden_form #N_EST_SEQ").val()
                                     };
                                     parameters = {'url': '/json-create', 'data': parameter};
                                     fnPostAjax('', parameters, '');
@@ -653,9 +483,9 @@
                 //if(ui.addList.length > 0 ) {
                 let EST_SEQ = ui.addList[0].rowData.EST_SEQ;
                 let EST_VER = ui.addList[0].rowData.EST_VER;
-                $("#estimate_master_hidden_form #EST_SEQ").val(EST_SEQ);
-                $("#estimate_master_hidden_form #EST_VER").val(EST_VER);
-                $("#estimate_master_excel_download #paramData").val(EST_SEQ);
+                $("#item-order-register_hidden_form #EST_SEQ").val(EST_SEQ);
+                $("#item-order-register_hidden_form #EST_VER").val(EST_VER);
+                $("#item-order-register_excel_download #paramData").val(EST_SEQ);
                 selectEstimateBotList(EST_SEQ);
                 //}
             },
@@ -702,29 +532,29 @@
             estimateMasterBotGrid.pqGrid("refreshDataAndView");
         };
 
-        $('#estimate_master_record_popup').on('hide.bs.modal', function() {
+        $('#item-order-register_record_popup').on('hide.bs.modal', function() {
             estimateMasterPopTopGrid.pqGrid( "destroy" );
             estimateMasterPopBotGrid.pqGrid( "destroy" );
         });
 
-        $('#estimate_master_record_popup').on('show.bs.modal',function() {
-            let EST_SEQ = $("#estimate_master_hidden_form #EST_SEQ").val();
+        $('#item-order-register_record_popup').on('show.bs.modal',function() {
+            let EST_SEQ = $("#item-order-register_hidden_form #EST_SEQ").val();
 
             let postData = { 'queryId': 'estimate.selectEstimateMasterListPop', 'EST_SEQ':EST_SEQ};
             let parameter = {'url': '/json-list', 'data': postData};
             fnPostAjax(function (data, callFunctionParam) {
                 let list = data.list[0];
-                $("#estimate_master_record_popup #P_ORDER_COMP_CD").val(list.ORDER_COMP_NM);
-                $("#estimate_master_record_popup #EST_TITLE").val(list.EST_TITLE);
-                $("#estimate_master_record_popup #EST_NUM").val(list.EST_NUM);
-                $("#estimate_master_record_popup #ORDER_STAFF_NM").val(list.ORDER_STAFF_NM);
-                $("#estimate_master_record_popup #COMP_CD").val(list.COMP_NM);
-                $("#estimate_master_record_popup #EST_USER_ID").val(list.EST_USER_ID);
-                $("#estimate_master_record_popup #P_EST_VER").val(list.EST_VER);
-                $("#estimate_master_record_popup #DTL_CNT").val(list.DTL_CNT);
-                $("#estimate_master_record_popup #DTL_AMOUNT").val(list.DTL_AMOUNT);
-                $("#estimate_master_record_popup #INSERT_DT").val(list.INSERT_DT);
-                $("#estimate_master_record_popup #SEND_DT").val(list.SEND_DT);
+                $("#item-order-register_record_popup #P_ORDER_COMP_CD").val(list.ORDER_COMP_NM);
+                $("#item-order-register_record_popup #EST_TITLE").val(list.EST_TITLE);
+                $("#item-order-register_record_popup #EST_NUM").val(list.EST_NUM);
+                $("#item-order-register_record_popup #ORDER_STAFF_NM").val(list.ORDER_STAFF_NM);
+                $("#item-order-register_record_popup #COMP_CD").val(list.COMP_NM);
+                $("#item-order-register_record_popup #EST_USER_ID").val(list.EST_USER_ID);
+                $("#item-order-register_record_popup #P_EST_VER").val(list.EST_VER);
+                $("#item-order-register_record_popup #DTL_CNT").val(list.DTL_CNT);
+                $("#item-order-register_record_popup #DTL_AMOUNT").val(list.DTL_AMOUNT);
+                $("#item-order-register_record_popup #INSERT_DT").val(list.INSERT_DT);
+                $("#item-order-register_record_popup #SEND_DT").val(list.SEND_DT);
             }, parameter, '');
 
             estimateMasterPopTopGrid.pqGrid({
@@ -780,12 +610,12 @@
 
         function upVersionEstimateCallBackMethod(){
             //estimateMasterTopGrid.pqGrid('refreshDataAndView');
-          $("#test").trigger('click');
+            $("#test").trigger('click');
         };
 
         /** 공통 코드 이외의 처리 부분 **/
-        fnCommCodeDatasourceSelectBoxCreate($("#estimate_master_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
-        fnCommCodeDatasourceSelectBoxCreate($("#estimate_master_search_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#item-order-register_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#item-order-register_search_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
 
     });
 

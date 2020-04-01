@@ -8,3 +8,7 @@
     <input type="file" id="click_singfile_chose_btn" name="click_singfile_chose_btn" style="display: none;">
     <input type="file" id="click_multifile_chose_btn" name="click_multifile_chose_btn" multiple  style="display: none;">
 </form>
+
+<form id="estimate_version_up_sequence_form">
+    <input type="hidden" id="hidden_est_seq" id="hidden_est_seq">
+</form>
