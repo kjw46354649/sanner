@@ -158,8 +158,45 @@
         });
     };
 
-
     /* form에 JsonData를 셋팅 한다.
+		/* formid : form 아이디
+		/* data : json return data
+		*/
+    let fnJsonDataToForm = function (formid, data) {
+        fnResetFrom(formid);
+        if(formid.indexOf("#") == -1) formid = "#"+formid;
+        $.each(data, function(key, value) {
+            let $ctrl = $(formid).find('[name='+key+']');
+            if ($ctrl.is('select')){
+                $('option', $ctrl).each(function() {
+                    if (this.value == value)
+                        this.selected = true;
+                });
+            } else if ($ctrl.is('textarea')) {
+                $ctrl.val(value);
+            } else {
+                switch($ctrl.attr("type")) {
+                    case "text":
+                    case "date":
+                    case "password":
+                    case "hidden":
+                        $ctrl.val(value);
+                        break;
+                    case "checkbox":
+                        if (value == '1' || $ctrl.val() == value)
+                            $ctrl.prop('checked', true);
+                        else
+                            $ctrl.prop('checked', false);
+                        break;
+                    case 'radio':
+                        $ctrl.filter('[value="' + value + '"]').attr('checked', 'checked');
+                        break;
+                }
+            }
+        });
+    };
+
+    /* form 값을 JsonData 값으로 변경하여 전달 한다.
 		/* formid : form 아이디
 		/* data : json return data
 		*/
@@ -220,7 +257,7 @@
 
         // hidden value가 queryId, url 제외 나머지 clear
         $('input:hidden', formid).each(function() {
-            if($(this).attr("id") == "url" || $(this).attr("id") == "queryId"){
+            if($(this).attr("type") == "button" || $(this).attr("id") == "url" || $(this).attr("id") == "queryId"){
             }else{
                 $(this).val('');
             }
@@ -319,8 +356,9 @@
             rowDataArray[i] = grid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
             rowDataArray[i].queryId = QUERY_ID;
         }
-
         parameters = {'url': '/paramQueryDeleteGrid', 'data': {data: JSON.stringify(rowDataArray)}}
+
+        console.log(parameters);
 
         fnPostAjax(function (data, callFunctionParam) {
             if (selectedRowCount > 0) {
