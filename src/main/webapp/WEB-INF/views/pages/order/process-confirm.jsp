@@ -32,21 +32,20 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="CONFIRM_ORDER_SORT_BY">Sorting 기준</label>
-                                <select class="form-control" name="CONFIRM_ORDER_SORT_BY"
-                                        id="CONFIRM_ORDER_SORT_BY">
-                                    <option value="">용망납기</option>
-                                    <%--                                <c:forEach var="code" items="${HighCode.H_1007}">--%>
-                                    <%--                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>--%>
-                                    <%--                                </c:forEach>--%>
+                                <select class="form-control" name="SORT_BY" id="CONFIRM_ORDER_SORT_BY">
+                                    <option value="">ALL</option>
+                                    <c:forEach var="code" items="${HighCode.H_1050}">
+                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                    </c:forEach>
                                 </select>
                                 <label class="checkbox-inline i-checks" for="CONFIRM_ORDER_SORT">
-                                    <input type="checkbox" id="CONFIRM_ORDER_SORT"><i></i> 내림차순
+                                    <input type="checkbox" name="DESCENDING" id="CONFIRM_ORDER_SORT"><i></i> 내림차순
                                 </label>
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="CONFIRM_ORDER_MATERIAL">소재</label>
                                 <select class="form-control" name="MATERIAL_TYPE" id="CONFIRM_ORDER_MATERIAL">
-                                    <option value=""> ALL</option>
+                                    <option value="">ALL</option>
                                     <c:forEach var="code" items="${HighCode.H_1001}">
                                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                     </c:forEach>
@@ -96,15 +95,14 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="PROCESS_CONFIRM_SORT_BY">Sorting 기준</label>
-                                <select class="form-control" name="PROCESS_CONFIRM_SORT_BY"
-                                        id="PROCESS_CONFIRM_SORT_BY">
-                                    <option value="">용망납기</option>
-                                    <%--                                <c:forEach var="code" items="${HighCode.H_1007}">--%>
-                                    <%--                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>--%>
-                                    <%--                                </c:forEach>--%>
+                                <select class="form-control" name="SORT_BY" id="PROCESS_CONFIRM_SORT_BY">
+                                    <option value="">ALL</option>
+                                    <c:forEach var="code" items="${HighCode.H_1050}">
+                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                    </c:forEach>
                                 </select>
                                 <label class="checkbox-inline i-checks" for="PROCESS_CONFIRM_SORT">
-                                    <input type="checkbox" id="PROCESS_CONFIRM_SORT"><i></i> 내림차순
+                                    <input type="checkbox" name="DESCENDING" id="PROCESS_CONFIRM_SORT"><i></i> 내림차순
                                 </label>
                             </div>
                             <div class="form-group col-md-3">
@@ -166,16 +164,13 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="OUTSOURCE_SORT_BY">Sorting 기준</label>
-                                <select class="form-control" name="OUTSOURCE_SORT_BY" id="OUTSOURCE_SORT_BY">
-                                    <option value="">용망납기</option>
-                                    <%--                                <c:forEach var="code" items="${HighCode.H_1007}">--%>
-                                    <%--                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>--%>
-                                    <%--                                </c:forEach>--%>
+                                <select class="form-control" name="SORT_BY" id="OUTSOURCE_SORT_BY">
+                                    <c:forEach var="code" items="${HighCode.H_1050}">
+                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                    </c:forEach>
                                 </select>
                                 <label class="checkbox-inline i-checks" for="OUTSOURCE_CONFIRM_SORT">
-                                    <input type="checkbox" name="OUTSOURCE_CONFIRM_SORT"
-                                           id="OUTSOURCE_CONFIRM_SORT"><i></i>
-                                    내림차순
+                                    <input type="checkbox" name="DESCENDING" id="OUTSOURCE_CONFIRM_SORT"><i></i> 내림차순
                                 </label>
                             </div>
                         </div>
@@ -201,13 +196,13 @@
         const leftGridId = 'CONFIRM_ORDER_GRID';
         let leftPostData = fnFormToJsonArrayData('#CONFIRM_ORDER_SEARCH_FORM');
         let leftColModel = [
-            {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true, editable: false, colModel: []},
-            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true, editable: false, colModel: []},
-            {title: 'CONTROL_STATUS', dataType: 'integer', dataIndx: 'CONTROL_STATUS', hidden: true, editable: false, colModel: []},
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true, editable: false, colModel: []},
-            {title: 'CONTROL_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'CONTROL_PROGRESS_SEQ', hidden: true, editable: false, colModel: []},
-            {title: 'PART_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true, editable: false, colModel: []},
-            {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true, editable: false, colModel: []},
+            {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true, colModel: []},
+            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true, colModel: []},
+            {title: 'CONTROL_STATUS', dataType: 'integer', dataIndx: 'CONTROL_STATUS', hidden: true, colModel: []},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true, colModel: []},
+            {title: 'CONTROL_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'CONTROL_PROGRESS_SEQ', hidden: true, colModel: []},
+            {title: 'PART_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true, colModel: []},
+            {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true, colModel: []},
             {
                 title: '주문상태', align: 'center', colModel: [
                     {title: '상태', datatype: 'string', dataIndx: 'ORDER_STATUS', hidden: true},
@@ -215,8 +210,8 @@
                     {title: '변경일시', datatype: 'date', dataIndx: 'ORDER_STATUS_DT', editable: false}
                 ]
             },
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true, editable: false, colModel: []},
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', editable: false, colModel: []},
+            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true, colModel: []},
+            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', colModel: []},
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', colModel: []},
             {
                 title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM', colModel: [],
@@ -232,8 +227,8 @@
             {title: '가공<br>납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', colModel: []},
             {title: '긴<br>급', dataType: 'string', dataIndx: 'EMERGENCY_YN', colModel: []},
             {title: '주<br>요', dataType: 'string', dataIndx: 'MAIN_INSPECTION_YN', colModel: []},
-            {title: '형<br>태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true, editable: false, colModel: []},
-            {title: '형<br>태', dataType: 'string', dataIndx: 'WORK_NM', editable: false, colModel: []},
+            {title: '형<br>태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true, colModel: []},
+            {title: '형<br>태', dataType: 'string', dataIndx: 'WORK_NM', colModel: []},
             {title: '규격', dataType: 'string', dataIndx: 'RBRUR', colModel: []},
             {title: '소재<br>종류', dataType: 'string', dataIndx: 'MATERIAL_KIND', colModel: []},
             {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', colModel: []},
@@ -268,7 +263,8 @@
             columnTemplate: {
                 align: 'center',
                 halign: 'center',
-                hvalign: 'center' //to vertically center align the header cells.
+                hvalign: 'center', //to vertically center align the header cells.
+                editable: false
             },
             colModel: leftColModel,
             // toolbar: leftToolbar,
@@ -303,7 +299,7 @@
                     let gridInstance = $confirmOrderGrid.pqGrid('getInstance').grid;
                     let changes = gridInstance.getChanges({format: 'byVal'});
                     let QUERY_ID_ARRAY = {
-                        'updateQueryId': ['updateControlStatus', 'updateControlPartStatus', 'updateControlPartProgressStatus'],
+                        'updateQueryId': ['updateControlStatus', 'updateControlPartStatus', 'insertControlPartProgress'],
                     };
                     changes.updateList.push(newRowData);
                     changes.queryIdList = QUERY_ID_ARRAY;
@@ -320,13 +316,13 @@
         const rightTopGridId = 'PROCESS_CONFIRM_GRID';
         let rightTopPostData = fnFormToJsonArrayData('#PROCESS_CONFIRM_SEARCH_FORM');
         let rightTopColModel = [
-            {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true, editable: false, colModel: []},
-            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true, editable: false, colModel: []},
-            {title: 'CONTROL_STATUS', dataType: 'integer', dataIndx: 'CONTROL_STATUS', hidden: true, editable: false, colModel: []},
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true, editable: false, colModel: []},
-            {title: 'CONTROL_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'CONTROL_PROGRESS_SEQ', hidden: true, editable: false, colModel: []},
-            {title: 'PART_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true, editable: false, colModel: []},
-            {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true, editable: false, colModel: []},
+            {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true, colModel: []},
+            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true, colModel: []},
+            {title: 'CONTROL_STATUS', dataType: 'integer', dataIndx: 'CONTROL_STATUS', hidden: true, colModel: []},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true, colModel: []},
+            {title: 'CONTROL_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'CONTROL_PROGRESS_SEQ', hidden: true, colModel: []},
+            {title: 'PART_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true, colModel: []},
+            {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true, colModel: []},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true, editable: false},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', editable: false},
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', editable: false},
@@ -375,7 +371,8 @@
             columnTemplate: {
                 align: 'center',
                 halign: 'center',
-                hvalign: 'center' //to vertically center align the header cells.
+                hvalign: 'center', //to vertically center align the header cells.
+                editable: false
             },
             colModel: rightTopColModel,
             // toolbar: rightTopToolbar,
@@ -396,7 +393,7 @@
                     let gridInstance = $processConfirmGrid.pqGrid('getInstance').grid;
                     let changes = gridInstance.getChanges({format: 'byVal'});
                     let QUERY_ID_ARRAY = {
-                        'updateQueryId': ['updateControlStatus', 'updateControlPartStatus', 'updateControlPartProgressStatus'],
+                        'updateQueryId': ['updateControlStatus', 'updateControlPartStatus', 'insertControlPartProgress'],
                     };
                     changes.updateList.push(newRowData);
                     changes.queryIdList = QUERY_ID_ARRAY;
@@ -413,19 +410,19 @@
         const rightBotGridId = 'OUTSOURCE_GRID';
         let rightBotPostData = fnFormToJsonArrayData('#OUTSOURCE_SEARCH_FORM');
         let rightBotColModel = [
-            {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true, editable: false, colModel: []},
-            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true, editable: false, colModel: []},
-            {title: 'CONTROL_STATUS', dataType: 'integer', dataIndx: 'CONTROL_STATUS', hidden: true, editable: false, colModel: []},
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true, editable: false, colModel: []},
-            {title: 'CONTROL_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'CONTROL_PROGRESS_SEQ', hidden: true, editable: false, colModel: []},
-            {title: 'PART_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true, editable: false, colModel: []},
-            {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true, editable: false, colModel: []},
+            {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true, colModel: []},
+            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true, colModel: []},
+            {title: 'CONTROL_STATUS', dataType: 'integer', dataIndx: 'CONTROL_STATUS', hidden: true, colModel: []},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true, colModel: []},
+            {title: 'CONTROL_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'CONTROL_PROGRESS_SEQ', hidden: true, colModel: []},
+            {title: 'PART_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true, colModel: []},
+            {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true, colModel: []},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true, editable: false},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', editable: false},
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', editable: false},
             {title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM', editable: false},
             {
-                title: '외주발송', align: 'center', editable: false, colModel: [
+                title: '외주발송', align: 'center', colModel: [
                     {title: '업체명', datatype: 'string', dataIndx: 'OUTSIDE_COMP_CD', hidden: true, editable: false},
                     {title: '업체명', datatype: 'string', dataIndx: 'OUTSIDE_COMP_NM', editable: false},
                     {title: '일시', datatype: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT', hidden: true, editable: false},
@@ -466,7 +463,8 @@
             columnTemplate: {
                 align: 'center',
                 halign: 'center',
-                hvalign: 'center' //to vertically center align the header cells.
+                hvalign: 'center', //to vertically center align the header cells.
+                editable: false
             },
             colModel: rightBotColModel,
             // toolbar: rightBotToolbar,
