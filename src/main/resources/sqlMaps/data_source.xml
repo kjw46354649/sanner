@@ -41,4 +41,13 @@
             AND DEL_YN = 'N'
     </select>
 
+    <select id="getRownumEmptyData" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        with recursive empty_tbl as (
+        select 1 as ROWNUM
+        union all
+        select ROWNUM + 1  from empty_tbl where ROWNUM <![CDATA[<]]> ${COUNT}
+        )
+        select ROWNUM from empty_tbl;
+    </select>
+
 </mapper>

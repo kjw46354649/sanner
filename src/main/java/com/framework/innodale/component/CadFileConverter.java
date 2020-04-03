@@ -44,12 +44,13 @@ public class CadFileConverter {
     public static void cadfile_converter(File orginalFile) throws IOException, InterruptedException {
 
         String sourceFilePath = orginalFile.getParentFile().toString();
-        String targetFilePath = sourceFilePath + File.separator + "convert";
+        // String targetFilePath = sourceFilePath + File.separator + "convert";
+        String targetFilePath = sourceFilePath;
         String fileName = new String(orginalFile.getName().getBytes("x-windows-949"), "ksc5601");
 
         // 1. cad file(dwg, dxf) to normal cad2010 converter
         cadfile_to_dxf2010(sourceFilePath, targetFilePath, fileName);
-        String convertFileName = targetFilePath + File.separator + fileName.substring(0, fileName.lastIndexOf(".")) + ".dwg";
+        // String convertFileName = targetFilePath + File.separator + fileName.substring(0, fileName.lastIndexOf(".")) + ".dwg";
 
         // 2. cad file converter to pdf converter
         cadfile_to_pdf_png(orginalFile);

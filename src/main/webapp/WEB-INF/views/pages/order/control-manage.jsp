@@ -243,6 +243,7 @@
     $(function () {
         'use strict';
         /* variable */
+        let $drawingRegistration = $("#DRAWING_REGISTRATION");
         let selectedRowIndex = [];
         let $orderManagementGrid;
         const gridId = 'CONTROL_MANAGE_GRID';
@@ -889,5 +890,11 @@
         });
         $orderManagementGrid = $('#' + gridId).pqGrid(obj);
         /* init */
+
+
+        /* 도면 등록 팝업 호출 */
+        $drawingRegistration.click(function(){
+            commonCadFileAttachPopup.modal('show');
+        });
     });
 </script>

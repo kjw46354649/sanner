@@ -520,4 +520,14 @@ public class CommonUtility {
         multipartFile.transferTo(file);
         return file;
     }
+
+    public static void createFileDirectory(File filePath) throws Exception {
+        if (!filePath.exists()) {
+            if (!filePath.mkdirs()) {
+                throw new Exception(
+                        "Fail to create a directory for attached file [" + filePath + "]");
+            }
+        }
+    }
+
 }

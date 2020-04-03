@@ -666,4 +666,34 @@
             <!-- CP.HOPE_DUE_DT -->
     </select>
 
+    <select id="selectControlCadFiles" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            ROW_NUMBER () OVER () AS ROWNUM,
+            C.CONTROL_SEQ,
+            C.CONTROL_STATUS,
+            B.CONTROL_DETAIL_SEQ,
+            C.CONTROL_NUM, <!-- 관리번호 -->
+            B.ITEM_NM, <!-- 품명 -->
+            B.PART_NUM, <!-- Part -->
+            B.DRAWING_NUM,
+            #{DWG_GFILE_SEQ} AS DWG_GFILE_SEQ,
+            #{DXF_GFILE_SEQ} AS DXF_GFILE_SEQ,
+            #{PDF_GFILE_SEQ} AS PDF_GFILE_SEQ,
+            #{IMG_GFILE_SEQ} AS IMG_GFILE_SEQ,
+            #{DWG_GFILE_SIZE} AS DWG_GFILE_SIZE,
+            #{DXF_GFILE_SIZE} AS DXF_GFILE_SIZE,
+            #{PDF_GFILE_SIZE} AS PDF_GFILE_SIZE,
+            #{IMG_GFILE_SIZE} AS IMG_GFILE_SIZE,
+            CASE WHEN C.CONTROL_STATUS = 'PRO01' THEN '확정완료 대상은 업로드 불가'  <!-- 상태완료 이후인 경우는 업로드 불가  -->
+                WHEN IMG_GFILE_SEQ IS NOT NULL THEN '이미 등록됨, Save 후 교체됨.'  <!-- 이미 등록된 Save시 교체 진행  -->
+                ELSE ''
+            END AS UPLOAD_MESSAGE
+        FROM TBL_CONTROL C
+            INNER JOIN TBL_CONTROL_PART B ON C.CONTROL_SEQ = B.CONTROL_SEQ
+        WHERE 1 = 1
+            AND IFNULL(C.CONTROL_STATUS, 'PRO00') IN ('PRO01', 'PRO00')
+            AND #{ORGINAL_FILE_NM} LIKE CONCAT(B.DRAWING_NUM, '%')
+    </select>
+
+
 </mapper>

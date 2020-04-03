@@ -119,7 +119,7 @@ public class ApplicationContextConfig {
         readOnlyAttribute.setTimeout(TX_METHOD_TIMEOUT);
 
         RuleBasedTransactionAttribute writeAttribute = new RuleBasedTransactionAttribute(TransactionDefinition.PROPAGATION_REQUIRED, rollbackRules);
-        writeAttribute.setTimeout(TX_METHOD_TIMEOUT);
+        writeAttribute.setTimeout(60);
 
         String readOnlyTransactionAttributesDefinition = readOnlyAttribute.toString();
         String writeTransactionAttributesDefinition = writeAttribute.toString();

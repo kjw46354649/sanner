@@ -47,6 +47,7 @@ public class LoginController {
         if(session.getAttribute("authUserInfo") != null){
             session.removeAttribute("authUserInfo");
         }
+        session.setMaxInactiveInterval(-1);
 
         /** Note: Parameter Values Into HashMap **/
 //        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);

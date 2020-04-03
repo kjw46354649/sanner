@@ -30,6 +30,8 @@
 <link rel="stylesheet" href="/resource/main/css/custom-tabs.css" type="text/css" />
 
 <link rel="stylesheet" href="/resource/main/css/custom-common.css" type="text/css" />
+<!-- DHTMLX PACK -->
+<link rel="stylesheet" href="/resource/plugins/dhtmlx/suite.css">
 
 <!--[if lt IE 9]>
 <script src="/resource/main/js/ie/html5shiv.js"></script>

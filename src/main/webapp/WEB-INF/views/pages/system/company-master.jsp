@@ -408,7 +408,13 @@
             // width: 700,
             height: 650, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'}, editable : false,
-            numberCell: {title: '<br>No.', styleHead: {'vertical-align':'middle', 'padding-top':'10px'}}, scrollModel: {autoFit: true}, trackModel: {on: true},
+            numberCell: {title: 'No.'}, dragColumns: {enabled: false},
+            scrollModel: {autoFit: true}, trackModel: {on: true},
+            columnTemplate: {
+                align: 'center',
+                halign: 'center',
+                hvalign: 'center' //to vertically center align the header cells.
+            },
             colModel: systemCompanyMasterColModel, toolbar: systemCompanyMasterToolbar,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -429,11 +435,11 @@
         $systemCompanyMasterGrid = $('#' + systemCompanyMasterGridId).pqGrid(systemCompanyMasterObj);
 
         $companyMasterMainSearchBtn.click(function(event){
-            $systemCompanyMasterGrid = $('#' + systemCompanyMasterGridId).pqGrid(systemCompanyMasterObj);
             $systemCompanyMasterGrid.pqGrid("option", "dataModel.postData", function(ui){
                 return fnFormToJsonArrayData('#company_master_search_form');
             } );
             $systemCompanyMasterGrid.pqGrid("refreshDataAndView");
+            fnAlertMessageAutoClose('save');
         });
 
         systemCompanyRegisterPostData = fnFormToJsonArrayData('#company_master_register_form');
@@ -479,6 +485,7 @@
                         'click': function (evt, ui) {
                             let staffDeleteQueryId = 'systemMapper.deleteCompanyMasterStaff';
                             fnDeletePQGrid($systemCompanyRegisterGrid, companyRegisterSelectedRowIndex, staffDeleteQueryId);
+                            fnAlertMessageAutoClose('remove');
                         }
                     }
                 },
@@ -496,6 +503,7 @@
                             let systemCompanyRegisterInsertQueryList = ['systemMapper.insertCompanyMasterStaff'];
                             let systemCompanyRegisterUpdateQueryList = ['systemMapper.updateCompanyMasterStaff'];
                             fnModifyPQGrid($systemCompanyRegisterGrid, systemCompanyRegisterInsertQueryList, systemCompanyRegisterUpdateQueryList);
+                            fnAlertMessageAutoClose('save');
                         }
                     }
                 }
@@ -594,7 +602,7 @@
                 'data': $('#company_master_register_form').serialize()
             };
             fnPostAjax(function (data, callFunctionParam) {
-                alert("저장이 완료 되었습니다.");
+                fnAlertMessageAutoClose('save');
             }, parameters, '');
         });
 
@@ -605,7 +613,7 @@
                 'data': $('#company_master_register_form').serialize()
             };
             fnPostAjax(function (data, callFunctionParam) {
-                alert(data);
+                fnAlertMessageAutoClose('remove');
             }, parameters, '');
         });
 
@@ -657,7 +665,7 @@
                         let fileInfo = data.fileUploadList[0];
                         $("#company_master_register_form").find("#ETC_GFILE_SEQ_NM").val(fileInfo.ORGINAL_FILE_NM);
                         $("#company_master_register_form").find("#ETC_GFILE_SEQ").val(fileInfo.GFILE_SEQ);
-                    }, formData);
+                    }, formData, '');
                 }
             });
         });
@@ -676,7 +684,7 @@
                         let fileInfo = data.fileUploadList[0];
                         $("#company_master_register_form").find("#LOGO_GFILE_SRC").attr("src", "/image/" + fileInfo.GFILE_SEQ);
                         $("#company_master_register_form").find("#LOGO_GFILE_SEQ").val(fileInfo.GFILE_SEQ);
-                    }, formData);
+                    }, formData, '');
                 }
             });
         });
@@ -695,7 +703,7 @@
                         let fileInfo = data.fileUploadList[0];
                         $("#company_master_register_form").find("#SIGN_GFILE_SRC").attr("src", "/image/" + fileInfo.GFILE_SEQ);
                         $("#company_master_register_form").find("#SIGN_GFILE_SEQ").val(fileInfo.GFILE_SEQ);
-                    }, formData);
+                    }, formData, '');
                 }
             });
         });

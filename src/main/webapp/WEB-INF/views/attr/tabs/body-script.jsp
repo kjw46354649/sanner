@@ -39,6 +39,8 @@
 <!-- paramQuery Grid -->
 <script src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script>
 <script src='/resource/plugins/paramquery/pqgrid.min.js'></script>
+<!-- DHTMLX PACK -->
+<script type="text/javascript" src="/resource/plugins/dhtmlx/suite.js"></script>
 
 <script type='text/javascript'>
     var g_code;
@@ -128,12 +130,16 @@
         });
     };
 
-    let fnFormDataFileUploadAjax = function (callFunction, formData) {
+    /**
+     * Normal File upload
+     * */
+    let fnFormDataFileUploadAjax = function (callFunction, formData, submitUrl) {
         'use strict';
+        let actionUrl = (submitUrl) ? submitUrl : '/uploadNormalFile';
         let callback = $.Callbacks();
         $.ajax({
             type: 'POST',
-            url: '/uploadNormalFile',
+            url: actionUrl,
             contentType : false,
             processData: false,
             data: formData,
@@ -546,5 +552,21 @@
      */
     let fnCloneObj = function (obj) {
         return {...obj}
+    };
+
+    /**
+     * Message Windows Alert 처리
+     * @param messageType
+     */
+    let fnAlertMessageAutoClose = function (messageType) {
+        let windowMessageHtml = '<spring:message code="com.alert.default.save.success" javaScriptEscape="true"/>';
+        if(messageType == 'del') windowMessageHtml = '<spring:message code="com.alert.default.remove.success" javaScriptEscape="true"/>';
+        var alertMessageConfig = {
+            text: windowMessageHtml,
+            expire: 1500,
+            icon: "dxi dxi-close",
+            position: "top-right"
+        };
+        dhx.message(alertMessageConfig);
     };
 </script>

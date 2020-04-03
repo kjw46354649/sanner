@@ -48,4 +48,8 @@
 }
 
 
+.drag-over { background-color: #ff0; }
+.thumb { width:200px; padding:5px; float:left; }
+.thumb > img { width:100%; }
+.thumb > .close { position:absolute; background-color:red; cursor:pointer; }
 
