@@ -569,4 +569,38 @@
         };
         dhx.message(alertMessageConfig);
     };
+
+    /**
+     * @param {string} id
+     */
+    let fnAppendSelectboxYear = function (id) {
+        $('#' + id).empty();
+        let date = new Date();
+        // date.setMonth(date.getMonth() + 1);
+        let year = date.getFullYear();
+
+        for (let i = year; i > year - 3; i--) {
+            $('#' + id).append(new Option(i + '년', i));
+        }
+    };
+
+    /**
+     * @param {string} id
+     * @param {string} selectedYear
+     */
+    let fnAppendSelectboxMonth = function (id, selectedYear = new Date().getFullYear()) {
+        $('#' + id).empty();
+        let date = new Date();
+        // date.setMonth(date.getMonth() + 1);
+        let year = date.getFullYear();
+        let month;
+        const JANUARY = 1;
+        const DECEMBER = 12;
+
+        month = year < selectedYear ? JANUARY : year == selectedYear ? date.getMonth() : DECEMBER;
+
+        for (let i = month; i >= 1; i--) {
+            $('#' + id).append(new Option(i + '월', i));
+        }
+    };
 </script>

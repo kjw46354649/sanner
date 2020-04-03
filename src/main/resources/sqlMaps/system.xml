@@ -238,8 +238,8 @@
             SORT_NUM,
             DEL_YN,
             NOTE,
-            INSERT_DT,
-            INSERT_ID
+            INSERT_DT
+            <!-- ,INSERT_ID -->
         ) VALUES(
             #{HIGH_CD},
             #{CODE_CD},
@@ -247,8 +247,8 @@
             #{SORT_NUM},
             #{DEL_YN},
             #{NOTE},
-            current_timestamp(),
-            'xmaseve96'
+            current_timestamp()
+            <!-- ,'xmaseve96' -->
         )
 	</insert>
 
@@ -258,15 +258,15 @@
             CODE_CD,
             LANG_CD,
             CODE_NM,
-            INSERT_DT,
-            INSERT_ID
+            INSERT_DT
+            <!-- ,INSERT_ID -->
         ) VALUES (
             #{HIGH_CD},
             #{CODE_CD},
             #{LANG_CD},
             #{CODE_NM},
-            current_timestamp(),
-            'xmaseve96'
+            current_timestamp()
+            <!-- ,'xmaseve96' -->
         )
 	</insert>
 
@@ -276,8 +276,8 @@
             SORT_NUM = #{SORT_NUM},
             DEL_YN = #{DEL_YN},
             NOTE = #{NOTE},
-            UPDATE_DT = current_timestamp(),
-            UPDATE_ID = 'xmaseve96'
+            UPDATE_DT = current_timestamp()
+            <!-- ,UPDATE_ID = 'xmaseve96' -->
         WHERE HIGH_CD = #{HIGH_CD}
         	  AND CODE_CD = #{CODE_CD}
    </update>
@@ -289,19 +289,19 @@
             LANG_CD,
             CODE_NM,
             INSERT_DT
---             ,INSERT_ID
+            <!-- ,INSERT_ID -->
         ) VALUES (
             #{HIGH_CD},
             #{CODE_CD},
             #{LANG_CD},
             #{CODE_NM},
             current_timestamp()
---             ,'xmaseve96'
+             <!-- ,'xmaseve96' -->
         ) ON DUPLICATE KEY
             UPDATE
-	        	CODE_NM = #{CODE_NM}
--- 	            ,UPDATE_DT = current_timestamp()
--- 	            ,UPDATE_ID = 'xmaseve96'
+	        	CODE_NM = #{CODE_NM},
+	        	UPDATE_DT = current_timestamp()
+                <!-- ,UPDATE_ID = 'xmaseve96' -->
    </update>
 
     <select id="selectAuthorityGroupList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -323,15 +323,15 @@
             ROLE_NM,
             DEL_YN,
             NOTE,
-            INSERT_DT,
-            INSERT_ID
+            INSERT_DT
+            <!-- ,INSERT_ID -->
         ) VALUES(
             #{ROLE_SEQ},
             #{ROLE_NM},
             #{DEL_YN},
             #{NOTE},
-            current_timestamp(),
-            'xmaseve96'
+            current_timestamp()
+            <!-- ,NULL -->
         )
 	</insert>
 
@@ -340,8 +340,8 @@
         SET ROLE_NM = #{ROLE_NM},
             DEL_YN = #{DEL_YN},
             NOTE = #{NOTE},
-            UPDATE_DT = current_timestamp(),
-            UPDATE_ID = 'xmaseve96'
+            UPDATE_DT = current_timestamp()
+            <!-- ,UPDATE_ID = 'xmaseve96' -->
         WHERE ROLE_SEQ = #{ROLE_SEQ}
    </update>
 

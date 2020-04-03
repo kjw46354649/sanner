@@ -30,22 +30,13 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public void insertControlProgress(Map<String, Object> hashMap) throws SQLException {
-        sqlSessionTemplate.insert("insertControlProgress", hashMap);
+    public void insertControlProgressList(Map<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("insertControlProgressList", hashMap);
     }
 
     @Override
-    public void insertControlPartProgress(Map<String, Object> hashMap) throws SQLException {
-        sqlSessionTemplate.insert("insertControlPartProgress", hashMap);
+    public void insertControlPartProgressList(Map<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("insertControlPartProgressList", hashMap);
     }
 
-    @Override
-    public void insertControlProgressConfirm(Map<String, Object> hashMap) throws SQLException {
-        sqlSessionTemplate.insert("insertControlProgressConfirm", hashMap);
-    }
-
-    @Override
-    public void insertControlPartProgressConfirm(Map<String, Object> hashMap) throws SQLException {
-        sqlSessionTemplate.insert("insertControlPartProgressConfirm", hashMap);
-    }
 }
