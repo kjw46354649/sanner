@@ -263,13 +263,30 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <label class="control-label" for="UNIT_CONST">대상 년/월</label>
-                        <select class="form-control" id="UNIT_CONST">
-                            <option></option>
-                        </select>
-                        <select class="form-control" id="UNIT_CONST">
-                            <option></option>
-                        </select>
+                        <div class="col-md-8">
+                            <div class="col-md-3">
+                                <label class="control-label" for="UNIT_CONST">대상 년/월</label>
+                            </div>
+                            <div class="col-md-5">
+                                <select class="form-control" name="MONTH_FINISH_YEAR" id="MONTH_FINISH_YEAR">
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-control" name="MONTH_FINISH_MONTH" id="MONTH_FINISH_MONTH">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="col-md-6">
+                                <label class="control-label" for="UNIT_CONST">차수</label>
+                            </div>
+                            <div class="col-md-6">
+                                <select class="form-control" name="" id="">
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="col-md-6">
                         <b>진행 하시겠습니까?</b>
@@ -478,7 +495,7 @@
                     {title: '변경일시', datatype: 'date', dataIndx: 'CONTROL_STATUS_DT'}
                 ]
             },
-            {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: false, colModel: []},
+            {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: true, colModel: []},
             {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_NM', colModel: []},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true, colModel: []},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', colModel: []},
@@ -661,22 +678,17 @@
                 }
             ]
         };
-
-        //r1 is shorthand for rowIndx, c1 for colIndx, rc for rowCount or rowspan, cc for columnCount or colspan.
-
         let obj = {
-            // width: 700,
             // height: 600,
             collapsible: false,
             resizable: true,
             showTitle: false,
             numberCell: {title: 'No.'},
-            // scrollModel: {autoFit: true},
             trackModel: {on: true},
             columnTemplate: {
                 align: 'center',
                 halign: 'center',
-                hvalign: 'center', //to vertically center align the header cells.
+                hvalign: 'center',
                 editable: false
             },
             colModel: colModel,
@@ -692,10 +704,8 @@
             cellClick: function (event, ui) {
                 if (ui.dataIndx === 'PART_NUM' && ui.rowData.WORK_NM === '가공조립') {
                     let newRowData = fnCloneObj(ui.rowData);
-                    let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
-                    let totalRecords = data.length;
-                    let newPartNum = 0;
-                    let newRowIndex = 0;
+                    let data = $orderManagementGrid.pqGrid('option', 'dataModel.data'), totalRecords = data.length;
+                    let newPartNum = 0, newRowIndex = 0;
 
                     for (let i = 0; i < totalRecords; i++) {
                         if (data[i].CONTROL_SEQ === newRowData.CONTROL_SEQ) {
@@ -735,13 +745,8 @@
                     let firstRow = ui.selection.iCells.ranges[0].r1;
                     let lastRow = ui.selection.iCells.ranges[0].r2;
 
-                    if (firstRow === lastRow) {
-                        selectedRowIndex[0] = firstRow;
-                    } else {
-                        for (let i = firstRow; i <= lastRow; i++) {
-                            selectedRowIndex.push(i);
-                        }
-                    }
+                    if (firstRow === lastRow) selectedRowIndex[0] = firstRow;
+                    else for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
                 }
             }
         };
@@ -792,12 +797,6 @@
         let popupToolbar = {
             cls: 'pq-toolbar-crud',
             items: [
-                // {
-                //     cls: 'title-hidden',
-                //     type: 'textbox',
-                //     label: '업체 리스트',
-                //     style: 'font-size: 1.3rem;padding: 4px;font-weight: bold;'
-                // },
                 {
                     type: 'button', label: 'Reset', icon: 'ui-icon-arrowrefresh-1-s', listener: {
                         'click': function (evt, ui) {
@@ -810,9 +809,7 @@
                         'click': function (evt, ui) {
                             let data = $orderRegisterGrid.pqGrid('option', 'dataModel.data');
 
-                            for (let i = 0; i < data.length; i++) {
-                                data[i].STATUS = 'PRO01'
-                            }
+                            for (let i = 0; i < data.length; i++) data[i].STATUS = 'PRO01'
 
                             let parameters = {
                                 'url': '/registerNewOrder',
@@ -847,22 +844,18 @@
             ]
         };
         let popoupObj = {
-            // width: 700,
             // height: 600,
             collapsible: false,
             resizable: true,
             showTitle: false,
             numberCell: {title: 'No.'},
-            // scrollModel: {autoFit: true},
             dragColumns: {enabled: false},
-            // trackModel: {on: true},
             columnTemplate: {
                 align: 'center',
                 halign: 'center',
-                hvalign: 'center' //to vertically center align the header cells.
+                hvalign: 'center'
             },
             colModel: popupColModel,
-            // editModel:{clicksToEdit: 2},
             toolbar: popupToolbar,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -877,13 +870,8 @@
                     let firstRow = ui.selection.iCells.ranges[0].r1;
                     let lastRow = ui.selection.iCells.ranges[0].r2;
 
-                    if (firstRow === lastRow) {
-                        selectedRowIndex[0] = firstRow;
-                    } else {
-                        for (let i = firstRow; i <= lastRow; i++) {
-                            selectedRowIndex.push(i);
-                        }
-                    }
+                    if (firstRow === lastRow) selectedRowIndex[0] = firstRow;
+                    else for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
                 }
             }
         };
@@ -898,7 +886,6 @@
             {title: '마감금액', dataType: 'string', dataIndx: 'MODULE_NM'}
         ];
         let monthFinishLeftObj = {
-            // width: 700,
             // height: 600,
             collapsible: false,
             resizable: true,
@@ -908,7 +895,7 @@
             columnTemplate: {
                 align: 'center',
                 halign: 'center',
-                hvalign: 'center', //to vertically center align the header cells.
+                hvalign: 'center',
                 editable: false
             },
             colModel: monthFinishLeftColModel,
@@ -937,7 +924,6 @@
             }
         ];
         let monthFinishRightObj = {
-            // width: 700,
             // height: 600,
             collapsible: false,
             resizable: true,
@@ -947,7 +933,7 @@
             columnTemplate: {
                 align: 'center',
                 halign: 'center',
-                hvalign: 'center', //to vertically center align the header cells.
+                hvalign: 'center',
                 editable: false
             },
             colModel: monthFinishRightColModel,
@@ -1013,12 +999,9 @@
         };
 
         String.prototype.string = function (len) {
-            let s = '';
-            let i = 0;
+            let s = '', i = 0;
 
-            while (i++ < len) {
-                s += this;
-            }
+            while (i++ < len) s += this;
 
             return s;
         };
@@ -1064,9 +1047,7 @@
          * @description 날짜 라디오 변경
          */
         $('[name=CONTROL_MANAGE_TERM]').change(function () {
-            let value = $(this).val();
-            let today = new Date();
-            let newDate = new Date();
+            let value = $(this).val(), today = new Date(), newDate = new Date();
 
             switch (value) {
                 case 'today':
@@ -1091,11 +1072,8 @@
         let createOrDestoryDatepicker = function () {
             let checked = $('#CONTROL_MANAGE_DATEPICKER_READ_ONLY').prop('checked');
 
-            if (checked) {
-                $('[id^=CONTROL_MANAGE][id$=DATE]').datepicker('destroy');
-            } else {
-                $('[id^=CONTROL_MANAGE][id$=DATE]').datepicker();
-            }
+            if (checked) $('[id^=CONTROL_MANAGE][id$=DATE]').datepicker('destroy');
+            else $('[id^=CONTROL_MANAGE][id$=DATE]').datepicker();
         };
 
 
@@ -1115,18 +1093,20 @@
         });
 
         $('#MONTH_FINISH_POPUP').on('show.bs.modal', function () {
-            $('#' + monthFinishLeftGridId).pqGrid(monthFinishLeftObj);
-            $('#' + monthFinishRightGridId).pqGrid(monthFinishRightObj);
+            fnAppendSelectboxYear('MONTH_FINISH_YEAR');
+            fnAppendSelectboxMonth('MONTH_FINISH_MONTH');
+            $monthFinishLeftGrid = $('#' + monthFinishLeftGridId).pqGrid(monthFinishLeftObj);
+            $monthFinishRightGrid = $('#' + monthFinishRightGridId).pqGrid(monthFinishRightObj);
         });
 
         $('#MONTH_FINISH_POPUP').on('hide.bs.modal', function () {
-            // $orderRegisterGrid.pqGrid('destroy');
+            $monthFinishLeftGrid.pqGrid('destroy');
+            $monthFinishRightGrid.pqGrid('destroy');
         });
 
         $('#testSearch').on('click', function () {
-            postData = fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM')
             $orderManagementGrid.pqGrid('option', "dataModel.postData", function (ui) {
-                return postData;
+                return (fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM'));
             });
             $orderManagementGrid.pqGrid('refreshDataAndView');
         });
@@ -1146,7 +1126,6 @@
                     alert('외주가 ‘Y’ 인 상태에서는 외주관리화면에서 대상을 먼저 삭제해야만 확정취소가 가능');
                     return false;
                 }
-
             }
 
             getOrderStatusButton(event);
@@ -1214,6 +1193,10 @@
 
             getOrderStatusButton(event);
         });
+
+        $('#MONTH_FINISH_YEAR').on('change', function() {
+            fnAppendSelectboxMonth('MONTH_FINISH_MONTH', this.value);
+        });
         /* event */
 
         /* init */
@@ -1226,22 +1209,6 @@
         /* init */
 
         /* 견적등록 */
-        // $('#ESTIMATE_REGISTER_POPUP').on('show.bs.modal', function () {
-        //     console.log(selectedRowIndex);
-        //     let rowDataList = [];
-        //     for (let i = 0; i < selectedRowIndex.length; i++) {
-        //         let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
-        //         let tempObject = {
-        //             rowIndx: selectedRowIndex[i],
-        //             newRow: rowData,
-        //             checkEditable: false
-        //         };
-        //         rowDataList[i] = rowData;
-        //         // rowDataList[i] = tempObject;
-        //     }
-
-
-
             /** 공통 코드 이외의 처리 부분 **/
             fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#ORDER_COMP_CD"), 'sel', {
                 "url": "/json-list",
@@ -1585,7 +1552,7 @@
                 });
 
                 estimateRegisterBotGrid.pqGrid("refreshDataAndView");
-            };
+            }
 
 
             $("#estimate_register_info_form #ORDER_COMP_CD").on('change', function () {
@@ -1611,7 +1578,7 @@
 
                 fnModifyPQGrid(estimateRegisterTopGrid, estimateRegisterInsertQueryList, estimateRegisterUpdateQueryList);
                 estimateRegisterReloadPageData();
-            };
+            }
 
             $("#btn_estimate_register_save").on("click", function () {
                 $("#estimate_register_info_form #queryId").val('selectEstimateNextSequence');
@@ -1658,7 +1625,7 @@
                     $("#estimate_register_excel_download #EST_SEQ").val(EST_SEQ);
                     $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
                 }, parameter, '');
-            };
+            }
 
             $(document).on('click', '#test', function () {
                 estimateRegisterReloadPageData();
@@ -1672,7 +1639,6 @@
         $('#ESTIMATE_REGISTER_POPUP').on('hide.bs.modal', function () {
             estimateRegisterTopGrid.pqGrid('destroy');
         });
-
         /* 견적등록 */
     });
 </script>

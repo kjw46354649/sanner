@@ -6,24 +6,32 @@
         SELECT 1 FROM DUAL WHERE FALSE
     </select>
 
-    <select id="selectControlManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    <sql id="controlManage">
         SELECT
             ROW_NUMBER () OVER () AS ROWNUM,
             C.CONTROL_SEQ,
             C.CONTROL_STATUS,
             CP.CONTROL_DETAIL_SEQ,
+            CPO.ORDER_SEQ,
+            CPRO.SEQ AS CONTROL_PROGRESS_SEQ,
+            CPRO.ORDER_STATUS,
             CPPRO.SEQ AS PART_PROGRESS_SEQ,
-            CPRO.ORDER_STATUS, -- 주문 상태
+            CPPRO.PART_STATUS,
             (SELECT CODE_NM
             FROM TBL_CODE_LANG
             WHERE HIGH_CD = '1024'
-                AND CODE_CD = CPRO.ORDER_STATUS
-                AND LANG_CD = 'KR') AS ORDER_STATUS_NM, -- 주문 상태
-            CPRO.STATUS_DT AS ORDER_STATUS_DT, -- 변경 일시
+            AND CODE_CD = C.CONTROL_STATUS
+            AND LANG_CD = 'KR') AS CONTROL_STATUS_NM,
+            DATE_FORMAT(C.STATUS_DT, '%m-%d %H:%i') AS CONTROL_STATUS_DT,
+            C.COMP_CD,
+            (SELECT CODE_NM
+            FROM TBL_CODE_LANG
+            WHERE CODE_CD = C.COMP_CD
+            AND LANG_CD = 'KR') AS COMP_NM,
             C.ORDER_COMP_CD, -- 발주업체
             (SELECT COMP_NM
             FROM TBL_COMPANY
-            WHERE COMP_CD = C.ORDER_COMP_CD) AS ORDER_COMP_NM, -- 발주업체
+            WHERE COMP_CD = C.ORDER_COMP_CD) AS ORDER_COMP_NM, -- 발주업체이름(JOIN)
             C.ORDER_STAFF_SEQ,
             (SELECT STAFF_NM
             FROM TBL_COMPANY_STAFF
@@ -79,6 +87,9 @@
             CP.MATERIAL_FINISH_HEAT,
             CP.SIZE_W_M,
             CP.SIZE_H_M,
+            CP.SIZE_T_M,
+            CP.SIZE_D_M,
+            CP.SIZE_L_M,
             CP.UNIT_MATERIAL_AMT,
             CP.UNIT_TM_AMT,
             CP.UNIT_GRIND_AMT,
@@ -98,6 +109,10 @@
                                                            AND CP.CONTROL_DETAIL_SEQ = CPPRO.CONTROL_DETAIL_SEQ
         INNER JOIN TBL_CONTROL_PART_ORDER CPO ON CP.CONTROL_SEQ = CPO.CONTROL_SEQ
                                                  AND CP.CONTROL_DETAIL_SEQ = CPO.CONTROL_DETAIL_SEQ
+    </sql>
+
+    <select id="selectControlManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        <include refid="controlManage" />
         WHERE 1 = 1
         <if test="CONTROL_NUMBER != null and CONTROL_NUMBER != ''">
              AND C.CONTROL_NUM = #{CONTROL_NUMBER}
