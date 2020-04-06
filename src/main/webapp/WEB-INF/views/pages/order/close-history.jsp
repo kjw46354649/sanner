@@ -21,11 +21,11 @@
                 </header>
                 <div class="panel-body">
                     <form class="form-inline" id="CONTROL_MANAGE_SEARCH_FORM" role="form">
-                        <input type="hidden" name="queryId" id="queryId" value="selectControlManageList">
+                        <input type="hidden" name="queryId" id="queryId" value="selectCloseHistoryList">
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="CORPORATION">사업자</label>
-                                <select class="form-control" name="CORPORATION" id="CORPORATION">
+                                <label class="control-label" for="COMP_CD">사업자</label>
+                                <select class="form-control" name="COMP_CD" id="COMP_CD">
                                     <option value="">All</option>
                                     <c:forEach var="code" items="${HighCode.H_1007}">
                                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -33,14 +33,14 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="CLIENT">발주사</label>
-                                <select class="form-control" name="CLIENT" id="CLIENT">
+                                <label class="control-label" for="ORDER_COMP_CD">발주사</label>
+                                <select class="form-control" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
                                     <option value="">All</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="DRAWING_NUMBER">도면번호</label>
-                                <input type="text" class="form-control" name="DRAWING_NUMBER" id="DRAWING_NUMBER">
+                                <label class="control-label" for="DRAWING_NUM">도면번호</label>
+                                <input type="text" class="form-control" name="DRAWING_NUMB" id="DRAWING_NUM">
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="PRODUCT_NAME">품명</label>
@@ -196,6 +196,7 @@
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true, colModel: []},
             {title: 'CONTROL_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'CONTROL_PROGRESS_SEQ', hidden: true, colModel: []},
             {title: 'ORDER_STATUS', dataType: 'integer', dataIndx: 'ORDER_STATUS', hidden: true, colModel: []},
+            {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true, colModel: []},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true, colModel: []},
             {title: 'PART_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true, colModel: []},
             {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true, colModel: []},
@@ -211,10 +212,10 @@
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', colModel: []},
             {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', hidden: true, colModel: []},
             {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', colModel: []},
-            {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', colModel: []},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', colModel: []},
+            {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', editable: true, colModel: []},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true, colModel: []},
             {title: 'INV No.<br>(거래명세No.)', dataType: 'string', dataIndx: 'CHARGE_USER_ID', colModel: []},
-            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', colModel: []},
+            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', editable: true, colModel: []},
             {title: '주요<br>검사품', dataType: 'select', dataIndx: 'MAIN_INSPECTION_YN', colModel: [],
                 editor: {
                     type: 'select',
@@ -231,7 +232,8 @@
                 }
             },
             {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN', colModel: []},
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', colModel: []},
+            {title: 'CONTROL_VER', dataType: 'string', dataIndx: 'CONTROL_VER', hidden: true, colModel: []},
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true, colModel: []},
             {
                 title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM', colModel: [],
                 render: function (ui) {
@@ -241,26 +243,27 @@
                 }
             },
             {title: '도면번호버전', dataType: 'string', dataIndx: 'DRAWING_VER', hidden: true, colModel: []},
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', colModel: []},
-            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', colModel: []},
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', editable: true, colModel: []},
+            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', editable: true, colModel: []},
             {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true, colModel: []},
             {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_NM', colModel: []},
             {title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN', colModel: []},
             {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', colModel: []},
             {title: '소재<br>사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', colModel: []},
-            {title: '가공납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', colModel: []},
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', colModel: []},
+            {title: '가공납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', editable: true, colModel: []},
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', editable: true, colModel: []},
             {title: '소재<br>종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', colModel: []},
             {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE', colModel: []},
             {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', colModel: []},
             {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', colModel: []},
             {title: '열<br>처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', colModel: []},
+            {title: '소재비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', editable: true, colModel: []},
             {title: 'Part<br>단위<br>수량', dataType: 'integer', dataIndx: 'PART_UNIT_QTY', colModel: []},
-            {title: '주문<br>수량', dataType: 'string', dataIndx: 'ORDER_QTY', colModel: []},
+            {title: '주문<br>수량', dataType: 'string', dataIndx: 'ITEM_QTY', colModel: []},
             {
                 title: '대칭', align: 'center', colModel: [
-                    {title: '원칭', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY'},
-                    {title: '대칭', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
+                    {title: '원칭', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY', editable: true},
+                    {title: '대칭', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY', editable: true},
                 ]
             },
             {
@@ -273,11 +276,11 @@
                             }
                         }
                     },
-                    {title: '발주번호', datatype: 'string', dataIndx: 'ORDER_NUM'},
-                    {title: '수량', datatype: 'string', dataIndx: 'ORDER_QTY'},
+                    {title: '발주번호', datatype: 'string', dataIndx: 'ORDER_NUM', editable: true},
+                    {title: '수량', datatype: 'string', dataIndx: 'ORDER_QTY', editable: true},
                     {title: '출고', datatype: 'string', dataIndx: 'CNFRH'},
-                    {title: '납기', datatype: 'string', dataIndx: 'HOPE_DUE_DT'},
-                    {title: '납품확인', datatype: 'string', dataIndx: 'DELIVERY_DT'},
+                    {title: '납기', datatype: 'string', dataIndx: 'HOPE_DUE_DT', editable: true},
+                    {title: '납품확인', datatype: 'string', dataIndx: 'DELIVERY_DT', editable: true},
                 ]
             },
             {
@@ -291,32 +294,45 @@
                 ]
             },
             {
-                title: '예상소재 Size', align: 'center', hidden: true, colModel: [
-                    {title: '가로', datatype: 'string', dataIndx: 'RKFH'},
-                    {title: '세로', datatype: 'string', dataIndx: 'TPFH'},
-                    {title: '높이', datatype: 'string', dataIndx: 'SHVDL'},
-                    {title: '중량(KG)', datatype: 'string', dataIndx: 'WNDFID'},
-                    {title: '부피(cm3)', datatype: 'string', dataIndx: 'QNVL'}
+                title: '소재마감', align: 'center', hidden: true, colModel: [
+                    {title: 'TM각비', datatype: 'string', dataIndx: 'MATERIAL_FINISH_TM'},
+                    {title: '연마', datatype: 'string', dataIndx: 'MATERIAL_FINISH_GRIND'},
+                    {title: '열처리', datatype: 'string', dataIndx: 'MATERIAL_FINISH_HEAT'}
                 ]
             },
-            /* ,
-             {
-                 title: '항목별 계산견적 단가', align: 'center', colModel: [
-                     {title: '소재비', datatype: 'string', dataIndx: ''},
-                     {title: '소재마감', datatype: 'string', dataIndx: ''},
-                     {title: '표면처리', datatype: 'string', dataIndx: ''},
-                     {title: '가공비', datatype: 'string', dataIndx: ''},
-                     {title: '기타추가', datatype: 'string', dataIndx: ''}
-                 ]
-             },
-             {title: '계산<br>견적단가', dataType: 'string', dataIndx: '', colModel: []},
-             {title: '최종<br>견적단가', dataType: 'string', dataIndx: '', colModel: []},
-             {title: '견적<br>합계금액', dataType: 'string', dataIndx: '', colModel: []},
-             {title: '최종<br>공급단가', dataType: 'string', dataIndx: '', colModel: []},
-             {title: '합계금액', dataType: 'string', dataIndx: '', colModel: []},
-             {title: '종전가', dataType: 'string', dataIndx: '', colModel: []}*/
-            {title: '변경전<br>도면번호', dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', colModel: []},
-            {title: 'NOTE', dataType: 'string', dataIndx: 'NOTE', editable: true, colModel: []}
+            {
+                title: '예상소재 Size', align: 'center', hidden: true, colModel: [
+                    {title: '@', datatype: 'string', dataIndx: 'RKFH'},
+                    {title: '가로', datatype: 'string', dataIndx: 'SIZE_W_M'},
+                    {title: '세로', datatype: 'string', dataIndx: 'SIZE_H_M'},
+                    {title: '높이', datatype: 'string', dataIndx: 'SIZE_T_M'},
+                    {title: '중량(KG)', datatype: 'string', dataIndx: 'SIZE_D_M'},
+                    {title: '부피(cm3)', datatype: 'string', dataIndx: 'SIZE_L_M'}
+                ]
+            },
+            {
+                title: '항목별 계산견적 단가 (10원단위 반올림)', align: 'center', colModel: [
+                    {title: '소재비', datatype: 'string', dataIndx: 'UNIT_MATERIAL_AMT', editable: true},
+                    {title: 'TM각비', datatype: 'string', dataIndx: 'UNIT_TM_AMT', editable: true},
+                    {title: '연마비', datatype: 'string', dataIndx: 'UNIT_GRIND_AMT', editable: true},
+                    {title: '열처리', datatype: 'string', dataIndx: 'UNIT_HEAT_AMT', editable: true},
+                    {title: '표면처리', datatype: 'string', dataIndx: 'UNIT_SURFACE_AMT', editable: true},
+                    {title: '가공비', datatype: 'string', dataIndx: 'UNIT_PROCESS_AMT', editable: true},
+                    {title: '기타추가', datatype: 'string', dataIndx: 'UNIT_ETC_AMT', editable: true},
+                    {title: '견적비고', datatype: 'string', dataIndx: 'UNIT_AMT_NOTE', editable: true}
+                ]
+            },
+            {title: '계산<br>견적단가', dataType: 'string', dataIndx: 'CALCUL_EST_UNIT_COST', colModel: []},
+            {title: '최종<br>견적단가', dataType: 'string', dataIndx: 'UNIT_FINAL_EST_AMT', colModel: [], editable: true},
+            {title: '견적<br>합계금액', dataType: 'string', dataIndx: 'RUSWJRGKQRpRMADOR', colModel: []},
+            {title: '최종<br>공급단가', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT', colModel: [], editable: true},
+            {title: '합계금액', dataType: 'string', dataIndx: 'FINAL_AMOUNT', colModel: []},
+            {title: '종전가', dataType: 'string', dataIndx: 'WHDWJSRK', colModel: []},
+            {title: '변경전<br>도면번호', dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', colModel: [], editable: true},
+            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ'},
+            {title: 'Rev.', dataType: 'string', dataIndx: 'DRAWING_VER', colModel: []},
+            {title: 'Rev. 일시', dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', colModel: []},
+            {title: '등록/업데이트<br>일시', dataType: 'string', dataIndx: 'STATUS_DT', colModel: []}
         ];
         let toolbar = {
             cls: 'pq-toolbar-crud',

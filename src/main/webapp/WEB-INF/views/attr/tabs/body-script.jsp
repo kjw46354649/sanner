@@ -364,8 +364,6 @@
         }
         parameters = {'url': '/paramQueryDeleteGrid', 'data': {data: JSON.stringify(rowDataArray)}}
 
-        console.log(parameters);
-
         fnPostAjax(function (data, callFunctionParam) {
             if (selectedRowCount > 0) {
                 let rowListConvert = [];
@@ -600,6 +598,8 @@
         month = year < selectedYear ? JANUARY : year == selectedYear ? date.getMonth() : DECEMBER;
 
         for (let i = month; i >= 1; i--) {
+            if (i < 10) i = '0' + i;
+
             $('#' + id).append(new Option(i + '월', i));
         }
     };

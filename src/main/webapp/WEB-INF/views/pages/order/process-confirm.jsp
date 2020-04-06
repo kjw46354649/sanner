@@ -252,8 +252,7 @@
         //     ]
         // };
         let leftObj = {
-            // width: 700,
-            // height: 600,
+            height: 700,
             collapsible: false,
             resizable: true,
             showTitle: false,
@@ -393,7 +392,7 @@
                     let gridInstance = $processConfirmGrid.pqGrid('getInstance').grid;
                     let changes = gridInstance.getChanges({format: 'byVal'});
                     let QUERY_ID_ARRAY = {
-                        'updateQueryId': ['updateControlStatus', 'updateControlPartStatus', 'insertControlPartProgress'],
+                        'updateQueryId': ['updateControlStatus', 'updateControlPartStatus', 'insertControlProgress', 'insertControlPartProgress'],
                     };
                     changes.updateList.push(newRowData);
                     changes.queryIdList = QUERY_ID_ARRAY;
