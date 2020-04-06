@@ -77,16 +77,15 @@
                 {title: 'DWG_GFILE_SEQ', dataType: 'integer', dataIndx: 'DWG_GFILE_SEQ', hidden: true, editable: false, colModel: []},
                 {title: 'PDF_GFILE_SEQ', dataType: 'integer', dataIndx: 'PDF_GFILE_SEQ', hidden: true, editable: false, colModel: []},
                 {title: 'IMG_GFILE_SEQ', dataType: 'integer', dataIndx: 'IMG_GFILE_SEQ', hidden: true, editable: false, colModel: []},
-                {title: '비고', datatype: 'string', dataIndx: 'STAFF_NM'},
-                {title: '견적번호', datatype: 'string', dataIndx: 'STAFF_NM'},
-                {title: '차수', dataType: 'string', dataIndx: 'POSITION_NM'},
-                {title: '품명', align: 'center', dataType: 'string', dataIndx: 'JOB_TITLE'},
-                {title: '도면번호', align: 'center', dataType: 'string', dataIndx: 'STAFF_TEL'},
-                {title: '파일번호', align: 'center', dataType: 'string', dataIndx: 'STAFF_EMAIL'},
-                {title: 'DXF', align: 'center', dataType: 'string', dataIndx: 'STAFF_EMAIL'},
-                {title: 'PDF', align: 'center', dataType: 'string', dataIndx: 'STAFF_EMAIL'},
-                {title: '사이즈', align: 'center', dataType: 'string', dataIndx: 'NOTE'},
-                {title: '삭제', align: 'center', dataType: 'string', dataIndx: 'NOTE'}
+                {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE'},
+                {title: '관리번호', datatype: 'string', dataIndx: 'CONTROL_NUM'},
+                {title: '품명', align: 'center', dataType: 'string', dataIndx: 'ITEM_NM'},
+                {title: '도면번호', align: 'center', dataType: 'string', dataIndx: 'DRAWING_NUM'},
+                {title: '파일명', align: 'center', dataType: 'string', dataIndx: 'FILE_NM'},
+                {title: 'DXF', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ'},
+                {title: 'PDF', align: 'center', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ'},
+                {title: '사이즈', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SIZE'},
+                {title: '삭제', align: 'center', dataType: 'string', dataIndx: 'DEL_YN'}
             ],
             toolbar: {
                 cls: 'pq-toolbar-crud',
@@ -95,6 +94,11 @@
                     {type: 'button', label: 'SAVE', icon: 'ui-icon-plus', style: 'float: right;', listener: {
                             'click': function (evt, ui) {
                                 alert("파일 저장 처리")
+                            }}
+                    },
+                    {type: 'button', label: 'FIND FILE', icon: 'ui-icon-plus', style: 'float: right;', listener: {
+                            'click': function (evt, ui) {
+                                alert("파일 추가 처리")
                             }}
                     }
                 ]

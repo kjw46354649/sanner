@@ -62,6 +62,17 @@ public class CadFileConverter {
      * @throws IOException
      * @throws InterruptedException
      */
+    public static void dxf_to_dxf(String orginalFile, String targetFilePath, String fileName) throws IOException, InterruptedException {
+        CadImage cadImage = (CadImage)Image.load(orginalFile);
+        cadImage.save(targetFilePath + File.separator + fileName);
+    }
+
+    /**
+     * CAD FILE TO DXF2010 VERSION CONVERT
+     * @param orginalFile
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public static String  cadfile_to_dxf2010(String orginalFile, String targetFilePath, String fileName) throws IOException, InterruptedException {
         int result = CommandExecuteUtil.execCommand(CMD_TO_NORMAL_DFX2010_WIN_EXE, orginalFile, targetFilePath, "ACAD2010", "DWG", "0", "1", fileName);
         return targetFilePath;

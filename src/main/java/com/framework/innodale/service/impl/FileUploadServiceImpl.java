@@ -112,6 +112,7 @@ public class FileUploadServiceImpl implements FileUploadService {
             fileInfo.put("FILE_NM", 		serverFileName);
             fileInfo.put("FILE_PATH", 		uploadFilePath + File.separator + serverFileName);
             fileInfo.put("ORGINAL_FILE_NM", originalFullName);
+            fileInfo.put("FILE_NM",         originalFullName);
             fileInfo.put("FILE_TYPE", 		multipartFile.getContentType());
             fileInfo.put("FILE_EXT", 		originalExtName);
             fileInfo.put("FILE_SIZE", 		multipartFile.getSize());
