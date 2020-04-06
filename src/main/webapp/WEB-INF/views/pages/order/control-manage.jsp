@@ -24,8 +24,8 @@
                         <input type="hidden" name="queryId" id="queryId" value="selectControlManageList">
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="CORPORATION">사업자</label>
-                                <select class="form-control" name="CORPORATION" id="CORPORATION">
+                                <label class="control-label" for="COMP_CD">사업자</label>
+                                <select class="form-control" name="COMP_CD" id="COMP_CD">
                                     <option value="">All</option>
                                     <c:forEach var="code" items="${HighCode.H_1007}">
                                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -39,23 +39,23 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="DRAWING_NUMBER">도면번호</label>
-                                <input type="text" class="form-control" name="DRAWING_NUMBER" id="DRAWING_NUMBER">
+                                <label class="control-label" for="DRAWING_NUM">도면번호</label>
+                                <input type="text" class="form-control" name="DRAWING_NUM" id="DRAWING_NUM">
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="PRODUCT_NAME">품명</label>
-                                <input type="text" class="form-control" name="PRODUCT_NAME" id="PRODUCT_NAME">
+                                <label class="control-label" for="ITEM_NM">품명</label>
+                                <input type="text" class="form-control" name="ITEM_NM" id="ITEM_NM">
                             </div>
                         </div>
                         <div class="line line-dashed b-b line-xs"></div>
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="CONTROL_NUMBER">관리번호</label>
-                                <input type="text" class="form-control" name="CONTROL_NUMBER" id="CONTROL_NUMBER">
+                                <label class="control-label" for="CONTROL_NUM">관리번호</label>
+                                <input type="text" class="form-control" name="CONTROL_NUM" id="CONTROL_NUM">
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="ORDER_NUMBER">발주번호</label>
-                                <input type="text" class="form-control" name="ORDER_NUMBER" id="ORDER_NUMBER">
+                                <label class="control-label" for="ORDER_NUM">발주번호</label>
+                                <input type="text" class="form-control" name="ORDER_NUM" id="ORDER_NUM">
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="STANDARD">규격</label>
@@ -263,12 +263,16 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6">
+                        <form class="form-inline" id="MONTH_FINISH_LEFT_FORM" role="form">
+                            <input type="hidden" name="queryId" id="queryId" value="selectFinishLastMonthList">
+                            <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
                         <div class="col-md-8">
                             <div class="col-md-3">
                                 <label class="control-label" for="UNIT_CONST">대상 년/월</label>
                             </div>
                             <div class="col-md-5">
                                 <select class="form-control" name="MONTH_FINISH_YEAR" id="MONTH_FINISH_YEAR">
+                                    <option></option>
                                 </select>
                             </div>
                             <div class="col-md-4">
@@ -279,20 +283,32 @@
                         </div>
                         <div class="col-md-4">
                             <div class="col-md-6">
-                                <label class="control-label" for="UNIT_CONST">차수</label>
+                                <label class="control-label" for="CLOSE_VER">차수</label>
                             </div>
                             <div class="col-md-6">
-                                <select class="form-control" name="" id="">
+                                <select class="form-control" name="CLOSE_VER" id="CLOSE_VER">
+                                    <option value="1">
+                                        1차
+                                    </option>
+                                    <option value="2">
+                                        2차
+                                    </option>
+                                    <option value="3">
+                                        3차
+                                    </option>
+                                    <option value="4">
+                                        4차
+                                    </option>
                                 </select>
                             </div>
                         </div>
-
                     </div>
+                    </form>
                     <div class="col-md-6">
                         <b>진행 하시겠습니까?</b>
                         <div class="text-right">
-                            <button id="">Yes</button>
-                            <button id="">No</button>
+                            <button id="MONTH_FINISH_YES">Yes</button>
+                            <button id="MONTH_FINISH_NO">No</button>
                         </div>
                     </div>
                 </div>
@@ -878,13 +894,15 @@
         };
         let $monthFinishLeftGrid;
         const monthFinishLeftGridId = 'MONTH_FINISH_LEFT_GRID';
+        let monthFinishLeftPostData = fnFormToJsonArrayData('#MONTH_FINISH_LEFT_FORM');
         let monthFinishLeftColModel = [
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP', hidden:true},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '마감월', dataType: 'string', dataIndx: 'ORDER_STAFF_NM'},
-            {title: '차수', dataType: 'string', dataIndx: 'DESIGNER_NM'},
-            {title: '건수', dataType: 'string', dataIndx: 'NOTE'},
-            {title: '마감금액', dataType: 'string', dataIndx: 'MODULE_NM'}
+            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden:true},
+            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
+            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
+            {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
+            {title: '마감금액', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT'}
         ];
         let monthFinishLeftObj = {
             // height: 600,
@@ -902,7 +920,7 @@
             colModel: monthFinishLeftColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'orderMapper.emptyGrid'},
+                postData: monthFinishLeftPostData,
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -913,10 +931,11 @@
         let monthFinishRightColModel = [
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden:true, colModel: []},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', colModel: []},
-            {title: '마감월', dataType: 'string', dataIndx: 'FINISH_MONTH', colModel: []},
-            {title: '차수', dataType: 'string', dataIndx: 'DEGREE', colModel: []},
-            {title: '건수', dataType: 'string', dataIndx: 'NUMBER', colModel: []},
-            {title: '변경후 마감금액', dataType: 'string', dataIndx: 'MODULE_NM', colModel: []},
+            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden:true, colModel: []},
+            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN', colModel: []},
+            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER', colModel: []},
+            {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY', colModel: []},
+            {title: '변경후 마감금액', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT', colModel: []},
             {
                 title: '추가 금액', align: 'center', colModel: [
                     {title: '', datatype: 'string', dataIndx: 'ADDITION_NUMBER'},
@@ -1094,10 +1113,54 @@
         });
 
         $('#MONTH_FINISH_POPUP').on('show.bs.modal', function () {
+            let selectedRowCount = selectedRowIndex.length;
+            let list = [];
+            let orderCompCdList = [];
+            let orderCompCdStr = '';
+
+            for (let i = 0; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+
+                list.push(rowData);
+                orderCompCdList.push(rowData.ORDER_COMP_CD);
+            }
+
+            // 중복제거
+            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+
+
+            for(let i = 0; i < orderCompCdList.length; i++){
+                orderCompCdStr += orderCompCdList[i];
+
+                if (i < orderCompCdList.length - 1) {
+                    orderCompCdStr += ',';
+                }
+            }
+
+            $('#MONTH_FINISH_LEFT_FORM > #ORDER_COMP_CD').val(orderCompCdStr);
+
             fnAppendSelectboxYear('MONTH_FINISH_YEAR');
             fnAppendSelectboxMonth('MONTH_FINISH_MONTH');
+
             $monthFinishLeftGrid = $('#' + monthFinishLeftGridId).pqGrid(monthFinishLeftObj);
             $monthFinishRightGrid = $('#' + monthFinishRightGridId).pqGrid(monthFinishRightObj);
+
+
+            $monthFinishLeftGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+                return (fnFormToJsonArrayData('#MONTH_FINISH_LEFT_FORM'));
+            });
+            $monthFinishLeftGrid.pqGrid('refreshDataAndView');
+
+            // rightGrid
+            let temp = fnFormToJsonArrayData('#MONTH_FINISH_LEFT_FORM')
+            temp.list = list;
+            let parameters = {'url': '/selectMonthFinishRightGrid', 'data': {data: JSON.stringify(temp)}}
+            fnPostAjax(function (data, callFunctionParam) {
+                $monthFinishRightGrid.pqGrid("option", "dataModel.data", data.list);
+                $monthFinishRightGrid.pqGrid('refreshView');
+            }, parameters, '');
         });
 
         $('#MONTH_FINISH_POPUP').on('hide.bs.modal', function () {
@@ -1176,25 +1239,6 @@
             getOrderStatusButton(event);
         });
 
-        /**
-         * @description 마감버튼 클릭
-         */
-        $('#DEADLINE').on('click', function (event) {
-            let selectedRowCount = selectedRowIndex.length;
-
-            for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
-
-                if (rowData.ORDER_STATUS_NM === '주문확정') {
-                    alert('외주가 ‘Y’ 인 상태에서는 외주관리화면에서 대상을 먼저 삭제해야만 확정취소가 가능');
-                    return false;
-                }
-
-            }
-
-            getOrderStatusButton(event);
-        });
-
         $('#MONTH_FINISH_YEAR').on('change', function() {
             fnAppendSelectboxMonth('MONTH_FINISH_MONTH', this.value);
         });
@@ -1213,6 +1257,24 @@
         /* 도면 등록 팝업 호출 */
         $drawingRegistration.click(function(){
             commonCadFileAttachPopup.modal('show');
+        });
+
+        $('#MONTH_FINISH_YES').on('click', function() {
+            let selectedRowCount = selectedRowIndex.length;
+            let list = [];
+
+            for (let i = 0; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                rowData.CLOSE_VER = $('#CLOSE_VER').val();
+                rowData.CLOSE_MONTH = $('#MONTH_FINISH_YEAR').val() + $('#MONTH_FINISH_MONTH').val();
+                list.push(rowData);
+            }
+
+            // rightGrid
+            let parameters = {'url': '/insertMonthFinishClose', 'data': {data: JSON.stringify(list)}}
+            fnPostAjax(function (data, callFunctionParam) {
+                $monthFinishLeftGrid.pqGrid('refreshDataAndView');
+            }, parameters, '');
         });
 
         /* 견적등록 */

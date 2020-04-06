@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -37,6 +38,26 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public void insertControlPartProgressList(Map<String, Object> hashMap) throws SQLException {
         sqlSessionTemplate.insert("insertControlPartProgressList", hashMap);
+    }
+
+    @Override
+    public List<Map<String, Object>> selectMonthFinishRightGrid(Map<String, Object> map) throws SQLException {
+        return sqlSessionTemplate.selectList("selectMonthFinishRightGrid", map);
+    }
+
+    @Override
+    public void insertMonthFinishClose(HashMap<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("insertMonthFinishClose", hashMap);
+    }
+
+    @Override
+    public void insertMonthFinishCloseHistory(HashMap<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("insertMonthFinishCloseHistory", hashMap);
+    }
+
+    @Override
+    public void updateControlStatus(HashMap<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.update("updateControlStatus", hashMap);
     }
 
 }
