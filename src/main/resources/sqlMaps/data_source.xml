@@ -28,7 +28,7 @@
             COMP_CD AS CODE_CD, COMP_NM AS CODE_NM
         FROM TBL_COMPANY
         WHERE 1 = 1
-            AND COMP_KIND = 'CLS010'
+            AND ORDER_COMPANY_YN = 'Y'
             AND DEL_YN = 'N'
     </select>
 
@@ -37,7 +37,7 @@
             COMP_CD AS CODE_CD, COMP_NM AS CODE_NM
         FROM TBL_COMPANY
         WHERE 1 = 1
-            AND COMP_KIND = 'CLS030'
+            AND FAMILY_COMPANY_YN = 'Y'
             AND DEL_YN = 'N'
     </select>
 
