@@ -50,4 +50,8 @@
         select ROWNUM from empty_tbl;
     </select>
 
+    <select id="emptyGrid" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT 1 FROM DUAL WHERE FALSE
+    </select>
+
 </mapper>

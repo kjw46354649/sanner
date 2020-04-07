@@ -2,9 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 
 <mapper namespace="orderMapper">
-    <select id="emptyGrid" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT 1 FROM DUAL WHERE FALSE
-    </select>
 
     <sql id="controlManage">
         SELECT
@@ -25,8 +22,8 @@
             A.NOTE, <!-- 비고 -->
             <!--        '', 거래명세서 no -->
             A.MODULE_NM, <!-- 모듈명 -->
-            A.MAIN_INSPECTION_YN, <!-- 주요 검사품 -->
-            SF_GET_CODE_NM(1045, A.MAIN_INSPECTION_YN, 'EN') AS MAIN_INSPECTION_YN_NM, <!-- 주요 검사품 -->
+            A.MAIN_INSPECTION, <!-- 주요 검사품 -->
+            SF_GET_CODE_NM(1045, A.MAIN_INSPECTION, 'EN') AS MAIN_INSPECTION_NM, <!-- 주요 검사품 -->
             A.EMERGENCY_YN, <!-- 긴급 -->
             SF_GET_CODE_NM(1045, A.EMERGENCY_YN, 'EN') AS EMERGENCY_YN_NM, <!-- 긴급 -->
             A.CONTROL_VER, <!-- 관리번호버전 -->
@@ -128,17 +125,17 @@
             CLOSE_MONTH,
             CLOSE_MONTH_TRAN,
             CLOSE_VER,
-            CAST(ORDER_QTY AS CHAR) AS ORDER_QTY,
-            CAST(UNIT_FINAL_AMT AS CHAR) AS UNIT_FINAL_AMT
+            ORDER_QTY,
+            UNIT_FINAL_AMT
         FROM (
             SELECT
                 A.ORDER_COMP_CD,
                 SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM,
                 D.CLOSE_MONTH, <!-- 마감월 -->
                 DATE_FORMAT(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m'), '%Y.%m월' ) AS CLOSE_MONTH_TRAN,
-                D.CLOSE_VER, <!-- 차수 -->
-                SUM(C.ORDER_QTY) AS ORDER_QTY, <!-- 건수 -->
-                SUM(B.UNIT_FINAL_AMT) AS UNIT_FINAL_AMT <!-- 마감금액 -->
+                CONCAT(D.CLOSE_VER, '차') AS CLOSE_VER, <!-- 차수 -->
+                CONCAT(CAST(SUM(C.ORDER_QTY) AS CHAR), '건') AS ORDER_QTY, <!-- 건수 -->
+                FORMAT(SUM(B.UNIT_FINAL_AMT), 0) AS UNIT_FINAL_AMT <!-- 마감금액 -->
             FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = B.CONTROL_SEQ
@@ -161,10 +158,10 @@
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             WHERE 1 = 1
                 AND A.ORDER_COMP_CD IN (${ORDER_COMP_CD})
-                AND NOT EXISTS (SELECT *
-                                FROM TBL_CONTROL_CLOSE
-                                WHERE B.CONTROL_SEQ = CONTROL_SEQ
-                                    AND CLOSE_MONTH = CONCAT(#{MONTH_FINISH_YEAR}, #{MONTH_FINISH_MONTH}))
+                AND A.ORDER_COMP_CD NOT IN (SELECT DISTINCT C.ORDER_COMP_CD
+                                            FROM TBL_CONTROL C
+                                            INNER JOIN TBL_CONTROL_CLOSE D ON C.CONTROL_SEQ = D.CONTROL_SEQ
+                                            WHERE D.CLOSE_MONTH = CONCAT(#{MONTH_FINISH_YEAR}, #{MONTH_FINISH_MONTH}))
             GROUP BY A.ORDER_COMP_CD
         ) X
     </select>
@@ -175,18 +172,18 @@
             ORDER_COMP_NM,
             CLOSE_MONTH,
             CLOSE_MONTH_TRAN,
-            CLOSE_VER,
-            SUM(ORDER_QTY) AS ORDER_QTY,
-            SUM(UNIT_FINAL_AMT) AS UNIT_FINAL_AMT
+            CONCAT(CLOSE_VER, '차') AS CLOSE_VER,
+            CONCAT(CAST(SUM(ORDER_QTY) AS CHAR),'건') AS ORDER_QTY,
+            FORMAT(SUM(UNIT_FINAL_AMT), 0) AS UNIT_FINAL_AMT
         FROM (
             SELECT
                 A.ORDER_COMP_CD,
                 SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM,
-                D.CLOSE_MONTH, <!-- 마감월 -->
+                D.CLOSE_MONTH,
                 DATE_FORMAT(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m'), '%Y.%m월' ) AS CLOSE_MONTH_TRAN,
-                D.CLOSE_VER, <!-- 차수 -->
-                SUM(C.ORDER_QTY) AS ORDER_QTY, <!-- 건수 -->
-                SUM(B.UNIT_FINAL_AMT) AS UNIT_FINAL_AMT <!-- 마감금액 -->
+                D.CLOSE_VER,
+                SUM(C.ORDER_QTY) AS ORDER_QTY,
+                SUM(B.UNIT_FINAL_AMT) AS UNIT_FINAL_AMT
             FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = B.CONTROL_SEQ
@@ -217,13 +214,13 @@
         <foreach collection="list" item="item">
             UNION ALL
             SELECT
-            A.ORDER_COMP_CD,
-            SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM,
-            CONCAT(#{MONTH_FINISH_YEAR}, #{MONTH_FINISH_MONTH}) AS CLOSE_MONTH, <!-- 마감월 -->
-            DATE_FORMAT(STR_TO_DATE(CONCAT(#{MONTH_FINISH_YEAR}, #{MONTH_FINISH_MONTH}), '%Y%m'), '%Y.%m월' ) AS CLOSE_MONTH_TRAN, <!-- 마감월 -->
-            #{CLOSE_VER},
-            C.ORDER_QTY,
-            B.UNIT_FINAL_AMT
+                A.ORDER_COMP_CD,
+                SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM,
+                CONCAT(#{MONTH_FINISH_YEAR}, #{MONTH_FINISH_MONTH}) AS CLOSE_MONTH, <!-- 마감월 -->
+                DATE_FORMAT(STR_TO_DATE(CONCAT(#{MONTH_FINISH_YEAR}, #{MONTH_FINISH_MONTH}), '%Y%m'), '%Y.%m월' ) AS CLOSE_MONTH_TRAN, <!-- 마감월 -->
+                #{CLOSE_VER},
+                C.ORDER_QTY,
+                B.UNIT_FINAL_AMT
             FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = B.CONTROL_SEQ
@@ -279,7 +276,7 @@
             DESIGNER_NM,
             NOTE,
             MODULE_NM,
-            MAIN_INSPECTION_YN,
+            MAIN_INSPECTION,
             EMERGENCY_YN,
             CONTROL_STATUS,
             STATUS_DT
@@ -297,7 +294,7 @@
             #{item.DESIGNER_NM},
             #{item.NOTE},
             #{item.MODULE_NM},
-            #{item.MAIN_INSPECTION_YN},
+            #{item.MAIN_INSPECTION},
             #{item.EMERGENCY_YN},
             #{item.CONTROL_STATUS},
             NOW()
@@ -509,7 +506,7 @@
             DESIGNER_NM = #{DESIGNER_NM},
             NOTE = #{NOTE},
             MODULE_NM = #{MODULE_NM},
-            MAIN_INSPECTION_YN = #{MAIN_INSPECTION_YN},
+            MAIN_INSPECTION = #{MAIN_INSPECTION},
             EMERGENCY_YN = #{EMERGENCY_YN},
             CONTROL_STATUS = #{CONTROL_STATUS},
             STATUS_DT = NOW(),
@@ -784,4 +781,5 @@
         D.CLOSE_MONTH, <!-- 마감월 -->
         D.CLOSE_VER
     </select>
+
 </mapper>
