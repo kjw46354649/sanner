@@ -522,17 +522,17 @@
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true, colModel: []},
             {title: 'INV No.<br>(거래명세No.)', dataType: 'string', dataIndx: 'CHARGE_USER_ID', colModel: []},
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', editable: true, colModel: []},
-            {title: '주요<br>검사품', dataType: 'select', dataIndx: 'MAIN_INSPECTION_YN', colModel: [],
+            {title: '주요<br>검사품', dataType: 'select', dataIndx: 'MAIN_INSPECTION', colModel: [],
                 editor: {
                     type: 'select',
-                    mapIndices: {name: 'MAIN_INSPECTION_YN_NM', id: 'MAIN_INSPECTION_YN'},
+                    mapIndices: {name: 'MAIN_INSPECTION_NM', id: 'MAIN_INSPECTION'},
                     valueIndx: 'value',
                     labelIndx: 'text',
                     options: fnGetCommCodeGridSelectBox('1045'),
                     getData: function (ui) {
                         let clave = ui.$cell.find('select').val();
                         let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: ui.rowIndx});
-                        rowData['MAIN_INSPECTION_YN'] = clave;
+                        rowData['MAIN_INSPECTION'] = clave;
                         return ui.$cell.find("select option[value='" + clave + "']").text();
                     }
                 }
@@ -776,7 +776,7 @@
             {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', colModel: []},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', colModel: []},
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', colModel: []},
-            {title: '주요 검사품',  dataType: 'select', dataIndx: 'MAIN_INSPECTION_YN', colModel: []},
+            {title: '주요 검사품',  dataType: 'select', dataIndx: 'MAIN_INSPECTION', colModel: []},
             {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN', colModel: []},
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', colModel: []},
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', colModel: []},
@@ -876,7 +876,7 @@
             toolbar: popupToolbar,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'orderMapper.emptyGrid'},
+                postData: {'queryId': 'dataSource.emptyGrid'},
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -920,7 +920,7 @@
             colModel: monthFinishLeftColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: monthFinishLeftPostData,
+                postData: {'queryId': 'dataSource.emptyGrid'},
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -959,7 +959,7 @@
             colModel: monthFinishRightColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'orderMapper.emptyGrid'},
+                postData: {'queryId': 'dataSource.emptyGrid'},
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -1146,7 +1146,6 @@
 
             $monthFinishLeftGrid = $('#' + monthFinishLeftGridId).pqGrid(monthFinishLeftObj);
             $monthFinishRightGrid = $('#' + monthFinishRightGridId).pqGrid(monthFinishRightObj);
-
 
             $monthFinishLeftGrid.pqGrid('option', 'dataModel.postData', function (ui) {
                 return (fnFormToJsonArrayData('#MONTH_FINISH_LEFT_FORM'));
