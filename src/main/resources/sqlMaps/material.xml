@@ -250,4 +250,7 @@
         WHERE MATERIAL_ORDER_SEQ = #{MATERIAL_ORDER_SEQ}
     </update>
 
+    <select id="selectInWarehouseManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+
+    </select>
 </mapper>
