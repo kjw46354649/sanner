@@ -232,24 +232,12 @@
         let estimateRegisterBotGrid = $("#estimate_register_bot_grid");
 
         let estimateRegisterTopColModel= [
-            {title: 'EST_SEQ', dataType: 'string', dataIndx: 'EST_SEQ' , hidden:true} ,
-            {title: 'SEQ', dataType: 'string', dataIndx: 'SEQ' , hidden:true} ,
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM' } ,
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM' } ,
             {title: '', dataType: 'string', dataIndx: 'DRAWING_YN' } ,
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', validations: [{ type: 'minLen', value: 1, msg: "Required"}] } ,
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM' } ,
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT' } ,
-            /*
-            {title: '규격', align: "center", colModel: [
-                //{title: '타입', dataType: 'string', dataIndx: 'SIZE_TYPE'},
-                {title: '가로', dataType: 'string', dataIndx: 'SIZE_W'},
-                {title: '세로', dataType: 'string', dataIndx: 'SIZE_H'},
-                {title: '두꼐', dataType: 'string', dataIndx: 'SIZE_T'},
-                {title: '지름', dataType: 'string', dataIndx: 'SIZE_D'},
-                {title: '길이', dataType: 'string', dataIndx: 'SIZE_L'},
-            ]},
-            */
             {title: '작업구분', dataType: 'string', dataIndx: 'WORK_TYPE',
                 editor: {
                     type: 'select',
@@ -346,7 +334,9 @@
             {title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ'},
             {title: 'DWF', dataType: 'string', dataIndx: 'DWF_GFILE_SEQ'},
             {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ'},
-            {title: 'IMG', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ'}
+            {title: 'IMG', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ'},
+            {title: 'EST_SEQ', dataType: 'string', dataIndx: 'EST_SEQ' , hidden:true} ,
+            {title: 'SEQ', dataType: 'string', dataIndx: 'SEQ' , hidden:true}
         ];
 
         let estimateRegisterBotColModel= [
@@ -450,6 +440,7 @@
             //resizable: true,
             colModel: estimateRegisterTopColModel,
             toolbar: estimateRegisterTopToolbar,
+            strNoRows: g_noData,
             selectChange: function (event, ui) {
                 if (ui.selection.iCells.ranges[0] !== undefined) {
                     estimateRegisterSelectedRowIndex = [];
@@ -485,6 +476,8 @@
                     estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'FINAL_AMOUNT': calculateEstimateAmt } });
 
                 }
+
+                console.log(event);
             }
         });
 

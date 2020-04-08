@@ -46,6 +46,7 @@
     var g_code;
     var royal_tab_api = null;
     var multiFileUploadBox = [];    // 임시 형태의 file upload 저장소
+    var g_noData = '<div style="font-size:18px;margin-top:20px;">No Data</div>';
 
     $(document).ready(function() {
 
