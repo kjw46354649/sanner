@@ -182,16 +182,16 @@
                     </a>
                     <button id="DRAWING_REGISTRATION">도면 등록</button>
                     <button id="DRAWING_CHANGE">도면변경(Rev. up)</button>
-                    <button name="CHANGE_STATUS" id="CONFIRMATION" data-control_status="PRO01"
-                            data-control_status_nm="주문확정">확정
+                    <button name="CHANGE_STATUS" id="CONFIRMATION" data-control_status="ORD001"
+                            data-control_status_nm="확정">확정
                     </button>
-                    <button name="CHANGE_STATUS" id="CANCEL" data-control_status="PRO00"
-                            data-control_status_nm="주문취소">취소
+                    <button name="CHANGE_STATUS" id="CANCEL" data-control_status="ORD002"
+                            data-control_status_nm="취소">취소
                     </button>
-                    <button name="CHANGE_STATUS" id="TERMINATION" data-control_status="2"
+                    <button name="CHANGE_STATUS" id="TERMINATION" data-control_status="ORD004"
                             data-control_status_nm="종료">종료
                     </button>
-                    <a href="#MONTH_FINISH_POPUP" data-toggle="modal" data-refform="MONTH_FINISH_POPUP">
+                    <a href="#CONTROL_CLOSE_POPUP" data-toggle="modal" data-refform="CONTROL_CLOSE_POPUP">
                         <input type="button" value="마감">
                     </a>
                     <a href="#ESTIMATE_REGISTER_POPUP" data-toggle="modal" data-refform="ESTIMATE_REGISTER_POPUP">
@@ -235,13 +235,14 @@
             </div>
             <div class="modal-body">
                 <div id="ORDER_REGISTER_GRID"></div>
+                <div id="TEMP_ORDER_REGISTER_GRID"></div>
             </div>
             <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
     </div>
 </div>
-<div class="modal" id="MONTH_FINISH_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal" id="CONTROL_CLOSE_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -252,31 +253,32 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-5">
-                        <div id="MONTH_FINISH_LEFT_GRID"></div>
+                        <div id="CONTROL_CLOSE_LEFT_GRID"></div>
                     </div>
                     <div class="col-md-2">
                         화살표~>
                     </div>
                     <div class="col-md-5">
-                        <div id="MONTH_FINISH_RIGHT_GRID"></div>
+                        <div id="CONTROL_CLOSE_RIGHT_GRID"></div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <form class="form-inline" id="MONTH_FINISH_LEFT_FORM" role="form">
-                            <input type="hidden" name="queryId" id="queryId" value="selectFinishLastMonthList">
+                        <form class="form-inline" id="CONTROL_CLOSE_FORM" role="form">
+                            <input type="hidden" name="queryId" id="queryId" value="selectControlCloseLeftList">
+                            <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
                             <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
                         <div class="col-md-8">
                             <div class="col-md-3">
                                 <label class="control-label" for="UNIT_CONST">대상 년/월</label>
                             </div>
                             <div class="col-md-5">
-                                <select class="form-control" name="MONTH_FINISH_YEAR" id="MONTH_FINISH_YEAR">
+                                <select class="form-control" name="CONTROL_CLOSE_YEAR" id="CONTROL_CLOSE_YEAR">
                                     <option></option>
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <select class="form-control" name="MONTH_FINISH_MONTH" id="MONTH_FINISH_MONTH">
+                                <select class="form-control" name="CONTROL_CLOSE_MONTH" id="CONTROL_CLOSE_MONTH">
                                     <option></option>
                                 </select>
                             </div>
@@ -307,8 +309,8 @@
                     <div class="col-md-6">
                         <b>진행 하시겠습니까?</b>
                         <div class="text-right">
-                            <button id="MONTH_FINISH_YES">Yes</button>
-                            <button id="MONTH_FINISH_NO">No</button>
+                            <button id="CONTROL_CLOSE_YES">Yes</button>
+                            <button id="CONTROL_CLOSE_NO">No</button>
                         </div>
                     </div>
                 </div>
@@ -733,8 +735,8 @@
 
                     newRowData.ROWNUM = totalRecords + 1;
                     newRowData.PART_NUM = newPartNum;
-                    newRowData.WORK_NM = '가공';
-                    newRowData.WORK_TYPE = 'FCT01';
+                    newRowData.WORK_NM = '단품가공';
+                    newRowData.WORK_TYPE = 'WTP010';
 
                     $orderManagementGrid.pqGrid('addRow', {
                         newRow: newRowData,
@@ -768,8 +770,10 @@
             }
         };
         let $orderRegisterGrid;
+        let $tempOrderRegisterGrid;
         const popupGridId = 'ORDER_REGISTER_GRID';
-        let popupColModel = [
+        const popupTempGridId = 'TEMP_ORDER_REGISTER_GRID';
+        const popupColModel = [
             {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_NM', colModel: []},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', colModel: []},
             {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', colModel: []},
@@ -811,7 +815,7 @@
             {title: '최종<br>공급단가', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT', colModel: []},
             {title: '변경전<br>도면번호', dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', colModel: []}
         ];
-        let popupToolbar = {
+        const popupToolbar = {
             cls: 'pq-toolbar-crud',
             items: [
                 {
@@ -826,7 +830,7 @@
                         'click': function (evt, ui) {
                             let data = $orderRegisterGrid.pqGrid('option', 'dataModel.data');
 
-                            for (let i = 0; i < data.length; i++) data[i].STATUS = 'PRO01'
+                            for (let i = 0; i < data.length; i++) data[i].STATUS = 'ORD001'
 
                             let parameters = {
                                 'url': '/registerNewOrder',
@@ -860,7 +864,7 @@
                 }
             ]
         };
-        let popoupObj = {
+        const popoupObj = {
             // height: 600,
             collapsible: false,
             resizable: true,
@@ -890,12 +894,33 @@
                     if (firstRow === lastRow) selectedRowIndex[0] = firstRow;
                     else for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
                 }
-            }
+            },
+            beforePaste: function(evt, ui){
+                console.log(evt);
+                console.log(ui);
+                //sanitize pasted data.
+                // var CM = this.getColModel(),
+                //     rows = ui.rows,
+                //     area = ui.areas[0],
+                //     c1 = area.c1;
+                //
+                // for(var i=0; i<rows.length; i++){
+                //     var row = rows[i];
+                //     for(var j=0; j<row.length; j++){
+                //         var column = CM[j+c1],
+                //             dt = column.dataType;
+                //         if( dt == "integer" || dt == "float" ){
+                //
+                //             row[j] = row[j].replace(/[^(\d|\.)]/g,"");
+                //         }
+                //     }
+                // }
+            },
+
         };
-        let $monthFinishLeftGrid;
-        const monthFinishLeftGridId = 'MONTH_FINISH_LEFT_GRID';
-        let monthFinishLeftPostData = fnFormToJsonArrayData('#MONTH_FINISH_LEFT_FORM');
-        let monthFinishLeftColModel = [
+        let $controlCloseLeftGrid;
+        const controlCloseLeftGridId = 'CONTROL_CLOSE_LEFT_GRID';
+        let controlCloseLeftColModel = [
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP', hidden:true},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden:true},
@@ -904,7 +929,7 @@
             {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
             {title: '마감금액', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT'}
         ];
-        let monthFinishLeftObj = {
+        let controlCloseLeftObj = {
             // height: 600,
             collapsible: false,
             resizable: true,
@@ -917,7 +942,7 @@
                 hvalign: 'center',
                 editable: false
             },
-            colModel: monthFinishLeftColModel,
+            colModel: controlCloseLeftColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: {'queryId': 'dataSource.emptyGrid'},
@@ -926,9 +951,9 @@
                 }
             }
         };
-        let $monthFinishRightGrid;
-        const monthFinishRightGridId = 'MONTH_FINISH_RIGHT_GRID';
-        let monthFinishRightColModel = [
+        let $controlCloseRightGrid;
+        const controlCloseRightGridId = 'CONTROL_CLOSE_RIGHT_GRID';
+        let controlCloseRightColModel = [
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden:true, colModel: []},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', colModel: []},
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden:true, colModel: []},
@@ -938,12 +963,12 @@
             {title: '변경후 마감금액', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT', colModel: []},
             {
                 title: '추가 금액', align: 'center', colModel: [
-                    {title: '', datatype: 'string', dataIndx: 'ADDITION_NUMBER'},
-                    {title: '', datatype: 'string', dataIndx: 'ADDITION_AMOUNT'}
+                    {title: '', datatype: 'string', dataIndx: 'ADD_QTY'},
+                    {title: '', datatype: 'string', dataIndx: 'ADD_UNIT_FINAL_AMT'}
                 ]
             }
         ];
-        let monthFinishRightObj = {
+        let controlCloseRightObj = {
             // height: 600,
             collapsible: false,
             resizable: true,
@@ -956,7 +981,7 @@
                 hvalign: 'center',
                 editable: false
             },
-            colModel: monthFinishRightColModel,
+            colModel: controlCloseRightColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: {'queryId': 'dataSource.emptyGrid'},
@@ -1060,6 +1085,62 @@
             }
             $orderManagementGrid.pqGrid('updateRow', {rowList: rowListConvert});
         };
+        
+        let loadDataControlClose = function () {
+            let selectedRowCount = selectedRowIndex.length;
+            let list = [];
+            let controlSeqList = [];
+            let orderCompCdList = [];
+            let controlSeqStr = '';
+            let orderCompCdStr = '';
+
+            for (let i = 0; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+
+                list.push(rowData);
+                controlSeqList.push(rowData.CONTROL_SEQ);
+                orderCompCdList.push(rowData.ORDER_COMP_CD);
+            }
+            // 중복제거
+            controlSeqList = controlSeqList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+
+            for (let i = 0; i < controlSeqList.length; i++) {
+                controlSeqStr += controlSeqList[i];
+
+                if (i < controlSeqList.length - 1) {
+                    controlSeqStr += ',';
+                }
+            }
+            for (let i = 0; i < orderCompCdList.length; i++) {
+                orderCompCdStr += orderCompCdList[i];
+
+                if (i < orderCompCdList.length - 1) {
+                    orderCompCdStr += ',';
+                }
+            }
+
+            $('#CONTROL_CLOSE_FORM > #CONTROL_SEQ').val(controlSeqStr);
+            $('#CONTROL_CLOSE_FORM > #ORDER_COMP_CD').val(orderCompCdStr);
+
+            $controlCloseLeftGrid.pqGrid('option', 'dataModel.postData', function () {
+                return (fnFormToJsonArrayData('#CONTROL_CLOSE_FORM'));
+            });
+            $controlCloseLeftGrid.pqGrid('refreshDataAndView');
+
+            let controlCloseRightPostData = fnFormToJsonArrayData('#CONTROL_CLOSE_FORM')
+            controlCloseRightPostData.list = list;
+            let parameters = {'url': '/selectControlCloseRightList', 'data': {data: JSON.stringify(controlCloseRightPostData)}}
+
+            fnPostAjax(function (data, callFunctionParam) {
+                $controlCloseRightGrid.pqGrid('option', 'dataModel.data', data.list);
+                $controlCloseRightGrid.pqGrid('refreshView');
+            }, parameters, '');
+        };
         /* function */
 
         /* event */
@@ -1106,65 +1187,31 @@
 
         $('#CONTROL_MANGE_POPUP').on('show.bs.modal', function () {
             $orderRegisterGrid = $('#' + popupGridId).pqGrid(popoupObj);
+            $tempOrderRegisterGrid = $('#' + popupTempGridId).pqGrid(popoupObj);
         });
 
         $('#CONTROL_MANGE_POPUP').on('hide.bs.modal', function () {
             $orderRegisterGrid.pqGrid('destroy');
+            $tempOrderRegisterGrid.pqGrid('destroy');
         });
 
-        $('#MONTH_FINISH_POPUP').on('show.bs.modal', function () {
-            let selectedRowCount = selectedRowIndex.length;
-            let list = [];
-            let orderCompCdList = [];
-            let orderCompCdStr = '';
+        $('#CONTROL_CLOSE_POPUP').on('show.bs.modal', function () {
+            fnAppendSelectboxYear('CONTROL_CLOSE_YEAR', 3);
+            fnAppendSelectboxMonth('CONTROL_CLOSE_MONTH');
 
-            for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+            $controlCloseLeftGrid = $('#' + controlCloseLeftGridId).pqGrid(controlCloseLeftObj);
+            $controlCloseRightGrid = $('#' + controlCloseRightGridId).pqGrid(controlCloseRightObj);
 
-                list.push(rowData);
-                orderCompCdList.push(rowData.ORDER_COMP_CD);
-            }
-
-            // 중복제거
-            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-
-
-            for(let i = 0; i < orderCompCdList.length; i++){
-                orderCompCdStr += orderCompCdList[i];
-
-                if (i < orderCompCdList.length - 1) {
-                    orderCompCdStr += ',';
-                }
-            }
-
-            $('#MONTH_FINISH_LEFT_FORM > #ORDER_COMP_CD').val(orderCompCdStr);
-
-            fnAppendSelectboxYear('MONTH_FINISH_YEAR');
-            fnAppendSelectboxMonth('MONTH_FINISH_MONTH');
-
-            $monthFinishLeftGrid = $('#' + monthFinishLeftGridId).pqGrid(monthFinishLeftObj);
-            $monthFinishRightGrid = $('#' + monthFinishRightGridId).pqGrid(monthFinishRightObj);
-
-            $monthFinishLeftGrid.pqGrid('option', 'dataModel.postData', function (ui) {
-                return (fnFormToJsonArrayData('#MONTH_FINISH_LEFT_FORM'));
-            });
-            $monthFinishLeftGrid.pqGrid('refreshDataAndView');
-
-            // rightGrid
-            let temp = fnFormToJsonArrayData('#MONTH_FINISH_LEFT_FORM')
-            temp.list = list;
-            let parameters = {'url': '/selectMonthFinishRightGrid', 'data': {data: JSON.stringify(temp)}}
-            fnPostAjax(function (data, callFunctionParam) {
-                $monthFinishRightGrid.pqGrid("option", "dataModel.data", data.list);
-                $monthFinishRightGrid.pqGrid('refreshView');
-            }, parameters, '');
+            loadDataControlClose();
         });
 
-        $('#MONTH_FINISH_POPUP').on('hide.bs.modal', function () {
-            $monthFinishLeftGrid.pqGrid('destroy');
-            $monthFinishRightGrid.pqGrid('destroy');
+        $('#CONTROL_CLOSE_POPUP').on('hide.bs.modal', function () {
+            $controlCloseLeftGrid.pqGrid('destroy');
+            $controlCloseRightGrid.pqGrid('destroy');
+        });
+
+        $('#CONTROL_CLOSE_FORM').on('change', function () {
+            loadDataControlClose();
         });
 
         $('#testSearch').on('click', function () {
@@ -1238,8 +1285,8 @@
             getOrderStatusButton(event);
         });
 
-        $('#MONTH_FINISH_YEAR').on('change', function() {
-            fnAppendSelectboxMonth('MONTH_FINISH_MONTH', this.value);
+        $('#CONTROL_CLOSE_YEAR').on('change', function() {
+            fnAppendSelectboxMonth('CONTROL_CLOSE_MONTH', this.value);
         });
         /* event */
 
@@ -1258,21 +1305,21 @@
             commonCadFileAttachPopup.modal('show');
         });
 
-        $('#MONTH_FINISH_YES').on('click', function() {
+        $('#CONTROL_CLOSE_YES').on('click', function() {
             let selectedRowCount = selectedRowIndex.length;
             let list = [];
 
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
                 rowData.CLOSE_VER = $('#CLOSE_VER').val();
-                rowData.CLOSE_MONTH = $('#MONTH_FINISH_YEAR').val() + $('#MONTH_FINISH_MONTH').val();
+                rowData.CLOSE_MONTH = $('#CONTROL_CLOSE_YEAR').val() + $('#CONTROL_CLOSE_MONTH').val();
                 list.push(rowData);
             }
 
             // rightGrid
             let parameters = {'url': '/insertMonthFinishClose', 'data': {data: JSON.stringify(list)}}
             fnPostAjax(function (data, callFunctionParam) {
-                $monthFinishLeftGrid.pqGrid('refreshDataAndView');
+                $controlCloseLeftGrid.pqGrid('refreshDataAndView');
             }, parameters, '');
         });
 

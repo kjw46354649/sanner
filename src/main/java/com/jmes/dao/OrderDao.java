@@ -16,7 +16,7 @@ public interface OrderDao {
 
     void insertControlPartProgressList(Map<String, Object> hashMap) throws SQLException;
 
-    List<Map<String, Object>> selectMonthFinishRightGrid(Map<String, Object> map) throws SQLException;
+    List<Map<String, Object>> selectControlCloseRightList(Map<String, Object> map) throws SQLException;
 
     void insertMonthFinishClose(HashMap<String, Object> hashMap) throws SQLException;
 
