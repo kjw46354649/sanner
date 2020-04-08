@@ -88,14 +88,16 @@ public class FileUploadServiceImpl implements FileUploadService {
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS", new Locale("ko", "KR"));
-        String uuid = CommonUtility.getUUIDString();
-        String serverFileName = "file-" + uuid;
+        // base.upload.cad.path=D:/Project/workspace-jmes/upload/cad
         String uploadFilePath = environment.getRequiredProperty("base.upload.cad.path") + File.separator + formatter.format(new Date()).substring(0, 8);
 
         ArrayList<HashMap<String, Object>> resultList = new ArrayList<HashMap<String, Object>>();
         Iterator<String> itr = (Iterator<String>)request.getFileNames();
 
         if(itr.hasNext()) {
+
+            String serverFileName = CommonUtility.getUUIDString();
+            String serverFullFileName = "file-" + serverFileName;
 
             HashMap<String, Object> fileInfo = new HashMap<String, Object>();
 
@@ -104,15 +106,15 @@ public class FileUploadServiceImpl implements FileUploadService {
             String originalFileName = originalFullName.substring(0, originalFullName.lastIndexOf(".")).toLowerCase();
             String originalExtName = originalFullName.substring(originalFullName.lastIndexOf(".") + 1).toLowerCase();
 
-            String convertFilePath = uploadFilePath + File.separator + uuid;    // 임시 작업 디렉토리
+            // String convertFilePath = uploadFilePath + File.separator + serverFileName;    // 임시 작업 디렉토리
+            // 업로드 파일 경로
+            String targetFilePath = uploadFilePath + File.separator + serverFullFileName + "." + originalExtName;
 
             CommonUtility.createFileDirectory(new File(uploadFilePath));
-            CommonUtility.createFileDirectory(new File(convertFilePath));      // convert 디렉토리 생성
 
-            fileInfo.put("FILE_NM", 		serverFileName);
-            fileInfo.put("FILE_PATH", 		uploadFilePath + File.separator + serverFileName);
+            fileInfo.put("FILE_NM", 		serverFullFileName + "." + originalExtName);
+            fileInfo.put("FILE_PATH", 		targetFilePath);
             fileInfo.put("ORGINAL_FILE_NM", originalFullName);
-            fileInfo.put("FILE_NM",         originalFullName);
             fileInfo.put("FILE_TYPE", 		multipartFile.getContentType());
             fileInfo.put("FILE_EXT", 		originalExtName);
             fileInfo.put("FILE_SIZE", 		multipartFile.getSize());
@@ -122,14 +124,17 @@ public class FileUploadServiceImpl implements FileUploadService {
             // 확장자에 따른 컬럼 정의
             settingFileInfoColumn(fileInfo, multipartFile.getSize(), originalExtName);
 
-            // Convert 처리를 위해서 작업장소 복사
-            File originalFile = new File(uploadFilePath + File.separator + serverFileName);
-            File convertFile = new File(convertFilePath + File.separator + serverFileName+ "." + originalExtName);
-            multipartFile.transferTo(originalFile);   // 원본 파일 저장
-            Files.copy(new File(originalFile.getAbsolutePath()).toPath(), new File(convertFile.getAbsolutePath()).toPath());
+            // 파일 업로드 원본 파일
+            File originalFile = new File(targetFilePath);
 
-            CadFileConverter.cadfile_converter(convertFile);    // convert 처리
-            File[] dxfFileList = new File(convertFilePath).listFiles();
+            // File convertFile = new File(convertFilePath + File.separator + serverFileName + "." + originalExtName);
+
+            multipartFile.transferTo(originalFile);   // 원본 파일 저장
+            // Files.copy(new File(originalFile.getAbsolutePath()).toPath(), new File(convertFile.getAbsolutePath()).toPath());
+            CadFileConverter.cadfile_converter(originalFile, serverFileName);    // convert 처리
+            // CadFileConverter.cadfile_converter(convertFile);    // convert 처리
+
+            File[] dxfFileList = new File(uploadFilePath + File.separator + serverFileName).listFiles();
 
             for(File convertToFile:dxfFileList){
                 String mimeType = Files.probeContentType(Paths.get(convertToFile.getAbsolutePath()));

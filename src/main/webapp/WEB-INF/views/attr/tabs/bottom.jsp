@@ -32,8 +32,15 @@
                                         </header>
                                         <div class="row">
                                             <div class="col-md-12 col-sm-12">
-                                                <div id="attachDragAndDrop" class="gridWrap">
+                                                <div class="gridWrap">
                                                     <div id="common_cad_file_attach_grid"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12">
+                                                <div id="attachDragAndDrop" class="dropfile visible-lg">
+                                                    <small>Drag and Drop file here</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -139,6 +146,7 @@
                 });
                 fnFormDataFileUploadAjax(function (data) {
                     let fileInfo = data.fileUploadList[0];
+                    console.log(data);
                     $("#company_master_register_form").find("#SIGN_GFILE_SRC").attr("src", "/image/" + fileInfo.GFILE_SEQ);
                     $("#company_master_register_form").find("#SIGN_GFILE_SEQ").val(fileInfo.GFILE_SEQ);
                 }, formData, '/uploadControlCadFiles');

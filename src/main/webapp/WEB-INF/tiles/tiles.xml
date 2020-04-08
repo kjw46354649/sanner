@@ -5,9 +5,8 @@
 
 <tiles-definitions>
 
-    <definition name=".pagesLoginLayout"         	 template="/WEB-INF/views/attr/template-login.jsp">
-        <put-attribute name="header" 	        		value="/WEB-INF/views/attr/login/header.jsp"/>
-        <put-attribute name="body" 	            		value=""/>
+    <definition name=".pagesLoginLayout"            template="/WEB-INF/views/attr/template-login.jsp">
+        <put-attribute name="body" 	                    value=""/>
     </definition>
 
     <definition name=".tabsPageLayout"         	    template="/WEB-INF/views/attr/template-tabs.jsp">
@@ -15,36 +14,35 @@
         <put-attribute name="body-default-script" 		value="/WEB-INF/views/attr/tabs/body-script.jsp"/>
         <put-attribute name="body-top" 	        		value="/WEB-INF/views/attr/tabs/body-top.jsp"/>
         <put-attribute name="body-menu" 	    		value="/WEB-INF/views/attr/tabs/body-menu.jsp"/>
-        <put-attribute name="body" 	            		value="/WEB-INF/views/attr/tabs/body-tab.jsp"/>
         <put-attribute name="bottom"	 	   			value="/WEB-INF/views/attr/tabs/bottom.jsp"/>
     </definition>
 
-    <definition name=".pagesPageLayout"         	 template="/WEB-INF/views/attr/template-page.jsp">
-        <put-attribute name="header" 	        		value="/WEB-INF/views/attr/page/header.jsp"/>
-        <put-attribute name="body-default-script" 		value="/WEB-INF/views/attr/page/body-script.jsp"/>
-        <put-attribute name="body-top" 	        		value="/WEB-INF/views/attr/page/body-top.jsp"/>
-        <put-attribute name="body-menu" 	    		value="/WEB-INF/views/attr/page/body-menu.jsp"/>
+    <definition name=".pagesPopLayout"         	    template="/WEB-INF/views/attr/template-pop.jsp">
         <put-attribute name="body" 	            		value=""/>
-        <put-attribute name="bottom"	 	   			value="/WEB-INF/views/attr/page/bottom.jsp"/>
+    </definition>
+
+    <definition name=".pagesBoardLayout"            template="/WEB-INF/views/attr/template-pop.jsp">
+        <put-attribute name="body" 	            		value=""/>
     </definition>
 
     <definition name="login/*.tiles"           	    extends=".pagesLoginLayout">
-        <put-attribute name="body"              	value="/WEB-INF/views/login/{1}.jsp" />
+        <put-attribute name="body"              	    value="/WEB-INF/views/login/{1}.jsp" />
     </definition>
 
-    <definition name="tab/tabs.tiles"           	extends=".tabsPageLayout"></definition>
-
-    <definition name="pop/*.tiles"           	    extends=".pagesLoginLayout">
-        <put-attribute name="body"              	value="/WEB-INF/views/pop/{1}.jsp" />
+    <definition name="tab/tabs.tiles"           	extends=".tabsPageLayout">
     </definition>
 
-    <definition name="board/*.tiles"           	    extends=".pagesLoginLayout">
-        <put-attribute name="body"              	value="/WEB-INF/views/board/{1}.jsp" />
+    <definition name="pop/*.tiles"           	    extends=".pagesPopLayout">
+        <put-attribute name="body"              	    value="/WEB-INF/views/pop/{1}.jsp" />
     </definition>
 
-    <definition name="pages/*/*.tiles"           	extends=".pagesPageLayout">
-        <put-attribute name="body"              	value="/WEB-INF/views/pages/{1}/{2}.jsp" />
+    <definition name="board/*.tiles"           	    extends=".pagesBoardLayout">
+        <put-attribute name="body"              	    value="/WEB-INF/views/board/{1}.jsp" />
     </definition>
+
+<!--    <definition name="pages/*/*.tiles"           	extends=".pagesPageLayout">-->
+<!--        <put-attribute name="body"              	value="/WEB-INF/views/pages/{1}/{2}.jsp" />-->
+<!--    </definition>-->
 
 
 </tiles-definitions>
