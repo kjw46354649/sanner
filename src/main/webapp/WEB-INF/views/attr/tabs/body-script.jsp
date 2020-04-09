@@ -571,14 +571,15 @@
 
     /**
      * @param {string} id
+     * @param {number} severalYears
      */
-    let fnAppendSelectboxYear = function (id) {
+    let fnAppendSelectboxYear = function (id, severalYears) {
         $('#' + id).empty();
         let date = new Date();
         // date.setMonth(date.getMonth() + 1);
         let year = date.getFullYear();
 
-        for (let i = year; i > year - 3; i--) {
+        for (let i = year; i > year - severalYears; i--) {
             $('#' + id).append(new Option(i + '년', i));
         }
     };

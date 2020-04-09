@@ -35,7 +35,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Map<String, Object>> selectMonthFinishRightGrid(Map<String, Object> map) throws Exception {
+    public List<Map<String, Object>> selectControlCloseRightList(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
@@ -45,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
 
         ArrayList<HashMap<String, Object>> list = (ArrayList<HashMap<String, Object>>) jsonMap.get("list");
 
-        return this.orderDao.selectMonthFinishRightGrid(jsonMap);
+        return this.orderDao.selectControlCloseRightList(jsonMap);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class OrderServiceImpl implements OrderService {
             jsonArray = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<HashMap<String, Object>>>() {});
 
         for (HashMap<String, Object> hashMap : jsonArray) {
-            hashMap.put("CONTROL_STATUS", "PRO18");
+            hashMap.put("CONTROL_STATUS", "ORD003");
             this.orderDao.updateControlStatus(hashMap);
             this.orderDao.insertMonthFinishClose(hashMap);
             this.orderDao.insertMonthFinishCloseHistory(hashMap);

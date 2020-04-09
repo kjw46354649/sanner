@@ -205,9 +205,9 @@
             {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true, colModel: []},
             {
                 title: '주문상태', align: 'center', colModel: [
-                    {title: '상태', datatype: 'string', dataIndx: 'ORDER_STATUS', hidden: true},
-                    {title: '상태', datatype: 'string', dataIndx: 'ORDER_STATUS_NM'},
-                    {title: '변경일시', datatype: 'date', dataIndx: 'ORDER_STATUS_DT', editable: false}
+                    {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS', hidden: true},
+                    {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_NM'},
+                    {title: '변경일시', datatype: 'date', dataIndx: 'CONTROL_STATUS_DT', editable: false}
                 ]
             },
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true, colModel: []},
@@ -223,10 +223,10 @@
             },
             {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', colModel: []},
             {title: '자재<br>사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', colModel: []},
-            {title: '요망<br>납기', dataType: 'string', dataIndx: 'HOPE_DUE_DT', colModel: []},
+            {title: '요망<br>납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', colModel: []},
             {title: '가공<br>납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', colModel: []},
             {title: '긴<br>급', dataType: 'string', dataIndx: 'EMERGENCY_YN', colModel: []},
-            {title: '주<br>요', dataType: 'string', dataIndx: 'MAIN_INSPECTION_YN', colModel: []},
+            {title: '주<br>요', dataType: 'string', dataIndx: 'MAIN_INSPECTION', colModel: []},
             {title: '형<br>태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true, colModel: []},
             {title: '형<br>태', dataType: 'string', dataIndx: 'WORK_NM', colModel: []},
             {title: '규격', dataType: 'string', dataIndx: 'RBRUR', colModel: []},
@@ -291,14 +291,13 @@
             cellClick: function (event, ui) {
                 if (ui.dataIndx === 'PROCESS_CONFIRM_BUTTON') {
                     let newRowData = fnCloneObj(ui.rowData);
-                    newRowData.CONTROL_STATUS = 'PRO02';
                     newRowData.PART_STATUS = 'PRO02';
-                    console.log(newRowData);
+
                     let parameters;
                     let gridInstance = $confirmOrderGrid.pqGrid('getInstance').grid;
                     let changes = gridInstance.getChanges({format: 'byVal'});
                     let QUERY_ID_ARRAY = {
-                        'updateQueryId': ['updateControlStatus', 'updateControlPartStatus', 'insertControlPartProgress'],
+                        'updateQueryId': ['updateControlPartStatus', 'insertControlPartProgress'],
                     };
                     changes.updateList.push(newRowData);
                     changes.queryIdList = QUERY_ID_ARRAY;
@@ -331,7 +330,7 @@
             {title: '요망<br>납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', editable: false},
             {title: '가공<br>납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', editable: false},
             {title: '긴<br>급', dataType: 'string', dataIndx: 'EMERGENCY_YN', editable: false},
-            {title: '주<br>요', dataType: 'select', dataIndx: 'MAIN_INSPECTION_YN', editable: false},
+            {title: '주<br>요', dataType: 'select', dataIndx: 'MAIN_INSPECTION', editable: false},
             {title: '형<br>태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true, editable: false},
             {title: '형<br>태', dataType: 'string', dataIndx: 'WORK_NM', editable: false},
             {title: '규<br>격', dataType: 'string', dataIndx: 'SIZE_TXT', editable: false},
@@ -385,14 +384,15 @@
             cellClick: function (event, ui) {
                 if (ui.dataIndx === 'CONFIRM_CANCLE_BUTTON') {
                     let newRowData = fnCloneObj(ui.rowData);
-                    newRowData.CONTROL_STATUS = 'PRO01';
-                    newRowData.PART_STATUS = 'PRO01';
+                    newRowData.PART_STATUS = null;
+                    console.log(newRowData);
+                    console.log(newRowData.PART_STATUS);
 
                     let parameters;
                     let gridInstance = $processConfirmGrid.pqGrid('getInstance').grid;
                     let changes = gridInstance.getChanges({format: 'byVal'});
                     let QUERY_ID_ARRAY = {
-                        'updateQueryId': ['updateControlStatus', 'updateControlPartStatus', 'insertControlProgress', 'insertControlPartProgress'],
+                        'updateQueryId': ['updateControlPartStatus', 'insertControlPartProgress'],
                     };
                     changes.updateList.push(newRowData);
                     changes.queryIdList = QUERY_ID_ARRAY;
@@ -431,7 +431,7 @@
             {title: '납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', editable: false},
             {title: '가공<br>납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', editable: false},
             {title: '긴<br>급', dataType: 'string', dataIndx: 'EMERGENCY_YN', editable: false},
-            {title: '주<br>요', dataType: 'select', dataIndx: 'MAIN_INSPECTION_YN', editable: false},
+            {title: '주<br>요', dataType: 'select', dataIndx: 'MAIN_INSPECTION', editable: false},
             {title: '형<br>태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true, editable: false},
             {title: '형<br>태', dataType: 'string', dataIndx: 'WORK_NM', editable: false},
             {title: '규<br>격', dataType: 'string', dataIndx: 'SIZE_TXT', editable: false},
