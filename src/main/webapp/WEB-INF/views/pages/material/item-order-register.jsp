@@ -240,13 +240,13 @@
             {title: '요청 사항', align: "center", colModel: [
                     {title: '요청<br>사항', dataType: 'string', dataIndx: 'REQUEST_CD', width: 120,
                         editor: {
-                            type: 'select',
+                            type: 'multiple',
                             mapIndices: { name: "REQUEST_CD", id: "REQUEST_CD" },
                             cls: 'item_order_register_material_order_note',
                             valueIndx: "value",
                             labelIndx: "text",
                             options: fnGetCommCodeGridSelectBox('1018'),
-                            attr: 'multiple="multiple"',
+                            attr: 'multiple',
                             init: function(ui){
                                 console.log(ui.rowData.REQUEST_CD);
                             },
