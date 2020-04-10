@@ -23,6 +23,11 @@ public class StaticUrlController {
     @Autowired
     private Environment environment;
 
+    @RequestMapping(value = "/imageviewer")
+    public String imageViewerController(Model model, HttpServletRequest request, HttpServletResponse response)  throws Exception{
+        return "/common/image_viewer";
+    }
+
     @RequestMapping(value = "/static/{pathName}/{fileName}")
     public String staticUrlController(Model model, HttpServletRequest request, HttpServletResponse response,
                                       @PathVariable("pathName") String pathName, @PathVariable("fileName") String fileName)  throws Exception{

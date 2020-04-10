@@ -9,4 +9,6 @@ public interface FileUploadService {
 
     public void createControlCadFiles(MultipartHttpServletRequest request, Model model) throws Exception;
 
+    public void uploadControlCadFilesTesting(MultipartHttpServletRequest request, Model model) throws Exception;
+
 }

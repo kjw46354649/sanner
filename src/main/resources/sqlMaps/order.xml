@@ -653,14 +653,15 @@
             #{DXF_GFILE_SIZE} AS DXF_GFILE_SIZE,
             #{PDF_GFILE_SIZE} AS PDF_GFILE_SIZE,
             #{IMG_GFILE_SIZE} AS IMG_GFILE_SIZE,
-            CASE WHEN C.CONTROL_STATUS = 'ORD001' THEN '확정완료 대상은 업로드 불가'  <!-- 상태완료 이후인 경우는 업로드 불가  -->
-                WHEN IMG_GFILE_SEQ IS NOT NULL THEN '이미 등록됨, Save 후 교체됨.'  <!-- 이미 등록된 Save시 교체 진행  메시지 처리 -->
+            CASE WHEN C.CONTROL_STATUS = 'PRO01' THEN '확정완료 대상은 업로드 불가'  <!-- 상태완료 이후인 경우는 업로드 불가  -->
+                 WHEN IMG_GFILE_SEQ IS NOT NULL THEN '이미 등록됨, Save 후 교체됨'  <!-- 이미 등록된 Save시 교체 진행  메시지 처리 -->
+                 WHEN IFNULL(${IMG_GFILE_SEQ}, 0) <![CDATA[ <= ]]> 40000 THEN  '파일 업로드 오류' <!-- 파일 업로드 오류 및 CONVERT 사이즈 오류 -->
                 ELSE ''
             END AS UPLOAD_MESSAGE
         FROM TBL_CONTROL C
             INNER JOIN TBL_CONTROL_PART B ON C.CONTROL_SEQ = B.CONTROL_SEQ
         WHERE 1 = 1
-            AND IFNULL(C.CONTROL_STATUS, 'ORD002') IN ('ORD001', 'ORD002')
+            AND IFNULL(C.CONTROL_STATUS, 'ORD002') IN ('ORD002')
             AND #{ORGINAL_FILE_NM} LIKE CONCAT(B.DRAWING_NUM, '%')
     </select>
 
