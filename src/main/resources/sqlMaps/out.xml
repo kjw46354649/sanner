@@ -5,52 +5,52 @@
     <select id="selectOutsourcingOrderManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER () OVER () AS ROWNUM,
-            A.CONTROL_SEQ, -- 주문관리일련번호
-            B.CONTROL_DETAIL_SEQ, -- 주문관리상세일련번호
-            C.ORDER_SEQ, -- 발주번호일련번호
-            D.OUTSIDE_REQUEST_SEQ, -- 외주가공요청일련번호
-            A.COMP_CD, -- 사업자 구분
-            SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM, -- 사업자 구분
-            B.OUTSIDE_YN, -- 외주 구분
-            '', -- 외주발주 상태
-            '', -- 상태변경 일시
-            B.OUTSIDE_COMP_CD, -- 외주업체
-            SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM, -- 외주업체명
-            '', -- 입고일자
-            B.OUTSIDE_ORDER_NUM, -- 외주 발주번호
-            B.OUTSIDE_NOTE, -- 외주 비고
-            A.NOTE, -- 주문 비고
+            A.CONTROL_SEQ, <!-- 주문관리일련번호 -->
+            B.CONTROL_DETAIL_SEQ, <!-- 주문관리상세일련번호 -->
+            C.ORDER_SEQ, <!-- 발주번호일련번호 -->
+            D.OUTSIDE_REQUEST_SEQ, <!-- 외주가공요청일련번호 -->
+            A.COMP_CD, <!-- 사업자 구분 -->
+            SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM, <!-- 사업자 구분 -->
+            B.OUTSIDE_YN, <!-- 외주 구분 -->
+            '', <!-- 외주발주 상태 -->
+            '', <!-- 상태변경 일시 -->
+            B.OUTSIDE_COMP_CD, <!-- 외주업체 -->
+            SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM, <!-- 외주업체명 -->
+            '', <!-- 입고일자 -->
+            B.OUTSIDE_ORDER_NUM, <!-- 외주 발주번호 -->
+            B.OUTSIDE_NOTE, <!-- 외주 비고 -->
+            A.NOTE, <!-- 주문 비고 -->
             A.CONTROL_SEQ,
-            B.DRAWING_NUM, -- 도면번호
-            B.PART_NUM, -- Part
-            B.ITEM_NM, -- 품명
-            B.SIZE_TXT, -- 규격
-            B.MATERIAL_DETAIL, -- 자재종류
-            B.SURFACE_TREAT, -- 표면처리
-            B.ITEM_QTY, -- 수량(확인필요)
-            B.MATERIAL_SUPPLY_YN, -- 사급 여부
-            B.OUTSIDE_MATERIAL_SUPPLY_YN, -- 소재 제공(사급소재인경우 자동으로 Y)
-            B.OUTSIDE_REQUEST_FINISH_YN, -- 외주 요청가공 완제품
-            B.OUTSIDE_REQUEST_PROCESS_YN, -- 외주 요청가공 가공
-            B.OUTSIDE_REQUEST_GRIND_YN, -- 외주 요청가공 연마
-            B.OUTSIDE_REQUEST_SURFACE_YN, -- 외주 요청가공 표면처리
-            B.OUTSIDE_REQUEST_ETC, -- 외주 요청가공 기타사항
-            B.OUTSIDE_HOPE_DUE_DT, -- 요망 납기
-            B.OUTSIDE_UNIT_AMT, -- 외주 확정 단가
-            B.UNIT_FINAL_AMT, -- 금액 합계
-            '', -- 외주 종전가
-            B.INNER_DUE_DT, -- 원발주 납기일
-            B.UNIT_FINAL_AMT, -- 원발주 공급단가
-            A.ORDER_COMP_CD, -- 발주처
-            SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM, -- 발주처
-            '', -- Seq
-            '', -- 결과
-            '', -- 불량코드
-            '', -- 측정일시
-            DATE_FORMAT(A.STATUS_DT, '%m/%d %H:%i') AS CONTROL_STATUS, -- 원주문 확정일시
-            DATE_FORMAT(E.INSERT_DT, '%m/%d %H:%i') AS OUTSIDE_REQUEST_DATE, -- 외주가공 요청일시
-            DATE_FORMAT(F.CLOSE_DT, '%m/%d %H:%i') AS OUTSIDE_FINISH_DATE, -- 외주가공 마감일시
-            '' -- DXF
+            B.DRAWING_NUM, <!-- 도면번호 -->
+            B.PART_NUM, <!-- Part -->
+            B.ITEM_NM, <!-- 품명 -->
+            B.SIZE_TXT, <!-- 규격 -->
+            B.MATERIAL_DETAIL, <!-- 자재종류 -->
+            B.SURFACE_TREAT, <!-- 표면처리 -->
+            B.ITEM_QTY, <!-- 수량(확인필요) -->
+            B.MATERIAL_SUPPLY_YN, <!-- 사급 여부 -->
+            B.OUTSIDE_MATERIAL_SUPPLY_YN, <!-- 소재 제공(사급소재인경우 자동으로 Y) -->
+            B.OUTSIDE_REQUEST_FINISH_YN, <!-- 외주 요청가공 완제품 -->
+            B.OUTSIDE_REQUEST_PROCESS_YN, <!-- 외주 요청가공 가공 -->
+            B.OUTSIDE_REQUEST_GRIND_YN, <!-- 외주 요청가공 연마 -->
+            B.OUTSIDE_REQUEST_SURFACE_YN, <!-- 외주 요청가공 표면처리 -->
+            B.OUTSIDE_REQUEST_ETC, <!-- 외주 요청가공 기타사항 -->
+            B.OUTSIDE_HOPE_DUE_DT, <!-- 요망 납기 -->
+            B.OUTSIDE_UNIT_AMT, <!-- 외주 확정 단가 -->
+            B.UNIT_FINAL_AMT, <!-- 금액 합계 -->
+            '', <!-- 외주 종전가 -->
+            B.INNER_DUE_DT, <!-- 원발주 납기일 -->
+            B.UNIT_FINAL_AMT, <!-- 원발주 공급단가 -->
+            A.ORDER_COMP_CD, <!-- 발주처 -->
+            SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM, <!-- 발주처 -->
+            '', <!-- Seq -->
+            '', <!-- 결과 -->
+            '', <!-- 불량코드 -->
+            '', <!-- 측정일시 -->
+            DATE_FORMAT(A.STATUS_DT, '%m/%d %H:%i') AS CONTROL_STATUS, <!-- 원주문 확정일시 -->
+            DATE_FORMAT(E.INSERT_DT, '%m/%d %H:%i') AS OUTSIDE_REQUEST_DATE, <!-- 외주가공 요청일시 -->
+            DATE_FORMAT(F.CLOSE_DT, '%m/%d %H:%i') AS OUTSIDE_FINISH_DATE, <!-- 외주가공 마감일시 -->
+            '' <!-- DXF -->
         FROM TBL_CONTROL A
         INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
         INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ

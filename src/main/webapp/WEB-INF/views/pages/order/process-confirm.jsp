@@ -34,7 +34,7 @@
                                 <label class="control-label" for="CONFIRM_ORDER_SORT_BY">Sorting 기준</label>
                                 <select class="form-control" name="SORT_BY" id="CONFIRM_ORDER_SORT_BY">
                                     <option value="">ALL</option>
-                                    <c:forEach var="code" items="${HighCode.H_1050}">
+                                    <c:forEach var="code" items="${HighCode.H_1044}">
                                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                     </c:forEach>
                                 </select>
@@ -46,7 +46,7 @@
                                 <label class="control-label" for="CONFIRM_ORDER_MATERIAL">소재</label>
                                 <select class="form-control" name="MATERIAL_TYPE" id="CONFIRM_ORDER_MATERIAL">
                                     <option value="">ALL</option>
-                                    <c:forEach var="code" items="${HighCode.H_1001}">
+                                    <c:forEach var="code" items="${HighCode.H_1027}">
                                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                     </c:forEach>
                                 </select>
@@ -97,7 +97,7 @@
                                 <label class="control-label" for="PROCESS_CONFIRM_SORT_BY">Sorting 기준</label>
                                 <select class="form-control" name="SORT_BY" id="PROCESS_CONFIRM_SORT_BY">
                                     <option value="">ALL</option>
-                                    <c:forEach var="code" items="${HighCode.H_1050}">
+                                    <c:forEach var="code" items="${HighCode.H_1044}">
                                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                     </c:forEach>
                                 </select>
@@ -109,7 +109,7 @@
                                 <label class="control-label" for="PROCESS_CONFIRM_MATERIAL">소재</label>
                                 <select class="form-control" name="MATERIAL_TYPE" id="PROCESS_CONFIRM_MATERIAL">
                                     <option value=""> ALL</option>
-                                    <c:forEach var="code" items="${HighCode.H_1001}">
+                                    <c:forEach var="code" items="${HighCode.H_1027}">
                                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                     </c:forEach>
                                 </select>
@@ -157,15 +157,12 @@
                                 <select class="form-control" name="OUTSOURCE_SUBCONTRACTOR"
                                         id="OUTSOURCE_SUBCONTRACTOR">
                                     <option value="">ALL</option>
-                                    <%--                                <c:forEach var="code" items="${HighCode.H_1007}">--%>
-                                    <%--                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>--%>
-                                    <%--                                </c:forEach>--%>
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="OUTSOURCE_SORT_BY">Sorting 기준</label>
                                 <select class="form-control" name="SORT_BY" id="OUTSOURCE_SORT_BY">
-                                    <c:forEach var="code" items="${HighCode.H_1050}">
+                                    <c:forEach var="code" items="${HighCode.H_1044}">
                                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                     </c:forEach>
                                 </select>
@@ -207,12 +204,12 @@
                 title: '주문상태', align: 'center', colModel: [
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS', hidden: true},
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_NM'},
-                    {title: '변경일시', datatype: 'date', dataIndx: 'CONTROL_STATUS_DT', editable: false}
+                    {title: '변경일시', minWidth: 100, datatype: 'date', dataIndx: 'CONTROL_STATUS_DT', editable: false}
                 ]
             },
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true, colModel: []},
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', colModel: []},
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', colModel: []},
+            {title: '발주업체', minWidth: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM', colModel: []},
+            {title: '관리번호', minWidth: 100, dataType: 'string', dataIndx: 'CONTROL_NUM', colModel: []},
             {
                 title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM', colModel: [],
                 render: function (ui) {
@@ -223,12 +220,12 @@
             },
             {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', colModel: []},
             {title: '자재<br>사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', colModel: []},
-            {title: '요망<br>납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', colModel: []},
-            {title: '가공<br>납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', colModel: []},
+            {title: '요망<br>납기', minWidth: 70, dataType: 'string', dataIndx: 'ORDER_DUE_DT', colModel: []},
+            {title: '가공<br>납기', minWidth: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT', colModel: []},
             {title: '긴<br>급', dataType: 'string', dataIndx: 'EMERGENCY_YN', colModel: []},
             {title: '주<br>요', dataType: 'string', dataIndx: 'MAIN_INSPECTION', colModel: []},
-            {title: '형<br>태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true, colModel: []},
-            {title: '형<br>태', dataType: 'string', dataIndx: 'WORK_NM', colModel: []},
+            {title: '형<br>태', minWidth: 70, dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true, colModel: []},
+            {title: '형<br>태', minWidth: 70, dataType: 'string', dataIndx: 'WORK_NM', colModel: []},
             {title: '규격', dataType: 'string', dataIndx: 'RBRUR', colModel: []},
             {title: '소재<br>종류', dataType: 'string', dataIndx: 'MATERIAL_KIND', colModel: []},
             {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', colModel: []},
@@ -236,7 +233,7 @@
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'ORDER_QTY', colModel: []},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', colModel: []},
             {
-                title: '', dataType: 'string', dataIndx: 'PROCESS_CONFIRM_BUTTON', editable: false,
+                title: '', minWidth: 70, dataType: 'string', dataIndx: 'PROCESS_CONFIRM_BUTTON', editable: false,
                 render: function (ui) {
                     return "<span>가공확정</span>";
                 }
@@ -322,18 +319,18 @@
             {title: 'PART_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true, colModel: []},
             {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true, colModel: []},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true, editable: false},
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', editable: false},
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', editable: false},
+            {title: '발주업체', minWidth: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM', editable: false},
+            {title: '관리번호', minWidth: 100, dataType: 'string', dataIndx: 'CONTROL_NUM', editable: false},
             {title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM', editable: false},
             {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', editable: false},
             {title: '자재<br>사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN'},
-            {title: '요망<br>납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', editable: false},
-            {title: '가공<br>납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', editable: false},
+            {title: '요망<br>납기', minWidth: 70, dataType: 'string', dataIndx: 'ORDER_DUE_DT', editable: false},
+            {title: '가공<br>납기', minWidth: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT', editable: false},
             {title: '긴<br>급', dataType: 'string', dataIndx: 'EMERGENCY_YN', editable: false},
             {title: '주<br>요', dataType: 'select', dataIndx: 'MAIN_INSPECTION', editable: false},
-            {title: '형<br>태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true, editable: false},
-            {title: '형<br>태', dataType: 'string', dataIndx: 'WORK_NM', editable: false},
-            {title: '규<br>격', dataType: 'string', dataIndx: 'SIZE_TXT', editable: false},
+            {title: '형<br>태', minWidth: 70, dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true, editable: false},
+            {title: '형<br>태', minWidth: 70, dataType: 'string', dataIndx: 'WORK_NM', editable: false},
+            {title: '규<br>격', minWidth: 100, dataType: 'string', dataIndx: 'SIZE_TXT', editable: false},
             {title: '소재<br>종류', dataType: 'string', dataIndx: 'MATERIAL_KIND', editable: false},
             {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', colModel: []},
             {title: '열<br>처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', editable: false},
@@ -342,7 +339,7 @@
             {title: '소재주문', dataType: 'string', dataIndx: 'PART_STAUS', hidden: true, editable: false},
             {title: '소재주문', dataType: 'string', dataIndx: 'PART_STAUS_NM', editable: false},
             {
-                title: '', dataType: 'string', dataIndx: 'CONFIRM_CANCLE_BUTTON', editable: false,
+                title: '', minWidth: 70, dataType: 'string', dataIndx: 'CONFIRM_CANCLE_BUTTON', editable: false,
                 render: function (ui) {
                     return "<span>확정취소</span>";
                 }
@@ -385,8 +382,6 @@
                 if (ui.dataIndx === 'CONFIRM_CANCLE_BUTTON') {
                     let newRowData = fnCloneObj(ui.rowData);
                     newRowData.PART_STATUS = null;
-                    console.log(newRowData);
-                    console.log(newRowData.PART_STATUS);
 
                     let parameters;
                     let gridInstance = $processConfirmGrid.pqGrid('getInstance').grid;
@@ -520,6 +515,10 @@
         fnCommCodeDatasourceSelectBoxCreate($('#OUTSOURCE_SEARCH_FORM').find('#OUTSOURCE_CORPORATION'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#OUTSOURCE_SEARCH_FORM').find('#OUTSOURCE_SUBCONTRACTOR'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
         });
         $confirmOrderGrid = $('#' + leftGridId).pqGrid(leftObj);
         $processConfirmGrid = $('#' + rightTopGridId).pqGrid(rightTopObj);

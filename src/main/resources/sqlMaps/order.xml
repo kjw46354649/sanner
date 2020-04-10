@@ -87,12 +87,16 @@
 
     <select id="selectControlManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         <include refid="controlManage" />
-        WHERE 1 = 1
+        WHERE
+            (A.CONTROL_STATUS IS NULL OR A.CONTROL_STATUS IN ('ORD001', 'ORD002'))
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
              AND A.CONTROL_NUM = #{CONTROL_NUM}
         </if>
         <if test="COMP_CD != null and COMP_CD != ''">
              AND A.COMP_CD = #{COMP_CD}
+        </if>
+        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
         <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
              AND B.DRAWING_NUM = #{DRAWING_NUM}
