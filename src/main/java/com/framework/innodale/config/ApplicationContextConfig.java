@@ -47,7 +47,7 @@ import java.util.Properties;
 )
 public class ApplicationContextConfig {
 
-    private static final int TX_METHOD_TIMEOUT = 10;
+    private static final int TX_METHOD_TIMEOUT = 60;
 
     @Autowired
     private Environment environment;

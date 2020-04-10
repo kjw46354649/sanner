@@ -493,6 +493,7 @@
         'use strict';
         /* variable */
         let $drawingRegistration = $("#DRAWING_REGISTRATION");
+        let $drawingView = $("#DRAWING_VIEW");
         let selectedRowIndex = [];
         let $orderManagementGrid;
         const gridId = 'CONTROL_MANAGE_GRID';
@@ -1252,10 +1253,14 @@
         $orderManagementGrid = $('#' + gridId).pqGrid(obj);
         /* init */
 
-
         /* 도면 등록 팝업 호출 */
         $drawingRegistration.click(function(){
             commonCadFileAttachPopup.modal('show');
+        });
+
+        /* 도면 등록 팝업 호출 */
+        $drawingView.click(function(){
+            callWindowImageViewer(999);
         });
 
         $('#MONTH_FINISH_YES').on('click', function() {

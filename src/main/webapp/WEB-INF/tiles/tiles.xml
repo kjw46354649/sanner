@@ -25,6 +25,8 @@
         <put-attribute name="body" 	            		value=""/>
     </definition>
 
+    <!--    tiles config    -->
+
     <definition name="login/*.tiles"           	    extends=".pagesLoginLayout">
         <put-attribute name="body"              	    value="/WEB-INF/views/login/{1}.jsp" />
     </definition>
@@ -40,9 +42,9 @@
         <put-attribute name="body"              	    value="/WEB-INF/views/board/{1}.jsp" />
     </definition>
 
+
 <!--    <definition name="pages/*/*.tiles"           	extends=".pagesPageLayout">-->
 <!--        <put-attribute name="body"              	value="/WEB-INF/views/pages/{1}/{2}.jsp" />-->
 <!--    </definition>-->
-
 
 </tiles-definitions>

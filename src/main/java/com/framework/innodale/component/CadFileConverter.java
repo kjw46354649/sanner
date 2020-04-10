@@ -120,8 +120,8 @@ public class CadFileConverter {
         rasterizationOptions.setNoScaling(false);
         rasterizationOptions.setDrawType(CadDrawTypeMode.UseObjectColor);
 
-        rasterizationOptions.getGraphicsOptions().setSmoothingMode(SmoothingMode.HighQuality);
-        rasterizationOptions.getGraphicsOptions().setTextRenderingHint(TextRenderingHint.AntiAliasGridFit);
+        // rasterizationOptions.getGraphicsOptions().setSmoothingMode(SmoothingMode.HighQuality);
+        // rasterizationOptions.getGraphicsOptions().setTextRenderingHint(TextRenderingHint.AntiAliasGridFit);
         rasterizationOptions.getGraphicsOptions().setInterpolationMode(InterpolationMode.HighQualityBicubic);
 
         PdfOptions pdfOptions = new PdfOptions();

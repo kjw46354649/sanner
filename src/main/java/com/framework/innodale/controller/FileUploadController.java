@@ -48,4 +48,22 @@ public class FileUploadController {
 
         return "jsonView";
     }
+
+    /**
+     *
+     * @param model
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/uploadControlCadFilesTesting")
+    public String uploadControlCadFilesTesting(Model model, MultipartHttpServletRequest request) throws Exception {
+
+        model.addAttribute("result", "false");
+        model.addAttribute("message", "처리 할수 없는 파일 형식 입니다.");
+
+        fileUploadService.uploadControlCadFilesTesting(request, model);
+
+        return "jsonView";
+    }
 }

@@ -44,36 +44,41 @@ public class FileUploadServiceImpl implements FileUploadService {
         Iterator<String> itr = (Iterator<String>)request.getFileNames();
 
         if(itr.hasNext()) {
-            HashMap<String, Object> fileMap = new HashMap<String, Object>();
-            CommonUtility.createFileDirectory(new File(uploadFilePath));
 
-            MultipartFile multipartFile = request.getFile(itr.next());
-            multipartFile.transferTo(new File(uploadFilePath + File.separator + serverFileName));
+            List<MultipartFile> fileList = request.getFiles(itr.next());
 
-            String fileName = new String(multipartFile.getOriginalFilename().getBytes("8859_1"),"utf-8");
-            String extName = fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase();
+            for(MultipartFile multipartFile:fileList) {
 
-            fileMap.put("FILE_NM", 		    serverFileName);
-            fileMap.put("FILE_PATH", 		uploadFilePath + File.separator + serverFileName);
-            fileMap.put("ORGINAL_FILE_NM", 	fileName);
-            fileMap.put("FILE_TYPE", 		multipartFile.getContentType());
-            fileMap.put("FILE_EXT", 		extName);
-            fileMap.put("FILE_SIZE", 		multipartFile.getSize());
+                HashMap<String, Object> fileMap = new HashMap<String, Object>();
+                CommonUtility.createFileDirectory(new File(uploadFilePath));
 
-            if(!hashMap.containsKey("GFILE_SEQ") || "".equals(String.valueOf(hashMap.get("GFILE_SEQ")))){
-                fileMap.put("GFILE_SEQ", "");                   // GFILE 신규 등록
-                fileMap.put("queryId", "common.insertFileGroup");
-                innodaleDao.update(fileMap);
-            } else {
-                fileMap.put("GFILE_SEQ", hashMap.get("GFILE_SEQ"));                 // 기존 파일 삭제
-                fileMap.put("queryId", "common.deleteGFileKey");
+                multipartFile.transferTo(new File(uploadFilePath + File.separator + serverFileName));
+
+                String fileName = new String(multipartFile.getOriginalFilename().getBytes("8859_1"), "utf-8");
+                String extName = fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase();
+
+                fileMap.put("FILE_NM", serverFileName);
+                fileMap.put("FILE_PATH", uploadFilePath + File.separator + serverFileName);
+                fileMap.put("ORGINAL_FILE_NM", fileName);
+                fileMap.put("FILE_TYPE", multipartFile.getContentType());
+                fileMap.put("FILE_EXT", extName);
+                fileMap.put("FILE_SIZE", multipartFile.getSize());
+
+                if (!hashMap.containsKey("GFILE_SEQ") || "".equals(String.valueOf(hashMap.get("GFILE_SEQ")))) {
+                    fileMap.put("GFILE_SEQ", "");                   // GFILE 신규 등록
+                    fileMap.put("queryId", "common.insertFileGroup");
+                    innodaleDao.update(fileMap);
+                } else {
+                    fileMap.put("GFILE_SEQ", hashMap.get("GFILE_SEQ"));                 // 기존 파일 삭제
+                    fileMap.put("queryId", "common.deleteGFileKey");
+                    innodaleDao.create(fileMap);
+                }
+
+                fileMap.put("queryId", "common.insertFile");    // 신규 파일 등록
                 innodaleDao.create(fileMap);
+
+                resultList.add(fileMap);
             }
-
-            fileMap.put("queryId", "common.insertFile");    // 신규 파일 등록
-            innodaleDao.create(fileMap);
-
-            resultList.add(fileMap);
         }
 
         model.addAttribute("result",       "success");
@@ -96,84 +101,168 @@ public class FileUploadServiceImpl implements FileUploadService {
 
         if(itr.hasNext()) {
 
-            String serverFileName = CommonUtility.getUUIDString();
-            String serverFullFileName = "file-" + serverFileName;
+            List<MultipartFile> fileList = request.getFiles(itr.next());
 
-            HashMap<String, Object> fileInfo = new HashMap<String, Object>();
+            for(MultipartFile multipartFile:fileList) {
 
-            MultipartFile multipartFile = request.getFile(itr.next());
-            String originalFullName = new String(multipartFile.getOriginalFilename().getBytes("8859_1"),"utf-8");
-            String originalFileName = originalFullName.substring(0, originalFullName.lastIndexOf(".")).toLowerCase();
-            String originalExtName = originalFullName.substring(originalFullName.lastIndexOf(".") + 1).toLowerCase();
+                String serverFileName = CommonUtility.getUUIDString();
+                String serverFullFileName = "file-" + serverFileName;
 
-            // String convertFilePath = uploadFilePath + File.separator + serverFileName;    // 임시 작업 디렉토리
-            // 업로드 파일 경로
-            String targetFilePath = uploadFilePath + File.separator + serverFullFileName + "." + originalExtName;
+                HashMap<String, Object> fileInfo = new HashMap<String, Object>();
 
-            CommonUtility.createFileDirectory(new File(uploadFilePath));
+                String originalFullName = new String(multipartFile.getOriginalFilename().getBytes("8859_1"), "utf-8");
+                String originalFileName = originalFullName.substring(0, originalFullName.lastIndexOf(".")).toLowerCase();
+                String originalExtName = originalFullName.substring(originalFullName.lastIndexOf(".") + 1).toLowerCase();
 
-            fileInfo.put("FILE_NM", 		serverFullFileName + "." + originalExtName);
-            fileInfo.put("FILE_PATH", 		targetFilePath);
-            fileInfo.put("ORGINAL_FILE_NM", originalFullName);
-            fileInfo.put("FILE_TYPE", 		multipartFile.getContentType());
-            fileInfo.put("FILE_EXT", 		originalExtName);
-            fileInfo.put("FILE_SIZE", 		multipartFile.getSize());
+                // String convertFilePath = uploadFilePath + File.separator + serverFileName;    // 임시 작업 디렉토리
+                // 업로드 파일 경로
+                String targetFilePath = uploadFilePath + File.separator + serverFullFileName + "." + originalExtName;
 
-            // 원본 파일 저장 처리
-            managerFileInformationInsert(fileInfo);
-            // 확장자에 따른 컬럼 정의
-            settingFileInfoColumn(fileInfo, multipartFile.getSize(), originalExtName);
+                CommonUtility.createFileDirectory(new File(uploadFilePath));
 
-            // 파일 업로드 원본 파일
-            File originalFile = new File(targetFilePath);
+                fileInfo.put("FILE_NM", serverFullFileName + "." + originalExtName);
+                fileInfo.put("FILE_PATH", targetFilePath);
+                fileInfo.put("UPLOAD_FILE_NM", originalFullName);
+                fileInfo.put("ORGINAL_FILE_NM", originalFullName);
+                fileInfo.put("FILE_TYPE", multipartFile.getContentType());
+                fileInfo.put("FILE_EXT", originalExtName);
+                fileInfo.put("FILE_SIZE", multipartFile.getSize());
+                fileInfo.put("ROWNUM", 1);
 
-            // File convertFile = new File(convertFilePath + File.separator + serverFileName + "." + originalExtName);
+                // 원본 파일 저장 처리
+                managerFileInformationInsert(fileInfo);
+                // 확장자에 따른 컬럼 정의
+                settingFileInfoColumn(fileInfo, multipartFile.getSize(), originalExtName);
 
-            multipartFile.transferTo(originalFile);   // 원본 파일 저장
-            // Files.copy(new File(originalFile.getAbsolutePath()).toPath(), new File(convertFile.getAbsolutePath()).toPath());
-            CadFileConverter.cadfile_converter(originalFile, serverFileName);    // convert 처리
-            // CadFileConverter.cadfile_converter(convertFile);    // convert 처리
+                // 파일 업로드 원본 파일
+                File originalFile = new File(targetFilePath);
 
-            File[] dxfFileList = new File(uploadFilePath + File.separator + serverFileName).listFiles();
+                // File convertFile = new File(convertFilePath + File.separator + serverFileName + "." + originalExtName);
 
-            for(File convertToFile:dxfFileList){
-                String mimeType = Files.probeContentType(Paths.get(convertToFile.getAbsolutePath()));
-                String convertFullName = new String(convertToFile.getName().getBytes("8859_1"),"utf-8");
-                String convertExtName = convertFullName.substring(convertFullName.lastIndexOf(".") + 1).toLowerCase();
+                multipartFile.transferTo(originalFile);   // 원본 파일 저장
+                // Files.copy(new File(originalFile.getAbsolutePath()).toPath(), new File(convertFile.getAbsolutePath()).toPath());
+                CadFileConverter.cadfile_converter(originalFile, serverFileName);    // convert 처리
+                // CadFileConverter.cadfile_converter(convertFile);    // convert 처리
 
-                if(CAD_CONVERT_TYPE.contains(convertExtName)) {
-                    fileInfo.put("FILE_PATH", convertToFile.getAbsolutePath());
-                    fileInfo.put("ORGINAL_FILE_NM", originalFileName + "." + convertExtName);
-                    fileInfo.put("FILE_TYPE", mimeType);
-                    fileInfo.put("FILE_EXT", convertExtName);
-                    fileInfo.put("FILE_SIZE", convertToFile.length());
+                File[] dxfFileList = new File(uploadFilePath + File.separator + serverFileName).listFiles();
 
-                    // 파일 저장 처리
-                    managerFileInformationInsert(fileInfo);
-                    // 확장자에 따른 컬럼 정의
-                    settingFileInfoColumn(fileInfo, convertToFile.length(), convertExtName);
+                int count = 2;
+
+                for (File convertToFile : dxfFileList) {
+                    String mimeType = Files.probeContentType(Paths.get(convertToFile.getAbsolutePath()));
+                    String convertFullName = new String(convertToFile.getName().getBytes("8859_1"), "utf-8");
+                    String convertExtName = convertFullName.substring(convertFullName.lastIndexOf(".") + 1).toLowerCase();
+
+                    if (CAD_CONVERT_TYPE.contains(convertExtName)) {
+                        fileInfo.put("FILE_PATH", convertToFile.getAbsolutePath());
+                        fileInfo.put("ORGINAL_FILE_NM", originalFileName + "." + convertExtName);
+                        fileInfo.put("FILE_TYPE", mimeType);
+                        fileInfo.put("FILE_EXT", convertExtName);
+                        fileInfo.put("FILE_SIZE", convertToFile.length());
+                        fileInfo.put("ROWNUM", count++);
+
+                        // 파일 저장 처리
+                        managerFileInformationInsert(fileInfo);
+                        // 확장자에 따른 컬럼 정의
+                        settingFileInfoColumn(fileInfo, convertToFile.length(), convertExtName);
+                    }
                 }
-            }
 
-            // 파일 명으로 주문 번호의 파일 번호가 있는지 확인하여 처리 한다.
-            fileInfo.put("queryId", "orderMapper.selectControlCadFiles");    // 연결 주문 정보 조회
-            List<Map<String, Object>> controlList = innodaleDao.getList(fileInfo);
+                // 파일 명으로 주문 번호의 파일 번호가 있는지 확인하여 처리 한다.
+                fileInfo.put("queryId", "orderMapper.selectControlCadFiles");    // 연결 주문 정보 조회
+                List<Map<String, Object>> controlList = innodaleDao.getList(fileInfo);
 
-            // 파일 번호 정보가 있는 경우 Map에 파일 정보를 추가 한다.
-            Iterator controlIterator = controlList.iterator();
-            while (controlIterator.hasNext()) {
-                HashMap<String, Object> map = (HashMap<String, Object>)controlIterator.next();
-                resultList.add(map);
+                // 파일 번호 정보가 있는 경우 Map에 파일 정보를 추가 한다.
+                Iterator controlIterator = controlList.iterator();
+                while (controlIterator.hasNext()) {
+                    HashMap<String, Object> map = (HashMap<String, Object>) controlIterator.next();
+                    resultList.add(map);
+                }
             }
         }
         model.addAttribute("result",       "success");
         model.addAttribute("message",      "업로드를 완료 하였습니다.");
         model.addAttribute("fileUploadList", resultList);
+    }
 
-        System.out.println("================        fileUploadList          =============== ");
-        System.out.println(resultList.toArray().toString());
-        System.out.println("================        fileUploadList          =============== ");
+    @Override
+    public void uploadControlCadFilesTesting(MultipartHttpServletRequest request, Model model) throws Exception {
 
+        HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS", new Locale("ko", "KR"));
+        // base.upload.cad.path=D:/Project/workspace-jmes/upload/cad
+        String uploadFilePath = environment.getRequiredProperty("base.upload.cad.path") + File.separator + formatter.format(new Date()).substring(0, 8);
+
+        ArrayList<HashMap<String, Object>> resultList = new ArrayList<HashMap<String, Object>>();
+        Iterator<String> itr = (Iterator<String>)request.getFileNames();
+
+        if(itr.hasNext()) {
+
+            List<MultipartFile> fileList = request.getFiles(itr.next());
+
+            for(MultipartFile multipartFile:fileList) {
+
+                String serverFileName = CommonUtility.getUUIDString();
+                String serverFullFileName = "file-" + serverFileName;
+
+                HashMap<String, Object> fileInfo = new HashMap<String, Object>();
+
+                String originalFullName = new String(multipartFile.getOriginalFilename().getBytes("8859_1"), "utf-8");
+                String originalFileName = originalFullName.substring(0, originalFullName.lastIndexOf(".")).toLowerCase();
+                String originalExtName = originalFullName.substring(originalFullName.lastIndexOf(".") + 1).toLowerCase();
+
+                // String convertFilePath = uploadFilePath + File.separator + serverFileName;    // 임시 작업 디렉토리
+                // 업로드 파일 경로
+                String targetFilePath = uploadFilePath + File.separator + serverFullFileName + "." + originalExtName;
+
+                CommonUtility.createFileDirectory(new File(uploadFilePath));
+
+                fileInfo.put("FILE_NM", serverFullFileName + "." + originalExtName);
+                fileInfo.put("FILE_PATH", targetFilePath);
+                fileInfo.put("UPLOAD_FILE_NM", originalFullName);
+                fileInfo.put("ORGINAL_FILE_NM", originalFullName);
+                fileInfo.put("FILE_TYPE", multipartFile.getContentType());
+                fileInfo.put("FILE_EXT", originalExtName);
+                fileInfo.put("FILE_SIZE", multipartFile.getSize());
+
+                // 원본 파일 저장 처리
+                managerFileInformationInsert(fileInfo);
+                // 확장자에 따른 컬럼 정의
+                settingFileInfoColumn(fileInfo, multipartFile.getSize(), originalExtName);
+
+                // 파일 업로드 원본 파일
+                File originalFile = new File(targetFilePath);
+
+                multipartFile.transferTo(originalFile);   // 원본 파일 저장
+                CadFileConverter.cadfile_converter(originalFile, serverFileName);    // convert 처리
+
+                File[] dxfFileList = new File(uploadFilePath + File.separator + serverFileName).listFiles();
+
+                for (File convertToFile : dxfFileList) {
+                    String mimeType = Files.probeContentType(Paths.get(convertToFile.getAbsolutePath()));
+                    String convertFullName = new String(convertToFile.getName().getBytes("8859_1"), "utf-8");
+                    String convertExtName = convertFullName.substring(convertFullName.lastIndexOf(".") + 1).toLowerCase();
+
+                    if (CAD_CONVERT_TYPE.contains(convertExtName)) {
+                        fileInfo.put("FILE_PATH", convertToFile.getAbsolutePath());
+                        fileInfo.put("ORGINAL_FILE_NM", originalFileName + "." + convertExtName);
+                        fileInfo.put("FILE_TYPE", mimeType);
+                        fileInfo.put("FILE_EXT", convertExtName);
+                        fileInfo.put("FILE_SIZE", convertToFile.length());
+
+                        // 파일 저장 처리
+                        managerFileInformationInsert(fileInfo);
+                        // 확장자에 따른 컬럼 정의
+                        settingFileInfoColumn(fileInfo, convertToFile.length(), convertExtName);
+                    }
+                }
+                resultList.add(fileInfo);
+            }
+        }
+        model.addAttribute("result",       "success");
+        model.addAttribute("message",      "업로드를 완료 하였습니다.");
+        model.addAttribute("fileUploadList", resultList);
     }
 
     /**
