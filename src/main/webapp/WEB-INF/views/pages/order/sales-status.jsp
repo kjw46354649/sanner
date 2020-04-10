@@ -161,7 +161,7 @@
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
             {title: '년도', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '분기', dataType: 'string', dataIndx: 'QUATER'},
+            {title: '분기', dataType: 'string', dataIndx: 'QUARTER'},
             {title: '마감월', dataType: 'string', dataIndx: 'FINISH_MONTH'},
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
             {title: '발주사', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},

@@ -1311,7 +1311,6 @@
             callWindowImageViewer(999);
         });
 
-        $('#MONTH_FINISH_YES').on('click', function() {
         $('#CONTROL_CLOSE_YES').on('click', function() {
             let selectedRowCount = selectedRowIndex.length;
             let list = [];

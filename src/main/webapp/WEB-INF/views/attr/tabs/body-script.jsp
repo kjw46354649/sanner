@@ -600,7 +600,7 @@
         month = year < selectedYear ? JANUARY : year == selectedYear ? date.getMonth() : DECEMBER;
 
         for (let i = month; i >= 1; i--) {
-            $('#' + id).append(new Option(i + '월', i));
+            $('#' + id).append(new Option(i + '월', i < 10 ? '0' + i : i));
         }
     };
 

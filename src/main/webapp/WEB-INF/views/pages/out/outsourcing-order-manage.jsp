@@ -20,7 +20,7 @@
                     외주 관리
                 </header>
                 <div class="panel-body">
-                    <form class="form-inline" id="OUTSOURCING_ORDER_MANAGE_SEARCH_FORM" role="form">
+                    <form class="form-inline" id="OUTSIDE_ORDER_MANAGE_SEARCH_FORM" role="form">
                         <input type="hidden" name="queryId" id="queryId"
                                value="outMapper.selectOutsourcingOrderManageList">
                         <div class="row">
@@ -157,14 +157,14 @@
         <div class="row">&nbsp;
             <section>
                 <div class="col-md-12">
-                    <a href="#REQUEST_OUTSOURCING_POPUP" data-toggle="modal" data-refform="CONTROL_MANGE_POPUP">
+                    <a href="#REQUEST_OUTSIDE_POPUP" data-toggle="modal" data-refform="CONTROL_MANGE_POPUP">
                         <input type="button" value="외주가공 요청">
                     </a>
                     <a href="#CANCEL_PROCESSING_REQUEST_POPUP" data-toggle="modal" data-refform="CONTROL_MANGE_POPUP">
                         <input type="button" value="가공요청 취소">
                     </a>
                     <button id="ORDER_EXTRACTION">발주서 추출</button>
-                    <a href="#OUTSOURCING_CLOSE_POPUP" data-toggle="modal" data-refform="CONTROL_MANGE_POPUP">
+                    <a href="#OUTSIDE_CLOSE_POPUP" data-toggle="modal" data-refform="CONTROL_MANGE_POPUP">
                         <input type="button" value="외주마감">
                     </a>
                 </div>
@@ -173,7 +173,7 @@
         <div class="row">&nbsp;
             <section>
                 <div class="col-md-12">
-                    <div id="OUTSOURCING_ORDER_MANAGE_GRID"></div>
+                    <div id="OUTSIDE_ORDER_MANAGE_GRID"></div>
                 </div>
             </section>
         </div>
@@ -181,7 +181,7 @@
 </div>
 
 <%-- modal --%>
-<div class="modal" id="REQUEST_OUTSOURCING_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal" id="REQUEST_OUTSIDE_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -212,7 +212,7 @@
         <!-- /.modal-dialog -->
     </div>
 </div>
-<div class="modal" id="REQUEST_OUTSOURCING_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal" id="REQUEST_OUTSIDE_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -274,7 +274,7 @@
         <!-- /.modal-dialog -->
     </div>
 </div>
-<div class="modal" id="OUTSOURCING_CLOSE_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal" id="OUTSIDE_CLOSE_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -285,31 +285,32 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-5">
-                        <div id="MONTH_FINISH_LEFT_GRID"></div>
+                        <div id="OUTSIDE_CLOSE_LEFT_GRID"></div>
                     </div>
                     <div class="col-md-2">
                         화살표~>
                     </div>
                     <div class="col-md-5">
-                        <div id="MONTH_FINISH_RIGHT_GRID"></div>
+                        <div id="OUTSIDE_CLOSE_RIGHT_GRID"></div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <form class="form-inline" id="OUTSOURCING_CLOSE_LEFT_FORM" role="form">
-                            <input type="hidden" name="queryId" id="queryId" value="selectControlCloseLeftList">
-                            <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
+                        <form class="form-inline" id="OUTSIDE_CLOSE_LEFT_FORM" role="form">
+                            <input type="hidden" name="queryId" id="queryId" value="selectOutsideCloseLeftList">
+                            <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ">
+                            <input type="hidden" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
                             <div class="col-md-8">
                                 <div class="col-md-3">
                                     <label class="control-label">대상 년/월</label>
                                 </div>
                                 <div class="col-md-5">
-                                    <select class="form-control" name="MONTH_FINISH_YEAR" id="OUTSOURCING_CLOSE_YEAR">
+                                    <select class="form-control" name="OUTSIDE_CLOSE_YEAR" id="OUTSIDE_CLOSE_YEAR">
                                         <option></option>
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <select class="form-control" name="MONTH_FINISH_MONTH" id="OUTSOURCING_CLOSE_MONTH">
+                                    <select class="form-control" name="OUTSIDE_CLOSE_MONTH" id="OUTSIDE_CLOSE_MONTH">
                                         <option></option>
                                     </select>
                                 </div>
@@ -340,8 +341,8 @@
                     <div class="col-md-6">
                         <b>진행 하시겠습니까?</b>
                         <div class="text-right">
-                            <button id="MONTH_FINISH_YES">Yes</button>
-                            <button id="MONTH_FINISH_NO">No</button>
+                            <button id="OUTSIDE_CLOSE_YES">Yes</button>
+                            <button id="OUTSIDE_CLOSE_NO">No</button>
                         </div>
                     </div>
                 </div>
@@ -357,27 +358,15 @@
         'use strict';
         /* variable */
         let selectedRowIndex = [];
-        let $outsourcingOrderManageGrid;
-        const gridId = 'OUTSOURCING_ORDER_MANAGE_GRID';
-        let postData = fnFormToJsonArrayData('#OUTSOURCING_ORDER_MANAGE_SEARCH_FORM');
+        let $outsideOrderManageGrid;
+        const gridId = 'OUTSIDE_ORDER_MANAGE_GRID';
+        let postData = fnFormToJsonArrayData('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM');
         let colModel = [
             {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true, colModel: []},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true, colModel: []},
-            {
-                title: 'CONTROL_DETAIL_SEQ',
-                dataType: 'integer',
-                dataIndx: 'CONTROL_DETAIL_SEQ',
-                hidden: true,
-                colModel: []
-            },
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true, colModel: []},
             {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true, colModel: []},
-            {
-                title: 'OUTSIDE_REQUEST_SEQ',
-                dataType: 'integer',
-                dataIndx: 'OUTSIDE_REQUEST_SEQ',
-                hidden: true,
-                colModel: []
-            },
+            {title: 'OUTSIDE_REQUEST_SEQ', dataType: 'integer', dataIndx: 'OUTSIDE_REQUEST_SEQ', hidden: true, colModel: []},
             {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: true, colModel: []},
             {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_NM', colModel: []},
             {title: '외주<br>구분', dataType: 'string', dataIndx: 'OUTSIDE_YN', hidden: true, colModel: []},
@@ -516,44 +505,6 @@
                     return {data: dataJSON.data};
                 }
             },
-            cellClick: function (event, ui) {
-                if (ui.dataIndx === 'PART_NUM' && ui.rowData.WORK_NM === '가공조립') {
-                    let newRowData = fnCloneObj(ui.rowData);
-                    let data = $orderManagementGrid.pqGrid('option', 'dataModel.data'), totalRecords = data.length;
-                    let newPartNum = 0, newRowIndex = 0;
-
-                    for (let i = 0; i < totalRecords; i++) {
-                        if (data[i].CONTROL_SEQ === newRowData.CONTROL_SEQ) {
-                            newPartNum++;
-                            newRowIndex = data[i].pq_ri + 1;
-                        }
-                    }
-
-                    newRowData.ROWNUM = totalRecords + 1;
-                    newRowData.PART_NUM = newPartNum;
-                    newRowData.WORK_NM = '가공';
-                    newRowData.WORK_TYPE = 'FCT01';
-
-                    $orderManagementGrid.pqGrid('addRow', {
-                        newRow: newRowData,
-                        rowIndx: newRowIndex,
-                        checkEditable: false
-                    });
-                }
-
-                if (ui.dataIndx === 'ORDER_NUM_PLUS_BUTTON' && ui.rowData.WORK_NM === '가공조립') {
-                    let newRowData = fnCloneObj(ui.rowData);
-                    let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
-                    let totalRecords = data.length;
-
-                    newRowData.ROWNUM = totalRecords + 1;
-                    $orderManagementGrid.pqGrid('addRow', {
-                        newRow: newRowData,
-                        rowIndx: ui.rowIndx + 1,
-                        checkEditable: false
-                    });
-                }
-            },
             selectChange: function (event, ui) {
                 if (ui.selection.iCells.ranges[0] !== undefined) {
                     selectedRowIndex = [];
@@ -565,10 +516,10 @@
                 }
             }
         };
-        let $outsourcingCloseLeftGrid;
-        const outsourcingCloseLeftGridId = 'MONTH_FINISH_LEFT_GRID';
-        let outsourcingCloseLeftPostData;
-        const outsourcingCloseLeftColModel = [
+        let $outsideCloseLeftGrid;
+        const outsideCloseLeftGridId = 'OUTSIDE_CLOSE_LEFT_GRID';
+        let outsideCloseLeftPostData;
+        const outsideCloseLeftColModel = [
             {title: '외주업체', dataType: 'string', dataIndx: 'ORDER_COMP', hidden: true},
             {title: '외주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
@@ -577,7 +528,7 @@
             {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
             {title: '마감금액', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT'}
         ];
-        const outsourcingCloseLeftObj = {
+        const outsideCloseLeftObj = {
             // height: 600,
             collapsible: false,
             resizable: true,
@@ -590,7 +541,7 @@
                 hvalign: 'center',
                 editable: false
             },
-            colModel: outsourcingCloseLeftColModel,
+            colModel: outsideCloseLeftColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: {'queryId': 'dataSource.emptyGrid'},
@@ -599,11 +550,11 @@
                 }
             }
         };
-        let $outsourcingCloseRightGrid;
-        const outsourcingCloseRightGridId = 'MONTH_FINISH_RIGHT_GRID';
-        const outsourcingCloseRightColModel = [
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true, colModel: []},
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', colModel: []},
+        let $outsideCloseRightGrid;
+        const outsideCloseRightGridId = 'OUTSIDE_CLOSE_RIGHT_GRID';
+        const outsideCloseRightColModel = [
+            {title: '외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_CD', hidden: true, colModel: []},
+            {title: '외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', colModel: []},
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true, colModel: []},
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN', colModel: []},
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER', colModel: []},
@@ -611,12 +562,12 @@
             {title: '변경후 마감금액', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT', colModel: []},
             {
                 title: '추가 금액', align: 'center', colModel: [
-                    {title: '', datatype: 'string', dataIndx: 'ADDITION_NUMBER'},
-                    {title: '', datatype: 'string', dataIndx: 'ADDITION_AMOUNT'}
+                    {title: '', datatype: 'string', dataIndx: 'ADD_QTY'},
+                    {title: '', datatype: 'string', dataIndx: 'ADD_UNIT_FINAL_AMT'}
                 ]
             }
         ];
-        const outsourcingCloseRightObj = {
+        const outsideCloseRightObj = {
             // height: 600,
             collapsible: false,
             resizable: true,
@@ -629,7 +580,7 @@
                 hvalign: 'center',
                 editable: false
             },
-            colModel: outsourcingCloseRightColModel,
+            colModel: outsideCloseRightColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: {'queryId': 'dataSource.emptyGrid'},
@@ -638,71 +589,114 @@
                 }
             }
         };
-        $outsourcingOrderManageGrid = $('#' + gridId).pqGrid(obj);
 
-        $('#OUTSOURCING_CLOSE_POPUP').on('show.bs.modal', function () {
+        let loadDataOutsideClose = function () {
             let selectedRowCount = selectedRowIndex.length;
-            let list = [];
-            let outsideCompCdList = [];
-            let outsideCompCdStr = '';
+            let controlDetailSeqList = [];
+            let coCompCdList = [];
+            let controlDetailSeqStr = '';
+            let coCompCdStr = '';
 
             for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $outsourcingOrderManageGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                let rowData = $outsideOrderManageGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
 
-                list.push(rowData);
-                outsideCompCdList.push(rowData.ORDER_COMP_CD);
+                controlDetailSeqList.push(rowData.CONTROL_DETAIL_SEQ);
+                coCompCdList.push(rowData.OUTSIDE_COMP_CD);
             }
             // 중복제거
-            outsideCompCdList = outsideCompCdList.filter(function (element, index, array) {
+            coCompCdList = coCompCdList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
             });
 
-            for (let i = 0; i < outsideCompCdList.length; i++) {
-                outsideCompCdStr += outsideCompCdList[i];
+            for (let i = 0; i < controlDetailSeqList.length; i++) {
+                controlDetailSeqStr += controlDetailSeqList[i];
 
-                if (i < outsideCompCdList.length - 1) {
-                    outsideCompCdStr += ',';
+                if (i < controlDetailSeqList.length - 1) {
+                    controlDetailSeqStr += ',';
+                }
+            }
+            for (let i = 0; i < coCompCdList.length; i++) {
+                coCompCdStr += coCompCdList[i];
+
+                if (i < coCompCdList.length - 1) {
+                    coCompCdStr += ',';
                 }
             }
 
-            $('#OUTSOURCING_CLOSE_LEFT_FORM > #ORDER_COMP_CD').val(outsideCompCdStr);
+            $('#OUTSIDE_CLOSE_LEFT_FORM > #CONTROL_DETAIL_SEQ').val(controlDetailSeqStr);
+            $('#OUTSIDE_CLOSE_LEFT_FORM > #OUTSIDE_COMP_CD').val(coCompCdStr);
 
-            fnAppendSelectboxYear('OUTSOURCING_CLOSE_YEAR');
-            fnAppendSelectboxMonth('OUTSOURCING_CLOSE_MONTH');
-
-            $outsourcingCloseLeftGrid = $('#' + outsourcingCloseLeftGridId).pqGrid(outsourcingCloseLeftObj);
-            $outsourcingCloseRightGrid = $('#' + outsourcingCloseRightGridId).pqGrid(outsourcingCloseRightObj);
-
-            $outsourcingCloseLeftGrid.pqGrid('option', 'dataModel.postData', function (ui) {
-                return (fnFormToJsonArrayData('#OUTSOURCING_CLOSE_LEFT_FORM'));
+            $outsideCloseLeftGrid.pqGrid('option', 'dataModel.postData', function () {
+                return (fnFormToJsonArrayData('#OUTSIDE_CLOSE_LEFT_FORM'));
             });
-            $outsourcingCloseLeftGrid.pqGrid('refreshDataAndView');
-            //
-            // // rightGrid
-            // let temp = fnFormToJsonArrayData('#OUTSOURCING_CLOSE_LEFT_FORM')
-            // temp.list = list;
-            // let parameters = {'url': '/selectoutsourcingCloseRightGrid', 'data': {data: JSON.stringify(temp)}}
-            // fnPostAjax(function (data, callFunctionParam) {
-            //     $outsourcingCloseRightGrid.pqGrid("option", "dataModel.data", data.list);
-            //     $outsourcingCloseRightGrid.pqGrid('refreshView');
-            // }, parameters, '');
+            $outsideCloseLeftGrid.pqGrid('refreshDataAndView');
+
+            let controlCloseRightPostData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_LEFT_FORM')
+            controlCloseRightPostData.queryId = 'selectOutsideCloseRightList';
+            let parameters = {'url': '/paramQueryGridSelect', 'data': controlCloseRightPostData}
+
+            fnPostAjax(function (data, callFunctionParam) {
+                $outsideCloseRightGrid.pqGrid('option', 'dataModel.data', data.data);
+                $outsideCloseRightGrid.pqGrid('refreshView');
+            }, parameters, '');
+        };
+        
+        $outsideOrderManageGrid = $('#' + gridId).pqGrid(obj);
+
+        $('#OUTSIDE_CLOSE_POPUP').on('show.bs.modal', function () {
+            fnAppendSelectboxYear('OUTSIDE_CLOSE_YEAR', 3);
+            fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH');
+
+            $outsideCloseLeftGrid = $('#' + outsideCloseLeftGridId).pqGrid(outsideCloseLeftObj);
+            $outsideCloseRightGrid = $('#' + outsideCloseRightGridId).pqGrid(outsideCloseRightObj);
+
+            loadDataOutsideClose();
         });
 
-        $('#OUTSOURCING_CLOSE_POPUP').on('hide.bs.modal', function () {
-            $outsourcingCloseLeftGrid.pqGrid('destroy');
-            $outsourcingCloseRightGrid.pqGrid('destroy');
+        $('#OUTSIDE_CLOSE_LEFT_FORM').on('change', function () {
+            loadDataOutsideClose();
+        });
+
+        $('#OUTSIDE_CLOSE_YES').on('click', function () {
+            let selectedRowCount = selectedRowIndex.length;
+            let list = [];
+
+            for (let i = 0; i < selectedRowCount; i++) {
+                let rowData = $outsideOrderManageGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                rowData.CLOSE_VER = $('#CLOSE_VER').val();
+                rowData.CLOSE_MONTH = $('#OUTSIDE_CLOSE_YEAR').val() + $('#OUTSIDE_CLOSE_MONTH').val();
+                list.push(rowData);
+            }
+
+            let parameters = {'url': '/insertOutsideClose', 'data': {data: JSON.stringify(list)}}
+            fnPostAjax(function (data, callFunctionParam) {
+                $outsideOrderManageGrid.pqGrid('refreshDataAndView');
+                $outsideCloseLeftGrid.pqGrid('refreshDataAndView');
+            }, parameters, '');
+        });
+
+        $('#OUTSIDE_CLOSE_POPUP').on('hide.bs.modal', function () {
+            $outsideCloseLeftGrid.pqGrid('destroy');
+            $outsideCloseRightGrid.pqGrid('destroy');
+        });
+
+        $('#testSearch').on('click', function () {
+            $outsideOrderManageGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+                return (fnFormToJsonArrayData('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM'));
+            });
+            $outsideOrderManageGrid.pqGrid('refreshDataAndView');
         });
 
         /* init */
-        fnCommCodeDatasourceSelectBoxCreate($('#OUTSOURCING_ORDER_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {
+        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getBusinessCompanyList'}
         });
-        fnCommCodeDatasourceSelectBoxCreate($('#OUTSOURCING_ORDER_MANAGE_SEARCH_FORM').find('#ORDER_COMP_CD'), 'all', {
+        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM').find('#ORDER_COMP_CD'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
-        fnCommCodeDatasourceSelectBoxCreate($('#OUTSOURCING_ORDER_MANAGE_SEARCH_FORM').find('#OUTSIDE_COMP_CD'), 'all', {
+        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM').find('#OUTSIDE_COMP_CD'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
         });
