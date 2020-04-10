@@ -29,10 +29,10 @@ public class OrderController {
         return "jsonView";
     }
 
-    @RequestMapping(value = "/selectMonthFinishRightGrid", method = RequestMethod.POST)
-    public String selectMonthFinishRightGrid(Model model, HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/selectControlCloseRightList", method = RequestMethod.POST)
+    public String selectControlCloseRightList(Model model, HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
-        List<Map<String, Object>> list = this.orderService.selectMonthFinishRightGrid(map);
+        List<Map<String, Object>> list = this.orderService.selectControlCloseRightList(map);
         model.addAttribute("list", list);
 
         return "jsonView";

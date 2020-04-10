@@ -36,8 +36,6 @@
 
 <script src='/resource/main/js/sortable/jquery.sortable.js'></script>
 <script src='/resource/main/js/app.plugin.js'></script>
-<!-- EZ viewer -->
-<script src='/resource/plugins/ezview/EZView.js'></script>
 <!-- paramQuery Grid -->
 <script src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script>
 <script src='/resource/plugins/paramquery/pqgrid.min.js'></script>
@@ -46,6 +44,7 @@
     var g_code;
     var royal_tab_api = null;
     var multiFileUploadBox = [];    // 임시 형태의 file upload 저장소
+    var g_noData = '<div style="font-size:18px;margin-top:20px;">No Data</div>';
     var windowImageViewer;
 
     $(document).ready(function() {
@@ -366,8 +365,6 @@
         }
         parameters = {'url': '/paramQueryDeleteGrid', 'data': {data: JSON.stringify(rowDataArray)}}
 
-        console.log(parameters);
-
         fnPostAjax(function (data, callFunctionParam) {
             if (selectedRowCount > 0) {
                 let rowListConvert = [];
@@ -574,14 +571,15 @@
 
     /**
      * @param {string} id
+     * @param {number} severalYears
      */
-    let fnAppendSelectboxYear = function (id) {
+    let fnAppendSelectboxYear = function (id, severalYears) {
         $('#' + id).empty();
         let date = new Date();
         // date.setMonth(date.getMonth() + 1);
         let year = date.getFullYear();
 
-        for (let i = year; i > year - 3; i--) {
+        for (let i = year; i > year - severalYears; i--) {
             $('#' + id).append(new Option(i + '년', i));
         }
     };

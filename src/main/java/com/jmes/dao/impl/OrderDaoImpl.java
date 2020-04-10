@@ -41,8 +41,8 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public List<Map<String, Object>> selectMonthFinishRightGrid(Map<String, Object> map) throws SQLException {
-        return sqlSessionTemplate.selectList("selectMonthFinishRightGrid", map);
+    public List<Map<String, Object>> selectControlCloseRightList(Map<String, Object> map) throws SQLException {
+        return sqlSessionTemplate.selectList("selectControlCloseRightList", map);
     }
 
     @Override
