@@ -27,14 +27,11 @@
                                 <label class="control-label" for="COMP_CD">사업자</label>
                                 <select class="form-control" name="COMP_CD" id="COMP_CD">
                                     <option value="">All</option>
-                                    <c:forEach var="code" items="${HighCode.H_1007}">
-                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:forEach>
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="CLIENT">발주사</label>
-                                <select class="form-control" name="CLIENT" id="CLIENT">
+                                <label class="control-label" for="ORDER_COMP_CD">발주사</label>
+                                <select class="form-control" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
                                     <option value="">All</option>
                                 </select>
                             </div>
@@ -132,7 +129,7 @@
                                     <label class="control-label" for="WORK_TYPE">작업형태</label>
                                     <select class="form-control" name="WORK_TYPE" id="WORK_TYPE">
                                         <option value="">All</option>
-                                        <c:forEach var="code" items="${HighCode.H_1013}">
+                                        <c:forEach var="code" items="${HighCode.H_1033}">
                                             <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                         </c:forEach>
                                     </select>
@@ -495,6 +492,7 @@
         'use strict';
         /* variable */
         let $drawingRegistration = $("#DRAWING_REGISTRATION");
+        let $drawingView = $("#DRAWING_VIEW");
         let selectedRowIndex = [];
         let $orderManagementGrid;
         const gridId = 'CONTROL_MANAGE_GRID';
@@ -511,18 +509,18 @@
             {title: '주문상태', align: 'center', colModel: [
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS', hidden: true},
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_NM'},
-                    {title: '변경일시', datatype: 'date', dataIndx: 'CONTROL_STATUS_DT'}
+                    {title: '변경일시', minWidth: 100, datatype: 'date', dataIndx: 'CONTROL_STATUS_DT'}
                 ]
             },
             {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: true, colModel: []},
-            {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_NM', colModel: []},
+            {title: '사업자<br>구분', minWidth: 70, dataType: 'string', dataIndx: 'COMP_NM', colModel: []},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true, colModel: []},
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', colModel: []},
+            {title: '발주업체', minWidth: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM', colModel: []},
             {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', hidden: true, colModel: []},
             {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', colModel: []},
             {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', editable: true, colModel: []},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true, colModel: []},
-            {title: 'INV No.<br>(거래명세No.)', dataType: 'string', dataIndx: 'CHARGE_USER_ID', colModel: []},
+            {title: 'INV No.<br>(거래명세No.)', minWidth: 100, dataType: 'string', dataIndx: 'CHARGE_USER_ID', colModel: []},
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', editable: true, colModel: []},
             {title: '주요<br>검사품', dataType: 'select', dataIndx: 'MAIN_INSPECTION', colModel: [],
                 editor: {
@@ -541,7 +539,7 @@
             },
             {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN', colModel: []},
             {title: 'CONTROL_VER', dataType: 'string', dataIndx: 'CONTROL_VER', hidden: true, colModel: []},
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true, colModel: []},
+            {title: '관리번호', minWidth: 100, dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true, colModel: []},
             {
                 title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM', colModel: [],
                 render: function (ui) {
@@ -551,16 +549,16 @@
                 }
             },
             {title: '도면번호버전', dataType: 'string', dataIndx: 'DRAWING_VER', hidden: true, colModel: []},
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', editable: true, colModel: []},
-            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', editable: true, colModel: []},
+            {title: '도면번호', minWidth: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', editable: true, colModel: []},
+            {title: '품명', minWidth: 110, dataType: 'string', dataIndx: 'ITEM_NM', editable: true, colModel: []},
             {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true, colModel: []},
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_NM', colModel: []},
+            {title: '작업<br>형태', minWidth: 70, dataType: 'string', dataIndx: 'WORK_NM', colModel: []},
             {title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN', colModel: []},
             {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', colModel: []},
             {title: '소재<br>사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', colModel: []},
-            {title: '가공납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', editable: true, colModel: []},
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', editable: true, colModel: []},
-            {title: '소재<br>종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', colModel: []},
+            {title: '가공납기', minWidth: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT', editable: true, colModel: []},
+            {title: '규격', minWidth: 110, dataType: 'string', dataIndx: 'SIZE_TXT', editable: true, colModel: []},
+            {title: '소재<br>종류', minWidth: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', colModel: []},
             {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE', colModel: []},
             {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', colModel: []},
             {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', colModel: []},
@@ -584,11 +582,11 @@
                             }
                         }
                     },
-                    {title: '발주번호', datatype: 'string', dataIndx: 'ORDER_NUM', editable: true},
+                    {title: '발주번호', minWidth: 90, datatype: 'string', dataIndx: 'ORDER_NUM', editable: true},
                     {title: '수량', datatype: 'string', dataIndx: 'ORDER_QTY', editable: true},
                     {title: '출고', datatype: 'string', dataIndx: 'CNFRH'},
                     {title: '납기', datatype: 'string', dataIndx: 'HOPE_DUE_DT', editable: true},
-                    {title: '납품확인', datatype: 'string', dataIndx: 'DELIVERY_DT', editable: true},
+                    {title: '납품확인', minWidth: 70, datatype: 'string', dataIndx: 'DELIVERY_DT', editable: true},
                 ]
             },
             {
@@ -630,17 +628,17 @@
                      {title: '견적비고', datatype: 'string', dataIndx: 'UNIT_AMT_NOTE', editable: true}
                  ]
              },
-             {title: '계산<br>견적단가', dataType: 'string', dataIndx: 'CALCUL_EST_UNIT_COST', colModel: []},
-             {title: '최종<br>견적단가', dataType: 'string', dataIndx: 'UNIT_FINAL_EST_AMT', colModel: [], editable: true},
-             {title: '견적<br>합계금액', dataType: 'string', dataIndx: 'RUSWJRGKQRpRMADOR', colModel: []},
-             {title: '최종<br>공급단가', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT', colModel: [], editable: true},
+             {title: '계산<br>견적단가', minWidth: 90, dataType: 'string', dataIndx: 'CALCUL_EST_UNIT_COST', colModel: []},
+             {title: '최종<br>견적단가', minWidth: 90, dataType: 'string', dataIndx: 'UNIT_FINAL_EST_AMT', colModel: [], editable: true},
+             {title: '견적<br>합계금액', minWidth: 90, dataType: 'string', dataIndx: 'RUSWJRGKQRpRMADOR', colModel: []},
+             {title: '최종<br>공급단가', minWidth: 90, dataType: 'string', dataIndx: 'UNIT_FINAL_AMT', colModel: [], editable: true},
              {title: '합계금액', dataType: 'string', dataIndx: 'FINAL_AMOUNT', colModel: []},
-             {title: '종전가', dataType: 'string', dataIndx: 'WHDWJSRK', colModel: []},
-            {title: '변경전<br>도면번호', dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', colModel: [], editable: true},
+             {title: '종전가', minWidth: 100, dataType: 'string', dataIndx: 'WHDWJSRK', colModel: []},
+            {title: '변경전<br>도면번호', minWidth: 120, dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', colModel: [], editable: true},
             {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ'},
-            {title: 'Rev.', dataType: 'string', dataIndx: 'DRAWING_VER', colModel: []},
-            {title: 'Rev. 일시', dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', colModel: []},
-            {title: '등록/업데이트<br>일시', dataType: 'string', dataIndx: 'STATUS_DT', colModel: []}
+            {title: 'Rev.', dataType: 'string', dataIndx: 'REVD.', colModel: []},
+            {title: 'Rev. 일시', minWidth: 70, dataType: 'string', dataIndx: 'REVDLFTL.', colModel: []},
+            {title: '등록/업데이트<br>일시', minWidth: 100, dataType: 'string', dataIndx: 'STATUS_DT', colModel: []}
         ];
         let toolbar = {
             cls: 'pq-toolbar-crud',
@@ -1085,7 +1083,7 @@
             }
             $orderManagementGrid.pqGrid('updateRow', {rowList: rowListConvert});
         };
-        
+
         let loadDataControlClose = function () {
             let selectedRowCount = selectedRowIndex.length;
             let list = [];
@@ -1292,17 +1290,25 @@
 
         /* init */
         changeDate();
-        fnCommCodeDatasourceSelectBoxCreate($('#CONTROL_MANAGE_SEARCH_FORM').find('#CLIENT'), 'all', {
+        fnCommCodeDatasourceSelectBoxCreate($('#CONTROL_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#CONTROL_MANAGE_SEARCH_FORM').find('#ORDER_COMP_CD'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
         $orderManagementGrid = $('#' + gridId).pqGrid(obj);
         /* init */
 
-
         /* 도면 등록 팝업 호출 */
         $drawingRegistration.click(function(){
             commonCadFileAttachPopup.modal('show');
+        });
+
+        /* 도면 등록 팝업 호출 */
+        $drawingView.click(function(){
+            callWindowImageViewer(999);
         });
 
         $('#CONTROL_CLOSE_YES').on('click', function() {

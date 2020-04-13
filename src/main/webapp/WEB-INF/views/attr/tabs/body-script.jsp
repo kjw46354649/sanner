@@ -39,14 +39,13 @@
 <!-- paramQuery Grid -->
 <script src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script>
 <script src='/resource/plugins/paramquery/pqgrid.min.js'></script>
-<!-- DHTMLX PACK -->
-<script type="text/javascript" src="/resource/plugins/dhtmlx/suite.js"></script>
 
 <script type='text/javascript'>
     var g_code;
     var royal_tab_api = null;
     var multiFileUploadBox = [];    // 임시 형태의 file upload 저장소
     var g_noData = '<div style="font-size:18px;margin-top:20px;">No Data</div>';
+    var windowImageViewer;
 
     $(document).ready(function() {
 
@@ -92,6 +91,7 @@
             },
             complete: function(){}
         });
+
     });
 
     /**
@@ -600,9 +600,27 @@
         month = year < selectedYear ? JANUARY : year == selectedYear ? date.getMonth() : DECEMBER;
 
         for (let i = month; i >= 1; i--) {
-            if (i < 10) i = '0' + i;
-
-            $('#' + id).append(new Option(i + '월', i));
+            $('#' + id).append(new Option(i + '월', i < 10 ? '0' + i : i));
         }
     };
+
+    function callWindowImageViewer(imageSeq)
+    {
+        // 팝업창 열려 있는지 확인
+        if(typeof(windowImageViewer)=='undefined' || windowImageViewer.closed) {
+            windowImageViewer = window.open("/imageviewer", "jmesImageViewChildForm", "width=1024, height=768, resizable = no, scrollbars = no");
+            windowImageViewer.onload = function(){
+                console.log($(windowImageViewer.window.document).find("#image_seq").val(imageSeq));
+                //windowImageViewer.document.all.image_seq.value = imageSeq;
+                windowImageViewer.onImageViewStart();
+            }
+            return;
+        }else {
+            windowImageViewer.focus();
+            console.log($(windowImageViewer.window.document).find("#image_seq").val(imageSeq));
+            //windowImageViewer.document.all.image_seq.value = imageSeq;
+            windowImageViewer.onImageViewStart();
+        }
+    }
+
 </script>

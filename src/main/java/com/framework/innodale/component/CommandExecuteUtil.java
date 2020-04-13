@@ -64,6 +64,9 @@ public class CommandExecuteUtil {
             sbOut.append(line + "\n");
         }
         bri.close();
+
+        System.out.println("sbOut=[" + sbOut.toString() + "]");
+
         Integer exitValue = p.waitFor();
 
         return exitValue;

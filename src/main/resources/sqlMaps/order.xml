@@ -87,12 +87,16 @@
 
     <select id="selectControlManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         <include refid="controlManage" />
-        WHERE 1 = 1
+        WHERE
+            (A.CONTROL_STATUS IS NULL OR A.CONTROL_STATUS IN ('ORD001', 'ORD002'))
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
              AND A.CONTROL_NUM = #{CONTROL_NUM}
         </if>
         <if test="COMP_CD != null and COMP_CD != ''">
              AND A.COMP_CD = #{COMP_CD}
+        </if>
+        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
         <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
              AND B.DRAWING_NUM = #{DRAWING_NUM}
@@ -649,14 +653,15 @@
             #{DXF_GFILE_SIZE} AS DXF_GFILE_SIZE,
             #{PDF_GFILE_SIZE} AS PDF_GFILE_SIZE,
             #{IMG_GFILE_SIZE} AS IMG_GFILE_SIZE,
-            CASE WHEN C.CONTROL_STATUS = 'ORD001' THEN '확정완료 대상은 업로드 불가'  <!-- 상태완료 이후인 경우는 업로드 불가  -->
-                WHEN IMG_GFILE_SEQ IS NOT NULL THEN '이미 등록됨, Save 후 교체됨.'  <!-- 이미 등록된 Save시 교체 진행  메시지 처리 -->
+            CASE WHEN C.CONTROL_STATUS = 'PRO01' THEN '확정완료 대상은 업로드 불가'  <!-- 상태완료 이후인 경우는 업로드 불가  -->
+                 WHEN IMG_GFILE_SEQ IS NOT NULL THEN '이미 등록됨, Save 후 교체됨'  <!-- 이미 등록된 Save시 교체 진행  메시지 처리 -->
+                 WHEN IFNULL(${IMG_GFILE_SEQ}, 0) <![CDATA[ <= ]]> 40000 THEN  '파일 업로드 오류' <!-- 파일 업로드 오류 및 CONVERT 사이즈 오류 -->
                 ELSE ''
             END AS UPLOAD_MESSAGE
         FROM TBL_CONTROL C
             INNER JOIN TBL_CONTROL_PART B ON C.CONTROL_SEQ = B.CONTROL_SEQ
         WHERE 1 = 1
-            AND IFNULL(C.CONTROL_STATUS, 'ORD002') IN ('ORD001', 'ORD002')
+            AND IFNULL(C.CONTROL_STATUS, 'ORD002') IN ('ORD002')
             AND #{ORGINAL_FILE_NM} LIKE CONCAT(B.DRAWING_NUM, '%')
     </select>
 
@@ -707,14 +712,7 @@
             A.COMP_CD,
             SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM,
             SUBSTR(D.CLOSE_MONTH, 1, 4) AS YEAR,
-            CASE
-                <![CDATA[
-                WHEN CAST(SUBSTR(D.CLOSE_MONTH, 5) AS INTEGER) <= 3 THEN '1분기'
-                WHEN CAST(SUBSTR(D.CLOSE_MONTH, 5) AS INTEGER) <= 6 THEN '2분기'
-                WHEN CAST(SUBSTR(D.CLOSE_MONTH, 5) AS INTEGER) <= 9 THEN '3분기'
-                WHEN CAST(SUBSTR(D.CLOSE_MONTH, 5) AS INTEGER) <= 12 THEN '4분기'
-                ]]>
-            END AS QUATER,
+            CONCAT(QUARTER(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m')), '분기') AS QUARTER,
             CONCAT(SUBSTR(D.CLOSE_MONTH, 5), '월') AS FINISH_MONTH,
             CONCAT(D.CLOSE_VER, '차') AS CLOSE_VER, <!-- 차수 -->
             A.ORDER_COMP_CD,
@@ -729,6 +727,11 @@
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
                                                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
             INNER JOIN TBL_CONTROL_CLOSE D ON A.CONTROL_SEQ = D.CONTROL_SEQ
+        WHERE D.CLOSE_VER = (SELECT MAX(CLOSE_VER)
+                             FROM TBL_CONTROL_CLOSE
+                             WHERE
+                                D.CLOSE_MONTH = CLOSE_MONTH
+                                AND D.CONTROL_SEQ = CONTROL_SEQ)
         GROUP BY
             A.COMP_CD,
             A.ORDER_COMP_CD,

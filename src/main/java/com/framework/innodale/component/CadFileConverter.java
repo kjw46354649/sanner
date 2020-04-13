@@ -5,32 +5,20 @@ import com.aspose.cad.InterpolationMode;
 import com.aspose.cad.SmoothingMode;
 import com.aspose.cad.TextRenderingHint;
 import com.aspose.cad.fileformats.cad.CadDrawTypeMode;
-import com.aspose.cad.fileformats.cad.CadImage;
-import com.aspose.cad.fileformats.cad.cadconsts.CadEntityTypeName;
-import com.aspose.cad.fileformats.cad.cadconsts.CadPlotStandardScaleType;
-import com.aspose.cad.fileformats.cad.cadobjects.CadBaseEntity;
 import com.aspose.cad.imageoptions.*;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.rendering.ImageType;
-import org.apache.pdfbox.rendering.PDFRenderer;
-import org.apache.pdfbox.tools.imageio.ImageIOUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 @Component(value = "cadFileConverter")
 public class CadFileConverter {
 
+    private static String CMD_DWG2JPG_QCAD = "D:/QCAD/qcad.exe -no-gui -allow-multiple-instances -autostart scripts/Pro/Tools/Dwg2Bmp/Dwg2Bmp.js";
     private static String CMD_TO_NORMAL_DFX2010_WIN_EXE = "D:/ODAFileConverter/ODAFileConverter.exe";
     private static String CMD_TO_NORMAL_DFX2010_LINUX_EXE = "ODAFileConverter";
     private static CommandExecuteUtil commandExecuteUtil;
@@ -41,41 +29,60 @@ public class CadFileConverter {
 //    @Autowired
 //    private CommandExecuteUtil commandExecuteUtil;
 
-    public static void cadfile_converter(File orginalFile) throws IOException, InterruptedException {
+    public static void cadfile_converter(File sourceFile, String convertPath) throws IOException, InterruptedException {
 
-        String sourceFilePath = orginalFile.getParentFile().toString();
-        // String targetFilePath = sourceFilePath + File.separator + "convert";
-        String targetFilePath = sourceFilePath;
-        String fileName = new String(orginalFile.getName().getBytes("x-windows-949"), "ksc5601");
+        System.out.println("sourceFile=[" + sourceFile.getAbsolutePath() + "]");
+        System.out.println("convertPath=[" + convertPath + "]");
 
-        // 1. cad file(dwg, dxf) to normal cad2010 converter
-        cadfile_to_dxf2010(sourceFilePath, targetFilePath, fileName);
+        String targetFilePath = sourceFile.getParentFile().toString() + File.separator + convertPath;
+
+        // 01. ODAFileConverter convert cad 2013 dwg
+        convertODAFileConvert(sourceFile, convertPath);
+
+        // 02. Convert File Make
+        String sourceFileName = new String(sourceFile.getName().getBytes("x-windows-949"), "ksc5601");
+        String fileOnlyName = sourceFileName.substring(0, sourceFileName.lastIndexOf("."));
+        String targetFileFullPath = sourceFile.getParentFile().toString() + File.separator + convertPath + File.separator + fileOnlyName + ".dwg";
+        File convertFile = new File(targetFileFullPath);
+
+        // 02. ASPOSE Cad to Java convert
+        convertAsposeCadTOJava(convertFile);
         // String convertFileName = targetFilePath + File.separator + fileName.substring(0, fileName.lastIndexOf(".")) + ".dwg";
 
-        // 2. cad file converter to pdf converter
-        cadfile_to_pdf_png(orginalFile);
+        // 03. cad file converter to pdf converter
+        // convertQCadDwg2Img(convertFile);
     }
 
     /**
-     * CAD FILE TO DXF2010 VERSION CONVERT
+     * ODA File Convert CAD FILE TO DXF2010 VERSION CONVERT
      * @param orginalFile
      * @throws IOException
      * @throws InterruptedException
      */
-    public static void dxf_to_dxf(String orginalFile, String targetFilePath, String fileName) throws IOException, InterruptedException {
-        CadImage cadImage = (CadImage)Image.load(orginalFile);
-        cadImage.save(targetFilePath + File.separator + fileName);
+    public static void convertODAFileConvert(File sourceFile, String convertPath) throws IOException, InterruptedException {
+        String sourceFileName = new String(sourceFile.getName().getBytes("x-windows-949"), "ksc5601");
+        String targetFilePath = sourceFile.getParentFile().toString() + File.separator + convertPath;
+        CommandExecuteUtil.execCommand(CMD_TO_NORMAL_DFX2010_WIN_EXE, sourceFile.getParentFile().toString(), targetFilePath, "ACAD2013", "DWG", "0", "1", sourceFileName);
+//        CommandExecuteUtil.execCommand(CMD_TO_NORMAL_DFX2010_WIN_EXE, orginalFile, targetFilePath, "ACAD2010", "DWG", "0", "1", fileName);
     }
 
     /**
-     * CAD FILE TO DXF2010 VERSION CONVERT
-     * @param orginalFile
-     * @throws IOException
-     * @throws InterruptedException
+     * Convert dwg by QCad (do NOT support 3D dwg)
+     *
+     * @param src
+     * @param destPath
      */
-    public static String  cadfile_to_dxf2010(String orginalFile, String targetFilePath, String fileName) throws IOException, InterruptedException {
-        int result = CommandExecuteUtil.execCommand(CMD_TO_NORMAL_DFX2010_WIN_EXE, orginalFile, targetFilePath, "ACAD2010", "DWG", "0", "1", fileName);
-        return targetFilePath;
+    @Deprecated
+    public static void convertQCadDwg2Img(File convertFile) throws IOException, InterruptedException {
+        // dwg2bmp.bat -f -a -b white -o d:\cad\c.jpg d:\cad\test.dwg
+        //long start = System.currentTimeMillis();
+        String sourceFilePath = convertFile.getAbsolutePath();
+        String sourceFileName = new String(convertFile.getName().getBytes("x-windows-949"), "ksc5601");
+        String targetFileName = convertFile.getParentFile().toString() + sourceFileName.substring(0, sourceFileName.lastIndexOf(".")) + "_qcad.jpg";
+        CommandExecuteUtil.execCommand(CMD_DWG2JPG_QCAD, "-fs", "standard", "Arial", "-a", "-b", "white", "-q", "100", "-d", "-r", "20", "-o", targetFileName, convertFile.getParentFile().toString());
+        //long end = System.currentTimeMillis();
+        //System.out.println("elapse: " + (end - start));
+        //System.out.println("result: " + result);
     }
 
     /**
@@ -83,15 +90,69 @@ public class CadFileConverter {
      * @param orginalFile
      * @throws UnsupportedEncodingException
      */
-    public static void cadfile_to_pdf_png(File orginalFile) throws UnsupportedEncodingException {
+    public static void convertAsposeCadTOJava(File convertFile) throws UnsupportedEncodingException {
 
-        String sourceFilePath = orginalFile.getAbsolutePath();
-        String soruceFileName = new String(orginalFile.getName().getBytes("x-windows-949"), "ksc5601");
+        String sourceFilePath = convertFile.getAbsolutePath();
+        String soruceFileName = new String(convertFile.getName().getBytes("x-windows-949"), "ksc5601");
 
         Image cadImage = Image.load(sourceFilePath);
 
         int cadWidth = cadImage.getSize().getWidth();
         int cadHeight = cadImage.getSize().getHeight();
+
+        System.out.println("convertAsposeCadTOJava image size width x height=[" + cadWidth + "] x [" + cadHeight + "]");
+
+        CadRasterizationOptions rasterizationOptions = new CadRasterizationOptions();
+
+        rasterizationOptions.setLayouts(new String[] {"Model"});
+
+        // export to raster
+        //A4 size at 300 DPI - 2480 x 3508
+        if(cadHeight < cadWidth) {
+            rasterizationOptions.setPageWidth(3508);
+            rasterizationOptions.setPageHeight(2480);
+        }else{
+            rasterizationOptions.setPageWidth(2480);
+            rasterizationOptions.setPageHeight(3508);
+        }
+
+        rasterizationOptions.setAutomaticLayoutsScaling(true);
+        rasterizationOptions.setNoScaling(false);
+        rasterizationOptions.setDrawType(CadDrawTypeMode.UseObjectColor);
+
+        // rasterizationOptions.getGraphicsOptions().setSmoothingMode(SmoothingMode.HighQuality);
+        // rasterizationOptions.getGraphicsOptions().setTextRenderingHint(TextRenderingHint.AntiAliasGridFit);
+        rasterizationOptions.getGraphicsOptions().setInterpolationMode(InterpolationMode.HighQualityBicubic);
+
+        PdfOptions pdfOptions = new PdfOptions();
+        pdfOptions.setVectorRasterizationOptions(rasterizationOptions);
+
+        cadImage.save(convertFile.getParentFile().toString() + File.separator + soruceFileName.substring(0, soruceFileName.lastIndexOf(".")) + "_aspos.pdf", pdfOptions);
+
+        rasterizationOptions.setContentAsBitmap(true);
+        PngOptions pngOptions = new PngOptions();
+        pngOptions.setVectorRasterizationOptions(rasterizationOptions);
+
+        cadImage.save(convertFile.getParentFile().toString() + File.separator + soruceFileName.substring(0, soruceFileName.lastIndexOf(".")) + "_aspos.png", pngOptions);
+
+    }
+
+    /**
+     * AUTO CAD 2010 TO PDF AND PNG IMAGE
+     * @param orginalFile
+     * @throws UnsupportedEncodingException
+     */
+    public static void convertAsposeCadTOJavaBackup(File convertFile) throws UnsupportedEncodingException {
+
+        String sourceFilePath = convertFile.getAbsolutePath();
+        String soruceFileName = new String(convertFile.getName().getBytes("x-windows-949"), "ksc5601");
+
+        Image cadImage = Image.load(sourceFilePath);
+
+        int cadWidth = cadImage.getSize().getWidth();
+        int cadHeight = cadImage.getSize().getHeight();
+
+        System.out.println("convertAsposeCadTOJava image size width x height=[" + cadWidth + "] x [" + cadHeight + "]");
 
         CadRasterizationOptions rasterizationOptions = new CadRasterizationOptions();
 
@@ -99,17 +160,22 @@ public class CadFileConverter {
 
         HashMap<String, Object> cadOption = new HashMap<String, Object>();
         cadOption.put("unitType", cadImage.getUnitType());
-        cadOption.put("metric", false);
-        cadOption.put("coefficient", 1.0);
+        cadOption.put("metric", true);
+        //cadOption.put("metric", false);
+        cadOption.put("coefficient", (double)1.0);
 
         DefineUnitSystem(cadOption);
 
         boolean currentUnitIsMetric = (boolean)cadOption.get("metric");
         double currentUnitCoefficient = (double)cadOption.get("coefficient");
 
+        System.out.println("convertAsposeCadTOJava currentUnitIsMetric x currentUnitCoefficient=[" + (boolean)cadOption.get("metric") + "], [" + (double)cadOption.get("coefficient") + "]");
+
         if (currentUnitIsMetric){
             double metersCoeff = 1 / 1000.0;
             double scaleFactor = metersCoeff / currentUnitCoefficient;
+
+            System.out.println("convertAsposeCadTOJava scaleFactor =[" + scaleFactor + "]");
 
             if(cadHeight < cadWidth) {
                 rasterizationOptions.setPageWidth((float) (297 * scaleFactor));
@@ -121,6 +187,9 @@ public class CadFileConverter {
             rasterizationOptions.setUnitType(UnitType.Millimeter);
 
         }else{
+
+            System.out.println("convertAsposeCadTOJava currentUnitCoefficient =[" + currentUnitCoefficient + "]");
+
             if(cadHeight < cadWidth) {
                 rasterizationOptions.setPageWidth((float) (11.69f / currentUnitCoefficient));
                 rasterizationOptions.setPageHeight((float) (8.27f / currentUnitCoefficient));
@@ -130,8 +199,9 @@ public class CadFileConverter {
             }
             rasterizationOptions.setUnitType(UnitType.Inch);
         }
+
         rasterizationOptions.setAutomaticLayoutsScaling(true);
-        rasterizationOptions.setNoScaling(true);
+        rasterizationOptions.setNoScaling(false);
         rasterizationOptions.setDrawType(CadDrawTypeMode.UseObjectColor);
 
         PdfOptions pdfOptions = new PdfOptions();
@@ -141,7 +211,7 @@ public class CadFileConverter {
         rasterizationOptions.getGraphicsOptions().setTextRenderingHint(TextRenderingHint.AntiAliasGridFit);
         rasterizationOptions.getGraphicsOptions().setInterpolationMode(InterpolationMode.HighQualityBicubic);
 
-        cadImage.save(orginalFile.getParentFile().toString() + File.separator + soruceFileName.substring(0, soruceFileName.lastIndexOf(".")) + ".pdf", pdfOptions);
+        cadImage.save(convertFile.getParentFile().toString() + File.separator + soruceFileName.substring(0, soruceFileName.lastIndexOf(".")) + "_aspos.pdf", pdfOptions);
 
         // export to raster
         //A4 size at 300 DPI - 2480 x 3508
@@ -157,7 +227,7 @@ public class CadFileConverter {
         PngOptions pngOptions = new PngOptions();
         pngOptions.setVectorRasterizationOptions(rasterizationOptions);
 
-        cadImage.save(orginalFile.getParentFile().toString() + File.separator + soruceFileName.substring(0, soruceFileName.lastIndexOf(".")) + ".png", pngOptions);
+        cadImage.save(convertFile.getParentFile().toString() + File.separator + soruceFileName.substring(0, soruceFileName.lastIndexOf(".")) + "_aspos.png", pngOptions);
 
     }
 
@@ -251,10 +321,8 @@ public class CadFileConverter {
     public static void main(String[] args){
         try{
 
-            File file = new File("D:/Project/workspace-jmes/src/test/resources/test/D107-78417A.dxf");
-            String fileName = file.getName();
-
-            cadfile_converter(file);
+            File file = new File("D:/Project/workspace-jmes/TEST_DXF/D107-50494A_000_Work.dxf");
+            cadfile_converter(file, "convert");
 
         }catch(Exception exception){
             exception.printStackTrace();

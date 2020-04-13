@@ -20,16 +20,13 @@
                     주문 마감 이력
                 </header>
                 <div class="panel-body">
-                    <form class="form-inline" id="CONTROL_MANAGE_SEARCH_FORM" role="form">
+                    <form class="form-inline" id="CLOSE_HISTORY_SEARCH_FORM" role="form">
                         <input type="hidden" name="queryId" id="queryId" value="selectCloseHistoryList">
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="COMP_CD">사업자</label>
                                 <select class="form-control" name="COMP_CD" id="COMP_CD">
                                     <option value="">All</option>
-                                    <c:forEach var="code" items="${HighCode.H_1007}">
-                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:forEach>
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
@@ -40,22 +37,22 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="DRAWING_NUM">도면번호</label>
-                                <input type="text" class="form-control" name="DRAWING_NUMB" id="DRAWING_NUM">
+                                <input type="text" class="form-control" name="DRAWING_NUM" id="DRAWING_NUM">
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="PRODUCT_NAME">품명</label>
-                                <input type="text" class="form-control" name="PRODUCT_NAME" id="PRODUCT_NAME">
+                                <label class="control-label" for="ITEM_NM">품명</label>
+                                <input type="text" class="form-control" name="ITEM_NM" id="ITEM_NM">
                             </div>
                         </div>
                         <div class="line line-dashed b-b line-xs"></div>
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="CONTROL_NUMBER">관리번호</label>
-                                <input type="text" class="form-control" name="CONTROL_NUMBER" id="CONTROL_NUMBER">
+                                <label class="control-label" for="CONTROL_NUM">관리번호</label>
+                                <input type="text" class="form-control" name="CONTROL_NUM" id="CONTROL_NUM">
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="ORDER_NUMBER">발주번호</label>
-                                <input type="text" class="form-control" name="ORDER_NUMBER" id="ORDER_NUMBER">
+                                <label class="control-label" for="ORDER_NUM">발주번호</label>
+                                <input type="text" class="form-control" name="ORDER_NUM" id="ORDER_NUM">
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="STANDARD">규격</label>
@@ -158,7 +155,7 @@
         <div class="row">&nbsp;
             <section>
                 <div class="col-md-12">
-                    <div id="CONTROL_MANAGE_GRID"></div>
+                    <div id="CLOSE_HISTORY_GRID"></div>
                 </div>
             </section>
         </div>
@@ -188,9 +185,9 @@
         'use strict';
         /* variable */
         let selectedRowIndex = [];
-        let $orderManagementGrid;
-        const gridId = 'CONTROL_MANAGE_GRID';
-        let postData = fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM');
+        let $closeHistoryGrid;
+        const gridId = 'CLOSE_HISTORY_GRID';
+        let postData = fnFormToJsonArrayData('#CLOSE_HISTORY_SEARCH_FORM');
         let colModel = [
             {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true, colModel: []},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true, colModel: []},
@@ -225,7 +222,7 @@
                     options: fnGetCommCodeGridSelectBox('1045'),
                     getData: function (ui) {
                         let clave = ui.$cell.find('select').val();
-                        let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: ui.rowIndx});
+                        let rowData = $closeHistoryGrid.pqGrid('getRowData', {rowIndx: ui.rowIndx});
                         rowData['MAIN_INSPECTION'] = clave;
                         return ui.$cell.find("select option[value='" + clave + "']").text();
                     }
@@ -340,18 +337,16 @@
                 {
                     type: 'button', label: '마감/종료 취소', icon: 'ui-icon-cancel', listener: {
                         'click': function (evt, ui) {
-                            const updateQueryList = ['updateControlMaster', 'updateControlPart'];
-
-                            fnModifyPQGrid($orderManagementGrid, [], updateQueryList);
+                            updateControlStatus();
                         }
                     }
                 },
                 {
                     type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            const updateQueryList = ['orderMapper.updateControlMaster', 'orderMapper.updateControlPart'];
+                            const updateQueryList = ['orderMapper.updateControlStatus', 'orderMapper.insertControlProgress'];
 
-                            fnModifyPQGrid($orderManagementGrid, [], updateQueryList);
+                            fnModifyPQGrid($closeHistoryGrid, [], updateQueryList);
                         }
                     }
                 },
@@ -362,7 +357,7 @@
                             let selectedRowCount = selectedRowIndex.length;
 
                             for (let i = 0; i < selectedRowCount; i++) {
-                                let thisRowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                                let thisRowData = $closeHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
 
                                 if (!(thisRowData.ORDER_STATUS_NM === undefined || thisRowData.ORDER_STATUS_NM === null || thisRowData.ORDER_STATUS_NM === '' || thisRowData.ORDER_STATUS_NM === '확정취소')) {
                                     alert('확정상태가 빈칸(임시저장)이나 확정취소인 경우에만 가능');
@@ -370,7 +365,7 @@
                                 }
                             }
 
-                            fnDeletePQGrid($orderManagementGrid, selectedRowIndex, DELETE_QUERY_ID);
+                            fnDeletePQGrid($closeHistoryGrid, selectedRowIndex, DELETE_QUERY_ID);
                         }
                     }
                 },
@@ -404,7 +399,7 @@
             cellClick: function (event, ui) {
                 if (ui.dataIndx === 'PART_NUM' && ui.rowData.WORK_NM === '가공조립') {
                     let newRowData = fnCloneObj(ui.rowData);
-                    let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
+                    let data = $closeHistoryGrid.pqGrid('option', 'dataModel.data');
                     let totalRecords = data.length;
                     let newPartNum = 0;
                     let newRowIndex = 0;
@@ -421,7 +416,7 @@
                     newRowData.WORK_NM = '가공';
                     newRowData.WORK_TYPE = 'FCT01';
 
-                    $orderManagementGrid.pqGrid('addRow', {
+                    $closeHistoryGrid.pqGrid('addRow', {
                         newRow: newRowData,
                         rowIndx: newRowIndex,
                         checkEditable: false
@@ -430,11 +425,11 @@
 
                 if (ui.dataIndx === 'ORDER_NUM_PLUS_BUTTON' && ui.rowData.WORK_NM === '가공조립') {
                     let newRowData = fnCloneObj(ui.rowData);
-                    let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
+                    let data = $closeHistoryGrid.pqGrid('option', 'dataModel.data');
                     let totalRecords = data.length;
 
                     newRowData.ROWNUM = totalRecords + 1;
-                    $orderManagementGrid.pqGrid('addRow', {
+                    $closeHistoryGrid.pqGrid('addRow', {
                         newRow: newRowData,
                         rowIndx: ui.rowIndx + 1,
                         checkEditable: false
@@ -457,141 +452,33 @@
                 }
             }
         };
-
-        let $orderRegisterGrid;
-        const popupGridId = 'ORDER_REGISTER_GRID';
-        let popupColModel = [
-            {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_NM', colModel: []},
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', colModel: []},
-            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', colModel: []},
-            {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', colModel: []},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', colModel: []},
-            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', colModel: []},
-            {title: '주요 검사품',  dataType: 'select', dataIndx: 'MAIN_INSPECTION', colModel: []},
-            {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN', colModel: []},
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', colModel: []},
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', colModel: []},
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', colModel: []},
-            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', colModel: []},
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_NM', colModel: []},
-            {title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN', colModel: []},
-            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', colModel: []},
-            {title: '소재 사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', colModel: []},
-            {title: '가공납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', colModel: []},
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', colModel: []},
-            {title: '소재상세종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', colModel: []},
-            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_TYPE', colModel: []},
-            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', colModel: []},
-            {title: '열처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', colModel: []},
-            {title: 'Part<br>단위<br>수량', dataType: 'string', dataIndx: 'PART_UNIT_QTY', colModel: []},
-            {
-                title: '대칭', align: 'center', colModel: [
-                    {title: '원칭', datatype: 'string', dataIndx: 'ORIGINAL_SIDE_QTY'},
-                    {title: '대칭', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY'}
-                ]
-            },
-            {
-                title: '발주정보', align: 'center', colModel: [
-                    {title: '발주번호', datatype: 'string', dataIndx: 'ORDER_NUM'},
-                    {title: '수량', datatype: 'string', dataIndx: 'ORDER_QTY'},
-                    {title: '납기', datatype: 'string', dataIndx: 'ORDER_DUE_DT'},
-                    {title: '납품확인', datatype: 'string', dataIndx: 'DELIVERY_DT'}
-                ]
-            },
-            {title: '최종<br>견적단가', dataType: 'string', dataIndx: 'UNIT_FINAL_EST_AMT', colModel: []},
-            {title: '최종<br>공급단가', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT', colModel: []},
-            {title: '변경전<br>도면번호', dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', colModel: []}
-        ];
-        let popupToolbar = {
-            cls: 'pq-toolbar-crud',
-            items: [
-                // {
-                //     cls: 'title-hidden',
-                //     type: 'textbox',
-                //     label: '업체 리스트',
-                //     style: 'font-size: 1.3rem;padding: 4px;font-weight: bold;'
-                // },
-                {
-                    type: 'button', label: 'Save & 확정', icon: 'ui-icon-disk', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {
-                            let data = $orderRegisterGrid.pqGrid('option', 'dataModel.data');
-                            let parameters = {
-                                'url': '/registerNewOrderConfirm',
-                                'data': {data: JSON.stringify(data)}
-                            };
-
-                            fnPostAjax(function (data, callFunctionParam) {
-                                $orderRegisterGrid.pqGrid('refreshDataAndView');
-                                $orderManagementGrid.pqGrid('refreshDataAndView');
-                            }, parameters, '');
-                        }
-                    }
-                },
-                {
-                    type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {
-                            let data = $orderRegisterGrid.pqGrid('option', 'dataModel.data');
-                            let parameters = {
-                                'url': '/registerNewOrder',
-                                'data': {data: JSON.stringify(data)}
-                            };
-
-                            fnPostAjax(function (data, callFunctionParam) {
-                                $orderRegisterGrid.pqGrid('refreshDataAndView');
-                                $orderManagementGrid.pqGrid('refreshDataAndView');
-                            }, parameters, '');
-                        }
-                    }
-                }
-            ]
-        };
-        let popoupObj = {
-            // width: 700,
-            // height: 600,
-            collapsible: false,
-            resizable: true,
-            showTitle: false,
-            numberCell: {title: 'No.'},
-            // scrollModel: {autoFit: true},
-            dragColumns: {enabled: false},
-            // trackModel: {on: true},
-            columnTemplate: {
-                align: 'center',
-                halign: 'center',
-                hvalign: 'center' //to vertically center align the header cells.
-            },
-            colModel: popupColModel,
-            // editModel:{clicksToEdit: 2},
-            toolbar: popupToolbar,
-            dataModel: {
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'dataSource.emptyGrid'},
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                }
-            },
-            selectChange: function (event, ui) {
-                if (ui.selection.iCells.ranges[0] !== undefined) {
-                    selectedRowIndex = [];
-                    let firstRow = ui.selection.iCells.ranges[0].r1;
-                    let lastRow = ui.selection.iCells.ranges[0].r2;
-
-                    if (firstRow === lastRow) {
-                        selectedRowIndex[0] = firstRow;
-                    } else {
-                        for (let i = firstRow; i <= lastRow; i++) {
-                            selectedRowIndex.push(i);
-                        }
-                    }
-                }
-            }
-        };
         /* variable */
 
         /* function */
-        let changeDate = function (newDate = new Date(), today = new Date()) {
-            $('#CONTROL_MANAGE_START_DATE').val(newDate.format('MM/dd/yyyy'));
-            $('#CONTROL_MANAGE_END_DATE').val(today.format('MM/dd/yyyy'));
+        /*let getOrderStatusButton = function (event) {
+            let controlStatus = event.target.dataset.control_status;
+            let controlStatusNm = event.target.dataset.control_status_nm;
+
+            updateControlStatus(controlStatus, controlStatusNm);
+        };*/
+
+        let updateControlStatus = function () {
+            let selectedRowCount = selectedRowIndex.length;
+            let rowListConvert = [];
+            let date = new Date().format('MM-dd HH:mm');
+
+            for (let i = 0; i < selectedRowCount; i++) {
+                let tempObject = {
+                    rowIndx: selectedRowIndex[i],
+                    newRow: {
+                        'CONTROL_STATUS': null,
+                        'CONTROL_STATUS_NM': null,
+                        'CONTROL_STATUS_DT': date
+                    }
+                };
+                rowListConvert.push(tempObject);
+            }
+            $closeHistoryGrid.pqGrid('updateRow', {rowList: rowListConvert, checkEditable: false});
         };
 
         Date.prototype.format = function (f) {
@@ -640,12 +527,9 @@
         };
 
         String.prototype.string = function (len) {
-            let s = '';
-            let i = 0;
+            let s = '', i = 0;
 
-            while (i++ < len) {
-                s += this;
-            }
+            while (i++ < len) s += this;
 
             return s;
         };
@@ -655,187 +539,28 @@
         Number.prototype.zf = function (len) {
             return this.toString().zf(len);
         };
-
-        let getOrderStatusButton = function (event) {
-            let controlStatus = event.target.dataset.control_status;
-            let controlStatusNm = event.target.dataset.control_status_nm;
-
-            updateOrderStatus(controlStatus, controlStatusNm);
-        };
-
-        let updateOrderStatus = function (controlStatus, controlStatusNm) {
-            let selectedRowCount = selectedRowIndex.length;
-            let rowListConvert = [];
-            let date = new Date().format('MM-dd HH:mm');
-
-            for (let i = 0; i < selectedRowCount; i++) {
-                let tempObject = {
-                    rowIndx: selectedRowIndex[i],
-                    newRow: {
-                        'ORDER_STATUS': controlStatus,
-                        'ORDER_STATUS_NM': controlStatusNm,
-                        'STATUS_DT': date
-                    }
-                };
-                rowListConvert.push(tempObject);
-            }
-            $orderManagementGrid.pqGrid('updateRow', {rowList: rowListConvert});
-        };
         /* function */
 
         /* event */
-        /**
-         * @description 날짜 라디오 변경
-         */
-        $('[name=CONTROL_MANAGE_TERM]').change(function () {
-            let value = $(this).val();
-            let today = new Date();
-            let newDate = new Date();
-
-            switch (value) {
-                case 'today':
-                    changeDate(newDate, today);
-                    break;
-                case 'current_month':
-                    newDate.setDate(1);
-
-                    changeDate(newDate, today);
-                    break;
-                case 'three_months':
-                    newDate.setMonth(newDate.getMonth() - 3);
-
-                    changeDate(newDate, today);
-                    break;
-            }
-
-            $('#CONTROL_MANAGE_DATEPICKER_READ_ONLY').prop('checked', true);
-            createOrDestoryDatepicker();
-        });
-
-        let createOrDestoryDatepicker = function () {
-            let checked = $('#CONTROL_MANAGE_DATEPICKER_READ_ONLY').prop('checked');
-
-            if (checked) {
-                $('[id^=CONTROL_MANAGE][id$=DATE]').datepicker('destroy');
-            } else {
-                $('[id^=CONTROL_MANAGE][id$=DATE]').datepicker();
-            }
-        }
-
-        /**
-         * @description 날짜 라디오 변경
-         */
-        $('#CONTROL_MANAGE_DATEPICKER_READ_ONLY').on('change', function () {
-            createOrDestoryDatepicker();
-        });
-
-        $('#CONTROL_MANGE_POPUP').on('show.bs.modal', function () {
-            $orderRegisterGrid = $('#' + popupGridId).pqGrid(popoupObj);
-        });
-
-        $('#CONTROL_MANGE_POPUP').on('hide.bs.modal', function () {
-            $orderRegisterGrid.pqGrid('destroy');
-        });
-
         $('#testSearch').on('click', function () {
-            postData = fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM')
-            $orderManagementGrid.pqGrid('option', "dataModel.postData", function (ui) {
+            postData = fnFormToJsonArrayData('#CLOSE_HISTORY_SEARCH_FORM')
+            $closeHistoryGrid.pqGrid('option', 'dataModel.postData', function (ui) {
                 return postData;
             });
-            $orderManagementGrid.pqGrid('refreshDataAndView');
-        });
-
-        /**
-         * @description 확정버튼 클릭
-         */
-        $('#CONFIRMATION').on('click', function (event) {
-            let selectedRowCount = selectedRowIndex.length;
-
-            for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
-
-                //TODO: 필수데이터가 입력되어 있어야만 확정 가능
-                if (rowData.OUTSIDE_YN === 'Y') {
-                    //TODO: 문구수정
-                    alert('외주가 ‘Y’ 인 상태에서는 외주관리화면에서 대상을 먼저 삭제해야만 확정취소가 가능');
-                    return false;
-                }
-            }
-
-            getOrderStatusButton(event);
-        });
-
-        /**
-         * @description 취소버튼 클릭
-         */
-        $('#CANCEL').on('click', function (event) {
-            let selectedRowCount = selectedRowIndex.length;
-
-            for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
-
-                if (rowData.OUTSIDE_YN === 'Y') {
-                    //TODO: 문구수정
-                    alert('외주가 ‘Y’ 인 상태에서는 외주관리화면에서 대상을 먼저 삭제해야만 확정취소가 가능');
-                    return false;
-                }
-            }
-
-            getOrderStatusButton(event);
-        });
-
-        /**
-         * @description 종료버튼 클릭
-         */
-        $('#TERMINATION').on('click', function (event) {
-            let selectedRowCount = selectedRowIndex.length;
-
-            for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
-
-                if (rowData.ORDER_STATUS_NM === '주문확정') {
-                    alert('외주가 ‘Y’ 인 상태에서는 외주관리화면에서 대상을 먼저 삭제해야만 확정취소가 가능');
-                    return false;
-                }
-
-                //TODO: 마감대상이 아닌 대상 중 기록이 필요한 대상은 종료 처리
-                // if (rowData.OUTSIDE_YN === 'Y') {
-                //     //TODO: 문구수정
-                //     alert('외주가 ‘Y’ 인 상태에서는 외주관리화면에서 대상을 먼저 삭제해야만 확정취소가 가능');
-                //     return false;
-                // }
-            }
-
-            getOrderStatusButton(event);
-        });
-
-        /**
-         * @description 마감버튼 클릭
-         */
-        $('#DEADLINE').on('click', function (event) {
-            let selectedRowCount = selectedRowIndex.length;
-
-            for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
-
-                if (rowData.ORDER_STATUS_NM === '주문확정') {
-                    alert('외주가 ‘Y’ 인 상태에서는 외주관리화면에서 대상을 먼저 삭제해야만 확정취소가 가능');
-                    return false;
-                }
-
-            }
-
-            getOrderStatusButton(event);
+            $closeHistoryGrid.pqGrid('refreshDataAndView');
         });
         /* event */
 
         /* init */
-        changeDate();
-        fnCommCodeDatasourceSelectBoxCreate($('#CONTROL_MANAGE_SEARCH_FORM').find('#CLIENT'), 'all', {
+        fnCommCodeDatasourceSelectBoxCreate($('#CLOSE_HISTORY_SEARCH_FORM').find('#COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#CLOSE_HISTORY_SEARCH_FORM').find('#ORDER_COMP_CD'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
-        $orderManagementGrid = $('#' + gridId).pqGrid(obj);
+        $closeHistoryGrid = $('#' + gridId).pqGrid(obj);
         /* init */
     });
 </script>

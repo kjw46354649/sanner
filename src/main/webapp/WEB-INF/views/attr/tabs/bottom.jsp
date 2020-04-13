@@ -32,8 +32,15 @@
                                         </header>
                                         <div class="row">
                                             <div class="col-md-12 col-sm-12">
-                                                <div id="attachDragAndDrop" class="gridWrap">
+                                                <div class="gridWrap">
                                                     <div id="common_cad_file_attach_grid"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12">
+                                                <div id="attachDragAndDrop" class="dropfile visible-lg">
+                                                    <small>Drag and Drop file here</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -63,29 +70,73 @@
         commonCadFileAttachObj = {
             // width: 700,
             height: 300, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
-            selectionModel : {type: 'row', mode: 'single'}, editable : false,
+            selectionModel : {type: 'row', mode: 'single'},
             numberCell: {title: 'No.'}, dragColumns: {enabled: false},
-            scrollModel: {autoFit: true}, trackModel: {on: true}, showBottom : true,
+            scrollModel: {autoFit: false}, trackModel: {on: true}, showBottom : true,
+            postRenderInterval: -1, //call postRender synchronously.
             columnTemplate: {
                 align: 'center',
                 halign: 'center',
                 hvalign: 'center' //to vertically center align the header cells.
             },
             colModel: [
-                {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true, editable: false, colModel: []},
-                {title: 'DXF_GFILE_SEQ', dataType: 'integer', dataIndx: 'DXF_GFILE_SEQ', hidden: true, editable: false, colModel: []},
-                {title: 'DWG_GFILE_SEQ', dataType: 'integer', dataIndx: 'DWG_GFILE_SEQ', hidden: true, editable: false, colModel: []},
-                {title: 'PDF_GFILE_SEQ', dataType: 'integer', dataIndx: 'PDF_GFILE_SEQ', hidden: true, editable: false, colModel: []},
-                {title: 'IMG_GFILE_SEQ', dataType: 'integer', dataIndx: 'IMG_GFILE_SEQ', hidden: true, editable: false, colModel: []},
-                {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE'},
-                {title: '관리번호', datatype: 'string', dataIndx: 'CONTROL_NUM'},
-                {title: '품명', align: 'center', dataType: 'string', dataIndx: 'ITEM_NM'},
-                {title: '도면번호', align: 'center', dataType: 'string', dataIndx: 'DRAWING_NUM'},
-                {title: '파일명', align: 'center', dataType: 'string', dataIndx: 'FILE_NM'},
-                {title: 'DXF', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ'},
-                {title: 'PDF', align: 'center', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ'},
-                {title: '사이즈', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SIZE'},
-                {title: '삭제', align: 'center', dataType: 'string', dataIndx: 'DEL_YN'}
+                {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true, width: 70, minWidth: 70, colModel: []},
+                // {title: 'DXF_GFILE_SEQ', dataType: 'integer', dataIndx: 'DXF_GFILE_SEQ', hidden: true, colModel: []},
+                {title: 'DWG_GFILE_SEQ', dataType: 'integer', dataIndx: 'DWG_GFILE_SEQ', hidden: true, colModel: []},
+                {title: 'PDF_GFILE_SEQ', dataType: 'integer', dataIndx: 'PDF_GFILE_SEQ', hidden: true, colModel: []},
+                // {title: 'IMG_GFILE_SEQ', dataType: 'integer', dataIndx: 'IMG_GFILE_SEQ', hidden: true, colModel: []},
+                {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE', width: 250, minWidth: 100},
+                {title: '관리번호', datatype: 'string', dataIndx: 'CONTROL_NUM', width: 130, minWidth: 100},
+                {title: '품명', align: 'center', dataType: 'string', dataIndx: 'ITEM_NM', width: 150, minWidth: 150},
+                {title: '도면번호', align: 'center', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 155, minWidth: 70},
+                {title: '파일명', align: 'center', dataType: 'string', dataIndx: 'UPLOAD_FILE_NM', width: 155, minWidth: 70},
+                {title: 'DXF', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 70, minWidth: 70,
+                    render: function (ui) {
+                        if (ui.rowData['DXF_GFILE_SEQ'] > 0) {
+                            return "<i class='fa fa-file fa-2x'>&nbsp;</i>";
+                        } else{
+                            return "";
+                        }
+                    },
+                },
+                {title: 'IMAGE', align: 'center', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', width: 70, minWidth: 70,
+                    render: function (ui) {
+                        if (ui.rowData['DXF_GFILE_SEQ'] > 0) {
+                            return "<i id='imageView' class='fa fa-file-image-o fa-2x'>&nbsp;</i>";
+                        } else{
+                            return "";
+                        }
+                    },
+                    postRender: function (ui) {
+                        var rowIndx = ui.rowIndx,
+                            grid = this,
+                            $cell = grid.getCell(ui);
+                        $cell.find("#imageView").bind("click", function () {
+                            var rowData = ui.rowData;
+                            console.log(rowData.IMG_GFILE_SEQ);
+                            callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                        });
+                    }
+                },
+                {title: '사이즈', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SIZE', width: 100, minWidth: 70},
+                {title: '삭제', align: 'center', dataType: 'string', dataIndx: 'DEL_YN', width: 70, minWidth: 70,
+                    render: function (ui) {
+                        console.log(ui)
+                        return "<button type='button' class='delete_btn'>Delete</button>";
+                    },
+                    postRender: function (ui) {
+                        var rowIndx = ui.rowIndx, grid = this, $cell = grid.getCell(ui);
+                        $cell.find("button").button({ icons: { primary: 'ui-icon-scissors'} })
+                            .bind("click", function () {
+                                grid.addClass({ rowIndx: ui.rowIndx, cls: 'pq-row-delete' });
+                                var ans = window.confirm("Are you sure to delete row No " + (rowIndx + 1) + "?");
+                                grid.removeClass({ rowIndx: rowIndx, cls: 'pq-row-delete' });
+                                if (ans) {
+                                    grid.deleteRow({ rowIndx: rowIndx });
+                                }
+                            });
+                    }
+                }
             ],
             toolbar: {
                 cls: 'pq-toolbar-crud',
@@ -94,11 +145,6 @@
                     {type: 'button', label: 'SAVE', icon: 'ui-icon-plus', style: 'float: right;', listener: {
                             'click': function (evt, ui) {
                                 alert("파일 저장 처리")
-                            }}
-                    },
-                    {type: 'button', label: 'FIND FILE', icon: 'ui-icon-plus', style: 'float: right;', listener: {
-                            'click': function (evt, ui) {
-                                alert("파일 추가 처리")
                             }}
                     }
                 ]
@@ -138,9 +184,24 @@
                         formData.append('file', file, file.name);
                 });
                 fnFormDataFileUploadAjax(function (data) {
-                    let fileInfo = data.fileUploadList[0];
-                    $("#company_master_register_form").find("#SIGN_GFILE_SRC").attr("src", "/image/" + fileInfo.GFILE_SEQ);
-                    $("#company_master_register_form").find("#SIGN_GFILE_SEQ").val(fileInfo.GFILE_SEQ);
+                    let fileList = data.fileUploadList;
+                    if(fileList.length <= 0){
+                        alert("주문 정보가 없습니다. 주문 정보를 확인 해 주세요.");
+                        return false;
+                    }
+                    // 도면 번호 없는 경우 삭제 처리
+                    var data = $commonCadFileAttachGrid.pqGrid('option', 'dataModel.data')
+                    var delKdys = [];
+                    $.each(data, function(rowItme, key) {
+                        if(!rowItme.CONTROL_NUM){
+                            delKdys.push({'rowIndx': key});
+                        }
+                    });
+                    $commonCadFileAttachGrid.pqGrid('deleteRow', {rowList: delKdys});
+                    // 업로드 파일의 정보를 업데이트 한다.
+                    $commonCadFileAttachGrid.pqGrid('option', {editable:true});
+                    $commonCadFileAttachGrid.pqGrid('addNodes', fileList, 0);
+                    $commonCadFileAttachGrid.pqGrid('option', {editable:false});
                 }, formData, '/uploadControlCadFiles');
             }
         });

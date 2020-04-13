@@ -2,64 +2,76 @@
 <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 
 <mapper namespace="outMapper">
-    <select id="selectOutsourcingOrderManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+
+    <sql id="outManage">
         SELECT
             ROW_NUMBER () OVER () AS ROWNUM,
-            A.CONTROL_SEQ, -- 주문관리일련번호
-            B.CONTROL_DETAIL_SEQ, -- 주문관리상세일련번호
-            C.ORDER_SEQ, -- 발주번호일련번호
-            D.OUTSIDE_REQUEST_SEQ, -- 외주가공요청일련번호
-            A.COMP_CD, -- 사업자 구분
-            SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM, -- 사업자 구분
-            B.OUTSIDE_YN, -- 외주 구분
-            '', -- 외주발주 상태
-            '', -- 상태변경 일시
-            B.OUTSIDE_COMP_CD, -- 외주업체
-            SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM, -- 외주업체명
-            '', -- 입고일자
-            B.OUTSIDE_ORDER_NUM, -- 외주 발주번호
-            B.OUTSIDE_NOTE, -- 외주 비고
-            A.NOTE, -- 주문 비고
-            A.CONTROL_SEQ,
-            B.DRAWING_NUM, -- 도면번호
-            B.PART_NUM, -- Part
-            B.ITEM_NM, -- 품명
-            B.SIZE_TXT, -- 규격
-            B.MATERIAL_DETAIL, -- 자재종류
-            B.SURFACE_TREAT, -- 표면처리
-            B.ITEM_QTY, -- 수량(확인필요)
-            B.MATERIAL_SUPPLY_YN, -- 사급 여부
-            B.OUTSIDE_MATERIAL_SUPPLY_YN, -- 소재 제공(사급소재인경우 자동으로 Y)
-            B.OUTSIDE_REQUEST_FINISH_YN, -- 외주 요청가공 완제품
-            B.OUTSIDE_REQUEST_PROCESS_YN, -- 외주 요청가공 가공
-            B.OUTSIDE_REQUEST_GRIND_YN, -- 외주 요청가공 연마
-            B.OUTSIDE_REQUEST_SURFACE_YN, -- 외주 요청가공 표면처리
-            B.OUTSIDE_REQUEST_ETC, -- 외주 요청가공 기타사항
-            B.OUTSIDE_HOPE_DUE_DT, -- 요망 납기
-            B.OUTSIDE_UNIT_AMT, -- 외주 확정 단가
-            B.UNIT_FINAL_AMT, -- 금액 합계
-            '', -- 외주 종전가
-            B.INNER_DUE_DT, -- 원발주 납기일
-            B.UNIT_FINAL_AMT, -- 원발주 공급단가
-            A.ORDER_COMP_CD, -- 발주처
-            SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM, -- 발주처
-            '', -- Seq
-            '', -- 결과
-            '', -- 불량코드
-            '', -- 측정일시
-            DATE_FORMAT(A.STATUS_DT, '%m/%d %H:%i') AS CONTROL_STATUS, -- 원주문 확정일시
-            DATE_FORMAT(E.INSERT_DT, '%m/%d %H:%i') AS OUTSIDE_REQUEST_DATE, -- 외주가공 요청일시
-            DATE_FORMAT(F.CLOSE_DT, '%m/%d %H:%i') AS OUTSIDE_FINISH_DATE, -- 외주가공 마감일시
-            '' -- DXF
+            A.CONTROL_SEQ, <!-- 주문관리일련번호 -->
+            B.CONTROL_DETAIL_SEQ, <!-- 주문관리상세일련번호 -->
+            C.ORDER_SEQ, <!-- 발주번호일련번호 -->
+            D.OUTSIDE_REQUEST_SEQ, <!-- 외주가공요청일련번호 -->
+            G.CLOSE_MONTH, <!-- 마감월 -->
+            G.CLOSE_VER, <!-- 차수 -->
+            B.PART_STATUS,
+            A.COMP_CD, <!-- 사업자 구분 -->
+            SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM, <!-- 사업자 구분 -->
+            B.OUTSIDE_YN, <!-- 외주 구분 -->
+            '', <!-- 외주발주 상태 -->
+            '', <!-- 상태변경 일시 -->
+            B.OUTSIDE_COMP_CD, <!-- 외주업체 -->
+            SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM, <!-- 외주업체명  -->
+            '', <!-- 입고일자 -->
+            B.OUTSIDE_ORDER_NUM, <!-- 외주 발주번호 -->
+            B.OUTSIDE_NOTE, <!-- 외주 비고 -->
+            A.NOTE, <!-- 주문 비고 -->
+            B.DRAWING_NUM, <!-- 도면번호 -->
+            B.PART_NUM, <!-- Part -->
+            B.ITEM_NM, <!-- 품명 -->
+            B.SIZE_TXT, <!-- 규격 -->
+            B.MATERIAL_DETAIL, <!-- 자재종류 -->
+            B.SURFACE_TREAT, <!-- 표면처리 -->
+            B.ITEM_QTY, <!-- 수량(확인필요) -->
+            B.MATERIAL_SUPPLY_YN, <!-- 사급 여부 -->
+            B.OUTSIDE_MATERIAL_SUPPLY_YN, <!-- 소재 제공(사급소재인경우 자동으로 Y) -->
+            B.OUTSIDE_REQUEST_FINISH_YN, <!-- 외주 요청가공 완제품 -->
+            B.OUTSIDE_REQUEST_PROCESS_YN, <!-- 외주 요청가공 가공 -->
+            B.OUTSIDE_REQUEST_GRIND_YN, <!-- 외주 요청가공 연마 -->
+            B.OUTSIDE_REQUEST_SURFACE_YN, <!-- 외주 요청가공 표면처리 -->
+            B.OUTSIDE_REQUEST_ETC, <!-- 외주 요청가공 기타사항 -->
+            B.OUTSIDE_HOPE_DUE_DT, <!-- 요망 납기 -->
+            B.OUTSIDE_UNIT_AMT, <!-- 외주 확정 단가 -->
+            B.UNIT_FINAL_AMT, <!-- 금액 합계 -->
+            '', <!-- 외주 종전가 -->
+            B.INNER_DUE_DT, <!-- 원발주 납기일 -->
+            B.UNIT_FINAL_AMT, <!-- 원발주 공급단가 -->
+            A.ORDER_COMP_CD, <!-- 발주처 -->
+            SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM, <!-- 발주처 -->
+            '', <!-- Seq -->
+            '', <!-- 결과 -->
+            '', <!-- 불량코드 -->
+            '', <!-- 측정일시 -->
+            DATE_FORMAT(A.STATUS_DT, '%m/%d %H:%i') AS CONTROL_STATUS, <!-- 원주문 확정일시 -->
+            DATE_FORMAT(E.INSERT_DT, '%m/%d %H:%i') AS OUTSIDE_REQUEST_DATE, <!-- 외주가공 요청일시 -->
+            DATE_FORMAT(F.CLOSE_DT, '%m/%d %H:%i') AS OUTSIDE_FINISH_DATE, <!-- 외주가공 마감일시 -->
+            '' <!-- DXF -->
         FROM TBL_CONTROL A
-        INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-        INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-                                               AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-        LEFT OUTER JOIN TBL_OUTSIDE_REQUEST_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ
-                                                        AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-        LEFT OUTER JOIN TBL_OUTSIDE_REQUEST E ON D.OUTSIDE_REQUEST_SEQ = E.OUTSIDE_REQUEST_SEQ
-        LEFT OUTER JOIN TBL_OUTSIDE_CLOSE F ON B.CONTROL_SEQ = F.CONTROL_SEQ
-                                               AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ 
+            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ 
+                                                   AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_OUTSIDE_REQUEST_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ 
+                                                       AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_OUTSIDE_REQUEST E ON D.OUTSIDE_REQUEST_SEQ = E.OUTSIDE_REQUEST_SEQ 
+            LEFT OUTER JOIN TBL_OUTSIDE_CLOSE F ON B.CONTROL_SEQ = F.CONTROL_SEQ
+                                             AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ 
+            LEFT OUTER JOIN TBL_OUTSIDE_CLOSE_HISTORY G ON F.CONTROL_SEQ = G.CONTROL_SEQ 
+                                                           AND F.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ 
+                                                           AND F.CLOSE_MONTH = G.CLOSE_MONTH 
+                                                           AND F.CLOSE_VER = G.CLOSE_VER
+    </sql>
+
+
+    <select id="selectOutsourcingOrderManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        <include refid="outManage" />
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001'
             AND B.OUTSIDE_YN = 'Y'
@@ -88,4 +100,220 @@
             AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
         </if>
     </select>
+
+    <select id="selectOutsideCloseLeftList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.COMP_CD AS ORDER_COMP,
+            A.COMP_NM AS ORDER_COMP_NM,
+            IFNULL(E.CLOSE_MONTH, CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})) AS CLOSE_MONTH,
+            IFNULL(DATE_FORMAT(STR_TO_DATE(E.CLOSE_MONTH, '%Y%m'), '%Y.%m월' ), DATE_FORMAT(STR_TO_DATE(CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH}), '%Y%m'), '%Y.%m월' )) AS CLOSE_MONTH_TRAN,
+            IFNULL(CONCAT(E.CLOSE_VER, '차'), '-') AS CLOSE_VER,
+            IFNULL(CONCAT(CAST(SUM(D.ORDER_QTY) AS CHAR), '건'), '-') AS ORDER_QTY,
+            IFNULL(FORMAT(SUM(C.UNIT_FINAL_AMT), 0), '-') AS UNIT_FINAL_AMT
+        FROM TBL_COMPANY A
+            LEFT OUTER JOIN TBL_CONTROL B ON A.COMP_CD = B.ORDER_COMP_CD
+            LEFT OUTER JOIN TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                                  AND EXISTS (SELECT 1
+                                                              FROM TBL_OUTSIDE_CLOSE
+                                                              WHERE
+                                                                    C.CONTROL_SEQ = CONTROL_SEQ
+                                                                    AND C.CONTROL_DETAIL_SEQ = CONTROL_DETAIL_SEQ
+                                                                    AND CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
+                                                                    AND CLOSE_VER = #{CLOSE_VER})
+            LEFT OUTER JOIN TBL_CONTROL_PART_ORDER D ON C.CONTROL_SEQ = D.CONTROL_SEQ
+                                                        AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_OUTSIDE_CLOSE E ON C.CONTROL_SEQ = E.CONTROL_SEQ
+                                                   AND C.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
+                                                   AND E.CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
+                                                   AND E.CLOSE_VER = #{CLOSE_VER}
+        WHERE A.CO_COMPANY_YN = 'Y'
+        GROUP BY A.COMP_CD
+    </select>
+
+    <select id="selectOutsideCloseRightList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            OUTSIDE_COMP_CD,
+            OUTSIDE_COMP_NM,
+            CLOSE_MONTH,
+            CLOSE_MONTH_TRAN,
+            CONCAT(CLOSE_VER, '차') AS CLOSE_VER,
+            CONCAT(CAST(SUM(ORDER_QTY) AS CHAR),'건') AS ORDER_QTY,
+            FORMAT(SUM(UNIT_FINAL_AMT), 0) AS UNIT_FINAL_AMT,
+            CONCAT(CAST(SUM(ADD_QTY) AS CHAR), '건') AS ADD_QTY,
+            FORMAT(SUM(ADD_UNIT_FINAL_AMT), 0) AS ADD_UNIT_FINAL_AMT
+        FROM (
+            SELECT
+                A.OUTSIDE_COMP_CD,
+                SF_GET_COMP_NM(A.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM,
+                C.CLOSE_MONTH,
+                DATE_FORMAT(STR_TO_DATE(C.CLOSE_MONTH, '%Y%m'), '%Y.%m월' ) AS CLOSE_MONTH_TRAN,
+                C.CLOSE_VER,
+                SUM(B.ORDER_QTY) AS ORDER_QTY,
+                SUM(A.UNIT_FINAL_AMT) AS UNIT_FINAL_AMT,
+                0 AS ADD_QTY,
+                0 AS ADD_UNIT_FINAL_AMT
+            FROM TBL_CONTROL_PART A
+                INNER JOIN TBL_CONTROL_PART_ORDER B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                                                       AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                INNER JOIN TBL_OUTSIDE_CLOSE C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                                       AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                                                       AND C.CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
+                                                       AND C.CLOSE_VER = #{CLOSE_VER}
+            WHERE
+                A.OUTSIDE_YN = 'Y'
+                AND A.OUTSIDE_COMP_CD IN (${OUTSIDE_COMP_CD})
+            GROUP BY A.OUTSIDE_COMP_CD 	
+        UNION ALL
+            SELECT
+                A.OUTSIDE_COMP_CD,
+                SF_GET_COMP_NM(A.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM,
+                CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH}) AS CLOSE_MONTH,
+                DATE_FORMAT(STR_TO_DATE(CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH}), '%Y%m'), '%Y.%m월' ) AS CLOSE_MONTH_TRAN,
+                #{CLOSE_VER},
+                SUM(B.ORDER_QTY) AS ORDER_QTY,
+                SUM(A.UNIT_FINAL_AMT) AS UNIT_FINAL_AMT,
+                SUM(B.ORDER_QTY) AS ADD_QTY,
+                SUM(A.UNIT_FINAL_AMT) AS ADD_UNIT_FINAL_AMT
+            FROM TBL_CONTROL_PART A
+            INNER JOIN TBL_CONTROL_PART_ORDER B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                                                   AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+            WHERE
+                A.OUTSIDE_YN = 'Y'
+                AND A.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})
+            GROUP BY A.OUTSIDE_COMP_CD) X
+        GROUP BY
+            OUTSIDE_COMP_CD
+    </select>
+
+    <insert id="insertOutsideClose" parameterType="java.util.HashMap" >
+        INSERT INTO TBL_OUTSIDE_CLOSE (
+            CLOSE_MONTH,
+            CLOSE_VER,
+            CONTROL_SEQ,
+            CONTROL_DETAIL_SEQ,
+            CLOSE_DT
+        ) VALUES (
+            #{CLOSE_MONTH},
+            #{CLOSE_VER},
+            #{CONTROL_SEQ},
+            #{CONTROL_DETAIL_SEQ},
+            NOW()
+        ) ON DUPLICATE KEY
+	        UPDATE
+		        CLOSE_DT = NOW()
+    </insert>
+
+    <insert id="insertOutsideCloseHistory" parameterType="java.util.HashMap" >
+        INSERT INTO jmes.TBL_OUTSIDE_CLOSE_HISTORY (
+            HISTORY_SEQ,
+            HISTORY_DT,
+            CLOSE_MONTH,
+            CLOSE_VER,
+            CONTROL_SEQ,
+            CONTROL_DETAIL_SEQ
+        ) VALUES (
+            NEXTVAL(SEQ_OUTSIDE_CLOSE_HISTORY),
+            NOW(),
+            #{CLOSE_MONTH},
+            CAST(#{CLOSE_VER} AS INTEGER),
+            #{CONTROL_SEQ},
+            #{CONTROL_DETAIL_SEQ}
+        )
+    </insert>
+
+    <select id="selectOutsourcingCloseHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        <include refid="outManage"/>
+        WHERE 1 = 1
+            AND F.CLOSE_MONTH = G.CLOSE_MONTH
+            AND F.CLOSE_VER = G.CLOSE_VER
+    </select>
+
+    <select id="selectOutsideClosingHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            ROW_NUMBER () OVER () AS ROWNUM,
+            A.COMP_CD,
+            SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM,
+            SUBSTR(D.CLOSE_MONTH, 1, 4) AS YEAR,
+            CONCAT(QUARTER(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m')), '분기') AS QUARTER,
+            CONCAT(SUBSTR(D.CLOSE_MONTH, 5), '월') AS FINISH_MONTH,
+            CONCAT(D.CLOSE_VER, '차') AS CLOSE_VER, /* 차수 */
+            B.OUTSIDE_COMP_CD,
+            SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS ORDER_COMP_NM,
+            SUM(C.ORDER_QTY) AS ITEM_NUMBER,
+            SUM(B.UNIT_FINAL_AMT) AS UNIT_FINAL_AMT,
+            SUM(B.UNIT_FINAL_AMT) * 0.1 AS VAT_AMOUNT,
+            SUM(B.UNIT_FINAL_AMT) + SUM(B.UNIT_FINAL_AMT) * 0.1 AS TOTAL_AMOUNT,
+            D.CLOSE_NOTE
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                                   AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_OUTSIDE_CLOSE D ON B.CONTROL_SEQ = D.CONTROL_SEQ
+                                              AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+        WHERE D.CLOSE_VER = (SELECT MAX(CLOSE_VER)
+                             FROM TBL_OUTSIDE_CLOSE
+                             WHERE
+                                D.CLOSE_MONTH = CLOSE_MONTH
+                                AND D.CONTROL_SEQ = CONTROL_SEQ
+                                AND D.CONTROL_DETAIL_SEQ = CONTROL_DETAIL_SEQ)
+        GROUP BY
+            A.COMP_CD,
+            B.OUTSIDE_COMP_CD,
+            D.CLOSE_MONTH,
+            D.CLOSE_VER
+        ORDER BY
+            SF_GET_COMP_NM(A.COMP_CD),
+            YEAR,
+            FINISH_MONTH
+    </select>
+
+    <select id="selectMonthCloseStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.COMP_CD,
+            A.COMP_NM,
+            B.COMP_CD AS ORDER_COMP_CD,
+            B.COMP_NM AS ORDER_COMP_NM,
+            C.YYYY,
+            C.MM,
+            QUARTER(C.DT) AS QUARTER,
+            X.OUTPUT_AMT,
+            Y.DEPOSIT_AMT
+        FROM TBL_COMPANY A
+            INNER JOIN TBL_COMPANY B ON B.CO_COMPANY_YN = 'Y'
+            CROSS JOIN TBL_YYYYMMDD C
+            LEFT OUTER JOIN (SELECT
+                                 C.CLOSE_MONTH,
+                                 A.COMP_CD,
+                                 A.ORDER_COMP_CD,
+                                 SUM(B.UNIT_FINAL_AMT * D.ORDER_QTY) AS OUTPUT_AMT
+                             FROM TBL_CONTROL A
+                                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                                 INNER JOIN TBL_OUTSIDE_CLOSE C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                                                   AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                                 INNER JOIN TBL_CONTROL_PART_ORDER D ON B.CONTROL_SEQ = D.CONTROL_SEQ
+                                                                        AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+                             GROUP BY A.COMP_CD,
+                                      A.ORDER_COMP_CD) X ON A.COMP_CD = X.COMP_CD
+                                                            AND B.COMP_CD = X.ORDER_COMP_CD
+                                                            AND CONCAT(C.YYYY, C.MM) = X.CLOSE_MONTH
+            LEFT OUTER JOIN(SELECT
+                                COMP_CD,
+                                ORDER_COMP_CD,
+                                SUBSTR(DATE_FORMAT(STR_TO_DATE(DEPOSIT_DT, '%Y%m%d'), '%Y%m%d'), 1, 4) AS YEAR,
+                                SUBSTR(DATE_FORMAT(STR_TO_DATE(DEPOSIT_DT, '%Y%m%d'), '%Y%m%d'), 5, 2) AS MONTH,
+                                DEPOSIT_AMT
+                            FROM TBL_MONEY_DEPOSIT) Y ON A.COMP_CD = Y.COMP_CD
+                                                         AND B.COMP_CD = Y.ORDER_COMP_CD
+                                                         AND C.YYYY = Y.YEAR
+                                                         AND C.MM = Y.MONTH
+        WHERE
+            A.FAMILY_COMPANY_YN = 'Y'
+            AND C.YYYY = 2020
+        GROUP BY
+            A.COMP_CD,
+            B.COMP_CD,
+            C.YYYY,
+            C.MM
+    </select>
+
 </mapper>

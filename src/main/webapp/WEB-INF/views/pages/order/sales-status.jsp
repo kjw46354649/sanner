@@ -24,17 +24,14 @@
                         <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectSalesClosingHistoryList">
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="CORPORATION">사업자</label>
-                                <select class="form-control" name="CORPORATION" id="CORPORATION">
+                                    <label class="control-label" for="COMP_CD">사업자</label>
+                                <select class="form-control" name="COMP_CD" id="COMP_CD">
                                     <option value="">All</option>
-                                    <c:forEach var="code" items="${HighCode.H_1007}">
-                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:forEach>
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="CLIENT">발주사</label>
-                                <select class="form-control" name="CLIENT" id="CLIENT">
+                                <label class="control-label" for="ORDER_COMP_CD">발주사</label>
+                                <select class="form-control" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
                                     <option value="">All</option>
                                 </select>
                             </div>
@@ -83,9 +80,6 @@
                                 <label class="control-label" for="COMP_CD">사업자</label>
                                 <select class="form-control" name="COMP_CD" id="COMP_CD">
                                     <option value="">All</option>
-                                    <c:forEach var="code" items="${HighCode.H_1007}">
-                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:forEach>
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
@@ -167,7 +161,7 @@
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
             {title: '년도', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '분기', dataType: 'string', dataIndx: 'QUATER'},
+            {title: '분기', dataType: 'string', dataIndx: 'QUARTER'},
             {title: '마감월', dataType: 'string', dataIndx: 'FINISH_MONTH'},
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
             {title: '발주사', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
@@ -299,13 +293,24 @@
 
 
         /* init */
-        /*fnCommCodeDatasourceSelectBoxCreate($('#CONTROL_MANAGE_SEARCH_FORM').find('#CLIENT'), 'CLOSING_HISTORY', {
+        fnCommCodeDatasourceSelectBoxCreate($('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM').find('#ORDER_COMP_CD'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
-        });*/
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#MONTH_SALE_STATUS_SEARCH_FORM ').find('#COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#MONTH_SALE_STATUS_SEARCH_FORM ').find('#ORDER_COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOrderCompanyList'}
+        });
         $closingHistoryGrid = $('#' + tab1GridId).pqGrid(tab1Obj);
         $monthlySalesStatusGrid = $('#' + tab2GridId).pqGrid(tab2Obj);
-        console.log($monthlySalesStatusGrid);
 
         fnAppendSelectboxYear('MONTH_SALE_YEAR', 10);
 
