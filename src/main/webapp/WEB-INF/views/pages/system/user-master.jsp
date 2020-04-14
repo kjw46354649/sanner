@@ -29,16 +29,20 @@
                 title: 'Use YN', dataType: 'select', width: '7%', dataIndx: 'DEL_YN_NM',
                 editor: {
                     type: 'select',
-                    mapIndices: {name: 'DEL_YN_NM', id: 'DEL_YN'},
+                    // mapIndices: {name: 'DEL_YN_NM', id: 'DEL_YN'},
                     valueIndx: 'value',
                     labelIndx: 'text',
                     options: fnGetCommCodeGridSelectBox('1042'),
-                    getData: function (ui) {
-                        let clave = ui.$cell.find('select').val();
-                        let rowData = $userMasterGrid.pqGrid('getRowData', {rowIndx: ui.rowIndx});
-                        rowData['DEL_YN'] = clave;
-                        return ui.$cell.find("select option[value='" + clave + "']").text();
-                    }
+                    // getData: function (ui) {
+                    //     console.log(ui);
+                    //     let clave = ui.$cell.find('select').val();
+                    //     console.log(clave);
+                    //     let rowData = $userMasterGrid.pqGrid('getRowData', {rowIndx: ui.rowIndx});
+                    //     console.log(rowData);
+                    //     rowData['DEL_YN'] = clave;
+                    //     console.log(rowData.DEL_YN);
+                    //     return ui.$cell.find("select option[value='" + clave + "']").text();
+                    // }
                 }
             }
         ];

@@ -46,6 +46,9 @@
     var multiFileUploadBox = [];    // 임시 형태의 file upload 저장소
     var g_noData = '<div style="font-size:18px;margin-top:20px;">No Data</div>';
     var windowImageViewer;
+    const TODAY = new Date();
+    const CURRENT_YEAR = TODAY.getFullYear();
+    const CURRENT_MONTH = TODAY.getMonth();
 
     $(document).ready(function() {
 
@@ -386,6 +389,7 @@
                 selectBoxContents.push({'value':g_code[i].CODE_CD, 'text':g_code[i].CODE_NM_KR});
             }
         }
+        debugger;
         return selectBoxContents;
     };
 
@@ -540,7 +544,7 @@
                 }
             }
         });
-
+        debugger;
         document.body.appendChild(excelForm);
         excelForm.submit();
     };
@@ -588,7 +592,7 @@
      * @param {string} id
      * @param {string} selectedYear
      */
-    let fnAppendSelectboxMonth = function (id, selectedYear = new Date().getFullYear()) {
+    let fnAppendSelectboxMonth = function (id, selectedYear) {
         $('#' + id).empty();
         let date = new Date();
         // date.setMonth(date.getMonth() + 1);

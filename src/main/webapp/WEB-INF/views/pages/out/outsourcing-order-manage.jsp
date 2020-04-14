@@ -22,7 +22,7 @@
                 <div class="panel-body">
                     <form class="form-inline" id="OUTSIDE_ORDER_MANAGE_SEARCH_FORM" role="form">
                         <input type="hidden" name="queryId" id="queryId"
-                               value="outMapper.selectOutsourcingOrderManageList">
+                               value="outMapper.selectOutsideOrderManageList">
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <label class="control-label" for="COMP_CD">사업자</label>
@@ -353,6 +353,14 @@
     </div>
 </div>
 
+<form id="outsourcing_order_excel_download" method="POST">
+    <input type="hidden" id="sqlId" name="sqlId" value="selectOutsourcingOrderExcel:selectOutsourcingOrderInfoExcel"/>
+    <input type="hidden" id="mapInputId" name="mapInputId" value="data:info"/>
+    <input type="hidden" id="paramName" name="paramName" value="OUTSIDE_ORDER_NUM:COMP_CD:ORDER_STAFF_SEQ"/>
+    <input type="hidden" id="paramData" name="paramData" value=""/>
+    <input type="hidden" id="template" name="template" value="outsourcing_order_template"/>
+</form>
+
 <script>
     $(function () {
         'use strict';
@@ -367,12 +375,13 @@
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true, colModel: []},
             {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true, colModel: []},
             {title: 'OUTSIDE_REQUEST_SEQ', dataType: 'integer', dataIndx: 'OUTSIDE_REQUEST_SEQ', hidden: true, colModel: []},
+            {title: '담당자', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', hidden: true, colModel: []},
             {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: true, colModel: []},
             {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_NM', colModel: []},
-            {title: '외주<br>구분', dataType: 'string', dataIndx: 'OUTSIDE_YN', hidden: true, colModel: []},
-            {title: '원발주<br>상태', dataType: 'string', dataIndx: 'ORDER_COMP_NM', colModel: []},
-            {title: '외주<br>발주상태', dataType: 'string', dataIndx: 'DHLWNQKFWNTKDXO', hidden: true, colModel: []},
-            {title: '상태변경<br>일시', dataType: 'string', dataIndx: 'TKDXOQUSRUDDLFTL', colModel: []},
+            {title: '외주<br>구분', dataType: 'string', dataIndx: 'OUTSIDE_YN', colModel: []},
+            {title: '원발주<br>상태', dataType: 'string', dataIndx: 'CONTROL_STATUS_NM', colModel: []},
+            {title: '외주<br>발주상태', dataType: 'string', dataIndx: 'OUTSIDE_STATUS', hidden: true, colModel: []},
+            {title: '상태변경<br>일시', dataType: 'string', dataIndx: 'OUTSIDE_STATUS_DT', colModel: []},
             {title: '외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_CD', hidden: true, colModel: []},
             {title: '외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', colModel: []},
             {title: '입고일자', dataType: 'string', dataIndx: 'DLQRHDLFWK', colModel: []},
@@ -422,7 +431,7 @@
                     {title: '측정일시', datatype: 'string', dataIndx: 'CMRWJDDLFTL'}
                 ]
             },
-            {title: '원주문<br>확정 일시', datatype: 'string', dataIndx: 'CONTROL_STATUS', colModel: []},
+            {title: '원주문<br>확정 일시', datatype: 'string', dataIndx: 'CONTROL_STATUS_DATE', colModel: []},
             {title: '외주가공<br>요청일시.', dataType: 'string', dataIndx: 'OUTSIDE_REQUEST_DATE', colModel: []},
             {title: '외주가공<br>마감일시', dataType: 'string', dataIndx: 'OUTSIDE_FINISH_DATE', colModel: []},
             {title: 'DXF', dataType: 'string', dataIndx: 'STATUS_DT', colModel: []}
@@ -431,52 +440,18 @@
             cls: 'pq-toolbar-crud',
             items: [
                 {
-                    type: 'checkbox', label: '상세견적요건', style: 'float: left;', listener: {
-                        'change': function (evt, ui) {
-                            let $orderManagementGridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
-                            let Cols = $orderManagementGridInstance.Columns();
-                            let titles = ['상세가공요건', '소재마감', '예상소재 Size'];
-
-                            Cols.alter(function () {
-                                for (let i = 0; i < titles.length; i++) {
-                                    let col = Cols.find(function (col) {
-                                        return col.title === titles[i];
-                                    });
-                                    col.hidden = !col.hidden;
-
-                                    for (let j = 0; j < col.colModel.length; j++) {
-                                        col.colModel[j].hidden = col.hidden;
-                                    }
-                                }
-                            })
-                        }
-                    }
-                },
-                {
-                    type: 'button', label: 'Delete', icon: 'ui-icon-minus', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {
-                            const DELETE_QUERY_ID = '';
-                            let selectedRowCount = selectedRowIndex.length;
-
-                            for (let i = 0; i < selectedRowCount; i++) {
-                                let thisRowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
-
-                                if (!(thisRowData.ORDER_STATUS_NM === undefined || thisRowData.ORDER_STATUS_NM === null || thisRowData.ORDER_STATUS_NM === '' || thisRowData.ORDER_STATUS_NM === '확정취소')) {
-                                    alert('확정상태가 빈칸(임시저장)이나 확정취소인 경우에만 가능');
-                                    return false;
-                                }
-                            }
-
-                            fnDeletePQGrid($orderManagementGrid, selectedRowIndex, DELETE_QUERY_ID);
-                        }
-                    }
-                },
-                {
                     type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            const updateQueryList = ['updateControlMaster', 'updateControlPart', 'updateControlPartOrder', 'insertControlProgress', 'insertControlPartProgress'];
+                            const updateQueryList = ['updateControlPart'];
 
-                            fnModifyPQGrid($orderManagementGrid, [], updateQueryList);
+                            fnModifyPQGrid($outsideOrderManageGrid, [], updateQueryList);
+                        }
+                    }
+                },
+                {
+                    type: 'button', label: '도면 View', icon: 'ui-icon-document', style: 'float: right;', listener: {
+                        'click': function (evt, ui) {
+
                         }
                     }
                 }
@@ -497,6 +472,7 @@
             },
             colModel: colModel,
             toolbar: toolbar,
+            strNoRows: g_noData,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: postData,
@@ -643,6 +619,37 @@
         
         $outsideOrderManageGrid = $('#' + gridId).pqGrid(obj);
 
+        $('#ORDER_EXTRACTION').on('click', function () {
+            console.log(selectedRowIndex);
+            let selectedRowCount = selectedRowIndex.length;
+            let outsideOrderNumStr = '';
+            let orderStaffSeqStr = '';
+            let compCdList = [];
+
+            // outsourcing_order_excel_download paramData
+            // OUTSIDE_ORDER_NUM:COMP_CD:ORDER_STAFF_SEQ
+
+            for (let i = 0; i < selectedRowCount; i++) {
+                let rowData = $outsideOrderManageGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+
+                outsideOrderNumStr = rowData.OUTSIDE_ORDER_NUM;
+                compCdList.push(rowData.OUTSIDE_COMP_CD);
+                orderStaffSeqStr = rowData.ORDER_STAFF_SEQ;
+            }
+            // 중복제거
+            compCdList = compCdList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+
+            if (compCdList.length > 1) {
+                alert('선택된 대상들의 외주업체는 반드시 동일해야함');
+                return false;
+            }
+            $('#outsourcing_order_excel_download #paramData').val(outsideOrderNumStr + ':' + compCdList[0] + ':' + orderStaffSeqStr);
+
+            fnReportFormToHiddenFormPageAction('outsourcing_order_excel_download', '/downloadExcel');
+        });
+
         $('#OUTSIDE_CLOSE_POPUP').on('show.bs.modal', function () {
             fnAppendSelectboxYear('OUTSIDE_CLOSE_YEAR', 3);
             fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH');
@@ -672,6 +679,7 @@
             fnPostAjax(function (data, callFunctionParam) {
                 $outsideOrderManageGrid.pqGrid('refreshDataAndView');
                 $outsideCloseLeftGrid.pqGrid('refreshDataAndView');
+                $outsideCloseRightGrid.pqGrid('refreshDataAndView');
             }, parameters, '');
         });
 

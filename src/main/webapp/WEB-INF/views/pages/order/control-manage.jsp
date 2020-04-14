@@ -486,7 +486,6 @@
     </div>
 </div>
 
-
 <script>
     $(function () {
         'use strict';
@@ -507,6 +506,7 @@
             {title: 'PART_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true, colModel: []},
             {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true, colModel: []},
             {title: '주문상태', align: 'center', colModel: [
+                    {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_ORIGINAL', hidden: true},
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS', hidden: true},
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_NM'},
                     {title: '변경일시', minWidth: 100, datatype: 'date', dataIndx: 'CONTROL_STATUS_DT'}
@@ -551,8 +551,26 @@
             {title: '도면번호버전', dataType: 'string', dataIndx: 'DRAWING_VER', hidden: true, colModel: []},
             {title: '도면번호', minWidth: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', editable: true, colModel: []},
             {title: '품명', minWidth: 110, dataType: 'string', dataIndx: 'ITEM_NM', editable: true, colModel: []},
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true, colModel: []},
-            {title: '작업<br>형태', minWidth: 70, dataType: 'string', dataIndx: 'WORK_NM', colModel: []},
+            // {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true, colModel: []},
+            // {title: '작업<br>형태', minWidth: 70, dataType: 'string', dataIndx: 'WORK_NM', colModel: []},
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE',
+                editor: {
+                    type: 'select',
+                    // mapIndices: {name: "WORK_TYPE", id: "WORK_TYPE"},
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1033'),
+                    // getData: function (ui) {
+                    //     console.log(ui);
+                    //     let clave = ui.$cell.find("select").val();
+                    //     let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                    //     rowData["WORK_TYPE"] = clave;
+                    //     console.log(clave);
+                    //     console.log(rowData.WORK_TYPE);
+                    //     return ui.$cell.find("select option[value='" + clave + "']").text();
+                    // }
+                }
+            },
             {title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN', colModel: []},
             {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', colModel: []},
             {title: '소재<br>사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', colModel: []},
@@ -635,9 +653,31 @@
              {title: '합계금액', dataType: 'string', dataIndx: 'FINAL_AMOUNT', colModel: []},
              {title: '종전가', minWidth: 100, dataType: 'string', dataIndx: 'WHDWJSRK', colModel: []},
             {title: '변경전<br>도면번호', minWidth: 120, dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', colModel: [], editable: true},
+            {
+                title: '마감/취소 현황', align: 'center', colModel: [
+                    {title: '마감월', datatype: 'string', dataIndx: 'CLOSE_MONTH'},
+                    {title: '차수', datatype: 'string', dataIndx: 'CLOSE_VER'},
+                    {title: '작성자', datatype: 'string', dataIndx: 'akrkacnlthtkwrtjdwk'},
+                    {title: '일시', datatype: 'string', dataIndx: 'CLOSE_DT'}
+                ]
+            },
             {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ'},
             {title: 'Rev.', dataType: 'string', dataIndx: 'REVD.', colModel: []},
             {title: 'Rev. 일시', minWidth: 70, dataType: 'string', dataIndx: 'REVDLFTL.', colModel: []},
+            {
+                title: '외주현황', align: 'center', colModel: [
+                    {title: '외주업체', datatype: 'string', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
+                    {title: '외주업체', datatype: 'string', dataIndx: 'OUTSIDE_COMP_NM'},
+                    {title: '자재사급', datatype: 'string', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN'},
+                    {title: '외주단가', datatype: 'integer', dataIndx: 'OUTSIDE_UNIT_AMT'},
+                    {title: '합계금액', datatype: 'integer', dataIndx: 'OUTSIDE_FINAL_AMT'},
+                    {title: '요망납기', datatype: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
+                    {title: '입고날짜', datatype: 'string', dataIndx: 'dhlwndlqrhskfWk'},
+                    {title: '비고', datatype: 'string', dataIndx: 'OUTSIDE_NOTE'},
+                    {title: '불량Code', datatype: 'string', dataIndx: 'dhlwnqnffidcode'},
+                    {title: '조치방안', datatype: 'string', dataIndx: 'dhlwnwhclqkddks'}
+                ]
+            },
             {title: '등록/업데이트<br>일시', minWidth: 100, dataType: 'string', dataIndx: 'STATUS_DT', colModel: []}
         ];
         let toolbar = {
@@ -828,7 +868,10 @@
                         'click': function (evt, ui) {
                             let data = $orderRegisterGrid.pqGrid('option', 'dataModel.data');
 
-                            for (let i = 0; i < data.length; i++) data[i].STATUS = 'ORD001'
+                            for (let i = 0; i < data.length; i++) {
+                                data[i].CONTROL_STATUS = 'ORD001';
+                                data[i].STATUS = 'ORD001';
+                            }
 
                             let parameters = {
                                 'url': '/registerNewOrder',
@@ -1194,6 +1237,18 @@
         });
 
         $('#CONTROL_CLOSE_POPUP').on('show.bs.modal', function () {
+            let selectedRowCount = selectedRowIndex.length;
+
+            for (let i = 0; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+
+                if (rowData.CONTROL_STATUS_ORIGINAL !== 'ORD001') {
+                    alert('주문 상태가 확정일 때 월 마감이 가능합니다.');
+                    return false;
+                }
+
+            }
+            // alert();
             fnAppendSelectboxYear('CONTROL_CLOSE_YEAR', 3);
             fnAppendSelectboxMonth('CONTROL_CLOSE_MONTH');
 
@@ -1229,11 +1284,10 @@
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
 
                 //TODO: 필수데이터가 입력되어 있어야만 확정 가능
-                if (rowData.OUTSIDE_YN === 'Y') {
-                    //TODO: 문구수정
-                    alert('외주가 ‘Y’ 인 상태에서는 외주관리화면에서 대상을 먼저 삭제해야만 확정취소가 가능');
-                    return false;
-                }
+                // if (rowData.OUTSIDE_YN === 'Y') {
+                //     // alert('외주가 ‘Y’ 인 상태에서는 외주관리화면에서 대상을 먼저 삭제해야만 확정취소가 가능');
+                //     // return false;
+                // }
             }
 
             getOrderStatusButton(event);
@@ -1325,7 +1379,9 @@
             // rightGrid
             let parameters = {'url': '/insertMonthFinishClose', 'data': {data: JSON.stringify(list)}}
             fnPostAjax(function (data, callFunctionParam) {
+                $orderManagementGrid.pqGrid('refreshDataAndView');
                 $controlCloseLeftGrid.pqGrid('refreshDataAndView');
+                $controlCloseRightGrid.pqGrid('refreshDataAndView');
             }, parameters, '');
         });
 
