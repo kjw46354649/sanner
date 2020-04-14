@@ -438,7 +438,7 @@
         };
         let itemOrderRegisterRightToolbar = {
             items: [
-                {   type: 'select', label: '창고', style: 'float: center;', option: fnGetCommCodeGridSelectBox('1045')   },
+                {   type: 'select', label: '창고', style: 'float: center;', option: fnGetCommCodeGridSelectBox('1049')   },
                 {   type: 'select', label: '소재종류', style: 'float: center;', option: fnGetCommCodeGridSelectBox('1045')   },
                 {   type: 'select', label: '넓이조건', style: 'float: center;', option: fnGetCommCodeGridSelectBox('1045')   },
                 {   type: 'select', label: 'T 조건', style: 'float: center;', option: fnGetCommCodeGridSelectBox('1045')   },

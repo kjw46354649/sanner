@@ -308,4 +308,71 @@
         GROUP BY A.WAREHOUSE_CD, A.MATERIAL_KIND, A.MATERIAL_DETAIL, A.SIZE_TXT
     </select>
 
+    <select id="selectInWarehouseManageWarehouseList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            #{WAREHOUSE_CD}, SF_GET_CODE_NM(1049, #{WAREHOUSE_CD}, 'EN') AS WAREHOUSE_NM,
+            LOC_SEQ, LOC_NM, LOC_DESC, UPDATE_DT, INSERT_ID
+        FROM TBL_WAREHOUSE_LOCATION
+        WHERE 1=1
+            AND DEL_YN = 'N'
+            AND WAREHOUSE_CD = #{WAREHOUSE_CD}
+    </select>
+
+    <insert id="insertUpdateInWarehouseManage" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_MY_MATERIAL_STOCK
+        (
+            MY_MAT_STOCK_SEQ, MATERIAL_TYPE, MATERIAL_DETAIL, MATERIAL_KIND,
+            SIZE_TXT, SIZE_TYPE, SIZE_W, SIZE_H, SIZE_T, SIZE_D, SIZE_L,
+            STOCK_QTY, WAREHOUSE_CD, LOC_SEQ, NOTE,
+            DEL_YN, INSERT_ID
+        )
+        VALUES
+        (
+            <choose>
+                <when test="MY_MAT_STOCK_SEQ !=null and MY_MAT_STOCK_SEQ !=''">
+                    #{MY_MAT_STOCK_SEQ},
+                </when>
+                <otherwise>
+                    NEXTVAL(SEQ_MY_MAT_STOCK),
+                </otherwise>
+            </choose>
+            #{MATERIAL_TYPE}, #{MATERIAL_DETAIL},#{MATERIAL_KIND},
+            #{SIZE_TXT}, #{SIZE_TYPE}, #{SIZE_W}, #{SIZE_H}, #{SIZE_T}, #{SIZE_D}, #{SIZE_L},
+            #{STOCK_QTY}, #{WAREHOUSE_CD}, #{LOC_SEQ}, #{NOTE},
+            'N', NULL
+        )
+        ON DUPLICATE KEY UPDATE
+            STOCK_QTY = #{STOCK_QTY},
+            WAREHOUSE_CD = #{WAREHOUSE_CD},
+            LOC_SEQ = #{LOC_SEQ},
+            NOTE = #{NOTE},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = NULL
+    </insert>
+
+    <insert id="insertUpdateInWarehouseManageWarehouse" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_WAREHOUSE_LOCATION
+        (
+            WAREHOUSE_CD, LOC_SEQ, LOC_NM, LOC_DESC, LOC_USE, DEL_YN, INSERT_ID
+        )
+        VALUES
+        (
+            #{WAREHOUSE_CD},
+            <choose>
+                <when test="LOC_SEQ !=null and LOC_SEQ !=''">
+                    #{LOC_SEQ},
+                </when>
+                <otherwise>
+                    NEXTVAL(SEQ_LOC),
+                </otherwise>
+            </choose>
+            #{LOC_NM}, #{LOC_DESC}, #{LOC_USE}, 'N', NULL
+        )
+        ON DUPLICATE KEY UPDATE
+            LOC_NM = #{LOC_NM},
+            LOC_DESC = #{LOC_DESC},
+            LOC_USE = #{LOC_USE},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = NULL
+    </insert>
 </mapper>

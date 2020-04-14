@@ -7,6 +7,45 @@
 --%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
+<div class="modal" id="in_warehouse_manage_warehouse_popup" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">위치정보관리</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-inline" role="form" id="in_warehouse_manage_warehouse_popup_form" name="in_warehouse_manage_warehouse_popup_form">
+                    <input type="hidden" id="queryId" name="queryId" value="selectInWarehouseManageWarehouseList">
+                    <input type="hidden" id="WAREHOUSE_CD" name="WAREHOUSE_CD" value="">
+                    <div class="panel-body line_tit portlet-body form bg-light">
+                        <!-- grid table -->
+                        <section class="bg-light">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="panel panel-default">
+                                        <header class="panel-heading">
+                                            <strong>위치 정보 관리</strong>
+                                        </header>
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12">
+                                                <div class="gridWrap">
+                                                    <div id="in_warehouse_manage_warehouse_grid" class="jqx-refresh"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
 <div class="page-context">
     <div class="row m-b-md">
         <div class="col-sm-12">&nbsp;
@@ -276,8 +315,15 @@
     let inWarehouseManageManageGrid01 = $("#in_warehouse_manage_manage_grid01");
     let inWarehouseManageManageGrid02 = $("#in_warehouse_manage_manage_grid02");
     let inWarehouseManageOutGrid = $("#in_warehouse_manage_out_grid01");
+    let inWarehouseManageWarehousePopupGrid = $("#in_warehouse_manage_warehouse_grid");
+
     $(function () {
+
+        console.log(fnGetCommCodeGridSelectBox('1027'));
+
+
         let inWarehouseManageManageColModel01= [
+            {title: '', dataType: 'string', dataIndx: 'MY_MAT_STOCK_SEQ', hidden: true},
             {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_NM', width: 120 ,
                 editor: {
                     type: 'select',
@@ -368,7 +414,30 @@
                 }
             },
             {title: '보유수량', dataType: 'string', dataIndx: 'STOCK_QTY', minWidth: 80 },
-            {title: '상세위치', dataType: 'string', dataIndx: 'LOC_NM', minWidth: 120 },
+            {title: '상세위치', dataType: 'string', dataIndx: 'LOC_NM', minWidth: 120,
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "LOC_NM", id: "LOC_SEQ" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: function(ui) {
+                        let rowData = inWarehouseManageManageGrid01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        let WAREHOUSE_CD = rowData["WAREHOUSE_CD"];
+                        let data = {
+                            "queryId": 'dataSource.getLocationListWithWarehouse',
+                            "WAREHOUSE_CD" : WAREHOUSE_CD
+                        };
+                        console.log(fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": data}));
+                        return fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": data});
+                    },
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = inWarehouseManageManageGrid01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["LOC_SEQ"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', minWidth: 200 },
             {title: '입고', dataType: 'string', dataIndx: 'IN_QTY', minWidth: 60 },
             {title: '불출요청', dataType: 'string', dataIndx: '', minWidth: 80 }
@@ -414,6 +483,29 @@
             {title: '수동 불출', dataType: 'string', dataIndx: 'ORDER_NOTE', editable: false}
         ];
 
+        let inWarehouseManageWarehouseColModel= [
+            {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_NM', editable: false,
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "WAREHOUSE_NM", id: "WAREHOUSE_CD" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1049'),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = inWarehouseManageWarehousePopupGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["WAREHOUSE_CD"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
+            {title: '위치명', dataType: 'string', dataIndx: 'LOC_NM' },
+            {title: '위치 설명', dataType: 'string', dataIndx: 'LOC_DESC', width: 150 },
+            {title: '용도', dataType: 'string', dataIndx: 'LOC_USE', width: 150} ,
+            {title: '업데이트 일시', dataType: 'date', dataIndx: 'UPDATE_DT', width: 120, editable: false},
+            {title: '작성자', dataType: 'string', dataIndx: 'INSERT_ID', width: 120, editable: false}
+        ];
+
         let inWarehouseManageManageToolbar01 = {
             items: [
                 {
@@ -438,18 +530,15 @@
                 {
                     type: 'button', label: '위치 정보 관리', style: 'float: left;', listener: {
                         'click': function (evt, ui) {
+                            $("#in_warehouse_manage_warehouse_popup").modal("show");
                         }
                     }
                 },
                 {
                     type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            let gridInstance = inWarehouseManageManageGrid01.pqGrid('getInstance').grid;
-                            //추가 또는 수정된 값이 있으면 true
-                            if (gridInstance.isDirty()) {
-                                let changes = gridInstance.getChanges({format: 'byVal'});
-                                console.log(changes);
-                            }
+                            let inWarehouseManageInsertUpdateQueryList = ['material.insertUpdateInWarehouseManage'];
+                            fnModifyPQGrid(inWarehouseManageManageGrid01, inWarehouseManageInsertUpdateQueryList, inWarehouseManageInsertUpdateQueryList);
                         }
                     }
                 },
@@ -462,11 +551,55 @@
         let inWarehouseManageOutToolbar = {
             items: []
         };
+        let inWarehouseManageWarehouseToolbar = {
+            items: [
+                {   type: 'select', cls:'inWarehouseManageWarehouseSelectBox', label: '창고명', style: 'float: left;', options: function() {
+                        let options = fnGetCommCodeGridToolbarSelectBox('1049');
+                        return options;
+
+                        let text = $(".inWarehouseManageWarehouseSelectBox option:selected").val();
+                        $("#in_warehouse_manage_warehouse_popup_form #WAREHOUSE_CD").val(text);
+                    },
+                    listener: {
+                        'change': function () {
+                            let text = $(".inWarehouseManageWarehouseSelectBox option:selected").val();
+                            $("#in_warehouse_manage_warehouse_popup_form #WAREHOUSE_CD").val(text);
+
+                            inWarehouseManageWarehousePopupGrid.pqGrid('option', "dataModel.postData", function (ui) {
+                                return (fnFormToJsonArrayData('#in_warehouse_manage_warehouse_popup_form'));
+                            });
+                            inWarehouseManageWarehousePopupGrid.pqGrid('refreshDataAndView');
+                        }
+                    }
+                },
+                {
+                    type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
+                        'click': function (evt, ui) {
+                            let inWarehouseManageInsertUpdateQueryList = ['insertUpdateInWarehouseManageWarehouse'];
+                            fnModifyPQGrid(inWarehouseManageWarehousePopupGrid, inWarehouseManageInsertUpdateQueryList, inWarehouseManageInsertUpdateQueryList);
+                        }
+                    }
+                },
+                {
+                    type: 'button', label: 'Add', icon: 'ui-icon-plus', style: 'float: left;', listener: {
+                        'click': function (evt, ui) {
+                            let WAREHOUSE_CD = $(".inWarehouseManageWarehouseSelectBox option:selected").val();
+                            let WAREHOUSE_NM = $(".inWarehouseManageWarehouseSelectBox option:selected").text();
+                            inWarehouseManageWarehousePopupGrid.pqGrid('addRow', {
+                                newRow: {WAREHOUSE_CD:WAREHOUSE_CD, WAREHOUSE_NM:WAREHOUSE_NM},
+                                rowIndx : 0,
+                                checkEditable: false
+                            });
+                        }
+                    }
+                }
+            ]
+        };
 
         inWarehouseManageManageGrid01.pqGrid({
             width: "100%", height: 400,
             dataModel: {
-                location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
+                location: "remote", dataType: "json", method: "POST", recIndx: 'MY_MAT_STOCK_SEQ',
                 url: "/paramQueryGridSelect",
                 postData: fnFormToJsonArrayData('#in_warehouse_manage_search_form'),
                 getData: function (dataJSON) {
@@ -609,6 +742,33 @@
                 $('#in_warehouse_manage_out_search_form').toggle(); // show -> hide , hide -> show
                 $('#in_warehouse_manage_search_form').toggle(); // show -> hide , hide -> show
             }
+        });
+
+        $('#in_warehouse_manage_warehouse_popup').on('show.bs.modal',function() {
+            inWarehouseManageWarehousePopupGrid.pqGrid({
+                width: "100%", height: 300,
+                dataModel: {
+                    location: "remote", dataType: "json", method: "POST", recIndx: 'LOC_SEQ',
+                    url: "/paramQueryGridSelect",
+                    postData: fnFormToJsonArrayData('in_warehouse_manage_warehouse_popup_form'),
+                    getData: function (dataJSON) {
+                        return {data: dataJSON.data};
+                    }
+                },
+                columnTemplate: {align: 'center', hvalign: 'center'},
+                scrollModel: {autoFit: true},
+                numberCell: {width: 30, title: "No", show: true },
+                selectionModel: { type: 'row', mode: 'single'} ,
+                swipeModel: {on: false},
+                collapsible: false,
+                strNoRows: g_noData,
+                resizable: false,
+                trackModel: {on: true},
+                colModel: inWarehouseManageWarehouseColModel,
+                toolbar: inWarehouseManageWarehouseToolbar
+            });
+
+            inWarehouseManageWarehousePopupGrid.pqGrid("refreshDataAndView");
         });
 
     });

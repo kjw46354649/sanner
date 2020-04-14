@@ -63,4 +63,15 @@
         SELECT 1 FROM DUAL WHERE FALSE
     </select>
 
+    <select id="getLocationListWithWarehouse" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            LOC_NM AS CODE_NM, CAST(LOC_SEQ AS CHAR) AS CODE_CD
+        FROM TBL_WAREHOUSE_LOCATION
+        WHERE 1=1
+            AND DEL_YN = 'N'
+            <if test="WAREHOUSE_CD !='' and WAREHOUSE_CD != null">
+                AND WAREHOUSE_CD = #{WAREHOUSE_CD}
+            </if>
+    </select>
+
 </mapper>
