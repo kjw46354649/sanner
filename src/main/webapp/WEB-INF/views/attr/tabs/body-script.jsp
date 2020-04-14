@@ -393,6 +393,21 @@
         return selectBoxContents;
     };
 
+    let fnGetCommCodeGridToolbarSelectBox = function (highCd) {
+        'use strict';
+        let selectBoxContents = [];
+        for(var i=0; i < g_code.length; i++){
+            if(g_code[i].HIGH_CD == highCd){
+                let toolbarValue = g_code[i].CODE_CD;
+                let toolbarName = g_code[i].CODE_NM_KR;
+                let item = {}
+                item[toolbarValue] = toolbarName;
+                selectBoxContents.push(item);
+            }
+        }
+        return selectBoxContents;
+    };
+
     let fnGetCommCodeBasicSelectBox = function (selectBox, highCd, refCd, selectType) {
         'use strict';
         let selectOptionHtml = '<option value=\"\">Select</option>';
