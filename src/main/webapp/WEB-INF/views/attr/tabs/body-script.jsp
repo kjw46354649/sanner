@@ -140,6 +140,7 @@
         let callback = $.Callbacks();
         $.ajax({
             type: 'POST',
+            enctype: 'multipart/form-data',
             url: actionUrl,
             contentType : false,
             processData: false,

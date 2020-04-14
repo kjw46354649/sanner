@@ -47,7 +47,7 @@ import java.util.Properties;
 )
 public class ApplicationContextConfig {
 
-    private static final int TX_METHOD_TIMEOUT = 60;
+    private static final int TX_METHOD_TIMEOUT = 600;
 
     @Autowired
     private Environment environment;
@@ -119,7 +119,7 @@ public class ApplicationContextConfig {
         readOnlyAttribute.setTimeout(TX_METHOD_TIMEOUT);
 
         RuleBasedTransactionAttribute writeAttribute = new RuleBasedTransactionAttribute(TransactionDefinition.PROPAGATION_REQUIRED, rollbackRules);
-        writeAttribute.setTimeout(60);
+        writeAttribute.setTimeout(600);
 
         String readOnlyTransactionAttributesDefinition = readOnlyAttribute.toString();
         String writeTransactionAttributesDefinition = writeAttribute.toString();

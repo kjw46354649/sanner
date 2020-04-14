@@ -20,6 +20,9 @@ public class WebApplnitializer implements WebApplicationInitializer {
 //        container.addListener(new ContextLoaderListener(rootContext));
 
         // Create the dispatcher servlet's Spring application context
+        com.aspose.cad.License license = new com.aspose.cad.License();
+        license.setLicense("Aspose.CAD.lic");
+
         AnnotationConfigWebApplicationContext dispatcherServlet = new AnnotationConfigWebApplicationContext();
         dispatcherServlet.register(WebContextConfig.class);
         dispatcherServlet.setServletContext(container);

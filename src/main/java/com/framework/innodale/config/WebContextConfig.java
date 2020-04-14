@@ -136,7 +136,7 @@ public class WebContextConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    AspectInterceptor aspectInterceptor() {
+    public AspectInterceptor aspectInterceptor() {
         return new AspectInterceptor();
     }
 

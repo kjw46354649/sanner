@@ -6,7 +6,7 @@
             </a>
         </div>
         <div class="login-inner-form">
-            <form action="/main" method="POST">
+            <form action="#" method="POST">
                 <div class="form-group form-box">
                     <input type="email" name="email" class="input-text" placeholder="Email Address">
                     <i class="flaticon-mail-2"></i>

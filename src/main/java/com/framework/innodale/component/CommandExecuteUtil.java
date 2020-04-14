@@ -29,13 +29,55 @@ public class CommandExecuteUtil {
 
         if (OS.contains("win")) {
             String[] use = { "cmd", "/c" };
-            return runCommand(new String[]{"cmd", "/c"}, cmdList);
+            return runCommand(use, cmdList);
         } else if (OS.contains("nix") || OS.contains("nux") || OS.contains("aix")) {
             String[] use = { "/bin/sh", "-c" };
-            return runCommand(new String[]{"/bin/sh", "-c"}, cmdList);
+            return runLinuxCommand(use, cmdList);
         } else {
             return -1;
         }
+    }
+
+    /**
+     * Run Commander
+     * @param use
+     * @param cmd
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public static int runLinuxCommand(String[] use, String... cmdLists) throws IOException, InterruptedException {
+
+        StringBuffer sbOut = new StringBuffer();
+        String line;
+        Integer exitValue = 0;
+
+//        List<String> cmdList = new ArrayList<String>(Arrays.asList(use));
+//        cmdList.addAll(Arrays.asList(cmdLists));
+        List<String> cmdList = new ArrayList<String>(Arrays.asList(cmdLists));
+        System.out.println("cmdList=[" + cmdList.toString() + "]");
+
+        try {
+
+            ProcessBuilder builder = new ProcessBuilder(cmdList.toArray(new String[0]));
+            builder.redirectErrorStream(true);
+
+            Process p = builder.start();
+
+            BufferedReader bri = new BufferedReader(new InputStreamReader(p.getInputStream(), "UTF-8"));
+            while ((line = bri.readLine()) != null) {
+                sbOut.append(line + "\n"); }
+            bri.close();
+            exitValue = p.waitFor();
+
+        }catch(Exception exception){
+            exception.printStackTrace();
+        }
+
+        // Thread.sleep(3000);
+        System.out.println("exitValue=[" + exitValue + "]");
+
+        return exitValue;
     }
 
     /**
@@ -54,6 +96,8 @@ public class CommandExecuteUtil {
         List<String> cmdList = new ArrayList<String>(Arrays.asList(use));
         cmdList.addAll(Arrays.asList(cmdLists));
 
+        System.out.println("cmdList=[" + cmdList.toString() + "]");
+
         ProcessBuilder builder = new ProcessBuilder(cmdList.toArray(new String[0]));
         builder.redirectErrorStream(true);
 
@@ -64,11 +108,9 @@ public class CommandExecuteUtil {
             sbOut.append(line + "\n");
         }
         bri.close();
-
-        System.out.println("sbOut=[" + sbOut.toString() + "]");
-
         Integer exitValue = p.waitFor();
-
+        // Thread.sleep(3000);
+        System.out.println("exitValue=[" + exitValue + "]");
         return exitValue;
     }
 }
