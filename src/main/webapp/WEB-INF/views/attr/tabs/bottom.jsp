@@ -11,6 +11,60 @@
 <form id="estimate_version_up_sequence_form">
     <input type="hidden" id="hidden_est_seq" id="hidden_est_seq">
 </form>
+<div class="drawing_print">
+    <table>
+        <tbody>
+            <tr>
+                <td>테스트1</td>
+                <td>테스트2</td>
+                <td>테스트3</td>
+                <td>테스트4</td>
+                <td>테스트5</td>
+                <td>테스트6</td>
+                <td>테스트7</td>
+                <td>테스트8</td>
+                <td>테스트9</td>
+                <td>테스트10</td>
+                <td>테스트11</td>
+                <td>테스트12</td>
+                <td>테스트13</td>
+            </tr>
+            <tr>
+                <td>테스트1</td>
+                <td>테스트2</td>
+                <td>테스트3</td>
+                <td>테스트4</td>
+                <td>테스트5</td>
+                <td>테스트6</td>
+                <td>테스트7</td>
+                <td>테스트8</td>
+                <td>테스트9</td>
+                <td>테스트10</td>
+                <td>테스트11</td>
+                <td>테스트12</td>
+                <td>테스트13</td>
+            </tr>
+            <tr>
+                <td>테스트1</td>
+                <td>테스트2</td>
+                <td>테스트3</td>
+                <td>테스트4</td>
+                <td>테스트5</td>
+                <td>테스트6</td>
+                <td>테스트7</td>
+                <td>테스트8</td>
+                <td>테스트9</td>
+                <td>테스트10</td>
+                <td>테스트11</td>
+                <td>테스트12</td>
+                <td>테스트13</td>
+            </tr>
+            <tr>
+                <td><img src="/image/999"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 <div class="modal" id="common_cad_file_attach_pop" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -195,6 +249,8 @@
             uploadControlFiles = [];
             $commonCadFileAttachGrid.pqGrid('destroy');
         });
+
+
     });
 
 </script>

@@ -39,6 +39,7 @@
 <!-- paramQuery Grid -->
 <script src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script>
 <script src='/resource/plugins/paramquery/pqgrid.min.js'></script>
+<script src='/resource/plugins/print.js/print.min.js'></script>
 
 <script type='text/javascript'>
     var g_code;
