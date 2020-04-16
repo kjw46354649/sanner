@@ -46,6 +46,9 @@
     var multiFileUploadBox = [];    // 임시 형태의 file upload 저장소
     var g_noData = '<div style="font-size:18px;margin-top:20px;">No Data</div>';
     var windowImageViewer;
+    const TODAY = new Date();
+    const CURRENT_YEAR = TODAY.getFullYear();
+    const CURRENT_MONTH = TODAY.getMonth();
 
     $(document).ready(function() {
 
@@ -387,6 +390,22 @@
                 selectBoxContents.push({'value':g_code[i].CODE_CD, 'text':g_code[i].CODE_NM_KR});
             }
         }
+        debugger;
+        return selectBoxContents;
+    };
+
+    let fnGetCommCodeGridToolbarSelectBox = function (highCd) {
+        'use strict';
+        let selectBoxContents = [];
+        for(var i=0; i < g_code.length; i++){
+            if(g_code[i].HIGH_CD == highCd){
+                let toolbarValue = g_code[i].CODE_CD;
+                let toolbarName = g_code[i].CODE_NM_KR;
+                let item = {}
+                item[toolbarValue] = toolbarName;
+                selectBoxContents.push(item);
+            }
+        }
         return selectBoxContents;
     };
 
@@ -541,7 +560,7 @@
                 }
             }
         });
-
+        debugger;
         document.body.appendChild(excelForm);
         excelForm.submit();
     };
@@ -589,7 +608,7 @@
      * @param {string} id
      * @param {string} selectedYear
      */
-    let fnAppendSelectboxMonth = function (id, selectedYear = new Date().getFullYear()) {
+    let fnAppendSelectboxMonth = function (id, selectedYear) {
         $('#' + id).empty();
         let date = new Date();
         // date.setMonth(date.getMonth() + 1);
@@ -601,7 +620,7 @@
         month = year < selectedYear ? JANUARY : year == selectedYear ? date.getMonth() : DECEMBER;
 
         for (let i = month; i >= 1; i--) {
-            $('#' + id).append(new Option(i + '월', i));
+            $('#' + id).append(new Option(i + '월', i < 10 ? '0' + i : i));
         }
     };
 

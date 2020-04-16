@@ -143,7 +143,7 @@
             </header>
             <div class="panel-body">
                 <form class="form-inline" id="OUTSOURCE_SEARCH_FORM" role="form">
-                    <input type="hidden" name="queryId" id="queryId" value="selectOutsourcingProcessingList">&nbsp;
+                    <input type="hidden" name="queryId" id="queryId" value="selectOutsideProcessingList">&nbsp;
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group col-md-3">
@@ -288,7 +288,7 @@
             cellClick: function (event, ui) {
                 if (ui.dataIndx === 'PROCESS_CONFIRM_BUTTON') {
                     let newRowData = fnCloneObj(ui.rowData);
-                    newRowData.PART_STATUS = 'PRO02';
+                    newRowData.PART_STATUS = 'PRO002';
 
                     let parameters;
                     let gridInstance = $confirmOrderGrid.pqGrid('getInstance').grid;

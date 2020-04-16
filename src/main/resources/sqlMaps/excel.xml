@@ -33,4 +33,47 @@
 			AND EST_SEQ = #{EST_SEQ}
     </select>
 
+    <select id="selectOutsourcingOrderInfoExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            SF_GET_COMP_NM(#{#{COMP_CD}) AS COMP_NM,
+            SF_GET_STAFF_NM(#{ORDER_STAFF_SEQ}) AS ORDER_STAFF_NM
+    </select>
+
+    <select id="selectOutsourcingOrderExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.PART_NUM) AS ROWNUM,
+            A.ORDER_COMP_CD, -- 발주업체
+            SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM,-- 발주업체
+            B.OUTSIDE_ORDER_NUM, -- 발주번호
+            A.CONTROL_NUM, -- 관리번호
+            B.OUTSIDE_HOPE_DUE_DT, -- 요망납기
+            B.DRAWING_NUM, -- 도면번호
+            B.ITEM_NM, -- 품명
+            B.SIZE_TXT, -- 규격
+            B.MATERIAL_DETAIL, -- 소재
+            B.OUTSIDE_ORDER_NUM, -- 발주량
+            B.OUTSIDE_UNIT_AMT -- 단가
+        -- 	SUM(B.OUTSIDE_ORDER_NUM * B.OUTSIDE_UNIT_AMT)
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                                   AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_OUTSIDE_REQUEST_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ
+                                                       AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_OUTSIDE_REQUEST E ON D.OUTSIDE_REQUEST_SEQ = E.OUTSIDE_REQUEST_SEQ
+            LEFT OUTER JOIN TBL_OUTSIDE_CLOSE F ON B.CONTROL_SEQ = F.CONTROL_SEQ
+                                             AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_OUTSIDE_CLOSE_HISTORY G ON F.CONTROL_SEQ = G.CONTROL_SEQ
+                                                           AND F.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ
+                                                           AND F.CLOSE_MONTH = G.CLOSE_MONTH
+                                                           AND F.CLOSE_VER = G.CLOSE_VER
+        WHERE
+            (A.CONTROL_STATUS IS NULL OR A.CONTROL_STATUS IN ('ORD001', 'ORD002'))
+            AND B.WORK_TYPE != 'WTP010'
+            AND B.OUTSIDE_ORDER_NUM = #{OUTSIDE_ORDER_NUM}
+        ORDER BY
+            A.CONTROL_SEQ,
+            B.PART_NUM
+    </select>
+
 </mapper>
