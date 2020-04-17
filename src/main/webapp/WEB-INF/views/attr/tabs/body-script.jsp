@@ -389,7 +389,6 @@
                 selectBoxContents.push({'value':g_code[i].CODE_CD, 'text':g_code[i].CODE_NM_KR});
             }
         }
-        debugger;
         return selectBoxContents;
     };
 
@@ -559,7 +558,6 @@
                 }
             }
         });
-        debugger;
         document.body.appendChild(excelForm);
         excelForm.submit();
     };

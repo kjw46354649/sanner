@@ -25,4 +25,9 @@ public class OutDaoImpl implements OutDao {
     public void insertOutsideCloseHistory(HashMap<String, Object> hashMap) throws SQLException {
         sqlSessionTemplate.insert("insertOutsideCloseHistory", hashMap);
     }
+
+    @Override
+    public void updateOutsideCloseRequest(HashMap<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.update("updateOutsideCloseRequest", hashMap);
+    }
 }

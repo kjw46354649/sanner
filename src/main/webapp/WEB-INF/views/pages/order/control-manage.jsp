@@ -160,7 +160,7 @@
                                     <input type="text" class="form-control" id="AMOUNT_SUM" readonly>
                                 </div>
                                 <div class="form-group col-md-3 text-right">
-                                    <div type="submit" class="btn btn-success btn-sm btn-default" id="testSearch">
+                                    <div type="submit" class="btn btn-success btn-sm btn-default" id="CONTROL_MANAGE_SEARCH">
                                         search
                                     </div>
                                 </div>
@@ -232,7 +232,7 @@
             </div>
             <div class="modal-body">
                 <div id="ORDER_REGISTER_GRID"></div>
-                <div id="TEMP_ORDER_REGISTER_GRID"></div>
+<%--                <div id="TEMP_ORDER_REGISTER_GRID"></div>--%>
             </div>
             <!-- /.modal-content -->
         </div>
@@ -361,7 +361,6 @@
                                                             <div class="form-group col-md-4 col-sm-4">
                                                                 <label class="col-md-4 col-sm-4 control-label">구매 담당자</label>
                                                                 <div class="col-md-8 col-sm-8">
-                                                                    <select id="ORDER_STAFF_SEQ" name="ORDER_STAFF_SEQ" data-required="true" class="form-control parsley-validated">
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -522,28 +521,14 @@
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true, colModel: []},
             {title: 'INV No.<br>(거래명세No.)', minWidth: 100, dataType: 'string', dataIndx: 'CHARGE_USER_ID', colModel: []},
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', editable: true, colModel: []},
-            {title: '주요<br>검사품', dataType: 'select', dataIndx: 'MAIN_INSPECTION', colModel: [],
-                editor: {
-                    type: 'select',
-                    mapIndices: {name: 'MAIN_INSPECTION_NM', id: 'MAIN_INSPECTION'},
-                    valueIndx: 'value',
-                    labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1045'),
-                    getData: function (ui) {
-                        let clave = ui.$cell.find('select').val();
-                        let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: ui.rowIndx});
-                        rowData['MAIN_INSPECTION'] = clave;
-                        return ui.$cell.find("select option[value='" + clave + "']").text();
-                    }
-                }
-            },
+            {title: '주요<br>검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION', colModel: []},
             {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN', colModel: []},
             {title: 'CONTROL_VER', dataType: 'string', dataIndx: 'CONTROL_VER', hidden: true, colModel: []},
             {title: '관리번호', minWidth: 100, dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true, colModel: []},
             {
                 title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM', colModel: [],
                 render: function (ui) {
-                    if (ui.rowData.WORK_NM === '가공조립') {
+                    if (ui.rowData.WORK_TYPE === 'WTP020') {
                         return "<span>플러스버튼</span>";
                     }
                 }
@@ -551,25 +536,30 @@
             {title: '도면번호버전', dataType: 'string', dataIndx: 'DRAWING_VER', hidden: true, colModel: []},
             {title: '도면번호', minWidth: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', editable: true, colModel: []},
             {title: '품명', minWidth: 110, dataType: 'string', dataIndx: 'ITEM_NM', editable: true, colModel: []},
-            // {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true, colModel: []},
-            // {title: '작업<br>형태', minWidth: 70, dataType: 'string', dataIndx: 'WORK_NM', colModel: []},
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE',
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: true, colModel: []/*,
                 editor: {
                     type: 'select',
-                    // mapIndices: {name: "WORK_TYPE", id: "WORK_TYPE"},
                     valueIndx: 'value',
                     labelIndx: 'text',
                     options: fnGetCommCodeGridSelectBox('1033'),
-                    // getData: function (ui) {
-                    //     console.log(ui);
-                    //     let clave = ui.$cell.find("select").val();
-                    //     let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                    //     rowData["WORK_TYPE"] = clave;
-                    //     console.log(clave);
-                    //     console.log(rowData.WORK_TYPE);
-                    //     return ui.$cell.find("select option[value='" + clave + "']").text();
-                    // }
-                }
+                },
+                render: function (ui) {
+                    // console.log(ui);
+                    let workType = fnGetCommCodeGridSelectBox('1033');
+                    let index = workType.findIndex(function(element) {
+                        return element.text == ui.cellData;
+                    });
+
+                    if (index < 0) {
+                        index = workType.findIndex(function(element) {
+                            return element.value == ui.cellData;
+                        });
+
+                        return workType[index].text;
+                    } else {
+                        return workType[index].text;
+                    }
+                }*/
             },
             {title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN', colModel: []},
             {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', colModel: []},
@@ -595,8 +585,8 @@
                     {
                         title: '', datatype: 'string', dataIndx: 'ORDER_NUM_PLUS_BUTTON',
                         render: function (ui) {
-                            if (ui.rowData.WORK_NM === '가공조립') {
-                                return "<span>플러스버튼</span>";
+                            if (ui.rowData.WORK_NM === 'WTP020') {
+                                return '<span>플러스버튼</span>';
                             }
                         }
                     },
@@ -646,12 +636,12 @@
                      {title: '견적비고', datatype: 'string', dataIndx: 'UNIT_AMT_NOTE', editable: true}
                  ]
              },
-             {title: '계산<br>견적단가', minWidth: 90, dataType: 'string', dataIndx: 'CALCUL_EST_UNIT_COST', colModel: []},
-             {title: '최종<br>견적단가', minWidth: 90, dataType: 'string', dataIndx: 'UNIT_FINAL_EST_AMT', colModel: [], editable: true},
-             {title: '견적<br>합계금액', minWidth: 90, dataType: 'string', dataIndx: 'RUSWJRGKQRpRMADOR', colModel: []},
-             {title: '최종<br>공급단가', minWidth: 90, dataType: 'string', dataIndx: 'UNIT_FINAL_AMT', colModel: [], editable: true},
-             {title: '합계금액', dataType: 'string', dataIndx: 'FINAL_AMOUNT', colModel: []},
-             {title: '종전가', minWidth: 100, dataType: 'string', dataIndx: 'WHDWJSRK', colModel: []},
+             {title: '계산<br>견적단가', minWidth: 90, dataType: 'integer', dataIndx: 'CALCUL_EST_UNIT_COST', colModel: []},
+             {title: '최종<br>견적단가', minWidth: 90, dataType: 'integer', dataIndx: 'UNIT_FINAL_EST_AMT', colModel: [], editable: true},
+             {title: '견적<br>합계금액', minWidth: 90, dataType: 'integer', dataIndx: 'RUSWJRGKQRpRMADOR', colModel: []},
+             {title: '최종<br>공급단가', minWidth: 90, dataType: 'integer', dataIndx: 'UNIT_FINAL_AMT', colModel: [], editable: true},
+             {title: '합계금액', dataType: 'integer', dataIndx: 'FINAL_AMOUNT', colModel: []},
+             {title: '종전가', minWidth: 100, dataType: 'integer', dataIndx: 'WHDWJSRK', colModel: []},
             {title: '변경전<br>도면번호', minWidth: 120, dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', colModel: [], editable: true},
             {
                 title: '마감/취소 현황', align: 'center', colModel: [
@@ -738,6 +728,7 @@
         let obj = {
             // height: 600,
             collapsible: false,
+            // postRenderInterval: -1, //call postRender synchronously.
             resizable: true,
             showTitle: false,
             numberCell: {title: 'No.'},
@@ -758,8 +749,14 @@
                     return {data: dataJSON.data};
                 }
             },
+            editModel: {
+                clicksToEdit: 1
+            },
             cellClick: function (event, ui) {
-                if (ui.dataIndx === 'PART_NUM' && ui.rowData.WORK_NM === '가공조립') {
+                console.group('cellClick');
+                console.log(ui.rowData);
+                console.groupEnd();
+                if (ui.dataIndx === 'PART_NUM' && ui.rowData.WORK_TYPE === 'WTP020') {
                     let newRowData = fnCloneObj(ui.rowData);
                     let data = $orderManagementGrid.pqGrid('option', 'dataModel.data'), totalRecords = data.length;
                     let newPartNum = 0, newRowIndex = 0;
@@ -773,7 +770,6 @@
 
                     newRowData.ROWNUM = totalRecords + 1;
                     newRowData.PART_NUM = newPartNum;
-                    newRowData.WORK_NM = '단품가공';
                     newRowData.WORK_TYPE = 'WTP010';
 
                     $orderManagementGrid.pqGrid('addRow', {
@@ -783,7 +779,7 @@
                     });
                 }
 
-                if (ui.dataIndx === 'ORDER_NUM_PLUS_BUTTON' && ui.rowData.WORK_NM === '가공조립') {
+                if (ui.dataIndx === 'ORDER_NUM_PLUS_BUTTON' && ui.rowData.WORK_TYPE === 'WTP020') {
                     let newRowData = fnCloneObj(ui.rowData);
                     let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
                     let totalRecords = data.length;
@@ -805,7 +801,31 @@
                     if (firstRow === lastRow) selectedRowIndex[0] = firstRow;
                     else for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
                 }
-            }
+            },
+            change: function (evt, ui){
+                if (ui.source === 'paste') {
+                    let updateListLength = ui.updateList.length;
+
+                    for(let i = 0; i < updateListLength; i++) {
+                        let newRowData = ui.updateList[i].newRow;
+                        let rowIndx = ui.updateList[i].rowIndx;
+
+                        if (newRowData.hasOwnProperty('WORK_TYPE')) {
+                            let workType = fnGetCommCodeGridSelectBox('1033');
+                            let index = workType.findIndex(function(element) {
+                                return element.text == newRowData.WORK_TYPE;
+                            });
+
+                            if (index < 0) {
+                                index = workType.findIndex(function (element) {
+                                    return element.value == newRowData.WORK_TYPE;
+                                });
+                            }
+                            $orderManagementGrid.pqGrid('updateRow', {'rowIndx': rowIndx, row: {'WORK_TYPE': workType[index].value}});
+                        }
+                    }
+                }
+            },
         };
         let $orderRegisterGrid;
         let $tempOrderRegisterGrid;
@@ -818,13 +838,49 @@
             {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', colModel: []},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', colModel: []},
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', colModel: []},
-            {title: '주요 검사품',  dataType: 'select', dataIndx: 'MAIN_INSPECTION', colModel: []},
+            {title: '주요 검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION', editable:true, colModel: [],
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1042'),
+                }
+            },
             {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN', colModel: []},
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', colModel: []},
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', colModel: []},
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', colModel: []},
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', colModel: []},
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_NM', colModel: []},
+            {
+                title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_NM', colModel: [],
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1033'),
+                },
+                render: function (ui) {
+                    console.log(ui);
+                    let workType = fnGetCommCodeGridSelectBox('1033');
+                    let index = workType.findIndex(function(element) {
+                        return element.text == ui.cellData;
+                    });
+
+                    if (index < 0) {
+                        index = workType.findIndex(function(element) {
+                            return element.value == ui.cellData;
+                        });
+
+                        $orderRegisterGrid.pqGrid('updateRow', {'rowIndx': ui.rowIndx, row: {'WORK_NM': workType[index].value}});
+
+                        return workType[index].text;
+                    } else {
+                        $orderRegisterGrid.pqGrid('updateRow', {'rowIndx': ui.rowIndx, row: {'WORK_NM': workType[index].value}});
+
+                        return workType[index].text;
+                    }
+                }
+            },
             {title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN', colModel: []},
             {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', colModel: []},
             {title: '소재 사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', colModel: []},
@@ -894,6 +950,8 @@
                                 'url': '/registerNewOrder',
                                 'data': {data: JSON.stringify(data)}
                             };
+                            console.log(data);
+                            return false;
 
                             fnPostAjax(function (data, callFunctionParam) {
                                 alert("<spring:message code='com.alert.default.save.success' />");
@@ -919,6 +977,7 @@
             },
             colModel: popupColModel,
             toolbar: popupToolbar,
+            strNoRows: g_noData,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: {'queryId': 'dataSource.emptyGrid'},
@@ -935,29 +994,7 @@
                     if (firstRow === lastRow) selectedRowIndex[0] = firstRow;
                     else for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
                 }
-            },
-            beforePaste: function(evt, ui){
-                console.log(evt);
-                console.log(ui);
-                //sanitize pasted data.
-                // var CM = this.getColModel(),
-                //     rows = ui.rows,
-                //     area = ui.areas[0],
-                //     c1 = area.c1;
-                //
-                // for(var i=0; i<rows.length; i++){
-                //     var row = rows[i];
-                //     for(var j=0; j<row.length; j++){
-                //         var column = CM[j+c1],
-                //             dt = column.dataType;
-                //         if( dt == "integer" || dt == "float" ){
-                //
-                //             row[j] = row[j].replace(/[^(\d|\.)]/g,"");
-                //         }
-                //     }
-                // }
-            },
-
+            }
         };
         let $controlCloseLeftGrid;
         const controlCloseLeftGridId = 'CONTROL_CLOSE_LEFT_GRID';
@@ -1250,7 +1287,7 @@
             }
             // alert();
             fnAppendSelectboxYear('CONTROL_CLOSE_YEAR', 3);
-            fnAppendSelectboxMonth('CONTROL_CLOSE_MONTH');
+            fnAppendSelectboxMonth('CONTROL_CLOSE_MONTH', CURRENT_YEAR);
 
             $controlCloseLeftGrid = $('#' + controlCloseLeftGridId).pqGrid(controlCloseLeftObj);
             $controlCloseRightGrid = $('#' + controlCloseRightGridId).pqGrid(controlCloseRightObj);
@@ -1267,7 +1304,7 @@
             loadDataControlClose();
         });
 
-        $('#testSearch').on('click', function () {
+        $('#CONTROL_MANAGE_SEARCH').on('click', function () {
             $orderManagementGrid.pqGrid('option', "dataModel.postData", function (ui) {
                 return (fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM'));
             });
@@ -1381,7 +1418,6 @@
             fnPostAjax(function (data, callFunctionParam) {
                 $orderManagementGrid.pqGrid('refreshDataAndView');
                 $controlCloseLeftGrid.pqGrid('refreshDataAndView');
-                $controlCloseRightGrid.pqGrid('refreshDataAndView');
             }, parameters, '');
         });
 

@@ -184,59 +184,74 @@
 <div class="modal" id="REQUEST_OUTSIDE_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
-                        class="sr-only">Close</span></button>
-                <h4 class="modal-title">외주가공 요청</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <label class="control-label" for="SUBCONTRACTOR_REQUESTED">요청 외주업체</label>
-                        <select class="form-control" name="" id="SUBCONTRACTOR_REQUESTED">
-
-                        </select>
-                        <textarea></textarea>
-                    </div>
-                    <div class="col-md-6">
-                        <div id="MAIL_GRID"></div>
-                        <div class="dropfile visible-lg">
-                            <small>Drag and Drop file here</small>
+            <div class="row m-b-md">
+                <div class="col-sm-12">
+                    <section class="panel panel-default">
+                        <header class="panel-heading font-bold">
+                            외주 가공 요청
+                            <div class="btnSaveCloseBox">
+                                <div type="button" class="btn btn-success btn-sm btn-default" id="OUTSIDE_PROCESS_REQUEST_SAVE">Save & Submit</div>
+                            </div>
+                        </header>
+                        <div class="panel-body">
+                            <form class="form-inline" id="OUTSIDE_PROCESS_REQUEST_FORM" role="form">
+                                <input type="hidden" name="queryId" id="queryId" value="selectOutsideProcessRequestList"/>
+                                <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ"/>
+                                <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ"/>
+                                <div class="panel-body line_tit portlet-body form bg-light">
+                                    <!-- grid table -->
+                                    <section class="bg-light">
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12">
+                                                <div class="panel panel-default">
+                                                    <header class="panel-heading">
+                                                        <strong>메일 내용</strong>
+                                                    </header>
+                                                    <div class="row">
+                                                        <div class="gridWrap">
+                                                            <textarea class="col-md-12 col-sm-12" id="EMAIL_CONTENT" name="EMAIL_CONTENT"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <section class="bg-light">
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="panel panel-default">
+                                                    <header class="panel-heading">
+                                                        <strong>메일 수신처</strong>
+                                                    </header>
+                                                    <div class="gridWrap">
+                                                        <div id="MAIL_RECIPIENT_GRID"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="panel panel-default">
+                                                    <header class="panel-heading">
+                                                        <strong>첨부파일</strong>
+                                                    </header>
+                                                    <div class="gridWrap">
+                                                        <input type="file">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <section class="bg-light">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div id="OUTSIDE_REQUEST_GRID"></div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </form>
                         </div>
-                    </div>
+                    </section>
                 </div>
-                <div id="ORDER_REGISTER_GRID"></div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-</div>
-<div class="modal" id="REQUEST_OUTSIDE_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
-                        class="sr-only">Close</span></button>
-                <h4 class="modal-title">외주가공 요청</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <label class="control-label" for="SUBCONTRACTOR_REQUESTED">요청 외주업체</label>
-                        <select class="form-control" name="" id="SUBCONTRACTOR_REQUESTED">
-
-                        </select>
-                        <textarea></textarea>
-                    </div>
-                    <div class="col-md-6">
-                        <div id="MAIL_GRID"></div>
-                        <div class="dropfile visible-lg">
-                            <small>Drag and Drop file here</small>
-                        </div>
-                    </div>
-                </div>
-                <div id="ORDER_REGISTER_GRID"></div>
             </div>
             <!-- /.modal-content -->
         </div>
@@ -369,7 +384,7 @@
         let $outsideOrderManageGrid;
         const gridId = 'OUTSIDE_ORDER_MANAGE_GRID';
         let postData = fnFormToJsonArrayData('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM');
-        let colModel = [
+        const colModel = [
             {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true, colModel: []},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true, colModel: []},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true, colModel: []},
@@ -436,7 +451,7 @@
             {title: '외주가공<br>마감일시', dataType: 'string', dataIndx: 'OUTSIDE_FINISH_DATE', colModel: []},
             {title: 'DXF', dataType: 'string', dataIndx: 'STATUS_DT', colModel: []}
         ];
-        let toolbar = {
+        const toolbar = {
             cls: 'pq-toolbar-crud',
             items: [
                 {
@@ -457,7 +472,7 @@
                 }
             ]
         };
-        let obj = {
+        const obj = {
             // height: 600,
             collapsible: false,
             resizable: true,
@@ -492,9 +507,141 @@
                 }
             }
         };
+        let $mailRecipientGrid;
+        const mailRecipientGridId = 'MAIL_RECIPIENT_GRID';
+        const mailRecipientColModel = [
+            {title: '', dataType: 'string', dataIndx: 'STAFF_SEQ', hidden: true},
+            {title: '성함', dataType: 'string', dataIndx: 'STAFF_NM'},
+            {title: '메일주소', dataType: 'string', dataIndx: 'STAFF_EMAIL'},
+            {title: '전화번호', dataType: 'string', dataIndx: 'STAFF_TEL'}
+        ];
+        const mailRecipientToolbar = {
+            items: [
+                {
+                    type: 'button', label: 'Delete', icon: 'ui-icon-disk', style: 'float: right;', listener: {
+                        'click': function (evt, ui) {
+
+                        }
+                    }
+                }
+            ]
+        };
+        const mailRecipientObj = {
+            height: 200,
+            collapsible: false,
+            resizable: true,
+            showTitle: false,
+            scrollModel: {autoFit: true},
+            dragColumns: {enabled: false},
+            columnTemplate: {
+                align: 'center',
+                halign: 'center',
+                hvalign: 'center',
+                editable: false
+            },
+            colModel: mailRecipientColModel,
+            toolbar: toolbar,
+            strNoRows: g_noData,
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                // postData: {'queryId': 'dataSource.selectCompanyStaffEmailList', 'COMP_CD': 'COMP_CD'}, // TODO: COMP_CD 변수
+                postData: {'queryId': 'dataSource.emptyGrid', 'COMP_CD': 'COMP_CD'}, // TODO: COMP_CD 변수
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            }
+        };
+
+        let $outsideProcessRequestGrid;
+        const outsideProcessRequestGridId = 'OUTSIDE_REQUEST_GRID';
+        const outsideProcessRequestColModel = [
+            {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true, colModel: []},
+            {title: '관리번호', minWidth: 100, dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true, colModel: []},
+            {title: '도면번호', minWidth: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', editable: true, colModel: []},
+            {title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM', colModel: []},
+            {title: '규격', minWidth: 110, dataType: 'string', dataIndx: 'SIZE_TXT', editable: true, colModel: []},
+            {title: '자재<br>종류', minWidth: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', colModel: []},
+            {title: '표면<br>처리', minWidth: 70, dataType: 'string', dataIndx: 'SURFACE_TREAT', colModel: []},
+            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY', colModel: []}, // 확인 필요
+            {title: '소재<br>제공', dataType: 'bool', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN', colModel: []}, // 확인 필요
+            {
+                title: '요청가공', align: 'center', colModel: [
+                    {title: '완제품', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN', editable: true,
+                        type: 'checkbox',
+                        cb: {
+                            all: false, //header checkbox to affect checkboxes on all pages.
+                            header: false, //for header checkbox.
+                            check: 'Y', //check the checkbox when cell value is "YES".
+                            uncheck: 'N' //uncheck when "NO".
+                        }
+                    },
+                    {title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN', editable: true,
+                        type: 'checkbox',
+                        cb: {
+                            all: false, //header checkbox to affect checkboxes on all pages.
+                            header: false, //for header checkbox.
+                            check: 'Y', //check the checkbox when cell value is "YES".
+                            uncheck: 'N' //uncheck when "NO".
+                        }},
+                    {title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN', editable: true,
+                        type: 'checkbox',
+                        cb: {
+                            all: false, //header checkbox to affect checkboxes on all pages.
+                            header: false, //for header checkbox.
+                            check: 'Y', //check the checkbox when cell value is "YES".
+                            uncheck: 'N' //uncheck when "NO".
+                        }},
+                    {title: '표면<br>처리', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN', editable: true,
+                        type: 'checkbox',
+                        cb: {
+                            all: false, //header checkbox to affect checkboxes on all pages.
+                            header: false, //for header checkbox.
+                            check: 'Y', //check the checkbox when cell value is "YES".
+                            uncheck: 'N' //uncheck when "NO".
+                        }},
+                    {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC', editable: true,
+                        type: 'checkbox',
+                        cb: {
+                            all: false, //header checkbox to affect checkboxes on all pages.
+                            header: false, //for header checkbox.
+                            check: 'Y', //check the checkbox when cell value is "YES".
+                            uncheck: 'N' //uncheck when "NO".
+                        }}
+                ]
+            },
+            {title: '요망<br>납기', datatype: 'date', dataIndx: 'OUTSIDE_HOPE_DUE_DT', editable: true},
+            {title: '비고', datatype: 'string', dataIndx: 'OUTSIDE_NOTE', editable: true},
+        ];
+        const outsideProcessRequestObj = {
+            height: 200,
+            collapsible: false,
+            resizable: true,
+            showTitle: false,
+            numberCell: {title: 'No.'},
+            trackModel: {on: true},
+            scrollModel: {autoFit: true},
+            dragColumns: {enabled: false},
+            columnTemplate: {
+                align: 'center',
+                halign: 'center',
+                hvalign: 'center',
+                editable: false
+            },
+            colModel: outsideProcessRequestColModel,
+            strNoRows: g_noData,
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                recIndx: 'ROWNUM',
+                postData: {'queryId': 'dataSource.emptyGrid'},
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            }
+        };
+
         let $outsideCloseLeftGrid;
         const outsideCloseLeftGridId = 'OUTSIDE_CLOSE_LEFT_GRID';
-        let outsideCloseLeftPostData;
+        // let outsideCloseLeftPostData;
         const outsideCloseLeftColModel = [
             {title: '외주업체', dataType: 'string', dataIndx: 'ORDER_COMP', hidden: true},
             {title: '외주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
@@ -566,7 +713,32 @@
             }
         };
 
-        let loadDataOutsideClose = function () {
+        let loadOutsideProcessData = function () {
+            let selectedRowCount = selectedRowIndex.length;
+            let controlSeqStr = '';
+            let controlDetailSeqStr = '';
+
+            for (let i = 0; i < selectedRowCount; i++) {
+                let rowData = $outsideOrderManageGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                controlSeqStr += rowData.CONTROL_SEQ;
+                controlDetailSeqStr += rowData.CONTROL_DETAIL_SEQ;
+
+                if (i < selectedRowCount - 1) {
+                    controlSeqStr += ','
+                    controlDetailSeqStr += ','
+                }
+            }
+
+            $('#OUTSIDE_PROCESS_REQUEST_FORM > #CONTROL_SEQ').val(controlSeqStr);
+            $('#OUTSIDE_PROCESS_REQUEST_FORM > #CONTROL_DETAIL_SEQ').val(controlDetailSeqStr);
+
+            $outsideProcessRequestGrid.pqGrid('option', 'dataModel.postData', function () {
+                return (fnFormToJsonArrayData('#OUTSIDE_PROCESS_REQUEST_FORM'));
+            });
+            $outsideProcessRequestGrid.pqGrid('refreshDataAndView');
+        };
+
+        let loadOutsideCloseData = function () {
             let selectedRowCount = selectedRowIndex.length;
             let controlDetailSeqList = [];
             let coCompCdList = [];
@@ -619,8 +791,19 @@
         
         $outsideOrderManageGrid = $('#' + gridId).pqGrid(obj);
 
+        $('#REQUEST_OUTSIDE_POPUP').on('show.bs.modal', function () {
+            $mailRecipientGrid = $('#' + mailRecipientGridId).pqGrid(mailRecipientObj);
+            $outsideProcessRequestGrid  = $('#' + outsideProcessRequestGridId ).pqGrid(outsideProcessRequestObj);
+            loadOutsideProcessData();
+        });
+
+        $('#OUTSIDE_PROCESS_REQUEST_SAVE').on('click', function () {
+            const updateQueryList = ['updateOutsideProcessRequest'];
+
+            fnModifyPQGrid($outsideProcessRequestGrid, [], updateQueryList);
+        });
+
         $('#ORDER_EXTRACTION').on('click', function () {
-            console.log(selectedRowIndex);
             let selectedRowCount = selectedRowIndex.length;
             let outsideOrderNumStr = '';
             let orderStaffSeqStr = '';
@@ -652,16 +835,16 @@
 
         $('#OUTSIDE_CLOSE_POPUP').on('show.bs.modal', function () {
             fnAppendSelectboxYear('OUTSIDE_CLOSE_YEAR', 3);
-            fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH');
+            fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH', CURRENT_YEAR);
 
             $outsideCloseLeftGrid = $('#' + outsideCloseLeftGridId).pqGrid(outsideCloseLeftObj);
             $outsideCloseRightGrid = $('#' + outsideCloseRightGridId).pqGrid(outsideCloseRightObj);
 
-            loadDataOutsideClose();
+            loadOutsideCloseData();
         });
 
         $('#OUTSIDE_CLOSE_LEFT_FORM').on('change', function () {
-            loadDataOutsideClose();
+            loadOutsideCloseData();
         });
 
         $('#OUTSIDE_CLOSE_YES').on('click', function () {
@@ -679,7 +862,6 @@
             fnPostAjax(function (data, callFunctionParam) {
                 $outsideOrderManageGrid.pqGrid('refreshDataAndView');
                 $outsideCloseLeftGrid.pqGrid('refreshDataAndView');
-                $outsideCloseRightGrid.pqGrid('refreshDataAndView');
             }, parameters, '');
         });
 
