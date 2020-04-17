@@ -134,6 +134,41 @@
         });
     };
 
+    let fnPostAjaxAsync = function (callFunction, params, callFunctionParam) {
+        'use strict';
+        let callback = $.Callbacks();
+        let param = $.extend({url: null, data: ''}, params || {});
+
+        $.ajax({
+            type: 'POST',
+            url: param.url,
+            dataType: 'json',
+            data: param.data,
+            async: false,
+            success: function (data, textStatus, jqXHR) {
+                if (textStatus === 'success') {
+                    // if (data.exception === null) {
+                    callback.add(callFunction);
+                    callback.fire(data, callFunctionParam);
+                    // } else {
+                    <%--alert('<spring:message code='com.alert.default.failText' />');--%>
+                    // }
+                } else {
+                    // alert('fail=[' + json.msg + ']111');
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                //console.log(textStatus);
+                //console.log(jqXHR);
+                //console.log(errorThrown);
+                //console.log('error=[' + jqXHR + ' ' + "status" + ' ' + textStatus + ' ' + "errorThrown" + errorThrown+']');
+                // if (errorThrown == 'Forbidden') {
+                //     $(this).fnHiddenFormPageAction('/');
+                // }
+            }
+        });
+    };
+
     /**
      * Normal File upload
      * */
@@ -392,14 +427,19 @@
         return selectBoxContents;
     };
 
-    let fnGetCommCodeGridToolbarSelectBox = function (highCd) {
+    let fnGetCommCodeGridToolbarSelectBox = function (highCd, selMode) {
         'use strict';
         let selectBoxContents = [];
+        if(selMode == "A"){
+            selectBoxContents.push({'':"-All-"});
+        }else if(selMode == "S"){
+            selectBoxContents.push({'':'-Select-'});
+        }
         for(var i=0; i < g_code.length; i++){
             if(g_code[i].HIGH_CD == highCd){
                 let toolbarValue = g_code[i].CODE_CD;
                 let toolbarName = g_code[i].CODE_NM_KR;
-                let item = {}
+                let item = {};
                 item[toolbarValue] = toolbarName;
                 selectBoxContents.push(item);
             }
