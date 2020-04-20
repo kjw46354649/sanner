@@ -38,6 +38,7 @@
 <script src='/resource/main/js/app.plugin.js'></script>
 <!-- paramQuery Grid -->
 <script src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script>
+<script src='/resource/main/js/jquery.ui.datepicker-ko.js'></script>
 <script src='/resource/plugins/paramquery/pqgrid.min.js'></script>
 
 <script type='text/javascript'>
@@ -643,7 +644,7 @@
 
     /**
      * @param {string} id
-     * @param {string} selectedYear
+     * @param {number} selectedYear
      */
     let fnAppendSelectboxMonth = function (id, selectedYear) {
         $('#' + id).empty();
@@ -684,7 +685,7 @@
         var yyyy = this.getFullYear().toString();
         var mm = (this.getMonth() + 1).toString();
         var dd = this.getDate().toString();
-        return  yyyy + "/" + (mm[1] ? mm : "0" + mm[0]) + "/" + (dd[1] ? dd : "0" + dd[0]);
+        return  yyyy + "-" + (mm[1] ? mm : "0" + mm[0]) + "-" + (dd[1] ? dd : "0" + dd[0]);
     }
 
-</script>
+ </script>
