@@ -22,80 +22,84 @@
 <script>
     $(function () {
         'use strict';
-        let commonCodeSelectedGroupCode = null;
-        let commonCodeSearchTextId = 'common-group-code-search';
+        const commonCodeSearchTextId = 'common-group-code-search';
         let $commonCodeTopGrid;
-        let commonCodeTopGridId = 'common_group_code_grid';
-        let commonCodeTopColModel = [
-            {title: '그룹코드', dataType: 'string', dataIndx: 'HIGH_CD', editable: true},
+        const commonCodeTopGridId = 'common_group_code_grid';
+        const commonCodeTopColModel = [
+            {title: '그룹코드', dataType: 'string', dataIndx: 'HIGH_CD', editable: false},
             {title: '그룹명', dataType: 'string', dataIndx: 'HIGH_NM'},
             {
-                title: '삭제여부', dataType: 'select', dataIndx: 'DEL_YN_NM',
+                title: '삭제여부', dataType: 'select', dataIndx: 'DEL_YN',
                 editor: {
                     type: 'select',
-                    mapIndices: {name: 'DEL_YN_NM', id: 'DEL_YN'},
                     valueIndx: 'value',
                     labelIndx: 'text',
                     options: fnGetCommCodeGridSelectBox('1042'),
-                    getData: function (ui) {
-                        let clave = ui.$cell.find('select').val();
-                        let rowData = $commonCodeTopGrid.pqGrid('getRowData', {rowIndx: ui.rowIndx});
-                        rowData['DEL_YN'] = clave;
-                        return ui.$cell.find("select option[value='" + clave + "']").text();
+                },
+                render: function (ui) {
+                    let delYn = fnGetCommCodeGridSelectBox('1042');
+                    let index = delYn.findIndex(function (element) {
+                        return element.value == ui.cellData;
+                    });
+
+                    if (index < 0) {
+                        return ui.cellData;
+                    } else {
+                        return delYn[index].text;
                     }
                 }
             },
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
         ];
-        let commonCodeTopPostData = {queryId: 'selectCommonGroupCodeList'};
-        let commonCodeTopInsertQueryList = ['insertCommonGroupCode'];
-        let commonCodeTopUpdateQueryList = ['updateCommonGroupCode'];
-        let commonCodeTopToolbar = {
+        const commonCodeTopPostData = {queryId: 'selectCommonGroupCodeList'};
+        const commonCodeTopToolbar = {
             cls: 'pq-toolbar-crud',
             items: [
                 {
-                    type: 'textbox', label: '그룹명', attr: "id='common-group-code-search'"
+                    type: 'textbox', label: '그룹명', attr: "id='common-group-code-search'",  listener: {
+                        'keyup': function (evt, ui) {
+                            if (evt.keyCode === 13 && evt.key === 'Enter') {
+                                reloadCommonCodeTopGrid();
+                            }
+                        }
+                    }
+
                 },
                 {
                     type: 'button', label: 'Search', icon: 'ui-icon-search', listener: {
                         'click': function (evt, ui) {
-                            commonCodeTopPostData.HIGH_NM = $('#' + commonCodeSearchTextId).val();
-
-                            fnRequestGidData($commonCodeTopGrid, commonCodeTopPostData);
+                            reloadCommonCodeTopGrid();
                         }
                     }
                 },
                 {
                     type: 'button', label: 'Add', icon: 'ui-icon-plus', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            let postData = { 'queryId': 'selectCommoGroupNextSequence'};
-                            let parameter = {'url': '/json-list', 'data': postData};
-
-                            fnPostAjax(function (data, callFunctionParam) {
-                                let seq = data.list[0].SEQ;
-                                let totalRecords = $commonCodeTopGrid.pqGrid('option', 'dataModel.data').length;
-
-                                $commonCodeTopGrid.pqGrid('addNodes', [{'HIGH_CD': seq}], totalRecords + 1);
-                            }, parameter, '');
+                            let totalRecords = $commonCodeTopGrid.pqGrid('option', 'dataModel.data').length;
+                            $commonCodeTopGrid.pqGrid('addNodes', [{}], totalRecords + 1);
                         }
                     }
                 },
                 {
                     type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
+                            const commonCodeTopInsertQueryList = ['insertCommonGroupCode'];
+                            const commonCodeTopUpdateQueryList = ['updateCommonGroupCode'];
+
                             fnModifyPQGrid($commonCodeTopGrid, commonCodeTopInsertQueryList, commonCodeTopUpdateQueryList);
                         }
                     }
                 }
             ]
         };
-        let commonCodeTopObj = {
+        const commonCodeTopObj = {
             collapsible: false,
             resizable: true,
             title: '그룹코드',
             numberCell: {title: 'No.'},
             selectionModel: {type: 'row', mode: 'single'},
             scrollModel: {autoFit: true},
+            strNoRows: g_noData,
             trackModel: {on: true}, //to turn on the track changes.
             columnTemplate: {
                 align: 'center', // haeder + cell
@@ -115,37 +119,47 @@
                 }
             },
             toolbar: commonCodeTopToolbar,
-            cellClick: function (event, ui) {
-                commonCodeSelectedGroupCode = commonCodeBotPostData.HIGH_CD = ui.rowData.HIGH_CD;
-                let parameter = {'url': '/getCommonCodeList', 'data': commonCodeBotPostData};
+            complete: function (event, ui) {
+                $commonCodeTopGrid.pqGrid('setSelection', {rowIndx: 0});
+            },
+            rowSelect: function( event, ui ) {
+                let highCd = ui.addList[0].rowData.HIGH_CD;
 
-                fnPostAjax(function (data, callFunctionParam) {
-                    $commonCodeBotGrid.pqGrid('option', 'dataModel.data', data.data);
-                    $commonCodeBotGrid.pqGrid('refreshDataAndView');
-                }, parameter, '');
+                if (highCd) {
+                    commonCodeBotPostData.HIGH_CD = highCd;
+                    reloadCommonCodeBotGrid();
+                } else {
+                    $commonCodeBotGrid.pqGrid('option', 'dataModel.data', []);
+                    $commonCodeBotGrid.pqGrid('refreshView');
+                }
             }
         };
         $commonCodeTopGrid = $('#' + commonCodeTopGridId).pqGrid(commonCodeTopObj);
         let $commonCodeBotGrid;
-        let commonCodeBotGridId = 'common_code_grid';
-        let commonCodeBotColModel = [
+        const commonCodeBotGridId = 'common_code_grid';
+        const commonCodeBotColModel = [
             {title: '그룹코드', dataType: 'string', dataIndx: 'HIGH_CD', hidden: true},
             {title: '코드', dataType: 'string', dataIndx: 'CODE_CD'},
             {title: '코드명(한글)', dataType: 'string', dataIndx: 'CODE_NM_KR'},
             {title: '코드명(영문)', dataType: 'string', dataIndx: 'CODE_NM_EN'},
             {
-                title: '삭제여부', dataType: 'select', dataIndx: 'DEL_YN_NM',
+                title: '삭제여부', dataType: 'select', dataIndx: 'DEL_YN',
                 editor: {
                     type: 'select',
-                    mapIndices: {name: 'DEL_YN_NM', id: 'DEL_YN'},
                     valueIndx: 'value',
                     labelIndx: 'text',
                     options: fnGetCommCodeGridSelectBox('1042'),
-                    getData: function (ui) {
-                        let clave = ui.$cell.find('select').val();
-                        let rowData = $commonCodeBotGrid.pqGrid('getRowData', {rowIndx: ui.rowIndx});
-                        rowData['DEL_YN'] = clave;
-                        return ui.$cell.find("select option[value='" + clave + "']").text();
+                },
+                render: function (ui) {
+                    let delYn = fnGetCommCodeGridSelectBox('1042');
+                    let index = delYn.findIndex(function (element) {
+                        return element.value == ui.cellData;
+                    });
+
+                    if (index < 0) {
+                        return ui.cellData;
+                    } else {
+                        return delYn[index].text;
                     }
                 }
             },
@@ -153,14 +167,14 @@
             {title: 'ETC Code', dataType: 'string', dataIndx: 'REF_CD'},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
         ];
-        let commonCodeBotPostData = {queryId: 'selectCommonCodeList'};
-        let commonCodeBotToolbar = {
+        const commonCodeBotPostData = {queryId: 'selectCommonCodeList'};
+        const commonCodeBotToolbar = {
             cls: 'pq-toolbar-crud',
             items: [
                 {
                     type: 'button', label: 'Add', icon: 'ui-icon-plus', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            $commonCodeBotGrid.pqGrid('addNodes', [{'HIGH_CD': commonCodeSelectedGroupCode}], 0);
+                            $commonCodeBotGrid.pqGrid('addNodes', [{'HIGH_CD': commonCodeBotPostData.HIGH_CD}], 0);
                         }
                     }
                 },
@@ -177,7 +191,7 @@
                                 };
 
                                 fnPostAjax(function (data, callFunctionParam) {
-                                    $commonCodeBotGrid.pqGrid('refreshDataAndView');
+                                    reloadCommonCodeBotGrid();
                                 }, parameters, '');
                             }
                         }
@@ -185,13 +199,14 @@
                 }
             ]
         };
-        let commonCodeBotObj = {
+        const commonCodeBotObj = {
             collapsible: false,
             resizable: true,
             title: '공통코드',
             numberCell: {title: 'No.'},
             scrollModel: {autoFit: true},
             trackModel: {on: true}, //to turn on the track changes.
+            strNoRows: g_noData,
             colModel: commonCodeBotColModel,
             toolbar: commonCodeBotToolbar,
             dataModel: {
@@ -199,5 +214,24 @@
             }
         };
         $commonCodeBotGrid = $('#' + commonCodeBotGridId).pqGrid(commonCodeBotObj);
+
+        const reloadCommonCodeTopGrid = function () {
+            commonCodeTopPostData.HIGH_NM = $('#' + commonCodeSearchTextId).val();
+
+            $commonCodeTopGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+                return commonCodeTopPostData;
+            });
+            $commonCodeTopGrid.pqGrid('refreshDataAndView');
+        };
+
+        const reloadCommonCodeBotGrid = function () {
+            let parameter = {'url': '/getCommonCodeList', 'data': commonCodeBotPostData};
+
+            fnPostAjax(function (data, callFunctionParam) {
+                $commonCodeBotGrid.pqGrid('option', 'dataModel.data', data.data);
+                $commonCodeBotGrid.pqGrid('refreshView');
+            }, parameter, '');
+        };
+
     });
 </script>
