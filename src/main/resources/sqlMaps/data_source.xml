@@ -65,13 +65,24 @@
 
     <select id="getLocationListWithWarehouse" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            LOC_NM AS CODE_NM, CAST(LOC_SEQ AS CHAR) AS CODE_CD
+            LOC_NM AS `text`, CAST(LOC_SEQ AS CHAR) AS `value`
         FROM TBL_WAREHOUSE_LOCATION
         WHERE 1=1
             AND DEL_YN = 'N'
             <if test="WAREHOUSE_CD !='' and WAREHOUSE_CD != null">
                 AND WAREHOUSE_CD = #{WAREHOUSE_CD}
             </if>
+    </select>
+
+    <select id="selectCompanyStaffEmailList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            B.STAFF_SEQ, A.COMP_CD, B.STAFF_NM, B.STAFF_TEL, B.STAFF_EMAIL
+        FROM TBL_COMPANY A
+            INNER JOIN TBL_COMPANY_STAFF B ON A. COMP_CD = B.COMP_CD
+                AND B.DEL_YN = 'N'
+        WHERE 1 = 1
+            AND A.DEL_YN = 'N'
+            AND A.COMP_CD = #{COMP_CD}
     </select>
 
 </mapper>

@@ -11,8 +11,8 @@
             C.ORDER_SEQ, <!-- 발주번호일련번호 -->
             D.OUTSIDE_REQUEST_SEQ, <!-- 외주가공요청일련번호 -->
             A.ORDER_STAFF_SEQ, <!-- 담당자 -->
-            G.CLOSE_MONTH, <!-- 마감월 -->
-            G.CLOSE_VER, <!-- 차수 -->
+            F.CLOSE_MONTH, <!-- 마감월 -->
+            F.CLOSE_VER, <!-- 차수 -->
             B.PART_STATUS,
             A.COMP_CD, <!-- 사업자 구분 -->
             SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM, <!-- 사업자 구분 -->
@@ -58,18 +58,14 @@
             DATE_FORMAT(F.CLOSE_DT, '%m/%d %H:%i') AS OUTSIDE_FINISH_DATE, <!-- 외주가공 마감일시 -->
             '' <!-- DXF -->
         FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ 
-            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ 
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
                                                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-            LEFT OUTER JOIN TBL_OUTSIDE_REQUEST_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ 
+            LEFT OUTER JOIN TBL_OUTSIDE_REQUEST_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ
                                                        AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-            LEFT OUTER JOIN TBL_OUTSIDE_REQUEST E ON D.OUTSIDE_REQUEST_SEQ = E.OUTSIDE_REQUEST_SEQ 
+            LEFT OUTER JOIN TBL_OUTSIDE_REQUEST E ON D.OUTSIDE_REQUEST_SEQ = E.OUTSIDE_REQUEST_SEQ
             LEFT OUTER JOIN TBL_OUTSIDE_CLOSE F ON B.CONTROL_SEQ = F.CONTROL_SEQ
-                                             AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ 
-            LEFT OUTER JOIN TBL_OUTSIDE_CLOSE_HISTORY G ON F.CONTROL_SEQ = G.CONTROL_SEQ 
-                                                           AND F.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ 
-                                                           AND F.CLOSE_MONTH = G.CLOSE_MONTH 
-                                                           AND F.CLOSE_VER = G.CLOSE_VER
+                                                   AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
     </sql>
 
 
@@ -78,8 +74,7 @@
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001'
             AND B.OUTSIDE_YN = 'Y'
-            AND B.WORK_TYPE != 'WTP010' <!-- 가공조립 -->
-            AND B.PART_STATUS IS NULL <!-- 외주마감 -->
+            AND B.WORK_TYPE != 'WTP020' <!-- 가공조립 -->
             AND NOT EXISTS (SELECT 1
                             FROM TBL_OUTSIDE_CLOSE
                             WHERE
@@ -110,6 +105,48 @@
             AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
         </if>
     </select>
+    
+    <select id="selectOutsideProcessRequestList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            ROW_NUMBER () OVER () AS ROWNUM,
+            B.CONTROL_SEQ,
+            B.CONTROL_DETAIL_SEQ,
+            A.CONTROL_NUM, <!-- 관리번호 -->
+            B.DRAWING_NUM, <!-- 도면번호 -->
+            B.PART_NUM, <!-- Part -->
+            B.SIZE_TXT, <!-- 규격 -->
+            B.MATERIAL_DETAIL, <!-- 자재종류 -->
+            B.SURFACE_TREAT, <!-- 표면 처리 -->
+            B.ITEM_QTY, <!-- 수량(확인필요) -->
+            B.OUTSIDE_MATERIAL_SUPPLY_YN, <!-- 소재 제공 -->
+            B.OUTSIDE_REQUEST_FINISH_YN, <!-- 완제품 -->
+            B.OUTSIDE_REQUEST_PROCESS_YN, <!-- 가공 -->
+            B.OUTSIDE_REQUEST_GRIND_YN, <!-- 연마 -->
+            B.OUTSIDE_REQUEST_SURFACE_YN, <!-- 표면 처리 -->
+            B.OUTSIDE_REQUEST_ETC, <!-- 기타사항 -->
+            B.OUTSIDE_HOPE_DUE_DT, <!-- 요망 납기 -->
+            B.OUTSIDE_NOTE <!-- 비고 -->
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ 
+        WHERE
+            B.CONTROL_SEQ IN (#{CONTROL_SEQ})
+            AND B.CONTROL_DETAIL_SEQ IN (#{CONTROL_DETAIL_SEQ})
+    </select>
+
+    <update id="updateOutsideProcessRequest" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            OUTSIDE_REQUEST_FINISH_YN = #{OUTSIDE_REQUEST_FINISH_YN}, <!-- 완제품 -->
+            OUTSIDE_REQUEST_PROCESS_YN = #{OUTSIDE_REQUEST_PROCESS_YN}, <!-- 가공 -->
+            OUTSIDE_REQUEST_GRIND_YN = #{OUTSIDE_REQUEST_GRIND_YN}, <!-- 연마 -->
+            OUTSIDE_REQUEST_SURFACE_YN = #{OUTSIDE_REQUEST_SURFACE_YN}, <!-- 표면 처리 -->
+            OUTSIDE_REQUEST_ETC = #{OUTSIDE_REQUEST_ETC}, <!-- 기타사항 -->
+            OUTSIDE_HOPE_DUE_DT = #{OUTSIDE_HOPE_DUE_DT}, <!-- 요망 납기 -->
+            OUTSIDE_NOTE = #{OUTSIDE_NOTE} <!-- 비고 -->
+        WHERE
+            CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </update>
 
     <select id="selectOutsideCloseLeftList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
@@ -195,6 +232,26 @@
             OUTSIDE_COMP_CD
     </select>
 
+    <update id="updateOutsideCloseRequest" parameterType="java.util.HashMap">
+        UPDATE TBL_OUTSIDE_REQUEST
+        SET
+        <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
+            OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD},
+        </if>
+        <if test="OUTSIDE_GFILE_SEQ != null and OUTSIDE_GFILE_SEQ != ''">
+            OUTSIDE_GFILE_SEQ = #{OUTSIDE_GFILE_SEQ},
+        </if>
+        <if test="OUTSIDE_STATUS != null and OUTSIDE_STATUS != ''">
+            OUTSIDE_STATUS = #{OUTSIDE_STATUS},
+        </if>
+        <if test="NOTE != null and NOTE != ''">
+            NOTE = #{NOTE},
+        </if>
+            STATUS_DT = NOW()
+        WHERE
+            OUTSIDE_REQUEST_SEQ = #{OUTSIDE_REQUEST_SEQ}
+    </update>
+
     <insert id="insertOutsideClose" parameterType="java.util.HashMap" >
         INSERT INTO TBL_OUTSIDE_CLOSE (
             CLOSE_MONTH,
@@ -234,9 +291,19 @@
     <select id="selectOutsideCloseHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         <include refid="outManage"/>
         WHERE 1 = 1
-            AND F.CLOSE_MONTH = G.CLOSE_MONTH
-            AND F.CLOSE_VER = G.CLOSE_VER
+            AND B.PART_STATUS = 'OST004'
+            AND B.CONTROL_SEQ = F.CONTROL_SEQ
+            AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
     </select>
+
+    <delete id="deleteOutsideClose" parameterType="java.util.HashMap">
+        DELETE FROM jmes.TBL_OUTSIDE_CLOSE
+        WHERE
+            CLOSE_MONTH = #{CLOSE_MONTH}
+            AND CLOSE_VER = #{CLOSE_VER}
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+   </delete>
 
     <select id="selectOutsideCloseStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
@@ -303,7 +370,7 @@
     </select>
 
     <select id="selectMonthCloseStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-<!--        SELECT
+        SELECT
             A.COMP_CD,
             A.COMP_NM,
             B.COMP_CD AS OUTSIDE_COMP_CD,
@@ -357,156 +424,87 @@
             A.COMP_CD,
             B.COMP_CD,
             C.YYYY,
-            C.MM-->
-        SELECT *
-        FROM(
+            C.MM
+        <!--
         SELECT
-        'OUTPUT_AMT' AS CONTROL_TYPE,
-        A.COMP_CD,
-        A.COMP_NM,
-        B.COMP_CD AS ORDER_COMP_CD,
-        B.COMP_NM AS ORDER_COMP_NM,
-        C.YYYY,
-        C.MM,
-        QUARTER(C.DT) AS QUARTER,
-        X.OUTPUT_AMT AS AMT
-        FROM TBL_COMPANY A
-        INNER JOIN TBL_COMPANY B ON B.ORDER_COMPANY_YN = 'Y'
-        CROSS JOIN TBL_YYYYMMDD C
-        LEFT OUTER JOIN (SELECT
-        C.CLOSE_MONTH,
-        A.COMP_CD,
-        A.ORDER_COMP_CD,
-        SUM(B.UNIT_FINAL_AMT * D.ORDER_QTY) AS OUTPUT_AMT
-        FROM TBL_CONTROL A
-        INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-        INNER JOIN TBL_CONTROL_CLOSE C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-        INNER JOIN TBL_CONTROL_PART_ORDER D ON B.CONTROL_SEQ = D.CONTROL_SEQ
-        AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-        GROUP BY A.COMP_CD,
-        A.ORDER_COMP_CD) X ON A.COMP_CD = X.COMP_CD
-        AND B.COMP_CD = X.ORDER_COMP_CD
-        AND CONCAT(C.YYYY, C.MM) = X.CLOSE_MONTH
-        WHERE
-        A.FAMILY_COMPANY_YN = 'Y'
-        AND C.YYYY = 2020
-        GROUP BY
-        A.COMP_CD,
-        B.COMP_CD,
-        C.YYYY,
-        C.MM
-        UNION ALL
-        SELECT
-        'DEPOSIT_AMT' AS CONTROL_TYPE,
-        A.COMP_CD,
-        A.COMP_NM,
-        B.COMP_CD AS ORDER_COMP_CD,
-        B.COMP_NM AS ORDER_COMP_NM,
-        C.YYYY,
-        C.MM,
-        QUARTER(C.DT) AS QUARTER,
-        Y.DEPOSIT_AMT AS AMT
-        FROM TBL_COMPANY A
-        INNER JOIN TBL_COMPANY B ON B.ORDER_COMPANY_YN = 'Y'
-        CROSS JOIN TBL_YYYYMMDD C
-        LEFT OUTER JOIN(SELECT
-        COMP_CD,
-        ORDER_COMP_CD,
-        SUBSTR(DATE_FORMAT(STR_TO_DATE(DEPOSIT_DT, '%Y%m%d'), '%Y%m%d'), 1, 4) AS YEAR,
-        SUBSTR(DATE_FORMAT(STR_TO_DATE(DEPOSIT_DT, '%Y%m%d'), '%Y%m%d'), 5, 2) AS MONTH,
-        DEPOSIT_AMT
-        FROM TBL_MONEY_DEPOSIT) Y ON A.COMP_CD = Y.COMP_CD
-        AND B.COMP_CD = Y.ORDER_COMP_CD
-        AND C.YYYY = Y.YEAR
-        AND C.MM = Y.MONTH
-        WHERE
-        A.FAMILY_COMPANY_YN = 'Y'
-        AND C.YYYY = 2020
-        GROUP BY
-        A.COMP_CD,
-        B.COMP_CD,
-        C.YYYY,
-        C.MM) AS Z
+            *
+        FROM (
+            SELECT
+                'OUTPUT_AMT' AS CONTROL_TYPE,
+                A.COMP_CD,
+                A.COMP_NM,
+                B.COMP_CD AS ORDER_COMP_CD,
+                B.COMP_NM AS ORDER_COMP_NM,
+                C.YYYY,
+                C.MM,
+                QUARTER(C.DT) AS QUARTER,
+                X.OUTPUT_AMT AS AMT
+            FROM TBL_COMPANY A
+                INNER JOIN TBL_COMPANY B ON B.ORDER_COMPANY_YN = 'Y'
+                CROSS JOIN TBL_YYYYMMDD C
+                LEFT OUTER JOIN (
+                SELECT
+                C.CLOSE_MONTH,
+                A.COMP_CD,
+                A.ORDER_COMP_CD,
+                SUM(B.UNIT_FINAL_AMT * D.ORDER_QTY) AS OUTPUT_AMT
+                FROM TBL_CONTROL A
+                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                INNER JOIN TBL_CONTROL_CLOSE C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                INNER JOIN TBL_CONTROL_PART_ORDER D ON B.CONTROL_SEQ = D.CONTROL_SEQ
+                AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+                GROUP BY
+                A.COMP_CD,
+                A.ORDER_COMP_CD) X ON A.COMP_CD = X.COMP_CD
+                                      AND B.COMP_CD = X.ORDER_COMP_CD
+                                      AND CONCAT(C.YYYY, C.MM) = X.CLOSE_MONTH
+            WHERE A.FAMILY_COMPANY_YN = 'Y'
+                  AND C.YYYY = #{YEAR}
+            GROUP BY
+                A.COMP_CD,
+                B.COMP_CD,
+                C.YYYY,
+                C.MM
+            UNION ALL
+            SELECT
+                'DEPOSIT_AMT' AS CONTROL_TYPE,
+                A.COMP_CD,
+                A.COMP_NM,
+                B.COMP_CD AS ORDER_COMP_CD,
+                B.COMP_NM AS ORDER_COMP_NM,
+                C.YYYY,
+                C.MM,
+                QUARTER(C.DT) AS QUARTER,
+                Y.DEPOSIT_AMT AS AMT
+            FROM TBL_COMPANY A
+                INNER JOIN TBL_COMPANY B ON B.ORDER_COMPANY_YN = 'Y'
+                CROSS JOIN TBL_YYYYMMDD C
+                LEFT OUTER JOIN (
+                SELECT
+                COMP_CD,
+                ORDER_COMP_CD,
+                SUBSTR(DATE_FORMAT(STR_TO_DATE(DEPOSIT_DT, '%Y%m%d'), '%Y%m%d'), 1, 4) AS YEAR,
+                SUBSTR(DATE_FORMAT(STR_TO_DATE(DEPOSIT_DT, '%Y%m%d'), '%Y%m%d'), 5, 2) AS MONTH,
+                DEPOSIT_AMT
+                FROM
+                TBL_MONEY_DEPOSIT) Y ON A.COMP_CD = Y.COMP_CD
+                                        AND B.COMP_CD = Y.ORDER_COMP_CD
+                                        AND C.YYYY = Y.YEAR
+                                        AND C.MM = Y.MONTH
+            WHERE A.FAMILY_COMPANY_YN = 'Y'
+                  AND C.YYYY = #{YEAR}
+            GROUP BY
+                A.COMP_CD,
+                B.COMP_CD,
+                C.YYYY,
+                C.MM ) AS Z
         ORDER BY
-        Z.COMP_CD,
-        Z.ORDER_COMP_CD,
-        Z.YYYY,
-        Z.MM,
-        Z.CONTROL_TYPESELECT *
-        FROM(
-        SELECT
-        'OUTPUT_AMT' AS CONTROL_TYPE,
-        A.COMP_CD,
-        A.COMP_NM,
-        B.COMP_CD AS ORDER_COMP_CD,
-        B.COMP_NM AS ORDER_COMP_NM,
-        C.YYYY,
-        C.MM,
-        QUARTER(C.DT) AS QUARTER,
-        X.OUTPUT_AMT AS AMT
-        FROM TBL_COMPANY A
-        INNER JOIN TBL_COMPANY B ON B.ORDER_COMPANY_YN = 'Y'
-        CROSS JOIN TBL_YYYYMMDD C
-        LEFT OUTER JOIN (SELECT
-        C.CLOSE_MONTH,
-        A.COMP_CD,
-        A.ORDER_COMP_CD,
-        SUM(B.UNIT_FINAL_AMT * D.ORDER_QTY) AS OUTPUT_AMT
-        FROM TBL_CONTROL A
-        INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-        INNER JOIN TBL_CONTROL_CLOSE C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-        INNER JOIN TBL_CONTROL_PART_ORDER D ON B.CONTROL_SEQ = D.CONTROL_SEQ
-        AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-        GROUP BY A.COMP_CD,
-        A.ORDER_COMP_CD) X ON A.COMP_CD = X.COMP_CD
-        AND B.COMP_CD = X.ORDER_COMP_CD
-        AND CONCAT(C.YYYY, C.MM) = X.CLOSE_MONTH
-        WHERE
-        A.FAMILY_COMPANY_YN = 'Y'
-        AND C.YYYY = 2020
-        GROUP BY
-        A.COMP_CD,
-        B.COMP_CD,
-        C.YYYY,
-        C.MM
-        UNION ALL
-        SELECT
-        'DEPOSIT_AMT' AS CONTROL_TYPE,
-        A.COMP_CD,
-        A.COMP_NM,
-        B.COMP_CD AS ORDER_COMP_CD,
-        B.COMP_NM AS ORDER_COMP_NM,
-        C.YYYY,
-        C.MM,
-        QUARTER(C.DT) AS QUARTER,
-        Y.DEPOSIT_AMT AS AMT
-        FROM TBL_COMPANY A
-        INNER JOIN TBL_COMPANY B ON B.ORDER_COMPANY_YN = 'Y'
-        CROSS JOIN TBL_YYYYMMDD C
-        LEFT OUTER JOIN(SELECT
-        COMP_CD,
-        ORDER_COMP_CD,
-        SUBSTR(DATE_FORMAT(STR_TO_DATE(DEPOSIT_DT, '%Y%m%d'), '%Y%m%d'), 1, 4) AS YEAR,
-        SUBSTR(DATE_FORMAT(STR_TO_DATE(DEPOSIT_DT, '%Y%m%d'), '%Y%m%d'), 5, 2) AS MONTH,
-        DEPOSIT_AMT
-        FROM TBL_MONEY_DEPOSIT) Y ON A.COMP_CD = Y.COMP_CD
-        AND B.COMP_CD = Y.ORDER_COMP_CD
-        AND C.YYYY = Y.YEAR
-        AND C.MM = Y.MONTH
-        WHERE
-        A.FAMILY_COMPANY_YN = 'Y'
-        AND C.YYYY = 2020
-        GROUP BY
-        A.COMP_CD,
-        B.COMP_CD,
-        C.YYYY,
-        C.MM) AS Z
-        ORDER BY
-        Z.COMP_CD,
-        Z.ORDER_COMP_CD,
-        Z.YYYY,
-        Z.MM,
-        Z.CONTROL_TYPE
+            Z.COMP_CD,
+            Z.ORDER_COMP_CD,
+            Z.YYYY,
+            Z.MM,
+            Z.CONTROL_TYPE
+        -->
     </select>
 
 </mapper>

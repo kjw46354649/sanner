@@ -570,7 +570,7 @@
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
         fnAppendSelectboxYear('CLOSE_YEAR', 10);
-        fnAppendSelectboxMonth('CLOSE_MONTH');
+        fnAppendSelectboxMonth('CLOSE_MONTH', CURRENT_YEAR);
         $closeHistoryGrid = $('#' + gridId).pqGrid(obj);
         /* init */
     });

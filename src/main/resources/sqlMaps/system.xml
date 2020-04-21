@@ -409,154 +409,223 @@
 
     <select id="getCompanyMasterList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            A.COMP_CD, A.COMP_KIND, A.COMP_NM, A.CEO_NM, A.COMP_NUM, A.COMP_TYPE, A.CHARGE_USER_ID, A.COMP_TEL, A.COMP_ADDRESS, A.COMP_EMAIL,
-            A.LOGO_GFILE_SEQ, A.SIGN_GFILE_SEQ, A.ETC_GFILE_SEQ, A.ACTIVE_YN, A.NOTE,
-            B.STAFF_NM, B.STAFF_EMAIL,
-            jmes.SF_GET_CODE_NM('1046', A.COMP_KIND, 'KR') as COMP_KIND_NM,
-            CASE WHEN A.COMP_KIND = 'CLS010' THEN jmes.SF_GET_CODE_NM('1042', A.COMP_TYPE, 'KR')
-                 WHEN A.COMP_KIND = 'CLS020' THEN jmes.SF_GET_CODE_NM('1043', A.COMP_TYPE, 'KR')
-                 ELSE '' END as COMP_TYPE_NM,
-            jmes.SF_GET_CODE_NM('1042', A.ACTIVE_YN, 'KR') as ACTIVE_YN_NM,
-            DATE_FORMAT(A.INSERT_DT, '%Y/%m/%d') AS INSERT_DT, A.INSERT_ID, DATE_FORMAT(A.UPDATE_DT, '%Y/%m/%d') AS UPDATE_DT, A.UPDATE_ID
+            A.COMP_CD
+            , A.COMP_NM
+            , A.ORDER_COMPANY_YN
+            , ( SELECT group_concat(jmes.SF_GET_CODE_NM('1024', M.COMP_TYPE, 'KR'))
+                FROM jmes.TBL_COMPANY_TYPE M
+                WHERE M.COMP_CD = A.COMP_CD
+                AND M.HIGH_TYPE = '1024'
+              ) AS ORDER_COMPANY_INFO
+            , A.CO_COMPANY_YN
+            , ( SELECT group_concat(DISTINCT jmes.SF_GET_CODE_NM('1041', N.REF_CD, 'KR'))
+                FROM jmes.TBL_COMPANY_TYPE M, jmes.TBL_CODE N
+                WHERE M.COMP_CD = A.COMP_CD
+                AND M.HIGH_TYPE IN ('1001','1002','1003','1004')
+                AND M.HIGH_TYPE = N.HIGH_CD
+                AND M.COMP_TYPE = N.CODE_CD
+              ) AS CO_COMPANY_INFO
+            , A.COMP_NUM
+            , A.BUSINESS_TYPE
+            , A.BUSINESS_ITEM
+            , A.COMP_TEL
+            , ( SELECT CONCAT(M.STAFF_NM, ' (', M.STAFF_EMAIL,')')
+                FROM jmes.TBL_COMPANY_STAFF M
+                WHERE M.COMP_CD = A.COMP_CD
+                AND M.MAIN_YN = 'Y'
+                AND M.DEL_YN = 'N'
+                LIMIT 1
+              ) AS MAIN_STAFF_INFO
+            , A.CEO_NM
+            , A.COMP_ADDRESS
+            , A.NOTE
+            , A.COMP_EMAIL
+            , CASE WHEN A.LOGO_GFILE_SEQ IS NULL THEN 'N' ELSE 'Y' END LOGO_FILE_YN
+            , CASE WHEN A.SIGN_GFILE_SEQ IS NULL THEN 'N' ELSE 'Y' END SIGN_FILE_YN
+            , CASE WHEN A.ETC_GFILE_SEQ IS NULL THEN 'N' ELSE 'Y' END ETC_FILE_YN
+            , 'AFTER...' AS LAST_BUSINESS_DT
+            , jmes.SF_GET_DATE_F(A.INSERT_DT,'YYYY','M') AS INSERT_DT
+            , jmes.SF_GET_DATE_F(A.UPDATE_DT,'YYYY','M') AS UPDATE_DT
+            , A.ACTIVE_YN
         FROM jmes.TBL_COMPANY A
-            LEFT OUTER JOIN jmes.TBL_COMPANY_STAFF B ON A.COMP_CD = B.COMP_CD
-                AND STAFF_SEQ = (SELECT STAFF_SEQ FROM jmes.TBL_COMPANY_STAFF C
-                                    WHERE B.COMP_CD = C.COMP_CD AND C.DEL_YN = 'N' AND C.MAIN_YN = 'Y' ORDER BY C.UPDATE_DT DESC LIMIT 1
-                                )
         WHERE A.DEL_YN = 'N'
-            <if test="SEL_COMP_KIND != null and SEL_COMP_KIND != ''">
-                AND A.COMP_KIND LIKE CONCAT('%', #{SEL_COMP_KIND}, '%')
-            </if>
-            <if test="SEL_COMP_TYPE != null and SEL_COMP_TYPE != ''">
-                AND A.COMP_TYPE LIKE CONCAT('%', #{SEL_COMP_TYPE}, '%')
-            </if>
-            <if test="SEL_COMP_NM != null and SEL_COMP_NM != ''">
-                AND A.COMP_NM LIKE CONCAT('%', #{SEL_COMP_NM}, '%')
-            </if>
-            <if test="SEL_COMP_NUM != null and SEL_COMP_NUM != ''">
-                AND A.COMP_NUM LIKE CONCAT('%', #{SEL_COMP_NUM}, '%')
-            </if>
-            <if test="SEL_STAFF_NM != null and SEL_STAFF_NM != ''">
-                AND EXISTS (SELECT * FROM jmes.TBL_COMPANY_STAFF D
-                            WHERE D.COMP_CD = A.COMP_CD AND D.DEL_YN = 'N' AND D.STAFF_NM LIKE CONCAT('%', #{SEL_STAFF_NM}, '%')
-                    )
-            </if>
-            <if test="SEL_CEO_NM != null and SEL_CEO_NM != ''">
-                AND A.CEO_NM LIKE CONCAT('%', #{SEL_CEO_NM}, '%')
-            </if>
-            <if test="SEL_ACTIVE_YN != null and SEL_ACTIVE_YN != ''">
-                AND A.ACTIVE_YN =  #{SEL_ACTIVE_YN}
-            </if>
+        <if test="SEL_COMP_KIND != null and SEL_COMP_KIND == 'CLS010'">
+            AND A.ORDER_COMPANY_YN = 'Y' -- 발주처 선택
+        </if>
+        <if test="SEL_COMP_KIND != null and SEL_COMP_KIND == 'CLS020'">
+            AND A.CO_COMPANY_YN = 'Y' -- 협력업체 선택
+        </if>
+        <if test="SEL_COMP_KIND != null and SEL_COMP_KIND == 'CLS030'">
+            AND A.FAMILY_COMPANY_YN = 'Y' -- 본사 선택
+        </if>
+        <if test="SEL_COMP_KIND == 'CLS010' and SEL_COMP_TYPE != null and SEL_COMP_TYPE != ''">
+            AND EXISTS( SELECT 1 FROM jmes.TBL_COMPANY_TYPE
+                        WHERE COMP_CD = A.COMP_CD
+                        AND HIGH_TYPE = '1024'
+                        AND COMP_TYPE = #{SEL_COMP_TYPE}
+                      )
+        </if>
+        <if test="SEL_COMP_KIND == 'CLS020' and SEL_COMP_TYPE != null and SEL_COMP_TYPE != ''">
+            AND EXISTS( SELECT 1
+                        FROM jmes.TBL_COMPANY_TYPE M, jmes.TBL_CODE N
+                        WHERE M.COMP_CD = A.COMP_CD
+                        AND M.HIGH_TYPE IN ('1001','1002','1003','1004')
+                        AND M.HIGH_TYPE = N.HIGH_CD
+                        AND M.COMP_TYPE = N.CODE_CD
+                        AND N.REF_CD = #{SEL_COMP_TYPE}
+                      )
+        </if>
+        <if test="SEL_STAFF_NM != null and SEL_STAFF_NM != ''">
+            AND EXISTS( SELECT 1 FROM jmes.TBL_COMPANY_STAFF
+                        WHERE COMP_CD = A.COMP_CD
+                        AND DEL_YN = 'N'
+                        AND STAFF_NM LIKE CONCAT('%', #{SEL_STAFF_NM}, '%')
+                      )
+        </if>
+        <if test="SEL_COMP_NM != null and SEL_COMP_NM != ''">
+            AND A.COMP_NM LIKE CONCAT('%', #{SEL_COMP_NM}, '%')
+        </if>
+        <if test="SEL_COMP_NUM != null and SEL_COMP_NUM != ''">
+            AND REPLACE(A.COMP_NUM,'-','') = REPLACE(#{SEL_COMP_NUM},'-','')
+        </if>
+        <if test="SEL_CEO_NM != null and SEL_CEO_NM != ''">
+            AND A.CEO_NM LIKE CONCAT('%', #{SEL_CEO_NM}, '%')
+        </if>
+        <if test="SEL_ACTIVE_YN != null and SEL_ACTIVE_YN != ''">
+            AND A.ACTIVE_YN = #{SEL_ACTIVE_YN}
+        </if>
+        ORDER BY 1 DESC
     </select>
 
     <select id="getCompanyMasterInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            A.COMP_CD, A.COMP_KIND, A.COMP_NM, A.CEO_NM, A.COMP_NUM, A.COMP_TYPE, A.CHARGE_USER_ID, A.COMP_TEL, A.COMP_ADDRESS, A.COMP_EMAIL,
-            A.LOGO_GFILE_SEQ, A.SIGN_GFILE_SEQ, A.ETC_GFILE_SEQ, A.ACTIVE_YN, A.NOTE,
-            B.STAFF_NM, B.STAFF_EMAIL, jmes.SF_GET_FILE_ORGINAL_NM(ETC_GFILE_SEQ, NULL) as ETC_GFILE_SEQ_NM,
-            jmes.SF_GET_CODE_NM('1046', A.COMP_KIND, 'KR') as COMP_KIND_NM,
-            CASE WHEN A.COMP_KIND = 'CLS010' THEN jmes.SF_GET_CODE_NM('1042', A.COMP_TYPE, 'KR')
-            WHEN A.COMP_KIND = 'CLS020' THEN jmes.SF_GET_CODE_NM('1043', A.COMP_TYPE, 'KR')
-            ELSE '' END as COMP_TYPE_NM,
-            jmes.SF_GET_CODE_NM('1042', A.ACTIVE_YN, 'KR') as ACTIVE_YN_NM,
-            DATE_FORMAT(A.INSERT_DT, '%Y/%m/%d') AS INSERT_DT, A.INSERT_ID, DATE_FORMAT(A.UPDATE_DT, '%Y/%m/%d') AS UPDATE_DT, A.UPDATE_ID
+            A.COMP_CD
+            , A.COMP_NM
+            , A.ORDER_COMPANY_YN
+            , ( SELECT group_concat(jmes.SF_GET_CODE_NM('1024', M.COMP_TYPE, 'KR'))
+                FROM jmes.TBL_COMPANY_TYPE M
+                WHERE M.COMP_CD = A.COMP_CD
+                AND M.HIGH_TYPE = '1024'
+              ) AS ORDER_COMPANY_INFO
+            , A.CO_COMPANY_YN
+            , ( SELECT group_concat(DISTINCT jmes.SF_GET_CODE_NM('1041', N.REF_CD, 'KR'))
+                FROM jmes.TBL_COMPANY_TYPE M, jmes.TBL_CODE N
+                WHERE M.COMP_CD = A.COMP_CD
+                AND M.HIGH_TYPE IN ('1001','1002','1003','1004')
+                AND M.HIGH_TYPE = N.HIGH_CD
+                AND M.COMP_TYPE = N.CODE_CD
+              ) AS CO_COMPANY_INFO
+            , A.FAMILY_COMPANY_YN
+            , A.COMP_NUM
+            , A.BUSINESS_TYPE
+            , A.BUSINESS_ITEM
+            , A.COMP_TEL
+            , ( SELECT CONCAT(M.STAFF_NM, ' (', M.STAFF_EMAIL,')')
+                FROM jmes.TBL_COMPANY_STAFF M
+                WHERE M.COMP_CD = A.COMP_CD
+                AND M.MAIN_YN = 'Y'
+                AND M.DEL_YN = 'N'
+                LIMIT 1
+              ) AS MAIN_STAFF_INFO
+            , A.CEO_NM
+            , A.COMP_ADDRESS
+            , A.NOTE
+            , A.COMP_EMAIL
+            , A.LOGO_GFILE_SEQ
+            , CASE WHEN A.LOGO_GFILE_SEQ IS NULL THEN 'N' ELSE 'Y' END LOGO_FILE_YN
+            , jmes.SF_GET_FILE_ORGINAL_NM(A.LOGO_GFILE_SEQ, NULL) as LOGO_GFILE_SEQ_NM
+            , A.SIGN_GFILE_SEQ
+            , CASE WHEN A.SIGN_GFILE_SEQ IS NULL THEN 'N' ELSE 'Y' END SIGN_FILE_YN
+            , jmes.SF_GET_FILE_ORGINAL_NM(A.SIGN_GFILE_SEQ, NULL) as SIGN_GFILE_SEQ_NM
+            , A.ETC_GFILE_SEQ
+            , CASE WHEN A.ETC_GFILE_SEQ IS NULL THEN 'N' ELSE 'Y' END ETC_FILE_YN
+            , jmes.SF_GET_FILE_ORGINAL_NM(A.ETC_GFILE_SEQ, NULL) as ETC_GFILE_SEQ_NM
+            , 'AFTER...' AS LAST_BUSINESS_DT
+            , jmes.SF_GET_DATE_F(A.INSERT_DT,'YYYY','M') AS INSERT_DT
+            , jmes.SF_GET_DATE_F(A.UPDATE_DT,'YYYY','M') AS UPDATE_DT
+            , A.ACTIVE_YN
+            , A.CHARGE_USER_ID
+            , A.COMP_FAX
+            ,(SELECT COMP_TYPE FROM jmes.TBL_COMPANY_TYPE WHERE COMP_CD = A.COMP_CD AND HIGH_TYPE = '1024' LIMIT 1) AS H_VAL_1024
+            ,(SELECT COMP_TYPE FROM jmes.TBL_COMPANY_TYPE WHERE COMP_CD = A.COMP_CD AND HIGH_TYPE = '1001' LIMIT 1) AS H_VAL_1001
+            ,(SELECT COMP_TYPE FROM jmes.TBL_COMPANY_TYPE WHERE COMP_CD = A.COMP_CD AND HIGH_TYPE = '1002' LIMIT 1) AS H_VAL_1002
+            ,(SELECT COMP_TYPE FROM jmes.TBL_COMPANY_TYPE WHERE COMP_CD = A.COMP_CD AND HIGH_TYPE = '1003' LIMIT 1) AS H_VAL_1003
+            ,(SELECT COMP_TYPE FROM jmes.TBL_COMPANY_TYPE WHERE COMP_CD = A.COMP_CD AND HIGH_TYPE = '1004' LIMIT 1) AS H_VAL_1004
         FROM jmes.TBL_COMPANY A
-            LEFT OUTER JOIN jmes.TBL_COMPANY_STAFF B ON A.COMP_CD = B.COMP_CD
-                    AND STAFF_SEQ = (SELECT STAFF_SEQ FROM jmes.TBL_COMPANY_STAFF C
-                    WHERE B.COMP_CD = C.COMP_CD AND C.DEL_YN = 'N' AND C.MAIN_YN = 'Y' ORDER BY C.UPDATE_DT DESC LIMIT 1
-            )
         WHERE A.DEL_YN = 'N'
           AND A.COMP_CD = #{COMP_CD}
     </select>
-
-    <update id="deleteCompanyMaster" parameterType="java.util.HashMap">
-        UPDATE jmes.TBL_COMPANY
-        SET
-            DEL_YN = 'Y',
-            UPDATE_ID = NULL,
-            UPDATE_DT = NOW()
-        WHERE COMP_CD = #{COMP_CD}
-    </update>
+    <select id="selectCompanySeq" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT CONCAT('CMP',LPAD(IFNULL(CONVERT(MAX(SUBSTRING('CMP0001',4,4)),INT)+1,1),4,'0')) AS SEQ
+        FROM jmes.TBL_COMPANY WHERE COMP_CD LIKE 'CMP%'
+    </select>
+    <insert id="insertCompanyMaster" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_COMPANY
+        (
+              COMP_CD, COMP_NM, CEO_NM, COMP_NUM, FAMILY_COMPANY_YN, BUSINESS_TYPE, BUSINESS_ITEM
+            , CHARGE_USER_ID, COMP_EMAIL, COMP_TEL, COMP_FAX, COMP_ADDRESS
+            <if test="LOGO_GFILE_SEQ != null and LOGO_GFILE_SEQ != ''">
+                ,LOGO_GFILE_SEQ
+            </if>
+            <if test="SIGN_GFILE_SEQ != null and SIGN_GFILE_SEQ != ''">
+                ,SIGN_GFILE_SEQ
+            </if>
+            <if test="ETC_GFILE_SEQ != null and ETC_GFILE_SEQ != ''">
+                ,ETC_GFILE_SEQ
+            </if>
+            ,ACTIVE_YN, NOTE, INSERT_ID
+        )VALUES (
+              #{COMP_CD}, #{COMP_NM}, #{CEO_NM}, #{COMP_NUM}, IFNULL(#{FAMILY_COMPANY_YN}, 'N'), #{BUSINESS_TYPE}, #{BUSINESS_ITEM}
+            , #{CHARGE_USER_ID}, #{COMP_EMAIL}, #{COMP_TEL}, #{COMP_FAX}, #{COMP_ADDRESS}
+            <if test="LOGO_GFILE_SEQ != null and LOGO_GFILE_SEQ != ''">
+                ,LOGO_GFILE_SEQ
+            </if>
+            <if test="SIGN_GFILE_SEQ != null and SIGN_GFILE_SEQ != ''">
+                ,SIGN_GFILE_SEQ
+            </if>
+            <if test="ETC_GFILE_SEQ != null and ETC_GFILE_SEQ != ''">
+                ,ETC_GFILE_SEQ
+            </if>
+            , IFNULL(#{ACTIVE_YN}, 'N'), #{NOTE}, #{LOGIN_USER_ID}
+        )
+    </insert>
 
     <update id="updateCompanyMaster" parameterType="java.util.HashMap">
         UPDATE jmes.TBL_COMPANY
         SET
-            COMP_KIND = #{COMP_KIND},
-            COMP_NM = #{COMP_NM},
-            CEO_NM = #{CEO_NM},
-            COMP_NUM = #{COMP_NUM},
-            COMP_TYPE = #{COMP_TYPE},
-            CHARGE_USER_ID = #{CHARGE_USER_ID},
-            COMP_TEL = #{COMP_TEL},
-            COMP_FAX = #{COMP_FAX},
-            COMP_ADDRESS = #{COMP_ADDRESS},
-            COMP_EMAIL = #{COMP_EMAIL},
+             COMP_NM = #{COMP_NM}
+            , CEO_NM = #{CEO_NM}
+            , COMP_NUM = #{COMP_NUM}
+            , CHARGE_USER_ID = #{CHARGE_USER_ID}
+            , COMP_TEL = #{COMP_TEL}
+            , COMP_FAX = #{COMP_FAX}
+            , COMP_ADDRESS = #{COMP_ADDRESS}
+            , COMP_EMAIL = #{COMP_EMAIL}
             <if test="LOGO_GFILE_SEQ != null and LOGO_GFILE_SEQ != ''">
-                LOGO_GFILE_SEQ = #{LOGO_GFILE_SEQ},
+                , LOGO_GFILE_SEQ = #{LOGO_GFILE_SEQ}
             </if>
             <if test="SIGN_GFILE_SEQ != null and SIGN_GFILE_SEQ != ''">
-                SIGN_GFILE_SEQ = #{SIGN_GFILE_SEQ},
+                , SIGN_GFILE_SEQ = #{SIGN_GFILE_SEQ}
             </if>
             <if test="ETC_GFILE_SEQ != null and ETC_GFILE_SEQ != ''">
-                ETC_GFILE_SEQ = #{ETC_GFILE_SEQ},
+                , ETC_GFILE_SEQ = #{ETC_GFILE_SEQ}
             </if>
-            ACTIVE_YN = #{ACTIVE_YN},
-            NOTE = #{NOTE},
-            UPDATE_ID = NULL,
-            UPDATE_DT = NOW()
+            , FAMILY_COMPANY_YN = IFNULL(#{FAMILY_COMPANY_YN}, 'N')
+            , BUSINESS_TYPE = #{BUSINESS_TYPE}
+            , BUSINESS_ITEM = #{BUSINESS_ITEM}
+            , ACTIVE_YN = IFNULL(#{ACTIVE_YN}, 'N')
+            , NOTE = #{NOTE}
+            , UPDATE_ID = #{LOGIN_USER_ID}
+            , UPDATE_DT = NOW()
         WHERE COMP_CD = #{COMP_CD}
     </update>
 
-    <insert id="insertCompanyMaster" parameterType="java.util.HashMap">
-        INSERT INTO jmes.TBL_COMPANY
-        (COMP_CD, COMP_KIND, COMP_NM, CEO_NM, COMP_NUM, COMP_TYPE, CHARGE_USER_ID, COMP_TEL, COMP_FAX, COMP_ADDRESS, COMP_EMAIL,
-            <if test="LOGO_GFILE_SEQ != null and LOGO_GFILE_SEQ != ''">
-                LOGO_GFILE_SEQ,
-            </if>
-            <if test="SIGN_GFILE_SEQ != null and SIGN_GFILE_SEQ != ''">
-                SIGN_GFILE_SEQ,
-            </if>
-            <if test="ETC_GFILE_SEQ != null and ETC_GFILE_SEQ != ''">
-                ETC_GFILE_SEQ,
-            </if>
-            ACTIVE_YN, DEL_YN, NOTE
-        )
-        SELECT
-            CONCAT(ABBR_NM, LPAD((SELECT COUNT(*) + 1 FROM jmes.TBL_COMPANY B WHERE COMP_KIND = #{COMP_KIND}), 4, '0')),
-            #{COMP_NM}, #{CEO_NM}, #{COMP_NUM}, #{COMP_TYPE}, #{CHARGE_USER_ID}, #{COMP_TEL}, #{COMP_FAX}, #{COMP_ADDRESS}, #{COMP_EMAIL},
-            <if test="LOGO_GFILE_SEQ != null and LOGO_GFILE_SEQ != ''">
-                #{LOGO_GFILE_SEQ},
-            </if>
-            <if test="SIGN_GFILE_SEQ != null and SIGN_GFILE_SEQ != ''">
-                #{SIGN_GFILE_SEQ},
-            </if>
-            <if test="ETC_GFILE_SEQ != null and ETC_GFILE_SEQ != ''">
-                #{ETC_GFILE_SEQ},
-            </if>
-            'N', #{NOTE}
-        FROM TBL_CODE
-        WHERE HIGH_CD = #{COMP_KIND};
+    <insert id="insertCompanyStaff" parameterType="java.util.HashMap" >
+        INSERT INTO jmes.TBL_COMPANY_STAFF (STAFF_SEQ, COMP_CD, STAFF_NM, POSITION_NM, JOB_TITLE, STAFF_TEL, STAFF_EMAIL, MAIN_YN, NOTE)
+        VALUES ( NEXTVAL(SEQ_COMPANY_STAFF), #{COMP_CD}, #{STAFF_NM}, #{POSITION_NM}, #{JOB_TITLE}, #{STAFF_TEL}, #{STAFF_EMAIL}, #{MAIN_YN}, #{NOTE})
     </insert>
 
-    <select id="getCompanyMasterStaffList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-            STAFF_SEQ, COMP_CD, STAFF_NM, POSITION_NM, JOB_TITLE, STAFF_TEL, STAFF_EMAIL, MAIN_YN, NOTE
-        FROM jmes.TBL_COMPANY_STAFF
-        WHERE DEL_YN = 'N'
-            AND COMP_CD = #{COMP_CD}
-        ORDER BY STAFF_NM
-    </select>
-
-    <update id="deleteCompanyMasterStaff" parameterType="java.util.HashMap">
-        UPDATE jmes.TBL_COMPANY_STAFF
-        SET
-            DEL_YN = 'Y',
-            UPDATE_ID = NULL,
-            UPDATE_DT = NOW()
-        WHERE STAFF_SEQ = #{STAFF_SEQ}
-    </update>
-
-    <update id="updateCompanyMasterStaff" parameterType="java.util.HashMap" >
+    <update id="updateCompanyStaff" parameterType="java.util.HashMap" >
         UPDATE jmes.TBL_COMPANY_STAFF
         SET
             COMP_CD = #{COMP_CD},
@@ -567,16 +636,72 @@
             STAFF_EMAIL = #{STAFF_EMAIL},
             MAIN_YN = #{MAIN_YN},
             NOTE = #{NOTE},
-            UPDATE_ID = NULL,
+            UPDATE_ID = #{LOGIN_USER_ID},
             UPDATE_DT = NOW()
         WHERE STAFF_SEQ = #{STAFF_SEQ}
     </update>
 
-    <insert id="insertCompanyMasterStaff" parameterType="java.util.HashMap" >
-        INSERT INTO jmes.TBL_COMPANY_STAFF
-        (STAFF_SEQ, COMP_CD, STAFF_NM, POSITION_NM, JOB_TITLE, STAFF_TEL, STAFF_EMAIL, MAIN_YN, DEL_YN, NOTE)
-        VALUES
-        (NEXTVAL(SEQ_COMPANY_STAFF), #{COMP_CD}, #{STAFF_NM}, #{POSITION_NM}, #{JOB_TITLE}, #{STAFF_TEL}, #{STAFF_EMAIL}, #{MAIN_YN}, 'N', #{NOTE})
-    </insert>
+    <update id="deleteCompanyStaff" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_COMPANY_STAFF
+        SET
+            DEL_YN = 'Y',
+            UPDATE_ID = #{LOGIN_USER_ID},
+            UPDATE_DT = NOW()
+        WHERE STAFF_SEQ = #{STAFF_SEQ}
+    </update>
 
+    <update id="deleteCompanyAllType" parameterType="java.util.HashMap">
+        DELETE FROM jmes.TBL_COMPANY_TYPE WHERE COMP_CD = #{COMP_CD}
+    </update>
+
+    <update id="insertCompanyType" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_COMPANY_TYPE (COMP_CD, COMP_TYPE, HIGH_TYPE, INSERT_ID)
+        VALUES (#{COMP_CD}, #{COMP_TYPE}, #{HIGH_TYPE}, #{LOGIN_USER_ID})
+    </update>
+
+    <update id="updateCompanyMasterStatus1" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_COMPANY SET ORDER_COMPANY_YN = (  SELECT CASE WHEN COUNT(*) > 0 THEN 'Y' ELSE 'N' END
+                                                          FROM jmes.TBL_COMPANY_TYPE
+                                                          WHERE COMP_CD = #{COMP_CD}
+                                                            AND HIGH_TYPE = '1024'
+                                                        )
+        WHERE COMP_CD = #{COMP_CD}
+    </update>
+    <update id="updateCompanyMasterStatus2" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_COMPANY SET CO_COMPANY_YN = (  SELECT CASE WHEN COUNT(*) > 0 THEN 'Y' ELSE 'N' END
+                                                          FROM jmes.TBL_COMPANY_TYPE
+                                                          WHERE COMP_CD = #{COMP_CD}
+                                                            AND HIGH_TYPE IN ('1001', '1002', '1003', '1004')
+                                                        )
+        WHERE COMP_CD = #{COMP_CD}
+    </update>
+
+
+
+
+    <!-- 여기부터 예전 소스 -->
+    <update id="deleteCompanyMaster" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_COMPANY
+        SET
+            DEL_YN = 'Y',
+            UPDATE_ID = #{LOGIN_USER_ID},
+            UPDATE_DT = NOW()
+        WHERE COMP_CD = #{COMP_CD}
+    </update>
+
+
+
+
+
+    <select id="getCompanyMasterStaffList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            STAFF_SEQ, COMP_CD, STAFF_NM, POSITION_NM, JOB_TITLE, STAFF_TEL, STAFF_EMAIL, MAIN_YN, NOTE
+        FROM jmes.TBL_COMPANY_STAFF
+        WHERE DEL_YN = 'N'
+            AND COMP_CD = #{COMP_CD}
+        ORDER BY STAFF_NM
+    </select>
+
+
+    <!-- 여기까지 예전 소스 -->
 </mapper>

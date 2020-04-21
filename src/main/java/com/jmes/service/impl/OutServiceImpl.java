@@ -30,8 +30,8 @@ public class OutServiceImpl implements OutService {
             jsonArray = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<HashMap<String, Object>>>() {});
 
         for (HashMap<String, Object> hashMap : jsonArray) {
-            hashMap.put("PART_STATUS", "OST004");
-            this.orderDao.updateControlPartStatus(hashMap);
+            hashMap.put("OUTSIDE_STATUS", "OST004");
+            this.outDao.updateOutsideCloseRequest(hashMap);
             this.outDao.insertOutsideClose(hashMap);
             this.outDao.insertOutsideCloseHistory(hashMap);
         }
