@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>진성정밀 MES 시스템</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<!-- Firefox, Opera (Chrome and Safari say thanks but no thanks) -->
+<!-- <link rel="shortcut icon" href="./asset/images/common/favicon-32.png"> -->
+<!-- Chrome, Safari, IE -->
+<!-- <link rel="icon" href="./asset/images/common/favicon.ico"> -->
+<!-- Android&IOS Touch Icon -->
+<!-- <link rel="apple-touch-icon-precomposed" href="./asset/images/common/favicon-152.png"> -->
+<link href="./asset/css/reset.css" rel="stylesheet" type="text/css" />
+<link href="./asset/css/common.css" rel="stylesheet" type="text/css" />
+<link href="./asset/css/layout.css" rel="stylesheet" type="text/css" />
+<link href="./asset/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="./asset/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="./asset/js/jquery.easing.1.3.js"></script>
+<!-- include Head : e -->
+</head>
+<body>
+	<!-- <dl id="skiptoContent">
+		<dt><strong class="invisible">바로가기 메뉴</strong></dt>
+		<dd><a href="#bodyWrap">본문 바로가기</a></dd>
+		<dd><a href="#gnbWrap">주메뉴 바로가기</a></dd>
+	</dl> -->
+	<hr />
+	<header>
+		<div class="header login">
+			<h1 class="logo"><a href="/"><span class="invisible">진성정밀 MES 시스템</span></a></h1>
+		</div>
+	</header>
+	<div class="bodyWrap login" id="bodyWrap">
+		<!-- contents 영역에 각페이지 명에 맞는 class 추가 !! -->
+		<section class="contents">
+			<div class="logWrap">
+				<ul>
+					<li><label for="userID">Username</label><input type="text" name="userId" id="userId" placeholder="Enter Username" title="Enter Username">
+					</li>
+					<li><label for="userPassword">Password</label><input type="password" name="userPassword" id="userPassword" placeholder="Enter Password" title="Enter Password"></li>
+					<li><label for="languageSltd">Language</label>
+						<select id="languageSltd" name="languageSltd" title="언어선택">
+							<option value="" selected="selected">언어선택</option>
+							<option value="1">한국어</option>
+							<option value="2">영어</option>
+						</select>
+					</li>
+					<li><span class="chk_box"><input id="idsave" type="checkbox"><label for="idsave">Remember Me</label></span></li>
+				</ul>
+				<div class="btn"><button type="button">login</button></div>
+			</div>
+		</section>
+	</div>
+</body>
+</html>

@@ -7,245 +7,287 @@
 --%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
-<div class="modal" id="estimate_master_record_popup" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">견적 상세 정보</h4>
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">주문으로 이동</span><span class="sr-only">Close</span></button>
-            </div>
-            <div class="modal-body">
-                <form class="form-inline" role="form" id="estimate_master_record_popup_search_form" name="estimate_master_record_popup_search_form">
-                    <div class="panel-body line_tit portlet-body form bg-light">
-                        <section class="bg-light">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    <form class="form-horizontal" data-validate="parsley" action="#">
-                                        <section class="panel panel-default">
+<div class="page estimate">
+    <div class="modal" id="estimate_master_record_popup" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">견적 상세 정보</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">주문으로 이동</span><span class="sr-only">Close</span></button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-inline" role="form" id="estimate_master_record_popup_search_form" name="estimate_master_record_popup_search_form">
+                        <div class="panel-body line_tit portlet-body form bg-light">
+                            <section class="bg-light">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12">
+                                        <form class="form-horizontal" data-validate="parsley" action="#">
+                                            <section class="panel panel-default">
+                                                <header class="panel-heading">
+                                                    <strong>기본 정보</strong>
+                                                </header>
+                                                <div class="panel-body">
+                                                    <div class="form-group col-md-4 col-sm-4">
+                                                        <label class="col-md-4 col-sm-4 control-label">발주사</label>
+                                                        <div class="col-md-8 col-sm-8">
+                                                            <input type="text" data-notblank="true" id="P_ORDER_COMP_CD" name="ORDER_COMP_CD" class="form-control" placeholder="발주사">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-8 col-sm-8">
+                                                        <label class="col-md-2 col-sm-2 control-label">제목</label>
+                                                        <div class="col-md-10 col-sm-10">
+                                                            <input type="text" data-notblank="true" id="EST_TITLE" name="EST_TITLE" class="form-control" placeholder="Title">
+                                                        </div>
+                                                    </div>
+                                                    <div class="line line-dashed b-b pull-in"></div>
+                                                    <div class="form-group col-md-4 col-sm-4">
+                                                        <label class="col-md-4 col-sm-4 control-label">구매 담당자</label>
+                                                        <div class="col-md-8 col-sm-8">
+                                                            <input type="text" class="form-control" id="ORDER_STAFF_NM" name="ORDER_STAFF_NM" placeholder="구매 담당자">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-4 col-sm-4">
+                                                        <label class="col-md-4 col-sm-4 control-label">품수</label>
+                                                        <div class="col-md-8 col-sm-8">
+                                                            <input type="text" class="form-control" id="DTL_CNT" name="DTL_CNT" placeholder="품수">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-4 col-sm-4">
+                                                        <label class="col-md-4 col-sm-4 control-label">등록일시</label>
+                                                        <div class="col-md-8 col-sm-8">
+                                                            <input type="text" class="form-control" id="INSERT_DT" name="INSERT_DT" placeholder="등록일시">
+                                                        </div>
+                                                    </div>
+                                                    <div class="line line-dashed b-b pull-in"></div>
+                                                    <div class="form-group col-md-4 col-sm-4">
+                                                        <label class="col-md-4 col-sm-4 control-label">견적번호</label>
+                                                        <div class="col-md-8 col-sm-8">
+                                                            <input type="text" class="form-control" id="EST_NUM" name="EST_NUM" placeholder="견적번호">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-4 col-sm-4">
+                                                        <label class="col-md-4 col-sm-4 control-label">차수</label>
+                                                        <div class="col-md-8 col-sm-8">
+                                                            <input type="text" class="form-control" id="P_EST_VER" name="EST_VER" placeholder="차수">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-4 col-sm-4">
+                                                        <label class="col-md-4 col-sm-4 control-label">견적 담당자</label>
+                                                        <div class="col-md-8 col-sm-8">
+                                                            <input type="text" class="form-control" id="EST_USER_ID" name="EST_USER_ID" placeholder="견적 담당자">
+                                                        </div>
+                                                    </div>
+                                                    <div class="line line-dashed b-b pull-in"></div>
+                                                    <div class="form-group col-md-4 col-sm-4">
+                                                        <label class="col-md-4 col-sm-4 control-label">견적금액 계</label>
+                                                        <div class="col-md-8 col-sm-8">
+                                                            <input type="text" class="form-control" id="DTL_AMOUNT" name="DTL_AMOUNT" placeholder="견적금액 계">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-4 col-sm-4">
+                                                        <label class="col-md-4 col-sm-4 control-label"></label>
+                                                        <div class="col-md-8 col-sm-8">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-4 col-sm-4">
+                                                        <label class="col-md-4 col-sm-4 control-label">회신일시</label>
+                                                        <div class="col-md-8 col-sm-8">
+                                                            <input type="text" class="form-control" id="SEND_DT" name="SEND_DT" placeholder="회신일시">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </form>
+                                    </div>
+                                </div>
+                            </section>
+                            <!-- grid table -->
+                            <section class="bg-light">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12">
+                                        <div class="panel panel-default">
                                             <header class="panel-heading">
-                                                <strong>기본 정보</strong>
+                                                <strong>상세 리스트</strong>
                                             </header>
-                                            <div class="panel-body">
-                                                <div class="form-group col-md-4 col-sm-4">
-                                                    <label class="col-md-4 col-sm-4 control-label">발주사</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" data-notblank="true" id="P_ORDER_COMP_CD" name="ORDER_COMP_CD" class="form-control" placeholder="발주사">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-8 col-sm-8">
-                                                    <label class="col-md-2 col-sm-2 control-label">제목</label>
-                                                    <div class="col-md-10 col-sm-10">
-                                                        <input type="text" data-notblank="true" id="EST_TITLE" name="EST_TITLE" class="form-control" placeholder="Title">
-                                                    </div>
-                                                </div>
-                                                <div class="line line-dashed b-b pull-in"></div>
-                                                <div class="form-group col-md-4 col-sm-4">
-                                                    <label class="col-md-4 col-sm-4 control-label">구매 담당자</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" id="ORDER_STAFF_NM" name="ORDER_STAFF_NM" placeholder="구매 담당자">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-4 col-sm-4">
-                                                    <label class="col-md-4 col-sm-4 control-label">품수</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" id="DTL_CNT" name="DTL_CNT" placeholder="품수">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-4 col-sm-4">
-                                                    <label class="col-md-4 col-sm-4 control-label">등록일시</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" id="INSERT_DT" name="INSERT_DT" placeholder="등록일시">
-                                                    </div>
-                                                </div>
-                                                <div class="line line-dashed b-b pull-in"></div>
-                                                <div class="form-group col-md-4 col-sm-4">
-                                                    <label class="col-md-4 col-sm-4 control-label">견적번호</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" id="EST_NUM" name="EST_NUM" placeholder="견적번호">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-4 col-sm-4">
-                                                    <label class="col-md-4 col-sm-4 control-label">차수</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" id="P_EST_VER" name="EST_VER" placeholder="차수">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-4 col-sm-4">
-                                                    <label class="col-md-4 col-sm-4 control-label">견적 담당자</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" id="EST_USER_ID" name="EST_USER_ID" placeholder="견적 담당자">
-                                                    </div>
-                                                </div>
-                                                <div class="line line-dashed b-b pull-in"></div>
-                                                <div class="form-group col-md-4 col-sm-4">
-                                                    <label class="col-md-4 col-sm-4 control-label">견적금액 계</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" id="DTL_AMOUNT" name="DTL_AMOUNT" placeholder="견적금액 계">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-4 col-sm-4">
-                                                    <label class="col-md-4 col-sm-4 control-label"></label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-4 col-sm-4">
-                                                    <label class="col-md-4 col-sm-4 control-label">회신일시</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" class="form-control" id="SEND_DT" name="SEND_DT" placeholder="회신일시">
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12">
+                                                    <div class="gridWrap">
+                                                        <div id="estimate_master_popup_top_grid" class="jqx-refresh"></div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </section>
-                                    </form>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </section>
-                        <!-- grid table -->
-                        <section class="bg-light">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="panel panel-default">
-                                        <header class="panel-heading">
-                                            <strong>상세 리스트</strong>
-                                        </header>
-                                        <div class="row">
-                                            <div class="col-md-12 col-sm-12">
+                            </section>
+                            <section class="bg-light">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12">
+                                        <div class="panel panel-default">
+                                            <header class="panel-heading">
+                                                <strong>메일 내용</strong>
+                                            </header>
+                                            <div class="row">
                                                 <div class="gridWrap">
-                                                    <div id="estimate_master_popup_top_grid" class="jqx-refresh"></div>
+                                                    <textarea class="col-md-12 col-sm-12">
+                                                        Text Test
+                                                    </textarea>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </section>
-                        <section class="bg-light">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="panel panel-default">
-                                        <header class="panel-heading">
-                                            <strong>메일 내용</strong>
-                                        </header>
-                                        <div class="row">
+                            </section>
+                            <section class="bg-light">
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6">
+                                        <div class="panel panel-default">
+                                            <header class="panel-heading">
+                                                <strong>메인 수신처</strong>
+                                            </header>
                                             <div class="gridWrap">
-                                                <textarea class="col-md-12 col-sm-12">
-                                                    Text Test
-                                                </textarea>
+                                                <div id="estimate_master_popup_bot_grid" class="jqx-refresh"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6">
+                                        <div class="panel panel-default">
+                                            <header class="panel-heading">
+                                                <strong>첨부파일</strong>
+                                            </header>
+                                            <div class="gridWrap">
+                                                <input type="file">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </section>
-                        <section class="bg-light">
-                            <div class="row">
-                                <div class="col-md-6 col-sm-6">
-                                    <div class="panel panel-default">
-                                        <header class="panel-heading">
-                                            <strong>메인 수신처</strong>
-                                        </header>
-                                        <div class="gridWrap">
-                                            <div id="estimate_master_popup_bot_grid" class="jqx-refresh"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-sm-6">
-                                    <div class="panel panel-default">
-                                        <header class="panel-heading">
-                                            <strong>첨부파일</strong>
-                                        </header>
-                                        <div class="gridWrap">
-                                            <input type="file">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                </form>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-</div>
-
-<div class="page-context">
-    <div class="row m-b-md">
-        <div class="col-sm-12">&nbsp;
-            <section class="panel panel-default">
-                <header class="panel-heading font-bold">
-                    업체 정보 관리
-                </header>
-                <div class="panel-body">
-                    <form class="form-inline" id="estimate_master_search_form" name="estimate_master_search_form" role="form">
-                        <div class="row">
-                            <div class="form-group col-md-4">
-                                <label class="control-label" for="COMP_CD">사업자구분</label>
-                                <select id="COMP_CD" name="COMP_CD" data-required="true" class="form-control parsley-validated">
-                                </select>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label class="control-label" for="ORDER_COMP_CD">발주사</label>
-                                <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" data-required="true" class="form-control parsley-validated">
-                                    <option value="">Select</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label class="control-label" for="MODULE_NM">견적번호</label>
-                                <input type="password" class="form-control" id="MODULE_NM" placeholder="">
-                            </div>
-                        </div>
-                        <div class="line line-dashed b-b line-xs"></div>
-                        <div class="row">
-                            <div class="form-group col-md-4">
-                                <label class="control-label" for="TITLE">제목</label>
-                                <input type="email" class="form-control" id="TITLE" placeholder="">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label class="control-label" for="DRAWING_NUM">도면번호</label>
-                                <input type="password" class="form-control" id="DRAWING_NUM" placeholder="">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label class="control-label" for="ITEM_NM">품명</label>
-                                <input type="password" class="form-control" id="ITEM_NM" placeholder="">
-                            </div>
-                        </div>
-                        <div class="line line-dashed b-b line-xs"></div>
-                        <div class="row">
-                            <div class="form-group col-md-4">
-                                <label class="control-label" for="SEL_STAFF_NM">Option</label>
-                                <input type="email" class="form-control" id="SEL_STAFF_NM" placeholder="">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <select id="SEARCH_DATE" name="SEARCH_DATE" data-required="true" class="form-control parsley-validated">
-                                    <option value="">Select</option>
-                                    <c:forEach var="code" items="${HighCode.H_10002}">
-                                        <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
-                                    </c:forEach>
-                                </select>
-                                <input type="password" class="form-control" id="SEL_CEO_NM" placeholder="">
-                            </div>
-                            <div class="form-group col-md-4 text-right">
-                                <div type="submit" class="btn btn-success btn-sm btn-default">SEARCH</div>
-                            </div>
+                            </section>
                         </div>
                     </form>
                 </div>
-            </section>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
         </div>
-        <%--<div class="row">
-            <a href="#estimate_master_record_popup" class="" id="estimatePopupOpen" data-target="" data-toggle="modal" data-refform="estimate_master_record_popup">
-                <input type="button" value="POP">
-            </a>
-        </div>--%>
-        <div class="row">
-            <div class="col-md-12">
-                <div id="estimate_master_top_grid" class="jqx-refresh"></div>
+    </div>
+    <div class="topWrap">
+        <form class="form-inline" id="estimate_master_search_form" name="estimate_master_search_form" role="form">
+            <div class="gubunWrap">
+                <ul>
+                    <li>
+                        <span class="slt_wrap">
+                            <label for="projectSltd">사업자구분</label>
+                            <select id="projectSltd" name="projectSltd" title="사업자구분">
+                                <option value="" selected="selected">-ALL-</option>
+                                <option value="1">-ALL-</option>
+                                <option value="2">-ALL-</option>
+                            </select>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="slt_wrap">
+                            <label for="customSltd">발주사</label>
+                            <select id="customSltd" name="customSltd" title="발주사">
+                                <option value="" selected="selected">-ALL-</option>
+                                <option value="1">-ALL-</option>
+                                <option value="2">-ALL-</option>
+                            </select>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="ipu_wrap"><label for="nameSltd">제목</label><input type="text" name="nameSltd" id="nameSltd" placeholder="" value="" title="제목"></span>
+                    </li>
+                    <li>
+                        <span class="ipu_wrap"><label for="numberSltd">도면번호</label><input type="text" name="numberSltd" id="numberSltd" placeholder="" value="" title="도면번호"></span>
+                    </li>
+                    <li>
+                        <span class="ipu_wrap"><label for="priceSltd">견적번호</label><input type="text" name="priceSltd" id="priceSltd" placeholder="" value="" title="견적번호"></span>
+                    </li>
+                    <li>
+                        <span class="ipu_wrap"><label for="numberSltd2">도면번호</label><input type="text" name="numberSltd2" id="numberSltd2" placeholder="" value="" title="도면번호"></span>
+                    </li>
+                    <li>
+                        <span class="ipu_wrap"><label for="m2Sltd">품명</label><input type="text" name="m2Sltd" id="m2Sltd" placeholder="" value="" title="품명"></span>
+                    </li>
+                    <li>
+                        <span class="ipu_wrap"><label for="nameSltd2">제목</label><input type="text" name="nameSltd2" id="nameSltd2" placeholder="" value="" title="제목"></span>
+                    </li>
+                </ul>
+                <div class="dateWrap">
+                    <div class="leftSpan">
+                        <span class="slt_wrap">
+                            <select id="daySltd" name="daySltd" title="등록일시">
+                                <option value="" selected="selected">등록일시</option>
+                                <option value="1">-ALL-</option>
+                                <option value="2">-ALL-</option>
+                            </select>
+                        </span>
+                        <span class="radio_box">
+                            <input reqcd="R" type="radio" id="fr_1001_1" name=""><label for="fr_1001_1">오늘</label>
+                        </span>
+                        <span class="radio_box">
+                            <input reqcd="R" type="radio" id="fr_1001_2" name=""><label for="fr_1001_2">현재월</label>
+                        </span>
+                        <span class="radio_box">
+                            <input reqcd="R" type="radio" id="fr_1001_3" name=""><label for="fr_1001_3">3개월</label>
+                        </span>
+                        <div class="calendar_wrap">
+                            <span class="calendar_span">
+                                <input type="text" name="dateOneIp" id="dateOneIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
+                            </span>
+                            <span class="nbsp">~</span>
+                            <span class="calendar_span">
+                                <input type="text" name="dateTwoIp" id="dateTwoIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
+                            </span>
+                            <span class="chk_box no_txt"><input id="pr_ex" type="checkbox"><label for="pr_ex">선택</label></span>
+                        </div>
+
+                    </div>
+                    <div class="rightSpan">
+                        <span class="txt">Option</span>
+                        <span class="chk_box"><input id="pr_ex1" type="checkbox"><label for="pr_ex1"> 발송완료</label></span>
+                        <span class="chk_box"><input id="pr_ex2" type="checkbox"><label for="pr_ex2"> 최신차수</label></span>
+                    </div>
+                    <button type="button" class="search_btn">검색</button>
+                </div>
+            </div>
+        </form>
+        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
+    </div>
+    <div class="bottomWrap">
+        <div class="hWrap">
+            <span class="buttonWrap">
+                <button type="button" class="defaultBtn">견적서 신규 작성</button>
+                <button type="button" class="defaultBtn">차수 생성</button>
+            </span>
+            <span class="chk_box"><input id="pr_a" type="checkbox"><label for="pr_a"> 견적상세요건</label></span>
+            <div class="rightSpan">
+                <span class="slt_wrap namePlusSlt">
+                    <label for="prSltd">견적서 추출</label>
+                    <select id="prSltd" name="prSltd" title="견적서 추출">
+                        <option value="" selected="selected">견적서 추출1</option>
+                        <option value="1">견적서 추출2</option>
+                        <option value="2">견적서 추출3</option>
+                    </select>
+                </span>
+                <span class="buttonWrap">
+                    <button type="button" class="defaultBtn grayGra">도면 View</button>
+                    <button type="button" class="defaultBtn yelllowGra">Delete</button>
+                    <button type="button" class="defaultBtn blueGra">Save</button>
+                </span>
             </div>
         </div>
-        <div class="row">&nbsp;
-            <div class="col-md-12">
+        <div class="tableWrap">
+            <span class="buttonWrap">
+                <button type="button" class="smallBtn">견적정보</button>
+                <button type="button" class="smallBtn blue">금액정보</button>
+            </span>
+            <div class="conMainWrap buttonWrap">
+                <div id="estimate_master_top_grid" class="jqx-refresh"></div>
+            </div>
+            <span class="buttonWrap">
+            </span>
+            <div class="conSubWrap">
                 <div id="estimate_master_bot_grid" class="jqx-refresh"></div>
             </div>
         </div>
@@ -493,7 +535,7 @@
         let estimateMasterTopToolbar = {
             items: [
                 {
-                    type: 'button', label: 'Delete', icon: 'ui-icon-minus', style: 'float: right;', listener: {
+                    cls: 'defaultBtn yelllowGra', type: 'button', label: 'Delete', icon: 'ui-icon-minus', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
                             let ESTIMATE_MASTER_QUERY_ID = ['deleteEstimateMaster', 'deleteEstimateDetail'];
 
@@ -609,7 +651,7 @@
         };
 
         estimateMasterTopGrid.pqGrid({
-            width: "100%", height: 200,
+            height: 300,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'EST_SEQ',
                 url: "/paramQueryGridSelect",
@@ -620,15 +662,15 @@
                     return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                 }
             },
+            scrollModel: { autoFit: true },
             columnTemplate: {align: 'center', hvalign: 'center'},
-            scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
             collapsible: false,
-            resizable: false,
+            title: "Grid From JSON",
             trackModel: {on: true},
-            //resizable: true,
+            resizable: true,
             colModel: estimateMasterTopColModel,
             toolbar: estimateMasterTopToolbar,
             complete: function(event, ui) {
@@ -675,7 +717,8 @@
 
         function selectEstimateBotList(EST_SEQ) {
             estimateMasterBotGrid.pqGrid({
-                width: "100%", height: 350,
+                minWidth: 500,
+                height: "100%",
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
                     url: "/paramQueryGridSelect",
@@ -692,7 +735,7 @@
                 selectionModel: { type: 'row', mode: 'single'} ,
                 swipeModel: {on: false},
                 collapsible: false,
-                resizable: false,
+                resizable: true,
                 trackModel: {on: true},
                 //resizable: true,
                 colModel: estimateMasterBotColModel,
@@ -789,5 +832,30 @@
 
     });
 
+    // topWrap 확장 함수
+    function topMenuOpen(){
+        var top = $('.gubunWrap');
+        var con = $('.bottomWrap .tableWrap .conWrap');
+        var con2 = $('.bottomWrap .tableWrap .conSubWrap');
+        var _h = con.height() - 100;
+        var _h2 = con2.height() - 100;
+
+        top.stop().animate({height:'136px'},300, 'easeOutCubic');
+        con.stop().animate({height: _h },300, 'easeOutCubic');
+        con2.stop().animate({height: _h2 },300, 'easeOutCubic');
+    }
+
+    // topWrap 축소 함수
+    function topMenuClose(){
+        var top = $('.gubunWrap');
+        var con = $('.bottomWrap .tableWrap .conWrap');
+        var con2 = $('.bottomWrap .tableWrap .conSubWrap');
+        var _h = con.height() + 100;
+        var _h2 = con2.height() + 100;
+
+        top.stop().animate({height:"36px"}, 300, 'easeInCubic');
+        con.stop().animate({height: _h},300, 'easeInCubic');
+        con2.stop().animate({height: _h2},300, 'easeInCubic');
+    }
 
 </script>

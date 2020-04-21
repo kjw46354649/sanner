@@ -4,39 +4,40 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
-<html lang="en" class="app">
+<html lang="ko">
 <head>
-    <title>J-MES - Login and Register HTML5 Template</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="UTF-8">
-    <!-- External CSS libraries -->
-    <link type="text/css" rel="stylesheet" href="/resource/login/css/bootstrap.min.css">
-    <link type="text/css" rel="stylesheet" href="/resource/login/fonts/font-awesome/css/font-awesome.min.css">
-    <link type="text/css" rel="stylesheet" href="/resource/login/fonts/flaticon/font/flaticon.css">
-    <!-- Favicon icon -->
-    <link rel="shortcut icon" href="/resource/login/img/favicon.ico" type="image/x-icon" >
-    <!-- Google fonts -->
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800%7CPoppins:400,500,700,800,900%7CRoboto:100,300,400,400i,500,700">
-    <!-- Custom Stylesheet -->
-    <link type="text/css" rel="stylesheet" href="/resource/login/css/style.css">
-    <link rel="stylesheet" type="text/css" id="style_sheet" href="/resource/login/css/skins/default.css">
+    <meta charset="utf-8">
+    <title>진성정밀 MES 시스템</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Firefox, Opera (Chrome and Safari say thanks but no thanks) -->
+    <!-- <link rel="shortcut icon" href="./asset/images/common/favicon-32.png"> -->
+    <!-- Chrome, Safari, IE -->
+    <!-- <link rel="icon" href="./asset/images/common/favicon.ico"> -->
+    <!-- Android&IOS Touch Icon -->
+    <!-- <link rel="apple-touch-icon-precomposed" href="./asset/images/common/favicon-152.png"> -->
+    <link href="/resource/asset/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/resource/asset/css/common.css" rel="stylesheet" type="text/css" />
+    <link href="/resource/asset/css/layout.css" rel="stylesheet" type="text/css" />
+    <link href="/resource/asset/css/style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
+    <!-- include Head : e -->
 </head>
-<body id="top">
-<!-- Login 10 start -->
-<div class="login-10">
-    <div class="container-fluid">
-        <div class="row">
-            <tiles:insertAttribute name="body"/>
-        </div>
+<body>
+<!-- <dl id="skiptoContent">
+    <dt><strong class="invisible">바로가기 메뉴</strong></dt>
+    <dd><a href="#bodyWrap">본문 바로가기</a></dd>
+    <dd><a href="#gnbWrap">주메뉴 바로가기</a></dd>
+</dl> -->
+<hr />
+<header>
+    <div class="header login">
+        <h1 class="logo"><a href="/"><span class="invisible">진성정밀 MES 시스템</span></a></h1>
     </div>
+</header>
+<div class="bodyWrap login" id="bodyWrap">
+    <!-- contents 영역에 각페이지 명에 맞는 class 추가 !! -->
+    <tiles:insertAttribute name="body"/>
 </div>
-<!-- Login 10 end -->
-
-<!-- External JS libraries -->
-<script src="/resource/login/js/jquery-2.2.0.min.js"></script>
-<script src="/resource/login/js/popper.min.js"></script>
-<script src="/resource/login/js/bootstrap.min.js"></script>
-<!-- Custom JS Script -->
-
 </body>
 </html>

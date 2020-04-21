@@ -485,6 +485,7 @@
     </div>
 </div>
 
+
 <script>
     $(function () {
         'use strict';
@@ -1400,6 +1401,10 @@
         /* 도면 등록 팝업 호출 */
         $drawingView.click(function(){
             callWindowImageViewer(999);
+        });
+
+        $('#MONTH_FINISH_YES').on('click', function() {
+
         });
 
         $('#CONTROL_CLOSE_YES').on('click', function() {

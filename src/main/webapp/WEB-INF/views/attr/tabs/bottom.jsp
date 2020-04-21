@@ -11,6 +11,60 @@
 <form id="estimate_version_up_sequence_form">
     <input type="hidden" id="hidden_est_seq" id="hidden_est_seq">
 </form>
+<div class="drawing_print">
+    <table>
+        <tbody>
+            <tr>
+                <td>테스트1</td>
+                <td>테스트2</td>
+                <td>테스트3</td>
+                <td>테스트4</td>
+                <td>테스트5</td>
+                <td>테스트6</td>
+                <td>테스트7</td>
+                <td>테스트8</td>
+                <td>테스트9</td>
+                <td>테스트10</td>
+                <td>테스트11</td>
+                <td>테스트12</td>
+                <td>테스트13</td>
+            </tr>
+            <tr>
+                <td>테스트1</td>
+                <td>테스트2</td>
+                <td>테스트3</td>
+                <td>테스트4</td>
+                <td>테스트5</td>
+                <td>테스트6</td>
+                <td>테스트7</td>
+                <td>테스트8</td>
+                <td>테스트9</td>
+                <td>테스트10</td>
+                <td>테스트11</td>
+                <td>테스트12</td>
+                <td>테스트13</td>
+            </tr>
+            <tr>
+                <td>테스트1</td>
+                <td>테스트2</td>
+                <td>테스트3</td>
+                <td>테스트4</td>
+                <td>테스트5</td>
+                <td>테스트6</td>
+                <td>테스트7</td>
+                <td>테스트8</td>
+                <td>테스트9</td>
+                <td>테스트10</td>
+                <td>테스트11</td>
+                <td>테스트12</td>
+                <td>테스트13</td>
+            </tr>
+            <tr>
+                <td><img src="/image/999"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 <div class="modal" id="common_cad_file_attach_pop" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -68,23 +122,14 @@
         'use strict';
 
         commonCadFileAttachObj = {
-            // width: 700,
             height: 300, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
-            selectionModel : {type: 'row', mode: 'single'},
-            numberCell: {title: 'No.'}, dragColumns: {enabled: false},
-            scrollModel: {autoFit: false}, trackModel: {on: true}, showBottom : true,
-            postRenderInterval: -1, //call postRender synchronously.
-            columnTemplate: {
-                align: 'center',
-                halign: 'center',
-                hvalign: 'center' //to vertically center align the header cells.
-            },
+            selectionModel : {type: 'row', mode: 'single'}, numberCell: {title: 'No.'}, dragColumns: {enabled: false},
+            scrollModel: {autoFit: false}, trackModel: {on: true}, showBottom : true, postRenderInterval: -1, //call postRender synchronously.
+            columnTemplate: { align: 'center', halign: 'center', hvalign: 'center' }, //to vertically center align the header cells.
             colModel: [
                 {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true, width: 70, minWidth: 70, colModel: []},
-                // {title: 'DXF_GFILE_SEQ', dataType: 'integer', dataIndx: 'DXF_GFILE_SEQ', hidden: true, colModel: []},
                 {title: 'DWG_GFILE_SEQ', dataType: 'integer', dataIndx: 'DWG_GFILE_SEQ', hidden: true, colModel: []},
                 {title: 'PDF_GFILE_SEQ', dataType: 'integer', dataIndx: 'PDF_GFILE_SEQ', hidden: true, colModel: []},
-                // {title: 'IMG_GFILE_SEQ', dataType: 'integer', dataIndx: 'IMG_GFILE_SEQ', hidden: true, colModel: []},
                 {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE', width: 250, minWidth: 100},
                 {title: '관리번호', datatype: 'string', dataIndx: 'CONTROL_NUM', width: 130, minWidth: 100},
                 {title: '품명', align: 'center', dataType: 'string', dataIndx: 'ITEM_NM', width: 150, minWidth: 150},
@@ -101,40 +146,31 @@
                 },
                 {title: 'IMAGE', align: 'center', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', width: 70, minWidth: 70,
                     render: function (ui) {
-                        if (ui.rowData['DXF_GFILE_SEQ'] > 0) {
-                            return "<i id='imageView' class='fa fa-file-image-o fa-2x'>&nbsp;</i>";
-                        } else{
-                            return "";
-                        }
+                        if (ui.rowData['DXF_GFILE_SEQ'] > 0) return "<i id='imageView' class='fa fa-file-image-o fa-2x'>&nbsp;</i>";
+                        return "";
                     },
                     postRender: function (ui) {
-                        var rowIndx = ui.rowIndx,
-                            grid = this,
-                            $cell = grid.getCell(ui);
+                        let grid = this, $cell = grid.getCell(ui);
                         $cell.find("#imageView").bind("click", function () {
-                            var rowData = ui.rowData;
-                            console.log(rowData.IMG_GFILE_SEQ);
-                            callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                            callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);
                         });
                     }
                 },
                 {title: '사이즈', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SIZE', width: 100, minWidth: 70},
                 {title: '삭제', align: 'center', dataType: 'string', dataIndx: 'DEL_YN', width: 70, minWidth: 70,
                     render: function (ui) {
-                        console.log(ui)
                         return "<button type='button' class='delete_btn'>Delete</button>";
                     },
                     postRender: function (ui) {
                         var rowIndx = ui.rowIndx, grid = this, $cell = grid.getCell(ui);
-                        $cell.find("button").button({ icons: { primary: 'ui-icon-scissors'} })
-                            .bind("click", function () {
-                                grid.addClass({ rowIndx: ui.rowIndx, cls: 'pq-row-delete' });
-                                var ans = window.confirm("Are you sure to delete row No " + (rowIndx + 1) + "?");
-                                grid.removeClass({ rowIndx: rowIndx, cls: 'pq-row-delete' });
-                                if (ans) {
-                                    grid.deleteRow({ rowIndx: rowIndx });
-                                }
-                            });
+                        $cell.find("button").button({ icons: { primary: 'ui-icon-scissors'} }).bind("click", function () {
+                            grid.addClass({ rowIndx: ui.rowIndx, cls: 'pq-row-delete' });
+                            grid.removeClass({ rowIndx: rowIndx, cls: 'pq-row-delete' });
+                            var ans = window.confirm("Are you sure to delete row No " + (rowIndx + 1) + "?");
+                            if (ans) {
+                                grid.deleteRow({ rowIndx: rowIndx });
+                            }
+                        });
                     }
                 }
             ],
@@ -142,16 +178,15 @@
                 cls: 'pq-toolbar-crud',
                 items: [
                     {type: 'textbox', label: '첨부 파일', style: 'float: left;font-size: 13px;padding: 4px; font-weight: bold;', attr: "id='title-hidden'" },
-                    {type: 'button', label: 'SAVE', icon: 'ui-icon-plus', style: 'float: right;', listener: {
-                            'click': function (evt, ui) {
-                                alert("파일 저장 처리")
-                            }}
+                    {type: 'button', label: 'SAVE', icon: 'ui-icon-plus', style: 'float: right;', listener: { 'click': function (evt, ui) {
+                            alert("파일 저장 처리")
+                        }}
                     }
                 ]
             },
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {queryId: 'dataSource.getRownumEmptyData', 'COUNT': 10},
+                postData: {queryId: 'dataSource.getRownumEmptyData', 'COUNT': 5},
                 recIndx: 'ROWNUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data || []};
@@ -214,6 +249,8 @@
             uploadControlFiles = [];
             $commonCadFileAttachGrid.pqGrid('destroy');
         });
+
+
     });
 
 </script>

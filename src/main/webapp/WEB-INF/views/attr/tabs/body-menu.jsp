@@ -11,98 +11,102 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-        <aside class="bg-black aside-md hidden-print hidden-xs" id="nav">
-            <section class="vbox">
-                <section class="w-f scrollable">
-                    <div class="slim-scroll" data-height="auto" data-disable-fade-out="true" data-distance="0" data-size="10px" data-railOpacity="0.2">
-                        <div class="clearfix wrapper dk nav-user hidden-xs">
-                            <div class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                  <span class="thumb avatar pull-left m-r">
-                                    <img src="/resource/main/images/a0.png" class="dker" alt="...">
-                                    <i class="on md b-black"></i>
-                                  </span>
-                                    <span class="hidden-nav-xs clear">
-                                    <span class="block m-t-xs">
-                                      <strong class="font-bold text-lt">John.Smith</strong>
-                                      <b class="caret"></b>
-                                    </span>
-                                    <span class="text-muted text-xs block">Art Director</span>
-                                  </span>
-                                </a>
-                                <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                    <li>
-                                        <span class="arrow top hidden-nav-xs"></span>
-                                        <a href="#">Settings</a>
-                                    </li>
-                                    <li>
-                                        <a href="profile.html">Profile</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <span class="badge bg-danger pull-right">3</span>
-                                            Notifications
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="docs.html">Help</a>
-                                    </li>
-                                    <li class="divider"></li>
-                                    <li>
-                                        <a href="modal.lockme.html" data-toggle="ajaxModal" >Logout</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-
-
-                        <!-- nav -->
-                        <nav class="nav-primary hidden-xs">
-                            <div class="text-muted text-sm hidden-nav-xs padder m-t-sm m-b-sm">Start</div>
-                            <ul class="nav nav-main" id="left_menu_wide_list" data-ride="collapse">
-                                <c:set var="menuCnt" value="0"/>
-                                <c:forEach var="menu" items="${LocalMenu}">
-                                    <c:if test="${menu.PARENT_MENU_SEQ eq 0}">
-                                    <c:if test="${menuCnt ne 0}">
-                                        </li>
-                                    </c:if>
-                                        <li >
-                                            <a href="#" class="auto">
-                                                <span class="pull-right text-muted">
-                                                  <i class="i i-circle-sm-o text"></i>
-                                                  <i class="i i-circle-sm text-active"></i>
-                                                </span>
-                                            <i class="i i-grid2 icon">
-                                            </i>
-                                                <span class="font-bold">${menu.PARENT_MENU_NM}</span>
-                                            </a>
-                                    </c:if>
-                                    <c:if test="${menu.PARENT_MENU_SEQ ne 0}">
-                                        <ul class="nav dk">
-                                            <li class="tabMenuClick" url="${menu.MENU_LINK}" tname="${menu.MENU_NM}" pid="${menu.CD_NO}">
-                                                <a href="#" class="auto">
-                                                    <i class="i i-dot"></i>
-
-                                                    <span>${menu.MENU_NM}</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </c:if>
-                                </c:forEach>
+        <div class="sidebarWrap on">
+            <h1 class="logo"><a href="/"><span class="invisible">진성정밀 MES 시스템</span></a></h1>
+            <div class="profileWrap">
+                <span class="imgWrap"><img src="asset/images/common/profile.png" alt=""></span>
+                <span class="textWrap"><b>홍길동</b>님 안녕하세요.</span>
+                <span class="btnWrap"><button type="button" class="btn">LOGOUT</button></span>
+            </div>
+            <div class="gnbWrap" id="gnbWrap">
+                <ul>
+        <c:set var="menuCnt" value="0"/>
+        <c:set var="parentMenuSeq" value=""/>
+        <c:forEach var="menu" items="${LocalMenu}">
+            <c:if test="${menu.PARENT_MENU_SEQ eq 0}">
+                <c:if test="${menuCnt > 0}">
                             </ul>
-                        </nav>
-                        <!-- / nav -->
-                    </div>
-                </section>
-
-                <footer class="footer hidden-xs no-padder text-center-nav-xs">
-                    <a href="modal.lockme.html" data-toggle="ajaxModal" class="btn btn-icon icon-muted btn-inactive pull-right m-l-xs m-r-xs hidden-nav-xs">
-                        <i class="i i-logout"></i>
-                    </a>
-                    <a href="#nav" data-toggle="class:nav-xs" class="btn btn-icon icon-muted btn-inactive m-l-xs m-r-xs">
-                        <i class="i i-circleleft text"></i>
-                        <i class="i i-circleright text-active"></i>
-                    </a>
-                </footer>
-            </section>
-        </aside>
+                        </div>
+                    </li>
+                </c:if>
+                <c:if test="${menu.MENU_SEQ ne parentMenuSeq}">
+                    <li class="depth1 no1 <c:if test='${menuCnt == 0}'>on</c:if>">
+                        <a href="#a;">${menu.PARENT_MENU_NM}</a>
+                        <div class="depth2">
+                            <ul>
+                </c:if>
+            </c:if>
+            <c:if test="${menu.PARENT_MENU_SEQ ne 0}">
+                <li><a href="#a;" url="${menu.MENU_LINK}" tname="${menu.MENU_NM}" pid="${menu.CD_NO}">${menu.MENU_NM}</a></li>
+            </c:if>
+            <c:set var="menuCnt" value="${menuCnt + 1}"/>
+        </c:forEach>
+                            </ul>
+                        </div>
+                    </li>
+<%--                    <li class="depth1 no1 on">--%>
+<%--                        <a href="#a;">견적접수</a>--%>
+<%--                        <div class="depth2">--%>
+<%--                            <ul>--%>
+<%--                                <li><a href="#a;">견적관리</a></li>--%>
+<%--                                <li><a href="#a;">견적서 작성</a></li>--%>
+<%--                                <li><a href="#a;">견적표준 계산 관리</a></li>--%>
+<%--                                <li><a href="#a;">견적서 작성</a></li>--%>
+<%--                                <li><a href="#a;">견적 표준 계산 관리</a></li>--%>
+<%--                            </ul>--%>
+<%--                        </div>--%>
+<%--                    </li>--%>
+<%--                    <li class="depth1 no2">--%>
+<%--                        <a href="#a;">주문관리</a>--%>
+<%--                        <div class="depth2">--%>
+<%--                            <ul>--%>
+<%--                                <li><a href="#a;">견적관리</a></li>--%>
+<%--                                <li><a href="#a;">견적서 작성</a></li>--%>
+<%--                                <li><a href="#a;">견적표준 계산 관리</a></li>--%>
+<%--                                <li><a href="#a;">견적서 작성</a></li>--%>
+<%--                                <li><a href="#a;">견적 표준 계산 관리</a></li>--%>
+<%--                            </ul>--%>
+<%--                        </div>--%>
+<%--                    </li>--%>
+<%--                    <li class="depth1 no3">--%>
+<%--                        <a href="#a;">외주관리</a>--%>
+<%--                        <div class="depth2">--%>
+<%--                            <ul>--%>
+<%--                                <li><a href="#a;">견적관리</a></li>--%>
+<%--                                <li><a href="#a;">견적서 작성</a></li>--%>
+<%--                                <li><a href="#a;">견적표준 계산 관리</a></li>--%>
+<%--                                <li><a href="#a;">견적서 작성</a></li>--%>
+<%--                                <li><a href="#a;">견적 표준 계산 관리</a></li>--%>
+<%--                            </ul>--%>
+<%--                        </div>--%>
+<%--                    </li>--%>
+<%--                    <li class="depth1 no4">--%>
+<%--                        <a href="#a;">주문관리</a>--%>
+<%--                        <div class="depth2">--%>
+<%--                            <ul>--%>
+<%--                                <li><a href="#a;">견적관리</a></li>--%>
+<%--                                <li><a href="#a;">견적서 작성</a></li>--%>
+<%--                                <li><a href="#a;">견적표준 계산 관리</a></li>--%>
+<%--                                <li><a href="#a;">견적서 작성</a></li>--%>
+<%--                                <li><a href="#a;">견적 표준 계산 관리</a></li>--%>
+<%--                            </ul>--%>
+<%--                        </div>--%>
+<%--                    </li>--%>
+<%--                    <li class="depth1 no5">--%>
+<%--                        <a href="#a;">외주관리</a>--%>
+<%--                        <div class="depth2">--%>
+<%--                            <ul>--%>
+<%--                                <li><a href="#a;">견적관리</a></li>--%>
+<%--                                <li><a href="#a;">견적서 작성</a></li>--%>
+<%--                                <li><a href="#a;">견적표준 계산 관리</a></li>--%>
+<%--                                <li><a href="#a;">견적서 작성</a></li>--%>
+<%--                                <li><a href="#a;">견적 표준 계산 관리</a></li>--%>
+<%--                            </ul>--%>
+<%--                        </div>--%>
+<%--                    </li>--%>
+                </ul>
+            </div>
+            <div class="sideWrap">
+                <a href="#a;" class="btn_allMenu"><span>메뉴열기</span></a>
+            </div>
+        </div>

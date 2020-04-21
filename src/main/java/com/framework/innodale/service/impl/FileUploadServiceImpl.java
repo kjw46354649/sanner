@@ -6,14 +6,12 @@ import com.framework.innodale.dao.InnodaleDao;
 import com.framework.innodale.service.FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -38,7 +36,7 @@ public class FileUploadServiceImpl implements FileUploadService {
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS", new Locale("ko", "KR"));
         String serverFileName = "file-" + CommonUtility.getUUIDString();
-        String uploadFilePath = environment.getRequiredProperty("base.upload.main.path") + File.separator + formatter.format(new Date()).substring(0, 8);
+        String uploadFilePath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.upload.main.path") + File.separator + formatter.format(new Date()).substring(0, 8);
 
         ArrayList<HashMap<String, Object>> resultList = new ArrayList<HashMap<String, Object>>();
         Iterator<String> itr = (Iterator<String>)request.getFileNames();
@@ -93,8 +91,8 @@ public class FileUploadServiceImpl implements FileUploadService {
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS", new Locale("ko", "KR"));
-        // base.upload.cad.path=D:/Project/workspace-jmes/upload/cad
-        String uploadFilePath = environment.getRequiredProperty("base.upload.cad.path") + File.separator + formatter.format(new Date()).substring(0, 8);
+        // linux.base.upload.cad.path=D:/Project/workspace-jmes/upload/cad
+        String uploadFilePath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.upload.cad.path") + File.separator + formatter.format(new Date()).substring(0, 8);
 
         ArrayList<HashMap<String, Object>> resultList = new ArrayList<HashMap<String, Object>>();
         Iterator<String> itr = (Iterator<String>)request.getFileNames();
@@ -119,6 +117,7 @@ public class FileUploadServiceImpl implements FileUploadService {
                 String targetFilePath = uploadFilePath + File.separator + serverFullFileName + "." + originalExtName;
 
                 CommonUtility.createFileDirectory(new File(uploadFilePath));
+                CommonUtility.createFileDirectory(new File(uploadFilePath + File.separator + serverFileName));
 
                 fileInfo.put("FILE_NM", serverFullFileName + "." + originalExtName);
                 fileInfo.put("FILE_PATH", targetFilePath);
@@ -191,8 +190,8 @@ public class FileUploadServiceImpl implements FileUploadService {
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS", new Locale("ko", "KR"));
-        // base.upload.cad.path=D:/Project/workspace-jmes/upload/cad
-        String uploadFilePath = environment.getRequiredProperty("base.upload.cad.path") + File.separator + formatter.format(new Date()).substring(0, 8);
+        // linux.base.upload.cad.path=D:/Project/workspace-jmes/upload/cad
+        String uploadFilePath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.upload.cad.path") + File.separator + formatter.format(new Date()).substring(0, 8);
 
         ArrayList<HashMap<String, Object>> resultList = new ArrayList<HashMap<String, Object>>();
         Iterator<String> itr = (Iterator<String>)request.getFileNames();
@@ -217,6 +216,7 @@ public class FileUploadServiceImpl implements FileUploadService {
                 String targetFilePath = uploadFilePath + File.separator + serverFullFileName + "." + originalExtName;
 
                 CommonUtility.createFileDirectory(new File(uploadFilePath));
+                CommonUtility.createFileDirectory(new File(uploadFilePath + File.separator + serverFileName));
 
                 fileInfo.put("FILE_NM", serverFullFileName + "." + originalExtName);
                 fileInfo.put("FILE_PATH", targetFilePath);
@@ -235,7 +235,11 @@ public class FileUploadServiceImpl implements FileUploadService {
                 File originalFile = new File(targetFilePath);
 
                 multipartFile.transferTo(originalFile);   // 원본 파일 저장
-                CadFileConverter.cadfile_converter(originalFile, serverFileName);    // convert 처리
+                String message = CadFileConverter.cadfile_converter(originalFile, serverFileName);    // convert 처리
+                // String message = CadFileConverter.cadfile_converter(originalFile, serverFileName);    // convert 처리
+                fileInfo.put("MESSAGE", message);
+
+                System.out.println("dxfFileList=[" + uploadFilePath + File.separator + serverFileName + "]");
 
                 File[] dxfFileList = new File(uploadFilePath + File.separator + serverFileName).listFiles();
 

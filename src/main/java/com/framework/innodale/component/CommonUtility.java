@@ -530,4 +530,15 @@ public class CommonUtility {
         }
     }
 
+    public static String getServerType() {
+
+        String OS = System.getProperty("os.name").toLowerCase();
+
+        if (OS.contains("win")) {
+            return "window";
+        } else {
+            return "linux";
+        }
+    }
+
 }

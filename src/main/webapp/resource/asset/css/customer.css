@@ -1,0 +1,32 @@
+.onegrid .topWrap .gubunWrap { width: 95.5%; border-right: 1px solid #e5e5e5; margin: 17px; height: 36px; overflow: hidden; }
+.onegrid .topWrap .gubunWrap ul { font-size: 0; }
+.onegrid .topWrap .gubunWrap ul li { width: 23%; display: inline-block; padding-bottom: 11px; padding-right: 2%; }
+.onegrid .topWrap .gubunWrap ul li:nth-child(4n) { padding-right: 0; }
+.onegrid .topWrap .gubunWrap ul li:nth-child(4n+1) { padding-left: 0.5%; }
+.onegrid .topWrap .gubunWrap ul li label { width: 25%; font-size: 14px; color: #353535; display: inline-block; }
+.onegrid .topWrap .gubunWrap ul li select { width: 75%; height: 36px; }
+.onegrid .topWrap .gubunWrap ul li input { width: 75%; }
+
+/*조회 조건*/
+.onegrid .topWrap .hWrap .ipu_wrap { display: inline-block; }
+.onegrid .topWrap .hWrap .ipu_wrap label { display: inline-block; font-size: 14px; color: #000; padding: 0 15px 0 25px; }
+.onegrid .topWrap .hWrap { border-bottom: 1px solid #e2e2e2; font-size: 0; position: relative; padding: 10px 20px; }
+.onegrid .topWrap .hWrap .buttonWrap { display: inline-block; }
+.onegrid .topWrap .hWrap .chk_box { font-size: 13px; color: #3f506e; margin-left: 15px; }
+.onegrid .topWrap .hWrap .rightSpan { float: right; display: inline-block; }
+.onegrid .topWrap .hWrap button.search_btn { width: 69px; height: 34px; background: url(../images/common/bg_search.jpg)repeat-x 0 0; border: 1px solid #a3a3a3; font-size: 13px; font-family: 'NotoKrB'; position: relative; color: #010101; padding-left: 13px; float: right; margin-right: 1.45%; }
+.onegrid .topWrap .hWrap button.search_btn:before { content: ''; width: 9px; height: 12px; background: url(../images/common/ico_search.jpg)no-repeat 0 0; position: absolute; top: 10px; left: 12px; }
+
+.onegrid .bottomWrap .hWrap { border-bottom: 1px solid #e2e2e2; font-size: 0; position: relative; padding: 10px 20px; }
+.onegrid .bottomWrap .hWrap .buttonWrap { display: inline-block; }
+.onegrid .bottomWrap .hWrap .chk_box { font-size: 13px; color: #3f506e; margin-left: 15px; }
+.onegrid .bottomWrap .hWrap .rightSpan { float: right; display: inline-block; }
+.onegrid .bottomWrap .tableWrap { margin: 20px 20px; position: relative; }
+.onegrid .bottomWrap .tableWrap .buttonWrap { padding: 5px 0; display: block; }
+.onegrid .bottomWrap .tableWrap .conWrap { height: calc(100vh - 210px); width: 100%; }
+.onegrid .bottomWrap .tableWrap .conWrap img { width: 100%; height: 100%; }
+
+
+.pq-theme .ui-state-default, .pq-theme .ui-button{
+
+}

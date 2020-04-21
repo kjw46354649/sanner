@@ -6,6 +6,8 @@ import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -36,7 +38,7 @@ public class ExcelController {
 
         List<Map<String, Object>> dataList = null;
 
-        String excelDir = environment.getRequiredProperty("base.excel.template.path");
+        // String excelDir = environment.getRequiredProperty(CommonUtility.getServerType() + "base.excel.template.path");
 
         InputStream is = null;
         Workbook workbook = null;
@@ -74,11 +76,13 @@ public class ExcelController {
                 map.put(arrayMapInputIds[j], dataList);
             }
 
-            is = new BufferedInputStream(new FileInputStream(excelDir + File.separator + templateFileName + ".xlsx"));
+            Resource resource = new ClassPathResource("classpath:excelTemplate" + File.separator + templateFileName + "data.txt");
+            InputStream inputStream = resource.getInputStream();
+            // is = new BufferedInputStream(new FileInputStream(excelDir + File.separator + templateFileName + ".xlsx"));
             XLSTransformer xls = new XLSTransformer();
             workbook = xls.transformXLS(is, map);
 
-            System.out.println(excelDir + File.separator + templateFileName + date + ".xlsx");
+            // System.out.println(excelDir + File.separator + templateFileName + date + ".xlsx");
 
             res.setHeader("Content-Disposition", CommonUtility.getDisposition(templateFileName + date + ".xlsx", CommonUtility.getBrowser(req)));
             res.setHeader("Content-Transfer-Encoding", "binary");

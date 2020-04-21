@@ -1,5 +1,6 @@
 package com.framework.innodale.controller;
 
+import com.framework.innodale.component.CommonUtility;
 import com.framework.innodale.service.InnodaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -9,8 +10,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +25,9 @@ public class StaticUrlController {
 
     @Autowired
     private Environment environment;
+
+    @Autowired
+    ServletContext context;
 
     @RequestMapping(value = "/imageviewer")
     public String imageViewerController(Model model, HttpServletRequest request, HttpServletResponse response)  throws Exception{
@@ -47,7 +53,7 @@ public class StaticUrlController {
     }
 
     @RequestMapping(value = "/image/{gfileSeq}")
-    public ModelAndView imageFileView(@PathVariable("gfileSeq") String GFILE_SEQ) throws Exception {
+    public ModelAndView imageFileView(@PathVariable("gfileSeq") String GFILE_SEQ, HttpServletRequest req, HttpServletResponse res) throws Exception {
 
         ModelAndView modelAndView = new ModelAndView();
 
@@ -56,7 +62,11 @@ public class StaticUrlController {
         fileInfo.put("queryId", "common.selectGfileFileImageInfo");
         modelAndView.setViewName("imageView");
         modelAndView.addObject("imageInfo", innodaleService.getInfo(fileInfo));
-        modelAndView.addObject("blank_image", environment.getRequiredProperty("blank.image.path"));
+//        modelAndView.addObject("blank_image", environment.getRequiredProperty(CommonUtility.getServerType() + ".blank.image.path"));
+        String rootPath = req.getSession().getServletContext().getRealPath("/");
+
+        출처: https://cofs.tistory.com/40 [CofS]
+        modelAndView.addObject("blank_image", rootPath + File.separator + "resource" + File.separator + "main" + File.separator + "blank.jpg");
 
         return modelAndView;
     }
