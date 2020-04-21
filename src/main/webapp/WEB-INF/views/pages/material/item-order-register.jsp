@@ -144,6 +144,7 @@
 
 <form id="item_order_register_hidden_form" name="item_order_register_hidden_form">
     <input type="hidden" id="queryId" name="queryId" value="selectItemOrderRegisterDetail"/>
+    <input type="hidden" id="AUTO_SEARCH" name="AUTO_SEARCH" value="N"/>
     <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ"/>
     <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ"/>
     <input type="hidden" id="WAREHOUSE_CD" name="WAREHOUSE_CD"/>
@@ -295,6 +296,9 @@
         ];
 
         let itemOrderRegisterRightColModel= [
+            {title: 'MY_MAT_OUT_SEQ', dataType: 'string', dataIndx: 'MY_MAT_OUT_SEQ', hidden: true } ,
+            {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden: true } ,
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true } ,
             {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_NM' } ,
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM' } ,
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden: true } ,
@@ -310,10 +314,7 @@
                     }
                     return returnVal;
                 }
-            },
-            {title: 'SEQ', dataType: 'string', dataIndx: 'MY_MAT_OUT_SEQ', hidden: true } ,
-            {title: 'SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden: true } ,
-            {title: 'SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true } ,
+            }
         ];
 
         let itemOrderRegisterPopTopColModel= [
@@ -440,6 +441,8 @@
                 {
                     type: 'checkbox', label: '보유소재 자동매칭', style: 'float: left;', listener: {
                         'click': function (evt, ui) {
+                            let hiddenYn = evt.target.checked == true ? 'Y' : 'N';
+                            $("#item_order_register_hidden_form #AUTO_SEARCH").val(hiddenYn);
                         }
                     }
                 },
@@ -459,7 +462,7 @@
                     cls: 'itemOrderRegisterWarehouseSelectBox',
                     label: '창고',
                     style: 'float: left;',
-                    options: fnGetCommCodeGridToolbarSelectBox('1049', 'S'),
+                    options: fnGetCommCodeGridToolbarSelectBox('1049', 'A'),
                     listener: {
                         'change': function () {
                             let text = $(".itemOrderRegisterWarehouseSelectBox option:selected").val();
@@ -477,7 +480,7 @@
                     cls: 'itemOrderRegisterMaterialDetailSelectBox',
                     label: '소재종류',
                     style: 'float: left;',
-                    options: fnGetCommCodeGridToolbarSelectBox('1027', 'S'),
+                    options: fnGetCommCodeGridToolbarSelectBox('1027', 'A'),
                     listener: {
                         'change': function () {
                             let text = $(".itemOrderRegisterMaterialDetailSelectBox option:selected").val();
@@ -495,7 +498,7 @@
                     cls: 'itemOrderRegisterAreaSelectBox',
                     label: '넓이조건',
                     style: 'float: left;',
-                    options: fnGetCommCodeGridToolbarSelectBox('1050', 'S'),
+                    options: fnGetCommCodeGridToolbarSelectBox('1050', 'A'),
                     listener: {
                         'change': function () {
                             let text = $(".itemOrderRegisterAreaSelectBox option:selected").val();
@@ -513,7 +516,7 @@
                     cls: 'itemOrderRegisterTconditionSelectBox',
                     label: 'T 조건',
                     style: 'float: left;',
-                    options: fnGetCommCodeGridToolbarSelectBox('1050', 'S'),
+                    options: fnGetCommCodeGridToolbarSelectBox('1050', 'A'),
                     listener: {
                         'change': function () {
                             let text = $(".itemOrderRegisterTconditionSelectBox option:selected").val();
@@ -664,9 +667,18 @@
                 $("#item_order_register_hidden_form #CONTROL_DETAIL_SEQ").val(ui.addList[0].rowData.CONTROL_DETAIL_SEQ);
             },
             cellClick: function( event, ui) {
-                itemOrderRegisterSelectedRowIndex = ui.rowIndx;
+                itemOrderRegisterSelectedRowIndex = [];
+                itemOrderRegisterSelectedRowIndex.push(ui.rowIndx);
+
                 $("#item_order_register_hidden_form #CONTROL_SEQ").val(ui.rowData.CONTROL_SEQ);
                 $("#item_order_register_hidden_form #CONTROL_DETAIL_SEQ").val(ui.rowData.CONTROL_DETAIL_SEQ);
+
+                let hiddenYn = $("#item_order_register_hidden_form #AUTO_SEARCH").val();
+                if(hiddenYn == 'Y') {
+                    $(".itemOrderRegisterMaterialDetailSelectBox").val(ui.rowData.MATERIAL_DETAIL);
+                    $("#item_order_register_hidden_form #MATERIAL_DETAIL").val(ui.rowData.MATERIAL_DETAIL);
+                    selectItemOrderRegisterRightList();
+                }
             }
         });
 
@@ -676,7 +688,7 @@
             itemOrderRegisterRightGrid.pqGrid({
                 width: "100%", height: 500,
                 dataModel: {
-                    location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
+                    location: "remote", dataType: "json", method: "POST", recIndx: 'MY_MAT_STOCK_SEQ',
                     url: "/paramQueryGridSelect",
                     postData: fnFormToJsonArrayData('#item_order_register_hidden_form'),
                     getData: function (dataJSON) {
