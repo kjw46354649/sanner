@@ -1213,17 +1213,17 @@
             $("#company_master_register_form").find("#SIGN_GFILE_SRC").attr("src", "/image/999");
 
             $systemCompanyRegisterGrid.pqGrid('destroy');
-            console.log("hide 11111");
+
             $type1Grid.pqGrid('destroy');
-            console.log("hide 2222");
+
             $type2Grid.pqGrid('destroy');
-            console.log("hide 33333");
+
             $type3Grid.pqGrid('destroy');
-            console.log("hide 4");
+
             $type4Grid.pqGrid('destroy');
-            console.log("hide 5");
+
             $type5Grid.pqGrid('destroy');
-            console.log("hide 6");
+
             // $companyMasterMainSearchBtn.trigger("click");
         });
 
