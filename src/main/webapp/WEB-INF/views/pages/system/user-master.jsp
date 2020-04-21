@@ -6,10 +6,26 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page pageEncoding='UTF-8' contentType='text/html; charset=UTF-8' %>
-<div class="container-fluid wrapper">
-    <div class="row">
-        <div class="col-md-12">
-            <div id='user_manager_grid' style='margin:5px auto;'></div>
+<div class="page onegrid">
+
+    <div class="topWrap">
+        <form class="form-inline" id="estimate_master_search_form" name="estimate_master_search_form" role="form">
+            <div class="hWrap">
+                <span class="ipu_wrap">
+                    <label for="priceSltd">사용자 이름</label>
+                    <input type="text" name="priceSltd" id="priceSltd" placeholder="" value="" title="사용자 이름">
+                </span>
+                <div class="rightSpan">
+                    <span class="buttonWrap"><button type="button" class="search_btn">검색</button></span>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="bottomWrap">
+        <div class="tableWrap">
+            <div class="conWrap">
+                <div id="user_manager_grid" class="jqx-refresh" ></div>
+            </div>
         </div>
     </div>
 </div>
@@ -23,10 +39,10 @@
         let userMasterPostData = {queryId: 'selectUserMasterList'};
         let userMasterColModel = [
             {title: 'USER_ID', dataType: 'string', dataIndx: 'USER_ID', editable: true},
-            {title: 'USER_NM', dataType: 'string', dataIndx: 'USER_NM'},
-            {title: 'USER_PWD', dataType: 'string', dataIndx: 'USER_PWD'},
+            {title: 'USER_NM', dataType: 'string', dataIndx: 'USER_NM', width: "30%"},
+            {title: 'USER_PWD', dataType: 'string', dataIndx: 'USER_PWD', width: "30%"},
             {
-                title: 'Use YN', dataType: 'select', width: '7%', dataIndx: 'DEL_YN_NM',
+                title: 'Use YN', dataType: 'select', dataIndx: 'DEL_YN_NM', width: "10%",
                 editor: {
                     type: 'select',
                     // mapIndices: {name: 'DEL_YN_NM', id: 'DEL_YN'},
@@ -78,16 +94,16 @@
             ]
         };
         let userMasterObj = {
-            collapsible: false,
+            height: '100%',
+            minWidth: 500,
+            flexWidth: false,
             resizable: true,
+            scrollModel: { autoFit: true },
+            collapsible: { on: true, collapsed: false },
             title: '사용자 관리',
             numberCell: {title: 'No.'},
-            scrollModel: {autoFit: true},
             trackModel: {on: true}, //to turn on the track changes.
-            columnTemplate: {
-                align: 'center',
-                hvalign: 'center' //to vertically center align the header cells.
-            },
+            columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
             colModel: userMasterColModel,
             dataModel: {
                 location: 'remote',

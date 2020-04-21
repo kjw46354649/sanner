@@ -4,30 +4,32 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
-<html lang="en" class="app">
+<html lang="ko">
 <head>
+    <meta charset="utf-8">
+    <title>진성정밀 MES 시스템</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <tiles:insertAttribute name="header"/>
     <tiles:insertAttribute name="body-default-script"/>
 </head>
-<body cz-shortcut-listen="true" class="header_is_fixed" >
-    <section class="vbox">
-        <header class="bg-white header header-md navbar navbar-fixed-top-xs box-shadow">
-            <tiles:insertAttribute name="body-top"/>
-        </header>
-        <section>
-            <div class="hbox stretch">
-                <tiles:insertAttribute name="body-menu"/>
-                <section id="content">
-                    <div class="royal_tab" data-position="top" data-alignment="left" data-animation="slide">
-                        <div class="tabs">
-                            <ul id="royal_tab_more" class="fixedleft"></ul>
-                        </div>
-                        <div class="views"></div>
-                    </div>
-                </section>
+<body>
+    <dl id="skiptoContent">
+        <dt><strong class="invisible">바로가기 메뉴</strong></dt>
+        <dd><a href="#bodyWrap">본문 바로가기</a></dd>
+        <dd><a href="#gnbWrap">주메뉴 바로가기</a></dd>
+    </dl>
+    <hr />
+    <div class="bodyWrap" id="bodyWrap">
+        <section class="containerBody">
+            <div class="navbarWrap">
+                <div class="locationWrap"><%--<ul><li><a href="#a;">Home</a></li></ul>--%></div>
             </div>
+            <div class="tabMenuWrap">
+                <ul></ul>
+            </div>
+            <div class="contentsWrap"></div>
+            <tiles:insertAttribute name="body-menu"/>
         </section>
-    </section>
-    <tiles:insertAttribute name="bottom"/>
+    </div>
 </body>
 </html>

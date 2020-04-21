@@ -12,38 +12,34 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/fmt' prefix='fmt' %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/functions' prefix='fn' %>
 
-
-<script src='/resource/main/js/jquery.min.js'></script>
+<script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
 <!-- Bootstrap -->
-<script src='/resource/main/js/bootstrap.js'></script>
-<!-- royal tab -->
-<script src='/resource/plugins/royal_tab/js/royal_tab.js'></script>
-<!-- App -->
-<script src='/resource/main/js/app.js'></script>
-<script src='/resource/main/js/slimscroll/jquery.slimscroll.min.js'></script>
-<script src='/resource/main/js/charts/easypiechart/jquery.easy-pie-chart.js'></script>
-<script src='/resource/main/js/charts/sparkline/jquery.sparkline.min.js'></script>
-<script src='/resource/main/js/charts/flot/jquery.flot.min.js'></script>
-<script src='/resource/main/js/charts/flot/jquery.flot.tooltip.min.js'></script>
-<script src='/resource/main/js/charts/flot/jquery.flot.spline.js'></script>
-<script src='/resource/main/js/charts/flot/jquery.flot.pie.min.js'></script>
-<script src='/resource/main/js/charts/flot/jquery.flot.resize.js'></script>
-<script src='/resource/main/js/charts/flot/jquery.flot.grow.js'></script>
-<script src='/resource/main/js/charts/flot/demo.js'></script>
+<%--<script src='/resource/main/js/bootstrap.js'></script>--%>
+<script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
+<script type="text/javascript" src="/resource/asset/js/front.js"></script>
+<!--jQuery dependencies-->
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css" />
 
-<script src='/resource/main/js/calendar/bootstrap_calendar.js'></script>
-<script src='/resource/main/js/calendar/demo.js'></script>
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>     -->
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 
-<script src='/resource/main/js/sortable/jquery.sortable.js'></script>
-<script src='/resource/main/js/app.plugin.js'></script>
-<!-- paramQuery Grid -->
-<script src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script>
-<script src='/resource/plugins/paramquery/pqgrid.min.js'></script>
-<script src='/resource/plugins/print.js/print.min.js'></script>
+<!--ParamQuery Grid js files-->
+<script type="text/javascript" src="/resource/plugins/paramquery/pqgrid.min.js" ></script>
+
+<!--ParamQuery Grid localization file (necessary since v5.2.0)-->
+<script src="/resource/plugins/paramquery/localize/pq-localize-en.js"></script>
+
+<!--Include jsZip file to support xlsx and zip export (optional)-->
+<script type="text/javascript" src="/resource/plugins/paramquery/jsZip-2.5.0/jszip.min.js" ></script>
+<!--Include jquery.resize to support auto height of detail views in hierarchy (optional)-->
+<script type="text/javascript" src="/resource/plugins/paramquery/resize/jquery.resize.js" ></script>
+<!--Include pqTouch file to provide support for touch devices (optional)-->
+<script type="text/javascript" src="/resource/plugins/paramquery/pqTouch/pqtouch.min.js" ></script>
+<script type="text/javascript" src="/resource/plugins/paramquery/pqSelect/pqselect.min.js" ></script>
 
 <script type='text/javascript'>
+
     var g_code;
-    var royal_tab_api = null;
     var multiFileUploadBox = [];    // 임시 형태의 file upload 저장소
     var g_noData = '<div style="font-size:18px;margin-top:20px;">No Data</div>';
     var windowImageViewer;
@@ -53,34 +49,9 @@
 
     $(document).ready(function() {
 
-        royal_tab_api = new Royal_Tab_Api($('div.royal_tab'));
-        royal_tab_api.add(0, true, 'MAIN', '/static/main/main', true, '01', addRoyalTabCallBackMethod);
-        // royal_tab_api.add(0, true, '${authUserFMenu.MENUNM}', '${authUserFMenu.PATHFILE}', true, '${authUserFMenu.MENUID}');
-
-        $('#royal_tab_more').delegate('i', 'click', function(){
-            royal_tab_api.remove($('#royal_tab_more > li > i').index(this));
-        });
-
-        $('#left_menu_wide_list').find('.tabMenuClick').on('click', function() {
-            royal_tab_api.add(0, true, $(this).attr('tname'), $(this).attr('url'), true, $(this).attr('pid'), addRoyalTabCallBackMethod);
-        });
-
-        function addRoyalTabCallBackMethod(){
-            let windows
-            let viewScrollerHeight = parseInt($('#view-scroller').outerHeight(true));
-            let activeViewItemHeight = parseInt($('.active_view_item').outerHeight(true));
-
-            if(activeViewItemHeight > 905) {
-                $('.active_view_item').height(activeViewItemHeight + (905 - activeViewItemHeight));
-            }
-            //$('#view-scroller').height(activeViewItemHeight);
-            //$('.active_view_item').height(activeViewItemHeight);
-        }
-
         $(window).resize( function() {
-            addRoyalTabCallBackMethod();
-
-            console.log(parseInt($('#view-scroller').outerHeight(true)));
+            // addRoyalTabCallBackMethod();
+            // console.log(parseInt($('#view-scroller').outerHeight(true)));
         } );
 
         $.ajax({
@@ -391,7 +362,6 @@
                 selectBoxContents.push({'value':g_code[i].CODE_CD, 'text':g_code[i].CODE_NM_KR});
             }
         }
-        debugger;
         return selectBoxContents;
     };
 
@@ -561,7 +531,6 @@
                 }
             }
         });
-        debugger;
         document.body.appendChild(excelForm);
         excelForm.submit();
     };
