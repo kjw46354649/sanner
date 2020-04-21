@@ -232,19 +232,21 @@
         let estimateRegisterBotGrid = $("#estimate_register_bot_grid");
 
         let estimateRegisterTopColModel= [
+            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM' } ,
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM' } ,
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM' } ,
             {title: '', dataType: 'string', dataIndx: 'DRAWING_YN' } ,
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', validations: [{ type: 'minLen', value: 1, msg: "Required"}] } ,
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM' } ,
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT' } ,
-            {title: '작업구분', dataType: 'string', dataIndx: 'WORK_TYPE',
+            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
+            {title: '작업구분', dataType: 'string', dataIndx: 'WORK_TYPE_NM',
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "WORK_TYPE", id: "WORK_TYPE" },
+                    mapIndices: { name: "WORK_TYPE_NM", id: "WORK_TYPE" },
                     valueIndx: "value",
                     labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1013'),
+                    options: fnGetCommCodeGridSelectBox('1033'),
                     getData: function(ui) {
                         let clave = ui.$cell.find("select").val();
                         let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
@@ -253,14 +255,28 @@
                     }
                 }
             },
-            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE' },
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
+            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM' ,
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "MATERIAL_DETAIL", id: "MATERIAL_DETAIL" },
+                    mapIndices: { name: "MATERIAL_TYPE_NM", id: "MATERIAL_TYPE" },
                     valueIndx: "value",
                     labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1000'),
+                    options: fnGetCommCodeGridSelectBox('1035'),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["MATERIAL_TYPE"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM',
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "MATERIAL_DETAIL_NM", id: "MATERIAL_DETAIL" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1027'),
                     getData: function(ui) {
                         let clave = ui.$cell.find("select").val();
                         let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
@@ -269,13 +285,13 @@
                     }
                 }
             },
-            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND',
+            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM',
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "MATERIAL_KIND", id: "MATERIAL_KIND" },
+                    mapIndices: { name: "MATERIAL_KIND_NM", id: "MATERIAL_KIND" },
                     valueIndx: "value",
                     labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1004'),
+                    options: fnGetCommCodeGridSelectBox('1029'),
                     getData: function(ui) {
                         let clave = ui.$cell.find("select").val();
                         let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
@@ -284,13 +300,13 @@
                     }
                 }
             },
-            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT',
+            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT_NM',
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "SURFACE_TREAT", id: "SURFACE_TREAT" },
+                    mapIndices: { name: "SURFACE_TREAT_NM", id: "SURFACE_TREAT" },
                     valueIndx: "value",
                     labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1002'),
+                    options: fnGetCommCodeGridSelectBox('1039'),
                     getData: function(ui) {
                         let clave = ui.$cell.find("select").val();
                         let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
@@ -300,16 +316,34 @@
                 }
             },
             {title: '소재 비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE' },
-            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
+            {title: '소재마감', align: "center", colModel:[
+                    {title: 'TM각비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_TM'},
+                    {title: '연마비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND'},
+                    {title: '열처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT'},
+                ]},
             {title: '상세 가공요건', align: "center", colModel:[
                 {title:'선반', dataType: 'string', dataIndx: 'DETAIL_LATHE'},
-                {title:'가공면', dataType: 'string', dataIndx: 'DETAIL_SURFACE'},
-                {title:'클램핑', dataType: 'string', dataIndx: 'DETAIL_CLAMPING'},
+                {title:'가공', dataType: 'string', dataIndx: 'DETAIL_SURFACE'},
+                {title:'클램', dataType: 'string', dataIndx: 'DETAIL_CLAMPING'},
                 {title:'포켓', dataType: 'string', dataIndx: 'DETAIL_POCKET'},
-                //{title:'공차', dataType: 'string', dataIndx: 'DETAIL_TOLERANCE'},
                 {title:'드릴', dataType: 'string', dataIndx: 'DETAIL_DRILL'},
                 {title:'난도', dataType: 'string', dataIndx: 'DETAIL_DIFFICULTY'}
             ], hidden: true},
+            {title: '소재사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "MATERIAL_SUPPLY_YN", id: "MATERIAL_SUPPLY_YN" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1042'),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["MATERIAL_SUPPLY_YN"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
             {title: '예상소재 Size', align: "center", colModel:[
                 {title:'가로', dataType: 'float', dataIndx: 'SIZE_W_M'},
                 {title:'세로', dataType: 'float', dataIndx: 'SIZE_H_M'},
@@ -319,9 +353,7 @@
             ], hidden: true},
             {title: '항목별 견적정보', align: "center", colModel: [
                     {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT'},
-                    {title: 'TM각비', dataType: 'integer', dataIndx: 'UNIT_TM_AMT'},
-                    {title: '연마비', dataType: 'integer', dataIndx: 'UNIT_GRIND_AMT'},
-                    {title: '열처리', dataType: 'integer', dataIndx: 'UNIT_HEAT_AMT'},
+                    /*{title: '소재마감', dataType: 'integer', dataIndx: ''},   */
                     {title: '표면 처리비', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT'},
                     {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT'},
                     {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_NOTE'},
@@ -368,7 +400,7 @@
                     type: 'checkbox', label: '상세견적요건', style: 'float: right;', listener: {
                         'change': function (evt, ui) {
                             let colM = estimateRegisterTopGrid.pqGrid("option", "colModel");
-                            let listM = [15,16];
+                            let listM = [14, 15];
                             let hiddenYn = evt.target.checked == true ? false : true;
                             for(let tmpI = 0; tmpI < listM.length; tmpI++) {
                                 for(let colCnt = 0; colCnt < colM[listM[tmpI]].colModel.length; colCnt++){
@@ -476,8 +508,6 @@
                     estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'FINAL_AMOUNT': calculateEstimateAmt } });
 
                 }
-
-                console.log(event);
             }
         });
 
@@ -530,7 +560,7 @@
             }
 
             fnModifyPQGrid(estimateRegisterTopGrid, estimateRegisterInsertQueryList, estimateRegisterUpdateQueryList);
-            estimateRegisterReloadPageData();
+            //estimateRegisterReloadPageData();
         };
 
         $("#btn_estimate_register_save").on("click", function(){
@@ -556,7 +586,7 @@
 
         function estimateRegisterReloadPageData(){
             let EST_SEQ = $("#estimate_version_up_sequence_form #hidden_est_seq").val();
-            let postData = { 'queryId': 'estimate.selectLastValEstimateMasterInfo', 'EST_SEQ': EST_SEQ};
+            let postData = { 'queryId': 'estimate.selectEstimateMasterList', 'EST_SEQ': EST_SEQ };
 
             let parameter = {'url': '/json-list', 'data': postData};
             fnPostAjax(function (data, callFunctionParam) {
@@ -572,7 +602,7 @@
                 $("#estimate_register_info_form #INSERT_DT").val(list.INSERT_DT);
                 $("#estimate_register_info_form #SEND_DT").val(list.SEND_DT);
 
-                postData = { 'queryId': 'estimate.selectLastValEstimateDetailList', 'EST_SEQ': EST_SEQ };
+                postData = { 'queryId': 'estimate.selectEstimateDetailList', 'EST_SEQ': EST_SEQ };
                 fnRequestGidData(estimateRegisterTopGrid, postData);
 
                 $("#estimate_register_excel_download #EST_SEQ").val(EST_SEQ);
