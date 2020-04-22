@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="machine">
+
+    <select id="getMachineList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.EQUIP_ID
+            , A.PHOTO_GFILE_SEQ
+            , jmes.SF_GET_FILE_ORGINAL_NM(A.PHOTO_GFILE_SEQ, NULL) as PHOTO_GFILE_SEQ_NM
+            , A.EQUIP_NM
+            , jmes.SF_GET_CODE_NM('1010', A.PROCESS_TYPE, 'KR') AS PROCESS_TYPE_NM
+            , jmes.SF_GET_CODE_NM('1012', A.EQUIP_TYPE, 'KR') AS EQUIP_TYPE_NM
+            , jmes.SF_GET_CODE_NM('1034', A.EQUIP_SIZE, 'KR') AS EQUIP_SIZE_NM
+            , jmes.SF_GET_CODE_NM('1037', A.EQUIP_COMP_CD, 'KR') AS EQUIP_COMP_NM
+            , jmes.SF_GET_CODE_NM('1022', A.RESELLER_CD, 'KR') AS RESELLER_NM
+            , jmes.SF_GET_CODE_NM('1005', A.FACTORY_AREA, 'KR') AS FACTORY_AREA_NM
+            , jmes.SF_GET_CODE_NM('1014', (SELECT REF_CD FROM jmes.TBL_CODE WHERE HIGH_CD = '1005' AND CODE_CD = A.FACTORY_AREA), 'KR') AS FACTORY_NM
+            , jmes.SF_GET_DATE_F(A.PURCHASE_DT,'YY','') AS PURCHASE_DT
+            , (SELECT USER_NM FROM jmes.TBL_USER WHERE USER_ID = A.MAIN_USER_ID) AS MAIN_USER_NM
+            , (SELECT USER_NM FROM jmes.TBL_USER WHERE USER_ID = A.SUB_USER_ID) AS SUB_USER_NM
+            , 'AFTER...' AS WORKING_TIME
+            , (SELECT jmes.SF_GET_DATE_F(MAX(REPAIR_END_DT),'YY','') FROM jmes.TBL_EQUIP_REPAIR WHERE EQUIP_ID = A.EQUIP_ID) AS LAST_REPAIR_DT
+            , 'AFTER...' AS LAST_CONTROL_NUM
+            , A.NOTE
+        FROM jmes.TBL_EQUIP A
+        WHERE A.EQUIP_KIND = #{SEL_EQUIP_KIND}
+        AND A.DEL_YN = 'N'
+        <if test="SEL_EQUIP_TYPE !='' and SEL_EQUIP_TYPE != null">
+            AND A.EQUIP_TYPE = #{SEL_EQUIP_TYPE}
+        </if>
+        <if test="SEL_EQUIP_SIZE !='' and SEL_EQUIP_SIZE != null">
+            AND A.EQUIP_SIZE = #{SEL_EQUIP_SIZE}
+        </if>
+        <if test="SEL_EQUIP_NM !='' and SEL_EQUIP_NM != null">
+            AND A.EQUIP_NM LIKE CONCAT('%', #{SEL_EQUIP_NM}, '%')
+        </if>
+        <if test="SEL_FACTORY_AREA !='' and SEL_FACTORY_AREA != null">
+            AND A.FACTORY_AREA = #{SEL_FACTORY_AREA}
+        </if>
+        <if test="SEL_MAIN_USER_ID !='' and SEL_MAIN_USER_ID != null">
+            AND EXISTS (  SELECT 1
+                            FROM jmes.TBL_USER
+                            WHERE USER_ID IN (A.MAIN_USER_ID, A.SUB_USER_ID)
+                            AND USER_NM LIKE CONCAT('%', #{SEL_MAIN_USER_ID}, '%')
+                       )
+        </if>
+        <if test="SEL_TERM_DT_USE or SEL_TERM_DT_USE ==true">
+            <if test='SEL_DAY_TYPE == "1"'>
+                AND A.PURCHASE_DT >= REPLACE(#{SEL_ST_DT},'-',space(0))
+                AND A.PURCHASE_DT <![CDATA[ <= ]]> REPLACE(#{SEL_END_DT},'-',space(0))
+            </if>
+        </if>
+        ORDER BY A.EQUIP_ID
+    </select>
+
+
+</mapper>
