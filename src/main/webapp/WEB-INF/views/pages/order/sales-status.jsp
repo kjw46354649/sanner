@@ -12,140 +12,154 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<div class="page-context">
-    <div class="row m-b-md">
-        <div class="col-md-12">
-            <section class="panel panel-default">
-                <header class="panel-heading font-bold">
-                    주문 마감 이력
-                </header>
-                <div class="panel-body">
-                    <form class="form-inline" id="SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM" role="form">
-                        <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectSalesClosingHistoryList">
-                        <div class="row">
-                            <div class="form-group col-md-3">
-                                    <label class="control-label" for="COMP_CD">사업자</label>
-                                <select class="form-control" name="COMP_CD" id="COMP_CD">
-                                    <option value="">All</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="ORDER_COMP_CD">발주사</label>
-                                <select class="form-control" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                                    <option value="">All</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="DEGREE">차수</label>
-                                <select class="form-control" name="DEGREE" id="DEGREE">
-                                    <option value="">All</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="NOTE">비고</label>
-                                <input type="text" class="form-control" name="NOTE" id="NOTE">
-                            </div>
-                        </div>
-                        <div class="line line-dashed b-b line-xs"></div>
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <label class="control-label" for="DEADLINE">마감년월</label>
-                                <select>
-
-                                </select>년
-                                <select>
-
-                                </select>월 ~
-                                <select>
-
-                                </select>년
-                                <select>
-
-                                </select>월
-                                <label class="checkbox-inline i-checks" for="CONFIRM_ORDER_SORT">
-                                    <input type="checkbox" name="DESCENDING" id="CONFIRM_ORDER_SORT"><i></i> Range 검색
-                                </label>
-                            </div>
-                            <div class="form-group col-md-6 text-right">
-                                <div type="submit" class="btn btn-success btn-sm btn-default" id="testSearch">
-                                    Search
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    <form class="form-inline" id="MONTH_SALE_STATUS_SEARCH_FORM" role="form" style="display: none">
-                        <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectMonthSaleStatusList">
-                        <div class="row">
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="COMP_CD">사업자</label>
-                                <select class="form-control" name="COMP_CD" id="COMP_CD">
-                                    <option value="">All</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="ORDER_COMP_CD">발주사</label>
-                                <select class="form-control" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                                    <option value="">All</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="DEGREE">차수</label>
-                                <select class="form-control" name="DEGREE" id="DEGREE">
-                                    <option value="">All</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="NOTE">비고</label>
-                                <input type="text" class="form-control" name="NOTE" id="NOTE">
-                            </div>
-                        </div>
-                        <div class="line line-dashed b-b line-xs"></div>
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <label class="control-label" for="MONTH_SALE_YEAR">조회년도</label>
-                                <select class="form-control" name="MONTH_SALE_YEAR" id="MONTH_SALE_YEAR">
-                                    <option></option>
-                                </select>
-                                <label class="checkbox-inline i-checks" for="CONFIRM_ORDER_SORT">
-                                    <input type="checkbox" name="DESCENDING" id="CONFIRM_ORDER_SORT"><i></i> Range 검색
-                                </label>
-                            </div>
-                            <div class="form-group col-md-6 text-right">
-                                <div type="submit" class="btn btn-success btn-sm btn-default" id="testSearch">
-                                    Search
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+<div class="page estimate">
+    <div class="topWrap">
+        <form class="form-inline" id="SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM" role="form">
+            <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectSalesClosingHistoryList">
+            <div class="gubunWrap">
+                <div class="form-group1">
+                    <div class="group-item">
+                        <label class="control-label" for="COMP_CD">사업자</label>
+                        <select class="form-control" name="COMP_CD" id="COMP_CD">
+                            <option value="">All</option>
+                        </select>
+                    </div>
+                    <div class="group-item">
+                        <label class="control-label" for="ORDER_COMP_CD">발주사</label>
+                        <select class="form-control" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
+                            <option value="">All</option>
+                        </select>
+                    </div>
+                    <div class="group-item">
+                        <label class="control-label" for="DEGREE">차수</label>
+                        <select class="form-control" name="DEGREE" id="DEGREE">
+                            <option value="">All</option>
+                        </select>
+                    </div>
+                    <div class="group-item">
+                        <label class="control-label" for="NOTE">비고</label>
+                        <input type="text" class="form-control" name="NOTE" id="NOTE">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="control-label">마감년월</label>
+                        <select name="CLOSE_YEAR_LEFT" id="CLOSE_YEAR_LEFT"></select>년
+                        <select name="CLOSE_MONTH_LEFT" id="CLOSE_MONTH_LEFT"></select>월 ~
+                        <select name="CLOSE_YEAR_RIGHT" id="CLOSE_YEAR_RIGHT" disabled></select>년
+                        <select name="CLOSE_MONTH_RIGHT" id="CLOSE_MONTH_RIGHT" disabled></select>월
+                        <label class="checkbox-inline i-checks" for="RANGE_SEARCH">
+                            <input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH"><i></i> Range 검색
+                        </label>
+                    </div>
+                    <button type="button" class="search_btn" id="CONTROL_MANAGE_SEARCH">검색</button>
+<%--                        <div class="form-group col-md-6 text-right">--%>
+<%--                            <div type="submit" class="btn btn-success btn-sm btn-default" id="testSearch">--%>
+<%--                                Search--%>
+<%--                            </div>--%>
+<%--                        </div>--%>
                 </div>
-            </section>
-        </div>
+            </div>
+        </form>
+        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
-    <div id="tabs">
-        <div class="row">&nbsp;
-    <%--            <section>--%>
-    <%--                <div class="col-md-12">--%>
-    <%--                    <div id="CONTROL_MANAGE_GRID"></div>--%>
-    <%--                </div>--%>
-    <%--            </section>--%>
-                <ul class="nav nav-tabs m-b-n-xxs">
-                    <li class="active">
-                        <a href="#CLOSING_HISTORY" data-toggle="tab" aria-expanded="true">마감이력</a>
-                    </li>
-                    <li class="">
-                        <a href="#MONTHLY_SALES_STATUS" data-toggle="tab" aria-expanded="false">월별 매출현황</a>
-                    </li>
-                </ul>
-                <div class="panel panel-default tab-content">
-                    <ul class="list-group tab-pane active" id="CLOSING_HISTORY">
-                        <div id="CLOSING_HISTORY_GRID"></div>
+
+    <div class="topWrap" style="display: none">
+        <form class="form-inline" id="MONTH_SALE_STATUS_SEARCH_FORM" role="form">
+            <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectMonthSaleStatusList">
+            <div class="gubunWrap">
+                <div class="form-group1">
+                    <div class="group-item">
+                        <label class="control-label" for="COMP_CD">사업자</label>
+                        <select class="form-control" name="COMP_CD" id="COMP_CD">
+                            <option value="">All</option>
+                        </select>
+                    </div>
+                    <div class="group-item">
+                        <label class="control-label" for="ORDER_COMP_CD">발주사</label>
+                        <select class="form-control" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
+                            <option value="">All</option>
+                        </select>
+                    </div>
+                    <div class="group-item">
+                        <label class="control-label" for="DEGREE">차수</label>
+                        <select class="form-control" name="DEGREE" id="DEGREE">
+                            <option value="">All</option>
+                        </select>
+                    </div>
+                    <div class="group-item">
+                        <label class="control-label" for="NOTE">비고</label>
+                        <input type="text" class="form-control" name="NOTE" id="NOTE">
+                    </div>
+                    <div class="group-item">
+                        <label class="control-label" for="MONTH_SALE_YEAR">조회년도</label>
+                        <select class="form-control" name="MONTH_SALE_YEAR" id="MONTH_SALE_YEAR">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="group-item-option">
+                        <label>Option</label>
+                    </div>
+                    <div class="chk_box_area">
+                        <input type="checkbox" name="DEPOSIT_STATUS_DISPLAY" id="DEPOSIT_STATUS_DISPLAY">
+                        <label for="DEPOSIT_STATUS_DISPLAY">입금현황 표시</label>
+                    </div>
+                    <button type="button" class="search_btn" id="CONTROL_MANAGE_SEARCH">검색</button>
+                </div>
+            </div>
+        </form>
+        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
+    </div>
+
+    <div class="bottomWrap">
+        <div class="tableWrap">
+            <div id="tabs">
+                <div class="row">&nbsp;
+                    <%--            <section>--%>
+                    <%--                <div class="col-md-12">--%>
+                    <%--                    <div id="CONTROL_MANAGE_GRID"></div>--%>
+                    <%--                </div>--%>
+                    <%--            </section>--%>
+                    <ul class="nav nav-tabs m-b-n-xxs">
+                        <li class="active">
+                            <a href="#CLOSING_HISTORY" data-toggle="tab" aria-expanded="true">마감이력</a>
+                        </li>
+                        <li class="">
+                            <a href="#MONTHLY_SALES_STATUS" data-toggle="tab" aria-expanded="false">월별 매출현황</a>
+                        </li>
                     </ul>
-                    <ul class="list-group tab-pane list-group-alt list-group-lg" id="MONTHLY_SALES_STATUS">
-                        <div id="MONTHLY_SALES_STATUS_GRID"></div>
-                    </ul>
+                    <div class="panel panel-default tab-content">
+                        <ul class="list-group tab-pane active" id="CLOSING_HISTORY">
+                            <div id="CLOSING_HISTORY_GRID"></div>
+                        </ul>
+                        <ul class="list-group tab-pane list-group-alt list-group-lg" id="MONTHLY_SALES_STATUS">
+                            <div id="MONTHLY_SALES_STATUS_GRID"></div>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+</div>
+
+<div class="modal" id="DETAIL_LIST_VIEW_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title">신규 주문 등록</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-inline" id="DETAIL_LIST_VIEW_FORM" role="form">
+                    <input type="hidden" name="queryId" id="queryId" value="selectControlCloseLeftList">
+                    <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
+                    <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
+                    <div id="DETAIL_LIST_VIEW_GRID"></div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
     </div>
 </div>
 
@@ -166,7 +180,12 @@
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
             {title: '발주사', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주사', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '품수', dataType: 'string', dataIndx: 'ITEM_NUMBER'},
+            {title: '품수', dataType: 'string', dataIndx: 'ITEM_NUMBER',
+                render: function (ui) {
+                    return ("<a href='#DETAIL_LIST_VIEW_POPUP' class='' id='' data-target='' data-toggle='modal' " +
+                        "data-refform='DETAIL_LIST_VIEW_POPUP'><u>" + ui.cellData + "</u></a>");
+                }
+            },
             {title: '최종 공급가', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT'},
             {title: '부가세액', dataType: 'string', dataIndx: 'VAT_AMOUNT'},
             {title: '합계금액', dataType: 'string', dataIndx: 'TOTAL_AMOUNT'},
@@ -210,26 +229,87 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            cellClick: function (event, ui) {
+                console.log(ui);
+                let rowData = ui.rowData;
+                if (ui.dataIndx === 'ITEM_NUMBER') {
+                    console.log('clcickckdlalgldlsxlzlxlxkzkzks');
+                }
+            },
+        };
+        let $detailListViewGrid;
+        const detailListViewGridId = 'DETAIL_LIST_VIEW_GRID';
+        let detailListViewPostData = fnFormToJsonArrayData('#MONTH_SALE_STATUS_SEARCH_FORM');
+        const detailListViewColModel = [
+            {title: '사업자<br>구분', minWidth: 70, dataType: 'string', dataIndx: 'COMP_NM', colModel: []},
+            {title: '발주업체', minWidth: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM', colModel: []},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', colModel: []},
+            {title: 'INV No.<br>(거래명세No.)', minWidth: 100, dataType: 'string', dataIndx: 'CHARGE_USER_ID', colModel: []},
+            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', colModel: []},
+            {title: '관리번호', minWidth: 100, dataType: 'string', dataIndx: 'CONTROL_NUM', colModel: []},
+            {title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM', colModel: []},
+            {title: '도면번호', minWidth: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', colModel: []},
+            {title: '품명', minWidth: 110, dataType: 'string', dataIndx: 'ITEM_NM', colModel: []},
+            {title: '작업<br>형태', minWidth: 110, dataType: 'string', dataIndx: 'WORK_NM', colModel: []},
+            {title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN', colModel: []},
+            {title: '자재<br>사급', dataType: 'string', dataIndx: 'OUTSIDE_YN', colModel: []},
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', colModel: []},
+            {title: '소재<br>종류', minWidth: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', colModel: []},
+            {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', colModel: []},
+            {title: 'Part<br>단위<br>수량', dataType: 'integer', dataIndx: 'PART_UNIT_QTY', colModel: []},
+            {title: '발주번호', minWidth: 90, datatype: 'string', dataIndx: 'ORDER_NUM', colModel: []},
+            // {title: '주문<br>수량', dataType: 'string', dataIndx: 'ITEM_QTY', colModel: []},
+            {
+                title: '대칭', align: 'center', colModel: [
+                    {title: '원칭', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY'},
+                    {title: '대칭', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
+                ]
+            },
+            {title: '견적단가', minWidth: 90, dataType: 'integer', dataIndx: 'UNIT_FINAL_EST_AMT', colModel: []},
+            {title: '공급단가', minWidth: 90, dataType: 'integer', dataIndx: 'UNIT_FINAL_AMT', colModel: []},
+            {title: '합계금액', dataType: 'integer', dataIndx: 'FINAL_AMOUNT', colModel: []}
+        ];
+        const detailListViewObj = {
+            // height: 600,
+            collapsible: false,
+            resizable: true,
+            showTitle: false,
+            columnTemplate: {
+                align: 'center',
+                halign: 'center',
+                hvalign: 'center',
+                editable: false
+            },
+            colModel: detailListViewColModel,
+            strNoRows: g_noData,
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: {'queryId': 'dataSource.emptyGrid'},
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
             }
         };
+
         let $monthlySalesStatusGrid;
         const tab2GridId = 'MONTHLY_SALES_STATUS_GRID';
         let tab2PostData = fnFormToJsonArrayData('#MONTH_SALE_STATUS_SEARCH_FORM');
         tab2PostData.MONTH_SALE_YEAR = CURRENT_YEAR;
         let tab2ColModel = [
-            {
-                title: 'Group', tpHide: true, menuInHide: true,
-                dataIndx: 'grp'
-            },
+            {title: 'Group', tpHide: true, menuInHide: true, dataIndx: 'grp'},
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
+            {title: 'CONTROL_TYPE', dataType: 'string', dataIndx: 'CONTROL_TYPE', hidden: true},
+            {title: 'CONTROL_NM', dataType: 'string', dataIndx: 'CONTROL_NM'},
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true/*, filter:{groupIndx: 'COMP_CD'}*/},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'/*, filter:{groupIndx: 'COMP_NM'}*/},
             {title: '년도', dataType: 'string', dataIndx: 'YYYY', hidden: true},
             {title: '월', dataType: 'string', dataIndx: 'MM'},
             {title: '분기', dataType: 'string', dataIndx: 'QUARTER'},
-            {title: '매출', dataType: 'string', dataIndx: 'OUTPUT_AMT'/*, summary: {type: 'sum'}*/},
-            {title: '입금', dataType: 'string', dataIndx: 'DEPOSIT_AMT'/*, summary: {type: 'sum'}*/}
+            {title: '금액', dataType: 'string', dataIndx: 'AMT', summary: {type: 'sum'}}
+            // {title: '매출', dataType: 'string', dataIndx: 'OUTPUT_AMT'/*, summary: {type: 'sum'}*/},
+            // {title: '입금', dataType: 'string', dataIndx: 'DEPOSIT_AMT'/*, summary: {type: 'sum'}*/}
         ];
         let tab2GroupModel = {
             on: true, //grouping mode.
@@ -238,26 +318,12 @@
             fixCols: false,
             pivot: true, //pivotMode
             groupCols: ['YYYY', 'QUARTER', 'MM'],
-            agg:{OUTPUT_AMT: 'sum', DEPOSIT_AMT: 'sum'},
+            // agg:{AMT: 'sum'},
             header: false, //hide grouping toolbar.
             grandSummary: true, //show grand summary row.
-            dataIndx: ['COMP_NM', 'ORDER_COMP_NM'],
-            collapsed: [false, false],
+            dataIndx: ['COMP_NM', 'ORDER_COMP_NM', 'CONTROL_NM'],
+            collapsed: [false, false, false],
             summaryEdit: false
-        };
-        let tab2Toolbar = {
-            cls: 'pq-toolbar-crud',
-            items: [
-                {
-                    type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {
-                            const updateQueryList = ['orderMapper.updateControlMaster', 'orderMapper.updateControlPart'];
-
-                            fnModifyPQGrid($orderManagementGrid, [], updateQueryList);
-                        }
-                    }
-                }
-            ]
         };
         let tab2Obj = {
             // width: 700,
@@ -276,10 +342,9 @@
             },
             colModel: tab2ColModel,
             groupModel: tab2GroupModel,
-            toolPanel:{
+            toolPanel: {
                 show: false  //show toolPanel initially.
             },
-            toolbar: tab2Toolbar,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: tab2PostData,
@@ -291,7 +356,16 @@
         };
         /* variable */
 
+        const loadDetailListViewData = function () {
 
+        };
+
+        $('#DETAIL_LIST_VIEW_POPUP').on('show.bs.modal', function (event) {
+            console.group('DETAIL_LIST_VIEW_POPUP ON');
+            console.log(event);
+            console.groupEnd();
+            $detailListViewGrid = $('#' + detailListViewGridId).pqGrid(detailListViewObj);
+        });
 
         /* init */
         fnCommCodeDatasourceSelectBoxCreate($('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {
@@ -313,13 +387,34 @@
         $closingHistoryGrid = $('#' + tab1GridId).pqGrid(tab1Obj);
         $monthlySalesStatusGrid = $('#' + tab2GridId).pqGrid(tab2Obj);
 
+        fnAppendSelectboxYear('CLOSE_YEAR_LEFT', 10);
+        fnAppendSelectboxMonth('CLOSE_MONTH_LEFT');
+        fnAppendSelectboxYear('CLOSE_YEAR_RIGHT', 10);
+        fnAppendSelectboxMonth('CLOSE_MONTH_RIGHT');
         fnAppendSelectboxYear('MONTH_SALE_YEAR', 10);
+
+        $('#CLOSE_YEAR_LEFT').on('change', function() {
+            fnAppendSelectboxMonth('CLOSE_MONTH_LEFT', this.value);
+        });
+        $('#CLOSE_YEAR_RIGHT').on('change', function() {
+            fnAppendSelectboxMonth('CLOSE_MONTH_RIGHT', this.value);
+        });
+        $('#RANGE_SEARCH').on('change', function(event) {
+            if ($(this).prop('checked')) {
+                $('#CLOSE_YEAR_RIGHT').prop('disabled', false);
+                $('#CLOSE_MONTH_RIGHT').prop('disabled', false);
+            } else {
+                $('#CLOSE_YEAR_RIGHT').prop('disabled', true);
+                $('#CLOSE_MONTH_RIGHT').prop('disabled', true);
+            }
+        })
 
         $("#tabs").tabs({
             activate: function(event, ui) {
                 ui.newPanel.find('.pq-grid').pqGrid('refresh');
-                $('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM').toggle(); // show -> hide , hide -> show
-                $('#MONTH_SALE_STATUS_SEARCH_FORM').toggle(); // show -> hide , hide -> show
+                $('.topWrap').toggle(); // show -> hide , hide -> show
+                // $('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM').toggle(); // show -> hide , hide -> show
+                // $('#MONTH_SALE_STATUS_SEARCH_FORM').toggle(); // show -> hide , hide -> show
             }
         });
         /* init */

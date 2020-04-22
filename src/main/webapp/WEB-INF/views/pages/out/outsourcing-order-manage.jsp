@@ -12,170 +12,145 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<div class="page-context">
-    <div class="row m-b-md">
-        <div class="col-md-12">&nbsp;
-            <section class="panel panel-default">
-                <header class="panel-heading font-bold">
-                    외주 관리
-                </header>
-                <div class="panel-body">
-                    <form class="form-inline" id="OUTSIDE_ORDER_MANAGE_SEARCH_FORM" role="form">
-                        <input type="hidden" name="queryId" id="queryId"
-                               value="outMapper.selectOutsideOrderManageList">
-                        <div class="row">
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="COMP_CD">사업자</label>
-                                <select class="form-control" name="COMP_CD" id="COMP_CD">
-                                    <option value="">All</option>
+<div class="page estimate">
+    <div class="topWrap">
+        <form class="form-inline" id="OUTSIDE_ORDER_MANAGE_SEARCH_FORM" role="form">
+            <input type="hidden" name="queryId" id="queryId" value="outMapper.selectOutsideOrderManageList">
+            <div class="gubunWrap">
+                <div class="form-group1">
+                    <div class="group-item">
+                        <label for="COMP_CD">사업자</label>
+                        <select name="COMP_CD" id="COMP_CD">
+                            <option value="">All</option>
+                        </select>
+                    </div>
+                    <div class="group-item">
+                        <label for="ORDER_COMP_CD">발주사</label>
+                        <select name="ORDER_COMP_CD" id="ORDER_COMP_CD">
+                            <option value="">All</option>
+                        </select>
+                    </div>
+                    <div class="group-item">
+                        <label for="DRAWING_NUM">도면번호</label>
+                        <input type="text" name="DRAWING_NUM" id="DRAWING_NUM">
+                    </div>
+                    <div class="group-item">
+                        <label for="ITEM_NM">품명</label>
+                        <input type="text" name="ITEM_NM" id="ITEM_NM">
+                    </div>
+                    <div class="group-item">
+                        <label for="CONTROL_NUM">관리번호</label>
+                        <input type="text" name="CONTROL_NUM" id="CONTROL_NUM">
+                    </div>
+                    <div class="group-item">
+                        <label for="MODULE_NM">모듈명</label>
+                        <input type="text" name="MODULE_NM" id="MODULE_NM">
+                    </div>
+                    <div class="group-item">
+                        <label for="OUTSIDE_COMP_CD">외주업체</label>
+                        <select name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
+                            <option value="">All</option>
+                        </select>
+                    </div>
+                    <div class="group-item">
+                        <label for="">외주발주상태</label>
+                        <select name="" id="">
+                            <option value="">All</option>
+                            <c:forEach var="code" items="${HighCode.H_1031}">
+                                <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="dateWrap">
+                        <div class="leftSpan">
+                            <span class="slt_wrap">
+                                <select id="daySltd" name="daySltd" title="등록일시">
+                                    <option value="" selected="selected">등록일시</option>
+                                    <option value="1">-ALL-</option>
+                                    <option value="2">-ALL-</option>
                                 </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="ORDER_COMP_CD">발주사</label>
-                                <select class="form-control" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                                    <option value="">All</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="DRAWING_NUM">도면번호</label>
-                                <input type="text" class="form-control" name="DRAWING_NUM" id="DRAWING_NUM">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="ITEM_NM">품명</label>
-                                <input type="text" class="form-control" name="ITEM_NM" id="ITEM_NM">
+                            </span>
+                            <span class="radio_box">
+                                <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_1" value="today" checked><label for="fr_1001_1">오늘</label>
+                            </span>
+                            <span class="radio_box">
+                                <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_2" value="current_month"><label for="fr_1001_2">현재월</label>
+                            </span>
+                            <span class="radio_box">
+                                <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_3" value="three_months"><label for="fr_1001_3">3개월</label>
+                            </span>
+                            <div class="calendar_wrap">
+                                <span class="calendar_span">
+                                    <input type="text" title="달력정보" name="CONTROL_MANAGE_START_DATE" id="CONTROL_MANAGE_START_DATE"><button type="button">달력선택</button>
+                                </span>
+                                <span class="nbsp">~</span>
+                                <span class="calendar_span">
+                                    <input type="text" title="달력정보" name="CONTROL_MANAGE_END_DATE" id="CONTROL_MANAGE_END_DATE" readonly><button type="button">달력선택</button>
+                                </span>
+                                <span class="chk_box no_txt"><input id="pr_ex" type="checkbox"><label for="pr_ex">선택</label></span>
                             </div>
                         </div>
-                        <div class="line line-dashed b-b line-xs"></div>
-                        <div class="row">
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="CONTROL_NUM">관리번호</label>
-                                <input type="text" class="form-control" name="CONTROL_NUM" id="CONTROL_NUM">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="MODULE_NM">모듈명</label>
-                                <input type="text" class="form-control" name="MODULE_NM" id="MODULE_NM">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="OUTSIDE_COMP_CD">외주업체</label>
-                                <select class="form-control" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
-                                    <option value="">All</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="">외주발주상태</label>
-                                <select class="form-control" name="" id="">
-                                    <option value="">All</option>
-                                    <c:forEach var="code" items="${HighCode.H_1031}">
-                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                            <div class="line line-dashed b-b line-xs"></div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for=""></label>
-                                    <select class="form-control" id="">
-                                        <option value="">All</option>
-                                        <c:forEach var="code" items="${HighCode.H_1047}">
-                                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                        </c:forEach>
-                                    </select>
-                                    <div class="radio i-checks">
-                                        <label>
-                                            <input type="radio" name="CONTROL_MANAGE_TERM" value="today" checked>
-                                            <i></i>
-                                            오늘
-                                        </label>
-                                    </div>
-                                    <div class="radio i-checks">
-                                        <label>
-                                            <input type="radio" name="CONTROL_MANAGE_TERM" value="current_month">
-                                            <i></i>
-                                            현재월
-                                        </label>
-                                    </div>
-                                    <div class="radio i-checks">
-                                        <label>
-                                            <input type="radio" name="CONTROL_MANAGE_TERM" value="three_months">
-                                            <i></i>
-                                            3개월
-                                        </label>
-                                    </div>
-                                    <input type="text" name="CONTROL_MANAGE_START_DATE" id="CONTROL_MANAGE_START_DATE"
-                                           readonly> ~
-                                    <input type="text"
-                                           name="CONTROL_MANAGE_END_DATE"
-                                           id="CONTROL_MANAGE_END_DATE" readonly>
-                                    <label class="checkbox-inline i-checks">
-                                        <input type="checkbox" id="CONTROL_MANAGE_DATEPICKER_READ_ONLY" checked><i></i>
-                                    </label>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label class="control-label" for="WORK_TYPE">작업구분</label>
-                                    <select class="form-control" name="WORK_TYPE" id="WORK_TYPE">
-                                        <option value="">All</option>
-                                        <c:forEach var="code" items="${HighCode.H_1013}">
-                                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                        </c:forEach>
-                                    </select>
-                                    <label for="UNIT_CONST_1"></label>
-                                    <input type="text" class="form-control" id="UNIT_CONST_1">
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label class="control-label" for="WORK_TYPE">품질현황</label>
-                                    <select class="form-control" name="WORK_TYPE" id="WORK_TYPE">
-                                        <option value="">All</option>
-                                        <c:forEach var="code" items="${HighCode.H_1040}">
-                                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="line line-dashed b-b line-xs"></div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label class="control-label">option</label>
-                                    <label class="checkbox-inline i-checks">
-                                        <input type="checkbox" id="inlinecheckbox1" value="option1"><i></i> 입고완료
-                                    </label>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label class="control-label" for="AMOUNT_SUM">금액총합계</label>
-                                    <input type="text" class="form-control" id="AMOUNT_SUM" readonly>
-                                </div>
-                                <div class="form-group col-md-3 text-right">
-                                    <div type="submit" class="btn btn-success btn-sm btn-default" id="testSearch">
-                                        search
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="group-item">
+                            <label for="WORK_TYPE">작업구분</label>
+                            <select name="WORK_TYPE" id="WORK_TYPE">
+                                <option value="">All</option>
+                                <c:forEach var="code" items="${HighCode.H_1013}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
                         </div>
-                    </form>
+                        <div class="group-item">
+                            <label for="WORK_TYPE">품질현황</label>
+                            <select name="WORK_TYPE" id="WORK_TYPE">
+                                <option value="">All</option>
+                                <c:forEach var="code" items="${HighCode.H_1040}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="group-item-option">
+                        <label>Option</label>
+                    </div>
+                    <div class="chk_box_area">
+                        <input type="checkbox" id="option1"><label for="option1">입고완료</label>
+                    </div>
+                    <div class="group-item">
+                        <label for="AMOUNT_SUM">금액총합계</label>
+                        <input type="text" id="AMOUNT_SUM" readonly>
+                    </div>
+                    <button type="button" class="search_btn" id="OUTSIDE_SEARCH">검색</button>
                 </div>
-            </section>
+            </div>
+        </form>
+        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
+    </div>
+    <div class="bottomWrap">
+        <div class="hWrap">
+            <div class="row">
+                <div class="col-md-6">
+                    <button type="button" class="defaultBtn" data-toggle="modal" data-target="#REQUEST_OUTSIDE_POPUP">
+                        외주가공
+                        요청
+                    </button>
+                    <button type="button" class="defaultBtn" data-toggle="modal" data-target="#CANCEL_PROCESSING_REQUEST_POPUP">
+                        가공요청 취소
+                    </button>
+                    <button type="button" class="defaultBtn" id="ORDER_EXTRACTION">발주서 추출</button>
+                    <button type="button" class="defaultBtn" data-toggle="modal" data-target="#OUTSIDE_CLOSE_POPUP">외주마감
+                    </button>
+                </div>
+                <div class="col-md-6 ta-r">
+                    <button type="button" class="defaultBtn grayGra" id="DRAWING_VIEW">도면 View</button>
+                    <button type="button" class="defaultBtn blueGra" id="OUTSIDE_ORDER_MANAGE_SAVE">Save</button>
+                    <button type="button" class="defaultBtn yelllowGra" id="OUTSIDE_ORDER_MANAGE_DELETE">Delete</button>
+                </div>
+            </div>
         </div>
-        <div class="row">&nbsp;
-            <section>
-                <div class="col-md-12">
-                    <a href="#REQUEST_OUTSIDE_POPUP" data-toggle="modal" data-refform="CONTROL_MANGE_POPUP">
-                        <input type="button" value="외주가공 요청">
-                    </a>
-                    <a href="#CANCEL_PROCESSING_REQUEST_POPUP" data-toggle="modal" data-refform="CONTROL_MANGE_POPUP">
-                        <input type="button" value="가공요청 취소">
-                    </a>
-                    <button id="ORDER_EXTRACTION">발주서 추출</button>
-                    <a href="#OUTSIDE_CLOSE_POPUP" data-toggle="modal" data-refform="CONTROL_MANGE_POPUP">
-                        <input type="button" value="외주마감">
-                    </a>
-                </div>
-            </section>
-        </div>
-        <div class="row">&nbsp;
-            <section>
-                <div class="col-md-12">
-                    <div id="OUTSIDE_ORDER_MANAGE_GRID"></div>
-                </div>
-            </section>
+        <div class="tableWrap">
+            <div class="conMainWrap">
+                <div id="OUTSIDE_ORDER_MANAGE_GRID"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -190,7 +165,9 @@
                         <header class="panel-heading font-bold">
                             외주 가공 요청
                             <div class="btnSaveCloseBox">
-                                <div type="button" class="btn btn-success btn-sm btn-default" id="OUTSIDE_PROCESS_REQUEST_SAVE">Save & Submit</div>
+                                <div type="button" class="btn btn-success btn-sm btn-default" id="OUTSIDE_PROCESS_REQUEST_SAVE">
+                                    Save & Submit
+                                </div>
                             </div>
                         </header>
                         <div class="panel-body">
@@ -269,8 +246,8 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <label class="control-label" for="SUBCONTRACTOR_REQUESTED">요청 외주업체</label>
-                        <select class="form-control" name="" id="SUBCONTRACTOR_REQUESTED">
+                        <label for="SUBCONTRACTOR_REQUESTED">요청 외주업체</label>
+                        <select name="" id="SUBCONTRACTOR_REQUESTED">
 
                         </select>
                         <textarea></textarea>
@@ -320,22 +297,22 @@
                                     <label class="control-label">대상 년/월</label>
                                 </div>
                                 <div class="col-md-5">
-                                    <select class="form-control" name="OUTSIDE_CLOSE_YEAR" id="OUTSIDE_CLOSE_YEAR">
+                                    <select name="OUTSIDE_CLOSE_YEAR" id="OUTSIDE_CLOSE_YEAR">
                                         <option></option>
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <select class="form-control" name="OUTSIDE_CLOSE_MONTH" id="OUTSIDE_CLOSE_MONTH">
+                                    <select name="OUTSIDE_CLOSE_MONTH" id="OUTSIDE_CLOSE_MONTH">
                                         <option></option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="col-md-6">
-                                    <label class="control-label" for="CLOSE_VER">차수</label>
+                                    <label for="CLOSE_VER">차수</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <select class="form-control" name="CLOSE_VER" id="CLOSE_VER">
+                                    <select name="CLOSE_VER" id="CLOSE_VER">
                                         <option value="1">
                                             1차
                                         </option>
@@ -387,9 +364,21 @@
         const colModel = [
             {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true, colModel: []},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true, colModel: []},
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true, colModel: []},
+            {
+                title: 'CONTROL_DETAIL_SEQ',
+                dataType: 'integer',
+                dataIndx: 'CONTROL_DETAIL_SEQ',
+                hidden: true,
+                colModel: []
+            },
             {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true, colModel: []},
-            {title: 'OUTSIDE_REQUEST_SEQ', dataType: 'integer', dataIndx: 'OUTSIDE_REQUEST_SEQ', hidden: true, colModel: []},
+            {
+                title: 'OUTSIDE_REQUEST_SEQ',
+                dataType: 'integer',
+                dataIndx: 'OUTSIDE_REQUEST_SEQ',
+                hidden: true,
+                colModel: []
+            },
             {title: '담당자', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', hidden: true, colModel: []},
             {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: true, colModel: []},
             {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_NM', colModel: []},
@@ -414,7 +403,7 @@
             {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', editable: true, colModel: []},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', editable: true, colModel: []},
             {title: '소재<br>종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', colModel: []},
-            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY', colModel: []},
+            // {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY', colModel: []},
             {title: '사급<br>여부', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', colModel: []},
             {title: '소재<br>제공', dataType: 'string', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN', colModel: []},
             {
@@ -451,27 +440,6 @@
             {title: '외주가공<br>마감일시', dataType: 'string', dataIndx: 'OUTSIDE_FINISH_DATE', colModel: []},
             {title: 'DXF', dataType: 'string', dataIndx: 'STATUS_DT', colModel: []}
         ];
-        const toolbar = {
-            cls: 'pq-toolbar-crud',
-            items: [
-                {
-                    type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {
-                            const updateQueryList = ['updateControlPart'];
-
-                            fnModifyPQGrid($outsideOrderManageGrid, [], updateQueryList);
-                        }
-                    }
-                },
-                {
-                    type: 'button', label: '도면 View', icon: 'ui-icon-document', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {
-
-                        }
-                    }
-                }
-            ]
-        };
         const obj = {
             // height: 600,
             collapsible: false,
@@ -486,7 +454,6 @@
                 editable: false
             },
             colModel: colModel,
-            toolbar: toolbar,
             strNoRows: g_noData,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -562,11 +529,12 @@
             {title: '규격', minWidth: 110, dataType: 'string', dataIndx: 'SIZE_TXT', editable: true, colModel: []},
             {title: '자재<br>종류', minWidth: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', colModel: []},
             {title: '표면<br>처리', minWidth: 70, dataType: 'string', dataIndx: 'SURFACE_TREAT', colModel: []},
-            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY', colModel: []}, // 확인 필요
+            // {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY', colModel: []}, // 확인 필요
             {title: '소재<br>제공', dataType: 'bool', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN', colModel: []}, // 확인 필요
             {
                 title: '요청가공', align: 'center', colModel: [
-                    {title: '완제품', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN', editable: true,
+                    {
+                        title: '완제품', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN', editable: true,
                         type: 'checkbox',
                         cb: {
                             all: false, //header checkbox to affect checkboxes on all pages.
@@ -575,38 +543,46 @@
                             uncheck: 'N' //uncheck when "NO".
                         }
                     },
-                    {title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN', editable: true,
+                    {
+                        title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN', editable: true,
                         type: 'checkbox',
                         cb: {
                             all: false, //header checkbox to affect checkboxes on all pages.
                             header: false, //for header checkbox.
                             check: 'Y', //check the checkbox when cell value is "YES".
                             uncheck: 'N' //uncheck when "NO".
-                        }},
-                    {title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN', editable: true,
+                        }
+                    },
+                    {
+                        title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN', editable: true,
                         type: 'checkbox',
                         cb: {
                             all: false, //header checkbox to affect checkboxes on all pages.
                             header: false, //for header checkbox.
                             check: 'Y', //check the checkbox when cell value is "YES".
                             uncheck: 'N' //uncheck when "NO".
-                        }},
-                    {title: '표면<br>처리', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN', editable: true,
+                        }
+                    },
+                    {
+                        title: '표면<br>처리', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN', editable: true,
                         type: 'checkbox',
                         cb: {
                             all: false, //header checkbox to affect checkboxes on all pages.
                             header: false, //for header checkbox.
                             check: 'Y', //check the checkbox when cell value is "YES".
                             uncheck: 'N' //uncheck when "NO".
-                        }},
-                    {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC', editable: true,
+                        }
+                    },
+                    {
+                        title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC', editable: true,
                         type: 'checkbox',
                         cb: {
                             all: false, //header checkbox to affect checkboxes on all pages.
                             header: false, //for header checkbox.
                             check: 'Y', //check the checkbox when cell value is "YES".
                             uncheck: 'N' //uncheck when "NO".
-                        }}
+                        }
+                    }
                 ]
             },
             {title: '요망<br>납기', datatype: 'date', dataIndx: 'OUTSIDE_HOPE_DUE_DT', editable: true},
@@ -788,12 +764,12 @@
                 $outsideCloseRightGrid.pqGrid('refreshView');
             }, parameters, '');
         };
-        
+
         $outsideOrderManageGrid = $('#' + gridId).pqGrid(obj);
 
         $('#REQUEST_OUTSIDE_POPUP').on('show.bs.modal', function () {
             $mailRecipientGrid = $('#' + mailRecipientGridId).pqGrid(mailRecipientObj);
-            $outsideProcessRequestGrid  = $('#' + outsideProcessRequestGridId ).pqGrid(outsideProcessRequestObj);
+            $outsideProcessRequestGrid = $('#' + outsideProcessRequestGridId).pqGrid(outsideProcessRequestObj);
             loadOutsideProcessData();
         });
 
@@ -870,11 +846,21 @@
             $outsideCloseRightGrid.pqGrid('destroy');
         });
 
-        $('#testSearch').on('click', function () {
+        $('#OUTSIDE_SEARCH').on('click', function () {
             $outsideOrderManageGrid.pqGrid('option', 'dataModel.postData', function (ui) {
                 return (fnFormToJsonArrayData('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM'));
             });
             $outsideOrderManageGrid.pqGrid('refreshDataAndView');
+        });
+
+        $('#OUTSIDE_ORDER_MANAGE_SAVE').on('click', function () {
+            const updateQueryList = ['updateControlPart'];
+
+            fnModifyPQGrid($outsideOrderManageGrid, [], updateQueryList);
+        });
+
+        $('#OUTSIDE_ORDER_MANAGE_DELETE').on('click', function () {
+
         });
 
         /* init */
