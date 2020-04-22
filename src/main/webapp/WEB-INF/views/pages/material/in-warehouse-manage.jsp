@@ -7,13 +7,15 @@
 --%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
-<div class="modal" id="in_warehouse_manage_warehouse_popup" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal popup" id="in_warehouse_manage_warehouse_popup" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">위치정보관리</h4>
+            <div class="modal-header topWrap">
+                <div class="hWrap">
+                    <h2>소재주문 진행</h2>
+                </div>
             </div>
-            <div class="modal-body">
+            <div class="topWrap">
                 <form class="form-inline" role="form" id="in_warehouse_manage_warehouse_popup_form" name="in_warehouse_manage_warehouse_popup_form">
                     <input type="hidden" id="queryId" name="queryId" value="selectInWarehouseManageWarehouseList">
                     <input type="hidden" id="WAREHOUSE_CD" name="WAREHOUSE_CD" value="">
@@ -23,12 +25,12 @@
                             <div class="row">
                                 <div class="col-md-12 col-sm-12">
                                     <div class="panel panel-default">
-                                        <header class="panel-heading">
-                                            <strong>위치 정보 관리</strong>
-                                        </header>
                                         <div class="row">
                                             <div class="col-md-12 col-sm-12">
                                                 <div class="gridWrap">
+                                                    <div class="hWrap">
+                                                        <button type="button" class="search_btn" id="btnItemOrderRegisterSearch">검색</button>
+                                                    </div>
                                                     <div id="in_warehouse_manage_warehouse_grid" class="jqx-refresh"></div>
                                                 </div>
                                             </div>
@@ -45,255 +47,201 @@
         <!-- /.modal-dialog -->
     </div>
 </div>
+<div class="page estimate">
+        <form class="form-inline" id="in_warehouse_manage_search_form" name="in_warehouse_manage_search_form" role="form">
+            <div class="topWrap">
+                <input type="hidden" name="queryId" id="queryId" value="selectInWarehouseManageList">
+                <div class="gubunWrap">
+                    <ul>
+                        <div class="dateWrap">
+                            <button type="button" class="search_btn" id="btnInWarehouseManageManageSearch">검색</button>
+                        </div>
+                        <li>
+                            <span class="slt_wrap">
+                                <label for="WAREHOUSE">창고</label>
+                                <select id="WAREHOUSE" name="WAREHOUSE" title="창고">
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="slt_wrap">
+                                <label for="LOC_NM">위치</label>
+                                <select id="LOC_NM" name="LOC_NM" title="위치">
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="slt_wrap">
+                                <label for="MATERIAL_DETAIL">소재종류</label>
+                                <select id="MATERIAL_DETAIL" name="MATERIAL_DETAIL" title="소재종류">
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="slt_wrap">
+                                <label for="MATERIAL_KIND">소재형태</label>
+                                <select id="MATERIAL_KIND" name="MATERIAL_KIND" title="소재형태">
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="ipu_wrap"><label for="SIZE">소재규격</label><input type="text" name="SIZE" id="SIZE" placeholder="" value="" title="소재규격"></span>
+                        </li>
+                        <li>
+                            <span class="ipu_wrap"><label for="SIZE_W">가로</label>
+                                <input type="text" name="SIZE_W" id="SIZE_W" placeholder="" value="" title="가로">
+                                <input type="text" name="SIZE_W" id="SIZE_W" placeholder="" value="" title="가로">
+                            </span>
+                        </li>
+                        <li>
+                            <span class="ipu_wrap"><label for="SIZE_H">세로</label><input type="text" name="SIZE_H" id="SIZE_H" placeholder="" value="" title="세로"></span>
+                        </li>
+                        <li>
+                            <span class="ipu_wrap"><label for="SIZE_D">두께</label><input type="text" name="SIZE_D" id="SIZE_D" placeholder="" value="" title="두께"></span>
+                        </li>
+                        <li>
+                            <span class="ipu_wrap"><label for="M_ORDER_COMP_CD">소재주문업체</label><input type="text" name="M_ORDER_COMP_CD" id="M_ORDER_COMP_CD" placeholder="" value="" title="소재주문업체"></span>
+                        </li>
+                        <li>
+                            <span class="ipu_wrap"><label for="MATERIAL_DETAIL">소재종류</label><input type="text" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" placeholder="" value="" title="소재주문업체"></span>
+                        </li>
 
-<div class="page-context">
-    <div class="row m-b-md">
-        <div class="col-sm-12">&nbsp;
-            <section class="panel panel-default">
-                <header class="panel-heading font-bold">
-                    보유 소재 관리
-                </header>
-                <div class="panel-body">
-                    <form class="form-inline" id="in_warehouse_manage_search_form" name="in_warehouse_manage_search_form" role="form">
-                    <input type="hidden" id="queryId" name="queryId" value="selectInWarehouseManageList">
-                        <div class="row">
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="WAREHOUSE">창고</label>
-                                <select id="WAREHOUSE" name="WAREHOUSE" data-required="true" class="form-control parsley-validated">
-                                    <option value="">ALL</option>
-                                    <c:forEach var="code" items="${HighCode.H_1049}">
-                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="LOC_NM">위치</label>
-                                <select id="LOC_NM" name="LOC_NM" data-required="true" class="form-control parsley-validated">
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="MATERIAL_DETAIL">소재종류</label>
-                                <select id="MATERIAL_DETAIL" name="MATERIAL_DETAIL" data-required="true" class="form-control parsley-validated">
-                                    <option value="">ALL</option>
-                                    <c:forEach var="code" items="${HighCode.H_1027}">
-                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="MATERIAL_KIND">소재형태</label>
-                                <select id="MATERIAL_KIND" name="MATERIAL_KIND" data-required="true" class="form-control parsley-validated">
-                                    <option value="">ALL</option>
-                                    <c:forEach var="code" items="${HighCode.H_1029}">
-                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="line line-dashed b-b line-xs"></div>
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <div class="form-group col-md-3">
-                                    <label class="control-label" for="SIZE">소재규격</label>
-                                    <select id="SIZE" name="SIZE" data-required="true" class="form-control parsley-validated">
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <div class="row">
-                                        <label class="control-label" for="SIZE_W">가로</label>
-                                        <input type="text" class="form-control" id="SIZE_W" placeholder="" size="2">~
-                                        <input type="text" class="form-control" id="SIZE_W" placeholder="" size="2">
-                                    </div>
-                                    <div class="row">
-                                        <label class="control-label" for="SIZE_W">가로</label>
-                                        <input type="text" class="form-control" id="SIZE_W" placeholder="" size="2">
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <div class="row">
-                                        <label class="control-label" for="SIZE_H">세로</label>
-                                        <input type="text" class="form-control" id="SIZE_H" placeholder=""size="2">
-                                    </div>
-                                    <div class="row">
-                                        <label class="control-label" for="SIZE_H">세로</label>
-                                        <input type="text" class="form-control" id="SIZE_H" placeholder=""size="2">
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <div class="row">
-                                        <label class="control-label" for="SIZE_D">두께</label>
-                                        <input type="text" class="form-control" id="SIZE_D" placeholder=""size="2">
-                                    </div>
-                                    <div class="row">
-                                        <label class="control-label" for="SIZE_W">두께</label>
-                                        <input type="text" class="form-control" id="SIZE_D" placeholder=""size="2">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-6 text-right">
-                                <div type="submit" class="btn btn-success btn-sm btn-default" id="btnInWarehouseManageManageSearch">SEARCH</div>
-                            </div>
-                        </div>
-                    </form>
-                    <form class="form-inline" id="in_warehouse_manage_out_search_form" name="in_warehouse_manage_out_search_form" role="form" style="display: none">
-                        <input type="hidden" id="queryId" name="queryId" value="selectInWarehouseManageOutList">
-                        <div class="row">
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="WAREHOUSE">창고</label>
-                                <select id="WAREHOUSE" name="WAREHOUSE" data-required="true" class="form-control parsley-validated">
-                                    <option value="">ALL</option>
-                                    <c:forEach var="code" items="${HighCode.H_1049}">
-                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="LOC_NM">위치</label>
-                                <select id="LOC_NM" name="LOC_NM" data-required="true" class="form-control parsley-validated">
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="MATERIAL_DETAIL">소재종류</label>
-                                <select id="MATERIAL_DETAIL" name="MATERIAL_DETAIL" data-required="true" class="form-control parsley-validated">
-                                    <option value="">ALL</option>
-                                    <c:forEach var="code" items="${HighCode.H_1027}">
-                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="MATERIAL_KIND">소재형태</label>
-                                <select id="MATERIAL_KIND" name="MATERIAL_KIND" data-required="true" class="form-control parsley-validated">
-                                    <option value="">ALL</option>
-                                    <c:forEach var="code" items="${HighCode.H_1029}">
-                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="line line-dashed b-b line-xs"></div>
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <div class="form-group col-md-3">
-                                    <label class="control-label" for="SIZE">소재규격</label>
-                                    <select id="SIZE" name="SIZE" data-required="true" class="form-control parsley-validated">
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <div class="row">
-                                        <label class="control-label" for="SIZE_W">가로</label>
-                                        <input type="text" class="form-control" id="SIZE_W" placeholder="" size="2">~
-                                        <input type="text" class="form-control" id="SIZE_W" placeholder="" size="2">
-                                    </div>
-                                    <div class="row">
-                                        <label class="control-label" for="SIZE_W">가로</label>
-                                        <input type="text" class="form-control" id="SIZE_W" placeholder="" size="2">
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <div class="row">
-                                        <label class="control-label" for="SIZE_H">세로</label>
-                                        <input type="text" class="form-control" id="SIZE_H" placeholder=""size="2">
-                                    </div>
-                                    <div class="row">
-                                        <label class="control-label" for="SIZE_H">세로</label>
-                                        <input type="text" class="form-control" id="SIZE_H" placeholder=""size="2">
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <div class="row">
-                                        <label class="control-label" for="SIZE_D">두께</label>
-                                        <input type="text" class="form-control" id="SIZE_D" placeholder=""size="2">
-                                    </div>
-                                    <div class="row">
-                                        <label class="control-label" for="SIZE_W">두께</label>
-                                        <input type="text" class="form-control" id="SIZE_D" placeholder=""size="2">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label class="control-label" for="IN_OUT">수불구분</label>
-                                <select id="IN_OUT" name="IN_OUT" data-required="true" class="form-control parsley-validated">
-                                    <option value="">ALL</option>
-                                    <c:forEach var="code" items="${HighCode.H_1029}">
-                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="line line-dashed b-b line-xs"></div>
-                        <div class="row">
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for=""></label>
-                                    <select class="form-control" id="">
-                                        <option value="">All</option>
-                                        <c:forEach var="code" items="${HighCode.H_1047}">
-                                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                        </c:forEach>
-                                    </select>
-                                    <div class="radio i-checks">
-                                        <label>
-                                            <input type="radio" name="IN_WAREHOUSE_OUT_TERM" value="today" checked>
-                                            <i></i>
-                                            오늘
-                                        </label>
-                                    </div>
-                                    <div class="radio i-checks">
-                                        <label>
-                                            <input type="radio" name="IN_WAREHOUSE_OUT_TERM" value="current_month">
-                                            <i></i>
-                                            현재월
-                                        </label>
-                                    </div>
-                                    <div class="radio i-checks">
-                                        <label>
-                                            <input type="radio" name="IN_WAREHOUSE_OUT_TERM" value="three_months">
-                                            <i></i>
-                                            3개월
-                                        </label>
-                                    </div>
-                                    <input type="text" name="IN_WAREHOUSE_OUT_START_DT" id="IN_WAREHOUSE_OUT_START_DT"
-                                           readonly> ~
-                                    <input type="text" name="IN_WAREHOUSE_OUT_END_DT" id="IN_WAREHOUSE_OUT_END_DT" readonly>
-                                    <label class="checkbox-inline i-checks">
-                                        <input type="checkbox" id="IN_WAREHOUSE_OUT_DATEPICKER_READ_ONLY" checked><i></i>
-                                    </label>
-                                </div>
-                                <div class="form-group col-md-6 text-right">
-                                    <div type="submit" class="btn btn-success btn-sm btn-default" id="btnInWarehouseManageOutSearch">SEARCH</div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+                    </ul>
                 </div>
-            </section>
-        </div>
-    </div>
-    <div id="in_warehouse_manage_tabs">
-        <div class="row">&nbsp;
-            <ul class="nav nav-tabs m-b-n-xxs">
-                <li class="active">
-                    <a href="#IN_WAREHOUSE_MANAGE_TAB1" data-toggle="tab" aria-expanded="true">현황관리</a>
-                </li>
-                <li class="">
-                    <a href="#IN_WAREHOUSE_MANAGE_TAB2" data-toggle="tab" aria-expanded="false">불출이력</a>
-                </li>
-            </ul>
-            <div class="panel panel-default tab-content">
-                <ul class="list-group tab-pane active" id="IN_WAREHOUSE_MANAGE_TAB1">
-                    <div class="row">
-                        <div id="in_warehouse_manage_manage_grid01"></div>
+                <button type="button" class="topWrap_btn">펼치기 / 접기</button>
+            </div>
+        </form>
+
+        <form class="form-inline" id="in_warehouse_manage_out_search_form" name="in_warehouse_manage_out_search_form" role="form" style="display: none">
+            <div class="topWrap">
+                <input type="hidden" name="queryId" id="queryId" value="selectInWarehouseManageOutList">
+                <div class="gubunWrap">
+                    <ul>
+                        <div class="dateWrap">
+                            <button type="button" class="search_btn" id="btnInWarehouseManageOutSearch">검색</button>
+                        </div>
+                        <li>
+                            <span class="slt_wrap">
+                                <label for="WAREHOUSE">창고</label>
+                                <select id="WAREHOUSE" name="WAREHOUSE" title="창고">
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="slt_wrap">
+                                <label for="LOC_NM">위치</label>
+                                <select id="LOC_NM" name="LOC_NM" title="위치">
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="slt_wrap">
+                                <label for="MATERIAL_DETAIL">소재종류</label>
+                                <select id="MATERIAL_DETAIL" name="MATERIAL_DETAIL" title="소재종류">
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="slt_wrap">
+                                <label for="MATERIAL_KIND">소재형태</label>
+                                <select id="MATERIAL_KIND" name="MATERIAL_KIND" title="소재형태">
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="ipu_wrap"><label for="SIZE">소재규격</label><input type="text" name="SIZE" id="SIZE" placeholder="" value="" title="소재규격"></span>
+                        </li>
+                        <li>
+                            <span class="ipu_wrap"><label for="SIZE_W">가로</label>
+                                <input type="text" name="SIZE_W" id="SIZE_W" placeholder="" value="" title="가로">
+                                <input type="text" name="SIZE_W" id="SIZE_W" placeholder="" value="" title="가로">
+                            </span>
+                        </li>
+                        <li>
+                            <span class="ipu_wrap"><label for="SIZE_H">세로</label><input type="text" name="SIZE_H" id="SIZE_H" placeholder="" value="" title="세로"></span>
+                        </li>
+                        <li>
+                            <span class="ipu_wrap"><label for="SIZE_D">두께</label><input type="text" name="SIZE_D" id="SIZE_D" placeholder="" value="" title="두께"></span>
+                        </li>
+                        <li>
+                            <span class="ipu_wrap"><label for="M_ORDER_COMP_CD">소재주문업체</label><input type="text" name="M_ORDER_COMP_CD" id="M_ORDER_COMP_CD" placeholder="" value="" title="소재주문업체"></span>
+                        </li>
+                        <li>
+                            <span class="ipu_wrap"><label for="MATERIAL_DETAIL">소재종류</label><input type="text" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" placeholder="" value="" title="소재주문업체"></span>
+                        </li>
+
+                    </ul>
+                    <div class="dateWrap">
+                        <div class="leftSpan">
+                                <span class="slt_wrap">
+                                    <select id="daySltd" name="daySltd" title="등록일시">
+                                        <option value="" selected="selected">등록일시</option>
+                                        <option value="1">-ALL-</option>
+                                        <option value="2">-ALL-</option>
+                                    </select>
+                                </span>
+                            <span class="radio_box">
+                                    <input reqcd="R" type="radio" id="fr_1001_1" name=""><label for="fr_1001_1">오늘</label>
+                                </span>
+                            <span class="radio_box">
+                                    <input reqcd="R" type="radio" id="fr_1001_2" name=""><label for="fr_1001_2">현재월</label>
+                                </span>
+                            <span class="radio_box">
+                                    <input reqcd="R" type="radio" id="fr_1001_3" name=""><label for="fr_1001_3">3개월</label>
+                                </span>
+                            <div class="calendar_wrap">
+                                    <span class="calendar_span">
+                                        <input type="text" name="dateOneIp" id="dateOneIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
+                                    </span>
+                                <span class="nbsp">~</span>
+                                <span class="calendar_span">
+                                        <input type="text" name="dateTwoIp" id="dateTwoIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
+                                    </span>
+                                <span class="chk_box no_txt"><input id="pr_ex" type="checkbox"><label for="pr_ex">선택</label></span>
+                            </div>
+
+                        </div>
+                        <div class="rightSpan">
+                            <span class="txt">Option</span>
+                            <span class="chk_box"><input id="pr_ex1" type="checkbox"><label for="pr_ex1"> 발송완료</label></span>
+                            <span class="chk_box"><input id="pr_ex2" type="checkbox"><label for="pr_ex2"> 최신차수</label></span>
+                        </div>
                     </div>
-                    <div class="row">
-                        <div id="in_warehouse_manage_manage_grid02"></div>
+                </div>
+                <button type="button" class="topWrap_btn">펼치기 / 접기</button>
+            </div>
+        </form>
+
+    <div class="bottomWrap">
+        <div class="tableWrap">
+            <div class="tableWrap">
+                <div id="in_warehouse_manage_tabs">
+                    <div class="row">&nbsp;
+                        <ul class="nav nav-tabs m-b-n-xxs">
+                            <li class="active">
+                                <a href="#IN_WAREHOUSE_MANAGE_TAB1" data-toggle="tab" aria-expanded="true">현황관리</a>
+                            </li>
+                            <li class="">
+                                <a href="#IN_WAREHOUSE_MANAGE_TAB2" data-toggle="tab" aria-expanded="false">불출이력</a>
+                            </li>
+                        </ul>
+                        <div class="panel panel-default tab-content">
+                            <ul class="list-group tab-pane active" id="IN_WAREHOUSE_MANAGE_TAB1">
+                                <div class="row">
+                                    <div id="in_warehouse_manage_manage_grid01"></div>
+                                </div>
+                                <div class="row">
+                                    <div id="in_warehouse_manage_manage_grid02"></div>
+                                </div>
+                            </ul>
+                            <ul class="list-group tab-pane list-group-alt list-group-lg" id="IN_WAREHOUSE_MANAGE_TAB2">
+                                <div class="row">
+                                    <div id="in_warehouse_manage_out_grid01"></div>
+                                </div>
+                            </ul>
+                        </div>
                     </div>
-                </ul>
-                <ul class="list-group tab-pane list-group-alt list-group-lg" id="IN_WAREHOUSE_MANAGE_TAB2">
-                    <div class="row">
-                        <div id="in_warehouse_manage_out_grid01"></div>
-                    </div>
-                </ul>
+                </div>
             </div>
         </div>
     </div>

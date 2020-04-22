@@ -46,168 +46,128 @@
         <!-- /.modal-dialog -->
     </div>
 </div>
-
-<div class="page-context">
-    <div class="row m-b-md">
-        <div class="col-sm-12">&nbsp;
-            <section class="panel panel-default">
-                <header class="panel-heading font-bold">
-                    업체 정보 관리
-                    <div class="btnSaveCloseBox">
-                        <div type="button" class="btn btn-success btn-sm btn-default" id="btn_estimate_register_save">Save</div>
-                        <div type="button" class="btn btn-success btn-sm btn-default" id="btn_estimate_register_submit">Submit</div>
-                    </div>
-                </header>
-                <div class="panel-body">
-                    <form class="form-inline" role="form" id="estimate_register_info_form" name="estimate_register_info_form">
-                        <input type="hidden" id="queryId" name="queryId" value="selectEstimateNextSequence"/>
-                        <input type="hidden" id="EST_SEQ" name="EST_SEQ" value=""/>
-                        <div class="panel-body line_tit portlet-body form bg-light">
-                            <section class="bg-light">
-                                <div class="row">
-                                    <div class="col-md-12 col-sm-12">
-                                        <form class="form-horizontal" data-validate="parsley" action="#">
-                                            <section class="panel panel-default">
-                                                <header class="panel-heading">
-                                                    <strong>기본 정보</strong>
-                                                </header>
-                                                <div class="panel-body">
-                                                    <div class="form-group col-md-4 col-sm-4">
-                                                        <label class="col-md-4 col-sm-4 control-label">발주사</label>
-                                                        <div class="col-md-8 col-sm-8">
-                                                            <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" data-required="true" class="form-control parsley-validated">
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-md-8 col-sm-8">
-                                                        <label class="col-md-2 col-sm-2 control-label">제목</label>
-                                                        <div class="col-md-10 col-sm-10">
-                                                            <input type="text" data-notblank="true" class="form-control" data-required="true" id="EST_TITLE" name="EST_TITLE">
-                                                        </div>
-                                                    </div>
-                                                    <div class="line line-dashed b-b pull-in"></div>
-                                                    <div class="form-group col-md-4 col-sm-4">
-                                                        <label class="col-md-4 col-sm-4 control-label">구매 담당자</label>
-                                                        <div class="col-md-8 col-sm-8">
-                                                            <select id="ORDER_STAFF_SEQ" name="ORDER_STAFF_SEQ" data-required="true" class="form-control parsley-validated">
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-md-4 col-sm-4">
-                                                        <label class="col-md-4 col-sm-4 control-label">사업자구분</label>
-                                                        <div class="col-md-8 col-sm-8">
-                                                            <select id="COMP_CD" name="COMP_CD" data-required="true" class="form-control parsley-validated">
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-md-4 col-sm-4">
-                                                        <label class="col-md-4 col-sm-4 control-label">견적 담당자</label>
-                                                        <div class="col-md-8 col-sm-8">
-                                                            <select id="EST_USER_ID" name="EST_USER_ID" data-required="true" class="form-control parsley-validated">
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="line line-dashed b-b pull-in"></div>
-                                                    <div class="form-group col-md-4 col-sm-4">
-                                                        <label class="col-md-4 col-sm-4 control-label">견적번호 (차수)</label>
-                                                        <div class="col-md-8 col-sm-8">
-                                                            <input type="text" class="form-control" id="EST_NUM" name="EST_NUM" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-md-4 col-sm-4">
-                                                        <label class="col-md-4 col-sm-4 control-label">품수</label>
-                                                        <div class="col-md-8 col-sm-8">
-                                                            <input type="text" class="form-control" id="DTL_CNT" name="DTL_CNT" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-md-4 col-sm-4">
-                                                        <label class="col-md-4 col-sm-4 control-label">견적금액 계</label>
-                                                        <div class="col-md-8 col-sm-8">
-                                                            <input type="text" class="form-control" id="DTL_AMOUNT" name="DTL_AMOUNT" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="line line-dashed b-b pull-in"></div>
-                                                    <div class="form-group col-md-4 col-sm-4">
-                                                        <label class="col-md-4 col-sm-4 control-label">업데이트 일시</label>
-                                                        <div class="col-md-8 col-sm-8">
-                                                            <input type="text" class="form-control" id="INSERT_DT" name="INSERT_DT" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-md-4 col-sm-4">
-                                                        <label class="col-md-4 col-sm-4 control-label">회신일시</label>
-                                                        <div class="col-md-8 col-sm-8">
-                                                            <input type="text" class="form-control" id="SEND_DT" name="SEND_DT" readonly>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </section>
-                                        </form>
-                                    </div>
-                                </div>
-                            </section>
-                            <!-- grid table -->
-                            <section class="bg-light">
-                                <div class="row">
-                                    <div class="col-md-12 col-sm-12">
-                                        <div class="panel panel-default">
-                                            <header class="panel-heading">
-                                                <strong>상세 리스트</strong>
-                                            </header>
-                                            <div class="row">
-                                                <div class="gridWrap">
-                                                    <div id="estimate_register_top_grid" class="jqx-refresh"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-                            <section class="bg-light">
-                                <div class="row">
-                                    <div class="col-md-12 col-sm-12">
-                                        <div class="panel panel-default">
-                                            <header class="panel-heading">
-                                                <strong>메일 내용</strong>
-                                            </header>
-                                            <div class="row">
-                                                <div class="gridWrap">
-                                                    <textarea class="col-md-12 col-sm-12" id="EMAIL_CONTENT" name="EMAIL_CONTENT"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-                            <section class="bg-light">
-                                <div class="row">
-                                    <div class="col-md-6 col-sm-6">
-                                        <div class="panel panel-default">
-                                            <header class="panel-heading">
-                                                <strong>메인 수신처</strong>
-                                            </header>
-                                            <div class="gridWrap">
-                                                <div id="estimate_register_bot_grid" class="jqx-refresh"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6">
-                                        <div class="panel panel-default">
-                                            <header class="panel-heading">
-                                                <strong>첨부파일</strong>
-                                            </header>
-                                            <div class="gridWrap">
-                                                <input type="file">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-                        </div>
-                    </form>
+<div class="page estimate">
+    <div class="topWrap">
+        <form class="form-inline" id="estimate_register_info_form" name="estimate_register_info_form" role="form">
+            <div class="basicWrap">
+                <ul>
+                    <li>
+                        <label>신규 발주 현황</label>
+                        <span class="buttonWrap">
+                            <button type="button" class="defaultBtn grayGra" id="btn_estimate_register_save">Save</button>
+                            <button type="button" class="defaultBtn yelllowGra" id="btn_estimate_register_submit">Submit</button>
+                        </span>
+                    </li>
+                </ul>
+                <ul>
+                    <li>
+                        <span class="slt_wrap">
+                            <label for="ORDER_COMP_CD">발주사</label>
+                            <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사">
+                            </select>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="slt_wrap">
+                            <span class="ipu_wrap"><label for="TITLE">제목</label><input type="text" name="TITLE" id="TITLE" placeholder="" value="" title="제목"></span>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="slt_wrap">
+                            <label for="ORDER_STAFF_SEQ">구매 담당자 </label>
+                            <select id="ORDER_STAFF_SEQ" name="ORDER_STAFF_SEQ" title="구매 담당자">
+                            </select>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="slt_wrap">
+                            <label for="COMP_CD">사업자</label>
+                            <select id="COMP_CD" name="COMP_CD" title="사업자">
+                            </select>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="slt_wrap">
+                            <label for="EST_USER_ID">견적 담당자</label>
+                            <select id="EST_USER_ID" name="EST_USER_ID" title="견적 담당자">
+                            </select>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="ipu_wrap"><label for="EST_NUM">견적번호 (차수)</label><input type="text" name="EST_NUM" id="EST_NUM" placeholder="" value="" title="견적번호 (차수)"></span>
+                    </li>
+                    <li>
+                        <span class="ipu_wrap"><label for="DTL_AMOUNT">견적금액 계</label><input type="text" name="DTL_AMOUNT" id="DTL_AMOUNT" placeholder="" value="" title="견적금액 계"></span>
+                    </li>
+                    <li>
+                        <span class="ipu_wrap"><label for="INSERT_DT">업데이트 일시</label><input type="text" name="INSERT_DT" id="INSERT_DT" placeholder="" value="" title="업데이트 일시"></span>
+                    </li>
+                    <li>
+                        <span class="ipu_wrap"><label for="SEND_DT">회신일시</label><input type="text" name="SEND_DT" id="SEND_DT" placeholder="" value="" title="회신일시"></span>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+    <div class="bottomWrap">
+        <div class="hWrap">
+            <span class="buttonWrap">
+                <button type="button" class="defaultBtn blueGra" id="btnEstimateRegisterAdd">Add</button>
+                <button type="button" class="defaultBtn yelllowGra" id="btnEstimateRegisterDelete">Delete</button>
+                <button type="button" class="defaultBtn yelllowGra" id="btnEstimateRegisterEstimateListExcel">견적List 출력</button>
+            </span>
+            <span class="chk_box"><input id="chkEstimateRegisterDetail" type="checkbox"><label for="chkEstimateRegisterDetail"> 견적상세요건</label></span>
+            <div class="rightSpan">
+                <span class="slt_wrap namePlusSlt">
+                    <label for="selEstimateRegisterCalculateApply">계산견적적용</label>
+                    <select id="selEstimateRegisterCalculateApply" name="selEstimateRegisterCalculateApply" title="계산견적적용">
+                        <option>Select</option>
+                        <option>10%</option>
+                        <option>20%</option>
+                    </select>
+                </span>
+                <span class="slt_wrap namePlusSlt">
+                    <label for="selEstimateListExcel">견적서 추출</label>
+                    <select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출">
+                    </select>
+                </span>
+                <span class="buttonWrap">
+                    <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawAdd">도면 등록</button>
+                    <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawView">도면 보기</button>
+                </span>
+            </div>
+        </div>
+        <div class="tableWrap">
+            <div class="conMainWrap buttonWrap">
+                <div id="estimate_register_top_grid" class="jqx-refresh"></div>
+            </div>
+            <div class="lookUp">
+                <div class="topBox">
+                    <span class="subTit">메일내용</span>
+                    <textarea class="col-md-12 col-sm-12" id="EMAIL_CONTENT" name="EMAIL_CONTENT"></textarea>
                 </div>
-            </section>
+                <div class="bottomBox">
+                    <div class="popup">
+                        <div class="resultWrap">
+                            <div class="leftWrap">
+                                <h3>메일수신처</h3>
+                                <div class="conMainWrap buttonWrap">
+                                    <div id="estimate_register_bot_grid" class="jqx-refresh"></div>
+                                </div>
+                            </div>
+                            <div class="rightWrap">
+                                <h3>첨부파일</h3>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</div>
+<div class="mct">
+
 </div>
 
 <input type="button" id="test">
@@ -378,80 +338,8 @@
             {title: '전화번호', dataType: 'string', dataIndx: 'STAFF_TEL' }
         ];
 
-        let estimateRegisterTopToolbar = {
-            items: [
-                {
-                    type: 'button', label: '도면 보기', icon: '', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {}
-                    }
-                },
-                {
-                    type: 'button', label: '도면 등록', icon: '', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {}
-                    }
-                },
-                {
-                    type: 'button', label: '계산견적적용', icon: '', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {}
-                    }
-                },
-                {   type: 'select', label: '', style: 'float: right;', option: fnGetCommCodeGridSelectBox('1045')   },
-                {
-                    type: 'checkbox', label: '상세견적요건', style: 'float: right;', listener: {
-                        'change': function (evt, ui) {
-                            let colM = estimateRegisterTopGrid.pqGrid("option", "colModel");
-                            let listM = [14, 15];
-                            let hiddenYn = evt.target.checked == true ? false : true;
-                            for(let tmpI = 0; tmpI < listM.length; tmpI++) {
-                                for(let colCnt = 0; colCnt < colM[listM[tmpI]].colModel.length; colCnt++){
-                                    colM[listM[tmpI]].colModel[colCnt].hidden = hiddenYn;
-                                }
-                                colM[listM[tmpI]].hidden = hiddenYn;
-                            }
-                            estimateRegisterTopGrid.pqGrid("option", "colModel", colM);
-                            estimateRegisterTopGrid.pqGrid( "refresh" );
-                        }
-                    }
-                },
-                {
-                    type: 'button', label: 'Delete', icon: 'ui-icon-disk', style: 'float: left;', listener: {
-                        'click': function (evt, ui) {
-                            let USER_MASTER_QUERY_ID = 'deleteEstimateDetail';
-
-                            fnDeletePQGrid(estimateRegisterTopGrid, estimateRegisterSelectedRowIndex, USER_MASTER_QUERY_ID);
-                        }
-                    }
-                },
-                {
-                    type: 'button', label: 'Add', icon: 'ui-icon-plus', style: 'float: left;', listener: {
-                        'click': function (evt, ui) {
-                            estimateRegisterTopGrid.pqGrid('addNodes', [{}], 0);
-                        }
-                    }
-                },
-                {
-                    type: 'button', label: '견적List 출력', icon: 'ui-icon-plus', style: 'float: left;', listener: {
-                        'click': function (evt, ui) {
-
-                            fnReportFormToHiddenFormPageAction("packing_history_list_search_form", "/downloadExcel");
-                        }
-                    }
-                }
-            ]
-        };
-        let estimateRegisterBotToolbar = {
-            items: [
-                {
-                type: 'button', label: 'Delete', icon: 'ui-icon-disk', style: 'float: right;', listener: {
-                    'click': function (evt, ui) {
-
-                    }
-                }
-            }]
-        };
-
         estimateRegisterTopGrid.pqGrid({
-            width: "100%", height: 200,
+            height: 200,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
                 url: "/paramQueryGridSelect",
@@ -461,17 +349,17 @@
                     return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                 }
             },
+            scrollModel: { autoFit: true },
             columnTemplate: {align: 'center', hvalign: 'center'},
-            //scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true },
-            //selectionModel: { type: 'row', mode: 'single'} ,
+            selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
             collapsible: false,
-            resizable: false,
             trackModel: {on: true},
-            //resizable: true,
+            resizable: true,
             colModel: estimateRegisterTopColModel,
-            toolbar: estimateRegisterTopToolbar,
+            toolbar: false,
+            title: false,
             strNoRows: g_noData,
             selectChange: function (event, ui) {
                 if (ui.selection.iCells.ranges[0] !== undefined) {
@@ -515,7 +403,7 @@
 
         function selectEstimateBotList(COMP_CD) {
             estimateRegisterBotGrid.pqGrid({
-                width: "100%", height: 200,
+                height: 200,
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
                     url: "/paramQueryGridSelect",
@@ -530,11 +418,12 @@
                 selectionModel: { type: 'row', mode: 'single'} ,
                 collapsible: false,
                 swipeModel: {on: false},
-                resizable: false,
                 trackModel: {on: true},
-                //resizable: true,
+                resizable: true,
                 colModel: estimateRegisterBotColModel,
-                toolbar: estimateRegisterBotToolbar
+                toolbar: false,
+                title: false,
+                strNoRows: g_noData
             });
 
             estimateRegisterBotGrid.pqGrid("refreshDataAndView");
@@ -562,27 +451,6 @@
             fnModifyPQGrid(estimateRegisterTopGrid, estimateRegisterInsertQueryList, estimateRegisterUpdateQueryList);
             //estimateRegisterReloadPageData();
         };
-
-        $("#btn_estimate_register_save").on("click", function(){
-            $("#estimate_register_info_form #queryId").val('selectEstimateNextSequence');
-
-            let parameters = {'url': '/json-list', 'data': $("#estimate_register_info_form").serialize()};
-            let EST_SEQ = $("#estimate_register_info_form #EST_SEQ").val();
-            fnPostAjax(function (data, callFunctionParam) {
-                let list = data.list[0];
-                if(EST_SEQ == '' || EST_SEQ == null){
-                    EST_SEQ = list.EST_SEQ;
-                }
-
-                $("#estimate_register_info_form #queryId").val('insertEstimateMaster');
-                $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
-                $("#estimate_version_up_sequence_form #hidden_est_seq").val(EST_SEQ);
-
-                parameters = {'url': '/json-create', 'data': $("#estimate_register_info_form").serialize()};
-                fnPostAjax(estimateRegisterSaveCallBack, parameters, '');
-
-            }, parameters, '');
-        });
 
         function estimateRegisterReloadPageData(){
             let EST_SEQ = $("#estimate_version_up_sequence_form #hidden_est_seq").val();
@@ -612,8 +480,64 @@
 
         $(document).on('click', '#test', function(){
             estimateRegisterReloadPageData();
+            alert('눌림.');
         });
 
-        //estimateRegisterReloadPageData();
+
+        /** 버튼 처리 **/
+        $("#btn_estimate_register_save").on("click", function(){
+            $("#estimate_register_info_form #queryId").val('selectEstimateNextSequence');
+
+            let parameters = {'url': '/json-list', 'data': $("#estimate_register_info_form").serialize()};
+            let EST_SEQ = $("#estimate_register_info_form #EST_SEQ").val();
+            fnPostAjax(function (data, callFunctionParam) {
+                let list = data.list[0];
+                if(EST_SEQ == '' || EST_SEQ == null){
+                    EST_SEQ = list.EST_SEQ;
+                }
+
+                $("#estimate_register_info_form #queryId").val('insertEstimateMaster');
+                $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
+                $("#estimate_version_up_sequence_form #hidden_est_seq").val(EST_SEQ);
+
+                parameters = {'url': '/json-create', 'data': $("#estimate_register_info_form").serialize()};
+                fnPostAjax(estimateRegisterSaveCallBack, parameters, '');
+
+            }, parameters, '');
+        });
+
+        $("#btnEstimateRegisterAdd").on('click', function(){
+            estimateRegisterTopGrid.pqGrid('addNodes', [{}], 0);
+        });
+
+        $("#btnEstimateRegisterDelete").on('click', function(){
+            let USER_MASTER_QUERY_ID = 'deleteEstimateDetail';
+
+            fnDeletePQGrid(estimateRegisterTopGrid, estimateRegisterSelectedRowIndex, USER_MASTER_QUERY_ID);
+        });
+
+        $("#btnEstimateRegisterEstimateListExcel").on('click', function(){
+            fnReportFormToHiddenFormPageAction("packing_history_list_search_form", "/downloadExcel");
+        });
+
+        $("#chkEstimateRegisterDetail").on('click', function(){
+
+        });
+
+        $("#selEstimateRegisterCalculateApply").on('click', function(){
+
+        });
+
+        $("#selEstimateListExcel").on('click', function(){
+
+        });
+
+        $("#btnEstimateRegisterDrawAdd").on('click', function(){
+
+        });
+
+        $("#btnEstimateRegisterDrawView").on('click', function(){
+
+        });
     });
 </script>
