@@ -34,6 +34,7 @@
             B.DRAWING_NUM, <!-- 도면번호 -->
             B.ITEM_NM, <!-- 품명 -->
             B.WORK_TYPE, <!-- 작업형태 -->
+            SF_GET_CODE_NM(1033, B.WORK_TYPE, 'KR') AS WORK_NM, <!-- 작업형태 이름 -->
             B.OUTSIDE_YN, <!-- 외주 -->
             B.WORK_FACTORY, <!-- 수행공장 -->
             B.MATERIAL_SUPPLY_YN, <!-- 소재사급 -->
@@ -46,7 +47,6 @@
             B.MATERIAL_FINISH_HEAT, <!-- 열처리 -->
             B.MATERIAL_NOTE, <!-- 소재비고 -->
             B.PART_UNIT_QTY, <!-- Part단위수량 -->
-            B.ITEM_QTY, <!-- 수량 -->
             C.ORDER_NUM, <!-- 발주번호 -->
             C.ORDER_QTY, <!-- 발주정보_수량 -->
             B.ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
@@ -830,6 +830,7 @@
         FROM (
             SELECT
             'OUTPUT_AMT' AS CONTROL_TYPE,
+            '매출' AS CONTROL_NM,
             A.COMP_CD,
             A.COMP_NM,
             B.COMP_CD AS ORDER_COMP_CD,
@@ -867,6 +868,7 @@
             UNION ALL
             SELECT
             'DEPOSIT_AMT' AS CONTROL_TYPE,
+            '입금' AS CONTROL_NM,
             A.COMP_CD,
             A.COMP_NM,
             B.COMP_CD AS ORDER_COMP_CD,
