@@ -12,7 +12,7 @@
 <!-- Android&IOS Touch Icon -->
 <!-- <link rel="apple-touch-icon-precomposed" href="/asset/images/common/favicon-152.png"> -->
 <!--jQueryUI version >= 1.11.4 only -->
-<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css" />
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css" />
 <!--ParamQuery Grid css files-->
 <link rel="stylesheet" href="/resource/plugins/paramquery/pqgrid.min.css" />
 <!--add pqgrid.ui.css for jQueryUI theme support-->

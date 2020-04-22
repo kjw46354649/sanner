@@ -30,3 +30,15 @@
 .pq-theme .ui-state-default, .pq-theme .ui-button{
 
 }
+
+.form-group1 div.group-item { display: inline-block; width: 24.5%; padding: 0.5vh 0.5vw; }
+.form-group1 div.group-item-option { display: inline-block; width: 5%; padding: 0.5vh 0.5vw; }
+.form-group1 div.group-item > label { width: 20%; font-size: 1.4rem; margin-right: 0.5vw; }
+.form-group1 div.group-item-option > label { width: 20%; font-size: 1.4rem; margin-right: 0.5vw; }
+.form-group1 div.group-item > select { width: 75%; }
+.form-group1 div.group-item > input { width: 75%; }
+.form-group1 .chk_box_area { display: inline-block; }
+.form-group1 .chk_box_area > input[type="checkbox"] + label { font-size: 1.4rem; margin-left: 0.2vw; margin-right: 0.5vw; }
+.form-group1 .search_btn { width: 69px; height: 34px; background: url(../images/common/bg_search.jpg)repeat-x 0 0; border: 1px solid #a3a3a3; font-size: 13px; font-family: 'NotoKrB'; position: relative; color: #010101; padding-left: 13px; float: right; margin-right: 1.45%; }
+.form-group1 .search_btn:before { content: ''; width: 9px; height: 12px; background: url(../images/common/ico_search.jpg)no-repeat 0 0; position: absolute; top: 10px; left: 12px; }
+/*.form-group1 > div.group-item > input.col-2 { width: 75%; }*/
