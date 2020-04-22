@@ -12,114 +12,89 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<div class="page-context">
-    <div class="row m-b-md">
-        <div class="col-md-12">
-            <section class="panel panel-default">
-                <header class="panel-heading font-bold">
-                    외주 마감 이력
-                </header>
-                <div class="panel-body">
-                    <form class="form-inline" id="OUTSIDE_CLOSE_HISTORY_SEARCH_FORM" role="form">
-                        <input type="hidden" name="queryId" id="queryId" value="selectOutsideCloseHistoryList">
-                        <div class="row">
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="COMP_CD">사업자</label>
-                                <select class="form-control" name="COMP_CD" id="COMP_CD">
-                                    <option value="">All</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="ORDER_COMP_CD">발주사</label>
-                                <select class="form-control" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                                    <option value="">All</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="DRAWING_NUM">도면번호</label>
-                                <input type="text" class="form-control" name="DRAWING_NUM" id="DRAWING_NUM">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="ITEM_NM">품명</label>
-                                <input type="text" class="form-control" name="ITEM_NM" id="ITEM_NM">
-                            </div>
-                        </div>
-                        <div class="line line-dashed b-b line-xs"></div>
-                        <div class="row">
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="CONTROL_NUM">관리번호</label>
-                                <input type="text" class="form-control" name="CONTROL_NUM" id="CONTROL_NUM">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="ORDER_NUM">발주번호</label>
-                                <input type="text" class="form-control" name="ORDER_NUM" id="ORDER_NUM">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="STANDARD">규격</label>
-                                <select class="form-control" id="STANDARD">
-                                    <option></option>
-                                </select>
-                                <label for="standard_1"></label><input type="text" class="form-control" id="STANDARD_1"
-                                                                       size="3">
-                                *
-                                <label for="standard_2"></label><input type="text" class="form-control" id="STANDARD_2"
-                                                                       size="3">
-                                *
-                                <label for="standard_3"></label><input type="text" class="form-control" id="STANDARD_3"
-                                                                       size="3">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="">모듈명</label>
-                                <input type="text" class="form-control" name="MODULE_NM" id="MODULE_NM">
-                            </div>
-                            <div class="line line-dashed b-b line-xs"></div>
-                            <div class="row">
-                                <div class="line line-dashed b-b line-xs"></div>
-                                <div class="row">
-                                    <div class="form-group col-md-3">
-                                        <label class="control-label" for="OPTIONAL_CONDITIONS">마감/종료 월</label>
-                                        <select class="form-control" name="OPTIONAL_CONDITIONS" id="OPTIONAL_CONDITIONS">
-                                            <option value="">Select</option>
-                                            <c:forEach var="code" items="${HighCode.H_1007}">
-                                                <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                            </c:forEach>
-                                        </select>
-                                        <label class="control-label" for="CONTROL_NUMBER"></label>
-                                        <select class="form-control" name="CORPORATION" id="CORPORATION">
-                                            <option value="">All</option>
-                                            <c:forEach var="code" items="${HighCode.H_1007}">
-                                                <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label class="control-label" for="UNIT_PRICE">단가</label>
-                                        <select class="form-control" id="UNIT_PRICE">
-                                            <option></option>
-                                        </select>
-                                        <label for="UNIT_PRICE_1"></label><input type="text" class="form-control" id="UNIT_PRICE_1">
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label class="control-label" for="">금액합산</label>
-                                        <input type="text" class="form-control" name="AMOUNT_SUM" id="AMOUNT_SUM" readonly>
-                                    </div>
-                                    <div class="form-group col-md-3 text-right">
-                                        <div type="submit" class="btn btn-success btn-sm btn-default" id="testSearch">
-                                            Search
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                    </form>
+<div class="page estimate">
+    <div class="topWrap">
+        <form class="form-inline" id="OUTSIDE_CLOSE_HISTORY_SEARCH_FORM" role="form">
+            <input type="hidden" name="queryId" id="queryId" value="outMapper.selectOutsideCloseHistoryList">
+            <div class="gubunWrap">
+                <div class="form-group1">
+                    <div class="group-item">
+                        <label for="COMP_CD">사업자</label>
+                        <select name="COMP_CD" id="COMP_CD">
+                            <option value="">All</option>
+                        </select>
+                    </div>
+                    <div class="group-item">
+                        <label for="ORDER_COMP_CD">발주사</label>
+                        <select name="ORDER_COMP_CD" id="ORDER_COMP_CD">
+                            <option value="">All</option>
+                        </select>
+                    </div>
+                    <div class="group-item">
+                        <label for="DRAWING_NUM">도면번호</label>
+                        <input type="text" name="DRAWING_NUM" id="DRAWING_NUM">
+                    </div>
+                    <div class="group-item">
+                        <label for="ITEM_NM">품명</label>
+                        <input type="text" name="ITEM_NM" id="ITEM_NM">
+                    </div>
+                    <div class="group-item">
+                        <label for="CONTROL_NUM">관리번호</label>
+                        <input type="text" name="CONTROL_NUM" id="CONTROL_NUM">
+                    </div>
+                    <div class="group-item">
+                        <label for="ORDER_NUM">발주번호</label>
+                        <input type="text" name="ORDER_NUM" id="ORDER_NUM">
+                    </div>
+                    <div class="group-item">
+                        <!-- TODO: 규격 -->
+                        <label for="STANDARD">규격</label>
+                        <select id="STANDARD">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="group-item">
+                        <label for="MODULE_NM">모듈명</label>
+                        <input type="text" name="MODULE_NM" id="MODULE_NM">
+                    </div>
+                    <div class="line line-dashed b-b line-xs"></div>
+                    <div class="group-item">
+                        <label for="OUTSIDE_CLOSE_YEAR">마감/종료 월</label>
+                        <select class="two" name="OUTSIDE_CLOSE_YEAR" id="OUTSIDE_CLOSE_YEAR"></select>
+                        <select class="two" name="OUTSIDE_CLOSE_MONTH" id="OUTSIDE_CLOSE_MONTH"></select>
+                    </div>
+                    <div class="group-item">
+                        <label for="UNIT_PRICE">단가</label>
+                        <select class="two" id="UNIT_PRICE">
+                            <option></option>
+                        </select>
+                        <input type="text" class="two" id="UNIT_PRICE_1">
+                    </div>
+                    <div class="group-item">
+                        <label for="AMOUNT_SUM">금액합산</label>
+                        <input type="text" name="AMOUNT_SUM" id="AMOUNT_SUM" readonly>
+                    </div>
+                    <button type="button" class="search_btn" id="OUTSIDE_CLOSE_HISTORY_SEARCH">검색</button>
                 </div>
-            </section>
+            </div>
+        </form>
+        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
+    </div>
+    <div class="bottomWrap">
+        <div class="hWrap">
+            <div class="row">
+                <div class="col-md-6">
+                    <button type="button" class="defaultBtn" id="OUTSIDE_CLOSE_CANCEL">마감 취소</button>
+                </div>
+                <div class="col-md-6 ta-r">
+                    <button type="button" class="defaultBtn grayGra" id="DRAWING_VIEW">도면 View</button>
+                </div>
+            </div>
         </div>
-        <div class="row">&nbsp;
-            <section>
-                <div class="col-md-12">
-                    <div id="OUTSIDE_CLOSE_HISTORY_GRID"></div>
-                </div>
-            </section>
+        <div class="tableWrap">
+            <div class="conMainWrap">
+                <div id="OUTSIDE_CLOSE_HISTORY_GRID"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -132,12 +107,24 @@
         let $outsideCloseHistoryGrid;
         const gridId = 'OUTSIDE_CLOSE_HISTORY_GRID';
         let postData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_HISTORY_SEARCH_FORM');
-        let colModel = [
+        const colModel = [
             {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true, colModel: []},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true, colModel: []},
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true, colModel: []},
+            {
+                title: 'CONTROL_DETAIL_SEQ',
+                dataType: 'integer',
+                dataIndx: 'CONTROL_DETAIL_SEQ',
+                hidden: true,
+                colModel: []
+            },
             {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true, colModel: []},
-            {title: 'OUTSIDE_REQUEST_SEQ', dataType: 'integer', dataIndx: 'OUTSIDE_REQUEST_SEQ', hidden: true, colModel: []},
+            {
+                title: 'OUTSIDE_REQUEST_SEQ',
+                dataType: 'integer',
+                dataIndx: 'OUTSIDE_REQUEST_SEQ',
+                hidden: true,
+                colModel: []
+            },
             {title: 'CLOSE_VER', dataType: 'integer', dataIndx: 'CLOSE_VER', hidden: false, colModel: []},
             {title: 'PART_STATUS', dataType: 'string', dataIndx: 'PART_STATUS', hidden: false, colModel: []},
             {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: true, colModel: []},
@@ -163,7 +150,7 @@
             {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', editable: true, colModel: []},
             {title: '규격', minWidth: 90, dataType: 'string', dataIndx: 'SIZE_TXT', editable: true, colModel: []},
             {title: '소재<br>종류', minWidth: 90, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', colModel: []},
-            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY', colModel: []},
+            // {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY', colModel: []},
             {title: '사급<br>여부', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', colModel: []},
             {title: '소재<br>제공', dataType: 'string', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN', colModel: []},
             {
@@ -200,43 +187,7 @@
             {title: '외주가공<br>마감일시', minWidth: 70, dataType: 'string', dataIndx: 'OUTSIDE_FINISH_DATE', colModel: []},
             {title: 'DXF', dataType: 'string', dataIndx: 'STATUS_DT', colModel: []}
         ];
-        let toolbar = {
-            cls: 'pq-toolbar-crud',
-            items: [
-                {
-                    type: 'button', label: '마감 취소', icon: 'ui-icon-cancel', listener: {
-                        'click': function () {
-                            updateControlPartStatus();
-                            const updateQueryList = ['orderMapper.updateControlPartStatus', 'orderMapper.insertControlPartProgress'];
-                            const deleteQuery = 'outMapper.deleteOutsideClose';
-
-                            fnModifyPQGrid($outsideCloseHistoryGrid, [], updateQueryList);
-                            fnDeletePQGrid($outsideCloseHistoryGrid, selectedRowIndex, deleteQuery);
-                        }
-                    }
-                },
-                {
-                    type: 'button', label: '도면 View', icon: 'ui-icon-document', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {
-                            const DELETE_QUERY_ID = '';
-                            let selectedRowCount = selectedRowIndex.length;
-
-                            for (let i = 0; i < selectedRowCount; i++) {
-                                let thisRowData = $outsideCloseHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
-
-                                if (!(thisRowData.ORDER_STATUS_NM === undefined || thisRowData.ORDER_STATUS_NM === null || thisRowData.ORDER_STATUS_NM === '' || thisRowData.ORDER_STATUS_NM === '확정취소')) {
-                                    alert('확정상태가 빈칸(임시저장)이나 확정취소인 경우에만 가능');
-                                    return false;
-                                }
-                            }
-
-                            fnDeletePQGrid($outsideCloseHistoryGrid, selectedRowIndex, DELETE_QUERY_ID);
-                        }
-                    }
-                },
-            ]
-        };
-        let obj = {
+        const obj = {
             // width: 700,
             // height: 600,
             collapsible: false,
@@ -252,7 +203,6 @@
                 editable: false
             },
             colModel: colModel,
-            toolbar: toolbar,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: postData,
@@ -405,12 +355,21 @@
         /* function */
 
         /* event */
-        $('#testSearch').on('click', function () {
+        $('#OUTSIDE_CLOSE_HISTORY_SEARCH').on('click', function () {
             postData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_HISTORY_SEARCH_FORM')
             $outsideCloseHistoryGrid.pqGrid('option', 'dataModel.postData', function (ui) {
                 return postData;
             });
             $outsideCloseHistoryGrid.pqGrid('refreshDataAndView');
+        });
+
+        $('#OUTSIDE_CLOSE_CANCEL').on('click', function () {
+            updateControlPartStatus();
+            const updateQueryList = ['orderMapper.updateControlPartStatus', 'orderMapper.insertControlPartProgress'];
+            const deleteQuery = 'outMapper.deleteOutsideClose';
+
+            fnModifyPQGrid($outsideCloseHistoryGrid, [], updateQueryList);
+            fnDeletePQGrid($outsideCloseHistoryGrid, selectedRowIndex, deleteQuery);
         });
         /* event */
 
@@ -423,6 +382,8 @@
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
+        fnAppendSelectboxYear('OUTSIDE_CLOSE_YEAR', 10);
+        fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH', CURRENT_YEAR);
         $outsideCloseHistoryGrid = $('#' + gridId).pqGrid(obj);
         /* init */
     });

@@ -12,218 +12,179 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<div class="page-context">
-    <div class="row m-b-md">
-        <div class="col-md-12">&nbsp;
-            <section class="panel panel-default">
-                <header class="panel-heading font-bold">
-                    주문 관리
-                </header>
-                <div class="panel-body">
-                    <form class="form-inline" id="CONTROL_MANAGE_SEARCH_FORM" role="form">
-                        <input type="hidden" name="queryId" id="queryId" value="selectControlManageList">
-                        <div class="row">
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="COMP_CD">사업자</label>
-                                <select class="form-control" name="COMP_CD" id="COMP_CD">
-                                    <option value="">All</option>
+<div class="page estimate">
+    <div class="topWrap">
+        <form class="form-inline" name="CONTROL_MANAGE_SEARCH_FORM" id="CONTROL_MANAGE_SEARCH_FORM" role="form">
+            <input type="hidden" name="queryId" id="queryId" value="selectControlManageList">
+            <div class="gubunWrap">
+                <div class="form-group1">
+                    <div class="group-item">
+                        <label for="COMP_CD">사업자구분</label>
+                        <select name="COMP_CD" id="COMP_CD" title="사업자구분">
+                            <option value="">ALL</option>
+                        </select>
+                    </div>
+                    <div class="group-item">
+                        <label for="ORDER_COMP_CD">발주사</label>
+                        <select name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="발주사">
+                            <option value="" selected="selected">ALL</option>
+                        </select>
+                    </div>
+                    <div class="group-item">
+                        <label for="DRAWING_NUM">도면번호</label>
+                        <input type="text" name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
+                    </div>
+                    <div class="group-item">
+                        <label for="ITEM_NM">품명</label>
+                        <input type="text" name="ITEM_NM" id="ITEM_NM" title="품명">
+                    </div>
+                    <div class="group-item">
+                        <label for="CONTROL_NUM">관리번호</label>
+                        <input type="text" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
+                    </div>
+                    <div class="group-item">
+                        <label for="ORDER_NUM">발주번호</label><input type="text" name="ORDER_NUM" id="ORDER_NUM" title="발주번호">
+                    </div>
+                    <%-- TODO: 규격 --%>
+                    <div class="group-item">
+                        <label for="ORDER_COMP_CD">규격</label>
+                        <select name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="규격">
+                            <option value="" selected="selected">ALL</option>
+                        </select>
+                    </div>
+                    <div class="group-item">
+                        <label for="ORDER_COMP_CD">소재형태</label>
+                        <select name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="소재형태">
+                            <option value="">All</option>
+                            <c:forEach var="code" items="${HighCode.H_1004}">
+                                <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="dateWrap">
+                        <div class="leftSpan">
+                            <span class="slt_wrap">
+                                <select id="daySltd" name="daySltd" title="등록일시">
+                                    <option value="" selected="selected">등록일시</option>
+                                    <option value="1">-ALL-</option>
+                                    <option value="2">-ALL-</option>
                                 </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="ORDER_COMP_CD">발주사</label>
-                                <select class="form-control" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                                    <option value="">All</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="DRAWING_NUM">도면번호</label>
-                                <input type="text" class="form-control" name="DRAWING_NUM" id="DRAWING_NUM">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="ITEM_NM">품명</label>
-                                <input type="text" class="form-control" name="ITEM_NM" id="ITEM_NM">
+                            </span>
+                            <span class="radio_box">
+                                <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_1" value="today" checked><label for="fr_1001_1">오늘</label>
+                            </span>
+                            <span class="radio_box">
+                                <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_2" value="current_month"><label for="fr_1001_2">현재월</label>
+                            </span>
+                            <span class="radio_box">
+                                <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_3" value="three_months"><label for="fr_1001_3">3개월</label>
+                            </span>
+                            <div class="calendar_wrap">
+                                <span class="calendar_span">
+                                    <input type="text" title="달력정보" name="CONTROL_MANAGE_START_DATE" id="CONTROL_MANAGE_START_DATE"><button type="button">달력선택</button>
+                                </span>
+                                <span class="nbsp">~</span>
+                                <span class="calendar_span">
+                                    <input type="text" title="달력정보" name="CONTROL_MANAGE_END_DATE" id="CONTROL_MANAGE_END_DATE" readonly><button type="button">달력선택</button>
+                                </span>
+                                <span class="chk_box no_txt"><input id="pr_ex" type="checkbox"><label for="pr_ex">선택</label></span>
                             </div>
                         </div>
-                        <div class="line line-dashed b-b line-xs"></div>
-                        <div class="row">
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="CONTROL_NUM">관리번호</label>
-                                <input type="text" class="form-control" name="CONTROL_NUM" id="CONTROL_NUM">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="ORDER_NUM">발주번호</label>
-                                <input type="text" class="form-control" name="ORDER_NUM" id="ORDER_NUM">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="STANDARD">규격</label>
-                                <select class="form-control" id="STANDARD">
-                                    <option></option>
-                                </select>
-                                <label for="standard_1"></label><input type="text" class="form-control" id="STANDARD_1"
-                                                                       size="3">
-                                *
-                                <label for="standard_2"></label><input type="text" class="form-control" id="STANDARD_2"
-                                                                       size="3">
-                                *
-                                <label for="standard_3"></label><input type="text" class="form-control" id="STANDARD_3"
-                                                                       size="3">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="">소재형태</label>
-                                <select class="form-control" name="" id="">
-                                    <option value="">All</option>
-                                    <c:forEach var="code" items="${HighCode.H_1004}">
-                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                            <div class="line line-dashed b-b line-xs"></div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for=""></label>
-                                    <select class="form-control" id="">
-                                        <option value="">All</option>
-                                        <c:forEach var="code" items="${HighCode.H_1047}">
-                                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                        </c:forEach>
-                                    </select>
-                                    <div class="radio i-checks">
-                                        <label>
-                                            <input type="radio" name="CONTROL_MANAGE_TERM" value="today" checked>
-                                            <i></i>
-                                            오늘
-                                        </label>
-                                    </div>
-                                    <div class="radio i-checks">
-                                        <label>
-                                            <input type="radio" name="CONTROL_MANAGE_TERM" value="current_month">
-                                            <i></i>
-                                            현재월
-                                        </label>
-                                    </div>
-                                    <div class="radio i-checks">
-                                        <label>
-                                            <input type="radio" name="CONTROL_MANAGE_TERM" value="three_months">
-                                            <i></i>
-                                            3개월
-                                        </label>
-                                    </div>
-                                    <input type="text" name="CONTROL_MANAGE_START_DATE" id="CONTROL_MANAGE_START_DATE"
-                                           readonly> ~
-                                    <input type="text"
-                                           name="CONTROL_MANAGE_END_DATE"
-                                           id="CONTROL_MANAGE_END_DATE" readonly>
-                                    <label class="checkbox-inline i-checks">
-                                        <input type="checkbox" id="CONTROL_MANAGE_DATEPICKER_READ_ONLY" checked><i></i>
-                                    </label>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label class="control-label" for="UNIT_CONST">단가</label>
-                                    <select class="form-control" id="UNIT_CONST">
-                                        <option></option>
-                                    </select>
-                                    <label for="UNIT_CONST_1"></label>
-                                    <input type="text" class="form-control" id="UNIT_CONST_1">
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label class="control-label" for="WORK_TYPE">작업형태</label>
-                                    <select class="form-control" name="WORK_TYPE" id="WORK_TYPE">
-                                        <option value="">All</option>
-                                        <c:forEach var="code" items="${HighCode.H_1033}">
-                                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="line line-dashed b-b line-xs"></div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label class="control-label" for="option">option</label>
-                                    <label class="checkbox-inline i-checks">
-                                        <input type="checkbox" id="inlinecheckbox1" value="option1"><i></i> 자재사급
-                                    </label>
-                                    <label class="checkbox-inline i-checks">
-                                        <input type="checkbox" id="inlinecheckbox1" value="option1"><i></i> 외주
-                                    </label>
-                                    <label class="checkbox-inline i-checks">
-                                        <input type="checkbox" id="inlinecheckbox1" value="option1"><i></i> 未단가
-                                    </label>
-                                    <label class="checkbox-inline i-checks">
-                                        <input type="checkbox" id="inlinecheckbox1" value="option1"><i></i> 긴급
-                                    </label>
-                                    <label class="checkbox-inline i-checks">
-                                        <input type="checkbox" id="inlinecheckbox1" value="option1"><i></i> part 숨기기
-                                    </label>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label class="control-label" for="AMOUNT_SUM">금액합산</label>
-                                    <input type="text" class="form-control" id="AMOUNT_SUM" readonly>
-                                </div>
-                                <div class="form-group col-md-3 text-right">
-                                    <div type="submit" class="btn btn-success btn-sm btn-default" id="CONTROL_MANAGE_SEARCH">
-                                        search
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="group-item">
+                            <label for="ORDER_COMP_CD">단가</label>
+                            <select name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="단가">
+                                <option value="" selected="selected">ALL</option>
+                            </select>
                         </div>
-                    </form>
+                        <div class="group-item">
+                            <label for="WORK_TYPE">작업형태</label>
+                            <select name="WORK_TYPE" id="WORK_TYPE" title="작업형태">
+                                <option value="">All</option>
+                                <c:forEach var="code" items="${HighCode.H_1033}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="group-item-option">
+                        <label for="Option">Option</label>
+                    </div>
+                    <div class="chk_box_area">
+                        <input type="checkbox" id="option1"><label for="option1">자재사급</label>
+                        <input type="checkbox" id="option2"><label for="option2">외주</label>
+                        <input type="checkbox" id="option3"><label for="option3">未단가</label>
+                        <input type="checkbox" id="option4"><label for="option4">긴급</label>
+                        <input type="checkbox" id="option5"><label for="option5">part 숨기기</label>
+                    </div>
+                    <button type="button" class="search_btn" id="CONTROL_MANAGE_SEARCH">검색</button>
                 </div>
-            </section>
-        </div>
-        <div class="row">&nbsp;
-            <section>
-                <div class="col-md-12">
-                    <a href="#CONTROL_MANGE_POPUP" class="" id="" data-target="" data-toggle="modal"
-                       data-refform="CONTROL_MANGE_POPUP">
-                        <input type="button" value="신규 주문 등록">
-                    </a>
-                    <button id="DRAWING_REGISTRATION">도면 등록</button>
-                    <button id="DRAWING_CHANGE">도면변경(Rev. up)</button>
-                    <button name="CHANGE_STATUS" id="CONFIRMATION" data-control_status="ORD001"
-                            data-control_status_nm="확정">확정
+            </div>
+        </form>
+        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
+    </div>
+    <div class="bottomWrap">
+        <div class="hWrap">
+            <div class="row">
+                <div class="col-md-6">
+                    <button type="button" class="defaultBtn" data-toggle="modal" data-target="#CONTROL_MANGE_POPUP">신규
+                        주문 등록
                     </button>
-                    <button name="CHANGE_STATUS" id="CANCEL" data-control_status="ORD002"
+                    <button type="button" class="defaultBtn" name="CHANGE_STATUS" id="CONFIRMATION"
+                            data-control_status="ORD001" data-control_status_nm="확정">확정
+                    </button>
+                    <button type="button" class="defaultBtn" name="CHANGE_STATUS" id="CANCEL" data-control_status="ORD002"
                             data-control_status_nm="취소">취소
                     </button>
-                    <button name="CHANGE_STATUS" id="TERMINATION" data-control_status="ORD004"
-                            data-control_status_nm="종료">종료
+                    <button type="button" class="defaultBtn" name="CHANGE_STATUS" id="TERMINATION"
+                            data-control_status="ORD004" data-control_status_nm="종료">종료
                     </button>
-                    <a href="#CONTROL_CLOSE_POPUP" data-toggle="modal" data-refform="CONTROL_CLOSE_POPUP">
-                        <input type="button" value="마감">
-                    </a>
-                    <a href="#ESTIMATE_REGISTER_POPUP" data-toggle="modal" data-refform="ESTIMATE_REGISTER_POPUP">
-                        <input type="button" value="견적등록">
-                    </a>
-                    <button id="SPECIFICATION_ON_TRANSACTION">거래명세표</button>
-                    <button id="DRAWING_VIEW">도면 View</button>
-                    <button id="DRAWING_PRINT">도면 출력</button>
-                    <button id="BARCODE_DRAWING_PRINT">바코드도면 출력</button>
-                    <button id="LABEL_PRINT">라벨 출력</button>
+                    <button type="button" class="defaultBtn" data-toggle="modal"
+                            data-target="#CONTROL_CLOSE_POPUP">마감
+                    </button>
+                    <button type="button" class="defaultBtn" data-toggle="modal"
+                            data-target="#ESTIMATE_REGISTER_POPUP">견적등록
+                    </button>
+                    <button type="button" class="defaultBtn" id="SPECIFICATION_ON_TRANSACTION">거래명세표</button>
                 </div>
-                <div class="col-md-12">
-                    <button id="ESTIMATE_AUTOMATIC_CALCULATION">견적자동계산</button>
-                    <button id="ESTIMATE_LIST_PRINT">견적List출력</button>
-                    <label class="control-label" for="SUPPLY_UNIT_COST_APPLY">공급단가적용</label>
-                    <select id="SUPPLY_UNIT_COST_APPLY">
-                        <option></option>
-                    </select>
+                <div class="col-md-6 ta-r">
+                    <button type="button" class="defaultBtn" id="ESTIMATE_AUTOMATIC_CALCULATION">견적자동계산</button>
+                    <button type="button" class="defaultBtn" id="ESTIMATE_LIST_PRINT">견적List출력</button>
+                    <button type="button" class="defaultBtn" id="BARCODE_DRAWING_PRINT">바코드도면 출력</button>
+                    <button type="button" class="defaultBtn" id="BARCODE_PRINT">바코드 출력</button>
+                    <button type="button" class="defaultBtn" id="LABEL_PRINT">라벨 출력</button>
                 </div>
-            </section>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-6">
+                        <span class="slt_wrap namePlusSlt">
+                            <label for="SUPPLY_UNIT_COST_APPLY">공급단가적용</label>
+                            <select id="SUPPLY_UNIT_COST_APPLY" title="공급단가적용">
+                                <option></option>
+                            </select>
+                        </span>
+                </div>
+                <div class="col-md-6 ta-r">
+                    <button type="button" class="defaultBtn" id="DRAWING_REGISTRATION">도면 등록</button>
+                    <button type="button" class="defaultBtn" id="DRAWING_CHANGE">도면변경(Rev. up)</button>
+                    <button type="button" class="defaultBtn grayGra" id="DRAWING_VIEW">도면 View</button>
+                    <button type="button" class="defaultBtn" id="DRAWING_PRINT">도면 출력</button>
+                    <button type="button" class="defaultBtn blueGra" id="CONTROL_MANAGE_SAVE">Save</button>
+                    <button type="button" class="defaultBtn yelllowGra" id="CONTROL_MANAGE_DELETE">Delete</button>
+                </div>
+            </div>
         </div>
-        <div class="row">&nbsp;
-            <section>
-                <div class="col-md-12">
-                    <%--                    <i class="fa fa-plus-circle"></i>--%>
-                    <div id="CONTROL_MANAGE_GRID"></div>
-                </div>
-            </section>
+
+        <div class="tableWrap">
+            <div class="conMainWrap">
+                <div id="CONTROL_MANAGE_GRID"></div>
+            </div>
         </div>
     </div>
 </div>
 
 <%-- modal --%>
 <div class="modal" id="CONTROL_MANGE_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
@@ -232,7 +193,7 @@
             </div>
             <div class="modal-body">
                 <div id="ORDER_REGISTER_GRID"></div>
-<%--                <div id="TEMP_ORDER_REGISTER_GRID"></div>--%>
+                <%--                <div id="TEMP_ORDER_REGISTER_GRID"></div>--%>
             </div>
             <!-- /.modal-content -->
         </div>
@@ -265,42 +226,42 @@
                             <input type="hidden" name="queryId" id="queryId" value="selectControlCloseLeftList">
                             <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
                             <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                        <div class="col-md-8">
-                            <div class="col-md-3">
-                                <label class="control-label" for="UNIT_CONST">대상 년/월</label>
-                            </div>
-                            <div class="col-md-5">
-                                <select class="form-control" name="CONTROL_CLOSE_YEAR" id="CONTROL_CLOSE_YEAR">
-                                    <option></option>
-                                </select>
+                            <div class="col-md-8">
+                                <div class="col-md-3">
+                                    <label class="control-label" for="UNIT_CONST">대상 년/월</label>
+                                </div>
+                                <div class="col-md-5">
+                                    <select class="form-control" name="CONTROL_CLOSE_YEAR" id="CONTROL_CLOSE_YEAR">
+                                        <option></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control" name="CONTROL_CLOSE_MONTH" id="CONTROL_CLOSE_MONTH">
+                                        <option></option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="col-md-4">
-                                <select class="form-control" name="CONTROL_CLOSE_MONTH" id="CONTROL_CLOSE_MONTH">
-                                    <option></option>
-                                </select>
+                                <div class="col-md-6">
+                                    <label class="control-label" for="CLOSE_VER">차수</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <select class="form-control" name="CLOSE_VER" id="CLOSE_VER">
+                                        <option value="1">
+                                            1차
+                                        </option>
+                                        <option value="2">
+                                            2차
+                                        </option>
+                                        <option value="3">
+                                            3차
+                                        </option>
+                                        <option value="4">
+                                            4차
+                                        </option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="col-md-6">
-                                <label class="control-label" for="CLOSE_VER">차수</label>
-                            </div>
-                            <div class="col-md-6">
-                                <select class="form-control" name="CLOSE_VER" id="CLOSE_VER">
-                                    <option value="1">
-                                        1차
-                                    </option>
-                                    <option value="2">
-                                        2차
-                                    </option>
-                                    <option value="3">
-                                        3차
-                                    </option>
-                                    <option value="4">
-                                        4차
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
                     </div>
                     </form>
                     <div class="col-md-6">
@@ -326,8 +287,12 @@
                         <header class="panel-heading font-bold">
                             업체 정보 관리
                             <div class="btnSaveCloseBox">
-                                <div type="button" class="btn btn-success btn-sm btn-default" id="btn_estimate_register_save">Save</div>
-                                <div type="button" class="btn btn-success btn-sm btn-default" id="btn_estimate_register_submit">Submit</div>
+                                <div type="button" class="btn btn-success btn-sm btn-default" id="btn_estimate_register_save">
+                                    Save
+                                </div>
+                                <div type="button" class="btn btn-success btn-sm btn-default" id="btn_estimate_register_submit">
+                                    Submit
+                                </div>
                             </div>
                         </header>
                         <div class="panel-body">
@@ -359,7 +324,8 @@
                                                             </div>
                                                             <div class="line line-dashed b-b pull-in"></div>
                                                             <div class="form-group col-md-4 col-sm-4">
-                                                                <label class="col-md-4 col-sm-4 control-label">구매 담당자</label>
+                                                                <label class="col-md-4 col-sm-4 control-label">구매
+                                                                    담당자</label>
                                                                 <div class="col-md-8 col-sm-8">
                                                                     </select>
                                                                 </div>
@@ -372,7 +338,8 @@
                                                                 </div>
                                                             </div>
                                                             <div class="form-group col-md-4 col-sm-4">
-                                                                <label class="col-md-4 col-sm-4 control-label">견적 담당자</label>
+                                                                <label class="col-md-4 col-sm-4 control-label">견적
+                                                                    담당자</label>
                                                                 <div class="col-md-8 col-sm-8">
                                                                     <select id="EST_USER_ID" name="EST_USER_ID" data-required="true" class="form-control parsley-validated">
                                                                     </select>
@@ -380,7 +347,8 @@
                                                             </div>
                                                             <div class="line line-dashed b-b pull-in"></div>
                                                             <div class="form-group col-md-4 col-sm-4">
-                                                                <label class="col-md-4 col-sm-4 control-label">견적번호 (차수)</label>
+                                                                <label class="col-md-4 col-sm-4 control-label">견적번호
+                                                                    (차수)</label>
                                                                 <div class="col-md-8 col-sm-8">
                                                                     <input type="text" class="form-control" id="EST_NUM" name="EST_NUM" readonly>
                                                                 </div>
@@ -392,14 +360,16 @@
                                                                 </div>
                                                             </div>
                                                             <div class="form-group col-md-4 col-sm-4">
-                                                                <label class="col-md-4 col-sm-4 control-label">견적금액 계</label>
+                                                                <label class="col-md-4 col-sm-4 control-label">견적금액
+                                                                    계</label>
                                                                 <div class="col-md-8 col-sm-8">
                                                                     <input type="text" class="form-control" id="DTL_AMOUNT" name="DTL_AMOUNT" readonly>
                                                                 </div>
                                                             </div>
                                                             <div class="line line-dashed b-b pull-in"></div>
                                                             <div class="form-group col-md-4 col-sm-4">
-                                                                <label class="col-md-4 col-sm-4 control-label">업데이트 일시</label>
+                                                                <label class="col-md-4 col-sm-4 control-label">업데이트
+                                                                    일시</label>
                                                                 <div class="col-md-8 col-sm-8">
                                                                     <input type="text" class="form-control" id="INSERT_DT" name="INSERT_DT" readonly>
                                                                 </div>
@@ -499,13 +469,32 @@
         let colModel = [
             {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true, colModel: []},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true, colModel: []},
-            {title: 'CONTROL_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'CONTROL_PROGRESS_SEQ', hidden: true, colModel: []},
+            {
+                title: 'CONTROL_PROGRESS_SEQ',
+                dataType: 'integer',
+                dataIndx: 'CONTROL_PROGRESS_SEQ',
+                hidden: true,
+                colModel: []
+            },
             {title: 'ORDER_STATUS', dataType: 'integer', dataIndx: 'ORDER_STATUS', hidden: true, colModel: []},
             {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true, colModel: []},
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true, colModel: []},
-            {title: 'PART_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true, colModel: []},
+            {
+                title: 'CONTROL_DETAIL_SEQ',
+                dataType: 'integer',
+                dataIndx: 'CONTROL_DETAIL_SEQ',
+                hidden: true,
+                colModel: []
+            },
+            {
+                title: 'PART_PROGRESS_SEQ',
+                dataType: 'integer',
+                dataIndx: 'PART_PROGRESS_SEQ',
+                hidden: true,
+                colModel: []
+            },
             {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true, colModel: []},
-            {title: '주문상태', align: 'center', colModel: [
+            {
+                title: '주문상태', align: 'center', colModel: [
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_ORIGINAL', hidden: true},
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS', hidden: true},
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_NM'},
@@ -518,9 +507,22 @@
             {title: '발주업체', minWidth: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM', colModel: []},
             {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', hidden: true, colModel: []},
             {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', colModel: []},
-            {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', editable: true, colModel: []},
+            {
+                title: '설계자',
+                dataType: 'string',
+                dataIndx: 'DESIGNER_NM',
+                editable: true,
+                colModel: [],
+                styleHead: {'font-weight': 'bold'}
+            },
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true, colModel: []},
-            {title: 'INV No.<br>(거래명세No.)', minWidth: 100, dataType: 'string', dataIndx: 'CHARGE_USER_ID', colModel: []},
+            {
+                title: 'INV No.<br>(거래명세No.)',
+                minWidth: 100,
+                dataType: 'string',
+                dataIndx: 'CHARGE_USER_ID',
+                colModel: []
+            },
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', editable: true, colModel: []},
             {title: '주요<br>검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION', colModel: []},
             {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN', colModel: []},
@@ -537,7 +539,9 @@
             {title: '도면번호버전', dataType: 'string', dataIndx: 'DRAWING_VER', hidden: true, colModel: []},
             {title: '도면번호', minWidth: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', editable: true, colModel: []},
             {title: '품명', minWidth: 110, dataType: 'string', dataIndx: 'ITEM_NM', editable: true, colModel: []},
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: true, colModel: []/*,
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_NM', colModel: []},
+            {
+                title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true, colModel: []/*,
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -574,7 +578,7 @@
             {title: '열<br>처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', colModel: []},
             {title: '소재비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', editable: true, colModel: []},
             {title: 'Part<br>단위<br>수량', dataType: 'integer', dataIndx: 'PART_UNIT_QTY', colModel: []},
-            {title: '주문<br>수량', dataType: 'string', dataIndx: 'ITEM_QTY', colModel: []},
+            // {title: '주문<br>수량', dataType: 'string', dataIndx: 'ITEM_QTY', colModel: []},
             {
                 title: '대칭', align: 'center', colModel: [
                     {title: '원칭', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY', editable: true},
@@ -625,25 +629,46 @@
                     {title: '부피(cm3)', datatype: 'string', dataIndx: 'SIZE_L_M'}
                 ]
             },
-             {
-                 title: '항목별 계산견적 단가 (10원단위 반올림)', align: 'center', colModel: [
-                     {title: '소재비', datatype: 'string', dataIndx: 'UNIT_MATERIAL_AMT', editable: true},
-                     {title: 'TM각비', datatype: 'string', dataIndx: 'UNIT_TM_AMT', editable: true},
-                     {title: '연마비', datatype: 'string', dataIndx: 'UNIT_GRIND_AMT', editable: true},
-                     {title: '열처리', datatype: 'string', dataIndx: 'UNIT_HEAT_AMT', editable: true},
-                     {title: '표면처리', datatype: 'string', dataIndx: 'UNIT_SURFACE_AMT', editable: true},
-                     {title: '가공비', datatype: 'string', dataIndx: 'UNIT_PROCESS_AMT', editable: true},
-                     {title: '기타추가', datatype: 'string', dataIndx: 'UNIT_ETC_AMT', editable: true},
-                     {title: '견적비고', datatype: 'string', dataIndx: 'UNIT_AMT_NOTE', editable: true}
-                 ]
-             },
-             {title: '계산<br>견적단가', minWidth: 90, dataType: 'integer', dataIndx: 'CALCUL_EST_UNIT_COST', colModel: []},
-             {title: '최종<br>견적단가', minWidth: 90, dataType: 'integer', dataIndx: 'UNIT_FINAL_EST_AMT', colModel: [], editable: true},
-             {title: '견적<br>합계금액', minWidth: 90, dataType: 'integer', dataIndx: 'RUSWJRGKQRpRMADOR', colModel: []},
-             {title: '최종<br>공급단가', minWidth: 90, dataType: 'integer', dataIndx: 'UNIT_FINAL_AMT', colModel: [], editable: true},
-             {title: '합계금액', dataType: 'integer', dataIndx: 'FINAL_AMOUNT', colModel: []},
-             {title: '종전가', minWidth: 100, dataType: 'integer', dataIndx: 'WHDWJSRK', colModel: []},
-            {title: '변경전<br>도면번호', minWidth: 120, dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', colModel: [], editable: true},
+            {
+                title: '항목별 계산견적 단가 (10원단위 반올림)', align: 'center', colModel: [
+                    {title: '소재비', datatype: 'string', dataIndx: 'UNIT_MATERIAL_AMT', editable: true},
+                    {title: 'TM각비', datatype: 'string', dataIndx: 'UNIT_TM_AMT', editable: true},
+                    {title: '연마비', datatype: 'string', dataIndx: 'UNIT_GRIND_AMT', editable: true},
+                    {title: '열처리', datatype: 'string', dataIndx: 'UNIT_HEAT_AMT', editable: true},
+                    {title: '표면처리', datatype: 'string', dataIndx: 'UNIT_SURFACE_AMT', editable: true},
+                    {title: '가공비', datatype: 'string', dataIndx: 'UNIT_PROCESS_AMT', editable: true},
+                    {title: '기타추가', datatype: 'string', dataIndx: 'UNIT_ETC_AMT', editable: true},
+                    {title: '견적비고', datatype: 'string', dataIndx: 'UNIT_AMT_NOTE', editable: true}
+                ]
+            },
+            {title: '계산<br>견적단가', minWidth: 90, dataType: 'integer', dataIndx: 'CALCUL_EST_UNIT_COST', colModel: []},
+            {
+                title: '최종<br>견적단가',
+                minWidth: 90,
+                dataType: 'integer',
+                dataIndx: 'UNIT_FINAL_EST_AMT',
+                colModel: [],
+                editable: true
+            },
+            {title: '견적<br>합계금액', minWidth: 90, dataType: 'integer', dataIndx: 'RUSWJRGKQRpRMADOR', colModel: []},
+            {
+                title: '최종<br>공급단가',
+                minWidth: 90,
+                dataType: 'integer',
+                dataIndx: 'UNIT_FINAL_AMT',
+                colModel: [],
+                editable: true
+            },
+            {title: '합계금액', dataType: 'integer', dataIndx: 'FINAL_AMOUNT', colModel: []},
+            {title: '종전가', minWidth: 100, dataType: 'integer', dataIndx: 'WHDWJSRK', colModel: []},
+            {
+                title: '변경전<br>도면번호',
+                minWidth: 120,
+                dataType: 'string',
+                dataIndx: 'PREV_DRAWING_NUM',
+                colModel: [],
+                editable: true
+            },
             {
                 title: '마감/취소 현황', align: 'center', colModel: [
                     {title: '마감월', datatype: 'string', dataIndx: 'CLOSE_MONTH'},
@@ -727,7 +752,7 @@
             ]
         };
         let obj = {
-            // height: 600,
+            height: 640,
             collapsible: false,
             // postRenderInterval: -1, //call postRender synchronously.
             resizable: true,
@@ -741,7 +766,6 @@
                 editable: false
             },
             colModel: colModel,
-            toolbar: toolbar,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: postData,
@@ -803,17 +827,17 @@
                     else for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
                 }
             },
-            change: function (evt, ui){
+            change: function (evt, ui) {
                 if (ui.source === 'paste') {
                     let updateListLength = ui.updateList.length;
 
-                    for(let i = 0; i < updateListLength; i++) {
+                    for (let i = 0; i < updateListLength; i++) {
                         let newRowData = ui.updateList[i].newRow;
                         let rowIndx = ui.updateList[i].rowIndx;
 
                         if (newRowData.hasOwnProperty('WORK_TYPE')) {
                             let workType = fnGetCommCodeGridSelectBox('1033');
-                            let index = workType.findIndex(function(element) {
+                            let index = workType.findIndex(function (element) {
                                 return element.text == newRowData.WORK_TYPE;
                             });
 
@@ -822,7 +846,10 @@
                                     return element.value == newRowData.WORK_TYPE;
                                 });
                             }
-                            $orderManagementGrid.pqGrid('updateRow', {'rowIndx': rowIndx, row: {'WORK_TYPE': workType[index].value}});
+                            $orderManagementGrid.pqGrid('updateRow', {
+                                'rowIndx': rowIndx,
+                                row: {'WORK_TYPE': workType[index].value}
+                            });
                         }
                     }
                 }
@@ -839,13 +866,14 @@
             {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', colModel: []},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', colModel: []},
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', colModel: []},
-            {title: '주요 검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION', editable:true, colModel: [],
-                editor: {
+            {
+                title: '주요 검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION', editable: true, colModel: [],
+                /*editor: {
                     type: 'select',
                     valueIndx: 'value',
                     labelIndx: 'text',
                     options: fnGetCommCodeGridSelectBox('1042'),
-                }
+                }*/
             },
             {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN', colModel: []},
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', colModel: []},
@@ -853,7 +881,7 @@
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', colModel: []},
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', colModel: []},
             {
-                title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_NM', colModel: [],
+                title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_CD', colModel: [],
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -861,28 +889,60 @@
                     options: fnGetCommCodeGridSelectBox('1033'),
                 },
                 render: function (ui) {
-                    console.log(ui);
                     let workType = fnGetCommCodeGridSelectBox('1033');
-                    let index = workType.findIndex(function(element) {
+                    let index = workType.findIndex(function (element) {
                         return element.text == ui.cellData;
                     });
 
                     if (index < 0) {
-                        index = workType.findIndex(function(element) {
+                        index = workType.findIndex(function (element) {
                             return element.value == ui.cellData;
                         });
-
-                        $orderRegisterGrid.pqGrid('updateRow', {'rowIndx': ui.rowIndx, row: {'WORK_NM': workType[index].value}});
-
-                        return workType[index].text;
-                    } else {
-                        $orderRegisterGrid.pqGrid('updateRow', {'rowIndx': ui.rowIndx, row: {'WORK_NM': workType[index].value}});
-
-                        return workType[index].text;
                     }
+                    console.log(index);
+                    $orderRegisterGrid.pqGrid('updateRow', {
+                        'rowIndx': ui.rowIndx,
+                        row: {'WORK_CD': workType[index].value}
+                    });
+
+                    return workType[index].text;
                 }
             },
-            {title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN', colModel: []},
+            {
+                title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN', colModel: [],
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1042'),
+                },
+                // render: function (ui) {
+                //     let workType = fnGetCommCodeGridSelectBox('1042');
+                //     let index = workType.findIndex(function (element) {
+                //         return element.text == ui.cellData;
+                //     });
+                //
+                //     if (index < 0) {
+                //         index = workType.findIndex(function (element) {
+                //             return element.value == ui.cellData;
+                //         });
+                //
+                //         $orderRegisterGrid.pqGrid('updateRow', {
+                //             'rowIndx': ui.rowIndx,
+                //             row: {'WORK_NM': workType[index].value}
+                //         });
+                //
+                //         return workType[index].text;
+                //     } else {
+                //         $orderRegisterGrid.pqGrid('updateRow', {
+                //             'rowIndx': ui.rowIndx,
+                //             row: {'WORK_NM': workType[index].value}
+                //         });
+                //
+                //         return workType[index].text;
+                //     }
+                // }
+            },
             {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', colModel: []},
             {title: '소재 사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', colModel: []},
             {title: '가공납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', colModel: []},
@@ -951,6 +1011,7 @@
                                 'url': '/registerNewOrder',
                                 'data': {data: JSON.stringify(data)}
                             };
+
                             console.log(data);
                             return false;
 
@@ -1000,9 +1061,9 @@
         let $controlCloseLeftGrid;
         const controlCloseLeftGridId = 'CONTROL_CLOSE_LEFT_GRID';
         let controlCloseLeftColModel = [
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP', hidden:true},
+            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP', hidden: true},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden:true},
+            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
             {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
@@ -1033,9 +1094,9 @@
         let $controlCloseRightGrid;
         const controlCloseRightGridId = 'CONTROL_CLOSE_RIGHT_GRID';
         let controlCloseRightColModel = [
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden:true, colModel: []},
+            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true, colModel: []},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', colModel: []},
-            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden:true, colModel: []},
+            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true, colModel: []},
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN', colModel: []},
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER', colModel: []},
             {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY', colModel: []},
@@ -1073,67 +1134,10 @@
 
         /* function */
         let changeDate = function (newDate = new Date(), today = new Date()) {
-            $('#CONTROL_MANAGE_START_DATE').val(newDate.format('MM/dd/yyyy'));
-            $('#CONTROL_MANAGE_END_DATE').val(today.format('MM/dd/yyyy'));
-        };
-
-        Date.prototype.format = function (f) {
-            if (!this.valueOf()) {
-                return ' ';
-            }
-
-            let weekKorName = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
-            let weekKorShortName = ['일', '월', '화', '수', '목', '금', '토'];
-            let weekEngName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            let weekEngShortName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            let d = this;
-
-            return f.replace(/(yyyy|yy|MM|dd|KS|KL|ES|EL|HH|hh|mm|ss|a\/p)/gi, function ($1) {
-                switch ($1) {
-                    case 'yyyy':
-                        return d.getFullYear(); // 년 (4자리)
-                    case 'yy':
-                        return (d.getFullYear() % 1000).zf(2); // 년 (2자리)
-                    case 'MM':
-                        return (d.getMonth() + 1).zf(2); // 월 (2자리)
-                    case 'dd':
-                        return d.getDate().zf(2); // 일 (2자리)
-                    case 'KS':
-                        return weekKorShortName[d.getDay()]; // 요일 (짧은 한글)
-                    case 'KL':
-                        return weekKorName[d.getDay()]; // 요일 (긴 한글)
-                    case 'ES':
-                        return weekEngShortName[d.getDay()]; // 요일 (짧은 영어)
-                    case 'EL':
-                        return weekEngName[d.getDay()]; // 요일 (긴 영어)
-                    case 'HH':
-                        return d.getHours().zf(2); // 시간 (24시간 기준, 2자리)
-                    case 'hh':
-                        return ((h = d.getHours() % 12) ? h : 12).zf(2); // 시간 (12시간 기준, 2자리)
-                    case 'mm':
-                        return d.getMinutes().zf(2); // 분 (2자리)
-                    case 'ss':
-                        return d.getSeconds().zf(2); // 초 (2자리)
-                    case 'a/p':
-                        return d.getHours() < 12 ? '오전' : '오후'; // 오전/오후 구분
-                    default:
-                        return $1;
-                }
-            });
-        };
-
-        String.prototype.string = function (len) {
-            let s = '', i = 0;
-
-            while (i++ < len) s += this;
-
-            return s;
-        };
-        String.prototype.zf = function (len) {
-            return '0'.string(len - this.length) + this;
-        };
-        Number.prototype.zf = function (len) {
-            return this.toString().zf(len);
+            console.group('changeDate');
+            $('#CONTROL_MANAGE_START_DATE').val(newDate.yyyymmdd());
+            $('#CONTROL_MANAGE_END_DATE').val(today.yyyymmdd());
+            console.groupEnd();
         };
 
         let getOrderStatusButton = function (event) {
@@ -1146,7 +1150,7 @@
         let updateOrderStatus = function (controlStatus, controlStatusNm) {
             let selectedRowCount = selectedRowIndex.length;
             let rowListConvert = [];
-            let date = new Date().format('MM-dd HH:mm');
+            let date = new Date().yyyymmddhhmm();
 
             for (let i = 0; i < selectedRowCount; i++) {
                 let tempObject = {
@@ -1213,7 +1217,10 @@
 
             let controlCloseRightPostData = fnFormToJsonArrayData('#CONTROL_CLOSE_FORM')
             controlCloseRightPostData.list = list;
-            let parameters = {'url': '/selectControlCloseRightList', 'data': {data: JSON.stringify(controlCloseRightPostData)}}
+            let parameters = {
+                'url': '/selectControlCloseRightList',
+                'data': {data: JSON.stringify(controlCloseRightPostData)}
+            }
 
             fnPostAjax(function (data, callFunctionParam) {
                 $controlCloseRightGrid.pqGrid('option', 'dataModel.data', data.list);
@@ -1262,6 +1269,28 @@
          */
         $('#CONTROL_MANAGE_DATEPICKER_READ_ONLY').on('change', function () {
             createOrDestoryDatepicker();
+        });
+
+        $('#CONTROL_MANAGE_SAVE').on('click', function () {
+            const updateQueryList = ['updateControlMaster', 'updateControlPart', 'updateControlPartOrder', 'insertControlProgress', 'insertControlPartProgress'];
+
+            fnModifyPQGrid($orderManagementGrid, [], updateQueryList);
+        });
+
+        $('#CONTROL_MANAGE_DELETE').on('click', function () {
+            const DELETE_QUERY_ID = '';
+            let selectedRowCount = selectedRowIndex.length;
+
+            for (let i = 0; i < selectedRowCount; i++) {
+                let thisRowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+
+                if (!(thisRowData.ORDER_STATUS_NM === undefined || thisRowData.ORDER_STATUS_NM === null || thisRowData.ORDER_STATUS_NM === '' || thisRowData.ORDER_STATUS_NM === '확정취소')) {
+                    alert('확정상태가 빈칸(임시저장)이나 확정취소인 경우에만 가능');
+                    return false;
+                }
+            }
+
+            fnDeletePQGrid($orderManagementGrid, selectedRowIndex, DELETE_QUERY_ID);
         });
 
         $('#CONTROL_MANGE_POPUP').on('show.bs.modal', function () {
@@ -1375,13 +1404,18 @@
             getOrderStatusButton(event);
         });
 
-        $('#CONTROL_CLOSE_YEAR').on('change', function() {
+        $('#CONTROL_CLOSE_YEAR').on('change', function () {
             fnAppendSelectboxMonth('CONTROL_CLOSE_MONTH', this.value);
         });
         /* event */
 
         /* init */
-        changeDate();
+        // changeDate();
+        $('#CONTROL_MANAGE_START_DATE').datepicker({dateFormat: 'yy-mm-dd'}); // yyyy-mm-dd 형식으로 date타입 포멧
+        $('#CONTROL_MANAGE_END_DATE').datepicker({dateFormat: 'yy-mm-dd'}); // yyyy-mm-dd 형식으로 date타입 포멧
+        $('#CONTROL_MANAGE_END_DATE').datepicker('setDate', 'today');
+        // setDatePickerToday();
+
         fnCommCodeDatasourceSelectBoxCreate($('#CONTROL_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getBusinessCompanyList'}
@@ -1394,20 +1428,20 @@
         /* init */
 
         /* 도면 등록 팝업 호출 */
-        $drawingRegistration.click(function(){
+        $drawingRegistration.click(function () {
             commonCadFileAttachPopup.modal('show');
         });
 
         /* 도면 등록 팝업 호출 */
-        $drawingView.click(function(){
+        $drawingView.click(function () {
             callWindowImageViewer(999);
         });
 
-        $('#MONTH_FINISH_YES').on('click', function() {
+        $('#MONTH_FINISH_YES').on('click', function () {
 
         });
 
-        $('#CONTROL_CLOSE_YES').on('click', function() {
+        $('#CONTROL_CLOSE_YES').on('click', function () {
             let selectedRowCount = selectedRowIndex.length;
             let list = [];
 
@@ -1427,243 +1461,243 @@
         });
 
         /* 견적등록 */
-            /** 공통 코드 이외의 처리 부분 **/
-            fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#ORDER_COMP_CD"), 'sel', {
-                "url": "/json-list",
-                "data": {"queryId": 'dataSource.getOrderCompanyList'}
-            });
-            fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#COMP_CD"), 'sel', {
-                "url": "/json-list",
-                "data": {"queryId": 'dataSource.getBusinessCompanyList'}
-            });
-            fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#EST_USER_ID"), 'sel', {
-                "url": "/json-list",
-                "data": {"queryId": 'dataSource.getUserList'}
-            });
-            fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#ORDER_STAFF_SEQ"), 'sel', {
-                "url": "/json-list",
-                "data": {"queryId": 'dataSource.getCompanyStaffList'}
-            });
+        /** 공통 코드 이외의 처리 부분 **/
+        fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#ORDER_COMP_CD"), 'sel', {
+            "url": "/json-list",
+            "data": {"queryId": 'dataSource.getOrderCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#COMP_CD"), 'sel', {
+            "url": "/json-list",
+            "data": {"queryId": 'dataSource.getBusinessCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#EST_USER_ID"), 'sel', {
+            "url": "/json-list",
+            "data": {"queryId": 'dataSource.getUserList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#ORDER_STAFF_SEQ"), 'sel', {
+            "url": "/json-list",
+            "data": {"queryId": 'dataSource.getCompanyStaffList'}
+        });
 
-            let estimateRegisterSelectedRowIndex;
+        let estimateRegisterSelectedRowIndex;
 
-            let estimateRegisterTopGrid = $("#estimate_register_top_grid");
-            let estimateRegisterBotGrid = $("#estimate_register_bot_grid");
+        let estimateRegisterTopGrid = $("#estimate_register_top_grid");
+        let estimateRegisterBotGrid = $("#estimate_register_bot_grid");
 
-            let estimateRegisterTopColModel = [
-                {title: 'EST_SEQ', dataType: 'string', dataIndx: 'EST_SEQ', hidden: true},
-                {title: 'SEQ', dataType: 'string', dataIndx: 'SEQ', hidden: true},
-                {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM'},
-                {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM'},
-                {title: '', dataType: 'string', dataIndx: 'DRAWING_YN'},
-                {
-                    title: '도면번호',
-                    dataType: 'string',
-                    dataIndx: 'DRAWING_NUM',
-                    validations: [{type: 'minLen', value: 1, msg: "Required"}]
-                },
-                {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM'},
-                {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT'},
-                /*
-                {title: '규격', align: "center", colModel: [
-                    //{title: '타입', dataType: 'string', dataIndx: 'SIZE_TYPE'},
-                    {title: '가로', dataType: 'string', dataIndx: 'SIZE_W'},
-                    {title: '세로', dataType: 'string', dataIndx: 'SIZE_H'},
-                    {title: '두꼐', dataType: 'string', dataIndx: 'SIZE_T'},
-                    {title: '지름', dataType: 'string', dataIndx: 'SIZE_D'},
-                    {title: '길이', dataType: 'string', dataIndx: 'SIZE_L'},
-                ]},
-                */
-                {
-                    title: '작업구분', dataType: 'string', dataIndx: 'WORK_TYPE',
-                    editor: {
-                        type: 'select',
-                        mapIndices: {name: "WORK_TYPE", id: "WORK_TYPE"},
-                        valueIndx: "value",
-                        labelIndx: "text",
-                        options: fnGetCommCodeGridSelectBox('1013'),
-                        getData: function (ui) {
-                            let clave = ui.$cell.find("select").val();
-                            let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                            rowData["WORK_TYPE"] = clave;
-                            return ui.$cell.find("select option[value='" + clave + "']").text();
-                        }
+        let estimateRegisterTopColModel = [
+            {title: 'EST_SEQ', dataType: 'string', dataIndx: 'EST_SEQ', hidden: true},
+            {title: 'SEQ', dataType: 'string', dataIndx: 'SEQ', hidden: true},
+            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM'},
+            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM'},
+            {title: '', dataType: 'string', dataIndx: 'DRAWING_YN'},
+            {
+                title: '도면번호',
+                dataType: 'string',
+                dataIndx: 'DRAWING_NUM',
+                validations: [{type: 'minLen', value: 1, msg: "Required"}]
+            },
+            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM'},
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT'},
+            /*
+            {title: '규격', align: "center", colModel: [
+                //{title: '타입', dataType: 'string', dataIndx: 'SIZE_TYPE'},
+                {title: '가로', dataType: 'string', dataIndx: 'SIZE_W'},
+                {title: '세로', dataType: 'string', dataIndx: 'SIZE_H'},
+                {title: '두꼐', dataType: 'string', dataIndx: 'SIZE_T'},
+                {title: '지름', dataType: 'string', dataIndx: 'SIZE_D'},
+                {title: '길이', dataType: 'string', dataIndx: 'SIZE_L'},
+            ]},
+            */
+            {
+                title: '작업구분', dataType: 'string', dataIndx: 'WORK_TYPE',
+                editor: {
+                    type: 'select',
+                    mapIndices: {name: "WORK_TYPE", id: "WORK_TYPE"},
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1013'),
+                    getData: function (ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["WORK_TYPE"] = clave;
+                        return ui.$cell.find("select option[value='" + clave + "']").text();
                     }
-                },
-                {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE'},
-                {
-                    title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
-                    editor: {
-                        type: 'select',
-                        mapIndices: {name: "MATERIAL_DETAIL", id: "MATERIAL_DETAIL"},
-                        valueIndx: "value",
-                        labelIndx: "text",
-                        options: fnGetCommCodeGridSelectBox('1000'),
-                        getData: function (ui) {
-                            let clave = ui.$cell.find("select").val();
-                            let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                            rowData["MATERIAL_DETAIL"] = clave;
-                            return ui.$cell.find("select option[value='" + clave + "']").text();
-                        }
+                }
+            },
+            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE'},
+            {
+                title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
+                editor: {
+                    type: 'select',
+                    mapIndices: {name: "MATERIAL_DETAIL", id: "MATERIAL_DETAIL"},
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1000'),
+                    getData: function (ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["MATERIAL_DETAIL"] = clave;
+                        return ui.$cell.find("select option[value='" + clave + "']").text();
                     }
-                },
-                {
-                    title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND',
-                    editor: {
-                        type: 'select',
-                        mapIndices: {name: "MATERIAL_KIND", id: "MATERIAL_KIND"},
-                        valueIndx: "value",
-                        labelIndx: "text",
-                        options: fnGetCommCodeGridSelectBox('1004'),
-                        getData: function (ui) {
-                            let clave = ui.$cell.find("select").val();
-                            let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                            rowData["MATERIAL_KIND"] = clave;
-                            return ui.$cell.find("select option[value='" + clave + "']").text();
-                        }
+                }
+            },
+            {
+                title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND',
+                editor: {
+                    type: 'select',
+                    mapIndices: {name: "MATERIAL_KIND", id: "MATERIAL_KIND"},
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1004'),
+                    getData: function (ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["MATERIAL_KIND"] = clave;
+                        return ui.$cell.find("select option[value='" + clave + "']").text();
                     }
-                },
-                {
-                    title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT',
-                    editor: {
-                        type: 'select',
-                        mapIndices: {name: "SURFACE_TREAT", id: "SURFACE_TREAT"},
-                        valueIndx: "value",
-                        labelIndx: "text",
-                        options: fnGetCommCodeGridSelectBox('1002'),
-                        getData: function (ui) {
-                            let clave = ui.$cell.find("select").val();
-                            let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                            rowData["SURFACE_TREAT"] = clave;
-                            return ui.$cell.find("select option[value='" + clave + "']").text();
-                        }
+                }
+            },
+            {
+                title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT',
+                editor: {
+                    type: 'select',
+                    mapIndices: {name: "SURFACE_TREAT", id: "SURFACE_TREAT"},
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1002'),
+                    getData: function (ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["SURFACE_TREAT"] = clave;
+                        return ui.$cell.find("select option[value='" + clave + "']").text();
                     }
-                },
-                {title: '소재 비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE'},
-                {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
-                {
-                    title: '상세 가공요건', align: "center", colModel: [
-                        {title: '선반', dataType: 'string', dataIndx: 'DETAIL_LATHE'},
-                        {title: '가공면', dataType: 'string', dataIndx: 'DETAIL_SURFACE'},
-                        {title: '클램핑', dataType: 'string', dataIndx: 'DETAIL_CLAMPING'},
-                        {title: '포켓', dataType: 'string', dataIndx: 'DETAIL_POCKET'},
-                        //{title:'공차', dataType: 'string', dataIndx: 'DETAIL_TOLERANCE'},
-                        {title: '드릴', dataType: 'string', dataIndx: 'DETAIL_DRILL'},
-                        {title: '난도', dataType: 'string', dataIndx: 'DETAIL_DIFFICULTY'}
-                    ], hidden: true
-                },
-                {
-                    title: '예상소재 Size', align: "center", colModel: [
-                        {title: '가로', dataType: 'float', dataIndx: 'SIZE_W_M'},
-                        {title: '세로', dataType: 'float', dataIndx: 'SIZE_H_M'},
-                        {title: '두께', dataType: 'float', dataIndx: 'SIZE_T_M'},
-                        {title: '지름', dataType: 'float', dataIndx: 'SIZE_D_M'},
-                        {title: '길이', dataType: 'float', dataIndx: 'SIZE_L_M'}
-                    ], hidden: true
-                },
-                {
-                    title: '항목별 견적정보', align: "center", colModel: [
-                        {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT'},
-                        {title: 'TM각비', dataType: 'integer', dataIndx: 'UNIT_TM_AMT'},
-                        {title: '연마비', dataType: 'integer', dataIndx: 'UNIT_GRIND_AMT'},
-                        {title: '열처리', dataType: 'integer', dataIndx: 'UNIT_HEAT_AMT'},
-                        {title: '표면 처리비', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT'},
-                        {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT'},
-                        {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_NOTE'},
-                        {title: '견적비고', dataType: 'integer', dataIndx: 'UNIT_AMT_NOTE'}
-                    ]
-                },
-                {title: '계산견적단가', dataType: 'float', dataIndx: 'CALCUL_EST_UNIT_COST'},
-                {title: '최종견적가', dataType: 'float', dataIndx: 'UNIT_FINAL_EST_AMT'},
-                {title: '금액 계', dataType: 'float', dataIndx: 'FINAL_AMOUNT'},
-                {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
-                {title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ'},
-                {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ'},
-                {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ'},
-                {title: 'IMG', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ'}
-            ];
-
-            let estimateRegisterBotColModel = [
-                {title: '', dataType: 'string', dataIndx: 'STAFF_SEQ', hidden: true},
-                {title: '성함', dataType: 'string', dataIndx: 'STAFF_NM'},
-                {title: '메일주소', dataType: 'string', dataIndx: 'STAFF_EMAIL'},
-                {title: '전화번호', dataType: 'string', dataIndx: 'STAFF_TEL'}
-            ];
-
-            let estimateRegisterTopToolbar = {
-                items: [
-                    {
-                        type: 'button', label: '도면 보기', icon: '', style: 'float: right;', listener: {
-                            'click': function (evt, ui) {
-                            }
-                        }
-                    },
-                    {
-                        type: 'button', label: '도면 등록', icon: '', style: 'float: right;', listener: {
-                            'click': function (evt, ui) {
-                            }
-                        }
-                    },
-                    {
-                        type: 'button', label: '계산견적적용', icon: '', style: 'float: right;', listener: {
-                            'click': function (evt, ui) {
-                            }
-                        }
-                    },
-                    {type: 'select', label: '', style: 'float: right;', option: fnGetCommCodeGridSelectBox('1045')},
-                    {
-                        type: 'checkbox', label: '상세견적요건', style: 'float: right;', listener: {
-                            'change': function (evt, ui) {
-                                let colM = estimateRegisterTopGrid.pqGrid("option", "colModel");
-                                let listM = [15, 16];
-                                let hiddenYn = evt.target.checked == true ? false : true;
-                                for (let tmpI = 0; tmpI < listM.length; tmpI++) {
-                                    for (let colCnt = 0; colCnt < colM[listM[tmpI]].colModel.length; colCnt++) {
-                                        colM[listM[tmpI]].colModel[colCnt].hidden = hiddenYn;
-                                    }
-                                    colM[listM[tmpI]].hidden = hiddenYn;
-                                }
-                                estimateRegisterTopGrid.pqGrid("option", "colModel", colM);
-                                estimateRegisterTopGrid.pqGrid("refresh");
-                            }
-                        }
-                    },
-                    {
-                        type: 'button', label: 'Delete', icon: 'ui-icon-disk', style: 'float: left;', listener: {
-                            'click': function (evt, ui) {
-                                let USER_MASTER_QUERY_ID = 'deleteEstimateDetail';
-
-                                fnDeletePQGrid(estimateRegisterTopGrid, estimateRegisterSelectedRowIndex, USER_MASTER_QUERY_ID);
-                            }
-                        }
-                    },
-                    {
-                        type: 'button', label: 'Add', icon: 'ui-icon-plus', style: 'float: left;', listener: {
-                            'click': function (evt, ui) {
-                                estimateRegisterTopGrid.pqGrid('addNodes', [{}], 0);
-                            }
-                        }
-                    },
-                    {
-                        type: 'button', label: '견적List 출력', icon: 'ui-icon-plus', style: 'float: left;', listener: {
-                            'click': function (evt, ui) {
-
-                                fnReportFormToHiddenFormPageAction("packing_history_list_search_form", "/downloadExcel");
-                            }
-                        }
-                    }
+                }
+            },
+            {title: '소재 비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE'},
+            // {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
+            {
+                title: '상세 가공요건', align: "center", colModel: [
+                    {title: '선반', dataType: 'string', dataIndx: 'DETAIL_LATHE'},
+                    {title: '가공면', dataType: 'string', dataIndx: 'DETAIL_SURFACE'},
+                    {title: '클램핑', dataType: 'string', dataIndx: 'DETAIL_CLAMPING'},
+                    {title: '포켓', dataType: 'string', dataIndx: 'DETAIL_POCKET'},
+                    //{title:'공차', dataType: 'string', dataIndx: 'DETAIL_TOLERANCE'},
+                    {title: '드릴', dataType: 'string', dataIndx: 'DETAIL_DRILL'},
+                    {title: '난도', dataType: 'string', dataIndx: 'DETAIL_DIFFICULTY'}
+                ], hidden: true
+            },
+            {
+                title: '예상소재 Size', align: "center", colModel: [
+                    {title: '가로', dataType: 'float', dataIndx: 'SIZE_W_M'},
+                    {title: '세로', dataType: 'float', dataIndx: 'SIZE_H_M'},
+                    {title: '두께', dataType: 'float', dataIndx: 'SIZE_T_M'},
+                    {title: '지름', dataType: 'float', dataIndx: 'SIZE_D_M'},
+                    {title: '길이', dataType: 'float', dataIndx: 'SIZE_L_M'}
+                ], hidden: true
+            },
+            {
+                title: '항목별 견적정보', align: "center", colModel: [
+                    {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT'},
+                    {title: 'TM각비', dataType: 'integer', dataIndx: 'UNIT_TM_AMT'},
+                    {title: '연마비', dataType: 'integer', dataIndx: 'UNIT_GRIND_AMT'},
+                    {title: '열처리', dataType: 'integer', dataIndx: 'UNIT_HEAT_AMT'},
+                    {title: '표면 처리비', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT'},
+                    {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT'},
+                    {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_NOTE'},
+                    {title: '견적비고', dataType: 'integer', dataIndx: 'UNIT_AMT_NOTE'}
                 ]
-            };
-            let estimateRegisterBotToolbar = {
-                items: [
-                    {
-                        type: 'button', label: 'Delete', icon: 'ui-icon-disk', style: 'float: right;', listener: {
-                            'click': function (evt, ui) {
+            },
+            {title: '계산견적단가', dataType: 'float', dataIndx: 'CALCUL_EST_UNIT_COST'},
+            {title: '최종견적가', dataType: 'float', dataIndx: 'UNIT_FINAL_EST_AMT'},
+            {title: '금액 계', dataType: 'float', dataIndx: 'FINAL_AMOUNT'},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
+            {title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ'},
+            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ'},
+            {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ'},
+            {title: 'IMG', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ'}
+        ];
 
-                            }
+        let estimateRegisterBotColModel = [
+            {title: '', dataType: 'string', dataIndx: 'STAFF_SEQ', hidden: true},
+            {title: '성함', dataType: 'string', dataIndx: 'STAFF_NM'},
+            {title: '메일주소', dataType: 'string', dataIndx: 'STAFF_EMAIL'},
+            {title: '전화번호', dataType: 'string', dataIndx: 'STAFF_TEL'}
+        ];
+
+        let estimateRegisterTopToolbar = {
+            items: [
+                {
+                    type: 'button', label: '도면 보기', icon: '', style: 'float: right;', listener: {
+                        'click': function (evt, ui) {
                         }
-                    }]
-            };
+                    }
+                },
+                {
+                    type: 'button', label: '도면 등록', icon: '', style: 'float: right;', listener: {
+                        'click': function (evt, ui) {
+                        }
+                    }
+                },
+                {
+                    type: 'button', label: '계산견적적용', icon: '', style: 'float: right;', listener: {
+                        'click': function (evt, ui) {
+                        }
+                    }
+                },
+                {type: 'select', label: '', style: 'float: right;', option: fnGetCommCodeGridSelectBox('1045')},
+                {
+                    type: 'checkbox', label: '상세견적요건', style: 'float: right;', listener: {
+                        'change': function (evt, ui) {
+                            let colM = estimateRegisterTopGrid.pqGrid("option", "colModel");
+                            let listM = [15, 16];
+                            let hiddenYn = evt.target.checked == true ? false : true;
+                            for (let tmpI = 0; tmpI < listM.length; tmpI++) {
+                                for (let colCnt = 0; colCnt < colM[listM[tmpI]].colModel.length; colCnt++) {
+                                    colM[listM[tmpI]].colModel[colCnt].hidden = hiddenYn;
+                                }
+                                colM[listM[tmpI]].hidden = hiddenYn;
+                            }
+                            estimateRegisterTopGrid.pqGrid("option", "colModel", colM);
+                            estimateRegisterTopGrid.pqGrid("refresh");
+                        }
+                    }
+                },
+                {
+                    type: 'button', label: 'Delete', icon: 'ui-icon-disk', style: 'float: left;', listener: {
+                        'click': function (evt, ui) {
+                            let USER_MASTER_QUERY_ID = 'deleteEstimateDetail';
+
+                            fnDeletePQGrid(estimateRegisterTopGrid, estimateRegisterSelectedRowIndex, USER_MASTER_QUERY_ID);
+                        }
+                    }
+                },
+                {
+                    type: 'button', label: 'Add', icon: 'ui-icon-plus', style: 'float: left;', listener: {
+                        'click': function (evt, ui) {
+                            estimateRegisterTopGrid.pqGrid('addNodes', [{}], 0);
+                        }
+                    }
+                },
+                {
+                    type: 'button', label: '견적List 출력', icon: 'ui-icon-plus', style: 'float: left;', listener: {
+                        'click': function (evt, ui) {
+
+                            fnReportFormToHiddenFormPageAction("packing_history_list_search_form", "/downloadExcel");
+                        }
+                    }
+                }
+            ]
+        };
+        let estimateRegisterBotToolbar = {
+            items: [
+                {
+                    type: 'button', label: 'Delete', icon: 'ui-icon-disk', style: 'float: right;', listener: {
+                        'click': function (evt, ui) {
+
+                        }
+                    }
+                }]
+        };
 
         $('#ESTIMATE_REGISTER_POPUP').on('show.bs.modal', function () {
             console.log(selectedRowIndex);
