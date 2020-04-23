@@ -16,7 +16,7 @@
             <div class="profileWrap">
                 <span class="imgWrap"><img src="asset/images/common/profile.png" alt=""></span>
                 <span class="textWrap"><b>홍길동</b>님 안녕하세요.</span>
-                <span class="btnWrap"><button type="button" class="btn">LOGOUT</button></span>
+                <span class="btnWrap"><button type="button" class="btn"></button></span>
             </div>
             <div class="gnbWrap" id="gnbWrap">
                 <ul>
