@@ -29,6 +29,18 @@ public class OrderController {
         return "jsonView";
     }
 
+    /**
+     * @description 신규 주문 등록 & 확정
+     */
+    @RequestMapping(value = "/registerNewOrderConfirm", method = RequestMethod.POST)
+    public String registerNewOrderConfirm(HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.orderService.registerNewOrderConfirm(map);
+
+        return "jsonView";
+    }
+
     @RequestMapping(value = "/selectControlCloseRightList", method = RequestMethod.POST)
     public String selectControlCloseRightList(Model model, HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);

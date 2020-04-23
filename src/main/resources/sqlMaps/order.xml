@@ -12,7 +12,7 @@
             C.ORDER_SEQ, <!-- 발주번호일련번호 -->
             A.CONTROL_STATUS AS CONTROL_STATUS_ORIGINAL, <!-- 주문관리상태 -->
             SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR') AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
-            DATE_FORMAT(A.STATUS_DT, '%m-%d %H:%i') AS CONTROL_STATUS_DT, <!-- 상태확정일 -->
+            SF_GET_DATE_F(A.STATUS_DT,'YYYY','M') AS CONTROL_STATUS_DT, <!-- 상태확정일 -->
             A.COMP_CD, <!-- 사업자구분 -->
             SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM, <!-- 사업자구분 이름 -->
             A.ORDER_COMP_CD, <!-- 발주업체 -->
@@ -21,7 +21,7 @@
             SF_GET_STAFF_NM(A.ORDER_STAFF_SEQ) AS ORDER_STAFF_NM, <!-- 구매담당자 이름 -->
             A.DESIGNER_NM, <!-- 설계자 -->
             A.NOTE, <!-- 비고 -->
-            <!--        '', 거래명세서 no -->
+            <!-- '', 거래명세서 no ㅇㄷ? -->
             A.MODULE_NM, <!-- 모듈명 -->
             A.MAIN_INSPECTION, <!-- 주요 검사품 -->
             SF_GET_CODE_NM(1042, A.MAIN_INSPECTION, 'EN') AS MAIN_INSPECTION_NM, <!-- 주요 검사품 -->
@@ -80,7 +80,7 @@
             CONCAT(SUBSTR(D.CLOSE_MONTH, 1, 4), '.', SUBSTR(D.CLOSE_MONTH, 5)) AS CLOSE_MONTH, <!-- 마감 월 -->
             CONCAT(D.CLOSE_VER, '건') AS CLOSE_VER, <!-- 차수 -->
             '', <!-- 작성자 -->
-            DATE_FORMAT(D.CLOSE_DT, '%m-%d %H:%i') AS CLOSE_DT, <!-- 마감일시 -->
+            SF_GET_DATE_F(D.CLOSE_DT,'YYYY','M') AS CLOSE_DT, <!-- 마감일시 -->
             B.OUTSIDE_COMP_CD, <!-- 외주업체 -->
             SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM, <!-- 외주업체 -->
             B.OUTSIDE_MATERIAL_SUPPLY_YN, <!-- 외주 자재사급 -->
@@ -92,12 +92,12 @@
             '', <!-- 외주 불량 CODE -->
             '', <!-- 외주 조치방안 -->
             B.PREV_DRAWING_NUM, <!-- 변경전도면번호 -->
-            DATE_FORMAT(A.STATUS_DT, '%m-%d %H:%i') AS STATUS_DT <!-- 등록/업데이트 일시 -->
-            FROM TBL_CONTROL A
-                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-                                                       AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                LEFT OUTER JOIN TBL_CONTROL_CLOSE D ON A.CONTROL_SEQ = D.CONTROL_SEQ
+            SF_GET_DATE_F(A.STATUS_DT,'YYYY','M') AS STATUS_DT <!-- 등록/업데이트 일시 -->
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                                   AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_CONTROL_CLOSE D ON A.CONTROL_SEQ = D.CONTROL_SEQ
     </sql>
 
     <select id="selectControlManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -270,9 +270,9 @@
             WHERE A.CONTROL_NUM = #{item.CONTROL_NUM}),
             #{item.CONTROL_NUM},
             0,
-            SF_GET_COMP_CD(#{item.COMP_NM}),
-            SF_GET_COMP_CD(#{item.ORDER_COMP_NM}),
-            SF_GET_STAFF_SEQ(#{item.ORDER_STAFF_NM}, #{item.ORDER_COMP_NM}),
+            #{item.COMP_CD},
+            #{item.ORDER_COMP_CD},
+            SF_GET_STAFF_SEQ(#{item.ORDER_COMP_CD}, #{item.ORDER_STAFF_NM}),
             #{item.DESIGNER_NM},
             #{item.NOTE},
             #{item.MODULE_NM},
@@ -322,20 +322,16 @@
             FROM TBL_CONTROL
             WHERE CONTROL_NUM = #{item.CONTROL_NUM}),
             NEXTVAL(SEQ_CONTROL_PART),
-            (SELECT IF(#{item.PART_NUM} = '', 0, CAST(#{item.PART_NUM} AS UNSIGNED INTEGER))),
+            #{item.PART_NUM},
             #{item.DRAWING_NUM},
-            0,
+            1,
             #{item.PREV_DRAWING_NUM},
             #{item.ITEM_NM},
-            (SELECT CODE_CD
-            FROM TBL_CODE_LANG
-            WHERE HIGH_CD = '1033'
-                  AND LANG_CD = 'KR'
-                  AND CODE_NM = #{item.WORK_NM}),
+            #{item.WORK_CD},
             #{item.OUTSIDE_YN},
             #{item.WORK_FACTORY},
             #{item.MATERIAL_SUPPLY_YN},
-            #{item.INNER_DUE_DT},
+            REPLACE(STR_TO_DATE(#{item.INNER_DUE_DT},'%y-%m-%d'), '-', SPACE(0)),
             #{item.SIZE_TXT},
             SF_GET_SIZE_TXT('SIZE_TYPE', #{item.SIZE_TXT}),
             SF_GET_SIZE_TXT('SIZE_W', #{item.SIZE_TXT}),
@@ -347,11 +343,11 @@
             #{item.MATERIAL_KIND},
             #{item.SURFACE_TREAT},
             #{item.MATERIAL_NOTE},
-            (SELECT IF(#{item.PART_UNIT_QTY} = '', NULL, CAST(#{item.PART_UNIT_QTY} AS UNSIGNED INTEGER))),
-            (SELECT IF(#{item.ORIGINAL_SIDE_QTY} = '', NULL, CAST(#{item.ORIGINAL_SIDE_QTY} AS UNSIGNED INTEGER))),
-            (SELECT IF(#{item.OTHER_SIDE_QTY} = '', NULL, CAST(#{item.OTHER_SIDE_QTY} AS UNSIGNED INTEGER))),
-            (SELECT IF(#{item.UNIT_FINAL_EST_AMT} = '', NULL, CAST(REPLACE(#{item.UNIT_FINAL_EST_AMT}, ',', '') AS UNSIGNED INTEGER))),
-            (SELECT IF(#{item.UNIT_FINAL_AMT} = '', NULL, CAST(REPLACE(#{item.UNIT_FINAL_AMT}, ',', '') AS UNSIGNED INTEGER))),
+            #{item.PART_UNIT_QTY},
+            #{item.ORIGINAL_SIDE_QTY},
+            #{item.OTHER_SIDE_QTY},
+            REPLACE(#{item.UNIT_FINAL_EST_AMT}, ',', SPACE(0)),
+            REPLACE(#{item.UNIT_FINAL_AMT}, ',', SPACE(0)),
             NOW()
         )
         </foreach>
@@ -384,9 +380,9 @@
              LIMIT 1),
             NEXTVAL(SEQ_CONTROL_PART_ORDER),
             #{item.ORDER_NUM},
-            (SELECT IF(#{item.ORDER_QTY} = '', NULL, CAST(#{item.ORDER_QTY} AS UNSIGNED INTEGER))),
-            #{item.ORDER_DUE_DT},
-            #{item.DELIVERY_DT}
+            #{item.ORDER_QTY},
+            REPLACE(STR_TO_DATE(#{item.ORDER_DUE_DT}, '%y-%m-%d'), '-', SPACE(0)),
+            REPLACE(STR_TO_DATE(#{item.DELIVERY_DT}, '%y-%m-%d'), '-', SPACE(0))
             <!-- ,NULL -->
         )
         </foreach>

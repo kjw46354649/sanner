@@ -58,7 +58,7 @@
 
 /* 견적관리 */
 .topWrap { margin: 0 1.25%; background: #fff; border: 1px solid #e2e2e2; border-radius: 3px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)";/*IE 8*/ -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*FF 3.5+*/ -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*Saf3-4, Chrome, iOS 4.0.2-4.2, Android 2.3+*/ box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); position: relative; margin-bottom: 20px; /*IE 5.5-7*/ }
-.estimate .topWrap .gubunWrap { width: 95.5%; border-right: 1px solid #e5e5e5; margin: 17px; height: 36px; overflow: hidden; }
+.estimate .topWrap .gubunWrap { width: 95.5%; border-right: 1px solid #e5e5e5; margin: 17px; height: 45px; overflow: hidden; }
 .estimate .topWrap .gubunWrap ul { font-size: 0; }
 .estimate .topWrap .gubunWrap ul li { width: 23%; display: inline-block; padding-bottom: 11px; padding-right: 2%; }
 .estimate .topWrap .gubunWrap ul li:nth-child(4n) { padding-right: 0; }
