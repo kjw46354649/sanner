@@ -54,36 +54,35 @@
                         </select>
                     </div>
                     <div class="group-item">
-                        <label class="control-label" for="MODULE_NM">모듈명</label>
-                        <input type="text" class="form-control" name="MODULE_NM" id="MODULE_NM">
+                        <label for="MODULE_NM">모듈명</label>
+                        <input type="text" name="MODULE_NM" id="MODULE_NM">
                     </div>
                     <div class="group-item">
-                        <label class="control-label" for="QUALITY_SEQ">품질Seq.</label>
-                        <select class="form-control" name="QUALITY_SEQ" id="QUALITY_SEQ">
+                        <label for="QUALITY_SEQ">품질Seq.</label>
+                        <select name="QUALITY_SEQ" id="QUALITY_SEQ">
                             <option value="">All</option>
                         </select>
                     </div>
                     <div class="group-item">
-                        <label class="control-label" for="ORDER_NUMBER">INV No.</label>
-                        <input type="text" class="form-control" name="ORDER_NUMBER" id="ORDER_NUMBER">
+                        <label for="ORDER_NUMBER">INV No.</label>
+                        <input type="text" name="ORDER_NUMBER" id="ORDER_NUMBER">
                     </div>
                     <div class="group-item">
-                        <label class="control-label" for="UNIT_PRICE">단가</label>
-                        <select class="form-control" id="UNIT_PRICE">
+                        <label for="UNIT_PRICE">단가</label>
+                        <select id="UNIT_PRICE">
                             <option></option>
                         </select>
                         <%--                        <label for="UNIT_PRICE_1"></label>--%>
-                        <%--                        <input type="text" class="form-control" id="UNIT_PRICE_1">--%>
+                        <%--                        <input type="text" id="UNIT_PRICE_1">--%>
                     </div>
                     <div class="group-item">
-                        <label class="control-label" for="AMOUNT_SUM">금액합산</label>
-                        <input type="text" class="form-control" name="AMOUNT_SUM" id="AMOUNT_SUM" readonly>
+                        <label for="AMOUNT_SUM">금액합산</label>
+                        <input type="text" name="AMOUNT_SUM" id="AMOUNT_SUM" readonly>
                     </div>
                     <div class="group-item">
-                        <label class="control-label" for="CLOSE_YEAR">마감/종료 월</label>
-                        <select class="form-control" name="CLOSE_YEAR" id="CLOSE_YEAR"></select>
-                        <label class="control-label" for="CLOSE_MONTH"></label>
-                        <select class="form-control" name="CLOSE_MONTH" id="CLOSE_MONTH"></select>
+                        <label for="CLOSE_YEAR">마감/종료 월</label>
+                        <select class="two" name="CLOSE_YEAR" id="CLOSE_YEAR"></select>
+                        <select class="two" name="CLOSE_MONTH" id="CLOSE_MONTH"></select>
                     </div>
                     <div class="group-item-option">
                         <label>조회 Option</label>
@@ -371,8 +370,7 @@
             {title: '등록/업데이트<br>일시', minWidth: 100, dataType: 'string', dataIndx: 'STATUS_DT', colModel: []}
         ];
         const obj = {
-            // width: 700,
-            // height: 600,
+            height: 630,
             collapsible: false,
             resizable: true,
             showTitle: false,

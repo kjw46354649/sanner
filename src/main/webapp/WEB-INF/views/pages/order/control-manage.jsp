@@ -525,7 +525,10 @@
                 dataIndx: 'CHARGE_USER_ID',
                 colModel: []
             },
-            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', editable: true, colModel: []},
+            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', editable: true, colModel: []},
+            {title: '모듈', dataType: 'string', dataIndx: 'MODULE_NM', editable: true, colModel: []},
+            {title: '납품처', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM', editable: true, colModel: []},
+            {title: '비고(라벨)', dataType: 'string', dataIndx: 'LABEL_NOTE', editable: true, colModel: []},
             {title: '주요<br>검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION', colModel: []},
             {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN', colModel: []},
             {title: 'CONTROL_VER', dataType: 'string', dataIndx: 'CONTROL_VER', hidden: true, colModel: []},
@@ -541,41 +544,20 @@
             {title: '도면번호버전', dataType: 'string', dataIndx: 'DRAWING_VER', hidden: true, colModel: []},
             {title: '도면번호', width: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', editable: true, colModel: []},
             {title: '품명', width: 110, dataType: 'string', dataIndx: 'ITEM_NM', editable: true, colModel: []},
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_NM', colModel: []},
-            {
-                title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true, colModel: []/*,
-                editor: {
-                    type: 'select',
-                    valueIndx: 'value',
-                    labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1033'),
-                },
-                render: function (ui) {
-                    // console.log(ui);
-                    let workType = fnGetCommCodeGridSelectBox('1033');
-                    let index = workType.findIndex(function(element) {
-                        return element.text == ui.cellData;
-                    });
-
-                    if (index < 0) {
-                        index = workType.findIndex(function(element) {
-                            return element.value == ui.cellData;
-                        });
-
-                        return workType[index].text;
-                    } else {
-                        return workType[index].text;
-                    }
-                }*/
-            },
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true, colModel: []},
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM', colModel: []},
             {title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN', colModel: []},
-            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', colModel: []},
+            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', hidden: true, colModel: []},
+            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY_NM', colModel: []},
             {title: '소재<br>사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', colModel: []},
             {title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT', editable: true, colModel: []},
             {title: '규격', width: 110, dataType: 'string', dataIndx: 'SIZE_TXT', editable: true, colModel: []},
-            {title: '소재<br>종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', colModel: []},
-            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE', colModel: []},
-            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', colModel: []},
+            {title: '소재<br>종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden:true, colModel: []},
+            {title: '소재<br>종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', colModel: []},
+            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE', hidden: true, colModel: []},
+            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', colModel: []},
+            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', hidden:true, colModel: []},
+            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM', colModel: []},
             {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', colModel: []},
             {title: '열<br>처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', colModel: []},
             {title: '소재비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', editable: true, colModel: []},
@@ -600,7 +582,7 @@
                     {title: '발주번호', width: 90, datatype: 'string', dataIndx: 'ORDER_NUM', editable: true},
                     {title: '수량', datatype: 'string', dataIndx: 'ORDER_QTY', editable: true},
                     {title: '출고', datatype: 'string', dataIndx: 'CNFRH'},
-                    {title: '납기', datatype: 'string', dataIndx: 'HOPE_DUE_DT', editable: true},
+                    {title: '납기', datatype: 'string', dataIndx: 'ORDER_DUE_DT', editable: true},
                     {title: '납품확인', width: 70, datatype: 'string', dataIndx: 'DELIVERY_DT', editable: true},
                 ]
             },
@@ -1336,7 +1318,7 @@
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
             {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
-            {title: '마감금액', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT'}
+            {title: '마감금액', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'}
         ];
         let controlCloseLeftObj = {
             // height: 600,
@@ -1369,11 +1351,11 @@
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN', colModel: []},
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER', colModel: []},
             {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY', colModel: []},
-            {title: '변경후 마감금액', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT', colModel: []},
+            {title: '변경후 마감금액', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', colModel: []},
             {
                 title: '추가 금액', align: 'center', colModel: [
                     {title: '', datatype: 'string', dataIndx: 'ADD_QTY'},
-                    {title: '', datatype: 'string', dataIndx: 'ADD_UNIT_FINAL_AMT'}
+                    {title: '', datatype: 'integer', format: '#,###', dataIndx: 'ADD_UNIT_FINAL_AMT'}
                 ]
             }
         ];
@@ -1438,7 +1420,7 @@
             $orderManagementGrid.pqGrid('updateRow', {rowList: rowListConvert});
         };
 
-        let loadDataControlClose = function () {
+        let loadDataControlClose = function (open) {
             let selectedRowCount = selectedRowIndex.length;
             let list = [];
             let controlSeqList = [];
@@ -1478,6 +1460,18 @@
 
             $('#CONTROL_CLOSE_FORM > #CONTROL_SEQ').val(controlSeqStr);
             $('#CONTROL_CLOSE_FORM > #ORDER_COMP_CD').val(orderCompCdStr);
+
+            if (open) {
+                let postData = fnFormToJsonArrayData('#CONTROL_CLOSE_FORM');
+                postData.queryId = 'orderMapper.selectControlCloseVer';
+                let parameters = {'url': '/json-list', 'data': postData};
+
+                fnPostAjaxAsync(function (data, callFunctionParam) {
+                    let closeVer = data.list[0] === null ? 1 : data.list[0].MAX_CLOSE_VER;
+                    console.log(closeVer);
+                    $('#CONTROL_CLOSE_FORM #CLOSE_VER').val(closeVer).prop('selected', true);
+                }, parameters, '');
+            }
 
             $controlCloseLeftGrid.pqGrid('option', 'dataModel.postData', function () {
                 return (fnFormToJsonArrayData('#CONTROL_CLOSE_FORM'));
@@ -1586,12 +1580,13 @@
             }
             // alert();
             fnAppendSelectboxYear('CONTROL_CLOSE_YEAR', 3);
-            fnAppendSelectboxMonth('CONTROL_CLOSE_MONTH', CURRENT_YEAR);
+            fnAppendSelectboxMonth('CONTROL_CLOSE_MONTH');
+            $('#CONTROL_CLOSE_MONTH').val(CURRENT_MONTH < 9 ? '0' + CURRENT_MONTH : CURRENT_MONTH).prop('selected', true);
 
             $controlCloseLeftGrid = $('#' + controlCloseLeftGridId).pqGrid(controlCloseLeftObj);
             $controlCloseRightGrid = $('#' + controlCloseRightGridId).pqGrid(controlCloseRightObj);
 
-            loadDataControlClose();
+            loadDataControlClose(true);
         });
 
         $('#CONTROL_CLOSE_POPUP').on('hide.bs.modal', function () {

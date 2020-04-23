@@ -604,19 +604,21 @@
     let fnAppendSelectboxYear = function (id, severalYears) {
         $('#' + id).empty();
         let date = new Date();
-        // date.setMonth(date.getMonth() + 1);
+        date.setMonth(date.getMonth() + 1);
         let year = date.getFullYear();
 
         for (let i = year; i > year - severalYears; i--) {
             $('#' + id).append(new Option(i + '년', i));
         }
+
+        $('#' + id).val(CURRENT_YEAR).prop('selected', true);
     };
 
     /**
      * @param {string} id
      * @param {number} selectedYear
      */
-    let fnAppendSelectboxMonth = function (id, selectedYear) {
+    let fnAppendSelectboxMonth = function (id, selectedYear = 0) {
         $('#' + id).empty();
         let date = new Date();
         // date.setMonth(date.getMonth() + 1);
