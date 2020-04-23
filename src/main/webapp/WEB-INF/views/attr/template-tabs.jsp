@@ -31,5 +31,6 @@
             <tiles:insertAttribute name="body-menu"/>
         </section>
     </div>
+    <tiles:insertAttribute name="bottom"/>
 </body>
 </html>
