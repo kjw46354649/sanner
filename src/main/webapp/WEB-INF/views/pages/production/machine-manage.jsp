@@ -11,7 +11,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <style>
 
-    .layerPopup .list99 { height: 150px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)"; }
+    .layerPopup .list99 { height: 360px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)"; }
     .layerPopup .list99 .rowStyle tr th { border: 1px solid #acb9b9; background: #e8f0f0; color: #162f2f; text-align: center; padding: 5px; }
     .layerPopup .list99 .rowStyle tr td { border: 1px solid #cecece; color: #444; padding: 5px; text-align: center; font-family: 'NotoKrR'; }
     .layerPopup .list99 .rowStyle tr td.red { color: #e71b1b; }
@@ -165,7 +165,7 @@
 
     </div>
 </div>
------
+
 <!-- 품질실적 layer popup : S -->
 <div class="popup_container" id="CURRENT_POPUP" style="display: none;">
     <form class="form-inline" id="machine_manage_pop_form" name="machine_manage_pop_form" role="form">
@@ -180,8 +180,8 @@
             <div class="qualityWrap">
                 <div class="h_area">
 					<span class="buttonWrap">
-						<button type="button" class="onoff left on">SAVE</button>
-						<button type="button" class="onoff right">DELETE</button>
+						<button type="button" id="saveBtn" class="onoff left on">SAVE</button>
+						<button type="button" id="deleteBtn" class="onoff right">DELETE</button>
 					</span>
 
                 </div>
@@ -221,15 +221,89 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row">내용</th>
+                                <th scope="row">장비종류</th>
                                 <td>
-                                    <span>SM45C 70*20*15 4EA</span>
-                                    <span>SM45C 70*20*15 4EA</span>
-                                    <span>SM45C 70*20*15 4EA</span>
+                                    <select id="EQUIP_TYPE" name="EQUIP_TYPE" data-required="true" class="form-control parsley-validated">
+                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                        <c:forEach var="vlocale" items="${HighCode.H_1012}">
+                                            <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
+                                        </c:forEach>
+                                    </select>
                                 </td>
-                                <th scope="row">내용</th>
-                                <td><span>SM45C 70*20*15 4EA</span></td>
+                                <th scope="row">장비규격</th>
+                                <td>
+                                    <select id="EQUIP_DETAIL" name="EQUIP_DETAIL" data-required="true" class="form-control parsley-validated">
+                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                        <c:forEach var="vlocale" items="${HighCode.H_1034}">
+                                            <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
+                                        </c:forEach>
+                                    </select>
+                                </td>
                             </tr>
+                            <tr>
+                                <th scope="row">제조사</th>
+                                <td>
+                                    <select id="EQUIP_COMP_CD" name="PROCESS_TYPE" data-required="true" class="form-control parsley-validated">
+                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                        <c:forEach var="vlocale" items="${HighCode.H_1037}">
+                                            <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
+                                        </c:forEach>
+                                    </select>
+                                </td>
+                                <th scope="row">설치위치</th>
+                                <td>
+                                    <select id="FACTORY_AREA" name="FACTORY_AREA" data-required="true" class="form-control parsley-validated">
+                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                        <c:forEach var="vlocale" items="${HighCode.H_1005}">
+                                            <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
+                                        </c:forEach>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">담당자(정)</th>
+                                <td>
+                                    <select id="MAIN_USER_ID" name="MAIN_USER_ID" data-required="true" class="form-control parsley-validated">
+                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                    </select>
+                                </td>
+                                <th scope="row">담당자(부)</th>
+                                <td>
+                                    <select id="SUB_USER_ID" name="SUB_USER_ID" data-required="true" class="form-control parsley-validated">
+                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">구입시기</th>
+                                <td>
+                                    <input class="datepicker-input" type="text" name="PURCHASE_DT" id="PURCHASE_DT" placeholder="" value="" title="구입시기">
+                                </td>
+                                <th scope="row">리셀러</th>
+                                <td>
+                                    <select id="RESELLER_CD" name="RESELLER_CD" data-required="true" class="form-control parsley-validated">
+                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                        <c:forEach var="vlocale" items="${HighCode.H_1022}">
+                                            <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
+                                        </c:forEach>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">첨부파일</th>
+                                <td colspan="3">
+                                    <input type="hidden" id="ETC_GFILE_SEQ" name="ETC_GFILE_SEQ" value="">
+                                    <input type="text" id="ETC_GFILE_SEQ_NM" name="ETC_GFILE_SEQ_NM" class="form-control" placeholder="첨부파일" readonly>
+                                    <input type="button" id="etc_attach_file" name="etc_attach_file" value="fileUpload">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">비고</th>
+                                <td colspan="3">
+                                    <input type="text" id="NOTE" name="NOTE" class="form-control" placeholder="비고">
+                                </td>
+                            </tr>
+
                         </table>
                     </div>
                 </div>
@@ -275,6 +349,8 @@
 <script type="text/javascript">
     /**  선언 **/
     let $searchBtn = $("#searchBtn");
+    let $saveBtn = $("#saveBtn");
+    let $deleteBtn = $("#deleteBtn");
 
     let currentGridId = 'machine_manage_current_grid';
     let currentColModel;
@@ -634,7 +710,7 @@
         ];
         historyObj = {
             width: 950,
-            height: 350, collapsible: false, resizable: false, showTitle: false, // pageModel: {type: "remote"},
+            height: 170, collapsible: false, resizable: false, showTitle: false, // pageModel: {type: "remote"},
             numberCell: {title: 'No.'}, dragColumns: {enabled: false},
             scrollModel: {autoFit: true}, trackModel: {on: true},
             columnTemplate: {
@@ -656,13 +732,29 @@
         $historyGrid = $('#' + historyGridId).pqGrid(historyObj);
         /**  정비이력 그리드 선언 끝 **/
 
-
+        /**  이벤트  **/
+        $saveBtn.click(function(event){
+            alert("저장 로직 시작");
+        });
+        $deleteBtn.click(function(event){
+            if(confirm("삭제하시겠습니까?")){
+                $("#machine_manage_pop_form").find("#queryId").val("machine.deleteMachineMaster");
+                let parameters = {
+                    'url': '/json-update',
+                    'data': $('#company_master_register_form').serialize()
+                };
+                fnPostAjax(function (data, callFunctionParam) {
+                    fnAlertMessageAutoClose('remove');
+                }, parameters, '');
+                alert("스태프랑 종류도 다 지워?");
+            };
+        });
 
 
         $('.pop_close').on('click', function(e) {
             $('#CURRENT_POPUP').modal('hide');
         });
-/**  이벤트  **/
+
         $('#SEL_TERM_DT_USE').on('click', function(e) {
             if ($(this).is(':checked')) {
                 $(this).val('Y');
@@ -703,6 +795,13 @@
         });
 
         $(".datepicker-input").each(function(){ $(this).datepicker();});
+
+        /** SelectBox 초기화 **/
+        let commonCodeBotGridId = 'dataSource.getUserList';
+        let paramData = {"url":"/json-list", "data": {"queryId": commonCodeBotGridId}};
+        // fnCommCodeDatasourceSelectBoxCreate($("#company_master_search_form").find("#SEL_STAFF_NM"), 'all', paramData);
+        fnCommCodeDatasourceSelectBoxCreate($("#machine_manage_pop_form").find("#MAIN_USER_ID"), 'sel', paramData);
+        fnCommCodeDatasourceSelectBoxCreate($("#machine_manage_pop_form").find("#SUB_USER_ID"), 'sel', paramData);
 
 
     });
@@ -792,6 +891,7 @@
             $("#machine_manage_pop_form").find("#EQUIP_NM").html(dataInfo.EQUIP_NM);
 
 
+
             // $("#company_master_register_form").find("#queryId").val("systemMapper.getCompanyMasterStaffList");
             // $systemCompanyRegisterGrid = $('#' + systemCompanyRegisterGridId).pqGrid(systemCompanyRegisterObj);
             // $systemCompanyRegisterGrid.pqGrid("option", "dataModel.postData", function(ui){
@@ -801,6 +901,26 @@
 
 
         }, parameters, '');
+    });
+    /** 업체 기타 파일 업로드 */
+    $("#machine_manage_pop_form").find("#etc_attach_file").click(function (e) {
+        let companyEtcFile = $("#common_formdata_multi_upload_form").find("#click_singfile_chose_btn");
+        companyEtcFile.trigger("click");
+        companyEtcFile.change(function () {
+            var input = $(this);
+            var files = input.get(0).files;
+            if (files.length > 0) {
+                let formData = new FormData();
+                for (var i = 0; i < files.length; i++) {
+                    formData.append("file" + i, files[i]);
+                }
+                fnFormDataFileUploadAjax(function (data) {
+                    let fileInfo = data.fileUploadList[0];
+                    $("#machine_manage_pop_form").find("#ETC_GFILE_SEQ_NM").val(fileInfo.ORGINAL_FILE_NM);
+                    $("#machine_manage_pop_form").find("#ETC_GFILE_SEQ").val(fileInfo.GFILE_SEQ);
+                }, formData, '');
+            }
+        });
     });
     // topWrap 확장 함수
     function topMenuOpen(){
