@@ -555,7 +555,7 @@
           AND A.COMP_CD = #{COMP_CD}
     </select>
     <select id="selectCompanySeq" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT CONCAT('CMP',LPAD(IFNULL(CONVERT(MAX(SUBSTRING('CMP0001',4,4)),INT)+1,1),4,'0')) AS SEQ
+        SELECT CONCAT('CMP',LPAD(IFNULL(CONVERT(MAX(SUBSTRING(COMP_CD,4,4)),INT)+1,1),4,'0')) AS SEQ
         FROM jmes.TBL_COMPANY WHERE COMP_CD LIKE 'CMP%'
     </select>
     <insert id="insertCompanyMaster" parameterType="java.util.HashMap">
