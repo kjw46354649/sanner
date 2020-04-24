@@ -30,8 +30,25 @@ public class OrderServiceImpl implements OrderService {
         this.orderDao.insertControlMaster(hashMap);
         this.orderDao.insertControlPart(hashMap);
         this.orderDao.insertControlPartOrder(hashMap);
+    }
+
+    @Override
+    public void registerNewOrderConfirm(Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayList<Map<String, Object>> jsonMap = null;
+        Map<String, Object> hashMap = new HashMap<String, Object>();
+
+        if (jsonObject != null) {
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<Map<String, Object>>>() {
+            });
+        }
+        hashMap.put("list", jsonMap);
+
+        this.orderDao.insertControlMaster(hashMap);
+        this.orderDao.insertControlPart(hashMap);
+        this.orderDao.insertControlPartOrder(hashMap);
         this.orderDao.insertControlProgressList(hashMap);
-        this.orderDao.insertControlPartProgressList(hashMap);
     }
 
     @Override
