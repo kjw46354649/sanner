@@ -764,7 +764,7 @@
         CONTROL_SEQ = #{CONTROL_SEQ}
     </update>
 
-    <update id="updateControlCadFiles__mapping" parameterType="java.util.HashMap">
+    <update id="updateControlCadFiles_mapping" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART
         SET
             PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},

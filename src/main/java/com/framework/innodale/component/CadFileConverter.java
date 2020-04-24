@@ -123,13 +123,13 @@ public class CadFileConverter {
         PdfOptions pdfOptions = new PdfOptions();
         pdfOptions.setVectorRasterizationOptions(rasterizationOptions);
 
-        cadImage.save(convertFile.getParentFile().toString() + File.separator + soruceFileName.substring(0, soruceFileName.lastIndexOf(".")) + "_aspos.pdf", pdfOptions);
+        cadImage.save(convertFile.getParentFile().toString() + File.separator + soruceFileName.substring(0, soruceFileName.lastIndexOf(".")) + ".pdf", pdfOptions);
 
         rasterizationOptions.setContentAsBitmap(true);
         PngOptions pngOptions = new PngOptions();
         pngOptions.setVectorRasterizationOptions(rasterizationOptions);
 
-        cadImage.save(convertFile.getParentFile().toString() + File.separator + soruceFileName.substring(0, soruceFileName.lastIndexOf(".")) + "_aspos.png", pngOptions);
+        cadImage.save(convertFile.getParentFile().toString() + File.separator + soruceFileName.substring(0, soruceFileName.lastIndexOf(".")) + ".png", pngOptions);
     }
 
     public static void main(String[] args){

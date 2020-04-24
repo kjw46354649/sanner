@@ -79,14 +79,14 @@
 
     <select id="selectGfileFileList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            A.GFILE_SEQ AS DXF_GFILE_SEQ, B.FILE_SEQ, B.TIME_PATH, B.FILE_PATH, REPLACE(B.ORGINAL_FILE_NM, CONCAT('.',B.FILE_EXT), SPACE(0)) AS FILE_NM
+            A.GFILE_SEQ AS DXF_GFILE_SEQ, B.FILE_SEQ, B.TIME_PATH, B.FILE_PATH, REPLACE(B.ORGINAL_FILE_NM, CONCAT('.',B.FILE_EXT), SPACE(0)) AS ORGINAL_FILE_NM,
+            REPLACE(B.FILE_NM, CONCAT('.',B.FILE_EXT), SPACE(0)) AS FILE_NM
         FROM jmes.TBL_FILE_GROUP A
             INNER JOIN jmes.TBL_FILE B ON A.GFILE_SEQ = B.GFILE_SEQ
-        WHERE A.GFILE_SEQ  IN (
-            <foreach collection="dxfGfileSeqList" item="bean" separator=",">
-                bean
+        WHERE A.GFILE_SEQ  IN
+            <foreach collection="dxfGfileSeqList" item="bean" index="index"  open="(" close=")" separator=",">
+                #{bean}
             </foreach>
-        )
     </select>
 
 

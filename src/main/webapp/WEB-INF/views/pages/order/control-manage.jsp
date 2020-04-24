@@ -529,7 +529,28 @@
             {title: '모듈', dataType: 'string', dataIndx: 'MODULE_NM', editable: true, colModel: []},
             {title: '납품처', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM', editable: true, colModel: []},
             {title: '비고(라벨)', dataType: 'string', dataIndx: 'LABEL_NOTE', editable: true, colModel: []},
-            {title: '주요<br>검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION', colModel: []},
+            {title: '주요<br>검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION',  editable: true, colModel: [],
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1052')},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let mainInspection = fnGetCommCodeGridSelectBox('1052');
+                        let index = mainInspection.findIndex(function (element) {
+                            return element.text == cellData;
+                        });
+
+                        if (index < 0) {
+                            index = mainInspection.findIndex(function (element) {
+                                return element.value == cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : mainInspection[index].text;
+                    }
+                }},
             {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN', colModel: []},
             {title: 'CONTROL_VER', dataType: 'string', dataIndx: 'CONTROL_VER', hidden: true, colModel: []},
             {title: '관리번호', width: 100, dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true, colModel: []},
