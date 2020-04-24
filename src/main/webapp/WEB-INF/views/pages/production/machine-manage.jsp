@@ -9,10 +9,28 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<style>
+
+    .layerPopup .list99 { height: 150px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)"; }
+    .layerPopup .list99 .rowStyle tr th { border: 1px solid #acb9b9; background: #e8f0f0; color: #162f2f; text-align: center; padding: 5px; }
+    .layerPopup .list99 .rowStyle tr td { border: 1px solid #cecece; color: #444; padding: 5px; text-align: center; font-family: 'NotoKrR'; }
+    .layerPopup .list99 .rowStyle tr td.red { color: #e71b1b; }
+
+    .layerPopup .list98 { height: 200px; background: #e1e1e1; }
+
+    .resultWrap99 { -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)"; }
+    .resultWrap99 .leftWrap { height: 150px; width: 40%; float: left; }
+    .resultWrap99 .rightWrap { height: 150px; width: 58%; float: right; }
+
+
+
+
+
+</style>
 <div class="page estimate">
     <div class="topWrap">
         <form class="form-inline" id="machine_manage_search_form" name="machine_manage_search_form" role="form">
-            <input type="hidden" id="queryId" name="queryId" value="machine.getMachineList">
+            <input type="hidden" id="queryId" name="queryId" value="machine.selectMachineList">
             <input type="hidden" id="SEL_EQUIP_KIND" name="SEL_EQUIP_KIND" value="1">
             <div class="gubunWrap">
                 <ul>
@@ -147,23 +165,113 @@
 
     </div>
 </div>
-<%-- modal --%>
-<div class="modal" id="CURRENT_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
-                        class="sr-only">Close</span></button>
-                <h4 class="modal-title">신규 주문 등록</h4>
+-----
+<!-- 품질실적 layer popup : S -->
+<div class="popup_container" id="CURRENT_POPUP" style="display: none;">
+    <form class="form-inline" id="machine_manage_pop_form" name="machine_manage_pop_form" role="form">
+        <input type="hidden" id="queryId" name="queryId" value="machine.selectMachineInfo">
+        <input type="hidden" id="SEQ" name="SEQ" value="">
+        <input type="hidden" id="EQUIP_KIND" name="EQUIP_KIND" value="">
+        <input type="hidden" id="EQUIP_ID" name="EQUIP_ID" value="" >
+
+        <div class="layerPopup">
+            <h3>품질 실적 등록</h3>
+            <button type="button" class="pop_close">닫기</button>
+            <div class="qualityWrap">
+                <div class="h_area">
+					<span class="buttonWrap">
+						<button type="button" class="onoff left on">SAVE</button>
+						<button type="button" class="onoff right">DELETE</button>
+					</span>
+
+                </div>
+                <div class="resultWrap99 list99">
+                    <div class="leftWrap">
+                        <img src="/resource/main/images/1.jpg" >
+                        <div class="btnWrap">
+                            <button type="button" class="defaultBtn">CLOSE</button>
+                        </div>
+                    </div>
+                    <div class="rightWrap">
+                        <table class="rowStyle">
+                            <caption></caption>
+                            <colgroup>
+                                <col width="24%">
+                                <col width="24%">
+                                <col width="24%">
+                                <col width="24%">
+                            </colgroup>
+                            <tr>
+                                <th scope="row">Item ID</th>
+                                <td id="EQUIP_ID_NM"></td>
+                                <th scope="row">구분</th>
+                                <td id="EQUIP_KIND_NM"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">장비명</th>
+                                <td id="EQUIP_NM">홍길동(abc@naver.com)</td>
+                                <th scope="row">공정</th>
+                                <td>
+                                    <select id="PROCESS_TYPE" name="PROCESS_TYPE" data-required="true" class="form-control parsley-validated">
+                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                        <c:forEach var="vlocale" items="${HighCode.H_1010}">
+                                            <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
+                                        </c:forEach>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">내용</th>
+                                <td>
+                                    <span>SM45C 70*20*15 4EA</span>
+                                    <span>SM45C 70*20*15 4EA</span>
+                                    <span>SM45C 70*20*15 4EA</span>
+                                </td>
+                                <th scope="row">내용</th>
+                                <td><span>SM45C 70*20*15 4EA</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+
+                <h4>공유사항</h4>
+                <div class="list98">
+                    <div id="div_tabs2">
+                        <div class="">&nbsp;
+                            <ul class="nav nav-tabs m-b-n-xxs">
+                                <li class="active">
+                                    <a href="#_TAB3" data-toggle="tab" aria-expanded="true">작동로그</a>
+                                </li>
+                                <li class="">
+                                    <a href="#_TAB4" data-toggle="tab" aria-expanded="false">정비이력</a>
+                                </li>
+                            </ul>
+                            <div class="panel panel-default tab-content">
+                                <ul class="list-group tab-pane active" id="_TAB3">
+                                    <div class="row">
+                                        <div id="machine_manage_log_grid"></div>
+                                    </div>
+                                </ul>
+                                <ul class="list-group tab-pane list-group-alt list-group-lg" id="_TAB4">
+                                    <div class="row">
+                                        <div id="machine_manage_history_grid"></div>
+                                    </div>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body">
-                <div id="ORDER_REGISTER_GRID"></div>
+            <div class="btnWrap">
+                <button type="button" class="defaultBtn">CLOSE</button>
             </div>
-            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
-    </div>
+
 </div>
+<!-- 품질실적 layer popup : E -->
+
+
 <script type="text/javascript">
     /**  선언 **/
     let $searchBtn = $("#searchBtn");
@@ -179,6 +287,18 @@
     let etcPostData;
     let etcObj;
     let $etcGrid;
+
+    let logGridId = 'machine_manage_log_grid';
+    let logColModel;
+    let logPostData;
+    let logObj;
+    let $logGrid;
+
+    let historyGridId = 'machine_manage_history_grid';
+    let historyColModel;
+    let historyPostData;
+    let historyObj;
+    let $historyGrid;
 
     $(function () {
         'use strict';
@@ -238,8 +358,11 @@
                 }
             },
             cellClick: function (event, ui) {
-                if (ui.dataIndx === 'PHOTO_GFILE_SEQ' && ui.dataIndx === 'EQUIP_NM'){
+                if (ui.dataIndx === 'PHOTO_GFILE_SEQ' || ui.dataIndx === 'EQUIP_NM'){
                     let target = ui.rowData.EQUIP_ID;
+
+                    fnResetFrom("machine_manage_pop_form");
+                    $("#machine_manage_pop_form").find("#EQUIP_ID").val(target);
                     $('#CURRENT_POPUP').modal('show');
                 }
             }
@@ -311,10 +434,234 @@
         $etcGrid = $('#' + etcGridId).pqGrid(etcObj);
 /**  기타장비 그리드 선언 끝 **/
 
+/**  작동로그 그리드 선언 시작 선언만 해놓고 작업은 업무 협의 되면 진행. **/
+        logPostData = fnFormToJsonArrayData('#machine_manage_search_form');
+        logColModel = [
+            {title: '정비 작업종류', dataType: 'string', dataIndx: 'REPAIR_TYPE',
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "REPAIR_TYPE", id: "REPAIR_TYPE" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1036'),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateMasterBotGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["REPAIR_TYPE"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
+            {title: 'Description', dataType: 'string', dataIndx: 'REPAIR_DESC'},
+            {title: '시작일시', dataType: 'string', dataIndx: 'REPAIR_START_DT'},
+            {title: '종료일시', dataType: 'string', dataIndx: 'REPAIR_END_DT'},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
+            {title: '정비전', align: 'center', dataType: 'string', dataIndx: 'BEFORE_GFILE_SEQ', width: 70, minWidth: 70,
+                render: function (ui) {
+                    if (ui.rowData['BEFORE_GFILE_SEQ'] > 0) return "<i id='imageView' class='fa fa-file-image-o fa-2x'>&nbsp;</i>";
+                    return "";
+                },
+                postRender: function (ui) {
+                    let grid = this, $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        callWindowImageViewer(ui.rowData.BEFORE_GFILE_SEQ);
+                    });
+                }
+            },
+            {title: '정비후', align: 'center', dataType: 'string', dataIndx: 'AFTER_GFILE_SEQ', width: 70, minWidth: 70,
+                render: function (ui) {
+                    if (ui.rowData['AFTER_GFILE_SEQ'] > 0) return "<i id='imageView' class='fa fa-file-image-o fa-2x'>&nbsp;</i>";
+                    return "";
+                },
+                postRender: function (ui) {
+                    let grid = this, $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        callWindowImageViewer(ui.rowData.AFTER_GFILE_SEQ);
+                    });
+                }
+            },
+            {title: '', dataType: 'string', dataIndx: 'SEQ', minWidth: 80 ,
+                render: function(ui){
+                    return '<input type="button" value="사진삭제"/>';
+                },
+                postRender: function (ui) {
+                    let grid = this, $cell = grid.getCell(ui);
+                    alert(ui.rowData.SEQ);
+                }
+            }
+        ];
+        logObj = {
+            width: 950,
+            height: 350, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            selectionModel : {type: 'row', mode: 'single'}, editable : false,
+            numberCell: {title: 'No.'}, dragColumns: {enabled: false},
+            scrollModel: {autoFit: true}, trackModel: {on: true},
+            columnTemplate: {
+                align: 'center',
+                halign: 'center',
+                hvalign: 'center', //to vertically center align the header cells.
+                editable: false
+            },
+            colModel: logColModel,
+            toolbar: {},
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: logPostData,
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            },
+            rowClick: function( event, ui ) {
+                console.log(ui) ;
+                // let rowData = ui.rowData;
+                // fnResetFrom("company_master_register_form");
+                // $("#company_master_register_form").find("#COMP_CD").val(rowData.COMP_CD);
+                // $('#system_company_popup').modal('show');
+            }
+        };
+        $logGrid = $('#' + logGridId).pqGrid(logObj);
+/**  작동로그 그리드 선언 끝 **/
+
+/**  정비이력 그리드 선언 시작 **/
+    let dateEditor = function (ui) {
+        let $inp = ui.$cell.find("input"),
+            $grid = $(this),
+            validate = function (that) {
+                let valid = $grid.pqGrid("isValid", {
+                    dataIndx: ui.dataIndx,
+                    value: $inp.val(),
+                    rowIndx: ui.rowIndx
+                }).valid;
+                if (!valid) {
+                    that.firstOpen = false;
+                }
+            };
+
+        //initialize the editor
+        $inp
+            .on("input", function (evt) {
+                validate(this);
+            })
+            .datepicker({
+                changeMonth: true,
+                changeYear: true,
+                showAnim: '',
+                onSelect: function () {
+                    this.firstOpen = true;
+                    validate(this);
+                },
+                beforeShow: function (input, inst) {
+                    return !this.firstOpen;
+                },
+                onClose: function () {
+                    this.focus();
+                }
+            });
+    }
+        historyPostData = fnFormToJsonArrayData('#machine_manage_pop_form');
+        historyColModel = [
+            {title: '정비 작업종류', dataType: 'string', dataIndx: 'REPAIR_TYPE_SEL',
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "REPAIR_TYPE_SEL", id: "REPAIR_TYPE" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1036'),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = $historyGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["REPAIR_TYPE"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
+            {title: 'Description', dataType: 'string', dataIndx: 'REPAIR_DESC'},
+            { title: "시작일시", dataIndx: "REPAIR_START_DT", dataType: 'date',
+                editor: {
+                    type: 'textbox',
+                    init: dateEditor
+                },
+                render: function (ui) {
+                    //return "hello";
+                    //var cellData = ui.cellData;
+                    var cellData = "01/01/2001";
+                    if (cellData) {
+                        return $.datepicker.formatDate('yy-mm-dd', new Date(cellData));
+                    }
+                    else {
+                        return "";
+                    }
+                },
+                validations: [
+                    { type: 'regexp', value: '^[0-9]{2}/[0-9]{2}/[0-9]{4}$', msg: 'Not in mm/dd/yyyy format' }
+                ]
+            },
+            {title: '종료일시', dataType: 'string', dataIndx: 'REPAIR_END_DT'},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
+            {title: '정비전', align: 'center', dataType: 'string', dataIndx: 'BEFORE_GFILE_SEQ', width: 70, minWidth: 70,
+                render: function (ui) {
+                    if (ui.rowData['BEFORE_GFILE_SEQ'] > 0) return "<i id='imageView' class='fa fa-file-image-o fa-2x'>&nbsp;</i>";
+                    return "";
+                },
+                postRender: function (ui) {
+                    let grid = this, $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        callWindowImageViewer(ui.rowData.BEFORE_GFILE_SEQ);
+                    });
+                }
+            },
+            {title: '정비후', align: 'center', dataType: 'string', dataIndx: 'AFTER_GFILE_SEQ', width: 70, minWidth: 70,
+                render: function (ui) {
+                    if (ui.rowData['AFTER_GFILE_SEQ'] > 0) return "<i id='imageView' class='fa fa-file-image-o fa-2x'>&nbsp;</i>";
+                    return "";
+                },
+                postRender: function (ui) {
+                    let grid = this, $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        callWindowImageViewer(ui.rowData.AFTER_GFILE_SEQ);
+                    });
+                }
+            },
+            {title: '', dataType: 'string', dataIndx: 'SEQ', minWidth: 80 , editable: false,
+                render: function(ui){
+                    return '<input type="button" value="사진삭제"/>';
+                },
+                postRender: function (ui) {
+                    let grid = this, $cell = grid.getCell(ui);
+                    alert(ui.rowData.SEQ);
+                }
+            }
+        ];
+        historyObj = {
+            width: 950,
+            height: 350, collapsible: false, resizable: false, showTitle: false, // pageModel: {type: "remote"},
+            numberCell: {title: 'No.'}, dragColumns: {enabled: false},
+            scrollModel: {autoFit: true}, trackModel: {on: true},
+            columnTemplate: {
+                align: 'center',
+                halign: 'center',
+                hvalign: 'center'
+            },
+            colModel: historyColModel,
+            toolbar: {},
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: historyPostData,
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            }
+        };
+
+        $historyGrid = $('#' + historyGridId).pqGrid(historyObj);
+        /**  정비이력 그리드 선언 끝 **/
 
 
 
 
+        $('.pop_close').on('click', function(e) {
+            $('#CURRENT_POPUP').modal('hide');
+        });
 /**  이벤트  **/
         $('#SEL_TERM_DT_USE').on('click', function(e) {
             if ($(this).is(':checked')) {
@@ -330,14 +677,13 @@
             let SEL_ST_DT = $("#machine_manage_search_form").find("#SEL_ST_DT").val();
             let SEL_END_DT = $("#machine_manage_search_form").find("#SEL_END_DT").val();
 
-            console.log("click-----------------");
             if(SEL_TERM_DT_USE == "Y"){
                 if(SEL_ST_DT == "" || SEL_END_DT == ""){
                     alert("날짜 검색을 선택하셨습니다.\n시작날짜와 종료날짜를 선택하여 주십시오.");
                     return;
                 }
             }
-console.log($('#machine_manage_search_form').serialize());
+
             if(targetTab == "1"){
                 $currentGrid = $('#' + currentGridId).pqGrid(currentObj);
                 $currentGrid.pqGrid("option", "dataModel.postData", function(ui){
@@ -372,6 +718,89 @@ console.log($('#machine_manage_search_form').serialize());
             $searchBtn.trigger('click');
 
         }
+    });
+    $("#div_tabs2").tabs({
+        activate: function(event, ui) {
+            ui.newPanel.find('.pq-grid').pqGrid('refresh');
+            let selTab = ui.newPanel.selector;
+            if(selTab == "#_TAB3"){
+
+                $("#machine_manage_pop_form").find("#queryId").val("machine.selectMachineHistoryList");
+
+                $logGrid = $('#' + logGridId).pqGrid(logObj);
+                $logGrid.pqGrid("option", "dataModel.postData", function(ui){
+                    return fnFormToJsonArrayData('#machine_manage_pop_form');
+                } );
+                $logGrid.pqGrid("refreshDataAndView");
+            }else if(selTab == "#_TAB4"){
+                $("#machine_manage_pop_form").find("#queryId").val("machine.selectMachineHistoryList");
+
+                $historyGrid = $('#' + historyGridId).pqGrid(historyObj);
+                $historyGrid.pqGrid("option", "dataModel.postData", function(ui){
+                    return fnFormToJsonArrayData('#machine_manage_pop_form');
+                } );
+                $historyGrid.pqGrid("refreshDataAndView");
+            }
+
+
+        }
+    });
+    // 업체상세 모달 open
+    $("#CURRENT_POPUP").on('show.bs.modal', function(){
+        $("#machine_manage_pop_form").find("#queryId").val("machine.selectMachineInfo");
+        let parameters = {
+            'url': '/json-info',
+            'data': $('#machine_manage_pop_form').serialize()
+        };
+        fnPostAjax(function (data, callFunctionParam) {
+            let dataInfo = data.info;
+
+            console.log("fnJsonDataToForm 1");
+            if(dataInfo == null || "" == dataInfo.EQUIP_ID) {
+                fnResetFrom("machine_manage_pop_form");
+            }else{
+                fnJsonDataToForm("machine_manage_pop_form", dataInfo);
+
+                console.log("fnJsonDataToForm 2");
+
+                // // select 정보 셋팅
+                // // $("#company_master_register_form").find("#COMP_KIND").trigger("change");
+                // // $("#company_master_register_form").find("#COMP_TYPE").val(dataInfo.COMP_TYPE);
+                // $("#company_master_register_form").find("#ETC_GFILE_SEQ_NM").val(dataInfo.ETC_GFILE_SEQ_NM);
+                // $("#company_master_register_form").find("#ETC_GFILE_SEQ").val(dataInfo.ETC_GFILE_SEQ);
+                // $("#company_master_register_form").find("#LOGO_GFILE_SEQ").val(dataInfo.LOGO_GFILE_SEQ);
+                // $("#company_master_register_form").find("#LOGO_GFILE_SRC").attr("src", "/image/" + dataInfo.LOGO_GFILE_SEQ);
+                // $("#company_master_register_form").find("#SIGN_GFILE_SEQ").val(dataInfo.SIGN_GFILE_SEQ);
+                // $("#company_master_register_form").find("#SIGN_GFILE_SRC").attr("src", "/image/" + dataInfo.SIGN_GFILE_SEQ);
+                // if(dataInfo.ACTIVE_YN == "Y") {
+                //     $("#company_master_register_form").find("#ACTIVE_YN").trigger("click");
+                // }
+                // if(dataInfo.FAMILY_COMPANY_YN == "Y") {
+                //     $("#company_master_register_form").find("#FAMILY_COMPANY_YN").prop('checked', true);
+                // }
+            }
+            let equip_kind = $("#machine_manage_search_form").find("#SEL_EQUIP_KIND").val();
+
+            if(equip_kind == "1"){
+                $("#machine_manage_pop_form").find("#EQUIP_KIND").val("1");
+                $("#machine_manage_pop_form").find("#EQUIP_KIND_NM").html("가공장비");
+            }else if(equip_kind == "2"){
+                $("#machine_manage_pop_form").find("#EQUIP_KIND").val("2");
+                $("#machine_manage_pop_form").find("#EQUIP_KIND_NM").html("기타장비");
+            }
+            $("#machine_manage_pop_form").find("#EQUIP_ID_NM").html(dataInfo.EQUIP_ID);
+            $("#machine_manage_pop_form").find("#EQUIP_NM").html(dataInfo.EQUIP_NM);
+
+
+            // $("#company_master_register_form").find("#queryId").val("systemMapper.getCompanyMasterStaffList");
+            // $systemCompanyRegisterGrid = $('#' + systemCompanyRegisterGridId).pqGrid(systemCompanyRegisterObj);
+            // $systemCompanyRegisterGrid.pqGrid("option", "dataModel.postData", function(ui){
+            //     return fnFormToJsonArrayData('#company_master_register_form');
+            // } );
+            // $systemCompanyRegisterGrid.pqGrid("refreshDataAndView");
+
+
+        }, parameters, '');
     });
     // topWrap 확장 함수
     function topMenuOpen(){

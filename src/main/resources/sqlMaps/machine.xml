@@ -3,7 +3,7 @@
 
 <mapper namespace="machine">
 
-    <select id="getMachineList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    <select id="selectMachineList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.EQUIP_ID
             , A.PHOTO_GFILE_SEQ
             , jmes.SF_GET_FILE_ORGINAL_NM(A.PHOTO_GFILE_SEQ, NULL) as PHOTO_GFILE_SEQ_NM
@@ -53,5 +53,111 @@
         ORDER BY A.EQUIP_ID
     </select>
 
+    <select id="selectMachineInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.EQUIP_ID
+            , jmes.SF_GET_CODE_NM('1051', A.EQUIP_KIND, 'KR') AS EQUIP_KIND_NM
+            , A.PHOTO_GFILE_SEQ
+            , A.EQUIP_NM
+            , A.PROCESS_TYPE
+            , A.EQUIP_TYPE
+            , A.EQUIP_SIZE
+            , A.EQUIP_COMP_CD
+            , A.FACTORY_AREA
+            , A.MAIN_USER_ID
+            , A.SUB_USER_ID
+            , jmes.SF_GET_DATE_F(A.PURCHASE_DT,'YYYY','') AS PURCHASE_DT
+            , A.RESELLER_CD
+            , A.ETC_GFILE_SEQ
+            , A.NOTE
+        FROM jmes.TBL_EQUIP A
+        WHERE A.EQUIP_ID = #{EQUIP_ID}
+    </select>
+    <select id="selectCompanySeq" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT CONCAT('NC', LPAD(NEXTVAL(jmes.SEQ_EQUIP),4,'0'))AS SEQ
+        FROM dual
+    </select>
 
+    <insert id="insertMachineMaster" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_EQUIP (EQUIP_ID, EQUIP_KIND, EQUIP_NM
+                              , PROCESS_TYPE, EQUIP_TYPE, EQUIP_SIZE
+                              , EQUIP_COMP_CD, FACTORY_AREA
+                              , MAIN_USER_ID, SUB_USER_ID, PURCHASE_DT, RESELLER_CD, NOTE
+                              , PHOTO_GFILE_SEQ, ETC_GFILE_SEQ, INSERT_ID)
+        VALUES (  #{EQUIP_ID}, #{EQUIP_KIND}, #{EQUIP_NM}
+                , #{PROCESS_TYPE}, #{EQUIP_TYPE}, #{EQUIP_SIZE}
+                , #{EQUIP_COMP_CD}, #{FACTORY_AREA}
+                , #{MAIN_USER_ID}, #{SUB_USER_ID}, REPLACE(#{PURCHASE_DT},'-',''), #{RESELLER_CD}, #{NOTE}
+                , #{PHOTO_GFILE_SEQ}, #{ETC_GFILE_SEQ}, #{LOGIN_USER_ID} )
+    </insert>
+    <update id="updateMachineMaster" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_EQUIP
+        SET EQUIP_NM = #{EQUIP_NM}
+              , PROCESS_TYPE = #{PROCESS_TYPE}
+              , EQUIP_TYPE = #{EQUIP_TYPE}
+              , EQUIP_SIZE = #{EQUIP_SIZE}
+              , EQUIP_COMP_CD = #{EQUIP_COMP_CD}
+              , FACTORY_AREA = #{FACTORY_AREA}
+              , MAIN_USER_ID = #{MAIN_USER_ID}
+              , SUB_USER_ID = #{SUB_USER_ID}
+              , PURCHASE_DT = REPLACE(#{PURCHASE_DT},'-','')
+              , RESELLER_CD = #{RESELLER_CD}
+              , NOTE = #{NOTE}
+            <if test="PHOTO_GFILE_SEQ != null and PHOTO_GFILE_SEQ != ''">
+                  , PHOTO_GFILE_SEQ = #{PHOTO_GFILE_SEQ}
+            </if>
+            <if test="ETC_GFILE_SEQ != null and ETC_GFILE_SEQ != ''">
+              , ETC_GFILE_SEQ = #{ETC_GFILE_SEQ}
+            </if>
+              , UPDATE_DT = NOW()
+              , UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE EQUIP_ID = #{EQUIP_ID}
+    </update>
+    <delete id="deleteMachineMaster" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_EQUIP
+        SET DEL_YN = 'N'
+          , UPDATE_DT = NOW()
+          , UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE EQUIP_ID = #{EQUIP_ID}
+    </delete>
+    <select id="selectMachineHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.EQUIP_ID
+          , A.SEQ
+          , A.REPAIR_TYPE
+          , A.REPAIR_DESC
+          , jmes.SF_GET_DATE_F(A.REPAIR_START_DT,'YY','M') AS REPAIR_START_DT
+          , jmes.SF_GET_DATE_F(A.REPAIR_END_DT,'YY','M') AS REPAIR_END_DT
+          , CONCAT(DATEDIFF(A.REPAIR_END_DT, A.REPAIR_START_DT) * 24 + HOUR(TIMEDIFF(A.REPAIR_END_DT, A.REPAIR_START_DT)), 'H ', MINUTE(TIMEDIFF(A.REPAIR_END_DT, A.REPAIR_START_DT)),'M') AS REPAIR_TIME
+          , A.NOTE
+          , A.BEFORE_GFILE_SEQ
+          , A.AFTER_GFILE_SEQ
+        FROM jmes.TBL_EQUIP_REPAIR A
+        WHERE A.EQUIP_ID = #{EQUIP_ID}
+    </select>
+    <insert id="insertMachineMasterHistory" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_EQUIP_REPAIR ( EQUIP_ID, SEQ, REPAIR_TYPE
+                                            , REPAIR_START_DT, REPAIR_END_DT
+                                            , REPAIR_DESC, NOTE, BEFORE_GFILE_SEQ, AFTER_GFILE_SEQ, INSERT_ID)
+        VALUES (#{EQUIP_ID},NEXTVAL(jmes.SEQ_DUMMY),#{REPAIR_TYPE}
+                , STR_TO_DATE(#{REPAIR_START_DT},'%y-%m-%d %H:%i'), STR_TO_DATE(#{REPAIR_END_DT},'%y-%m-%d %H:%i')
+                , #{REPAIR_DESC}, #{NOTE}, #{BEFORE_GFILE_SEQ}, #{AFTER_GFILE_SEQ}, #{LOGIN_USER_ID})
+    </insert>
+    <update id="updateMachineMasterHistory" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_EQUIP_REPAIR
+        SET  REPAIR_TYPE = #{REPAIR_TYPE}
+            , REPAIR_START_DT = STR_TO_DATE(#{REPAIR_START_DT},'%y-%m-%d %H:%i')
+            , REPAIR_END_DT = STR_TO_DATE(#{REPAIR_END_DT},'%y-%m-%d %H:%i')
+            , REPAIR_DESC = #{REPAIR_DESC}
+            , NOTE = #{NOTE}
+            , BEFORE_GFILE_SEQ = #{BEFORE_GFILE_SEQ}
+            , AFTER_GFILE_SEQ = #{AFTER_GFILE_SEQ}
+            , UPDATE_DT = NOW()
+            , UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE EQUIP_ID = #{EQUIP_ID}
+            AND SEQ = #{SEQ}
+    </update>
+    <delete id="deleteMachineMasterHistory" parameterType="java.util.HashMap">
+        DELETE FROM jmes.TBL_EQUIP_REPAIR
+        WHERE EQUIP_ID = #{EQUIP_ID}
+            AND SEQ = #{SEQ}
+    </delete>
 </mapper>
