@@ -63,12 +63,14 @@ public class CadFileConvertTaskService {
             CadFileConverter.convertODAFileDirectoryConvert(originalFile, timePath);    // DXF -> 2013 버전으로 디렉토리 convert 처리
             CadFileConverter.convertAsposeCadTOJava(originalFile);
 
-            File[] dxfFileList = new File(originalFile.getParent() + File.separator + timePath).listFiles(new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String name) {
-                    return name.startsWith(serverFileName);
-                }
-            });
+//            File[] dxfFileList = new File(originalFile.getParent() + File.separator + timePath).listFiles(new FilenameFilter() {
+//                @Override
+//                public boolean accept(File dir, String name) {
+//                    return name.startsWith(serverFileName);
+//                }
+//            });
+
+            File[] dxfFileList = new File(originalFile.getParent() + File.separator + timePath).listFiles();
 
             for (File convertToFile : dxfFileList) {
                 String mimeType = Files.probeContentType(Paths.get(convertToFile.getAbsolutePath()));
