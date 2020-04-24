@@ -47,6 +47,14 @@
 
     $(document).ready(function() {
 
+        $('.contentsWrap .addTapPage').hide();
+        $('.tabMenuWrap ul').append("<li class='on'><a href='#a;' id='tab_999'>MAIN</a></li>");
+        $.get("/static/main/main", function (data) {
+            let containerDiv = "<span class='addTapPage' id='view_tab_999'>" + data + "</span>";
+            $(".contentsWrap").append(containerDiv).trigger('create');
+            tabMenuFn();
+        });
+
         $(window).resize( function() {
             // addRoyalTabCallBackMethod();
             // console.log(parseInt($('#view-scroller').outerHeight(true)));
@@ -349,7 +357,7 @@
                 'updateQueryId': updateQueryList,
             };
             changes.queryIdList = QUERY_ID_ARRAY;
-            parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}}
+            parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
 
             fnPostAjax(function (data, callFunctionParam) {
                 grid.pqGrid('refreshDataAndView');

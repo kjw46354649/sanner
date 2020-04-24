@@ -69,7 +69,7 @@
                     </li>
                     <li>
                         <span class="slt_wrap">
-                            <span class="ipu_wrap"><label for="TITLE">제목</label><input type="text" name="TITLE" id="TITLE" placeholder="" value="" title="제목"></span>
+                            <span class="ipu_wrap"><label for="EST_TITLE">제목</label><input type="text" name="EST_TITLE" id="EST_TITLE" placeholder="" value="" title="제목"></span>
                         </span>
                     </li>
                     <li>
@@ -316,7 +316,7 @@
                     /*{title: '소재마감', dataType: 'integer', dataIndx: ''},   */
                     {title: '표면 처리비', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT'},
                     {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT'},
-                    {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_NOTE'},
+                    {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT'},
                     {title: '견적비고', dataType: 'integer', dataIndx: 'UNIT_AMT_NOTE'}
                 ]},
             {title: '계산견적단가', dataType: 'float', dataIndx: 'CALCUL_EST_UNIT_COST'},
@@ -459,6 +459,7 @@
             let parameter = {'url': '/json-list', 'data': postData};
             fnPostAjax(function (data, callFunctionParam) {
                 let list = data.list[0];
+                console.log(list);
                 $("#estimate_register_info_form #ORDER_COMP_CD").val(list.ORDER_COMP_CD);
                 $("#estimate_register_info_form #EST_TITLE").val(list.EST_TITLE);
                 $("#estimate_register_info_form #ORDER_STAFF_SEQ").val(list.ORDER_STAFF_SEQ);
@@ -475,12 +476,12 @@
 
                 $("#estimate_register_excel_download #EST_SEQ").val(EST_SEQ);
                 $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
+                alert(EST_SEQ);
             }, parameter, '');
         };
 
         $(document).on('click', '#test', function(){
             estimateRegisterReloadPageData();
-            alert('눌림.');
         });
 
 

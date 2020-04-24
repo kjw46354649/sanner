@@ -37,10 +37,10 @@
 
     <insert id="insertFile" parameterType="java.util.HashMap">
         INSERT INTO jmes.TBL_FILE
-        (FILE_SEQ, FILE_NM, FILE_PATH, ORGINAL_FILE_NM, FILE_TYPE, FILE_EXT, FILE_SIZE,
+        (FILE_SEQ, FILE_NM, FILE_PATH, TIME_PATH, ORGINAL_FILE_NM, FILE_TYPE, FILE_EXT, FILE_SIZE,
             GFILE_SEQ, INSERT_ID)
         VALUES
-        (NEXTVAL(SEQ_FILE), #{FILE_NM}, #{FILE_PATH}, #{ORGINAL_FILE_NM}, #{FILE_TYPE}, #{FILE_EXT}, #{FILE_SIZE},
+        (NEXTVAL(SEQ_FILE), #{FILE_NM}, #{FILE_PATH}, #{TIME_PATH}, #{ORGINAL_FILE_NM}, #{FILE_TYPE}, #{FILE_EXT}, #{FILE_SIZE},
             #{GFILE_SEQ}, 'admin')
     </insert>
 
@@ -49,6 +49,7 @@
         SET
             FILE_NM = #{FILE_NM},
             FILE_PATH = #{FILE_PATH},
+            TIME_PATH = #{TIME_PATH},
             ORGINAL_FILE_NM = #{ORGINAL_FILE_NM},
             FILE_TYPE = #{FILE_TYPE},
             FILE_EXT = #{FILE_EXT},
@@ -70,10 +71,23 @@
 
     <select id="selectGfileFileImageInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            A.GFILE_SEQ, B.FILE_SEQ, B.ORGINAL_FILE_NM, B.FILE_PATH
+            A.GFILE_SEQ, B.FILE_SEQ, B.ORGINAL_FILE_NM, B.FILE_PATH, TIME_PATH
         FROM jmes.TBL_FILE_GROUP A
             INNER JOIN jmes.TBL_FILE B ON A.GFILE_SEQ = B.GFILE_SEQ
         WHERE A.GFILE_SEQ  = #{GFILE_SEQ}
     </select>
+
+    <select id="selectGfileFileList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.GFILE_SEQ AS DXF_GFILE_SEQ, B.FILE_SEQ, B.TIME_PATH, B.FILE_PATH, REPLACE(B.ORGINAL_FILE_NM, CONCAT('.',B.FILE_EXT), SPACE(0)) AS FILE_NM
+        FROM jmes.TBL_FILE_GROUP A
+            INNER JOIN jmes.TBL_FILE B ON A.GFILE_SEQ = B.GFILE_SEQ
+        WHERE A.GFILE_SEQ  IN (
+            <foreach collection="dxfGfileSeqList" item="bean" separator=",">
+                bean
+            </foreach>
+        )
+    </select>
+
 
 </mapper>
