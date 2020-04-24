@@ -40,7 +40,7 @@ public class CadFileConvertTaskService {
         // 변환 파일 정보를 조회한다.
         if (dataList != null && dataList.size() > 0) {
             for (HashMap<String, Object> hashMap : dataList) {
-                hashSet.add(hashMap.get("DXF_GFILE_SEQ"));
+                hashSet.add((String)hashMap.get("DXF_GFILE_SEQ"));
             }
         }
         ArrayList<String> dxfGfileSeqList = new ArrayList<String>(hashSet);     // DXF_GFILE_SEQ 값
