@@ -24,7 +24,7 @@
     <div class="bottomWrap">
         <div class="tableWrap">
             <div class="conWrap">
-                <div id="user_manager_grid" class="jqx-refresh" ></div>
+                <div id="user_manager_grid" style="margin:auto;" ></div>
             </div>
         </div>
     </div>

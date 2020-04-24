@@ -25,15 +25,7 @@ public class CadFileConverter {
     @Autowired
     private Environment environment;
 
-//    @Autowired
-//    private CommandExecuteUtil commandExecuteUtil;
-
     public static String cadfile_converter(File sourceFile, String convertPath) throws IOException, InterruptedException {
-
-        System.out.println("sourceFile=[" + sourceFile.getAbsolutePath() + "]");
-        System.out.println("convertPath=[" + convertPath + "]");
-
-        // String targetFilePath = sourceFile.getParentFile().toString() + File.separator + convertPath;
 
         License license = new License();
         license.setLicense("Aspose.CAD.lic");
@@ -51,23 +43,14 @@ public class CadFileConverter {
             String targetFileFullPath = sourceFile.getParentFile().toString() + File.separator + convertPath + File.separator + fileOnlyName + ".dwg";
             File convertFile = new File(targetFileFullPath);
 
-            System.out.println("sourceFile=[" + sourceFile.getAbsolutePath() + "]");
-            System.out.println("targetFileFullPath=[" + targetFileFullPath + "]");
-
-//            CadImage cadImage = (CadImage)Image.load(sourceFile.getAbsolutePath());
-//            cadImage.save(targetFileFullPath);
-
             // 02. ASPOSE Cad to Java convert
             convertAsposeCadTOJava(convertFile);
-            // String convertFileName = targetFilePath + File.separator + fileName.substring(0, fileName.lastIndexOf(".")) + ".dwg";
 
         }catch(Exception exception){
             message = exception.getMessage();
         }
 
         return message;
-        // 03. cad file converter to pdf converter
-        // convertQCadDwg2Img(convertFile);
     }
 
     /**
@@ -83,6 +66,21 @@ public class CadFileConverter {
             CommandExecuteUtil.execCommand(CMD_TO_NORMAL_DFX2010_WIN_EXE, sourceFile.getParentFile().toString(), targetFilePath, "ACAD2013", "DWG", "0", "1", sourceFileName);
         }else{
             CommandExecuteUtil.execCommand(CMD_TO_NORMAL_DFX2010_LINUX_EXE, sourceFile.getParentFile().toString(), targetFilePath, "ACAD2013", "DWG", "0", "1", sourceFileName);
+        }
+    }
+
+    /**
+     * ODA File Convert CAD FILE TO DXF2010 VERSION CONVERT
+     * @param orginalFile
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public static void convertODAFileDirectoryConvert(File sourceFile, String convertPath) throws IOException, InterruptedException {
+        String targetFilePath = sourceFile.getParentFile().toString() + File.separator + convertPath;
+        if ("window".equals(CommonUtility.getServerType())){
+            CommandExecuteUtil.execCommand(CMD_TO_NORMAL_DFX2010_WIN_EXE, sourceFile.getParentFile().toString(), targetFilePath, "ACAD2013", "DWG", "0", "1");
+        }else{
+            CommandExecuteUtil.execCommand(CMD_TO_NORMAL_DFX2010_LINUX_EXE, sourceFile.getParentFile().toString(), targetFilePath, "ACAD2013", "DWG", "0", "1");
         }
     }
 
@@ -122,17 +120,16 @@ public class CadFileConverter {
         // rasterizationOptions.getGraphicsOptions().setTextRenderingHint(TextRenderingHint.AntiAliasGridFit);
         rasterizationOptions.getGraphicsOptions().setInterpolationMode(InterpolationMode.HighQualityBicubic);
 
-//        PdfOptions pdfOptions = new PdfOptions();
-//        pdfOptions.setVectorRasterizationOptions(rasterizationOptions);
+        PdfOptions pdfOptions = new PdfOptions();
+        pdfOptions.setVectorRasterizationOptions(rasterizationOptions);
 
-        // cadImage.save(convertFile.getParentFile().toString() + File.separator + soruceFileName.substring(0, soruceFileName.lastIndexOf(".")) + "_aspos.pdf", pdfOptions);
+        cadImage.save(convertFile.getParentFile().toString() + File.separator + soruceFileName.substring(0, soruceFileName.lastIndexOf(".")) + "_aspos.pdf", pdfOptions);
 
         rasterizationOptions.setContentAsBitmap(true);
         PngOptions pngOptions = new PngOptions();
         pngOptions.setVectorRasterizationOptions(rasterizationOptions);
 
         cadImage.save(convertFile.getParentFile().toString() + File.separator + soruceFileName.substring(0, soruceFileName.lastIndexOf(".")) + "_aspos.png", pngOptions);
-
     }
 
     public static void main(String[] args){

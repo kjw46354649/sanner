@@ -9,8 +9,8 @@
 .login .logWrap ul { position: relative; top: 112px; left: 31px; }
 .login .logWrap li { padding-bottom: 19px }
 .login .logWrap li label { display: block; padding-bottom: 10px; color: #464646;; }
-.login .logWrap li input { width: 310px; height: 33px; border: 0; transition: none; background: transparent; color: #d0d8e8; font-size: 10px; }
-.login .logWrap li input::placeholder { color: #d0d8e8; }
+.login .logWrap li input { width: 310px; height: 33px; border: 0; transition: none; background: transparent; color: #1f293f; font-size: 15px;font-weight: 500 }
+.login .logWrap li input::placeholder { color: #d0d8e8; font-size: 12px;font-weight: 500 }
 .login .logWrap li input:focus { border: 0; }
 .login .logWrap li select { position: relative; width: 310px; height: 33px; border: none; color: #1f293f; transition: none; line-height: 29px; background: transparent url(../images/common/select_arrow.png)no-repeat 98% 50%; }
 .logWrap .btn { display: inline-block; position: absolute; right: 32px; bottom: 35px; }

@@ -65,7 +65,6 @@ public class StaticUrlController {
 //        modelAndView.addObject("blank_image", environment.getRequiredProperty(CommonUtility.getServerType() + ".blank.image.path"));
         String rootPath = req.getSession().getServletContext().getRealPath("/");
 
-        출처: https://cofs.tistory.com/40 [CofS]
         modelAndView.addObject("blank_image", rootPath + File.separator + "resource" + File.separator + "main" + File.separator + "blank.jpg");
 
         return modelAndView;

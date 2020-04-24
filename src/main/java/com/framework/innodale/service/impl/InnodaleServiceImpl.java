@@ -70,16 +70,24 @@ public class InnodaleServiceImpl implements InnodaleService {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
 
+        ArrayList<HashMap<String, Object>> addList = null;
+        ArrayList<HashMap<String, Object>> updateList = null;
+        HashMap<String, Object> queryIdList = null;
+
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
 
-        ArrayList<HashMap<String, Object>> addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
-        ArrayList<HashMap<String, Object>> updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
-        HashMap<String, Object> queryIdList = (HashMap<String, Object>) jsonMap.get("queryIdList");
+        if (jsonMap.containsKey("addList"))
+            addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
 
-        if (addList.size() > 0) {
+        if (jsonMap.containsKey("updateList"))
+            updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+
+        if (jsonMap.containsKey("queryIdList"))
+            queryIdList = (HashMap<String, Object>) jsonMap.get("queryIdList");
+
+        if (addList != null && addList.size() > 0) {
             ArrayList<String> queryId = (ArrayList<String>) queryIdList.get("insertQueryId");
-
             for (HashMap<String, Object> hashMap : addList) {
                 for (int i = 0, queryCount = queryId.size(); i < queryCount; i++) {
                     hashMap.put("queryId", queryId.get(i));
@@ -87,7 +95,7 @@ public class InnodaleServiceImpl implements InnodaleService {
                 }
             }
         }
-        if (updateList.size() > 0) {
+        if (updateList != null && updateList.size() > 0) {
             ArrayList<String> queryId = (ArrayList<String>) queryIdList.get("updateQueryId");
 
             for (HashMap<String, Object> hashMap : updateList) {

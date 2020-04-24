@@ -1429,7 +1429,7 @@
 
         /* 도면 등록 팝업 호출 */
         $drawingRegistration.click(function () {
-            commonCadFileAttachPopup.modal('show');
+            setEstiMatePopup('control', 'orderMapper.updateControlCadFiles');
         });
 
         /* 도면 등록 팝업 호출 */

@@ -719,7 +719,7 @@
 
     <select id="selectControlCadFiles" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ROW_NUMBER () OVER () AS ROWNUM,
+            UUID() AS ROWNUM,
             C.CONTROL_SEQ,
             C.CONTROL_STATUS,
             B.CONTROL_DETAIL_SEQ,
@@ -727,20 +727,14 @@
             B.ITEM_NM, <!-- 품명 -->
             B.PART_NUM, <!-- Part -->
             B.DRAWING_NUM,
-            'N' AS DEL_YN,
+            B.DRAWING_VER,
             #{FILE_NM} AS FILE_NM,
-            #{DWG_GFILE_SEQ} AS DWG_GFILE_SEQ,
             #{DXF_GFILE_SEQ} AS DXF_GFILE_SEQ,
-            #{PDF_GFILE_SEQ} AS PDF_GFILE_SEQ,
-            #{IMG_GFILE_SEQ} AS IMG_GFILE_SEQ,
-            #{DWG_GFILE_SIZE} AS DWG_GFILE_SIZE,
-            #{DXF_GFILE_SIZE} AS DXF_GFILE_SIZE,
-            #{PDF_GFILE_SIZE} AS PDF_GFILE_SIZE,
-            #{IMG_GFILE_SIZE} AS IMG_GFILE_SIZE,
-            CASE WHEN C.CONTROL_STATUS = 'PRO01' THEN '확정완료 대상은 업로드 불가'  <!-- 상태완료 이후인 경우는 업로드 불가  -->
-                 WHEN IMG_GFILE_SEQ IS NOT NULL THEN '이미 등록됨, Save 후 교체됨'  <!-- 이미 등록된 Save시 교체 진행  메시지 처리 -->
-                 WHEN IFNULL(${IMG_GFILE_SEQ}, 0) <![CDATA[ <= ]]> 40000 THEN  '파일 업로드 오류' <!-- 파일 업로드 오류 및 CONVERT 사이즈 오류 -->
-                ELSE ''
+            #{TIME_PATH} AS TIME_PATH,
+            #{FILE_PATH} AS FILE_PATH,
+            CASE WHEN IMG_GFILE_SEQ IS NOT NULL THEN '이미 등록됨, Save 후 교체됨'  <!-- 이미 등록된 Save시 교체 진행  메시지 처리 -->
+                 WHEN IFNULL(#{DXF_GFILE_SEQ}, 0) <![CDATA[ <= ]]> 0 THEN  '파일 업로드 오류' <!-- 파일 업로드 오류 및 CONVERT 사이즈 오류 -->
+                 ELSE ''
             END AS UPLOAD_MESSAGE
         FROM TBL_CONTROL C
             INNER JOIN TBL_CONTROL_PART B ON C.CONTROL_SEQ = B.CONTROL_SEQ
@@ -748,6 +742,29 @@
             AND IFNULL(C.CONTROL_STATUS, 'ORD002') IN ('ORD002')
             AND #{ORGINAL_FILE_NM} LIKE CONCAT(B.DRAWING_NUM, '%')
     </select>
+
+    <update id="updateControlCadFiles" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
+            PDF_GFILE_SEQ = NULL,
+            IMG_GFILE_SEQ = NULL,
+            UPDATE_DT = NOW()
+            <!-- ,UPDATE_ID = NULL -->
+        WHERE
+        CONTROL_SEQ = #{CONTROL_SEQ}
+    </update>
+
+    <update id="updateControlCadFiles__mapping" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
+            IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
+            UPDATE_DT = NOW()
+            <!-- ,UPDATE_ID = NULL -->
+        WHERE
+            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ}
+    </update>
 
     <select id="selectCloseHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         <include refid="controlManage"/>
