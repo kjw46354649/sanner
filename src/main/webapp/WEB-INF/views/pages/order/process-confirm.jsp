@@ -16,8 +16,8 @@
     <div class="col-md-6">
         <section class="panel panel-default">
             <header class="panel-heading font-bold">
-                주문확정 List ( Total : <span id="CONFIRM_ORDER_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows <span
-                    id="CONFIRM_ORDER_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA )
+                주문확정 List (Total : <span id="CONFIRM_ORDER_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows <span
+                    id="CONFIRM_ORDER_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA)
             </header>
             <div class="panel-body">
                 <form class="form-inline" id="CONFIRM_ORDER_SEARCH_FORM" role="form">
@@ -76,8 +76,8 @@
     <div class="col-md-6">
         <section class="panel panel-default">
             <header class="panel-heading font-bold">
-                가공확정 List ( Total : <span style="color: #00b3ee">16</span> Rows <span style="color: #00b3ee">103</span>
-                EA )
+                가공확정 List (Total : <span id="PROCESS_CONFIRM_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows
+                <span id="PROCESS_CONFIRM_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span>EA )
             </header>
             <div class="panel-body">
                 <form class="form-inline" id="PROCESS_CONFIRM_SEARCH_FORM" role="form">
@@ -138,36 +138,36 @@
         </div>
         <section class="panel panel-default">
             <header class="panel-heading font-bold">
-                외주가공 List ( Total : <span style="color: #00b3ee">16</span> Rows <span style="color: #00b3ee">103</span>
+                외주가공 List (Total : <span id="OUTSIDE_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows <span id="OUTSIDE_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span>
                 EA )
             </header>
             <div class="panel-body">
-                <form class="form-inline" id="OUTSOURCE_SEARCH_FORM" role="form">
+                <form class="form-inline" id="OUTSIDE_SEARCH_FORM" role="form">
                     <input type="hidden" name="queryId" id="queryId" value="selectOutsideProcessingList">&nbsp;
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="OUTSOURCE_CORPORATION">발주처</label>
-                                <select class="form-control" name="ORDER_COMP_CD" id="OUTSOURCE_CORPORATION">
+                                <label class="control-label" for="OUTSIDE_CORPORATION">발주처</label>
+                                <select class="form-control" name="ORDER_COMP_CD" id="OUTSIDE_CORPORATION">
                                     <option value="">ALL</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="OUTSOURCE_SUBCONTRACTOR">외주업체</label>
-                                <select class="form-control" name="OUTSOURCE_SUBCONTRACTOR"
-                                        id="OUTSOURCE_SUBCONTRACTOR">
+                                <label class="control-label" for="OUTSIDE_SUBCONTRACTOR">외주업체</label>
+                                <select class="form-control" name="OUTSIDE_SUBCONTRACTOR"
+                                        id="OUTSIDE_SUBCONTRACTOR">
                                     <option value="">ALL</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="OUTSOURCE_SORT_BY">Sorting 기준</label>
-                                <select class="form-control" name="SORT_BY" id="OUTSOURCE_SORT_BY">
+                                <label class="control-label" for="OUTSIDE_SORT_BY">Sorting 기준</label>
+                                <select class="form-control" name="SORT_BY" id="OUTSIDE_SORT_BY">
                                     <c:forEach var="code" items="${HighCode.H_1044}">
                                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                     </c:forEach>
                                 </select>
-                                <label class="checkbox-inline i-checks" for="OUTSOURCE_CONFIRM_SORT">
-                                    <input type="checkbox" name="DESCENDING" id="OUTSOURCE_CONFIRM_SORT"><i></i> 내림차순
+                                <label class="checkbox-inline i-checks" for="OUTSIDE_CONFIRM_SORT">
+                                    <input type="checkbox" name="DESCENDING" id="OUTSIDE_CONFIRM_SORT"><i></i> 내림차순
                                 </label>
                             </div>
                         </div>
@@ -178,7 +178,7 @@
         <div class="row">
             <section>
                 <div class="col-md-12">
-                    <div id="OUTSOURCE_GRID"></div>
+                    <div id="OUTSIDE_GRID"></div>
                 </div>
             </section>
         </div>
@@ -271,19 +271,17 @@
                     return {data: dataJSON.data};
                 }
             },
-            complete: function (event, ui) {
-                // FIXME:
+            complete: function () {
                 let data = $confirmOrderGrid.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
                 let totalOrderQuantity = 0;
 
                 for (let i = 0; i < totalRecords; i++) {
-                    // total += data[i].colNm;
+                    totalOrderQuantity += data[i].ORDER_QTY ? parseInt(data[i].ORDER_QTY) : 0;
                 }
-                console.log(totalRecords);
 
                 $('#CONFIRM_ORDER_TOTAL_RECORDS').html(totalRecords);
-                $('#CONFIRM_ORDER_TOTAL_RECORDS').html(totalOrderQuantity);
+                $('#CONFIRM_ORDER_TOTAL_ORDER_QUANTITY').html(totalOrderQuantity);
             },
             cellClick: function (event, ui) {
                 if (ui.dataIndx === 'PROCESS_CONFIRM_BUTTON') {
@@ -345,23 +343,12 @@
                 }
             }
         ];
-        // let rightTopToolbar = {
-        //     // cls: 'pq-toolbar-crud',
-        //     items: [
-        //         {
-        //             cls: 'title-hidden', type: 'textbox', label: '가공확정 List',
-        //             style: 'font-size: 1.3rem;padding: 4px;font-weight: bold;'
-        //         }
-        //     ]
-        // };
         let rightTopObj = {
-            // width: 700,
             // height: 600,
             collapsible: false,
             resizable: true,
             showTitle: false,
             numberCell: {title: 'No.'},
-            // scrollModel: {autoFit: true},
             trackModel: {on: true},
             columnTemplate: {
                 align: 'center',
@@ -370,13 +357,24 @@
                 editable: false
             },
             colModel: rightTopColModel,
-            // toolbar: rightTopToolbar,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: rightTopPostData,
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            complete: function () {
+                let data = $processConfirmGrid.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                let totalOrderQuantity = 0;
+
+                for (let i = 0; i < totalRecords; i++) {
+                    totalOrderQuantity += data[i].ORDER_QTY ? parseInt(data[i].ORDER_QTY) : 0;
+                }
+
+                $('#PROCESS_CONFIRM_TOTAL_RECORDS').html(totalRecords);
+                $('#PROCESS_CONFIRM_TOTAL_ORDER_QUANTITY').html(totalOrderQuantity);
             },
             cellClick: function (event, ui) {
                 if (ui.dataIndx === 'CONFIRM_CANCLE_BUTTON') {
@@ -400,9 +398,9 @@
                 }
             }
         };
-        let $outsourceGrid;
-        const rightBotGridId = 'OUTSOURCE_GRID';
-        let rightBotPostData = fnFormToJsonArrayData('#OUTSOURCE_SEARCH_FORM');
+        let $outsideGrid;
+        const rightBotGridId = 'OUTSIDE_GRID';
+        let rightBotPostData = fnFormToJsonArrayData('#OUTSIDE_SEARCH_FORM');
         let rightBotColModel = [
             {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true, colModel: []},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true, colModel: []},
@@ -436,17 +434,7 @@
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'ORDER_QTY', editable: false},
             {title: '발생일시', dataType: 'string', dataIndx: 'STATUS_DT', editable: false}
         ];
-        // let rightBotToolbar = {
-        //     // cls: 'pq-toolbar-crud',
-        //     items: [
-        //         {
-        //             cls: 'title-hidden', type: 'textbox', label: '외주가공 List',
-        //             style: 'font-size: 1.3rem;padding: 4px;font-weight: bold;'
-        //         }
-        //     ]
-        // };
         let rightBotObj = {
-            // width: 700,
             // height: 600,
             collapsible: false,
             resizable: true,
@@ -469,12 +457,24 @@
                     return {data: dataJSON.data};
                 }
             },
+            complete: function () {
+                let data = $outsideGrid.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                let totalOrderQuantity = 0;
+
+                for (let i = 0; i < totalRecords; i++) {
+                    totalOrderQuantity += data[i].ORDER_QTY ? parseInt(data[i].ORDER_QTY) : 0;
+                }
+
+                $('#OUTSIDE_TOTAL_RECORDS').html(totalRecords);
+                $('#OUTSIDE_TOTAL_ORDER_QUANTITY').html(totalOrderQuantity);
+            },
         };
 
         let reloadData = function () {
             $confirmOrderGrid.pqGrid('refreshDataAndView');
             $processConfirmGrid.pqGrid('refreshDataAndView');
-            $outsourceGrid.pqGrid('refreshDataAndView');
+            $outsideGrid.pqGrid('refreshDataAndView');
         };
         const tenSeconds = 10000;
 
@@ -495,12 +495,12 @@
             });
             $processConfirmGrid.pqGrid('refreshDataAndView');
         });
-        $('#OUTSOURCE_SEARCH_FORM').on('change', function() {
-            rightBotPostData = fnFormToJsonArrayData('#OUTSOURCE_SEARCH_FORM');
-            $outsourceGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+        $('#OUTSIDE_SEARCH_FORM').on('change', function() {
+            rightBotPostData = fnFormToJsonArrayData('#OUTSIDE_SEARCH_FORM');
+            $outsideGrid.pqGrid('option', 'dataModel.postData', function (ui) {
                 return rightBotPostData;
             });
-            $outsourceGrid.pqGrid('refreshDataAndView');
+            $outsideGrid.pqGrid('refreshDataAndView');
         });
 
         /* init */
@@ -512,17 +512,17 @@
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
-        fnCommCodeDatasourceSelectBoxCreate($('#OUTSOURCE_SEARCH_FORM').find('#OUTSOURCE_CORPORATION'), 'all', {
+        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_SEARCH_FORM').find('#OUTSIDE_CORPORATION'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
-        fnCommCodeDatasourceSelectBoxCreate($('#OUTSOURCE_SEARCH_FORM').find('#OUTSOURCE_SUBCONTRACTOR'), 'all', {
+        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_SEARCH_FORM').find('#OUTSIDE_SUBCONTRACTOR'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
         });
         $confirmOrderGrid = $('#' + leftGridId).pqGrid(leftObj);
         $processConfirmGrid = $('#' + rightTopGridId).pqGrid(rightTopObj);
-        $outsourceGrid = $('#' + rightBotGridId).pqGrid(rightBotObj);
+        $outsideGrid = $('#' + rightBotGridId).pqGrid(rightBotObj);
         /* init */
     });
 </script>
