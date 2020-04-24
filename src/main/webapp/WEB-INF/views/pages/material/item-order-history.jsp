@@ -7,85 +7,113 @@
 --%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
-<div class="page-context">
-    <div class="row m-b-md">
-        <div class="col-sm-12">&nbsp;
-            <section class="panel panel-default">
-                <header class="panel-heading font-bold">
-                    소재 주문 관리
-                </header>
-                <div class="panel-body">
-                    <form class="form-inline" id="item_order_history_search_form" name="item_order_history_search_form" role="form">
-                        <input type="hidden" id="queryId" name="queryId" value="selectItemOrderHistoryList">
-                        <div class="row">
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="COMP_CD">사업자</label>
-                                <select id="COMP_CD" name="COMP_CD" data-required="true" class="form-control parsley-validated">
+<div class="page estimate">
+    <div class="topWrap">
+        <form class="form-inline" id="item_order_history_search_form" name="item_order_history_search_form" role="form">
+            <input type="hidden" name="queryId" id="queryId" value="selectItemOrderHistoryList">
+            <div class="gubunWrap">
+                <ul>
+                    <div class="dateWrap">
+                        <button type="button" class="search_btn" id="btnItemOrderRegisterSearch">검색</button>
+                    </div>
+                    <li>
+                        <span class="slt_wrap">
+                            <label for="COMP_CD">사업자</label>
+                            <select id="COMP_CD" name="COMP_CD" title="사업자">
+                            </select>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="slt_wrap">
+                            <label for="ORDER_COMP_CD">발주사</label>
+                            <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사">
+                            </select>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="ipu_wrap"><label for="MODULE_NM">견적번호</label><input type="text" name="MODULE_NM" id="MODULE_NM" placeholder="" value="" title="견적번호"></span>
+                    </li>
+                    <li>
+                        <span class="ipu_wrap"><label for="ITEM_NM">품명</label><input type="text" name="ITEM_NM" id="ITEM_NM" placeholder="" value="" title="품명"></span>
+                    </li>
+                    <li>
+                        <span class="ipu_wrap"><label for="MANAGE_NUM">관리번호</label><input type="text" name="MANAGE_NUM" id="MANAGE_NUM" placeholder="" value="" title="관리번호"></span>
+                    </li>
+                    <li>
+                        <span class="ipu_wrap"><label for="DRAWING_NUM">소재주문번호</label><input type="text" name="DRAWING_NUM" id="DRAWING_NUM" placeholder="" value="" title="소재주문번호"></span>
+                    </li>
+                    <li>
+                        <span class="ipu_wrap"><label for="M_ORDER_COMP_CD">소재주문업체</label><input type="text" name="M_ORDER_COMP_CD" id="M_ORDER_COMP_CD" placeholder="" value="" title="소재주문업체"></span>
+                    </li>
+                    <li>
+                        <span class="ipu_wrap"><label for="MATERIAL_DETAIL">소재종류</label><input type="text" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" placeholder="" value="" title="소재주문업체"></span>
+                    </li>
+
+                </ul>
+                <div class="dateWrap">
+                    <div class="leftSpan">
+                            <span class="slt_wrap">
+                                <select id="daySltd" name="daySltd" title="등록일시">
+                                    <option value="" selected="selected">등록일시</option>
+                                    <option value="1">-ALL-</option>
+                                    <option value="2">-ALL-</option>
                                 </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="ORDER_COMP_CD">발주사</label>
-                                <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" data-required="true" class="form-control parsley-validated">
-                                    <option value="">Select</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="MODULE_NM">견적번호</label>
-                                <input type="password" class="form-control" id="MODULE_NM" placeholder="">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="ITEM_NM">품명</label>
-                                <input type="text" class="form-control" id="ITEM_NM" placeholder="">
-                            </div>
+                            </span>
+                        <span class="radio_box">
+                                <input reqcd="R" type="radio" id="fr_1001_1" name=""><label for="fr_1001_1">오늘</label>
+                            </span>
+                        <span class="radio_box">
+                                <input reqcd="R" type="radio" id="fr_1001_2" name=""><label for="fr_1001_2">현재월</label>
+                            </span>
+                        <span class="radio_box">
+                                <input reqcd="R" type="radio" id="fr_1001_3" name=""><label for="fr_1001_3">3개월</label>
+                            </span>
+                        <div class="calendar_wrap">
+                                <span class="calendar_span">
+                                    <input type="text" name="dateOneIp" id="dateOneIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
+                                </span>
+                            <span class="nbsp">~</span>
+                            <span class="calendar_span">
+                                    <input type="text" name="dateTwoIp" id="dateTwoIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
+                                </span>
+                            <span class="chk_box no_txt"><input id="pr_ex" type="checkbox"><label for="pr_ex">선택</label></span>
                         </div>
-                        <div class="line line-dashed b-b line-xs"></div>
-                        <div class="row">
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="MANAGE_NUM">관리번호</label>
-                                <input type="email" class="form-control" id="MANAGE_NUM" placeholder="">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="DRAWING_NUM">소재주문번호</label>
-                                <input type="password" class="form-control" id="DRAWING_NUM" placeholder="">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="ORDER_COMP_CD">소재주문업체</label>
-                                <input type="password" class="form-control" id="M_ORDER_COMP_CD" placeholder="">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="MATERIAL_DETAIL">소재종류</label>
-                                <input type="password" class="form-control" id="MATERIAL_DETAIL" placeholder="">
-                            </div>
-                        </div>
-                        <div class="line line-dashed b-b line-xs"></div>
-                        <div class="row">
-                            <div class="form-group col-md-4">
-                                <label class="control-label" for="SEL_STAFF_NM">Option</label>
-                                <input type="email" class="form-control" id="SEL_STAFF_NM" placeholder="">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <select id="SEARCH_DATE" name="SEARCH_DATE" data-required="true" class="form-control parsley-validated">
-                                    <option value="">Select</option>
-                                    <c:forEach var="code" items="${HighCode.H_10002}">
-                                        <option value="${code.CODE_CD}" >${code.CODE_NM_KR}</option>
-                                    </c:forEach>
-                                </select>
-                                <input type="password" class="form-control" id="SEL_CEO_NM" placeholder="">
-                            </div>
-                            <div class="form-group col-md-4 text-right">
-                                <div type="submit" class="btn btn-success btn-sm btn-default">SEARCH</div>
-                            </div>
-                        </div>
-                    </form>
+
+                    </div>
+                    <div class="rightSpan">
+                        <span class="txt">Option</span>
+                        <span class="chk_box"><input id="pr_ex1" type="checkbox"><label for="pr_ex1"> 발송완료</label></span>
+                        <span class="chk_box"><input id="pr_ex2" type="checkbox"><label for="pr_ex2"> 최신차수</label></span>
+                    </div>
                 </div>
-            </section>
-        </div>
-        <div class="row">
-            <div class="col-md-3">
-                <div id="item_order_history_left_grid" class="jqx-refresh"></div>
             </div>
-            <div class="col-md-9">
-                <div id="item_order_history_right_grid" class="jqx-refresh"></div>
+        </form>
+        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
+    </div>
+    <div class="page main">
+        <div class="leftWrap">
+            <div class="chartWrap">
+                <div class="hWrap">
+                    <span class="buttonWrap">
+                        <button type="button" class="defaultBtn" id="btnItemOrderHistoryCancel">주문취소</button>
+                    </span>
+                </div>
+                <div class="conWrap">
+                    <div id="item_order_history_left_grid" class="jqx-refresh"></div>
+                </div>
+            </div>
+        </div>
+        <div class="rightWrap">
+            <div class="tableWrap">
+                <div class="hWrap">
+                    <span class="buttonWrap">
+                		<button type="button" class="defaultBtn blueGra" id="btnItemOrderHistoryExcel">주문서 출력</button>
+                        <button type="button" class="defaultBtn blueGra" id="btnItemOrderHistorySave">Save</button>
+                    </span>
+                </div>
+                <div class="conWrap">
+                    <div id="item_order_history_right_grid" class="jqx-refresh"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -224,7 +252,7 @@
         };
 
         itemOrderHistoryLeftGrid.pqGrid({
-            width: "100%", height: 500,
+            height: 680,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
                 url: "/paramQueryGridSelect",
@@ -279,7 +307,7 @@
 
         function selectItemOrderHistoryRightList() {
             itemOrderHistoryRightGrid.pqGrid({
-                width: "100%", height: 500,
+                height: 680,
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
                     url: "/paramQueryGridSelect",

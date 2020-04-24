@@ -1,3 +1,4 @@
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <section class="contents">
     <div class="logWrap">
         <form action="/main" method="POST">

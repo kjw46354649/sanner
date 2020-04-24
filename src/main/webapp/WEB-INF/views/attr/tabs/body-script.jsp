@@ -47,6 +47,14 @@
 
     $(document).ready(function() {
 
+        $('.contentsWrap .addTapPage').hide();
+        $('.tabMenuWrap ul').append("<li class='on'><a href='#a;' id='tab_999'>MAIN</a></li>");
+        $.get("/static/main/main", function (data) {
+            let containerDiv = "<span class='addTapPage' id='view_tab_999'>" + data + "</span>";
+            $(".contentsWrap").append(containerDiv).trigger('create');
+            tabMenuFn();
+        });
+
         $(window).resize( function() {
             // addRoyalTabCallBackMethod();
             // console.log(parseInt($('#view-scroller').outerHeight(true)));
@@ -349,7 +357,7 @@
                 'updateQueryId': updateQueryList,
             };
             changes.queryIdList = QUERY_ID_ARRAY;
-            parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}}
+            parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
 
             fnPostAjax(function (data, callFunctionParam) {
                 grid.pqGrid('refreshDataAndView');
@@ -604,19 +612,21 @@
     let fnAppendSelectboxYear = function (id, severalYears) {
         $('#' + id).empty();
         let date = new Date();
-        // date.setMonth(date.getMonth() + 1);
+        date.setMonth(date.getMonth() + 1);
         let year = date.getFullYear();
 
         for (let i = year; i > year - severalYears; i--) {
             $('#' + id).append(new Option(i + '년', i));
         }
+
+        $('#' + id).val(CURRENT_YEAR).prop('selected', true);
     };
 
     /**
      * @param {string} id
      * @param {number} selectedYear
      */
-    let fnAppendSelectboxMonth = function (id, selectedYear) {
+    let fnAppendSelectboxMonth = function (id, selectedYear = 0) {
         $('#' + id).empty();
         let date = new Date();
         // date.setMonth(date.getMonth() + 1);

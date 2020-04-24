@@ -6,11 +6,6 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="page main">
     <div class="leftWrap">
         <div class="chartWrap">
@@ -24,42 +19,42 @@
                             <span class="t_text">MCT 가동률</span>
                             <span class="t_date">2019/12/17</span>
                         </div>
-                        <div class="plugWrap"><img src="asset/images/common/img_char_sp.png" alt="차트 샘플"></div>
+                        <div class="plugWrap"><img src="/resource/asset/images/common/img_char_sp.png" alt="차트 샘플"></div>
                     </li>
                     <li>
                         <div class="title">
                             <span class="t_text">MCT 가동률</span>
                             <span class="t_date">2019/12/17</span>
                         </div>
-                        <div class="plugWrap"><img src="asset/images/common/img_char_sp.png" alt="차트 샘플"></div>
+                        <div class="plugWrap"><img src="/resource/asset/images/common/img_char_sp.png" alt="차트 샘플"></div>
                     </li>
                     <li>
                         <div class="title">
                             <span class="t_text">MCT 가동률</span>
                             <span class="t_date">2019/12/17</span>
                         </div>
-                        <div class="plugWrap"><img src="asset/images/common/img_char_sp.png" alt="차트 샘플"></div>
+                        <div class="plugWrap"><img src="/resource/asset/images/common/img_char_sp.png" alt="차트 샘플"></div>
                     </li>
                     <li>
                         <div class="title">
                             <span class="t_text">MCT 가동률</span>
                             <span class="t_date">2019/12/17</span>
                         </div>
-                        <div class="plugWrap"><img src="asset/images/common/img_char_sp.png" alt="차트 샘플"></div>
+                        <div class="plugWrap"><img src="/resource/asset/images/common/img_char_sp.png" alt="차트 샘플"></div>
                     </li>
                     <li>
                         <div class="title">
                             <span class="t_text">MCT 가동률</span>
                             <span class="t_date">2019/12/17</span>
                         </div>
-                        <div class="plugWrap"><img src="asset/images/common/img_char_sp.png" alt="차트 샘플"></div>
+                        <div class="plugWrap"><img src="/resource/asset/images/common/img_char_sp.png" alt="차트 샘플"></div>
                     </li>
                     <li>
                         <div class="title">
                             <span class="t_text">MCT 가동률</span>
                             <span class="t_date">2019/12/17</span>
                         </div>
-                        <div class="plugWrap"><img src="asset/images/common/img_char_sp.png" alt="차트 샘플"></div>
+                        <div class="plugWrap"><img src="/resource/asset/images/common/img_char_sp.png" alt="차트 샘플"></div>
                     </li>
                 </ul>
             </div>
@@ -141,10 +136,10 @@
 									</select>
 								</span>
                 <span class="ipu_wrap"><label for="dateSltd">조회일자</label><input type="text" name="dateSltd" id="dateSltd" placeholder="" value="2019/12/18" title="조회일자"></span>
-                <span class="refresh"><a href="#a;"><img src="asset/images/common/btn_refresh.png" alt="새로고침"></a></span>
+                <span class="refresh"><a href="#a;"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></a></span>
             </div>
             <div class="conWrap">
-                <img src="asset/images/common/img_table_sp.jpg" alt="테이블샘플">
+                <img src="/resource/asset/images/common/img_table_sp.jpg" alt="테이블샘플">
             </div>
         </div>
     </div>
