@@ -173,8 +173,13 @@
                 </div>
             </div>
         </div>
-
         <div class="tableWrap">
+            <span class="buttonWrap">
+                <button type="button" class="smallBtn" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_ALL">전체모드</button>
+                <button type="button" class="smallBtn blue" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_ESTIMATE">견적관련</button>
+                <button type="button" class="smallBtn blue" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_QUALITY">품질관련</button>
+                <button type="button" class="smallBtn blue" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_CLOSE">마감관련</button>
+            </span>
             <div class="conMainWrap">
                 <div id="CONTROL_MANAGE_GRID"></div>
             </div>
@@ -496,10 +501,10 @@
             },
             {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true, colModel: []},
             {
-                title: '주문상태', align: 'center', colModel: [
-                    {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_ORIGINAL', hidden: true},
+                title: '주문상태', clsHead:'default', align: 'center', colModel: [
+                    {title: '상태', clsHead:'default', datatype: 'string', dataIndx: 'CONTROL_STATUS_ORIGINAL', hidden: true},
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS', hidden: true},
-                    {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_NM'},
+                    {title: '상태', clsHead:'default', datatype: 'string', dataIndx: 'CONTROL_STATUS_NM'},
                     {title: '변경일시', width: 120, datatype: 'date', dataIndx: 'CONTROL_STATUS_DT'}
                 ]
             },
@@ -529,7 +534,28 @@
             {title: '모듈', dataType: 'string', dataIndx: 'MODULE_NM', editable: true, colModel: []},
             {title: '납품처', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM', editable: true, colModel: []},
             {title: '비고(라벨)', dataType: 'string', dataIndx: 'LABEL_NOTE', editable: true, colModel: []},
-            {title: '주요<br>검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION', colModel: []},
+            {title: '주요<br>검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION',  editable: true, colModel: [],
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1052')},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let mainInspection = fnGetCommCodeGridSelectBox('1052');
+                        let index = mainInspection.findIndex(function (element) {
+                            return element.text == cellData;
+                        });
+
+                        if (index < 0) {
+                            index = mainInspection.findIndex(function (element) {
+                                return element.value == cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : mainInspection[index].text;
+                    }
+                }},
             {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN', colModel: []},
             {title: 'CONTROL_VER', dataType: 'string', dataIndx: 'CONTROL_VER', hidden: true, colModel: []},
             {title: '관리번호', width: 100, dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true, colModel: []},
@@ -640,7 +666,18 @@
                     {title: '일시', width: 120, datatype: 'string', dataIndx: 'CLOSE_DT'}
                 ]
             },
-            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ'},
+            {
+                title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', colModel: [],
+                render: function (ui) {
+                    if (ui.cellData) return '<span class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+                }
+            },
+            {
+                title: 'IMG', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', colModel: [],
+                render: function (ui) {
+                    if (ui.cellData) return '<span class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+                }
+            },
             {title: 'Rev.', dataType: 'string', dataIndx: 'REVD.', colModel: []},
             {title: 'Rev. 일시', width: 120, dataType: 'string', dataIndx: 'REVDLFTL.', colModel: []},
             {
@@ -1671,6 +1708,82 @@
         $('#CONTROL_CLOSE_YEAR').on('change', function () {
             fnAppendSelectboxMonth('CONTROL_CLOSE_MONTH', this.value);
         });
+
+        $('[name=CONTROL_MANAGE_VIEW]').on('click', function (event) {
+            console.log('click');
+            console.log(event);
+            console.log(event.target.id);
+            let elementId = event.target.id;
+            let title = [];
+            switch (elementId) {
+                case 'CONTROL_MANAGE_VIEW':
+                    title = [];
+                    break;
+                case 'CONTROL_MANAGE_ESTIMATE':
+                    title = [];
+                    break;
+                case 'CONTROL_MANAGE_QUALITY':
+                    title = [];
+                    break;
+                case 'CONTROL_MANAGE_CLOSE':
+                    title = [];
+                    break;
+            }
+
+            let $orderManagementGridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
+            let Cols = $orderManagementGridInstance.Columns();
+            console.log($orderManagementGrid.pqGrid("option", "colModel"));
+            console.log($orderManagementGridInstance.getColModel());
+            // console.log(Cols);
+            // 전체, 견적, 품질, 마감
+            let group = ['all', 'estimate', 'quality', 'close'];
+            let titles = ['상세가공요건', '소재마감', '예상소재 Size'];
+
+            Cols.alter(function () {
+                for (let i = 0; i < titles.length; i++) {
+                    let col = Cols.find(function (col) {
+                        return col.title === titles[i];
+                    });
+                    col.hidden = !col.hidden;
+
+                    console.log('col2', col);
+                    for (let j = 0; j < col.colModel.length; j++) {
+                        col.colModel[j].hidden = col.hidden;
+                    }
+                }
+            });
+
+            /*
+            $("#chkEstimateListDetail").on('change', function(evt){
+            let colM = estimateMasterBotGrid.pqGrid("option", "colModel");
+            let listM = [14, 15];
+            let hiddenYn = evt.target.checked == true ? false : true;
+            for (let tmpI = 0; tmpI < listM.length; tmpI++) {
+            for (let colCnt = 0; colCnt < colM[listM[tmpI]].colModel.length; colCnt++) {
+            colM[listM[tmpI]].colModel[colCnt].hidden = hiddenYn;
+            }
+            colM[listM[tmpI]].hidden = hiddenYn;
+            }
+            estimateMasterBotGrid.pqGrid("option", "colModel", colM);
+            estimateMasterBotGrid.pqGrid("refresh");
+            });
+            */
+
+        });
+
+        $('#CONTROL_MANAGE_VIEW_ESTIMATE').on('click', function () {
+
+        });
+
+        $('#CONTORL_MANAGE_VIEW_QUALITY').on('click', function () {
+
+        });
+
+        $('#CONTROL_MANAGE_VIEW_CLOSE').on('click', function () {
+
+        });
+
+
         /* event */
 
         /* init */

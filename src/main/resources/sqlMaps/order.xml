@@ -84,10 +84,13 @@
             B.UNIT_AMT_NOTE, <!-- 항목별단가_견적비고 -->
             B.UNIT_FINAL_EST_AMT, <!-- 최종견적단가 -->
             B.UNIT_FINAL_AMT, <!-- 최종공급단가 -->
+            B.PREV_DRAWING_NUM, <!-- 변경전도면번호 -->
             SF_GET_DATE_F(D.CLOSE_MONTH, 'YY', '') AS CLOSE_MONTH, <!-- 마감 월 -->
             CONCAT(D.CLOSE_VER, '건') AS CLOSE_VER, <!-- 차수 -->
             '', <!-- 작성자 -->
             SF_GET_DATE_F(D.CLOSE_DT,'YY','M') AS CLOSE_DT, <!-- 마감일시 -->
+            B.DXF_GFILE_SEQ, <!-- DXF -->
+            B.IMG_GFILE_SEQ, <!-- IMG(PNG) -->
             B.OUTSIDE_COMP_CD, <!-- 외주업체 -->
             SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM, <!-- 외주업체 -->
             B.OUTSIDE_MATERIAL_SUPPLY_YN, <!-- 외주 자재사급 -->
@@ -98,7 +101,6 @@
             B.OUTSIDE_NOTE, <!-- 외주비고 -->
             '', <!-- 외주 불량 CODE -->
             '', <!-- 외주 조치방안 -->
-            B.PREV_DRAWING_NUM, <!-- 변경전도면번호 -->
             SF_GET_DATE_F(A.STATUS_DT,'YY','M') AS STATUS_DT <!-- 등록/업데이트 일시 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
@@ -764,7 +766,7 @@
         CONTROL_SEQ = #{CONTROL_SEQ}
     </update>
 
-    <update id="updateControlCadFiles__mapping" parameterType="java.util.HashMap">
+    <update id="updateControlCadFiles_mapping" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART
         SET
             PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},

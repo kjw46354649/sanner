@@ -120,7 +120,6 @@ public class FileUploadServiceImpl implements FileUploadService {
                 String targetFilePath = uploadFilePath + File.separator + serverFullFileName + "." + originalExtName;
 
                 CommonUtility.createFileDirectory(new File(uploadFilePath));
-                CommonUtility.createFileDirectory(new File(uploadFilePath + File.separator + serverFileName));
 
                 fileInfo.put("FILE_NM", serverFullFileName + "." + originalExtName);
                 fileInfo.put("FILE_PATH", targetFilePath);
