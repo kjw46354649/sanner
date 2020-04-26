@@ -675,7 +675,17 @@
             {
                 title: 'IMG', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', colModel: [],
                 render: function (ui) {
-                    if (ui.cellData) return '<span class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+                    if (ui.cellData) return '<span id="imageView" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    var rowIndx = ui.rowIndx,
+                        grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        var rowData = ui.rowData;
+                        console.log(rowData.IMG_GFILE_SEQ);
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
                 }
             },
             {title: 'Rev.', dataType: 'string', dataIndx: 'REVD.', colModel: []},
@@ -754,7 +764,7 @@
         let obj = {
             height: 640,
             collapsible: false,
-            // postRenderInterval: -1, //call postRender synchronously.
+            postRenderInterval: -1, //call postRender synchronously.
             resizable: true,
             showTitle: false,
             numberCell: {title: 'No.'},

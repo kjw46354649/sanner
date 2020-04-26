@@ -34,7 +34,7 @@
 <!--Include pqTouch file to provide support for touch devices (optional)-->
 <script type="text/javascript" src="/resource/plugins/paramquery/pqTouch/pqtouch.min.js" ></script>
 <script type="text/javascript" src="/resource/plugins/paramquery/pqSelect/pqselect.min.js" ></script>
-
+<%--<script type="text/javascript" src="/resource/plugins/dhtmlx/suite.min.js"></script>--%>
 <script type='text/javascript'>
 
     var g_code;
@@ -596,13 +596,12 @@
     let fnAlertMessageAutoClose = function (messageType) {
         let windowMessageHtml = '<spring:message code="com.alert.default.save.success" javaScriptEscape="true"/>';
         if(messageType == 'del') windowMessageHtml = '<spring:message code="com.alert.default.remove.success" javaScriptEscape="true"/>';
-        var alertMessageConfig = {
+        dhx.alert({
+            header: "Message Box",
             text: windowMessageHtml,
-            expire: 1500,
-            icon: "dxi dxi-close",
-            position: "top-right"
-        };
-        dhx.message(alertMessageConfig);
+            buttonsAlignment: "center",
+            buttons: ["ok"],
+        });
     };
 
     /**
@@ -644,19 +643,21 @@
 
     function callWindowImageViewer(imageSeq)
     {
+        console.log(imageSeq);
+
         // 팝업창 열려 있는지 확인
         if(typeof(windowImageViewer)=='undefined' || windowImageViewer.closed) {
             windowImageViewer = window.open("/imageviewer", "jmesImageViewChildForm", "width=1024, height=768, resizable = no, scrollbars = no");
             windowImageViewer.onload = function(){
                 console.log($(windowImageViewer.window.document).find("#image_seq").val(imageSeq));
-                //windowImageViewer.document.all.image_seq.value = imageSeq;
+                $(windowImageViewer.window.document).find("#image_seq").val(imageSeq);
                 windowImageViewer.onImageViewStart();
             }
             return;
         }else {
             windowImageViewer.focus();
             console.log($(windowImageViewer.window.document).find("#image_seq").val(imageSeq));
-            //windowImageViewer.document.all.image_seq.value = imageSeq;
+            $(windowImageViewer.window.document).find("#image_seq").val(imageSeq);
             windowImageViewer.onImageViewStart();
         }
     }

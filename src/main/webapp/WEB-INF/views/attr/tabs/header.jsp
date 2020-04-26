@@ -22,6 +22,8 @@
 <!--add pqgrid.bootstrap.css for bootstrap related classes-->
 <link rel="stylesheet" href="/resource/plugins/paramquery/themes/bootstrap/pqgrid.css" />
 
+<%--<link rel="stylesheet" href="/resource/plugins/dhtmlx/suite.css" />--%>
+
 <link href="/resource/asset/css/reset.css" rel="stylesheet" type="text/css" />
 <link href="/resource/asset/css/webFont.css" rel="stylesheet" type="text/css" />
 <link href="/resource/asset/css/common.css" rel="stylesheet" type="text/css" />

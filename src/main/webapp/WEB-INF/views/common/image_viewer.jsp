@@ -33,7 +33,7 @@
 </head>
 <body class="home">
 <div class="demo-gallery">
-    <input type="hidden" id="image_seq" name="image_seq" value="https://sachinchoolur.github.io/lightGallery/static/img/1.jpg">
+    <input type="hidden" id="image_seq" name="image_seq" value="">
     <input type="button" id="dynamic" name="dynamic" style="display: none">
 </div>
 <!-- External JS libraries -->
@@ -49,6 +49,7 @@
 <!-- lightgallery plugins -->
 <script src="/resource/plugins/light_gallery/modules/lg-thumbnail.min.js"></script>
 <script src="/resource/plugins/light_gallery/modules/lg-fullscreen.min.js"></script>
+<script src="/resource/plugins/light_gallery/modules/lg-zoom.min.js"></script>
 <!-- Custom JS Script -->
 <script type="text/javascript">
 
@@ -56,18 +57,39 @@
 
     $(document).ready(function() {
         $('#dynamic').on('click', function(e) {
-            $lg = $(this).lightGallery({
-                thumbnail: false,
-                dynamic: true,
-                escKey : false,
-                closable : false,
-                counter : false,
-                dynamicEl: [{
-                    src: "/image/" + $("#image_seq").val()
-                }]
-            });
+            if ($(this).data('lightGallery'))
+                $(this).data('lightGallery').destroy(true);
+            var target = $(this);
+            setTimeout(function()
+            {
+                target.lightGallery({
+                    thumbnail: false,
+                    dynamic: true,
+                    escKey : false,
+                    closable : false,
+                    counter : false,
+                    zoom : true,
+                    download : false,
+                    dynamicEl: [{
+                        src: "/image/" + $("#image_seq").val()
+                    }]
+                });
+            }, 250);
+
+            // $lg = $(this).lightGallery({
+            //     thumbnail: false,
+            //     dynamic: true,
+            //     escKey : false,
+            //     closable : false,
+            //     counter : false,
+            //     zoom : true,
+            //     download : false,
+            //     dynamicEl: [{
+            //         src: "/image/" + $("#image_seq").val()
+            //     }]
+            // });
             $lg.on('onCloseAfter.lg',function(el){
-                console.log("onCloseAfter");
+                // console.log("onCloseAfter");
                 window.close();
             });
         });

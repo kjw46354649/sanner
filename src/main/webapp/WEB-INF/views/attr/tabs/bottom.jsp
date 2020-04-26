@@ -34,12 +34,15 @@
                     </div>
                     <div class="rightWrap">
                         <h3>파일 업로드</h3>
-                        <table class="colStyle" id="attachDragAndDrop">
+                        <table class="colStyle" id="attachDragAndDrop" cellspacing='0' style="overflow: auto; height: 150px;">
                             <caption></caption>
                             <colgroup><col width="*"><col width="10%"><col width="20%"></colgroup>
                             <thead><th scope="col">파일명</th><th scope="col">용량</th><th scope="col"></th></thead>
                             <tbody class="files"></tbody>
                         </table>
+                        <div style="float: right;">
+                            <h2>첨부파일 개수 : 4      에러파일 : 1</h2>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -176,8 +179,6 @@
         });
 
         $cadFileConvertUploadCompletedBtn.on('click', function(){
-            alert("save");
-
             let gridInstance = $commonCadFileAttachGrid.pqGrid('getInstance').grid;
             let changes = gridInstance.getChanges({format: 'byVal'});
             changes.queryIdList = {
@@ -186,10 +187,10 @@
             $("#common_cad_file_attach_form").find("#fileGrid").val(JSON.stringify(changes));
             let parameters = { 'url': '/cadFileConvert', 'data': {data: JSON.stringify(changes)}};
             fnPostAjax(function (data, callFunctionParam) {
-
-                 alert("저장이 완료 되었습니다.");
-
-
+                fnAlertMessageAutoClose('save');
+                $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
+                let fileHtml = '<tr><td colspan="3" style="text-align: center;">마우스로 파일을 Drag & Drop 하세요.</td></tr><tr><td colspan="3"></td></tr><tr><td colspan="3"></td></tr><tr><td colspan="3"></td></tr><tr><td colspan="3"></td></tr>';
+                clearCadFileAttachPopup(fileHtml);
             }, parameters, '');
         });
 
@@ -230,6 +231,7 @@
         commonCadFileAttachPopup.on('hide.bs.modal',function(e) {
             uploadControlFiles = [];
             $commonCadFileAttachGrid.pqGrid('destroy');
+
         });
     });
 
