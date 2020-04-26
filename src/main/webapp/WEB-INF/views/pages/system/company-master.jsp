@@ -1355,7 +1355,6 @@
             fnPostAjax(function (data, callFunctionParam) {
                 fnAlertMessageAutoClose('remove');
             }, parameters, '');
-            alert("스태프랑 종류도 다 지워?");
         });
 
         // 업체상세 모달 활성여부

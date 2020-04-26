@@ -19,6 +19,7 @@
 <script type="text/javascript" src="/resource/asset/js/front.js"></script>
 <!--jQuery dependencies-->
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/resource/main/js/jquery-ui-timepicker-addon.js" ></script>
 <script type="text/javascript" src="/resource/main/js/jquery.ui.datepicker-ko.js" ></script>
 
 <!--ParamQuery Grid js files-->
