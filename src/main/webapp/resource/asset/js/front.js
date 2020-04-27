@@ -169,6 +169,13 @@ function sideMenuOpen(){
 	tm.stop().animate({'margin-left':'270px'},300, 'easeOutCubic');
 	con.stop().animate({'margin-left':'270px'},300, 'easeOutCubic');
 
+	setTimeout(function(){
+		var conWidth = $(".estimate .bottomWrap .tableWrap .conWrap").width();
+		var pqGrid = $('.estimate .bottomWrap .tableWrap .jqx-refresh');
+		pqGrid.each(function(){
+			$(this).pqGrid('option', 'width', conWidth).pqGrid('refresh');
+		});
+	}, 300);
 }
 //사이드 메뉴 클로즈 함수
 function sideMenuClose(){
@@ -178,6 +185,14 @@ function sideMenuClose(){
 	menu.stop().animate({left:"-270px"}, 300, 'easeInCubic').removeClass('on');
 	tm.stop().animate({'margin-left':'0px'}, 300, 'easeInCubic');
 	con.stop().animate({'margin-left':'0px'},300, 'easeInCubic');
+
+	setTimeout(function(){
+		var conWidth = $(".estimate .bottomWrap .tableWrap .conWrap").width();
+		var pqGrid = $('.estimate .bottomWrap .tableWrap .jqx-refresh');
+		pqGrid.each(function(){
+			$(this).pqGrid('option', 'width', conWidth).pqGrid('refresh');
+		});
+	}, 300);
 }
 
 // topWrap 확장 함수
@@ -189,6 +204,14 @@ function topMenuOpen(){
 	top.stop().animate({height:t_h},300, 'easeOutCubic');
 	con.stop().animate({height: c_h },300, 'easeOutCubic');
 
+	setTimeout(function(){
+		var conHeight = $(".estimate .bottomWrap .tableWrap .conWrap").height();
+		var pqGrid = $('.estimate .bottomWrap .tableWrap .conWrap .jqx-refresh');
+		pqGrid.each(function(){
+			$(this).pqGrid('option', 'height', c_h).pqGrid('refresh');
+		});
+	}, 350);
+
 }
 // topWrap 축소 함수
 function topMenuClose(){
@@ -198,6 +221,14 @@ function topMenuClose(){
 	var c_h = con.height() + top.height() - t_h + 10;
 	top.stop().animate({height:t_h}, 300, 'easeInCubic');
 	con.stop().animate({height: c_h},300, 'easeInCubic');
+
+	setTimeout(function(){
+		var conHeight = $(".estimate .bottomWrap .tableWrap .conWrap").height();
+		var pqGrid = $('.estimate .bottomWrap .tableWrap .conWrap .jqx-refresh');
+		pqGrid.each(function(){
+			$(this).pqGrid('option', 'height', c_h).pqGrid('refresh');
+		});
+	}, 350);
 }
 
 // 견적관리 페이지 불러올때 꼭 호출해줘야하는 함수!!
