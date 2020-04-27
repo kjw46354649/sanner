@@ -10,74 +10,73 @@
 <div class="page estimate">
     <div class="topWrap">
         <form class="form-inline" id="estimate_master_search_form" name="estimate_master_search_form" role="form">
+            <input type="hidden" id="queryId" name="queryId" value="estimate.selectEstimateMasterList">
             <div class="gubunWrap">
                 <ul>
-                    <div class="dateWrap">
-                        <button type="button" class="search_btn" id="btnEstimateListSearch">검색</button>
-                    </div>
                     <li>
+                        <div class="dateWrap">
+                            <button type="button" class="search_btn" id="btnEstimateListSearch">검색</button>
+                        </div>
                         <span class="slt_wrap">
                             <label for="COMP_CD">사업자구분</label>
                             <select id="COMP_CD" name="COMP_CD" title="사업자구분">
                             </select>
                         </span>
-                    </li>
-                    <li>
+                        <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label for="ORDER_COMP_CD">발주사</label>
                             <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사">
                             </select>
                         </span>
-                    </li>
-                    <li>
+                        <span class="gubun"></span>
                         <span class="ipu_wrap"><label for="TITLE">제목</label><input type="text" name="TITLE" id="TITLE" placeholder="" value="" title="제목"></span>
-                    </li>
-                    <li>
+                        <span class="gubun"></span>
                         <span class="ipu_wrap"><label for="DRAWING_NUM">도면번호</label><input type="text" name="DRAWING_NUM" id="DRAWING_NUM" placeholder="" value="" title="도면번호"></span>
-                    </li>
-                    <li>
+                        <span class="gubun"></span>
                         <span class="ipu_wrap"><label for="MODULE_NM">견적번호</label><input type="text" name="MODULE_NM" id="MODULE_NM" placeholder="" value="" title="견적번호"></span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap"><label for="ITEM_NM">품명</label><input type="text" name="ITEM_NM" id="ITEM_NM" placeholder="" value="" title="품명"></span>
+                        <span class="gubun"></span>
                     </li>
                     <li>
-                        <span class="ipu_wrap"><label for="ITEM_NM">품명</label><input type="text" name="ITEM_NM" id="ITEM_NM" placeholder="" value="" title="품명"></span>
+                        <div class="dateWrap">
+                            <div class="leftSpan">
+                                <span class="slt_wrap">
+                                    <select id="daySltd" name="daySltd" title="등록일시">
+                                        <option value="" selected="selected">등록일시</option>
+                                        <option value="1">-ALL-</option>
+                                        <option value="2">-ALL-</option>
+                                    </select>
+                                </span>
+                                <span class="radio_box">
+                                    <input reqcd="R" type="radio" id="fr_1001_1" name=""><label for="fr_1001_1">오늘</label>
+                                </span>
+                                <span class="radio_box">
+                                    <input reqcd="R" type="radio" id="fr_1001_2" name=""><label for="fr_1001_2">현재월</label>
+                                </span>
+                                <span class="radio_box">
+                                    <input reqcd="R" type="radio" id="fr_1001_3" name=""><label for="fr_1001_3">3개월</label>
+                                </span>
+                                <div class="calendar_wrap">
+                                    <span class="calendar_span">
+                                        <input type="text" name="dateOneIp" id="dateOneIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
+                                    </span>
+                                    <span class="nbsp">~</span>
+                                    <span class="calendar_span">
+                                        <input type="text" name="dateTwoIp" id="dateTwoIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
+                                    </span>
+                                    <span class="chk_box no_txt"><input id="pr_ex" type="checkbox"><label for="pr_ex">선택</label></span>
+                                </div>
+
+                            </div>
+                            <div class="rightSpan">
+                                <span class="txt">Option</span>
+                                <span class="chk_box"><input id="pr_ex1" type="checkbox"><label for="pr_ex1"> 발송완료</label></span>
+                                <span class="chk_box"><input id="pr_ex2" type="checkbox"><label for="pr_ex2"> 최신차수</label></span>
+                            </div>
+                        </div>
                     </li>
                 </ul>
-                <div class="dateWrap">
-                    <div class="leftSpan">
-                        <span class="slt_wrap">
-                            <select id="daySltd" name="daySltd" title="등록일시">
-                                <option value="" selected="selected">등록일시</option>
-                                <option value="1">-ALL-</option>
-                                <option value="2">-ALL-</option>
-                            </select>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" id="fr_1001_1" name=""><label for="fr_1001_1">오늘</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" id="fr_1001_2" name=""><label for="fr_1001_2">현재월</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" id="fr_1001_3" name=""><label for="fr_1001_3">3개월</label>
-                        </span>
-                        <div class="calendar_wrap">
-                            <span class="calendar_span">
-                                <input type="text" name="dateOneIp" id="dateOneIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
-                            </span>
-                            <span class="nbsp">~</span>
-                            <span class="calendar_span">
-                                <input type="text" name="dateTwoIp" id="dateTwoIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
-                            </span>
-                            <span class="chk_box no_txt"><input id="pr_ex" type="checkbox"><label for="pr_ex">선택</label></span>
-                        </div>
-
-                    </div>
-                    <div class="rightSpan">
-                        <span class="txt">Option</span>
-                        <span class="chk_box"><input id="pr_ex1" type="checkbox"><label for="pr_ex1"> 발송완료</label></span>
-                        <span class="chk_box"><input id="pr_ex2" type="checkbox"><label for="pr_ex2"> 최신차수</label></span>
-                    </div>
-                </div>
             </div>
         </form>
         <button type="button" class="topWrap_btn">펼치기 / 접기</button>
@@ -112,7 +111,7 @@
             </div>
             <span class="buttonWrap">
             </span>
-            <div class="conSubWrap">
+            <div class="conWrap">
                 <div id="estimate_master_bot_grid" class="jqx-refresh"></div>
             </div>
         </div>
@@ -143,7 +142,7 @@
 
         let estimateMasterTopColModel= [
             //{title: 'No.', dataType: 'string', dataIndx: 'EST_SEQ'},
-            {title: 'Status', dataType: 'string', dataIndx: 'EST_STATUS_NM', editable: false},
+            {title: 'Status', dataType: 'string', dataIndx: 'EST_STATUS_NM', editable: false, width: 80},
             {title: '발주사', dataType: 'string', dataIndx: 'ORDER_COMP_NM',
                 editor: {
                     type: 'select',
@@ -159,14 +158,14 @@
                     }
                 }
             },
-            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', editable: false},
+            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', editable: false, width: 60},
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM',
                 editor: {
                     type: 'select',
                     mapIndices: { name: "COMP_NM", id: "COMP_CD" },
                     valueIndx: "value",
                     labelIndx: "text",
-                    options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}}),
+                    options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getCompanyStaffList'}}),
                     getData: function(ui) {
                         let clave = ui.$cell.find("select").val();
                         let rowData = estimateMasterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
@@ -175,23 +174,37 @@
                     }
                 }
             },
-            {title: '견적번호', dataType: 'string', dataIndx: 'EST_NUM', editable: false},
-            {title: '차수', dataType: 'string', dataIndx: 'EST_VER', editable: false},
-            {title: '', dataType: 'string', dataIndx: '', editable: false,
+            {title: '견적번호', dataType: 'string', dataIndx: 'EST_NUM', editable: false, width: 150},
+            {title: '차수', dataType: 'string', dataIndx: 'EST_VER', editable: false, width: 50},
+            {title: '', dataType: 'string', dataIndx: '', editable: false, width: 30,
                 render: function(ui){
                     return '<a href="#estimate_master_record_popup" class="" id="estimatePopupOpen" data-target="" data-toggle="modal" data-refform="estimate_master_record_popup">' +
                         '<span class="ui-icon ui-icon-circle-zoomin"></span>' +
                         '</a>';
                 }
             },
-            {title: '제목', dataType: 'string', dataIndx: 'EST_TITLE'},
+            {title: '제목', dataType: 'string', dataIndx: 'EST_TITLE', width: 180},
             {title: '품수', dataType: 'string', dataIndx: 'DTL_CNT', editable: false},
-            {title: '금액 계', dataType: 'string', dataIndx: 'DTL_AMOUNT'},
+            {title: '금액 계', dataType: 'string', dataIndx: 'DTL_AMOUNT', format: '#,###'},
             {title: '등록일시', dataType: 'date', dataIndx: 'INSERT_DT', editable: false},
-            {title: '견적담당', dataType: 'string', dataIndx: 'EST_USER_ID'},
+            {title: '견적담당', dataType: 'string', dataIndx: 'EST_USER_ID',
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "EST_USER_ID", id: "EST_USER" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}}),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = estimateMasterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["EST_USER"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
             {title: '발송일시', dataType: 'string', dataIndx: 'SEND_DT', editable: false},
-            {title: '', dataType: 'string', dataIndx: '', editable: false},
-            {title: '주문접수', dataType: 'date', dataIndx: '', editable: false,
+            {title: '', dataType: 'string', dataIndx: '', editable: false, width: 40},
+            {title: '주문접수', dataType: 'date', dataIndx: '', editable: false, width: 60,
                 render: function(ui){
                     return '<a href="#"><span class="ui-icon ui-icon-arrowthick-1-e"></span></a>';
                 }
@@ -199,13 +212,13 @@
         ];
 
         let estimateMasterBotColModel= [
-            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM' } ,
-            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM' } ,
-            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM' } ,
-            {title: '', dataType: 'string', dataIndx: 'DRAWING_YN' } ,
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', validations: [{ type: 'minLen', value: 1, msg: "Required"}] } ,
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM' } ,
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT' } ,
+            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', width: 80 } ,
+            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', width: 80 } ,
+            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 80 } ,
+            {title: '', dataType: 'string', dataIndx: 'DRAWING_YN', width: 30 } ,
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', validations: [{ type: 'minLen', value: 1, msg: "Required"}], width: 100} ,
+            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', width: 50 } ,
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 100 } ,
             {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
             {title: '작업구분', dataType: 'string', dataIndx: 'WORK_TYPE_NM',
                 editor: {
@@ -267,7 +280,7 @@
                     }
                 }
             },
-            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT_NM',
+            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT_NM', width: 80,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "SURFACE_TREAT_NM", id: "SURFACE_TREAT" },
@@ -319,16 +332,16 @@
                     {title:'길이', dataType: 'float', dataIndx: 'SIZE_L_M'}
                 ], hidden: true},
             {title: '항목별 견적정보', align: "center", colModel: [
-                    {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT'},
-                    /*{title: '소재마감', dataType: 'integer', dataIndx: ''},   */
-                    {title: '표면 처리비', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT'},
-                    {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT'},
-                    {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_NOTE'},
-                    {title: '견적비고', dataType: 'integer', dataIndx: 'UNIT_AMT_NOTE'}
+                    {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT', format: '#,###'},
+                    /*{title: '소재마감', dataType: 'integer', dataIndx: '', format: '#,###'},   */
+                    {title: '표면 처리비', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###'},
+                    {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT', format: '#,###'},
+                    {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_NOTE', format: '#,###'},
+                    {title: '견적비고', dataType: 'integer', dataIndx: 'UNIT_AMT_NOTE', format: '#,###'}
                 ]},
-            {title: '계산견적단가', dataType: 'float', dataIndx: 'CALCUL_EST_UNIT_COST'},
-            {title: '최종견적가', dataType: 'float', dataIndx: 'FINAL_EST_UNIT_PRICE'},
-            {title: '금액 계', dataType: 'float', dataIndx: 'FINAL_AMOUNT'},
+            {title: '계산견적단가', dataType: 'float', dataIndx: 'CALCUL_EST_UNIT_COST', format: '#,###', width: 80},
+            {title: '최종견적가', dataType: 'float', dataIndx: 'FINAL_EST_UNIT_PRICE', format: '#,###', width: 80},
+            {title: '금액 계', dataType: 'float', dataIndx: 'DTL_AMOUNT', format: '#,###', width: 80},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
             {title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ'},
             {title: 'DWF', dataType: 'string', dataIndx: 'DWF_GFILE_SEQ'},
@@ -344,7 +357,7 @@
                 location: "remote", dataType: "json", method: "POST", recIndx: 'EST_SEQ',
                 url: "/paramQueryGridSelect",
                 //postData: fnFormToJsonArrayData(),
-                postData: { 'queryId': 'selectEstimateMasterList'},
+                postData: fnFormToJsonArrayData('#estimate_master_search_form'),
                 getData: function (dataJSON) {
                     let data = dataJSON.data;
                     return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
@@ -360,7 +373,7 @@
             resizable: true,
             colModel: estimateMasterTopColModel,
             toolbar: false,
-            title: "Grid From JSON",
+            title: false,
             strNoRows: g_noData,
             complete: function(event, ui) {
                 estimateMasterTopGrid.pqGrid('setSelection', {rowIndx:0} );
@@ -407,30 +420,28 @@
 
         function selectEstimateBotList(EST_SEQ) {
             estimateMasterBotGrid.pqGrid({
-                minWidth: 500,
-                height: "100%",
+                height: 300,
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
                     url: "/paramQueryGridSelect",
-                    //postData: fnFormToJsonArrayData(),
                     postData: { 'queryId': 'selectEstimateDetailList', 'EST_SEQ': EST_SEQ},
                     getData: function (dataJSON) {
                         let data = dataJSON.data;
                         return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                     }
                 },
+                scrollModel: { autoFit: false },
                 columnTemplate: {align: 'center', hvalign: 'center'},
-                scrollModel: {autoFit: true},
                 numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'row', mode: 'single'} ,
                 swipeModel: {on: false},
                 collapsible: false,
-                resizable: true,
                 trackModel: {on: true},
+                resizable: true,
                 colModel: estimateMasterBotColModel,
                 toolbar: false,
                 title: false,
-                strNoRows: g_noData,
+                strNoRows: g_noData
             });
 
             estimateMasterBotGrid.pqGrid("refreshDataAndView");
@@ -445,7 +456,7 @@
         /** 버튼 처리 **/
         $("#btnEstimateListSearch").on('click', function(){
             estimateMasterTopGrid.pqGrid('option', "dataModel.postData", function (ui) {
-                return (fnFormToJsonArrayData('#in_warehouse_manage_search_form'));
+                return (fnFormToJsonArrayData('#estimate_master_search_form'));
             });
             estimateMasterTopGrid.pqGrid('refreshDataAndView');
         });
@@ -526,29 +537,6 @@
     });
 
     // topWrap 확장 함수
-    function topMenuOpen(){
-        var top = $('.gubunWrap');
-        var con = $('.bottomWrap .tableWrap .conWrap');
-        var con2 = $('.bottomWrap .tableWrap .conSubWrap');
-        var _h = con.height() - 100;
-        var _h2 = con2.height() - 100;
 
-        top.stop().animate({height:'136px'},300, 'easeOutCubic');
-        con.stop().animate({height: _h },300, 'easeOutCubic');
-        con2.stop().animate({height: _h2 },300, 'easeOutCubic');
-    }
-
-    // topWrap 축소 함수
-    function topMenuClose(){
-        var top = $('.gubunWrap');
-        var con = $('.bottomWrap .tableWrap .conWrap');
-        var con2 = $('.bottomWrap .tableWrap .conSubWrap');
-        var _h = con.height() + 100;
-        var _h2 = con2.height() + 100;
-
-        top.stop().animate({height:"36px"}, 300, 'easeInCubic');
-        con.stop().animate({height: _h},300, 'easeInCubic');
-        con2.stop().animate({height: _h2},300, 'easeInCubic');
-    }
 
 </script>

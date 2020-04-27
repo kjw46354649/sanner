@@ -49,6 +49,7 @@
 <div class="page estimate">
     <div class="topWrap">
         <form class="form-inline" id="estimate_register_info_form" name="estimate_register_info_form" role="form">
+            <input type="hidden" id="queryId" name="queryId" value="">
             <div class="basicWrap">
                 <ul>
                     <li>
@@ -94,16 +95,16 @@
                         </span>
                     </li>
                     <li>
-                        <span class="ipu_wrap"><label for="EST_NUM">견적번호 (차수)</label><input type="text" name="EST_NUM" id="EST_NUM" placeholder="" value="" title="견적번호 (차수)"></span>
+                        <span class="ipu_wrap"><label for="EST_NUM">견적번호 (차수)</label><input type="text" name="EST_NUM" id="EST_NUM" placeholder="" value="" title="견적번호 (차수)" readonly></span>
                     </li>
                     <li>
-                        <span class="ipu_wrap"><label for="DTL_AMOUNT">견적금액 계</label><input type="text" name="DTL_AMOUNT" id="DTL_AMOUNT" placeholder="" value="" title="견적금액 계"></span>
+                        <span class="ipu_wrap"><label for="DTL_AMOUNT">견적금액 계</label><input type="text" name="DTL_AMOUNT" id="DTL_AMOUNT" placeholder="" value="" title="견적금액 계" readonly></span>
                     </li>
                     <li>
-                        <span class="ipu_wrap"><label for="INSERT_DT">업데이트 일시</label><input type="text" name="INSERT_DT" id="INSERT_DT" placeholder="" value="" title="업데이트 일시"></span>
+                        <span class="ipu_wrap"><label for="INSERT_DT">업데이트 일시</label><input type="text" name="INSERT_DT" id="INSERT_DT" placeholder="" value="" title="업데이트 일시" readonly></span>
                     </li>
                     <li>
-                        <span class="ipu_wrap"><label for="SEND_DT">회신일시</label><input type="text" name="SEND_DT" id="SEND_DT" placeholder="" value="" title="회신일시"></span>
+                        <span class="ipu_wrap"><label for="SEND_DT">회신일시</label><input type="text" name="SEND_DT" id="SEND_DT" placeholder="" value="" title="회신일시" readonly></span>
                     </li>
                 </ul>
             </div>
@@ -192,13 +193,13 @@
         let estimateRegisterBotGrid = $("#estimate_register_bot_grid");
 
         let estimateRegisterTopColModel= [
-            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM' } ,
-            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM' } ,
-            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM' } ,
-            {title: '', dataType: 'string', dataIndx: 'DRAWING_YN' } ,
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', validations: [{ type: 'minLen', value: 1, msg: "Required"}] } ,
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM' } ,
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT' } ,
+            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', width: 80 } ,
+            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', width: 80 } ,
+            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 80 } ,
+            {title: '', dataType: 'string', dataIndx: 'DRAWING_YN', width: 30 } ,
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', validations: [{ type: 'minLen', value: 1, msg: "Required"}], width: 100 } ,
+            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', width: 50 } ,
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 100 } ,
             {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
             {title: '작업구분', dataType: 'string', dataIndx: 'WORK_TYPE_NM',
                 editor: {
@@ -260,7 +261,7 @@
                     }
                 }
             },
-            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT_NM',
+            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT_NM', width: 80,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "SURFACE_TREAT_NM", id: "SURFACE_TREAT" },
@@ -312,16 +313,16 @@
                 {title:'길이', dataType: 'float', dataIndx: 'SIZE_L_M'}
             ], hidden: true},
             {title: '항목별 견적정보', align: "center", colModel: [
-                    {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT'},
-                    /*{title: '소재마감', dataType: 'integer', dataIndx: ''},   */
-                    {title: '표면 처리비', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT'},
-                    {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT'},
-                    {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT'},
-                    {title: '견적비고', dataType: 'integer', dataIndx: 'UNIT_AMT_NOTE'}
+                    {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT', format: '#,###'},
+                    /*{title: '소재마감', dataType: 'integer', dataIndx: '', format: '#,###'},   */
+                    {title: '표면 처리비', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###'},
+                    {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT', format: '#,###'},
+                    {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###'},
+                    {title: '견적비고', dataType: 'integer', dataIndx: 'UNIT_AMT_NOTE', format: '#,###'}
                 ]},
-            {title: '계산견적단가', dataType: 'float', dataIndx: 'CALCUL_EST_UNIT_COST'},
-            {title: '최종견적가', dataType: 'float', dataIndx: 'FINAL_EST_UNIT_PRICE'},
-            {title: '금액 계', dataType: 'float', dataIndx: 'FINAL_AMOUNT'},
+            {title: '계산견적단가', dataType: 'float', dataIndx: 'CALCUL_EST_UNIT_COST', format: '#,###', width: 80},
+            {title: '최종견적가', dataType: 'float', dataIndx: 'FINAL_EST_UNIT_PRICE', format: '#,###', width: 80},
+            {title: '금액 계', dataType: 'float', dataIndx: 'FINAL_AMOUNT', format: '#,###', width: 80},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
             {title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ'},
             {title: 'DWF', dataType: 'string', dataIndx: 'DWF_GFILE_SEQ'},
@@ -349,7 +350,7 @@
                     return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                 }
             },
-            scrollModel: { autoFit: true },
+            scrollModel: { autoFit: false },
             columnTemplate: {align: 'center', hvalign: 'center'},
             numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'row', mode: 'single'} ,
@@ -378,21 +379,28 @@
             },
             change: function( event, ui ) {
                 if(ui.source == 'edit'){
+                    console.log(ui);
+
                     let rowIndx = ui.updateList[0].rowIndx;
                     let calculateEstimateAmt = 0;
                     let dataColumn = ['ITEM_QTY', 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT'];
-                    let data = estimateRegisterTopGrid.pqGrid( "getData", { dataIndx: dataColumn } );
+                    let data = ui.updateList[0].rowData;
+                    let UNIT_MATERIAL_AMT = data.UNIT_MATERIAL_AMT == '' ? 0 : parseFloat(data.UNIT_MATERIAL_AMT);
+                    let UNIT_SURFACE_AMT = data.UNIT_SURFACE_AMT == '' ? 0 : parseFloat(data.UNIT_SURFACE_AMT);
+                    let UNIT_PROCESS_AMT = data.UNIT_PROCESS_AMT == '' ? 0 : parseFloat(data.UNIT_PROCESS_AMT);
+                    let UNIT_ETC_AMT = data.UNIT_ETC_AMT == '' ? 0 : parseFloat(data.UNIT_ETC_AMT);
+                    let ITEM_QTY = data.ITEM_QTY == '' ? 0 : parseFloat(data.ITEM_QTY);
 
-                    calculateEstimateAmt += data[0].UNIT_MATERIAL_AMT == undefined ? 0 : parseFloat(data[0].UNIT_MATERIAL_AMT);
-                    calculateEstimateAmt += data[0].UNIT_TM_AMT == undefined ? 0 : parseFloat(data[0].UNIT_TM_AMT);
-                    calculateEstimateAmt += data[0].UNIT_GRIND_AMT == undefined ? 0 : parseFloat(data[0].UNIT_GRIND_AMT);
-                    calculateEstimateAmt += data[0].UNIT_HEAT_AMT == undefined ? 0 : parseFloat(data[0].UNIT_HEAT_AMT);
-                    calculateEstimateAmt += data[0].UNIT_SURFACE_AMT == undefined ? 0 : parseFloat(data[0].UNIT_SURFACE_AMT);
-                    calculateEstimateAmt += data[0].UNIT_PROCESS_AMT == undefined ? 0 : parseFloat(data[0].UNIT_PROCESS_AMT);
-                    calculateEstimateAmt += data[0].UNIT_ETC_AMT == undefined ? 0 : parseFloat(data[0].UNIT_ETC_AMT);
+                    calculateEstimateAmt += UNIT_MATERIAL_AMT;
+                    calculateEstimateAmt += UNIT_SURFACE_AMT;
+                    calculateEstimateAmt += UNIT_PROCESS_AMT;
+                    calculateEstimateAmt += UNIT_ETC_AMT;
+                    console.log("UNIT_MATERIAL_AMT:"+"["+UNIT_MATERIAL_AMT+"], "+"UNIT_SURFACE_AMT:"+"["+UNIT_SURFACE_AMT+"], "+
+                        "UNIT_PROCESS_AMT:"+"["+UNIT_PROCESS_AMT+"], "+"UNIT_ETC_AMT:"+"["+UNIT_ETC_AMT+"]"+ "calculateEstimateAmt:"+"["+calculateEstimateAmt+"]");
+
                     estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'CALCUL_EST_UNIT_COST': calculateEstimateAmt } });
 
-                    calculateEstimateAmt *= parseFloat(data[0].ITEM_QTY);
+                    calculateEstimateAmt *= ITEM_QTY;
                     estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'FINAL_AMOUNT': calculateEstimateAmt } });
 
                 }
@@ -476,7 +484,6 @@
 
                 $("#estimate_register_excel_download #EST_SEQ").val(EST_SEQ);
                 $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
-                alert(EST_SEQ);
             }, parameter, '');
         };
 
@@ -497,6 +504,7 @@
                     EST_SEQ = list.EST_SEQ;
                 }
 
+                alert(EST_SEQ);
                 $("#estimate_register_info_form #queryId").val('insertEstimateMaster');
                 $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
                 $("#estimate_version_up_sequence_form #hidden_est_seq").val(EST_SEQ);
