@@ -1,6 +1,7 @@
 var chk = 0; // 예제를 위한 변수
 
 $(document).ready(function(){
+
 	if($('.contentsWrap .page').hasClass('estimate')){
 		// table chart height값
 		estimateH();

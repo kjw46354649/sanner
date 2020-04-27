@@ -8,31 +8,49 @@
 <%@ page pageEncoding='UTF-8' contentType='text/html; charset=UTF-8' %>
 <div class="page onegrid">
     <div class="topWrap">
-        <form class="form-inline" id="estimate_master_search_form" name="estimate_master_search_form" role="form">
+        <form class="form-inline" id="user_master_search_form" name="user_master_search_form" role="form">
+            <input type="hidden" name="queryId" id="queryId" value="systemMapper.selectUserMasterList">
+            <input type="hidden" name="" id="" value="">
             <div class="hWrap">
-                <span class="ipu_wrap"><label for="projectSltd">사용자 이름</label><input type="text" name="nameSltd" id="nameSltd" placeholder="" value="" title="사용자 이름"></span>
+                <span class="ipu_wrap"><label for="sel_user_nm">사용자 이름</label><input type="text" name="sel_user_nm" id="sel_user_nm" placeholder="" value="" title="사용자 이름"></span>
                 <div class="rightSpan">
-                    <span class="buttonWrap"><button type="button" class="defaultBtn radius blue">검색</button></span>
+                    <span class="buttonWrap">
+                        <button type="button" id="userMasterSearchBtn" class="defaultBtn radius blue">검색</button>
+                    </span>
                 </div>
             </div>
         </form>
     </div>
     <div class="bottomWrap">
         <div class="tableWrap">
+            <div class="buttonWrap right_sort">
+                <button type="button" id="userMasterAddBtn" class="defaultBtn radius">추가</button>
+                <button type="button" id="userMasterDelBtn" class="defaultBtn radius red">삭제</button>
+                <button type="button" id="userMasterSaveBtn" class="defaultBtn radius green">저장</button>
+            </div>
             <div class="conWrap">
                 <div id="user_manager_grid" style="margin:auto;" ></div>
+                <div class="right_sort">
+                    전체 조회 건수 (Total : <span id="CONFIRM_ORDER_TOTAL_RECORDS" style="color: #00b3ee">0</span>)
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+
+    let userMasterSelectedRowIndex = [];
+    let $userMasterGrid;
+    let userMasterGridId = 'user_manager_grid';
+    let userMasterPostData = fnFormToJsonArrayData('user_master_search_form');
+    let $userMasterSearchBtn = $("#userMasterSearchBtn");
+    let $userMasterAddBtn = $("#userMasterAddBtn");
+    let $userMasterDelBtn = $("#userMasterDelBtn");
+    let $userMasterSaveBtn = $("#userMasterSaveBtn");
+
     $(function () {
         'use strict';
-        let userMasterSelectedRowIndex = [];
-        let $userMasterGrid;
-        let userMasterGridId = 'user_manager_grid';
-        let userMasterPostData = {queryId: 'selectUserMasterList'};
         let userMasterColModel = [
             {title: 'USER_ID', dataType: 'string', dataIndx: 'USER_ID', editable: true},
             {title: 'USER_NM', dataType: 'string', dataIndx: 'USER_NM', width: "30%"},
@@ -40,57 +58,13 @@
             {
                 title: 'Use YN', dataType: 'select', dataIndx: 'DEL_YN_NM', width: "10%",
                 editor: {
-                    type: 'select',
-                    // mapIndices: {name: 'DEL_YN_NM', id: 'DEL_YN'},
-                    valueIndx: 'value',
-                    labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1042'),
-                    // getData: function (ui) {
-                    //     console.log(ui);
-                    //     let clave = ui.$cell.find('select').val();
-                    //     console.log(clave);
-                    //     let rowData = $userMasterGrid.pqGrid('getRowData', {rowIndx: ui.rowIndx});
-                    //     console.log(rowData);
-                    //     rowData['DEL_YN'] = clave;
-                    //     console.log(rowData.DEL_YN);
-                    //     return ui.$cell.find("select option[value='" + clave + "']").text();
-                    // }
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1042')
                 }
             }
         ];
-        let userMasterToolbar = {
-            cls: 'pq-toolbar-crud',
-            items: [
-                {
-                    type: 'button', label: 'Add', icon: 'ui-icon-plus', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {
-                            $userMasterGrid.pqGrid('addNodes', [{}], 0);
-                        }
-                    }
-                },
-                {
-                    type: 'button', label: 'Delete', icon: 'ui-icon-minus', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {
-                            let USER_MASTER_QUERY_ID = 'deleteUser';
-
-                            fnDeletePQGrid($userMasterGrid, userMasterSelectedRowIndex, USER_MASTER_QUERY_ID);
-                        }
-                    }
-                },
-                {
-                    type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {
-                            let userMasterInsertQueryList = ['insertUser'];
-                            let userMasterUpdateQueryList = ['updateUser'];
-
-                            fnModifyPQGrid($userMasterGrid, userMasterInsertQueryList, userMasterUpdateQueryList);
-                        }
-                    }
-                }
-            ]
-        };
         let userMasterObj = {
-            height: '100%',
+            minHeight: 750,
             minWidth: 500,
             flexWidth: false,
             resizable: true,
@@ -102,17 +76,20 @@
             columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
             colModel: userMasterColModel,
             dataModel: {
-                location: 'remote',
-                dataType: 'json',
-                method: 'POST',
-                url: '/paramQueryGridSelect',
+                recIndx: 'USER_ID', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: userMasterPostData,
-                recIndx: 'USER_ID',
                 getData: function (response, textStatus, jqXHR) {
                     return {data: response.data};
                 }
             },
-            toolbar: userMasterToolbar,
+            complete: function () {
+                let data = $confirmOrderGrid.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                let totalOrderQuantity = 0;
+                $('#CONFIRM_ORDER_TOTAL_RECORDS').html(totalRecords);
+            },
+            // toolbar: userMasterToolbar,
+            toolbar: false,
             selectChange: function (event, ui) {
                 if (ui.selection.iCells.ranges[0] !== undefined) {
                     userMasterSelectedRowIndex = [];
@@ -129,6 +106,31 @@
                 }
             }
         };
+
         $userMasterGrid = $('#' + userMasterGridId).pqGrid(userMasterObj);
+
+        /* 버튼 Action 처리 */
+        $userMasterSearchBtn.click(function(event){
+            $userMasterGrid.pqGrid("option", "dataModel.postData", function(ui){
+                return fnFormToJsonArrayData('user_master_search_form');
+            } );
+            $userMasterGrid.pqGrid("refreshDataAndView");
+        });
+
+        $userMasterAddBtn.click(function(event){
+            $userMasterGrid.pqGrid('addNodes', [{}], 0);
+        });
+
+        $userMasterDelBtn.click(function(event){
+            let USER_MASTER_QUERY_ID = 'deleteUser';
+            fnDeletePQGrid($userMasterGrid, userMasterSelectedRowIndex, USER_MASTER_QUERY_ID);
+        });
+
+        $userMasterSaveBtn.click(function(event){
+            let userMasterInsertQueryList = ['insertUser'];
+            let userMasterUpdateQueryList = ['updateUser'];
+
+            fnModifyPQGrid($userMasterGrid, userMasterInsertQueryList, userMasterUpdateQueryList);
+        });
     });
 </script>
