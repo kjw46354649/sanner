@@ -12,7 +12,10 @@
             <input type="hidden" name="queryId" id="queryId" value="systemMapper.selectUserMasterList">
             <input type="hidden" name="" id="" value="">
             <div class="hWrap">
-                <span class="ipu_wrap"><label for="sel_user_nm">사용자 이름</label><input type="text" name="sel_user_nm" id="sel_user_nm" placeholder="" value="" title="사용자 이름"></span>
+                <span class="ipu_wrap">
+                    <label for="sel_user_nm">사용자 이름</label>
+                    <input type="text" name="sel_user_nm" id="sel_user_nm" placeholder="사용자 이름" value="" class="pd-left5 wd_200 " title="사용자 이름">
+                </span>
                 <div class="rightSpan">
                     <span class="buttonWrap">
                         <button type="button" id="userMasterSearchBtn" class="defaultBtn radius blue">검색</button>
