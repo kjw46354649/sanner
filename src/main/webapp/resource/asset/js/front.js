@@ -7,9 +7,6 @@ $(document).ready(function(){
 		estimateH();
 	}
 
-
-	//console.log(pageHeight,tableConWrapY,tableConWrapH);
-
 	$('.sideWrap a').on('click' , function(e){
 		e.preventDefault();
 		if($(this).parents('div').hasClass('on')){
