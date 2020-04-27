@@ -251,7 +251,8 @@ table.boardList .txtP{color: #7030a0;}
 .tabMenu{ padding-left: 14px;}
 .tabMenu:after { content: ''; width: 0; height: 0; display: block; overflow: hidden; clear: both; }
 .tabMenu li{float: left; position: relative;}
-.tabMenu li a { font-size: 12px; font-family: 'NotoKrR'; color: #fff; display: block; background: url(../images/common/bg_tabmenu.png) repeat-x 0 0; border: 1px solid #00003f; border-left: 0; line-height: 26px; padding: 0 30px 0 15px; }
+/*.tabMenu li a { font-size: 12px; font-family: 'NotoKrR'; color: #fff; display: block; background: url(../images/common/bg_tabmenu.png) repeat-x 0 0; border: 1px solid #00003f; border-left: 0; line-height: 26px; padding: 0 30px 0 15px; }*/
+.tabMenu li a { font-size: 12px; font-family: 'NotoKrR'; color: #fff; display: block; background: url(../images/common/bg_tabmenu.png) repeat-x 0 0; border: 1px solid #00003f; border-left: 0; line-height: 35px; padding: 0 30px 0 15px; }
 .tabMenu li .closeBtn { position: absolute; top: 6px; right: 5px; font-size: 0; width: 15px; height: 15px; background: url(../images/common/btn_tabmenu_close_off.png)no-repeat 0 0; }
 .tabMenu li.on a{ background: #f6f6f9; color: #070707; border: 1px solid #b1b1b1; border-bottom: 1px solid #f6f6f9;}
 .tabMenu li.on .closeBtn{background: url(../images/common/btn_tabmenu_close_on.png)no-repeat 0 0;}
