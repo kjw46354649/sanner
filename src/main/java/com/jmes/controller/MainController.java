@@ -22,6 +22,14 @@ public class MainController {
         return "tab/tabs.tiles";
     }
 
+    @RequestMapping(value = "/jmes")
+    public String jmes(Model model, HttpServletRequest request, Locale locale) throws Exception {
+
+        logger.info("logger");
+
+        return "sample/tabs.tiles";
+    }
+
     @RequestMapping(value = "/userManger")
     public String userManger(Model model, HttpServletRequest request, Locale locale) throws Exception {
 

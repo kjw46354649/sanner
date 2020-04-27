@@ -49,4 +49,4 @@
 .form-group1 .search_btn:before { content: ''; width: 9px; height: 12px; background: url(../images/common/ico_search.jpg)no-repeat 0 0; position: absolute; top: 10px; left: 12px; }
 /*.form-group1 > div.group-item > input.col-2 { width: 75%; }*/
 
-
+d-inline { display: inline; }
