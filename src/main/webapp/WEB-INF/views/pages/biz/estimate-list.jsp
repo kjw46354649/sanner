@@ -14,66 +14,58 @@
             <div class="gubunWrap">
                 <ul>
                     <li>
-                        <%--<div class="dateWrap">
-                            <button type="button" class="search_btn" id="btnEstimateListSearch">검색</button>
-                        </div>--%>
                         <span class="slt_wrap">
                             <label for="COMP_CD" class="label_100">사업자구분</label>
-                            <select id="COMP_CD" name="COMP_CD" title="사업자구분" class="wd_200">
-                            </select>
+                            <select id="COMP_CD" name="COMP_CD" title="사업자구분" class="wd_200"></select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label for="ORDER_COMP_CD" class="label_100">발주사</label>
-                            <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사" class="wd_200">
-                            </select>
+                            <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사" class="wd_200"></select>
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label class="label_100" for="TITLE">제목</label><input type="text" name="TITLE" id="TITLE" class="wd_200" value="" title="제목"></span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label class="label_100" for="DRAWING_NUM">도면번호</label><input type="text" name="DRAWING_NUM" id="DRAWING_NUM" class="wd_200" value="" title="도면번호"></span>
+                        <span class="gubun"></span>
                         <span class="ipu_wrap right_float"><button type="button" class="defaultBtn radius blue" id="btnEstimateListSearch">검색</button></span>
                     </li>
                     <li>
                         <span class="ipu_wrap"><label class="label_100" for="MODULE_NM">견적번호</label><input type="text" name="MODULE_NM" id="MODULE_NM" class="wd_200" value="" title="견적번호"></span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label class="label_100" for="ITEM_NM">품명</label><input type="text" name="ITEM_NM" id="ITEM_NM" class="wd_200 " value="" title="품명"></span>
-                        <div class="dateWrap">
-                            <div class="leftSpan">
-                                <span class="slt_wrap">
-                                    <select id="daySltd" name="daySltd" title="등록일시">
-                                        <option value="" selected="selected">등록일시</option>
-                                        <option value="1">-ALL-</option>
-                                        <option value="2">-ALL-</option>
-                                    </select>
-                                </span>
-                                <span class="radio_box">
-                                    <input reqcd="R" type="radio" id="fr_1001_1" name=""><label for="fr_1001_1">오늘</label>
-                                </span>
-                                <span class="radio_box">
-                                    <input reqcd="R" type="radio" id="fr_1001_2" name=""><label for="fr_1001_2">현재월</label>
-                                </span>
-                                <span class="radio_box">
-                                    <input reqcd="R" type="radio" id="fr_1001_3" name=""><label for="fr_1001_3">3개월</label>
-                                </span>
-                                <div class="calendar_wrap">
-                                    <span class="calendar_span">
-                                        <input type="text" name="dateOneIp" id="dateOneIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
-                                    </span>
-                                    <span class="nbsp">~</span>
-                                    <span class="calendar_span">
-                                        <input type="text" name="dateTwoIp" id="dateTwoIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
-                                    </span>
-                                    <span class="chk_box no_txt"><input id="pr_ex" type="checkbox"><label for="pr_ex">선택</label></span>
-                                </div>
-
-                            </div>
-                            <div class="rightSpan">
-                                <span class="txt">Option</span>
-                                <span class="chk_box"><input id="pr_ex1" type="checkbox"><label for="pr_ex1"> 발송완료</label></span>
-                                <span class="chk_box"><input id="pr_ex2" type="checkbox"><label for="pr_ex2"> 최신차수</label></span>
-                            </div>
+                    </li>
+                    <li class="">
+                        <span class="txt_span pd-right20">Option</span>
+                        <span class="chk_box"><input id="pr_ex1" type="checkbox"><label for="pr_ex1"> 발송완료</label></span>
+                        <span class="chk_box"><input id="pr_ex2" type="checkbox"><label for="pr_ex2"> 최신차수</label></span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap trans_slt mg-right10">
+                            <select id="daySltd" name="daySltd" title="등록일시">
+                                <option value="" selected="selected">등록일시</option>
+                                <option value="1">-ALL-</option>
+                                <option value="2">-ALL-</option>
+                            </select>
+                        </span>
+                        <span class="radio_box">
+                            <input reqcd="R" type="radio" id="fr_1001_1" name=""><label for="fr_1001_1">오늘</label>
+                        </span>
+                        <span class="radio_box">
+                            <input reqcd="R" type="radio" id="fr_1001_2" name=""><label for="fr_1001_2">현재월</label>
+                        </span>
+                        <span class="radio_box">
+                            <input reqcd="R" type="radio" id="fr_1001_3" name=""><label for="fr_1001_3">3개월</label>
+                        </span>
+                        <div class="calendar_wrap">
+                            <span class="calendar_span">
+                                <input type="text" name="dateOneIp" id="dateOneIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
+                            </span>
+                            <span class="nbsp">~</span>
+                            <span class="calendar_span">
+                                <input type="text" name="dateTwoIp" id="dateTwoIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
+                            </span>
                         </div>
+                        <span class="chk_box"><input id="pr_ex" type="checkbox"><label for="pr_ex">선택</label></span>
                     </li>
                 </ul>
             </div>
