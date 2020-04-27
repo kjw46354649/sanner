@@ -1,6 +1,14 @@
 var chk = 0; // 예제를 위한 변수
 
 $(document).ready(function(){
+	if($('.contentsWrap .page').hasClass('estimate')){
+		// table chart height값
+		estimateH();
+	}
+
+
+	//console.log(pageHeight,tableConWrapY,tableConWrapH);
+
 	$('.sideWrap a').on('click' , function(e){
 		e.preventDefault();
 		if($(this).parents('div').hasClass('on')){
@@ -10,15 +18,7 @@ $(document).ready(function(){
 		}
 	});
 
-	$('.topWrap_btn').on('click' , function(){
-		if($(this).hasClass('on')){
-			topMenuClose();
-			$(this).removeClass('on');
-		}else{
-			topMenuOpen();
-			$(this).addClass('on');
-		}
-	});
+
 
 	$('.gnbWrap .depth1 > a').on('click' , function(e){
 		e.preventDefault();
@@ -47,6 +47,7 @@ $(document).ready(function(){
 		$('.tabMenuWrap ul').append("<li class='on'><a href='#a;''>견적관리</a><button type='button' class='closeBtn'>닫기</button></li>");
 		tabMenuFn();
 		chk = chk+1; // 예제를 위한 처리
+		estimateH();
 	});
 
 })
@@ -99,7 +100,7 @@ function sideMenuOpen(){
 	var con = $('.contentsWrap');
 	var tm = $('.tabMenuWrap');
 	menu.stop().animate({left:0},300, 'easeOutCubic').addClass('on');
-	tm.stop().animate({left:284},300, 'easeOutCubic');
+	tm.stop().animate({'margin-left':'270px'},300, 'easeOutCubic');
 	con.stop().animate({'margin-left':'270px'},300, 'easeOutCubic');
 
 }
@@ -109,7 +110,7 @@ function sideMenuClose(){
 	var con = $('.contentsWrap');
 	var tm = $('.tabMenuWrap');
 	menu.stop().animate({left:"-270px"}, 300, 'easeInCubic').removeClass('on');
-	tm.stop().animate({left:"14px"}, 300, 'easeInCubic');
+	tm.stop().animate({'margin-left':'0px'}, 300, 'easeInCubic');
 	con.stop().animate({'margin-left':'0px'},300, 'easeInCubic');
 }
 
@@ -117,16 +118,37 @@ function sideMenuClose(){
 function topMenuOpen(){
 	var top = $('.gubunWrap');
 	var con = $('.bottomWrap .tableWrap .conWrap');
-	var _h = con.height() - 100;
-	top.stop().animate({height:'136px'},300, 'easeOutCubic');
-	con.stop().animate({height: _h },300, 'easeOutCubic');
+	var t_h = $('.gubunWrap ul').height()+10;
+	var c_h = con.height() - t_h + top.height() + 10;
+	top.stop().animate({height:t_h},300, 'easeOutCubic');
+	con.stop().animate({height: c_h },300, 'easeOutCubic');
 
 }
 // topWrap 축소 함수
 function topMenuClose(){
 	var top = $('.gubunWrap');
 	var con = $('.bottomWrap .tableWrap .conWrap');
-	var _h = con.height() + 100;
-	top.stop().animate({height:"36px"}, 300, 'easeInCubic');
-	con.stop().animate({height: _h},300, 'easeInCubic');
+	var t_h = $('.gubunWrap ul li').outerHeight() + 10;
+	var c_h = con.height() + top.height() - t_h + 10;
+	top.stop().animate({height:t_h}, 300, 'easeInCubic');
+	con.stop().animate({height: c_h},300, 'easeInCubic');
+}
+
+// 견적관리 페이지 불러올때 꼭 호출해줘야하는 함수!!
+function estimateH(){
+	var tableCon = $('.estimate .bottomWrap .tableWrap .conWrap');
+	var pageHeight = $(window).height();
+	var tableConWrapY = tableCon.offset().top;
+	var tableConWrapH = pageHeight - tableConWrapY - 16;
+
+	tableCon.css({'height' : tableConWrapH});
+	$('.topWrap_btn').on('click' , function(){
+		if($(this).hasClass('on')){
+			topMenuClose();
+			$(this).removeClass('on');
+		}else{
+			topMenuOpen();
+			$(this).addClass('on');
+		}
+	});
 }

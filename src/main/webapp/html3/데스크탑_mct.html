@@ -37,18 +37,18 @@
 				</div>
 			</div>
 			<div class="tabMenuWrap">
-					<ul>
-						<li class="on"><a href="#a;">견적관리</a><button type="button" class="closeBtn">닫기</button></li>
-						<li><a href="#a;">견적서작성</a><button type="button" class="closeBtn">닫기</button></li>
-						<li><a href="#a;">견적 표준 계산 관리</a><button type="button" class="closeBtn">닫기</button></li>
-					</ul>
-				</div>
+				<ul class="tabMenu">
+					<li class="on"><a href="#a;">견적관리</a><button type="button" class="closeBtn">닫기</button></li>
+					<li><a href="#a;">견적서작성</a><button type="button" class="closeBtn">닫기</button></li>
+					<li><a href="#a;">견적 표준 계산 관리</a><button type="button" class="closeBtn">닫기</button></li>
+				</ul>
+			</div>
 			<div class="contentsWrap">
 				<div class="page mct">
 					<div class="topWrap">
 						<div class="hWrap">
 							<h2>MCT 가공 계획 현황</h2>
-							<span class="slt_wrap namePlusSlt">
+							<span class="slt_wrap namePlusSlt mg-left20">
 								<label for="mctSltd">MCT 공장</label>
 								<select id="mctSltd" name="mctSltd" title="MCT 소형">
 									<option value="" selected="selected">MCT 소형1</option>
@@ -56,8 +56,8 @@
 									<option value="2">MCT 소형3</option>
 								</select>
 							</span>
-							<span class="refresh"><a href="#a;"><img src="./asset/images/common/btn_refresh.png" alt="새로고침"></a></span>
-							<span class="chk_box"><input id="s_mode" type="checkbox"><label for="s_mode"> 축소모드</label></span>
+							<span class="refresh mg-left10"><a href="#a;"><img src="./asset/images/common/btn_refresh.png" alt="새로고침"></a></span>
+							<span class="chk_box mg-left10"><input id="s_mode" type="checkbox"><label for="s_mode"> 축소모드</label></span>
 							<span class="buttonWrap">
 								<button type="button" class="defaultBtn black">도면보기</button>
 								<button type="button" class="defaultBtn sky">레이아웃관리</button>
@@ -267,6 +267,15 @@
 					<div class="bottomWrap">
 						<div class="hWrap">
 							<h2>금일 가공 대상 List</h2>
+							<span class="slt_wrap mg-left20">
+								<label for="no1Sltd">공장구분</label>
+								<select id="no1Sltd" name="no1Sltd" title="공장구분">
+									<option value="" selected="selected">-ALL-</option>
+									<option value="1">-ALL-</option>
+									<option value="2">-ALL-</option>
+								</select>
+							</span>
+							<span class="gubun"></span>
 							<span class="slt_wrap">
 								<label for="no1Sltd">공장구분</label>
 								<select id="no1Sltd" name="no1Sltd" title="공장구분">
@@ -275,6 +284,7 @@
 									<option value="2">-ALL-</option>
 								</select>
 							</span>
+							<span class="gubun"></span>
 							<span class="slt_wrap">
 								<label for="no1Sltd">공장구분</label>
 								<select id="no1Sltd" name="no1Sltd" title="공장구분">
@@ -283,6 +293,7 @@
 									<option value="2">-ALL-</option>
 								</select>
 							</span>
+							<span class="gubun"></span>
 							<span class="slt_wrap">
 								<label for="no1Sltd">공장구분</label>
 								<select id="no1Sltd" name="no1Sltd" title="공장구분">
@@ -291,6 +302,7 @@
 									<option value="2">-ALL-</option>
 								</select>
 							</span>
+							<span class="gubun"></span>
 							<span class="slt_wrap">
 								<label for="no1Sltd">공장구분</label>
 								<select id="no1Sltd" name="no1Sltd" title="공장구분">
@@ -299,14 +311,7 @@
 									<option value="2">-ALL-</option>
 								</select>
 							</span>
-							<span class="slt_wrap">
-								<label for="no1Sltd">공장구분</label>
-								<select id="no1Sltd" name="no1Sltd" title="공장구분">
-									<option value="" selected="selected">-ALL-</option>
-									<option value="1">-ALL-</option>
-									<option value="2">-ALL-</option>
-								</select>
-							</span>
+							<span class="gubun"></span>
 							<span class="slt_wrap">
 								<label for="no1Sltd">공장구분</label>
 								<select id="no1Sltd" name="no1Sltd" title="공장구분">
@@ -335,6 +340,11 @@
 							<a href="#a;">견적접수</a>
 							<div class="depth2">
 								<ul>
+									<li><a href="#a;">견적관리</a></li>
+									<li><a href="#a;">견적서 작성</a></li>
+									<li><a href="#a;">견적표준 계산 관리</a></li>
+									<li><a href="#a;">견적서 작성</a></li>
+									<li><a href="#a;">견적 표준 계산 관리</a></li>
 									<li><a href="#a;">견적관리</a></li>
 									<li><a href="#a;">견적서 작성</a></li>
 									<li><a href="#a;">견적표준 계산 관리</a></li>

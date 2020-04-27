@@ -1,5 +1,4 @@
 @charset "utf-8";
-
 /*/////////////////////////////////////////////////////////////////////////// /////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// sidebar WRAP ///////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
@@ -28,6 +27,7 @@
 .sidebarWrap .gnbWrap ul li.depth1.on > a:after { background: url(../images/common/ico_gnb_arrow_up.png)no-repeat 0 50%; }
 .gnbWrap .depth2 { ; box-sizing: border-box; background: #002159; padding: 12px 0; display: none; }
 .sidebarWrap .gnbWrap ul li.depth1.on .depth2{display: block;}
+.gnbWrap .depth2 ul{max-height: 180px; overflow-y: auto;}
 .gnbWrap .depth2 ul li { padding: 0 30px 0 65px; }
 .gnbWrap .depth2 ul li a { display: block; width: 100%; height: 36px; box-sizing: border-box; color: #afbcd6; font-size: 15px; font-family: 'NotoKrR'; line-height: 34px; }
 .gnbWrap .depth2 ul li a:hover { color: #fff }
@@ -39,27 +39,27 @@
 /////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////*/
 .bodyWrap { min-height: 0; position: relative; background: #f6f6f9; }
-.container { width: 100%; height: 100vh; position: relative; }
-.navbarWrap { width: 100%; height: 66px; background: #002159; }
-.navbarWrap .locationWrap { position: absolute; right: 0; top: 20px; margin-right: 2% }
+.container { width: 100%; position: relative; min-height: 100vh; }
+.navbarWrap { height: 45px; background: #002159; position: absolute; width: 100%; text-align: right;; }
+.navbarWrap .locationWrap { display: inline-block; margin-right: 1%; }
 .locationWrap ul li { float: left; padding-left: 22px; position: relative; }
-.locationWrap ul li:before {content:'>'; display: block; line-height: 14px; color: #d9dde3; font-size: 14px; position: absolute; top: 3px; left: 7px; }
+.locationWrap ul li:before {content:'>'; display: block; color: #fff; font-size: 14px; position: absolute; top: 12px; left: 7px;font-family:'NotoKrL'; }
 .locationWrap ul li:first-child:before{display: none;}
 
-.locationWrap ul li a { display: block; font-family: 'NotoKrR'; font-size: 14px; color: #d9dde3; }
-.contentsWrap { position: relative; margin-left: 270px; padding: 1.25% 0; height: calc( 100vh - 66px); box-sizing: border-box; background: #f6f6f9;; }
+.locationWrap ul li a { display: block; font-family: 'NotoKrR'; font-size: 12px; color: #fff; line-height: 45px; }
+.contentsWrap { position: relative; margin-left: 270px; box-sizing: border-box; background: #f6f6f9; padding-top: 5px;; }
 .contentsWrap:after { content: ''; width: 0; height: 0; display: block; overflow: hidden; clear: both; }
 
-.tabMenuWrap{position: absolute; top:20px; left: 284px;}
-.tabMenuWrap ul:after{content: ''; width: 0; height: 0; display: block; overflow: hidden; clear: both;}
-.tabMenuWrap ul li{float: left; position: relative;}
-.tabMenuWrap ul li a{font-size: 16px; font-family: 'NotoKrR'; color: #fff; display: block; padding: 0 45px; line-height: 44px; background:url(../images/common/bg_tabmenu.png) repeat-x 0 0;border:1px solid #00003f;border-left:0;}
-.tabMenuWrap ul li:first-child a{border-left: 1px solid #00003f;}
+.tabMenuWrap{ padding-top: 17px; margin-left: 270px; min-height: 28px;}
+.tabMenuWrap ul:after{}
+.tabMenuWrap ul li{}
+.tabMenuWrap ul li a{}
+.tabMenuWrap ul li:first-child a{}
 
-.tabMenuWrap ul li .closeBtn{position: absolute; top: 15px; right: 13px; font-size: 0; width: 15px; height: 15px; background:url(../images/common/btn_tabmenu_close_off.png)no-repeat 0 0;}
+.tabMenuWrap ul li .closeBtn{}
 
-.tabMenuWrap ul li.on a{background:#f6f6f9; color:#070707; border:1px solid #f6f6f9;}
-.tabMenuWrap ul li.on .closeBtn{background: url(../images/common/btn_tabmenu_close_on.png)no-repeat 0 0;}
+.tabMenuWrap ul li.on a{}
+.tabMenuWrap ul li.on .closeBtn{}
 /*/////////////////////////////////////////////////////////////////////////// /////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// FOOTER WRAP ///////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////

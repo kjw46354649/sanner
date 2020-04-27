@@ -7,16 +7,12 @@
 --%>
 <%@ page pageEncoding='UTF-8' contentType='text/html; charset=UTF-8' %>
 <div class="page onegrid">
-
     <div class="topWrap">
         <form class="form-inline" id="estimate_master_search_form" name="estimate_master_search_form" role="form">
             <div class="hWrap">
-                <span class="ipu_wrap">
-                    <label for="priceSltd">사용자 이름</label>
-                    <input type="text" name="priceSltd" id="priceSltd" placeholder="" value="" title="사용자 이름">
-                </span>
+                <span class="ipu_wrap"><label for="projectSltd">사용자 이름</label><input type="text" name="nameSltd" id="nameSltd" placeholder="" value="" title="사용자 이름"></span>
                 <div class="rightSpan">
-                    <span class="buttonWrap"><button type="button" class="search_btn">검색</button></span>
+                    <span class="buttonWrap"><button type="button" class="defaultBtn radius blue">검색</button></span>
                 </div>
             </div>
         </form>
