@@ -25,7 +25,7 @@
                 <div class="locationWrap"><%--<ul><li><a href="#a;">Home</a></li></ul>--%></div>
             </div>
             <div class="tabMenuWrap">
-                <ul></ul>
+                <ul class="tabMenu"></ul>
             </div>
             <div class="contentsWrap"></div>
             <tiles:insertAttribute name="body-menu"/>

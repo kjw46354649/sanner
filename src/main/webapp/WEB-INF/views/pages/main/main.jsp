@@ -122,20 +122,20 @@
         <div class="tableWrap">
             <div class="hWrap">
                 <h2>금일 가공 대상 List</h2>
-                <span class="chk_box"><input id="pr_ex" type="checkbox"><label for="pr_ex"> 가공완료제외</label></span>
-                <span class="slt_wrap">
+                <span class="chk_box mg-left20"><input id="pr_ex" type="checkbox"><label for="pr_ex"> 가공완료제외</label></span>
+                <span class="slt_wrap mg-left10">
 									<select id="customSltd" name="customSltd" title="발주처 선태">
 										<option value="" selected="selected">-발주처-</option>
 										<option value="1">-발주처-</option>
 										<option value="2">-발주처-</option>
 									</select>
-									<select id="materSltd" name="materSltd" title="재질선택">
+									<select id="materSltd" class="mg-left5" name="materSltd" title="재질선택">
 										<option value="" selected="selected">-재질-</option>
 										<option value="1">-재질-</option>
 										<option value="2">-재질-</option>
 									</select>
 								</span>
-                <span class="ipu_wrap"><label for="dateSltd">조회일자</label><input type="text" name="dateSltd" id="dateSltd" placeholder="" value="2019/12/18" title="조회일자"></span>
+                <span class="ipu_wrap mg-left10"><label for="dateSltd">조회일자</label><input type="text" name="dateSltd" id="dateSltd" placeholder="" value="2019/12/18" title="조회일자"></span>
                 <span class="refresh"><a href="#a;"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></a></span>
             </div>
             <div class="conWrap">
