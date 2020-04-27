@@ -64,7 +64,7 @@ $(document).ready(function(){
 			$('.tabMenuWrap ul li').removeClass('on');
 			$('.tabMenuWrap ul').append("<li class='on'><a href='#a;' id='tab_" + pid + "'>" + $(this).attr('tname') + "</a><button type='button' class='closeBtn' idx='tab_" + pid + "'>닫기</button></li>");
 			$.get($(this).attr('url'), function (data) {
-				let containerDiv = "<span class='addTapPage' id='view_tab_" + pid + "'>" + data + "</span>";
+				let containerDiv = "<span class='addTapPage estimate' id='view_tab_" + pid + "'>" + data + "</span>";
 				$(".contentsWrap").append(containerDiv).trigger('create');
 				tabMenuFn();
 				estimateH();

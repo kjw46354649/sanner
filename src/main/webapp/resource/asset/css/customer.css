@@ -1,3 +1,7 @@
+.topWrap {
+    margin-bottom: 5px;
+}
+
 .onegrid .topWrap .gubunWrap { width: 95.5%; border-right: 1px solid #e5e5e5; margin: 17px; height: 36px; overflow: hidden; }
 .onegrid .topWrap .gubunWrap ul { font-size: 0; }
 .onegrid .topWrap .gubunWrap ul li { width: 23%; display: inline-block; padding-bottom: 11px; padding-right: 2%; }
