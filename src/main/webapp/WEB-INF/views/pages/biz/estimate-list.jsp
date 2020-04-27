@@ -14,31 +14,30 @@
             <div class="gubunWrap">
                 <ul>
                     <li>
-                        <div class="dateWrap">
+                        <%--<div class="dateWrap">
                             <button type="button" class="search_btn" id="btnEstimateListSearch">검색</button>
-                        </div>
+                        </div>--%>
                         <span class="slt_wrap">
-                            <label for="COMP_CD">사업자구분</label>
-                            <select id="COMP_CD" name="COMP_CD" title="사업자구분">
+                            <label for="COMP_CD" class="label_100">사업자구분</label>
+                            <select id="COMP_CD" name="COMP_CD" title="사업자구분" class="wd_200">
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label for="ORDER_COMP_CD">발주사</label>
-                            <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사">
+                            <label for="ORDER_COMP_CD" class="label_100">발주사</label>
+                            <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사" class="wd_200">
                             </select>
                         </span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label for="TITLE">제목</label><input type="text" name="TITLE" id="TITLE" placeholder="" value="" title="제목"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="TITLE">제목</label><input type="text" name="TITLE" id="TITLE" class="wd_200" value="" title="제목"></span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label for="DRAWING_NUM">도면번호</label><input type="text" name="DRAWING_NUM" id="DRAWING_NUM" placeholder="" value="" title="도면번호"></span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap"><label for="MODULE_NM">견적번호</label><input type="text" name="MODULE_NM" id="MODULE_NM" placeholder="" value="" title="견적번호"></span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap"><label for="ITEM_NM">품명</label><input type="text" name="ITEM_NM" id="ITEM_NM" placeholder="" value="" title="품명"></span>
-                        <span class="gubun"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="DRAWING_NUM">도면번호</label><input type="text" name="DRAWING_NUM" id="DRAWING_NUM" class="wd_200" value="" title="도면번호"></span>
+                        <span class="ipu_wrap right_float"><button type="button" class="defaultBtn radius blue" id="btnEstimateListSearch">검색</button></span>
                     </li>
                     <li>
+                        <span class="ipu_wrap"><label class="label_100" for="MODULE_NM">견적번호</label><input type="text" name="MODULE_NM" id="MODULE_NM" class="wd_200" value="" title="견적번호"></span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="ITEM_NM">품명</label><input type="text" name="ITEM_NM" id="ITEM_NM" class="wd_200 " value="" title="품명"></span>
                         <div class="dateWrap">
                             <div class="leftSpan">
                                 <span class="slt_wrap">
@@ -82,23 +81,21 @@
         <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
     <div class="bottomWrap">
-        <div class="hWrap">
-            <span class="buttonWrap">
+        <div class="buttonWrap">
+            <div class="left_sort">
                 <button type="button" class="defaultBtn" id="btnEstimateListNewEstimate">견적서 신규 작성</button>
                 <button type="button" class="defaultBtn" id="btnEstimateListNewVersion">차수 생성</button>
-            </span>
-            <span class="chk_box"><input id="chkEstimateListDetail" type="checkbox"><label for="chkEstimateListDetail"> 견적상세요건</label></span>
-            <div class="rightSpan">
-                <span class="slt_wrap namePlusSlt">
-                    <label for="selEstimateListExcel">견적서 추출</label>
-                    <select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출">
-                    </select>
-                </span>
-                <span class="buttonWrap">
+                <span class="chk_box"><input id="chkEstimateListDetail" type="checkbox"><label for="chkEstimateListDetail"> 견적상세요건</label></span>
+                <div class="right_float">
+                    <span class="slt_wrap namePlusSlt">
+                        <label for="selEstimateListExcel">견적서 추출</label>
+                        <select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출">
+                        </select>
+                    </span>
                     <button type="button" class="defaultBtn grayGra" id="btnEstimateListDrawView">도면 보기</button>
                     <button type="button" class="defaultBtn yelllowGra" id="btnEstimateListDelete">Delete</button>
                     <button type="button" class="defaultBtn blueGra" id="btnEstimateListSave">Save</button>
-                </span>
+                </div>
             </div>
         </div>
         <div class="tableWrap">
