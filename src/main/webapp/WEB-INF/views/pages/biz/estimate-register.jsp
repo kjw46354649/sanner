@@ -59,35 +59,25 @@
                             <button type="button" class="defaultBtn yelllowGra" id="btn_estimate_register_submit">Submit</button>
                         </span>
                     </li>
-                </ul>
-                <ul>
                     <li>
-                        <span class="slt_wrap">
+                        <span class="slt_wrap" class="wd_200">
                             <label for="ORDER_COMP_CD">발주사</label>
                             <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사">
                             </select>
                         </span>
-                    </li>
-                    <li>
                         <span class="slt_wrap">
-                            <span class="ipu_wrap"><label for="EST_TITLE">제목</label><input type="text" name="EST_TITLE" id="EST_TITLE" placeholder="" value="" title="제목"></span>
+                            <span class="ipu_wrap"><label for="EST_TITLE">제목</label><input type="text" name="EST_TITLE" id="EST_TITLE" class="wd_200" value="" title="제목"></span>
                         </span>
-                    </li>
-                    <li>
                         <span class="slt_wrap">
                             <label for="ORDER_STAFF_SEQ">구매 담당자 </label>
                             <select id="ORDER_STAFF_SEQ" name="ORDER_STAFF_SEQ" title="구매 담당자">
                             </select>
                         </span>
-                    </li>
-                    <li>
                         <span class="slt_wrap">
                             <label for="COMP_CD">사업자</label>
                             <select id="COMP_CD" name="COMP_CD" title="사업자">
                             </select>
                         </span>
-                    </li>
-                    <li>
                         <span class="slt_wrap">
                             <label for="EST_USER_ID">견적 담당자</label>
                             <select id="EST_USER_ID" name="EST_USER_ID" title="견적 담당자">
@@ -95,16 +85,10 @@
                         </span>
                     </li>
                     <li>
-                        <span class="ipu_wrap"><label for="EST_NUM">견적번호 (차수)</label><input type="text" name="EST_NUM" id="EST_NUM" placeholder="" value="" title="견적번호 (차수)" readonly></span>
-                    </li>
-                    <li>
-                        <span class="ipu_wrap"><label for="DTL_AMOUNT">견적금액 계</label><input type="text" name="DTL_AMOUNT" id="DTL_AMOUNT" placeholder="" value="" title="견적금액 계" readonly></span>
-                    </li>
-                    <li>
-                        <span class="ipu_wrap"><label for="INSERT_DT">업데이트 일시</label><input type="text" name="INSERT_DT" id="INSERT_DT" placeholder="" value="" title="업데이트 일시" readonly></span>
-                    </li>
-                    <li>
-                        <span class="ipu_wrap"><label for="SEND_DT">회신일시</label><input type="text" name="SEND_DT" id="SEND_DT" placeholder="" value="" title="회신일시" readonly></span>
+                        <span class="ipu_wrap"><label for="EST_NUM">견적번호 (차수)</label><input type="text" name="EST_NUM" id="EST_NUM" class="wd_200" value="" title="견적번호 (차수)" readonly></span>
+                        <span class="ipu_wrap"><label for="DTL_AMOUNT">견적금액 계</label><input type="text" name="DTL_AMOUNT" id="DTL_AMOUNT" class="wd_200" value="" title="견적금액 계" readonly></span>
+                        <span class="ipu_wrap"><label for="INSERT_DT">업데이트 일시</label><input type="text" name="INSERT_DT" id="INSERT_DT" class="wd_200" value="" title="업데이트 일시" readonly></span>
+                        <span class="ipu_wrap"><label for="SEND_DT">회신일시</label><input type="text" name="SEND_DT" id="SEND_DT" class="wd_200" value="" title="회신일시" readonly></span>
                     </li>
                 </ul>
             </div>
@@ -147,7 +131,7 @@
                     <span class="subTit">메일내용</span>
                     <textarea class="col-md-12 col-sm-12" id="EMAIL_CONTENT" name="EMAIL_CONTENT"></textarea>
                 </div>
-                <div class="bottomBox">
+                <div class="conWrap">
                     <div class="popup">
                         <div class="resultWrap">
                             <div class="leftWrap">

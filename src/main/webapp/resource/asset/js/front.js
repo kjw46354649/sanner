@@ -12,6 +12,7 @@ $(document).ready(function(){
 
 	$(document).on('click', '.sideWrap a', function (e) {
 	// $('.sideWrap a').on('click' , function(e){
+	// $('.sideWrap a').on('click' , function(e){
 		e.preventDefault();
 		if($(this).parents('div').hasClass('on')){
 			sideMenuClose();
