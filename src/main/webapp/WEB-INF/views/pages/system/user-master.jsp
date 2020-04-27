@@ -73,7 +73,8 @@
             resizable: true,
             scrollModel: { autoFit: true },
             collapsible: { on: true, collapsed: false },
-            title: '사용자 관리',
+            showTitle: false,
+            // title: '사용자 관리',
             numberCell: {title: 'No.'},
             trackModel: {on: true}, //to turn on the track changes.
             columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
