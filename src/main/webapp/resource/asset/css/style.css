@@ -106,7 +106,7 @@
     -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);
     box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);
     filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); }
-.estimate .bottomWrap .hWrap { border-bottom: 1px solid #e2e2e2; font-size: 0; position: relative; padding: 10px; }
+.estimate .bottomWrap .hWrap { position: relative; overflow: auto; padding: 10px; border-bottom: 1px solid #e2e2e2; font-size: 0; }
 .estimate .bottomWrap .hWrap .buttonWrap { display: inline-block; }
 .estimate .bottomWrap .hWrap .chk_box { }
 .estimate .bottomWrap .hWrap .rightSpan { float: right; display: inline-block; }
