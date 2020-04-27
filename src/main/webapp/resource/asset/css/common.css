@@ -22,7 +22,8 @@
 .motion { -webkit-transition: all 0.1s ease-in-out; transition: all 0.1s ease-in-out; }
 
 /* button */
-button { cursor: pointer; background: none; }
+button { cursor: pointer; background: none; text-align: center; }
+
 
 /* skip navigation */
 #skiptoContent { position: absolute; width: auto; top: 0; margin: 0 auto }
@@ -86,7 +87,7 @@ box-shadow: 0 0 1px 1px rgba(38,38,38,0.1);/* FF3.5+, Opera 9+, Saf1+, Chrome, I
 ::-webkit-scrollbar-button:vertical:decrement {
 }
 ::-webkit-scrollbar-corner {
-  background-color: violet; /* 우측 하단의 코너 부분 */
+  /*background-color: violet; !* 우측 하단의 코너 부분 *!*/
 }
 ::-webkit-resizer {
   background-color: green;
@@ -120,6 +121,7 @@ option { font-size: 12px; }
 /* btn */
 .defaultBtn~.defaultBtn { }
 .defaultBtn { height: 27px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; display: inline-block; text-align: center; padding: 0 20px; border: 1px solid #e5e5e5; box-sizing: border-box; }
+.defaultBtn.btn-120w { display: inline-block; overflow: hidden; width: 120px; height: 27px; margin: 0 5px; padding: 0 10px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
 
 .yelllowGra { background: #ffc63a; border: 1px solid #ffc63a; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#FFC63A)";/*IE 8*/ -moz-box-shadow: 1px 1px 3px 3px rgba(255, 198, 58, 0.3);/*FF 3.5+*/ -webkit-box-shadow: 1px 1px 2px 2px rgba(255, 198, 58, 0.3);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#FFC63A); 3-4,Chrome, iOS 4.0.2-4.2, Android 2.3+*/box-shadow: 1px 1px 2px 2px rgba(255, 198, 58, 0.3); /*IE 5.5-7*/ }
 .blueGra { background: #2b89fa; border: 1px solid #2b89fa; color: #fff; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#2B89FA)";/*IE 8*/ -moz-box-shadow: 1px 1px 2px 2px rgba(43, 137, 250, 0.3);/*FF 3.5+*/ -webkit-box-shadow: 1px 1px 2px 2px rgba(43, 137, 250, 0.3);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#2B89FA); box-shadow: 1px 1px 2px 2px rgba(43, 137, 250, 0.3); /*IE 5.5-7*/ }
