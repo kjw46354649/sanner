@@ -39,12 +39,12 @@
 				</div>
 			</div>
 			<div class="tabMenuWrap">
-					<ul>
-						<li class="on"><a href="#a;">견적관리</a><button type="button" class="closeBtn">닫기</button></li>
-						<li><a href="#a;">견적서작성</a><button type="button" class="closeBtn">닫기</button></li>
-						<li><a href="#a;">견적 표준 계산 관리</a><button type="button" class="closeBtn">닫기</button></li>
-					</ul>
-				</div>
+				<ul class="tabMenu">
+					<li class="on"><a href="#a;">견적관리</a><button type="button" class="closeBtn">닫기</button></li>
+					<li><a href="#a;">견적서작성</a><button type="button" class="closeBtn">닫기</button></li>
+					<li><a href="#a;">견적 표준 계산 관리</a><button type="button" class="closeBtn">닫기</button></li>
+				</ul>
+			</div>
 			<div class="contentsWrap">
 				<div class="page estimate">
 					<div class="topWrap">
@@ -59,8 +59,7 @@
 											<option value="2">-ALL-</option>
 										</select>
 									</span>
-								</li>
-								<li>
+									<span class="gubun"></span>
 									<span class="slt_wrap">
 										<label for="customSltd">발주사</label>
 										<select id="customSltd" name="customSltd" title="발주사">
@@ -69,30 +68,30 @@
 											<option value="2">-ALL-</option>
 										</select>
 									</span>
-								</li>
-								<li>
+									<span class="gubun"></span>
 									<span class="ipu_wrap"><label for="nameSltd">제목</label><input type="text" name="nameSltd" id="nameSltd" placeholder="" value="" title="제목"></span>
-								</li>
-								<li>
+									<span class="gubun"></span>
 									<span class="ipu_wrap"><label for="numberSltd">도면번호</label><input type="text" name="numberSltd" id="numberSltd" placeholder="" value="" title="도면번호"></span>
-								</li>
-								<li>
+									<span class="gubun"></span>
 									<span class="ipu_wrap"><label for="priceSltd">견적번호</label><input type="text" name="priceSltd" id="priceSltd" placeholder="" value="" title="견적번호"></span>
-								</li>
-								<li>
+									<span class="gubun"></span>
 									<span class="ipu_wrap"><label for="numberSltd2">도면번호</label><input type="text" name="numberSltd2" id="numberSltd2" placeholder="" value="" title="도면번호"></span>
 								</li>
-								<li>
-									<span class="ipu_wrap"><label for="m2Sltd">품명</label><input type="text" name="m2Sltd" id="m2Sltd" placeholder="" value="" title="품명"></span>
+								<li class="right_sort">
+									<span class="ipu_wrap"><label for="numberSltd">도면번호</label><input type="text" name="numberSltd" id="numberSltd" placeholder="" value="" title="도면번호" class="wd_450"></span>
+									<span class="gubun"></span>
+									<span class="ipu_wrap"><label for="priceSltd">견적번호</label><input type="text" name="priceSltd" id="priceSltd" placeholder="" value="" title="견적번호"></span>
+									<span class="gubun"></span>
+									<span class="ipu_wrap"><label for="numberSltd2">도면번호</label><input type="text" name="numberSltd2" id="numberSltd2" placeholder="" value="" title="도면번호" class="wd_300"></span>
+									<span class="gubun"></span>
+									<span class="ipu_wrap"><label for="numberSltd2">도면번호</label><input type="text" name="numberSltd2" id="numberSltd2" placeholder="" value="" title="도면번호" class="wd_100"></span>
 								</li>
-								<li>
-									<span class="ipu_wrap"><label for="nameSltd2">제목</label><input type="text" name="nameSltd2" id="nameSltd2" placeholder="" value="" title="제목"></span>
-								</li>
-
-							</ul>
-							<div class="dateWrap">
-								<div class="leftSpan">
-									<span class="slt_wrap">
+								<li class="center_sort">
+									<span class="txt_span pd-right20">Option</span>
+									<span class="chk_box"><input id="pr_ex1" type="checkbox"><label for="pr_ex1"> 발송완료</label></span>
+									<span class="chk_box"><input id="pr_ex2" type="checkbox"><label for="pr_ex2"> 최신차수</label></span>
+									<span class="gubun"></span>
+									<span class="slt_wrap trans_slt mg-right10">
 										<select id="daySltd" name="daySltd" title="등록일시">
 											<option value="" selected="selected">등록일시</option>
 											<option value="1">-ALL-</option>
@@ -116,30 +115,21 @@
 										<span class="calendar_span">
 											<input type="text" name="dateTwoIp" id="dateTwoIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
 										</span>
-										<span class="chk_box no_txt"><input id="pr_ex" type="checkbox"><label for="pr_ex">선택</label></span>
 									</div>
-
-								</div>
-								<div class="rightSpan">
-									<span class="txt">Option</span>
-									<span class="chk_box"><input id="pr_ex1" type="checkbox"><label for="pr_ex1"> 발송완료</label></span>
-									<span class="chk_box"><input id="pr_ex2" type="checkbox"><label for="pr_ex2"> 최신차수</label></span>
-
-								</div>
-								<button type="button" class="search_btn">검색</button>
-							</div>
+									<span class="chk_box no_txt"><input id="pr_ex" type="checkbox"><label for="pr_ex">선택</label></span>
+									<button type="button" class="search_btn mg-left20">검색</button>
+								</li>
+							</ul>
 						</div>
 						<button type="button" class="topWrap_btn">펼치기 / 접기</button>
 					</div>
 					<div class="bottomWrap">
 						<div class="hWrap">
-							<span class="buttonWrap">
-								<button type="button" class="defaultBtn">견적서 신규 작성</button>
-								<button type="button" class="defaultBtn">차수 생성</button>
-							</span>
-							<span class="chk_box"><input id="pr_a" type="checkbox"><label for="pr_a"> 견적상세요건</label></span>
+							<button type="button" class="defaultBtn">견적서 신규 작성</button>
+							<button type="button" class="defaultBtn">차수 생성</button>
+							<span class="chk_box mg-left15"><input id="pr_a" type="checkbox"><label for="pr_a"> 견적상세요건</label></span>
 							<div class="rightSpan">
-								<span class="slt_wrap namePlusSlt">
+								<span class="slt_wrap namePlusSlt mg-right25">
 									<label for="prSltd">견적서 추출</label>
 									<select id="prSltd" name="prSltd" title="견적서 추출">
 										<option value="" selected="selected">견적서 추출1</option>
@@ -147,11 +137,9 @@
 										<option value="2">견적서 추출3</option>
 									</select>
 								</span>
-								<span class="buttonWrap">
-									<button type="button" class="defaultBtn grayGra">도면 View</button>
-									<button type="button" class="defaultBtn yelllowGra">Delete</button>
-									<button type="button" class="defaultBtn blueGra">Save</button>
-								</span>
+								<button type="button" class="defaultBtn grayGra">도면 View</button>
+								<button type="button" class="defaultBtn yelllowGra">Delete</button>
+								<button type="button" class="defaultBtn blueGra">Save</button>
 							</div>
 						</div>
 						<div class="tableWrap">
