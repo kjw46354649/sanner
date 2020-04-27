@@ -10,7 +10,8 @@ $(document).ready(function(){
 
 	//console.log(pageHeight,tableConWrapY,tableConWrapH);
 
-	$('.sideWrap a').on('click' , function(e){
+	$(document).on('click', '.sideWrap a', function (e) {
+	// $('.sideWrap a').on('click' , function(e){
 		e.preventDefault();
 		if($(this).parents('div').hasClass('on')){
 			sideMenuClose();
@@ -64,7 +65,7 @@ $(document).ready(function(){
 			$('.tabMenuWrap ul li').removeClass('on');
 			$('.tabMenuWrap ul').append("<li class='on'><a href='#a;' id='tab_" + pid + "'>" + $(this).attr('tname') + "</a><button type='button' class='closeBtn' idx='tab_" + pid + "'>닫기</button></li>");
 			$.get($(this).attr('url'), function (data) {
-				let containerDiv = "<span class='addTapPage estimate' id='view_tab_" + pid + "'>" + data + "</span>";
+				let containerDiv = "<span class='addTapPage estimate page' id='view_tab_" + pid + "'>" + data + "</span>";
 				$(".contentsWrap").append(containerDiv).trigger('create');
 				tabMenuFn();
 				estimateH();
@@ -200,6 +201,7 @@ function topMenuClose(){
 
 // 견적관리 페이지 불러올때 꼭 호출해줘야하는 함수!!
 function estimateH(){
+	// var tableCon = $('.estimate .bottomWrap .tableWrap .conWrap');
 	var tableCon = $('.estimate .bottomWrap .tableWrap .conWrap');
 	var pageHeight = $(window).height();
 	var tableConWrapY = tableCon.offset().top;
