@@ -19,113 +19,107 @@
             <div class="gubunWrap">
                 <ul>
                     <li>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="COMP_CD">사업자구분</label>
-                            <select class="label_200" name="COMP_CD" id="COMP_CD" title="사업자구분">
-                                <option value="">ALL</option>
-                            </select>
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="ORDER_COMP_CD">발주사</label>
-                            <select class="label_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="발주사">
-                                <option value="" selected="selected">ALL</option>
-                            </select>
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="DRAWING_NUM">도면번호</label>
-                            <input type="text" class="label_200"name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="ITEM_NM">품명</label>
-                            <input type="text" class="label_200"name="ITEM_NM" id="ITEM_NM" title="품명">
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap right_float">
-                            <button type="button" class="defaultBtn radius blue" id="CONTROL_MANAGE_SEARCH">검색</button>
-                        </span>
-                    </li>
-                    <li>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="CONTROL_NUM">관리번호</label>
-                            <input type="text" class="label_200"name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="ORDER_NUM">발주번호</label>
-                            <input type="text" class="label_200"name="ORDER_NUM" id="ORDER_NUM" title="발주번호">
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="RBRUR">규격</label>
-                            <select class="label_200" name="RBRUR" id="RBRUR" title="규격">
-                                <option value="" selected="selected">ALL</option>
-                            </select>
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="THWOGUDXO">소재형태</label>
-                            <select class="label_200" name="THWOGUDXO" id="THWOGUDXO" title="소재형태">
-                                <option value="">All</option>
-                                <c:forEach var="code" items="${HighCode.H_1004}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
-                        </span>
-                    </li>
-                    <li>
-                        <span class="slt_wrap trans_slt mg-right10">
-                            <select id="daySltd" name="daySltd" title="등록일시">
-                                <option value="" selected="selected">등록일시</option>
-                                <option value="1">-ALL-</option>
-                                <option value="2">-ALL-</option>
-                            </select>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_1" value="today" checked><label for="fr_1001_1">오늘</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_2" value="current_month"><label for="fr_1001_2">현재월</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_3" value="three_months"><label for="fr_1001_3">3개월</label>
-                        </span>
-                        <div class="calendar_wrap">
-                            <span class="calendar_span">
-                                <input type="text" title="달력정보" name="CONTROL_MANAGE_START_DATE" id="CONTROL_MANAGE_START_DATE"><button type="button">달력선택</button>
+                <div class="form-group1">
+                    <div class="group-item">
+                        <label for="COMP_CD">사업자구분</label>
+                        <select name="COMP_CD" id="COMP_CD" title="사업자구분">
+                            <option value="">ALL</option>
+                        </select>
+                    </div>
+                    <div class="group-item">
+                        <label for="ORDER_COMP_CD">발주사</label>
+                        <select name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="발주사">
+                            <option value="" selected="selected">ALL</option>
+                        </select>
+                    </div>
+                    <div class="group-item">
+                        <label for="DRAWING_NUM">도면번호</label>
+                        <input type="text" name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
+                    </div>
+                    <div class="group-item">
+                        <label for="ITEM_NM">품명</label>
+                        <input type="text" name="ITEM_NM" id="ITEM_NM" title="품명">
+                    </div>
+                    <div class="group-item">
+                        <label for="CONTROL_NUM">관리번호</label>
+                        <input type="text" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
+                    </div>
+                    <div class="group-item">
+                        <label for="ORDER_NUM">발주번호</label><input type="text" name="ORDER_NUM" id="ORDER_NUM" title="발주번호">
+                    </div>
+                    <%-- TODO: 규격 --%>
+                    <div class="group-item">
+                        <label for="ORDER_COMP_CD">규격</label>
+                        <select name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="규격">
+                            <option value="" selected="selected">ALL</option>
+                        </select>
+                    </div>
+                    <div class="group-item">
+                        <label for="ORDER_COMP_CD">소재형태</label>
+                        <select name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="소재형태">
+                            <option value="">All</option>
+                            <c:forEach var="code" items="${HighCode.H_1004}">
+                                <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="dateWrap">
+                        <div class="leftSpan">
+                            <span class="slt_wrap">
+                                <select id="daySltd" name="daySltd" title="등록일시">
+                                    <option value="" selected="selected">등록일시</option>
+                                    <option value="1">-ALL-</option>
+                                    <option value="2">-ALL-</option>
+                                </select>
                             </span>
-                            <span class="nbsp">~</span>
-                            <span class="calendar_span">
-                                <input type="text" title="달력정보" name="CONTROL_MANAGE_END_DATE" id="CONTROL_MANAGE_END_DATE" readonly><button type="button">달력선택</button>
+                            <span class="radio_box">
+                                <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_1" value="today" checked><label for="fr_1001_1">오늘</label>
                             </span>
-                            <span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>
+                            <span class="radio_box">
+                                <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_2" value="current_month"><label for="fr_1001_2">현재월</label>
+                            </span>
+                            <span class="radio_box">
+                                <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_3" value="three_months"><label for="fr_1001_3">3개월</label>
+                            </span>
+                            <div class="calendar_wrap">
+                                <span class="calendar_span">
+                                    <input type="text" title="달력정보" name="CONTROL_MANAGE_START_DATE" id="CONTROL_MANAGE_START_DATE"><button type="button">달력선택</button>
+                                </span>
+                                <span class="nbsp">~</span>
+                                <span class="calendar_span">
+<%--                                    <input type="text" title="달력정보" name="CONTROL_MANAGE_END_DATE" id="CONTROL_MANAGE_END_DATE" readonly><button type="button">달력선택</button>--%>
+                                </span>
+                                <span class="chk_box no_txt"><input id="pr_ex" type="checkbox"><label for="pr_ex">선택</label></span>
+                            </div>
                         </div>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="ORDER_COMP_CD">단가</label>
-                            <select class="label_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="단가">
+                        <div class="group-item">
+                            <label for="ORDER_COMP_CD">단가</label>
+                            <select name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="단가">
                                 <option value="" selected="selected">ALL</option>
                             </select>
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="WORK_TYPE">작업형태</label>
-                            <select class="label_200" name="WORK_TYPE" id="WORK_TYPE" title="작업형태">
+                        </div>
+                        <div class="group-item">
+                            <label for="WORK_TYPE">작업형태</label>
+                            <select name="WORK_TYPE" id="WORK_TYPE" title="작업형태">
                                 <option value="">All</option>
                                 <c:forEach var="code" items="${HighCode.H_1033}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
-                        </span>
-                    </li>
-                    <li>
-                        <span class="txt_span pd-right20">Option</span>
-                        <span class="chk_box"><input id="option1" type="checkbox"><label for="option1"> 자재사급</label></span>
-                        <span class="chk_box"><input id="option2" type="checkbox"><label for="option2"> 외주</label></span>
-                        <span class="chk_box"><input id="option3" type="checkbox"><label for="option3"> 未단가</label></span>
-                        <span class="chk_box"><input id="option4" type="checkbox"><label for="option4"> 긴급</label></span>
-                        <span class="chk_box"><input id="option5" type="checkbox"><label for="option5"> part 숨기기</label></span>
+                        </div>
+                    </div>
+                    <div class="group-item-option">
+                        <label for="Option">Option</label>
+                    </div>
+                    <div class="chk_box_area">
+                        <input type="checkbox" id="option1"><label for="option1">자재사급</label>
+                        <input type="checkbox" id="option2"><label for="option2">외주</label>
+                        <input type="checkbox" id="option3"><label for="option3">未단가</label>
+                        <input type="checkbox" id="option4"><label for="option4">긴급</label>
+                        <input type="checkbox" id="option5"><label for="option5">part 숨기기</label>
+                    </div>
+                    <button type="button" class="search_btn" id="CONTROL_MANAGE_SEARCH">검색</button>
+                </div>
                     </li>
                 </ul>
             </div>
@@ -134,67 +128,64 @@
     </div>
     <div class="bottomWrap">
         <div class="hWrap">
-            <div class="d-inline">
-                <button type="button" class="defaultBtn btn-120w" data-toggle="modal" data-target="#CONTROL_MANGE_POPUP">신규
-                    주문 등록
-                </button>
-                <button type="button" class="defaultBtn btn-120w" data-toggle="modal"
-                        data-target="#ESTIMATE_REGISTER_POPUP">견적등록
-                </button>
-                <button type="button" class="defaultBtn btn-120w" id="SPECIFICATION_ON_TRANSACTION">거래명세표</button>
-                <div class="rightSpan">
-                    <button type="button" class="defaultBtn btn-120w" id="ESTIMATE_AUTOMATIC_CALCULATION">견적자동계산</button>
-                    <button type="button" class="defaultBtn btn-120w" id="ESTIMATE_LIST_PRINT">견적List출력</button>
-                    <button type="button" class="defaultBtn btn-120w" id="BARCODE_DRAWING_PRINT">바코드도면 출력</button>
-                    <button type="button" class="defaultBtn btn-120w" id="BARCODE_PRINT">바코드 출력</button>
-                    <button type="button" class="defaultBtn btn-120w" id="LABEL_PRINT">라벨 출력</button>
+            <div class="row">
+                <div class="col-md-6">
+                    <button type="button" class="defaultBtn" data-toggle="modal" data-target="#CONTROL_MANGE_POPUP">신규
+                        주문 등록
+                    </button>
+                    <button type="button" class="defaultBtn" name="CHANGE_STATUS" id="CONFIRMATION"
+                            data-control_status="ORD001" data-control_status_nm="확정">확정
+                    </button>
+                    <button type="button" class="defaultBtn" name="CHANGE_STATUS" id="CANCEL" data-control_status="ORD002"
+                            data-control_status_nm="취소">취소
+                    </button>
+                    <button type="button" class="defaultBtn" name="CHANGE_STATUS" id="TERMINATION"
+                            data-control_status="ORD004" data-control_status_nm="종료">종료
+                    </button>
+                    <button type="button" class="defaultBtn" data-toggle="modal"
+                            data-target="#CONTROL_CLOSE_POPUP">마감
+                    </button>
+                    <button type="button" class="defaultBtn" data-toggle="modal"
+                            data-target="#ESTIMATE_REGISTER_POPUP">견적등록
+                    </button>
+                    <button type="button" class="defaultBtn" id="SPECIFICATION_ON_TRANSACTION">거래명세표</button>
+                </div>
+                <div class="col-md-6 ta-r">
+                    <button type="button" class="defaultBtn" id="ESTIMATE_AUTOMATIC_CALCULATION">견적자동계산</button>
+                    <button type="button" class="defaultBtn" id="ESTIMATE_LIST_PRINT">견적List출력</button>
+                    <button type="button" class="defaultBtn" id="BARCODE_DRAWING_PRINT">바코드도면 출력</button>
+                    <button type="button" class="defaultBtn" id="BARCODE_PRINT">바코드 출력</button>
+                    <button type="button" class="defaultBtn" id="LABEL_PRINT">라벨 출력</button>
                 </div>
             </div>
-            <div class="d-inline mg-top10">
-                <button type="button" class="defaultBtn btn-120w" name="CHANGE_STATUS" id="CONFIRMATION"
-                        data-control_status="ORD001" data-control_status_nm="확정">확정
-                </button>
-                <button type="button" class="defaultBtn btn-120w" name="CHANGE_STATUS" id="CANCEL" data-control_status="ORD002"
-                        data-control_status_nm="취소">취소
-                </button>
-                <button type="button" class="defaultBtn btn-120w" name="CHANGE_STATUS" id="TERMINATION"
-                        data-control_status="ORD004" data-control_status_nm="종료">종료
-                </button>
-                <button type="button" class="defaultBtn btn-120w" data-toggle="modal"
-                        data-target="#CONTROL_CLOSE_POPUP">마감
-                </button>
-                <div class="rightSpan">
-                    <button type="button" class="defaultBtn btn-120w" id="DRAWING_REGISTRATION">도면 등록</button>
-                    <button type="button" class="defaultBtn btn-120w" id="DRAWING_CHANGE">도면변경(Rev. up)</button>
-                    <button type="button" class="defaultBtn btn-120w" id="DRAWING_VIEW">도면 View</button>
-                    <button type="button" class="defaultBtn btn-120w" id="DRAWING_PRINT">도면 출력</button>
-                    <button type="button" class="defaultBtn btn-120w red" id="CONTROL_MANAGE_DELETE">삭제</button>
-                    <button type="button" class="defaultBtn btn-120w green" id="CONTROL_MANAGE_SAVE">저장</button>
+            <div class="row mt-3">
+                <div class="col-md-6">
+                        <span class="slt_wrap namePlusSlt">
+                            <label for="SUPPLY_UNIT_COST_APPLY">공급단가적용</label>
+                            <select id="SUPPLY_UNIT_COST_APPLY" title="공급단가적용">
+                                <option></option>
+                            </select>
+                        </span>
+                </div>
+                <div class="col-md-6 ta-r">
+                    <button type="button" class="defaultBtn" id="DRAWING_REGISTRATION">도면 등록</button>
+                    <button type="button" class="defaultBtn" id="DRAWING_CHANGE">도면변경(Rev. up)</button>
+                    <button type="button" class="defaultBtn grayGra" id="DRAWING_VIEW">도면 View</button>
+                    <button type="button" class="defaultBtn" id="DRAWING_PRINT">도면 출력</button>
+                    <button type="button" class="defaultBtn blueGra" id="CONTROL_MANAGE_SAVE">Save</button>
+                    <button type="button" class="defaultBtn yelllowGra" id="CONTROL_MANAGE_DELETE">Delete</button>
                 </div>
             </div>
         </div>
         <div class="tableWrap">
             <span class="buttonWrap">
-                <div class="d-inline">
-                    <button type=" button" class="smallBtn yellow" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_ALL">전체모드</button>
-                    <button type="button" class="smallBtn yellow" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_ESTIMATE">견적관련</button>
-                    <button type="button" class="smallBtn yellow" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_QUALITY">품질관련</button>
-                    <button type="button" class="smallBtn yellow" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_CLOSE">마감관련</button>
-                    <div class="right_float">
-                        <span class="slt_wrap namePlusSlt">
-                        <label for="SUPPLY_UNIT_COST_APPLY">공급단가적용</label>
-                        <select id="SUPPLY_UNIT_COST_APPLY" title="공급단가적용">
-                            <option></option>
-                        </select>
-                        </span>
-                    </div>
-                </div>
+                <button type="button" class="smallBtn" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_ALL">전체모드</button>
+                <button type="button" class="smallBtn blue" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_ESTIMATE">견적관련</button>
+                <button type="button" class="smallBtn blue" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_QUALITY">품질관련</button>
+                <button type="button" class="smallBtn blue" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_CLOSE">마감관련</button>
             </span>
             <div class="conWrap">
                 <div id="CONTROL_MANAGE_GRID"></div>
-                <div class="right_sort">
-                    전체 조회 건수 (Total : <span id="CONTROL_MANAGE_RECORDS" style="color: #00b3ee">0</span>)
-                </div>
             </div>
         </div>
     </div>
@@ -558,7 +549,7 @@
             {
                 title: '대칭', align: 'center', colModel: [
                     {title: '원칭', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY', editable: true},
-                    {title: '대칭', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY', editable: true}
+                    {title: '대칭', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY', editable: true},
                 ]
             },
             {
@@ -673,7 +664,7 @@
             {title: '등록/업데이트<br>일시', width: 120, dataType: 'string', dataIndx: 'STATUS_DT'}
         ];
         let obj = {
-            height: '95%',
+            height: 640,
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             resizable: true,
@@ -690,11 +681,6 @@
                 }
             },
             editModel: {clicksToEdit: 1},
-            complete: function (event, ui) {
-                let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
-
-                $('#CONTROL_MANAGE_RECORDS').html(data.length);
-            },
             cellClick: function (event, ui) {
                 console.group('cellClick');
                 console.log(ui.rowData);
@@ -781,11 +767,6 @@
                     $orderManagementGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                 }
                 console.groupEnd();
-            },
-            columnResize: function (event, ui) {
-                cosole.count();
-                console.log(event);
-                console.log(ui);
             }
         };
         let $orderRegisterGrid;

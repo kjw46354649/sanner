@@ -21,142 +21,116 @@
                     <li>
                         <span class="slt_wrap">
                             <label class="label_100" for="COMP_CD">사업자구분</label>
-                            <select class="label_200" name="COMP_CD" id="COMP_CD" title="사업자구분">
+                            <select class="wd_200" name="COMP_CD" id="COMP_CD" title="사업자구분">
                                 <option value="">ALL</option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="ORDER_COMP_CD">발주사</label>
-                            <select class="label_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="발주사">
+                            <select class="wd_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="발주사">
                                 <option value="" selected="selected">ALL</option>
                             </select>
                         </span>
+                        <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="DRAWING_NUM">도면번호</label>
-                            <input type="text" class="label_200"name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
+                            <input type="text" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="ITEM_NM">품명</label>
-                            <input type="text" class="label_200"name="ITEM_NM" id="ITEM_NM" title="품명">
+                            <input type="text" class="wd_200" name="ITEM_NM" id="ITEM_NM" title="품명">
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" class="defaultBtn radius blue" id="CLOSE_HISTORY_SEARCH">검색</button>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="ipu_wrap">
+                            <label class="label_100" for="CONTROL_NUM">관리번호</label>
+                            <input type="text" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
-                            <label for="CONTROL_NUM">관리번호</label>
-                        <input type="text" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
+                            <label class="label_100" for="ORDER_NUM">발주번호</label>
+                            <input type="text" class="wd_200" name="ORDER_NUM" id="ORDER_NUM" title="발주번호">
                         </span>
                         <span class="gubun"></span>
-
+                        <span class="slt_wrap">
+                            <label class="label_100" for="RBRUR">규격</label>
+                            <select class="wd_200" name="RBRUR" id="RBRUR" title="규격">
+                                <option value="" selected="selected">ALL</option>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <div class="ipu_wrap">
+                            <label class="label_100" for="MODULE_NM">모듈명</label>
+                            <input type="text" class="wd_200" name="MODULE_NM" id="MODULE_NM">
+                        </div>
+                    </li>
+                    <li>
+                        <div class="slt_wrap">
+                            <label class="label_100" for="QUALITY_SEQ">품질Seq.</label>
+                            <select class="wd_200" name="QUALITY_SEQ" id="QUALITY_SEQ">
+                                <option value="">All</option>
+                            </select>
+                        </div>
+                        <span class="gubun"></span>
+                        <div class="ipu_wrap">
+                            <label class="label_100" for="ORDER_NUMBER">INV No.</label>
+                            <input type="text" class="wd_200" name="ORDER_NUMBER" id="ORDER_NUMBER">
+                        </div>
+                        <span class="gubun"></span>
+                        <div class="slt_wrap">
+                            <label class="label_100" for="UNIT_PRICE">단가</label>
+                            <select class="wd_200" id="UNIT_PRICE">
+                                <option></option>
+                            </select>
+                            <%--                        <label class="label_100" for="UNIT_PRICE_1"></label>--%>
+                            <%--                        <input type="text" class="wd_200" id="UNIT_PRICE_1">--%>
+                        </div>
+                        <span class="gubun"></span>
+                        <div class="ipu_wrap">
+                            <label class="label_100" for="AMOUNT_SUM">금액합산</label>
+                            <input type="text" class="wd_200" name="AMOUNT_SUM" id="AMOUNT_SUM" readonly>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="slt_wrap">
+                            <label class="label_100" for="CLOSE_YEAR">마감/종료 월</label>
+                            <select class="wd_100" class="two" name="CLOSE_YEAR" id="CLOSE_YEAR"></select>
+                            <select class="wd_100" class="two" name="CLOSE_MONTH" id="CLOSE_MONTH"></select>
+                        </div>
+                        <span class="gubun"></span>
+                        <span class="txt_span pd-right20">조회 Option</span>
+                        <span class="chk_box"><input type="checkbox" name="DEADLINE" id="DEADLINE"><label for="DEADLINE">마감</label></span>
+                        <span class="chk_box"><input type="checkbox" name="END" id="END"><label for="END">종료</label></span>
+                        <span class="gubun"></span>
+                        <span class="txt_span pd-right20">항목 Option</span>
+                        <span class="chk_box"><input type="checkbox" name="PART_NUM" id="PART_NUM"><label for="PART_NUM">Part</label></span>
+                        <span class="chk_box"><input type="checkbox" name="ORDER_NUM" id="ORDER_NUM"><label for="ORDER_NUM">발주번호</label></span>
                     </li>
                 </ul>
-                <div class="form-group1">
-                    <div class="group-item">
-                        <label for="COMP_CD">사업자구분</label>
-                        <select name="COMP_CD" id="COMP_CD" title="사업자구분">
-                            <option value="">ALL</option>
-                        </select>
-                    </div>
-                    <div class="group-item">
-                        <label for="ORDER_COMP_CD">발주사</label>
-                        <select name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="발주사">
-                            <option value="" selected="selected">ALL</option>
-                        </select>
-                    </div>
-                    <div class="group-item">
-                        <label for="DRAWING_NUM">도면번호</label>
-                        <input type="text" name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
-                    </div>
-                    <div class="group-item">
-                        <label for="ITEM_NM">품명</label>
-                        <input type="text" name="ITEM_NM" id="ITEM_NM" title="품명">
-                    </div>
-                    <div class="group-item">
-                        <label for="CONTROL_NUM">관리번호</label>
-                        <input type="text" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
-                    </div>
-                    <div class="group-item">
-                        <label for="ORDER_NUM">발주번호</label>
-                        <input type="text" name="ORDER_NUM" id="ORDER_NUM" title="발주번호">
-                    </div>
-                    <%-- TODO: 규격 --%>
-                    <div class="group-item">
-                        <label for="ORDER_COMP_CD">규격</label>
-                        <select name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="규격">
-                            <option value="" selected="selected">ALL</option>
-                        </select>
-                    </div>
-                    <div class="group-item">
-                        <label for="MODULE_NM">모듈명</label>
-                        <input type="text" name="MODULE_NM" id="MODULE_NM">
-                    </div>
-                    <div class="group-item">
-                        <label for="QUALITY_SEQ">품질Seq.</label>
-                        <select name="QUALITY_SEQ" id="QUALITY_SEQ">
-                            <option value="">All</option>
-                        </select>
-                    </div>
-                    <div class="group-item">
-                        <label for="ORDER_NUMBER">INV No.</label>
-                        <input type="text" name="ORDER_NUMBER" id="ORDER_NUMBER">
-                    </div>
-                    <div class="group-item">
-                        <label for="UNIT_PRICE">단가</label>
-                        <select id="UNIT_PRICE">
-                            <option></option>
-                        </select>
-                        <%--                        <label for="UNIT_PRICE_1"></label>--%>
-                        <%--                        <input type="text" id="UNIT_PRICE_1">--%>
-                    </div>
-                    <div class="group-item">
-                        <label for="AMOUNT_SUM">금액합산</label>
-                        <input type="text" name="AMOUNT_SUM" id="AMOUNT_SUM" readonly>
-                    </div>
-                    <div class="group-item">
-                        <label for="CLOSE_YEAR">마감/종료 월</label>
-                        <select class="two" name="CLOSE_YEAR" id="CLOSE_YEAR"></select>
-                        <select class="two" name="CLOSE_MONTH" id="CLOSE_MONTH"></select>
-                    </div>
-                    <div class="group-item-option">
-                        <label>조회 Option</label>
-                    </div>
-                    <div class="chk_box_area">
-                        <input type="checkbox" name="DEADLINE" id="DEADLINE"><label for="DEADLINE">마감</label>
-                        <input type="checkbox" name="END" id="END"><label for="END">종료</label>
-                    </div>
-                    <div class="group-item-option">
-                        <label>항목 Option</label>
-                    </div>
-                    <div class="chk_box_area">
-                        <input type="checkbox" name="PART_NUM" id="PART_NUM"><label for="PART_NUM">Part</label>
-                        <input type="checkbox" name="ORDER_NUM" id="ORDER_NUM"><label for="ORDER_NUM">발주번호</label>
-                    </div>
-                    <%--                <div class="form-group col-md-3 text-right">--%>
-                    <%--                    <div type="submit" class="btn btn-success btn-sm btn-default" id="CLOSE_HISTORY_SEARCH">--%>
-                    <%--                        Search--%>
-                    <%--                    </div>--%>
-                    <%--                </div>--%>
-                    <button type="button" class="search_btn" id="CLOSE_HISTORY_SEARCH">검색</button>
-                </div>
             </div>
         </form>
         <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
     <div class="bottomWrap">
         <div class="hWrap">
-            <div class="row">
-                <div class="col-md-6">
-                    <button type="button" class="defaultBtn" id="DEADLINE_OR_END_CANCLE">마감/종료 취소</button>
-                </div>
-                <div class="col-md-6 ta-r">
-                    <button type="button" class="defaultBtn grayGra" id="DRAWING_VIEW">도면 View</button>
-                    <button type="button" class="defaultBtn blueGra" id="SAVE">Save</button>
-                </div>
+            <button type="button" class="defaultBtn btn-120w" id="DEADLINE_OR_END_CANCLE">마감/종료 취소</button>
+            <div class="rightSpan">
+                <button type="button" class="defaultBtn btn-120w" id="DRAWING_VIEW">도면 View</button>
+                <button type="button" class="defaultBtn btn-120w green" id="CONTROL_CLOSE_HISTORY_SAVE">저장</button>
             </div>
         </div>
         <div class="tableWrap">
-            <div class="conMainWrap">
+            <div class="conWrap">
                 <div id="CLOSE_HISTORY_GRID"></div>
+                <div class="right_sort">
+                    전체 조회 건수 (Total : <span id="CLOSE_HISTORY_RECORDS" style="color: #00b3ee">0</span>)
+                </div>
             </div>
         </div>
     </div>
@@ -403,28 +377,26 @@
             {title: '등록/업데이트<br>일시', minWidth: 100, dataType: 'string', dataIndx: 'STATUS_DT', colModel: []}
         ];
         const obj = {
-            height: 630,
+            height: '95%',
             collapsible: false,
             resizable: true,
             showTitle: false,
             numberCell: {title: 'No.'},
             // scrollModel: {autoFit: true},
             trackModel: {on: true},
-            columnTemplate: {
-                align: 'center',
-                halign: 'center',
-                hvalign: 'center', //to vertically center align the header cells.
-                editable: false
-            },
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
             colModel: colModel,
-            toolbar: toolbar,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: postData,
-                recIndx: 'ROWNUM',
+                postData: postData, recIndx: 'ROWNUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            complete: function () {
+                let data = $closeHistoryGrid.pqGrid('option', 'dataModel.data');
+
+                $('#CLOSE_HISTORY_RECORDS').html(data.length);
             },
             cellClick: function (event, ui) {
                 if (ui.dataIndx === 'PART_NUM' && ui.rowData.WORK_NM === '가공조립') {
@@ -525,7 +497,7 @@
 
         });
 
-        $('#SAVE').on('click', function () {
+        $('#CONTROL_CLOSE_HISTORY_SAVE').on('click', function () {
             const updateQueryList = ['orderMapper.updateControlStatus', 'orderMapper.insertControlProgress'];
 
             fnModifyPQGrid($closeHistoryGrid, [], updateQueryList);
