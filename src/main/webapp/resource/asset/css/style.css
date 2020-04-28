@@ -70,7 +70,6 @@
     filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000);
     margin-bottom: 15px;     position: relative;}
 .estimate .topWrap .gubunWrap { border-right: 1px solid #e5e5e5; overflow: hidden; width: 97%; box-sizing: border-box; padding: 5px 15px; height: 47px; }
-.estimate .topWrap .basicWrap { border-right: 1px solid #e5e5e5; overflow: hidden; width: 100%; box-sizing: border-box; padding: 5px 15px; height: 148px; }
 .estimate .topWrap .gubunWrap ul { font-size: 0; }
 .estimate .topWrap .gubunWrap ul li { padding: 6px 0; }
 .estimate .topWrap .gubunWrap ul li *{ }
@@ -79,6 +78,15 @@
 .estimate .topWrap .gubunWrap ul li label { }
 .estimate .topWrap .gubunWrap ul li select { }
 .estimate .topWrap .gubunWrap ul li input { }
+.estimate .topWrap .basicWrap { border-right: 1px solid #e5e5e5; overflow: hidden; width: 100%; box-sizing: border-box; padding: 5px 15px; height: 148px; }
+.estimate .topWrap .basicWrap ul { font-size: 0; }
+.estimate .topWrap .basicWrap ul li { padding: 6px 0; }
+.estimate .topWrap .basicWrap ul li *{ }
+.estimate .topWrap .basicWrap ul li:nth-child(4n) { padding-right: 0; }
+.estimate .topWrap .basicWrap ul li:nth-child(4n+1) { }
+.estimate .topWrap .basicWrap ul li label { }
+.estimate .topWrap .basicWrap ul li select { }
+.estimate .topWrap .basicWrap ul li input { }
 .estimate .topWrap .dateWrap .leftSpan { display: inline-block; }
 .estimate .topWrap .dateWrap .slt_wrap { padding-right: 19px; }
 .estimate .topWrap .dateWrap .slt_wrap select { }
@@ -115,7 +123,8 @@
 .estimate .bottomWrap .tableWrap .buttonWrap { padding: 5px 0; display: block; }
 .estimate .bottomWrap .tableWrap .conWrap { }
 .estimate .bottomWrap .tableWrap .conWrap img { width: 100%; height: 100%; }
-
+.estimate .bottomWrap .tableWrap .conWrap .popup .resultWrap .left_sort .col-md-6 { position: relative; min-height: 1px; padding-right: 15px; padding-left: 0px;}
+.estimate .bottomWrap .tableWrap .conWrap .popup .resultWrap .left_sort .col-sm-6 { position: relative; min-height: 1px; padding-right: 15px; padding-left: 0px;}
 /* MCT */
 .mct .topWrap .hWrap { border-bottom: 1px solid #e2e2e2; font-size: 0; position: relative; }
 .mct .topWrap .hWrap * { vertical-align: middle; }
