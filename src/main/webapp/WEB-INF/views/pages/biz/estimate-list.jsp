@@ -73,33 +73,30 @@
         <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
     <div class="bottomWrap">
-        <div class="buttonWrap">
-            <div class="left_sort">
-                <button type="button" class="defaultBtn" id="btnEstimateListNewEstimate">견적서 신규 작성</button>
-                <button type="button" class="defaultBtn" id="btnEstimateListNewVersion">차수 생성</button>
-                <span class="chk_box"><input id="chkEstimateListDetail" type="checkbox"><label for="chkEstimateListDetail"> 견적상세요건</label></span>
-                <div class="right_float">
-                    <span class="slt_wrap namePlusSlt">
-                        <label for="selEstimateListExcel">견적서 추출</label>
-                        <select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출">
-                        </select>
-                    </span>
-                    <button type="button" class="defaultBtn grayGra" id="btnEstimateListDrawView">도면 보기</button>
-                    <button type="button" class="defaultBtn yelllowGra" id="btnEstimateListDelete">Delete</button>
-                    <button type="button" class="defaultBtn blueGra" id="btnEstimateListSave">Save</button>
-                </div>
+        <div class="hWrap">
+            <button type="button" class="defaultBtn" id="btnEstimateListNewEstimate">견적서 신규 작성</button>
+            <button type="button" class="defaultBtn" id="btnEstimateListNewVersion">차수 생성</button>
+            <span class="chk_box mg-left15"><input id="chkEstimateListDetail" type="checkbox"><label for="chkEstimateListDetail"> 견적상세요건</label></span>
+            <div class="rightSpan">
+                <button type="button" class="defaultBtn yelllowGra" id="btnEstimateListDelete">Delete</button>
+                <button type="button" class="defaultBtn blueGra" id="btnEstimateListSave">Save</button>
             </div>
         </div>
         <div class="tableWrap">
-            <span class="buttonWrap">
-                <button type="button" class="smallBtn">견적정보</button>
-                <button type="button" class="smallBtn blue">금액정보</button>
-            </span>
-            <div class="conMainWrap buttonWrap">
+            <div class="buttonWrap">
+                <span class="slt_wrap">
+                    <button type="button" class="smallBtn mg-right5">견적정보</button>
+                    <button type="button" class="smallBtn blue">금액정보</button>
+                </span>
+                <span class="slt_wrap namePlusSlt right_float">
+                    <label for="selEstimateListExcel">견적서 추출</label>
+                    <select class="mg-right25" id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출"></select>
+                    <button type="button" class="defaultBtn grayGra" id="btnEstimateListDrawView">도면 보기</button>
+                </span>
+            </div>
+            <div class="conMainWrap">
                 <div id="estimate_master_top_grid" class="jqx-refresh"></div>
             </div>
-            <span class="buttonWrap">
-            </span>
             <div class="conWrap">
                 <div id="estimate_master_bot_grid" class="jqx-refresh"></div>
             </div>
@@ -341,7 +338,7 @@
         ];
 
         estimateMasterTopGrid.pqGrid({
-            height: 300,
+            width: '100%', height: 300,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'EST_SEQ',
                 url: "/paramQueryGridSelect",
@@ -361,8 +358,7 @@
             trackModel: {on: true},
             resizable: true,
             colModel: estimateMasterTopColModel,
-            toolbar: false,
-            title: false,
+            showTitle: false,
             strNoRows: g_noData,
             complete: function(event, ui) {
                 estimateMasterTopGrid.pqGrid('setSelection', {rowIndx:0} );
@@ -409,7 +405,7 @@
 
         function selectEstimateBotList(EST_SEQ) {
             estimateMasterBotGrid.pqGrid({
-                height: 300,
+                width: '100%', height: '100%',
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
                     url: "/paramQueryGridSelect",
@@ -428,8 +424,7 @@
                 trackModel: {on: true},
                 resizable: true,
                 colModel: estimateMasterBotColModel,
-                toolbar: false,
-                title: false,
+                showTitle: false,
                 strNoRows: g_noData
             });
 

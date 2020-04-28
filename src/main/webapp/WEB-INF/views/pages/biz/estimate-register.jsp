@@ -50,49 +50,56 @@
     <div class="topWrap">
         <form class="form-inline" id="estimate_register_info_form" name="estimate_register_info_form" role="form">
             <input type="hidden" id="queryId" name="queryId" value="">
-            <div class="basicWrap">
+            <div class="gubunWrap">
                 <ul>
                     <li>
-                        <label>신규 발주 현황</label>
-                        <span class="buttonWrap">
+                        <div class="right_float">
                             <button type="button" class="defaultBtn grayGra" id="btn_estimate_register_save">Save</button>
                             <button type="button" class="defaultBtn yelllowGra" id="btn_estimate_register_submit">Submit</button>
+                        </div>
+                        <span class="slt_wrap">
+                            <label for="ORDER_COMP_CD" class="label_100">발주사</label>
+                            <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사" class="wd_200">
+                            </select>
                         </span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap"><label for="EST_TITLE" class="label_100">제목</label><input type="text" name="EST_TITLE" id="EST_TITLE" class="wd_500" value="" title="제목"></span>
+                        <span class="gubun"></span>
                     </li>
                     <li>
-                        <span class="slt_wrap" class="wd_200">
-                            <label for="ORDER_COMP_CD">발주사</label>
-                            <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사">
+                        <span class="slt_wrap">
+                            <label for="ORDER_STAFF_SEQ" class="label_100">구매 담당자 </label>
+                            <select id="ORDER_STAFF_SEQ" name="ORDER_STAFF_SEQ" title="구매 담당자" class="wd_200">
                             </select>
                         </span>
                         <span class="slt_wrap">
-                            <span class="ipu_wrap"><label for="EST_TITLE">제목</label><input type="text" name="EST_TITLE" id="EST_TITLE" class="wd_200" value="" title="제목"></span>
-                        </span>
-                        <span class="slt_wrap">
-                            <label for="ORDER_STAFF_SEQ">구매 담당자 </label>
-                            <select id="ORDER_STAFF_SEQ" name="ORDER_STAFF_SEQ" title="구매 담당자">
+                        <span class="gubun"></span>
+                            <label for="COMP_CD" class="label_100">사업자</label>
+                            <select id="COMP_CD" name="COMP_CD" title="사업자" class="wd_200">
                             </select>
                         </span>
+                        <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label for="COMP_CD">사업자</label>
-                            <select id="COMP_CD" name="COMP_CD" title="사업자">
+                            <label for="EST_USER_ID" class="label_100">견적 담당자</label>
+                            <select id="EST_USER_ID" name="EST_USER_ID" title="견적 담당자" class="wd_200">
                             </select>
                         </span>
-                        <span class="slt_wrap">
-                            <label for="EST_USER_ID">견적 담당자</label>
-                            <select id="EST_USER_ID" name="EST_USER_ID" title="견적 담당자">
-                            </select>
-                        </span>
+                        <span class="gubun"></span>
                     </li>
                     <li>
-                        <span class="ipu_wrap"><label for="EST_NUM">견적번호 (차수)</label><input type="text" name="EST_NUM" id="EST_NUM" class="wd_200" value="" title="견적번호 (차수)" readonly></span>
-                        <span class="ipu_wrap"><label for="DTL_AMOUNT">견적금액 계</label><input type="text" name="DTL_AMOUNT" id="DTL_AMOUNT" class="wd_200" value="" title="견적금액 계" readonly></span>
-                        <span class="ipu_wrap"><label for="INSERT_DT">업데이트 일시</label><input type="text" name="INSERT_DT" id="INSERT_DT" class="wd_200" value="" title="업데이트 일시" readonly></span>
-                        <span class="ipu_wrap"><label for="SEND_DT">회신일시</label><input type="text" name="SEND_DT" id="SEND_DT" class="wd_200" value="" title="회신일시" readonly></span>
+                        <span class="ipu_wrap"><label for="EST_NUM" class="label_100">견적번호 (차수)</label><input type="text" name="EST_NUM" id="EST_NUM" class="wd_200" value="" title="견적번호 (차수)" readonly></span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap"><label for="DTL_AMOUNT" class="label_100">견적금액 계</label><input type="text" name="DTL_AMOUNT" id="DTL_AMOUNT" class="wd_200" value="" title="견적금액 계" readonly></span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap"><label for="INSERT_DT" class="label_100">업데이트 일시</label><input type="text" name="INSERT_DT" id="INSERT_DT" class="wd_200" value="" title="업데이트 일시" readonly></span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap"><label for="SEND_DT" class="label_100">회신일시</label><input type="text" name="SEND_DT" id="SEND_DT" class="wd_200" value="" title="회신일시" readonly></span>
+                        <span class="gubun"></span>
                     </li>
                 </ul>
             </div>
         </form>
+        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
     <div class="bottomWrap">
         <div class="hWrap">
@@ -101,9 +108,9 @@
                 <button type="button" class="defaultBtn yelllowGra" id="btnEstimateRegisterDelete">Delete</button>
                 <button type="button" class="defaultBtn yelllowGra" id="btnEstimateRegisterEstimateListExcel">견적List 출력</button>
             </span>
-            <span class="chk_box"><input id="chkEstimateRegisterDetail" type="checkbox"><label for="chkEstimateRegisterDetail"> 견적상세요건</label></span>
+            <span class="chk_box mg-left15"><input id="chkEstimateRegisterDetail" type="checkbox"><label for="chkEstimateRegisterDetail"> 견적상세요건</label></span>
             <div class="rightSpan">
-                <span class="slt_wrap namePlusSlt">
+                <span class="slt_wrap namePlusSlt mg-right25">
                     <label for="selEstimateRegisterCalculateApply">계산견적적용</label>
                     <select id="selEstimateRegisterCalculateApply" name="selEstimateRegisterCalculateApply" title="계산견적적용">
                         <option>Select</option>
@@ -111,7 +118,7 @@
                         <option>20%</option>
                     </select>
                 </span>
-                <span class="slt_wrap namePlusSlt">
+                <span class="slt_wrap namePlusSlt mg-right25">
                     <label for="selEstimateListExcel">견적서 추출</label>
                     <select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출">
                     </select>
@@ -123,7 +130,7 @@
             </div>
         </div>
         <div class="tableWrap">
-            <div class="conMainWrap buttonWrap">
+            <div class="conWrap">
                 <div id="estimate_register_top_grid" class="jqx-refresh"></div>
             </div>
             <div class="lookUp">
@@ -131,19 +138,17 @@
                     <span class="subTit">메일내용</span>
                     <textarea class="col-md-12 col-sm-12" id="EMAIL_CONTENT" name="EMAIL_CONTENT"></textarea>
                 </div>
-                <div class="conWrap">
-                    <div class="popup">
-                        <div class="resultWrap">
-                            <div class="leftWrap">
-                                <h3>메일수신처</h3>
-                                <div class="conMainWrap buttonWrap">
-                                    <div id="estimate_register_bot_grid" class="jqx-refresh"></div>
-                                </div>
+                <div class="popup">
+                    <div class="resultWrap">
+                        <div class="leftWrap">
+                            <h3>메일수신처</h3>
+                            <div class="conMainWrap">
+                                <div id="estimate_register_bot_grid" class="jqx-refresh"></div>
                             </div>
-                            <div class="rightWrap">
-                                <h3>첨부파일</h3>
+                        </div>
+                        <div class="rightWrap">
+                            <h3>첨부파일</h3>
 
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -324,7 +329,7 @@
         ];
 
         estimateRegisterTopGrid.pqGrid({
-            height: 200,
+            height: 400,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
                 url: "/paramQueryGridSelect",

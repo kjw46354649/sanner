@@ -192,6 +192,9 @@
             </span>
             <div class="conWrap">
                 <div id="CONTROL_MANAGE_GRID"></div>
+                <div class="right_sort">
+                    전체 조회 건수 (Total : <span id="CONTROL_MANAGE_RECORDS" style="color: #00b3ee">0</span>)
+                </div>
             </div>
         </div>
     </div>
@@ -670,7 +673,7 @@
             {title: '등록/업데이트<br>일시', width: 120, dataType: 'string', dataIndx: 'STATUS_DT'}
         ];
         let obj = {
-            height: 640,
+            height: '95%',
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             resizable: true,
@@ -687,6 +690,11 @@
                 }
             },
             editModel: {clicksToEdit: 1},
+            complete: function (event, ui) {
+                let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
+
+                $('#CONTROL_MANAGE_RECORDS').html(data.length);
+            },
             cellClick: function (event, ui) {
                 console.group('cellClick');
                 console.log(ui.rowData);
@@ -773,6 +781,11 @@
                     $orderManagementGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                 }
                 console.groupEnd();
+            },
+            columnResize: function (event, ui) {
+                cosole.count();
+                console.log(event);
+                console.log(ui);
             }
         };
         let $orderRegisterGrid;
