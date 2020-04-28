@@ -1056,7 +1056,7 @@
 
         let companyEtcFile = $("#common_formdata_multi_upload_form").find("#click_singfile_chose_btn");
         companyEtcFile.trigger("click");
-        companyEtcFile.change(function () {
+        companyEtcFile.unbind().change(function () {
             var input = $(this);
             var files = input.get(0).files;
             if (files.length > 0) {
@@ -1065,6 +1065,7 @@
                     formData.append("file" + i, files[i]);
                 }
                 fnFormDataFileUploadAjax(function (data) {
+                    input.val('');
                     let fileInfo = data.fileUploadList[0];
                     $grid.pqGrid("updateRow", { rowIndx: rowIndx , row: { [rowTarget]: fileInfo.GFILE_SEQ } });
 
