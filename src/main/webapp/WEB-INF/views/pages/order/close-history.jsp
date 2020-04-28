@@ -17,6 +17,39 @@
         <form class="form-inline" id="CLOSE_HISTORY_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="selectCloseHistoryList">
             <div class="gubunWrap">
+                <ul>
+                    <li>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="COMP_CD">사업자구분</label>
+                            <select class="label_200" name="COMP_CD" id="COMP_CD" title="사업자구분">
+                                <option value="">ALL</option>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="ORDER_COMP_CD">발주사</label>
+                            <select class="label_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="발주사">
+                                <option value="" selected="selected">ALL</option>
+                            </select>
+                        </span>
+                        <span class="ipu_wrap">
+                            <label class="label_100" for="DRAWING_NUM">도면번호</label>
+                            <input type="text" class="label_200"name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap">
+                            <label class="label_100" for="ITEM_NM">품명</label>
+                            <input type="text" class="label_200"name="ITEM_NM" id="ITEM_NM" title="품명">
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap">
+                            <label for="CONTROL_NUM">관리번호</label>
+                        <input type="text" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
+                        </span>
+                        <span class="gubun"></span>
+
+                    </li>
+                </ul>
                 <div class="form-group1">
                     <div class="group-item">
                         <label for="COMP_CD">사업자구분</label>
