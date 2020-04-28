@@ -24,7 +24,7 @@
                         <div class="depth2">
                             <ul>
                                 <li><a href="#" url="/static/biz/estimate-list" tname="견적관리" pid="100011">견적관리</a></li>
-<%--                                <li><a href="#" url="/static/biz/estimate-register" tname="견적작성" pid="100012">견적작성</a></li>--%>
+                                <li><a href="#" url="/static/biz/estimate-register" tname="견적작성" pid="100012">견적작성</a></li>
                             </ul>
                         </div>
                     </li>
