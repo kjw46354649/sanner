@@ -10,7 +10,7 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<div class="page estimate">
+<div class="page estimate machineWrap">
     <div class="topWrap">
         <form class="form-inline" id="machine_manage_search_form" name="machine_manage_search_form" role="form">
             <input type="hidden" id="queryId" name="queryId" value="machine.selectMachineList">
@@ -60,7 +60,7 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                              <label for="SEL_DAY_TYPE" class="label_100">날짜조회</label>
-                            <select id="SEL_DAY_TYPE" name="SEL_DAY_TYPE" title="날짜조회" class="wd_200">
+                            <select id="SEL_DAY_TYPE" name="SEL_DAY_TYPE" title="날짜조회" class="wd_100">
                                 <option value="1">구입시기</option>
 <%--                                <option value="2">정비일시</option>--%>
 <%--                                <option value="3">최근종료일시</option>--%>
@@ -95,20 +95,20 @@
             </div>
         </div>
 
-     <div class="tableWrap" id="div_tabs">
-        <ul class="smallTabMenu1">
-            <li class="active"><a href="#_TAB1" data-toggle="tab" aria-expanded="true">가공장비</a></li>
-            <li><a href="#_TAB2" data-toggle="tab" aria-expanded="false">기타장비</a></li>
-        </ul>
-         <div class="tab-content">
-             <ul class="active conWrap" id="_TAB1">
-                     <div id="machine_manage_current_grid"></div>
-             </ul>
-             <ul class="conWrap" id="_TAB2">
-                     <div id="machine_manage_etc_grid"></div>
-             </ul>
-         </div>
-    </div>
+        <div class="tableWrap" id="div_tabs">
+            <ul class="smallTabMenuTabs">
+                <li class="active"><a href="#_TAB1" data-toggle="tab" aria-expanded="true">가공장비</a></li>
+                <li><a href="#_TAB2" data-toggle="tab" aria-expanded="false">기타장비</a></li>
+            </ul>
+             <div class="tab-content">
+                 <ul class="active conWrap" id="_TAB1">
+                         <div id="machine_manage_current_grid"></div>
+                 </ul>
+                 <ul class="conWrap" id="_TAB2">
+                         <div id="machine_manage_etc_grid"></div>
+                 </ul>
+             </div>
+        </div>
 
 
 <%--        <div class="tableWrap">--%>
@@ -288,13 +288,13 @@
                 <div class="list98">
                     <div class="tableWrap" id="div_tabs2">
 
-                        <ul class="smallTabMenu1">
+                        <ul class="smallTabMenuTabs">
                             <li class="active" id="_TAB3_TITLE"><a href="#_TAB3" data-toggle="tab" aria-expanded="true">작동로그</a></li>
                             <li id="_TAB4_TITLE"><a href="#_TAB4" data-toggle="tab" aria-expanded="false">정비이력</a></li>
-                            <span class="rightGridWrap">
+                            <div class="right_sort">
                             <button type="button" id="addHistoryBtn" class="defaultBtn radius ">Add</button>
                             <button type="button" id="deleteHistoryBtn" class="defaultBtn radius red ">Delete</button>
-                            </span>
+                            </div>
                         </ul>
 
                         <div class="tab-content">
@@ -1056,7 +1056,7 @@
 
         let companyEtcFile = $("#common_formdata_multi_upload_form").find("#click_singfile_chose_btn");
         companyEtcFile.trigger("click");
-        companyEtcFile.change(function () {
+        companyEtcFile.unbind().change(function () {
             var input = $(this);
             var files = input.get(0).files;
             if (files.length > 0) {
@@ -1065,6 +1065,7 @@
                     formData.append("file" + i, files[i]);
                 }
                 fnFormDataFileUploadAjax(function (data) {
+                    input.val('');
                     let fileInfo = data.fileUploadList[0];
                     $grid.pqGrid("updateRow", { rowIndx: rowIndx , row: { [rowTarget]: fileInfo.GFILE_SEQ } });
 

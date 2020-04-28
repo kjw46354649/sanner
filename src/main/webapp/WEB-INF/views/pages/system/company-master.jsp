@@ -1404,7 +1404,7 @@
         $("#company_master_register_form").find("#compnay_etc_attach_file").click(function (e) {
             let companyEtcFile = $("#common_formdata_multi_upload_form").find("#click_singfile_chose_btn");
             companyEtcFile.trigger("click");
-            companyEtcFile.change(function () {
+            companyEtcFile.unbind().change(function () {
                 var input = $(this);
                 var files = input.get(0).files;
                 if (files.length > 0) {
@@ -1425,7 +1425,7 @@
         $("#company_master_register_form").find("#company_logo_upload").click(function (e) {
             let companyLogoFile = $("#common_formdata_multi_upload_form").find("#click_singfile_chose_btn");
             companyLogoFile.trigger("click");
-            companyLogoFile.change(function () {
+            companyLogoFile.unbind().change(function () {
                 var input = $(this);
                 var files = input.get(0).files;
                 if (files.length > 0) {
@@ -1444,7 +1444,7 @@
         $("#company_master_register_form").find("#company_sign_upload").click(function (e) {
             let companySignFile = $("#common_formdata_multi_upload_form").find("#click_singfile_chose_btn");
             companySignFile.trigger("click");
-            companySignFile.change(function () {
+            companySignFile.unbind().change(function () {
                 var input = $(this);
                 var files = input.get(0).files;
                 if (files.length > 0) {

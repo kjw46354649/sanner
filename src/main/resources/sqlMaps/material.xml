@@ -507,4 +507,184 @@
             AND WAREHOUSE_CD = #{WAREHOUSE_CD}
             AND LOC_SEQ = #{LOC_SEQ}
     </delete>
+
+    <select id="selectConsumableList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+              A.CONSUMABLE_STOCK_SEQ
+            , A.WAREHOUSE_CD
+            , A.LOC_SEQ
+            , A.CONSUMABLE_NUM
+            , A.CONSUMABLE_NM
+            , A.CONSUMABLE_TYPE
+            , A.CONSUMABLE_DETAIL
+            , A.STOCK_QTY
+            , A.NOTE
+            , NULL AS IN_QTY
+            , A.ACTIVE_YN
+        FROM jmes.TBL_CONSUMABLE_STOCK A
+        WHERE 1=1
+        <if test="SEL_WAREHOUSE_CD !='' and SEL_WAREHOUSE_CD != null">
+            AND A.WAREHOUSE_CD = #{SEL_FACTORY_AREA}
+        </if>
+        <if test="SEL_LOC_SEQ !='' and SEL_LOC_SEQ != null">
+            AND A.LOC_SEQ = #{SEL_LOC_SEQ}
+        </if>
+        <if test="SEL_CONSUMABLE_TYPE !='' and SEL_CONSUMABLE_TYPE != null">
+            AND A.CONSUMABLE_TYPE = #{SEL_CONSUMABLE_TYPE}
+        </if>
+        <if test="SEL_CONSUMABLE_DETAIL !='' and SEL_CONSUMABLE_DETAIL != null">
+            AND A.CONSUMABLE_DETAIL = #{SEL_CONSUMABLE_DETAIL}
+        </if>
+        <if test="SEL_CONSUMABLE_NUM !='' and SEL_CONSUMABLE_NUM != null">
+            AND A.CONSUMABLE_NUM LIKE CONCAT('%', #{SEL_CONSUMABLE_NUM}, '%')
+        </if>
+        <if test="SEL_CONSUMABLE_NM !='' and SEL_CONSUMABLE_NM != null">
+            AND A.CONSUMABLE_NM LIKE CONCAT('%', #{SEL_CONSUMABLE_NM}, '%')
+        </if>
+        <if test="SEL_ACTIVE_YN !='' and SEL_ACTIVE_YN != null">
+            AND A.ACTIVE_YN = #{SEL_ACTIVE_YN}
+        </if>
+        ORDER BY A.CONSUMABLE_STOCK_SEQ
+    </select>
+
+    <delete id="deleteConsumable" parameterType="java.util.HashMap">
+        DELETE FROM jmes.TBL_CONSUMABLE_STOCK WHERE CONSUMABLE_STOCK_SEQ = #{CONSUMABLE_STOCK_SEQ}
+    </delete>
+    <update id="updateConsumable" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_CONSUMABLE_STOCK
+        SET
+              CONSUMABLE_NM = #{CONSUMABLE_NM}
+            , CONSUMABLE_TYPE = #{CONSUMABLE_TYPE}
+            , CONSUMABLE_DETAIL = #{CONSUMABLE_DETAIL}
+            , NOTE = #{NOTE}
+            , ACTIVE_YN = #{ACTIVE_YN}
+            , UPDATE_ID = #{LOGIN_USER_ID}
+            , UPDATE_DT = NOW()
+        WHERE CONSUMABLE_STOCK_SEQ = #{CONSUMABLE_STOCK_SEQ}
+    </update>
+    <insert id="insertConsumable" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_CONSUMABLE_STOCK
+        (
+            CONSUMABLE_STOCK_SEQ, WAREHOUSE_CD, LOC_SEQ,
+            CONSUMABLE_NUM, CONSUMABLE_NM, CONSUMABLE_TYPE,
+            CONSUMABLE_DETAIL, NOTE, ACTIVE_YN,
+            INSERT_ID, INSERT_DT
+        )VALUES(
+            NEXTVAL(jmes.SEQ_CONSUMABLE_STOCK), #{WAREHOUSE_CD}, #{LOC_SEQ},
+            #{CONSUMABLE_NUM}, #{CONSUMABLE_NM}, #{CONSUMABLE_TYPE},
+            #{CONSUMABLE_DETAIL}, #{NOTE}, #{ACTIVE_YN},
+            #{LOGIN_USER_ID}, NOW()
+        )
+    </insert>
+    <insert id="insertConsumableIn" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_CONSUMABLE_IN
+        (CONSUMABLE_IN_SEQ, CONSUMABLE_STOCK_SEQ, IN_QTY, INSERT_ID, INSERT_DT)
+        SELECT
+              NEXTVAL(jmes.SEQ_CONSUMABLE_IN) AS CONSUMABLE_IN_SEQ
+            , A.CONSUMABLE_STOCK_SEQ
+            , #{IN_QTY} AS IN_QTY
+            , #{LOGIN_USER_ID} AS INSERT_ID
+            , NOW() AS INSERT_DT
+        FROM jmes.TBL_CONSUMABLE_STOCK A
+        WHERE A.WAREHOUSE_CD = #{WAREHOUSE_CD}
+        AND A.LOC_SEQ = #{LOC_SEQ}
+        AND A.CONSUMABLE_NUM = #{CONSUMABLE_NUM}
+        AND #{IN_QTY} > 0
+    </insert>
+    <insert id="insertConsumableOut" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_CONSUMABLE_OUT
+        (
+            CONSUMABLE_OUT_SEQ, CONSUMABLE_STOCK_SEQ, OUT_QTY,
+            REQUEST_USER_ID, OUT_USE, INSERT_ID, INSERT_DT
+        )VALUES(
+            NEXTVAL(jmes.SEQ_CONSUMABLE_OUT), #{CONSUMABLE_STOCK_SEQ}, #{OUT_QTY},
+            #{REQUEST_USER_ID}, #{OUT_USE}, #{INSERT_ID}, NOW()
+        )
+    </insert>
+    <select id="selectConsumableHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+              jmes.SF_GET_CODE_NM('1055', X.IN_OUT_TYPE, #{LANG_CD}) AS IN_OUT_NM
+            , jmes.SF_GET_CODE_NM('1049', X.WAREHOUSE_CD, #{LANG_CD}) AS WAREHOUSE_NM
+            , (SELECT LOC_NM FROM jmes.TBL_WAREHOUSE_LOCATION WHERE WAREHOUSE_CD = X.WAREHOUSE_CD AND LOC_SEQ = X.LOC_SEQ ) AS LOC_NM
+            , X.CONSUMABLE_NUM
+            , X.CONSUMABLE_NM
+            , jmes.SF_GET_CODE_NM('1053', X.CONSUMABLE_TYPE, #{LANG_CD}) AS CONSUMABLE_TYPE_NM
+            , jmes.SF_GET_CODE_NM('1054', X.CONSUMABLE_DETAIL, #{LANG_CD}) AS CONSUMABLE_DETAIL_NM
+            , X.IN_QTY
+            , Y.OUT_QTY
+            , (SELECT USER_NM FROM jmes.TBL_USER WHERE USER_ID = X.REQUEST_USER_ID) AS REQUEST_USER_NM
+            , jmes.SF_GET_DATE_F(X.IN_OUT_DT,'YY','M') AS IN_OUT_DT
+        FROM (
+            SELECT
+                '1' AS IN_OUT_TYPE
+                , A.WAREHOUSE_CD, A.LOC_SEQ, A.CONSUMABLE_NUM, A.CONSUMABLE_NM
+                , A.CONSUMABLE_TYPE, A.CONSUMABLE_DETAIL, B.IN_QTY, NULL AS OUT_QTY
+                , B.INSERT_ID AS REQUEST_USER_ID, B.IN_DT AS IN_OUT_DT
+            FROM jmes.TBL_CONSUMABLE_STOCK A, jmes.TBL_CONSUMABLE_IN B
+            WHERE A.CONSUMABLE_STOCK_SEQ = B.CONSUMABLE_STOCK_SEQ
+                <if test="SEL_WAREHOUSE_CD !='' and SEL_WAREHOUSE_CD != null">
+                    AND A.WAREHOUSE_CD = #{SEL_FACTORY_AREA}
+                </if>
+                <if test="SEL_LOC_SEQ !='' and SEL_LOC_SEQ != null">
+                    AND A.LOC_SEQ = #{SEL_LOC_SEQ}
+                </if>
+                <if test="SEL_CONSUMABLE_TYPE !='' and SEL_CONSUMABLE_TYPE != null">
+                    AND A.CONSUMABLE_TYPE = #{SEL_CONSUMABLE_TYPE}
+                </if>
+                <if test="SEL_CONSUMABLE_DETAIL !='' and SEL_CONSUMABLE_DETAIL != null">
+                    AND A.CONSUMABLE_DETAIL = #{SEL_CONSUMABLE_DETAIL}
+                </if>
+                <if test="SEL_CONSUMABLE_NUM !='' and SEL_CONSUMABLE_NUM != null">
+                    AND A.CONSUMABLE_NUM LIKE CONCAT('%', #{SEL_CONSUMABLE_NUM}, '%')
+                </if>
+                <if test="SEL_CONSUMABLE_NM !='' and SEL_CONSUMABLE_NM != null">
+                    AND A.CONSUMABLE_NM LIKE CONCAT('%', #{SEL_CONSUMABLE_NM}, '%')
+                </if>
+                <if test="SEL_ACTIVE_YN !='' and SEL_ACTIVE_YN != null">
+                    AND A.ACTIVE_YN = #{SEL_ACTIVE_YN}
+                </if>
+                <if test="SEL_TERM_DT_USE or SEL_TERM_DT_USE ==true">
+                    <if test='SEL_DAY_TYPE == "1"'>
+                        AND B.IN_DT >= CONVERT(REPLACE(#{SEL_ST_DT},'-',space(0)),'%Y%m%d')
+                        AND B.IN_DT <![CDATA[ <= ]]> CONVERT(REPLACE(#{SEL_END_DT},'-',space(0)),'%Y%m%d')
+                    </if>
+                </if>
+            UNION ALL
+            SELECT
+                 '2' AS IN_OUT_TYPE
+                , A.WAREHOUSE_CD, A.LOC_SEQ, A.CONSUMABLE_NUM, A.CONSUMABLE_NM
+                , A.CONSUMABLE_TYPE, A.CONSUMABLE_DETAIL, NULL AS IN_QTY, B.OUT_QTY
+                , B.REQUEST_USER_ID, B.OUT_DT AS IN_OUT_DT
+            FROM jmes.TBL_CONSUMABLE_STOCK A, jmes.TBL_CONSUMABLE_OUT B
+            WHERE A.CONSUMABLE_STOCK_SEQ = B.CONSUMABLE_STOCK_SEQ
+                <if test="SEL_WAREHOUSE_CD !='' and SEL_WAREHOUSE_CD != null">
+                    AND A.WAREHOUSE_CD = #{SEL_FACTORY_AREA}
+                </if>
+                <if test="SEL_LOC_SEQ !='' and SEL_LOC_SEQ != null">
+                    AND A.LOC_SEQ = #{SEL_LOC_SEQ}
+                </if>
+                <if test="SEL_CONSUMABLE_TYPE !='' and SEL_CONSUMABLE_TYPE != null">
+                    AND A.CONSUMABLE_TYPE = #{SEL_CONSUMABLE_TYPE}
+                </if>
+                <if test="SEL_CONSUMABLE_DETAIL !='' and SEL_CONSUMABLE_DETAIL != null">
+                    AND A.CONSUMABLE_DETAIL = #{SEL_CONSUMABLE_DETAIL}
+                </if>
+                <if test="SEL_CONSUMABLE_NUM !='' and SEL_CONSUMABLE_NUM != null">
+                    AND A.CONSUMABLE_NUM LIKE CONCAT('%', #{SEL_CONSUMABLE_NUM}, '%')
+                </if>
+                <if test="SEL_CONSUMABLE_NM !='' and SEL_CONSUMABLE_NM != null">
+                    AND A.CONSUMABLE_NM LIKE CONCAT('%', #{SEL_CONSUMABLE_NM}, '%')
+                </if>
+                <if test="SEL_ACTIVE_YN !='' and SEL_ACTIVE_YN != null">
+                    AND A.ACTIVE_YN = #{SEL_ACTIVE_YN}
+                </if>
+                <if test="SEL_TERM_DT_USE or SEL_TERM_DT_USE ==true">
+                    <if test='SEL_DAY_TYPE == "1"'>
+                        AND B.OUT_DT >= CONVERT(REPLACE(#{SEL_ST_DT},'-',space(0)),'%Y%m%d')
+                        AND B.OUT_DT <![CDATA[ <= ]]> CONVERT(REPLACE(#{SEL_END_DT},'-',space(0)),'%Y%m%d')
+                    </if>
+                </if>
+        ) X
+        ORDER BY X.IN_OUT_DT DESC
+    </select>
 </mapper>

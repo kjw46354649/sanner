@@ -50,12 +50,12 @@
     <div class="topWrap">
         <form class="form-inline" id="estimate_register_info_form" name="estimate_register_info_form" role="form">
             <input type="hidden" id="queryId" name="queryId" value="">
-            <div class="gubunWrap">
+            <div class="basicWrap">
                 <ul>
                     <li>
-                        <div class="right_float">
-                            <button type="button" class="defaultBtn grayGra" id="btn_estimate_register_save">Save</button>
-                            <button type="button" class="defaultBtn yelllowGra" id="btn_estimate_register_submit">Submit</button>
+                        <div class="right_sort">
+                            <button type="button" class="defaultBtn radius" id="btn_estimate_register_save">Save</button>
+                            <button type="button" class="defaultBtn radius yellow" id="btn_estimate_register_submit">Submit</button>
                         </div>
                         <span class="slt_wrap">
                             <label for="ORDER_COMP_CD" class="label_100">발주사</label>
@@ -99,38 +99,41 @@
                 </ul>
             </div>
         </form>
-        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
+        <%--<button type="button" class="topWrap_btn">펼치기 / 접기</button>--%>
     </div>
     <div class="bottomWrap">
         <div class="hWrap">
-            <span class="buttonWrap">
-                <button type="button" class="defaultBtn blueGra" id="btnEstimateRegisterAdd">Add</button>
-                <button type="button" class="defaultBtn yelllowGra" id="btnEstimateRegisterDelete">Delete</button>
-                <button type="button" class="defaultBtn yelllowGra" id="btnEstimateRegisterEstimateListExcel">견적List 출력</button>
-            </span>
-            <span class="chk_box mg-left15"><input id="chkEstimateRegisterDetail" type="checkbox"><label for="chkEstimateRegisterDetail"> 견적상세요건</label></span>
-            <div class="rightSpan">
-                <span class="slt_wrap namePlusSlt mg-right25">
-                    <label for="selEstimateRegisterCalculateApply">계산견적적용</label>
-                    <select id="selEstimateRegisterCalculateApply" name="selEstimateRegisterCalculateApply" title="계산견적적용">
-                        <option>Select</option>
-                        <option>10%</option>
-                        <option>20%</option>
-                    </select>
-                </span>
-                <span class="slt_wrap namePlusSlt mg-right25">
-                    <label for="selEstimateListExcel">견적서 추출</label>
-                    <select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출">
-                    </select>
-                </span>
-                <span class="buttonWrap">
-                    <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawAdd">도면 등록</button>
-                    <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawView">도면 보기</button>
-                </span>
+            <div class="d-inline">
+                <div class="right_sort">
+                    <button type="button" class="defaultBtn btn-120w" id="btnEstimateRegisterEstimateListExcel">견적List 출력</button>
+                    <button type="button" class="defaultBtn btn-120w" id="btnEstimateRegisterAdd">Add</button>
+                    <button type="button" class="defaultBtn btn-120w" id="btnEstimateRegisterDelete">Delete</button>
+                </div>
             </div>
+
+            <%--<span class="chk_box mg-left15"><input id="chkEstimateRegisterDetail" type="checkbox"><label for="chkEstimateRegisterDetail"> 견적상세요건</label></span>--%>
         </div>
         <div class="tableWrap">
-            <div class="conWrap">
+            <div class="buttonWrap">
+                <div class="d-inline">
+                    <button type="button" class="smallBtn yellow">견적정보</button>
+                    <button type="button" class="smallBtn yellow">금액정보</button>
+                    <span class="slt_wrap namePlusSlt right_float">
+                        <label for="selEstimateRegisterCalculateApply">계산견적적용</label>
+                        <select id="selEstimateRegisterCalculateApply" name="selEstimateRegisterCalculateApply" title="계산견적적용">
+                            <option>Select</option>
+                            <option>10%</option>
+                            <option>20%</option>
+                        </select>
+                        <label for="selEstimateListExcel">견적서 추출</label>
+                        <select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출">
+                        </select>
+                        <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawAdd">도면 등록</button>
+                        <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawView">도면 보기</button>
+                    </span>
+                </div>
+            </div>
+            <div class="conMainWrap">
                 <div id="estimate_register_top_grid" class="jqx-refresh"></div>
             </div>
             <div class="lookUp">
@@ -138,17 +141,19 @@
                     <span class="subTit">메일내용</span>
                     <textarea class="col-md-12 col-sm-12" id="EMAIL_CONTENT" name="EMAIL_CONTENT"></textarea>
                 </div>
-                <div class="popup">
-                    <div class="resultWrap">
-                        <div class="leftWrap">
-                            <h3>메일수신처</h3>
-                            <div class="conMainWrap">
-                                <div id="estimate_register_bot_grid" class="jqx-refresh"></div>
+                <div class="">
+                    <div class="popup">
+                        <div class="resultWrap">
+                            <div class="leftWrap">
+                                <h3>메일수신처</h3>
+                                <div class="conMainWrap">
+                                    <div id="estimate_register_bot_grid" class="jqx-refresh"></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="rightWrap">
-                            <h3>첨부파일</h3>
+                            <div class="rightWrap">
+                                <h3>첨부파일</h3>
 
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -168,7 +173,6 @@
 </form>
 <script type="text/javascript">
     $(function () {
-
         /** 공통 코드 이외의 처리 부분 **/
         fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
         fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
@@ -400,7 +404,7 @@
 
         function selectEstimateBotList(COMP_CD) {
             estimateRegisterBotGrid.pqGrid({
-                height: 200,
+                height: 100,
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
                     url: "/paramQueryGridSelect",
@@ -537,5 +541,6 @@
         $("#btnEstimateRegisterDrawView").on('click', function(){
 
         });
+
     });
 </script>

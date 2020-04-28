@@ -70,6 +70,7 @@
     filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000);
     margin-bottom: 15px;     position: relative;}
 .estimate .topWrap .gubunWrap { border-right: 1px solid #e5e5e5; overflow: hidden; width: 97%; box-sizing: border-box; padding: 5px 15px; height: 47px; }
+.estimate .topWrap .basicWrap { border-right: 1px solid #e5e5e5; overflow: hidden; width: 100%; box-sizing: border-box; padding: 5px 15px; height: 148px; }
 .estimate .topWrap .gubunWrap ul { font-size: 0; }
 .estimate .topWrap .gubunWrap ul li { padding: 6px 0; }
 .estimate .topWrap .gubunWrap ul li *{ }
