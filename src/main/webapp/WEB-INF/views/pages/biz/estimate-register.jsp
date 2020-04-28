@@ -54,8 +54,8 @@
                 <ul>
                     <li>
                         <div class="right_sort">
-                            <button type="button" class="defaultBtn radius" id="btn_estimate_register_save">Save</button>
-                            <button type="button" class="defaultBtn radius yellow" id="btn_estimate_register_submit">Submit</button>
+                            <button type="button" class="defaultBtn radius" id="btn_estimate_register_save">저장</button>
+                            <button type="button" class="defaultBtn radius yellow" id="btn_estimate_register_submit">제출</button>
                         </div>
                         <span class="slt_wrap">
                             <label for="ORDER_COMP_CD" class="label_100">발주사</label>
@@ -106,8 +106,8 @@
             <div class="d-inline">
                 <div class="right_sort">
                     <button type="button" class="defaultBtn btn-120w" id="btnEstimateRegisterEstimateListExcel">견적List 출력</button>
-                    <button type="button" class="defaultBtn btn-120w" id="btnEstimateRegisterAdd">Add</button>
-                    <button type="button" class="defaultBtn btn-120w" id="btnEstimateRegisterDelete">Delete</button>
+                    <button type="button" class="defaultBtn btn-120w" id="btnEstimateRegisterAdd">추가</button>
+                    <button type="button" class="defaultBtn btn-120w" id="btnEstimateRegisterDelete">삭제</button>
                 </div>
             </div>
 
@@ -136,23 +136,21 @@
             <div class="conMainWrap">
                 <div id="estimate_register_top_grid" class="jqx-refresh"></div>
             </div>
-            <div class="lookUp">
-                <div class="topBox">
-                    <span class="subTit">메일내용</span>
-                    <textarea class="col-md-12 col-sm-12" id="EMAIL_CONTENT" name="EMAIL_CONTENT"></textarea>
-                </div>
-                <div class="">
-                    <div class="popup">
-                        <div class="resultWrap">
-                            <div class="leftWrap">
-                                <h3>메일수신처</h3>
-                                <div class="conMainWrap">
-                                    <div id="estimate_register_bot_grid" class="jqx-refresh"></div>
-                                </div>
+            <br>
+            <div class="conWrap">
+                <div class="popup">
+                    <div class="resultWrap">
+                        <div class="left_sort">
+                            <div class="col-md-6 col-sm-6">
+                                <h3>메일내용</h3><textarea class="col-md-12 col-sm-12" id="EMAIL_CONTENT" name="EMAIL_CONTENT" style="height: 320px;"></textarea>
                             </div>
-                            <div class="rightWrap">
-                                <h3>첨부파일</h3>
-
+                            <div class="right_sort">
+                                <h3 style="text-align: left;">메일수신처</h3>
+                                <div class="conMainWrap">
+                                    <div id="estimate_register_bot_grid"></div>
+                                </div>
+                                <br>
+                                <h3 style="text-align: left;">첨부파일</h3>
                             </div>
                         </div>
                     </div>
@@ -160,9 +158,6 @@
             </div>
         </div>
     </div>
-</div>
-<div class="mct">
-
 </div>
 
 <input type="button" id="test">
@@ -333,7 +328,7 @@
         ];
 
         estimateRegisterTopGrid.pqGrid({
-            height: 400,
+            height: 300,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
                 url: "/paramQueryGridSelect",

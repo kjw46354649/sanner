@@ -25,6 +25,24 @@
             <if test="EST_SEQ !='' and EST_SEQ !=null">
                 AND A.EST_SEQ = #{EST_SEQ}
             </if>
+            <if test="COMP_CD !='' and COMP_CD !=null">
+                AND A.COMP_CD = #{COMP_CD}
+            </if>
+            <if test="ORDER_COMP_CD !='' and ORDER_COMP_CD !=null">
+                AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+            </if>
+            <if test="TITLE !='' and TITLE !=null">
+                AND A.TITLE = #{TITLE}
+            </if>
+            <if test="DRAWING_NUM !='' and DRAWING_NUM !=null">
+                AND A.DRAWING_NUM = #{DRAWING_NUM}
+            </if>
+            <if test="MODULE_NM !='' and MODULE_NM !=null">
+                AND A.MODULE_NM = #{MODULE_NM}
+            </if>
+            <if test="ITEM_NM !='' and ITEM_NM !=ITEM_NM">
+                AND A.ITEM_NM = #{ITEM_NM}
+            </if>
         GROUP BY A.EST_SEQ
         ORDER BY A.EST_NUM, A.EST_SEQ, A.EST_VER
     </select>

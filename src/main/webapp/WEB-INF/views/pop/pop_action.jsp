@@ -55,8 +55,8 @@
     <script type="text/javascript" src="/resource/plugins/paramquery/pqSelect/pqselect.min.js" ></script>
     <%--<script type="text/javascript" src="/resource/plugins/dhtmlx/suite.min.js"></script>--%>
 </head>
-<body>
-
+<%--<body>--%>
+<body onresize="parent.resizeTo(1920,1080)" onload="parent.resizeTo(1920,1080)">
     <div class="page estimate">
         <div class="topWrap">
             <div class="conWrap">
