@@ -9,26 +9,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<style>
-
-    .layerPopup .list99 { height: 360px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)"; }
-    .layerPopup .list99 .rowStyle tr th { border: 1px solid #acb9b9; background: #e8f0f0; color: #162f2f; text-align: center; padding: 5px; }
-    .layerPopup .list99 .rowStyle tr td { border: 1px solid #cecece; color: #444; padding: 5px; text-align: center; font-family: 'NotoKrR'; }
-    .layerPopup .list99 .rowStyle tr td.red { color: #e71b1b; }
-
-    .layerPopup .list98 { height: 200px; background: #e1e1e1; }
-
-    .resultWrap99 { -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)"; }
-    .resultWrap99 .leftWrap { height: 150px; width: 40%; float: left; }
-    .resultWrap99 .rightWrap { height: 150px; width: 58%; float: right; }
-
-
-
-
-
-</style>
-
-
 
 <div class="page estimate">
     <div class="topWrap">
@@ -37,57 +17,50 @@
             <input type="hidden" id="SEL_EQUIP_KIND" name="SEL_EQUIP_KIND" value="1">
             <div class="gubunWrap">
                 <ul>
-                    <div class="dateWrap">
-                        <button type="button" class="search_btn" id="searchBtn">검색</button>
-                    </div>
                     <li>
                         <span class="slt_wrap">
-                            <label for="SEL_EQUIP_TYPE">장비종류</label>
-                            <select id="SEL_EQUIP_TYPE" name="SEL_EQUIP_TYPE" title="장비종류" data-required="true" >
+                            <label for="SEL_EQUIP_TYPE" class="label_100">장비종류</label>
+                            <select id="SEL_EQUIP_TYPE" name="SEL_EQUIP_TYPE" title="장비종류" data-required="true" class="wd_200">
                                 <option value=""><spring:message code="com.form.top.all.option" /></option>
                                 <c:forEach var="vlocale" items="${HighCode.H_1012}">
                                     <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
                         </span>
-                    </li>
-                    <li>
+                        <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label for="SEL_EQUIP_SIZE">장비규격</label>
-                            <select id="SEL_EQUIP_SIZE" name="SEL_EQUIP_SIZE" title="장비규격" data-required="true" >
+                            <label for="SEL_EQUIP_SIZE" class="label_100">장비규격</label>
+                            <select id="SEL_EQUIP_SIZE" name="SEL_EQUIP_SIZE" title="장비규격" data-required="true"  class="wd_200">
                                 <option value=""><spring:message code="com.form.top.all.option" /></option>
                                 <c:forEach var="vlocale" items="${HighCode.H_1034}">
                                     <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
                         </span>
-                    </li>
-                    <li>
-                        <span class="ipu_wrap"><label for="SEL_EQUIP_NM">장비명</label>
-                            <input type="text" name="SEL_EQUIP_NM" id="SEL_EQUIP_NM" placeholder="장비명" value="" title="장비명">
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap"><label for="SEL_EQUIP_NM" class="label_100">장비명</label>
+                            <input type="text" name="SEL_EQUIP_NM" id="SEL_EQUIP_NM" placeholder="장비명" value="" title="장비명" class="wd_200">
                         </span>
-                    </li>
-                    <li>
+                        <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label for="SEL_FACTORY_AREA">설치위치</label>
-                            <select id="SEL_FACTORY_AREA" name="SEL_FACTORY_AREA" title="설치위치" data-required="true" >
+                            <label for="SEL_FACTORY_AREA" class="label_100">설치위치</label>
+                            <select id="SEL_FACTORY_AREA" name="SEL_FACTORY_AREA" title="설치위치" data-required="true" class="wd_200">
                                 <option value=""><spring:message code="com.form.top.all.option" /></option>
                                 <c:forEach var="vlocale" items="${HighCode.H_1005}">
                                     <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
                         </span>
+                        <span class="ipu_wrap right_float"><button type="button" class="defaultBtn radius blue" id="searchBtn">검색</button></span>
                     </li>
                     <li>
-                        <span class="ipu_wrap"><label for="SEL_MAIN_USER_ID">담당자</label>
-                            <input type="text" name="SEL_MAIN_USER_ID" id="SEL_MAIN_USER_ID" placeholder="담당자" value="" title="담당자">
+                        <span class="ipu_wrap"><label for="SEL_MAIN_USER_ID" class="label_100">담당자</label>
+                            <input type="text" name="SEL_MAIN_USER_ID" id="SEL_MAIN_USER_ID" placeholder="담당자" value="" title="담당자" class="wd_200">
                         </span>
-                    </li>
-                </ul>
-                <div class="dateWrap">
-                    <div class="leftSpan">
+                        <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <select id="SEL_DAY_TYPE" name="SEL_DAY_TYPE" title="날짜조회">
+                             <label for="SEL_DAY_TYPE" class="label_100">날짜조회</label>
+                            <select id="SEL_DAY_TYPE" name="SEL_DAY_TYPE" title="날짜조회" class="wd_200">
                                 <option value="1">구입시기</option>
 <%--                                <option value="2">정비일시</option>--%>
 <%--                                <option value="3">최근종료일시</option>--%>
@@ -103,68 +76,67 @@
                                 <input class="datepicker-input" type="text" name="SEL_END_DT" id="SEL_END_DT" placeholder="" value="" title="종료날짜">
 <%--                                <button type="button">달력선택</button>--%>
                             </span>
-                            <span class="chk_box no_txt"><input id="SEL_TERM_DT_USE" name="SEL_TERM_DT_USE" type="checkbox"><label for="SEL_TERM_DT_USE">선택</label></span>
                         </div>
+                        <span class="chk_box mg-left20">&nbsp;&nbsp;<input id="SEL_TERM_DT_USE" name="SEL_TERM_DT_USE" type="checkbox"><label for="SEL_TERM_DT_USE">선택</label></span>
 
-                    </div>
-                    <div class="rightSpan">
-                        <span class="txt">&nbsp;</span>
-                    </div>
+                    </li>
+                </ul>
 
-                </div>
             </div>
         </form>
         <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
+
     <div class="bottomWrap">
-        <div class="hWrap" style="height:55px">
-<%--            <span class="buttonWrap">--%>
-<%--                <button type="button" class="defaultBtn">견적서 신규 작성</button>--%>
-<%--            </span>--%>
-            <div class="rightSpan">
-                <span class="buttonWrap">
-                    <button type="button" id="newBtn" class="defaultBtn yelllowGra">신규등록</button>
-                </span>
+        <div class="hWrap2">
+<%--        <div class="buttonWrap" >--%>
+            <div class="right_sort">
+                <button type="button" id="newBtn" class="defaultBtn yelllowGra">신규등록</button>
             </div>
         </div>
-        <div class="tableWrap">
-<%--            <span class="buttonWrap">--%>
-<%--                <button type="button" class="smallBtn">견적정보</button>--%>
-<%--                <button type="button" class="smallBtn blue">금액정보</button>--%>
-<%--            </span>--%>
-<%--            <div class="conMainWrap buttonWrap">--%>
-<%--                <div id="estimate_master_top_grid" class="jqx-refresh"></div>--%>
+
+     <div class="tableWrap" id="div_tabs">
+        <ul class="smallTabMenu1">
+            <li class="active"><a href="#_TAB1" data-toggle="tab" aria-expanded="true">가공장비</a></li>
+            <li><a href="#_TAB2" data-toggle="tab" aria-expanded="false">기타장비</a></li>
+        </ul>
+         <div class="tab-content">
+             <ul class="active conWrap" id="_TAB1">
+                     <div id="machine_manage_current_grid"></div>
+             </ul>
+             <ul class="conWrap" id="_TAB2">
+                     <div id="machine_manage_etc_grid"></div>
+             </ul>
+         </div>
+    </div>
+
+
+<%--        <div class="tableWrap">--%>
+<%--            <div id="div_tabs">--%>
+<%--                <div class="">&nbsp;--%>
+<%--                    <ul class="nav nav-tabs m-b-n-xxs smallTabMenu1">--%>
+<%--                        <li class="active">--%>
+<%--                            <a href="#_TAB1" data-toggle="tab" aria-expanded="true">가공장비</a>--%>
+<%--                        </li>--%>
+<%--                        <li class="">--%>
+<%--                            <a href="#_TAB2" data-toggle="tab" aria-expanded="false">기타장비</a>--%>
+<%--                        </li>--%>
+<%--                    </ul>--%>
+<%--                    <div class="panel panel-default tab-content">--%>
+<%--                        <ul class="list-group tab-pane active" id="_TAB1">--%>
+<%--                            <div class="conWrap">--%>
+<%--                                <div id="machine_manage_current_grid"></div>--%>
+<%--                            </div>--%>
+<%--                        </ul>--%>
+<%--                        <ul class="list-group tab-pane list-group-alt list-group-lg" id="_TAB2">--%>
+<%--                            <div class="conWrap">--%>
+<%--                                <div id="machine_manage_etc_grid"></div>--%>
+<%--                            </div>--%>
+<%--                        </ul>--%>
+<%--                    </div>--%>
+<%--                </div>--%>
 <%--            </div>--%>
-<%--            <span class="buttonWrap">--%>
-<%--            </span>--%>
-<%--            <div class="conSubWrap">--%>
-<%--                <div id="estimate_master_bot_grid" class="jqx-refresh"></div>--%>
-<%--            </div>--%>
-            <div id="div_tabs">
-                <div class="">&nbsp;
-                    <ul class="nav nav-tabs m-b-n-xxs">
-                        <li class="active">
-                            <a href="#_TAB1" data-toggle="tab" aria-expanded="true">가공장비</a>
-                        </li>
-                        <li class="">
-                            <a href="#_TAB2" data-toggle="tab" aria-expanded="false">기타장비</a>
-                        </li>
-                    </ul>
-                    <div class="panel panel-default tab-content">
-                        <ul class="list-group tab-pane active" id="_TAB1">
-                            <div class="row">
-                                <div id="machine_manage_current_grid"></div>
-                            </div>
-                        </ul>
-                        <ul class="list-group tab-pane list-group-alt list-group-lg" id="_TAB2">
-                            <div class="row">
-                                <div id="machine_manage_etc_grid"></div>
-                            </div>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+<%--        </div>--%>
 
     </div>
 </div>
@@ -183,10 +155,10 @@
             <button type="button" class="pop_close">닫기</button>
             <div class="qualityWrap">
                 <div class="h_area">
-					<span class="buttonWrap">
-						<button type="button" id="saveBtn" class="onoff left on">SAVE</button>
-						<button type="button" id="deleteBtn" class="onoff right">DELETE</button>
-					</span>
+					<div class="right_sort ">
+                        <button type="button" id="saveBtn" class="graBtn save">SAVE</button>
+                        <button type="button" id="deleteBtn" class="graBtn save">Delete</button>
+					</div>
 
                 </div>
                 <div class="resultWrap99 list99">
@@ -313,44 +285,65 @@
                     </div>
                 </div>
 
-                <div class="rightSpan">
-
-                    <span class="buttonWrap">
-                        <button type="button" class="defaultBtn grayGra" id="addHistoryBtn">Add</button>
-                        <button type="button" class="defaultBtn yelllowGra" id="deleteHistoryBtn">Delete</button>
-                    </span>
-                </div>
-
                 <div class="list98">
-                    <div id="div_tabs2">
-                        <div class="">&nbsp;
-                            <ul class="nav nav-tabs m-b-n-xxs">
-                                <li class="active" id="_TAB3_TITLE">
-                                    <a href="#_TAB3" data-toggle="tab" aria-expanded="true">작동로그</a>
-                                </li>
-                                <li class="" id="_TAB4_TITLE">
-                                    <a href="#_TAB4" data-toggle="tab" aria-expanded="false">정비이력</a>
-                                </li>
+                    <div class="tableWrap" id="div_tabs2">
+
+                        <ul class="smallTabMenu1">
+                            <li class="active" id="_TAB3_TITLE"><a href="#_TAB3" data-toggle="tab" aria-expanded="true">작동로그</a></li>
+                            <li id="_TAB4_TITLE"><a href="#_TAB4" data-toggle="tab" aria-expanded="false">정비이력</a></li>
+                            <span class="rightGridWrap">
+                            <button type="button" id="addHistoryBtn" class="defaultBtn radius ">Add</button>
+                            <button type="button" id="deleteHistoryBtn" class="defaultBtn radius red ">Delete</button>
+                            </span>
+                        </ul>
+
+                        <div class="tab-content">
+                            <ul class="active conWrap" id="_TAB3">
+                                <div id="machine_manage_log_grid"></div>
                             </ul>
-                            <div class="panel panel-default tab-content">
-                                <ul class="list-group tab-pane active" id="_TAB3">
-                                    <div class="row">
-                                        <div id="machine_manage_log_grid"></div>
-                                    </div>
-                                </ul>
-                                <ul class="list-group tab-pane list-group-alt list-group-lg" id="_TAB4">
-                                    <div class="row">
-                                        <div id="machine_manage_history_grid"></div>
-                                    </div>
-                                </ul>
-                            </div>
+                            <ul class="conWrap" id="_TAB4">
+                                <div id="machine_manage_history_grid"></div>
+                            </ul>
                         </div>
                     </div>
+
+
+<%--                    <div id="div_tabs2">--%>
+<%--                        <div class="">&nbsp;--%>
+<%--                            <ul class="nav nav-tabs m-b-n-xxs">--%>
+<%--                                <li class="active" id="_TAB3_TITLE">--%>
+<%--                                    <a href="#_TAB3" data-toggle="tab" aria-expanded="true">작동로그</a>--%>
+<%--                                </li>--%>
+<%--                                <li class="" id="_TAB4_TITLE">--%>
+<%--                                    <a href="#_TAB4" data-toggle="tab" aria-expanded="false">정비이력</a>--%>
+<%--                                </li>--%>
+<%--                            </ul>--%>
+<%--                            <div class="panel panel-default tab-content">--%>
+<%--                                <ul class="list-group tab-pane active" id="_TAB3">--%>
+<%--                                    <div class="row">--%>
+<%--                                        <div id="machine_manage_log_grid"></div>--%>
+<%--                                    </div>--%>
+<%--                                </ul>--%>
+<%--                                <ul class="list-group tab-pane list-group-alt list-group-lg" id="_TAB4">--%>
+<%--                                    <div class="row">--%>
+<%--                                        <div id="machine_manage_history_grid"></div>--%>
+<%--                                    </div>--%>
+<%--                                </ul>--%>
+<%--                            </div>--%>
+<%--                        </div>--%>
+<%--                    </div>--%>
+
+
+
+
+
+
+
                 </div>
             </div>
-<%--            <div class="btnWrap">--%>
-<%--                <button type="button" class="defaultBtn">CLOSE</button>--%>
-<%--            </div>--%>
+            <%--            <div class="btnWrap">--%>
+            <%--                <button type="button" class="defaultBtn">CLOSE</button>--%>
+            <%--            </div>--%>
         </div>
 
 </div>
@@ -393,14 +386,14 @@
     $(function () {
         'use strict';
 
-/**  가공장비 그리드 선언 시작 **/
+        /**  가공장비 그리드 선언 시작 **/
         currentPostData = fnFormToJsonArrayData('#machine_manage_search_form');
         currentColModel = [
             {title: '사진', dataType: 'string', dataIndx: 'PHOTO_GFILE_SEQ', minWidth: 80 ,
                 render: function(ui){
                     let CELL_PHOTO_GFILE_SEQ = ui.rowData['PHOTO_GFILE_SEQ'];
-                    if (CELL_PHOTO_GFILE_SEQ > 0) return "<img src='/image/" + CELL_PHOTO_GFILE_SEQ + " width='100px' height='100px'>";
-                    return "";
+                    if (CELL_PHOTO_GFILE_SEQ > 0) return "<img src='/image/" + CELL_PHOTO_GFILE_SEQ + "' width='100px' height='100px'>";
+                    return "<img src='/image/999' width='100px' height='100px'>";
                 },
                 postRender: function (ui) {
                     // let grid = this, $cell = grid.getCell(ui);
@@ -427,19 +420,19 @@
             {title: '최근 수행 관리번호', dataType: 'string', dataIndx: 'LAST_CONTROL_NUM'}
         ];
         currentObj = {
-            width: 1450,
-            height: 600, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            width: "100%",
+            height: 700, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             editable : false,
+            autoRow: false,
+            rowHt: 100,
             numberCell: {title: 'No.'}, dragColumns: {enabled: false},
             scrollModel: {autoFit: true}, trackModel: {on: true},
             columnTemplate: {
                 align: 'center',
-                halign: 'center',
-                hvalign: 'center', //to vertically center align the header cells.
+                valign: 'center', //to vertically center align the header cells.
                 editable: false
             },
             colModel: currentColModel,
-            toolbar: {},
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: currentPostData,
@@ -458,16 +451,17 @@
             }
         };
         $currentGrid = $('#' + currentGridId).pqGrid(currentObj);
-/**  가공장비 그리드 선언 끝 **/
 
-/**  기타장비 그리드 선언 시작 **/
+        /**  가공장비 그리드 선언 끝 **/
+
+        /**  기타장비 그리드 선언 시작 **/
         etcPostData = fnFormToJsonArrayData('#machine_manage_search_form');
         etcColModel = [
             {title: '사진', dataType: 'string', dataIndx: 'PHOTO_GFILE_SEQ', minWidth: 80 ,
                 render: function(ui){
                     let CELL_PHOTO_GFILE_SEQ = ui.rowData['PHOTO_GFILE_SEQ'];
-                    if (CELL_PHOTO_GFILE_SEQ > 0) return "<img src='/image/" + CELL_PHOTO_GFILE_SEQ + " width='100px' height='100px'>";
-                    return "";
+                    if (CELL_PHOTO_GFILE_SEQ > 0) return "<img src='/image/" + CELL_PHOTO_GFILE_SEQ + "' width='100px' height='100px'>";
+                    return "<img src='/image/999' width='100px' height='100px'>";
                 },
                 postRender: function (ui) {
                     // let grid = this, $cell = grid.getCell(ui);
@@ -493,19 +487,19 @@
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
         ];
         etcObj = {
-            width: 1450,
-            height: 600, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            width: "100%",
+            height: 700, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'}, editable : false,
             numberCell: {title: 'No.'}, dragColumns: {enabled: false},
             scrollModel: {autoFit: true}, trackModel: {on: true},
+            autoRow: false,
+            rowHt: 100,
             columnTemplate: {
                 align: 'center',
-                halign: 'center',
-                hvalign: 'center', //to vertically center align the header cells.
+                valign: 'center', //to vertically center align the header cells.
                 editable: false
             },
             colModel: etcColModel,
-            toolbar: {},
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: etcPostData,
@@ -524,9 +518,9 @@
             }
         };
         $etcGrid = $('#' + etcGridId).pqGrid(etcObj);
-/**  기타장비 그리드 선언 끝 **/
+        /**  기타장비 그리드 선언 끝 **/
 
-/**  작동로그 그리드 선언 시작 선언만 해놓고 작업은 업무 협의 되면 진행. **/
+        /**  작동로그 그리드 선언 시작 선언만 해놓고 작업은 업무 협의 되면 진행. **/
         logPostData = fnFormToJsonArrayData('#machine_manage_search_form');
         logColModel = [
             {title: '관리번호', dataType: 'string', dataIndx: 'EQUIP_ID'},
@@ -541,10 +535,10 @@
             {title: '작업시간', dataType: 'string', dataIndx: 'SEQ'}
         ];
         logObj = {
-            width: 950,
-            height: 170, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            width: "100%",
+            height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'}, editable : false,
-            numberCell: {title: 'No.'}, dragColumns: {enabled: false},
+            numberCell: {title: 'No.', styleHead: {'vertical-align':'middle'}}, dragColumns: {enabled: false},
             scrollModel: {autoFit: true}, trackModel: {on: true},
             columnTemplate: {
                 align: 'center',
@@ -553,7 +547,6 @@
                 editable: false
             },
             colModel: logColModel,
-            toolbar: {},
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: logPostData,
@@ -570,42 +563,42 @@
             }
         };
         $logGrid = $('#' + logGridId).pqGrid(logObj);
-/**  작동로그 그리드 선언 끝 **/
+        /**  작동로그 그리드 선언 끝 **/
 
-/**  정비이력 그리드 선언 시작 **/
-let dateEditor = function (ui) {
-    let $inp = ui.$cell.find("input"),
-        grid = this,
-        format = ui.column.format || "yy-mm-dd",
-        //val = $.datepicker.formatDate("yy-mm-dd HH:mm", new Date($inp.val()));
-        //val = $.datepicker.formatTime("YYYY-MM-DD HH:mm", new Date($inp.val()));
-        val = $inp.val();
+        /**  정비이력 그리드 선언 시작 **/
+        let dateEditor = function (ui) {
+            let $inp = ui.$cell.find("input"),
+                grid = this,
+                format = ui.column.format || "yy-mm-dd",
+                //val = $.datepicker.formatDate("yy-mm-dd HH:mm", new Date($inp.val()));
+                //val = $.datepicker.formatTime("YYYY-MM-DD HH:mm", new Date($inp.val()));
+                val = $inp.val();
 
-    //initialize the editor
-    $inp
-        .attr('readonly', 'readonly')
-        .val(val)
-        .datetimepicker({
-            // changeMonth: true,
-            // changeYear: true,
-            dateFormat: format,
-            timeFormat : "HH:mm",
-            showAnim: '',
-            onSelect: function () {
-                this.firstOpen = true;
-            },
-            beforeShow: function (input, inst) {
-                setTimeout(function () {
-                    //to fix the issue of datepicker z-index when grid is in maximized state.
-                    $('.ui-datepicker').css('z-index', 999999999999);
+            //initialize the editor
+            $inp
+                .attr('readonly', 'readonly')
+                .val(val)
+                .datetimepicker({
+                    // changeMonth: true,
+                    // changeYear: true,
+                    dateFormat: format,
+                    timeFormat : "HH:mm",
+                    showAnim: '',
+                    onSelect: function () {
+                        this.firstOpen = true;
+                    },
+                    beforeShow: function (input, inst) {
+                        setTimeout(function () {
+                            //to fix the issue of datepicker z-index when grid is in maximized state.
+                            $('.ui-datepicker').css('z-index', 999999999999);
+                        });
+                        return !this.firstOpen;
+                    },
+                    onClose: function () {
+                        this.focus();
+                    }
                 });
-                return !this.firstOpen;
-            },
-            onClose: function () {
-                this.focus();
-            }
-        });
-}
+        }
         historyPostData = fnFormToJsonArrayData('#machine_manage_pop_form');
         historyColModel = [
             {title: 'EQUIP_ID', dataType: 'string', dataIndx: 'EQUIP_ID', hidden:true},
@@ -677,7 +670,7 @@ let dateEditor = function (ui) {
             //     // ]
             // },
             {title: '소요시간', dataType: 'string', dataIndx: 'REPAIR_TIME', editable: false},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true},
             {title: '정비전', align: 'center', dataType: 'string', dataIndx: 'BEFORE_GFILE_SEQ', width: 20, minWidth: 20, editable: true,
                 render: function (ui) {
                     let rowIndx = ui.rowIndx, grid = this;
@@ -687,27 +680,20 @@ let dateEditor = function (ui) {
                     //return '<a href="#" id="gridSingleFileUpload">' +
                     //'   <span data-col="GRID_BEFORE_GFILE_SEQ" data-gridInfo="'+grid+'" data-val="'+rowIndx+'" data-type="'+'before'+'">+</span></a>';
 
-                },
-                postRender: function (ui) {
-                    console.log(" postRender BEFORE_GFILE_SEQ")
-                    let rowIndx = ui.rowIndx, grid = this, $cell = grid.getCell(ui);
-                    $cell.find("#imageView").bind("click", function () {
-                        callWindowImageViewer(ui.rowData.BEFORE_GFILE_SEQ);
-                    });
                 }
             },
             {title: '정비후', align: 'center', dataType: 'string', dataIndx: 'AFTER_GFILE_SEQ', width: 20, minWidth: 20, editable: true,
                 render: function (ui) {
                     if (ui.rowData['AFTER_GFILE_SEQ'] > 0) return "<i id='imageView' class='fa fa-file-image-o fa-2x'>VIEW</i>";
                     return "+";
-                },
-                postRender: function (ui) {
-                    console.log(" postRender AFTER_GFILE_SEQ")
-                    let rowIndx = ui.rowIndx, grid = this, $cell = grid.getCell(ui);
-                    $cell.find("#imageView").bind("click", function () {
-                        callWindowImageViewer(ui.rowData.AFTER_GFILE_SEQ);
-                    });
                 }
+                // postRender: function (ui) {
+                //     console.log(" postRender AFTER_GFILE_SEQ")
+                //     let rowIndx = ui.rowIndx, grid = this, $cell = grid.getCell(ui);
+                //     $cell.find("#imageView").bind("click", function () {
+                //         callWindowImageViewer(ui.rowData.AFTER_GFILE_SEQ);
+                //     });
+                // }
             },
             {title: '', dataType: 'string', dataIndx: 'SEQ', minWidth: 80 , editable: true,
                 render: function(ui){
@@ -720,27 +706,32 @@ let dateEditor = function (ui) {
                 }
             }
         ];
-        historyObj = {
-            width: 950,
-            height: 170, collapsible: false, resizable: false, showTitle: false, // pageModel: {type: "remote"},
-            numberCell: {title: 'No.'}, dragColumns: {enabled: false},
-            scrollModel: {autoFit: true}, trackModel: {on: true},
-            recIndx: 'SEQ',
-            postRenderInterval: -1, //call postRender synchronously.
+        $("#machine_manage_pop_form").find("#queryId").val("machine.selectMachineHistoryList");
+        $('#' + historyGridId).pqGrid({
+        //historyObj = {
+            width: "100%", height: 200,
+            dataModel: {
+                location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
+                url: "/paramQueryGridSelect",
+                postData: fnFormToJsonArrayData('machine_manage_pop_form'),
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            },
             columnTemplate: {
                 align: 'center',
                 halign: 'center',
                 hvalign: 'center'
             },
+            scrollModel: {autoFit: true},
+            numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
+            selectionModel: { type: 'row', mode: 'single'} ,
+            swipeModel: {on: false},
+            showTitle: false,
+            collapsible: false,
+            resizable: false,
+            trackModel: {on: true},
             colModel: historyColModel,
-            toolbar: {},
-            dataModel: {
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: historyPostData,
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                }
-            },
             rowSelect: function (event, ui) {
                 SelectedRowIndex = [];
                 let selectList = ui.addList;
@@ -752,37 +743,46 @@ let dateEditor = function (ui) {
                 let rowIndx = ui.rowIndx, $grid = this;
 
                 if (ui.dataIndx == 'AFTER_GFILE_SEQ') {
-                    callGridSingleFileUpload($historyGrid, rowIndx, 'AFTER_GFILE_SEQ');
-                    $historyGrid.pqGrid("refresh");
+                    if (ui.rowData['BEFORE_GFILE_SEQ'] > 0){
+                        callWindowImageViewer(ui.rowData.AFTER_GFILE_SEQ);
+                    }else{
+                        callGridSingleFileUpload($historyGrid, rowIndx, 'AFTER_GFILE_SEQ');
+                    }
+
+                    //$historyGrid.pqGrid("refresh");
                     //callGridSingleFileUpload($historyGrid, rowIndx, 'AFTER_GFILE_SEQ');
                     return;
                 }
                 if (ui.dataIndx == 'BEFORE_GFILE_SEQ') {
-                    callGridSingleFileUpload($historyGrid, rowIndx, 'BEFORE_GFILE_SEQ');
-                    $historyGrid.pqGrid("refresh");
+
+                    if (ui.rowData['BEFORE_GFILE_SEQ'] > 0){
+                        callWindowImageViewer(ui.rowData.BEFORE_GFILE_SEQ);
+                    }else{
+                        callGridSingleFileUpload($historyGrid, rowIndx, 'BEFORE_GFILE_SEQ');
+                    }
+
+                    //$historyGrid.pqGrid("refresh");
                     return;
                 }
                 if (ui.dataIndx == 'SEQ') {
+
                     $historyGrid.pqGrid("updateRow", { rowIndx: rowIndx , row: { "BEFORE_GFILE_SEQ": "" } });
                     $historyGrid.pqGrid("updateRow", { rowIndx: rowIndx , row: { "AFTER_GFILE_SEQ": "" } });
+
+                    var gridInstance = $historyGrid.pqGrid('getInstance').grid;
+                    var changes = gridInstance.getChanges({format: 'byVal'});
                     $historyGrid.pqGrid("refresh");
+                    console.log("after1", changes);
+
                     return;
                 }
-
-
-
-            },
-            cellSave: function (evt, ui) {
-                if (ui.oldVal === undefined && ui.newVal === null) {
-                    $historyGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
-                }
             }
-        };
-
-        $historyGrid = $('#' + historyGridId).pqGrid(historyObj);
+        });
+        // $("#machine_manage_pop_form").find("#queryId").val("machine.selectMachineHistoryList");
+        // $historyGrid = $('#' + historyGridId).pqGrid(historyObj);
         /**  정비이력 그리드 선언 끝 **/
 
-/**  이벤트  **/
+        /**  이벤트  **/
 
         $("#machine_manage_pop_form").find("#addHistoryBtn").click(function(event){
 
@@ -797,7 +797,11 @@ let dateEditor = function (ui) {
         });
         $("#machine_manage_pop_form").find("#deleteHistoryBtn").click(function(event){
 
-            $historyGrid.pqGrid('deleteRow', {'rowIndx': SelectedRowIndex});//rowIndx
+//            if(confirm("정비이력이 바로 삭제됩니다.\n삭제 하시겠습니까?")){
+                $historyGrid.pqGrid('deleteRow', {'rowIndx': SelectedRowIndex});//rowIndx
+                //fnDeletePQGrid($historyGrid, SelectedRowIndex, "machine.deleteMachineMasterHistory");
+  //          }
+
         });
 
         $newBtn.click(function(event){
@@ -818,14 +822,15 @@ let dateEditor = function (ui) {
                 }else{
                     $("#machine_manage_pop_form").find("#historyGrid").val("");
                 }
-                // let data_history = $historyGrid.pqGrid('option', 'dataModel.data');
+                //let data_history = $historyGrid.pqGrid('option', 'dataModel.data');
+                //console.log("data_history",data_history);
                 // let total_history= data_history.length;
                 // for(let tempI=0; tempI<total_history; tempI++){
                 //
                 //     let rowData3 = $historyGrid.pqGrid("getRowData", {rowIndx: tempI});
                 //     console.log("rowData3",rowData3);
                 // }
-                // return;
+
                 let parameters = {
                     'url': '/managerEquip',
                     'data': $('#machine_manage_pop_form').serialize()
@@ -840,6 +845,8 @@ let dateEditor = function (ui) {
         });
         $deleteBtn.click(function(event){
             if(confirm("삭제하시겠습니까?")){
+
+
                 $("#machine_manage_pop_form").find("#queryId").val("machine.deleteMachineMaster");
                 let parameters = {
                     'url': '/json-update',
@@ -974,8 +981,10 @@ let dateEditor = function (ui) {
         $("#machine_manage_pop_form").find("#PHOTO_GFILE_SRC").attr("src", "/image/999");
 
 
-        $logGrid.pqGrid('destroy');
-        $historyGrid.pqGrid('destroy');
+        //$logGrid.pqGrid('destroy');
+        //$historyGrid.pqGrid('destroy');
+        //$('#' + logGridId).pqGrid('destroy');
+        //$('#' + historyGridId).pqGrid('destroy');
         $searchBtn.trigger("click");
     });
     // 모달 open
@@ -1025,18 +1034,19 @@ let dateEditor = function (ui) {
             $("#machine_manage_pop_form").find("#deleteHistoryBtn").hide();
 
             $("#machine_manage_pop_form").find("#queryId").val("machine.selectMachineLogList");
-            $logGrid = $('#' + logGridId).pqGrid(logObj);
-            $logGrid.pqGrid("option", "dataModel.postData", function(ui){
+            //$logGrid = $('#' + logGridId).pqGrid(logObj);
+            $('#' + logGridId).pqGrid("option", "dataModel.postData", function(ui){
                 return fnFormToJsonArrayData('#machine_manage_pop_form');
             } );
-            $logGrid.pqGrid("refreshDataAndView");
+            $('#' + logGridId).pqGrid("refreshDataAndView");
 
             $("#machine_manage_pop_form").find("#queryId").val("machine.selectMachineHistoryList");
-            $historyGrid = $('#' + historyGridId).pqGrid(historyObj);
-            $historyGrid.pqGrid("option", "dataModel.postData", function(ui){
+            //$historyGrid = $('#' + historyGridId).pqGrid(historyObj);
+            //$historyGrid.pqGrid("option", "dataModel.postData", function(ui){
+            $('#' + historyGridId).pqGrid("option", "dataModel.postData", function(ui){
                 return fnFormToJsonArrayData('#machine_manage_pop_form');
             } );
-            $historyGrid.pqGrid("refreshDataAndView");
+            $('#' + historyGridId).pqGrid("refreshDataAndView");
 
 
         }, parameters, '');
@@ -1062,16 +1072,14 @@ let dateEditor = function (ui) {
             }
         });
     };
-    let EtcFile = $("#common_formdata_multi_upload_form").find("#click_singfile_chose_btn");
+
     /** 업체 기타 파일 업로드 */
     $("#machine_manage_pop_form").find("#etc_attach_file").click(function (e) {
-
-        console.log("EtcFile1", EtcFile);
+        let EtcFile = $("#common_formdata_multi_upload_form").find("#click_singfile_chose_btn");
         EtcFile.trigger("click");
-        EtcFile.change(function () {
+        EtcFile.unbind().change(function () {
             var input = $(this);
             var files = input.get(0).files;
-            console.log("files etc", input);
             if (files.length > 0) {
                 let formData = new FormData();
                 for (var i = 0; i < files.length; i++) {
@@ -1079,38 +1087,36 @@ let dateEditor = function (ui) {
                 }
                 fnFormDataFileUploadAjax(function (data) {
                     let fileInfo = data.fileUploadList[0];
-                    alert(1);
+                    input.val('');
                     $("#machine_manage_pop_form").find("#ETC_GFILE_SEQ_NM").val(fileInfo.ORGINAL_FILE_NM);
                     $("#machine_manage_pop_form").find("#ETC_GFILE_SEQ").val(fileInfo.GFILE_SEQ);
                 }, formData, '');
             }
         });
-        console.log("EtcFile2", EtcFile);
     });
-    let photoFile = $("#common_formdata_multi_upload_form").find("#click_singfile_chose_btn");
+
     /** 장비 파일 업로드 */
     $("#machine_manage_pop_form").find("#photo_upload").click(function (e) {
+        let photoFile = $("#common_formdata_multi_upload_form").find("#click_singfile_chose_btn");
 
-        console.log("photoFile1", photoFile);
         photoFile.trigger("click");
-        photoFile.change(function () {
+        photoFile.unbind().change(function () {
             var input = $(this);
             var files = input.get(0).files;
-            console.log("files photo", input);
+
             if (files.length > 0) {
                 let formData = new FormData();
                 for (var i = 0; i < files.length; i++) {
                     formData.append("file" + i, files[i]);
                 }
                 fnFormDataFileUploadAjax(function (data) {
-                    alert(2);
+                    input.val('');
                     let fileInfo = data.fileUploadList[0];
                     $("#machine_manage_pop_form").find("#PHOTO_GFILE_SRC").attr("src", "/image/" + fileInfo.GFILE_SEQ);
                     $("#machine_manage_pop_form").find("#PHOTO_GFILE_SEQ").val(fileInfo.GFILE_SEQ);
                 }, formData, '');
             }
         });
-        console.log("photoFile2", photoFile);
     });
     // topWrap 확장 함수
     function topMenuOpen(){
@@ -1138,4 +1144,10 @@ let dateEditor = function (ui) {
         con2.stop().animate({height: _h2},300, 'easeInCubic');
     }
 
+</script>
+<script>
+    $(function(){
+        $("#div_tabs").removeClass('ui-widget-content');
+        $("#div_tabs2").removeClass('ui-widget-content');
+    });
 </script>
