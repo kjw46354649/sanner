@@ -17,107 +17,106 @@
         <form class="form-inline" id="SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectSalesClosingHistoryList">
             <div class="gubunWrap">
-                <div class="form-group1">
-                    <div class="group-item">
-                        <label class="control-label" for="COMP_CD">사업자</label>
-                        <select class="form-control" name="COMP_CD" id="COMP_CD">
-                            <option value="">All</option>
-                        </select>
-                    </div>
-                    <div class="group-item">
-                        <label class="control-label" for="ORDER_COMP_CD">발주사</label>
-                        <select class="form-control" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                            <option value="">All</option>
-                        </select>
-                    </div>
-                    <div class="group-item">
-                        <label class="control-label" for="DEGREE">차수</label>
-                        <select class="form-control" name="DEGREE" id="DEGREE">
-                            <option value="">All</option>
-                        </select>
-                    </div>
-                    <div class="group-item">
-                        <label class="control-label" for="NOTE">비고</label>
-                        <input type="text" class="form-control" name="NOTE" id="NOTE">
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label class="control-label">마감년월</label>
-                        <select name="CLOSE_YEAR_LEFT" id="CLOSE_YEAR_LEFT"></select>년
-                        <select name="CLOSE_MONTH_LEFT" id="CLOSE_MONTH_LEFT"></select>월 ~
-                        <select name="CLOSE_YEAR_RIGHT" id="CLOSE_YEAR_RIGHT" disabled></select>년
-                        <select name="CLOSE_MONTH_RIGHT" id="CLOSE_MONTH_RIGHT" disabled></select>월
-                        <label class="checkbox-inline i-checks" for="RANGE_SEARCH">
-                            <input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH"><i></i> Range 검색
-                        </label>
-                    </div>
-                    <button type="button" class="search_btn" id="CONTROL_MANAGE_SEARCH">검색</button>
-<%--                        <div class="form-group col-md-6 text-right">--%>
-<%--                            <div type="submit" class="btn btn-success btn-sm btn-default" id="testSearch">--%>
-<%--                                Search--%>
-<%--                            </div>--%>
-<%--                        </div>--%>
-                </div>
+                <ul>
+                    <li>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="COMP_CD">사업자</label>
+                            <select class="wd_200" name="COMP_CD" id="COMP_CD">
+                                <option value="">All</option>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="ORDER_COMP_CD">발주사</label>
+                            <select class="wd_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
+                                <option value="">All</option>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="DEGREE">차수</label>
+                            <select class="wd_200" name="DEGREE" id="DEGREE">
+                                <option value="">All</option>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap">
+                            <label class="label_100" for="NOTE">비고</label>
+                            <input type="text" class="wd_200" name="NOTE" id="NOTE">
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" class="defaultBtn radius blue" id="CONTROL_SALES_CLOSING_HISTORY_SEARCH">검색</button>
+                        </span>
+                    </li>
+                    <li>
+                        <label class="label_100">마감년월</label>
+                        <select name="CLOSE_YEAR_LEFT" id="CLOSE_YEAR_LEFT"></select>
+                        <select name="CLOSE_MONTH_LEFT" id="CLOSE_MONTH_LEFT"></select><span style="margin: 10px 0; vertical-align: middle; font-size: 1.4rem;">~</span>
+                        <select name="CLOSE_YEAR_RIGHT" id="CLOSE_YEAR_RIGHT" disabled></select>
+                        <select name="CLOSE_MONTH_RIGHT" id="CLOSE_MONTH_RIGHT" disabled></select>
+                        <span class="chk_box" style="margin-left: 10px;"><input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH"><label for="RANGE_SEARCH"> Range 검색</label></span>
+                    </li>
+                </ul>
             </div>
         </form>
         <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
-
     <div class="topWrap" style="display: none">
         <form class="form-inline" id="MONTH_SALE_STATUS_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectMonthSaleStatusList">
             <div class="gubunWrap">
-                <div class="form-group1">
-                    <div class="group-item">
-                        <label class="control-label" for="COMP_CD">사업자</label>
-                        <select class="form-control" name="COMP_CD" id="COMP_CD">
-                            <option value="">All</option>
-                        </select>
-                    </div>
-                    <div class="group-item">
-                        <label class="control-label" for="ORDER_COMP_CD">발주사</label>
-                        <select class="form-control" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                            <option value="">All</option>
-                        </select>
-                    </div>
-                    <div class="group-item">
-                        <label class="control-label" for="DEGREE">차수</label>
-                        <select class="form-control" name="DEGREE" id="DEGREE">
-                            <option value="">All</option>
-                        </select>
-                    </div>
-                    <div class="group-item">
-                        <label class="control-label" for="NOTE">비고</label>
-                        <input type="text" class="form-control" name="NOTE" id="NOTE">
-                    </div>
-                    <div class="group-item">
-                        <label class="control-label" for="MONTH_SALE_YEAR">조회년도</label>
-                        <select class="form-control" name="MONTH_SALE_YEAR" id="MONTH_SALE_YEAR">
-                            <option></option>
-                        </select>
-                    </div>
-                    <div class="group-item-option">
-                        <label>Option</label>
-                    </div>
-                    <div class="chk_box_area">
-                        <input type="checkbox" name="DEPOSIT_STATUS_DISPLAY" id="DEPOSIT_STATUS_DISPLAY">
-                        <label for="DEPOSIT_STATUS_DISPLAY">입금현황 표시</label>
-                    </div>
-                    <button type="button" class="search_btn" id="CONTROL_MANAGE_SEARCH">검색</button>
-                </div>
+                <ul>
+                    <li>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="COMP_CD">사업자</label>
+                            <select class="wd_200" name="COMP_CD" id="COMP_CD">
+                                <option value="">All</option>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="ORDER_COMP_CD">발주사</label>
+                            <select class="wd_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
+                                <option value="">All</option>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="DEGREE">차수</label>
+                            <select class="wd_200" name="DEGREE" id="DEGREE">
+                                <option value="">All</option>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap">
+                            <label class="label_100" for="NOTE">비고</label>
+                            <input type="text" class="wd_200" name="NOTE" id="NOTE">
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" class="defaultBtn radius blue" id="CONTROL_MONTH_SALE_STATUS_SEARCH">검색</button>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="MONTH_SALE_YEAR">조회년도</label>
+                            <select class="wd_200" name="MONTH_SALE_YEAR" id="MONTH_SALE_YEAR">
+                                <option></option>
+                            </select>
+                        </span>
+                        <span class="txt_span pd-right20">Option</span>
+                        <span class="chk_box"><input type="checkbox" name="DEPOSIT_STATUS_DISPLAY" id="DEPOSIT_STATUS_DISPLAY"><label for="DEPOSIT_STATUS_DISPLAY">입금현황 표시</label></span>
+                    </li>
+                </ul>
             </div>
         </form>
         <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
-
     <div class="bottomWrap">
         <div class="tableWrap">
-            <div id="tabs">
-                <div class="row">&nbsp;
-                    <%--            <section>--%>
-                    <%--                <div class="col-md-12">--%>
-                    <%--                    <div id="CONTROL_MANAGE_GRID"></div>--%>
-                    <%--                </div>--%>
-                    <%--            </section>--%>
+            <div class="conWrap">
+                <div id="tabs">
                     <ul class="nav nav-tabs m-b-n-xxs">
                         <li class="active">
                             <a href="#CLOSING_HISTORY" data-toggle="tab" aria-expanded="true">마감이력</a>
@@ -138,7 +137,6 @@
             </div>
         </div>
     </div>
-</div>
 </div>
 
 <div class="modal" id="DETAIL_LIST_VIEW_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
@@ -206,8 +204,7 @@
             ]
         };
         let tab1Obj = {
-            // width: 700,
-            // height: 600,
+            height: 750,
             collapsible: false,
             resizable: true,
             showTitle: false,
@@ -326,8 +323,7 @@
             summaryEdit: false
         };
         let tab2Obj = {
-            // width: 700,
-            // height: 600,
+            height: 750,
             collapsible: false,
             resizable: true,
             showTitle: false,
@@ -413,8 +409,6 @@
             activate: function(event, ui) {
                 ui.newPanel.find('.pq-grid').pqGrid('refresh');
                 $('.topWrap').toggle(); // show -> hide , hide -> show
-                // $('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM').toggle(); // show -> hide , hide -> show
-                // $('#MONTH_SALE_STATUS_SEARCH_FORM').toggle(); // show -> hide , hide -> show
             }
         });
         /* init */
