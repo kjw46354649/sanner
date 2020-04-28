@@ -259,14 +259,6 @@ function topMenuClose(){
 
 // 견적관리 페이지 불러올때 꼭 호출해줘야하는 함수!!
 function estimateH(){
-	// var tableCon = $('.estimate .bottomWrap .tableWrap .conWrap');
-	var tableCon = $('.estimate .bottomWrap .tableWrap .conWrap');
-	var pageHeight = $(window).height();
-	var tableConWrapY = tableCon.offset().top;
-	var tableConWrapH = pageHeight - tableConWrapY - 16;
-
-	tableCon.css({'height' : tableConWrapH});
-
 	var tabId = "";
 	var tab = $(".tabMenuWrap .tabMenu li");
 	tab.each(function(){
@@ -274,6 +266,14 @@ function estimateH(){
 			tabId = $(this).find('a')[0].id;
 		}
 	});
+
+	// var tableCon = $('.estimate .bottomWrap .tableWrap .conWrap');
+	var tableCon = $("#view_"+tabId).find('.estimate .bottomWrap .tableWrap .conWrap');
+	var pageHeight = $(window).height();
+	var tableConWrapY = tableCon.offset().top;
+	var tableConWrapH = pageHeight - tableConWrapY - 16;
+
+	tableCon.css({'height' : tableConWrapH});
 
 	$("#view_"+tabId).find('.topWrap_btn').on('click' , function(){
 		if($(this).hasClass('on')){

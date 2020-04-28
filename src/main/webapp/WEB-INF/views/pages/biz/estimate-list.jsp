@@ -74,28 +74,30 @@
     </div>
     <div class="bottomWrap">
         <div class="hWrap">
-            <button type="button" class="defaultBtn" id="btnEstimateListNewEstimate">견적서 신규 작성</button>
-            <button type="button" class="defaultBtn" id="btnEstimateListNewVersion">차수 생성</button>
-            <span class="chk_box mg-left15"><input id="chkEstimateListDetail" type="checkbox"><label for="chkEstimateListDetail"> 견적상세요건</label></span>
-            <div class="rightSpan">
-                <button type="button" class="defaultBtn yelllowGra" id="btnEstimateListDelete">Delete</button>
-                <button type="button" class="defaultBtn blueGra" id="btnEstimateListSave">Save</button>
+            <div class="d-inline">
+                <button type="button" class="defaultBtn btn-120w" id="btnEstimateListNewEstimate">견적서 신규 작성</button>
+                <button type="button" class="defaultBtn btn-120w" id="btnEstimateListNewVersion">차수 생성</button>
+                <%--<span class="chk_box mg-left15"><input id="chkEstimateListDetail" type="checkbox"><label for="chkEstimateListDetail"> 견적상세요건</label></span>--%>
+                <div class="rightSpan">
+                    <button type="button" class="defaultBtn btn-120w" id="btnEstimateListSave">Save</button>
+                    <button type="button" class="defaultBtn btn-120w" id="btnEstimateListDelete">Delete</button>
+                </div>
             </div>
         </div>
         <div class="tableWrap">
             <div class="buttonWrap">
-                <span class="slt_wrap">
-                    <button type="button" class="smallBtn mg-right5">견적정보</button>
-                    <button type="button" class="smallBtn blue">금액정보</button>
-                </span>
-                <span class="slt_wrap namePlusSlt right_float">
-                    <label for="selEstimateListExcel">견적서 추출</label>
-                    <select class="mg-right25" id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출"></select>
-                    <button type="button" class="defaultBtn grayGra" id="btnEstimateListDrawView">도면 보기</button>
-                </span>
+                <div class="d-inline">
+                    <button type="button" class="smallBtn yellow">견적정보</button>
+                    <button type="button" class="smallBtn yellow">금액정보</button>
+                    <span class="slt_wrap namePlusSlt right_float">
+                        <label for="selEstimateListExcel">견적서 추출</label>
+                        <select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출"></select>
+                        <button type="button" class="defaultBtn grayGra" id="btnEstimateListDrawView">도면 보기</button>
+                    </span>
+                </div>
             </div>
             <div class="conMainWrap">
-                <div id="estimate_master_top_grid" class="jqx-refresh"></div>
+                <div id="estimate_master_top_grid" class="jqx-refresh"></div><br/>
             </div>
             <div class="conWrap">
                 <div id="estimate_master_bot_grid" class="jqx-refresh"></div>

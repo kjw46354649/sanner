@@ -49,7 +49,10 @@
 .form-group1 .search_btn:before { content: ''; width: 9px; height: 12px; background: url(../images/common/ico_search.jpg)no-repeat 0 0; position: absolute; top: 10px; left: 12px; }
 /*.form-group1 > div.group-item > input.col-2 { width: 75%; }*/
 
-d-inline { display: inline; }
+.d-inline { display: inline; }
+.d-inline button{ margin: 0 1px; }
+.d-inline select{ margin: 0 1px; }
+.d-inline input{ margin: 0 1px; }
 
 .layerPopup .list99 { height: 360px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)"; }
 .layerPopup .list99 .rowStyle tr th { border: 1px solid #acb9b9; background: #e8f0f0; color: #162f2f; text-align: center; padding: 5px; }
