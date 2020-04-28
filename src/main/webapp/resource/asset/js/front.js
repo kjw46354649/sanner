@@ -196,57 +196,91 @@ function sideMenuClose(){
 }
 
 // topWrap 확장 함수
-function topMenuOpen(element) {
-	var top = $(element).parents('.topWrap').find('.gubunWrap');
-	var con = $(element).parents('.page').find('.conWrap');
-	var t_h = top.children('ul').height() + 10;
-	var c_h = con.height() - t_h + top.height() + 10;
-	top.stop().animate({height: t_h}, 300, 'easeOutCubic');
-	con.stop().animate({height: c_h}, 300, 'easeOutCubic');
+function topMenuOpen(){
+	var tabId = "";
+	var tab = $(".tabMenuWrap .tabMenu li");
+	tab.each(function(){
+		if($(this).hasClass('on')) {
+			tabId = $(this).find('a')[0].id;
+			//console.log(tabId);
+		}
+	});
 
-	setTimeout(function () {
+	var top = $("#view_"+tabId).find('.gubunWrap');
+	var con = $("#view_"+tabId).find('.bottomWrap .tableWrap .conWrap');
+	var t_h = $("#view_"+tabId).find('.gubunWrap ul').height()+10;
+
+	/*var top = $();
+	var con = $('.bottomWrap .tableWrap .conWrap');
+	var t_h = $('.gubunWrap ul').height()+10;*/
+	var c_h = con.height() - t_h + top.height() + 10;
+	top.stop().animate({height:t_h},300, 'easeOutCubic');
+	con.stop().animate({height: c_h },300, 'easeOutCubic');
+
+	setTimeout(function(){
 		var conHeight = $(".estimate .bottomWrap .tableWrap .conWrap").height();
 		var pqGrid = $('.estimate .bottomWrap .tableWrap .conWrap .jqx-refresh');
-		pqGrid.each(function () {
+		pqGrid.each(function(){
 			$(this).pqGrid('option', 'height', c_h).pqGrid('refresh');
 		});
 	}, 350);
+
 }
-
 // topWrap 축소 함수
-function topMenuClose(element) {
-	// console.log($(element).parents('.page').find('.conWrap'));
-	var top = $(element).parents('.topWrap').find('.gubunWrap');
-	var con = $(element).parents('.page').find('.conWrap');
-	var t_h = top.find('ul li:first-child').outerHeight() + 10;
-	var c_h = con.height() + top.height() - t_h + 10;
-	top.stop().animate({height: t_h}, 300, 'easeInCubic');
-	con.stop().animate({height: c_h}, 300, 'easeInCubic');
+function topMenuClose(){
+	var tabId = "";
+	var tab = $(".tabMenuWrap .tabMenu li");
+	tab.each(function(){
+		if($(this).hasClass('on')) {
+			tabId = $(this).find('a')[0].id;
+			//console.log(tabId);
+		}
+	});
 
-	setTimeout(function () {
+	var top = $("#view_"+tabId).find('.gubunWrap');
+	var con = $("#view_"+tabId).find('.bottomWrap .tableWrap .conWrap');
+	var t_h = $("#view_"+tabId).find('.gubunWrap ul li').outerHeight() + 10;
+
+	/*var top = $('.gubunWrap');
+	var con = $('.bottomWrap .tableWrap .conWrap');
+	var t_h = $('.gubunWrap ul li').outerHeight() + 10;*/
+	var c_h = con.height() + top.height() - t_h + 10;
+	top.stop().animate({height:t_h}, 300, 'easeInCubic');
+	con.stop().animate({height: c_h},300, 'easeInCubic');
+
+	setTimeout(function(){
 		var conHeight = $(".estimate .bottomWrap .tableWrap .conWrap").height();
 		var pqGrid = $('.estimate .bottomWrap .tableWrap .conWrap .jqx-refresh');
-		pqGrid.each(function () {
+		pqGrid.each(function(){
 			$(this).pqGrid('option', 'height', c_h).pqGrid('refresh');
 		});
 	}, 350);
 }
 
 // 견적관리 페이지 불러올때 꼭 호출해줘야하는 함수!!
-function estimateH() {
+function estimateH(){
 	// var tableCon = $('.estimate .bottomWrap .tableWrap .conWrap');
 	var tableCon = $('.estimate .bottomWrap .tableWrap .conWrap');
 	var pageHeight = $(window).height();
-	var tableConWrapY = tableCon.offset().top || 0;
+	var tableConWrapY = tableCon.offset().top;
 	var tableConWrapH = pageHeight - tableConWrapY - 16;
 
-	tableCon.css({'height': tableConWrapH});
-	$('.topWrap_btn').on('click', function () {
-		if ($(this).hasClass('on')) {
-			topMenuClose(this);
+	tableCon.css({'height' : tableConWrapH});
+
+	var tabId = "";
+	var tab = $(".tabMenuWrap .tabMenu li");
+	tab.each(function(){
+		if($(this).hasClass('on')) {
+			tabId = $(this).find('a')[0].id;
+		}
+	});
+
+	$("#view_"+tabId).find('.topWrap_btn').on('click' , function(){
+		if($(this).hasClass('on')){
+			topMenuClose();
 			$(this).removeClass('on');
-		} else {
-			topMenuOpen(this);
+		}else{
+			topMenuOpen();
 			$(this).addClass('on');
 		}
 	});

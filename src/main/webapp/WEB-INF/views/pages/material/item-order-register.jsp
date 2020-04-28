@@ -801,9 +801,6 @@
                 toolbar: itemOrderRegisterPopBotToolbar
             });
 
-            itemOrderRegisterPopTopGrid.pqGrid("refreshDataAndView");
-            itemOrderRegisterPopBotGrid.pqGrid("refreshDataAndView");
-
         });
 
         /** 버튼 처리 **/
