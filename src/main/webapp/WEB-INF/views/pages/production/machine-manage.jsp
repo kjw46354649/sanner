@@ -156,15 +156,16 @@
             <div class="qualityWrap">
                 <div class="h_area">
 					<div class="right_sort ">
-                        <button type="button" id="saveBtn" class="graBtn save">SAVE</button>
-                        <button type="button" id="deleteBtn" class="graBtn save">Delete</button>
+
+                        <button type="button" class="defaultBtn btn-120w red" id="saveBtn">SAVE</button>
+                        <button type="button" class="defaultBtn btn-120w green" id="deleteBtn">Delete</button>
 					</div>
 
                 </div>
                 <div class="resultWrap99 list99">
                     <div class="leftWrap">
                         <input type="hidden" id="PHOTO_GFILE_SEQ" name="PHOTO_GFILE_SEQ" value="">
-                        <img src="/image/999" id="PHOTO_GFILE_SRC" width="400px" alt="장비사진" class="img-circle m-b">
+                        <img src="/image/999" id="PHOTO_GFILE_SRC" width="400px" alt="장비사진" >
                         <div class="btnWrap">
                             <button type="button" id="photo_upload" class="defaultBtn">사진변경하기</button>
                         </div>
@@ -173,10 +174,10 @@
                         <table class="rowStyle">
                             <caption></caption>
                             <colgroup>
-                                <col width="24%">
-                                <col width="24%">
-                                <col width="24%">
-                                <col width="24%">
+                                <col width="110px">
+                                <col width="171px">
+                                <col width="110px">
+                                <col width="171px">
                             </colgroup>
                             <tr>
                                 <th scope="row">Item ID</th>
@@ -186,10 +187,10 @@
                             </tr>
                             <tr>
                                 <th scope="row">장비명</th>
-                                <td ><input type="text" name="EQUIP_NM" id="EQUIP_NM" placeholder="장비명" value="" title="장비명"></td>
+                                <td ><input type="text" name="EQUIP_NM" id="EQUIP_NM" placeholder="장비명" value="" title="장비명" class="wd_150"></td>
                                 <th scope="row">공정</th>
                                 <td>
-                                    <select id="PROCESS_TYPE" name="PROCESS_TYPE" data-required="true" class="form-control parsley-validated">
+                                    <select id="PROCESS_TYPE" name="PROCESS_TYPE" data-required="true" class="wd_150">
                                         <option value=""><spring:message code="com.form.top.sel.option" /></option>
                                         <c:forEach var="vlocale" items="${HighCode.H_1010}">
                                             <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
@@ -200,7 +201,7 @@
                             <tr>
                                 <th scope="row">장비종류</th>
                                 <td>
-                                    <select id="EQUIP_TYPE" name="EQUIP_TYPE" data-required="true" class="form-control parsley-validated">
+                                    <select id="EQUIP_TYPE" name="EQUIP_TYPE" data-required="true" class="wd_150">
                                         <option value=""><spring:message code="com.form.top.sel.option" /></option>
                                         <c:forEach var="vlocale" items="${HighCode.H_1012}">
                                             <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
@@ -209,7 +210,7 @@
                                 </td>
                                 <th scope="row">장비규격</th>
                                 <td>
-                                    <select id="EQUIP_SIZE" name="EQUIP_SIZE" data-required="true" class="form-control parsley-validated">
+                                    <select id="EQUIP_SIZE" name="EQUIP_SIZE" data-required="true" class="wd_150">
                                         <option value=""><spring:message code="com.form.top.sel.option" /></option>
                                         <c:forEach var="vlocale" items="${HighCode.H_1034}">
                                             <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
@@ -220,7 +221,7 @@
                             <tr>
                                 <th scope="row">제조사</th>
                                 <td>
-                                    <select id="EQUIP_COMP_CD" name="EQUIP_COMP_CD" data-required="true" class="form-control parsley-validated">
+                                    <select id="EQUIP_COMP_CD" name="EQUIP_COMP_CD" data-required="true" class="wd_150">
                                         <option value=""><spring:message code="com.form.top.sel.option" /></option>
                                         <c:forEach var="vlocale" items="${HighCode.H_1037}">
                                             <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
@@ -229,7 +230,7 @@
                                 </td>
                                 <th scope="row">설치위치</th>
                                 <td>
-                                    <select id="FACTORY_AREA" name="FACTORY_AREA" data-required="true" class="form-control parsley-validated">
+                                    <select id="FACTORY_AREA" name="FACTORY_AREA" data-required="true" class="wd_150">
                                         <option value=""><spring:message code="com.form.top.sel.option" /></option>
                                         <c:forEach var="vlocale" items="${HighCode.H_1005}">
                                             <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
@@ -240,13 +241,13 @@
                             <tr>
                                 <th scope="row">담당자(정)</th>
                                 <td>
-                                    <select id="MAIN_USER_ID" name="MAIN_USER_ID" data-required="true" class="form-control parsley-validated">
+                                    <select id="MAIN_USER_ID" name="MAIN_USER_ID" data-required="true" class="wd_150">
                                         <option value=""><spring:message code="com.form.top.sel.option" /></option>
                                     </select>
                                 </td>
                                 <th scope="row">담당자(부)</th>
                                 <td>
-                                    <select id="SUB_USER_ID" name="SUB_USER_ID" data-required="true" class="form-control parsley-validated">
+                                    <select id="SUB_USER_ID" name="SUB_USER_ID" data-required="true" class="wd_150">
                                         <option value=""><spring:message code="com.form.top.sel.option" /></option>
                                     </select>
                                 </td>
@@ -254,11 +255,11 @@
                             <tr>
                                 <th scope="row">구입시기</th>
                                 <td>
-                                    <input class="datepicker-input" type="text" name="PURCHASE_DT" id="PURCHASE_DT" placeholder="" value="" title="구입시기" readonly>
+                                    <input class="datepicker-input wd_150" type="text" name="PURCHASE_DT" id="PURCHASE_DT" placeholder="" value="" title="구입시기" readonly >
                                 </td>
                                 <th scope="row">리셀러</th>
                                 <td>
-                                    <select id="RESELLER_CD" name="RESELLER_CD" data-required="true" class="form-control parsley-validated">
+                                    <select id="RESELLER_CD" name="RESELLER_CD" data-required="true" class="wd_150">
                                         <option value=""><spring:message code="com.form.top.sel.option" /></option>
                                         <c:forEach var="vlocale" items="${HighCode.H_1022}">
                                             <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
@@ -270,14 +271,15 @@
                                 <th scope="row">첨부파일</th>
                                 <td colspan="3">
                                     <input type="hidden" id="ETC_GFILE_SEQ" name="ETC_GFILE_SEQ" value="">
-                                    <input type="text" id="ETC_GFILE_SEQ_NM" name="ETC_GFILE_SEQ_NM" class="form-control" placeholder="첨부파일" readonly>
-                                    <input type="button" id="etc_attach_file" name="etc_attach_file" value="fileUpload">
+                                    <input type="text" id="ETC_GFILE_SEQ_NM" name="ETC_GFILE_SEQ_NM" placeholder="첨부파일" readonly class="wd_300">
+                                    <input type="button" id="etc_attach_file" name="etc_attach_file" value="fileUpload" class="smallBtn blue">
+
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row">비고</th>
                                 <td colspan="3">
-                                    <input type="text" id="NOTE" name="NOTE" class="form-control" placeholder="비고">
+                                    <input type="text" id="NOTE" name="NOTE"  placeholder="비고" class="wd_400">
                                 </td>
                             </tr>
 
@@ -293,7 +295,7 @@
                             <li id="_TAB4_TITLE"><a href="#_TAB4" data-toggle="tab" aria-expanded="false">정비이력</a></li>
                             <div class="right_sort">
                             <button type="button" id="addHistoryBtn" class="defaultBtn radius ">Add</button>
-                            <button type="button" id="deleteHistoryBtn" class="defaultBtn radius red ">Delete</button>
+                            <button type="button" id="deleteHistoryBtn" class="defaultBtn radius green ">Delete</button>
                             </div>
                         </ul>
 
