@@ -142,13 +142,14 @@
                     <div class="resultWrap">
                         <div class="left_sort">
                             <div class="col-md-6 col-sm-6">
-                                <h3>메일내용</h3><textarea class="col-md-12 col-sm-12" id="EMAIL_CONTENT" name="EMAIL_CONTENT" style="height: 220px;"></textarea>
+                                <h3>메일내용</h3><textarea class="col-md-12 col-sm-12" id="EMAIL_CONTENT" name="EMAIL_CONTENT" style="height: 320px;"></textarea>
                             </div>
                             <div class="right_sort">
                                 <h3 style="text-align: left;">메일수신처</h3>
                                 <div class="conMainWrap">
                                     <div id="estimate_register_bot_grid"></div>
                                 </div>
+                                <br>
                                 <h3 style="text-align: left;">첨부파일</h3>
                             </div>
                         </div>
@@ -327,7 +328,7 @@
         ];
 
         estimateRegisterTopGrid.pqGrid({
-            height: 400,
+            height: 300,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
                 url: "/paramQueryGridSelect",
