@@ -108,7 +108,7 @@
 
 
 
-        <div class="tableWrap jmestabs" id="div_tabs">
+        <div class="tableWrap jmestabs" id="div_tabs_machine_01">
 
             <ul class="smallTabMenuTabs">
                 <li class="active"><a href="#_TAB1" data-toggle="tab" aria-expanded="true">가공장비</a></li>
@@ -302,7 +302,7 @@
                 </div>
 
                 <div class="list98">
-                    <div class="tableWrap jmestabs" id="div_tabs2">
+                    <div class="tableWrap jmestabs" id="div_tabs_machine_02">
 
                         <ul class="smallTabMenuTabs">
                             <li class="active" id="_TAB3_TITLE"><a href="#_TAB3" data-toggle="tab" aria-expanded="true">작동로그</a></li>
@@ -942,7 +942,7 @@
 
 
 
-    $("#div_tabs").tabs({
+    $("#div_tabs_machine_01").tabs({
         activate: function(event, ui) {
             ui.newPanel.find('.pq-grid').pqGrid('refresh');
             let selTab = ui.newPanel.selector;
@@ -956,7 +956,7 @@
 
         }
     });
-    $("#div_tabs2").tabs({
+    $("#div_tabs_machine_02").tabs({
         activate: function(event, ui) {
             ui.newPanel.find('.pq-grid').pqGrid('refresh');
             let selTab = ui.newPanel.selector;

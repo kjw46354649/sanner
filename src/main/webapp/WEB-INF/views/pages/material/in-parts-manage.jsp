@@ -120,7 +120,7 @@
         </div>
 
 
-        <div class="tableWrap jmestabs" id="div_tabs">
+        <div class="tableWrap jmestabs" id="div_tabs_part">
             <ul class="smallTabMenuTabs">
                 <li class="active"><a href="#_TAB1" data-toggle="tab" aria-expanded="true">현황관리</a></li>
                 <li><a href="#_TAB2" data-toggle="tab" aria-expanded="false">불출이력</a></li>
@@ -310,7 +310,10 @@
                         rowData["WAREHOUSE_CD"]=clave;
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
-                }
+                },
+                validations: [
+                    { type: 'minLen', value: 1, msg: "Required" }
+                ]
             },
             {title: '위치', dataType: 'string', dataIndx: 'LOC_SEQ_NM', minWidth: 120,
                 editor: {
@@ -338,10 +341,21 @@
                         rowData["LOC_SEQ"]=clave;
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
-                }
+                },
+                validations: [
+                    { type: 'minLen', value: 1, msg: "Required" }
+                ]
             },
-            {title: '자재관리번호', dataType: 'string', dataIndx: 'CONSUMABLE_NUM'},
-            {title: '자재명', dataType: 'string', dataIndx: 'CONSUMABLE_NM'},
+            {title: '자재관리번호', dataType: 'string', dataIndx: 'CONSUMABLE_NUM',
+                validations: [
+                    { type: 'minLen', value: 1, msg: "Required" }
+                ]
+            },
+            {title: '자재명', dataType: 'string', dataIndx: 'CONSUMABLE_NM',
+                validations: [
+                    { type: 'minLen', value: 1, msg: "Required" }
+                ]
+            },
             {title: '자재종류', dataType: 'string', dataIndx: 'CONSUMABLE_TYPE_NM',
                 editor: {
                     type: 'select',
@@ -590,8 +604,40 @@
         $("#mainAddBtn").click(function(event){
             mainGridId01.pqGrid('addNodes', [{"ACTIVE_YN":"Y"}], 0);
         });
+        let gridValidation = function(targetGrid){
+            let gridInstance = $("#" + targetGrid).pqGrid('getInstance').grid;
+            let addList = gridInstance.getChanges().addList;
+            let errCnt = 0;
+            for (var i = 0; i < addList.length; i++) {
+                var rowData = addList[i];
+                var isValid = gridInstance.isValid({ "rowData": rowData }).valid;
+                if (!isValid) {
+                    errCnt++;
+                }
+            }
 
+            let updateList = gridInstance.getChanges().updateList;
+            for (var i = 0; i < updateList.length; i++) {
+                var rowData = updateList;
+                var isValid = gridInstance.isValid({ "rowData": rowData }).valid;
+                if (!isValid) {
+                    errCnt++;
+                }
+            }
+
+            if(errCnt >0){
+                return false;
+            }else{
+                return true;
+            }
+
+        }
         $("#mainSaveBtn").click(function(event){
+
+            if(!gridValidation("main_grid_01")){
+                alert("그리드의 값이 올바르지 않습니다.");
+                return;
+            }
 
             if(confirm("저장 하시겠습니까?")){
                 // 그리드 데이터 폼에 넣기 to-do
@@ -706,7 +752,7 @@
 
 
 
-    $("#div_tabs").tabs({
+    $("#div_tabs_part").tabs({
         activate: function(event, ui) {
             ui.newPanel.find('.pq-grid').pqGrid('refresh');
             let selTab = ui.newPanel.selector;
