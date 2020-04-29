@@ -47,7 +47,7 @@
         <!-- /.modal-dialog -->
     </div>
 </div>
-<div class="page estimate">
+<div class="page estimate machineWrap">
         <form class="form-inline" id="in_warehouse_manage_search_form" name="in_warehouse_manage_search_form" role="form">
             <div class="topWrap">
                 <input type="hidden" name="queryId" id="queryId" value="selectInWarehouseManageList">
@@ -74,7 +74,8 @@
                                 <select id="MATERIAL_KIND" name="MATERIAL_KIND" title="소재형태" class="wd_200">
                                 </select>
                             </span>
-                            <span class="ipu_wrap right_float"><button type="button" class="search_btn" id="btnInWarehouseManageManageSearch">검색</button></span>
+                            <span class="ipu_wrap right_float"></span>
+                            <span class="ipu_wrap right_float"><button type="button" class="defaultBtn radius blue" id="btnInWarehouseManageManageSearch">검색</button></span>
                         </li>
                         <li>
                             <span class="ipu_wrap"><label class="label_100" for="SIZE">소재규격</label><input type="text" name="SIZE" id="SIZE" class="wd_200" value="" title="소재규격"></span>
@@ -121,7 +122,7 @@
                                 <select id="MATERIAL_KIND" name="MATERIAL_KIND" title="소재형태" class="wd_200">
                                 </select>
                             </span>
-                            <span class="ipu_wrap right_float"><button type="button" class="search_btn" id="btnInWarehouseManageOutSearch">검색</button></span>
+                            <span class="ipu_wrap right_float"><button type="button" class="defaultBtn radius blue" id="btnInWarehouseManageOutSearch">검색</button></span>
                         </li>
                         <li>
                             <span class="ipu_wrap"><label class="label_100" for="SIZE">소재규격</label><input type="text" name="SIZE" id="SIZE" class="wd_200" value="" title="소재규격"></span>
@@ -175,35 +176,26 @@
         </form>
 
     <div class="bottomWrap">
-        <div class="tableWrap">
-            <div class="tableWrap">
-                <div id="in_warehouse_manage_tabs">
-                    <div class="row">&nbsp;
-                        <ul class="nav nav-tabs m-b-n-xxs">
-                            <li class="active">
-                                <a href="#IN_WAREHOUSE_MANAGE_TAB1" data-toggle="tab" aria-expanded="true">현황관리</a>
-                            </li>
-                            <li class="">
-                                <a href="#IN_WAREHOUSE_MANAGE_TAB2" data-toggle="tab" aria-expanded="false">불출이력</a>
-                            </li>
-                        </ul>
-                        <div class="panel panel-default tab-content">
-                            <ul class="list-group tab-pane active" id="IN_WAREHOUSE_MANAGE_TAB1">
-                                <div class="row">
-                                    <div id="in_warehouse_manage_manage_grid01"></div>
-                                </div>
-                                <div class="row">
-                                    <div id="in_warehouse_manage_manage_grid02"></div>
-                                </div>
-                            </ul>
-                            <ul class="list-group tab-pane list-group-alt list-group-lg" id="IN_WAREHOUSE_MANAGE_TAB2">
-                                <div class="row">
-                                    <div id="in_warehouse_manage_out_grid01"></div>
-                                </div>
-                            </ul>
-                        </div>
+        <div class="tableWrap jmestabs" id="in_warehouse_manage_tabs">
+            <ul class="smallTabMenuTabs">
+                <li class="active"><a href="#IN_WAREHOUSE_MANAGE_TAB1" data-toggle="tab" aria-expanded="true">현황관리</a></li>
+                <li><a href="#IN_WAREHOUSE_MANAGE_TAB2" data-toggle="tab" aria-expanded="false">불출이력</a></li>
+            </ul>
+            <div class="tab-content">
+                <ul class="active" id="IN_WAREHOUSE_MANAGE_TAB1">
+                    <div class="conMainWrap">
+                        <div id="in_warehouse_manage_manage_grid01"></div>
                     </div>
-                </div>
+                    <br/>
+                    <div class="conWrap">
+                        <div id="in_warehouse_manage_manage_grid02"></div>
+                    </div>
+                </ul>
+                <ul class="" id="IN_WAREHOUSE_MANAGE_TAB2">
+                    <div class="conWrap">
+                        <div id="in_warehouse_manage_out_grid01"></div>
+                    </div>
+                </ul>
             </div>
         </div>
     </div>
@@ -525,7 +517,7 @@
         };
 
         inWarehouseManageManageGrid01.pqGrid({
-            width: "100%", height: 400,
+            width: "100%", height: 500,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'MY_MAT_STOCK_SEQ',
                 url: "/paramQueryGridSelect",
@@ -546,6 +538,7 @@
             trackModel: {on: true},
             colModel: inWarehouseManageManageColModel01,
             toolbar: inWarehouseManageManageToolbar01,
+            showTitle: false,
             complete: function(event, ui) {
             },
             selectChange: function (event, ui) {
@@ -579,7 +572,7 @@
         selectInWarehouseManageManageGrid02List();
         function selectInWarehouseManageManageGrid02List(){
             inWarehouseManageManageGrid02.pqGrid({
-                width: "100%", height: 200,
+                width: "100%", height: 300,
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
                     url: "/paramQueryGridSelect",
@@ -599,12 +592,13 @@
                 strNoRows: g_noData,
                 trackModel: {on: true},
                 colModel: inWarehouseManageManageColModel02,
-                toolbar: inWarehouseManageManageToolbar02
+                toolbar: inWarehouseManageManageToolbar02,
+                showTitle: false
             });
         }
 
         inWarehouseManageOutGrid.pqGrid({
-            width: "100%", height: 400,
+            width: "100%", height: "100%",
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
                 url: "/paramQueryGridSelect",
@@ -624,7 +618,7 @@
             strNoRows: g_noData,
             trackModel: {on: true},
             colModel: inWarehouseManageOutColModel,
-            toolbar: inWarehouseManageOutToolbar,
+            showTitle: false
         });
 
         function getSizeEditYn(typeNm, rowData){
