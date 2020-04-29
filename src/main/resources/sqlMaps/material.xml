@@ -525,6 +525,9 @@
             , A.ACTIVE_YN
         FROM jmes.TBL_CONSUMABLE_STOCK A
         WHERE 1=1
+        <if test="SEL_CONSUMABLE_STOCK_SEQ !='' and SEL_CONSUMABLE_STOCK_SEQ != null">
+            AND A.CONSUMABLE_STOCK_SEQ = #{SEL_CONSUMABLE_STOCK_SEQ}
+        </if>
         <if test="SEL_WAREHOUSE_CD !='' and SEL_WAREHOUSE_CD != null">
             AND A.WAREHOUSE_CD = #{SEL_FACTORY_AREA}
         </if>
@@ -598,7 +601,7 @@
             REQUEST_USER_ID, OUT_USE, INSERT_ID, INSERT_DT
         )VALUES(
             NEXTVAL(jmes.SEQ_CONSUMABLE_OUT), #{CONSUMABLE_STOCK_SEQ}, #{OUT_QTY},
-            #{REQUEST_USER_ID}, #{OUT_USE}, #{INSERT_ID}, NOW()
+            #{REQUEST_USER_ID}, #{OUT_USE}, #{LOGIN_USER_ID}, NOW()
         )
     </insert>
     <select id="selectConsumableHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
