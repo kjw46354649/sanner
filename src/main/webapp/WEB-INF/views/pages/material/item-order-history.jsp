@@ -30,7 +30,7 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label class="label_100" for="ITEM_NM">품명</label><input type="text" name="ITEM_NM" id="ITEM_NM" class="wd_200" value="" title="품명"></span>
                         <span class="gubun"></span>
-                        <button type="button" class="search_btn" id="btnItemOrderRegisterSearch">검색</button>
+                        <span class="ipu_wrap right_float"><button type="button" class="search_btn" id="btnItemOrderHistorySearch">검색</button></span>
                     </li>
                     <li>
                         <span class="ipu_wrap"><label class="label_100" for="MANAGE_NUM">관리번호</label><input type="text" name="MANAGE_NUM" id="MANAGE_NUM" class="wd_200" value="" title="관리번호"></span>
@@ -39,7 +39,7 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label class="label_100" for="M_ORDER_COMP_CD">소재주문업체</label><input type="text" name="M_ORDER_COMP_CD" id="M_ORDER_COMP_CD" class="wd_200" value="" title="소재주문업체"></span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label class="label_100" for="MATERIAL_DETAIL">소재종류</label><input type="text" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" placlass="wd_200" value="" title="소재주문업체"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="MATERIAL_DETAIL">소재종류</label><input type="text" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200" value="" title="소재주문업체"></span>
                         <span class="gubun"></span>
                     </li>
 
@@ -242,7 +242,7 @@
         };
 
         itemOrderHistoryLeftGrid.pqGrid({
-            height: 680,
+            height: '100%',
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
                 url: "/paramQueryGridSelect",
@@ -297,7 +297,7 @@
 
         function selectItemOrderHistoryRightList() {
             itemOrderHistoryRightGrid.pqGrid({
-                height: 680,
+                height: '100%',
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
                     url: "/paramQueryGridSelect",

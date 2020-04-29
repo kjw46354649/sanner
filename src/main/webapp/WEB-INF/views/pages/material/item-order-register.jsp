@@ -75,7 +75,7 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label class="label_100" for="ITEM_NM">품명</label><input type="text" name="ITEM_NM" id="ITEM_NM" class="wd_200" value="" title="품명"></span>
                         <span class="gubun"></span>
-                        <button type="button" class="search_btn" id="btnItemOrderRegisterSearch">검색</button>
+                        <span class="ipu_wrap right_float"><button type="button" class="search_btn" id="btnItemOrderRegisterSearch">검색</button></span>
                     </li>
                     <li>
                         <span class="ipu_wrap"><label class="label_100" for="MANAGE_NUM">관리번호</label><input type="text" name="MANAGE_NUM" id="MANAGE_NUM" class="wd_200" value="" title="관리번호"></span>
@@ -134,8 +134,8 @@
                             <button type="button" class="defaultBtn btn-120w" id="btnItemOrderRegisterCurrentStock">보유소재 전체현황</button>
                             <span class="chk_box"><input id="chkItemOrderRegisterAutoMatching" type="checkbox"/><label for="chkItemOrderRegisterAutoMatching">보유소개 자동매칭</label></span>
                             <span class="slt_wrap namePlusSlt right_float">
-                                <button type="button" class="defaultBtn yelllowGra" id="btnItemOrderRegisterDrawView">도면 보기</button>
-                                <button type="button" class="defaultBtn blueGra" id="btnItemOrderRegisterSave">Save</button>
+                                <button type="button" class="defaultBtn yelllow" id="btnItemOrderRegisterDrawView">도면 보기</button>
+                                <button type="button" class="defaultBtn blue" id="btnItemOrderRegisterSave">Save</button>
                             </span>
                         </span>
                     </div>
@@ -155,7 +155,7 @@
                             <select id="materSltd" name="materSltd" title="재질선택">
                             </select>
                             <span class="slt_wrap namePlusSlt right_float">
-                                <button type="button" class="defaultBtn blueGra" id="btnItemOrderRegisterOutSave">Save</button>
+                                <button type="button" class="defaultBtn blue" id="btnItemOrderRegisterOutSave">Save</button>
                             </span>
                         </div>
                     </div>
