@@ -133,9 +133,15 @@
             <div class="tab-content">
                 <ul class="active conWrap" id="_TAB1">
                     <div id="main_grid_01"></div>
+                    <div class="right_sort">
+                        전체 조회 건수 (Total : <span id="MAIN_GRID_01_TOTAL_RECORDS" style="color: #00b3ee">0</span>)
+                    </div>
                 </ul>
                 <ul class="conWrap" id="_TAB2">
                     <div id="main_grid_02"></div>
+                    <div class="right_sort">
+                        전체 조회 건수 (Total : <span id="MAIN_GRID_02_TOTAL_RECORDS" style="color: #00b3ee">0</span>)
+                    </div>
                 </ul>
             </div>
         </div>
@@ -435,6 +441,11 @@
             resizable: false,
             trackModel: {on: true},
             colModel: mainColModel01,
+            complete: function () {
+                let data = mainGridId01.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#MAIN_GRID_01_TOTAL_RECORDS').html(totalRecords);
+            },
             rowSelect: function (event, ui) {
                 SelectedRowIndex = [];
                 let selectList = ui.addList;
@@ -497,6 +508,11 @@
             resizable: false,
             trackModel: {on: true},
             colModel: mainColModel02,
+            complete: function () {
+                let data = mainGridId02.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#MAIN_GRID_02_TOTAL_RECORDS').html(totalRecords);
+            },
             rowSelect: function (event, ui) {
                 SelectedRowIndex = [];
                 let selectList = ui.addList;
@@ -604,6 +620,10 @@
         $("#mainAddBtn").click(function(event){
             mainGridId01.pqGrid('addNodes', [{"ACTIVE_YN":"Y"}], 0);
         });
+        $("#mainLocBtn").click(function(event){
+            alert("위치정보관리 작업중");
+        });
+
         let gridValidation = function(targetGrid){
             let gridInstance = $("#" + targetGrid).pqGrid('getInstance').grid;
             let addList = gridInstance.getChanges().addList;

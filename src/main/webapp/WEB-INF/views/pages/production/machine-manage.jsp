@@ -117,9 +117,15 @@
              <div class="tab-content">
                  <ul class="active conWrap" id="_TAB1">
                          <div id="machine_manage_current_grid"></div>
+                         <div class="right_sort">
+                             전체 조회 건수 (Total : <span id="MACHINE_MANAGE_CURRENT_GRID_TOTAL_RECORDS" style="color: #00b3ee">0</span>)
+                         </div>
                  </ul>
                  <ul class="conWrap" id="_TAB2">
                          <div id="machine_manage_etc_grid"></div>
+                         <div class="right_sort">
+                             전체 조회 건수 (Total : <span id="MACHINE_MANAGE_ETC_GRID_TOTAL_RECORDS" style="color: #00b3ee">0</span>)
+                         </div>
                  </ul>
              </div>
         </div>
@@ -456,6 +462,11 @@
                     return {data: dataJSON.data};
                 }
             },
+            complete: function () {
+                let data = $currentGrid.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#MACHINE_MANAGE_CURRENT_GRID_TOTAL_RECORDS').html(totalRecords);
+            },
             cellDblClick: function (event, ui) {
                 if (ui.dataIndx === 'PHOTO_GFILE_SEQ' || ui.dataIndx === 'EQUIP_NM'){
                     let target = ui.rowData.EQUIP_ID;
@@ -489,16 +500,16 @@
             {title: 'Item ID', dataType: 'string', dataIndx: 'EQUIP_ID'},
             {title: '장비명', dataType: 'string', dataIndx: 'EQUIP_NM'},
             {title: '공정', dataType: 'string', dataIndx: 'PROCESS_TYPE_NM'},
-            {title: '장비<br>종류', dataType: 'string', dataIndx: 'EQUIP_TYPE_NM'},
-            {title: '장비<br>규격', dataType: 'string', dataIndx: 'EQUIP_SIZE_NM'},
+            {title: '장비종류', dataType: 'string', dataIndx: 'EQUIP_TYPE_NM'},
+            {title: '장비규격', dataType: 'string', dataIndx: 'EQUIP_SIZE_NM'},
             {title: '제조사', dataType: 'string', dataIndx: 'EQUIP_COMP_NM'},
             {title: '리셀러', dataType: 'string', dataIndx: 'RESELLER_NM'},
             {title: '설치위치', dataType: 'string', dataIndx: 'FACTORY_AREA_NM'},
-            {title: '공장<br>구분', dataType: 'string', dataIndx: 'FACTORY_NM'},
+            {title: '공장구분', dataType: 'string', dataIndx: 'FACTORY_NM'},
             {title: '구입시기', dataType: 'string', dataIndx: 'PURCHASE_DT'},
             {title: '담당(정)', dataType: 'string', dataIndx: 'MAIN_USER_NM'},
             {title: '담당(부)', dataType: 'string', dataIndx: 'SUB_USER_NM'},
-            {title: '작동시작<br>(누적)', dataType: 'string', dataIndx: 'WORKING_TIME'},
+            {title: '작동시작(누적)', dataType: 'string', dataIndx: 'WORKING_TIME'},
             //{title: '최근<br>정비일시', dataType: 'string', dataIndx: ''},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
         ];
@@ -522,6 +533,11 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            complete: function () {
+                let data = $etcGrid.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#MACHINE_MANAGE_ETC_GRID_TOTAL_RECORDS').html(totalRecords);
             },
             cellClick: function (event, ui) {
                 if (ui.dataIndx === 'PHOTO_GFILE_SEQ' || ui.dataIndx === 'EQUIP_NM'){
