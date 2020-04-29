@@ -13,7 +13,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <div class="page process_confirm">
-    <div class="leftWrap left_float">
+    <div class="leftWrap1 left_float">
         <div>
             <form class="form-inline" id="CONFIRM_ORDER_SEARCH_FORM" role="form">
                 <input type="hidden" name="queryId" id="queryId" value="selectConfirmOrderList">
@@ -63,7 +63,7 @@
     </div>
 
 
-    <div class="rightWrap right_float">
+    <div class="rightWrap1 right_float">
         <div>
             <form class="form-inline" id="PROCESS_CONFIRM_SEARCH_FORM" role="form">
                 <input type="hidden" name="queryId" id="queryId" value="selectProcessConfirmList">
@@ -115,7 +115,7 @@
         </div>
     </div>
 
-    <div class="rightWrap right_float">
+    <div class="rightWrap1 right_float">
         <div>
             <form class="form-inline" id="OUTSIDE_SEARCH_FORM" role="form">
                 <input type="hidden" name="queryId" id="queryId" value="selectOutsideProcessingList">
@@ -208,7 +208,7 @@
             }
         ];
         let leftObj = {
-            height: 680,
+            height: 750,
             collapsible: false,
             resizable: true,
             showTitle: false,
