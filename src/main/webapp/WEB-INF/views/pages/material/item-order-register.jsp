@@ -75,7 +75,7 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label class="label_100" for="ITEM_NM">품명</label><input type="text" name="ITEM_NM" id="ITEM_NM" class="wd_200" value="" title="품명"></span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap right_float"><button type="button" class="search_btn" id="btnItemOrderRegisterSearch">검색</button></span>
+                        <span class="ipu_wrap right_float"><button type="button" class="defaultBtn radius blue" id="btnItemOrderRegisterSearch">검색</button></span>
                     </li>
                     <li>
                         <span class="ipu_wrap"><label class="label_100" for="MANAGE_NUM">관리번호</label><input type="text" name="MANAGE_NUM" id="MANAGE_NUM" class="wd_200" value="" title="관리번호"></span>
@@ -126,7 +126,7 @@
     <div class="bottomWrap">
         <div class="tableWrap">
             <div class="conWrap">
-                <div class="leftWrap">
+                <div class="left_60Wrap">
                     <div class="buttonWrap">
                         <span class="d-inline">
                             <button type="button" class="defaultBtn btn-120w" id="btnItemOrderRegisterOrder">소재주문</button>
@@ -143,7 +143,7 @@
                         <div id="item_order_register_left_grid" class="jqx-refresh"></div>
                     </div>
                 </div>
-                <div class="rightWrap">
+                <div class="right_30Wrap">
                     <div class="buttonWrap">
                         <div class="d-inline">
                             <select id="customSltd" name="customSltd" title="발주처 선태">

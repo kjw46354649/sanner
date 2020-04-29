@@ -30,7 +30,7 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label class="label_100" for="ITEM_NM">품명</label><input type="text" name="ITEM_NM" id="ITEM_NM" class="wd_200" value="" title="품명"></span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap right_float"><button type="button" class="search_btn" id="btnItemOrderHistorySearch">검색</button></span>
+                        <span class="ipu_wrap right_float"><button type="button" class="defaultBtn radius blue" id="btnItemOrderHistorySearch">검색</button></span>
                     </li>
                     <li>
                         <span class="ipu_wrap"><label class="label_100" for="MANAGE_NUM">관리번호</label><input type="text" name="MANAGE_NUM" id="MANAGE_NUM" class="wd_200" value="" title="관리번호"></span>
@@ -261,7 +261,8 @@
             resizable: true,
             trackModel: {on: true},
             colModel: itemOrderHistoryLeftColModel,
-            toolbar: itemOrderHistoryLeftToolbar,
+            showTitle: false,
+            title: false,
             sort: function () {
                 autoMerge(this);
             },
@@ -317,7 +318,8 @@
                 trackModel: {on: true},
                 //resizable: true,
                 colModel: itemOrderHistoryRightColModel,
-                toolbar: itemOrderHistoryRightToolbar
+                showTitle: false,
+                title: false,
             });
 
             itemOrderHistoryRightGrid.pqGrid("refreshDataAndView");
