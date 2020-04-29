@@ -53,59 +53,42 @@
                 <input type="hidden" name="queryId" id="queryId" value="selectInWarehouseManageList">
                 <div class="gubunWrap">
                     <ul>
-                        <div class="dateWrap">
-                            <button type="button" class="search_btn" id="btnInWarehouseManageManageSearch">검색</button>
-                        </div>
                         <li>
                             <span class="slt_wrap">
-                                <label for="WAREHOUSE">창고</label>
-                                <select id="WAREHOUSE" name="WAREHOUSE" title="창고">
+                                <label class="label_100" for="WAREHOUSE">창고</label>
+                                <select id="WAREHOUSE" name="WAREHOUSE" title="창고" class="wd_200">
                                 </select>
                             </span>
-                        </li>
-                        <li>
                             <span class="slt_wrap">
-                                <label for="LOC_NM">위치</label>
-                                <select id="LOC_NM" name="LOC_NM" title="위치">
+                                <label class="label_100" for="LOC_NM">위치</label>
+                                <select id="LOC_NM" name="LOC_NM" title="위치" class="wd_200">
                                 </select>
                             </span>
-                        </li>
-                        <li>
                             <span class="slt_wrap">
-                                <label for="MATERIAL_DETAIL">소재종류</label>
-                                <select id="MATERIAL_DETAIL" name="MATERIAL_DETAIL" title="소재종류">
+                                <label class="label_100" for="MATERIAL_DETAIL">소재종류</label>
+                                <select id="MATERIAL_DETAIL" name="MATERIAL_DETAIL" title="소재종류" class="wd_200">
                                 </select>
                             </span>
-                        </li>
-                        <li>
                             <span class="slt_wrap">
-                                <label for="MATERIAL_KIND">소재형태</label>
-                                <select id="MATERIAL_KIND" name="MATERIAL_KIND" title="소재형태">
+                                <label class="label_100" for="MATERIAL_KIND">소재형태</label>
+                                <select id="MATERIAL_KIND" name="MATERIAL_KIND" title="소재형태" class="wd_200">
                                 </select>
                             </span>
+                            <span class="ipu_wrap right_float"><button type="button" class="search_btn" id="btnInWarehouseManageManageSearch">검색</button></span>
                         </li>
                         <li>
-                            <span class="ipu_wrap"><label for="SIZE">소재규격</label><input type="text" name="SIZE" id="SIZE" placeholder="" value="" title="소재규격"></span>
-                        </li>
-                        <li>
-                            <span class="ipu_wrap"><label for="SIZE_W">가로</label>
-                                <input type="text" name="SIZE_W" id="SIZE_W" placeholder="" value="" title="가로">
-                                <input type="text" name="SIZE_W" id="SIZE_W" placeholder="" value="" title="가로">
+                            <span class="ipu_wrap"><label class="label_100" for="SIZE">소재규격</label><input type="text" name="SIZE" id="SIZE" class="wd_200" value="" title="소재규격"></span>
+                            <span class="ipu_wrap"><label class="label_100" for="SIZE_W">가로</label>
+                                <input type="text" name="SIZE_W" id="SIZE_W" class="wd_200" value="" title="가로">
+                                <input type="text" name="SIZE_W" id="SIZE_W" class="wd_200" value="" title="가로">
                             </span>
+                            <span class="ipu_wrap"><label class="label_100" for="SIZE_H">세로</label><input type="text" name="SIZE_H" id="SIZE_H" class="wd_200" value="" title="세로"></span>
+                            <span class="ipu_wrap"><label class="label_100" for="SIZE_D">두께</label><input type="text" name="SIZE_D" id="SIZE_D" class="wd_200" value="" title="두께"></span>
                         </li>
                         <li>
-                            <span class="ipu_wrap"><label for="SIZE_H">세로</label><input type="text" name="SIZE_H" id="SIZE_H" placeholder="" value="" title="세로"></span>
+                            <span class="ipu_wrap"><label class="label_100" for="M_ORDER_COMP_CD">소재주문업체</label><input type="text" name="M_ORDER_COMP_CD" id="M_ORDER_COMP_CD" class="wd_200" value="" title="소재주문업체"></span>
+                            <span class="ipu_wrap"><label class="label_100" for="MATERIAL_DETAIL">소재종류</label><input type="text" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200" value="" title="소재주문업체"></span>
                         </li>
-                        <li>
-                            <span class="ipu_wrap"><label for="SIZE_D">두께</label><input type="text" name="SIZE_D" id="SIZE_D" placeholder="" value="" title="두께"></span>
-                        </li>
-                        <li>
-                            <span class="ipu_wrap"><label for="M_ORDER_COMP_CD">소재주문업체</label><input type="text" name="M_ORDER_COMP_CD" id="M_ORDER_COMP_CD" placeholder="" value="" title="소재주문업체"></span>
-                        </li>
-                        <li>
-                            <span class="ipu_wrap"><label for="MATERIAL_DETAIL">소재종류</label><input type="text" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" placeholder="" value="" title="소재주문업체"></span>
-                        </li>
-
                     </ul>
                 </div>
                 <button type="button" class="topWrap_btn">펼치기 / 접기</button>
@@ -117,96 +100,75 @@
                 <input type="hidden" name="queryId" id="queryId" value="selectInWarehouseManageOutList">
                 <div class="gubunWrap">
                     <ul>
-                        <div class="dateWrap">
-                            <button type="button" class="search_btn" id="btnInWarehouseManageOutSearch">검색</button>
-                        </div>
                         <li>
                             <span class="slt_wrap">
-                                <label for="WAREHOUSE">창고</label>
-                                <select id="WAREHOUSE" name="WAREHOUSE" title="창고">
+                                <label class="label_100" for="WAREHOUSE">창고</label>
+                                <select id="WAREHOUSE" name="WAREHOUSE" title="창고" class="wd_200">
                                 </select>
                             </span>
-                        </li>
-                        <li>
                             <span class="slt_wrap">
-                                <label for="LOC_NM">위치</label>
-                                <select id="LOC_NM" name="LOC_NM" title="위치">
+                                <label class="label_100" for="LOC_NM">위치</label>
+                                <select id="LOC_NM" name="LOC_NM" title="위치" class="wd_200">
                                 </select>
                             </span>
-                        </li>
-                        <li>
                             <span class="slt_wrap">
-                                <label for="MATERIAL_DETAIL">소재종류</label>
-                                <select id="MATERIAL_DETAIL" name="MATERIAL_DETAIL" title="소재종류">
+                                <label class="label_100" for="MATERIAL_DETAIL">소재종류</label>
+                                <select id="MATERIAL_DETAIL" name="MATERIAL_DETAIL" title="소재종류" class="wd_200">
                                 </select>
                             </span>
-                        </li>
-                        <li>
                             <span class="slt_wrap">
-                                <label for="MATERIAL_KIND">소재형태</label>
-                                <select id="MATERIAL_KIND" name="MATERIAL_KIND" title="소재형태">
+                                <label class="label_100" for="MATERIAL_KIND">소재형태</label>
+                                <select id="MATERIAL_KIND" name="MATERIAL_KIND" title="소재형태" class="wd_200">
                                 </select>
                             </span>
+                            <span class="ipu_wrap right_float"><button type="button" class="search_btn" id="btnInWarehouseManageOutSearch">검색</button></span>
                         </li>
                         <li>
-                            <span class="ipu_wrap"><label for="SIZE">소재규격</label><input type="text" name="SIZE" id="SIZE" placeholder="" value="" title="소재규격"></span>
-                        </li>
-                        <li>
-                            <span class="ipu_wrap"><label for="SIZE_W">가로</label>
-                                <input type="text" name="SIZE_W" id="SIZE_W" placeholder="" value="" title="가로">
-                                <input type="text" name="SIZE_W" id="SIZE_W" placeholder="" value="" title="가로">
+                            <span class="ipu_wrap"><label class="label_100" for="SIZE">소재규격</label><input type="text" name="SIZE" id="SIZE" class="wd_200" value="" title="소재규격"></span>
+                            <span class="ipu_wrap"><label class="label_100" for="SIZE_W">가로</label>
+                                <input type="text" name="SIZE_W" id="SIZE_W" class="wd_200" value="" title="가로">
+                                <input type="text" name="SIZE_W" id="SIZE_W" class="wd_200" value="" title="가로">
                             </span>
+                            <span class="ipu_wrap"><label class="label_100" for="SIZE_H">세로</label><input type="text" name="SIZE_H" id="SIZE_H" class="wd_200" value="" title="세로"></span>
+                            <span class="ipu_wrap"><label class="label_100" for="SIZE_D">두께</label><input type="text" name="SIZE_D" id="SIZE_D" class="wd_200" value="" title="두께"></span>
                         </li>
                         <li>
-                            <span class="ipu_wrap"><label for="SIZE_H">세로</label><input type="text" name="SIZE_H" id="SIZE_H" placeholder="" value="" title="세로"></span>
+                            <span class="ipu_wrap"><label class="label_100" for="M_ORDER_COMP_CD">소재주문업체</label><input type="text" name="M_ORDER_COMP_CD" id="M_ORDER_COMP_CD" class="wd_200" value="" title="소재주문업체"></span>
+                            <span class="ipu_wrap"><label class="label_100" for="MATERIAL_DETAIL">소재종류</label><input type="text" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200" value="" title="소재주문업체"></span>
                         </li>
-                        <li>
-                            <span class="ipu_wrap"><label for="SIZE_D">두께</label><input type="text" name="SIZE_D" id="SIZE_D" placeholder="" value="" title="두께"></span>
-                        </li>
-                        <li>
-                            <span class="ipu_wrap"><label for="M_ORDER_COMP_CD">소재주문업체</label><input type="text" name="M_ORDER_COMP_CD" id="M_ORDER_COMP_CD" placeholder="" value="" title="소재주문업체"></span>
-                        </li>
-                        <li>
-                            <span class="ipu_wrap"><label for="MATERIAL_DETAIL">소재종류</label><input type="text" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" placeholder="" value="" title="소재주문업체"></span>
-                        </li>
-
-                    </ul>
-                    <div class="dateWrap">
-                        <div class="leftSpan">
-                                <span class="slt_wrap">
-                                    <select id="daySltd" name="daySltd" title="등록일시">
-                                        <option value="" selected="selected">등록일시</option>
-                                        <option value="1">-ALL-</option>
-                                        <option value="2">-ALL-</option>
-                                    </select>
-                                </span>
-                            <span class="radio_box">
-                                    <input reqcd="R" type="radio" id="fr_1001_1" name=""><label for="fr_1001_1">오늘</label>
-                                </span>
-                            <span class="radio_box">
-                                    <input reqcd="R" type="radio" id="fr_1001_2" name=""><label for="fr_1001_2">현재월</label>
-                                </span>
-                            <span class="radio_box">
-                                    <input reqcd="R" type="radio" id="fr_1001_3" name=""><label for="fr_1001_3">3개월</label>
-                                </span>
-                            <div class="calendar_wrap">
-                                    <span class="calendar_span">
-                                        <input type="text" name="dateOneIp" id="dateOneIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
-                                    </span>
-                                <span class="nbsp">~</span>
-                                <span class="calendar_span">
-                                        <input type="text" name="dateTwoIp" id="dateTwoIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
-                                    </span>
-                                <span class="chk_box no_txt"><input id="pr_ex" type="checkbox"><label for="pr_ex">선택</label></span>
-                            </div>
-
-                        </div>
-                        <div class="rightSpan">
-                            <span class="txt">Option</span>
+                        <li class="">
+                            <span class="txt_span pd-right20">Option</span>
                             <span class="chk_box"><input id="pr_ex1" type="checkbox"><label for="pr_ex1"> 발송완료</label></span>
                             <span class="chk_box"><input id="pr_ex2" type="checkbox"><label for="pr_ex2"> 최신차수</label></span>
-                        </div>
-                    </div>
+                            <span class="gubun"></span>
+                            <span class="slt_wrap trans_slt mg-right10">
+                            <select id="daySltd" name="daySltd" title="등록일시" class="wd_200">
+                                <option value="" selected="selected">등록일시</option>
+                                <option value="1">-ALL-</option>
+                                <option value="2">-ALL-</option>
+                            </select>
+                        </span>
+                            <span class="radio_box">
+                            <input reqcd="R" type="radio" id="fr_1001_1" name=""><label for="fr_1001_1">오늘</label>
+                        </span>
+                            <span class="radio_box">
+                            <input reqcd="R" type="radio" id="fr_1001_2" name=""><label for="fr_1001_2">현재월</label>
+                        </span>
+                            <span class="radio_box">
+                            <input reqcd="R" type="radio" id="fr_1001_3" name=""><label for="fr_1001_3">3개월</label>
+                        </span>
+                            <div class="calendar_wrap">
+                            <span class="calendar_span">
+                                <input type="text" name="dateOneIp" id="dateOneIp" class="wd_200" value="" title="달력정보"><button type="button">달력선택</button>
+                            </span>
+                                <span class="nbsp">~</span>
+                                <span class="calendar_span">
+                                <input type="text" name="dateTwoIp" id="dateTwoIp" class="wd_200" value="" title="달력정보"><button type="button">달력선택</button>
+                            </span>
+                            </div>
+                            <span class="chk_box"><input id="pr_ex" type="checkbox"><label for="pr_ex">선택</label></span>
+                        </li>
+                    </ul>
                 </div>
                 <button type="button" class="topWrap_btn">펼치기 / 접기</button>
             </div>

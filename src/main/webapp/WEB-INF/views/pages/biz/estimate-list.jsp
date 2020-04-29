@@ -35,8 +35,8 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label class="label_100" for="ITEM_NM">품명</label><input type="text" name="ITEM_NM" id="ITEM_NM" class="wd_200 " value="" title="품명"></span>
                     </li>
-                    <li class="">
-                        <span class="txt_span pd-right20">Option</span>
+                    <span class="">
+                        <span class="ipu_wrap"><label class="label_100" for="MODULE_NM">일자별 조회</label></span>
                         <span class="chk_box"><input id="pr_ex1" type="checkbox"><label for="pr_ex1"> 발송완료</label></span>
                         <span class="chk_box"><input id="pr_ex2" type="checkbox"><label for="pr_ex2"> 최신차수</label></span>
                         <span class="gubun"></span>
@@ -79,8 +79,8 @@
                 <button type="button" class="defaultBtn btn-120w" id="btnEstimateListNewVersion">차수 생성</button>
                 <%--<span class="chk_box mg-left15"><input id="chkEstimateListDetail" type="checkbox"><label for="chkEstimateListDetail"> 견적상세요건</label></span>--%>
                 <div class="rightSpan">
-                    <button type="button" class="defaultBtn btn-120w" id="btnEstimateListSave">Save</button>
-                    <button type="button" class="defaultBtn btn-120w" id="btnEstimateListDelete">Delete</button>
+                    <button type="button" class="defaultBtn radius green " id="btnEstimateListSave">저장</button>
+                    <button type="button" class="defaultBtn radius red " id="btnEstimateListDelete">삭제</button>
                 </div>
             </div>
         </div>
@@ -358,7 +358,7 @@
             swipeModel: {on: false},
             collapsible: false,
             trackModel: {on: true},
-            resizable: true,
+            resizable: false,
             colModel: estimateMasterTopColModel,
             showTitle: false,
             strNoRows: g_noData,
@@ -407,7 +407,9 @@
 
         function selectEstimateBotList(EST_SEQ) {
             estimateMasterBotGrid.pqGrid({
-                width: '100%', height: '100%',
+                minHeight: "100%",
+                height: '100%',
+                width: '100%',
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
                     url: "/paramQueryGridSelect",
@@ -424,7 +426,7 @@
                 swipeModel: {on: false},
                 collapsible: false,
                 trackModel: {on: true},
-                resizable: true,
+                resizable: false,
                 colModel: estimateMasterBotColModel,
                 showTitle: false,
                 strNoRows: g_noData

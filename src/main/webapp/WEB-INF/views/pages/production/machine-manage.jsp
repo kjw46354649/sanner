@@ -88,14 +88,28 @@
     </div>
 
     <div class="bottomWrap">
-        <div class="hWrap2">
-<%--        <div class="buttonWrap" >--%>
-            <div class="right_sort">
-                <button type="button" id="newBtn" class="defaultBtn yelllowGra">신규등록</button>
+<%--        <div class="hWrap2">--%>
+<%--&lt;%&ndash;        <div class="buttonWrap" >&ndash;%&gt;--%>
+<%--            <div class="right_sort">--%>
+<%--                <button type="button" id="newBtn" class="defaultBtn yelllowGra">신규등록</button>--%>
+<%--            </div>--%>
+<%--        </div>--%>
+
+        <div class="hWrap">
+            <div class="d-inline">
+
+                <div class="rightSpan">
+                    <button type="button" id="newBtn" class="defaultBtn yelllowGra">신규등록</button>
+
+                </div>
             </div>
         </div>
 
-        <div class="tableWrap" id="div_tabs">
+
+
+
+        <div class="tableWrap jmestabs" id="div_tabs">
+
             <ul class="smallTabMenuTabs">
                 <li class="active"><a href="#_TAB1" data-toggle="tab" aria-expanded="true">가공장비</a></li>
                 <li><a href="#_TAB2" data-toggle="tab" aria-expanded="false">기타장비</a></li>
@@ -271,7 +285,7 @@
                                 <th scope="row">첨부파일</th>
                                 <td colspan="3">
                                     <input type="hidden" id="ETC_GFILE_SEQ" name="ETC_GFILE_SEQ" value="">
-                                    <input type="text" id="ETC_GFILE_SEQ_NM" name="ETC_GFILE_SEQ_NM" placeholder="첨부파일" readonly class="wd_300">
+                                    <input type="text" id="ETC_GFILE_SEQ_NM" name="ETC_GFILE_SEQ_NM" placeholder="첨부파일" readonly style="width:75%;">
                                     <input type="button" id="etc_attach_file" name="etc_attach_file" value="fileUpload" class="smallBtn blue">
 
                                 </td>
@@ -279,7 +293,7 @@
                             <tr>
                                 <th scope="row">비고</th>
                                 <td colspan="3">
-                                    <input type="text" id="NOTE" name="NOTE"  placeholder="비고" class="wd_400">
+                                    <input type="text" id="NOTE" name="NOTE"  placeholder="비고" style="width:98%;">
                                 </td>
                             </tr>
 
@@ -288,7 +302,7 @@
                 </div>
 
                 <div class="list98">
-                    <div class="tableWrap" id="div_tabs2">
+                    <div class="tableWrap jmestabs" id="div_tabs2">
 
                         <ul class="smallTabMenuTabs">
                             <li class="active" id="_TAB3_TITLE"><a href="#_TAB3" data-toggle="tab" aria-expanded="true">작동로그</a></li>
@@ -406,20 +420,20 @@
             },
             {title: 'Item ID', dataType: 'string', dataIndx: 'EQUIP_ID'},
             {title: '장비명', dataType: 'string', dataIndx: 'EQUIP_NM'},
-            {title: '공정', dataType: 'string', dataIndx: 'PROCESS_TYPE_NM'},
-            {title: '장비<br>종류', dataType: 'string', dataIndx: 'EQUIP_TYPE_NM'},
-            {title: '장비<br>규격', dataType: 'string', dataIndx: 'EQUIP_SIZE_NM'},
+            {title: '공정', dataType: 'string', dataIndx: 'PROCESS_TYPE_NM',width: 70},
+            {title: '장비종류', dataType: 'string', dataIndx: 'EQUIP_TYPE_NM',width: 70},
+            {title: '장비규격', dataType: 'string', dataIndx: 'EQUIP_SIZE_NM',width: 70},
             {title: '제조사', dataType: 'string', dataIndx: 'EQUIP_COMP_NM'},
             {title: '리셀러', dataType: 'string', dataIndx: 'RESELLER_NM'},
             {title: '설치위치', dataType: 'string', dataIndx: 'FACTORY_AREA_NM'},
-            {title: '공장<br>구분', dataType: 'string', dataIndx: 'FACTORY_NM'},
+            {title: '공장구분', dataType: 'string', dataIndx: 'FACTORY_NM'},
             {title: '구입시기', dataType: 'string', dataIndx: 'PURCHASE_DT'},
             {title: '담당(정)', dataType: 'string', dataIndx: 'MAIN_USER_NM'},
             {title: '담당(부)', dataType: 'string', dataIndx: 'SUB_USER_NM'},
-            {title: '작동시작<br>(누적)', dataType: 'string', dataIndx: 'WORKING_TIME'},
+            {title: '작동시작(누적)', dataType: 'string', dataIndx: 'WORKING_TIME'},
             //{title: '최근<br>정비일시', dataType: 'string', dataIndx: ''},
             {title: '최근종료일시', dataType: 'string', dataIndx: 'LAST_REPAIR_DT'},
-            {title: '최근 수행 관리번호', dataType: 'string', dataIndx: 'LAST_CONTROL_NUM'}
+            {title: '최근수행번호', dataType: 'string', dataIndx: 'LAST_CONTROL_NUM'}
         ];
         currentObj = {
             width: "100%",
@@ -442,7 +456,7 @@
                     return {data: dataJSON.data};
                 }
             },
-            cellClick: function (event, ui) {
+            cellDblClick: function (event, ui) {
                 if (ui.dataIndx === 'PHOTO_GFILE_SEQ' || ui.dataIndx === 'EQUIP_NM'){
                     let target = ui.rowData.EQUIP_ID;
 
@@ -1150,7 +1164,7 @@
 </script>
 <script>
     $(function(){
-        $("#div_tabs").removeClass('ui-widget-content');
-        $("#div_tabs2").removeClass('ui-widget-content');
+        //$("#div_tabs").removeClass('ui-widget-content');
+        // $("#div_tabs2").removeClass('ui-widget-content');
     });
 </script>
