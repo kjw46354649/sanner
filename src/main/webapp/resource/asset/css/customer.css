@@ -82,3 +82,7 @@
 .machineWrap .bottomWrap .hWrap2 .buttonWrap { display: inline-block; }
 .machineWrap .bottomWrap .hWrap2 .chk_box { }
 .machineWrap .bottomWrap .hWrap2 .rightSpan { float: right; display: inline-block; }
+
+.jmestabs .pq-grid-header-table {border-bottom: 1px solid #aaaaaa;}
+.jmestabs .ui-widget-header{background: none;border: 0px;}
+.jmestabs{border: 0px}
