@@ -58,120 +58,110 @@
             <input type="hidden" name="queryId" id="queryId" value="selectItemOrderRegisterList">
             <div class="gubunWrap">
                 <ul>
-                    <div class="dateWrap">
-                        <button type="button" class="search_btn" id="btnItemOrderRegisterSearch">검색</button>
-                    </div>
                     <li>
                         <span class="slt_wrap">
-                            <label for="COMP_CD">사업자</label>
-                            <select id="COMP_CD" name="COMP_CD" title="사업자">
+                            <label for="COMP_CD" class="label_100">사업자</label>
+                            <select id="COMP_CD" name="COMP_CD" title="사업자" class="wd_200">
                             </select>
                         </span>
-                    </li>
-                    <li>
+                        <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label for="ORDER_COMP_CD">발주사</label>
-                            <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사">
+                            <label for="ORDER_COMP_CD" class="label_100">발주사</label>
+                            <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사" class="wd_200">
                             </select>
                         </span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="MODULE_NM">견적번호</label><input type="text" name="MODULE_NM" id="MODULE_NM" class="wd_200" value="" title="견적번호"></span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="ITEM_NM">품명</label><input type="text" name="ITEM_NM" id="ITEM_NM" class="wd_200" value="" title="품명"></span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap right_float"><button type="button" class="search_btn" id="btnItemOrderRegisterSearch">검색</button></span>
                     </li>
                     <li>
-                        <span class="ipu_wrap"><label for="MODULE_NM">견적번호</label><input type="text" name="MODULE_NM" id="MODULE_NM" placeholder="" value="" title="견적번호"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="MANAGE_NUM">관리번호</label><input type="text" name="MANAGE_NUM" id="MANAGE_NUM" class="wd_200" value="" title="관리번호"></span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="DRAWING_NUM">소재주문번호</label><input type="text" name="DRAWING_NUM" id="DRAWING_NUM" class="wd_200" value="" title="소재주문번호"></span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="M_ORDER_COMP_CD">소재주문업체</label><input type="text" name="M_ORDER_COMP_CD" id="M_ORDER_COMP_CD" class="wd_200" value="" title="소재주문업체"></span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="MATERIAL_DETAIL">소재종류</label><input type="text" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200" value="" title="소재주문업체"></span>
                     </li>
-                    <li>
-                        <span class="ipu_wrap"><label for="ITEM_NM">품명</label><input type="text" name="ITEM_NM" id="ITEM_NM" placeholder="" value="" title="품명"></span>
-                    </li>
-                    <li>
-                        <span class="ipu_wrap"><label for="MANAGE_NUM">관리번호</label><input type="text" name="MANAGE_NUM" id="MANAGE_NUM" placeholder="" value="" title="관리번호"></span>
-                    </li>
-                    <li>
-                        <span class="ipu_wrap"><label for="DRAWING_NUM">소재주문번호</label><input type="text" name="DRAWING_NUM" id="DRAWING_NUM" placeholder="" value="" title="소재주문번호"></span>
-                    </li>
-                    <li>
-                        <span class="ipu_wrap"><label for="M_ORDER_COMP_CD">소재주문업체</label><input type="text" name="M_ORDER_COMP_CD" id="M_ORDER_COMP_CD" placeholder="" value="" title="소재주문업체"></span>
-                    </li>
-                    <li>
-                        <span class="ipu_wrap"><label for="MATERIAL_DETAIL">소재종류</label><input type="text" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" placeholder="" value="" title="소재주문업체"></span>
-                    </li>
-
-                </ul>
-                <div class="dateWrap">
-                    <div class="leftSpan">
-                            <span class="slt_wrap">
-                                <select id="daySltd" name="daySltd" title="등록일시">
-                                    <option value="" selected="selected">등록일시</option>
-                                    <option value="1">-ALL-</option>
-                                    <option value="2">-ALL-</option>
-                                </select>
-                            </span>
-                        <span class="radio_box">
-                                <input reqcd="R" type="radio" id="fr_1001_1" name=""><label for="fr_1001_1">오늘</label>
-                            </span>
-                        <span class="radio_box">
-                                <input reqcd="R" type="radio" id="fr_1001_2" name=""><label for="fr_1001_2">현재월</label>
-                            </span>
-                        <span class="radio_box">
-                                <input reqcd="R" type="radio" id="fr_1001_3" name=""><label for="fr_1001_3">3개월</label>
-                            </span>
-                        <div class="calendar_wrap">
-                                <span class="calendar_span">
-                                    <input type="text" name="dateOneIp" id="dateOneIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
-                                </span>
-                            <span class="nbsp">~</span>
-                            <span class="calendar_span">
-                                    <input type="text" name="dateTwoIp" id="dateTwoIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
-                                </span>
-                            <span class="chk_box no_txt"><input id="pr_ex" type="checkbox"><label for="pr_ex">선택</label></span>
-                        </div>
-
-                    </div>
-                    <div class="rightSpan">
-                        <span class="txt">Option</span>
+                    <li class="">
+                        <span class="txt_span pd-right20">Option</span>
                         <span class="chk_box"><input id="pr_ex1" type="checkbox"><label for="pr_ex1"> 발송완료</label></span>
                         <span class="chk_box"><input id="pr_ex2" type="checkbox"><label for="pr_ex2"> 최신차수</label></span>
-                    </div>
-                </div>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap trans_slt mg-right10">
+                            <select id="daySltd" name="daySltd" title="등록일시">
+                                <option value="" selected="selected">등록일시</option>
+                                <option value="1">-ALL-</option>
+                                <option value="2">-ALL-</option>
+                            </select>
+                        </span>
+                        <span class="radio_box">
+                            <input reqcd="R" type="radio" id="fr_1001_1" name=""><label for="fr_1001_1">오늘</label>
+                        </span>
+                        <span class="radio_box">
+                            <input reqcd="R" type="radio" id="fr_1001_2" name=""><label for="fr_1001_2">현재월</label>
+                        </span>
+                        <span class="radio_box">
+                            <input reqcd="R" type="radio" id="fr_1001_3" name=""><label for="fr_1001_3">3개월</label>
+                        </span>
+                        <div class="calendar_wrap">
+                            <span class="calendar_span">
+                                <input type="text" name="dateOneIp" id="dateOneIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
+                            </span>
+                            <span class="nbsp">~</span>
+                            <span class="calendar_span">
+                                <input type="text" name="dateTwoIp" id="dateTwoIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
+                            </span>
+                        </div>
+                        <span class="chk_box"><input id="pr_ex" type="checkbox"><label for="pr_ex">선택</label></span>
+                    </li>
+                </ul>
             </div>
         </form>
         <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
-    <div class="page item">
-        <div class="leftWrap">
-            <div class="tableWrap">
-                <div class="hWrap">
-                    <span class="buttonWrap">
-                        <button type="button" class="defaultBtn" id="btnItemOrderRegisterOrder">소재주문</button>
-                        <button type="button" class="defaultBtn" id="btnItemOrderRegisterCancel">주문취소</button>
-                        <button type="button" class="defaultBtn" id="btnItemOrderRegisterCurrentStock">보유소재 전체현황</button>
-                    </span>
-                    <span class="chk_box"><input id="chkItemOrderRegisterAutoMatching" type="checkbox"/><label for="chkItemOrderRegisterAutoMatching">보유소개 자동매칭</label></span>
-                    <span class="buttonWrap">
-                        <button type="button" class="defaultBtn yelllowGra" id="btnItemOrderRegisterDrawView">도면 보기</button>
-                        <button type="button" class="defaultBtn blueGra" id="btnItemOrderRegisterSave">Save</button>
-                    </span>
+    <div class="bottomWrap">
+        <div class="tableWrap">
+            <div class="conWrap">
+                <div class="leftWrap">
+                    <div class="buttonWrap">
+                        <span class="d-inline">
+                            <button type="button" class="defaultBtn btn-120w" id="btnItemOrderRegisterOrder">소재주문</button>
+                            <button type="button" class="defaultBtn btn-120w" id="btnItemOrderRegisterCancel">주문취소</button>
+                            <button type="button" class="defaultBtn btn-120w" id="btnItemOrderRegisterCurrentStock">보유소재 전체현황</button>
+                            <span class="chk_box"><input id="chkItemOrderRegisterAutoMatching" type="checkbox"/><label for="chkItemOrderRegisterAutoMatching">보유소개 자동매칭</label></span>
+                            <span class="slt_wrap namePlusSlt right_float">
+                                <button type="button" class="defaultBtn yelllow" id="btnItemOrderRegisterDrawView">도면 보기</button>
+                                <button type="button" class="defaultBtn blue" id="btnItemOrderRegisterSave">Save</button>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="conMainWrap">
+                        <div id="item_order_register_left_grid" class="jqx-refresh"></div>
+                    </div>
                 </div>
-                <div class="conWrap">
-                    <div id="item_order_register_left_grid" class="jqx-refresh"></div>
-                </div>
-            </div>
-        </div>
-        <div class="rightWrap">
-            <div class="tableWrap">
-                <div class="hWrap">
-                    <span class="slt_wrap">
-                        <select id="customSltd" name="customSltd" title="발주처 선태">
-                        </select>
-                        <select id="materSltd" name="materSltd" title="재질선택">
-                        </select>
-                        <select id="materSltd" name="materSltd" title="재질선택">
-                        </select>
-                    </span>
-                    <span class="buttonWrap">
-                        <button type="button" class="defaultBtn blueGra" id="btnItemOrderRegisterOutSave">Save</button>
-                    </span>
-                </div>
-                <div class="conWrap">
-                    <div id="item_order_register_right_grid" class="jqx-refresh"></div>
+                <div class="rightWrap">
+                    <div class="buttonWrap">
+                        <div class="d-inline">
+                            <select id="customSltd" name="customSltd" title="발주처 선태">
+                            </select>
+                            <select id="materSltd" name="materSltd" title="재질선택">
+                            </select>
+                            <select id="materSltd" name="materSltd" title="재질선택">
+                            </select>
+                            <select id="materSltd" name="materSltd" title="재질선택">
+                            </select>
+                            <span class="slt_wrap namePlusSlt right_float">
+                                <button type="button" class="defaultBtn blue" id="btnItemOrderRegisterOutSave">Save</button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="conMainWrap">
+                        <div id="item_order_register_right_grid" class="jqx-refresh"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -657,7 +647,7 @@
         };
 
         itemOrderRegisterLeftGrid.pqGrid({
-            height: 680,
+            height: '100%',
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'CONTROL_DETAIL_SEQ',
                 url: "/paramQueryGridSelect",
@@ -676,7 +666,7 @@
             resizable: true,
             trackModel: {on: true},
             colModel: itemOrderRegisterLeftColModel,
-            toolbar: itemOrderRegisterLeftToolbar,
+            showTitle: false,
             title: false,
             strNoRows: g_noData,
             sort: function () {
@@ -723,7 +713,7 @@
 
         function selectItemOrderRegisterRightList() {
             itemOrderRegisterRightGrid.pqGrid({
-                height: 680,
+                height: '100%',
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'MY_MAT_STOCK_SEQ',
                     url: "/paramQueryGridSelect",
@@ -742,7 +732,7 @@
                 resizable: true,
                 trackModel: {on: true},
                 colModel: itemOrderRegisterRightColModel,
-                toolbar: itemOrderRegisterRightToolbar,
+                showTitle: false,
                 title: false,
                 strNoRows: g_noData,
             });
@@ -777,7 +767,7 @@
                 resizable: false,
                 trackModel: {on: true},
                 colModel: itemOrderRegisterPopTopColModel,
-                toolbar: itemOrderRegisterPopTopToolbar
+                showTitle: false,
             });
 
             itemOrderRegisterPopBotGrid.pqGrid({
@@ -798,7 +788,7 @@
                 collapsible: false,
                 resizable: false,
                 colModel: itemOrderRegisterPopBotColModel,
-                toolbar: itemOrderRegisterPopBotToolbar
+                showTitle: false,
             });
 
         });

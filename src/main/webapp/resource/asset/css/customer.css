@@ -87,6 +87,54 @@
 .jmestabs .ui-widget-header{background: none;border: 0px;}
 .jmestabs{border: 0px}
 
+/*  소재 주문 등록 */
+.estimate .leftWrap { float: left; width: 64.5%; padding-right: 1%; height: 100%; }
+.estimate .leftWrap .tableWrap { background: #fff; border: 1px solid #e2e2e2; border-radius: 3px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)";/*IE 8*/ -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*FF 3.5+*/ -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*Saf3-4, Chrome, iOS 4.0.2-4.2, Android 2.3+*/ box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); /*IE 5.5-7*/ }
+.estimate .leftWrap .tableWrap .hWrap { border-bottom: 1px solid #e2e2e2; font-size: 0; position: relative; }
+.estimate .leftWrap .tableWrap .hWrap *{vertical-align: middle;}
+.estimate .leftWrap .tableWrap .hWrap h2 { height: 50px; line-height: 48px; padding-left: 20px; font-size: 16px; font-family: 'NotoKrB'; color: #000; display: inline-block; }
+.estimate .leftWrap .tableWrap .hWrap .chk_box { }
+.estimate .leftWrap .tableWrap .hWrap .slt_wrap { display: inline-block; }
+.estimate .leftWrap .tableWrap .hWrap .slt_wrap select { }
+.estimate .leftWrap .tableWrap .hWrap .ipu_wrap { display: inline-block; }
+.estimate .leftWrap .tableWrap .hWrap .ipu_wrap label { }
+.estimate .leftWrap .conMainWrap { padding: 0px; box-sizing: border-box; height: 800px; }
+.estimate .rightWrap { float: right; width: 32.5%; padding-right: 1%; height: 100%; }
+.estimate .rightWrap .tableWrap { background: #fff; border: 1px solid #e2e2e2; border-radius: 3px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)";/*IE 8*/ -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*FF 3.5+*/ -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*Saf3-4, Chrome, iOS 4.0.2-4.2, Android 2.3+*/ box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); /*IE 5.5-7*/ }
+.estimate .rightWrap .tableWrap .hWrap { border-bottom: 1px solid #e2e2e2; font-size: 0; position: relative; }
+.estimate .rightWrap .tableWrap .hWrap *{vertical-align: middle;}
+.estimate .rightWrap .tableWrap .hWrap h2 { height: 50px; line-height: 48px; padding-left: 20px; font-size: 16px; font-family: 'NotoKrB'; color: #000; display: inline-block; }
+.estimate .rightWrap .tableWrap .hWrap .chk_box { }
+.estimate .rightWrap .tableWrap .hWrap .slt_wrap { display: inline-block; }
+.estimate .rightWrap .tableWrap .hWrap .slt_wrap select { }
+.estimate .rightWrap .tableWrap .hWrap .ipu_wrap { display: inline-block; }
+.estimate .rightWrap .tableWrap .hWrap .ipu_wrap label { }
+.estimate .rightWrap .conMainWrap { padding: 0px; box-sizing: border-box; height: 800px; }
+
+/*  소재 주문 이력 */
+.estimate .left_30Wrap { float: left; width: 32.5%; padding-right: 1%; height: 100%; }
+.estimate .left_30Wrap .tableWrap { background: #fff; border: 1px solid #e2e2e2; border-radius: 3px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)";/*IE 8*/ -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*FF 3.5+*/ -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*Saf3-4, Chrome, iOS 4.0.2-4.2, Android 2.3+*/ box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); /*IE 5.5-7*/ }
+.estimate .left_30Wrap .tableWrap .hWrap { border-bottom: 1px solid #e2e2e2; font-size: 0; position: relative; }
+.estimate .left_30Wrap .tableWrap .hWrap *{vertical-align: middle;}
+.estimate .left_30Wrap .tableWrap .hWrap h2 { height: 50px; line-height: 48px; padding-left: 20px; font-size: 16px; font-family: 'NotoKrB'; color: #000; display: inline-block; }
+.estimate .left_30Wrap .tableWrap .hWrap .chk_box { }
+.estimate .left_30Wrap .tableWrap .hWrap .slt_wrap { display: inline-block; }
+.estimate .left_30Wrap .tableWrap .hWrap .slt_wrap select { }
+.estimate .left_30Wrap .tableWrap .hWrap .ipu_wrap { display: inline-block; }
+.estimate .left_30Wrap .tableWrap .hWrap .ipu_wrap label { }
+.estimate .left_30Wrap .conMainWrap { padding: 0px; box-sizing: border-box; height: 800px; }
+.estimate .right_60Wrap { float: right; width: 64.5%; padding-right: 1%; height: 100%; }
+.estimate .right_60Wrap .tableWrap { background: #fff; border: 1px solid #e2e2e2; border-radius: 3px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)";/*IE 8*/ -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*FF 3.5+*/ -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*Saf3-4, Chrome, iOS 4.0.2-4.2, Android 2.3+*/ box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); /*IE 5.5-7*/ }
+.estimate .right_60Wrap .tableWrap .hWrap { border-bottom: 1px solid #e2e2e2; font-size: 0; position: relative; }
+.estimate .right_60Wrap .tableWrap .hWrap *{vertical-align: middle;}
+.estimate .right_60Wrap .tableWrap .hWrap h2 { height: 50px; line-height: 48px; padding-left: 20px; font-size: 16px; font-family: 'NotoKrB'; color: #000; display: inline-block; }
+.estimate .right_60Wrap .tableWrap .hWrap .chk_box { }
+.estimate .right_60Wrap .tableWrap .hWrap .slt_wrap { display: inline-block; }
+.estimate .right_60Wrap .tableWrap .hWrap .slt_wrap select { }
+.estimate .right_60Wrap .tableWrap .hWrap .ipu_wrap { display: inline-block; }
+.estimate .right_60Wrap .tableWrap .hWrap .ipu_wrap label { }
+.estimate .right_60Wrap .conMainWrap { padding: 0px; box-sizing: border-box; height: 800px; }
+
 .layerPopup .btn_plus{ width: 28px; height: 29px; font-size: 0; background: url(../images/common/btn_plus.png)no-repeat 0 0;}
 .layerPopup .btn_minus{width: 28px; height: 29px; font-size: 0; background: url(../images/common/btn_minus.png)no-repeat 0 0;}
 

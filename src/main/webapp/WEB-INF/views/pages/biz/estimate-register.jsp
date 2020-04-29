@@ -347,7 +347,7 @@
             trackModel: {on: true},
             resizable: true,
             colModel: estimateRegisterTopColModel,
-            toolbar: false,
+            showTitle: false,
             title: false,
             strNoRows: g_noData,
             selectChange: function (event, ui) {
@@ -417,7 +417,7 @@
                 trackModel: {on: true},
                 resizable: true,
                 colModel: estimateRegisterBotColModel,
-                toolbar: false,
+                showTitle: false,
                 title: false,
                 strNoRows: g_noData
             });
