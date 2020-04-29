@@ -32,7 +32,7 @@
                 <button type="button" id="userMasterSaveBtn" class="defaultBtn radius green">저장</button>
             </div>
             <div class="conWrap">
-                <div id="user_manager_grid" style="margin:auto;" ></div>
+                <div id="user_manager_grid" style="margin:auto; height: auto; width: auto;" ></div>
                 <div class="right_sort">
                     전체 조회 건수 (Total : <span id="CONFIRM_ORDER_TOTAL_RECORDS" style="color: #00b3ee">0</span>)
                 </div>
@@ -56,10 +56,10 @@
         'use strict';
         let userMasterColModel = [
             {title: 'USER_ID', dataType: 'string', dataIndx: 'USER_ID', editable: true},
-            {title: 'USER_NM', dataType: 'string', dataIndx: 'USER_NM', width: "30%"},
-            {title: 'USER_PWD', dataType: 'string', dataIndx: 'USER_PWD', width: "30%"},
+            {title: 'USER_NM', dataType: 'string', dataIndx: 'USER_NM'},
+            {title: 'USER_PWD', dataType: 'string', dataIndx: 'USER_PWD', width: 150},
             {
-                title: 'Use YN', dataType: 'select', dataIndx: 'DEL_YN_NM', width: "10%",
+                title: 'Use YN', dataType: 'select', dataIndx: 'DEL_YN_NM', width: 150,
                 editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text',
                     options: fnGetCommCodeGridSelectBox('1042')
@@ -67,16 +67,18 @@
             }
         ];
         let userMasterObj = {
-            minHeight: 750,
-            minWidth: 500,
+            minHeight: "auto",
+            height: 760,
+            width: "auto",
+            selectionModel: { type: 'row', mode: 'single'} ,
+            swipeModel: {on: false},
+            collapsible: false,
+            trackModel: {on: true},
+            resizable: false,
             flexWidth: false,
-            resizable: true,
             scrollModel: { autoFit: true },
-            collapsible: { on: true, collapsed: false },
             showTitle: false,
-            // title: '사용자 관리',
             numberCell: {title: 'No.'},
-            trackModel: {on: true}, //to turn on the track changes.
             columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
             colModel: userMasterColModel,
             dataModel: {
@@ -87,9 +89,8 @@
                 }
             },
             complete: function () {
-                let data = $confirmOrderGrid.pqGrid('option', 'dataModel.data');
+                let data = $userMasterGrid.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
-                let totalOrderQuantity = 0;
                 $('#CONFIRM_ORDER_TOTAL_RECORDS').html(totalRecords);
             },
             // toolbar: userMasterToolbar,

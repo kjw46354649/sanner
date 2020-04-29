@@ -507,16 +507,18 @@
             AND WAREHOUSE_CD = #{WAREHOUSE_CD}
             AND LOC_SEQ = #{LOC_SEQ}
     </delete>
-
+    <select id="selectConsumableInCnt" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT COUNT(*) AS CNT FROM jmes.TBL_CONSUMABLE_IN WHERE CONSUMABLE_STOCK_SEQ = #{CONSUMABLE_STOCK_SEQ}
+    </select>
     <select id="selectConsumableList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
               A.CONSUMABLE_STOCK_SEQ
-            , A.WAREHOUSE_CD
-            , A.LOC_SEQ
+            , A.WAREHOUSE_CD, jmes.SF_GET_CODE_NM('1049', A.WAREHOUSE_CD, 'EN') AS WAREHOUSE_CD_NM
+            , A.LOC_SEQ, (SELECT LOC_NM FROM jmes.TBL_WAREHOUSE_LOCATION WHERE WAREHOUSE_CD = A.WAREHOUSE_CD AND LOC_SEQ = A.LOC_SEQ) AS LOC_SEQ_NM
             , A.CONSUMABLE_NUM
             , A.CONSUMABLE_NM
-            , A.CONSUMABLE_TYPE
-            , A.CONSUMABLE_DETAIL
+            , A.CONSUMABLE_TYPE, jmes.SF_GET_CODE_NM('1053', A.CONSUMABLE_TYPE, 'EN') AS CONSUMABLE_TYPE_NM
+            , A.CONSUMABLE_DETAIL, jmes.SF_GET_CODE_NM('1054', A.CONSUMABLE_DETAIL, 'EN') AS CONSUMABLE_DETAIL_NM
             , A.STOCK_QTY
             , A.NOTE
             , NULL AS IN_QTY
@@ -576,20 +578,18 @@
             #{LOGIN_USER_ID}, NOW()
         )
     </insert>
+
     <insert id="insertConsumableIn" parameterType="java.util.HashMap">
         INSERT INTO jmes.TBL_CONSUMABLE_IN
         (CONSUMABLE_IN_SEQ, CONSUMABLE_STOCK_SEQ, IN_QTY, INSERT_ID, INSERT_DT)
         SELECT
               NEXTVAL(jmes.SEQ_CONSUMABLE_IN) AS CONSUMABLE_IN_SEQ
-            , A.CONSUMABLE_STOCK_SEQ
+            , jmes.SF_GET_TEST(#{WAREHOUSE_CD},#{LOC_SEQ},#{CONSUMABLE_NUM}) AS CONSUMABLE_STOCK_SEQ
             , #{IN_QTY} AS IN_QTY
             , #{LOGIN_USER_ID} AS INSERT_ID
             , NOW() AS INSERT_DT
-        FROM jmes.TBL_CONSUMABLE_STOCK A
-        WHERE A.WAREHOUSE_CD = #{WAREHOUSE_CD}
-        AND A.LOC_SEQ = #{LOC_SEQ}
-        AND A.CONSUMABLE_NUM = #{CONSUMABLE_NUM}
-        AND #{IN_QTY} > 0
+        FROM DUAL
+        WHERE #{IN_QTY} > 0
     </insert>
     <insert id="insertConsumableOut" parameterType="java.util.HashMap">
         INSERT INTO jmes.TBL_CONSUMABLE_OUT
@@ -603,15 +603,15 @@
     </insert>
     <select id="selectConsumableHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-              jmes.SF_GET_CODE_NM('1055', X.IN_OUT_TYPE, #{LANG_CD}) AS IN_OUT_NM
-            , jmes.SF_GET_CODE_NM('1049', X.WAREHOUSE_CD, #{LANG_CD}) AS WAREHOUSE_NM
+              jmes.SF_GET_CODE_NM('1055', X.IN_OUT_TYPE, 'KR') AS IN_OUT_NM
+            , jmes.SF_GET_CODE_NM('1049', X.WAREHOUSE_CD, 'KR') AS WAREHOUSE_NM
             , (SELECT LOC_NM FROM jmes.TBL_WAREHOUSE_LOCATION WHERE WAREHOUSE_CD = X.WAREHOUSE_CD AND LOC_SEQ = X.LOC_SEQ ) AS LOC_NM
             , X.CONSUMABLE_NUM
             , X.CONSUMABLE_NM
-            , jmes.SF_GET_CODE_NM('1053', X.CONSUMABLE_TYPE, #{LANG_CD}) AS CONSUMABLE_TYPE_NM
-            , jmes.SF_GET_CODE_NM('1054', X.CONSUMABLE_DETAIL, #{LANG_CD}) AS CONSUMABLE_DETAIL_NM
+            , jmes.SF_GET_CODE_NM('1053', X.CONSUMABLE_TYPE, 'KR') AS CONSUMABLE_TYPE_NM
+            , jmes.SF_GET_CODE_NM('1054', X.CONSUMABLE_DETAIL, 'KR') AS CONSUMABLE_DETAIL_NM
             , X.IN_QTY
-            , Y.OUT_QTY
+            , X.OUT_QTY
             , (SELECT USER_NM FROM jmes.TBL_USER WHERE USER_ID = X.REQUEST_USER_ID) AS REQUEST_USER_NM
             , jmes.SF_GET_DATE_F(X.IN_OUT_DT,'YY','M') AS IN_OUT_DT
         FROM (
@@ -687,4 +687,16 @@
         ) X
         ORDER BY X.IN_OUT_DT DESC
     </select>
+
+    <select id="selectWarehouseLocationList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            LOC_NM AS CODE_NM, CAST(LOC_SEQ AS CHAR) AS CODE_CD
+        FROM TBL_WAREHOUSE_LOCATION
+        WHERE 1=1
+        AND DEL_YN = 'N'
+        <if test="WAREHOUSE_CD !='' and WAREHOUSE_CD != null">
+            AND WAREHOUSE_CD = #{WAREHOUSE_CD}
+        </if>
+    </select>
+
 </mapper>

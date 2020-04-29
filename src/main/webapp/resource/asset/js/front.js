@@ -69,7 +69,7 @@ $(document).ready(function(){
 				let containerDiv = "<span class='addTapPage estimate page' id='view_tab_" + pid + "'>" + data + "</span>";
 				$(".contentsWrap").append(containerDiv).trigger('create');
 				tabMenuFn();
-				estimateH();
+				estimateH("view_tab_" + pid);
 			});
 		}
 	});
@@ -170,27 +170,27 @@ function sideMenuOpen(){
 	con.stop().animate({'margin-left':'270px'},300, 'easeOutCubic');
 
 	setTimeout(function(){
-		var conWidth = $(".estimate .bottomWrap .tableWrap .conWrap").width();
-		var pqGrid = $('.estimate .bottomWrap .tableWrap .jqx-refresh');
-		pqGrid.each(function(){
-			$(this).pqGrid('option', 'width', conWidth).pqGrid('refresh');
+		var grids = $(".pq-grid");
+		grids.each(function(index, pgGrid){
+			$("#" + pgGrid.id).pqGrid('option', 'width', 'auto').pqGrid('refresh');
 		});
 	}, 300);
 }
+
 //사이드 메뉴 클로즈 함수
 function sideMenuClose(){
 	var menu = $('.sidebarWrap');
 	var con = $('.contentsWrap');
 	var tm = $('.tabMenuWrap');
+
 	menu.stop().animate({left:"-270px"}, 300, 'easeInCubic').removeClass('on');
 	tm.stop().animate({'margin-left':'0px'}, 300, 'easeInCubic');
 	con.stop().animate({'margin-left':'0px'},300, 'easeInCubic');
 
 	setTimeout(function(){
-		var conWidth = $(".estimate .bottomWrap .tableWrap .conWrap").width();
-		var pqGrid = $('.estimate .bottomWrap .tableWrap .jqx-refresh');
-		pqGrid.each(function(){
-			$(this).pqGrid('option', 'width', conWidth).pqGrid('refresh');
+		var grids = $(".pq-grid");
+		grids.each(function(index, pgGrid){
+			$("#" + pgGrid.id).pqGrid('option', 'width', 'auto').pqGrid('refresh');
 		});
 	}, 300);
 }
@@ -208,23 +208,21 @@ function topMenuOpen(){
 
 	var top = $("#view_"+tabId).find('.gubunWrap');
 	var con = $("#view_"+tabId).find('.bottomWrap .tableWrap .conWrap');
-	var t_h = $("#view_"+tabId).find('.gubunWrap ul').height()+10;
+	var t_h = $("#view_"+tabId).find('.gubunWrap ul').height() + 10;
 
 	/*var top = $();
 	var con = $('.bottomWrap .tableWrap .conWrap');
 	var t_h = $('.gubunWrap ul').height()+10;*/
-	var c_h = con.height() - t_h + top.height() + 10;
+	var c_h = con.height() - t_h + top.height();
 	top.stop().animate({height:t_h},300, 'easeOutCubic');
 	con.stop().animate({height: c_h },300, 'easeOutCubic');
 
 	setTimeout(function(){
-		var conHeight = $(".estimate .bottomWrap .tableWrap .conWrap").height();
-		var pqGrid = $('.estimate .bottomWrap .tableWrap .conWrap .jqx-refresh');
-		pqGrid.each(function(){
-			$(this).pqGrid('option', 'height', c_h).pqGrid('refresh');
+		var grids = $(".pq-grid");
+		grids.each(function(index, pgGrid){
+			$("#" + pgGrid.id).pqGrid('option', 'height', '100%').pqGrid('refresh');
 		});
-	}, 350);
-
+	}, 300);
 }
 // topWrap 축소 함수
 function topMenuClose(){
@@ -244,7 +242,7 @@ function topMenuClose(){
 	/*var top = $('.gubunWrap');
 	var con = $('.bottomWrap .tableWrap .conWrap');
 	var t_h = $('.gubunWrap ul li').outerHeight() + 10;*/
-	var c_h = con.height() + top.height() - t_h + 10;
+	var c_h = con.height() + top.height() - (t_h - 5);
 	top.stop().animate({height:t_h}, 300, 'easeInCubic');
 	con.stop().animate({height: c_h},300, 'easeInCubic');
 
@@ -258,24 +256,16 @@ function topMenuClose(){
 }
 
 // 견적관리 페이지 불러올때 꼭 호출해줘야하는 함수!!
-function estimateH(){
-	var tabId = "";
-	var tab = $(".tabMenuWrap .tabMenu li");
-	tab.each(function(){
-		if($(this).hasClass('on')) {
-			tabId = $(this).find('a')[0].id;
-		}
-	});
-
+function estimateH(viewTabId){
 	// var tableCon = $('.estimate .bottomWrap .tableWrap .conWrap');
-	var tableCon = $("#view_"+tabId).find('.estimate .bottomWrap .tableWrap .conWrap');
+	var tableCon = $("#" + viewTabId).find('.estimate .bottomWrap .tableWrap .conWrap');
 	var pageHeight = $(window).height();
 	var tableConWrapY = tableCon.offset().top;
 	var tableConWrapH = pageHeight - tableConWrapY - 16;
 
 	tableCon.css({'height' : tableConWrapH});
 
-	$("#view_"+tabId).find('.topWrap_btn').on('click' , function(){
+	$("#"+viewTabId).find('.topWrap_btn').on('click' , function(){
 		if($(this).hasClass('on')){
 			topMenuClose();
 			$(this).removeClass('on');
