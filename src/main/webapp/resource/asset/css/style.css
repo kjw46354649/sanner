@@ -416,3 +416,9 @@ div.drawingTit,span.drawingTit{background-color: #e8f0f0; font-family: 'NotoKrB'
 .materialCont table td{background-color: #fff;}
 .materialCont table td~td{border-right: 1px solid #cecece; border-bottom: 1px solid #cecece;}
 .materialCont table td:first-child{border:1px solid #cecece;}
+
+.process_confirm .leftWrap { width: 46%; height: 88vh; margin: 1% 1%; padding: 15px; background: #fff; border: 1px solid #e2e2e2; border-radius: 3px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)"; -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1); box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1); filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); }
+.process_confirm .rightWrap { width: 46%; height: 40vh; margin: 1% 1%; padding: 15px; background: #fff; border: 1px solid #e2e2e2; border-radius: 3px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)"; -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1); box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1); filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); }
+.process_confirm p { display:inline; font-size: 1.6rem; font-family: 'NotoKrB'; color: #000; }
+.process_confirm label { font-size: 1.2rem; }
+.process_confirm hr { margin-top:0; margin-bottom: 10px; border: 0; border-top: 1px solid #e2e2e2; }

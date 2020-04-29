@@ -12,172 +12,147 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<div class="page-context">
-    <div class="col-md-6" style="box-sizing: border-box">
-        <section class="panel panel-default">
-            <header class="panel-heading font-bold">
-                주문확정 List (Total : <span id="CONFIRM_ORDER_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows <span
-                    id="CONFIRM_ORDER_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA)
-            </header>
-            <div class="panel-body">
-                <form class="form-inline" id="CONFIRM_ORDER_SEARCH_FORM" role="form">
-                    <input type="hidden" name="queryId" id="queryId" value="selectConfirmOrderList">&nbsp;
+<div class="page process_confirm">
+    <div class="leftWrap left_float">
+        <div>
+            <form class="form-inline" id="CONFIRM_ORDER_SEARCH_FORM" role="form">
+                <input type="hidden" name="queryId" id="queryId" value="selectConfirmOrderList">
+                <div class="mg-bottom10">
                     <div class="row">
-                        <div class="d-table">
-                            <div class="d-table-cell">
-                                <label class="control-label" for="CONFIRM_ORDER_CORPORATION">발주처</label>
-                                <select class="form-control" name="ORDER_COMP_CD" id="CONFIRM_ORDER_CORPORATION">
-                                    <option value="">ALL</option>
-                                </select>
-                            </div>
-                            <div class="d-table-cell">
-                                <label class="control-label" for="CONFIRM_ORDER_SORT_BY">Sorting 기준</label>
-                                <select class="form-control" name="SORT_BY" id="CONFIRM_ORDER_SORT_BY">
-                                    <option value="">ALL</option>
-                                    <c:forEach var="code" items="${HighCode.H_1044}">
-                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:forEach>
-                                </select>
-                                <label class="checkbox-inline i-checks" for="CONFIRM_ORDER_SORT">
-                                    <input type="checkbox" name="DESCENDING" id="CONFIRM_ORDER_SORT"><i></i> 내림차순
-                                </label>
-                            </div>
-                            <div class="d-table-cell">
-                                <label class="control-label" for="CONFIRM_ORDER_MATERIAL">소재</label>
-                                <select class="form-control" name="MATERIAL_TYPE" id="CONFIRM_ORDER_MATERIAL">
-                                    <option value="">ALL</option>
-                                    <c:forEach var="code" items="${HighCode.H_1027}">
-                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                            <div class="d-table-cell">
-                                <label class="checkbox-inline i-checks" for="CONFIRM_ORDER_EMERGENCY_PRIORITY">
-                                    <input type="checkbox" name="EMERGENCY_YN" id="CONFIRM_ORDER_EMERGENCY_PRIORITY"><i></i>
-                                    긴급우선 Sorting
-                                </label>
-                                <label class="checkbox-inline i-checks" for="CONFIRM_ORDER_EXCLUDE_STOCK">
-                                    <input type="checkbox" name="CONFIRM_ORDER_EXCLUDE_STOCK"
-                                           id="CONFIRM_ORDER_EXCLUDE_STOCK"><i></i> 재고 제외
-                                </label>
-                            </div>
-                        </div>
+                        <span>
+                            <label class="label_100" for="CONFIRM_ORDER_CORPORATION">발주처</label>
+                            <select class="wd_200" name="ORDER_COMP_CD" id="CONFIRM_ORDER_CORPORATION">
+                                <option value="">ALL</option>
+                            </select>
+                        </span>
+                        <span>
+                            <label class="label_100" for="CONFIRM_ORDER_MATERIAL">소재</label>
+                            <select class="wd_200" name="MATERIAL_TYPE" id="CONFIRM_ORDER_MATERIAL">
+                                <option value="">ALL</option>
+                                <c:forEach var="code" items="${HighCode.H_1027}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </span>
                     </div>
-                </form>
-            </div>
-        </section>
-        <section>
-            <div id="CONFIRM_ORDER_GRID"></div>
-        </section>
-    </div>
-    <div class="col-md-6" style="box-sizing: border-box">
-        <div>
-            <section class="panel panel-default">
-                <header class="panel-heading font-bold">
-                    가공확정 List (Total : <span id="PROCESS_CONFIRM_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows
-                    <span id="PROCESS_CONFIRM_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span>EA )
-                </header>
-                <div class="panel-body">
-                    <form class="form-inline" id="PROCESS_CONFIRM_SEARCH_FORM" role="form">
-                        <input type="hidden" name="queryId" id="queryId" value="selectProcessConfirmList">
-                        <div class="row">
-                            <div class="d-table">
-                                <div class="d-table-cell">
-                                    <label class="control-label" for="PROCESS_CONFIRM_CORPORATION">발주처</label>
-                                    <select class="form-control" name="ORDER_COMP_CD" id="PROCESS_CONFIRM_CORPORATION">
-                                        <option value="">ALL</option>
-                                        <%--                                <c:forEach var="code" items="${HighCode.H_1007}">--%>
-                                        <%--                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>--%>
-                                        <%--                                </c:forEach>--%>
-                                    </select>
-                                </div>
-                                <div class="d-table-cell">
-                                    <label class="control-label" for="PROCESS_CONFIRM_SORT_BY">Sorting 기준</label>
-                                    <select class="form-control" name="SORT_BY" id="PROCESS_CONFIRM_SORT_BY">
-                                        <option value="">ALL</option>
-                                        <c:forEach var="code" items="${HighCode.H_1044}">
-                                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                        </c:forEach>
-                                    </select>
-                                    <label class="checkbox-inline i-checks" for="PROCESS_CONFIRM_SORT">
-                                        <input type="checkbox" name="DESCENDING" id="PROCESS_CONFIRM_SORT"><i></i> 내림차순
-                                    </label>
-                                </div>
-                                <div class="d-table-cell">
-                                    <label class="control-label" for="PROCESS_CONFIRM_MATERIAL">소재</label>
-                                    <select class="form-control" name="MATERIAL_TYPE" id="PROCESS_CONFIRM_MATERIAL">
-                                        <option value=""> ALL</option>
-                                        <c:forEach var="code" items="${HighCode.H_1027}">
-                                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                                <div class="d-table-cell">
-                                    <label class="checkbox-inline i-checks" for="PROCESS_CONFIRM_EMERGENCY_PRIORITY">
-                                        <input type="checkbox" name="EMERGENCY_YN"
-                                               id="PROCESS_CONFIRM_EMERGENCY_PRIORITY"><i></i> 긴급우선 Sorting
-                                    </label>
-                                    <label class="checkbox-inline i-checks" for="PROCESS_CONFIRM_EXCLUDE_STOCK">
-                                        <input type="checkbox" name="PROCESS_CONFIRM_EXCLUDE_STOCK"
-                                               id="PROCESS_CONFIRM_EXCLUDE_STOCK"><i></i> 재고 제외
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
                 </div>
-            </section>
-            <section style="margin-bottom: 20px;">
-                <div id="PROCESS_CONFIRM_GRID"></div>
-            </section>
+                <hr style="display: block">
+                <div>
+                    <div class="mg-bottom10">
+                        <p>주문확정 List</p>
+                        <span style="float: right">
+                            <label class="checkbox-inline i-checks" for="CONFIRM_ORDER_EMERGENCY_PRIORITY">
+                                <input type="checkbox" name="EMERGENCY_YN" id="CONFIRM_ORDER_EMERGENCY_PRIORITY"><i></i>
+                                긴급우선 Sorting
+                            </label>
+                            <label class="checkbox-inline i-checks" for="CONFIRM_ORDER_EXCLUDE_STOCK">
+                                <input type="checkbox" name="CONFIRM_ORDER_EXCLUDE_STOCK"
+                                       id="CONFIRM_ORDER_EXCLUDE_STOCK"><i></i> 재고 제외
+                            </label>
+                        </span>
+                    </div>
+                    <div id="CONFIRM_ORDER_GRID"></div>
+                    <div class="right_sort">
+                        (Total :
+                            <span id="CONFIRM_ORDER_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows
+                            <span id="CONFIRM_ORDER_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA)
+                    </div>
+                </div>
+            </form>
         </div>
+    </div>
+
+
+    <div class="rightWrap right_float">
         <div>
-            <section class="panel panel-default">
-                <header class="panel-heading font-bold">
-                    외주가공 List (Total : <span id="OUTSIDE_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows
-                    <span id="OUTSIDE_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span>
-                    EA )
-                </header>
-                <div class="panel-body">
-                    <form class="form-inline" id="OUTSIDE_SEARCH_FORM" role="form">
-                        <input type="hidden" name="queryId" id="queryId" value="selectOutsideProcessingList">&nbsp;
-                        <div class="row">
-                            <div class="d-table">
-                                <div class="d-table-cell">
-                                    <label class="control-label" for="OUTSIDE_CORPORATION">발주처</label>
-                                    <select class="form-control" name="ORDER_COMP_CD" id="OUTSIDE_CORPORATION">
-                                        <option value="">ALL</option>
-                                    </select>
-                                </div>
-                                <div class="d-table-cell">
-                                    <label class="control-label" for="OUTSIDE_SUBCONTRACTOR">외주업체</label>
-                                    <select class="form-control" name="OUTSIDE_SUBCONTRACTOR"
-                                            id="OUTSIDE_SUBCONTRACTOR">
-                                        <option value="">ALL</option>
-                                    </select>
-                                </div>
-                                <div class="d-table-cell">
-                                    <label class="control-label" for="OUTSIDE_SORT_BY">Sorting 기준</label>
-                                    <select class="form-control" name="SORT_BY" id="OUTSIDE_SORT_BY">
-                                        <c:forEach var="code" items="${HighCode.H_1044}">
-                                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                        </c:forEach>
-                                    </select>
-                                    <label class="checkbox-inline i-checks" for="OUTSIDE_CONFIRM_SORT">
-                                        <input type="checkbox" name="DESCENDING" id="OUTSIDE_CONFIRM_SORT"><i></i> 내림차순
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+            <form class="form-inline" id="PROCESS_CONFIRM_SEARCH_FORM" role="form">
+                <input type="hidden" name="queryId" id="queryId" value="selectProcessConfirmList">
+                <div class="mg-bottom10">
+                    <div class="row">
+                        <span>
+                            <label class="label_100" for="PROCESS_CONFIRM_CORPORATION">발주처</label>
+                            <select class="wd_200" name="ORDER_COMP_CD" id="PROCESS_CONFIRM_CORPORATION">
+                                <option value="">ALL</option>
+                                <c:forEach var="code" items="${HighCode.H_1007}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </span>
+                        <span>
+                            <label class="label_100" for="PROCESS_CONFIRM_MATERIAL">소재</label>
+                            <select class="wd_200" name="MATERIAL_TYPE" id="PROCESS_CONFIRM_MATERIAL">
+                                <option value=""> ALL</option>
+                                <c:forEach var="code" items="${HighCode.H_1027}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </span>
+                    </div>
                 </div>
-            </section>
-            <section>
-                <div id="OUTSIDE_GRID"></div>
-            </section>
+                <hr style="display: block">
+                <div>
+                    <div class="mg-bottom10">
+                        <p>가공확정 List</p>
+                        <span style="float: right">
+                            <label class="checkbox-inline i-checks" for="PROCESS_CONFIRM_EMERGENCY_PRIORITY">
+                                <input type="checkbox" name="EMERGENCY_YN"
+                                       id="PROCESS_CONFIRM_EMERGENCY_PRIORITY"><i></i> 긴급우선 Sorting
+                            </label>
+                            <label class="checkbox-inline i-checks" for="PROCESS_CONFIRM_EXCLUDE_STOCK">
+                                <input type="checkbox" name="PROCESS_CONFIRM_EXCLUDE_STOCK"
+                                       id="PROCESS_CONFIRM_EXCLUDE_STOCK"><i></i> 재고 제외
+                            </label>
+                        </span>
+                    </div>
+                    <div id="PROCESS_CONFIRM_GRID"></div>
+                    <div class="right_sort">
+                        (Total :
+                            <span id="PROCESS_CONFIRM_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows
+                            <span id="PROCESS_CONFIRM_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span>EA )
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="rightWrap right_float">
+        <div>
+            <form class="form-inline" id="OUTSIDE_SEARCH_FORM" role="form">
+                <input type="hidden" name="queryId" id="queryId" value="selectOutsideProcessingList">
+                <div class="mg-bottom10">
+                    <div class="row">
+                        <span>
+                            <label class="label_100" for="OUTSIDE_CORPORATION">발주처</label>
+                            <select class="wd_200" name="ORDER_COMP_CD" id="OUTSIDE_CORPORATION">
+                                <option value="">ALL</option>
+                            </select>
+                        </span>
+                        <span>
+                            <label class="label_100" for="OUTSIDE_SUBCONTRACTOR">외주업체</label>
+                            <select class="wd_200" name="OUTSIDE_SUBCONTRACTOR"
+                                    id="OUTSIDE_SUBCONTRACTOR">
+                                <option value="">ALL</option>
+                            </select>
+                        </span>
+                    </div>
+                </div>
+                <hr style="display: block">
+                <div>
+                    <div class="mg-bottom10">
+                        <p>외주가공 List</p>
+                    </div>
+                    <div id="OUTSIDE_GRID"></div>
+                    <div class="right_sort">
+                        (Total :
+                            <span id="OUTSIDE_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows
+                            <span id="OUTSIDE_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA )
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
 
 <script>
     $(function () {
@@ -233,7 +208,7 @@
             }
         ];
         let leftObj = {
-            height: 800,
+            height: 680,
             collapsible: false,
             resizable: true,
             showTitle: false,

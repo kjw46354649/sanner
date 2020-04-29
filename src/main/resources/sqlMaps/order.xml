@@ -101,7 +101,8 @@
             B.OUTSIDE_NOTE, <!-- 외주비고 -->
             '', <!-- 외주 불량 CODE -->
             '', <!-- 외주 조치방안 -->
-            SF_GET_DATE_F(A.STATUS_DT,'YY','M') AS STATUS_DT <!-- 등록/업데이트 일시 -->
+            SF_GET_DATE_F(A.STATUS_DT,'YY','M') AS STATUS_DT, <!-- 등록/업데이트 일시 -->
+            A.DEL_YN
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
@@ -112,7 +113,8 @@
     <select id="selectControlManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         <include refid="controlManage" />
         WHERE
-            (A.CONTROL_STATUS IS NULL OR A.CONTROL_STATUS IN ('ORD001', 'ORD002'))
+            A.DEL_YN = 'N'
+            AND (A.CONTROL_STATUS IS NULL OR A.CONTROL_STATUS IN ('ORD001', 'ORD002'))
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
              AND A.CONTROL_NUM = #{CONTROL_NUM}
         </if>
@@ -484,6 +486,16 @@
         )
         </foreach>
     </insert>
+
+    <update id="DeleteControl" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL
+        SET
+            DEL_YN = #{DEL_YN},
+            UPDATE_DT = NOW()
+        <!-- ,UPDATE_ID = NULL -->
+        WHERE
+            CONTROL_SEQ = #{CONTROL_SEQ}
+    </update>
 
     <update id="updateControlMaster" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL

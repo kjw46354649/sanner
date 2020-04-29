@@ -114,7 +114,7 @@
         <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
     <div class="bottomWrap">
-        <div class="tableWrap">
+        <div class="tableWrap" style="padding: 10px 0;">
             <div class="conWrap">
                 <div id="tabs">
                     <ul class="nav nav-tabs m-b-n-xxs">
@@ -125,11 +125,11 @@
                             <a href="#MONTHLY_SALES_STATUS" data-toggle="tab" aria-expanded="false">월별 매출현황</a>
                         </li>
                     </ul>
-                    <div class="panel panel-default tab-content">
-                        <ul class="list-group tab-pane active" id="CLOSING_HISTORY">
+                    <div class="tab-content">
+                        <ul class="tab-pane active" id="CLOSING_HISTORY">
                             <div id="CLOSING_HISTORY_GRID"></div>
                         </ul>
-                        <ul class="list-group tab-pane list-group-alt list-group-lg" id="MONTHLY_SALES_STATUS">
+                        <ul class="tab-pane list-group-alt list-group-lg" id="MONTHLY_SALES_STATUS">
                             <div id="MONTHLY_SALES_STATUS_GRID"></div>
                         </ul>
                     </div>
