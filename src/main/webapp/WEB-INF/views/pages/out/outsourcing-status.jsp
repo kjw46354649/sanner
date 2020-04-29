@@ -17,46 +17,53 @@
         <form class="form-inline" id="OUTSIDE_CLOSE_STATUS_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="outMapper.selectOutsideCloseStatusList">
             <div class="gubunWrap">
-                <div class="form-group1">
-                    <div class="group-item">
-                        <label for="COMP_CD">사업자</label>
-                        <select name="COMP_CD" id="COMP_CD">
-                            <option value="">All</option>
-                        </select>
-                    </div>
-                    <div class="group-item">
-                        <label for="OUTSIDE_COMP_CD">외주업체</label>
-                        <select name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
-                            <option value="">All</option>
-                        </select>
-                    </div>
-                    <div class="group-item">
-                        <label for="CLOSE_VER">차수</label>
-                        <select name="CLOSE_VER" id="CLOSE_VER">
-                            <option value="">All</option>
-                            <option value="1">1차</option>
-                            <option value="2">2차</option>
-                            <option value="3">3차</option>
-                            <option value="4">4차</option>
-                            <option value="5">5차</option>
-                        </select>
-                    </div>
-                    <div class="group-item">
-                        <label for="CLOSE_NOTE">비고</label>
-                        <input type="text" name="CLOSE_NOTE" id="CLOSE_NOTE">
-                    </div>
-
-                    <div class="form-group col-md-6">
-                        <select name="CLOSE_YEAR_LEFT" id="CLOSE_YEAR_LEFT"></select>년
-                        <select name="CLOSE_MONTH_LEFT" id="CLOSE_MONTH_LEFT"></select>월 ~
-                        <select name="CLOSE_YEAR_RIGHT" id="CLOSE_YEAR_RIGHT" disabled></select>년
-                        <select name="CLOSE_MONTH_RIGHT" id="CLOSE_MONTH_RIGHT" disabled></select>월
-                        <label class="checkbox-inline i-checks" for="RANGE_SEARCH">
-                            <input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH"><i></i> Range 검색
-                        </label>
-                    </div>
-                    <button type="button" class="search_btn" id="TAB1_SEARCH">검색</button>
-                </div>
+                <ul>
+                    <li>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="COMP_CD">사업자</label>
+                            <select class="wd_200" name="COMP_CD" id="COMP_CD">
+                                <option value="">All</option>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="OUTSIDE_COMP_CD">외주업체</label>
+                            <select class="wd_200" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
+                                <option value="">All</option>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="CLOSE_VER">차수</label>
+                            <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
+                                <option value="">All</option>
+                                <option value="1">1차</option>
+                                <option value="2">2차</option>
+                                <option value="3">3차</option>
+                                <option value="4">4차</option>
+                                <option value="5">5차</option>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap">
+                            <label class="label_100" for="CLOSE_NOTE">비고</label>
+                            <input type="text" class="wd_200" name="CLOSE_NOTE" id="CLOSE_NOTE">
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" class="defaultBtn radius blue" id="TAB1_SEARCH">검색</button>
+                        </span>
+                    </li>
+                    <li>
+                        <div class="form-group col-md-6">
+                            <select name="CLOSE_YEAR_LEFT" id="CLOSE_YEAR_LEFT"></select>
+                            <select name="CLOSE_MONTH_LEFT" id="CLOSE_MONTH_LEFT"></select><span style="margin: 10px 0; vertical-align: middle; font-size: 1.4rem;">~</span>
+                            <select name="CLOSE_YEAR_RIGHT" id="CLOSE_YEAR_RIGHT" disabled></select>
+                            <select name="CLOSE_MONTH_RIGHT" id="CLOSE_MONTH_RIGHT" disabled></select>
+                            <span class="chk_box" style="margin-left: 10px;"><input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH"><label for="RANGE_SEARCH"> Range 검색</label></span>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </form>
         <button type="button" class="topWrap_btn">펼치기 / 접기</button>
@@ -66,59 +73,58 @@
         <form class="form-inline" id="MONTH_OUTSIDE_STATUS_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="outMapper.selectMonthCloseStatusList">
             <div class="gubunWrap">
-                <div class="form-group1">
-                    <div class="group-item">
-                        <label for="COMP_CD">사업자</label>
-                        <select name="COMP_CD" id="COMP_CD">
-                            <option value="">All</option>
-                        </select>
-                    </div>
-                    <div class="group-item">
-                        <label for="OUTSIDE_COMP_CD">외주업체</label>
-                        <select name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
-                            <option value="">All</option>
-                        </select>
-                    </div>
-                    <div class="group-item">
-                        <label for="YEAR">조회년도</label>
-                        <select name="YEAR" id="YEAR">
-                            <option></option>
-                        </select>
-                    </div>
-                    <div class="group-item-option">
-                        <label>Option</label>
-                    </div>
-                    <div class="chk_box_area">
-                        <input type="checkbox" name="ORIGINAL_ORDER_AMOUNT" id="ORIGINAL_ORDER_AMOUNT">
-                        <label for="ORIGINAL_ORDER_AMOUNT">원 발주 금액</label>
-                    </div>
-                    <button type="button" class="search_btn" id="TAB2_SEARCH">검색</button>
-                </div>
+                <ul>
+                    <li>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="COMP_CD">사업자</label>
+                            <select class="wd_200" name="COMP_CD" id="COMP_CD">
+                                <option value="">All</option>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="OUTSIDE_COMP_CD">외주업체</label>
+                            <select class="wd_200" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
+                                <option value="">All</option>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="YEAR">조회년도</label>
+                            <select class="wd_200" name="YEAR" id="YEAR">
+                                <option></option>
+                            </select>
+                        </span>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" class="defaultBtn radius blue" id="TAB2_SEARCH">검색</button>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="txt_span pd-right20">Option</span>
+                        <span class="chk_box"><input type="checkbox" name="ORIGINAL_ORDER_AMOUNT" id="ORIGINAL_ORDER_AMOUNT"><label for="ORIGINAL_ORDER_AMOUNT">원 발주 금액</label></span>
+                    </li>
+                </ul>
             </div>
         </form>
         <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
     <div class="bottomWrap">
-        <div class="tableWrap">
-            <div id="tabs">
-                <div class="row">
-                    <ul class="nav nav-tabs m-b-n-xxs">
-                        <li class="active">
-                            <a href="#OUTSIDE_CLOSE_STATUS" data-toggle="tab" aria-expanded="true">마감현황</a>
-                        </li>
-                        <li class="">
-                            <a href="#MONTHLY_OUTSIDE_STATUS" data-toggle="tab" aria-expanded="false">월별 매출현황</a>
-                        </li>
-                    </ul>
-                    <div class="panel panel-default tab-content">
-                        <ul class="list-group tab-pane active" id="OUTSIDE_CLOSE_STATUS">
-                            <div id="OUTSIDE_CLOSE_STATUS_GRID"></div>
-                        </ul>
-                        <ul class="list-group tab-pane list-group-alt list-group-lg" id="MONTHLY_OUTSIDE_STATUS">
-                            <div id="MONTHLY_OUTSIDE_STATUS_GRID"></div>
-                        </ul>
-                    </div>
-                </div>
+        <div class="tableWrap jmestabs" id="div_tabs" style="padding: 10px 0;">
+        <ul class="smallTabMenuTabs">
+                <li class="active">
+                    <a href="#OUTSIDE_CLOSE_STATUS" data-toggle="tab" aria-expanded="true">마감현황</a>
+                </li>
+                <li>
+                    <a href="#MONTHLY_OUTSIDE_STATUS" data-toggle="tab" aria-expanded="false">월별 매출현황</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <ul class="active conWrap" id="OUTSIDE_CLOSE_STATUS">
+                    <div id="OUTSIDE_CLOSE_STATUS_GRID"></div>
+                </ul>
+                <ul class="conWrap" id="MONTHLY_OUTSIDE_STATUS">
+                    <div id="MONTHLY_OUTSIDE_STATUS_GRID"></div>
+                </ul>
             </div>
         </div>
     </div>
@@ -168,26 +174,19 @@
             ]
         };
         let tab1Obj = {
-            // width: 700,
-            // height: 600,
+            height: 750,
             collapsible: false,
             resizable: true,
             showTitle: false,
             numberCell: {title: 'No.'},
             scrollModel: {autoFit: true},
             trackModel: {on: true},
-            columnTemplate: {
-                align: 'center',
-                halign: 'center',
-                hvalign: 'center', //to vertically center align the header cells.
-                editable: false
-            },
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center',  editable: false},
             colModel: tab1ColModel,
             toolbar: tab1Toolbar,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: tab1PostData,
-                recIndx: 'ROWNUM',
+                postData: tab1PostData, recIndx: 'ROWNUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -198,18 +197,10 @@
         let tab2PostData = fnFormToJsonArrayData('#MONTH_OUTSIDE_STATUS_SEARCH_FORM');
         tab2PostData.YEAR = YEAR;
         let tab2ColModel = [
-            {
-                title: 'Group', tpHide: true, menuInHide: true,
-                dataIndx: 'grp'
-            },
+            {title: 'Group', tpHide: true, menuInHide: true, dataIndx: 'grp'},
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
-            {
-                title: '발주업체',
-                dataType: 'string',
-                dataIndx: 'OUTSIDE_COMP_CD',
-                hidden: true/*, filter:{groupIndx: 'COMP_CD'}*/
-            },
+            {title: '발주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_CD', hidden: true/*, filter:{groupIndx: 'COMP_CD'}*/},
             {title: '발주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM'/*, filter:{groupIndx: 'COMP_NM'}*/},
             {title: '년도', dataType: 'string', dataIndx: 'YYYY', hidden: true},
             {title: '월', dataType: 'string', dataIndx: 'MM'},
@@ -246,30 +237,21 @@
             ]
         };
         let tab2Obj = {
-            // width: 700,
-            // height: 600,
+            height: 750,
             collapsible: false,
             resizable: true,
             showTitle: false,
             numberCell: {title: 'No.'},
             scrollModel: {autoFit: true},
             // trackModel: {on: true},
-            columnTemplate: {
-                align: 'center',
-                halign: 'center',
-                hvalign: 'center', //to vertically center align the header cells.
-                editable: false
-            },
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
             colModel: tab2ColModel,
             groupModel: tab2GroupModel,
-            toolPanel: {
-                show: false  //show toolPanel initially.
-            },
+            toolPanel: {show: false},
             toolbar: tab2Toolbar,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: tab2PostData,
-                recIndx: 'ROWNUM',
+                postData: tab2PostData, recIndx: 'ROWNUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -336,7 +318,7 @@
         });
 
 
-        $("#tabs").tabs({
+        $("#div_tabs").tabs({
             activate: function (event, ui) {
                 ui.newPanel.find('.pq-grid').pqGrid('refresh');
                 $('.topWrap').toggle(); // show -> hide , hide -> show
