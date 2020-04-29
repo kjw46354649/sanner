@@ -134,7 +134,7 @@
     </div>
     <div class="bottomWrap">
         <div class="hWrap">
-            <div class="d-inline">
+            <div>
                 <button type="button" class="defaultBtn btn-120w" data-toggle="modal" data-target="#CONTROL_MANGE_POPUP">신규
                     주문 등록
                 </button>
@@ -150,7 +150,7 @@
                     <button type="button" class="defaultBtn btn-120w" id="LABEL_PRINT">라벨 출력</button>
                 </div>
             </div>
-            <div class="d-inline mg-top10">
+            <div class="mg-top10">
                 <button type="button" class="defaultBtn btn-120w" name="CHANGE_STATUS" id="CONFIRMATION"
                         data-control_status="ORD001" data-control_status_nm="확정">확정
                 </button>
@@ -501,6 +501,7 @@
             {title: 'CONTROL_DETAIL_SEQ', clsHead: 'display_none', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'PART_PROGRESS_SEQ', clsHead: 'display_none', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true},
             {title: 'PART_STATUS', clsHead: 'display_none', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true},
+
             {
                 title: '주문상태', align: 'center', colModel: [
                     {title: '상태', clsHead: 'display_none', datatype: 'string', dataIndx: 'CONTROL_STATUS_ORIGINAL', hidden: true},
@@ -670,7 +671,8 @@
                     {title: '조치방안', datatype: 'string', dataIndx: 'dhlwnwhclqkddks'}
                 ]
             },
-            {title: '등록/업데이트<br>일시', width: 120, dataType: 'string', dataIndx: 'STATUS_DT'}
+            {title: '등록/업데이트<br>일시', width: 120, dataType: 'string', dataIndx: 'STATUS_DT'},
+            {title: 'DEL_YN', clsHead: 'display_none', dataType: 'string', dataIndx: 'DEL_YN', hidden: true}
         ];
         let obj = {
             height: '95%',
@@ -1531,19 +1533,30 @@
         });
 
         $('#CONTROL_MANAGE_DELETE').on('click', function () {
-            const DELETE_QUERY_ID = '';
+            let rowListConvert = [];
             let selectedRowCount = selectedRowIndex.length;
+            const controlUpdateQueryList = ['orderMapper.DeleteControl'];
 
             for (let i = 0; i < selectedRowCount; i++) {
                 let thisRowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
 
-                if (!(thisRowData.ORDER_STATUS_NM === undefined || thisRowData.ORDER_STATUS_NM === null || thisRowData.ORDER_STATUS_NM === '' || thisRowData.ORDER_STATUS_NM === '확정취소')) {
+                if (!(thisRowData.CONTROL_STATUS_ORIGINAL === undefined || thisRowData.CONTROL_STATUS_ORIGINAL === 'ORD002')) {
                     alert('확정상태가 빈칸(임시저장)이나 확정취소인 경우에만 가능');
                     return false;
                 }
+
+                let tempObject = {
+                    rowIndx: selectedRowIndex[i],
+                    newRow: {
+                        'DEL_YN': 'Y'
+                    }
+                };
+                rowListConvert.push(tempObject);
             }
 
-            fnDeletePQGrid($orderManagementGrid, selectedRowIndex, DELETE_QUERY_ID);
+            $orderManagementGrid.pqGrid('updateRow', {rowList: rowListConvert, checkEditable: false});
+
+            fnModifyPQGrid($orderManagementGrid, [], controlUpdateQueryList);
         });
 
         $('#CONTROL_MANGE_POPUP').on({

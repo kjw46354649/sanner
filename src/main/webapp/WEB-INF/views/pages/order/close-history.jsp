@@ -125,7 +125,7 @@
                 <button type="button" class="defaultBtn btn-120w green" id="CONTROL_CLOSE_HISTORY_SAVE">저장</button>
             </div>
         </div>
-        <div class="tableWrap">
+        <div class="tableWrap" style="padding: 10px 0;">
             <div class="conWrap">
                 <div id="CLOSE_HISTORY_GRID"></div>
                 <div class="right_sort">

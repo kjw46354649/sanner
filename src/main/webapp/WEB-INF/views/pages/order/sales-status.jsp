@@ -114,26 +114,22 @@
         <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
     <div class="bottomWrap">
-        <div class="tableWrap">
-            <div class="conWrap">
-                <div id="tabs">
-                    <ul class="nav nav-tabs m-b-n-xxs">
-                        <li class="active">
-                            <a href="#CLOSING_HISTORY" data-toggle="tab" aria-expanded="true">마감이력</a>
-                        </li>
-                        <li class="">
-                            <a href="#MONTHLY_SALES_STATUS" data-toggle="tab" aria-expanded="false">월별 매출현황</a>
-                        </li>
-                    </ul>
-                    <div class="panel panel-default tab-content">
-                        <ul class="list-group tab-pane active" id="CLOSING_HISTORY">
-                            <div id="CLOSING_HISTORY_GRID"></div>
-                        </ul>
-                        <ul class="list-group tab-pane list-group-alt list-group-lg" id="MONTHLY_SALES_STATUS">
-                            <div id="MONTHLY_SALES_STATUS_GRID"></div>
-                        </ul>
-                    </div>
-                </div>
+        <div class="tableWrap jmestabs" id="div_tabs" style="padding: 10px 0;">
+            <ul class="smallTabMenuTabs">
+                <li class="active">
+                    <a href="#CLOSING_HISTORY" data-toggle="tab" aria-expanded="true">마감이력</a>
+                </li>
+                <li>
+                    <a href="#MONTHLY_SALES_STATUS" data-toggle="tab" aria-expanded="false">월별 매출현황</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <ul class="active conWrap" id="CLOSING_HISTORY">
+                    <div id="CLOSING_HISTORY_GRID"></div>
+                </ul>
+                <ul class="conWrap" id="MONTHLY_SALES_STATUS">
+                    <div id="MONTHLY_SALES_STATUS_GRID"></div>
+                </ul>
             </div>
         </div>
     </div>
@@ -260,7 +256,7 @@
             {
                 title: '대칭', align: 'center', colModel: [
                     {title: '원칭', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY'},
-                    {title: '대칭', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
+                    {title: '대칭', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'}
                 ]
             },
             {title: '견적단가', minWidth: 90, dataType: 'integer', dataIndx: 'UNIT_FINAL_EST_AMT', colModel: []},
@@ -405,7 +401,7 @@
             }
         })
 
-        $("#tabs").tabs({
+        $("#div_tabs").tabs({
             activate: function(event, ui) {
                 ui.newPanel.find('.pq-grid').pqGrid('refresh');
                 $('.topWrap').toggle(); // show -> hide , hide -> show
