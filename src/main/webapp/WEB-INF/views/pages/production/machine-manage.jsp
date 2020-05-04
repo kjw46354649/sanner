@@ -775,7 +775,7 @@
                 let rowIndx = ui.rowIndx, $grid = this;
 
                 if (ui.dataIndx == 'AFTER_GFILE_SEQ') {
-                    if (ui.rowData['BEFORE_GFILE_SEQ'] > 0){
+                    if (ui.rowData['AFTER_GFILE_SEQ'] > 0){
                         callWindowImageViewer(ui.rowData.AFTER_GFILE_SEQ);
                     }else{
                         callGridSingleFileUpload($historyGrid, rowIndx, 'AFTER_GFILE_SEQ');

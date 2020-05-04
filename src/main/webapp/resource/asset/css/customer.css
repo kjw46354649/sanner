@@ -62,6 +62,7 @@
 .layerPopup .list99 .rowStyle tr td.red { color: #e71b1b; }
 
 .layerPopup .list98 { height: 200px; }
+.layerPopup .list98 .conWrapPop{ float: left; width: 19.0%; padding-right: 1%; height: 100%; }
 
 .resultWrap99 { -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)"; }
 .resultWrap99 .leftWrap { height: 150px; width: 40%; float: left; }
@@ -144,3 +145,5 @@
 
 .consumablePop  {height: 400px; }
 .consumable_container .layerPopup .list1 { -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)";/*IE 8*/ -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0);/*FF 3.5+*/ -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0);/*Saf3-4, Chrome, iOS 4.0.2-4.2, Android 2.3+*/ box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); }
+
+.right_sort_pop{text-align: right; padding: 0px 0 7px;}
