@@ -1184,6 +1184,8 @@
                     'data': $('#company_master_register_form').serialize()
                 };
                 fnPostAjax(function (data, callFunctionParam) {
+                    $('#system_company_popup').modal('hide');
+                    $companyMasterMainSearchBtn.trigger("click");
                     //fnAlertMessageAutoClose('remove');
                 }, parameters, '');
             }
