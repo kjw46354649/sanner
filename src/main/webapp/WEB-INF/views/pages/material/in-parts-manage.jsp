@@ -151,7 +151,7 @@
     <input type="hidden" id="mainGrid" name="mainGrid" value="">
 </form>
 <!-- layer popup : S -->
-<div class="popup_container consumable_container" id="CURRENT_POPUP" style="display: none;">
+<div class="popup_container consumable_container" id="PARTS_MANAGE_CURRENT_POPUP" style="display: none;">
     <form class="form-inline" id="pop_form" name="pop_form" role="form">
         <input type="hidden" id="queryId" name="queryId" value="material.selectConsumableList">
         <input type="hidden" id="SEL_CONSUMABLE_STOCK_SEQ" name="SEL_CONSUMABLE_STOCK_SEQ" value="">
@@ -236,8 +236,8 @@
                 </table>
             </div>
             <div class="btnWrap">
-                <button type="button" class="defaultBtn btn-120w red" id="popSaveBtn">SAVE</button>
-                <button type="button" class="defaultBtn btn-120w green" id="closeBtn">Close</button>
+                <button type="button" class="defaultBtn btn-120w red" id="partsPopSaveBtn">SAVE</button>
+                <button type="button" class="defaultBtn btn-120w green" id="partsCloseBtn">Close</button>
             </div>
         </div>
     </form>
@@ -460,7 +460,7 @@
                     if (ui.rowData['CONSUMABLE_STOCK_SEQ'] > 0 && ui.rowData['STOCK_QTY'] > 0){
                         $("#pop_form").find("#SEL_CONSUMABLE_STOCK_SEQ").val(ui.rowData['CONSUMABLE_STOCK_SEQ']);
                         $("#pop_form").find("#queryId").val("material.selectConsumableList");
-                        $('#CURRENT_POPUP').modal('show');
+                        $('#PARTS_MANAGE_CURRENT_POPUP').modal('show');
                     }else{}
                     return;
                 }
@@ -678,7 +678,7 @@
                 // };
                 // fnPostAjax(function (data, callFunctionParam) {
                 //     alert('장비상세 정보가 저장되었습니다.');
-                //     $('#CURRENT_POPUP').modal('hide');
+                //     $('#PARTS_MANAGE_CURRENT_POPUP').modal('hide');
                 //     $searchBtn.trigger("click");
                 // }, parameters, '');
 
@@ -744,11 +744,11 @@
             $('#SEL_END_DT').val(today.yyyymmdd());
 
         };
-        $('.pop_close, #closeBtn').on('click', function(e) {
-            $('#CURRENT_POPUP').modal('hide');
+        $('.pop_close, #partsCloseBtn').on('click', function(e) {
+            $('#PARTS_MANAGE_CURRENT_POPUP').modal('hide');
         });
 
-        $('#popSaveBtn').click(function(event){
+        $('#partsPopSaveBtn').click(function(event){
             if(confirm("불출 신청 하시겠습니까?")){
 
                 $("#pop_form").find("#queryId").val("material.insertConsumableOut");
@@ -759,7 +759,7 @@
                 fnPostAjax(function (data, callFunctionParam) {
                     alert("불출 신청 되었습니다.");
                     $("#searchBtn").trigger('click');
-                    $('#CURRENT_POPUP').modal('hide');
+                    $('#PARTS_MANAGE_CURRENT_POPUP').modal('hide');
 
                 }, parameters, '');
 
@@ -795,13 +795,13 @@
         }
     });
 
-    $("#CURRENT_POPUP").on('hide.bs.modal', function(){
+    $("#PARTS_MANAGE_CURRENT_POPUP").on('hide.bs.modal', function(){
         fnResetFrom("pop_form");
         $("#machine_manage_pop_form").find("#queryId").val("material.selectConsumableList");
         $("#searchBtn").trigger("click");
     });
     // 모달 open
-    $("#CURRENT_POPUP").on('show.bs.modal', function(){
+    $("#PARTS_MANAGE_CURRENT_POPUP").on('show.bs.modal', function(){
         $("#pop_form").find("#queryId").val("material.selectConsumableList");
         console.log($('#pop_form').serialize());
         let parameters = {
@@ -813,7 +813,7 @@
 
             if(dataInfo == null ) {
                 alert("해당 정보가 없습니다. ")
-                $('#CURRENT_POPUP').modal('hide');
+                $('#PARTS_MANAGE_CURRENT_POPUP').modal('hide');
             }else{
                 fnJsonDataToForm("pop_form", dataInfo);
                 $("#pop_form").find("#SEL_CONSUMABLE_STOCK_SEQ").val(dataInfo.CONSUMABLE_STOCK_SEQ);
