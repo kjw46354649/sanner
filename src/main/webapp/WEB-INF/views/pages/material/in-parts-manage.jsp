@@ -638,7 +638,7 @@
 
             let updateList = gridInstance.getChanges().updateList;
             for (var i = 0; i < updateList.length; i++) {
-                var rowData = updateList;
+                var rowData = updateList[i];
                 var isValid = gridInstance.isValid({ "rowData": rowData }).valid;
                 if (!isValid) {
                     errCnt++;
