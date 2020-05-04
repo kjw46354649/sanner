@@ -64,35 +64,35 @@
             A.MATERIAL_TYPE, SF_GET_ETC_NM( '1000', A.MATERIAL_TYPE) AS MATERIAL_TYPE_NM,
             A.MATERIAL_DETAIL, SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, 'EN') AS MATERIAL_DETAIL_NM,
             A.MATERIAL_KIND, SF_GET_CODE_NM('1029', A.MATERIAL_KIND, 'EN') AS MATERIAL_KIND_NM,
-            A.SIZE_TXT, A.STOCK_QTY - IFNULL(Z.OUT_QTY, 0) AS STOCK_QTY, A.LOC_SEQ, B.LOC_NM,
-            Z.MY_MAT_OUT_SEQ, Z.OUT_QTY AS OUT_QTY,
-            CASE WHEN Z.CONTROL_DETAIL_SEQ IS NOT NULL THEN 'Y' ELSE 'N' END OUT_YN
+            A.SIZE_TXT, A.LOC_SEQ, B.LOC_NM,
+            SUM(IFNULL(C.IN_QTY, 0)) - SUM(IFNULL(D.OUT_QTY, 0)) AS STOCK_QTY,
+            D.MY_MAT_OUT_SEQ, D.OUT_QTY AS OUT_QTY,
+            CASE WHEN D.CONTROL_DETAIL_SEQ IS NOT NULL THEN 'Y' ELSE 'N' END OUT_YN,
+            A.NOTE
         FROM TBL_MY_MATERIAL_STOCK A
-            INNER JOIN TBL_WAREHOUSE_LOCATION B ON A.WAREHOUSE_CD = B.WAREHOUSE_CD AND A.LOC_SEQ = B.LOC_SEQ
-            LEFT OUTER JOIN (
-                SELECT C.*
-                FROM TBL_MY_MATERIAL_OUT C
-                    INNER JOIN TBL_MATERIAL_ORDER D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_WAREHOUSE_LOCATION B ON A.WAREHOUSE_CD = B.WAREHOUSE_CD AND A.LOC_SEQ = B.LOC_SEQ AND B.DEL_YN = 'N'
+            LEFT OUTER JOIN TBL_MY_MATERIAL_IN C ON A.MY_MAT_STOCK_SEQ = C.MY_MAT_STOCK_SEQ
+            LEFT OUTER JOIN TBL_MY_MATERIAL_OUT D ON A.MY_MAT_STOCK_SEQ = D.MY_MAT_STOCK_SEQ
                 <if test="CONTROL_SEQ !='' and CONTROL_SEQ != null">
                     AND D.CONTROL_SEQ = #{CONTROL_SEQ}
                 </if>
                 <if test="CONTROL_DETAIL_SEQ !='' and CONTROL_DETAIL_SEQ != null">
                     AND D.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
                 </if>
-                ) Z ON Z.MY_MAT_STOCK_SEQ = A.MY_MAT_STOCK_SEQ
         WHERE 1=1
-        <if test="WAREHOUSE_CD !='' and WAREHOUSE_CD != null">
-            AND A.WAREHOUSE_CD = #{WAREHOUSE_CD}
-        </if>
-        <if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
-            AND A.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
-        </if>
-        <if test="AREA !='' and AREA != null">
-            AND A.AREA = #{AREA}
-        </if>
-        <if test="CONDITION !='' and CONDITION != null">
-            AND A.CONDITION = #{CONDITION}
-        </if>
+            <if test="WAREHOUSE_CD !='' and WAREHOUSE_CD != null">
+                AND A.WAREHOUSE_CD = #{WAREHOUSE_CD}
+            </if>
+            <if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
+                AND A.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
+            </if>
+            <if test="AREA !='' and AREA != null">
+                AND A.AREA = #{AREA}
+            </if>
+            <if test="CONDITION !='' and CONDITION != null">
+                AND A.CONDITION = #{CONDITION}
+            </if>
+        GROUP BY A.WAREHOUSE_CD, A.MATERIAL_KIND, A.MATERIAL_DETAIL, A.SIZE_TXT
         ORDER BY A.WAREHOUSE_CD, A.LOC_SEQ
     </select>
 
@@ -372,11 +372,13 @@
             A.SIZE_TXT, A.SIZE_TYPE, A.SIZE_W, A.SIZE_H, A.SIZE_T, A.SIZE_D, A.SIZE_L,
             A.WAREHOUSE_CD, SF_GET_CODE_NM('1049', A.WAREHOUSE_CD, 'EN') AS WAREHOUSE_NM,
             A.LOC_SEQ, B.LOC_NM,
-            A.STOCK_QTY,
+            /*A.STOCK_QTY,*/
+            SUM(IFNULL(C.IN_QTY, 0)) - SUM(IFNULL(D.OUT_QTY, 0)) AS STOCK_QTY,
             A.NOTE
         FROM TBL_MY_MATERIAL_STOCK A
-            INNER JOIN TBL_WAREHOUSE_LOCATION B ON A.WAREHOUSE_CD = B.WAREHOUSE_CD AND A.LOC_SEQ = B.LOC_SEQ
-                AND B.DEL_YN = 'N'
+            INNER JOIN TBL_WAREHOUSE_LOCATION B ON A.WAREHOUSE_CD = B.WAREHOUSE_CD AND A.LOC_SEQ = B.LOC_SEQ AND B.DEL_YN = 'N'
+            LEFT OUTER JOIN TBL_MY_MATERIAL_IN C ON A.MY_MAT_STOCK_SEQ = C.MY_MAT_STOCK_SEQ
+            LEFT OUTER JOIN TBL_MY_MATERIAL_OUT D ON A.MY_MAT_STOCK_SEQ = D.MY_MAT_STOCK_SEQ
         WHERE A.DEL_YN ='N'
         GROUP BY A.WAREHOUSE_CD, A.MATERIAL_KIND, A.MATERIAL_DETAIL, A.SIZE_TXT
     </select>
@@ -416,11 +418,13 @@
             A.SIZE_TXT, A.SIZE_TYPE, A.SIZE_W, A.SIZE_H, A.SIZE_T, A.SIZE_D, A.SIZE_L,
             A.WAREHOUSE_CD, SF_GET_CODE_NM('1049', A.WAREHOUSE_CD, 'EN') AS WAREHOUSE_NM,
             A.LOC_SEQ, B.LOC_NM,
-            A.STOCK_QTY,
+            /*A.STOCK_QTY,*/
+            SUM(IFNULL(C.IN_QTY, 0)) - SUM(IFNULL(D.OUT_QTY, 0)) AS STOCK_QTY,
             A.NOTE
         FROM TBL_MY_MATERIAL_STOCK A
-            INNER JOIN TBL_WAREHOUSE_LOCATION B ON A.WAREHOUSE_CD = B.WAREHOUSE_CD AND A.LOC_SEQ = B.LOC_SEQ
-                AND B.DEL_YN = 'N'
+            INNER JOIN TBL_WAREHOUSE_LOCATION B ON A.WAREHOUSE_CD = B.WAREHOUSE_CD AND A.LOC_SEQ = B.LOC_SEQ AND B.DEL_YN = 'N'
+            LEFT OUTER JOIN TBL_MY_MATERIAL_IN C ON A.MY_MAT_STOCK_SEQ = C.MY_MAT_STOCK_SEQ
+            LEFT OUTER JOIN TBL_MY_MATERIAL_OUT D ON A.MY_MAT_STOCK_SEQ = D.MY_MAT_STOCK_SEQ
         WHERE A.DEL_YN ='N'
         GROUP BY A.WAREHOUSE_CD, A.MATERIAL_KIND, A.MATERIAL_DETAIL, A.SIZE_TXT
     </select>
@@ -435,12 +439,12 @@
             AND WAREHOUSE_CD = #{WAREHOUSE_CD}
     </select>
 
-    <insert id="insertUpdateInWarehouseManage" parameterType="java.util.HashMap">
+    <insert id="insertUpdateInWarehouseManageMaster" parameterType="java.util.HashMap">
         INSERT INTO jmes.TBL_MY_MATERIAL_STOCK
         (
             MY_MAT_STOCK_SEQ, MATERIAL_TYPE, MATERIAL_DETAIL, MATERIAL_KIND,
             SIZE_TXT, SIZE_TYPE, SIZE_W, SIZE_H, SIZE_T, SIZE_D, SIZE_L,
-            STOCK_QTY, WAREHOUSE_CD, LOC_SEQ, NOTE,
+            WAREHOUSE_CD, LOC_SEQ, NOTE,
             DEL_YN, INSERT_ID
         )
         VALUES
@@ -458,16 +462,35 @@
             SF_GET_SIZE_TXT('SIZE_TYPE', #{SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_W', #{SIZE_TXT}),
             SF_GET_SIZE_TXT('SIZE_H', #{SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_T', #{SIZE_TXT}),
             SF_GET_SIZE_TXT('SIZE_D', #{SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_L', #{SIZE_TXT}),
-            #{STOCK_QTY}, #{WAREHOUSE_CD}, #{LOC_SEQ}, #{NOTE},
+            #{WAREHOUSE_CD}, #{LOC_SEQ}, #{NOTE},
             'N', NULL
         )
         ON DUPLICATE KEY UPDATE
-            STOCK_QTY = #{STOCK_QTY},
             WAREHOUSE_CD = #{WAREHOUSE_CD},
             LOC_SEQ = #{LOC_SEQ},
             NOTE = #{NOTE},
             UPDATE_DT = NOW(),
             UPDATE_ID = NULL
+    </insert>
+
+    <insert id="insertUpdateInWarehouseManageDetail" parameterType="java.util.HashMap">
+        INSERT INTO TBL_MY_MATERIAL_IN
+        (
+            MY_MAT_IN_SEQ, IN_QTY, IN_DT, MY_MAT_STOCK_SEQ, INSERT_ID
+        )
+        VALUES
+        (
+            NEXTVAL(SEQ_MY_MAT_IN), #{IN_QTY}, NOW(),
+        <choose>
+            <when test="MY_MAT_STOCK_SEQ !=null and MY_MAT_STOCK_SEQ !=''">
+                #{MY_MAT_STOCK_SEQ},
+            </when>
+            <otherwise>
+                LASTVAL(SEQ_MY_MAT_STOCK),
+            </otherwise>
+        </choose>
+        NULL
+        )
     </insert>
 
     <insert id="insertUpdateInWarehouseManageWarehouse" parameterType="java.util.HashMap">
@@ -496,8 +519,13 @@
             UPDATE_ID = NULL
     </insert>
 
-    <delete id="deleteInWarehouseManage" parameterType="java.util.HashMap">
+    <delete id="deleteInWarehouseManageMaster" parameterType="java.util.HashMap">
         DELETE FROM TBL_MY_MATERIAL_STOCK
+        WHERE MY_MAT_STOCK_SEQ = #{MY_MAT_STOCK_SEQ}
+    </delete>
+
+    <delete id="deleteInWarehouseManageDetail" parameterType="java.util.HashMap">
+        DELETE FROM TBL_MY_MATERIAL_IN
         WHERE MY_MAT_STOCK_SEQ = #{MY_MAT_STOCK_SEQ}
     </delete>
 

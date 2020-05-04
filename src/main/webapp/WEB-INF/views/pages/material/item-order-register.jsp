@@ -13,6 +13,15 @@
             <div class="modal-header">
                 <h4 class="modal-title">소재주문 진행</h4>
             </div>
+            <div class="buttonWrap">
+                <span class="d-inline">
+                    <span class="ipu_wrap"><label class="label_100" for="item_order_register_material_order_num">소재주문번호</label><input type="text" name="" id="item_order_register_material_order_num" class="wd_200" value="" title="소재주문업체"></span>
+                    <button type="button" class="defaultBtn btn-120w" id="btnItemOrderRegisterPopAdd">추가</button>
+                    <span class="right_float">
+                        <button type="button" class="defaultBtn btn-120w" id="btnItemOrderRegisterPopOrder">저장 & 제출</button>
+                    </span>
+                </span>
+            </div>
             <div class="modal-body">
                 <form class="form-inline" role="form" id="item_order_register_popup_form" name="item_order_register_popup_form">
                     <input type="hidden" id="queryId" name="queryId" value="selectItemOrderRegisterPopList"/>
@@ -146,13 +155,29 @@
                 <div class="right_30Wrap">
                     <div class="buttonWrap">
                         <div class="d-inline">
-                            <select id="customSltd" name="customSltd" title="발주처 선태">
+                            <select id="itemOrderRegisterWarehouseSelectBox" name="itemOrderRegisterWarehouseSelectBox" title="창고">
+                                <option value="">All</option>
+                                <c:forEach var="code" items="${HighCode.H_1049}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
                             </select>
-                            <select id="materSltd" name="materSltd" title="재질선택">
+                            <select id="itemOrderRegisterMaterialDetailSelectBox" name="itemOrderRegisterMaterialDetailSelectBox" title="소재종류">
+                                <option value="">All</option>
+                                <c:forEach var="code" items="${HighCode.H_1027}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
                             </select>
-                            <select id="materSltd" name="materSltd" title="재질선택">
+                            <select id="itemOrderRegisterAreaSelectBox" name="itemOrderRegisterAreaSelectBox" title="넓이조건">
+                                <option value="">All</option>
+                                <c:forEach var="code" items="${HighCode.H_1050}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
                             </select>
-                            <select id="materSltd" name="materSltd" title="재질선택">
+                            <select id="itemOrderRegisterTconditionSelectBox" name="itemOrderRegisterTconditionSelectBox" title="T 조건">
+                                <option value="">All</option>
+                                <c:forEach var="code" items="${HighCode.H_1050}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
                             </select>
                             <span class="slt_wrap namePlusSlt right_float">
                                 <button type="button" class="defaultBtn blue" id="btnItemOrderRegisterOutSave">Save</button>
@@ -322,21 +347,22 @@
         ];
 
         let itemOrderRegisterRightColModel= [
+            {title: 'MY_MAT_STOCK_SEQ', dataType: 'string', dataIndx: 'MY_MAT_STOCK_SEQ', hidden: false } ,
             {title: 'MY_MAT_OUT_SEQ', dataType: 'string', dataIndx: 'MY_MAT_OUT_SEQ', hidden: true } ,
             {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden: true } ,
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true } ,
-            {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_NM' } ,
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM' } ,
+            {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_NM' , editable: false} ,
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM' , editable: false} ,
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden: true } ,
-            {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM' } ,
-            {title: 'Size(mm)', dataType: 'string', dataIndx: 'SIZE_TXT' } ,
-            {title: '재고', dataType: 'string', dataIndx: 'STOCK_QTY' } ,
-            {title: '요청', dataType: 'string', dataIndx: 'OUT_QTY' } ,
-            {title: '', dataType: 'string', dataIndx: 'OUT_YN',
+            {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM' , editable: false} ,
+            {title: 'Size(mm)', dataType: 'string', dataIndx: 'SIZE_TXT' , editable: false} ,
+            {title: '재고', dataType: 'integer', dataIndx: 'STOCK_QTY' , editable: false} ,
+            {title: '요청', dataType: 'integer', dataIndx: 'OUT_QTY' } ,
+            {title: '', dataType: 'string', dataIndx: 'OUT_YN', editable: false,
                 render: function(ui){
                     let returnVal = "";
                     if(ui.rowData.OUT_YN == 'Y') {
-                        let returnVal = '<a href="#"><span class="ui-icon ui-icon-arrowthick-1-e"></span></a>';
+                        returnVal = '<a href="#"><span class="ui-icon ui-icon-arrowthick-1-e"></span></a>';
                     }
                     return returnVal;
                 }
@@ -706,6 +732,11 @@
                     $("#item_order_register_hidden_form #MATERIAL_DETAIL").val(ui.rowData.MATERIAL_DETAIL);
                     selectItemOrderRegisterRightList();
                 }
+            },
+            cellSave: function (evt, ui) {
+                if (ui.oldVal === undefined && ui.newVal === null) {
+                    itemOrderRegisterLeftGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                }
             }
         });
 
@@ -727,14 +758,21 @@
                 scrollModel: {autoFit: true},
                 numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'row', mode: 'single'} ,
+                trackModel: {on: true},
                 swipeModel: {on: false},
                 collapsible: false,
                 resizable: true,
-                trackModel: {on: true},
                 colModel: itemOrderRegisterRightColModel,
                 showTitle: false,
                 title: false,
                 strNoRows: g_noData,
+                /*cellSave: function (evt, ui) {
+                    console.log(ui.oldVal);
+                    console.log(ui.newVal);
+                    if (ui.oldVal === undefined && ui.newVal === null) {
+                        itemOrderRegisterRightGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                    }
+                }*/
             });
 
             itemOrderRegisterRightGrid.pqGrid("refreshDataAndView");
@@ -768,6 +806,11 @@
                 trackModel: {on: true},
                 colModel: itemOrderRegisterPopTopColModel,
                 showTitle: false,
+                cellSave: function (evt, ui) {
+                    if (ui.oldVal === undefined && ui.newVal === null) {
+                        itemOrderRegisterPopTopGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                    }
+                }
             });
 
             itemOrderRegisterPopBotGrid.pqGrid({
@@ -791,6 +834,11 @@
                 showTitle: false,
             });
 
+            let parameters = {'url': '/json-list', 'data': {'queryId': 'selectItemOrderRegisterNextMaterialOrderNum'}};
+            fnPostAjax(function (data, callFunctionParam) {
+                let list = data.list[0];
+                $("#item_order_register_material_order_num").val(list.MATERIAL_ORDER_NUM);
+            }, parameters, '');
         });
 
         /** 버튼 처리 **/
@@ -847,6 +895,66 @@
                 alert("You must be select item.");
                 return;
             }
+        });
+
+        $("#itemOrderRegisterWarehouseSelectBox").on('change', function(){
+            let text = $(this).val();
+            $("#item_order_register_hidden_form #WAREHOUSE_CD").val(text);
+
+            itemOrderRegisterRightGrid.pqGrid('option', "dataModel.postData", function (ui) {
+                return (fnFormToJsonArrayData('#item_order_register_hidden_form'));
+            });
+            itemOrderRegisterRightGrid.pqGrid('refreshDataAndView');
+        });
+
+        $("#itemOrderRegisterMaterialDetailSelectBox").on('change', function(){
+            let text = $(this).val();
+            $("#item_order_register_hidden_form #MATERIAL_DETAIL").val(text);
+
+            itemOrderRegisterRightGrid.pqGrid('option', "dataModel.postData", function (ui) {
+                return (fnFormToJsonArrayData('#item_order_register_hidden_form'));
+            });
+            itemOrderRegisterRightGrid.pqGrid('refreshDataAndView');
+        });
+
+        $("#itemOrderRegisterAreaSelectBox").on('change', function(){
+            let text = $(this).val();
+            $("#item_order_register_hidden_form #AREA").val(text);
+
+            itemOrderRegisterRightGrid.pqGrid('option', "dataModel.postData", function (ui) {
+                return (fnFormToJsonArrayData('#item_order_register_hidden_form'));
+            });
+            itemOrderRegisterRightGrid.pqGrid('refreshDataAndView');
+        });
+
+        $("#itemOrderRegisterTconditionSelectBox").on('change', function(){
+            let text = $(this).val();
+            $("#item_order_register_hidden_form #CONDITION").val(text);
+
+            itemOrderRegisterRightGrid.pqGrid('option', "dataModel.postData", function (ui) {
+                return (fnFormToJsonArrayData('#item_order_register_hidden_form'));
+            });
+            itemOrderRegisterRightGrid.pqGrid('refreshDataAndView');
+        });
+
+        /** 팝업 버튼 처리 **/
+        $("#btnItemOrderRegisterPopAdd").on('click', function(){
+            itemOrderRegisterPopTopGrid.pqGrid('addNodes', [{}], 0);
+        });
+
+        $("#btnItemOrderRegisterPopOrder").on('click', function(){
+            let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num").val();
+            let data = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data');
+            let totalRecords = data.length;
+            for(let tempI=0; tempI<totalRecords; tempI++){
+                itemOrderRegisterPopTopGrid.pqGrid("updateRow", { 'rowIndx': tempI , row: { 'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM } });
+            }
+            let itemOrderRegisterInsertUpdateQueryList = ['insertUpdateItemOrderRegisterPopSave','updateItemOrderRegister'];
+            fnModifyPQGrid(itemOrderRegisterPopTopGrid, itemOrderRegisterInsertUpdateQueryList, itemOrderRegisterInsertUpdateQueryList);
+
+            //$("#item_order_register_popup").modal('toggle');
+            $("#btnItemOrderRegisterSearch").trigger('click');
+            //itemOrderRegisterLeftGrid.pqGrid("refreshDataAndView");
         });
 
         /** 공통 코드 이외의 처리 부분 **/
