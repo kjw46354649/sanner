@@ -271,7 +271,10 @@
         </div>
 
 </div>
+<form class="" role="form" id="company_master_type1_form" name="company_master_type1_form">
 
+    <input type="hidden" id="queryId" name="queryId" value="systemMapper.getCompanyMasterStaffList">
+</form>
 <script>
 
 /**  선언 **/
