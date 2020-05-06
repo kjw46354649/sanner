@@ -11,437 +11,270 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<div class="modal" id="system_company_popup" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">업체 상세 정보</h4>
-            </div>
-            <div class="modal-body">
-                <form class="" role="form" id="company_master_register_form" name="company_master_register_form">
-                    <input type="hidden" id="queryId" name="queryId" value="systemMapper.getCompanyMasterStaffList">
-                    <input type="hidden" id="staffGrid" name="staffGrid" value="">
-                    <input type="hidden" id="compType" name="compType" value="">
-                    <div class="panel-body line_tit portlet-body form bg-light">
-                        <section class="bg-light">
-                            <div class="panel-body">
-                                <div class="form-inline" role="form">
-                                   <%-- <div class="checkbox m-l m-r-xs">
-                                        <div class="col-sm-7">
-                                            <label class="switch">
-                                                <input type="checkbox" id="ACTIVE_YN" name="ACTIVE_YN" value="N">
-                                                <span></span>
-                                            </label>
-                                        </div>
-                                    </div>--%>
-                                    <input type="button" class="btn btn-s-md btn-danger" id="companyMasterRegisterSaveBtn" value="SAVE">
-                                    <input type="button" class="btn btn-s-md btn-dark" id="companyMasterRegisterDelBtn" value="DELETE">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-8 col-sm-8">
-                                    <div class="form-horizontal" data-validate="parsley" action="#">
-                                        <section class="panel panel-default">
-                                            <header class="panel-heading">
-                                                <strong>기본 정보</strong>
-                                            </header>
-                                            <div class="panel-body">
-                                                <div class="form-group col-md-6 col-sm-6">
-                                                    <label class="col-md-4 col-sm-4 control-label">활성여부</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="checkbox" id="ACTIVE_YN" name="ACTIVE_YN" value="Y">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-6 col-sm-6">
-                                                    <label class="col-md-4 col-sm-4 control-label">본사 여부</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="checkbox" id="FAMILY_COMPANY_YN" name="FAMILY_COMPANY_YN" value="Y">
-                                                    </div>
-                                                </div>
-                                                <div class="line line-dashed b-b pull-in"></div>
-                                                <div class="form-group col-md-6 col-sm-6">
-                                                    <label class="col-md-4 col-sm-4 control-label">Company ID</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" id="COMP_CD" name="COMP_CD" data-notblank="true" class="form-control" placeholder="Company ID" readonly>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-6 col-sm-6">
-                                                    <label class="col-md-4 col-sm-4 control-label">생성 일시</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" id="INSERT_DT" name="INSERT_DT" data-notblank="true" class="form-control" placeholder="생성일시" readonly>
-                                                    </div>
-                                                </div>
-                                                <div class="line line-dashed b-b pull-in"></div>
-                                                <div class="form-group col-md-6 col-sm-6">
-                                                    <label class="col-md-4 col-sm-4 control-label">최근거래 일시</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" id="LAST_ORDER_DT" name="LAST_ORDER_DT" data-notblank="true" class="form-control" placeholder="최근거래일시" readonly>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-6 col-sm-6">
-                                                    <label class="col-md-4 col-sm-4 control-label">영업담당자</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <select id="CHARGE_USER_ID" name="CHARGE_USER_ID" data-required="true" class="form-control parsley-validated">
-                                                            <option value=""><spring:message code="com.form.top.sel.option" /></option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                                <%-- 시작 --%>
-                                                <div class="line line-dashed b-b pull-in"></div>
-                                                <div class="form-group col-md-6 col-sm-6">
-                                                    <label class="col-md-4 col-sm-4 control-label">업체명</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" id="COMP_NM" name="COMP_NM" data-notblank="true" class="form-control" placeholder="업체명">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-6 col-sm-6">
-                                                    <label class="col-md-4 col-sm-4 control-label">대표자</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" id="CEO_NM" name="CEO_NM" data-notblank="true" class="form-control" placeholder="대표자">
-                                                    </div>
-                                                </div>
-
-                                                <div class="line line-dashed b-b pull-in"></div>
-                                                <div class="form-group col-md-6 col-sm-6">
-                                                    <label class="col-md-4 col-sm-4 control-label">업태</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" id="BUSINESS_TYPE" name="BUSINESS_TYPE" data-notblank="true" class="form-control" placeholder="업태">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-6 col-sm-6">
-                                                    <label class="col-md-4 col-sm-4 control-label">종목</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" id="BUSINESS_ITEM" name="BUSINESS_ITEM" data-notblank="true" class="form-control" placeholder="종목">
-                                                    </div>
-                                                </div>
-
-                                                <div class="line line-dashed b-b pull-in"></div>
-                                                <div class="form-group col-md-6 col-sm-6">
-                                                    <label class="col-md-4 col-sm-4 control-label">사업자 번호</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" id="COMP_NUM" name="COMP_NUM" data-notblank="true" class="form-control" placeholder="사업자 번호">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-6 col-sm-6">
-                                                    <label class="col-md-4 col-sm-4 control-label">E-MAIL</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" id="COMP_EMAIL" name="COMP_EMAIL" data-notblank="true" class="form-control" placeholder="E-MAIL">
-                                                    </div>
-                                                </div>
-
-                                                <div class="line line-dashed b-b pull-in"></div>
-                                                <div class="form-group col-md-6 col-sm-6">
-                                                    <label class="col-md-4 col-sm-4 control-label">TEL.</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" id="COMP_TEL" name="COMP_TEL" data-notblank="true" class="form-control" placeholder="TEL">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-6 col-sm-6">
-                                                    <label class="col-md-4 col-sm-4 control-label">FAX</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        <input type="text" id="COMP_FAX" name="COMP_FAX" data-notblank="true" class="form-control" placeholder="FAX">
-                                                    </div>
-                                                </div>
-
-                                                <div class="line line-dashed b-b pull-in"></div>
-                                                <div class="form-group col-md-12 col-sm-12">
-                                                    <label class="col-md-2 col-sm-2 control-label">사업장소재지</label>
-                                                    <div class="col-md-10 col-sm-10">
-                                                        <input type="text" id="COMP_ADDRESS" name="COMP_ADDRESS" data-notblank="true" class="form-control" placeholder="사업장소재지">
-                                                    </div>
-                                                </div>
-                                                <div class="line line-dashed b-b pull-in"></div>
-                                                <div class="form-group col-md-12 col-sm-12">
-                                                    <label class="col-md-2 col-sm-2 control-label">비고</label>
-                                                    <div class="col-md-10 col-sm-10">
-                                                        <input type="text" id="NOTE" name="NOTE" class="form-control" placeholder="비고">
-                                                    </div>
-                                                </div>
-                                                <div class="line line-dashed b-b pull-in"></div>
-                                                <div class="form-group col-md-12 col-sm-12">
-                                                    <label class="col-md-2 col-sm-2 control-label">첨부파일</label>
-                                                    <div class="col-md-10 col-sm-10">
-                                                        <input type="hidden" id="ETC_GFILE_SEQ" name="ETC_GFILE_SEQ" value="">
-                                                        <input type="text" id="ETC_GFILE_SEQ_NM" name="ETC_GFILE_SEQ_NM" class="form-control" placeholder="첨부파일" readonly>
-                                                        <input type="button" id="compnay_etc_attach_file" name="compnay_etc_attach_file" value="fileUpload">
-                                                    </div>
-                                                </div>
-                                                <%-- 끝 --%>
 
 
-
-
-<%--                                                <div class="line line-dashed b-b pull-in"></div>--%>
-<%--                                                <div class="form-group col-md-6 col-sm-6">--%>
-<%--                                                    <label class="col-md-4 col-sm-4 control-label">관계 구분</label>--%>
-<%--                                                    <div class="col-md-8 col-sm-8">--%>
-<%--                                                        <select id="COMP_KIND" name="COMP_KIND" data-required="true" class="form-control parsley-validated">--%>
-<%--                                                            <option value=""><spring:message code="com.form.top.sel.option" /></option>--%>
-<%--                                                            <c:forEach var="vlocale" items="${HighCode.H_1049}">--%>
-<%--                                                                <option value="${vlocale.CODE_CD}" <c:if test="${fn:toUpperCase(LocalInfo) eq vlocale.CODE_CD}"> selected="selected"</c:if>>${vlocale.CODE_NM_KR}</option>--%>
-<%--                                                            </c:forEach>--%>
-<%--                                                        </select>--%>
-<%--                                                    </div>--%>
-<%--                                                </div>--%>
-<%--                                                   <div class="line line-dashed b-b pull-in"></div>--%>
-<%--                                                <div class="form-group col-md-6 col-sm-6">--%>
-<%--                                                    <label class="col-md-4 col-sm-4 control-label">업체종류</label>--%>
-<%--                                                    <div class="col-md-8 col-sm-8">--%>
-<%--                                                        <select id="COMP_TYPE" name="COMP_TYPE" data-required="true" class="form-control parsley-validated">--%>
-<%--                                                            <option value=""><spring:message code="com.form.top.sel.option" /></option>--%>
-<%--                                                        </select>--%>
-<%--                                                    </div>--%>
-<%--                                                </div>--%>
-
-
-
-
-                                            </div>
-                                        </section>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-sm-4">
-                                    <div class="hbox">
-                                        <aside class="aside-md">
-                                            <div class="text-center">
-                                                <input type="hidden" id="LOGO_GFILE_SEQ" name="LOGO_GFILE_SEQ" value="">
-                                                <img src="/image/999" id="LOGO_GFILE_SRC" width="200px" alt="..." class="img-circle m-b">
-                                                <div class="">
-                                                    <button type="button" class="btn btn-default" id="company_logo_upload" href="#" >
-                                                        <i class="fa fa-cloud-upload text"></i>
-                                                        <span class="text">Upload</span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </aside>
-                                    </div>
-                                    <div>&nbsp;</div>
-                                    <div class="hbox">
-                                        <aside class="aside-md">
-                                            <div class="text-center">
-                                                <input type="hidden" id="SIGN_GFILE_SEQ" name="SIGN_GFILE_SEQ" value="">
-                                                <img src="/image/999" id="SIGN_GFILE_SRC" width="200px" alt="..." class="img-circle m-b">
-                                                <div class="">
-                                                    <button type="button" class="btn btn-default" id="company_sign_upload" href="#" >
-                                                        <i class="fa fa-cloud-upload text"></i>
-                                                        <span class="text">Upload</span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </aside>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                        <!-- grid table -->
-                        <section class="bg-light">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="panel panel-default">
-                                        <header class="panel-heading">
-                                            <strong>담당자 정보</strong>
-                                        </header>
-                                        <%-- staff grid --%>
-                                        <div class="row">
-                                            <div class="col-md-12 col-sm-12">
-                                                <div class="gridWrap">
-                                                    <div id="system-company-register-popup-grid" class="jqx-refresh"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <%-- 발주업체 grid --%>
-                        <section class="bg-light">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="panel panel-default">
-                                        <header class="panel-heading">
-                                            <strong>발주업체 종류</strong>
-                                        </header>
-                                        <div class="row">
-                                            <div class="col-md-12 col-sm-12">
-                                                <div class="gridWrap">
-                                                    <div id="system-company-type1-popup-grid" class="jqx-refresh"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <%-- 협력업체 가공 grid --%>
-                        <section class="bg-light">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="panel panel-default">
-                                        <header class="panel-heading">
-                                            <strong>협력업체 가공 종류</strong>
-                                        </header>
-                                        <div class="row">
-                                            <div class="col-md-12 col-sm-12">
-                                                <div class="gridWrap">
-                                                    <div id="system-company-type2-popup-grid" class="jqx-refresh"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <%-- 협력업체 소재 grid --%>
-                        <section class="bg-light">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="panel panel-default">
-                                        <header class="panel-heading">
-                                            <strong>협력업체 소재 종류</strong>
-                                        </header>
-                                        <div class="row">
-                                            <div class="col-md-12 col-sm-12">
-                                                <div class="gridWrap">
-                                                    <div id="system-company-type3-popup-grid" class="jqx-refresh"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <%-- 협력업체 표면처리 grid --%>
-                        <section class="bg-light">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="panel panel-default">
-                                        <header class="panel-heading">
-                                            <strong>협력업체 표면처리 종류</strong>
-                                        </header>
-                                        <div class="row">
-                                            <div class="col-md-12 col-sm-12">
-                                                <div class="gridWrap">
-                                                    <div id="system-company-type4-popup-grid" class="jqx-refresh"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <%-- 협력업체 후가공 grid --%>
-                        <section class="bg-light">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="panel panel-default">
-                                        <header class="panel-heading">
-                                            <strong>협력업체 후가공 종류</strong>
-                                        </header>
-                                        <div class="row">
-                                            <div class="col-md-12 col-sm-12">
-                                                <div class="gridWrap">
-                                                    <div id="system-company-type5-popup-grid" class="jqx-refresh"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                    </div>
-                </form>
-                <form class="" role="form" id="company_master_type1_form" name="company_master_type1_form">
-
-                    <input type="hidden" id="queryId" name="queryId" value="systemMapper.getCompanyMasterStaffList">
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="page-context">
-    <div class="row m-b-md">
-        <div class="col-sm-12">&nbsp;
-            <section class="panel panel-default">
-                <header class="panel-heading font-bold">
-                    업체 정보 관리
-                </header>
-                <div class="panel-body">
-                    <form class="form-inline" id="company_master_search_form" name="company_master_search_form" role="form">
-                        <input type="hidden" id="queryId" name="queryId" value="systemMapper.getCompanyMasterList">
-                        <div class="row">
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="SEL_COMP_KIND">관계구분</label>
-                                <select id="SEL_COMP_KIND" name="SEL_COMP_KIND" data-required="true" class="form-control parsley-validated">
-                                    <option value=""><spring:message code="com.form.top.all.option" /></option>
+<div class="page estimate machineWrap">
+    <div class="topWrap">
+        <form class="form-inline" id="company_master_search_form" name="company_master_search_form" role="form">
+            <input type="hidden" id="queryId" name="queryId" value="systemMapper.getCompanyMasterList">
+            <div class="gubunWrap" style="height: 84px;">
+                <ul>
+                    <li>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="SEL_COMP_KIND">관계구분</label>
+                            <select id="SEL_COMP_KIND" name="SEL_COMP_KIND" data-required="true" class="wd_200">
+                                <option value=""><spring:message code="com.form.top.all.option" /></option>
                                     <c:forEach var="vlocale" items="${HighCode.H_1046}">
                                         <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                     </c:forEach>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="SEL_COMP_TYPE">업체종류</label>
-                                <select id="SEL_COMP_TYPE" name="SEL_COMP_TYPE" data-required="true" class="form-control parsley-validated">
-                                    <option value=""><spring:message code="com.form.top.all.option" /></option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="SEL_COMP_NM">업체명</label>
-                                <input type="text" class="form-control" id="SEL_COMP_NM" name="SEL_COMP_NM" placeholder="업체명">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="SEL_COMP_NUM">사업자번호</label>
-                                <input type="text" class="form-control" id="SEL_COMP_NUM" name="SEL_COMP_NUM" placeholder="사업자번호">
-                            </div>
-                        </div>
-                        <div class="line line-dashed b-b line-xs"></div>
-                        <div class="row">
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="SEL_STAFF_NM">담당자명</label>
-                                <input type="text" class="form-control" id="SEL_STAFF_NM" name="SEL_STAFF_NM" placeholder="담당자명">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="SEL_CEO_NM">대표자명</label>
-                                <input type="text" class="form-control" id="SEL_CEO_NM" name="SEL_CEO_NM" placeholder="대표자명">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label" for="SEL_ACTIVE_YN">활성여부</label>
-                                <select id="SEL_ACTIVE_YN" name="SEL_ACTIVE_YN" data-required="true" class="form-control parsley-validated">
-                                    <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                           <label class="label_100" for="SEL_COMP_TYPE">업체종류</label>
+                            <select id="SEL_COMP_TYPE" name="SEL_COMP_TYPE" data-required="true" class="wd_200">
+                                <option value=""><spring:message code="com.form.top.all.option" /></option>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap">
+                            <label class="label_100" for="SEL_COMP_NM">업체명</label>
+                            <input type="text" class="wd_200 form-control" name="SEL_COMP_NM" id="SEL_COMP_NM" title="업체명" placeholder="업체명">
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap">
+                            <label class="label_100" for="SEL_COMP_NUM">사업자번호</label>
+                            <input type="text" class="wd_200 form-control" name="SEL_COMP_NUM" id="SEL_COMP_NUM" title="사업자번호" placeholder="사업자번호">
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" class="defaultBtn radius blue" id="companyMasterMainSearchBtn">검색</button>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="ipu_wrap">
+                            <label class="label_100" for="SEL_STAFF_NM">담당자명</label>
+                            <input type="text" class="wd_200" name="SEL_STAFF_NM" id="SEL_STAFF_NM" title="담당자명" placeholder="담당자명">
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap">
+                            <label class="label_100" for="SEL_CEO_NM">대표자명</label>
+                            <input type="text" class="wd_200" name="SEL_CEO_NM" id="SEL_CEO_NM" title="대표자명" placeholder="대표자명">
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="SEL_ACTIVE_YN">활성여부</label>
+                            <select id="SEL_ACTIVE_YN" name="SEL_ACTIVE_YN" data-required="true" class="wd_200">
+                                <option value=""><spring:message code="com.form.top.all.option" /></option>
                                     <c:forEach var="vlocale" items="${HighCode.H_1042}">
-                                        <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
+                                        <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                     </c:forEach>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3 text-right">
-                                <div type="submit" id="companyMasterMainSearchBtn" class="btn btn-success btn-sm btn-default">SEARCH</div>
-<%--                                <img src="/barcode/code128/123456" width="300px" height="150px">--%>
-                            </div>
-                            <%--<div class="form-group col-md-4">
-                                <button type="submit" class="btn btn-sm btn-default">Submit</button>
-                            </div>--%>
-                        </div>
-                    </form>
-                </div>
-            </section>
+                            </select>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </form>
+        <%--<button type="button" class="topWrap_btn">펼치기 / 접기</button>--%>
+    </div>
+    <div class="bottomWrap">
+        <div class="hWrap">
+            <div class="rightSpan">
+                <button type="button" class="defaultBtn btn-120w" id="companyMasterMainNewBtn">신규등록</button>
+            </div>
         </div>
-        <div class="row">&nbsp;
-            <section>
-                <div class="col-md-12">
-                    <div id='system-company-master-grid' style='margin:5px auto;'></div>
+        <div class="tableWrap" style="padding: 10px 0;">
+            <div class="conWrap">
+                <div id="system-company-master-grid" class="jqx-refresh"></div>
+                <div class="right_sort">
+                    전체 조회 건수 (Total : <span id="system-company-master-grid-total-records" style="color: #00b3ee">0</span>)
                 </div>
-            </section>
-
+            </div>
         </div>
     </div>
 </div>
+<%--<div class="modal" id="system_company_popup" tabindex="-1" role="dialog" aria-hidden="true">--%>
+<!-- layer popup : S -->
+<div class="popup_container" id="system_company_popup" style="display: none;">
+    <form class="form-inline" id="company_master_register_form" name="company_master_register_form" role="form">
+        <input type="hidden" id="queryId" name="queryId" value="systemMapper.getCompanyMasterStaffList">
+        <input type="hidden" id="staffGrid" name="staffGrid" value="">
+        <input type="hidden" id="compType" name="compType" value="">
+
+
+        <div class="layerPopup sysCompPopup">
+            <h3>업체상세정보</h3>
+            <button type="button" class="pop_close">닫기</button>
+            <div class="qualityWrap">
+                <div class="h_area">
+                    <div class="right_sort ">
+
+                        <button type="button" class="defaultBtn btn-120w red" id="companyMasterRegisterSaveBtn">SAVE</button>
+                        <button type="button" class="defaultBtn btn-120w green" id="companyMasterRegisterDelBtn">Delete</button>
+                    </div>
+
+                </div>
+                <div class="resultWrap99 list99" style="height: 410px;">
+                    <div class="leftWrap">
+                        <input type="hidden" id="LOGO_GFILE_SEQ" name="LOGO_GFILE_SEQ" value="">
+                        <img src="/image/999" id="LOGO_GFILE_SRC" width="388px" height="150px" alt="사진" >
+                        <div class="btnWrap">
+                            <button type="button" id="company_logo_upload" class="defaultBtn">사진변경하기</button>
+                        </div><br/>
+                        <input type="hidden" id="SIGN_GFILE_SEQ" name="SIGN_GFILE_SEQ" value="">
+                        <img src="/image/999" id="SIGN_GFILE_SRC" width="388px" height="150px" alt="사진" >
+                        <div class="btnWrap">
+                            <button type="button" id="company_sign_upload" class="defaultBtn">사진변경하기</button>
+                        </div>
+                    </div>
+                    <div class="rightWrap">
+                        <table class="rowStyle">
+                            <caption></caption>
+                            <colgroup>
+                                <col width="110px">
+                                <col width="171px">
+                                <col width="110px">
+                                <col width="171px">
+                            </colgroup>
+                            <tr>
+                                <th scope="row">Item ID</th>
+                                <td id="EQUIP_ID_NM"></td>
+                                <th scope="row">구분</th>
+                                <td id="EQUIP_KIND_NM"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">활성여부</th>
+                                <td><input type="checkbox" id="ACTIVE_YN" name="ACTIVE_YN" value="Y" class="wd_150"></td>
+                                <th scope="row">본사여부</th>
+                                <td><input type="checkbox" id="FAMILY_COMPANY_YN" name="FAMILY_COMPANY_YN" value="Y" class="wd_150"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">업체ID</th>
+                                <td>
+                                    <input type="text" id="COMP_CD" name="COMP_CD" value="" class="wd_150" data-notblank="true" class="form-control" placeholder="Company ID" readonly>
+                                </td>
+                                <th scope="row">생성일시</th>
+                                <td>
+                                    <input type="text" id="INSERT_DT" name="INSERT_DT" value="" class="wd_150" data-notblank="true" class="form-control" placeholder="생성일시" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">최근거래일시</th>
+                                <td>
+                                    <input type="text" id="LAST_ORDER_DT" name="LAST_ORDER_DT" value="" class="wd_150" data-notblank="true" class="form-control" placeholder="최근거래일시" readonly>
+                                </td>
+                                <th scope="row">영업담당자</th>
+                                <td>
+                                    <select id="CHARGE_USER_ID" name="CHARGE_USER_ID" data-required="true" class="wd_150">
+                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">업체명</th>
+                                <td>
+                                    <input type="text" id="COMP_NM" name="COMP_NM" value="" class="wd_150" data-notblank="true" class="form-control" placeholder="업체명">
+                                </td>
+                                <th scope="row">대표자</th>
+                                <td>
+                                    <input type="text" id="CEO_NM" name="CEO_NM" value="" class="wd_150" data-notblank="true" class="form-control" placeholder="대표자">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">업태</th>
+                                <td>
+                                    <input type="text" id="BUSINESS_TYPE" name="BUSINESS_TYPE" value="" class="wd_150" data-notblank="true" class="form-control" placeholder="업태">
+                                </td>
+                                <th scope="row">종목</th>
+                                <td>
+                                    <input type="text" id="BUSINESS_ITEM" name="BUSINESS_ITEM" value="" class="wd_150" data-notblank="true" class="form-control" placeholder="종목">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">사업자번호</th>
+                                <td>
+                                    <input type="text" id="COMP_NUM" name="COMP_NUM" value="" class="wd_150" data-notblank="true" class="form-control" placeholder="사업자번호">
+                                </td>
+                                <th scope="row">E-MAIL</th>
+                                <td>
+                                    <input type="text" id="COMP_EMAIL" name="COMP_EMAIL" value="" class="wd_150" data-notblank="true" class="form-control" placeholder="E-MAIL">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">전화번호</th>
+                                <td>
+                                    <input type="text" id="COMP_TEL" name="COMP_TEL" value="" class="wd_150" data-notblank="true" class="form-control" placeholder="전화번호">
+                                </td>
+                                <th scope="row">FAX</th>
+                                <td>
+                                    <input type="text" id="COMP_FAX" name="COMP_FAX" value="" class="wd_150" data-notblank="true" class="form-control" placeholder="FAX">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">사업장소재지</th>
+                                <td colspan="3">
+                                    <input type="text" id="COMP_ADDRESS" name="COMP_ADDRESS"  placeholder="사업장소재지" style="width:98%;">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">비고</th>
+                                <td colspan="3">
+                                    <input type="text" id="NOTE" name="NOTE"  placeholder="비고" style="width:98%;">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">첨부파일</th>
+                                <td colspan="3">
+                                    <input type="hidden" id="ETC_GFILE_SEQ" name="ETC_GFILE_SEQ" value="">
+                                    <input type="text" id="ETC_GFILE_SEQ_NM" name="ETC_GFILE_SEQ_NM" placeholder="첨부파일" readonly style="width:75%;">
+                                    <input type="button" id="compnay_etc_attach_file" name="compnay_etc_attach_file" value="fileUpload" class="smallBtn blue">
+
+                                </td>
+                            </tr>
+
+
+                        </table>
+                    </div>
+                </div>
+
+                <div class="list98">
+                    <div class="tableWrap" style="height: 240px; overflow-y: auto;">
+                            <div class="right_sort_pop">
+                                <button type="button" id="addSystemCompRegiBtn" class="defaultBtn radius ">Add</button>
+                                <button type="button" id="deleteSystemCompRegiBtn" class="defaultBtn radius green ">Delete</button>
+                            </div>
+                            <ul class="conWrap">
+                                <div id="system-company-register-popup-grid" class="jqx-refresh"></div>
+                            </ul><br/>
+                            <ul class="conWrapPop">
+                                <div id="system-company-type1-popup-grid" class="jqx-refresh"></div>
+                            </ul>
+                            <ul class="conWrapPop">
+                                <div id="system-company-type2-popup-grid" class="jqx-refresh"></div>
+                            </ul>
+                            <ul class="conWrapPop">
+                                <div id="system-company-type3-popup-grid" class="jqx-refresh"></div>
+                            </ul>
+                            <ul class="conWrapPop">
+                                <div id="system-company-type4-popup-grid" class="jqx-refresh"></div>
+                            </ul>
+                            <ul class="conWrapPop">
+                                <div id="system-company-type5-popup-grid" class="jqx-refresh"></div>
+                            </ul>
+
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+
+</div>
+<form class="" role="form" id="company_master_type1_form" name="company_master_type1_form">
+
+    <input type="hidden" id="queryId" name="queryId" value="systemMapper.getCompanyMasterStaffList">
+</form>
 <script>
 
 /**  선언 **/
@@ -512,71 +345,38 @@
         'use strict';
 
 /**  업체리스트 그리드 선언 시작 **/
-
+// styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
         systemCompanyMasterPostData = fnFormToJsonArrayData('#company_master_search_form');
         systemCompanyMasterColModel = [
-            {title: '업체명', dataType: 'string', dataIndx: 'COMP_NM',
-                styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
-            },
+            {title: '업체명', dataType: 'string', dataIndx: 'COMP_NM', width: 92},
             {title: '발주업체YN', dataType: 'string', dataIndx: 'ORDER_COMPANY_YN', hidden:true},
-            {title: '발주업체<br>여부', dataType: 'string', dataIndx: 'ORDER_COMPANY_INFO',
-                styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
-            },
+            {title: '발주업체여부', dataType: 'string', dataIndx: 'ORDER_COMPANY_INFO', width: 92},
             {title: '협력업체YN', dataType: 'string', dataIndx: 'CO_COMPANY_YN', hidden:true},
-            {title: '협력업체<br>여부', dataType: 'string', dataIndx: 'CO_COMPANY_INFO',
-                styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
-            },
-            {title: '사업자<br>등록번호', align: 'center', dataType: 'string', dataIndx: 'COMP_NUM',
-                styleHead: { 'text-align':'center','vertical-align':'middle'}
-            },
-            {title: '업태', align: 'center', dataType: 'string', dataIndx: 'BUSINESS_TYPE',
-                styleHead: { 'text-align':'center','vertical-align':'middle'}
-            },
-            {title: '종목', align: 'center', dataType: 'string', dataIndx: 'BUSINESS_ITEM',
-                styleHead: { 'text-align':'center','vertical-align':'middle'}
-            },
-            {title: '전화번호', align: 'center', dataType: 'string', dataIndx: 'COMP_TEL',
-                styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
-            },
-            {title: '담당자<br>(Email)', align: 'center', dataType: 'string', dataIndx: 'MAIN_STAFF_INFO',
-                styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
-            },
-            {title: '대표자', align: 'center', dataType: 'string', dataIndx: 'CEO_NM',
-                styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
-            },
-            {title: '주소', align: 'center', dataType: 'string', dataIndx: 'COMP_ADDRESS',
-                styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
-            },
-            {title: '비고', align: 'center', dataType: 'string', dataIndx: 'NOTE',
-                styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
-            },
-            {title: '대표이메일', align: 'center', dataType: 'string', dataIndx: 'COMP_EMAIL',
-                styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
-            },
-            {title: '로고', align: 'center', dataType: 'string', dataIndx: 'LOGO_FILE_YN',
-                styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'},
+            {title: '협력업체여부', dataType: 'string', dataIndx: 'CO_COMPANY_INFO', width: 162},
+            {title: '사업자등록번호', align: 'center', dataType: 'string', dataIndx: 'COMP_NUM', width: 120},
+            {title: '업태', align: 'center', dataType: 'string', dataIndx: 'BUSINESS_TYPE', width: 100},
+            {title: '종목', align: 'center', dataType: 'string', dataIndx: 'BUSINESS_ITEM', width: 100},
+            {title: '전화번호', align: 'center', dataType: 'string', dataIndx: 'COMP_TEL', width: 150},
+            {title: '담당자(Email)', align: 'center', dataType: 'string', dataIndx: 'MAIN_STAFF_INFO',  width: 150},
+            {title: '대표자', align: 'center', dataType: 'string', dataIndx: 'CEO_NM', width: 70},
+            {title: '주소', align: 'center', dataType: 'string', dataIndx: 'COMP_ADDRESS', width: 300},
+            {title: '비고', align: 'center', dataType: 'string', dataIndx: 'NOTE', width: 200},
+            {title: '대표이메일', align: 'center', dataType: 'string', dataIndx: 'COMP_EMAIL', width: 150},
+            {title: '로고', align: 'center', dataType: 'string', dataIndx: 'LOGO_GFILE_SEQ',
                 render: function (ui) {
                     var rowData = ui.rowData, dataIndx = ui.dataIndx;
-                    if(rowData.LOGO_FILE_YN == 'Y'){
-                        return '<i class="fa fa-image"></i>';
-                    }else{
-                        return '';
-                    }
+                    if (ui.rowData['LOGO_GFILE_SEQ'] > 0) return "<i id='imageView' class='fa fa-file-image-o fa-2x'>VIEW</i>";
+                    return '';
                 }
             },
-            {title: '직인', align: 'center', dataType: 'string', dataIndx: 'SIGN_FILE_YN',
-                styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'},
+            {title: '직인', align: 'center', dataType: 'string', dataIndx: 'SIGN_GFILE_SEQ',
                 render: function (ui) {
                     var rowData = ui.rowData, dataIndx = ui.dataIndx;
-                    if(rowData.SIGN_FILE_YN  == 'Y'){
-                        return '<i class="fa fa-image"></i>';
-                    }else{
-                        return '';
-                    }
+                    if (ui.rowData['SIGN_GFILE_SEQ'] > 0) return "<i id='imageView' class='fa fa-file-image-o fa-2x'>VIEW</i>";
+                    return '';
                 }
             },
-            {title: '', align: 'center', dataType: 'string', dataIndx: 'ETC_FILE_YN',
-                styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'},
+            {title: '', align: 'center', dataType: 'string', dataIndx: 'ETC_GFILE_SEQ', width: 40,
                 render: function (ui) {
                     var rowData = ui.rowData, dataIndx = ui.dataIndx;
                     if(rowData.ETC_FILE_YN  == 'Y'){
@@ -586,48 +386,41 @@
                     }
                 }
             },
-            {title: '최근거래<br>일시', align: 'center', dataType: 'string', dataIndx: 'LAST_BUSINESS_DT',
-                styleHead: { 'text-align':'center','vertical-align':'middle'}
-            },
-            {title: '등록일시', align: 'center', ataType: 'string', dataIndx: 'INSERT_DT',
-                styleHead: { 'text-align':'center','vertical-align':'middle','padding-top':'10px'}
-            },
-            {title: '업데이트<br>일시', align: 'center', dataType: 'string', dataIndx: 'UPDATE_DT',
-                styleHead: { 'text-align':'center','vertical-align':'middle'}
-            },
-            {title: '활성<br>여부', align: 'center', dataType: 'string', dataIndx: 'ACTIVE_YN',
-                styleHead: { 'text-align':'center','vertical-align':'middle'}
-            }
+            {title: '최근거래일시', align: 'center', dataType: 'string', dataIndx: 'LAST_BUSINESS_DT', width: 150},
+            {title: '등록일시', align: 'center', ataType: 'string', dataIndx: 'INSERT_DT', width: 150},
+            {title: '수정일시', align: 'center', dataType: 'string', dataIndx: 'UPDATE_DT', width: 150},
+            {title: '활성여부', align: 'center', dataType: 'string', dataIndx: 'ACTIVE_YN', width: 70}
         ];
-        systemCompanyMasterToolbar = {
-            cls: 'pq-toolbar-crud',
-            items: [
-                {
-                    type: 'textbox', label: '업체 리스트', style: 'float: left;font-size: 13px;padding: 4px; font-weight: bold;', attr: "id='title-hidden'"
-                },
-                {
-                    type: 'button', label: 'NEW COMPANY', icon: 'ui-icon-plus', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {
-                            $systemCompanyRegisterGrid = $('#' + systemCompanyRegisterGridId).pqGrid(systemCompanyRegisterObj);
-                            $('#system_company_popup').modal('show');
-                        }
-                    }
-                }
-            ]
-        };
+        // systemCompanyMasterToolbar = {
+        //     cls: 'pq-toolbar-crud',
+        //     items: [
+        //         {
+        //             type: 'textbox', label: '업체 리스트', style: 'float: left;font-size: 13px;padding: 4px; font-weight: bold;', attr: "id='title-hidden'"
+        //         },
+        //         {
+        //             type: 'button', label: 'NEW COMPANY', icon: 'ui-icon-plus', style: 'float: right;', listener: {
+        //                 'click': function (evt, ui) {
+        //                     $systemCompanyRegisterGrid = $('#' + systemCompanyRegisterGridId).pqGrid(systemCompanyRegisterObj);
+        //                     $('#system_company_popup').modal('show');
+        //                 }
+        //             }
+        //         }
+        //     ]
+        // };
 
         systemCompanyMasterObj = {
-            // width: 700,
-            height: 650, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            width: '100%',
+            height: 650, collapsible: false, resizable: false, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'}, editable : false,
             numberCell: {title: 'No.'}, dragColumns: {enabled: false},
-            scrollModel: {autoFit: true}, trackModel: {on: true},
+            trackModel: {on: true},
+            strNoRows: g_noData,
             columnTemplate: {
                 align: 'center',
-                halign: 'center',
-                hvalign: 'center' //to vertically center align the header cells.
+                valign: 'center' //to vertically center align the header cells.
             },
-            colModel: systemCompanyMasterColModel, toolbar: systemCompanyMasterToolbar,
+            colModel: systemCompanyMasterColModel,
+            // toolbar: systemCompanyMasterToolbar,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: systemCompanyMasterPostData,
@@ -642,7 +435,30 @@
                 $("#company_master_register_form").find("#LOGO_GFILE_SRC").attr("src", "/image/999");
                 $("#company_master_register_form").find("#COMP_CD").val(rowData.COMP_CD);
                 $('#system_company_popup').modal('show');
-            }
+            },
+            cellClick: function (event, ui) {
+                let rowIndx = ui.rowIndx, $grid = this;
+
+                if (ui.dataIndx == 'LOGO_GFILE_SEQ') {
+                    if (ui.rowData['LOGO_GFILE_SEQ'] > 0) {
+                        callWindowImageViewer(ui.rowData.LOGO_GFILE_SEQ);
+                    }
+                    return;
+                }
+                if (ui.dataIndx == 'SIGN_GFILE_SEQ') {
+                    if (ui.rowData['SIGN_GFILE_SEQ'] > 0) {
+                        callWindowImageViewer(ui.rowData.SIGN_GFILE_SEQ);
+                    }
+                    return;
+                }
+
+
+            },
+            complete: function () {
+                let data = $systemCompanyMasterGrid.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#system-company-master-grid-total-records').html(totalRecords);
+            },
         };
         $systemCompanyMasterGrid = $('#' + systemCompanyMasterGridId).pqGrid(systemCompanyMasterObj);
 
@@ -742,13 +558,13 @@
             ]
         };
         systemCompanyRegisterObj = {
-            height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            height: 100, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single', fireSelectChange: true},
             //selectionModel: { type: 'cell', mode: 'multiple'} ,
             trackModel: {on: true}, scrollModel: {autoFit: true},
             numberCell: {title: 'No.', styleHead: {'vertical-align':'middle'}}, // scrollModel: {autoFit: true},
             colModel: systemCompanyRegisterColModel,
-            toolbar: systemCompanyRegisterToolbar,
+            //toolbar: systemCompanyRegisterToolbar,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect', recIndx: 'STAFF_SEQ',
                 postData: systemCompanyRegisterPostData,
@@ -809,7 +625,7 @@
 
         type1PostData = fnFormToJsonArrayData('#company_master_type1_form');
         type1ColModel = [
-            {title: '적용 여부', align: 'center', dataIndx: 'APPLY_YN', editable: true,
+            {title: '적용여부', align: 'center', dataIndx: 'APPLY_YN', editable: true,
                 type: 'checkbox',
                 cb: {
                     all: false, //header checkbox to affect checkboxes on all pages.
@@ -822,22 +638,22 @@
             {title: '종류', datatype: 'string', dataIndx: 'COMP_TYPE_NM', editable: true},
             {title: 'HIGH_TYPE', datatype: 'string', dataIndx: 'HIGH_TYPE', editable: true, hidden: true}
         ];
-        type1Toolbar = {
-            cls: 'pq-toolbar-crud',
-            items: [
-                {
-                    type: 'textbox', label: '발주업체 종류', style: 'float: left;font-size: 13px;padding: 4px; font-weight: bold;', attr: "id='title-hidden'"
-                }
-            ]
-        };
+        // type1Toolbar = {
+        //     cls: 'pq-toolbar-crud',
+        //     items: [
+        //         {
+        //             type: 'textbox', label: '발주업체 종류', style: 'float: left;font-size: 13px;padding: 4px; font-weight: bold;', attr: "id='title-hidden'"
+        //         }
+        //     ]
+        // };
 
         type1Obj = {
-            height: 230, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'},
             trackModel: {on: true}, scrollModel: {autoFit: true},
             numberCell: {title: 'No.', styleHead: {'vertical-align':'middle'}}, // scrollModel: {autoFit: true},
             colModel: type1ColModel,
-            toolbar: type1Toolbar,
+           // toolbar: type1Toolbar,
             beforeCheck:function (evt, ui) {
                 var rowIndx = ui.rowIndx, grid = this;
                 //var cb = grid.Checkbox('APPLY_YN');
@@ -863,7 +679,7 @@
 
         type2PostData = fnFormToJsonArrayData('#company_master_type1_form');
         type2ColModel = [
-            {title: '적용 여부', align: 'center', dataIndx: 'APPLY_YN', editable: true,
+            {title: '적용여부', align: 'center', dataIndx: 'APPLY_YN', editable: true,width:50,
                 type: 'checkbox',
                 cb: {
                     all: false, //header checkbox to affect checkboxes on all pages.
@@ -874,24 +690,24 @@
             },
             {title: '업체코드', datatype: 'string', dataIndx: 'COMP_CD', editable: true, hidden: true},
             {title: 'COMP_TYPE', datatype: 'string', dataIndx: 'COMP_TYPE', editable: true, hidden: true},
-            {title: '종류', datatype: 'string', dataIndx: 'COMP_TYPE_NM', editable: true},
+            {title: '종류', datatype: 'string', dataIndx: 'COMP_TYPE_NM', editable: true,width:50,},
             {title: 'HIGH_TYPE', datatype: 'string', dataIndx: 'HIGH_TYPE', editable: true, hidden: true}
         ];
-        type2Toolbar = {
-            cls: 'pq-toolbar-crud',
-            items: [
-                {
-                    type: 'textbox', label: '협력업체 가공 종류', style: 'float: left;font-size: 13px;padding: 4px; font-weight: bold;', attr: "id='title-hidden'"
-                }
-            ]
-        };
+        // type2Toolbar = {
+        //     cls: 'pq-toolbar-crud',
+        //     items: [
+        //         {
+        //             type: 'textbox', label: '협력업체 가공 종류', style: 'float: left;font-size: 13px;padding: 4px; font-weight: bold;', attr: "id='title-hidden'"
+        //         }
+        //     ]
+        // };
         type2Obj = {
-            height: 230, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'},
             trackModel: {on: true}, scrollModel: {autoFit: true},
             numberCell: {title: 'No.', styleHead: {'vertical-align':'middle'}}, // scrollModel: {autoFit: true},
             colModel: type2ColModel,
-            toolbar: type2Toolbar,
+            // toolbar: type2Toolbar,
             dataModel: {dataType: 'json', data: {}},
             beforeCheck:function (evt, ui) {
                 var rowIndx = ui.rowIndx, grid = this;
@@ -905,7 +721,7 @@
 
         type3PostData = fnFormToJsonArrayData('#company_master_type1_form');
         type3ColModel = [
-            {title: '적용 여부', align: 'center', dataIndx: 'APPLY_YN', editable: true,
+            {title: '적용여부', align: 'center', dataIndx: 'APPLY_YN', editable: true,
                 type: 'checkbox',
                 cb: {
                     all: false, //header checkbox to affect checkboxes on all pages.
@@ -919,21 +735,21 @@
             {title: '종류', datatype: 'string', dataIndx: 'COMP_TYPE_NM', editable: true},
             {title: 'HIGH_TYPE', datatype: 'string', dataIndx: 'HIGH_TYPE', editable: true, hidden: true}
         ];
-        type3Toolbar = {
-            cls: 'pq-toolbar-crud',
-            items: [
-                {
-                    type: 'textbox', label: '협력업체 소재 종류', style: 'float: left;font-size: 13px;padding: 4px; font-weight: bold;', attr: "id='title-hidden'"
-                }
-            ]
-        };
+        // type3Toolbar = {
+        //     cls: 'pq-toolbar-crud',
+        //     items: [
+        //         {
+        //             type: 'textbox', label: '협력업체 소재 종류', style: 'float: left;font-size: 13px;padding: 4px; font-weight: bold;', attr: "id='title-hidden'"
+        //         }
+        //     ]
+        // };
         type3Obj = {
-            height: 230, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'},
             trackModel: {on: true}, scrollModel: {autoFit: true},
             numberCell: {title: 'No.', styleHead: {'vertical-align':'middle'}}, // scrollModel: {autoFit: true},
             colModel: type3ColModel,
-            toolbar: type3Toolbar,
+           // toolbar: type3Toolbar,
             dataModel: {dataType: 'json', data: {}},
             beforeCheck:function (evt, ui) {
                 var rowIndx = ui.rowIndx, grid = this;
@@ -947,7 +763,7 @@
 
         type4PostData = fnFormToJsonArrayData('#company_master_type1_form');
         type4ColModel = [
-            {title: '적용 여부', align: 'center', dataIndx: 'APPLY_YN', editable: true,
+            {title: '적용여부', align: 'center', dataIndx: 'APPLY_YN', editable: true,
                 type: 'checkbox',
                 cb: {
                     all: false, //header checkbox to affect checkboxes on all pages.
@@ -961,21 +777,21 @@
             {title: '종류', datatype: 'string', dataIndx: 'COMP_TYPE_NM', editable: true},
             {title: 'HIGH_TYPE', datatype: 'string', dataIndx: 'HIGH_TYPE', editable: true, hidden: true}
         ];
-        type4Toolbar = {
-            cls: 'pq-toolbar-crud',
-            items: [
-                {
-                    type: 'textbox', label: '협력업체 표면처리 종류', style: 'float: left;font-size: 13px;padding: 4px; font-weight: bold;', attr: "id='title-hidden'"
-                }
-            ]
-        };
+        // type4Toolbar = {
+        //     cls: 'pq-toolbar-crud',
+        //     items: [
+        //         {
+        //             type: 'textbox', label: '협력업체 표면처리 종류', style: 'float: left;font-size: 13px;padding: 4px; font-weight: bold;', attr: "id='title-hidden'"
+        //         }
+        //     ]
+        // };
         type4Obj = {
-            height: 230, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'},
             trackModel: {on: true}, scrollModel: {autoFit: true},
             numberCell: {title: 'No.', styleHead: {'vertical-align':'middle'}}, // scrollModel: {autoFit: true},
             colModel: type4ColModel,
-            toolbar: type4Toolbar,
+            // toolbar: type4Toolbar,
             dataModel: {dataType: 'json', data: {}},
             beforeCheck:function (evt, ui) {
                 var rowIndx = ui.rowIndx, grid = this;
@@ -989,7 +805,7 @@
 
         type5PostData = fnFormToJsonArrayData('#company_master_type1_form');
         type5ColModel = [
-            {title: '적용 여부', align: 'center', dataIndx: 'APPLY_YN', editable: true,
+            {title: '적용여부', align: 'center', dataIndx: 'APPLY_YN', editable: true,
                 type: 'checkbox',
                 cb: {
                     all: false, //header checkbox to affect checkboxes on all pages.
@@ -1003,21 +819,21 @@
             {title: '종류', datatype: 'string', dataIndx: 'COMP_TYPE_NM', editable: true},
             {title: 'HIGH_TYPE', datatype: 'string', dataIndx: 'HIGH_TYPE', editable: true, hidden: true}
         ];
-        type5Toolbar = {
-            cls: 'pq-toolbar-crud',
-            items: [
-                {
-                    type: 'textbox', label: '협력업체 후가공 종류', style: 'float: left;font-size: 13px;padding: 4px; font-weight: bold;', attr: "id='title-hidden'"
-                }
-            ]
-        };
+        // type5Toolbar = {
+        //     cls: 'pq-toolbar-crud',
+        //     items: [
+        //         {
+        //             type: 'textbox', label: '협력업체 후가공 종류', style: 'float: left;font-size: 13px;padding: 4px; font-weight: bold;', attr: "id='title-hidden'"
+        //         }
+        //     ]
+        // };
         type5Obj = {
-            height: 230, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'},
             trackModel: {on: true}, scrollModel: {autoFit: true},
             numberCell: {title: 'No.', styleHead: {'vertical-align':'middle'}}, // scrollModel: {autoFit: true},
             colModel: type5ColModel,
-            toolbar: type5Toolbar,
+            // toolbar: type5Toolbar,
             dataModel: {dataType: 'json', data: {}},
             beforeCheck:function (evt, ui) {
                 var rowIndx = ui.rowIndx, grid = this;
@@ -1038,7 +854,7 @@
                 return fnFormToJsonArrayData('#company_master_search_form');
             } );
             $systemCompanyMasterGrid.pqGrid("refreshDataAndView");
-            fnAlertMessageAutoClose('save');
+            //fnAlertMessageAutoClose('save');
         });
 
 /**  EVENT **/
@@ -1052,6 +868,7 @@
 
         // 업체상세 모달 open
         $("#system_company_popup").on('show.bs.modal', function(){
+
             $("#company_master_register_form").find("#queryId").val("systemMapper.getCompanyMasterInfo");
             let parameters = {
                 'url': '/json-info',
@@ -1204,7 +1021,9 @@
                 }
             }, parameters, '');
         });
-
+        $('.pop_close').on('click', function(e) {
+            $('#system_company_popup').modal('hide');
+        });
         // 업체상세 모달 hide
         $("#system_company_popup").on('hide.bs.modal', function(){
             fnResetFrom("company_master_register_form");
@@ -1227,6 +1046,19 @@
             // $companyMasterMainSearchBtn.trigger("click");
         });
 
+        $("#companyMasterMainNewBtn").click(function(event){
+            $systemCompanyRegisterGrid = $('#' + systemCompanyRegisterGridId).pqGrid(systemCompanyRegisterObj);
+            $('#system_company_popup').modal('show');
+        });
+        $("#addSystemCompRegiBtn").click(function(event){
+            $systemCompanyRegisterGrid.pqGrid('addNodes', [{"COMP_CD":$("#company_master_register_form").find("#COMP_CD").val(), "MAIN_YN":'N'}], 0);
+        });
+        $("#deleteSystemCompRegiBtn").click(function(event){
+            $systemCompanyRegisterGrid.pqGrid('deleteRow', {'rowIndx': companyRegisterSelectedRowIndex});//rowIndx
+        });
+
+
+
         // 업체상세 모달 save
         $systemCompanyRegisterSaveBtn.click(function(event){
 
@@ -1242,119 +1074,124 @@
                 fnAlertMessageAutoClose('save');
             }, parameters, '');
             */
+            if(confirm("업체정보가 저장 됩니다.\n저장 하시겠습니까?")) {
+                // 그리드 데이터 폼에 넣기 to-do
+                var gridInstance = $systemCompanyRegisterGrid.pqGrid('getInstance').grid;
+                var changes = gridInstance.getChanges({format: 'byVal'});
+                $("#company_master_register_form").find("#staffGrid").val(JSON.stringify(changes));
 
-            // 그리드 데이터 폼에 넣기 to-do
-            var gridInstance = $systemCompanyRegisterGrid.pqGrid('getInstance').grid;
-            var changes = gridInstance.getChanges({format: 'byVal'});
-            $("#company_master_register_form").find("#staffGrid").val(JSON.stringify(changes));
+                let result =  "";
 
-            let result =  "";
+                // 업체종류 하나에 담기
+                let data_1 = $type1Grid.pqGrid('option', 'dataModel.data');
+                let totalRecords_1 = data_1.length;
 
-            // 업체종류 하나에 담기
-            let data_1 = $type1Grid.pqGrid('option', 'dataModel.data');
-            let totalRecords_1 = data_1.length;
+                for(let tempI=0; tempI<totalRecords_1; tempI++){
 
-            for(let tempI=0; tempI<totalRecords_1; tempI++){
+                    let rowData1 = $type1Grid.pqGrid("getRowData", {rowIndx: tempI});
+                    let APPLY_YN1 = rowData1["APPLY_YN"];
+                    let COMP_TYPE1 = rowData1["COMP_TYPE"];
+                    let HIGH_TYPE1 = rowData1["HIGH_TYPE"];
 
-                let rowData1 = $type1Grid.pqGrid("getRowData", {rowIndx: tempI});
-                let APPLY_YN1 = rowData1["APPLY_YN"];
-                let COMP_TYPE1 = rowData1["COMP_TYPE"];
-                let HIGH_TYPE1 = rowData1["HIGH_TYPE"];
-
-                if(APPLY_YN1 == 'Y'){
-                    result +=  COMP_TYPE1 + "|" + HIGH_TYPE1 +",";
+                    if(APPLY_YN1 == 'Y'){
+                        result +=  COMP_TYPE1 + "|" + HIGH_TYPE1 +",";
+                    }
                 }
-            }
-            //협력업체 가공 그리드
-            let data2 = $type2Grid.pqGrid('option', 'dataModel.data');
-            let totalRecords2= data2.length;
-            for(let tempI=0; tempI<totalRecords2; tempI++){
+                //협력업체 가공 그리드
+                let data2 = $type2Grid.pqGrid('option', 'dataModel.data');
+                let totalRecords2= data2.length;
+                for(let tempI=0; tempI<totalRecords2; tempI++){
 
-                let rowData2 = $type2Grid.pqGrid("getRowData", {rowIndx: tempI});
-                let APPLY_YN2 = rowData2["APPLY_YN"];
-                let COMP_TYPE2 = rowData2["COMP_TYPE"];
-                let HIGH_TYPE2 = rowData2["HIGH_TYPE"];
+                    let rowData2 = $type2Grid.pqGrid("getRowData", {rowIndx: tempI});
+                    let APPLY_YN2 = rowData2["APPLY_YN"];
+                    let COMP_TYPE2 = rowData2["COMP_TYPE"];
+                    let HIGH_TYPE2 = rowData2["HIGH_TYPE"];
 
-                if(APPLY_YN2 == 'Y'){
-                    result +=  COMP_TYPE2 + "|" + HIGH_TYPE2 +",";
+                    if(APPLY_YN2 == 'Y'){
+                        result +=  COMP_TYPE2 + "|" + HIGH_TYPE2 +",";
+                    }
                 }
-            }
 
-            //협력업체 소재 그리드
-            let data3 = $type3Grid.pqGrid('option', 'dataModel.data');
-            let totalRecords3= data3.length;
-            for(let tempI=0; tempI<totalRecords3; tempI++){
+                //협력업체 소재 그리드
+                let data3 = $type3Grid.pqGrid('option', 'dataModel.data');
+                let totalRecords3= data3.length;
+                for(let tempI=0; tempI<totalRecords3; tempI++){
 
-                let rowData3 = $type3Grid.pqGrid("getRowData", {rowIndx: tempI});
-                let APPLY_YN3 = rowData3["APPLY_YN"];
-                let COMP_TYPE3 = rowData3["COMP_TYPE"];
-                let HIGH_TYPE3 = rowData3["HIGH_TYPE"];
+                    let rowData3 = $type3Grid.pqGrid("getRowData", {rowIndx: tempI});
+                    let APPLY_YN3 = rowData3["APPLY_YN"];
+                    let COMP_TYPE3 = rowData3["COMP_TYPE"];
+                    let HIGH_TYPE3 = rowData3["HIGH_TYPE"];
 
-                if(APPLY_YN3 == 'Y'){
-                    result +=  COMP_TYPE3 + "|" + HIGH_TYPE3 +",";
+                    if(APPLY_YN3 == 'Y'){
+                        result +=  COMP_TYPE3 + "|" + HIGH_TYPE3 +",";
+                    }
                 }
-            }
 
-            //협력업체 표면처리 그리드
-            let data4 = $type4Grid.pqGrid('option', 'dataModel.data');
-            let totalRecords4= data4.length;
-            for(let tempI=0; tempI<totalRecords4; tempI++){
+                //협력업체 표면처리 그리드
+                let data4 = $type4Grid.pqGrid('option', 'dataModel.data');
+                let totalRecords4= data4.length;
+                for(let tempI=0; tempI<totalRecords4; tempI++){
 
-                let rowData4 = $type4Grid.pqGrid("getRowData", {rowIndx: tempI});
-                let APPLY_YN4 = rowData4["APPLY_YN"];
-                let COMP_TYPE4 = rowData4["COMP_TYPE"];
-                let HIGH_TYPE4 = rowData4["HIGH_TYPE"];
+                    let rowData4 = $type4Grid.pqGrid("getRowData", {rowIndx: tempI});
+                    let APPLY_YN4 = rowData4["APPLY_YN"];
+                    let COMP_TYPE4 = rowData4["COMP_TYPE"];
+                    let HIGH_TYPE4 = rowData4["HIGH_TYPE"];
 
-                if(APPLY_YN4 == 'Y'){
-                    result +=  COMP_TYPE4 + "|" + HIGH_TYPE4 +",";
+                    if(APPLY_YN4 == 'Y'){
+                        result +=  COMP_TYPE4 + "|" + HIGH_TYPE4 +",";
+                    }
                 }
-            }
 
-            //협력업체 후가공 그리드
-            let data5 = $type5Grid.pqGrid('option', 'dataModel.data');
-            let totalRecords5= data5.length;
-            for(let tempI=0; tempI<totalRecords5; tempI++){
+                //협력업체 후가공 그리드
+                let data5 = $type5Grid.pqGrid('option', 'dataModel.data');
+                let totalRecords5= data5.length;
+                for(let tempI=0; tempI<totalRecords5; tempI++){
 
-                let rowData5 = $type5Grid.pqGrid("getRowData", {rowIndx: tempI});
-                let APPLY_YN5 = rowData5["APPLY_YN"];
-                let COMP_TYPE5 = rowData5["COMP_TYPE"];
-                let HIGH_TYPE5 = rowData5["HIGH_TYPE"];
+                    let rowData5 = $type5Grid.pqGrid("getRowData", {rowIndx: tempI});
+                    let APPLY_YN5 = rowData5["APPLY_YN"];
+                    let COMP_TYPE5 = rowData5["COMP_TYPE"];
+                    let HIGH_TYPE5 = rowData5["HIGH_TYPE"];
 
-                if(APPLY_YN5 == 'Y'){
-                    result +=  COMP_TYPE5 + "|" + HIGH_TYPE5 +",";
+                    if(APPLY_YN5 == 'Y'){
+                        result +=  COMP_TYPE5 + "|" + HIGH_TYPE5 +",";
+                    }
                 }
+
+
+
+
+                result = result.substring(0, result.length-1);
+
+                $("#company_master_register_form").find("#compType").val(result);
+                console.log($("#company_master_register_form").find("#compType").val());
+
+
+                let parameters = {
+                    'url': '/managerSystemCompany',
+                    'data': $('#company_master_register_form').serialize()
+                };
+                fnPostAjax(function (data, callFunctionParam) {
+                    $('#system_company_popup').modal('hide');
+                    $companyMasterMainSearchBtn.trigger("click");
+                }, parameters, '');
             }
 
-
-
-
-            result = result.substring(0, result.length-1);
-
-            $("#company_master_register_form").find("#compType").val(result);
-            console.log($("#company_master_register_form").find("#compType").val());
-
-
-            let parameters = {
-                'url': '/managerSystemCompany',
-                'data': $('#company_master_register_form').serialize()
-            };
-            fnPostAjax(function (data, callFunctionParam) {
-                alert('이제 처리하자. 성공메세지는 공통에서 처리한다더라.');
-                $('#system_company_popup').modal('hide');
-                $companyMasterMainSearchBtn.trigger("click");
-            }, parameters, '');
         });
 
         // 업체상세 모달 delete
         $systemCompanyRegisterDelBtn.click(function(event){
-            $("#company_master_register_form").find("#queryId").val("systemMapper.deleteCompanyMaster");
-            let parameters = {
-                'url': '/json-update',
-                'data': $('#company_master_register_form').serialize()
-            };
-            fnPostAjax(function (data, callFunctionParam) {
-                fnAlertMessageAutoClose('remove');
-            }, parameters, '');
+            if(confirm("업체정보가 삭제됩니다.\n삭제 하시겠습니까?")) {
+                $("#company_master_register_form").find("#queryId").val("systemMapper.deleteCompanyMaster");
+                let parameters = {
+                    'url': '/json-update',
+                    'data': $('#company_master_register_form').serialize()
+                };
+                fnPostAjax(function (data, callFunctionParam) {
+                    $('#system_company_popup').modal('hide');
+                    $companyMasterMainSearchBtn.trigger("click");
+                    //fnAlertMessageAutoClose('remove');
+                }, parameters, '');
+            }
         });
 
         // 업체상세 모달 활성여부
