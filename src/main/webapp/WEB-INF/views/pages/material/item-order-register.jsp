@@ -347,7 +347,7 @@
         ];
 
         let itemOrderRegisterRightColModel= [
-            {title: 'MY_MAT_STOCK_SEQ', dataType: 'string', dataIndx: 'MY_MAT_STOCK_SEQ', hidden: false } ,
+            {title: 'MY_MAT_STOCK_SEQ', dataType: 'string', dataIndx: 'MY_MAT_STOCK_SEQ', hidden: true } ,
             {title: 'MY_MAT_OUT_SEQ', dataType: 'string', dataIndx: 'MY_MAT_OUT_SEQ', hidden: true } ,
             {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden: true } ,
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true } ,
@@ -674,7 +674,7 @@
 
         itemOrderRegisterLeftGrid.pqGrid({
             height: '100%',
-            dataModel: {
+            dataModel: {Destroy
                 location: "remote", dataType: "json", method: "POST", recIndx: 'CONTROL_DETAIL_SEQ',
                 url: "/paramQueryGridSelect",
                 postData: fnFormToJsonArrayData('#item_order_register_search_form'),
@@ -730,6 +730,7 @@
                 if(hiddenYn == 'Y') {
                     $(".itemOrderRegisterMaterialDetailSelectBox").val(ui.rowData.MATERIAL_DETAIL);
                     $("#item_order_register_hidden_form #MATERIAL_DETAIL").val(ui.rowData.MATERIAL_DETAIL);
+                    itemOrderRegisterRightGrid.pqGrid( "destroy" );
                     selectItemOrderRegisterRightList();
                 }
             },
@@ -766,21 +767,19 @@
                 showTitle: false,
                 title: false,
                 strNoRows: g_noData,
-                /*cellSave: function (evt, ui) {
-                    console.log(ui.oldVal);
-                    console.log(ui.newVal);
+                cellSave: function (evt, ui) {
                     if (ui.oldVal === undefined && ui.newVal === null) {
                         itemOrderRegisterRightGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                     }
-                }*/
+                }
             });
 
-            itemOrderRegisterRightGrid.pqGrid("refreshDataAndView");
+            //itemOrderRegisterRightGrid.pqGrid("refreshDataAndView");
         };
 
         $('#item_order_register_popup').on('hide.bs.modal', function() {
-            itemOrderRegisterPopTopGrid.pqGrid( "destroy" );
-            itemOrderRegisterPopBotGrid.pqGrid( "destroy" );
+            itemOrderRegisterPopTopGrid.pqGrid( "Destroy" );
+            itemOrderRegisterPopBotGrid.pqGrid( "Destroy" );
         });
 
         $('#item_order_register_popup').on('show.bs.modal',function() {
