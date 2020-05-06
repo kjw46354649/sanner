@@ -28,44 +28,45 @@
                             </ul>
                         </div>
                     </li>
-<%--                    <li class="depth1 no1"><a href="#">주문관리</a>--%>
-<%--                        <div class="depth2">--%>
-<%--                            <ul>--%>
-<%--                                <li><a href="#" url="/static/order/control-manage" tname="주문관리" pid="100021">주문관리</a></li>--%>
+                    <li class="depth1 no1"><a href="#">주문관리</a>
+                        <div class="depth2">
+                            <ul>
+                                <li><a href="#" url="/static/order/control-manage" tname="주문관리" pid="100021">주문관리</a></li>
 <%--                                <li><a href="#" url="/static/order/process-confirm" tname="가공확정" pid="100022">가공확정</a></li>--%>
 <%--                                <li><a href="#" url="/static/order/order-status" tname="영업현황" pid="100023">영업현황</a></li>--%>
 <%--                                <li><a href="#" url="/static/order/close-history" tname="마감이력" pid="100024">마감이력</a></li>--%>
 <%--                                <li><a href="#" url="/static/order/sales-status" tname="매출현황" pid="100025">매출현황</a></li>--%>
-                                <%--<li><a href="#" url="/static/order/incoming-amount-manage" tname="수금관리" pid="100026">수금관리</a></li>--%>
-<%--                            </ul>--%>
-<%--                        </div>--%>
-<%--                    </li>--%>
+<%--                                <li><a href="#" url="/static/order/incoming-amount-manage" tname="수금관리" pid="100026">수금관리</a></li>--%>
+                            </ul>
+                        </div>
+                    </li>
 <%--                    <li class="depth1 no1"><a href="#">외주관리</a>--%>
 <%--                        <div class="depth2">--%>
 <%--                            <ul>--%>
-<%--                                <li><a href="#" url="/static/out/outsourcing-order-manage" tname="외주 주문관리" pid="100031">외주 주문관리</a></li>--%>
-<%--                                <li><a href="#" url="/static/out/outsourcing-close-history" tname="외주 마감이력" pid="100032">외주 마감이력</a></li>--%>
-<%--                                <li><a href="#" url="/static/out/outsourcing-status" tname="외주현황" pid="100033">외주현황</a></li>--%>
+<%--&lt;%&ndash;                                <li><a href="#" url="/static/out/outsourcing-order-manage" tname="외주 주문관리" pid="100031">외주 주문관리</a></li>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                <li><a href="#" url="/static/out/outsourcing-close-history" tname="외주 마감이력" pid="100032">외주 마감이력</a></li>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                <li><a href="#" url="/static/out/outsourcing-status" tname="외주현황" pid="100033">외주현황</a></li>&ndash;%&gt;--%>
 <%--                            </ul>--%>
 <%--                        </div>--%>
-<%--                    </li><li class="depth1 no1"><a href="#">소재관리</a>--%>
+<%--                    </li>--%>
+<%--                    <li class="depth1 no1"><a href="#">소재관리</a>--%>
 <%--                        <div class="depth2">--%>
 <%--                            <ul>--%>
-<%--                                <li><a href="#" url="/static/material/item-order-register" tname="소재 주문등록" pid="100041">소재 주문등록</a></li>--%>
-<%--                                <li><a href="#" url="/static/material/item-order-history" tname="소재 주문이력" pid="100042">소재 주문이력</a></li>--%>
+<%--&lt;%&ndash;                                <li><a href="#" url="/static/material/item-order-register" tname="소재 주문등록" pid="100041">소재 주문등록</a></li>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                <li><a href="#" url="/static/material/item-order-history" tname="소재 주문이력" pid="100042">소재 주문이력</a></li>&ndash;%&gt;--%>
 <%--                                <li><a href="#" url="/static/material/in-warehouse-manage" tname="보유 소재 관리" pid="100043">보유 소재 관리</a></li>--%>
 <%--                                <li><a href="#" url="/static/material/in-parts-manage" tname="자재 소모품 관리" pid="100044">자재 소모품 관리</a></li>--%>
-<%--                                <li><a href="#" url="/static/material/stock-manage" tname="재고 관리" pid="100045">재고 관리</a></li>--%>
+<%--&lt;%&ndash;                                <li><a href="#" url="/static/material/stock-manage" tname="재고 관리" pid="100045">재고 관리</a></li>&ndash;%&gt;--%>
 <%--                            </ul>--%>
 <%--                        </div>--%>
 <%--                    </li>--%>
 <%--                    <li class="depth1 no1"><a href="#">생산관리</a>--%>
 <%--                        <div class="depth2">--%>
 <%--                            <ul>--%>
-<%--                                <li><a href="#" url="/static/production/mct-plan-manage" tname="MCT 가공계획 관리" pid="100051">MCT 가공계획 관리</a></li>--%>
-<%--                                <li><a href="#" url="/static/production/mct-result-manage" tname="MCT 실적관리" pid="100052">MCT 실적관리</a></li>--%>
-<%--                                <li><a href="#" url="/static/production/mct-execute-history" tname="MCT 수행이력 관리" pid="100053">MCT 수행이력 관리</a></li>--%>
-<%--                                <li><a href="#" url="/static/production/rnd-db" tname="가공조건 연구 DB" pid="100054">가공조건 연구 DB</a></li>--%>
+<%--&lt;%&ndash;                                <li><a href="#" url="/static/production/mct-plan-manage" tname="MCT 가공계획 관리" pid="100051">MCT 가공계획 관리</a></li>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                <li><a href="#" url="/static/production/mct-result-manage" tname="MCT 실적관리" pid="100052">MCT 실적관리</a></li>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                <li><a href="#" url="/static/production/mct-execute-history" tname="MCT 수행이력 관리" pid="100053">MCT 수행이력 관리</a></li>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                <li><a href="#" url="/static/production/rnd-db" tname="가공조건 연구 DB" pid="100054">가공조건 연구 DB</a></li>&ndash;%&gt;--%>
 <%--                                <li><a href="#" url="/static/production/machine-manage" tname="장비이력 관리" pid="100055">장비이력 관리</a></li>--%>
 <%--                            </ul>--%>
 <%--                        </div>--%>

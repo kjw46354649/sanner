@@ -225,30 +225,18 @@ function topMenuOpen(){
 	}, 300);
 }
 // topWrap 축소 함수
-function topMenuClose(){
-	var tabId = "";
-	var tab = $(".tabMenuWrap .tabMenu li");
-	tab.each(function(){
-		if($(this).hasClass('on')) {
-			tabId = $(this).find('a')[0].id;
-			//console.log(tabId);
-		}
-	});
+function topMenuClose(viewTabId){
 
-	var top = $("#view_"+tabId).find('.gubunWrap');
-	var con = $("#view_"+tabId).find('.bottomWrap .tableWrap .conWrap');
-	var t_h = $("#view_"+tabId).find('.gubunWrap ul li').outerHeight() + 10;
+	var top = $("#"+ viewTabId).find('.gubunWrap');
+	var con = $("#"+ viewTabId).find('.bottomWrap .tableWrap .conWrap');
+	var t_h = $("#"+ viewTabId).find('.gubunWrap ul li').outerHeight() + 10;
 
-	/*var top = $('.gubunWrap');
-	var con = $('.bottomWrap .tableWrap .conWrap');
-	var t_h = $('.gubunWrap ul li').outerHeight() + 10;*/
 	var c_h = con.height() + top.height() - (t_h - 5);
 	top.stop().animate({height:t_h}, 300, 'easeInCubic');
 	con.stop().animate({height: c_h},300, 'easeInCubic');
 
 	setTimeout(function(){
-		var conHeight = $(".estimate .bottomWrap .tableWrap .conWrap").height();
-		var pqGrid = $('.estimate .bottomWrap .tableWrap .conWrap .jqx-refresh');
+		var pqGrid = $("#"+ viewTabId).find('.estimate .bottomWrap .tableWrap .conWrap .jqx-refresh');
 		pqGrid.each(function(){
 			$(this).pqGrid('option', 'height', c_h).pqGrid('refresh');
 		});
@@ -267,10 +255,10 @@ function estimateH(viewTabId){
 
 	$("#"+viewTabId).find('.topWrap_btn').on('click' , function(){
 		if($(this).hasClass('on')){
-			topMenuClose();
+			topMenuClose(viewTabId);
 			$(this).removeClass('on');
 		}else{
-			topMenuOpen();
+			topMenuOpen(viewTabId);
 			$(this).addClass('on');
 		}
 	});

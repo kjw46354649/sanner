@@ -1,8 +1,8 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <section class="contents">
     <div class="logWrap">
-<%--        <form action="/main" method="POST">--%>
-        <form action="/jmes" method="POST">
+        <form action="/main" method="POST">
+<%--        <form action="/jmes" method="POST">--%>
             <ul>
                 <li><label for="userID">Username</label><input type="text" name="userId" id="userId" placeholder="Enter Username" title="Enter Username">
                 </li>
