@@ -732,5 +732,56 @@
             AND WAREHOUSE_CD = #{WAREHOUSE_CD}
         </if>
     </select>
+    <select id="selectInsideStockList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.ORDER_COMP_CD
+          , (SELECT COMP_NM FROM jmes.TBL_COMPANY WHERE COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_CD_NM
+          , A.DRAWING_NUM
+          , A.ITEM_NM
+          , A.INSIDE_STOCK_NUM
+          , A.COMP_CD
+          , (SELECT COMP_NM FROM jmes.TBL_COMPANY WHERE COMP_CD = A.COMP_CD) AS COMP_CD_NM
+          , A.SIZE_TXT
+          , A.MATERIAL_DETAIL
+          , jmes.SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, 'KR') AS MATERIAL_DETAIL_NM
+          , (SELECT IFNULL(SUM(IN_QTY),0) FROM jmes.TBL_INSIDE_IN WHERE INSIDE_STOCK_NUM = A.INSIDE_STOCK_NUM) - (SELECT IFNULL(SUM(OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT WHERE INSIDE_STOCK_NUM = A.INSIDE_STOCK_NUM) AS INSIDE_STOCK_CURR_QTY
+          , A.ORIGINAL_SIDE_QTY
+          , A.OTHER_SIDE_QTY
+          , A.WAREHOUSE_CD
+          , jmes.SF_GET_CODE_NM('1049', A.WAREHOUSE_CD, 'KR') AS WAREHOUSE_CD_NM
+          , A.LOC_SEQ
+          , (SELECT LOC_NM FROM jmes.TBL_WAREHOUSE_LOCATION WHERE WAREHOUSE_CD = A.WAREHOUSE_CD AND LOC_SEQ = A.LOC_SEQ ) AS LOC_SEQ_NM
+          , A.DXF_GFILE_SEQ
+          , A.IMG_GFILE_SEQ
+          , jmes.SF_GET_DATE_F(A.INSERT_DT, 'YY', 'M') AS INSERT_TIME
+          , jmes.SF_GET_DATE_F(A.UPDATE_DT, 'YY', 'M') AS UPDATE_TIME
+          , A.NOTE
+        FROM jmes.TBL_INSIDE_STOCK A
+        WHERE 1=1
+        <if test="SEL_COMP_CD !='' and SEL_COMP_CD != null">
+            AND A.COMP_CD = #{SEL_COMP_CD}
+        </if>
+        <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
+            AND A.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
+        </if>
+        <if test="SEL_DRAWING_NUM !='' and SEL_DRAWING_NUM != null">
+            AND A.DRAWING_NUM LIKE CONCAT('%', #{SEL_DRAWING_NUM}, '%')
+        </if>
+        <if test="SEL_ITEM_NM !='' and SEL_ITEM_NM != null">
+            AND A.ITEM_NM LIKE CONCAT('%', #{SEL_ITEM_NM}, '%')
+        </if>
+        <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null">
+            AND A.CONTROL_SEQ IN (SELECT CONTROL_SEQ FROM jmes.TBL_CONTROL B WHERE B.CONTROL_NUM LIKE CONCAT('%', #{SEL_CONTROL_NUM}, '%'))
+        </if>
+        <if test="SEL_MATERIAL_DETAIL !='' and SEL_MATERIAL_DETAIL != null">
+            AND A.MATERIAL_DETAIL = #{SEL_MATERIAL_DETAIL}
+        </if>
+        <if test="SEL_WAREHOUSE_CD !='' and SEL_WAREHOUSE_CD != null">
+            AND A.WAREHOUSE_CD = #{SEL_WAREHOUSE_CD}
+        </if>
+        <if test="SEL_LOC_SEQ !='' and SEL_LOC_SEQ != null">
+            AND A.LOC_SEQ = #{SEL_LOC_SEQ}
+        </if>
+    </select>
 
 </mapper>
