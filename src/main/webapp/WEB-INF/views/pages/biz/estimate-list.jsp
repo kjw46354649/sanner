@@ -7,6 +7,8 @@
 --%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
 <div class="page estimate">
     <div class="topWrap">
         <form class="form-inline" id="estimate_master_search_form" name="estimate_master_search_form" role="form">
@@ -127,7 +129,8 @@
         let estimateMasterSelectedRowIndex;
         let estimateMasterTopGrid = $("#estimate_master_top_grid");
         let estimateMasterBotGrid = $("#estimate_master_bot_grid");
-        let $btnEstimateListDrawView = $("#btnEstimateListDrawView");
+
+    $(function () {
 
         let estimateMasterTopColModel= [
             //{title: 'No.', dataType: 'string', dataIndx: 'EST_SEQ'},
@@ -170,7 +173,7 @@
                     let EST_STATUS = ui.rowData.EST_STATUS;
                     let EST_SEQ = ui.rowData.EST_SEQ;
 
-                    return '<a a href="#" id="estimateOrderPage">' +
+                    return '<a href="#" id="estimateRegisterPage">' +
                         '<span data-status="'+EST_STATUS+'" data-seq="'+EST_SEQ+'" class="ui-icon ui-icon-circle-zoomin"></span>' +
                         '</a>';
                 }
@@ -198,7 +201,15 @@
             {title: '', dataType: 'string', dataIndx: '', editable: false, width: 40},
             {title: '주문접수', dataType: 'date', dataIndx: '', editable: false, width: 60,
                 render: function(ui){
-                    return '<a href="#"><span class="ui-icon ui-icon-arrowthick-1-e"></span></a>';
+                    let EST_STATUS = ui.rowData.EST_STATUS;
+                    let EST_SEQ = ui.rowData.EST_SEQ;
+                    let EST_VER = ui.rowData.EST_VER;
+
+                    if(EST_STATUS == 'EST010'){
+                        return '<a href="#" id="estimateOrder">' +
+                            '<span data-seq="'+EST_SEQ+'" data-ver="'+EST_VER+'" class="ui-icon ui-icon-arrowthick-1-e"></span>' +
+                            '</a>';
+                    }
                 }
             }
         ];
@@ -209,7 +220,15 @@
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 80 } ,
             {title: '', dataType: 'string', dataIndx: 'DRAWING_YN', width: 30 } ,
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', validations: [{ type: 'minLen', value: 1, msg: "Required"}], width: 100 } ,
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', width: 50 } ,
+            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', width: 50 ,
+                render: function (ui) {
+                    if (ui.rowData.WORK_TYPE === 'WTP020') {
+                        return '<a href="#" id="estimatePartPlus">' +
+                            '<span data-idx="'+ui.rowIndx+'" class="ui-icon ui-icon-plus" style="cursor: pointer"></span>' +
+                            '</a>'
+                    }
+                }
+            } ,
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 100 } ,
             {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
             {title: '작업구분', dataType: 'string', dataIndx: 'WORK_TYPE_NM',
@@ -418,14 +437,14 @@
 
         function selectEstimateBotList(EST_SEQ) {
             if(estimateMasterBotGrid.hasClass('pq-grid')){
-                estimateMasterBotGrid.pqGrid('Destroy');
+                estimateMasterBotGrid.pqGrid('destroy');
             }
             estimateMasterBotGrid.pqGrid({
                 minHeight: "100%",
                 height: '100%',
                 width: '100%',
                 dataModel: {
-                    location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
+                    location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
                     url: "/paramQueryGridSelect",
                     postData: { 'queryId': 'selectEstimateDetailList', 'EST_SEQ': EST_SEQ},
                     getData: function (dataJSON) {
@@ -491,14 +510,13 @@
         });
 
         $("#btnEstimateListSave").on('click', function(){
-            alert("clickkk");
+            let estimateDetailInsertQueryList = ['insertEstimateDetail'];
+            let estimateDetailUpdateQueryList = ['updateEstimateDetail'];
+            fnModifyPQGrid(estimateMasterBotGrid, estimateDetailInsertQueryList, estimateDetailUpdateQueryList);
+
             let estimateMasterInsertQueryList = ['insertEstimateMaster'];
             let estimateMasterUpdateQueryList = ['updateEstimateMaster'];
             fnModifyPQGrid(estimateMasterTopGrid, estimateMasterInsertQueryList, estimateMasterUpdateQueryList);
-
-            let estimateDetailInsertQueryList = ['insertEstimateMaster'];
-            let estimateDetailUpdateQueryList = ['updateEstimateMaster'];
-            fnModifyPQGrid(estimateMasterBotGrid, estimateDetailInsertQueryList, estimateDetailUpdateQueryList);
         });
 
         $("#btnEstimateListDrawView").on('click', function(){ });
@@ -556,18 +574,57 @@
             estimateMasterBotGrid.pqGrid("refresh");
         });
 
-        /* 도면 등록 팝업 호출 */
-        $btnEstimateListDrawView.click(function () {
-            callWindowImageViewer(999);
-        });
-
         /** 공통 코드 이외의 처리 부분 **/
         fnCommCodeDatasourceSelectBoxCreate($("#estimate_master_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
         fnCommCodeDatasourceSelectBoxCreate($("#estimate_master_search_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
 
     });
 
-    $(document).on('click', '#estimateOrderPage', function(event){
+    /** 그리드 버튼 처리 **/
+    $(document).on('click', '#estimateOrder', function(event){
+        let seq = event.target.dataset.seq;
+        let parameters = {'url': '/json-list', 'data': { 'queryId': 'selectEstimateDetailList', 'EST_SEQ': seq}};
+        fnPostAjax(function (data, callFunctionParam) {
+
+            let parameters = {
+                'url': '/registerEstimateOrder',
+                'data': {data: JSON.stringify(data.list)}
+            };
+
+            fnPostAjax(function () {
+                alert("<spring:message code='com.alert.default.save.success' />");
+                $("#btnEstimateListSearch").trigger('click');
+            }, parameters, '');
+
+        }, parameters, '');
+    });
+
+    $(document).on('click', '#estimatePartPlus', function(event){
+        let rowIndex = event.target.dataset.idx;
+        let data = estimateMasterBotGrid.pqGrid('option', 'dataModel.data'), totalRecords = data.length;
+        let newPartNum = 0, newRowIndex = 0;
+
+        let newRowData = data[rowIndex];
+        for (let i = 0; i < totalRecords; i++) {
+            if (data[i].SEQ === newRowData.SEQ) {
+                newPartNum++;
+                newRowIndex = data[i].pq_ri + 1;
+            }
+        }
+
+        newRowData.ROWNUM = totalRecords + 1;
+        newRowData.PART_NUM = newPartNum;
+        newRowData.WORK_TYPE = 'WTP010';
+
+        estimateMasterBotGrid.pqGrid('addRow', {
+            newRow: newRowData,
+            rowIndx: newRowIndex,
+            checkEditable: false
+        });
+    });
+
+    /** 화면 이동 처리 **/
+    $(document).on('click', '#estimateRegisterPage', function(event){
         let seq = event.target.dataset.seq;
         let status = event.target.dataset.status;
 
@@ -578,5 +635,6 @@
             $("#test").trigger('click');
         }
     });
+
 
 </script>

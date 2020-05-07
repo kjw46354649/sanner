@@ -466,9 +466,9 @@
                 estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': tempI , row: { 'EST_SEQ': EST_SEQ } });
             }
 
-            //$("#estimate_register_hidden_form #EST_SEQ").val(EST_SEQ);
+            $("#estimate_register_hidden_form #EST_SEQ").val(EST_SEQ);
             fnModifyPQGrid(estimateRegisterTopGrid, estimateRegisterInsertQueryList, estimateRegisterUpdateQueryList);
-            estimateRegisterReloadPageData();
+            //estimateRegisterReloadPageData();
         };
 
         function estimateRegisterReloadPageData(){
@@ -494,7 +494,7 @@
 
                 postData = { 'queryId': 'estimate.selectEstimateDetailList', 'EST_SEQ': EST_SEQ };
                 if(estimateRegisterTopGrid.hasClass('pq-grid')){
-                    estimateRegisterTopGrid.pqGrid('Destroy');
+                    //estimateRegisterTopGrid.pqGrid('destroy');
                 }
                 fnRequestGidData(estimateRegisterTopGrid, postData);
             }, parameter, '');
