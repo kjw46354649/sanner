@@ -26,6 +26,7 @@
     <select id="getOrderCompanyList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             COMP_CD AS CODE_CD, COMP_NM AS CODE_NM
+            ,COMP_NM AS `text`, CAST(COMP_CD AS CHAR) AS `value`
         FROM TBL_COMPANY
         WHERE 1 = 1
             AND ORDER_COMPANY_YN = 'Y'
@@ -35,6 +36,7 @@
     <select id="getBusinessCompanyList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             COMP_CD AS CODE_CD, COMP_NM AS CODE_NM
+            ,COMP_NM AS `text`, CAST(COMP_CD AS CHAR) AS `value`
         FROM TBL_COMPANY
         WHERE 1 = 1
             AND FAMILY_COMPANY_YN = 'Y'
@@ -44,6 +46,7 @@
     <select id="getOutsourceCompanyList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             COMP_CD AS CODE_CD, COMP_NM AS CODE_NM
+            ,COMP_NM AS `text`, CAST(COMP_CD AS CHAR) AS `value`
         FROM TBL_COMPANY
         WHERE 1 = 1
                     AND CO_COMPANY_YN = 'Y'
