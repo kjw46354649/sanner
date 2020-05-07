@@ -98,6 +98,56 @@
         ORDER BY A.EST_SEQ, A.EST_NUM
     </select>
 
+    <select id="manageEstimateCadFiles_select" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            UUID() AS ROWNUM,
+            A.EST_SEQ,
+            A.EST_NUM,
+            A.EST_VER, <!-- 차수 -->
+            B.SEQ,
+            B.MODULE_NM,
+            B.ITEM_NM, <!-- 품명 -->
+            B.PART_NUM, <!-- Part -->
+            B.DRAWING_NUM,
+            #{FILE_NM} AS FILE_NM,
+            #{DXF_GFILE_SEQ} AS DXF_GFILE_SEQ,
+            #{TIME_PATH} AS TIME_PATH,
+            #{FILE_PATH} AS FILE_PATH,
+            CASE WHEN IMG_GFILE_SEQ IS NOT NULL THEN '이미 등록됨, Save 후 교체됨'  <!-- 이미 등록된 Save시 교체 진행  메시지 처리 -->
+                WHEN IFNULL(#{DXF_GFILE_SEQ}, 0) <![CDATA[ <= ]]> 0 THEN  '파일 업로드 오류' <!-- 파일 업로드 오류 및 CONVERT 사이즈 오류 -->
+            ELSE ''
+            END AS UPLOAD_MESSAGE
+        FROM TBL_ESTIMATE A
+            INNER JOIN TBL_ESTIMATE_DETAIL B ON A.EST_SEQ = B.EST_SEQ
+        WHERE 1 = 1
+            AND A.DEL_YN = 'N'
+            AND IFNULL(A.EST_STATUS, 'EST010') IN ('EST010')
+            AND #{ORGINAL_FILE_NM} LIKE CONCAT(B.DRAWING_NUM, '%')
+    </select>
+
+    <update id="manageEstimateCadFiles" parameterType="java.util.HashMap">
+        UPDATE TBL_ESTIMATE_DETAIL
+        SET
+            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
+            PDF_GFILE_SEQ = NULL,
+            IMG_GFILE_SEQ = NULL,
+            UPDATE_DT = NOW()
+            <!-- ,UPDATE_ID = NULL -->
+        WHERE EST_SEQ = #{EST_SEQ}
+            AND SEQ = #{SEQ}
+    </update>
+
+    <update id="manageEstimateCadFiles_mapping" parameterType="java.util.HashMap">
+        UPDATE TBL_ESTIMATE_DETAIL
+        SET
+            PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
+            IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
+            UPDATE_DT = NOW()
+            <!-- ,UPDATE_ID = NULL -->
+        WHERE
+            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ}
+    </update>
+
     <insert id="insertEstimateMaster" parameterType="java.util.HashMap">
         INSERT INTO TBL_ESTIMATE
             (EST_SEQ, EST_VER, EST_NUM, ORDER_COMP_CD, ORDER_STAFF_SEQ, COMP_CD, EST_USER_ID,

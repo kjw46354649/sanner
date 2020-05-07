@@ -182,6 +182,8 @@
 
         let estimateRegisterTopGrid = $("#estimate_register_top_grid");
         let estimateRegisterBotGrid = $("#estimate_register_bot_grid");
+        let $btnEstimateRegisterDrawView = $("#btnEstimateRegisterDrawView");
+        let $btnEstimateRegisterDrawAdd = $("#btnEstimateRegisterDrawAdd");
 
         let estimateRegisterTopColModel= [
             {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', width: 80 } ,
@@ -542,12 +544,14 @@
 
         });
 
-        $("#btnEstimateRegisterDrawAdd").on('click', function(){
-
+        /* 도면 등록 팝업 호출 */
+        $btnEstimateRegisterDrawAdd.click(function () {
+            setEstiMatePopup('estimate', 'estimate.manageEstimateCadFiles');
         });
 
-        $("#btnEstimateRegisterDrawView").on('click', function(){
-
+        /* 도면 등록 팝업 호출 */
+        $btnEstimateRegisterDrawView.click(function () {
+            callWindowImageViewer(999);
         });
 
     });

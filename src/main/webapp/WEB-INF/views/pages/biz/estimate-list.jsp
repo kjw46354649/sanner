@@ -124,10 +124,11 @@
 </form>
 
 <script type="text/javascript">
-    'use strict';
-    let estimateMasterSelectedRowIndex;
-    let estimateMasterTopGrid = $("#estimate_master_top_grid");
-    let estimateMasterBotGrid = $("#estimate_master_bot_grid");
+    $(function () {
+        'use strict';
+        let estimateMasterSelectedRowIndex;
+        let estimateMasterTopGrid = $("#estimate_master_top_grid");
+        let estimateMasterBotGrid = $("#estimate_master_bot_grid");
 
     $(function () {
 
@@ -563,8 +564,6 @@
             estimateMasterBotGrid.pqGrid("option", "colModel", colM);
             estimateMasterBotGrid.pqGrid("refresh");
         });
-
-
 
         /** 공통 코드 이외의 처리 부분 **/
         fnCommCodeDatasourceSelectBoxCreate($("#estimate_master_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
