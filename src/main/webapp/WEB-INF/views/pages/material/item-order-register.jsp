@@ -674,7 +674,7 @@
 
         itemOrderRegisterLeftGrid.pqGrid({
             height: '100%',
-            dataModel: {Destroy
+            dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'CONTROL_DETAIL_SEQ',
                 url: "/paramQueryGridSelect",
                 postData: fnFormToJsonArrayData('#item_order_register_search_form'),
@@ -778,8 +778,8 @@
         };
 
         $('#item_order_register_popup').on('hide.bs.modal', function() {
-            itemOrderRegisterPopTopGrid.pqGrid( "Destroy" );
-            itemOrderRegisterPopBotGrid.pqGrid( "Destroy" );
+            itemOrderRegisterPopTopGrid.pqGrid( "destroy" );
+            itemOrderRegisterPopBotGrid.pqGrid( "destroy" );
         });
 
         $('#item_order_register_popup').on('show.bs.modal',function() {

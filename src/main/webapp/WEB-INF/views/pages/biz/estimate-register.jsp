@@ -327,7 +327,15 @@
             {
                 title: 'IMG', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ',
                 render: function (ui) {
-                    if (ui.cellData) return '<span class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+                    if (ui.cellData) return '<span id="imageView" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
                 }
             }
         ];
@@ -350,6 +358,7 @@
                     return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                 }
             },
+            postRenderInterval: -1, //call postRender synchronously.
             scrollModel: { autoFit: false },
             columnTemplate: {align: 'center', hvalign: 'center'},
             numberCell: {width: 30, title: "No", show: true },
@@ -457,9 +466,9 @@
                 estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': tempI , row: { 'EST_SEQ': EST_SEQ } });
             }
 
-            //$("#estimate_register_hidden_form #EST_SEQ").val(EST_SEQ);
+            $("#estimate_register_hidden_form #EST_SEQ").val(EST_SEQ);
             fnModifyPQGrid(estimateRegisterTopGrid, estimateRegisterInsertQueryList, estimateRegisterUpdateQueryList);
-            estimateRegisterReloadPageData();
+            //estimateRegisterReloadPageData();
         };
 
         function estimateRegisterReloadPageData(){
@@ -485,7 +494,7 @@
 
                 postData = { 'queryId': 'estimate.selectEstimateDetailList', 'EST_SEQ': EST_SEQ };
                 if(estimateRegisterTopGrid.hasClass('pq-grid')){
-                    estimateRegisterTopGrid.pqGrid('Destroy');
+                    //estimateRegisterTopGrid.pqGrid('destroy');
                 }
                 fnRequestGidData(estimateRegisterTopGrid, postData);
             }, parameter, '');

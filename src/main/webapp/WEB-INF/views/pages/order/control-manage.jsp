@@ -487,6 +487,7 @@
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
         let $drawingRegistration = $("#DRAWING_REGISTRATION");
+        let $drawingChangeRegistration = $("#DRAWING_CHANGE");
         let $drawingView = $("#DRAWING_VIEW");
         let selectedRowIndex = [];
         let $orderManagementGrid;
@@ -1777,10 +1778,17 @@
         $orderManagementGrid = $('#' + gridId).pqGrid(obj);
         /* init */
 
-        /* 도면 등록 팝업 호출 */
+        /** 도면 등록 팝업 호출 **/
         $drawingRegistration.click(function () {
             setEstiMatePopup('control', 'orderMapper.manageControlCadFiles');
         });
+
+        /** 도면 차수 및 변경 처리 **/
+        $drawingChangeRegistration.click(function () {
+            setEstiMatePopup('control', 'orderMapper.manageControlCadFiles');
+        });
+
+
 
         /* 도면 등록 팝업 호출 */
         $drawingView.click(function () {

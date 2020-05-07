@@ -63,6 +63,8 @@
             setTimeout(function()
             {
                 $lg.lightGallery({
+                    mode: 'lg-fade',
+                    width: '100%',
                     thumbnail: false,
                     dynamic: true,
                     escKey : false,
