@@ -148,3 +148,89 @@
 .consumable_container .layerPopup .list1 { -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)";/*IE 8*/ -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0);/*FF 3.5+*/ -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0);/*Saf3-4, Chrome, iOS 4.0.2-4.2, Android 2.3+*/ box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); }
 
 .right_sort_pop{text-align: right; padding: 0px 0 7px;}
+
+
+.cadDrawing .modal-header h2{ font-size: 1.5em; }
+.cadDrawing .modal-body { position: relative;  padding: 15px 15px 25px 15px;}
+.cadDrawing .modal-body h4{ font-size: 1.5em; }
+.cadDrawing .modal-body .buttonWrap { height: 35px; padding: 0 0px; font-size: 13px; display: block; }
+.cadDrawing .modal-body .fileTableWrap{
+    padding: 5px 0px 5px 0px;
+}
+.cadDrawing .modal-body .fileTableInfoWrap{
+    padding: 0px 0px 5px 0px;
+}
+.cadDrawing .modal-body .fileTableInfoWrap .errorInfo{
+    color : #c00000;
+    font-weight: bold;
+    padding: 0px 0px 0px 10px;
+}
+
+/* col */
+.cadDrawing .modal-body table.colStyle { border: 1px solid #cecece; }
+.cadDrawing .modal-body table.colStyle tbody {
+    height: 200px;
+    display: inline-block;
+    overflow: auto;
+}
+.cadDrawing .modal-body table.colStyle th,
+.cadDrawing .modal-body table.colStyle td {
+    padding: 10px 5px;
+    font-size: 13px;
+    font-family: 'NotoKrR';
+    display: inline-block;
+    box-sizing: border-box;
+    text-align: center;
+}
+.cadDrawing .modal-body table.colStyle th.fileName {
+    width: 556px;
+    text-align: center;
+}
+.cadDrawing .modal-body table.colStyle th.etcInfo {
+    width: 150px;
+    text-align: center;
+}
+.cadDrawing .modal-body table.colStyle td.fileName{
+    width: 556px;
+    text-align: left;
+}
+.cadDrawing .modal-body table.colStyle td.etcInfo {
+    width: 150px;
+    text-align: right;
+}
+.cadDrawing .modal-body table.colStyle td.spanArea {
+    width: 856px;
+    text-align: center;
+}
+.cadDrawing .modal-body table.colStyle th { background: #fbfbfb; border-bottom: 1px solid #f3f3f3; }
+/*.cadDrawing .modal-body table {*/
+/*    font-size: 13px;*/
+/*    display: block;*/
+/*    border: 1px solid #cecece;*/
+/*}*/
+/*.cadDrawing .modal-body thead {*/
+/*    display: inline-block;*/
+/*    height: 20px;*/
+/*    text-align: center;*/
+/*}*/
+/*.cadDrawing .modal-body thead th{*/
+/*    background: #fbfbfb;*/
+/*    border-bottom: 1px solid #f3f3f3;*/
+/*}*/
+/*.cadDrawing .modal-body tbody {*/
+/*    height: 200px;*/
+/*    display: inline-block;*/
+/*    overflow: auto;*/
+/*    text-align: center;*/
+/*}*/
+/*.cadDrawing .modal-body tbody tr{*/
+/*    text-align: center;*/
+/*}*/
+/*.cadDrawing .modal-body tbody td{*/
+/*    float: right;*/
+/*    padding: 5px 5px;*/
+/*    font-size: 13px;*/
+/*}*/
+/*.cadDrawing .modal-body tbody td .fileName{*/
+/*    float: left;*/
+/*}*/

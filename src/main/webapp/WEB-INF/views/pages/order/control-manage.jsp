@@ -1779,7 +1779,7 @@
 
         /* 도면 등록 팝업 호출 */
         $drawingRegistration.click(function () {
-            setEstiMatePopup('control', 'orderMapper.updateControlCadFiles');
+            setEstiMatePopup('control', 'orderMapper.manageControlCadFiles');
         });
 
         /* 도면 등록 팝업 호출 */

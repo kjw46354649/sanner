@@ -35,7 +35,7 @@
 <!--Include pqTouch file to provide support for touch devices (optional)-->
 <script type="text/javascript" src="/resource/plugins/paramquery/pqTouch/pqtouch.min.js" ></script>
 <script type="text/javascript" src="/resource/plugins/paramquery/pqSelect/pqselect.min.js" ></script>
-<%--<script type="text/javascript" src="/resource/plugins/dhtmlx/suite.min.js"></script>--%>
+<script type="text/javascript" src="/resource/plugins/dhtmlx/suite.min.js"></script>
 <script type='text/javascript'>
 
     var g_code;

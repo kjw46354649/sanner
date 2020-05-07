@@ -127,6 +127,7 @@
         let estimateMasterSelectedRowIndex;
         let estimateMasterTopGrid = $("#estimate_master_top_grid");
         let estimateMasterBotGrid = $("#estimate_master_bot_grid");
+        let $btnEstimateListDrawView = $("#btnEstimateListDrawView");
 
         let estimateMasterTopColModel= [
             //{title: 'No.', dataType: 'string', dataIndx: 'EST_SEQ'},
@@ -516,6 +517,11 @@
             }
             estimateMasterBotGrid.pqGrid("option", "colModel", colM);
             estimateMasterBotGrid.pqGrid("refresh");
+        });
+
+        /* 도면 등록 팝업 호출 */
+        $btnEstimateListDrawView.click(function () {
+            callWindowImageViewer(999);
         });
 
         /** 공통 코드 이외의 처리 부분 **/
