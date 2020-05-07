@@ -124,11 +124,10 @@
 </form>
 
 <script type="text/javascript">
-    $(function () {
-        'use strict';
-        let estimateMasterSelectedRowIndex;
-        let estimateMasterTopGrid = $("#estimate_master_top_grid");
-        let estimateMasterBotGrid = $("#estimate_master_bot_grid");
+    'use strict';
+    let estimateMasterSelectedRowIndex;
+    let estimateMasterTopGrid = $("#estimate_master_top_grid");
+    let estimateMasterBotGrid = $("#estimate_master_bot_grid");
 
     $(function () {
 
@@ -583,7 +582,7 @@
     /** 그리드 버튼 처리 **/
     $(document).on('click', '#estimateOrder', function(event){
         let seq = event.target.dataset.seq;
-        let parameters = {'url': '/json-list', 'data': { 'queryId': 'selectEstimateDetailList', 'EST_SEQ': seq}};
+        let parameters = {'url': '/json-list', 'data': { 'queryId': 'selectEstimateOrderControlData', 'EST_SEQ': seq}};
         fnPostAjax(function (data, callFunctionParam) {
 
             let parameters = {
@@ -604,9 +603,9 @@
         let data = estimateMasterBotGrid.pqGrid('option', 'dataModel.data'), totalRecords = data.length;
         let newPartNum = 0, newRowIndex = 0;
 
-        let newRowData = data[rowIndex];
+        let newRowData = fnCloneObj(data[rowIndex]);
         for (let i = 0; i < totalRecords; i++) {
-            if (data[i].SEQ === newRowData.SEQ) {
+            if (data[i].PARENT_SEQ === newRowData.PARENT_SEQ) {
                 newPartNum++;
                 newRowIndex = data[i].pq_ri + 1;
             }
