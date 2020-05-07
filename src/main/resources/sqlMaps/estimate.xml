@@ -49,6 +49,7 @@
 
     <select id="selectEstimateDetailList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
+            ROW_NUMBER () OVER () AS ROWNUM,
             EST_SEQ, SEQ, PROJECT_NM, MODULE_NM, ITEM_NM, DRAWING_NUM, PART_NUM, MATERIAL_SUPPLY_YN AS MATERIAL_SUPPLY_YN,
             ITEM_QTY AS ITEM_QTY, SIZE_TXT AS SIZE_TXT, SIZE_TYPE AS SIZE_TYPE,
             SIZE_W, SIZE_H, SIZE_T, SIZE_D, SIZE_L,
@@ -215,7 +216,7 @@
             PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},                   IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
             UPDATE_DT = #{UPDATE_DT},                           UPDATE_ID = #{UPDATE_ID}
         WHERE EST_SEQ = #{EST_SEQ}
-
+            AND SEQ = #{SEQ}
     </update>
 
     <delete id="deleteEstimateMaster"  parameterType="java.util.HashMap">
@@ -289,10 +290,11 @@
         INSERT INTO TBL_CONTROL
             (CONTROL_SEQ, CONTROL_VER, COMP_CD, ORDER_COMP_CD, ORDER_STAFF_SEQ, PROJECT_NM, MODULE_NM, EST_SEQ, DEL_YN, INSERT_ID)
         SELECT
-            NEXTVAL(SEQ_CONTROL), EST_VER, COMP_CD, ORDER_COMP_CD, ORDER_STAFF_SEQ, PROJECT_NM, MODULE_NM, EST_SEQ, 'N', NULL
-        FROM TBL_ESTIMATE
-        WHERE EST_SEQ = #{EST_SEQ}
-            AND EST_VER = #{EST_VER}
+            NEXTVAL(SEQ_CONTROL), A.EST_VER, A.COMP_CD, A.ORDER_COMP_CD, A.ORDER_STAFF_SEQ, B.PROJECT_NM, B.MODULE_NM, A.EST_SEQ, 'N', NULL
+        FROM TBL_ESTIMATE A
+            INNER JOIN TBL_ESTIMATE_DETAIL B ON A.EST_SEQ = B.EST_SEQ
+        WHERE A.EST_SEQ = #{EST_SEQ}
+        GROUP BY B.PROJECT_NM, B.MODULE_NM, B.ITEM_NM, B.DRAWING_NUM
     </insert>
 
     <insert id="insertEstimateOrderControlDetail"  parameterType="java.util.HashMap">
@@ -325,7 +327,9 @@
             DWG_GFILE_SEQ, DXF_GFILE_SEQ, PDF_GFILE_SEQ, IMG_GFILE_SEQ,
             NULL
         FROM TBL_ESTIMATE_DETAIL
-        WHERE EST_SEQ = #{EST_SEQ}
+        WHERE 1=1
+            AND EST_SEQ = #{EST_SEQ}
+            AND SEQ = #{SEQ}
     </insert>
 
     <insert id="insertEstimateOrderControlOrder"  parameterType="java.util.HashMap">
