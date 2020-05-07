@@ -183,6 +183,17 @@
             </ul>
             <div class="tab-content">
                 <ul class="active" id="IN_WAREHOUSE_MANAGE_TAB1">
+                    <div class="hWrap" id="currentListTabButton">
+                        <div class="d-inline">
+                            <button type="button" class="defaultBtn btn-120w" id="btnInWarehouseManageAdd">추가</button>
+                            <button type="button" class="defaultBtn btn-120w" id="btnInWarehouseManageRemove">삭제</button>
+                            <button type="button" class="defaultBtn btn-120w" id="btnInWarehouseManageOutBarcode">소재불출(바코드)</button>
+                            <button type="button" class="defaultBtn btn-120w" id="btnInWarehouseManageLocation">위치정보관리</button>
+                            <div class="rightSpan">
+                                <button type="button" class="defaultBtn btn-120w" id="btnInWarehouseManageSave">저장</button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="conMainWrap">
                         <div id="in_warehouse_manage_manage_grid01"></div>
                     </div>
@@ -457,7 +468,7 @@
                 {
                     type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            let inWarehouseManageInsertUpdateQueryList = ['material.insertUpdateInWarehouseManage'];
+                            let inWarehouseManageInsertUpdateQueryList = ['material.insertUpdateInWarehouseManageMaster','material.insertUpdateInWarehouseManageDetail'];
                             fnModifyPQGrid(inWarehouseManageManageGrid01, inWarehouseManageInsertUpdateQueryList, inWarehouseManageInsertUpdateQueryList);
                         }
                     }
@@ -537,7 +548,6 @@
             strNoRows: g_noData,
             trackModel: {on: true},
             colModel: inWarehouseManageManageColModel01,
-            toolbar: inWarehouseManageManageToolbar01,
             showTitle: false,
             complete: function(event, ui) {
             },
@@ -592,7 +602,6 @@
                 strNoRows: g_noData,
                 trackModel: {on: true},
                 colModel: inWarehouseManageManageColModel02,
-                toolbar: inWarehouseManageManageToolbar02,
                 showTitle: false
             });
         }
@@ -693,6 +702,37 @@
             });
 
             inWarehouseManageWarehousePopupGrid.pqGrid("refreshDataAndView");
+        });
+
+        /** 버튼 처리 **/
+        $("#btnInWarehouseManageAdd").on('click', function(){
+            inWarehouseManageManageGrid01.pqGrid('addNodes', [{}], 0);
+        });
+
+        $("#btnInWarehouseManageRemove").on('click', function(){
+            $("#in_warehouse_manage_hidden_form #queryId").val("deleteInWarehouseManageDetail");
+            let parameters = {'url': '/json-list', 'data': fnFormToJsonArrayData('#in_warehouse_manage_hidden_form')};
+
+            fnPostAjax(function (data, callFunctionParam) {
+                $("#in_warehouse_manage_hidden_form #queryId").val("deleteInWarehouseManageMaster");
+                let parameters = {'url': '/json-list', 'data': fnFormToJsonArrayData('#in_warehouse_manage_hidden_form')};
+                fnPostAjax(function (data, callFunctionParam) {
+                    inWarehouseManageManageGrid01.pqGrid("refreshDataAndView");
+                }, parameters, '');
+            }, parameters, '');
+        });
+
+        $("#btnInWarehouseManageOutBarcode").on('click', function(){
+
+        });
+
+        $("#btnInWarehouseManageLocation").on('click', function(){
+            $("#in_warehouse_manage_warehouse_popup").modal("show");
+        });
+
+        $("#btnInWarehouseManageSave").on('click', function(){
+            let inWarehouseManageInsertUpdateQueryList = ['material.insertUpdateInWarehouseManageMaster','material.insertUpdateInWarehouseManageDetail'];
+            fnModifyPQGrid(inWarehouseManageManageGrid01, inWarehouseManageInsertUpdateQueryList, inWarehouseManageInsertUpdateQueryList);
         });
 
     });
