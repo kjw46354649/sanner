@@ -14,7 +14,7 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="SEL_COMP_CD">사업자</label>
                             <select class="wd_200" name="SEL_COMP_CD" id="SEL_COMP_CD" title="사업자">
-                                <option value=""><spring:message code="com.form.top.all.option" /></option>
+                                <option value="">test<spring:message code="com.form.top.all.option" /></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
