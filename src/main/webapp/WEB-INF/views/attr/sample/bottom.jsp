@@ -16,23 +16,31 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">도면 등록</h4>
+                <h4 class="modal-title">도면 등록11</h4>
             </div>
             <div class="modal-body">
                 <form class="" role="form" id="common_cad_file_attach_form" name="common_cad_file_attach_form">
                     <input type="hidden" id="queryId" name="queryId" value="">
                     <input type="hidden" id="actionType" name="actionType" value="">
                     <input type="hidden" id="fileGrid" name="fileGrid" value="">
-                    <div class="titWrap">
-                        <div class="col-md-6">
-                            <h3>주문 도면 리스트</h3>
+                    <div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="left_float">
+                                    <h3>주문 도면 리스트</h3>
+                                </div>
+                                <div class="right_float">
+                                    <button type="button" class="defaultBtn blueGra" id="cadFileConvertUploadCompletedBtn">Save</button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6 ta-r">
-                            <button type="button" class="defaultBtn blueGra" id="cadFileConvertUploadCompletedBtn">Save</button>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="common_cad_file_attach_grid" style="margin:auto;"></div>
+                            </div>
                         </div>
-                        <div id="common_cad_file_attach_grid" style="margin:auto;"></div>
                     </div>
-                    <div class="rightWrap">
+                    <div>
                         <h3>파일 업로드</h3>
                         <table class="colStyle" id="attachDragAndDrop" cellspacing='0' style="overflow: auto; height: 150px;">
                             <caption></caption>
@@ -97,7 +105,7 @@
         ];
 
         commonCadFileAttachObj = {
-            height: 250, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            height: 250, width: "100%", collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'}, numberCell: {title: 'No.'}, dragColumns: {enabled: false},
             editable : false,
             scrollModel: {autoFit: false}, trackModel: {on: true}, showBottom : true, postRenderInterval: -1, //call postRender synchronously.

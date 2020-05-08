@@ -7,6 +7,8 @@
 --%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
 <div class="page estimate">
     <div class="topWrap">
         <form class="form-inline" id="estimate_master_search_form" name="estimate_master_search_form" role="form">
@@ -79,8 +81,8 @@
                 <button type="button" class="defaultBtn btn-120w" id="btnEstimateListNewVersion">차수 생성</button>
                 <%--<span class="chk_box mg-left15"><input id="chkEstimateListDetail" type="checkbox"><label for="chkEstimateListDetail"> 견적상세요건</label></span>--%>
                 <div class="rightSpan">
-                    <button type="button" class="defaultBtn radius green " id="btnEstimateListSave">저장</button>
-                    <button type="button" class="defaultBtn radius red " id="btnEstimateListDelete">삭제</button>
+                    <button type="button" class="defaultBtn radius green" id="btnEstimateListSave">저장</button>
+                    <button type="button" class="defaultBtn radius red" id="btnEstimateListDelete">삭제</button>
                 </div>
             </div>
         </div>
@@ -122,11 +124,12 @@
 </form>
 
 <script type="text/javascript">
+    'use strict';
+    let estimateMasterSelectedRowIndex;
+    let estimateMasterTopGrid = $("#estimate_master_top_grid");
+    let estimateMasterBotGrid = $("#estimate_master_bot_grid");
+
     $(function () {
-        'use strict';
-        let estimateMasterSelectedRowIndex;
-        let estimateMasterTopGrid = $("#estimate_master_top_grid");
-        let estimateMasterBotGrid = $("#estimate_master_bot_grid");
 
         let estimateMasterTopColModel= [
             //{title: 'No.', dataType: 'string', dataIndx: 'EST_SEQ'},
@@ -166,8 +169,11 @@
             {title: '차수', dataType: 'string', dataIndx: 'EST_VER', editable: false, width: 50},
             {title: '', dataType: 'string', dataIndx: '', editable: false, width: 30,
                 render: function(ui){
-                    return '<a href="#estimate_master_record_popup" class="" id="estimatePopupOpen" data-target="" data-toggle="modal" data-refform="estimate_master_record_popup">' +
-                        '<span class="ui-icon ui-icon-circle-zoomin"></span>' +
+                    let EST_STATUS = ui.rowData.EST_STATUS;
+                    let EST_SEQ = ui.rowData.EST_SEQ;
+
+                    return '<a href="#" id="estimateRegisterPage">' +
+                        '<span data-status="'+EST_STATUS+'" data-seq="'+EST_SEQ+'" class="ui-icon ui-icon-circle-zoomin"></span>' +
                         '</a>';
                 }
             },
@@ -175,17 +181,17 @@
             {title: '품수', dataType: 'string', dataIndx: 'DTL_CNT', editable: false},
             {title: '금액 계', dataType: 'string', dataIndx: 'DTL_AMOUNT', format: '#,###'},
             {title: '등록일시', dataType: 'date', dataIndx: 'INSERT_DT', editable: false},
-            {title: '견적담당', dataType: 'string', dataIndx: 'EST_USER_ID',
+            {title: '견적담당', dataType: 'string', dataIndx: 'EST_USER',
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "EST_USER_ID", id: "EST_USER" },
+                    mapIndices: { name: "EST_USER", id: "EST_USER_ID" },
                     valueIndx: "value",
                     labelIndx: "text",
-                    options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}}),
+                    options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}}),
                     getData: function(ui) {
                         let clave = ui.$cell.find("select").val();
                         let rowData = estimateMasterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["EST_USER"]=clave;
+                        rowData["EST_USER_ID"]=clave;
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
                 }
@@ -194,7 +200,15 @@
             {title: '', dataType: 'string', dataIndx: '', editable: false, width: 40},
             {title: '주문접수', dataType: 'date', dataIndx: '', editable: false, width: 60,
                 render: function(ui){
-                    return '<a href="#"><span class="ui-icon ui-icon-arrowthick-1-e"></span></a>';
+                    let EST_STATUS = ui.rowData.EST_STATUS;
+                    let EST_SEQ = ui.rowData.EST_SEQ;
+                    let EST_VER = ui.rowData.EST_VER;
+
+                    if(EST_STATUS == 'EST010'){
+                        return '<a href="#" id="estimateOrder">' +
+                            '<span data-seq="'+EST_SEQ+'" data-ver="'+EST_VER+'" class="ui-icon ui-icon-arrowthick-1-e"></span>' +
+                            '</a>';
+                    }
                 }
             }
         ];
@@ -204,8 +218,16 @@
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', width: 80 } ,
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 80 } ,
             {title: '', dataType: 'string', dataIndx: 'DRAWING_YN', width: 30 } ,
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', validations: [{ type: 'minLen', value: 1, msg: "Required"}], width: 100} ,
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', width: 50 } ,
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', validations: [{ type: 'minLen', value: 1, msg: "Required"}], width: 100 } ,
+            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', width: 50 ,
+                render: function (ui) {
+                    if (ui.rowData.WORK_TYPE === 'WTP020') {
+                        return '<a href="#" id="estimatePartPlus">' +
+                            '<span data-idx="'+ui.rowIndx+'" class="ui-icon ui-icon-plus" style="cursor: pointer"></span>' +
+                            '</a>'
+                    }
+                }
+            } ,
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 100 } ,
             {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
             {title: '작업구분', dataType: 'string', dataIndx: 'WORK_TYPE_NM',
@@ -324,19 +346,34 @@
                     /*{title: '소재마감', dataType: 'integer', dataIndx: '', format: '#,###'},   */
                     {title: '표면 처리비', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###'},
                     {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT', format: '#,###'},
-                    {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_NOTE', format: '#,###'},
-                    {title: '견적비고', dataType: 'integer', dataIndx: 'UNIT_AMT_NOTE', format: '#,###'}
+                    {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###'},
+                    {title: '견적비고', dataType: 'integer', dataIndx: 'UNIT_AMT_NOTE'}
                 ]},
             {title: '계산견적단가', dataType: 'float', dataIndx: 'CALCUL_EST_UNIT_COST', format: '#,###', width: 80},
             {title: '최종견적가', dataType: 'float', dataIndx: 'FINAL_EST_UNIT_PRICE', format: '#,###', width: 80},
             {title: '금액 계', dataType: 'float', dataIndx: 'DTL_AMOUNT', format: '#,###', width: 80},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
-            {title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ'},
-            {title: 'DWF', dataType: 'string', dataIndx: 'DWF_GFILE_SEQ'},
-            {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ'},
-            {title: 'IMG', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ'},
-            {title: 'EST_SEQ', dataType: 'string', dataIndx: 'EST_SEQ' , hidden:true} ,
-            {title: 'SEQ', dataType: 'string', dataIndx: 'SEQ' , hidden:true}
+            //{title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ'},
+            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ',
+                render: function (ui) {
+                    if (ui.cellData) return '<span class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+                }
+            },
+            //{title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ'},
+            {
+                title: 'IMG', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ',
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="imageView" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            }
         ];
 
         estimateMasterTopGrid.pqGrid({
@@ -390,28 +427,23 @@
                 selectEstimateBotList(EST_SEQ);
                 //}
             },
-            cellDblClick: function( event, ui ) {
-                let EST_STATUS = ui.rowData.EST_STATUS;
-                let EST_SEQ = ui.rowData.EST_SEQ;
-                if(EST_STATUS == 'EST010'){
-                    $("#estimate_version_up_sequence_form #hidden_est_seq").val(EST_SEQ);
-
-                    $("a[pid='100012']").trigger("click");
-                    upVersionEstimateCallBackMethod();
+            cellSave: function (evt, ui) {
+                if (ui.oldVal === undefined && ui.newVal === null) {
+                    estimateMasterTopGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                 }
-                //$("#estimatePopupOpen").trigger('click');
             }
         });
 
-        selectEstimateBotList('', '');
-
         function selectEstimateBotList(EST_SEQ) {
+            if(estimateMasterBotGrid.hasClass('pq-grid')){
+                estimateMasterBotGrid.pqGrid('destroy');
+            }
             estimateMasterBotGrid.pqGrid({
                 minHeight: "100%",
                 height: '100%',
                 width: '100%',
                 dataModel: {
-                    location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
+                    location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
                     url: "/paramQueryGridSelect",
                     postData: { 'queryId': 'selectEstimateDetailList', 'EST_SEQ': EST_SEQ},
                     getData: function (dataJSON) {
@@ -419,7 +451,8 @@
                         return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                     }
                 },
-                scrollModel: { autoFit: false },
+                postRenderInterval: -1, //call postRender synchronously.
+                scrollModel: { autoFit: true },
                 columnTemplate: {align: 'center', hvalign: 'center'},
                 numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'row', mode: 'single'} ,
@@ -429,18 +462,39 @@
                 resizable: false,
                 colModel: estimateMasterBotColModel,
                 showTitle: false,
-                strNoRows: g_noData
+                strNoRows: g_noData,
+                change: function( event, ui ) {
+                    if(ui.source == 'edit'){
+                        let rowIndx = ui.updateList[0].rowIndx;
+                        let calculateEstimateAmt = 0;
+                        let data = ui.updateList[0].rowData;
+                        let UNIT_MATERIAL_AMT = data.UNIT_MATERIAL_AMT == null || data.UNIT_MATERIAL_AMT == '' ? 0 : parseInt(data.UNIT_MATERIAL_AMT);
+                        let UNIT_SURFACE_AMT = data.UNIT_SURFACE_AMT == null || data.UNIT_SURFACE_AMT == '' ? 0 : parseInt(data.UNIT_SURFACE_AMT);
+                        let UNIT_PROCESS_AMT = data.UNIT_PROCESS_AMT == null || data.UNIT_PROCESS_AMT == '' ? 0 : parseInt(data.UNIT_PROCESS_AMT);
+                        let UNIT_ETC_AMT = data.UNIT_ETC_AMT == null || data.UNIT_ETC_AMT == '' ? 0 : parseInt(data.UNIT_ETC_AMT);
+                        let ITEM_QTY = data.ITEM_QTY == null || data.ITEM_QTY == '' ? 0 : parseInt(data.ITEM_QTY);
+
+                        calculateEstimateAmt += UNIT_MATERIAL_AMT;
+                        calculateEstimateAmt += UNIT_SURFACE_AMT;
+                        calculateEstimateAmt += UNIT_PROCESS_AMT;
+                        calculateEstimateAmt += UNIT_ETC_AMT;
+                        estimateMasterBotGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'CALCUL_EST_UNIT_COST': calculateEstimateAmt } });
+
+                        calculateEstimateAmt *= ITEM_QTY;
+                        estimateMasterBotGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'DTL_AMOUNT': calculateEstimateAmt } });
+                    }
+                },
+                cellSave: function (evt, ui) {
+                    if (ui.oldVal === undefined && ui.newVal === null) {
+                        estimateMasterBotGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                    }
+                }
             });
 
             estimateMasterBotGrid.pqGrid("refreshDataAndView");
         };
 
-        function upVersionEstimateCallBackMethod(){
-            //estimateMasterTopGrid.pqGrid('refreshDataAndView');
-          $("#test").trigger('click');
-        };
 
-        
         /** 버튼 처리 **/
         $("#btnEstimateListSearch").on('click', function(){
             estimateMasterTopGrid.pqGrid('option', "dataModel.postData", function (ui) {
@@ -455,12 +509,13 @@
         });
 
         $("#btnEstimateListSave").on('click', function(){
+            let estimateDetailInsertQueryList = ['insertEstimateDetail'];
+            let estimateDetailUpdateQueryList = ['updateEstimateDetail'];
+            fnModifyPQGrid(estimateMasterBotGrid, estimateDetailInsertQueryList, estimateDetailUpdateQueryList);
+
             let estimateMasterInsertQueryList = ['insertEstimateMaster'];
             let estimateMasterUpdateQueryList = ['updateEstimateMaster'];
             fnModifyPQGrid(estimateMasterTopGrid, estimateMasterInsertQueryList, estimateMasterUpdateQueryList);
-            estimateMasterInsertQueryList = ['insertEstimateMaster'];
-            estimateMasterUpdateQueryList = ['updateEstimateMaster'];
-            fnModifyPQGrid(estimateMasterBotGrid, estimateMasterInsertQueryList, estimateMasterUpdateQueryList);
         });
 
         $("#btnEstimateListDrawView").on('click', function(){ });
@@ -499,7 +554,7 @@
                     fnPostAjax('', parameters, '');
 
                     $("a[pid='100012']").trigger("click");
-                    upVersionEstimateCallBackMethod();
+                    $("#test").trigger('click');
                 }, parameters, '');
             }, parameters, '');
         });
@@ -524,7 +579,61 @@
 
     });
 
-    // topWrap 확장 함수
+    /** 그리드 버튼 처리 **/
+    $(document).on('click', '#estimateOrder', function(event){
+        let seq = event.target.dataset.seq;
+        let parameters = {'url': '/json-list', 'data': { 'queryId': 'selectEstimateOrderControlData', 'EST_SEQ': seq}};
+        fnPostAjax(function (data, callFunctionParam) {
+
+            let parameters = {
+                'url': '/registerEstimateOrder',
+                'data': {data: JSON.stringify(data.list)}
+            };
+
+            fnPostAjax(function () {
+                alert("<spring:message code='com.alert.default.save.success' />");
+                $("#btnEstimateListSearch").trigger('click');
+            }, parameters, '');
+
+        }, parameters, '');
+    });
+
+    $(document).on('click', '#estimatePartPlus', function(event){
+        let rowIndex = event.target.dataset.idx;
+        let data = estimateMasterBotGrid.pqGrid('option', 'dataModel.data'), totalRecords = data.length;
+        let newPartNum = 0, newRowIndex = 0;
+
+        let newRowData = fnCloneObj(data[rowIndex]);
+        for (let i = 0; i < totalRecords; i++) {
+            if (data[i].PARENT_SEQ === newRowData.PARENT_SEQ) {
+                newPartNum++;
+                newRowIndex = data[i].pq_ri + 1;
+            }
+        }
+
+        newRowData.ROWNUM = totalRecords + 1;
+        newRowData.PART_NUM = newPartNum;
+        newRowData.WORK_TYPE = 'WTP010';
+
+        estimateMasterBotGrid.pqGrid('addRow', {
+            newRow: newRowData,
+            rowIndx: newRowIndex,
+            checkEditable: false
+        });
+    });
+
+    /** 화면 이동 처리 **/
+    $(document).on('click', '#estimateRegisterPage', function(event){
+        let seq = event.target.dataset.seq;
+        let status = event.target.dataset.status;
+
+        if(status == 'EST010'){
+            $("#estimate_version_up_sequence_form #hidden_est_seq").val(seq);
+
+            $("a[pid='100012']").trigger("click");
+            $("#test").trigger('click');
+        }
+    });
 
 
 </script>

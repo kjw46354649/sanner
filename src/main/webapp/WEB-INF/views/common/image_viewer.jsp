@@ -59,10 +59,12 @@
         $('#dynamic').on('click', function(e) {
             if ($(this).data('lightGallery'))
                 $(this).data('lightGallery').destroy(true);
-            var target = $(this);
+            $lg = $(this);
             setTimeout(function()
             {
-                target.lightGallery({
+                $lg.lightGallery({
+                    mode: 'lg-fade',
+                    width: '100%',
                     thumbnail: false,
                     dynamic: true,
                     escKey : false,

@@ -51,12 +51,7 @@ public class CommandExecuteUtil {
         StringBuffer sbOut = new StringBuffer();
         String line;
         Integer exitValue = 0;
-
-//        List<String> cmdList = new ArrayList<String>(Arrays.asList(use));
-//        cmdList.addAll(Arrays.asList(cmdLists));
         List<String> cmdList = new ArrayList<String>(Arrays.asList(cmdLists));
-        System.out.println("cmdList=[" + cmdList.toString() + "]");
-
         try {
 
             ProcessBuilder builder = new ProcessBuilder(cmdList.toArray(new String[0]));
@@ -95,9 +90,6 @@ public class CommandExecuteUtil {
 
         List<String> cmdList = new ArrayList<String>(Arrays.asList(use));
         cmdList.addAll(Arrays.asList(cmdLists));
-
-        System.out.println("cmdList=[" + cmdList.toString() + "]");
-
         ProcessBuilder builder = new ProcessBuilder(cmdList.toArray(new String[0]));
         builder.redirectErrorStream(true);
 

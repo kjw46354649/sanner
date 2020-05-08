@@ -3,21 +3,19 @@ package com.framework.innodale.component;
 import com.aspose.cad.*;
 import com.aspose.cad.fileformats.cad.CadDrawTypeMode;
 import com.aspose.cad.fileformats.cad.CadImage;
+import com.aspose.cad.fileformats.cad.cadtables.CadStyleTableObject;
 import com.aspose.cad.imageoptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import javax.activation.CommandMap;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 
 @Component(value = "cadFileConverter")
 public class CadFileConverter {
 
-    private static String CMD_DWG2JPG_QCAD = "D:/QCAD/qcad.exe -no-gui -allow-multiple-instances -autostart scripts/Pro/Tools/Dwg2Bmp/Dwg2Bmp.js";
     private static String CMD_TO_NORMAL_DFX2010_WIN_EXE = "D:/ODAFileConverter/ODAFileConverter.exe";
     private static String CMD_TO_NORMAL_DFX2010_LINUX_EXE = "ODAFileConverter";
     private static CommandExecuteUtil commandExecuteUtil;
@@ -94,10 +92,23 @@ public class CadFileConverter {
         String sourceFilePath = convertFile.getAbsolutePath();
         String soruceFileName = new String(convertFile.getName().getBytes("x-windows-949"), "ksc5601");
 
-        Image cadImage = Image.load(sourceFilePath);
+        CadImage cadImage = (CadImage)Image.load(sourceFilePath);
 
         int cadWidth = cadImage.getSize().getWidth();
         int cadHeight = cadImage.getSize().getHeight();
+
+        for (Object style : cadImage.getStyles()) {
+            System.err.println("getStyleName=[" + ((CadStyleTableObject) style).getStyleName());
+            System.err.println("getBigFontName=[" + ((CadStyleTableObject) style).getBigFontName());
+            System.err.println("getRoundTripTableStyle=[" + ((CadStyleTableObject) style).getRoundTripTableStyle());
+            System.err.println(("image styles  " + ((CadStyleTableObject) style).getStyleName() + " -> " + ((CadStyleTableObject) style).getPrimaryFontName()));
+        }
+
+//        for(Object style : cadImage.getStyles())
+//        {
+//            // Set the font name
+//            ((com.aspose.cad.fileformats.cad.cadtables.CadStyleTableObject)style).setPrimaryFontName("Arial");
+//        }
 
         CadRasterizationOptions rasterizationOptions = new CadRasterizationOptions();
         rasterizationOptions.setLayouts(new String[] {"Model"});
@@ -114,18 +125,18 @@ public class CadFileConverter {
 
         rasterizationOptions.setAutomaticLayoutsScaling(true);
         rasterizationOptions.setNoScaling(false);
-        rasterizationOptions.setDrawType(CadDrawTypeMode.UseObjectColor);
+        rasterizationOptions.setDrawType(CadDrawTypeMode.UseDrawColor);
 
-        // rasterizationOptions.getGraphicsOptions().setSmoothingMode(SmoothingMode.HighQuality);
-        // rasterizationOptions.getGraphicsOptions().setTextRenderingHint(TextRenderingHint.AntiAliasGridFit);
+        rasterizationOptions.getGraphicsOptions().setSmoothingMode(SmoothingMode.None);
+        rasterizationOptions.getGraphicsOptions().setTextRenderingHint(TextRenderingHint.SystemDefault);
         rasterizationOptions.getGraphicsOptions().setInterpolationMode(InterpolationMode.HighQualityBicubic);
-
-        PdfOptions pdfOptions = new PdfOptions();
-        pdfOptions.setVectorRasterizationOptions(rasterizationOptions);
-
-        cadImage.save(convertFile.getParentFile().toString() + File.separator + soruceFileName.substring(0, soruceFileName.lastIndexOf(".")) + ".pdf", pdfOptions);
-
         rasterizationOptions.setContentAsBitmap(true);
+
+//        PdfOptions pdfOptions = new PdfOptions();
+//        pdfOptions.setVectorRasterizationOptions(rasterizationOptions);
+
+        // cadImage.save(convertFile.getParentFile().toString() + File.separator + soruceFileName.substring(0, soruceFileName.lastIndexOf(".")) + ".pdf", pdfOptions);
+
         PngOptions pngOptions = new PngOptions();
         pngOptions.setVectorRasterizationOptions(rasterizationOptions);
 

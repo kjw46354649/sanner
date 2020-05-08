@@ -35,9 +35,6 @@ public class CadFileConvertController {
     public String cadFileConvert(HttpServletRequest request) throws Exception {
 
         Map<String, Object> map = CommonUtility.getParameterMap(request);
-
-        map.put("key", "test");
-
         this.innodaleService.modifyGrid(map);   // db 매핑 정보로 DXF 키를 업데이트 한다.
 
         // background 방식으로 처리 된다.

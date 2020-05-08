@@ -101,8 +101,15 @@ public class FileUploadServiceImpl implements FileUploadService {
 
         if(itr.hasNext()) {
 
-            int iRowCount = 0;
+            int iSuccessCount = 0;
+            int iErrorCount = 0;
+            String paramQueryId = (String)hashMap.get("queryId");
             List<MultipartFile> fileList = request.getFiles(itr.next());
+
+            System.out.println("#########################################");
+            System.out.println("hashMap=[" + hashMap.toString() + "]");
+            System.out.println("queryId=[" + paramQueryId + "]");
+            System.out.println("#########################################");
 
             for(MultipartFile multipartFile:fileList) {
 
@@ -129,7 +136,7 @@ public class FileUploadServiceImpl implements FileUploadService {
                 fileInfo.put("FILE_TYPE", multipartFile.getContentType());
                 fileInfo.put("FILE_EXT", originalExtName);
                 fileInfo.put("FILE_SIZE", multipartFile.getSize());
-                fileInfo.put("ROWNUM", iRowCount++);
+                fileInfo.put("ROWNUM", iSuccessCount++);
 
                 // 원본 파일 DB 저장 처리
                 managerFileInformationInsert(fileInfo);
@@ -139,7 +146,7 @@ public class FileUploadServiceImpl implements FileUploadService {
                 multipartFile.transferTo(new File(targetFilePath));   // 원본 파일 저장
 
                 // 파일 명으로 주문 번호의 파일 번호가 있는지 확인하여 처리 한다.
-                fileInfo.put("queryId", "orderMapper.selectControlCadFiles");    // 연결 주문 정보 조회
+                fileInfo.put("queryId", paramQueryId);    // 연결 주문 정보 조회
                 List<Map<String, Object>> controlList = innodaleDao.getList(fileInfo);
 
                 // 파일 번호 정보가 있는 경우 Map에 파일 정보를 추가 한다.
@@ -150,8 +157,14 @@ public class FileUploadServiceImpl implements FileUploadService {
                         fileUploadDataList.add(map);
                     }
                     fileUploadList.add(fileInfo);
+                }else{
+                    iErrorCount++;
                 }
             }
+
+            model.addAttribute("successCount",  iSuccessCount);
+            model.addAttribute("errorCount",    iErrorCount);
+
         }
         model.addAttribute("result",       "success");
         model.addAttribute("message",      "업로드를 완료 하였습니다.");

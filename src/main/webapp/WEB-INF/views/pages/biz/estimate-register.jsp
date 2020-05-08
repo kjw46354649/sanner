@@ -48,15 +48,24 @@
 </div>
 <div class="page estimate">
     <div class="topWrap">
+    </div>
+    <div class="bottomWrap">
+        <div class="hWrap">
+            <div class="d-inline">
+                <div class="right_sort">
+                    <button type="button" class="defaultBtn btn-120w" id="btn_estimate_register_save">저장</button>
+                    <button type="button" class="defaultBtn btn-120w yellow" id="btn_estimate_register_submit">제출</button>
+                </div>
+            </div>
+            <%--<span class="chk_box mg-left15"><input id="chkEstimateRegisterDetail" type="checkbox"><label for="chkEstimateRegisterDetail"> 견적상세요건</label></span>--%>
+        </div>
+        <br>
         <form class="form-inline" id="estimate_register_info_form" name="estimate_register_info_form" role="form">
             <input type="hidden" id="queryId" name="queryId" value="">
+            <input type="hidden" id="EST_SEQ" name="EST_SEQ" value="">
             <div class="basicWrap">
                 <ul>
                     <li>
-                        <div class="right_sort">
-                            <button type="button" class="defaultBtn radius" id="btn_estimate_register_save">저장</button>
-                            <button type="button" class="defaultBtn radius yellow" id="btn_estimate_register_submit">제출</button>
-                        </div>
                         <span class="slt_wrap">
                             <label for="ORDER_COMP_CD" class="label_100">발주사</label>
                             <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사" class="wd_200">
@@ -99,20 +108,7 @@
                 </ul>
             </div>
         </form>
-        <%--<button type="button" class="topWrap_btn">펼치기 / 접기</button>--%>
-    </div>
-    <div class="bottomWrap">
-        <div class="hWrap">
-            <div class="d-inline">
-                <div class="right_sort">
-                    <button type="button" class="defaultBtn btn-120w" id="btnEstimateRegisterEstimateListExcel">견적List 출력</button>
-                    <button type="button" class="defaultBtn btn-120w" id="btnEstimateRegisterAdd">추가</button>
-                    <button type="button" class="defaultBtn btn-120w" id="btnEstimateRegisterDelete">삭제</button>
-                </div>
-            </div>
-
-            <%--<span class="chk_box mg-left15"><input id="chkEstimateRegisterDetail" type="checkbox"><label for="chkEstimateRegisterDetail"> 견적상세요건</label></span>--%>
-        </div>
+        <br><br>
         <div class="tableWrap">
             <div class="buttonWrap">
                 <div class="d-inline">
@@ -126,10 +122,13 @@
                             <option>20%</option>
                         </select>
                         <label for="selEstimateListExcel">견적서 추출</label>
+                        <button type="button" class="defaultBtn" id="btnEstimateRegisterEstimateListExcel">견적List 출력</button>
                         <select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출">
                         </select>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawAdd">도면 등록</button>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawView">도면 보기</button>
+                        <button type="button" class="defaultBtn" id="btnEstimateRegisterAdd">추가</button>
+                        <button type="button" class="defaultBtn" id="btnEstimateRegisterDelete">삭제</button>
                     </span>
                 </div>
             </div>
@@ -161,6 +160,10 @@
 </div>
 
 <input type="button" id="test">
+<form id="estimate_register_hidden_form" method="POST">
+    <input type="hidden" id="queryId" name="queryId" value="selectEstimateDetailList"/>
+    <input type="hidden" id="EST_SEQ" name="EST_SEQ" value=""/>
+</form>
 <form id="estimate_register_excel_download" method="POST">
     <input type="hidden" id="sqlId" name="sqlId" value="selectEstimateDetailListExcel"/>
     <input type="hidden" id="paramName" name="paramName" value="EST_SEQ"/>
@@ -179,6 +182,8 @@
 
         let estimateRegisterTopGrid = $("#estimate_register_top_grid");
         let estimateRegisterBotGrid = $("#estimate_register_bot_grid");
+        let $btnEstimateRegisterDrawView = $("#btnEstimateRegisterDrawView");
+        let $btnEstimateRegisterDrawAdd = $("#btnEstimateRegisterDrawAdd");
 
         let estimateRegisterTopColModel= [
             {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', width: 80 } ,
@@ -306,18 +311,33 @@
                     {title: '표면 처리비', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###'},
                     {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT', format: '#,###'},
                     {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###'},
-                    {title: '견적비고', dataType: 'integer', dataIndx: 'UNIT_AMT_NOTE', format: '#,###'}
+                    {title: '견적비고', dataType: 'integer', dataIndx: 'UNIT_AMT_NOTE'}
                 ]},
             {title: '계산견적단가', dataType: 'float', dataIndx: 'CALCUL_EST_UNIT_COST', format: '#,###', width: 80},
             {title: '최종견적가', dataType: 'float', dataIndx: 'FINAL_EST_UNIT_PRICE', format: '#,###', width: 80},
-            {title: '금액 계', dataType: 'float', dataIndx: 'FINAL_AMOUNT', format: '#,###', width: 80},
+            {title: '금액 계', dataType: 'float', dataIndx: 'DTL_AMOUNT', format: '#,###', width: 80},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
-            {title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ'},
-            {title: 'DWF', dataType: 'string', dataIndx: 'DWF_GFILE_SEQ'},
-            {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ'},
-            {title: 'IMG', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ'},
-            {title: 'EST_SEQ', dataType: 'string', dataIndx: 'EST_SEQ' , hidden:true} ,
-            {title: 'SEQ', dataType: 'string', dataIndx: 'SEQ' , hidden:true}
+            //{title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ'},
+            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ',
+                render: function (ui) {
+                    if (ui.cellData) return '<span class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+                }
+            },
+            //{title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ'},
+            {
+                title: 'IMG', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ',
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="imageView" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            }
         ];
 
         let estimateRegisterBotColModel= [
@@ -332,12 +352,13 @@
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
                 url: "/paramQueryGridSelect",
-                postData: { 'queryId': 'selectEstimateDetailList'},
+                postData: fnFormToJsonArrayData('#estimate_register_hidden_form'),
                 getData: function (dataJSON) {
                     let data = dataJSON.data;
                     return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                 }
             },
+            postRenderInterval: -1, //call postRender synchronously.
             scrollModel: { autoFit: false },
             columnTemplate: {align: 'center', hvalign: 'center'},
             numberCell: {width: 30, title: "No", show: true },
@@ -367,30 +388,31 @@
             },
             change: function( event, ui ) {
                 if(ui.source == 'edit'){
-                    console.log(ui);
-
                     let rowIndx = ui.updateList[0].rowIndx;
                     let calculateEstimateAmt = 0;
-                    let dataColumn = ['ITEM_QTY', 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT'];
                     let data = ui.updateList[0].rowData;
-                    let UNIT_MATERIAL_AMT = data.UNIT_MATERIAL_AMT == '' ? 0 : parseFloat(data.UNIT_MATERIAL_AMT);
-                    let UNIT_SURFACE_AMT = data.UNIT_SURFACE_AMT == '' ? 0 : parseFloat(data.UNIT_SURFACE_AMT);
-                    let UNIT_PROCESS_AMT = data.UNIT_PROCESS_AMT == '' ? 0 : parseFloat(data.UNIT_PROCESS_AMT);
-                    let UNIT_ETC_AMT = data.UNIT_ETC_AMT == '' ? 0 : parseFloat(data.UNIT_ETC_AMT);
-                    let ITEM_QTY = data.ITEM_QTY == '' ? 0 : parseFloat(data.ITEM_QTY);
+                    let UNIT_MATERIAL_AMT = data.UNIT_MATERIAL_AMT == null || data.UNIT_MATERIAL_AMT == '' ? 0 : parseFloat(data.UNIT_MATERIAL_AMT);
+                    let UNIT_SURFACE_AMT = data.UNIT_SURFACE_AMT == null || data.UNIT_SURFACE_AMT == '' ? 0 : parseFloat(data.UNIT_SURFACE_AMT);
+                    let UNIT_PROCESS_AMT = data.UNIT_PROCESS_AMT == null || data.UNIT_PROCESS_AMT == '' ? 0 : parseFloat(data.UNIT_PROCESS_AMT);
+                    let UNIT_ETC_AMT = data.UNIT_ETC_AMT == null || data.UNIT_ETC_AMT == '' ? 0 : parseFloat(data.UNIT_ETC_AMT);
+                    let ITEM_QTY = data.ITEM_QTY == null || data.ITEM_QTY == '' ? 0 : parseFloat(data.ITEM_QTY);
 
                     calculateEstimateAmt += UNIT_MATERIAL_AMT;
                     calculateEstimateAmt += UNIT_SURFACE_AMT;
                     calculateEstimateAmt += UNIT_PROCESS_AMT;
                     calculateEstimateAmt += UNIT_ETC_AMT;
-                    console.log("UNIT_MATERIAL_AMT:"+"["+UNIT_MATERIAL_AMT+"], "+"UNIT_SURFACE_AMT:"+"["+UNIT_SURFACE_AMT+"], "+
-                        "UNIT_PROCESS_AMT:"+"["+UNIT_PROCESS_AMT+"], "+"UNIT_ETC_AMT:"+"["+UNIT_ETC_AMT+"]"+ "calculateEstimateAmt:"+"["+calculateEstimateAmt+"]");
+                    /*console.log("UNIT_MATERIAL_AMT:"+"["+UNIT_MATERIAL_AMT+"], "+"UNIT_SURFACE_AMT:"+"["+UNIT_SURFACE_AMT+"], "+
+                        "UNIT_PROCESS_AMT:"+"["+UNIT_PROCESS_AMT+"], "+"UNIT_ETC_AMT:"+"["+UNIT_ETC_AMT+"]"+ "calculateEstimateAmt:"+"["+calculateEstimateAmt+"]");*/
 
                     estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'CALCUL_EST_UNIT_COST': calculateEstimateAmt } });
 
                     calculateEstimateAmt *= ITEM_QTY;
-                    estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'FINAL_AMOUNT': calculateEstimateAmt } });
-
+                    estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'DTL_AMOUNT': calculateEstimateAmt } });
+                }
+            },
+            cellSave: function (evt, ui) {
+                if (ui.oldVal === undefined && ui.newVal === null) {
+                    estimateRegisterTopGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                 }
             }
         });
@@ -444,6 +466,7 @@
                 estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': tempI , row: { 'EST_SEQ': EST_SEQ } });
             }
 
+            $("#estimate_register_hidden_form #EST_SEQ").val(EST_SEQ);
             fnModifyPQGrid(estimateRegisterTopGrid, estimateRegisterInsertQueryList, estimateRegisterUpdateQueryList);
             //estimateRegisterReloadPageData();
         };
@@ -455,7 +478,6 @@
             let parameter = {'url': '/json-list', 'data': postData};
             fnPostAjax(function (data, callFunctionParam) {
                 let list = data.list[0];
-                console.log(list);
                 $("#estimate_register_info_form #ORDER_COMP_CD").val(list.ORDER_COMP_CD);
                 $("#estimate_register_info_form #EST_TITLE").val(list.EST_TITLE);
                 $("#estimate_register_info_form #ORDER_STAFF_SEQ").val(list.ORDER_STAFF_SEQ);
@@ -466,12 +488,15 @@
                 $("#estimate_register_info_form #DTL_AMOUNT").val(list.DTL_AMOUNT);
                 $("#estimate_register_info_form #INSERT_DT").val(list.INSERT_DT);
                 $("#estimate_register_info_form #SEND_DT").val(list.SEND_DT);
-
-                postData = { 'queryId': 'estimate.selectEstimateDetailList', 'EST_SEQ': EST_SEQ };
-                fnRequestGidData(estimateRegisterTopGrid, postData);
+                $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
 
                 $("#estimate_register_excel_download #EST_SEQ").val(EST_SEQ);
-                $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
+
+                postData = { 'queryId': 'estimate.selectEstimateDetailList', 'EST_SEQ': EST_SEQ };
+                if(estimateRegisterTopGrid.hasClass('pq-grid')){
+                    //estimateRegisterTopGrid.pqGrid('destroy');
+                }
+                fnRequestGidData(estimateRegisterTopGrid, postData);
             }, parameter, '');
         };
 
@@ -492,7 +517,6 @@
                     EST_SEQ = list.EST_SEQ;
                 }
 
-                alert(EST_SEQ);
                 $("#estimate_register_info_form #queryId").val('insertEstimateMaster');
                 $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
                 $("#estimate_version_up_sequence_form #hidden_est_seq").val(EST_SEQ);
@@ -529,12 +553,14 @@
 
         });
 
-        $("#btnEstimateRegisterDrawAdd").on('click', function(){
-
+        /* 도면 등록 팝업 호출 */
+        $btnEstimateRegisterDrawAdd.click(function () {
+            setEstiMatePopup('estimate', 'estimate.manageEstimateCadFiles');
         });
 
-        $("#btnEstimateRegisterDrawView").on('click', function(){
-
+        /* 도면 등록 팝업 호출 */
+        $btnEstimateRegisterDrawView.click(function () {
+            callWindowImageViewer(999);
         });
 
     });

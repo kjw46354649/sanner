@@ -183,6 +183,17 @@
             </ul>
             <div class="tab-content">
                 <ul class="active" id="IN_WAREHOUSE_MANAGE_TAB1">
+                    <div class="hWrap" id="currentListTabButton">
+                        <div class="d-inline">
+                            <button type="button" class="defaultBtn btn-120w" id="btnInWarehouseManageAdd">추가</button>
+                            <button type="button" class="defaultBtn btn-120w" id="btnInWarehouseManageRemove">삭제</button>
+                            <button type="button" class="defaultBtn btn-120w" id="btnInWarehouseManageOutBarcode">소재불출(바코드)</button>
+                            <button type="button" class="defaultBtn btn-120w" id="btnInWarehouseManageLocation">위치정보관리</button>
+                            <div class="rightSpan">
+                                <button type="button" class="defaultBtn btn-120w" id="btnInWarehouseManageSave">저장</button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="conMainWrap">
                         <div id="in_warehouse_manage_manage_grid01"></div>
                     </div>
@@ -357,9 +368,9 @@
         ];
 
         let inWarehouseManageManageColModel02= [
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_SEQ' },
-            {title: '형태', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ' },
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ' },
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM' },
+            {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM' },
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM' },
             {title: '불출대기 목록', align: "center", colModel: [
                     {title: '가로', dataType: 'string', dataIndx: 'SIZE_W'},
                     {title: '세로', dataType: 'string', dataIndx: 'SIZE_H'},
@@ -367,12 +378,12 @@
                     {title: '파이', dataType: 'string', dataIndx: 'SIZE_D'},
                     {title: '길이(L)', dataType: 'string', dataIndx: 'SIZE_L'},
                 ]},
-            {title: '요청수량', dataType: 'string', dataIndx: 'MATERIAL_COMP_CD', width: 80 , editable: false} ,
-            {title: '창고', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 120, editable: false},
-            {title: '위치', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 120, editable: false},
-            {title: '주문번호', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 120, editable: false},
-            {title: '요청일시', dataType: 'string', dataIndx: 'SIZE_TXT', width: 120, editable: false},
-            {title: '요청자', dataType: 'string', dataIndx: 'ORDER_QTY' , editable: false},
+            {title: '요청수량', dataType: 'string', dataIndx: 'OUT_QTY', width: 80 , editable: false} ,
+            {title: '창고', dataType: 'string', dataIndx: 'WAREHOUSE_NM', width: 120, editable: false},
+            {title: '위치', dataType: 'string', dataIndx: 'LOC_NM', width: 120, editable: false},
+            {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120, editable: false},
+            {title: '요청일시', dataType: 'string', dataIndx: 'OUT_DT', width: 120, editable: false},
+            {title: '요청자', dataType: 'string', dataIndx: 'OUT_USER_ID' , editable: false},
             {title: '수동 불출', dataType: 'string', dataIndx: 'ORDER_NOTE', editable: false}
         ];
 
@@ -457,7 +468,7 @@
                 {
                     type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function (evt, ui) {
-                            let inWarehouseManageInsertUpdateQueryList = ['material.insertUpdateInWarehouseManage'];
+                            let inWarehouseManageInsertUpdateQueryList = ['material.insertUpdateInWarehouseManageMaster','material.insertUpdateInWarehouseManageDetail'];
                             fnModifyPQGrid(inWarehouseManageManageGrid01, inWarehouseManageInsertUpdateQueryList, inWarehouseManageInsertUpdateQueryList);
                         }
                     }
@@ -528,16 +539,15 @@
                 }
             },
             columnTemplate: {align: 'center', hvalign: 'center'},
-            scrollModel: {autoFit: false},
+            scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
             collapsible: false,
-            resizable: true,
+            resizable: false,
             strNoRows: g_noData,
             trackModel: {on: true},
             colModel: inWarehouseManageManageColModel01,
-            toolbar: inWarehouseManageManageToolbar01,
             showTitle: false,
             complete: function(event, ui) {
             },
@@ -572,7 +582,7 @@
         selectInWarehouseManageManageGrid02List();
         function selectInWarehouseManageManageGrid02List(){
             inWarehouseManageManageGrid02.pqGrid({
-                width: "100%", height: 300,
+                width: "100%", height: 250,
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
                     url: "/paramQueryGridSelect",
@@ -592,9 +602,11 @@
                 strNoRows: g_noData,
                 trackModel: {on: true},
                 colModel: inWarehouseManageManageColModel02,
-                toolbar: inWarehouseManageManageToolbar02,
-                showTitle: false
+                showTitle: false,
+                editable: false
             });
+
+            inWarehouseManageManageGrid02.pqGrid('refreshDataAndView');
         }
 
         inWarehouseManageOutGrid.pqGrid({
@@ -693,6 +705,37 @@
             });
 
             inWarehouseManageWarehousePopupGrid.pqGrid("refreshDataAndView");
+        });
+
+        /** 버튼 처리 **/
+        $("#btnInWarehouseManageAdd").on('click', function(){
+            inWarehouseManageManageGrid01.pqGrid('addNodes', [{}], 0);
+        });
+
+        $("#btnInWarehouseManageRemove").on('click', function(){
+            $("#in_warehouse_manage_hidden_form #queryId").val("deleteInWarehouseManageDetail");
+            let parameters = {'url': '/json-list', 'data': fnFormToJsonArrayData('#in_warehouse_manage_hidden_form')};
+
+            fnPostAjax(function (data, callFunctionParam) {
+                $("#in_warehouse_manage_hidden_form #queryId").val("deleteInWarehouseManageMaster");
+                let parameters = {'url': '/json-list', 'data': fnFormToJsonArrayData('#in_warehouse_manage_hidden_form')};
+                fnPostAjax(function (data, callFunctionParam) {
+                    inWarehouseManageManageGrid01.pqGrid("refreshDataAndView");
+                }, parameters, '');
+            }, parameters, '');
+        });
+
+        $("#btnInWarehouseManageOutBarcode").on('click', function(){
+
+        });
+
+        $("#btnInWarehouseManageLocation").on('click', function(){
+            $("#in_warehouse_manage_warehouse_popup").modal("show");
+        });
+
+        $("#btnInWarehouseManageSave").on('click', function(){
+            let inWarehouseManageInsertUpdateQueryList = ['material.insertUpdateInWarehouseManageMaster','material.insertUpdateInWarehouseManageDetail'];
+            fnModifyPQGrid(inWarehouseManageManageGrid01, inWarehouseManageInsertUpdateQueryList, inWarehouseManageInsertUpdateQueryList);
         });
 
     });

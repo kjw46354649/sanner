@@ -62,7 +62,7 @@ dependencies {
 
     // cat to pdf convert
     // https://mvnrepository.com/artifact/com.aspose/aspose-cad
-    compile group: 'com.aspose', name: 'aspose-cad', version: '20.1'
+    compile group: 'com.aspose', name: 'aspose-cad', version: '20.3'
 
     // pdf to image convert
     // https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
@@ -105,12 +105,15 @@ dependencies {
     // https://mvnrepository.com/artifact/org.jxls/jxls-poi
     compile group: 'org.jxls', name: 'jxls-poi', version: '1.0.15'
 
+    // https://mvnrepository.com/artifact/com.thetransactioncompany/cors-filter
+    compile group: 'com.thetransactioncompany', name: 'cors-filter', version: '2.9'
+
 
 }
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8' //인코딩을 UTF-8로 통일
 
 war {
-    archiveName 'jmes.war'
+    archiveName 'ROOT.war'
     from 'webapp' // adds a file-set to the root of the archive
 }

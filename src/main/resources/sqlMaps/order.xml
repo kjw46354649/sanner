@@ -740,7 +740,7 @@
         </choose>
     </select>
 
-    <select id="selectControlCadFiles" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    <select id="manageControlCadFiles_select" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             UUID() AS ROWNUM,
             C.CONTROL_SEQ,
@@ -766,7 +766,7 @@
             AND #{ORGINAL_FILE_NM} LIKE CONCAT(B.DRAWING_NUM, '%')
     </select>
 
-    <update id="updateControlCadFiles" parameterType="java.util.HashMap">
+    <update id="manageControlCadFiles" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART
         SET
             DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
@@ -778,7 +778,7 @@
         CONTROL_SEQ = #{CONTROL_SEQ}
     </update>
 
-    <update id="updateControlCadFiles_mapping" parameterType="java.util.HashMap">
+    <update id="manageControlCadFiles_mapping" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART
         SET
             PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
