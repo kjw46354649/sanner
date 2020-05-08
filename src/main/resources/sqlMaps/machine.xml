@@ -177,4 +177,123 @@
         WHERE EQUIP_ID = #{EQUIP_ID}
             AND SEQ = #{SEQ}
     </delete>
+    <select id="selectEquipId" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT EQUIP_ID
+        FROM TBL_EQUIP
+        WHERE 1 = 1
+            AND FACTORY_AREA = #{FACTORY_AREA}
+            AND PROCESS_TYPE = 'MPR010'
+    </select>
+    <select id="selectProcessPlanGridList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            ROW_NUMBER () OVER () AS ROWNUM,
+            E.EQUIP_ID,
+            A.CONTROL_SEQ,
+            A.CONTROL_DETAIL_SEQ,
+            D.MCT_PLAN_SEQ,
+            A.INNER_DUE_DT, <!-- 납기 -->
+            B.CONTROL_NUM, <!-- 관리번호 -->
+            A.PART_UNIT_QTY, <!-- Part 수량 -->
+            A.MATERIAL_DETAIL, <!-- 소재 -->
+            A.SIZE_TXT, <!-- 규격 -->
+            C.POP_POSITION, <!-- 현재위치 -->
+            D.WORKING_TIME,  <!-- 예상 시간(분) -->
+            F.WORK_USER_ID,
+            D.SORT_NUM
+        FROM TBL_CONTROL_PART A
+            INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            LEFT OUTER JOIN TBL_POP C ON A.CONTROL_SEQ = C.CONTROL_SEQ
+                                         AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_MCT_PLAN D ON A.CONTROL_SEQ = D.CONTROL_SEQ
+                                         AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_EQUIP E ON D.EQUIP_ID = E.EQUIP_ID
+            LEFT OUTER JOIN TBL_MCT_WORK F ON A.CONTROL_SEQ = F.CONTROL_SEQ
+                                              AND A.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
+                                              AND E.EQUIP_ID = F.EQUIP_ID
+        WHERE E.EQUIP_ID = #{EQUIP_ID}
+        ORDER BY D.SORT_NUM
+    </select>
+    <insert id="insertMctPlan"  parameterType="java.util.HashMap" >
+        INSERT INTO TBL_MCT_PLAN (
+            MCT_PLAN_SEQ,
+            EQUIP_ID,
+            CONTROL_SEQ,
+            CONTROL_DETAIL_SEQ,
+            WORKING_TIME,
+            SORT_NUM
+        ) VALUES(
+            NEXTVAL(SEQ_MCT_PLAN),
+            #{EQUIP_ID},
+            #{CONTROL_SEQ},
+            #{CONTROL_DETAIL_SEQ},
+            #{WORKING_TIME},
+            #{SORT_NUM}
+        )
+    </insert>
+    <update id="updateMctPlan"  parameterType="java.util.HashMap" >
+        UPDATE TBL_MCT_PLAN
+        SET
+            EQUIP_ID = #{EQUIP_ID},
+            WORKING_TIME = #{WORKING_TIME},
+            SORT_NUM = #{SORT_NUM},
+            UPDATE_DT = NOW()
+        WHERE MCT_PLAN_SEQ = #{MCT_PLAN_SEQ}
+    </update>
+    <delete id="deleteMctPlan" parameterType="java.util.HashMap">
+        DELETE
+        FROM TBL_MCT_PLAN
+        WHERE MCT_PLAN_SEQ = #{MCT_PLAN_SEQ};
+    </delete>
+    <select id="selectProcessTargetList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            ROW_NUMBER () OVER () AS ROWNUM,
+            A.CONTROL_SEQ,
+            A.CONTROL_DETAIL_SEQ,
+            A.INNER_DUE_DT, <!-- 납기 -->
+            CASE
+                WHEN B.EMERGENCY_YN = 'Y' THEN '긴'
+            END AS EMERGENCY_YN, -- 긴급
+            CASE
+                WHEN B.MAIN_INSPECTION = 'Y' THEN '주'
+            END AS MAIN_INSPECTION, -- 주요 검사품
+            CASE
+                WHEN A.WORK_TYPE = 'WTP030' THEN '수'
+                WHEN A.WORK_TYPE = 'WTP040' THEN '재'
+            END AS WORK_NM, -- 형태
+            '', <!-- MCT Plan/Actual -->
+            H.POP_POSITION, <!-- 현재위치 -->
+            SF_GET_CODE_NM(1013, A.PART_STATUS, 'KR')_PART_STATUS_NM, <!-- 진행상태 -->
+            '', <!-- 가공진행현황 -->
+            B.CONTROL_NUM, <!-- 관리번호 -->
+            A.PART_NUM, <!-- Part -->
+            A.MATERIAL_DETAIL, <!-- 소재종류 상세 -->
+            C.ORDER_QTY, <!-- 수량 -->
+            A.SIZE_TXT AS STANDARD_SIZE, <!-- 규격 -->
+            D.SIZE_TXT AS MATERIAL_SIZE, <!-- 소재 Size -->
+            CONCAT(B.NOTE, D.ORDER_NOTE) AS NOTE, <!-- 비고 기록사항 -->
+            '', <!-- 예상가공 시간(분) -->
+            A.MCT_NOTE, <!-- 가공계획 비고 -->
+            A.MCT_WORK_TYPE, <!-- 작업 구분 -->
+            H.POP_PREV_POSITION, <!-- 이전 위치 -->
+            '', <!-- 과거 경험(NC설계 기준) -->
+            SF_GET_DATE_F(A.STATUS_DT,'YYYY','M') AS SATAUS_DT, <!-- 확정 일시 -->
+            SF_GET_DATE_F(D.IN_DT,'YYYY','M') AS MATERIAL_INNER_DT <!-- 소재 입고 일시  -->
+        FROM TBL_CONTROL_PART A 
+            INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ 
+            INNER JOIN TBL_CONTROL_PART_ORDER C ON A.CONTROL_SEQ = C.CONTROL_SEQ 
+                                                   AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_MATERIAL_ORDER D ON A.CONTROL_SEQ = D.CONTROL_SEQ 
+                                               AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ 
+            INNER JOIN TBL_MCT_PLAN E ON A.CONTROL_SEQ = E.CONTROL_SEQ 
+                                         AND A.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_MCT_WORK F ON A.CONTROL_SEQ = F.CONTROL_SEQ 
+                                              AND A.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_EQUIP G ON E.EQUIP_ID = G.EQUIP_ID 
+                                      AND F.EQUIP_ID = G.EQUIP_ID 
+            LEFT OUTER JOIN TBL_POP H ON A.CONTROL_SEQ = H.CONTROL_SEQ 
+                                         AND A.CONTROL_DETAIL_SEQ = H.CONTROL_DETAIL_SEQ 
+        WHERE 1 = 1
+            AND B.CONTROL_STATUS = 'ORD001' <!-- 주문확정 -->
+            AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO008')
+    </select>
 </mapper>

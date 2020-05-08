@@ -14,7 +14,7 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="SEL_COMP_CD">사업자</label>
                             <select class="wd_200" name="SEL_COMP_CD" id="SEL_COMP_CD" title="사업자">
-                                <option value="">test<spring:message code="com.form.top.all.option" /></option>
+                                <option value=""><spring:message code="com.form.top.all.option" /></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
@@ -276,7 +276,7 @@
                     { type: 'minLen', value: 1, msg: "Required" }
                 ]
             },
-            {title: '규격', dataType: 'string', dataIndx: 'STOCK_SIZE_FULL', editable: false},
+            {title: '규격', dataType: 'string', dataIndx: 'STOCK_SIZE_FULL', editable: true},
             {title: '소재Type', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM',
                 editor: {
                     type: 'select',
@@ -294,9 +294,9 @@
             },
             {title: '재고수량(EA)', dataType: 'integer', dataIndx: 'INSIDE_STOCK_CURR_QTY', editable: true},
             {
-                title: '대칭', align: 'center', colModel: [
-                    {title: '원칭', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY'},
-                    {title: '대칭', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'}
+                title: '대칭', datatype: 'integer', align: 'center', colModel: [
+                    {title: '원칭', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY', editable: true},
+                    {title: '대칭', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY', editable: true}
                 ]
             },
             {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_CD_NM',
@@ -308,7 +308,7 @@
                     options: fnGetCommCodeGridSelectBox('1049'),
                     getData: function(ui) {
                         let clave = ui.$cell.find("select").val();
-                        let rowData = mainGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
                         rowData["WAREHOUSE_CD"]=clave;
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
@@ -324,7 +324,7 @@
                     valueIndx: "value",
                     labelIndx: "text",
                     options: function(ui) {
-                        let rowData = mainGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
                         let WAREHOUSE_CD = rowData["WAREHOUSE_CD"];
                         let warehouseData = {
                             "url" : '/json-list',
@@ -339,7 +339,7 @@
                     },
                     getData: function(ui) {
                         let clave = ui.$cell.find("select").val();
-                        let rowData = mainGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
                         rowData["LOC_SEQ"]=clave;
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
@@ -383,6 +383,7 @@
                     return {data: dataJSON.data};
                 }
             },
+            strNoRows: g_noData,
             columnTemplate: {align: 'center', hvalign: 'center'},
             scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
@@ -444,6 +445,10 @@
 
                 }
             }, parameters, '');
+        });
+
+        $('#stock_manage_add_btn').on('click', function () {
+            stockManageGridId01.pqGrid('addNodes', [{}], 0);
         });
         $('#inside_stock_pop_save_btn').on('click', function () {
             //규격 validation

@@ -52,4 +52,15 @@ public class ParmqueryGridController {
         return "jsonView";
     }
 
+
+    /**
+     * 그리드 삽입/갱신/삭제
+     */
+    @RequestMapping(value = "/paramQueryCRUDGrid", method = RequestMethod.POST)
+    public String paramQueryCRUDGrid(HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+        this.innodaleService.CRUDGrid(map);
+        return "jsonView";
+    }
+
 }

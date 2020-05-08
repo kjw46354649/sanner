@@ -368,9 +368,9 @@
         ];
 
         let inWarehouseManageManageColModel02= [
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_SEQ' },
-            {title: '형태', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ' },
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ' },
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM' },
+            {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM' },
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM' },
             {title: '불출대기 목록', align: "center", colModel: [
                     {title: '가로', dataType: 'string', dataIndx: 'SIZE_W'},
                     {title: '세로', dataType: 'string', dataIndx: 'SIZE_H'},
@@ -378,12 +378,12 @@
                     {title: '파이', dataType: 'string', dataIndx: 'SIZE_D'},
                     {title: '길이(L)', dataType: 'string', dataIndx: 'SIZE_L'},
                 ]},
-            {title: '요청수량', dataType: 'string', dataIndx: 'MATERIAL_COMP_CD', width: 80 , editable: false} ,
-            {title: '창고', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 120, editable: false},
-            {title: '위치', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 120, editable: false},
-            {title: '주문번호', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 120, editable: false},
-            {title: '요청일시', dataType: 'string', dataIndx: 'SIZE_TXT', width: 120, editable: false},
-            {title: '요청자', dataType: 'string', dataIndx: 'ORDER_QTY' , editable: false},
+            {title: '요청수량', dataType: 'string', dataIndx: 'OUT_QTY', width: 80 , editable: false} ,
+            {title: '창고', dataType: 'string', dataIndx: 'WAREHOUSE_NM', width: 120, editable: false},
+            {title: '위치', dataType: 'string', dataIndx: 'LOC_NM', width: 120, editable: false},
+            {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120, editable: false},
+            {title: '요청일시', dataType: 'string', dataIndx: 'OUT_DT', width: 120, editable: false},
+            {title: '요청자', dataType: 'string', dataIndx: 'OUT_USER_ID' , editable: false},
             {title: '수동 불출', dataType: 'string', dataIndx: 'ORDER_NOTE', editable: false}
         ];
 
@@ -539,12 +539,12 @@
                 }
             },
             columnTemplate: {align: 'center', hvalign: 'center'},
-            scrollModel: {autoFit: false},
+            scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
             collapsible: false,
-            resizable: true,
+            resizable: false,
             strNoRows: g_noData,
             trackModel: {on: true},
             colModel: inWarehouseManageManageColModel01,
@@ -582,7 +582,7 @@
         selectInWarehouseManageManageGrid02List();
         function selectInWarehouseManageManageGrid02List(){
             inWarehouseManageManageGrid02.pqGrid({
-                width: "100%", height: 300,
+                width: "100%", height: 250,
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
                     url: "/paramQueryGridSelect",
@@ -602,8 +602,11 @@
                 strNoRows: g_noData,
                 trackModel: {on: true},
                 colModel: inWarehouseManageManageColModel02,
-                showTitle: false
+                showTitle: false,
+                editable: false
             });
+
+            inWarehouseManageManageGrid02.pqGrid('refreshDataAndView');
         }
 
         inWarehouseManageOutGrid.pqGrid({

@@ -50,8 +50,9 @@
     <select id="selectEstimateDetailList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER () OVER () AS ROWNUM,
-            EST_SEQ, SEQ, PROJECT_NM, MODULE_NM, ITEM_NM, DRAWING_NUM, PART_NUM, MATERIAL_SUPPLY_YN AS MATERIAL_SUPPLY_YN,
-            ITEM_QTY AS ITEM_QTY, SIZE_TXT AS SIZE_TXT, SIZE_TYPE AS SIZE_TYPE,
+            EST_SEQ, SEQ, PROJECT_NM, MODULE_NM, ITEM_NM, DRAWING_NUM, PART_NUM,
+            CASE WHEN PARENT_SEQ IS NULL THEN SEQ ELSE PARENT_SEQ END PARENT_SEQ,
+            MATERIAL_SUPPLY_YN, ITEM_QTY, SIZE_TXT, SIZE_TYPE,
             SIZE_W, SIZE_H, SIZE_T, SIZE_D, SIZE_L,
             SIZE_W_M, SIZE_H_M, SIZE_T_M, SIZE_D_M, SIZE_L_M,
             WORK_TYPE AS WORK_TYPE, SF_GET_CODE_NM(1033, WORK_TYPE, 'EN') AS WORK_TYPE_NM,
@@ -76,8 +77,9 @@
                         IFNULL(UNIT_SURFACE_AMT, 0) + IFNULL(UNIT_PROCESS_AMT, 0) + IFNULL(UNIT_ETC_AMT, 0)) * IFNULL(ITEM_QTY, 0)
             END AS DTL_AMOUNT
         FROM TBL_ESTIMATE_DETAIL
-         WHERE 1=1
+        WHERE 1=1
             AND EST_SEQ = #{EST_SEQ}
+        ORDER BY PROJECT_NM, MODULE_NM, ITEM_NM, PART_NUM
     </select>
 
     <select id="selectEstimateMasterListPop" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -176,8 +178,8 @@
     <insert id="insertEstimateDetail" parameterType="java.util.HashMap">
         INSERT INTO TBL_ESTIMATE_DETAIL
         (
-            EST_SEQ, SEQ, PROJECT_NM, MODULE_NM, ITEM_NM, DRAWING_NUM, PART_NUM, MATERIAL_SUPPLY_YN,
-            ITEM_QTY, SIZE_TXT, SIZE_TYPE,
+            EST_SEQ, SEQ, PROJECT_NM, MODULE_NM, ITEM_NM, DRAWING_NUM, PART_NUM, PARENT_SEQ,
+            MATERIAL_SUPPLY_YN, ITEM_QTY, SIZE_TXT, SIZE_TYPE,
             SIZE_W, SIZE_H, SIZE_T, SIZE_D, SIZE_L,
             SIZE_W_M, SIZE_H_M, SIZE_T_M, SIZE_D_M, SIZE_L_M,
             WORK_TYPE, MATERIAL_TYPE, MATERIAL_DETAIL, MATERIAL_KIND, SURFACE_TREAT, MATERIAL_NOTE,
@@ -192,8 +194,8 @@
         )
         VALUES
         (
-            #{EST_SEQ}, NEXTVAL(SEQ_ESTIMATE_DETAIL), #{PROJECT_NM}, #{MODULE_NM}, #{ITEM_NM}, #{DRAWING_NUM}, #{PART_NUM}, #{MATERIAL_SUPPLY_YN},
-            #{ITEM_QTY}, #{SIZE_TXT},
+            #{EST_SEQ}, NEXTVAL(SEQ_ESTIMATE_DETAIL), #{PROJECT_NM}, #{MODULE_NM}, #{ITEM_NM}, #{DRAWING_NUM}, #{PART_NUM}, #{PARENT_SEQ},
+            #{MATERIAL_SUPPLY_YN}, #{ITEM_QTY}, #{SIZE_TXT},
             SF_GET_SIZE_TXT('SIZE_TYPE', #{SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_W', #{SIZE_TXT}),
             SF_GET_SIZE_TXT('SIZE_H', #{SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_T', #{SIZE_TXT}),
             SF_GET_SIZE_TXT('SIZE_D', #{SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_L', #{SIZE_TXT}),
@@ -295,7 +297,7 @@
     <insert id="insertEstimateDetailVersion"  parameterType="java.util.HashMap">
         INSERT INTO TBL_ESTIMATE_DETAIL
         (
-            EST_SEQ, SEQ, PROJECT_NM, MODULE_NM, ITEM_NM, DRAWING_NUM, PART_NUM, MATERIAL_SUPPLY_YN,
+            EST_SEQ, SEQ, PROJECT_NM, MODULE_NM, ITEM_NM, DRAWING_NUM, PART_NUM, PARENT_SEQ, MATERIAL_SUPPLY_YN,
             ITEM_QTY, SIZE_TXT, SIZE_TYPE, SIZE_W, SIZE_H, SIZE_T, SIZE_D, SIZE_L,
             SIZE_W_M, SIZE_H_M, SIZE_T_M, SIZE_D_M, SIZE_L_M,
             WORK_TYPE, MATERIAL_TYPE, MATERIAL_DETAIL, MATERIAL_KIND, SURFACE_TREAT, MATERIAL_NOTE,
@@ -309,7 +311,7 @@
             INSERT_DT, INSERT_ID
         )
         SELECT
-            #{N_EST_SEQ} AS EST_SEQ, NEXTVAL(SEQ_ESTIMATE_DETAIL) AS SEQ, PROJECT_NM, MODULE_NM, ITEM_NM, DRAWING_NUM, PART_NUM, MATERIAL_SUPPLY_YN,
+            #{N_EST_SEQ} AS EST_SEQ, SEQ, PROJECT_NM, MODULE_NM, ITEM_NM, DRAWING_NUM, PART_NUM, PARENT_SEQ, MATERIAL_SUPPLY_YN,
             ITEM_QTY, SIZE_TXT, SIZE_TYPE, SIZE_W, SIZE_H, SIZE_T, SIZE_D, SIZE_L,
             SIZE_W_M, SIZE_H_M, SIZE_T_M, SIZE_D_M, SIZE_L_M,
             WORK_TYPE, MATERIAL_TYPE, MATERIAL_DETAIL, MATERIAL_KIND, SURFACE_TREAT, MATERIAL_NOTE,
@@ -326,15 +328,16 @@
 			AND EST_SEQ = #{EST_SEQ}
     </insert>
 
-    <update id="updateEstimateMasterFinish" parameterType="java.util.HashMap">
-        UPDATE TBL_ESTIMATE
-        SET
-            EST_STATUS = 'EST020',
-            UPDATE_DT = NOW(),
-            UPDATE_ID = NULL
-        WHERE EST_SEQ = #{EST_SEQ}
-            AND EST_VER = #{EST_VER}
-    </update>
+    <select id="selectEstimateOrderControlData" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            EST_SEQ, SEQ, PROJECT_NM, MODULE_NM, ITEM_NM, DRAWING_NUM, PART_NUM,
+            CASE WHEN PARENT_SEQ IS NULL THEN SEQ ELSE PARENT_SEQ END PARENT_SEQ
+        FROM TBL_ESTIMATE_DETAIL
+        WHERE 1=1
+            AND EST_SEQ = #{EST_SEQ}
+		GROUP BY CASE WHEN PARENT_SEQ IS NULL THEN SEQ ELSE PARENT_SEQ END
+        ORDER BY PROJECT_NM, MODULE_NM, ITEM_NM, PART_NUM
+    </select>
 
     <insert id="insertEstimateOrderControlMaster" parameterType="java.util.HashMap">
         INSERT INTO TBL_CONTROL
@@ -343,8 +346,9 @@
             NEXTVAL(SEQ_CONTROL), A.EST_VER, A.COMP_CD, A.ORDER_COMP_CD, A.ORDER_STAFF_SEQ, B.PROJECT_NM, B.MODULE_NM, A.EST_SEQ, 'N', NULL
         FROM TBL_ESTIMATE A
             INNER JOIN TBL_ESTIMATE_DETAIL B ON A.EST_SEQ = B.EST_SEQ
+                AND CASE WHEN B.PARENT_SEQ IS NULL THEN B.SEQ ELSE B.PARENT_SEQ END = #{SEQ}
         WHERE A.EST_SEQ = #{EST_SEQ}
-        GROUP BY B.PROJECT_NM, B.MODULE_NM, B.ITEM_NM, B.DRAWING_NUM
+        GROUP BY CASE WHEN B.PARENT_SEQ IS NULL THEN B.SEQ ELSE B.PARENT_SEQ END
     </insert>
 
     <insert id="insertEstimateOrderControlDetail"  parameterType="java.util.HashMap">
@@ -358,8 +362,7 @@
             MATERIAL_FINISH_TM, MATERIAL_FINISH_GRIND, MATERIAL_FINISH_HEAT,
             UNIT_MATERIAL_AMT, UNIT_TM_AMT, UNIT_GRIND_AMT, UNIT_HEAT_AMT, UNIT_SURFACE_AMT, UNIT_PROCESS_AMT, UNIT_ETC_AMT,
             UNIT_MATERIAL_AUTO_YN, UNIT_TM_AUTO_YN, UNIT_GRIND_AUTO_YN, UNIT_HEAT_AUTO_YN, UNIT_SURFACE_AUTO_YN, UNIT_PROCESS_AUTO_YN,
-            UNIT_AMT_NOTE,
-            UNIT_FINAL_EST_AMT, UNIT_FINAL_AMT,
+            UNIT_AMT_NOTE, UNIT_FINAL_EST_AMT,
             DWG_GFILE_SEQ, DXF_GFILE_SEQ, PDF_GFILE_SEQ, IMG_GFILE_SEQ,
             INSERT_ID)
         SELECT
@@ -372,14 +375,13 @@
             MATERIAL_FINISH_TM, MATERIAL_FINISH_GRIND, MATERIAL_FINISH_HEAT,
             UNIT_MATERIAL_AMT, UNIT_TM_AMT, UNIT_GRIND_AMT, UNIT_HEAT_AMT, UNIT_SURFACE_AMT, UNIT_PROCESS_AMT, UNIT_ETC_AMT,
             UNIT_MATERIAL_AUTO_YN, UNIT_TM_AUTO_YN, UNIT_GRIND_AUTO_YN, UNIT_HEAT_AUTO_YN, UNIT_SURFACE_AUTO_YN, UNIT_PROCESS_AUTO_YN,
-            UNIT_AMT_NOTE,
-            UNIT_FINAL_EST_AMT, UNIT_FINAL_AMT,
+            UNIT_AMT_NOTE, UNIT_FINAL_EST_AMT,
             DWG_GFILE_SEQ, DXF_GFILE_SEQ, PDF_GFILE_SEQ, IMG_GFILE_SEQ,
             NULL
         FROM TBL_ESTIMATE_DETAIL
         WHERE 1=1
             AND EST_SEQ = #{EST_SEQ}
-            AND SEQ = #{SEQ}
+            AND CASE WHEN PARENT_SEQ IS NULL THEN SEQ ELSE PARENT_SEQ END = #{SEQ}
     </insert>
 
     <insert id="insertEstimateOrderControlOrder"  parameterType="java.util.HashMap">
@@ -399,5 +401,14 @@
             )
             AND A.EST_SEQ = #{EST_SEQ}
     </insert>
+
+    <update id="updateEstimateMasterFinish" parameterType="java.util.HashMap">
+        UPDATE TBL_ESTIMATE
+        SET
+            EST_STATUS = 'EST020',
+            UPDATE_DT = NOW(),
+            UPDATE_ID = NULL
+        WHERE EST_SEQ = #{EST_SEQ}
+    </update>
 
 </mapper>
