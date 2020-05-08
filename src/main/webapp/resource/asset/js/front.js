@@ -2,10 +2,10 @@ var chk = 0; // 예제를 위한 변수
 
 $(document).ready(function(){
 
-	if($('.contentsWrap .page').hasClass('estimate')){
+	/*if($('.contentsWrap .page').hasClass('estimate')){
 		// table chart height값
 		estimateH();
-	}
+	}*/
 
 
 	//console.log(pageHeight,tableConWrapY,tableConWrapH);
@@ -69,7 +69,8 @@ $(document).ready(function(){
 				let containerDiv = "<span class='addTapPage estimate page' id='view_tab_" + pid + "'>" + data + "</span>";
 				$(".contentsWrap").append(containerDiv).trigger('create');
 				tabMenuFn();
-				estimateH("view_tab_" + pid);
+				//estimateH("view_tab_" + pid);
+
 			});
 		}
 	});
@@ -195,6 +196,7 @@ function sideMenuClose(){
 	}, 300);
 }
 
+/*
 // topWrap 확장 함수
 function topMenuOpen(){
 	var tabId = "";
@@ -210,9 +212,9 @@ function topMenuOpen(){
 	var con = $("#view_"+tabId).find('.bottomWrap .tableWrap .conWrap');
 	var t_h = $("#view_"+tabId).find('.gubunWrap ul').height() + 10;
 
-	/*var top = $();
+	/!*var top = $();
 	var con = $('.bottomWrap .tableWrap .conWrap');
-	var t_h = $('.gubunWrap ul').height()+10;*/
+	var t_h = $('.gubunWrap ul').height()+10;*!/
 	var c_h = con.height() - t_h + top.height();
 	top.stop().animate({height:t_h},300, 'easeOutCubic');
 	con.stop().animate({height: c_h },300, 'easeOutCubic');
@@ -262,4 +264,4 @@ function estimateH(viewTabId){
 			$(this).addClass('on');
 		}
 	});
-}
+}*/

@@ -65,7 +65,7 @@
     <div class="topWrap">
         <form class="form-inline" id="item_order_register_search_form" name="item_order_register_search_form" role="form">
             <input type="hidden" name="queryId" id="queryId" value="selectItemOrderRegisterList">
-            <div class="gubunWrap">
+            <div class="gubunWrap row3_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -132,7 +132,7 @@
         </form>
         <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
-    <div class="bottomWrap">
+    <div class="bottomWrap row3_bottomWrap">
         <div class="tableWrap">
             <div class="conWrap">
                 <div class="left_60Wrap">
@@ -143,8 +143,8 @@
                             <button type="button" class="defaultBtn btn-120w" id="btnItemOrderRegisterCurrentStock">보유소재 전체현황</button>
                             <span class="chk_box"><input id="chkItemOrderRegisterAutoMatching" type="checkbox"/><label for="chkItemOrderRegisterAutoMatching">보유소개 자동매칭</label></span>
                             <span class="slt_wrap namePlusSlt right_float">
-                                <button type="button" class="defaultBtn yelllow" id="btnItemOrderRegisterDrawView">도면 보기</button>
-                                <button type="button" class="defaultBtn blue" id="btnItemOrderRegisterSave">Save</button>
+                                <button type="button" class="defaultBtn radius" id="btnItemOrderRegisterDrawView">도면 보기</button>
+                                <button type="button" class="defaultBtn radius green" id="btnItemOrderRegisterSave">저장</button>
                             </span>
                         </span>
                     </div>
@@ -180,7 +180,7 @@
                                 </c:forEach>
                             </select>
                             <span class="slt_wrap namePlusSlt right_float">
-                                <button type="button" class="defaultBtn blue" id="btnItemOrderRegisterOutSave">Save</button>
+                                <button type="button" class="defaultBtn radius green" id="btnItemOrderRegisterOutSave">저장</button>
                             </span>
                         </div>
                     </div>

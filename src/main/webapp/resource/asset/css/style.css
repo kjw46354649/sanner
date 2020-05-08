@@ -78,15 +78,15 @@
 .estimate .topWrap .gubunWrap ul li label { }
 .estimate .topWrap .gubunWrap ul li select { }
 .estimate .topWrap .gubunWrap ul li input { }
-.estimate .topWrap .basicWrap { border-right: 1px solid #e5e5e5; overflow: hidden; width: 100%; box-sizing: border-box; padding: 5px 15px; height: 148px; }
-.estimate .topWrap .basicWrap ul { font-size: 0; }
-.estimate .topWrap .basicWrap ul li { padding: 6px 0; }
-.estimate .topWrap .basicWrap ul li *{ }
-.estimate .topWrap .basicWrap ul li:nth-child(4n) { padding-right: 0; }
-.estimate .topWrap .basicWrap ul li:nth-child(4n+1) { }
-.estimate .topWrap .basicWrap ul li label { }
-.estimate .topWrap .basicWrap ul li select { }
-.estimate .topWrap .basicWrap ul li input { }
+.estimate .basicWrap { border-right: 1px solid #e5e5e5; overflow: hidden; width: 100%; box-sizing: border-box; padding: 5px 15px; height: 148px; }
+.estimate .basicWrap ul { font-size: 0; }
+.estimate .basicWrap ul li { padding: 6px 0; }
+.estimate .basicWrap ul li *{ }
+.estimate .basicWrap ul li:nth-child(4n) { padding-right: 0; }
+.estimate .basicWrap ul li:nth-child(4n+1) { }
+.estimate .basicWrap ul li label { }
+.estimate .basicWrap ul li select { }
+.estimate .basicWrap ul li input { }
 .estimate .topWrap .dateWrap .leftSpan { display: inline-block; }
 .estimate .topWrap .dateWrap .slt_wrap { padding-right: 19px; }
 .estimate .topWrap .dateWrap .slt_wrap select { }
