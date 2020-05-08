@@ -694,5 +694,31 @@
 
         return year + '-' + month + '-' + date + ' ' + hour + ':' + minute;
     }
+    let fnGridValidation = function(targetGrid){
+        var gridInstance = $("#" + targetGrid).pqGrid('getInstance').grid;
+        var addList = gridInstance.getChanges().addList;
+        var errCnt = 0;
+        for (var i = 0; i < addList.length; i++) {
+            var rowData = addList[i];
+            var isValid = gridInstance.isValid({ "rowData": rowData }).valid;
+            if (!isValid) {
+                errCnt++;
+            }
+        }
 
-</script>
+        var updateList = gridInstance.getChanges().updateList;
+        for (var i = 0; i < updateList.length; i++) {
+            var rowData = updateList[i];
+            var isValid = gridInstance.isValid({ "rowData": rowData }).valid;
+            if (!isValid) {
+                errCnt++;
+            }
+        }
+
+        if(errCnt >0){
+            return false;
+        }else{
+            return true;
+        }
+
+    }</script>
