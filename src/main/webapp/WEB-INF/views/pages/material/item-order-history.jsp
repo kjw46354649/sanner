@@ -11,7 +11,7 @@
     <div class="topWrap">
         <form class="form-inline" id="item_order_history_search_form" name="item_order_history_search_form" role="form">
             <input type="hidden" name="queryId" id="queryId" value="selectItemOrderHistoryList">
-            <div class="gubunWrap">
+            <div class="gubunWrap row3_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -80,7 +80,7 @@
         </form>
         <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
-    <div class="bottomWrap">
+    <div class="bottomWrap row3_bottomWrap">
         <div class="tableWrap">
             <div class="conWrap">
                 <div class="left_30Wrap">
@@ -95,10 +95,10 @@
                 </div>
                 <div class="right_60Wrap">
                     <div class="buttonWrap">
-                        <span class="d-inline">
-                            <button type="button" class="defaultBtn btn-120w blue" id="btnItemOrderHistoryExcel">주문서 출력</button>
-                            <button type="button" class="defaultBtn btn-120w blue" id="btnItemOrderHistorySave">Save</button>
-                        </span>
+                        <div class="right_sort">
+                            <button type="button" class="defaultBtn btn-120w" id="btnItemOrderHistoryExcel">주문서 출력</button>
+                            <button type="button" class="defaultBtn radius green" id="btnItemOrderHistorySave">저장</button>
+                        </div>
                     </div>
                     <div class="conMainWrap">
                         <div id="item_order_history_right_grid" class="jqx-refresh"></div>

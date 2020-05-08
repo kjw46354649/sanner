@@ -51,7 +51,7 @@
         <form class="form-inline" id="in_warehouse_manage_search_form" name="in_warehouse_manage_search_form" role="form">
             <div class="topWrap">
                 <input type="hidden" name="queryId" id="queryId" value="selectInWarehouseManageList">
-                <div class="gubunWrap">
+                <div class="gubunWrap row3_topWrap">
                     <ul>
                         <li>
                             <span class="slt_wrap">
@@ -92,14 +92,13 @@
                         </li>
                     </ul>
                 </div>
-                <button type="button" class="topWrap_btn">펼치기 / 접기</button>
             </div>
         </form>
 
         <form class="form-inline" id="in_warehouse_manage_out_search_form" name="in_warehouse_manage_out_search_form" role="form" style="display: none">
             <div class="topWrap">
                 <input type="hidden" name="queryId" id="queryId" value="selectInWarehouseManageOutList">
-                <div class="gubunWrap">
+                <div class="gubunWrap row3_topWrap">
                     <ul>
                         <li>
                             <span class="slt_wrap">
@@ -137,63 +136,26 @@
                             <span class="ipu_wrap"><label class="label_100" for="M_ORDER_COMP_CD">소재주문업체</label><input type="text" name="M_ORDER_COMP_CD" id="M_ORDER_COMP_CD" class="wd_200" value="" title="소재주문업체"></span>
                             <span class="ipu_wrap"><label class="label_100" for="MATERIAL_DETAIL">소재종류</label><input type="text" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200" value="" title="소재주문업체"></span>
                         </li>
-                        <li class="">
-                            <span class="txt_span pd-right20">Option</span>
-                            <span class="chk_box"><input id="pr_ex1" type="checkbox"><label for="pr_ex1"> 발송완료</label></span>
-                            <span class="chk_box"><input id="pr_ex2" type="checkbox"><label for="pr_ex2"> 최신차수</label></span>
-                            <span class="gubun"></span>
-                            <span class="slt_wrap trans_slt mg-right10">
-                            <select id="daySltd" name="daySltd" title="등록일시" class="wd_200">
-                                <option value="" selected="selected">등록일시</option>
-                                <option value="1">-ALL-</option>
-                                <option value="2">-ALL-</option>
-                            </select>
-                        </span>
-                            <span class="radio_box">
-                            <input reqcd="R" type="radio" id="fr_1001_1" name=""><label for="fr_1001_1">오늘</label>
-                        </span>
-                            <span class="radio_box">
-                            <input reqcd="R" type="radio" id="fr_1001_2" name=""><label for="fr_1001_2">현재월</label>
-                        </span>
-                            <span class="radio_box">
-                            <input reqcd="R" type="radio" id="fr_1001_3" name=""><label for="fr_1001_3">3개월</label>
-                        </span>
-                            <div class="calendar_wrap">
-                            <span class="calendar_span">
-                                <input type="text" name="dateOneIp" id="dateOneIp" class="wd_200" value="" title="달력정보"><button type="button">달력선택</button>
-                            </span>
-                                <span class="nbsp">~</span>
-                                <span class="calendar_span">
-                                <input type="text" name="dateTwoIp" id="dateTwoIp" class="wd_200" value="" title="달력정보"><button type="button">달력선택</button>
-                            </span>
-                            </div>
-                            <span class="chk_box"><input id="pr_ex" type="checkbox"><label for="pr_ex">선택</label></span>
-                        </li>
                     </ul>
                 </div>
-                <button type="button" class="topWrap_btn">펼치기 / 접기</button>
             </div>
         </form>
 
-    <div class="bottomWrap">
+    <div class="bottomWrap row3_bottomWrap">
         <div class="tableWrap jmestabs" id="in_warehouse_manage_tabs">
             <ul class="smallTabMenuTabs">
                 <li class="active"><a href="#IN_WAREHOUSE_MANAGE_TAB1" data-toggle="tab" aria-expanded="true">현황관리</a></li>
                 <li><a href="#IN_WAREHOUSE_MANAGE_TAB2" data-toggle="tab" aria-expanded="false">불출이력</a></li>
+                <div class="right_sort">
+                    <button type="button" class="defaultBtn btn-120w" id="btnInWarehouseManageOutBarcode">소재불출(바코드)</button>
+                    <button type="button" class="defaultBtn btn-120w" id="btnInWarehouseManageLocation">위치정보관리</button>
+                    <button type="button" class="defaultBtn radius" id="btnInWarehouseManageAdd">추가</button>
+                    <button type="button" class="defaultBtn radius red" id="btnInWarehouseManageRemove">삭제</button>
+                    <button type="button" class="defaultBtn radius green" id="btnInWarehouseManageSave">저장</button>
+                </div>
             </ul>
             <div class="tab-content">
                 <ul class="active" id="IN_WAREHOUSE_MANAGE_TAB1">
-                    <div class="hWrap" id="currentListTabButton">
-                        <div class="d-inline">
-                            <button type="button" class="defaultBtn btn-120w" id="btnInWarehouseManageAdd">추가</button>
-                            <button type="button" class="defaultBtn btn-120w" id="btnInWarehouseManageRemove">삭제</button>
-                            <button type="button" class="defaultBtn btn-120w" id="btnInWarehouseManageOutBarcode">소재불출(바코드)</button>
-                            <button type="button" class="defaultBtn btn-120w" id="btnInWarehouseManageLocation">위치정보관리</button>
-                            <div class="rightSpan">
-                                <button type="button" class="defaultBtn btn-120w" id="btnInWarehouseManageSave">저장</button>
-                            </div>
-                        </div>
-                    </div>
                     <div class="conMainWrap">
                         <div id="in_warehouse_manage_manage_grid01"></div>
                     </div>
@@ -203,7 +165,7 @@
                     </div>
                 </ul>
                 <ul class="" id="IN_WAREHOUSE_MANAGE_TAB2">
-                    <div class="conWrap">
+                    <div class="conMainWrap">
                         <div id="in_warehouse_manage_out_grid01"></div>
                     </div>
                 </ul>
@@ -528,7 +490,7 @@
         };
 
         inWarehouseManageManageGrid01.pqGrid({
-            width: "100%", height: 500,
+            width: "100%", height: 438,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'MY_MAT_STOCK_SEQ',
                 url: "/paramQueryGridSelect",

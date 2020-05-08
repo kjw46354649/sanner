@@ -64,6 +64,18 @@
 
 .tabMenuWrap ul li.on a{}
 .tabMenuWrap ul li.on .closeBtn{}
+
+.full_bottomWrap { height: 891px; }
+.row1_bottomWrap { height: 838px; }
+.row2_bottomWrap { height: 816px; }
+.row3_bottomWrap { height: 763px; }
+.row4_bottomWrap { height: 741px; }
+
+.estimate .topWrap .row1_topWrap { height: 47px !important; }
+.estimate .topWrap .row2_topWrap { height: 84.5px !important; }
+.estimate .topWrap .row3_topWrap { height: 122px !important; }
+.estimate .topWrap .row4_topWrap { height: 159.5px !important; }
+
 /*/////////////////////////////////////////////////////////////////////////// /////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// FOOTER WRAP ///////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
