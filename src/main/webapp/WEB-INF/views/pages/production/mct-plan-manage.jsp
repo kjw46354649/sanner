@@ -13,6 +13,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <div class="page mct">
+    <div id="ahah_test"></div>
     <div class="topWrap">
         <form id="MCT_PLAN_MANAGE_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="machine.selectEquipId">
@@ -38,123 +39,29 @@
         <div class="conWrap">
             <div class="tableWrap">
                 <ul>
-                    <li>
-                        <form id="MCT_NC1_PLAN_FORM" role="form">
-                            <input type="hidden" name="queryId" id="queryId" value="machine.selectProcessPlanGridList">
-                            <input type="hidden" name="EQUIP_ID" id="EQUIP_ID">
-                            <input type="hidden" name="ORDER" id="ORDER" value="1">
-                            <div class="table">
-                            <div class="titleWrap">
-                                <span class="tableLabel">NC1</span>
-                                <span class="data_ipt" id="NC1_CONTROL_NUM">C19-625-0799-04#1</span>
-                                <p class="listTxt">
-                                    <span id="NC1_MATERIAL_DETAIL">SM45C</span>
-                                    <span><span id="NC1_PART_UNIT_QTY">20</span>EA</span>
-                                    <span id="NC1_WORK_USER_ID">홍길동</span>
-                                </p>
-                                <!-- <span class="totalNumber">(85/120)</span> -->
-                            </div>
-                            <div class="listWrap">
-                                <div class="miniLeft"><span>대기목록</span></div>
-                                <div class="miniRight">
-                                    <div class="scrollWrap">
-                                        <div id="PROCESS_PLAN_GRID1"></div>
-                                    </div>
-                                    <div class="footerWrap"><span>Total</span><span id="NC1_TOTAL_RECORDS">13</span>rows <span id="NC1_TOTAL_PART_UNIT_QUANTITY">1</span>ea <span id="NC1_TOTAL_WORKING_TIME">583</span>min</div>
-                                </div>
-                            </div>
+                    <li id="layout_1_1">
 
-                        </div>
-                        </form>
                     </li>
-                    <li>
-                        <form id="MCT_NC2_PLAN_FORM" role="form">
-                            <input type="hidden" name="queryId" id="queryId" value="machine.selectProcessPlanGridList">
-                            <input type="hidden" name="EQUIP_ID" id="EQUIP_ID">
-                            <input type="hidden" name="ORDER" id="ORDER" value="2">
-                            <div class="table">
-                            <div class="titleWrap">
-                                <span class="tableLabel yellowLabel">NC2</span>
-                                <span class="data_ipt" id="NC2_CONTROL_NUM">C19-625-0799-04#1</span>
-                                <p class="listTxt">
-                                    <span id="NC2_MATERIAL_DETAIL">SM45C</span>
-                                    <span id="NC2_PART_UNIT_QTY">20EA</span>
-                                    <span id="NC2_WORK_USER_ID">홍길동</span>
-                                </p>
-                                <!-- <span class="totalNumber">(85/120)</span> -->
-                            </div>
-                            <div class="listWrap">
-                                <div class="miniLeft"><span>대기목록</span></div>
-                                <div class="miniRight">
-                                    <div class="scrollWrap">
-                                        <div id="PROCESS_PLAN_GRID2"></div>
-                                    </div>
-                                    <div class="footerWrap"><span>Total</span><span id="NC2_TOTAL_RECORDS">13</span> rows <span id="NC2_TOTAL_PART_UNIT_QUANTITY">1</span> ea <span id="NC2_TOTAL_WORKING_TIME">583</span> min</div>
-                                </div>
-                            </div>
+                    <li id="layout_1_2">
 
-                        </div>
-                        </form>
+                    </li>
+                    <li id="layout_1_3">
+
+                    </li>
+                    <li id="layout_1_4">
+
                     </li>
                 </ul>
                 <ul>
-                    <li>
-                        <form id="MCT_NC3_PLAN_FORM" role="form">
-                            <input type="hidden" name="queryId" id="queryId" value="machine.selectProcessPlanGridList">
-                            <input type="hidden" name="EQUIP_ID" id="EQUIP_ID">
-                            <input type="hidden" name="ORDER" id="ORDER" value="3">
-                            <div class="table">
-                            <div class="titleWrap">
-                                <span class="tableLabel">NC3</span>
-                                <span class="data_ipt" id="NC3_CONTROL_NUM">C19-625-0799-04#1</span>
-                                <p class="listTxt">
-                                    <span id="NC3_MATERIAL_DETAIL">SM45C</span>
-                                    <span id="NC3_PART_UNIT_QTY">20EA</span>
-                                    <span id="NC3_WORK_USER_ID">홍길동</span>
-                                </p>
-                                <!-- <span class="totalNumber">(85/120)</span> -->
-                            </div>
-                            <div class="listWrap">
-                                <div class="miniLeft"><span>대기목록</span></div>
-                                <div class="miniRight">
-                                    <div class="scrollWrap">
-                                        <div id="PROCESS_PLAN_GRID3"></div>
-                                    </div>
-                                    <div class="footerWrap"><span>Total</span><span id="NC3_TOTAL_RECORDS">13</span> rows <span id="NC3_TOTAL_PART_UNIT_QUANTITY">1</span> ea <span id="NC3_TOTAL_WORKING_TIME">583</span> min</div>
-                                </div>
-                            </div>
+                    <li id="layout_2_1">
 
-                        </div>
-                        </form>
                     </li>
-                    <li>
-                        <form id="MCT_NC4_PLAN_FORM" role="form">
-                            <input type="hidden" name="queryId" id="queryId" value="machine.selectProcessPlanGridList">
-                            <input type="hidden" name="EQUIP_ID" id="EQUIP_ID">
-                            <input type="hidden" name="ORDER" id="ORDER" value="4">
-                            <div class="table">
-                            <div class="titleWrap">
-                                <span class="tableLabel">NC4</span>
-                                <span class="data_ipt" id="NC4_CONTROL_NUM">C19-625-0799-04#1</span>
-                                <p class="listTxt">
-                                    <span id="NC4_MATERIAL_DETAIL">SM45C</span>
-                                    <span id="NC4_PART_UNIT_QTY">20EA</span>
-                                    <span id="NC4_WORK_USER_ID">홍길동</span>
-                                </p>
-                                <!-- <span class="totalNumber">(85/120)</span> -->
-                            </div>
-                            <div class="listWrap">
-                                <div class="miniLeft"><span>대기목록</span></div>
-                                <div class="miniRight">
-                                    <div class="scrollWrap">
-                                        <div id="PROCESS_PLAN_GRID4"></div>
-                                    </div>
-                                    <div class="footerWrap"><span>Total</span><span id="NC4_TOTAL_RECORDS">13</span> rows <span id="NC4_TOTAL_PART_UNIT_QUANTITY">1</span> ea <span id="NC4_TOTAL_WORKING_TIME">583</span> min</div>
-                                </div>
-                            </div>
+                    <li id="layout_2_2">
 
-                        </div>
-                        </form>
+                    </li>
+                    <li id="layout_2_3">
+                    </li>
+                    <li id="layout_2_4">
                     </li>
                 </ul>
             </div>
@@ -244,9 +151,50 @@
         let postData = fnFormToJsonArrayData('#MCT_PLAN_MANAGE_SEARCH_FORM');
         let parameters = {'url': '/json-list', 'data': postData};
 
+        const createdynamicForm = function (row, col, order, equipId) {
+            let str = '';
+
+            str += '<form id="MCT_NC' + order + '_PLAN_FORM" role="form">';
+            str += '    <input type="hidden" name="queryId" id="queryId" value="machine.selectProcessPlanGridList">';
+            str += '    <input type="hidden" name="EQUIP_ID" id="EQUIP_ID" value="' + equipId + '">';
+            str += '    <div class="table">';
+            str += '        <div class="titleWrap">';
+            str += '            <span class="tableLabel">NC' + order +'</span>';
+            str += '            <span class="data_ipt" id="NC' + order + '_CONTROL_NUM">C19-625-0799-0order#1</span>';
+            str += '            <p class="listTxt">';
+            str += '                <span id="NC' + order + '_MATERIAL_DETAIL">SMorder5C</span>';
+            str += '                <span id="NC' + order + '_PART_UNIT_QTY">20EA</span>';
+            str += '                <span id="NC' + order + '_WORK_USER_ID">홍길동</span>';
+            str += '            </p>';
+            str += '        </div>';
+            str += '        <div class="listWrap">';
+            str += '            <div class="miniLeft"><span>대기목록</span></div>';
+            str += '            <div class="miniRight">';
+            str += '                <div class="scrollWrap">';
+            str += '                    <div id="PROCESS_PLAN_GRID' + order + '"></div>';
+            str += '                </div>';
+            str += '                <div class="footerWrap">';
+            str += '                    <span>Total<span id="NC' + order + '_TOTAL_RECORDS">13</span> rows <span id="NC' + order + '_TOTAL_PART_UNIT_QUANTITY">1</span> ea <span id="NC' + order + '_TOTAL_WORKING_TIME">583</span> min</span>';
+            str += '                </div>';
+            str += '            </div>';
+            str += '        </div>';
+            str += '    </div>';
+            str += '</form>';
+
+            debugger;
+            // $('#layout_' + row + '_' + col).html(str);
+            $('#layout_' + row + '_' + col)[0].innerHTML = str;
+        };
+
         fnPostAjaxAsync(function (data) {
             for (let i = 0, listLength = data.list.length; i < listLength; i++) {
-                $('#MCT_NC' + (i + 1) + '_PLAN_FORM > #EQUIP_ID').val(data.list[i].EQUIP_ID);
+                console.log(data.list[i]);
+                let thisParameter = data.list[i];
+                let row = thisParameter.LAYOUT_ROW;
+                let col = thisParameter.LAYOUT_COL;
+                let equipId = thisParameter.EQUIP_ID;
+                // $('#MCT_NC' + (i + 1) + '_PLAN_FORM > #EQUIP_ID').val(data.list[i].EQUIP_ID);
+                createdynamicForm(row, col, i + 1, equipId);
             }
         }, parameters, '');
 
@@ -260,9 +208,9 @@
             {title: 'EQUIP_ID', dataType: 'string', dataIndx: 'EQUIP_ID', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-            {title: 'MCT_PLAN_SEQ', dataType: 'integer', dataIndx: 'MCT_PLAN_SEQ', hidden: false},
+            {title: 'MCT_PLAN_SEQ', dataType: 'integer', dataIndx: 'MCT_PLAN_SEQ', hidden: true},
             {title: 'WORK_USER_ID', dataType: 'string', dataIndx: 'WORK_USER_ID', hidden: true},
-            {title: 'SORT_NUM', dataType: 'integer', dataIndx: 'SORT_NUM', hidden: false},
+            {title: 'SORT_NUM', dataType: 'integer', dataIndx: 'SORT_NUM', hidden: true},
             {title: '납기', dataType: 'string', dataIndx: 'INNER_DUE_DT'},
             {title: '관리번호', width: 70, dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {title: 'Part 수량', dataType: 'string', dataIndx: 'PART_UNIT_QTY'},
@@ -270,7 +218,8 @@
             {title: '규격', dataType: 'string', dataIndx: 'STANDARD_SIZE'},
             {title: '현재위치', dataType: 'string', dataIndx: 'POP_POSITION'},
             {title: '예상', dataType: 'string', dataIndx: 'WORKING_TIME'},
-            {title: '', width: 50, dataType: 'string', dataIndx: 'DELETE_BUTTON', editable: false,
+            {
+                title: '', width: 50, dataType: 'string', dataIndx: 'DELETE_BUTTON', editable: false,
                 render: function (ui) {
                     return '<span class="ui-icon ui-icon-circle-minus" name="MCT_PLAN_DELETE_BUTTON" style="cursor: pointer"></span>'
                 },
@@ -293,7 +242,7 @@
             resizable: true,
             showTitle: false,
             numberCell: {title: 'No.'},
-            scrollModel: {autoFit: true},
+            // scrollModel: {autoFit: true},
             trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
             colModel: processPlanColModel,
@@ -305,40 +254,17 @@
                     return {data: dataJSON.data};
                 }
             },
-            dragModel:{
+            dragModel: {
                 on: true,
                 clsDnD: 'dnd1',
-                diHelper:['CONTROL_NUM']
+                diHelper: ['CONTROL_NUM']
             },
-            dropModel:{
+            dropModel: {
                 on: true,
                 accept: '.dnd1, .dnd2, .dnd3, .dnd4, .master'
             },
-            moveNode: function (event, ui) {
-
-                console.log(event);
-                console.log(ui);
-
-                //get order of OrderID.
-                var ids = this.pageData().map(function (rd) {
-                    console.log(rd);
-                    return rd.MCT_PLAN_SEQ;
-                });
-
-                let rowListConvert = [];
-
-                for (let i = 0, length = ids.length; i < length; i++) {
-                    let tempObject = {
-                        rowIndx: i,
-                        newRow: {
-                            'SORT_NUM': (i + 1)
-                        }
-                    };
-                    rowListConvert.push(tempObject);
-                }
-                $processPlanGrid1.pqGrid('updateRow', {rowList: rowListConvert, checkEditable: false});
-            },
             complete: function () {
+                this.flex();
                 let data = $processPlanGrid1.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
                 let totalPartUnitQuantity = 0;
@@ -360,14 +286,19 @@
                 $('#NC1_TOTAL_PART_UNIT_QUANTITY').html(totalPartUnitQuantity);
                 $('#NC1_TOTAL_WORKING_TIME').html(totalWorkingTime);
             },
+            moveNode: function (event, ui) {
+                changeSortNum(this, $processPlanGrid1);
+            },
             cellSave: function (evt, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {
                     $processPlanGrid1.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                 }
             },
-            change: function( event, ui ) {
+            change: function (event, ui) {
                 if (ui.source === 'addNodes' && ui.addList.length > 0) {
                     let equipId = $('#MCT_NC1_PLAN_FORM > #EQUIP_ID').val();
+
+                    changeSortNum(this, $processPlanGrid1);
 
                     //TODO: rowIndx 0
                     $processPlanGrid1.pqGrid('updateRow', {rowIndx: 0, row: {EQUIP_ID: equipId}});
@@ -375,6 +306,11 @@
 
                 if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
                     modifyPQGrid($processPlanGrid1, insertQueryList, updateQueryList, deleteQueryList);
+                    refreshTargetGrid();
+                }
+
+                if (ui.source === 'delete' || ui.source === 'deleteNodes') {
+                    changeSortNum(this, $processPlanGrid1);
                 }
             }
         };
@@ -402,11 +338,12 @@
                 clsDnD: 'dnd2',
                 diHelper: ['CONTROL_NUM']
             },
-            dropModel:{
+            dropModel: {
                 on: true,
                 accept: '.dnd1, .dnd3, .dnd4, .master',
             },
             complete: function () {
+                this.flex();
                 let data = $processPlanGrid2.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
                 let totalPartUnitQuantity = 0;
@@ -428,14 +365,19 @@
                 $('#NC2_TOTAL_PART_UNIT_QUANTITY').html(totalPartUnitQuantity);
                 $('#NC2_TOTAL_WORKING_TIME').html(totalWorkingTime);
             },
+            moveNode: function (event, ui) {
+                changeSortNum(this, $processPlanGrid2);
+            },
             cellSave: function (evt, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {
                     $processPlanGrid2.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                 }
             },
-            change: function( event, ui ) {
+            change: function (event, ui) {
                 if (ui.source === 'addNodes' && ui.addList.length > 0) {
                     let equipId = $('#MCT_NC2_PLAN_FORM > #EQUIP_ID').val();
+
+                    changeSortNum(this, $processPlanGrid1);
 
                     //TODO: rowIndx 0
                     $processPlanGrid2.pqGrid('updateRow', {rowIndx: 0, row: {EQUIP_ID: equipId}});
@@ -443,6 +385,11 @@
 
                 if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
                     modifyPQGrid($processPlanGrid2, insertQueryList, updateQueryList, deleteQueryList);
+                    refreshTargetGrid();
+                }
+
+                if (ui.source === 'delete' || ui.source === 'deleteNodes') {
+                    changeSortNum(this, $processPlanGrid1);
                 }
             }
         };
@@ -466,16 +413,17 @@
                     return {data: dataJSON.data};
                 }
             },
-            dragModel:{
+            dragModel: {
                 on: true,
                 clsDnD: 'dnd3',
-                diHelper:['CONTROL_NUM']
+                diHelper: ['CONTROL_NUM']
             },
-            dropModel:{
+            dropModel: {
                 on: true,
                 accept: '.dnd1, .dnd2, .dnd4, .master'
             },
             complete: function () {
+                this.flex();
                 let data = $processPlanGrid3.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
                 let totalPartUnitQuantity = 0;
@@ -497,14 +445,19 @@
                 $('#NC3_TOTAL_PART_UNIT_QUANTITY').html(totalPartUnitQuantity);
                 $('#NC3_TOTAL_WORKING_TIME').html(totalWorkingTime);
             },
+            moveNode: function (event, ui) {
+                changeSortNum(this, $processPlanGrid3);
+            },
             cellSave: function (evt, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {
                     $processPlanGrid3.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                 }
             },
-            change: function( event, ui ) {
+            change: function (event, ui) {
                 if (ui.source === 'addNodes' && ui.addList.length > 0) {
                     let equipId = $('#MCT_NC3_PLAN_FORM > #EQUIP_ID').val();
+
+                    changeSortNum(this, $processPlanGrid1);
 
                     //TODO: rowIndx 0
                     $processPlanGrid3.pqGrid('updateRow', {rowIndx: 0, row: {EQUIP_ID: equipId}});
@@ -512,6 +465,11 @@
 
                 if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
                     modifyPQGrid($processPlanGrid3, insertQueryList, updateQueryList, deleteQueryList);
+                    refreshTargetGrid();
+                }
+
+                if (ui.source === 'delete' || ui.source === 'deleteNodes') {
+                    changeSortNum(this, $processPlanGrid1);
                 }
             }
         };
@@ -535,16 +493,17 @@
                     return {data: dataJSON.data};
                 }
             },
-            dragModel:{
+            dragModel: {
                 on: true,
                 clsDnD: 'dnd4',
-                diHelper:['CONTROL_NUM']
+                diHelper: ['CONTROL_NUM']
             },
-            dropModel:{
+            dropModel: {
                 on: true,
                 accept: '.dnd1, .dnd2, .dnd3, .master'
             },
             complete: function () {
+                this.flex();
                 let data = $processPlanGrid4.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
                 let totalPartUnitQuantity = 0;
@@ -566,14 +525,19 @@
                 $('#NC4_TOTAL_PART_UNIT_QUANTITY').html(totalPartUnitQuantity);
                 $('#NC4_TOTAL_WORKING_TIME').html(totalWorkingTime);
             },
+            moveNode: function (event, ui) {
+                changeSortNum(this, $processPlanGrid4);
+            },
             cellSave: function (evt, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {
                     $processPlanGrid4.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                 }
             },
-            change: function( event, ui ) {
+            change: function (event, ui) {
                 if (ui.source === 'addNodes' && ui.addList.length > 0) {
                     let equipId = $('#MCT_NC4_PLAN_FORM > #EQUIP_ID').val();
+
+                    changeSortNum(this, $processPlanGrid1);
 
                     //TODO: rowIndx 0
                     $processPlanGrid4.pqGrid('updateRow', {rowIndx: 0, row: {EQUIP_ID: equipId}});
@@ -581,6 +545,11 @@
 
                 if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
                     modifyPQGrid($processPlanGrid4, insertQueryList, updateQueryList, deleteQueryList);
+                    refreshTargetGrid();
+                }
+
+                if (ui.source === 'delete' || ui.source === 'deleteNodes') {
+                    changeSortNum(this, $processPlanGrid1);
                 }
             }
         };
@@ -701,16 +670,23 @@
                     return {data: dataJSON.data};
                 }
             },
-            dragModel:{
+            dragModel: {
                 on: true,
                 clsDnD: 'master',
-                diHelper:['CONTROL_NUM'],
+                diHelper: ['CONTROL_NUM'],
                 // FIXME:
                 beforeDrop: function (evt, uiDrop) {
                     console.log(evt);
                     console.log(uiDrop);
                 }
-
+            },
+            complete: function () {
+                this.flex();
+            },
+            cellSave: function () {
+                if (ui.oldVal === undefined && ui.newVal === null) {
+                    $processTargetGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                }
             }
         };
 
@@ -739,6 +715,9 @@
             $processPlanGrid3.pqGrid('refreshDataAndView');
             $processPlanGrid4.pqGrid('refreshDataAndView');
         };
+        const refreshTargetGrid = function () {
+            $processTargetGrid.pqGrid('refreshDataAndView');
+        }
 
         const resetEquipId = function () {
             $('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_ID').val('');
@@ -775,6 +754,23 @@
             });
         };
 
+        /**
+         * @description
+         * @param {object | jQuery} grid
+         */
+        const changeSortNum = function (kk, grid) {
+            debugger;
+            let rowListConvert = [];
+            let ids = kk.pageData().map(function (rd) {
+                return rd.MCT_PLAN_SEQ;
+            });
+
+            for (let i = 0, length = ids.length; i < length; i++) {
+                let tempObject = {rowIndx: i, newRow: {'SORT_NUM': (i + 1)}};
+                rowListConvert.push(tempObject);
+            }
+            grid.pqGrid('updateRow', {rowList: rowListConvert, checkEditable: false});
+        };
         /* 함수 */
 
         /* event */
