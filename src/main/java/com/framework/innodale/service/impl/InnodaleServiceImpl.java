@@ -127,4 +127,41 @@ public class InnodaleServiceImpl implements InnodaleService {
         }
     }
 
+    /**
+     * 그리드 삽입/갱신/삭제
+     *
+     * @param map
+     * @throws Exception
+     */
+    @Override
+    public void CRUDGrid(Map<String, Object> map) throws Exception {
+        modifyGrid(map);
+
+        String jsonObject = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+
+        ArrayList<HashMap<String, Object>> deleteList = null;
+        HashMap<String, Object> queryIdList = null;
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        if (jsonMap.containsKey("deleteList"))
+            deleteList = (ArrayList<HashMap<String, Object>>) jsonMap.get("deleteList");
+
+        if (jsonMap.containsKey("queryIdList"))
+            queryIdList = (HashMap<String, Object>) jsonMap.get("queryIdList");
+
+        if (deleteList != null && deleteList.size() > 0) {
+            ArrayList<String> queryId = (ArrayList<String>) queryIdList.get("deleteQueryId");
+            for (HashMap<String, Object> hashMap : deleteList) {
+                for (int i = 0, queryCount = queryId.size(); i < queryCount; i++) {
+                    hashMap.put("queryId", queryId.get(i));
+                    this.innodaleDao.deleteGrid(hashMap);
+                }
+            }
+        }
+    }
+
 }

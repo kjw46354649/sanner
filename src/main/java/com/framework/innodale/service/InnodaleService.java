@@ -82,4 +82,11 @@ public interface InnodaleService {
          */
         public void deleteGrid(Map<String, Object> map) throws Exception;
 
+        /**
+         * 그리드 삽입/갱신/삭제
+         *
+         * @param map
+         * @throws Exception
+         */
+        void CRUDGrid(Map<String, Object> map) throws Exception;
 }
