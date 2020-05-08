@@ -8,7 +8,7 @@
     <div class="topWrap">
         <form class="form-inline" id="stock_manage_form" name="stock_manage_form" role="form">
             <input type="hidden" name="queryId" id="queryId" value="material.selectInsideStockList">
-            <div class="gubunWrap" style="height: 84px;">
+            <div class="gubunWrap" style="height: 124px;">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -65,6 +65,55 @@
                             </select>
                         </span>
                         <span class="gubun"></span>
+                    </li>
+                    <li>
+                        <div class="slt_wrap">
+                            <label class="label_100" for="SEL_SIZE_TYPE">규격</label>
+                            <select class="wd_100" class="two" name="SEL_SIZE_TYPE" id="SEL_SIZE_TYPE">
+                                <option value=""><spring:message code="com.form.top.all.option" /></option>
+                                <c:forEach var="vlocale" items="${HighCode.H_1016}">
+                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                            <span class="nbsp"></span>
+                            <select class="wd_100" class="two" name="SEL_SIZE_SEARCH_TYPE" id="SEL_SIZE_SEARCH_TYPE" style="display: none">
+                                <option value=""><spring:message code="com.form.top.all.option" /></option>
+                                <c:forEach var="vlocale" items="${HighCode.H_1056}">
+                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+
+                        </div>
+                        <span class="nbsp"> </span>
+                        <%-- 원통@, 반원R, 육각H, 가로W, 세로H, 두께T, 지름D, 길이L --%>
+                        <span id="SEL_SIZE_SEARCH_TYPE_E" style="display: none">
+                            <input type="text" class="wd_50" name="SEL_SIZE_SEARCH_TYPE_E_1" id="SEL_SIZE_SEARCH_TYPE_E_1">
+                            <span class="nbsp">*</span>
+                            <input type="text" class="wd_50" name="SEL_SIZE_SEARCH_TYPE_E_2" id="SEL_SIZE_SEARCH_TYPE_E_2">
+                            <span class="nbsp" id="SEL_SIZE_SEARCH_TYPE_E_3_SPAN">*</span>
+                            <input type="text" class="wd_50" name="SEL_SIZE_SEARCH_TYPE_E_3" id="SEL_SIZE_SEARCH_TYPE_E_3">
+                        </span>
+                        <span id="SEL_SIZE_SEARCH_TYPE_R" style="display: none">
+                            <input type="text" class="wd_50" name="SEL_SIZE_SEARCH_TYPE_R_1" id="SEL_SIZE_SEARCH_TYPE_R_1">
+                                <span class="nbsp">~</span>
+                            <input type="text" class="wd_50" name="SEL_SIZE_SEARCH_TYPE_R_2" id="SEL_SIZE_SEARCH_TYPE_R_2">
+                            <span class="nbsp">*</span>
+                            <input type="text" class="wd_50" name="SEL_SIZE_SEARCH_TYPE_R_3" id="SEL_SIZE_SEARCH_TYPE_R_3">
+                                <span class="nbsp">~</span>
+                            <input type="text" class="wd_50" name="SEL_SIZE_SEARCH_TYPE_R_4" id="SEL_SIZE_SEARCH_TYPE_R_4">
+                            <span class="nbsp" id="SEL_SIZE_SEARCH_TYPE_R_5_SPAN">*</span>
+                            <input type="text" class="wd_50" name="SEL_SIZE_SEARCH_TYPE_R_5" id="SEL_SIZE_SEARCH_TYPE_R_5">
+                                <span class="nbsp" id="SEL_SIZE_SEARCH_TYPE_R_6_SPAN">~</span>
+                            <input type="text" class="wd_50" name="SEL_SIZE_SEARCH_TYPE_R_6" id="SEL_SIZE_SEARCH_TYPE_R_6">
+                        </span>
+
+                        <%--<span class="txt_span pd-right20">조회 Option</span>
+                        <span class="chk_box"><input type="checkbox" name="DEADLINE" id="DEADLINE"><label for="DEADLINE">마감</label></span>
+                        <span class="chk_box"><input type="checkbox" name="END" id="END"><label for="END">종료</label></span>
+                        <span class="gubun"></span>
+                        <span class="txt_span pd-right20">항목 Option</span>
+                        <span class="chk_box"><input type="checkbox" name="PART_NUM" id="PART_NUM"><label for="PART_NUM">Part</label></span>
+                        <span class="chk_box"><input type="checkbox" name="ORDER_NUM" id="ORDER_NUM"><label for="ORDER_NUM">발주번호</label></span>--%>
                     </li>
                 </ul>
             </div>
@@ -201,7 +250,7 @@
         $("#stock_manage_form").find("#queryId").val("material.selectInsideStockList");
         stockManagePostData01 = fnFormToJsonArrayData('#stock_manage_form');
         stockManageColModel01 = [
-            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD_NM', minWidth: 120,
+            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD_NM', minWidth: 100,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "ORDER_COMP_CD_NM", id: "ORDER_COMP_CD" },
@@ -227,26 +276,25 @@
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
                 },
+                editable: function (ui) {return gridCellEditable(ui);},
                 validations: [
                     { type: 'minLen', value: 1, msg: "Required" }
                 ]
             },
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM',
+                editable: function (ui) { return gridCellEditable(ui);},
                 validations: [
                     { type: 'minLen', value: 1, msg: "Required" }
                 ]
             },
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM',
+                editable: function (ui) { return gridCellEditable(ui);},
                 validations: [
                     { type: 'minLen', value: 1, msg: "Required" }
                 ]
             },
-            {title: '재고번호', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', editable: false,
-                validations: [
-                    { type: 'minLen', value: 1, msg: "Required" }
-                ]
-            },
-            {title: '사업자구분', dataType: 'string', dataIndx: 'COMP_CD_NM', minWidth: 120,
+            {title: '재고번호', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', editable: false},
+            {title: '사업자구분', dataType: 'string', dataIndx: 'COMP_CD_NM', minWidth: 100,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "COMP_CD_NM", id: "COMP_CD" },
@@ -276,8 +324,8 @@
                     { type: 'minLen', value: 1, msg: "Required" }
                 ]
             },
-            {title: '규격', dataType: 'string', dataIndx: 'STOCK_SIZE_FULL', editable: true},
-            {title: '소재Type', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM',
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', editable: function (ui) { return gridCellEditable(ui);}},
+            {title: '소재Type', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM',editable: function (ui) { return gridCellEditable(ui);},
                 editor: {
                     type: 'select',
                     mapIndices: { name: "MATERIAL_DETAIL_NM", id: "MATERIAL_DETAIL" },
@@ -290,16 +338,19 @@
                         rowData["MATERIAL_DETAIL"]=clave;
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
-                }
+                },
+                validations: [
+                    { type: 'minLen', value: 1, msg: "Required" }
+                ]
             },
-            {title: '재고수량(EA)', dataType: 'integer', dataIndx: 'INSIDE_STOCK_CURR_QTY', editable: true},
+            {title: '재고수량(EA)', dataType: 'integer', dataIndx: 'INSIDE_STOCK_CURR_QTY', editable: function (ui) { return gridCellEditable(ui);}},
             {
                 title: '대칭', datatype: 'integer', align: 'center', colModel: [
                     {title: '원칭', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY', editable: true},
                     {title: '대칭', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY', editable: true}
                 ]
             },
-            {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_CD_NM',
+            {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_CD_NM', editable: true,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "WAREHOUSE_CD_NM", id: "WAREHOUSE_CD" },
@@ -312,12 +363,9 @@
                         rowData["WAREHOUSE_CD"]=clave;
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
-                },
-                validations: [
-                    { type: 'minLen', value: 1, msg: "Required" }
-                ]
+                }
             },
-            {title: '위치', dataType: 'string', dataIndx: 'LOC_SEQ_NM', minWidth: 120,
+            {title: '위치', dataType: 'string', dataIndx: 'LOC_SEQ_NM', minWidth: 120,editable: true,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "LOC_SEQ_NM", id: "LOC_SEQ" },
@@ -343,10 +391,7 @@
                         rowData["LOC_SEQ"]=clave;
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
-                },
-                validations: [
-                    { type: 'minLen', value: 1, msg: "Required" }
-                ]
+                }
             },
             {title: 'PDF', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 20, minWidth: 20, editable: false,
                 render: function (ui) {
@@ -355,19 +400,20 @@
                     return '';
                 }
             },
-            {title: '생성일시', dataType: 'string', dataIndx: 'INSERT_TIME', editable: false},
-            {title: '수정일시', dataType: 'string', dataIndx: 'UPDATE_TIME', editable: false},
+            {title: '생성일시', dataType: 'string', dataIndx: 'INSERT_TIME', width: 103, editable: false},
+            {title: '수정일시', dataType: 'string', dataIndx: 'UPDATE_TIME', width: 103, editable: false},
             {title: '입고', align: 'center', dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_IN', width: 20, minWidth: 20, editable: false,
                 render: function (ui) {
                     let rowIndx = ui.rowIndx, grid = this;
-                    if (ui.rowData['INSIDE_STOCK_NUM'] > 0) return "[입고]";
+                    console.log("ui.rowData['INSIDE_STOCK_NUM']", ui.rowData['INSIDE_STOCK_NUM']);
+                    if (ui.rowData['INSIDE_STOCK_NUM'] != "undefined") return "[입고]";
                     return '';
                 }
             },
             {title: '출고', align: 'center', dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_OUT', width: 20, minWidth: 20, editable: false,
                 render: function (ui) {
                     let rowIndx = ui.rowIndx, grid = this;
-                    if (ui.rowData['INSIDE_STOCK_NUM'] > 0) return "[출고]";
+                    if (ui.rowData['INSIDE_STOCK_NUM'] != "undefined") return "[출고]";
                     return '';
                 }
             },
@@ -420,6 +466,18 @@
             }
         });
         /**  현황관리(GRID01) 그리드 선언 끝 **/
+
+        let gridCellEditable = function(ui){
+            let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+            let INSIDE_STOCK_NUM = rowData["INSIDE_STOCK_NUM"];
+            if (INSIDE_STOCK_NUM == null || INSIDE_STOCK_NUM == "" || INSIDE_STOCK_NUM== "undefined") {
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+
         $("#stock_manage_pop").on('hide.bs.modal', function(){
             fnResetFrom("stock_manage_pop_form");
             $("#stock_manage_form").find("#queryId").val("material.selectInsideStockList");
@@ -446,9 +504,147 @@
                 }
             }, parameters, '');
         });
+        $("#stock_manage_search_btn").on('click', function () {
+            let SEL_SIZE_SEARCH_TYPE = $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE").val();
+            let SEL_SIZE_SEARCH_TYPE_E_1 = $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_E_1").val();
+            let SEL_SIZE_SEARCH_TYPE_E_2 = $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_E_2").val();
+            let SEL_SIZE_SEARCH_TYPE_E_3 = $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_E_3").val();
+            let SEL_SIZE_SEARCH_TYPE_R_1 = $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R_1").val();
+            let SEL_SIZE_SEARCH_TYPE_R_2 = $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R_2").val();
+            let SEL_SIZE_SEARCH_TYPE_R_3 = $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R_3").val();
+            let SEL_SIZE_SEARCH_TYPE_R_4 = $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R_4").val();
+            let SEL_SIZE_SEARCH_TYPE_R_5 = $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R_5").val();
+            let SEL_SIZE_SEARCH_TYPE_R_6 = $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R_6").val();
+
+            if(SEL_SIZE_SEARCH_TYPE == "1") {//Range
+                if (SEL_SIZE_SEARCH_TYPE_R_1 == "" || SEL_SIZE_SEARCH_TYPE_R_2 == "" || SEL_SIZE_SEARCH_TYPE_R_3 == ""
+                    || SEL_SIZE_SEARCH_TYPE_R_4 == "" || SEL_SIZE_SEARCH_TYPE_R_5 == "" || SEL_SIZE_SEARCH_TYPE_R_6 == "") {
+                    alert("Range 검색을 선택하셨습니다.\n구간 입력값 모두를 입력하여 주십시오.");
+                    return;
+                }
+            }else if(SEL_SIZE_SEARCH_TYPE == "2") {//Equal
+                if (SEL_SIZE_SEARCH_TYPE_E_1 == "" || SEL_SIZE_SEARCH_TYPE_E_2 == "" || SEL_SIZE_SEARCH_TYPE_E_3 == "") {
+                    alert("Equal 검색을 선택하셨습니다.\n각 입력값 모두를 입력하여 주십시오.");
+                    return;
+                }
+            }
+
+
+            stockManageGridId01.pqGrid("option", "dataModel.postData", function(ui){
+                return fnFormToJsonArrayData('#stock_manage_form');
+            } );
+            stockManageGridId01.pqGrid("refreshDataAndView");
+
+        });
 
         $('#stock_manage_add_btn').on('click', function () {
+
+            // stockManageGridId01.pqGrid('addRow', {
+            //     newRow: {  },
+            //     rowIndx: 0,
+            //     checkEditable: true
+            // });
             stockManageGridId01.pqGrid('addNodes', [{}], 0);
+
+        });
+        $("#stock_manage_delete_btn").click(function(event){
+            if(SelectedRowIndex == "" || SelectedRowIndex == null){
+                alert("삭제할 데이터를 선택해 주십시오.");
+                return;
+            }
+            let rowCnt = "";
+            let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: SelectedRowIndex});
+            let INSIDE_STOCK_NUM = rowData["INSIDE_STOCK_NUM"];
+            let deleteData = {
+                "url" : '/json-info',
+                'data' :
+                    {
+                        "queryId": 'material.selectInsideStockIn',
+                        "INSIDE_STOCK_NUM" : INSIDE_STOCK_NUM
+                    }
+            };
+            fnPostAjaxAsync(function (data, callFunctionParam) {
+                rowCnt = data.info.CNT;
+                console.log(rowCnt);
+            }, deleteData, '');
+
+            if(rowCnt > 0){
+                alert("입고 이력이 존재 합니다.\n삭제를 위해서 관리자에게 문의 하십시오.");
+                return;
+            }else{
+                if(confirm("선택한 대상의 모든 정보가 삭제됩니다.\n진행하시겠습니까?")){
+                    fnDeletePQGrid(stockManageGridId01, SelectedRowIndex, "material.deleteInsideStock");
+                    $("#stock_manage_search_btn").trigger("click");
+                }
+            }
+        });
+
+        $("#stock_manage_save_btn").click(function(event){
+
+            if(!fnGridValidation("stock_manage_grid")){
+                alert("그리드의 값이 올바르지 않습니다.");
+                return;
+            }
+            if(false){
+                //to-do 규격 validation
+            }
+            if(confirm("저장 하시겠습니까?")){
+
+                /*//step 1 java 에서 처리
+                let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: SelectedRowIndex});
+                let V_ABBR_NM = "";
+                let MATERIAL_DETAIL = rowData["MATERIAL_DETAIL"];
+                let selectData1 = {
+                    "url" : '/json-info',
+                    'data' :
+                        {
+                            "queryId": 'material.selectInsideStockAbbrNm',
+                            "MATERIAL_DETAIL" : MATERIAL_DETAIL
+                        }
+                };
+                fnPostAjaxAsync(function (data, callFunctionParam) {
+                    V_ABBR_NM = data.info.ABBR_NM;
+                }, selectData1, '');
+                if( V_ABBR_NM == null || "" == V_ABBR_NM ){
+                    alert("잘못된 접근 입니다.[V_ABBR_NM null]");
+                    return;
+                }
+
+                //step 2
+                let V_INSIDE_STOCK_NUM = "";
+                let ORDER_COMP_CD = rowData["ORDER_COMP_CD"];
+                let selectData2 = {
+                    "url" : '/json-info',
+                    'data' :
+                        {
+                            "queryId": 'material.selectInsideStockAbbrNm',
+                            "ORDER_COMP_CD" : ORDER_COMP_CD,
+                            "ABBR_NM" : V_ABBR_NM
+                        }
+                };
+                fnPostAjaxAsync(function (data, callFunctionParam) {
+                    V_INSIDE_STOCK_NUM = data.info.ABBR_NM;
+                }, selectData2, '');
+                if( V_INSIDE_STOCK_NUM == null || "" == V_INSIDE_STOCK_NUM ){
+                    alert("잘못된 접근 입니다.[V_INSIDE_STOCK_NUM null]");
+                    return;
+                }*/
+
+                //step 3 save
+                let gridInstance = stockManageGridId01.pqGrid('getInstance').grid;
+                let changes = gridInstance.getChanges({format: 'byVal'});
+console.log("change",JSON.stringify(changes));
+
+                let parameters = {
+                    'url': '/managerInsideStock',
+                    'data': {"stockGrid": JSON.stringify(changes)}
+                };
+                fnPostAjax(function (data, callFunctionParam) {
+                    alert('재고관리 정보가 저장되었습니다.');
+                    $("#stock_manage_search_btn").trigger("click");
+                }, parameters, '');
+
+            }
         });
         $('#inside_stock_pop_save_btn').on('click', function () {
             //규격 validation
@@ -470,6 +666,67 @@
             let paramData = {"url":"/json-list", "data": {"WAREHOUSE_CD": WAREHOUSE_CD, "queryId": 'material.selectWarehouseLocationList'}};
             fnCommCodeDatasourceSelectBoxCreate($("#stock_manage_pop_form").find("#LOC_SEQ"), 'all', paramData);
         });
+        $("#stock_manage_form").find("#SEL_SIZE_TYPE").change(function(){
+            resetSelSizeVal("1");
+            displaySelSize();
+        });
+        $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE").change(function(){
+            resetSelSizeVal("2");
+            displaySelSize();
+        });
+        let displaySelSize = function(type){
+            let SEL_SIZE_TYPE = $("#stock_manage_form").find("#SEL_SIZE_TYPE").val();
+            let SEL_SIZE_SEARCH_TYPE = $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE").val();
+
+            if(SEL_SIZE_TYPE == ""){
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE").hide();
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_E").hide();
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R").hide();
+            }else if(SEL_SIZE_TYPE =="MSS010"){//일반
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE").show();
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_E_3").show();
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_E_3_SPAN").show();
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R_5").show();
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R_5_SPAN").show();
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R_6").show();
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R_6_SPAN").show();
+            }else if(SEL_SIZE_TYPE =="MSS020" || SEL_SIZE_TYPE =="MSS030" || SEL_SIZE_TYPE =="MSS040"){
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE").show();
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_E_3").hide();
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_E_3_SPAN").hide();
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R_5").hide();
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R_5_SPAN").hide();
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R_6").hide();
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R_6_SPAN").hide();
+            }
+
+
+            if(SEL_SIZE_SEARCH_TYPE == ""){
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R").hide();
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_E").hide();
+            }else if(SEL_SIZE_SEARCH_TYPE == "1"){//Range
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R").show();
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_E").hide();
+            }else if(SEL_SIZE_SEARCH_TYPE == "2") {//Equal
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R").hide();
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_E").show();
+            }
+        }
+        let resetSelSizeVal = function(type){
+            if(type == "1"){
+                $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE").val("");
+            }
+            $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_E_1").val("");
+            $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_E_2").val("");
+            $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_E_3").val("");
+            $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R_1").val("");
+            $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R_2").val("");
+            $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R_3").val("");
+            $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R_4").val("");
+            $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R_5").val("");
+            $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R_6").val("");
+
+        }
 
         fnCommCodeDatasourceSelectBoxCreate($('#stock_manage_form').find('#SEL_COMP_CD'), 'all', {
             'url': '/json-list',

@@ -782,6 +782,104 @@
         <if test="SEL_LOC_SEQ !='' and SEL_LOC_SEQ != null">
             AND A.LOC_SEQ = #{SEL_LOC_SEQ}
         </if>
+        <if test="SEL_SIZE_TYPE !='' and SEL_SIZE_TYPE != null">
+            AND A.SIZE_TYPE = #{SEL_SIZE_TYPE}
+        </if>
+        <if test='SEL_SIZE_SEARCH_TYPE =="1"'>
+            <if test='SEL_SIZE_TYPE =="MSS010"'>
+                AND A.SIZE_W BETWEEN #{SEL_SIZE_SEARCH_TYPE_R_1} and #{SEL_SIZE_SEARCH_TYPE_R_2}
+                AND A.SIZE_H BETWEEN #{SEL_SIZE_SEARCH_TYPE_R_3} and #{SEL_SIZE_SEARCH_TYPE_R_4}
+                AND A.SIZE_T BETWEEN #{SEL_SIZE_SEARCH_TYPE_R_5} and #{SEL_SIZE_SEARCH_TYPE_R_6}
+            </if>
+            <if test='SEL_SIZE_TYPE =="MSS020" or SEL_SIZE_TYPE =="MSS030" or SEL_SIZE_TYPE =="MSS040"'>
+                AND A.SIZE_D BETWEEN #{SEL_SIZE_SEARCH_TYPE_R_1} and #{SEL_SIZE_SEARCH_TYPE_R_2}
+                AND A.SIZE_L BETWEEN #{SEL_SIZE_SEARCH_TYPE_R_3} and #{SEL_SIZE_SEARCH_TYPE_R_4}
+            </if>
+        </if>
+        <if test='SEL_SIZE_SEARCH_TYPE =="2"'>
+            <if test='SEL_SIZE_TYPE =="MSS010"'>
+                AND A.SIZE_W = #{SEL_SIZE_SEARCH_TYPE_E_1}
+                AND A.SIZE_H = #{SEL_SIZE_SEARCH_TYPE_E_2}
+                AND A.SIZE_T = #{SEL_SIZE_SEARCH_TYPE_E_3}
+            </if>
+            <if test='SEL_SIZE_TYPE =="MSS020" or SEL_SIZE_TYPE =="MSS030" or SEL_SIZE_TYPE =="MSS040"'>
+                AND A.SIZE_D = #{SEL_SIZE_SEARCH_TYPE_E_1}
+                AND A.SIZE_L = #{SEL_SIZE_SEARCH_TYPE_E_2}
+            </if>
+        </if>
     </select>
+    <select id="selectInsideStockIn" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT COUNT(*) AS CNT FROM jmes.TBL_INSIDE_IN WHERE INSIDE_STOCK_NUM = #{INSIDE_STOCK_NUM}
+    </select>
+    <delete id="deleteInsideStock" parameterType="java.util.HashMap">
+        DELETE FROM jmes.TBL_INSIDE_STOCK WHERE INSIDE_STOCK_NUM = #{INSIDE_STOCK_NUM}
+    </delete>
+    <select id="selectInsideStockAbbrNm" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.ABBR_NM
+        FROM TBL_CODE A, TBL_CODE B
+        WHERE A.HIGH_CD = '1035'
+        AND B.HIGH_CD = '1027'
+        AND A.CODE_CD = B.REF_CD
+        AND B.CODE_CD = #{MATERIAL_DETAIL}
+    </select>
+    <select id="selectInsideStockSeq" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT CONCAT(#{ORDER_COMP_CD},'-',#{ABBR_NM},'-',LPAD(IFNULL(CONVERT(MAX(SUBSTRING(INSIDE_STOCK_NUM,-4,4)),INT)+1,1),4,'0')) AS INSIDE_STOCK_NUM
+        FROM jmes.TBL_INSIDE_STOCK
+        WHERE INSIDE_STOCK_NUM LIKE CONCAT(#{ORDER_COMP_CD},'-',#{ABBR_NM},'-','%')
+    </select>
+    <insert id="insertInsideStock" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_INSIDE_STOCK
+        (
+            INSIDE_STOCK_NUM, ORDER_COMP_CD, DRAWING_NUM, ITEM_NM, COMP_CD,
+            MATERIAL_TYPE, MATERIAL_DETAIL,
+            SIZE_TXT,
+            SIZE_TYPE,
+            SIZE_W,
+            SIZE_H,
+            SIZE_T,
+            SIZE_D,
+            SIZE_L,
+            ORIGINAL_SIDE_QTY, OTHER_SIDE_QTY, WAREHOUSE_CD,
+            LOC_SEQ, NOTE, INSERT_ID
+        )VALUES (
+            #{INSIDE_STOCK_NUM}, #{ORDER_COMP_CD}, #{DRAWING_NUM}, #{ITEM_NM}, #{COMP_CD},
+            (SELECT REF_CD FROM jmes.TBL_CODE WHERE HIGH_CD = '1027' AND CODE_CD = #{MATERIAL_DETAIL}), #{MATERIAL_DETAIL},
+            #{SIZE_TXT},
+            SF_GET_SIZE_TXT('SIZE_TYPE', #{SIZE_TXT}),
+            SF_GET_SIZE_TXT('SIZE_W', #{SIZE_TXT}),
+            SF_GET_SIZE_TXT('SIZE_H', #{SIZE_TXT}),
+            SF_GET_SIZE_TXT('SIZE_T', #{SIZE_TXT}),
+            SF_GET_SIZE_TXT('SIZE_D', #{SIZE_TXT}),
+            SF_GET_SIZE_TXT('SIZE_L', #{SIZE_TXT}),
+            #{ORIGINAL_SIDE_QTY}, #{OTHER_SIDE_QTY}, #{WAREHOUSE_CD},
+            #{LOC_SEQ}, #{NOTE}, #{LOGIN_USER_ID}
+        )
+    </insert>
+    <update id="updateInsideStock" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_INSIDE_STOCK
+        SET COMP_CD = #{COMP_CD}
+            , ORIGINAL_SIDE_QTY = #{ORIGINAL_SIDE_QTY}
+            , OTHER_SIDE_QTY = #{OTHER_SIDE_QTY}
+            , WAREHOUSE_CD = #{WAREHOUSE_CD}
+            , LOC_SEQ = #{LOC_SEQ}
+            , NOTE = #{NOTE}
+            , UPDATE_DT = NOW()
+            , UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE INSIDE_STOCK_NUM = #{INSIDE_STOCK_NUM}
+    </update>
+    <insert id="insertInsideStockIn" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_INSIDE_IN (INSIDE_IN_SEQ, INSIDE_STOCK_NUM, IN_QTY, CONTROL_SEQ, INSERT_ID)
+        SELECT NEXTVAL(jmes.SEQ_INSIDE_IN)
+        , #{INSIDE_STOCK_NUM}
+        , #{IN_QTY}
+        , #{CONTROL_SEQ}
+        , #{LOGIN_USER_ID}
+        FROM DUAL
+        WHERE #{IN_QTY} > 0
+    </insert>
+    <insert id="insertInsideStockOut" parameterType="java.util.HashMap">
+      INSERT INTO jmes.TBL_INSIDE_OUT (INSIDE_OUT_SEQ, INSIDE_STOCK_NUM, OUT_QTY, INSERT_ID)
+      VALUES ( NEXTVAL(jmes.SEQ_INSIDE_OUT), #{INSIDE_STOCK_NUM}, #{OUT_QTY}, #{LOGIN_USER_ID} )
+    </insert>
 
 </mapper>
