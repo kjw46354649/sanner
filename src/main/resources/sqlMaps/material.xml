@@ -879,15 +879,15 @@
         INSERT INTO jmes.TBL_INSIDE_IN (INSIDE_IN_SEQ, INSIDE_STOCK_NUM, IN_QTY, CONTROL_SEQ, INSERT_ID)
         SELECT NEXTVAL(jmes.SEQ_INSIDE_IN)
         , #{INSIDE_STOCK_NUM}
-        , #{IN_QTY}
+        , #{IN_OUT_QTY}
         , #{CONTROL_SEQ}
         , #{LOGIN_USER_ID}
         FROM DUAL
-        WHERE #{IN_QTY} > 0
+        WHERE #{IN_OUT_QTY} > 0
     </insert>
     <insert id="insertInsideStockOut" parameterType="java.util.HashMap">
       INSERT INTO jmes.TBL_INSIDE_OUT (INSIDE_OUT_SEQ, INSIDE_STOCK_NUM, OUT_QTY, INSERT_ID)
-      VALUES ( NEXTVAL(jmes.SEQ_INSIDE_OUT), #{INSIDE_STOCK_NUM}, #{OUT_QTY}, #{LOGIN_USER_ID} )
+      VALUES ( NEXTVAL(jmes.SEQ_INSIDE_OUT), #{INSIDE_STOCK_NUM}, #{IN_OUT_QTY}, #{LOGIN_USER_ID} )
     </insert>
     <select id="selectInsideStockPopInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
@@ -926,6 +926,7 @@
               C.MATERIAL_DETAIL, B.ORDER_COMP_CD, C.DRAWING_NUM, C.ITEM_NM, B.COMP_CD
             , C.SIZE_TXT, C.SIZE_TYPE, C.SIZE_W, C.SIZE_H, C.SIZE_T, C.SIZE_D, C.SIZE_L
             , '0' AS POP_STOCK_QTY
+            , '' AS INSIDE_STOCK_NUM
             , (SELECT IFNULL(SUM(ORDER_QTY),0) FROM jmes.TBL_CONTROL_PART_ORDER WHERE CONTROL_SEQ = B.CONTROL_SEQ) AS POP_STOCK_QTY_AFTER
             , (SELECT IFNULL(SUM(ORDER_QTY),0) FROM jmes.TBL_CONTROL_PART_ORDER WHERE CONTROL_SEQ = B.CONTROL_SEQ) AS ORDER_QTY
             , A.CONTROL_SEQ
