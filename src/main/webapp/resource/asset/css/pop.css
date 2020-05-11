@@ -15,6 +15,8 @@
     display: inline-block;
     vertical-align: center;
     color: #ff0000;
+    float: right;
+    padding-right: 20px;
 }
 
 .rowCodeTxt {

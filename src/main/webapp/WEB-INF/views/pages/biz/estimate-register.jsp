@@ -49,17 +49,16 @@
 <div class="page estimate">
     <div class="topWrap">
     </div>
-    <div class="bottomWrap">
+    <div class="bottomWrap full_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
                 <div class="right_sort">
-                    <button type="button" class="defaultBtn btn-120w" id="btn_estimate_register_save">저장</button>
-                    <button type="button" class="defaultBtn btn-120w yellow" id="btn_estimate_register_submit">제출</button>
+                    <button type="button" class="defaultBtn radius green" id="btn_estimate_register_save">저장</button>
+                    <button type="button" class="defaultBtn radius blue" id="btn_estimate_register_submit">제출</button>
                 </div>
             </div>
             <%--<span class="chk_box mg-left15"><input id="chkEstimateRegisterDetail" type="checkbox"><label for="chkEstimateRegisterDetail"> 견적상세요건</label></span>--%>
         </div>
-        <br>
         <form class="form-inline" id="estimate_register_info_form" name="estimate_register_info_form" role="form">
             <input type="hidden" id="queryId" name="queryId" value="">
             <input type="hidden" id="EST_SEQ" name="EST_SEQ" value="">
@@ -108,7 +107,6 @@
                 </ul>
             </div>
         </form>
-        <br><br>
         <div class="tableWrap">
             <div class="buttonWrap">
                 <div class="d-inline">
@@ -127,8 +125,8 @@
                         </select>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawAdd">도면 등록</button>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawView">도면 보기</button>
-                        <button type="button" class="defaultBtn" id="btnEstimateRegisterAdd">추가</button>
-                        <button type="button" class="defaultBtn" id="btnEstimateRegisterDelete">삭제</button>
+                        <button type="button" class="defaultBtn radius" id="btnEstimateRegisterAdd">추가</button>
+                        <button type="button" class="defaultBtn radius red" id="btnEstimateRegisterDelete">삭제</button>
                     </span>
                 </div>
             </div>
@@ -139,17 +137,30 @@
             <div class="conWrap">
                 <div class="popup">
                     <div class="resultWrap">
-                        <div class="left_sort">
-                            <div class="col-md-6 col-sm-6">
-                                <h3>메일내용</h3><textarea class="col-md-12 col-sm-12" id="EMAIL_CONTENT" name="EMAIL_CONTENT" style="height: 320px;"></textarea>
+                        <div class="float_left col-md-5 col-sm-5" style="width: 46% !important;">
+                            <div class="">
+                                <h3>메일내용</h3><textarea class="col-md-12 col-sm-12" id="EMAIL_CONTENT" name="EMAIL_CONTENT" style="height: 300px;"></textarea>
                             </div>
-                            <div class="right_sort">
-                                <h3 style="text-align: left;">메일수신처</h3>
-                                <div class="conMainWrap">
-                                    <div id="estimate_register_bot_grid"></div>
-                                </div>
-                                <br>
-                                <h3 style="text-align: left;">첨부파일</h3>
+                        </div>
+                        <div class="float_right col-md-6 col-sm-6">
+                            <h3 style="text-align: left;">메일수신처</h3>
+                            <div class="conMainWrap">
+                                <div id="estimate_register_bot_grid"></div>
+                            </div>
+                            <br>
+                            <h3 style="text-align: left;">첨부파일</h3>
+                            <div class="fileTableWrap">
+                                <table class="colStyle" id="attachDragAndDrop">
+                                    <caption></caption>
+                                    <thead>
+                                    <tr>
+                                        <th scope="col" class="fileName txt">파일명</th>
+                                        <th scope="col" class="etcInfo">용량</th>
+                                        <th scope="col" class="etcInfo"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="files"></tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -166,8 +177,10 @@
 </form>
 <form id="estimate_register_excel_download" method="POST">
     <input type="hidden" id="sqlId" name="sqlId" value="selectEstimateDetailListExcel"/>
+    <input type="hidden" id="mapInputId" name="mapInputId" value="data"/>
     <input type="hidden" id="paramName" name="paramName" value="EST_SEQ"/>
     <input type="hidden" id="paramData" name="paramData" value=""/>
+    <input type="hidden" id="template" name="template" value="estimate_list_template"/>
 </form>
 <script type="text/javascript">
     $(function () {
@@ -500,6 +513,14 @@
             }, parameter, '');
         };
 
+        function getCadUploadBlankHtml(){
+            return'<tr><td colspan="3" class="spanArea" >마우스로 파일을 Drag & Drop 하세요.</td></tr><tr><td colspan="3"></td></tr><tr><td colspan="3"></td></tr>';
+        }
+
+        let fileHtml = getCadUploadBlankHtml();
+        $('#attachDragAndDrop > tbody').html('');
+        $('#attachDragAndDrop > tbody').append(fileHtml).trigger('create');
+
         $(document).on('click', '#test', function(){
             estimateRegisterReloadPageData();
         });
@@ -538,7 +559,7 @@
         });
 
         $("#btnEstimateRegisterEstimateListExcel").on('click', function(){
-            fnReportFormToHiddenFormPageAction("packing_history_list_search_form", "/downloadExcel");
+            fnReportFormToHiddenFormPageAction("estimate_register_excel_download", "/downloadExcel");
         });
 
         $("#chkEstimateRegisterDetail").on('click', function(){
