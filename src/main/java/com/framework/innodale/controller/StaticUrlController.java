@@ -29,9 +29,14 @@ public class StaticUrlController {
     @Autowired
     ServletContext context;
 
-    @RequestMapping(value = "/imageviewer")
+    @RequestMapping(value = "/imageViewer")
     public String imageViewerController(Model model, HttpServletRequest request, HttpServletResponse response)  throws Exception{
         return "/common/image_viewer";
+    }
+
+    @RequestMapping(value = "/drawingPrint")
+    public String drawingPrintController(Model model, HttpServletRequest request, HttpServletResponse response)  throws Exception{
+        return "/common/drawing_print";
     }
 
     @RequestMapping(value = "/static/{pathName}/{fileName}")

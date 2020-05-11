@@ -74,7 +74,7 @@
         </form>
         <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
-    <div class="bottomWrap">
+    <div class="bottomWrap row1_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
                 <button type="button" class="defaultBtn btn-120w" id="btnEstimateListNewEstimate">견적서 신규 작성</button>
@@ -101,7 +101,7 @@
             <div class="conMainWrap">
                 <div id="estimate_master_top_grid" class="jqx-refresh"></div><br/>
             </div>
-            <div class="conWrap">
+            <div class="conWrap" style="height:412px;">
                 <div id="estimate_master_bot_grid" class="jqx-refresh"></div>
             </div>
         </div>
@@ -130,7 +130,6 @@
     let estimateMasterBotGrid = $("#estimate_master_bot_grid");
 
     $(function () {
-
         let estimateMasterTopColModel= [
             //{title: 'No.', dataType: 'string', dataIndx: 'EST_SEQ'},
             {title: 'Status', dataType: 'string', dataIndx: 'EST_STATUS_NM', editable: false, width: 80},
@@ -577,6 +576,16 @@
         fnCommCodeDatasourceSelectBoxCreate($("#estimate_master_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
         fnCommCodeDatasourceSelectBoxCreate($("#estimate_master_search_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
 
+        /** topWrap Open/ Close 처리 **/
+        $('.topWrap_btn').on('click' , function(){
+            if($(this).hasClass('on')){
+                topMenuClose();
+                $(this).removeClass('on');
+            }else{
+                topMenuOpen();
+                $(this).addClass('on');
+            }
+        });
     });
 
     /** 그리드 버튼 처리 **/
@@ -635,5 +644,31 @@
         }
     });
 
+
+    // topWrap 확장 함수
+    function topMenuOpen(){
+        var top = $('#view_tab_100011 .gubunWrap');
+        var bottom = $('#view_tab_100011 .bottomWrap');
+        var con = $('#view_tab_100011 .bottomWrap .tableWrap .conWrap');
+
+        top.stop().animate({height:'122px'},300, 'easeOutCubic');
+        bottom.stop().animate({height:'766px'},300, 'easeOutCubic');
+        con.css({height:'341px'});
+
+        estimateMasterBotGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
+    }
+
+    // topWrap 축소 함수
+    function topMenuClose(){
+        var top = $('#view_tab_100011 .gubunWrap');
+        var bottom = $('#view_tab_100011 .bottomWrap');
+        var con = $('#view_tab_100011 .bottomWrap .tableWrap .conWrap');
+
+        top.stop().animate({height:'47px'},300, 'easeOutCubic');
+        bottom.stop().animate({height:'841px'},300, 'easeOutCubic');
+        con.css({height:'416px'});
+
+        estimateMasterBotGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
+    }
 
 </script>

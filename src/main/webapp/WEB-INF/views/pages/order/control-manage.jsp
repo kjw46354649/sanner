@@ -1755,7 +1755,7 @@
         });
         // 도면출력
         $('#DRAWING_PRINT').on('click', function () {
-            alert('개발중입니다.');
+            callWindowModalDrawingPopup();
         });
         /* event */
 
@@ -1775,6 +1775,7 @@
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
+
         $orderManagementGrid = $('#' + gridId).pqGrid(obj);
         /* init */
 
@@ -1787,8 +1788,6 @@
         $drawingChangeRegistration.click(function () {
             setEstiMatePopup('control', 'orderMapper.manageControlCadFiles');
         });
-
-
 
         /* 도면 등록 팝업 호출 */
         $drawingView.click(function () {

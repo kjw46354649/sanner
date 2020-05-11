@@ -648,19 +648,30 @@
 
         // 팝업창 열려 있는지 확인
         if(typeof(windowImageViewer)=='undefined' || windowImageViewer.closed) {
-            windowImageViewer = window.open("/imageviewer", "jmesImageViewChildForm", "width=1024, height=768, resizable = no, scrollbars = no");
+            windowImageViewer = window.open("/imageViewer", "jmesImageViewChildForm", "width=1024, height=768, resizable = no, scrollbars = no");
             windowImageViewer.onload = function(){
-                console.log($(windowImageViewer.window.document).find("#image_seq").val(imageSeq));
                 $(windowImageViewer.window.document).find("#image_seq").val(imageSeq);
                 windowImageViewer.onImageViewStart();
             }
             return;
         }else {
             windowImageViewer.focus();
-            console.log($(windowImageViewer.window.document).find("#image_seq").val(imageSeq));
             $(windowImageViewer.window.document).find("#image_seq").val(imageSeq);
             windowImageViewer.onImageViewStart();
         }
+    }
+
+    /* 모달 Print 팝업 호출 */
+    function callWindowModalDrawingPopup(controlSeqMap){
+        let dhxWindow = new dhx.Window({width: 440, height: 520, title: "drawingPrint"});
+        dhxWindow.attachHTML("/drawingPrint");
+        dhxWindow.show();
+
+        // var dhxWindow = new dhx.Window({width: 440, height: 520, title: "Window"});
+        // var html = "<h3>dhtmlxWindow</h3><p>Here is a neat and flexible window system with fast initialization, convenient modes, and easy customization.</p><p>Inspect all the samples to discover each and every feature.</p><img style='display: block; width: 200px; height: 200px; margin-top: 20px; margin-left: auto; margin-right: auto' src='../common/developer.svg'>";
+        //
+        // dhxWindow.attachHTML(html);
+        // dhxWindow.show();
     }
 
     Date.prototype.yyyymmdd = function() {
@@ -683,5 +694,31 @@
 
         return year + '-' + month + '-' + date + ' ' + hour + ':' + minute;
     }
+    let fnGridValidation = function(targetGrid){
+        var gridInstance = $("#" + targetGrid).pqGrid('getInstance').grid;
+        var addList = gridInstance.getChanges().addList;
+        var errCnt = 0;
+        for (var i = 0; i < addList.length; i++) {
+            var rowData = addList[i];
+            var isValid = gridInstance.isValid({ "rowData": rowData }).valid;
+            if (!isValid) {
+                errCnt++;
+            }
+        }
 
-</script>
+        var updateList = gridInstance.getChanges().updateList;
+        for (var i = 0; i < updateList.length; i++) {
+            var rowData = updateList[i];
+            var isValid = gridInstance.isValid({ "rowData": rowData }).valid;
+            if (!isValid) {
+                errCnt++;
+            }
+        }
+
+        if(errCnt >0){
+            return false;
+        }else{
+            return true;
+        }
+
+    }</script>
