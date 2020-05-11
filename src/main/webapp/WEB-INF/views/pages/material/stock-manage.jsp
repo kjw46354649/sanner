@@ -8,11 +8,9 @@
     <div class="topWrap">
         <form class="form-inline" id="stock_manage_form" name="stock_manage_form" role="form">
             <input type="hidden" name="queryId" id="queryId" value="material.selectInsideStockList">
-            <div class="gubunWrap row3_topWrap">
             <input type="hidden" name="popType" id="popType" value="">
             <input type="hidden" name="V_INSIDE_STOCK_NUM" id="V_INSIDE_STOCK_NUM" value="">
-
-            <div class="gubunWrap" style="height: 124px;">
+            <div class="gubunWrap row3_topWrap" >
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -446,7 +444,7 @@
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true}
         ];
         stockManageGridId01.pqGrid({
-            width: "100%", height: 600,
+            width: "100%", height: 700,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'INSIDE_STOCK_NUM',
                 url: "/paramQueryGridSelect",
