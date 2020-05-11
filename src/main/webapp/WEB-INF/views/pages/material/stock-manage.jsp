@@ -834,7 +834,7 @@ console.log("change",JSON.stringify(changes));
             $("#stock_manage_form").find("#SEL_SIZE_SEARCH_TYPE_R_6").val("");
 
         }
-
+// sdfsd
         fnCommCodeDatasourceSelectBoxCreate($('#stock_manage_form').find('#SEL_COMP_CD'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getBusinessCompanyList'}
