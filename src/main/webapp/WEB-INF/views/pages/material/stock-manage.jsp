@@ -8,6 +8,7 @@
     <div class="topWrap">
         <form class="form-inline" id="stock_manage_form" name="stock_manage_form" role="form">
             <input type="hidden" name="queryId" id="queryId" value="material.selectInsideStockList">
+            <div class="gubunWrap row3_topWrap">
             <input type="hidden" name="popType" id="popType" value="">
             <input type="hidden" name="V_INSIDE_STOCK_NUM" id="V_INSIDE_STOCK_NUM" value="">
 
@@ -124,14 +125,16 @@
     </div>
     <div class="bottomWrap">
         <div class="hWrap">
-            <button type="button" class="defaultBtn btn-120w" id="stock_manage_add_btn">Add</button>
-            <button type="button" class="defaultBtn btn-120w" id="stock_manage_delete_btn">delete</button>
-            <button type="button" class="defaultBtn btn-120w" id="stock_manage_area_info_btn">위치정보관리</button>
-            <button type="button" class="defaultBtn btn-120w" id="stock_manage_new_btn">입고</button>
-            <div class="rightSpan">
-                <button type="button" class="defaultBtn btn-120w" id="stock_manage_drawing_new_btn">도면 등록</button>
-                <button type="button" class="defaultBtn btn-120w" id="stock_manage_drawing_view_btn">도면 View</button>
-                <button type="button" class="defaultBtn btn-120w green" id="stock_manage_save_btn">저장</button>
+            <div class="d-inline">
+                <button type="button" class="defaultBtn" id="stock_manage_new_btn">재고 입고</button>
+                <button type="button" class="defaultBtn" id="stock_manage_area_info_btn">위치정보관리</button>
+                <div class="rightSpan">
+                    <button type="button" class="defaultBtn radius" id="stock_manage_drawing_new_btn">도면 등록</button>
+                    <button type="button" class="defaultBtn radius" id="stock_manage_drawing_view_btn">도면 View</button>
+                    <button type="button" class="defaultBtn radius" id="stock_manage_add_btn">추가</button>
+                    <button type="button" class="defaultBtn radius red" id="stock_manage_delete_btn">삭제</button>
+                    <button type="button" class="defaultBtn radius green" id="stock_manage_save_btn">저장</button>
+                </div>
             </div>
         </div>
         <div class="tableWrap" style="padding: 10px 0;">

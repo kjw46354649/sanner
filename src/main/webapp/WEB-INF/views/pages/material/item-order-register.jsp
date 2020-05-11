@@ -39,6 +39,9 @@
                                             <div class="col-md-12 col-sm-12">
                                                 <div class="gridWrap">
                                                     <div id="item_order_register_popup_top_grid" class="jqx-refresh"></div>
+                                                    <div class="right_sort">
+                                                        전체 조회 건수 (Total : <span id="item_order_register_popup_top_grid_records" style="color: #00b3ee">0</span>)
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -46,6 +49,9 @@
                                             <div class="col-md-12 col-sm-12">
                                                 <div class="gridWrap">
                                                     <div id="item_order_register_popup_bot_grid" class="jqx-refresh"></div>
+                                                    <div class="right_sort">
+                                                        전체 조회 건수 (Total : <span id="item_order_register_popup_bot_grid_records" style="color: #00b3ee">0</span>)
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -96,7 +102,7 @@
                         <span class="ipu_wrap"><label class="label_100" for="MATERIAL_DETAIL">소재종류</label><input type="text" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200" value="" title="소재주문업체"></span>
                     </li>
                     <li class="">
-                        <span class="txt_span pd-right20">Option</span>
+                        <span class="txt_span pd-right20"><label class="label_100" for="MODULE_NM">기간 조회</label></span>
                         <span class="chk_box"><input id="pr_ex1" type="checkbox"><label for="pr_ex1"> 발송완료</label></span>
                         <span class="chk_box"><input id="pr_ex2" type="checkbox"><label for="pr_ex2"> 최신차수</label></span>
                         <span class="gubun"></span>
@@ -130,7 +136,6 @@
                 </ul>
             </div>
         </form>
-        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
     <div class="bottomWrap row3_bottomWrap">
         <div class="tableWrap">
@@ -138,8 +143,8 @@
                 <div class="left_60Wrap">
                     <div class="buttonWrap">
                         <span class="d-inline">
-                            <button type="button" class="defaultBtn btn-120w" id="btnItemOrderRegisterOrder">소재주문</button>
-                            <button type="button" class="defaultBtn btn-120w" id="btnItemOrderRegisterCancel">주문취소</button>
+                            <button type="button" class="defaultBtn " id="btnItemOrderRegisterOrder">소재주문</button>
+                            <button type="button" class="defaultBtn radius red" id="btnItemOrderRegisterCancel">주문취소</button>
                             <button type="button" class="defaultBtn btn-120w" id="btnItemOrderRegisterCurrentStock">보유소재 전체현황</button>
                             <span class="chk_box"><input id="chkItemOrderRegisterAutoMatching" type="checkbox"/><label for="chkItemOrderRegisterAutoMatching">보유소개 자동매칭</label></span>
                             <span class="slt_wrap namePlusSlt right_float">
@@ -150,6 +155,9 @@
                     </div>
                     <div class="conMainWrap">
                         <div id="item_order_register_left_grid" class="jqx-refresh"></div>
+                        <div class="right_sort">
+                            전체 조회 건수 (Total : <span id="item_order_register_left_grid_records" style="color: #00b3ee">0</span>)
+                        </div>
                     </div>
                 </div>
                 <div class="right_30Wrap">
@@ -186,6 +194,9 @@
                     </div>
                     <div class="conMainWrap">
                         <div id="item_order_register_right_grid" class="jqx-refresh"></div>
+                        <div class="right_sort">
+                            전체 조회 건수 (Total : <span id="item_order_register_right_grid_records" style="color: #00b3ee">0</span>)
+                        </div>
                     </div>
                 </div>
             </div>
@@ -699,6 +710,10 @@
                 autoMerge(this, true);
             },
             complete: function(event, ui) {
+                this.flex();
+                let data = itemOrderRegisterLeftGrid.pqGrid('option', 'dataModel.data');
+
+                $('#item_order_register_left_grid_records').html(data.length);
             },
             selectChange: function (event, ui) {
                 if (ui.selection.iCells.ranges[0] !== undefined) {
@@ -767,6 +782,12 @@
                 showTitle: false,
                 title: false,
                 strNoRows: g_noData,
+                complete: function(event, ui) {
+                    this.flex();
+                    let data = itemOrderRegisterRightGrid.pqGrid('option', 'dataModel.data');
+
+                    $('#item_order_register_right_grid_records').html(data.length);
+                },
                 cellSave: function (evt, ui) {
                     if (ui.oldVal === undefined && ui.newVal === null) {
                         itemOrderRegisterRightGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
@@ -805,6 +826,12 @@
                 trackModel: {on: true},
                 colModel: itemOrderRegisterPopTopColModel,
                 showTitle: false,
+                complete: function (event, ui) {
+                    this.flex();
+                    let data = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data');
+
+                    $('#item_order_register_popup_top_grid_records').html(data.length);
+                },
                 cellSave: function (evt, ui) {
                     if (ui.oldVal === undefined && ui.newVal === null) {
                         itemOrderRegisterPopTopGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
@@ -831,6 +858,12 @@
                 resizable: false,
                 colModel: itemOrderRegisterPopBotColModel,
                 showTitle: false,
+                complete: function (event, ui) {
+                    this.flex();
+                    let data = itemOrderRegisterPopBotGrid.pqGrid('option', 'dataModel.data');
+
+                    $('#item_order_register_popup_bot_grid_records').html(data.length);
+                }
             });
 
             let parameters = {'url': '/json-list', 'data': {'queryId': 'selectItemOrderRegisterNextMaterialOrderNum'}};

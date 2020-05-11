@@ -16,7 +16,7 @@
     <div class="topWrap">
         <form class="form-inline" id="CLOSE_HISTORY_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="selectCloseHistoryList">
-            <div class="gubunWrap">
+            <div class="basicWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -115,7 +115,6 @@
                 </ul>
             </div>
         </form>
-        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
     <div class="bottomWrap">
         <div class="hWrap">
@@ -377,7 +376,7 @@
             {title: '등록/업데이트<br>일시', minWidth: 100, dataType: 'string', dataIndx: 'STATUS_DT', colModel: []}
         ];
         const obj = {
-            height: '95%',
+            height: 658,
             collapsible: false,
             resizable: true,
             showTitle: false,

@@ -53,6 +53,11 @@
         <div class="hWrap">
             <div class="d-inline">
                 <div class="right_sort">
+<%--                    <label for="selEstimateListExcel">견적서 추출</label>--%>
+                    <button type="button" class="defaultBtn" id="btnEstimateRegisterEstimateListExcel">견적서 출력</button>
+<%--                    <select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출"></select>--%>
+                    <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawAdd">도면 등록</button>
+                    <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawView">도면 보기</button>
                     <button type="button" class="defaultBtn radius green" id="btn_estimate_register_save">저장</button>
                     <button type="button" class="defaultBtn radius blue" id="btn_estimate_register_submit">제출</button>
                 </div>
@@ -66,42 +71,43 @@
                 <ul>
                     <li>
                         <span class="slt_wrap">
-                            <label for="ORDER_COMP_CD" class="label_100">발주사</label>
+                            <label for="ORDER_COMP_CD" class="label_65">발주사</label>
                             <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사" class="wd_200">
                             </select>
                         </span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label for="EST_TITLE" class="label_100">제목</label><input type="text" name="EST_TITLE" id="EST_TITLE" class="wd_500" value="" title="제목"></span>
+                        <span class="ipu_wrap"><label for="EST_TITLE" class="label_65">제목</label>
+<%--                            <input type="text" name="EST_TITLE" id="EST_TITLE" class="wd_542" value="" title="제목">--%>
+                            <input type="text" name="EST_TITLE" id="EST_TITLE" class="wd_200" value="" title="제목">
+                        </span>
                         <span class="gubun"></span>
-                    </li>
-                    <li>
                         <span class="slt_wrap">
-                            <label for="ORDER_STAFF_SEQ" class="label_100">구매 담당자 </label>
+                            <label for="ORDER_STAFF_SEQ" class="label_65">구매 담당자 </label>
                             <select id="ORDER_STAFF_SEQ" name="ORDER_STAFF_SEQ" title="구매 담당자" class="wd_200">
                             </select>
                         </span>
                         <span class="slt_wrap">
                         <span class="gubun"></span>
-                            <label for="COMP_CD" class="label_100">사업자</label>
+                            <label for="COMP_CD" class="label_65">사업자</label>
                             <select id="COMP_CD" name="COMP_CD" title="사업자" class="wd_200">
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label for="EST_USER_ID" class="label_100">견적 담당자</label>
+                            <label for="EST_USER_ID" class="label_65">견적 담당자</label>
                             <select id="EST_USER_ID" name="EST_USER_ID" title="견적 담당자" class="wd_200">
                             </select>
                         </span>
                         <span class="gubun"></span>
                     </li>
                     <li>
-                        <span class="ipu_wrap"><label for="EST_NUM" class="label_100">견적번호 (차수)</label><input type="text" name="EST_NUM" id="EST_NUM" class="wd_200" value="" title="견적번호 (차수)" readonly></span>
+                        <span class="ipu_wrap"><label for="EST_NUM" class="label_65">견적번호</label><input type="text" name="EST_NUM" id="EST_NUM" class="wd_200" value="" title="견적번호 (차수)" readonly></span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label for="DTL_AMOUNT" class="label_100">견적금액 계</label><input type="text" name="DTL_AMOUNT" id="DTL_AMOUNT" class="wd_200" value="" title="견적금액 계" readonly></span>
+                        <span class="ipu_wrap"><label for="DTL_AMOUNT" class="label_65">견적금액</label><input type="text" name="DTL_AMOUNT" id="DTL_AMOUNT" class="wd_200" value="" title="견적금액 계" readonly></span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label for="INSERT_DT" class="label_100">업데이트 일시</label><input type="text" name="INSERT_DT" id="INSERT_DT" class="wd_200" value="" title="업데이트 일시" readonly></span>
+                        <span class="ipu_wrap"><label for="INSERT_DT" class="label_65">수정일시</label><input type="text" name="INSERT_DT" id="INSERT_DT" class="wd_200" value="" title="업데이트 일시" readonly></span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label for="SEND_DT" class="label_100">회신일시</label><input type="text" name="SEND_DT" id="SEND_DT" class="wd_200" value="" title="회신일시" readonly></span>
+                        <span class="ipu_wrap"><label for="SEND_DT" class="label_65">회신일시</label><input type="text" name="SEND_DT" id="SEND_DT" class="wd_200" value="" title="회신일시" readonly></span>
                         <span class="gubun"></span>
                     </li>
                 </ul>
@@ -119,12 +125,6 @@
                             <option>10%</option>
                             <option>20%</option>
                         </select>
-                        <label for="selEstimateListExcel">견적서 추출</label>
-                        <button type="button" class="defaultBtn" id="btnEstimateRegisterEstimateListExcel">견적List 출력</button>
-                        <select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출">
-                        </select>
-                        <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawAdd">도면 등록</button>
-                        <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawView">도면 보기</button>
                         <button type="button" class="defaultBtn radius" id="btnEstimateRegisterAdd">추가</button>
                         <button type="button" class="defaultBtn radius red" id="btnEstimateRegisterDelete">삭제</button>
                     </span>
@@ -132,6 +132,9 @@
             </div>
             <div class="conMainWrap">
                 <div id="estimate_register_top_grid" class="jqx-refresh"></div>
+                <div class="right_sort">
+                    전체 조회 건수 (Total : <span id="estimate_register_top_grid_records" style="color: #00b3ee">0</span>)
+                </div>
             </div>
             <br>
             <div class="conWrap">
@@ -145,9 +148,11 @@
                         <div class="float_right col-md-6 col-sm-6">
                             <h3 style="text-align: left;">메일수신처</h3>
                             <div class="conMainWrap">
-                                <div id="estimate_register_bot_grid" role="grid" dir="ltr" class="pq-grid pq-theme ui-widget ui-widget-content ui-corner-all pq-disable-select ui-resizable" style="width: auto; height: 100px;"><div class="pq-grid-top ui-widget-header  ui-corner-top"><div class="pq-grid-title ui-corner-top" style="display: none;"></div><div class="pq-slider-icon pq-no-capture"></div></div><div class="pq-grid-center-o"><div class="pq-tool-panel" style="display: none; height: 1px;"></div><div class="pq-grid-center" style="height: 98px;"><div class="pq-header-outer ui-widget-header" style="width: 881px; height: 29px;"><div class="pq-grid-cont"><div class="pq-cont-inner pq-cont-right"><div class="pq-table-right pq-table pq-grid-header-table" style="height: 28px; width: 871px;"><div class="pq-grid-row pq-grid-title-row" role="row" id="pq-head-row-u3-0-right" style="top:0px;height:28px;width:100%;"><div role="gridcell" id="pq-head-cell-u3-0-1-right" pq-row-indx="0" pq-col-indx="1" class="pq-grid-col  pq-grid-col-leaf" style="left: 30px; width: 280px; height: 28px;"><div class="pq-td-div"><span class="pq-title-span">성함</span><span class="pq-col-sort-icon"></span><span class="pq-col-sort-count"></span></div></div><div role="gridcell" id="pq-head-cell-u3-0-2-right" pq-row-indx="0" pq-col-indx="2" class="pq-grid-col  pq-grid-col-leaf" style="left: 310px; width: 280px; height: 28px;"><div class="pq-td-div"><span class="pq-title-span">메일주소</span><span class="pq-col-sort-icon"></span><span class="pq-col-sort-count"></span></div></div><div role="gridcell" id="pq-head-cell-u3-0-3-right" pq-row-indx="0" pq-col-indx="3" class="pq-grid-col  pq-grid-col-leaf" style="left: 590px; width: 281px; height: 28px;"><div class="pq-td-div"><span class="pq-title-span">전화번호</span><span class="pq-col-sort-icon"></span><span class="pq-col-sort-count"></span></div></div></div></div><div class="pq-r-spacer" style="position: absolute; top: 0px; height: 10px; width: 10px; left: 871px;"></div><div id="pq-resize-div-3-1" pq-col-indx="1" style="left:305px;" class="pq-grid-col-resize-handle pq-resize-div-3">&nbsp;</div><div id="pq-resize-div-3-2" pq-col-indx="2" style="left:585px;" class="pq-grid-col-resize-handle pq-resize-div-3">&nbsp;</div><div id="pq-resize-div-3-3" pq-col-indx="3" style="left:866px;" class="pq-grid-col-resize-handle pq-resize-div-3">&nbsp;</div></div><div class="pq-cont-inner pq-cont-left" style="width: 30px; height: 28px;"><div class="pq-table-left pq-table pq-grid-header-table" style="height: 28px;"><div class="pq-grid-row pq-grid-title-row" role="row" id="pq-head-row-u3-0-left" style="top:0px;height:28px;width:100%;"><div id="pq-head-cell-u3-0--1-left" style="width:30px;height:28px;" role="gridcell" class="pq-grid-number-cell ">No</div></div></div><div id="pq-resize-div-3--1" pq-col-indx="-1" style="left:25px;" class="pq-grid-col-resize-handle pq-resize-div-3">&nbsp;</div></div><div class="pq-cont-inner pq-cont-tr"><div class="pq-table-tr pq-table pq-grid-header-table" style="width: 871px;"></div></div><div class="pq-cont-inner pq-cont-lt"><div class="pq-table-lt pq-table pq-grid-header-table"></div></div></div></div><div class="pq-body-outer" tabindex="0" style="height: 70px;"><div class="pq-grid-cont"><div class="pq-grid-norows"><div style="font-size:18px;margin-top:20px;">No Data</div></div><div class="pq-cont-inner pq-cont-right" style="overflow: hidden scroll;"><div class="pq-table-right pq-table pq-td-border-top pq-td-border-right" style="height: 1px; width: 871px;"></div></div><div class="pq-cont-inner pq-cont-left" style="width: 30px; height: 70px;"><div class="pq-table-left pq-table pq-td-border-top pq-td-border-right" style="height: 1px;"></div></div><div class="pq-cont-inner pq-cont-tr" style="display: none; width: 871px; height: 0px;"><div class="pq-table-tr pq-table pq-td-border-top pq-td-border-right" style="width: 871px;"></div></div><div class="pq-cont-inner pq-cont-lt" style="display: none; width: 30px; height: 0px;"><div class="pq-table-lt pq-table pq-td-border-top pq-td-border-right"></div></div></div></div><div class="pq-summary-outer" style="height: 1px; width: 881px;"><div class="pq-grid-cont"><div class="pq-cont-inner pq-cont-right"><div class="pq-table-right pq-table pq-grid-summary-table pq-td-border-top pq-td-border-right" style="height: 1px; width: 871px;"></div><div class="pq-r-spacer" style="position: absolute; top: 0px; height: 10px; left: 871px; width: 10px;"></div></div><div class="pq-cont-inner pq-cont-left" style="width: 30px; height: 0px;"><div class="pq-table-left pq-table pq-grid-summary-table pq-td-border-top pq-td-border-right" style="height: 1px;"></div></div><div class="pq-cont-inner pq-cont-tr"><div class="pq-table-tr pq-table pq-grid-summary-table pq-td-border-top pq-td-border-right" style="width: 871px;"></div></div><div class="pq-cont-inner pq-cont-lt"><div class="pq-table-lt pq-table pq-grid-summary-table pq-td-border-top pq-td-border-right"></div></div></div></div></div><div style="clear:both;"></div></div><div class="pq-grid-bottom ui-widget-header  ui-corner-bottom"><div class="pq-grid-footer"></div></div><div class="pq-loading" style="display: none;"><div class="pq-loading-bg" style="opacity: 0.2;"></div><div class="pq-loading-mask ui-state-highlight"><div>Loading...</div></div></div><div class="ui-resizable-handle ui-resizable-s" style="z-index: 90;"></div><div class="pq-arrow-down ui-icon ui-icon-circle-arrow-s glyphicon glyphicon-circle-arrow-down" style="display: none;"></div><div class="pq-arrow-up ui-icon ui-icon-circle-arrow-n glyphicon glyphicon-circle-arrow-up" style="display: none;"></div></div>
+                                <div id="estimate_register_bot_grid"></div>
+                                <div class="right_sort">
+                                    전체 조회 건수 (Total : <span id="estimate_register_bot_grid_records" style="color: #00b3ee">0</span>)
+                                </div>
                             </div>
-                            <br>
                             <h3 style="text-align: left;">첨부파일</h3>
                             <div class="fileTableWrap">
                                 <table class="colStyle" id="attachDragAndDrop">
@@ -177,8 +182,10 @@
 </form>
 <form id="estimate_register_excel_download" method="POST">
     <input type="hidden" id="sqlId" name="sqlId" value="selectEstimateDetailListExcel"/>
+    <input type="hidden" id="mapInputId" name="mapInputId" value="data"/>
     <input type="hidden" id="paramName" name="paramName" value="EST_SEQ"/>
     <input type="hidden" id="paramData" name="paramData" value=""/>
+    <input type="hidden" id="template" name="template" value="estimate_list_template"/>
 </form>
 <script type="text/javascript">
     $(function () {
@@ -359,7 +366,7 @@
         ];
 
         estimateRegisterTopGrid.pqGrid({
-            height: 300,
+            height: 380,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
                 url: "/paramQueryGridSelect",
@@ -382,6 +389,12 @@
             showTitle: false,
             title: false,
             strNoRows: g_noData,
+            complete: function (event, ui) {
+                this.flex();
+                let data = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data');
+
+                $('#estimate_master_top_grid_records').html(data.length);
+            },
             selectChange: function (event, ui) {
                 if (ui.selection.iCells.ranges[0] !== undefined) {
                     estimateRegisterSelectedRowIndex = [];
@@ -452,7 +465,13 @@
                 colModel: estimateRegisterBotColModel,
                 showTitle: false,
                 title: false,
-                strNoRows: g_noData
+                strNoRows: g_noData,
+                complete: function (event, ui) {
+                    this.flex();
+                    let data = estimateRegisterBotGrid.pqGrid('option', 'dataModel.data');
+
+                    $('#estimate_master_bot_grid_records').html(data.length);
+                },
             });
 
             estimateRegisterBotGrid.pqGrid("refreshDataAndView");
@@ -512,7 +531,7 @@
         };
 
         function getCadUploadBlankHtml(){
-            return'<tr><td colspan="3" class="spanArea" >마우스로 파일을 Drag & Drop 하세요.</td></tr><tr><td colspan="3"></td></tr><tr><td colspan="3"></td></tr><tr><td colspan="3"></td></tr><tr><td colspan="3"></td></tr>';
+            return'<tr><td colspan="3" class="spanArea" >마우스로 파일을 Drag & Drop 하세요.</td></tr><tr><td colspan="3"></td></tr><tr><td colspan="3"></td></tr>';
         }
 
         let fileHtml = getCadUploadBlankHtml();
@@ -557,7 +576,7 @@
         });
 
         $("#btnEstimateRegisterEstimateListExcel").on('click', function(){
-            fnReportFormToHiddenFormPageAction("packing_history_list_search_form", "/downloadExcel");
+            fnReportFormToHiddenFormPageAction("estimate_register_excel_download", "/downloadExcel");
         });
 
         $("#chkEstimateRegisterDetail").on('click', function(){

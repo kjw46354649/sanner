@@ -130,9 +130,9 @@
                 </ul>
             </div>
         </form>
-        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
+        <button type="button" class="topWrap_btn" id="CONTROL_MANAGE_TOPWRAP_BTN">펼치기 / 접기</button>
     </div>
-    <div class="bottomWrap">
+    <div class="bottomWrap row1_bottomWrap">
         <div class="hWrap">
             <div>
                 <button type="button" class="defaultBtn btn-120w" data-toggle="modal" data-target="#CONTROL_MANGE_POPUP">신규
@@ -200,30 +200,41 @@
     </div>
 </div>
 
-<%-- modal --%>
-<div class="modal" id="CONTROL_MANGE_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
-                        class="sr-only">Close</span></button>
-                <h4 class="modal-title">신규 주문 등록</h4>
-            </div>
-            <div class="modal-body">
-                <div id="ORDER_REGISTER_GRID"></div>
-            </div>
-            <!-- /.modal-content -->
+<div class="popup_container" id="CONTROL_MANGE_POPUP" style="display: none;">
+    <div class="layerPopup">
+        <h3 style="margin-bottom: 10px;">신규 주문 등록</h3>
+        <button type="button" class="pop_close">닫기</button>
+        <div>
+            <div id="ORDER_REGISTER_GRID"></div>
         </div>
-        <!-- /.modal-dialog -->
     </div>
 </div>
-<div class="modal" id="CONTROL_CLOSE_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
+
+<%--<div class="popup_container" id="CONTROL_CLOSE_POPUP" style="display: none;">
+    <div class="layerPopup">
+        <h3 style="margin-bottom: 10px;">월 마감 진행</h3>
+        <button type="button" class="pop_close">닫기</button>
+        <div>
+            <div class="col-md-5">
+                <div id="CONTROL_CLOSE_LEFT_GRID"></div>
+            </div>
+            <div class="col-md-2">
+                화살표 ~>
+            </div>
+            <div class="col-md-5">
+                <div id="CONTROL_CLOSE_RIGHT_GRID"></div>
+            </div>
+        </div>
+    </div>
+</div>--%>
+
+<div class="modal" id="" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
                         class="sr-only">Close</span></button>
-                <h4 class="modal-title">월 마감 진행</h4>
+                <h4 class="modal-title"></h4>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -240,7 +251,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <form class="form-inline" id="CONTROL_CLOSE_FORM" role="form">
-                            <input type="hidden" name="queryId" id="queryId" value="selectControlCloseLeftList">
+                            <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectControlCloseLeftList">
                             <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
                             <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
                             <div class="col-md-8">
@@ -295,6 +306,7 @@
         <!-- /.modal-dialog -->
     </div>
 </div>
+
 <div class="modal" id="ESTIMATE_REGISTER_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -508,13 +520,13 @@
                     {title: '상태', clsHead: 'display_none', datatype: 'string', dataIndx: 'CONTROL_STATUS_ORIGINAL', hidden: true},
                     {title: '상태', clsHead: 'display_none', dataIndx: 'CONTROL_STATUS', hidden: true},
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_NM'},
-                    {title: '변경일시', width: 120, datatype: 'date', dataIndx: 'CONTROL_STATUS_DT'}
+                    {title: '변경일시', datatype: 'date', dataIndx: 'CONTROL_STATUS_DT'}
                 ]
             },
             {title: '사업자<br>구분', clsHead: 'display_none', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자<br>구분', width: 70, dataType: 'string', dataIndx: 'COMP_NM'},
             {title: '발주업체', clsHead: 'display_none', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '발주업체', width: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '구매담당', clsHead: 'display_none', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', hidden: true},
             {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM'},
             {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', editable: true, styleHead: {'font-weight': 'bold'}},
@@ -675,8 +687,9 @@
             {title: '등록/업데이트<br>일시', width: 120, dataType: 'string', dataIndx: 'STATUS_DT'},
             {title: 'DEL_YN', clsHead: 'display_none', dataType: 'string', dataIndx: 'DEL_YN', hidden: true}
         ];
-        let obj = {
-            height: '95%',
+        const obj = {
+            minHeight: '100%',
+            height: 700,
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             resizable: true,
@@ -694,6 +707,7 @@
             },
             editModel: {clicksToEdit: 1},
             complete: function (event, ui) {
+                this.flex();
                 let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
 
                 $('#CONTROL_MANAGE_RECORDS').html(data.length);
@@ -1483,9 +1497,45 @@
                 $controlCloseRightGrid.pqGrid('refresh');
             }, parameters, '');
         };
+
+        // topWrap 확장 함수
+        const topMenuOpen = function () {
+            let top = $('#view_tab_100021 .gubunWrap');
+            let bottom = $('#view_tab_100021 .bottomWrap');
+            let con = $('#view_tab_100021 .bottomWrap .tableWrap .conWrap');
+
+            top.stop().animate({height: 159}, 300, 'easeOutCubic');
+            bottom.stop().animate({height: 730}, 300, 'easeOutCubic');
+            con.stop().animate({height: 562}, 300, 'easeOutCubic');
+
+            $orderManagementGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
+        };
+
+        // topWrap 축소 함수
+        const topMenuClose = function () {
+            let top = $('#view_tab_100021 .gubunWrap');
+            let bottom = $('#view_tab_100021 .bottomWrap');
+            let con = $('#view_tab_100021 .bottomWrap .tableWrap .conWrap');
+
+            top.stop().animate({height: 47}, 300, 'easeInCubic');
+            bottom.stop().animate({height: 840},300, 'easeOutCubic');
+            con.stop().animate({height: 699}, 300, 'easeInCubic');
+
+            $orderManagementGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
+        }
         /* function */
 
         /* event */
+        $('#CONTROL_MANAGE_TOPWRAP_BTN').on('click', function () {
+            if ($(this).hasClass('on')) {
+                topMenuClose();
+                $(this).removeClass('on');
+            } else {
+                topMenuOpen();
+                $(this).addClass('on');
+            }
+        });
+
         /**
          * @description 날짜 라디오 변경
          */

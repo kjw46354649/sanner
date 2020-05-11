@@ -15,7 +15,7 @@
     <div class="modal-dialog modal-lg cadDrawing">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
                 <h2 class="headerTitle_01">도면 등록</h2>
             </div>
             <div class="modal-body">
@@ -28,7 +28,7 @@
                     </div>
                     <div id="common_cad_file_attach_grid" style="margin:auto;"></div>
                     <div class="right_sort fileTableInfoWrap">
-                        <h4>전체 조회 건수 (Total : <span id="cadFileUploadTotalCount" style="color: #00b3ee">0</span>)<h4>
+                        <h4>전체 조회 건수 (Total : <span id="cadFileUploadTotalCount" style="color: #00b3ee">0</span>)</h4>
                     </div>
                     <div class="fileTableWrap">
                         <table class="colStyle mg-top20" id="attachDragAndDrop" >
@@ -51,10 +51,69 @@
         </div>
     </div>
 </div>
+<div class="modal" id="common_drawing_print_popup" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog cadDrawing" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                <h2 class="modal-title">Information</h2>
+            </div>
+            <div class="modal-body">
+                <div><h4><img style='width: 32px; height: 32px;' src='/resource/main/images/print.png'>&nbsp;&nbsp; 32건의 바코드 도면이 출력 됩니다. 진행하시겠습니까?</h4></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="drawingPrintActionBtn" class="defaultBtn radius blue">출력</button>
+                <button type="button" class="defaultBtn radius" data-dismiss="modal">아니오</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="cadDrawingPrint" style="display: block">
+    <div class="print">
+        <table class="drawingArea" style="table-layout: fixed; word-wrap:break-word;">
+            <caption></caption>
+            <tbody>
+                <tr class="controlInfo">
+                    <td scope="col" width="28%" rowspan="2" class="center_sort">
+                        <img src="/barcode/code128/1234567890" class="barcode">
+                    </td>
+                    <td scope="col" width="10%" rowspan="2" class="center_sort">진성정밀</td>
+                    <td scope="col" width="3%" class="center_sort">cseq</td>
+                    <td scope="col" width="10%" rowspan="2" class="center_sort">관리번호</td>
+                    <td scope="col" width="3%" class="center_sort">part</td>
+                    <td scope="col" width="10%" colspan="2" class="center_sort">규격</td>
+                    <td scope="col" width="10%" class="center_sort">형태</td>
+                    <td scope="col" width="10%" class="center_sort">열처리여부</td>
+                    <td scope="col" width="3%" rowspan="2" class="center_sort">발주수량</td>
+                    <td scope="col" width="5%" class="center_sort">원칭</td>
+                    <td scope="col" width="5%" class="center_sort">대칭</td>
+                    <td scope="col" width="5%" class="center_sort">납기</td>
+                </tr>
+                <tr class="controlInfo">
+                    <td scope="col" class="center_sort">dseq</td>
+                    <td scope="col" class="center_sort">part</td>
+                    <td scope="col" class="center_sort">소재종류</td>
+                    <td scope="col" class="center_sort">표면처리</td>
+                    <td scope="col" class="center_sort">긴급여부</td>
+                    <td scope="col" class="center_sort">주요검사</td>
+                    <td scope="col" class="center_sort">원</td>
+                    <td scope="col" class="center_sort">대</td>
+                    <td scope="col" class="center_sort">일자</td>
+                </tr>
+                <tr class="imageInfo">
+                    <td scope="col" colspan="14">
+                        <img src="/image/5266" class="drawingImage">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 <script type="text/javascript">
 
     let $cadFileConvertUploadCompletedBtn = $("#cadFileConvertUploadCompletedBtn");
     let commonCadFileAttachPopup = $("#common_cad_file_attach_pop");
+    let commonDrawingPrintPopup = $("#common_drawing_print_popup");
     let commonCadFileAttachGridId = "common_cad_file_attach_grid";
     let estimateCadFileColModel;
     let controlCadFileColModel;
@@ -233,9 +292,6 @@
 
         commonCadFileAttachPopup.on('show.bs.modal',function(e) {
             var actionType = $('#common_cad_file_attach_form').find('#actionType').val();
-
-            alert(actionType);
-
             $commonCadFileAttachGrid = $('#' + commonCadFileAttachGridId).pqGrid(commonCadFileAttachObj);
             if(actionType == 'estimate') {
                 $commonCadFileAttachGrid.pqGrid('option', 'colModel', estimateCadFileColModel);

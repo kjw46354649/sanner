@@ -158,15 +158,24 @@
                 <ul class="active" id="IN_WAREHOUSE_MANAGE_TAB1">
                     <div class="conMainWrap">
                         <div id="in_warehouse_manage_manage_grid01"></div>
+                        <div class="right_sort">
+                            전체 조회 건수 (Total : <span id="in_warehouse_manage_manage_grid01_records" style="color: #00b3ee">0</span>)
+                        </div>
                     </div>
                     <br/>
                     <div class="conWrap">
                         <div id="in_warehouse_manage_manage_grid02"></div>
+                        <div class="right_sort">
+                            전체 조회 건수 (Total : <span id="in_warehouse_manage_manage_grid02_records" style="color: #00b3ee">0</span>)
+                        </div>
                     </div>
                 </ul>
                 <ul class="" id="IN_WAREHOUSE_MANAGE_TAB2">
                     <div class="conMainWrap">
                         <div id="in_warehouse_manage_out_grid01"></div>
+                        <div class="right_sort">
+                            전체 조회 건수 (Total : <span id="in_warehouse_manage_out_grid01_records" style="color: #00b3ee">0</span>)
+                        </div>
                     </div>
                 </ul>
             </div>
@@ -512,6 +521,10 @@
             colModel: inWarehouseManageManageColModel01,
             showTitle: false,
             complete: function(event, ui) {
+                this.flex();
+                let data = inWarehouseManageManageGrid01.pqGrid('option', 'dataModel.data');
+
+                $('#in_warehouse_manage_manage_grid01_records').html(data.length);
             },
             selectChange: function (event, ui) {
                 if (ui.selection.iCells.ranges[0] !== undefined) {
@@ -565,7 +578,13 @@
                 trackModel: {on: true},
                 colModel: inWarehouseManageManageColModel02,
                 showTitle: false,
-                editable: false
+                editable: false,
+                complete: function(event, ui) {
+                    this.flex();
+                    let data = inWarehouseManageManageGrid02.pqGrid('option', 'dataModel.data');
+
+                    $('#in_warehouse_manage_manage_grid02_records').html(data.length);
+                },
             });
 
             inWarehouseManageManageGrid02.pqGrid('refreshDataAndView');
@@ -592,7 +611,13 @@
             strNoRows: g_noData,
             trackModel: {on: true},
             colModel: inWarehouseManageOutColModel,
-            showTitle: false
+            showTitle: false,
+            complete: function(event, ui) {
+                this.flex();
+                let data = inWarehouseManageOutGrid.pqGrid('option', 'dataModel.data');
+
+                $('#in_warehouse_manage_out_grid01_records').html(data.length);
+            },
         });
 
         function getSizeEditYn(typeNm, rowData){
@@ -663,7 +688,13 @@
                 resizable: false,
                 trackModel: {on: true},
                 colModel: inWarehouseManageWarehouseColModel,
-                toolbar: inWarehouseManageWarehouseToolbar
+                toolbar: inWarehouseManageWarehouseToolbar,
+                complete: function(event, ui) {
+                    this.flex();
+                    let data = inWarehouseManageWarehousePopupGrid.pqGrid('option', 'dataModel.data');
+
+                    $('#in_warehouse_manage_manage_grid01_records').html(data.length);
+                },
             });
 
             inWarehouseManageWarehousePopupGrid.pqGrid("refreshDataAndView");

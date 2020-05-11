@@ -16,7 +16,7 @@
     <div class="topWrap">
         <form class="form-inline" id="SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectSalesClosingHistoryList">
-            <div class="gubunWrap">
+            <div class="gubunWrap row_two">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -50,7 +50,9 @@
                         </span>
                     </li>
                     <li>
-                        <label class="label_100">마감년월</label>
+                        <span class="ipu_wrap">
+                            <label class="label_100">마감년월</label>
+                        </span>
                         <select name="CLOSE_YEAR_LEFT" id="CLOSE_YEAR_LEFT"></select>
                         <select name="CLOSE_MONTH_LEFT" id="CLOSE_MONTH_LEFT"></select><span style="margin: 10px 0; vertical-align: middle; font-size: 1.4rem;">~</span>
                         <select name="CLOSE_YEAR_RIGHT" id="CLOSE_YEAR_RIGHT" disabled></select>
@@ -60,12 +62,11 @@
                 </ul>
             </div>
         </form>
-        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
     <div class="topWrap" style="display: none">
         <form class="form-inline" id="MONTH_SALE_STATUS_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectMonthSaleStatusList">
-            <div class="gubunWrap">
+            <div class="gubunWrap row_two">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -111,10 +112,16 @@
                 </ul>
             </div>
         </form>
-        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
     <div class="bottomWrap">
-        <div class="tableWrap jmestabs" id="div_tabs" style="padding: 10px 0;">
+        <div class="hWrap">
+            <div>
+                <div class="rightSpan">
+                    <button type="button" class="defaultBtn btn-120w green" id="CLOSING_HISTORY_SAVE">저장</button>
+                </div>
+            </div>
+        </div>
+        <div class="tableWrap jmestabs" id="CONTROL_SALES_STATUS_TABS" style="padding: 10px 0;">
             <ul class="smallTabMenuTabs">
                 <li class="active">
                     <a href="#CLOSING_HISTORY" data-toggle="tab" aria-expanded="true">마감이력</a>
@@ -185,22 +192,8 @@
             {title: '합계금액', dataType: 'string', dataIndx: 'TOTAL_AMOUNT'},
             {title: '비고', dataType: 'string', dataIndx: 'CLOSE_NOTE', editable: true}
         ];
-        let tab1Toolbar = {
-            cls: 'pq-toolbar-crud',
-            items: [
-                {
-                    type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {
-                            const updateQueryList = ['orderMapper.updateControlMaster', 'orderMapper.updateControlPart'];
-
-                            fnModifyPQGrid($orderManagementGrid, [], updateQueryList);
-                        }
-                    }
-                }
-            ]
-        };
         let tab1Obj = {
-            height: 750,
+            height: 700,
             collapsible: false,
             resizable: true,
             showTitle: false,
@@ -214,7 +207,6 @@
                 editable: false
             },
             colModel: tab1ColModel,
-            toolbar: tab1Toolbar,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: tab1PostData,
@@ -385,13 +377,13 @@
         fnAppendSelectboxMonth('CLOSE_MONTH_RIGHT');
         fnAppendSelectboxYear('MONTH_SALE_YEAR', 10);
 
-        $('#CLOSE_YEAR_LEFT').on('change', function() {
+        $('#CLOSE_YEAR_LEFT').on('change', function () {
             fnAppendSelectboxMonth('CLOSE_MONTH_LEFT', this.value);
         });
-        $('#CLOSE_YEAR_RIGHT').on('change', function() {
+        $('#CLOSE_YEAR_RIGHT').on('change', function () {
             fnAppendSelectboxMonth('CLOSE_MONTH_RIGHT', this.value);
         });
-        $('#RANGE_SEARCH').on('change', function(event) {
+        $('#RANGE_SEARCH').on('change', function (event) {
             if ($(this).prop('checked')) {
                 $('#CLOSE_YEAR_RIGHT').prop('disabled', false);
                 $('#CLOSE_MONTH_RIGHT').prop('disabled', false);
@@ -399,12 +391,19 @@
                 $('#CLOSE_YEAR_RIGHT').prop('disabled', true);
                 $('#CLOSE_MONTH_RIGHT').prop('disabled', true);
             }
-        })
+        });
 
-        $("#div_tabs").tabs({
+        $('#CLOSING_HISTORY_SAVE').on('click', function (event) {
+            const updateQueryList = ['orderMapper.updateControlMaster', 'orderMapper.updateControlPart'];
+
+            fnModifyPQGrid($closingHistoryGrid, [], updateQueryList);
+        });
+
+        $("#CONTROL_SALES_STATUS_TABS").tabs({
             activate: function(event, ui) {
                 ui.newPanel.find('.pq-grid').pqGrid('refresh');
-                $('.topWrap').toggle(); // show -> hide , hide -> show
+                $('.topWrap').toggle();
+                $('.hWrap').toggle();
             }
         });
         /* init */

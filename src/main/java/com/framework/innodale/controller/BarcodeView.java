@@ -31,8 +31,14 @@ public class BarcodeView extends AbstractView {
         BitMatrix bitMatrix = null;
 
         switch (codeType){
+            case "code39" :
+                bitMatrix = CreateBarcodeStream.generateCode39BarcodeImage(barcode);
+                break;
             case "code128" :
                 bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage(barcode);
+                break;
+            case "ean13" :
+                bitMatrix = CreateBarcodeStream.generateEAN13BarcodeImage(barcode);
                 break;
             case "qrcode" :
                 bitMatrix = CreateBarcodeStream.generateQRCodeImage(barcode);

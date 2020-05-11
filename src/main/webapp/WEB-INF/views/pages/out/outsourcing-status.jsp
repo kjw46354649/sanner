@@ -16,7 +16,7 @@
     <div class="topWrap">
         <form class="form-inline" id="OUTSIDE_CLOSE_STATUS_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="outMapper.selectOutsideCloseStatusList">
-            <div class="gubunWrap">
+            <div class="gubunWrap row_two">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -55,24 +55,24 @@
                         </span>
                     </li>
                     <li>
-                        <div class="form-group col-md-6">
-                            <select name="CLOSE_YEAR_LEFT" id="CLOSE_YEAR_LEFT"></select>
-                            <select name="CLOSE_MONTH_LEFT" id="CLOSE_MONTH_LEFT"></select><span style="margin: 10px 0; vertical-align: middle; font-size: 1.4rem;">~</span>
-                            <select name="CLOSE_YEAR_RIGHT" id="CLOSE_YEAR_RIGHT" disabled></select>
-                            <select name="CLOSE_MONTH_RIGHT" id="CLOSE_MONTH_RIGHT" disabled></select>
-                            <span class="chk_box" style="margin-left: 10px;"><input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH"><label for="RANGE_SEARCH"> Range 검색</label></span>
-                        </div>
+                        <span class="ipu_wrap">
+                            <label class="label_100">마감년월</label>
+                        </span>
+                        <select name="CLOSE_YEAR_LEFT" id="CLOSE_YEAR_LEFT"></select>
+                        <select name="CLOSE_MONTH_LEFT" id="CLOSE_MONTH_LEFT"></select><span style="margin: 10px 0; vertical-align: middle; font-size: 1.4rem;">~</span>
+                        <select name="CLOSE_YEAR_RIGHT" id="CLOSE_YEAR_RIGHT" disabled></select>
+                        <select name="CLOSE_MONTH_RIGHT" id="CLOSE_MONTH_RIGHT" disabled></select>
+                        <span class="chk_box" style="margin-left: 10px;"><input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH"><label for="RANGE_SEARCH"> Range 검색</label></span>
                     </li>
                 </ul>
             </div>
         </form>
-        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
 
     <div class="topWrap" style="display: none;">
         <form class="form-inline" id="MONTH_OUTSIDE_STATUS_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="outMapper.selectMonthCloseStatusList">
-            <div class="gubunWrap">
+            <div class="gubunWrap row_two">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -100,7 +100,9 @@
                         </span>
                     </li>
                     <li>
-                        <span class="txt_span pd-right20">Option</span>
+                        <span class="ipu_wrap">
+                            <label class="label_100">Option</label>
+                        </span>
                         <span class="chk_box"><input type="checkbox" name="ORIGINAL_ORDER_AMOUNT" id="ORIGINAL_ORDER_AMOUNT"><label for="ORIGINAL_ORDER_AMOUNT">원 발주 금액</label></span>
                     </li>
                 </ul>
@@ -109,7 +111,14 @@
         <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
     <div class="bottomWrap">
-        <div class="tableWrap jmestabs" id="div_tabs" style="padding: 10px 0;">
+        <div class="hWrap">
+            <div>
+                <div class="rightSpan">
+                    <button type="button" class="defaultBtn btn-120w green" id="OUTSIDE_CLOSE_STATUS_SAVE">저장</button>
+                </div>
+            </div>
+        </div>
+        <div class="tableWrap jmestabs" id="OUTSOURCING_STATUS_TABS" style="padding: 10px 0;">
         <ul class="smallTabMenuTabs">
                 <li class="active">
                     <a href="#OUTSIDE_CLOSE_STATUS" data-toggle="tab" aria-expanded="true">마감현황</a>
@@ -174,10 +183,11 @@
             ]
         };
         let tab1Obj = {
-            height: 750,
+            height: 700,
             collapsible: false,
             resizable: true,
             showTitle: false,
+            strNoRows: g_noData,
             numberCell: {title: 'No.'},
             scrollModel: {autoFit: true},
             trackModel: {on: true},
@@ -196,7 +206,7 @@
         const tab2GridId = 'MONTHLY_OUTSIDE_STATUS_GRID';
         let tab2PostData = fnFormToJsonArrayData('#MONTH_OUTSIDE_STATUS_SEARCH_FORM');
         tab2PostData.YEAR = YEAR;
-        let tab2ColModel = [
+        const tab2ColModel = [
             {title: 'Group', tpHide: true, menuInHide: true, dataIndx: 'grp'},
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
@@ -208,7 +218,7 @@
             {title: '매출', dataType: 'string', dataIndx: 'OUTPUT_AMT'/*, summary: {type: 'sum'}*/},
             {title: '입금', dataType: 'string', dataIndx: 'DEPOSIT_AMT'/*, summary: {type: 'sum'}*/}
         ];
-        let tab2GroupModel = {
+        const tab2GroupModel = {
             on: true, //grouping mode.
             titleIndx: 'grp',
             indent: 20,
@@ -222,25 +232,12 @@
             collapsed: [false, false],
             summaryEdit: false
         };
-        let tab2Toolbar = {
-            cls: 'pq-toolbar-crud',
-            items: [
-                {
-                    type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {
-                            const updateQueryList = ['orderMapper.updateControlMaster', 'orderMapper.updateControlPart'];
-
-                            fnModifyPQGrid($orderManagementGrid, [], updateQueryList);
-                        }
-                    }
-                }
-            ]
-        };
-        let tab2Obj = {
+        const tab2Obj = {
             height: 750,
             collapsible: false,
             resizable: true,
             showTitle: false,
+            strNoRows: g_noData,
             numberCell: {title: 'No.'},
             scrollModel: {autoFit: true},
             // trackModel: {on: true},
@@ -248,7 +245,6 @@
             colModel: tab2ColModel,
             groupModel: tab2GroupModel,
             toolPanel: {show: false},
-            toolbar: tab2Toolbar,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: tab2PostData, recIndx: 'ROWNUM',
@@ -317,13 +313,19 @@
             }
         });
 
+        $('#OUTSIDE_CLOSE_STATUS_SAVE').on('click', function () {
+            const updateQueryList = ['orderMapper.updateControlMaster', 'orderMapper.updateControlPart'];
 
-        $("#div_tabs").tabs({
+            fnModifyPQGrid($outsideCloseStatusGrid, [], updateQueryList);
+
+        });
+
+        $('#OUTSOURCING_STATUS_TABS').tabs({
             activate: function (event, ui) {
                 ui.newPanel.find('.pq-grid').pqGrid('refresh');
-                $('.topWrap').toggle(); // show -> hide , hide -> show
-                // $('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM').toggle(); // show -> hide , hide -> show
-                // $('#MONTH_OUTSIDE_STATUS_SEARCH_FORM').toggle(); // show -> hide , hide -> show
+                $('.topWrap').toggle();
+                $('.hWrap').toggle();
+
             }
         });
         /* init */

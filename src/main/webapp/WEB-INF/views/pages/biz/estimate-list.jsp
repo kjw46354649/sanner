@@ -36,9 +36,10 @@
                         <span class="ipu_wrap"><label class="label_100" for="MODULE_NM">견적번호</label><input type="text" name="MODULE_NM" id="MODULE_NM" class="wd_200" value="" title="견적번호"></span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label class="label_100" for="ITEM_NM">품명</label><input type="text" name="ITEM_NM" id="ITEM_NM" class="wd_200 " value="" title="품명"></span>
+                        <span class="gubun"></span>
                     </li>
                     <span class="">
-                        <span class="ipu_wrap"><label class="label_100" for="MODULE_NM">일자별 조회</label></span>
+                        <span class="ipu_wrap"><label class="label_100" for="MODULE_NM">기간 조회</label></span>
                         <span class="chk_box"><input id="pr_ex1" type="checkbox"><label for="pr_ex1"> 발송완료</label></span>
                         <span class="chk_box"><input id="pr_ex2" type="checkbox"><label for="pr_ex2"> 최신차수</label></span>
                         <span class="gubun"></span>
@@ -77,12 +78,12 @@
     <div class="bottomWrap row1_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
-                <button type="button" class="defaultBtn btn-120w" id="btnEstimateListNewEstimate">견적서 신규 작성</button>
-                <button type="button" class="defaultBtn btn-120w" id="btnEstimateListNewVersion">차수 생성</button>
+                <button type="button" class="defaultBtn" id="btnEstimateListNewEstimate">신규 작성</button>
+                <button type="button" class="defaultBtn" id="btnEstimateListNewVersion">차수 생성</button>
                 <%--<span class="chk_box mg-left15"><input id="chkEstimateListDetail" type="checkbox"><label for="chkEstimateListDetail"> 견적상세요건</label></span>--%>
                 <div class="rightSpan">
-                    <button type="button" class="defaultBtn radius green" id="btnEstimateListSave">저장</button>
                     <button type="button" class="defaultBtn radius red" id="btnEstimateListDelete">삭제</button>
+                    <button type="button" class="defaultBtn radius green" id="btnEstimateListSave">저장</button>
                 </div>
             </div>
         </div>
@@ -92,17 +93,25 @@
                     <button type="button" class="smallBtn yellow">견적정보</button>
                     <button type="button" class="smallBtn yellow">금액정보</button>
                     <span class="slt_wrap namePlusSlt right_float">
-                        <label for="selEstimateListExcel">견적서 추출</label>
-                        <select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출"></select>
+<%--                        <label for="selEstimateListExcel">견적서 추출</label>--%>
+<%--                        <select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출"></select>--%>
+                        <button type="button" class="defaultBtn grayGra" id="#">견적서 출력</button>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateListDrawView">도면 보기</button>
                     </span>
                 </div>
             </div>
             <div class="conMainWrap">
-                <div id="estimate_master_top_grid" class="jqx-refresh"></div><br/>
+                <div id="estimate_master_top_grid" class="jqx-refresh"></div>
+                <div class="right_sort">
+                    전체 조회 건수 (Total : <span id="estimate_master_top_grid_records" style="color: #00b3ee">0</span>)
+                </div>
             </div>
-            <div class="conWrap" style="height:412px;">
+            <br/>
+            <div class="conWrap" style="height:404px;">
                 <div id="estimate_master_bot_grid" class="jqx-refresh"></div>
+                <div class="right_sort">
+                    전체 조회 건수 (Total : <span id="estimate_master_bot_grid_records" style="color: #00b3ee">0</span>)
+                </div>
             </div>
         </div>
     </div>
@@ -376,7 +385,7 @@
         ];
 
         estimateMasterTopGrid.pqGrid({
-            width: '100%', height: 300,
+            width: '100%', height: 330,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'EST_SEQ',
                 url: "/paramQueryGridSelect",
@@ -400,6 +409,11 @@
             strNoRows: g_noData,
             complete: function(event, ui) {
                 estimateMasterTopGrid.pqGrid('setSelection', {rowIndx:0} );
+
+                this.flex();
+                let data = estimateMasterTopGrid.pqGrid('option', 'dataModel.data');
+
+                $('#estimate_master_top_grid_records').html(data.length);
             },
             selectChange: function (event, ui) {
                 if (ui.selection.iCells.ranges[0] !== undefined) {
@@ -462,6 +476,12 @@
                 colModel: estimateMasterBotColModel,
                 showTitle: false,
                 strNoRows: g_noData,
+                complete: function (event, ui) {
+                    this.flex();
+                    let data = estimateMasterBotGrid.pqGrid('option', 'dataModel.data');
+
+                    $('#estimate_master_bot_grid_records').html(data.length);
+                },
                 change: function( event, ui ) {
                     if(ui.source == 'edit'){
                         let rowIndx = ui.updateList[0].rowIndx;
@@ -517,7 +537,9 @@
             fnModifyPQGrid(estimateMasterTopGrid, estimateMasterInsertQueryList, estimateMasterUpdateQueryList);
         });
 
-        $("#btnEstimateListDrawView").on('click', function(){ });
+        $("#btnEstimateListDrawView").on('click', function(){
+            callWindowImageViewer(999);
+        });
 
         $("#selEstimateListExcel").on('click', function(){
             fnReportFormToHiddenFormPageAction("estimate_master_excel_download", "/downloadExcel");
@@ -651,9 +673,10 @@
         var bottom = $('#view_tab_100011 .bottomWrap');
         var con = $('#view_tab_100011 .bottomWrap .tableWrap .conWrap');
 
-        top.stop().animate({height:'122px'},300, 'easeOutCubic');
-        bottom.stop().animate({height:'766px'},300, 'easeOutCubic');
-        con.css({height:'341px'});
+        // top.stop().animate({height:'122px'},300, 'easeOutCubic');
+        top.stop().animate({height:'95px'},300, 'easeOutCubic');
+        bottom.stop().animate({height:'796px'},300, 'easeOutCubic');
+        con.css({height:'346px'});
 
         estimateMasterBotGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
     }
@@ -664,9 +687,10 @@
         var bottom = $('#view_tab_100011 .bottomWrap');
         var con = $('#view_tab_100011 .bottomWrap .tableWrap .conWrap');
 
-        top.stop().animate({height:'47px'},300, 'easeOutCubic');
-        bottom.stop().animate({height:'841px'},300, 'easeOutCubic');
-        con.css({height:'416px'});
+        // top.stop().animate({height:'47px'},300, 'easeOutCubic');
+        top.stop().animate({height:'37px'},300, 'easeOutCubic');
+        bottom.stop().animate({height:'854px'},300, 'easeOutCubic');
+        con.css({height:'404px'});
 
         estimateMasterBotGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
     }
