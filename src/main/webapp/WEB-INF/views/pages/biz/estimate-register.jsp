@@ -53,6 +53,11 @@
         <div class="hWrap">
             <div class="d-inline">
                 <div class="right_sort">
+<%--                    <label for="selEstimateListExcel">견적서 추출</label>--%>
+                    <button type="button" class="defaultBtn" id="btnEstimateRegisterEstimateListExcel">견적서 출력</button>
+<%--                    <select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출"></select>--%>
+                    <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawAdd">도면 등록</button>
+                    <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawView">도면 보기</button>
                     <button type="button" class="defaultBtn radius green" id="btn_estimate_register_save">저장</button>
                     <button type="button" class="defaultBtn radius blue" id="btn_estimate_register_submit">제출</button>
                 </div>
@@ -66,42 +71,43 @@
                 <ul>
                     <li>
                         <span class="slt_wrap">
-                            <label for="ORDER_COMP_CD" class="label_100">발주사</label>
+                            <label for="ORDER_COMP_CD" class="label_65">발주사</label>
                             <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사" class="wd_200">
                             </select>
                         </span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label for="EST_TITLE" class="label_100">제목</label><input type="text" name="EST_TITLE" id="EST_TITLE" class="wd_500" value="" title="제목"></span>
+                        <span class="ipu_wrap"><label for="EST_TITLE" class="label_65">제목</label>
+<%--                            <input type="text" name="EST_TITLE" id="EST_TITLE" class="wd_542" value="" title="제목">--%>
+                            <input type="text" name="EST_TITLE" id="EST_TITLE" class="wd_200" value="" title="제목">
+                        </span>
                         <span class="gubun"></span>
-                    </li>
-                    <li>
                         <span class="slt_wrap">
-                            <label for="ORDER_STAFF_SEQ" class="label_100">구매 담당자 </label>
+                            <label for="ORDER_STAFF_SEQ" class="label_65">구매 담당자 </label>
                             <select id="ORDER_STAFF_SEQ" name="ORDER_STAFF_SEQ" title="구매 담당자" class="wd_200">
                             </select>
                         </span>
                         <span class="slt_wrap">
                         <span class="gubun"></span>
-                            <label for="COMP_CD" class="label_100">사업자</label>
+                            <label for="COMP_CD" class="label_65">사업자</label>
                             <select id="COMP_CD" name="COMP_CD" title="사업자" class="wd_200">
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label for="EST_USER_ID" class="label_100">견적 담당자</label>
+                            <label for="EST_USER_ID" class="label_65">견적 담당자</label>
                             <select id="EST_USER_ID" name="EST_USER_ID" title="견적 담당자" class="wd_200">
                             </select>
                         </span>
                         <span class="gubun"></span>
                     </li>
                     <li>
-                        <span class="ipu_wrap"><label for="EST_NUM" class="label_100">견적번호 (차수)</label><input type="text" name="EST_NUM" id="EST_NUM" class="wd_200" value="" title="견적번호 (차수)" readonly></span>
+                        <span class="ipu_wrap"><label for="EST_NUM" class="label_65">견적번호</label><input type="text" name="EST_NUM" id="EST_NUM" class="wd_200" value="" title="견적번호 (차수)" readonly></span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label for="DTL_AMOUNT" class="label_100">견적금액 계</label><input type="text" name="DTL_AMOUNT" id="DTL_AMOUNT" class="wd_200" value="" title="견적금액 계" readonly></span>
+                        <span class="ipu_wrap"><label for="DTL_AMOUNT" class="label_65">견적금액</label><input type="text" name="DTL_AMOUNT" id="DTL_AMOUNT" class="wd_200" value="" title="견적금액 계" readonly></span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label for="INSERT_DT" class="label_100">업데이트 일시</label><input type="text" name="INSERT_DT" id="INSERT_DT" class="wd_200" value="" title="업데이트 일시" readonly></span>
+                        <span class="ipu_wrap"><label for="INSERT_DT" class="label_65">수정일시</label><input type="text" name="INSERT_DT" id="INSERT_DT" class="wd_200" value="" title="업데이트 일시" readonly></span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label for="SEND_DT" class="label_100">회신일시</label><input type="text" name="SEND_DT" id="SEND_DT" class="wd_200" value="" title="회신일시" readonly></span>
+                        <span class="ipu_wrap"><label for="SEND_DT" class="label_65">회신일시</label><input type="text" name="SEND_DT" id="SEND_DT" class="wd_200" value="" title="회신일시" readonly></span>
                         <span class="gubun"></span>
                     </li>
                 </ul>
@@ -119,12 +125,6 @@
                             <option>10%</option>
                             <option>20%</option>
                         </select>
-                        <label for="selEstimateListExcel">견적서 추출</label>
-                        <button type="button" class="defaultBtn" id="btnEstimateRegisterEstimateListExcel">견적List 출력</button>
-                        <select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출">
-                        </select>
-                        <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawAdd">도면 등록</button>
-                        <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawView">도면 보기</button>
                         <button type="button" class="defaultBtn radius" id="btnEstimateRegisterAdd">추가</button>
                         <button type="button" class="defaultBtn radius red" id="btnEstimateRegisterDelete">삭제</button>
                     </span>
@@ -361,7 +361,7 @@
         ];
 
         estimateRegisterTopGrid.pqGrid({
-            height: 300,
+            height: 380,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
                 url: "/paramQueryGridSelect",

@@ -69,19 +69,23 @@
     box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);
     filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000);
     margin-bottom: 15px;     position: relative;}
-.estimate .topWrap .gubunWrap { border-right: 1px solid #e5e5e5; overflow: hidden; width: 97%; box-sizing: border-box; padding: 5px 15px; height: 47px; }
+/*.estimate .topWrap .gubunWrap { border-right: 1px solid #e5e5e5; overflow: hidden; width: 97%; box-sizing: border-box; padding: 5px 15px; height: 47px; }*/
+.estimate .topWrap .gubunWrap { border-right: 1px solid #e5e5e5; overflow: hidden; width: 97%; box-sizing: border-box; padding: 5px 15px; height: 37px; }
 .estimate .topWrap .gubunWrap.row_two { border-right: 1px solid #e5e5e5; overflow: hidden; width: 100%; box-sizing: border-box; padding: 5px 15px; height: 94px; }
 .estimate .topWrap .gubunWrap ul { font-size: 0; }
-.estimate .topWrap .gubunWrap ul li { padding: 6px 0; }
+/*.estimate .topWrap .gubunWrap ul li { padding: 6px 0; }*/
+.estimate .topWrap .gubunWrap ul li { padding: 2px 0; }
 .estimate .topWrap .gubunWrap ul li *{ }
 .estimate .topWrap .gubunWrap ul li:nth-child(4n) { padding-right: 0; }
 .estimate .topWrap .gubunWrap ul li:nth-child(4n+1) { }
 .estimate .topWrap .gubunWrap ul li label { }
 .estimate .topWrap .gubunWrap ul li select { }
 .estimate .topWrap .gubunWrap ul li input { }
-.estimate .basicWrap { border-right: 1px solid #e5e5e5; overflow: hidden; width: 100%; box-sizing: border-box; padding: 5px 15px; height: 148px; }
+/*.estimate .basicWrap { border-right: 1px solid #e5e5e5; overflow: hidden; width: 100%; box-sizing: border-box; padding: 5px 15px; height: 148px; }*/
+.estimate .basicWrap { /*border-bottom: 1px solid #e2e2e2;*/ border-right: 1px solid #e5e5e5; overflow: hidden; width: 100%; box-sizing: border-box; padding: 5px 15px; height: 68px; }
 .estimate .basicWrap ul { font-size: 0; }
-.estimate .basicWrap ul li { padding: 6px 0; }
+/*.estimate .basicWrap ul li { padding: 6px 0; }*/
+.estimate .basicWrap ul li { padding: 2px 0; }
 .estimate .basicWrap ul li *{ }
 .estimate .basicWrap ul li:nth-child(4n) { padding-right: 0; }
 .estimate .basicWrap ul li:nth-child(4n+1) { }
@@ -116,12 +120,14 @@
     -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);
     box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);
     filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); }
-.estimate .bottomWrap .hWrap { position: relative; overflow: auto; padding: 10px; border-bottom: 1px solid #e2e2e2; font-size: 0; }
+/*.estimate .bottomWrap .hWrap { position: relative; overflow: auto; padding: 10px; border-bottom: 1px solid #e2e2e2; font-size: 0; }*/
+.estimate .bottomWrap .hWrap { position: relative; overflow: auto; padding: 5px; border-bottom: 1px solid #e2e2e2; font-size: 0; }
 .estimate .bottomWrap .hWrap .buttonWrap { display: inline-block; }
 .estimate .bottomWrap .hWrap .chk_box { }
 .estimate .bottomWrap .hWrap .rightSpan { float: right; display: inline-block; }
 .estimate .bottomWrap .tableWrap { margin: 0 20px; position: relative; }
 .estimate .bottomWrap .tableWrap .buttonWrap { padding: 5px 0; display: block; }
+.estimate .bottomWrap .tableWrap .mailInfo .mailContext{ padding-left: 0px !important;  }
 .estimate .bottomWrap .tableWrap .conWrap { }
 .estimate .bottomWrap .tableWrap .conWrap img { width: 100%; height: 100%; }
 .estimate .bottomWrap .tableWrap .conWrap .popup .resultWrap .left_sort .col-md-6 { position: relative; min-height: 1px; padding-right: 15px; padding-left: 0px;}

@@ -96,7 +96,7 @@
                         <span class="ipu_wrap"><label class="label_100" for="MATERIAL_DETAIL">소재종류</label><input type="text" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200" value="" title="소재주문업체"></span>
                     </li>
                     <li class="">
-                        <span class="txt_span pd-right20">Option</span>
+                        <span class="txt_span pd-right20"><label class="label_100" for="MODULE_NM">기간 조회</label></span>
                         <span class="chk_box"><input id="pr_ex1" type="checkbox"><label for="pr_ex1"> 발송완료</label></span>
                         <span class="chk_box"><input id="pr_ex2" type="checkbox"><label for="pr_ex2"> 최신차수</label></span>
                         <span class="gubun"></span>
@@ -138,8 +138,8 @@
                 <div class="left_60Wrap">
                     <div class="buttonWrap">
                         <span class="d-inline">
-                            <button type="button" class="defaultBtn btn-120w" id="btnItemOrderRegisterOrder">소재주문</button>
-                            <button type="button" class="defaultBtn btn-120w" id="btnItemOrderRegisterCancel">주문취소</button>
+                            <button type="button" class="defaultBtn " id="btnItemOrderRegisterOrder">소재주문</button>
+                            <button type="button" class="defaultBtn radius red" id="btnItemOrderRegisterCancel">주문취소</button>
                             <button type="button" class="defaultBtn btn-120w" id="btnItemOrderRegisterCurrentStock">보유소재 전체현황</button>
                             <span class="chk_box"><input id="chkItemOrderRegisterAutoMatching" type="checkbox"/><label for="chkItemOrderRegisterAutoMatching">보유소개 자동매칭</label></span>
                             <span class="slt_wrap namePlusSlt right_float">

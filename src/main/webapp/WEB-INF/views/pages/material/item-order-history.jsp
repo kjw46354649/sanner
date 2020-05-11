@@ -84,9 +84,10 @@
         <div class="tableWrap">
             <div class="conWrap">
                 <div class="left_30Wrap">
-                    <div class="buttonWrap">
+                    <div class="buttonWrap right_sort">
                         <span class="d-inline">
-                            <button type="button" class="defaultBtn btn-120w" id="btnItemOrderHistoryCancel">주문취소</button>
+                            <button type="button" class="defaultBtn radius" id="btnItemOrderHistoryExcel">주문서 출력</button>
+                            <button type="button" class="defaultBtn radius red" id="btnItemOrderHistoryCancel">주문취소</button>
                         </span>
                     </div>
                     <div class="conMainWrap">
@@ -96,8 +97,7 @@
                 <div class="right_60Wrap">
                     <div class="buttonWrap">
                         <div class="right_sort">
-                            <button type="button" class="defaultBtn btn-120w" id="btnItemOrderHistoryExcel">주문서 출력</button>
-                            <button type="button" class="defaultBtn radius green" id="btnItemOrderHistorySave">저장</button>
+                            <button type="button" class="defaultBtn radius green" id="btnItemOrderHistorySave">검사 입고</button>
                         </div>
                     </div>
                     <div class="conMainWrap">
