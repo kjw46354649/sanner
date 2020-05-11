@@ -16,7 +16,7 @@
     <div class="topWrap">
         <form class="form-inline" id="SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectSalesClosingHistoryList">
-            <div class="gubunWrap">
+            <div class="gubunWrap row_two">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -50,7 +50,9 @@
                         </span>
                     </li>
                     <li>
-                        <label class="label_100">마감년월</label>
+                        <span class="ipu_wrap">
+                            <label class="label_100">마감년월</label>
+                        </span>
                         <select name="CLOSE_YEAR_LEFT" id="CLOSE_YEAR_LEFT"></select>
                         <select name="CLOSE_MONTH_LEFT" id="CLOSE_MONTH_LEFT"></select><span style="margin: 10px 0; vertical-align: middle; font-size: 1.4rem;">~</span>
                         <select name="CLOSE_YEAR_RIGHT" id="CLOSE_YEAR_RIGHT" disabled></select>
@@ -60,12 +62,11 @@
                 </ul>
             </div>
         </form>
-        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
     <div class="topWrap" style="display: none">
         <form class="form-inline" id="MONTH_SALE_STATUS_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectMonthSaleStatusList">
-            <div class="gubunWrap">
+            <div class="gubunWrap row_two">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -111,10 +112,9 @@
                 </ul>
             </div>
         </form>
-        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
     <div class="bottomWrap">
-        <div class="tableWrap jmestabs" id="div_tabs" style="padding: 10px 0;">
+        <div class="tableWrap jmestabs" id="CONTROL_SALES_STATUS_TABS" style="padding: 10px 0;">
             <ul class="smallTabMenuTabs">
                 <li class="active">
                     <a href="#CLOSING_HISTORY" data-toggle="tab" aria-expanded="true">마감이력</a>
@@ -401,7 +401,7 @@
             }
         })
 
-        $("#div_tabs").tabs({
+        $("#CONTROL_SALES_STATUS_TABS").tabs({
             activate: function(event, ui) {
                 ui.newPanel.find('.pq-grid').pqGrid('refresh');
                 $('.topWrap').toggle(); // show -> hide , hide -> show

@@ -194,7 +194,7 @@
             A.CONTROL_SEQ,
             A.CONTROL_DETAIL_SEQ,
             D.MCT_PLAN_SEQ,
-            A.INNER_DUE_DT, <!-- 납기 -->
+            SF_GET_DATE_F(A.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT, <!-- 납기 -->
             B.CONTROL_NUM, <!-- 관리번호 -->
             A.PART_UNIT_QTY, <!-- Part 수량 -->
             A.MATERIAL_DETAIL, <!-- 소재 -->
@@ -252,7 +252,7 @@
             ROW_NUMBER () OVER () AS ROWNUM,
             A.CONTROL_SEQ,
             A.CONTROL_DETAIL_SEQ,
-            A.INNER_DUE_DT, <!-- 납기 -->
+            SF_GET_DATE_F(A.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT, <!-- 납기 -->
             CASE
                 WHEN B.EMERGENCY_YN = 'Y' THEN '긴'
             END AS EMERGENCY_YN, <!-- 긴급 -->
@@ -298,13 +298,16 @@
         WHERE 1 = 1
             AND B.CONTROL_STATUS = 'ORD001' <!-- 주문확정 -->
             AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO008')
+        GROUP BY
+            A.CONTROL_SEQ,
+            A.CONTROL_DETAIL_SEQ
     </select>
     <select id="selectCamWorkHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER () OVER () AS ROWNUM,
             A.CONTROL_SEQ,
             A.CONTROL_DETAIL_SEQ,
-            A.INNER_DUE_DT, <!-- 납기 -->
+            SF_GET_DATE_F(A.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT, <!-- 납기 -->
             CASE
                 WHEN B.EMERGENCY_YN = 'Y' THEN '긴'
             END AS EMERGENCY_YN, <!-- 긴급 -->
@@ -383,8 +386,8 @@
             A.MATERIAL_FINISH_TM, <!-- TM각비 -->
             A.MATERIAL_FINISH_GRIND, <!-- 연마 -->
             A.MATERIAL_FINISH_HEAT, <!-- 열처리 -->
-            SF_GET_DATE_F(D.WORK_START_DT,'YYYY','M') AS WORK_START_DT, <!-- 착수일시 -->
-            SF_GET_DATE_F(D.WORK_FINISH_DT,'YYYY','M') AS WORK_FINISH_DT, <!-- 완료일시 -->
+            SF_GET_DATE_F(D.WORK_START_DT, 'YYYY', 'M') AS WORK_START_DT, <!-- 착수일시 -->
+            SF_GET_DATE_F(D.WORK_FINISH_DT, 'YYYY', 'M') AS WORK_FINISH_DT, <!-- 완료일시 -->
             CONCAT(D.WORK_STOP_DT, '분') AS WORK_STOP_DT, <!-- 정지시간 -->
             CONCAT(TIMESTAMPDIFF(MINUTE, D.WORK_START_DT, WORK_FINISH_DT), '분') AS LEAD_TIME, <!-- 소요시간 -->
             CONCAT(TIMESTAMPDIFF(MINUTE, D.WORK_START_DT, WORK_FINISH_DT) / A.PART_UNIT_QTY, '분') AS UNIT_LEAD_TIME, <!-- 단위소요 -->

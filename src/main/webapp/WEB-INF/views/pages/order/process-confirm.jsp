@@ -115,7 +115,7 @@
         </div>
     </div>
 
-    <div class="rightWrap1 right_float">
+    <div class="rightWrap2 right_float">
         <div>
             <form class="form-inline" id="OUTSIDE_SEARCH_FORM" role="form">
                 <input type="hidden" name="queryId" id="queryId" value="selectOutsideProcessingList">

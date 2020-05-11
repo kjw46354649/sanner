@@ -73,7 +73,7 @@
             <div class="hWrap">
                 <h2>가공 대상 List</h2>
                 <span class="slt_wrap mg-left20">
-                    <label class="label_100" for="FACTORY_CLASSIFY">공장구분</label>
+                    <label class="label_50" for="FACTORY_CLASSIFY">공장구분</label>
                     <select class="wd_100" name="FACTORY_CLASSIFY" id="FACTORY_CLASSIFY" title="공장구분">
                         <option value="">All</option>
                         <c:forEach var="code" items="${HighCode.H_1014}">
@@ -83,14 +83,14 @@
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
-                    <label class="label_100" for="LOCATION">위치</label>
+                    <label class="label_50" for="LOCATION">위치</label>
                     <select class="wd_100" id="LOCATION" name="LOCATION" title="위치">
                         <option value="">ALL</option>
                     </select>
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
-                    <label class="label_100" for="MATERIAL_CLASSIFY">소재분류</label>
+                    <label class="label_50" for="MATERIAL_CLASSIFY">소재분류</label>
                     <select class="wd_100" name="MATERIAL_CLASSIFY" id="MATERIAL_CLASSIFY" title="소재분류">
                         <option value="">All</option>
                         <c:forEach var="code" items="${HighCode.H_1027}">
@@ -100,7 +100,7 @@
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
-                    <label class="label_100" for="PROGRESS">진행상태</label>
+                    <label class="label_50" for="PROGRESS">진행상태</label>
                     <select class="wd_100" name="PROGRESS" id="PROGRESS" title="진행상태">
                         <option value="">All</option>
                         <c:forEach var="code" items="${HighCode.H_1013}">
@@ -110,14 +110,14 @@
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
-                    <label class="label_100" for="MCT_NO">MCT No.</label>
+                    <label class="label_50" for="MCT_NO">MCT No.</label>
                     <select class="wd_100" name="MCT_NO" id="MCT_NO" title="MCT No.">
                         <option value="">ALL</option>
                     </select>
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
-                    <label class="label_100" for="WORK_CLASSIFY">작업구분</label>
+                    <label class="label_50" for="WORK_CLASSIFY">작업구분</label>
                     <select class="wd_100" name="WORK_CLASSIFY" id="WORK_CLASSIFY" title="작업구분">
                         <option value="">All</option>
                         <c:forEach var="code" items="${HighCode.H_1011}">
@@ -125,6 +125,8 @@
                         </c:forEach>
                     </select>
                 </span>
+                <span class="gubun"></span>
+                <span class="refresh mg-left10"><button type="button" id="MCT_TARGET_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
             </div>
             <div class="conWrap">
                 <div class="tableWrap" style="background: #e1e1e1;">
@@ -174,15 +176,13 @@
             str += '                    <div id="PROCESS_PLAN_GRID' + order + '"></div>';
             str += '                </div>';
             str += '                <div class="footerWrap">';
-            str += '                    <span>Total<span id="NC' + order + '_TOTAL_RECORDS">13</span> rows <span id="NC' + order + '_TOTAL_PART_UNIT_QUANTITY">1</span> ea <span id="NC' + order + '_TOTAL_WORKING_TIME">583</span> min</span>';
+            str += '                    <span>Total <span id="NC' + order + '_TOTAL_RECORDS">13</span>rows <span id="NC' + order + '_TOTAL_PART_UNIT_QUANTITY">1</span>ea <span id="NC' + order + '_TOTAL_WORKING_TIME">583</span>min</span>';
             str += '                </div>';
             str += '            </div>';
             str += '        </div>';
             str += '    </div>';
             str += '</form>';
 
-            debugger;
-            // $('#layout_' + row + '_' + col).html(str);
             $('#layout_' + row + '_' + col)[0].innerHTML = str;
         };
 
@@ -709,7 +709,7 @@
                 }, parameters, '');
             }
         };
-        const refreshGrids = function () {
+        const refreshMctPlanGrids = function () {
             $processPlanGrid1.pqGrid('refreshDataAndView');
             $processPlanGrid2.pqGrid('refreshDataAndView');
             $processPlanGrid3.pqGrid('refreshDataAndView');
@@ -717,7 +717,7 @@
         };
         const refreshTargetGrid = function () {
             $processTargetGrid.pqGrid('refreshDataAndView');
-        }
+        };
 
         const resetEquipId = function () {
             $('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_ID').val('');
@@ -778,11 +778,15 @@
             resetGrid();
             showGrid();
             changePostData();
-            refreshGrids();
+            refreshMctPlanGrids();
         });
 
         $('#MCT_PLAN_REFRESH').on('click', function () {
-            refreshGrids();
+            refreshMctPlanGrids();
+        });
+        
+        $('#MCT_TARGET_REFRESH').on('click', function () {
+            refreshTargetGrid();
         });
         /* event */
 
