@@ -35,6 +35,10 @@
 <!--Include pqTouch file to provide support for touch devices (optional)-->
 <script type="text/javascript" src="/resource/plugins/paramquery/pqTouch/pqtouch.min.js" ></script>
 <script type="text/javascript" src="/resource/plugins/paramquery/pqSelect/pqselect.min.js" ></script>
+
+<!-- print -->
+<script type="text/javascript" src="/resource/plugins/printThis/printThis.js"></script>
+
 <script type="text/javascript" src="/resource/plugins/dhtmlx/suite.min.js"></script>
 <script type='text/javascript'>
 
@@ -644,8 +648,6 @@
 
     function callWindowImageViewer(imageSeq)
     {
-        console.log(imageSeq);
-
         // 팝업창 열려 있는지 확인
         if(typeof(windowImageViewer)=='undefined' || windowImageViewer.closed) {
             windowImageViewer = window.open("/imageViewer", "jmesImageViewChildForm", "width=1024, height=768, resizable = no, scrollbars = no");
@@ -663,15 +665,29 @@
 
     /* 모달 Print 팝업 호출 */
     function callWindowModalDrawingPopup(controlSeqMap){
-        let dhxWindow = new dhx.Window({width: 440, height: 520, title: "drawingPrint"});
-        dhxWindow.attachHTML("/drawingPrint");
-        dhxWindow.show();
-
-        // var dhxWindow = new dhx.Window({width: 440, height: 520, title: "Window"});
-        // var html = "<h3>dhtmlxWindow</h3><p>Here is a neat and flexible window system with fast initialization, convenient modes, and easy customization.</p><p>Inspect all the samples to discover each and every feature.</p><img style='display: block; width: 200px; height: 200px; margin-top: 20px; margin-left: auto; margin-right: auto' src='../common/developer.svg'>";
-        //
-        // dhxWindow.attachHTML(html);
-        // dhxWindow.show();
+        commonDrawingPrintPopup.modal('show');
+        $(".cadDrawingPrint").printThis({
+            debug: false,               // show the iframe for debugging
+            importCSS: true,            // import parent page css
+            importStyle: false,         // import style tags
+            printContainer: true,       // print outer container/$.selector
+            loadCSS: "",                // path to additional css file - use an array [] for multiple
+            pageTitle: "진성 시스템",              // add title to print page
+            removeInline: false,        // remove inline styles from print elements
+            removeInlineSelector: "*",  // custom selectors to filter inline styles. removeInline must be true
+            printDelay: 333,            // variable print delay
+            header: null,               // prefix to html
+            footer: null,               // postfix to html
+            base: false,                // preserve the BASE tag or accept a string for the URL
+            formValues: true,           // preserve input/form values
+            canvas: false,              // copy canvas content
+            doctypeString: '...',       // enter a different doctype for older markup
+            removeScripts: false,       // remove script tags from print content
+            copyTagClasses: false,      // copy classes from the html & body tag
+            beforePrintEvent: null,     // function for printEvent in iframe
+            beforePrint: null,          // function called before iframe is filled
+            afterPrint: null            // function called before iframe is removed
+        });
     }
 
     Date.prototype.yyyymmdd = function() {

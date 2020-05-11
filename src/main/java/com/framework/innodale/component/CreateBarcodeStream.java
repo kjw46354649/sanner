@@ -16,7 +16,20 @@ public class CreateBarcodeStream {
      */
     public static BitMatrix generateEAN13BarcodeImage(String barcodeText) throws Exception {
         EAN13Writer barcodeWriter = new EAN13Writer();
-        BitMatrix bitMatrix = barcodeWriter.encode(barcodeText, BarcodeFormat.EAN_13, 300, 150);
+        BitMatrix bitMatrix = barcodeWriter.encode(barcodeText, BarcodeFormat.EAN_13, 300, 50);
+
+        return bitMatrix;
+    }
+
+    /**
+     * generate CODE39 Barcode
+     * @param barcodeText
+     * @return
+     * @throws Exception
+     */
+    public static BitMatrix generateCode39BarcodeImage(String barcodeText) throws Exception {
+        EAN13Writer barcodeWriter = new EAN13Writer();
+        BitMatrix bitMatrix = barcodeWriter.encode(barcodeText, BarcodeFormat.CODE_39, 300, 50);
 
         return bitMatrix;
     }
@@ -29,7 +42,7 @@ public class CreateBarcodeStream {
      */
     public static BitMatrix generateCode128BarcodeImage(String barcodeText) throws Exception {
         Code128Writer barcodeWriter = new Code128Writer();
-        BitMatrix bitMatrix = barcodeWriter.encode(barcodeText, BarcodeFormat.CODE_128, 300, 150);
+        BitMatrix bitMatrix = barcodeWriter.encode(barcodeText, BarcodeFormat.CODE_128, 300, 50);
 
         return bitMatrix;
     }
