@@ -144,11 +144,11 @@ option { font-size: 12px; }
 .blue { color: #fff !important; background: #59a8e4 !important; border: 1px solid #3371a0 !important; }
 .black { color: #fff !important; background: #454545 !important; border: 1px solid #454545 !important; }
 .sky { color: #0a2032 !important; background: #add6f6 !important; border: 1px solid #85b3d8 !important; }
-.red{background: #9b1313; color: #fff; border: 1px solid #9b1313;}
-.orange{background: #e57304; border: 1px solid #e57304; color:#fff;}
-.green{background: #4d8d1a; border:1px solid #4d8d1a; color:#fff;}
-.yellow{background: #ffc63a; border: 1px solid #ffc63a; color: #fff}
-.purple{background: #73139b; border:1px solid #73139b; color:#fff;}
+.red{background: #9b1313 !important; color: #fff !important; border: 1px solid #9b1313 !important;}
+.orange{background: #e57304 !important; border: 1px solid #e57304 !important; color:#fff !important;}
+.green{background: #4d8d1a !important; border:1px solid #4d8d1a !important; color:#fff !important;}
+.yellow{background: #ffc63a !important; border: 1px solid #ffc63a !important; color: #fff !important;}
+.purple{background: #73139b !important; border:1px solid #73139b !important; color:#fff !important;}
 
 
 .graBtn { height: 40px; padding: 0 20px 0 40px; color: #fff; font-size: 15px; line-height: 40px; position: relative; border-radius: 3px; background: -webkit-gradient(linear, 90deg, color-stop(5%, 43934B), color-stop(5%, 4EAB57));/* Chrome,Safari4+ */ background: -webkit-linear-gradient(90deg, #43934B 5%, #4EAB57 5%);/* Chrome10+,Safari5.1+ */ }

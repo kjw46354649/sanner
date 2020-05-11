@@ -72,6 +72,7 @@
 /*.estimate .topWrap .gubunWrap { border-right: 1px solid #e5e5e5; overflow: hidden; width: 97%; box-sizing: border-box; padding: 5px 15px; height: 47px; }*/
 .estimate .topWrap .gubunWrap { border-right: 1px solid #e5e5e5; overflow: hidden; width: 97%; box-sizing: border-box; padding: 5px 15px; height: 37px; }
 .estimate .topWrap .gubunWrap.row_two { border-right: 1px solid #e5e5e5; overflow: hidden; width: 100%; box-sizing: border-box; padding: 5px 15px; height: 94px; }
+.estimate .topWrap .gubunWrap.row_three { border-right: 1px solid #e5e5e5; overflow: hidden; width: 100%; box-sizing: border-box; padding: 5px 15px; height: 125px; }
 .estimate .topWrap .gubunWrap ul { font-size: 0; }
 /*.estimate .topWrap .gubunWrap ul li { padding: 6px 0; }*/
 .estimate .topWrap .gubunWrap ul li { padding: 2px 0; }

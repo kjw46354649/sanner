@@ -16,7 +16,7 @@
     <div class="topWrap">
         <form class="form-inline" id="OUTSIDE_CLOSE_HISTORY_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="outMapper.selectOutsideCloseHistoryList">
-            <div class="gubunWrap">
+            <div class="gubunWrap row_three">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -86,9 +86,8 @@
                 </ul>
             </div>
         </form>
-        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
-    <div class="bottomWrap">
+    <div class="bottomWrap row3_bottomWrap">
         <div class="hWrap">
             <button type="button" class="defaultBtn btn-120w" id="OUTSIDE_CLOSE_CANCEL">마감 취소</button>
             <div class="rightSpan">
@@ -192,10 +191,12 @@
             {title: 'DXF', dataType: 'string', dataIndx: 'STATUS_DT', colModel: []}
         ];
         const obj = {
-            height: '100%',
+            minHeight: '100%',
+            height: 700,
             collapsible: false,
             resizable: true,
             showTitle: false,
+            strNoRows: g_noData,
             numberCell: {title: 'No.'},
             // scrollModel: {autoFit: true},
             trackModel: {on: true},
