@@ -92,6 +92,9 @@
                     </div>
                     <div class="conMainWrap">
                         <div id="item_order_history_left_grid" class="jqx-refresh"></div>
+                        <div class="right_sort">
+                            전체 조회 건수 (Total : <span id="item_order_history_left_grid_records" style="color: #00b3ee">0</span>)
+                        </div>
                     </div>
                 </div>
                 <div class="right_60Wrap">
@@ -102,6 +105,9 @@
                     </div>
                     <div class="conMainWrap">
                         <div id="item_order_history_right_grid" class="jqx-refresh"></div>
+                        <div class="right_sort">
+                            전체 조회 건수 (Total : <span id="item_order_history_right_grid_records" style="color: #00b3ee">0</span>)
+                        </div>
                     </div>
                 </div>
             </div>
@@ -267,6 +273,10 @@
                 autoMerge(this);
             },
             complete: function(event, ui) {
+                this.flex();
+                let data = itemOrderHistoryLeftGrid.pqGrid('option', 'dataModel.data');
+
+                $('#item_order_history_left_grid_records').html(data.length);
             },
             selectChange: function (event, ui) {
                 if (ui.selection.iCells.ranges[0] !== undefined) {
@@ -320,6 +330,12 @@
                 colModel: itemOrderHistoryRightColModel,
                 showTitle: false,
                 title: false,
+                complete: function(event, ui) {
+                    this.flex();
+                    let data = itemOrderHistoryRightGrid.pqGrid('option', 'dataModel.data');
+
+                    $('#item_order_history_right_grid_records').html(data.length);
+                },
             });
 
             itemOrderHistoryRightGrid.pqGrid("refreshDataAndView");

@@ -132,6 +132,9 @@
             </div>
             <div class="conMainWrap">
                 <div id="estimate_register_top_grid" class="jqx-refresh"></div>
+                <div class="right_sort">
+                    전체 조회 건수 (Total : <span id="estimate_register_top_grid_records" style="color: #00b3ee">0</span>)
+                </div>
             </div>
             <br>
             <div class="conWrap">
@@ -146,8 +149,10 @@
                             <h3 style="text-align: left;">메일수신처</h3>
                             <div class="conMainWrap">
                                 <div id="estimate_register_bot_grid"></div>
+                                <div class="right_sort">
+                                    전체 조회 건수 (Total : <span id="estimate_register_bot_grid_records" style="color: #00b3ee">0</span>)
+                                </div>
                             </div>
-                            <br>
                             <h3 style="text-align: left;">첨부파일</h3>
                             <div class="fileTableWrap">
                                 <table class="colStyle" id="attachDragAndDrop">
@@ -384,6 +389,12 @@
             showTitle: false,
             title: false,
             strNoRows: g_noData,
+            complete: function (event, ui) {
+                this.flex();
+                let data = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data');
+
+                $('#estimate_master_top_grid_records').html(data.length);
+            },
             selectChange: function (event, ui) {
                 if (ui.selection.iCells.ranges[0] !== undefined) {
                     estimateRegisterSelectedRowIndex = [];
@@ -454,7 +465,13 @@
                 colModel: estimateRegisterBotColModel,
                 showTitle: false,
                 title: false,
-                strNoRows: g_noData
+                strNoRows: g_noData,
+                complete: function (event, ui) {
+                    this.flex();
+                    let data = estimateRegisterBotGrid.pqGrid('option', 'dataModel.data');
+
+                    $('#estimate_master_bot_grid_records').html(data.length);
+                },
             });
 
             estimateRegisterBotGrid.pqGrid("refreshDataAndView");

@@ -101,10 +101,17 @@
                 </div>
             </div>
             <div class="conMainWrap">
-                <div id="estimate_master_top_grid" class="jqx-refresh"></div><br/>
+                <div id="estimate_master_top_grid" class="jqx-refresh"></div>
+                <div class="right_sort">
+                    전체 조회 건수 (Total : <span id="estimate_master_top_grid_records" style="color: #00b3ee">0</span>)
+                </div>
             </div>
-            <div class="conWrap" style="height:412px;">
+            <br/>
+            <div class="conWrap" style="height:404px;">
                 <div id="estimate_master_bot_grid" class="jqx-refresh"></div>
+                <div class="right_sort">
+                    전체 조회 건수 (Total : <span id="estimate_master_bot_grid_records" style="color: #00b3ee">0</span>)
+                </div>
             </div>
         </div>
     </div>
@@ -402,6 +409,11 @@
             strNoRows: g_noData,
             complete: function(event, ui) {
                 estimateMasterTopGrid.pqGrid('setSelection', {rowIndx:0} );
+
+                this.flex();
+                let data = estimateMasterTopGrid.pqGrid('option', 'dataModel.data');
+
+                $('#estimate_master_top_grid_records').html(data.length);
             },
             selectChange: function (event, ui) {
                 if (ui.selection.iCells.ranges[0] !== undefined) {
@@ -464,6 +476,12 @@
                 colModel: estimateMasterBotColModel,
                 showTitle: false,
                 strNoRows: g_noData,
+                complete: function (event, ui) {
+                    this.flex();
+                    let data = estimateMasterBotGrid.pqGrid('option', 'dataModel.data');
+
+                    $('#estimate_master_bot_grid_records').html(data.length);
+                },
                 change: function( event, ui ) {
                     if(ui.source == 'edit'){
                         let rowIndx = ui.updateList[0].rowIndx;
@@ -657,8 +675,8 @@
 
         // top.stop().animate({height:'122px'},300, 'easeOutCubic');
         top.stop().animate({height:'95px'},300, 'easeOutCubic');
-        bottom.stop().animate({height:'786px'},300, 'easeOutCubic');
-        con.css({height:'357px'});
+        bottom.stop().animate({height:'796px'},300, 'easeOutCubic');
+        con.css({height:'346px'});
 
         estimateMasterBotGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
     }
@@ -671,8 +689,8 @@
 
         // top.stop().animate({height:'47px'},300, 'easeOutCubic');
         top.stop().animate({height:'37px'},300, 'easeOutCubic');
-        bottom.stop().animate({height:'841px'},300, 'easeOutCubic');
-        con.css({height:'416px'});
+        bottom.stop().animate({height:'854px'},300, 'easeOutCubic');
+        con.css({height:'404px'});
 
         estimateMasterBotGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
     }

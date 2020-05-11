@@ -60,26 +60,32 @@
     <div class="page estimate">
         <div class="topWrap">
             <div class="conWrap">
-                <div class="titWrap">
-                    <div class="left_float">
-                        <span class="slt_wrap">
-						    <label for="popLocation">위치정보</label>
-                            <select id="popLocation" name="popLocation" title="위치정보" class="wd_200">
-                                <option value="" selected="selected">검사실</option>
-                                <option value="1">1 공장</option>
-                                <option value="2">2 공장</option>
-                            </select>
-                        </span>
-                        <span class="wd_200">&nbsp;</span>
-                        <span class="barCode"><img src="/resource/asset/images/common/img_barcode.png" alt="바코드"></span>
-                        <span class="ipu_wrap"><input type="text" name="priceSltd" id="priceSltd" placeholder="읽기 불가능 모드" value="" title="바코드번호"></span>
+                <form id="pop_search_form">
+                    <input type="hidden" id="queryId" name="queryId" value="popMapper.selectPopList"/>
+                    <div class="titWrap">
+                        <div class="left_float">
+                            <span class="slt_wrap">
+                                <label for="popLocation">위치정보</label>
+                                <select id="popLocation" name="popLocation" title="위치정보" class="wd_200">
+                                    <c:forEach var="code" items="${HighCode.H_1009}">
+                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                    </c:forEach>
+                                </select>
+                            </span>
+                            <span class="wd_200">&nbsp;</span>
+                            <span class="barCode"><img src="/resource/asset/images/common/img_barcode.png" alt="바코드"></span>
+                            <span class="ipu_wrap"><input type="text" name="popBarcode" id="popBarcode" placeholder="읽기 불가능 모드" value="" title="바코드번호"></span>
+                        </div>
+                        <div class="right_float">
+                            <span class="refresh" id="popRefresh"><a href="#a;"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></a></span>
+                            <span class="rowCodeTxt">Total :
+                                <span class="rowCodeTxtColor" id="popTotalRows"> 27</span> Rows
+                                <span class="rowCodeTxtColor" id="popTotalQty">103</span> EA
+                            </span>
+                        </div>
                     </div>
-                    <div class="right_float">
-                        <span class="refresh"><a href="#a;"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></a></span>
-                        <span class="rowCodeTxt">Total :   <span class="rowCodeTxtColor"> 27</span> Rows   <span class="rowCodeTxtColor">103</span> EA</span>
-                    </div>
-                </div>
-                <div class="barCodeTxt">(바코드 이미지를 클릭하고 읽기가능 모드에서 출력물의 바코드를 스캔해 주세요.)</div>
+                    <div class="barCodeTxt">(바코드 이미지를 클릭하고 읽기가능 모드에서 출력물의 바코드를 스캔해 주세요.)</div>
+                </form>
             </div>
         </div>
         <div class="bottomWrap">
@@ -93,37 +99,13 @@
     <script type='text/javascript'>
 
         var g_code;
-        let $userMasterGrid;
-        let userMasterGridId = 'control_parts_pop_grid';
+        let $popMasterGrid;
+        let popMasterGridId = 'control_parts_pop_grid';
 
         $(function () {
             'use strict';
 
-            $.ajax({
-                url: '/json-list',
-                cache: false,
-                type: "POST",
-                data: {'queryId': 'systemMapper.selectSessionCodeList'},
-                dataType: "json",
-                async: false,
-                success: function(data) {
-                    g_code = data.list;
-                },
-                complete: function(){}
-            });
-
-            let fnGetCommCodeGridSelectBox = function (highCd) {
-                'use strict';
-                let selectBoxContents = [];
-                for(var i=0; i < g_code.length; i++){
-                    if(g_code[i].HIGH_CD == highCd){
-                        selectBoxContents.push({'value':g_code[i].CODE_CD, 'text':g_code[i].CODE_NM_KR});
-                    }
-                }
-                return selectBoxContents;
-            };
-
-            let userMasterColModel = [
+            let popMasterColModel = [
                 {title: '긴급', clsHead: 'control_manage_view_quality', dataType: 'string', dataIndx: 'EMERGENCY_YN'},
                 {title: '요망납기', width: 100, datatype: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
                 {title: '발주업체', clsHead: 'display_none', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
@@ -131,7 +113,7 @@
                 {title: '관리번호', clsHead: 'control_manage_view_estimate', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM', },
                 {
                     title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM',
-                    render: function (ui) {
+                    render: function (ui) {a
                         if (ui.rowData.WORK_TYPE === 'WTP020') {
                             return "<span></span>";
                         }
@@ -152,7 +134,8 @@
                 {title: 'Part 단위 수량', width: 120, dataType: 'integer', dataIndx: 'PART_UNIT_QTY'},
                 {title: '등록/업데이트 일시', width: 120, dataType: 'string', dataIndx: 'STATUS_DT'}
             ];
-            let userMasterObj = {
+
+            let popMasterObj = {
                 minHeight: "100%",
                 height: 800,
                 width: "100%",
@@ -165,19 +148,99 @@
                 trackModel: {on: true},
                 scrollModel: { autoFit: true },
                 columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
-                colModel: userMasterColModel,
+                colModel: popMasterColModel,
                 dataModel: {
                     recIndx: 'ROWNUM', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                    postData: { "queryId" : "orderMapper.selectControlManageList"},
+                    postData: fnFormToJsonArrayData('#pop_search_form'),
                     getData: function (response, textStatus, jqXHR) {
                         return {data: response.data};
                     }
                 },
-                toolbar: false
+                toolbar: false,
+                complete : function( ui, event){
+                    console.log(ui);
+
+                    let totalRows = 0;
+                    let totalQty = 0;
+                    $("#popTotalRows").html(totalRows);
+                    $("#popTotalQty").html(totalQty);
+
+                }
             };
-            $userMasterGrid = $('#' + userMasterGridId).pqGrid(userMasterObj);
+            $popMasterGrid = $('#' + popMasterGridId).pqGrid(popMasterObj);
+
+            function refreshDate(){
+                $popMasterGrid.pqGrid('option', "dataModel.postData", function (ui) {
+                    return (fnFormToJsonArrayData('#pop_search_form'));
+                });
+                $popMasterGrid.pqGrid('refreshDataAndView');
+            };
+
+            function scanningBarcode(){
+
+            }
+
+            $("#popLocation").on('change', function(){
+                refreshDate();
+            });
+
+            $("#popBarcode").on('change', function(){
+                let barcode = $(this).val();
+                if( barcode.length == 10) {
+                    scanningBarcode();
+                }
+            });
+
+            $("#popBarcode").on('focus', function(){
+                $(this).attr('placeholder', '');
+            });
+
+            $("#popBarcode").on('focusout', function(){
+                $(this).attr('placeholder', '읽기 불가능 모드');
+            });
+
+            $("#popRefresh").on('click', function(){
+                refreshDate();
+            });
+
         });
 
+        let fnFormToJsonArrayData = function (formid) {
+            if(formid.indexOf("#") == -1) formid = "#"+formid;
+            let elementArray = {};
+            let formArr = $(formid).serializeArray();
+            for(let i=0; i < formArr.length; i++) {
+                let tmp = formArr[i];
+                let name = tmp.name;
+                let value = "";
+                if(name != null){
+                    let $ctrl = $(formid).find('[name='+name+']');
+                    if ($ctrl.is('select')){
+                        value = $ctrl.val();
+                    } else if ($ctrl.is('textarea')) {
+                        value = $ctrl.val();
+                    } else {
+                        switch($ctrl.attr("type")) {
+                            case "text":
+                            case "date":
+                            case "password":
+                            case "hidden":
+                                value = $ctrl.val();
+                                break;
+                            case "checkbox":
+                                if($ctrl.prop('checked')) value = true;
+                                else value = false;
+                                break;
+                            case 'radio':
+                                value = $("input:radio[name=" + name + "]:checked").val();
+                                break;
+                        }
+                    }
+                    elementArray[name] = value;
+                }
+            }
+            return elementArray;
+        };
     </script>
 </body>
 </html>
