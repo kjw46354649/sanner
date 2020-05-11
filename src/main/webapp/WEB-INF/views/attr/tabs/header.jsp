@@ -23,6 +23,9 @@
 <link rel="stylesheet" href="/resource/plugins/paramquery/themes/bootstrap/pqgrid.css" />
 
 <link rel="stylesheet" href="/resource/plugins/dhtmlx/suite.css" />
+<!-- print -->
+<%--<link href="/resource/plugins/printThis/assets/css/normalize.css" rel="stylesheet" type="text/css" />--%>
+<%--<link href="/resource/plugins/printThis/assets/css/skeleton.css" rel="stylesheet" type="text/css" />--%>
 
 <link href="/resource/asset/css/reset.css" rel="stylesheet" type="text/css" />
 <link href="/resource/asset/css/webFont.css" rel="stylesheet" type="text/css" />
