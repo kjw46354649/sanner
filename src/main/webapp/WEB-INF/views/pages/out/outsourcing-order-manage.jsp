@@ -132,47 +132,11 @@
                         </span>
                     </li>
                 </ul>
-                <%--<div class="form-group1">
-
-
-                    <div class="dateWrap">
-                        <div class="leftSpan">
-                            <span class="slt_wrap">
-                                <select class="wd_200" id="daySltd" name="daySltd" title="등록일시">
-                                    <option value="" selected="selected">등록일시</option>
-                                    <option value="1">-ALL-</option>
-                                    <option value="2">-ALL-</option>
-                                </select>
-                            </span>
-                            <span class="radio_box">
-                                <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_1" value="today" checked><label class="label_100" for="fr_1001_1">오늘</label>
-                            </span>
-                            <span class="radio_box">
-                                <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_2" value="current_month"><label class="label_100" for="fr_1001_2">현재월</label>
-                            </span>
-                            <span class="radio_box">
-                                <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_3" value="three_months"><label class="label_100" for="fr_1001_3">3개월</label>
-                            </span>
-                            <div class="calendar_wrap">
-                                <span class="calendar_span">
-                                    <input type="text" class="wd_200" title="달력정보" name="CONTROL_MANAGE_START_DATE" id="CONTROL_MANAGE_START_DATE"><button type="button">달력선택</button>
-                                </span>
-                                <span class="nbsp">~</span>
-                                <span class="calendar_span">
-                                    <input type="text" class="wd_200" title="달력정보" name="CONTROL_MANAGE_END_DATE" id="CONTROL_MANAGE_END_DATE" readonly><button type="button">달력선택</button>
-                                </span>
-                                <span class="chk_box no_txt"><input id="pr_ex" type="checkbox"><label class="label_100" for="pr_ex">선택</label></span>
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>--%>
             </div>
         </form>
-        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
+        <button type="button" class="topWrap_btn" id="OUTSIDE_ORDER_MANAGE_TOPWRAP_BTN">펼치기 / 접기</button>
     </div>
-    <div class="bottomWrap">
+    <div class="bottomWrap row1_bottomWrap">
         <div class="hWrap">
             <button type="button" class="defaultBtn btn-120w" data-toggle="modal" data-target="#REQUEST_OUTSIDE_POPUP">
                 외주가공
@@ -193,6 +157,9 @@
         <div class="tableWrap">
             <div class="conWrap">
                 <div id="OUTSIDE_ORDER_MANAGE_GRID"></div>
+                <div class="right_sort">
+                    전체 조회 건수 (Total : <span id="OUTSIDE_ORDER_MANAGE_RECORDS" style="color: #00b3ee">0</span>)
+                </div>
             </div>
         </div>
     </div>
@@ -484,7 +451,8 @@
             {title: 'DXF', dataType: 'string', dataIndx: 'STATUS_DT', colModel: []}
         ];
         const obj = {
-            height: '100%',
+            minHeight: '100%',
+            height: 750,
             collapsible: false,
             resizable: true,
             showTitle: false,
@@ -505,6 +473,12 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            complete: function () {
+                this.flex();
+                let data = $outsideOrderManageGrid.pqGrid('option', 'dataModel.data');
+
+                $('#OUTSIDE_ORDER_MANAGE_RECORDS').html(data.length);
             },
             selectChange: function (event, ui) {
                 if (ui.selection.iCells.ranges[0] !== undefined) {
@@ -808,7 +782,43 @@
             }, parameters, '');
         };
 
-        $outsideOrderManageGrid = $('#' + gridId).pqGrid(obj);
+        // topWrap 확장 함수
+        const topMenuOpen = function () {
+            let top = $('#view_tab_100031 .gubunWrap');
+            let bottom = $('#view_tab_100031 .bottomWrap');
+            let con = $('#view_tab_100031 .bottomWrap .tableWrap .conWrap');
+
+            top.stop().animate({height: 159}, 300, 'easeOutCubic');
+            bottom.stop().animate({height: 730}, 300, 'easeOutCubic');
+            con.stop().animate({height: 562}, 300, 'easeOutCubic');
+
+            $outsideOrderManageGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
+        };
+
+        // topWrap 축소 함수
+        const topMenuClose = function () {
+            let top = $('#view_tab_100031 .gubunWrap');
+            let bottom = $('#view_tab_100031 .bottomWrap');
+            let con = $('#view_tab_100031 .bottomWrap .tableWrap .conWrap');
+
+            top.stop().animate({height: 47}, 300, 'easeInCubic');
+            bottom.stop().animate({height: 840},300, 'easeOutCubic');
+            con.stop().animate({height: 699}, 300, 'easeInCubic');
+
+            $outsideOrderManageGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
+        }
+        /* function */
+
+        /* event */
+        $('#OUTSIDE_ORDER_MANAGE_TOPWRAP_BTN').on('click', function () {
+            if ($(this).hasClass('on')) {
+                topMenuClose();
+                $(this).removeClass('on');
+            } else {
+                topMenuOpen();
+                $(this).addClass('on');
+            }
+        });
 
         $('#REQUEST_OUTSIDE_POPUP').on('show.bs.modal', function () {
             $mailRecipientGrid = $('#' + mailRecipientGridId).pqGrid(mailRecipientObj);
@@ -919,6 +929,8 @@
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
         });
+
+        $outsideOrderManageGrid = $('#' + gridId).pqGrid(obj);
         /* init */
     });
 </script>

@@ -20,7 +20,7 @@
             <div class="hWrap">
                 <h2>MCT 가공 계획 현황</h2>
                 <span class="slt_wrap namePlusSlt mg-left20">
-                                    <label for="FACTORY_AREA">MCT 공장</label>
+                                    <label for="FACTORY_AREA">MCT 센터</label>
                                     <select name="FACTORY_AREA" id="FACTORY_AREA">
                                     <c:forEach var="code" items="${HighCode.H_1005}">
                                         <c:if test="${code.ETC1 == 'MCT_PROCESS_PLAN'}">
