@@ -145,7 +145,7 @@
                         <div class="float_right col-md-6 col-sm-6">
                             <h3 style="text-align: left;">메일수신처</h3>
                             <div class="conMainWrap">
-                                <div id="estimate_register_bot_grid" role="grid" dir="ltr" class="pq-grid pq-theme ui-widget ui-widget-content ui-corner-all pq-disable-select ui-resizable" style="width: auto; height: 100px;"><div class="pq-grid-top ui-widget-header  ui-corner-top"><div class="pq-grid-title ui-corner-top" style="display: none;"></div><div class="pq-slider-icon pq-no-capture"></div></div><div class="pq-grid-center-o"><div class="pq-tool-panel" style="display: none; height: 1px;"></div><div class="pq-grid-center" style="height: 98px;"><div class="pq-header-outer ui-widget-header" style="width: 881px; height: 29px;"><div class="pq-grid-cont"><div class="pq-cont-inner pq-cont-right"><div class="pq-table-right pq-table pq-grid-header-table" style="height: 28px; width: 871px;"><div class="pq-grid-row pq-grid-title-row" role="row" id="pq-head-row-u3-0-right" style="top:0px;height:28px;width:100%;"><div role="gridcell" id="pq-head-cell-u3-0-1-right" pq-row-indx="0" pq-col-indx="1" class="pq-grid-col  pq-grid-col-leaf" style="left: 30px; width: 280px; height: 28px;"><div class="pq-td-div"><span class="pq-title-span">성함</span><span class="pq-col-sort-icon"></span><span class="pq-col-sort-count"></span></div></div><div role="gridcell" id="pq-head-cell-u3-0-2-right" pq-row-indx="0" pq-col-indx="2" class="pq-grid-col  pq-grid-col-leaf" style="left: 310px; width: 280px; height: 28px;"><div class="pq-td-div"><span class="pq-title-span">메일주소</span><span class="pq-col-sort-icon"></span><span class="pq-col-sort-count"></span></div></div><div role="gridcell" id="pq-head-cell-u3-0-3-right" pq-row-indx="0" pq-col-indx="3" class="pq-grid-col  pq-grid-col-leaf" style="left: 590px; width: 281px; height: 28px;"><div class="pq-td-div"><span class="pq-title-span">전화번호</span><span class="pq-col-sort-icon"></span><span class="pq-col-sort-count"></span></div></div></div></div><div class="pq-r-spacer" style="position: absolute; top: 0px; height: 10px; width: 10px; left: 871px;"></div><div id="pq-resize-div-3-1" pq-col-indx="1" style="left:305px;" class="pq-grid-col-resize-handle pq-resize-div-3">&nbsp;</div><div id="pq-resize-div-3-2" pq-col-indx="2" style="left:585px;" class="pq-grid-col-resize-handle pq-resize-div-3">&nbsp;</div><div id="pq-resize-div-3-3" pq-col-indx="3" style="left:866px;" class="pq-grid-col-resize-handle pq-resize-div-3">&nbsp;</div></div><div class="pq-cont-inner pq-cont-left" style="width: 30px; height: 28px;"><div class="pq-table-left pq-table pq-grid-header-table" style="height: 28px;"><div class="pq-grid-row pq-grid-title-row" role="row" id="pq-head-row-u3-0-left" style="top:0px;height:28px;width:100%;"><div id="pq-head-cell-u3-0--1-left" style="width:30px;height:28px;" role="gridcell" class="pq-grid-number-cell ">No</div></div></div><div id="pq-resize-div-3--1" pq-col-indx="-1" style="left:25px;" class="pq-grid-col-resize-handle pq-resize-div-3">&nbsp;</div></div><div class="pq-cont-inner pq-cont-tr"><div class="pq-table-tr pq-table pq-grid-header-table" style="width: 871px;"></div></div><div class="pq-cont-inner pq-cont-lt"><div class="pq-table-lt pq-table pq-grid-header-table"></div></div></div></div><div class="pq-body-outer" tabindex="0" style="height: 70px;"><div class="pq-grid-cont"><div class="pq-grid-norows"><div style="font-size:18px;margin-top:20px;">No Data</div></div><div class="pq-cont-inner pq-cont-right" style="overflow: hidden scroll;"><div class="pq-table-right pq-table pq-td-border-top pq-td-border-right" style="height: 1px; width: 871px;"></div></div><div class="pq-cont-inner pq-cont-left" style="width: 30px; height: 70px;"><div class="pq-table-left pq-table pq-td-border-top pq-td-border-right" style="height: 1px;"></div></div><div class="pq-cont-inner pq-cont-tr" style="display: none; width: 871px; height: 0px;"><div class="pq-table-tr pq-table pq-td-border-top pq-td-border-right" style="width: 871px;"></div></div><div class="pq-cont-inner pq-cont-lt" style="display: none; width: 30px; height: 0px;"><div class="pq-table-lt pq-table pq-td-border-top pq-td-border-right"></div></div></div></div><div class="pq-summary-outer" style="height: 1px; width: 881px;"><div class="pq-grid-cont"><div class="pq-cont-inner pq-cont-right"><div class="pq-table-right pq-table pq-grid-summary-table pq-td-border-top pq-td-border-right" style="height: 1px; width: 871px;"></div><div class="pq-r-spacer" style="position: absolute; top: 0px; height: 10px; left: 871px; width: 10px;"></div></div><div class="pq-cont-inner pq-cont-left" style="width: 30px; height: 0px;"><div class="pq-table-left pq-table pq-grid-summary-table pq-td-border-top pq-td-border-right" style="height: 1px;"></div></div><div class="pq-cont-inner pq-cont-tr"><div class="pq-table-tr pq-table pq-grid-summary-table pq-td-border-top pq-td-border-right" style="width: 871px;"></div></div><div class="pq-cont-inner pq-cont-lt"><div class="pq-table-lt pq-table pq-grid-summary-table pq-td-border-top pq-td-border-right"></div></div></div></div></div><div style="clear:both;"></div></div><div class="pq-grid-bottom ui-widget-header  ui-corner-bottom"><div class="pq-grid-footer"></div></div><div class="pq-loading" style="display: none;"><div class="pq-loading-bg" style="opacity: 0.2;"></div><div class="pq-loading-mask ui-state-highlight"><div>Loading...</div></div></div><div class="ui-resizable-handle ui-resizable-s" style="z-index: 90;"></div><div class="pq-arrow-down ui-icon ui-icon-circle-arrow-s glyphicon glyphicon-circle-arrow-down" style="display: none;"></div><div class="pq-arrow-up ui-icon ui-icon-circle-arrow-n glyphicon glyphicon-circle-arrow-up" style="display: none;"></div></div>
+                                <div id="estimate_register_bot_grid"></div>
                             </div>
                             <br>
                             <h3 style="text-align: left;">첨부파일</h3>
@@ -177,8 +177,10 @@
 </form>
 <form id="estimate_register_excel_download" method="POST">
     <input type="hidden" id="sqlId" name="sqlId" value="selectEstimateDetailListExcel"/>
+    <input type="hidden" id="mapInputId" name="mapInputId" value="data"/>
     <input type="hidden" id="paramName" name="paramName" value="EST_SEQ"/>
     <input type="hidden" id="paramData" name="paramData" value=""/>
+    <input type="hidden" id="template" name="template" value="estimate_list_template"/>
 </form>
 <script type="text/javascript">
     $(function () {
@@ -512,7 +514,7 @@
         };
 
         function getCadUploadBlankHtml(){
-            return'<tr><td colspan="3" class="spanArea" >마우스로 파일을 Drag & Drop 하세요.</td></tr><tr><td colspan="3"></td></tr><tr><td colspan="3"></td></tr><tr><td colspan="3"></td></tr><tr><td colspan="3"></td></tr>';
+            return'<tr><td colspan="3" class="spanArea" >마우스로 파일을 Drag & Drop 하세요.</td></tr><tr><td colspan="3"></td></tr><tr><td colspan="3"></td></tr>';
         }
 
         let fileHtml = getCadUploadBlankHtml();
@@ -557,7 +559,7 @@
         });
 
         $("#btnEstimateRegisterEstimateListExcel").on('click', function(){
-            fnReportFormToHiddenFormPageAction("packing_history_list_search_form", "/downloadExcel");
+            fnReportFormToHiddenFormPageAction("estimate_register_excel_download", "/downloadExcel");
         });
 
         $("#chkEstimateRegisterDetail").on('click', function(){

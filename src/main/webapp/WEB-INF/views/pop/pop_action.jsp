@@ -63,8 +63,8 @@
                 <div class="titWrap">
                     <div class="left_float">
                         <span class="slt_wrap">
-						    <label for="projectSltd">위치정보</label>
-                            <select id="projectSltd" name="projectSltd" title="사업자구분" class="wd_200">
+						    <label for="popLocation">위치정보</label>
+                            <select id="popLocation" name="popLocation" title="위치정보" class="wd_200">
                                 <option value="" selected="selected">검사실</option>
                                 <option value="1">1 공장</option>
                                 <option value="2">2 공장</option>
@@ -73,13 +73,13 @@
                         <span class="wd_200">&nbsp;</span>
                         <span class="barCode"><img src="/resource/asset/images/common/img_barcode.png" alt="바코드"></span>
                         <span class="ipu_wrap"><input type="text" name="priceSltd" id="priceSltd" placeholder="읽기 불가능 모드" value="" title="바코드번호"></span>
-                        <span class="barCodeTxt">(바코드 이미지를 클릭하고 읽기가능 모드에서 출력물의 바코드를 스캔해 주세요.)</span>
                     </div>
                     <div class="right_float">
                         <span class="refresh"><a href="#a;"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></a></span>
                         <span class="rowCodeTxt">Total :   <span class="rowCodeTxtColor"> 27</span> Rows   <span class="rowCodeTxtColor">103</span> EA</span>
                     </div>
                 </div>
+                <div class="barCodeTxt">(바코드 이미지를 클릭하고 읽기가능 모드에서 출력물의 바코드를 스캔해 주세요.)</div>
             </div>
         </div>
         <div class="bottomWrap">
