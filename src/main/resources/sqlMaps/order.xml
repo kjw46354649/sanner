@@ -55,6 +55,11 @@
             IFNULL(B.MATERIAL_FINISH_HEAT, SPACE(0)) AS MATERIAL_FINISH_HEAT, <!-- 열처리 -->
             B.MATERIAL_NOTE, <!-- 소재비고 -->
             B.PART_UNIT_QTY, <!-- Part단위수량 -->
+            (IFNULL(B.PART_UNIT_QTY, 1) * IFNULL(C.ORDER_QTY, (SELECT MAX(ORDER_QTY)
+                                                               FROM TBL_CONTROL_PART_ORDER AA
+                                                               INNER JOIN TBL_CONTROL_PART BB ON AA.CONTROL_SEQ = BB.CONTROL_SEQ AND AA.CONTROL_DETAIL_SEQ = BB.CONTROL_DETAIL_SEQ
+                                                               WHERE
+                                                                   AA.CONTROL_SEQ = B.CONTROL_SEQ))) AS ORDER_QTY_TOTAL, -- 주문 수량
             C.ORDER_NUM, <!-- 발주번호 -->
             IFNULL(C.ORDER_QTY, SPACE(0)) AS ORDER_QTY, <!-- 발주정보_수량 -->
             IFNULL(B.ORIGINAL_SIDE_QTY, SPACE(0)) AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
@@ -103,7 +108,7 @@
             '', <!-- 외주 불량 CODE -->
             '', <!-- 외주 조치방안 -->
             SF_GET_DATE_F(A.STATUS_DT,'YY','M') AS STATUS_DT, <!-- 등록/업데이트 일시 -->
-            A.DEL_YN 
+            A.DEL_YN
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
