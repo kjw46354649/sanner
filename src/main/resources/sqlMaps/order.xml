@@ -27,37 +27,43 @@
             A.DELIVERY_COMP_NM, <!-- 납품처명 -->
             A.LABEL_NOTE, <!-- 비고(라벨) -->
             A.MAIN_INSPECTION, <!-- 주요 검사품 -->
-            SF_GET_CODE_NM(1042, A.MAIN_INSPECTION, 'EN') AS MAIN_INSPECTION_NM, <!-- 주요 검사품 -->
+            IFNULL(SF_GET_CODE_NM(1042, A.MAIN_INSPECTION, 'EN'), SPACE(0)) AS MAIN_INSPECTION_NM, <!-- 주요 검사품 -->
             A.EMERGENCY_YN, <!-- 긴급 -->
             SF_GET_CODE_NM(1042, A.EMERGENCY_YN, 'EN') AS EMERGENCY_YN_NM, <!-- 긴급 -->
+            IF(A.EMERGENCY_YN IS NULL, SPACE(0), '긴급') AS EMERGENCY_BARCODE_NM, <!-- 바코드 긴급 -->
             A.CONTROL_VER, <!-- 관리번호버전 -->
             A.CONTROL_NUM, <!-- 관리번호 -->
-            B.PART_NUM, <!-- Part -->
+            IFNULL(B.PART_NUM, SPACE(0)) AS PART_NUM, <!-- Part -->
             B.DRAWING_VER, <!-- 도면번호버전 -->
             B.DRAWING_NUM, <!-- 도면번호 -->
             B.ITEM_NM, <!-- 품명 -->
             B.WORK_TYPE, <!-- 작업형태 -->
-            SF_GET_CODE_NM(1033, B.WORK_TYPE, 'KR') AS WORK_TYPE_NM, <!-- 작업형태 이름 -->
+            IFNULL(SF_GET_CODE_NM(1033, B.WORK_TYPE, 'KR'), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 이름 -->
             B.OUTSIDE_YN, <!-- 외주 -->
             B.WORK_FACTORY, <!-- 수행공장 -->
             SF_GET_CODE_NM(1014, B.WORK_FACTORY, 'KR') AS WORK_FACTORY_NM, <!-- 수행공장 -->
             B.MATERIAL_SUPPLY_YN, <!-- 소재사급 -->
-            SF_GET_DATE_F(B.INNER_DUE_DT, 'YY', '') AS INNER_DUE_DT, <!-- 납기(가공납기) -->
-            B.SIZE_TXT, <!-- 규격 -->
+            IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'YY', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 납기(가공납기) -->
+            IFNULL(B.SIZE_TXT, SPACE(0)) AS SIZE_TXT, <!-- 규격 -->
             B.MATERIAL_DETAIL, <!-- 소재 종류 -->
-            SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, 'KR') AS MATERIAL_DETAIL_NM, <!-- 소재 종류 -->
+            IFNULL(SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, 'KR'), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류 -->
             B.MATERIAL_TYPE, <!-- 재질 -->
-            SF_GET_CODE_NM(1002, B.MATERIAL_TYPE, 'KR') AS MATERIAL_TYPE_NM, <!-- 재질 -->
+            IFNULL(SF_GET_CODE_NM(1002, B.MATERIAL_TYPE, 'KR'), SPACE(0)) AS MATERIAL_TYPE_NM, <!-- 재질 -->
             B.MATERIAL_KIND, <!-- 소재 형태 -->
-            SF_GET_CODE_NM(1029, B.MATERIAL_KIND, 'KR') AS MATERIAL_KIND_NM, <!-- 소재 형태 -->
+            IFNULL(SF_GET_CODE_NM(1029, B.MATERIAL_KIND, 'KR'), SPACE(0)) AS MATERIAL_KIND_NM, <!-- 소재 형태 -->
             B.SURFACE_TREAT, <!-- 표면처리 -->
-            B.MATERIAL_FINISH_HEAT, <!-- 열처리 -->
+            IFNULL(B.MATERIAL_FINISH_HEAT, SPACE(0)) AS MATERIAL_FINISH_HEAT, <!-- 열처리 -->
             B.MATERIAL_NOTE, <!-- 소재비고 -->
             B.PART_UNIT_QTY, <!-- Part단위수량 -->
+            (IFNULL(B.PART_UNIT_QTY, 1) * IFNULL(C.ORDER_QTY, (SELECT MAX(ORDER_QTY)
+                                                               FROM TBL_CONTROL_PART_ORDER AA
+                                                               INNER JOIN TBL_CONTROL_PART BB ON AA.CONTROL_SEQ = BB.CONTROL_SEQ AND AA.CONTROL_DETAIL_SEQ = BB.CONTROL_DETAIL_SEQ
+                                                               WHERE
+                                                                   AA.CONTROL_SEQ = B.CONTROL_SEQ))) AS ORDER_QTY_TOTAL, -- 주문 수량
             C.ORDER_NUM, <!-- 발주번호 -->
-            C.ORDER_QTY, <!-- 발주정보_수량 -->
-            B.ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
-            B.OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
+            IFNULL(C.ORDER_QTY, SPACE(0)) AS ORDER_QTY, <!-- 발주정보_수량 -->
+            IFNULL(B.ORIGINAL_SIDE_QTY, SPACE(0)) AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
+            IFNULL(B.OTHER_SIDE_QTY, SPACE(0)) AS OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
             SF_GET_DATE_F(C.ORDER_DUE_DT, 'YY', '') AS ORDER_DUE_DT, <!-- 발주정보_납기 -->
             SF_GET_DATE_F(C.DELIVERY_DT, 'YY', '') AS DELIVERY_DT, <!-- 발주정보_납품확인 -->
             B.DETAIL_LATHE, <!-- 상세가공요건_선반 -->
