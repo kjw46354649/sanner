@@ -5,8 +5,10 @@ import java.util.Map;
 
 public interface PopDao {
 
-    void updateControlPartStatus(Map<String, Object> map) throws SQLException;
-
     void insertPopBarcode(Map<String, Object> map) throws SQLException;
+
+    void updatePopControlPartStatus(Map<String, Object> map) throws SQLException;
+
+    void updatePopMaterialOrderStatus(Map<String, Object> map) throws SQLException;
 
 }
