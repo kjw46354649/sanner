@@ -867,19 +867,78 @@
             , UPDATE_ID = #{LOGIN_USER_ID}
         WHERE INSIDE_STOCK_NUM = #{INSIDE_STOCK_NUM}
     </update>
+    <update id="updateInsideStockPop" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_INSIDE_STOCK
+        SET   WAREHOUSE_CD = #{WAREHOUSE_CD}
+            , LOC_SEQ = #{LOC_SEQ}
+            , UPDATE_DT = NOW()
+            , UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE INSIDE_STOCK_NUM = #{INSIDE_STOCK_NUM}
+    </update>
     <insert id="insertInsideStockIn" parameterType="java.util.HashMap">
         INSERT INTO jmes.TBL_INSIDE_IN (INSIDE_IN_SEQ, INSIDE_STOCK_NUM, IN_QTY, CONTROL_SEQ, INSERT_ID)
         SELECT NEXTVAL(jmes.SEQ_INSIDE_IN)
         , #{INSIDE_STOCK_NUM}
-        , #{IN_QTY}
+        , #{IN_OUT_QTY}
         , #{CONTROL_SEQ}
         , #{LOGIN_USER_ID}
         FROM DUAL
-        WHERE #{IN_QTY} > 0
+        WHERE #{IN_OUT_QTY} > 0
     </insert>
     <insert id="insertInsideStockOut" parameterType="java.util.HashMap">
       INSERT INTO jmes.TBL_INSIDE_OUT (INSIDE_OUT_SEQ, INSIDE_STOCK_NUM, OUT_QTY, INSERT_ID)
-      VALUES ( NEXTVAL(jmes.SEQ_INSIDE_OUT), #{INSIDE_STOCK_NUM}, #{OUT_QTY}, #{LOGIN_USER_ID} )
+      VALUES ( NEXTVAL(jmes.SEQ_INSIDE_OUT), #{INSIDE_STOCK_NUM}, #{IN_OUT_QTY}, #{LOGIN_USER_ID} )
     </insert>
+    <select id="selectInsideStockPopInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.DRAWING_NUM
+            , A.INSIDE_STOCK_NUM
+            , A.SIZE_TXT
+            , A.WAREHOUSE_CD
+            , jmes.SF_GET_CODE_NM('1049', A.WAREHOUSE_CD, 'KR') AS WAREHOUSE_CD_NM
+            , A.LOC_SEQ
+            , (SELECT LOC_NM FROM jmes.TBL_WAREHOUSE_LOCATION WHERE WAREHOUSE_CD = A.WAREHOUSE_CD AND LOC_SEQ = A.LOC_SEQ ) AS LOC_SEQ_NM
+            , (SELECT IFNULL(SUM(IN_QTY),0) FROM jmes.TBL_INSIDE_IN WHERE INSIDE_STOCK_NUM = A.INSIDE_STOCK_NUM) - (SELECT IFNULL(SUM(OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT WHERE INSIDE_STOCK_NUM = A.INSIDE_STOCK_NUM) AS POP_STOCK_QTY
+            , (SELECT IFNULL(SUM(IN_QTY),0) FROM jmes.TBL_INSIDE_IN WHERE INSIDE_STOCK_NUM = A.INSIDE_STOCK_NUM) - (SELECT IFNULL(SUM(OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT WHERE INSIDE_STOCK_NUM = A.INSIDE_STOCK_NUM) AS POP_STOCK_QTY_AFTER
+            , '0' AS ORDER_QTY
+            , '' AS CONTROL_SEQ
+        FROM jmes.TBL_INSIDE_STOCK A
+        WHERE A.INSIDE_STOCK_NUM = #{V_INSIDE_STOCK_NUM}
+    </select>
+    <select id="selectInsideStockPopInfoBarcode" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+              C.DRAWING_NUM, C.INSIDE_STOCK_NUM, C.SIZE_TXT
+            , C.WAREHOUSE_CD, C.LOC_SEQ
+            , (SELECT IFNULL(SUM(IN_QTY),0) FROM jmes.TBL_INSIDE_IN WHERE INSIDE_STOCK_NUM = C.INSIDE_STOCK_NUM) - (SELECT IFNULL(SUM(OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT WHERE INSIDE_STOCK_NUM = C.INSIDE_STOCK_NUM) AS POP_STOCK_QTY
+            , (SELECT IFNULL(SUM(IN_QTY),0) FROM jmes.TBL_INSIDE_IN WHERE INSIDE_STOCK_NUM = C.INSIDE_STOCK_NUM) - (SELECT IFNULL(SUM(OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT WHERE INSIDE_STOCK_NUM = C.INSIDE_STOCK_NUM) +
+              (SELECT IFNULL(SUM(ORDER_QTY),0) FROM jmes.TBL_CONTROL_PART_ORDER WHERE CONTROL_SEQ = B.CONTROL_SEQ)  AS POP_STOCK_QTY_AFTER
+            , (SELECT IFNULL(SUM(ORDER_QTY),0) FROM jmes.TBL_CONTROL_PART_ORDER WHERE CONTROL_SEQ = B.CONTROL_SEQ) AS ORDER_QTY
+            , A.CONTROL_SEQ
+        FROM jmes.TBL_CONTROL_BARCODE A, jmes.TBL_CONTROL_PART B, jmes.TBL_INSIDE_STOCK C
+        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+        AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+        AND B.DRAWING_NUM = C.DRAWING_NUM
+        AND A.DEL_YN = 'N'
+        AND A.BARCODE_NUM = #{BARCODE_NUM}
+    </select>
+    <select id="selectInsideStockPopInfoBarcodeNew" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+              C.MATERIAL_DETAIL, B.ORDER_COMP_CD, C.DRAWING_NUM, C.ITEM_NM, B.COMP_CD
+            , C.SIZE_TXT, C.SIZE_TYPE, C.SIZE_W, C.SIZE_H, C.SIZE_T, C.SIZE_D, C.SIZE_L
+            , '0' AS POP_STOCK_QTY
+            , '' AS INSIDE_STOCK_NUM
+            , (SELECT IFNULL(SUM(ORDER_QTY),0) FROM jmes.TBL_CONTROL_PART_ORDER WHERE CONTROL_SEQ = B.CONTROL_SEQ) AS POP_STOCK_QTY_AFTER
+            , (SELECT IFNULL(SUM(ORDER_QTY),0) FROM jmes.TBL_CONTROL_PART_ORDER WHERE CONTROL_SEQ = B.CONTROL_SEQ) AS ORDER_QTY
+            , A.CONTROL_SEQ
+        FROM jmes.TBL_CONTROL_BARCODE A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C
+        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+        AND A.CONTROL_SEQ = C.CONTROL_SEQ
+        AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+        AND A.DEL_YN = 'N'
+        AND A.BARCODE_NUM = #{BARCODE_NUM}
+    </select>
+
+
+
 
 </mapper>
