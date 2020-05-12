@@ -164,6 +164,7 @@
                 }
             },
             {title: 'Sort', dataType: 'int', dataIndx: 'SORT_NUM'},
+            {title: 'ABBR_NM', dataType: 'string', dataIndx: 'ABBR_NM'},
             {title: 'ETC Code', dataType: 'string', dataIndx: 'REF_CD'},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
         ];
