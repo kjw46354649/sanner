@@ -168,24 +168,24 @@
 .cadDrawing .modal-body table.colStyle td.spanArea { width: 856px; text-align: center; }
 .cadDrawing .modal-body table.colStyle th { background: #fbfbfb; border-bottom: 1px solid #f3f3f3; }
 
-.cadDrawingPrint { width: 21cm; min-height: 29.7cm; margin: 0 auto; background: #ee212b;}
+.cadDrawingPrint { /*width: 21cm; min-height: 29.7cm;*/ /*margin: 0 auto;*/ max-height: 29.7cm; background: #ee212b;}
 /*.cadDrawingPrint .print { border: 1px #0b0b0b solid; padding: 0.5cm; background:#fff; height: 290mm; page-break-after: always;}*/
-.cadDrawingPrint .print { background:#fff; height: 297mm; page-break-after: always; }
-.cadDrawingPrint .print table.drawingArea { width: 100%; border-left: 1px solid #616161; border-right: 1px solid #616161; border-top: 1px solid #616161; border-bottom: 1px solid #616161; }
+.cadDrawingPrint .print { background:#fff; /*height: 297mm;*/ page-break-after: always; }
+.cadDrawingPrint .print table.drawingArea { width: 100%; height: 100%; border-left: 1px solid #616161; border-right: 1px solid #616161; border-top: 1px solid #616161; border-bottom: 1px solid #616161; }
 .cadDrawingPrint .print table.drawingArea tbody .controlInfo{ height: 20px; width: 100%;}
 .cadDrawingPrint .print table.drawingArea tbody .controlInfo td{ border-left: 1px solid #616161; border-right: 1px solid #616161; border-top: 1px solid #616161; border-bottom: 1px solid #616161;}
-.cadDrawingPrint .print table.drawingArea tbody .controlInfo .barcode{width: 100%; height:50px; padding: 3px;}
-.cadDrawingPrint .print table.drawingArea tbody .imageInfo{ height:1040px; width:100%;}
-.cadDrawingPrint .print table.drawingArea tbody .drawingImage{ height:1040px; width:98%; text-align: center; padding: 2px;}
+.cadDrawingPrint .print table.drawingArea tbody .controlInfo .barcode{width:95%; height:50px; padding: 3px;}
+.cadDrawingPrint .print table.drawingArea tbody .imageInfo{ /*height:1040px;*/ /*width:100%;*/}
+.cadDrawingPrint .print table.drawingArea tbody .drawingImage{ /*height:1040px;*/ width:98%; text-align: center; padding: 2px;}
 
-/*@page cadDrawingPrintPage {*/
-/*    size: 8.27in 11.69in;*/
-/*    !*margin: .5in .5in .5in .5in;*!*/
-/*    margin: 0;  !* this affects the margin in the printer settings *!*/
-/*    mso-header-margin: .5in;*/
-/*    mso-footer-margin: .5in;*/
-/*    mso-paper-source: 0;*/
-/*}*/
+@page cadDrawingPrintPage {
+    /*size: 8.27in 11.69in;*/
+    /*margin: .5in .5in .5in .5in;*/
+    margin: 0;  /* this affects the margin in the printer settings */
+    mso-header-margin: .5in;
+    mso-footer-margin: .5in;
+    mso-paper-source: 0;
+}
 
 /*div.cadDrawingPrint {*/
 /*    page: cadDrawingPrintPage;*/

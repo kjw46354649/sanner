@@ -601,12 +601,19 @@
     let fnAlertMessageAutoClose = function (messageType) {
         let windowMessageHtml = '<spring:message code="com.alert.default.save.success" javaScriptEscape="true"/>';
         if(messageType == 'del') windowMessageHtml = '<spring:message code="com.alert.default.remove.success" javaScriptEscape="true"/>';
-        dhx.alert({
-            header: "Message Box",
+        dhx.message({
             text: windowMessageHtml,
-            buttonsAlignment: "center",
-            buttons: ["ok"],
+            expire: 3000,
+            "icon": "dxi dxi-close",
+            "position": "bottom-left"
         });
+
+        // dhx.alert({
+        //     header: "Message Box",
+        //     text: windowMessageHtml,
+        //     buttonsAlignment: "center",
+        //     buttons: ["ok"],
+        // });
     };
 
     /**
@@ -664,8 +671,7 @@
     }
 
     /* 모달 Print 팝업 호출 */
-    function callWindowModalDrawingPopup(controlSeqMap){
-        commonDrawingPrintPopup.modal('show');
+    function callWindowModalDrawingPopup(){
         $(".cadDrawingPrint").printThis({
             debug: false,               // show the iframe for debugging
             importCSS: true,            // import parent page css
@@ -686,7 +692,10 @@
             copyTagClasses: false,      // copy classes from the html & body tag
             beforePrintEvent: null,     // function for printEvent in iframe
             beforePrint: null,          // function called before iframe is filled
-            afterPrint: null            // function called before iframe is removed
+            afterPrint: function(e){
+                $(".cadDrawingPrint").html('').trigger('create');
+                $(".cadDrawingPrint").css("display","none");
+            },            // function called before iframe is removed
         });
     }
 

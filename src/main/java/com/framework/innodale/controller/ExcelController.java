@@ -38,7 +38,7 @@ public class ExcelController {
 
         List<Map<String, Object>> dataList = null;
 
-        // String excelDir = environment.getRequiredProperty(CommonUtility.getServerType() + "base.excel.template.path");
+        String excelDir = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.excel.template.path");
 
         InputStream is = null;
         Workbook workbook = null;
@@ -76,9 +76,9 @@ public class ExcelController {
                 map.put(arrayMapInputIds[j], dataList);
             }
 
-            Resource resource = new ClassPathResource("classpath:excelTemplate" + File.separator + templateFileName + "data.txt");
-            InputStream inputStream = resource.getInputStream();
-            // is = new BufferedInputStream(new FileInputStream(excelDir + File.separator + templateFileName + ".xlsx"));
+            //Resource resource = new ClassPathResource("classpath:excelTemplate" + File.separator + templateFileName + "data.txt");
+            //InputStream inputStream = resource.getInputStream();
+            is = new BufferedInputStream(new FileInputStream(excelDir + File.separator + templateFileName + ".xlsx"));
             XLSTransformer xls = new XLSTransformer();
             workbook = xls.transformXLS(is, map);
 

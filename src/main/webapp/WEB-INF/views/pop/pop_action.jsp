@@ -62,6 +62,8 @@
             <div class="conWrap">
                 <form id="pop_search_form">
                     <input type="hidden" id="queryId" name="queryId" value="popMapper.selectPopList"/>
+                    <input type="hidden" id="PART_STATUS" name="PART_STATUS" value=""/>
+                    <input type="hidden" id="RECEIVE_YN" name="RECEIVE_YN" value=""/>
                     <div class="titWrap">
                         <div class="left_float">
                             <span class="slt_wrap">
@@ -107,26 +109,22 @@
 
             let popMasterColModel = [
                 {title: '긴급', clsHead: 'control_manage_view_quality', dataType: 'string', dataIndx: 'EMERGENCY_YN'},
-                {title: '요망납기', width: 100, datatype: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
+                {title: '요망납기', width: 100, datatype: 'string', dataIndx: 'INNER_DUE_DT'},
                 {title: '발주업체', clsHead: 'display_none', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
                 {title: '발주업체', width: 150, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
                 {title: '관리번호', clsHead: 'control_manage_view_estimate', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM', },
                 {
                     title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM',
-                    render: function (ui) {a
+                    render: function (ui) {
                         if (ui.rowData.WORK_TYPE === 'WTP020') {
                             return "<span></span>";
                         }
                     }
                 },
-                {title: '도면번호버전', dataType: 'string', dataIndx: 'DRAWING_VER', hidden: true},
                 {title: '도면번호', width: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', },
                 {title: '규격', width: 110, dataType: 'string', dataIndx: 'SIZE_TXT', },
-                {title: '소재 종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden: true},
                 {title: '소재 종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
-                {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE', hidden: true},
                 {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM'},
-                {title: '소재 형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', hidden: true},
                 {title: '소재 형태', width: 100, dataType: 'string', dataIndx: 'MATERIAL_KIND_NM'},
                 {title: '표면 처리', width: 80, dataType: 'string', dataIndx: 'SURFACE_TREAT'},
                 {title: '열 처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT'},
@@ -158,18 +156,23 @@
                 },
                 toolbar: false,
                 complete : function( ui, event){
-                    console.log(ui);
-
-                    let totalRows = 0;
+                    let data = $popMasterGrid.pqGrid('option', 'dataModel.data');
+                    let totalRows = data.length;
                     let totalQty = 0;
+
+                    for(let i=0; i<totalRows; i++) {
+                        let PART_UNIT_QTY = data[i].PART_UNIT_QTY == undefined ? 0 : data[i].PART_UNIT_QTY;
+                        totalQty += parseInt(PART_UNIT_QTY);
+                    }
+
                     $("#popTotalRows").html(totalRows);
                     $("#popTotalQty").html(totalQty);
-
                 }
             };
             $popMasterGrid = $('#' + popMasterGridId).pqGrid(popMasterObj);
 
             function refreshDate(){
+                $("#pop_search_form #queryId").val("popMapper.selectPopList");
                 $popMasterGrid.pqGrid('option', "dataModel.postData", function (ui) {
                     return (fnFormToJsonArrayData('#pop_search_form'));
                 });
@@ -177,7 +180,21 @@
             };
 
             function scanningBarcode(){
+                $("#pop_search_form #queryId").val("popMapper.selectPopPartStatus");
+                let parameters = {'url': '/json-list', 'data': $("#pop_search_form").serialize()};
+                fnPostAjax(function (data, callFunctionParam) {
+                    let list = data.list[0];
+                    $("#pop_search_form #PART_STATUS").val(list.PART_STATUS);
+                    $("#pop_search_form #RECEIVE_YN").val(list.RECEIVE_YN);
 
+                    parameters = {'url': '/scanningBarcodePop', 'data': $("#pop_search_form").serialize()};
+                    fnPostAjax(popSaveCallBack, parameters, '');
+
+                }, parameters, '');
+            }
+
+            function popSaveCallBack(response, callMethodParam){
+                refreshDate();
             }
 
             $("#popLocation").on('change', function(){
@@ -197,6 +214,10 @@
 
             $("#popBarcode").on('focusout', function(){
                 $(this).attr('placeholder', '읽기 불가능 모드');
+            });
+
+            $("#barCode img").on('click', function(){
+                $("#popBarcode").focus();
             });
 
             $("#popRefresh").on('click', function(){
@@ -240,6 +261,37 @@
                 }
             }
             return elementArray;
+        };
+
+        let fnPostAjax = function (callFunction, params, callFunctionParam) {
+            'use strict';
+            let callback = $.Callbacks();
+            let param = $.extend({url: null, data: ''}, params || {});
+
+            $.ajax({
+                type: 'POST',
+                url: param.url,
+                dataType: 'json',
+                data: param.data,
+                success: function (data, textStatus, jqXHR) {
+                    if (textStatus === 'success') {
+                        // if (data.exception === null) {
+                        callback.add(callFunction);
+                        callback.fire(data, callFunctionParam);
+                        // } else {
+                        <%--alert('<spring:message code='com.alert.default.failText' />');--%>
+                        // }
+                    } else {
+                        // alert('fail=[' + json.msg + ']111');
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    // alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
+                    // if (errorThrown == 'Forbidden') {
+                    //     $(this).fnHiddenFormPageAction('/');
+                    // }
+                }
+            });
         };
     </script>
 </body>

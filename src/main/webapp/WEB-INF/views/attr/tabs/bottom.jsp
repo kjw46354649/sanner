@@ -55,20 +55,20 @@
     <div class="modal-dialog cadDrawing" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                <h2 class="modal-title">Information</h2>
+                <button type="button" class="close drawingPrintCloseBtn" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                <h2 class="modal-title">출력 정보</h2>
             </div>
             <div class="modal-body">
-                <div><h4><img style='width: 32px; height: 32px;' src='/resource/main/images/print.png'>&nbsp;&nbsp; 32건의 바코드 도면이 출력 됩니다. 진행하시겠습니까?</h4></div>
+                <div><h4><img style='width: 32px; height: 32px;' src='/resource/main/images/print.png'>&nbsp;&nbsp;<span id="drawingPrintMessageHtml">32 건의 바코드 도면이 출력 됩니다.</span> 진행하시겠습니까?</h4></div>
             </div>
             <div class="modal-footer">
                 <button type="button" id="drawingPrintActionBtn" class="defaultBtn radius blue">출력</button>
-                <button type="button" class="defaultBtn radius" data-dismiss="modal">아니오</button>
+                <button type="button" class="defaultBtn radius drawingPrintCloseBtn" data-dismiss="modal">아니오</button>
             </div>
         </div>
     </div>
 </div>
-<div class="cadDrawingPrint" style="display: block">
+<div class="cadDrawingPrint" style="display: none; height: 1px;">
     <div class="print">
         <table class="drawingArea" style="table-layout: fixed; word-wrap:break-word;">
             <caption></caption>
@@ -102,7 +102,7 @@
                 </tr>
                 <tr class="imageInfo">
                     <td scope="col" colspan="14">
-                        <img src="/image/5266" class="drawingImage">
+                        <img src="/image/5296" class="drawingImage">
                     </td>
                 </tr>
             </tbody>
@@ -293,11 +293,13 @@
         commonCadFileAttachPopup.on('show.bs.modal',function(e) {
             var actionType = $('#common_cad_file_attach_form').find('#actionType').val();
             $commonCadFileAttachGrid = $('#' + commonCadFileAttachGridId).pqGrid(commonCadFileAttachObj);
-            if(actionType == 'estimate') {
+            if(actionType == 'estimate') {          // 견적 도면 등록
                 $commonCadFileAttachGrid.pqGrid('option', 'colModel', estimateCadFileColModel);
-            }else if(actionType == 'control') {
+            }else if(actionType == 'control') {     // 주문 도면 등록
                 $commonCadFileAttachGrid.pqGrid('option', 'colModel', estimateCadFileColModel);
-            }else if(actionType == 'inside') {
+            }else if(actionType == 'controlRev') {  // 주문 도면 차수 변경
+                $commonCadFileAttachGrid.pqGrid('option', 'colModel', insideStockCadFileColModel);
+            }else if(actionType == 'inside') {      // 자재 도면 등록
                 $commonCadFileAttachGrid.pqGrid('option', 'colModel', insideStockCadFileColModel);
             }
             $commonCadFileAttachGrid.pqGrid('refresh');
@@ -308,6 +310,7 @@
             $commonCadFileAttachGrid.pqGrid('destroy');
 
         });
+
     });
 
     function setEstiMatePopup(actionType, queryId) {
