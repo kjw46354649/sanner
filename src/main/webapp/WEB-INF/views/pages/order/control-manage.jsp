@@ -146,6 +146,7 @@
                     <button type="button" class="defaultBtn btn-120w" id="ESTIMATE_AUTOMATIC_CALCULATION">견적자동계산</button>
                     <button type="button" class="defaultBtn btn-120w" id="ESTIMATE_LIST_PRINT">견적List출력</button>
                     <button type="button" class="defaultBtn btn-120w" id="BARCODE_DRAWING_PRINT">바코드도면 출력</button>
+                    <button type="button" class="defaultBtn btn-120w" id="DRAWING_PRINT">도면 출력</button>
                     <button type="button" class="defaultBtn btn-120w" id="BARCODE_PRINT">바코드 출력</button>
                     <button type="button" class="defaultBtn btn-120w" id="LABEL_PRINT">라벨 출력</button>
                 </div>
@@ -167,7 +168,6 @@
                     <button type="button" class="defaultBtn btn-120w" id="DRAWING_REGISTRATION">도면 등록</button>
                     <button type="button" class="defaultBtn btn-120w" id="DRAWING_CHANGE">도면변경(Rev. up)</button>
                     <button type="button" class="defaultBtn btn-120w" id="DRAWING_VIEW">도면 View</button>
-                    <button type="button" class="defaultBtn btn-120w" id="DRAWING_PRINT">도면 출력</button>
                     <button type="button" class="defaultBtn btn-120w red" id="CONTROL_MANAGE_DELETE">삭제</button>
                     <button type="button" class="defaultBtn btn-120w green" id="CONTROL_MANAGE_SAVE">저장</button>
                 </div>
@@ -716,6 +716,7 @@
                 console.group('cellClick');
                 console.log(ui.rowData);
                 console.groupEnd();
+                if(ui.rowData.IMG_GFILE_SEQ) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);    // 셀 선택시 도면 View 실행 중인경우 이미지 표시 하기
                 if (ui.dataIndx === 'PART_NUM' && ui.rowData.WORK_TYPE === 'WTP020') {
                     let newRowData = fnCloneObj(ui.rowData);
                     let data = $orderManagementGrid.pqGrid('option', 'dataModel.data'), totalRecords = data.length;
@@ -1705,7 +1706,6 @@
 
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
-
                 if (rowData.ORDER_STATUS_NM === '주문확정') {
                     alert('외주가 ‘Y’ 인 상태에서는 외주관리화면에서 대상을 먼저 삭제해야만 확정취소가 가능');
                     return false;
@@ -1776,7 +1776,6 @@
         $('#SPECIFICATION_ON_TRANSACTION').on('click', function () {
             let gridData = $orderManagementGrid.pqGrid('option', 'dataModel.data');
             console.log(gridData);
-
             alert('개발중입니다.');
         });
         // 견적자동계산
@@ -1789,7 +1788,75 @@
         });
         // 바코드도면출력
         $('#BARCODE_DRAWING_PRINT').on('click', function () {
-            alert('개발중입니다.');
+            let printHtml  = "";
+            let selectedRowCount = selectedRowIndex.length;
+            for (let i = 0; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                if(!rowData.IMG_GFILE_SEQ){
+                    alert("이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.");
+                    return;
+                }
+                printHtml += '<div class="print">' +
+                '   <table class="drawingArea" style="table-layout: fixed; word-wrap:break-word;">' +
+                '        <tbody>' +
+                '        <tr class="controlInfo">' +
+                '           <td scope="col" width="28%" rowspan="2" class="center_sort"><img src="/barcode/code128/1234567890" class="barcode"></td>' +
+                '           <td scope="col" width="10%" rowspan="2" class="center_sort">'+rowData.ORDER_COMP_NM+'</td>' +
+                '           <td scope="col" width="3%" class="center_sort">'+rowData.CONTROL_VER+'</td>' +
+                '           <td scope="col" width="10%" rowspan="2" class="center_sort">'+rowData.CONTROL_NUM+'</td>' +
+                '           <td scope="col" width="3%" class="center_sort">Part</td>' +
+                '           <td scope="col" width="10%" colspan="2" class="center_sort">'+rowData.SIZE_TXT+'</td>' +
+                '           <td scope="col" width="10%" class="center_sort">'+rowData.WORK_TYPE_NM+'</td>' +
+                '           <td scope="col" width="10%" class="center_sort">'+rowData.MATERIAL_FINISH_HEAT+'</td>';
+                if(rowData.PART_NUM){
+                    printHtml += '           <td scope="col" width="3%" rowspan="2" class="center_sort">'+rowData.PART_UNIT_QTY+'</td>';
+                }else{
+                    printHtml += '           <td scope="col" width="3%" rowspan="2" class="center_sort">'+rowData.ORDER_QTY+'</td>';
+                }
+                printHtml = printHtml + '' +
+                '           <td scope="col" width="5%" class="center_sort">원칭</td>' +
+                '           <td scope="col" width="5%" class="center_sort">대칭</td>' +
+                '           <td scope="col" width="5%" class="center_sort">납기</td>' +
+                '        </tr>' +
+                '        <tr class="controlInfo">' +
+                '            <td scope="col" class="center_sort">'+rowData.DRAWING_VER+'</td>' +
+                '            <td scope="col" class="center_sort">'+rowData.PART_NUM+'</td>' +
+                '            <td scope="col" class="center_sort">'+rowData.MATERIAL_DETAIL_NM+'</td>' +
+                '            <td scope="col" class="center_sort">'+rowData.SURFACE_TREAT+'</td>' +
+                '            <td scope="col" class="center_sort">'+rowData.EMERGENCY_YN+'</td>' +
+                '            <td scope="col" class="center_sort">'+rowData.MAIN_INSPECTION+'</td>' +
+                '            <td scope="col" class="center_sort">'+rowData.ORIGINAL_SIDE_QTY+'</td>' +
+                '            <td scope="col" class="center_sort">'+rowData.OTHER_SIDE_QTY+'</td>' +
+                '            <td scope="col" class="center_sort">'+rowData.INNER_DUE_DT+'</td>' +
+                '        </tr>' +
+                '        <tr class="imageInfo">' +
+                '            <td scope="col" colspan="14"><img src="/image/'+rowData.IMG_GFILE_SEQ+'" class="drawingImage"></td>' +
+                '        </tr>' +
+                '        </tbody>' +
+                '    </table>' +
+                '</div>';
+            }
+            let drawingBarcodePrintModalConfirm = function(callback){
+                $("#drawingPrintMessageHtml").html(selectedRowCount + " 건의 바코드 도면이 출력 됩니다.");
+                commonDrawingPrintPopup.show();
+                $("#drawingPrintActionBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonDrawingPrintPopup.hide();
+                    $(".cadDrawingPrint").css("display","");
+                    $(".cadDrawingPrint").html(printHtml).trigger('create');
+                    callback(true);
+                    return;
+                });
+                $(".drawingPrintCloseBtn").unbind().click(function(e) {
+                    e.stopPropagation();
+                    commonDrawingPrintPopup.hide();
+                });
+            };
+            drawingBarcodePrintModalConfirm(function(confirm){
+                if(confirm){
+                    callWindowModalDrawingPopup();
+                }
+            });
         });
         // 바코드출력
         $('#BARCODE_PRINT').on('click', function () {
@@ -1799,14 +1866,61 @@
         $('#LABEL_PRINT').on('click', function () {
             alert('개발중입니다.');
         });
-        // 도면변경
-        $('#DRAWING_CHANGE').on('click', function () {
-            alert('개발중입니다.');
+        /** 도면 등록 팝업 호출 **/
+        $drawingRegistration.click(function () {
+            setEstiMatePopup('control', 'orderMapper.manageControlCadFiles');
+        });
+        /** 도면 차수 및 변경 처리 **/
+        $drawingChangeRegistration.click(function () {
+            setEstiMatePopup('controlRev', 'orderMapper.manageControlCadFiles');
+        });
+        /* 도면 보기 팝업 호출 */
+        $drawingView.click(function () {
+            callWindowImageViewer(999);
         });
         // 도면출력
         $('#DRAWING_PRINT').on('click', function () {
-            callWindowModalDrawingPopup();
+            let printHtml  = "";
+            let selectedRowCount = selectedRowIndex.length;
+            for (let i = 0; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                if(!rowData.IMG_GFILE_SEQ){
+                    alert("이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.");
+                    return;
+                }
+                printHtml += '<div class="print">' +
+                    '   <table class="drawingArea" style="table-layout: fixed; word-wrap:break-word;">' +
+                    '        <tbody>' +
+                    '           <tr class="imageInfo">' +
+                    '               <td scope="col" colspan="14"><img src="/image/'+rowData.IMG_GFILE_SEQ+'" class="drawingImage"></td>' +
+                    '           </tr>' +
+                    '        </tbody>' +
+                    '    </table>' +
+                    '</div>';
+            }
+            let drawingPrintModalConfirm = function(callback){
+                $("#drawingPrintMessageHtml").html(selectedRowCount + " 건의 바코드 도면이 출력 됩니다.");
+                commonDrawingPrintPopup.show();
+                $("#drawingPrintActionBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonDrawingPrintPopup.hide();
+                    $(".cadDrawingPrint").css("display","");
+                    $(".cadDrawingPrint").html(printHtml).trigger('create');
+                    callback(true);
+                    return;
+                });
+                $(".drawingPrintCloseBtn").unbind().click(function(e) {
+                    e.stopPropagation();
+                    commonDrawingPrintPopup.hide();
+                });
+            };
+            drawingPrintModalConfirm(function(confirm){
+                if(confirm){
+                    callWindowModalDrawingPopup();
+                }
+            });
         });
+
         /* event */
 
         /* init */
@@ -1816,7 +1930,6 @@
         $('#CONTROL_MANAGE_START_DATE').datepicker('setDate', 'today');
         $('#CONTROL_MANAGE_END_DATE').datepicker('setDate', 'today');
         // setDatePickerToday();
-
         fnCommCodeDatasourceSelectBoxCreate($('#CONTROL_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getBusinessCompanyList'}
@@ -1828,21 +1941,6 @@
 
         $orderManagementGrid = $('#' + gridId).pqGrid(obj);
         /* init */
-
-        /** 도면 등록 팝업 호출 **/
-        $drawingRegistration.click(function () {
-            setEstiMatePopup('control', 'orderMapper.manageControlCadFiles');
-        });
-
-        /** 도면 차수 및 변경 처리 **/
-        $drawingChangeRegistration.click(function () {
-            setEstiMatePopup('control', 'orderMapper.manageControlCadFiles');
-        });
-
-        /* 도면 등록 팝업 호출 */
-        $drawingView.click(function () {
-            callWindowImageViewer(999);
-        });
 
         $('#MONTH_FINISH_YES').on('click', function () {
 

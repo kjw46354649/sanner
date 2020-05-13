@@ -89,6 +89,8 @@ public class CadFileConverter {
      */
     public static void convertAsposeCadTOJava(File convertFile) throws UnsupportedEncodingException {
 
+        boolean isRotate = false;
+
         String sourceFilePath = convertFile.getAbsolutePath();
         String soruceFileName = new String(convertFile.getName().getBytes("x-windows-949"), "ksc5601");
 
@@ -97,12 +99,12 @@ public class CadFileConverter {
         int cadWidth = cadImage.getSize().getWidth();
         int cadHeight = cadImage.getSize().getHeight();
 
-        for (Object style : cadImage.getStyles()) {
-            System.err.println("getStyleName=[" + ((CadStyleTableObject) style).getStyleName());
-            System.err.println("getBigFontName=[" + ((CadStyleTableObject) style).getBigFontName());
-            System.err.println("getRoundTripTableStyle=[" + ((CadStyleTableObject) style).getRoundTripTableStyle());
-            System.err.println(("image styles  " + ((CadStyleTableObject) style).getStyleName() + " -> " + ((CadStyleTableObject) style).getPrimaryFontName()));
-        }
+//        for (Object style : cadImage.getStyles()) {
+//            System.err.println("getStyleName=[" + ((CadStyleTableObject) style).getStyleName());
+//            System.err.println("getBigFontName=[" + ((CadStyleTableObject) style).getBigFontName());
+//            System.err.println("getRoundTripTableStyle=[" + ((CadStyleTableObject) style).getRoundTripTableStyle());
+//            System.err.println(("image styles  " + ((CadStyleTableObject) style).getStyleName() + " -> " + ((CadStyleTableObject) style).getPrimaryFontName()));
+//        }
 
 //        for(Object style : cadImage.getStyles())
 //        {
@@ -116,11 +118,13 @@ public class CadFileConverter {
         // export to raster
         //A4 size at 300 DPI - 2480 x 3508
         if(cadHeight < cadWidth) {
-            rasterizationOptions.setPageWidth(3508);
+            rasterizationOptions.setPageWidth(3350);
             rasterizationOptions.setPageHeight(2480);
+            isRotate = true;
         }else{
             rasterizationOptions.setPageWidth(2480);
-            rasterizationOptions.setPageHeight(3508);
+//            rasterizationOptions.setPageHeight(3508);
+            rasterizationOptions.setPageHeight(3350);
         }
 
         rasterizationOptions.setAutomaticLayoutsScaling(true);
@@ -140,7 +144,16 @@ public class CadFileConverter {
         PngOptions pngOptions = new PngOptions();
         pngOptions.setVectorRasterizationOptions(rasterizationOptions);
 
-        cadImage.save(convertFile.getParentFile().toString() + File.separator + soruceFileName.substring(0, soruceFileName.lastIndexOf(".")) + ".png", pngOptions);
+//        String distinctImagePath = convertFile.getParentFile().toString() + File.separator + soruceFileName.substring(0, soruceFileName.lastIndexOf(".")) + ".png";
+        String distinctImagePath = convertFile.getParentFile().toString() + File.separator + soruceFileName.substring(0, soruceFileName.lastIndexOf("."));
+
+        if(isRotate){
+            cadImage.save(distinctImagePath + ".jpg", pngOptions);
+            ImageUtil.rotate90(new File(distinctImagePath + ".jpg"), new File(distinctImagePath + ".png"));
+
+        }else{
+            cadImage.save(distinctImagePath + ".png", pngOptions);
+        }
     }
 
     public static void main(String[] args){

@@ -42,7 +42,7 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
                     localeNat = "en";
                 }
             }else{
-                localeNat = "en";
+                localeNat = "kr";
             }
 
             LocaleEditor localeEditor = new LocaleEditor();
