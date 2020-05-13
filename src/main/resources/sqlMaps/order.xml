@@ -757,6 +757,7 @@
             B.PART_NUM, <!-- Part -->
             B.DRAWING_NUM,
             B.DRAWING_VER,
+            #{NEW_DRAWING_NUM} AS NEW_DRAWING_NUM,
             #{FILE_NM} AS FILE_NM,
             #{DXF_GFILE_SEQ} AS DXF_GFILE_SEQ,
             #{TIME_PATH} AS TIME_PATH,
@@ -775,6 +776,9 @@
     <update id="manageControlCadFiles" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART
         SET
+            DRAWING_NUM = #{NEW_DRAWING_NUM},
+            DRAWING_UP_DT = NOW(),
+            PREV_DRAWING_NUM = DRAWING_NUM,
             DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
             PDF_GFILE_SEQ = NULL,
             IMG_GFILE_SEQ = NULL,
@@ -785,6 +789,62 @@
     </update>
 
     <update id="manageControlCadFiles_mapping" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
+            IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
+            UPDATE_DT = NOW()
+            <!-- ,UPDATE_ID = NULL -->
+        WHERE
+            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ}
+    </update>
+
+    <!-- 캐드 도면 교체 -->
+    <select id="manageControlCadRevFiles_select" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            UUID() AS ROWNUM,
+            C.CONTROL_SEQ,
+            C.CONTROL_STATUS,
+            B.CONTROL_DETAIL_SEQ,
+            C.CONTROL_NUM, <!-- 관리번호 -->
+            B.ITEM_NM, <!-- 품명 -->
+            B.PART_NUM, <!-- Part -->
+            B.DRAWING_NUM,
+            B.DRAWING_VER,
+            B.SIZE_TEXT, <!-- 규격 -->
+            SF_GET_DATE_F(B.DRAWING_UP_DT,'YY','M') AS DRAWING_UP_DT,
+            #{NEW_DRAWING_NUM} AS NEW_DRAWING_NUM,
+            #{FILE_NM} AS FILE_NM,
+            #{DXF_GFILE_SEQ} AS DXF_GFILE_SEQ,
+            #{TIME_PATH} AS TIME_PATH,
+            #{FILE_PATH} AS FILE_PATH,
+            CASE WHEN IFNULL(#{DXF_GFILE_SEQ}, 0) <![CDATA[ <= ]]> 0 THEN  '파일 업로드 오류' <!-- 파일 업로드 오류 및 CONVERT 사이즈 오류 -->
+                 ELSE ''
+            END AS UPLOAD_MESSAGE
+        FROM TBL_CONTROL C
+            INNER JOIN TBL_CONTROL_PART B ON C.CONTROL_SEQ = B.CONTROL_SEQ
+        WHERE 1 = 1
+            AND IFNULL(C.CONTROL_STATUS, 'ORD002') = 'ORD001'
+            AND #{ORGINAL_FILE_NM} LIKE CONCAT(B.DRAWING_NUM, '%')
+    </select>
+
+    <update id="manageControlCadRevFiles" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            DRAWING_NUM = #{NEW_DRAWING_NUM},
+            DRAWING_VER = IFNULL(DRAWING_VER, 0) + 1,
+            DRAWING_UP_DT = NOW(),
+            PREV_DRAWING_NUM = DRAWING_NUM,
+            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
+            PDF_GFILE_SEQ = NULL,
+            IMG_GFILE_SEQ = NULL,
+            UPDATE_DT = NOW()
+            <!-- ,UPDATE_ID = NULL -->
+        WHERE
+            CONTROL_SEQ = #{CONTROL_SEQ}
+    </update>
+
+    <update id="manageControlCadRevFiles_mapping" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART
         SET
             PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},

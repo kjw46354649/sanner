@@ -106,11 +106,6 @@ public class FileUploadServiceImpl implements FileUploadService {
             String paramQueryId = (String)hashMap.get("queryId");
             List<MultipartFile> fileList = request.getFiles(itr.next());
 
-            System.out.println("#########################################");
-            System.out.println("hashMap=[" + hashMap.toString() + "]");
-            System.out.println("queryId=[" + paramQueryId + "]");
-            System.out.println("#########################################");
-
             for(MultipartFile multipartFile:fileList) {
 
                 String serverFileName = CommonUtility.getUUIDString();
@@ -129,6 +124,7 @@ public class FileUploadServiceImpl implements FileUploadService {
                 CommonUtility.createFileDirectory(new File(uploadFilePath));
 
                 fileInfo.put("FILE_NM", serverFullFileName + "." + originalExtName);
+                fileInfo.put("NEW_DRAWING_NUM", originalFileName);
                 fileInfo.put("FILE_PATH", targetFilePath);
                 fileInfo.put("TIME_PATH", uploadTimePath);
                 fileInfo.put("UPLOAD_FILE_NM", originalFullName);

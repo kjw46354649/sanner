@@ -111,6 +111,7 @@
             B.ITEM_NM, <!-- 품명 -->
             B.PART_NUM, <!-- Part -->
             B.DRAWING_NUM,
+            #{NEW_DRAWING_NUM} AS NEW_DRAWING_NUM,
             #{FILE_NM} AS FILE_NM,
             #{DXF_GFILE_SEQ} AS DXF_GFILE_SEQ,
             #{TIME_PATH} AS TIME_PATH,
@@ -130,6 +131,7 @@
     <update id="manageEstimateCadFiles" parameterType="java.util.HashMap">
         UPDATE TBL_ESTIMATE_DETAIL
         SET
+            DRAWING_NUM = #{NEW_DRAWING_NUM},
             DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
             PDF_GFILE_SEQ = NULL,
             IMG_GFILE_SEQ = NULL,

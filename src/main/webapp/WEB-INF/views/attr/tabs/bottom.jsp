@@ -117,6 +117,7 @@
     let commonCadFileAttachGridId = "common_cad_file_attach_grid";
     let estimateCadFileColModel;
     let controlCadFileColModel;
+    let controlCadRevFileColModel;
     let insideStockCadFileColModel;
     let commonCadFileAttachObj;
     let $commonCadFileAttachGrid;
@@ -130,6 +131,7 @@
         estimateCadFileColModel =  [
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 1, minWidth: 70},
             {title: 'EST_SEQ', dataType: 'string', dataIndx: 'EST_SEQ', hidden: true, width: 1, minWidth: 70},
+            {title: 'NEW_DRAWING_NUM', dataType: 'string', dataIndx: 'NEW_DRAWING_NUM', hidden: true, width: 1, minWidth: 70},
             {title: 'SEQ', dataType: 'string', dataIndx: 'SEQ', hidden: true, width: 1, minWidth: 70},
             {title: 'DXF_GFILE_SEQ', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 1, minWidth: 70},
             {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE', width: 250, minWidth: 100},
@@ -142,6 +144,7 @@
         controlCadFileColModel =  [
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 70, minWidth: 70},
             {title: 'DXF_GFILE_SEQ', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 70, minWidth: 70},
+            {title: 'NEW_DRAWING_NUM', dataType: 'string', dataIndx: 'NEW_DRAWING_NUM', hidden: true, width: 70, minWidth: 70},
             {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE', width: 250, minWidth: 100},
             {title: '관리번호', datatype: 'string', dataIndx: 'CONTROL_NUM', width: 155, minWidth: 100},
             {title: '품명', align: 'center', dataType: 'string', dataIndx: 'ITEM_NM', width: 155, minWidth: 100},
@@ -150,9 +153,23 @@
             {title: 'Rev', align: 'center', dataType: 'string', dataIndx: 'DRAWING_VER', width: 50, minWidth: 50}
         ];
 
+        controlCadRevFileColModel =  [
+            {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 70, minWidth: 70},
+            {title: 'DXF_GFILE_SEQ', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 70, minWidth: 70},
+            {title: 'NEW_DRAWING_NUM', dataType: 'string', dataIndx: 'NEW_DRAWING_NUM', hidden: true, width: 70, minWidth: 70},
+            {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE', width: 250, minWidth: 100},
+            {title: '관리번호', datatype: 'string', dataIndx: 'CONTROL_NUM', width: 155, minWidth: 100},
+            {title: 'Part', align: 'center', dataType: 'string', dataIndx: 'PART_NUM', width: 50, minWidth: 50},
+            {title: '도면번호', align: 'center', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 155, minWidth: 100},
+            {title: '규격', align: 'center', dataType: 'string', dataIndx: 'SIZE_TEXT', width: 155, minWidth: 100},
+            {title: 'Rev', align: 'center', dataType: 'string', dataIndx: 'DRAWING_VER', width: 50, minWidth: 50}
+            {title: '변경일자', align: 'center', dataType: 'string', dataIndx: 'DRAWING_UP_DT', width: 50, minWidth: 50}
+        ];
+
         insideStockCadFileColModel =  [
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 70, minWidth: 70},
             {title: 'DXF_GFILE_SEQ', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 70, minWidth: 70},
+            {title: 'NEW_DRAWING_NUM', dataType: 'string', dataIndx: 'NEW_DRAWING_NUM', hidden: true, width: 70, minWidth: 70},
             {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE', width: 250, minWidth: 100},
             {title: '재고번호', datatype: 'string', dataIndx: 'CONTROL_NUM', width: 155, minWidth: 100},
             {title: '품명', align: 'center', dataType: 'string', dataIndx: 'ITEM_NM', width: 155, minWidth: 100},
@@ -296,9 +313,9 @@
             if(actionType == 'estimate') {          // 견적 도면 등록
                 $commonCadFileAttachGrid.pqGrid('option', 'colModel', estimateCadFileColModel);
             }else if(actionType == 'control') {     // 주문 도면 등록
-                $commonCadFileAttachGrid.pqGrid('option', 'colModel', estimateCadFileColModel);
+                $commonCadFileAttachGrid.pqGrid('option', 'colModel', controlCadFileColModel);
             }else if(actionType == 'controlRev') {  // 주문 도면 차수 변경
-                $commonCadFileAttachGrid.pqGrid('option', 'colModel', insideStockCadFileColModel);
+                $commonCadFileAttachGrid.pqGrid('option', 'colModel', controlCadRevFileColModel);
             }else if(actionType == 'inside') {      // 자재 도면 등록
                 $commonCadFileAttachGrid.pqGrid('option', 'colModel', insideStockCadFileColModel);
             }

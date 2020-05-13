@@ -498,9 +498,6 @@
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
-        let $drawingRegistration = $("#DRAWING_REGISTRATION");
-        let $drawingChangeRegistration = $("#DRAWING_CHANGE");
-        let $drawingView = $("#DRAWING_VIEW");
         let selectedRowIndex = [];
         let $orderManagementGrid;
         const gridId = 'CONTROL_MANAGE_GRID';
@@ -1867,15 +1864,15 @@
             alert('개발중입니다.');
         });
         /** 도면 등록 팝업 호출 **/
-        $drawingRegistration.click(function () {
+        $('#DRAWING_REGISTRATION').on('click', function () {
             setEstiMatePopup('control', 'orderMapper.manageControlCadFiles');
         });
         /** 도면 차수 및 변경 처리 **/
-        $drawingChangeRegistration.click(function () {
-            setEstiMatePopup('controlRev', 'orderMapper.manageControlCadFiles');
+        $('#DRAWING_CHANGE').on('click', function () {
+            setEstiMatePopup('controlRev', 'orderMapper.manageControlCadRevFiles');
         });
-        /* 도면 보기 팝업 호출 */
-        $drawingView.click(function () {
+        /** 도면 보기 팝업 호출 */
+        $('#DRAWING_VIEW').on('click', function () {
             callWindowImageViewer(999);
         });
         // 도면출력
