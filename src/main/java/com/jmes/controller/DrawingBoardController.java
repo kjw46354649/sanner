@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.Locale;
 
 @Controller
@@ -27,6 +29,10 @@ public class DrawingBoardController {
     public String drawingLogin(Model model, HttpServletRequest request, Locale locale) throws Exception {
 
         logger.info("pop page submit");
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("queryId", "drawingMapper.selectDrawingEquipment");
+
+        model.addAttribute("equipment",innodaleService.getList(hashMap));
 
         return "board/login";
     }

@@ -75,7 +75,7 @@
                                 </select>
                             </span>
                             <span class="wd_200">&nbsp;</span>
-                            <span class="barCode"><img src="/resource/asset/images/common/img_barcode.png" alt="바코드"></span>
+                            <span class="barCode"><img id="barCodeImg" src="/resource/asset/images/common/img_barcode.png" alt="바코드"></span>
                             <span class="ipu_wrap"><input type="text" name="popBarcode" id="popBarcode" placeholder="읽기 불가능 모드" value="" title="바코드번호"></span>
                         </div>
                         <div class="right_float">
@@ -210,13 +210,16 @@
 
             $("#popBarcode").on('focus', function(){
                 $(this).attr('placeholder', '');
+                $("#barCodeImg").attr("src", "/resource/asset/images/common/img_barcode_on.png");
             });
 
             $("#popBarcode").on('focusout', function(){
                 $(this).attr('placeholder', '읽기 불가능 모드');
+                $("#barCodeImg").attr("src", "/resource/asset/images/common/img_barcode.png");
+
             });
 
-            $("#barCode img").on('click', function(){
+            $("#barCodeImg").on('click', function(){
                 $("#popBarcode").focus();
             });
 
