@@ -11,7 +11,8 @@
 .profileWrap .imgWrap img { width: 100%; height: auto; }
 .profileWrap .textWrap { position: absolute; font-size: 14px; color: #282828; left: 112px; top: 33px; }
 .profileWrap .textWrap b { color: #000; font-family: 'NotoKrB'; }
-.profileWrap .btnWrap { position: absolute; left: 112px; top: 58px; font-size: 0; width: 128px; height: 26px; background: url(../images/common/btn_logout.png)no-repeat 0 0; }
+.profileWrap .btnWrap { position: absolute; left: 112px; top: 58px;  }
+.profileWrap .btnWrap button{font-size: 0; width: 128px; height: 26px; background: url(../images/common/btn_logout.png)no-repeat 0 0;}
 .gnbWrap > ul { }
 .gnbWrap > ul li.depth1 { position: relative; display: block; background: 0; }
 .sidebarWrap .gnbWrap ul li.depth1 > a { color: #dce4f0; height: 50px; line-height: 48px; padding-left: 35px; font-size: 18px; font-family: 'NotoKrR'; display: block; position: relative; box-sizing: border-box; margin: 0 30px; }
@@ -39,7 +40,7 @@
 /////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////*/
 .bodyWrap { min-height: 0; position: relative; background: #f6f6f9; }
-.container { width: 100%; position: relative; min-height: 100vh; }
+.container { width: 100%; position: relative; min-height: 100vh; padding: 0; margin: 0; }
 .navbarWrap { height: 45px; background: #002159; position: absolute; width: 100%; text-align: right;; }
 .navbarWrap .locationWrap { display: inline-block; margin-right: 1%; }
 .locationWrap ul li { float: left; padding-left: 22px; position: relative; }
@@ -47,10 +48,10 @@
 .locationWrap ul li:first-child:before{display: none;}
 
 .locationWrap ul li a { display: block; font-family: 'NotoKrR'; font-size: 12px; color: #fff; line-height: 45px; }
-.contentsWrap { position: relative; margin-left: 270px; box-sizing: border-box; background: #f6f6f9; padding-top: 5px;; }
+.contentsWrap { position: relative; margin-left: 270px; box-sizing: border-box; background: #f6f6f9; padding-top: 15px;; }
 .contentsWrap:after { content: ''; width: 0; height: 0; display: block; overflow: hidden; clear: both; }
 
-.tabMenuWrap{ padding-top: 17px; margin-left: 270px; min-height: 28px;}
+.tabMenuWrap{ padding-top: 17px; margin-left: 270px; min-height: 45px;}
 .tabMenuWrap ul:after{}
 .tabMenuWrap ul li{}
 .tabMenuWrap ul li a{}

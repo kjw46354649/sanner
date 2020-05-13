@@ -1,7 +1,6 @@
 var chk = 0; // 예제를 위한 변수
 
 $(document).ready(function(){
-
 	if($('.contentsWrap .page').hasClass('estimate')){
 		// table chart height값
 		estimateH();
@@ -50,7 +49,12 @@ $(document).ready(function(){
 		chk = chk+1; // 예제를 위한 처리
 		estimateH();
 	});
-
+	// 태블릿 로그인 화면 언어 선택
+	$('.langBtn button').click(function(){
+		var i = $(this).index();
+		$('.langBtn button').removeClass('on');
+		$('.langBtn button').eq(i).addClass('on');
+	});
 })
 function tabMenuFn(){
 	var divIdName = 'paddPage' + chk; // 예제를 위한 처리
