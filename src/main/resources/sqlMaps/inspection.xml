@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="inspection">
+
+    <select id="selectInspectionList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select 1 from dual
+    </select>
+    <select id="selectInspectionPopInfoBasic" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select 1 from dual
+    </select>
+    <select id="selectInspectionPopInfoGrid01" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select 1 from dual
+    </select>
+    <select id="selectInspectionPopInfoGrid02" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select 1 from dual
+    </select>
+
+    <insert id="insertMachineMaster" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_EQUIP (EQUIP_ID, EQUIP_KIND, EQUIP_NM
+                              , PROCESS_TYPE, EQUIP_TYPE, EQUIP_SIZE
+                              , EQUIP_COMP_CD, FACTORY_AREA
+                              , MAIN_USER_ID, SUB_USER_ID, PURCHASE_DT, RESELLER_CD, NOTE
+                              , PHOTO_GFILE_SEQ, ETC_GFILE_SEQ, INSERT_ID)
+        VALUES (  #{EQUIP_ID}, #{EQUIP_KIND}, #{EQUIP_NM}
+                , #{PROCESS_TYPE, jdbcType=VARCHAR}, #{EQUIP_TYPE}, #{EQUIP_SIZE}
+                , #{EQUIP_COMP_CD}, #{FACTORY_AREA}
+                , #{MAIN_USER_ID}, #{SUB_USER_ID}, REPLACE(#{PURCHASE_DT},'-',space(0)), #{RESELLER_CD}, #{NOTE}
+                , #{PHOTO_GFILE_SEQ}, #{ETC_GFILE_SEQ}, #{LOGIN_USER_ID} )
+    </insert>
+    <update id="updateMachineMaster" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_EQUIP
+        SET EQUIP_NM = #{EQUIP_NM}
+              , PROCESS_TYPE = #{PROCESS_TYPE, jdbcType=VARCHAR}
+              , EQUIP_TYPE = #{EQUIP_TYPE}
+              , EQUIP_SIZE = #{EQUIP_SIZE}
+              , EQUIP_COMP_CD = #{EQUIP_COMP_CD}
+              , FACTORY_AREA = #{FACTORY_AREA}
+              , MAIN_USER_ID = #{MAIN_USER_ID}
+              , SUB_USER_ID = #{SUB_USER_ID}
+              , PURCHASE_DT = REPLACE(#{PURCHASE_DT},'-',space(0))
+              , RESELLER_CD = #{RESELLER_CD}
+              , NOTE = #{NOTE}
+            <if test="PHOTO_GFILE_SEQ != null and PHOTO_GFILE_SEQ != ''">
+                  , PHOTO_GFILE_SEQ = #{PHOTO_GFILE_SEQ}
+            </if>
+            <if test="ETC_GFILE_SEQ != null and ETC_GFILE_SEQ != ''">
+              , ETC_GFILE_SEQ = #{ETC_GFILE_SEQ}
+            </if>
+              , UPDATE_DT = NOW()
+              , UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE EQUIP_ID = #{EQUIP_ID}
+    </update>
+    <delete id="deleteMachineMaster" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_EQUIP
+        SET DEL_YN = 'Y'
+          , UPDATE_DT = NOW()
+          , UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE EQUIP_ID = #{EQUIP_ID}
+    </delete>
+
+    <select id="selectMachineLogList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.EQUIP_ID
+          , A.SEQ
+          , A.REPAIR_TYPE
+          , A.REPAIR_DESC
+          , jmes.SF_GET_DATE_F(A.REPAIR_START_DT,'YY','M') AS REPAIR_START_DT
+          , jmes.SF_GET_DATE_F(A.REPAIR_END_DT,'YY','M') AS REPAIR_END_DT
+          , CONCAT(DATEDIFF(A.REPAIR_END_DT, A.REPAIR_START_DT) * 24 + HOUR(TIMEDIFF(A.REPAIR_END_DT, A.REPAIR_START_DT)), 'H ', MINUTE(TIMEDIFF(A.REPAIR_END_DT, A.REPAIR_START_DT)),'M') AS REPAIR_TIME
+          , A.NOTE
+          , A.BEFORE_GFILE_SEQ
+          , A.AFTER_GFILE_SEQ
+        FROM jmes.TBL_EQUIP_REPAIR A
+        WHERE A.EQUIP_ID = #{EQUIP_ID}
+    </select>
+    <select id="selectMachineHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.EQUIP_ID
+          , A.SEQ
+          , A.REPAIR_TYPE
+          , SF_GET_CODE_NM(1036, REPAIR_TYPE, 'KR') AS REPAIR_TYPE_NM
+          , A.REPAIR_DESC
+          , jmes.SF_GET_DATE_F(A.REPAIR_START_DT,'YYYY','M') AS REPAIR_START_DT
+          , jmes.SF_GET_DATE_F(A.REPAIR_END_DT,'YYYY','M') AS REPAIR_END_DT
+          , CONCAT(DATEDIFF(A.REPAIR_END_DT, A.REPAIR_START_DT) * 24 + HOUR(TIMEDIFF(A.REPAIR_END_DT, A.REPAIR_START_DT)), 'H ', MINUTE(TIMEDIFF(A.REPAIR_END_DT, A.REPAIR_START_DT)),'M') AS REPAIR_TIME
+          , A.NOTE
+          , A.BEFORE_GFILE_SEQ
+          , A.AFTER_GFILE_SEQ
+        FROM jmes.TBL_EQUIP_REPAIR A
+        WHERE A.EQUIP_ID = #{EQUIP_ID}
+    </select>
+    <insert id="insertMachineMasterHistory" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_EQUIP_REPAIR ( EQUIP_ID, SEQ, REPAIR_TYPE
+                                            , REPAIR_START_DT, REPAIR_END_DT
+                                            , REPAIR_DESC, NOTE, BEFORE_GFILE_SEQ, AFTER_GFILE_SEQ, INSERT_ID)
+        VALUES (#{EQUIP_ID},NEXTVAL(jmes.SEQ_DUMMY),#{REPAIR_TYPE}
+                , STR_TO_DATE(#{REPAIR_START_DT},'%Y-%m-%d %H:%i'), STR_TO_DATE(#{REPAIR_END_DT},'%Y-%m-%d %H:%i')
+                , #{REPAIR_DESC}, #{NOTE}, #{BEFORE_GFILE_SEQ}, #{AFTER_GFILE_SEQ}, #{LOGIN_USER_ID})
+    </insert>
+    <update id="updateMachineMasterHistory" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_EQUIP_REPAIR
+        SET  REPAIR_TYPE = #{REPAIR_TYPE}
+            , REPAIR_START_DT = STR_TO_DATE(#{REPAIR_START_DT},'%Y-%m-%d %H:%i')
+            , REPAIR_END_DT = STR_TO_DATE(#{REPAIR_END_DT},'%Y-%m-%d %H:%i')
+            , REPAIR_DESC = #{REPAIR_DESC}
+            , NOTE = #{NOTE}
+            , BEFORE_GFILE_SEQ = #{BEFORE_GFILE_SEQ}
+            , AFTER_GFILE_SEQ = #{AFTER_GFILE_SEQ}
+            , UPDATE_DT = NOW()
+            , UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE EQUIP_ID = #{EQUIP_ID}
+            AND SEQ = #{SEQ}
+    </update>
+    <delete id="deleteMachineMasterHistory" parameterType="java.util.HashMap">
+        DELETE FROM jmes.TBL_EQUIP_REPAIR
+        WHERE EQUIP_ID = #{EQUIP_ID}
+            AND SEQ = #{SEQ}
+    </delete>
+    <select id="selectEquipId" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            EQUIP_ID,
+            LAYOUT_ROW,
+            LAYOUT_COL
+        FROM TBL_EQUIP
+        WHERE 1 = 1
+            AND FACTORY_AREA = #{FACTORY_AREA}
+            AND PROCESS_TYPE = 'MPR010'
+    </select>
+    <select id="selectProcessPlanGridList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            ROW_NUMBER () OVER () AS ROWNUM,
+            E.EQUIP_ID,
+            A.CONTROL_SEQ,
+            A.CONTROL_DETAIL_SEQ,
+            D.MCT_PLAN_SEQ,
+            SF_GET_DATE_F(A.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT, <!-- 납기 -->
+            B.CONTROL_NUM, <!-- 관리번호 -->
+            A.PART_UNIT_QTY, <!-- Part 수량 -->
+            A.MATERIAL_DETAIL, <!-- 소재 -->
+            A.SIZE_TXT, <!-- 규격 -->
+            C.POP_POSITION, <!-- 현재위치 -->
+            D.WORKING_TIME,  <!-- 예상 시간(분) -->
+            F.WORK_USER_ID,
+            D.SORT_NUM
+        FROM TBL_CONTROL_PART A
+            INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            LEFT OUTER JOIN TBL_POP C ON A.CONTROL_SEQ = C.CONTROL_SEQ
+                                         AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_MCT_PLAN D ON A.CONTROL_SEQ = D.CONTROL_SEQ
+                                         AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_EQUIP E ON D.EQUIP_ID = E.EQUIP_ID
+            LEFT OUTER JOIN TBL_MCT_WORK F ON A.CONTROL_SEQ = F.CONTROL_SEQ
+                                              AND A.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
+                                              AND E.EQUIP_ID = F.EQUIP_ID
+        WHERE E.EQUIP_ID = #{EQUIP_ID}
+        ORDER BY D.SORT_NUM
+    </select>
+    <insert id="insertMctPlan"  parameterType="java.util.HashMap" >
+        INSERT INTO TBL_MCT_PLAN (
+            MCT_PLAN_SEQ,
+            EQUIP_ID,
+            CONTROL_SEQ,
+            CONTROL_DETAIL_SEQ,
+            WORKING_TIME,
+            SORT_NUM
+        ) VALUES(
+            NEXTVAL(SEQ_MCT_PLAN),
+            #{EQUIP_ID},
+            #{CONTROL_SEQ},
+            #{CONTROL_DETAIL_SEQ},
+            #{WORKING_TIME},
+            #{SORT_NUM}
+        )
+    </insert>
+    <update id="updateMctPlan"  parameterType="java.util.HashMap" >
+        UPDATE TBL_MCT_PLAN
+        SET
+            EQUIP_ID = #{EQUIP_ID},
+            WORKING_TIME = #{WORKING_TIME},
+            SORT_NUM = #{SORT_NUM},
+            UPDATE_DT = NOW()
+        WHERE MCT_PLAN_SEQ = #{MCT_PLAN_SEQ}
+    </update>
+    <delete id="deleteMctPlan" parameterType="java.util.HashMap">
+        DELETE
+        FROM TBL_MCT_PLAN
+        WHERE MCT_PLAN_SEQ = #{MCT_PLAN_SEQ};
+    </delete>
+    <select id="selectProcessTargetList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            ROW_NUMBER () OVER () AS ROWNUM,
+            A.CONTROL_SEQ,
+            A.CONTROL_DETAIL_SEQ,
+            SF_GET_DATE_F(A.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT, <!-- 납기 -->
+            CASE
+                WHEN B.EMERGENCY_YN = 'Y' THEN '긴'
+            END AS EMERGENCY_YN, <!-- 긴급 -->
+            CASE
+                WHEN B.MAIN_INSPECTION = 'Y' THEN '주'
+            END AS MAIN_INSPECTION, <!-- 주요 검사품 -->
+            CASE
+                WHEN A.WORK_TYPE = 'WTP030' THEN '수'
+                WHEN A.WORK_TYPE = 'WTP040' THEN '재'
+            END AS WORK_NM, <!-- 형태 -->
+            '', <!-- MCT Plan/Actual -->
+            H.POP_POSITION, <!-- 현재위치 -->
+            SF_GET_CODE_NM(1013, A.PART_STATUS, 'KR')_PART_STATUS_NM, <!-- 진행상태 -->
+            '', <!-- 가공진행현황 -->
+            B.CONTROL_NUM, <!-- 관리번호 -->
+            A.PART_NUM, <!-- Part -->
+            A.MATERIAL_DETAIL, <!-- 소재종류 상세 -->
+            C.ORDER_QTY, <!-- 수량 -->
+            A.SIZE_TXT AS STANDARD_SIZE, <!-- 규격 -->
+            D.SIZE_TXT AS MATERIAL_SIZE, <!-- 소재 Size -->
+            CONCAT(B.NOTE, D.ORDER_NOTE) AS NOTE, <!-- 비고 기록사항 -->
+            '', <!-- 예상가공 시간(분) -->
+            A.MCT_NOTE, <!-- 가공계획 비고 -->
+            A.MCT_WORK_TYPE, <!-- 작업 구분 -->
+            H.POP_PREV_POSITION, <!-- 이전 위치 -->
+            '', <!-- 과거 경험(NC설계 기준) -->
+            SF_GET_DATE_F(A.STATUS_DT,'YYYY','M') AS SATAUS_DT, <!-- 확정 일시 -->
+            SF_GET_DATE_F(D.IN_DT,'YYYY','M') AS MATERIAL_INNER_DT <!-- 소재 입고 일시  -->
+        FROM TBL_CONTROL_PART A 
+            INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ 
+            INNER JOIN TBL_CONTROL_PART_ORDER C ON A.CONTROL_SEQ = C.CONTROL_SEQ 
+                                                   AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_MATERIAL_ORDER D ON A.CONTROL_SEQ = D.CONTROL_SEQ 
+                                               AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ 
+            INNER JOIN TBL_MCT_PLAN E ON A.CONTROL_SEQ = E.CONTROL_SEQ 
+                                         AND A.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_MCT_WORK F ON A.CONTROL_SEQ = F.CONTROL_SEQ 
+                                              AND A.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_EQUIP G ON E.EQUIP_ID = G.EQUIP_ID 
+                                      AND F.EQUIP_ID = G.EQUIP_ID 
+            LEFT OUTER JOIN TBL_POP H ON A.CONTROL_SEQ = H.CONTROL_SEQ 
+                                         AND A.CONTROL_DETAIL_SEQ = H.CONTROL_DETAIL_SEQ 
+        WHERE 1 = 1
+            AND B.CONTROL_STATUS = 'ORD001' <!-- 주문확정 -->
+            AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO008')
+        GROUP BY
+            A.CONTROL_SEQ,
+            A.CONTROL_DETAIL_SEQ
+    </select>
+    <select id="selectCamWorkHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            ROW_NUMBER () OVER () AS ROWNUM,
+            A.CONTROL_SEQ,
+            A.CONTROL_DETAIL_SEQ,
+            SF_GET_DATE_F(A.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT, <!-- 납기 -->
+            CASE
+                WHEN B.EMERGENCY_YN = 'Y' THEN '긴'
+            END AS EMERGENCY_YN, <!-- 긴급 -->
+            CASE
+                WHEN B.MAIN_INSPECTION = 'Y' THEN '주'
+            END AS MAIN_INSPECTION, <!-- 주요 검사품 -->
+            CASE 
+                WHEN A.WORK_TYPE = 'WTP030' THEN '수'
+                WHEN A.WORK_TYPE = 'WTP040' THEN '재'
+            END AS WORK_NM, <!-- 형태 -->
+            B.CONTROL_NUM, <!-- 관리번호 -->
+            A.PART_NUM, <!-- Part  -->
+            A.MATERIAL_DETAIL, <!-- 소재종류 상세 -->
+            A.PART_UNIT_QTY, <!-- 수량 -->
+            A.SIZE_TXT AS STANDARD_SIZE, <!-- 규격 -->
+            '', <!-- NC Actual -->
+            '', <!-- 가공진행 현황 -->
+            '', <!-- 총 가공 시간 -->
+            A.PART_STATUS, <!-- 진행상태 -->
+            H.POP_POSITION, <!-- 현재위치	 -->
+            A.MCT_WORK_TYPE, <!-- 작업 구분 -->
+            J.DESIGN_QTY, <!-- Step -->
+            J.WORK_DIRECTION, <!-- 가공위치 -->
+            J.WORK_DESC, <!-- 작업내용 -->
+            J.WORK_USER_ID, <!-- 작업자 -->
+            J.CAM_GFILE_SEQ,
+            I.NOTE, <!-- 비고 -->
+            I.UPDATE_DT, <!-- Update 확인! -->
+            H.POP_PREV_POSITION, <!-- 이전 위치 -->
+            SF_GET_DATE_F(A.STATUS_DT,'YYYY','M') AS SATAUS_DT, <!-- 가공 확정 일시 -->
+            SF_GET_DATE_F(D.IN_DT,'YYYY','M') AS MATERIAL_INNER_DT, <!-- 소재 입고 일시 -->
+            CONCAT(B.NOTE, D.ORDER_NOTE) AS NOTE, <!-- 비고 기록사항 -->
+            K.INSPECT_SEQ, <!-- 품질현황 SEQ??? -->
+            K.INSPECT_GRADE, <!-- 판정 -->
+            K.INSPECT_RESULT, <!-- 불량 코드 A~C 통과 D이면 불량! -->
+            K.ERROR_REASON, <!-- 원인 -->
+            K.ERROR_ACTION, <!-- 조치방안 -->
+            K.INSERT_DT <!-- 작성일자 -->
+        FROM TBL_CONTROL_PART A
+            INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ 
+        <!-- 	INNER JOIN TBL_CONTROL_PART_ORDER C ON A.CONTROL_SEQ = C.CONTROL_SEQ -->
+        <!-- 	                                       AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ -->
+            LEFT OUTER JOIN TBL_MATERIAL_ORDER D ON A.CONTROL_SEQ = D.CONTROL_SEQ 
+                                               AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ 
+        <!-- 	INNER JOIN TBL_MCT_PLAN E ON A.CONTROL_SEQ = E.CONTROL_SEQ -->
+        <!-- 	                             AND A.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ -->
+            LEFT OUTER JOIN TBL_MCT_WORK F ON A.CONTROL_SEQ = F.CONTROL_SEQ 
+                                              AND A.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
+         <!--   INNER JOIN TBL_EQUIP G ON E.EQUIP_ID = G.EQUIP_ID -->
+         <!--                             AND F.EQUIP_ID = G.EQUIP_ID -->
+            LEFT OUTER JOIN TBL_POP H ON A.CONTROL_SEQ = H.CONTROL_SEQ 
+                                         AND A.CONTROL_DETAIL_SEQ = H.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_CAM I ON A.CONTROL_SEQ = I.CONTROL_SEQ 
+                                         AND A.CONTROL_DETAIL_SEQ = I.CONTROL_DETAIL_SEQ 
+            LEFT OUTER JOIN TBL_CAM_DETAIL J ON I.CAM_SEQ = J.CAM_SEQ 
+            LEFT OUTER JOIN TBL_INSPECT K ON A.CONTROL_SEQ = K.CONTROL_SEQ 
+                                             AND A.CONTROL_DETAIL_SEQ = K.CONTROL_DETAIL_SEQ 
+    </select>
+    <select id="selectNcPerformanceHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            ROW_NUMBER () OVER () AS ROWNUM,
+            A.CONTROL_SEQ,
+            A.CONTROL_DETAIL_SEQ,
+            SF_GET_CODE_NM(1005, E.FACTORY_AREA, 'KR') AS FACTORY_AREA, <!-- 공정구분 -->
+            '', <!-- NC 명 -->
+            B.CONTROL_NUM, <!-- 관리번호 -->
+            A.PART_NUM, <!-- Part -->
+            A.DRAWING_NUM, <!-- 도면번호 -->
+            A.ITEM_NM, <!-- 품명 -->
+            SF_GET_CODE_NM(1033, A.WORK_TYPE, 'KR') AS WORK_TYPE, <!-- 형태 -->
+            SF_GET_CODE_NM(1027, A.MATERIAL_DETAIL, 'KR') AS MATERIAL_DETAIL, <!-- 소재종류 -->
+            SF_GET_CODE_NM(1029, A.MATERIAL_KIND, 'KR') AS MATERIAL_KIND, <!-- 소재분류? -->
+            A.PART_UNIT_QTY, <!-- 수량 -->
+            A.SIZE_TXT AS STANDARD_SIZE, <!-- 규격 -->
+            C.SIZE_TXT AS MATERIAL_SIZE, <!-- 소재 Size -->
+            A.MATERIAL_FINISH_TM, <!-- TM각비 -->
+            A.MATERIAL_FINISH_GRIND, <!-- 연마 -->
+            A.MATERIAL_FINISH_HEAT, <!-- 열처리 -->
+            SF_GET_DATE_F(D.WORK_START_DT, 'YYYY', 'M') AS WORK_START_DT, <!-- 착수일시 -->
+            SF_GET_DATE_F(D.WORK_FINISH_DT, 'YYYY', 'M') AS WORK_FINISH_DT, <!-- 완료일시 -->
+            CONCAT(D.WORK_STOP_DT, '분') AS WORK_STOP_DT, <!-- 정지시간 -->
+            CONCAT(TIMESTAMPDIFF(MINUTE, D.WORK_START_DT, WORK_FINISH_DT), '분') AS LEAD_TIME, <!-- 소요시간 -->
+            CONCAT(TIMESTAMPDIFF(MINUTE, D.WORK_START_DT, WORK_FINISH_DT) / A.PART_UNIT_QTY, '분') AS UNIT_LEAD_TIME, <!-- 단위소요 -->
+            D.WORK_USER_ID <!-- 작업자 -->
+        FROM TBL_CONTROL_PART A
+            INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            LEFT OUTER JOIN TBL_MATERIAL_ORDER C ON A.CONTROL_SEQ = C.CONTROL_SEQ
+            AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_MCT_WORK D ON A.CONTROL_SEQ = D.CONTROL_SEQ
+            AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_EQUIP E ON D.EQUIP_ID = E.EQUIP_ID
+    </select>
+</mapper>

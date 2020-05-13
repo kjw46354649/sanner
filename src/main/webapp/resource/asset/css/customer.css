@@ -192,3 +192,11 @@
 /*}*/
 
 .wd_270_barcode {width:270px !important;}
+
+
+.inspection .layerPopup .m_area .numWrap { width: 285px;}
+.inspection .layerPopup .m_area .numWrap span i { width: 140px; }
+.inspection table.colStyle th, table.colStyle td { display: table-cell; }
+.inspection .layerPopup .list4 { height: 90px; background: #e1e1e1; }
+.inspectionBWrap .barCode { margin-left:20px;margin-right:10px }
+.estimate .inspectionBWrap .hWrap {font-size: 12px;}
