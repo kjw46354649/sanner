@@ -587,6 +587,42 @@
     };
 
     /**
+     *	Download Hidden Action 처리
+     *   actionURL : 서버 호출 URL
+     *	param : 호출 URL에 Parameter 정보
+     **/
+    let fnFileDownloadFormPageAction = function(GfileSeq) {
+        let elem = document.getElementById('downloadActionForm');
+        if(elem != null && typeof(elem) !== undefined){
+            $('#downloadActionForm').remove()
+        }
+        let downloadActionForm = document.createElement("form");
+        downloadActionForm.setAttribute("id", "downloadActionForm");
+        downloadActionForm.setAttribute("name", "downloadActionForm");
+        downloadActionForm.hidden=true;
+        downloadActionForm.name='downloadActionForm';
+        downloadActionForm.method='POST';
+        downloadActionForm.target='_self';
+        downloadActionForm.action= '/fileDownload/' + GfileSeq;
+
+        document.body.appendChild(downloadActionForm);
+        downloadActionForm.submit();
+    };
+
+    function initExcelHiddenForm(theForm, key, value) {
+        var elem = document.getElementById('excelForm');
+        if(elem != null && typeof(elem) !== undefined){
+            $('#excelForm').remove()
+        }
+        var excelform = document.createElement("form");
+        excelform.setAttribute("id", "excelForm");
+        excelform.name='excelForm';
+        excelform.method='POST';
+        excelform.action='/excel-download';
+        return excelform;
+    }
+
+    /**
      * @description 레퍼런스 참조 없는 배열 복사
      * @param obj
      */
@@ -719,6 +755,7 @@
 
         return year + '-' + month + '-' + date + ' ' + hour + ':' + minute;
     }
+
     let fnGridValidation = function(targetGrid){
         var gridInstance = $("#" + targetGrid).pqGrid('getInstance').grid;
         var addList = gridInstance.getChanges().addList;
@@ -746,4 +783,6 @@
             return true;
         }
 
-    }</script>
+    }
+
+</script>
