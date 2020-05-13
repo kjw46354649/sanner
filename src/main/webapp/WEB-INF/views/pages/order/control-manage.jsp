@@ -325,7 +325,7 @@
                             </div>
                         </header>
                         <div class="panel-body">
-                            <form class="form-inline" role="form" id="estimate_register_info_form" name="estimate_register_info_form">
+                            <form class="form-inline" role="form" id="control_estimate_register_info_form" name="control_estimate_register_info_form">
                                 <input type="hidden" id="queryId" name="queryId" value="selectEstimateNextSequence"/>
                                 <input type="hidden" id="EST_SEQ" name="EST_SEQ" value=""/>
                                 <div class="panel-body line_tit portlet-body form bg-light">
@@ -566,9 +566,9 @@
             {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', hidden: true},
             {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM'},
             {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT'},
-            {title: '열<br>처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT'},
             {title: '소재비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', editable: true},
             {title: 'Part<br>단위<br>수량', dataType: 'integer', dataIndx: 'PART_UNIT_QTY'},
+            {title: '주문<br>수량', dataType: 'integer', dataIndx: 'ORDER_QTY_TOTAL'},
             {
                 title: '대칭', align: 'center', colModel: [
                     {title: '원칭', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY', editable: true},
@@ -810,7 +810,7 @@
         const popupGridId = 'ORDER_REGISTER_GRID';
         const popupColModel = [
             {
-                title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', colModel: [],
+                title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD',
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: BUSINESS_COMPANY},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -833,7 +833,7 @@
                 }
             },
             {
-                title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', colModel: [],
+                title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD',
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: ORDER_COMPANY},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -855,12 +855,12 @@
                     }
                 }
             },
-            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', colModel: []},
-            {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', colModel: []},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', colModel: []},
-            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', colModel: []},
+            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM'},
+            {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM'},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
+            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM'},
             {
-                title: '주요 검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION', colModel: [],
+                title: '주요 검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION',
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -889,7 +889,7 @@
                 }
             },
             {
-                title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN', colModel: [],
+                title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN',
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -918,12 +918,12 @@
                     }
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', colModel: []},
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', colModel: []},
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', colModel: []},
-            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', colModel: []},
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM'},
+            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM'},
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM'},
+            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM'},
             {
-                title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', colModel: [],
+                title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE',
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -953,7 +953,7 @@
                 }
             },
             {
-                title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN', colModel: [],
+                title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN',
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -982,7 +982,7 @@
                 }
             },
             {
-                title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', colModel: [],
+                title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY',
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -1011,7 +1011,7 @@
                 }
             },
             {
-                title: '소재 사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', colModel: [],
+                title: '소재 사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -1039,10 +1039,10 @@
                     }
                 }
             },
-            {title: '가공납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', colModel: []},
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', colModel: []},
+            {title: '가공납기', dataType: 'string', dataIndx: 'INNER_DUE_DT'},
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT'},
             {
-                title: '소재상세종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', colModel: [],
+                title: '소재상세종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -1071,7 +1071,7 @@
                 }
             },
             {
-                title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', colModel: [],
+                title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND',
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -1101,7 +1101,7 @@
                 }
             },
             {
-                title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', colModel: [],
+                title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT',
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -1129,8 +1129,8 @@
                     }
                 }
             },
-            {title: '소재비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', colModel: []},
-            {title: 'Part<br>단위<br>수량', dataType: 'string', dataIndx: 'PART_UNIT_QTY', colModel: []},
+            {title: '소재비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE'},
+            {title: 'Part<br>단위<br>수량', dataType: 'string', dataIndx: 'PART_UNIT_QTY'},
             {
                 title: '대칭', align: 'center', colModel: [
                     {title: '원칭', datatype: 'string', dataIndx: 'ORIGINAL_SIDE_QTY'},
@@ -1145,9 +1145,9 @@
                     {title: '납품확인', datatype: 'string', dataIndx: 'DELIVERY_DT'}
                 ]
             },
-            {title: '최종<br>견적단가', dataType: 'string', dataIndx: 'UNIT_FINAL_EST_AMT', colModel: []},
-            {title: '최종<br>공급단가', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT', colModel: []},
-            {title: '변경전<br>도면번호', dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', colModel: []}
+            {title: '최종<br>견적단가', dataType: 'string', dataIndx: 'UNIT_FINAL_EST_AMT'},
+            {title: '최종<br>공급단가', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT'},
+            {title: '변경전<br>도면번호', dataType: 'string', dataIndx: 'PREV_DRAWING_NUM'}
         ];
         const popupToolbar = {
             cls: 'pq-toolbar-crud',
@@ -1358,13 +1358,13 @@
         let $controlCloseRightGrid;
         const controlCloseRightGridId = 'CONTROL_CLOSE_RIGHT_GRID';
         let controlCloseRightColModel = [
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true, colModel: []},
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', colModel: []},
-            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true, colModel: []},
-            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN', colModel: []},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER', colModel: []},
-            {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY', colModel: []},
-            {title: '변경후 마감금액', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', colModel: []},
+            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
+            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
+            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
+            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
+            {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
+            {title: '변경후 마감금액', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
             {
                 title: '추가 금액', align: 'center', colModel: [
                     {title: '', datatype: 'string', dataIndx: 'ADD_QTY'},
@@ -1967,19 +1967,19 @@
 
         /* 견적등록 */
         /** 공통 코드 이외의 처리 부분 **/
-        fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#ORDER_COMP_CD"), 'sel', {
+        fnCommCodeDatasourceSelectBoxCreate($("#control_estimate_register_info_form").find("#ORDER_COMP_CD"), 'sel', {
             "url": "/json-list",
             "data": {"queryId": 'dataSource.getOrderCompanyList'}
         });
-        fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#COMP_CD"), 'sel', {
+        fnCommCodeDatasourceSelectBoxCreate($("#control_estimate_register_info_form").find("#COMP_CD"), 'sel', {
             "url": "/json-list",
             "data": {"queryId": 'dataSource.getBusinessCompanyList'}
         });
-        fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#EST_USER_ID"), 'sel', {
+        fnCommCodeDatasourceSelectBoxCreate($("#control_estimate_register_info_form").find("#EST_USER_ID"), 'sel', {
             "url": "/json-list",
             "data": {"queryId": 'dataSource.getUserList'}
         });
-        fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#ORDER_STAFF_SEQ"), 'sel', {
+        fnCommCodeDatasourceSelectBoxCreate($("#control_estimate_register_info_form").find("#ORDER_STAFF_SEQ"), 'sel', {
             "url": "/json-list",
             "data": {"queryId": 'dataSource.getCompanyStaffList'}
         });
@@ -2312,10 +2312,10 @@
             }
 
 
-            $("#estimate_register_info_form #ORDER_COMP_CD").on('change', function () {
+            $("#control_estimate_register_info_form #ORDER_COMP_CD").on('change', function () {
                 let compCd = $(this).val();
 
-                fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#ORDER_STAFF_SEQ"), 'sel', {
+                fnCommCodeDatasourceSelectBoxCreate($("#control_estimate_register_info_form").find("#ORDER_STAFF_SEQ"), 'sel', {
                     "url": "/json-list",
                     "data": {"queryId": 'dataSource.getCompanyStaffList', 'COMP_CD': compCd}
                 });
@@ -2338,21 +2338,21 @@
             }
 
             $("#btn_estimate_register_save").on("click", function () {
-                $("#estimate_register_info_form #queryId").val('selectEstimateNextSequence');
+                $("#control_estimate_register_info_form #queryId").val('selectEstimateNextSequence');
 
-                let parameters = {'url': '/json-list', 'data': $("#estimate_register_info_form").serialize()};
-                let EST_SEQ = $("#estimate_register_info_form #EST_SEQ").val();
+                let parameters = {'url': '/json-list', 'data': $("#control_estimate_register_info_form").serialize()};
+                let EST_SEQ = $("#control_estimate_register_info_form #EST_SEQ").val();
                 fnPostAjax(function (data, callFunctionParam) {
                     let list = data.list[0];
                     if (EST_SEQ == '' || EST_SEQ == null) {
                         EST_SEQ = list.EST_SEQ;
                     }
 
-                    $("#estimate_register_info_form #queryId").val('insertEstimateMaster');
-                    $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
+                    $("#control_estimate_register_info_form #queryId").val('insertEstimateMaster');
+                    $("#control_estimate_register_info_form #EST_SEQ").val(EST_SEQ);
                     $("#estimate_version_up_sequence_form #hidden_est_seq").val(EST_SEQ);
 
-                    parameters = {'url': '/json-create', 'data': $("#estimate_register_info_form").serialize()};
+                    parameters = {'url': '/json-create', 'data': $("#control_estimate_register_info_form").serialize()};
                     fnPostAjax(estimateRegisterSaveCallBack, parameters, '');
 
                 }, parameters, '');
@@ -2365,22 +2365,22 @@
                 let parameter = {'url': '/json-list', 'data': postData};
                 fnPostAjax(function (data, callFunctionParam) {
                     let list = data.list[0];
-                    $("#estimate_register_info_form #ORDER_COMP_CD").val(list.ORDER_COMP_CD);
-                    $("#estimate_register_info_form #EST_TITLE").val(list.EST_TITLE);
-                    $("#estimate_register_info_form #ORDER_STAFF_SEQ").val(list.ORDER_STAFF_SEQ);
-                    $("#estimate_register_info_form #COMP_CD").val(list.COMP_CD);
-                    $("#estimate_register_info_form #EST_USER_ID").val(list.EST_USER_ID);
-                    $("#estimate_register_info_form #EST_NUM").val(list.EST_NUM + ' (' + list.EST_VER + ')');
-                    $("#estimate_register_info_form #DTL_CNT").val(list.DTL_CNT);
-                    $("#estimate_register_info_form #DTL_AMOUNT").val(list.DTL_AMOUNT);
-                    $("#estimate_register_info_form #INSERT_DT").val(list.INSERT_DT);
-                    $("#estimate_register_info_form #SEND_DT").val(list.SEND_DT);
+                    $("#control_estimate_register_info_form #ORDER_COMP_CD").val(list.ORDER_COMP_CD);
+                    $("#control_estimate_register_info_form #EST_TITLE").val(list.EST_TITLE);
+                    $("#control_estimate_register_info_form #ORDER_STAFF_SEQ").val(list.ORDER_STAFF_SEQ);
+                    $("#control_estimate_register_info_form #COMP_CD").val(list.COMP_CD);
+                    $("#control_estimate_register_info_form #EST_USER_ID").val(list.EST_USER_ID);
+                    $("#control_estimate_register_info_form #EST_NUM").val(list.EST_NUM + ' (' + list.EST_VER + ')');
+                    $("#control_estimate_register_info_form #DTL_CNT").val(list.DTL_CNT);
+                    $("#control_estimate_register_info_form #DTL_AMOUNT").val(list.DTL_AMOUNT);
+                    $("#control_estimate_register_info_form #INSERT_DT").val(list.INSERT_DT);
+                    $("#control_estimate_register_info_form #SEND_DT").val(list.SEND_DT);
 
                     postData = {'queryId': 'estimate.selectLastValEstimateDetailList', 'EST_SEQ': EST_SEQ};
                     fnRequestGidData(estimateRegisterTopGrid, postData);
 
                     $("#estimate_register_excel_download #EST_SEQ").val(EST_SEQ);
-                    $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
+                    $("#control_estimate_register_info_form #EST_SEQ").val(EST_SEQ);
                 }, parameter, '');
             }
 

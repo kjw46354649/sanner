@@ -7,4 +7,6 @@ import java.util.Map;
 public interface MaterialService {
 
     public void managerInsideStock(Model model, Map<String, Object> map) throws Exception;
+    public void managerInsideStockPop(Model model, Map<String, Object> map) throws Exception;
+
 }

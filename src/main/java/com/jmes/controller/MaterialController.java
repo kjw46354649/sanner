@@ -27,4 +27,17 @@ public class MaterialController {
 
         return "jsonView";
     }
+
+    @RequestMapping(value = "/managerInsideStockPop", method = RequestMethod.POST)
+    public String managerInsideStockPop(Model model, HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        System.out.println("---managerInsideStockPop-----map-------" + map.toString());
+        this.materialService.managerInsideStockPop(model, map);
+
+        return "jsonView";
+    }
+
+
+
 }

@@ -39,6 +39,9 @@
                                             <div class="col-md-12 col-sm-12">
                                                 <div class="gridWrap">
                                                     <div id="item_order_register_popup_top_grid" class="jqx-refresh"></div>
+                                                    <div class="right_sort">
+                                                        전체 조회 건수 (Total : <span id="item_order_register_popup_top_grid_records" style="color: #00b3ee">0</span>)
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -46,6 +49,9 @@
                                             <div class="col-md-12 col-sm-12">
                                                 <div class="gridWrap">
                                                     <div id="item_order_register_popup_bot_grid" class="jqx-refresh"></div>
+                                                    <div class="right_sort">
+                                                        전체 조회 건수 (Total : <span id="item_order_register_popup_bot_grid_records" style="color: #00b3ee">0</span>)
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -130,7 +136,6 @@
                 </ul>
             </div>
         </form>
-        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
     <div class="bottomWrap row3_bottomWrap">
         <div class="tableWrap">
@@ -150,6 +155,9 @@
                     </div>
                     <div class="conMainWrap">
                         <div id="item_order_register_left_grid" class="jqx-refresh"></div>
+                        <div class="right_sort">
+                            전체 조회 건수 (Total : <span id="item_order_register_left_grid_records" style="color: #00b3ee">0</span>)
+                        </div>
                     </div>
                 </div>
                 <div class="right_30Wrap">
@@ -186,6 +194,9 @@
                     </div>
                     <div class="conMainWrap">
                         <div id="item_order_register_right_grid" class="jqx-refresh"></div>
+                        <div class="right_sort">
+                            전체 조회 건수 (Total : <span id="item_order_register_right_grid_records" style="color: #00b3ee">0</span>)
+                        </div>
                     </div>
                 </div>
             </div>
@@ -699,6 +710,10 @@
                 autoMerge(this, true);
             },
             complete: function(event, ui) {
+                this.flex();
+                let data = itemOrderRegisterLeftGrid.pqGrid('option', 'dataModel.data');
+
+                $('#item_order_register_left_grid_records').html(data.length);
             },
             selectChange: function (event, ui) {
                 if (ui.selection.iCells.ranges[0] !== undefined) {
@@ -767,6 +782,12 @@
                 showTitle: false,
                 title: false,
                 strNoRows: g_noData,
+                complete: function(event, ui) {
+                    this.flex();
+                    let data = itemOrderRegisterRightGrid.pqGrid('option', 'dataModel.data');
+
+                    $('#item_order_register_right_grid_records').html(data.length);
+                },
                 cellSave: function (evt, ui) {
                     if (ui.oldVal === undefined && ui.newVal === null) {
                         itemOrderRegisterRightGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
@@ -805,6 +826,12 @@
                 trackModel: {on: true},
                 colModel: itemOrderRegisterPopTopColModel,
                 showTitle: false,
+                complete: function (event, ui) {
+                    this.flex();
+                    let data = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data');
+
+                    $('#item_order_register_popup_top_grid_records').html(data.length);
+                },
                 cellSave: function (evt, ui) {
                     if (ui.oldVal === undefined && ui.newVal === null) {
                         itemOrderRegisterPopTopGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
@@ -831,6 +858,12 @@
                 resizable: false,
                 colModel: itemOrderRegisterPopBotColModel,
                 showTitle: false,
+                complete: function (event, ui) {
+                    this.flex();
+                    let data = itemOrderRegisterPopBotGrid.pqGrid('option', 'dataModel.data');
+
+                    $('#item_order_register_popup_bot_grid_records').html(data.length);
+                }
             });
 
             let parameters = {'url': '/json-list', 'data': {'queryId': 'selectItemOrderRegisterNextMaterialOrderNum'}};
