@@ -15,7 +15,7 @@ def version = [
 
 repositories {
     mavenCentral()
-    maven { url "https://artifact.aspose.com/repo/"}
+    maven { url "https://repository.aspose.com/repo/"}
 }
 
 configurations { providedCompile }
@@ -30,6 +30,8 @@ dependencies {
 
     compile "org.springframework:spring-jdbc:${version.spring}",
             "org.springframework:spring-webmvc:${version.spring}",
+            "org.springframework:spring-context-support:${version.spring}",
+            "org.springframework:spring-test:${version.spring}",
             "org.springframework:spring-test:${version.spring}",
             "org.slf4j:slf4j-api:${version.slf4j}",
             "org.slf4j:jcl-over-slf4j:${version.slf4j}",
@@ -62,7 +64,12 @@ dependencies {
 
     // cat to pdf convert
     // https://mvnrepository.com/artifact/com.aspose/aspose-cad
-    compile group: 'com.aspose', name: 'aspose-cad', version: '20.3'
+    compile group: 'com.aspose', name: 'aspose-cad', version: '20.4'
+    // https://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor
+    // compile group: 'com.drewnoakes', name: 'metadata-extractor', version: '2.13.0'
+    // https://mvnrepository.com/artifact/org.imgscalr/imgscalr-lib
+    // compile group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
+
 
     // pdf to image convert
     // https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
@@ -108,6 +115,8 @@ dependencies {
     // https://mvnrepository.com/artifact/com.thetransactioncompany/cors-filter
     compile group: 'com.thetransactioncompany', name: 'cors-filter', version: '2.9'
 
+    // https://mvnrepository.com/artifact/javax.mail/javax.mail-api
+    compile group: 'javax.mail', name: 'javax.mail-api', version: '1.6.2'
 
 }
 
