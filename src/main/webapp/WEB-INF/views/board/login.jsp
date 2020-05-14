@@ -17,30 +17,32 @@
 <body onresize="parent.resizeTo(1024,600)" onload="parent.resizeTo(1024,600)">
     <div class="bodyWrap login" id="bodyWrap">
         <!-- contents 영역에 각페이지 명에 맞는 class 추가 !! -->
-        <div class="loginWrap">
-            <ul>
-                <li><label for="menu_1">메뉴선택</label>
-                    <select id="menu_1" name="menu_1" title="메뉴선택">
-                        <c:forEach var="code" items="${HighCode.H_1005}">
-                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                        </c:forEach>
-                    </select>
-                </li>
-                <li><label for="menu_2">메뉴선택</label>
-                    <select id="menu_2" name="menu_2" title="메뉴선택">
-                        <option value="" selected="selected">NC-1</option>
-                        <option value="1">NC-1</option>
-                        <option value="2">NC-1</option>
-                    </select>
-                </li>
-            </ul>
-            <p class="txt">로그인해 주세요</p>
-            <div class="btn"><button id="drawingLogin" type="button">사용자 선택하기</button></div>
-            <div class="langBtn">
-                <button type="button" class="on">Korean</button>
-                <button type="button">English</button>
+        <form id="drawing_log_in_form" method="POST" action="/drawing-worker">
+            <div class="loginWrap">
+                <ul>
+                    <li><label for="menu_1">메뉴선택</label>
+                        <select id="menu_1" name="FACTORY_AREA" title="메뉴선택">
+                            <c:forEach var="code" items="${HighCode.H_1005}">
+                                <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                            </c:forEach>
+                        </select>
+                    </li>
+                    <li><label for="menu_2">메뉴선택</label>
+                        <select id="menu_2" name="EQUIP_ID" title="메뉴선택">
+                            <option value="" selected="selected">NC-1</option>
+                            <option value="1">NC-1</option>
+                            <option value="2">NC-1</option>
+                        </select>
+                    </li>
+                </ul>
+                <p class="txt">로그인해 주세요</p>
+                <div class="btn"><button type="submit">사용자 선택하기</button></div>
+                <%--<div class="langBtn">
+                    <button type="button" class="on">Korean</button>
+                    <button type="button">English</button>
+                </div>--%>
             </div>
-        </div>
+        </form>
     </div>
 <script type='text/javascript'>
     let equipmentData;
@@ -63,10 +65,6 @@
 
         $("#menu_1").on('change', function(){
             fnSelectBoxCreate();
-        });
-
-        $("#drawingLogin").on('click', function(){
-
         });
 
     });
