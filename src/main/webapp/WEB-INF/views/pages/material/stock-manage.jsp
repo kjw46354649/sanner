@@ -417,11 +417,27 @@
                     }
                 }
             },
-            {title: 'PDF', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 20, minWidth: 20, editable: false,
+            {title: 'DXF', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 20, minWidth: 20, editable: false,
                 render: function (ui) {
                     let rowIndx = ui.rowIndx, grid = this;
                     if (ui.rowData['DXF_GFILE_SEQ'] > 0) return "[PDF]";
                     return '';
+                }
+            },
+            {title: 'IMG', align: 'center', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', width: 20, minWidth: 20, editable: false,
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="imageView" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let rowIndx = ui.rowIndx,
+                        grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        let rowData = ui.rowData;
+
+                        console.log(rowData.IMG_GFILE_SEQ);
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
                 }
             },
             {title: '생성일시', dataType: 'string', dataIndx: 'INSERT_TIME', minWidth: 92, editable: false},
@@ -445,6 +461,7 @@
         ];
         stockManageGridId01.pqGrid({
             width: "100%", height: 700,
+            postRenderInterval: -1, //call postRender synchronously.
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'INSIDE_STOCK_NUM',
                 url: "/paramQueryGridSelect",
@@ -950,6 +967,15 @@ console.log("change",JSON.stringify(changes));
                     }
                 }, parameters, '');
             }
+        });
+        /** 도면 등록 처리 **/
+        $('#stock_manage_drawing_new_btn').on('click', function () {
+            setEstiMatePopup('inside', 'material.manageStockCadFiles');
+        });
+
+        /** 도면 보기 팝업 호출 */
+        $('#stock_manage_drawing_view_btn').on('click', function () {
+            callWindowImageViewer(999);
         });
     });
 </script>

@@ -7,27 +7,100 @@
 <html lang="en" class="app">
 <head>
     <title>J-MES POP</title>
-    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css" />
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="/resource/asset/css/drawing.css" rel="stylesheet" type="text/css" />
+    <link href="/resource/asset/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/resource/asset/css/common.css" rel="stylesheet" type="text/css" />
+    <link href="/resource/asset/css/tab.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
-    <script type="text/javascript" src='/resource/main/js/bootstrap.js'></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
+    <script type="text/javascript" src="/resource/asset/js/front.js"></script>
 </head>
 <body onresize="parent.resizeTo(1024,600)" onload="parent.resizeTo(1024,600)">
-<div class="row">
-    <div class="text-center">
-        <img src="/resource/drawing/drawing_02.jpg" class="img-fluid" alt="Responsive image" usemap="#workerMap">
-        <map name="workerMap">
-            <area shape="circle" coords="189, 175, 78" href="/drawing-board" target="_self" onFocus="blur()"/>
-            <area shape="circle" coords="514, 175, 78" href="/drawing-board" target="_self" onFocus="blur()"/>
-            <area shape="circle" coords="840, 175, 78" href="/drawing-board" target="_self" onFocus="blur()"/>
-            <area shape="circle" coords="189, 443, 78" href="/drawing-board" target="_self" onFocus="blur()"/>
-            <area shape="circle" coords="514, 443, 78" href="/drawing-board" target="_self" onFocus="blur()"/>
-            <area shape="circle" coords="840, 443, 78" href="/drawing-board" target="_self" onFocus="blur()"/>
-        </map>
+    <div class="bodyWrap user" id="bodyWrap">
+        <!-- contents 영역에 각페이지 명에 맞는 class 추가 !! -->
+        <header>
+            <div class="head">사용자 선택하기 <span>NC</span></div>
+            <div class="langBtn">
+                <button type="button" class="on">Korean</button>
+                <button type="button">English</button>
+            </div>
+        </header>
+        <section class="contents">
+            <ul class="userWrap">
+                <li class="userBox">
+                    <a href="#a;">
+                        <div class="userImg"><img src="/resource/asset/images/user/user.jpg" alt=""></div>
+                        <div class="userName">
+                            <span class="ko">홍길동 </span><span>/</span><span class="en"> KIM JIN HO</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="userBox">
+                    <a href="#a;">
+                        <div class="userImg"><img src="./asset/images/user/user_1.jpg" alt=""></div>
+                        <div class="userName">
+                            <span class="ko">홍길동 </span><span>/</span><span class="en"> KIM JIN HO</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="userBox">
+                    <a href="#a;">
+                        <div class="userImg"><img src="./asset/images/user/user_2.jpg" alt=""></div>
+                        <div class="userName">
+                            <span class="ko">홍길동 </span><span>/</span><span class="en"> KIM JIN HO</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="userBox">
+                    <a href="#a;">
+                        <div class="userImg"><img src="./asset/images/user/user_3.jpg" alt=""></div>
+                        <div class="userName">
+                            <span class="ko">홍길동 </span><span>/</span><span class="en"> KIM JIN HO</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="userBox">
+                    <a href="#a;">
+                        <div class="userImg"><img src="./asset/images/user/user_4.jpg" alt=""></div>
+                        <div class="userName">
+                            <span class="ko">홍길동 </span><span>/</span><span class="en"> KIM JIN HO</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="userBox">
+                    <a href="#a;">
+                        <div class="userImg"><img src="./asset/images/user/user_1.jpg" alt=""></div>
+                        <div class="userName">
+                            <span class="ko">홍길동 </span><span>/</span><span class="en"> KIM JIN HO</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="userBox">
+                    <a href="#a;">
+                        <div class="userImg"><img src="./asset/images/user/user_3.jpg" alt=""></div>
+                        <div class="userName">
+                            <span class="ko">홍길동 </span><span>/</span><span class="en"> KIM JIN HO</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="userBox">
+                    <a href="#a;">
+                        <div class="userImg"><img src="./asset/images/user/user_4.jpg" alt=""></div>
+                        <div class="userName">
+                            <span class="ko">홍길동 </span><span>/</span><span class="en"> KIM JIN HO</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="userBox">
+                    <a href="#a;">
+                        <div class="userImg"><img src="./asset/images/user/user_1.jpg" alt=""></div>
+                        <div class="userName">
+                            <span class="ko">홍길동 </span><span>/</span><span class="en"> KIM JIN HO</span>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </section>
     </div>
-</div>
 <script type='text/javascript'>
 
 </script>

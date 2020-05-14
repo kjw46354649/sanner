@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>진성정밀 MES 시스템</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1,  user-scalable=yes, minimum-scale=1.0">
+<!-- Firefox, Opera (Chrome and Safari say thanks but no thanks) -->
+<!-- <link rel="shortcut icon" href="./asset/images/common/favicon-32.png"> -->
+<!-- Chrome, Safari, IE -->
+<!-- <link rel="icon" href="./asset/images/common/favicon.ico"> -->
+<!-- Android&IOS Touch Icon -->
+<!-- <link rel="apple-touch-icon-precomposed" href="./asset/images/common/favicon-152.png"> -->
+<link href="./asset/css/reset.css" rel="stylesheet" type="text/css" />
+<link href="./asset/css/common.css" rel="stylesheet" type="text/css" />
+<link href="./asset/css/tab.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="./asset/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="./asset/js/jquery.easing.1.3.js"></script>
+<script type="text/javascript" src="./asset/js/front.js"></script>
+<!-- include Head : e -->
+</head>
+<body>
+	<div class="bodyWrap work" id="bodyWrap">
+		<!-- contents 영역에 각페이지 명에 맞는 class 추가 !! -->
+		<div class="leftLogWrap">
+			<div class="logInWrap">
+				<div class="mainTit">MCT 1호</div>
+				<div class="userWrap">
+					<div class="userImg"><img src="./asset/images/user/user.jpg" alt=""></div>
+					<div class="userInfo">
+						<p class="name">홍길동</p>
+						<p><span class="dept">관리부</span> / <span class="position"></span>차장</p>
+					</div>
+					<div class="logStatus"><button type="button">Log off</button></div>
+				</div>
+				<div class="langBtn">
+					<button type="button" class="on">Korean</button>
+					<button type="button">English</button>
+				</div>
+			</div>
+		</div>
+		<div class="rightWorkWrap">
+			<div class="workInWrap">
+				<div class="contsTitWrap">
+					<div class="contsTit">최근 작업내용</div>
+					<div class="slecBox"><a href="#a;">작업대상 선택</a></div>
+				</div>
+				<div class="contsWrap">
+					<div class="topConts">
+						<div class="timeWrap">
+							<span class="timeTit">시작</span>
+							<span class="time"><span>10/5 </span><span>16:32</span></span>
+						</div>
+						<div class="timeWrap">
+							<span class="timeTit">종료</span>
+							<span class="time"><span>10/5 </span><span>16:32</span></span>
+						</div>
+						<div class="timeWrap">
+							<span class="timeTit">정지</span>
+							<span class="time">12분</span>
+						</div>
+						<div class="timeWrap">
+							<span class="time">32분</span>
+						</div>
+					</div>
+					<div class="middleConts">
+						<div class="tbl">
+							<table>
+								<caption>관리번호, Part, 수량, 납기로 구분된 테이블</caption>
+								<colgroup>
+									<col width="288px">
+									<col width="91px">
+									<col width="111px">
+									<col width="107px">
+								</colgroup>
+								<thead>
+									<tr>
+										<th>관리번호</th>
+										<th>Part</th>
+										<th>수량</th>
+										<th>납기</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><div>C19-0625-02</div></td>
+										<td><div>1</div></td>
+										<td><div>32</div></td>
+										<td><div>10/4</div></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="share">
+							<div class="shareTit">공유</div>
+							<div class="shareConts">좌측 모서리 파임 현상 발생, 후가공시 보완요망<br>상/하단 연마 필요, 드릴 관통 탭 주의</div>
+						</div>
+						<div class="qual">
+							<div class="qualTit">품질</div>
+							<div class="qualConts">
+								<span>03</span>
+								<span class="txtR">불합격(3)</span>
+								<span>02.평탄불량 - HOL공차 불량</span>
+							</div>
+						</div>
+					</div>
+					<div class="alertConts">
+						<span class="alertBox">주요검사</span>
+						<span class="alertBox">긴급</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

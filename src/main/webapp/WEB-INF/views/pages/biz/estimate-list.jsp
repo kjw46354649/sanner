@@ -364,7 +364,15 @@
             //{title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ'},
             {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ',
                 render: function (ui) {
-                    if (ui.cellData) return '<span class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+                    if (ui.cellData) return '<span id="downloadView" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#downloadView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        fnFileDownloadFormPageAction(rowData.DXF_GFILE_SEQ);
+                    });
                 }
             },
             //{title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ'},
@@ -386,6 +394,7 @@
 
         estimateMasterTopGrid.pqGrid({
             width: '100%', height: 330,
+            postRenderInterval: -1, //call postRender synchronously.
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'EST_SEQ',
                 url: "/paramQueryGridSelect",

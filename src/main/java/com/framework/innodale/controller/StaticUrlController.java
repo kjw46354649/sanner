@@ -74,4 +74,18 @@ public class StaticUrlController {
 
         return modelAndView;
     }
+
+    @RequestMapping(value = "/fileDownload/{gfileSeq}")
+    public ModelAndView fileDownloadView(@PathVariable("gfileSeq") String GFILE_SEQ, HttpServletRequest req, HttpServletResponse res) throws Exception {
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        HashMap<String, Object> fileInfo = new HashMap<String, Object>();
+        fileInfo.put("GFILE_SEQ", GFILE_SEQ);
+        fileInfo.put("queryId", "common.selectGfileFileSingleInfo");
+        modelAndView.setViewName("fileDownloadView");
+        modelAndView.addObject("fileInfo", innodaleService.getInfo(fileInfo));
+
+        return modelAndView;
+    }
 }

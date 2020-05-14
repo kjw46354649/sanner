@@ -75,22 +75,6 @@ box-shadow: 0 0 1px 1px rgba(38,38,38,0.1);/* FF3.5+, Opera 9+, Saf1+, Chrome, I
   width:0;
   height: 0;
 }
-::-webkit-scrollbar-button:start {
-
-}
-::-webkit-scrollbar-button:end {
-
-}
-::-webkit-scrollbar-button:vertical:increment {
-}
-::-webkit-scrollbar-button:vertical:decrement {
-}
-::-webkit-scrollbar-corner {
-  background-color: violet; /* 우측 하단의 코너 부분 */
-}
-::-webkit-resizer {
-  background-color: green;
-}
 
 
 /* select */

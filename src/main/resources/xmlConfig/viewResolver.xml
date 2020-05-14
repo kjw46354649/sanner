@@ -12,4 +12,6 @@
 
     <beans:bean name="imageView" class="com.framework.innodale.controller.ImageView" p:contentType="text/html" />
 
+    <beans:bean name="fileDownloadView" class="com.framework.innodale.controller.FileDownloadView" p:contentType="text/html" />
+
 </beans>

@@ -811,7 +811,7 @@
             B.PART_NUM, <!-- Part -->
             B.DRAWING_NUM,
             B.DRAWING_VER,
-            B.SIZE_TEXT, <!-- 규격 -->
+            B.SIZE_TXT, <!-- 규격 -->
             SF_GET_DATE_F(B.DRAWING_UP_DT,'YY','M') AS DRAWING_UP_DT,
             #{NEW_DRAWING_NUM} AS NEW_DRAWING_NUM,
             #{FILE_NM} AS FILE_NM,
@@ -824,6 +824,7 @@
         FROM TBL_CONTROL C
             INNER JOIN TBL_CONTROL_PART B ON C.CONTROL_SEQ = B.CONTROL_SEQ
         WHERE 1 = 1
+            AND C.DEL_YN = 'N'
             AND IFNULL(C.CONTROL_STATUS, 'ORD002') = 'ORD001'
             AND #{ORGINAL_FILE_NM} LIKE CONCAT(B.DRAWING_NUM, '%')
     </select>
