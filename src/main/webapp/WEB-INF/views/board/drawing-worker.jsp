@@ -24,84 +24,43 @@
                 <button type="button">English</button>
             </div>
         </header>
-        <section class="contents">
-            <ul class="userWrap">
-                <li class="userBox">
-                    <a href="#a;">
-                        <div class="userImg"><img src="/resource/asset/images/user/user.jpg" alt=""></div>
-                        <div class="userName">
-                            <span class="ko">홍길동 </span><span>/</span><span class="en"> KIM JIN HO</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="userBox">
-                    <a href="#a;">
-                        <div class="userImg"><img src="./asset/images/user/user_1.jpg" alt=""></div>
-                        <div class="userName">
-                            <span class="ko">홍길동 </span><span>/</span><span class="en"> KIM JIN HO</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="userBox">
-                    <a href="#a;">
-                        <div class="userImg"><img src="./asset/images/user/user_2.jpg" alt=""></div>
-                        <div class="userName">
-                            <span class="ko">홍길동 </span><span>/</span><span class="en"> KIM JIN HO</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="userBox">
-                    <a href="#a;">
-                        <div class="userImg"><img src="./asset/images/user/user_3.jpg" alt=""></div>
-                        <div class="userName">
-                            <span class="ko">홍길동 </span><span>/</span><span class="en"> KIM JIN HO</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="userBox">
-                    <a href="#a;">
-                        <div class="userImg"><img src="./asset/images/user/user_4.jpg" alt=""></div>
-                        <div class="userName">
-                            <span class="ko">홍길동 </span><span>/</span><span class="en"> KIM JIN HO</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="userBox">
-                    <a href="#a;">
-                        <div class="userImg"><img src="./asset/images/user/user_1.jpg" alt=""></div>
-                        <div class="userName">
-                            <span class="ko">홍길동 </span><span>/</span><span class="en"> KIM JIN HO</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="userBox">
-                    <a href="#a;">
-                        <div class="userImg"><img src="./asset/images/user/user_3.jpg" alt=""></div>
-                        <div class="userName">
-                            <span class="ko">홍길동 </span><span>/</span><span class="en"> KIM JIN HO</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="userBox">
-                    <a href="#a;">
-                        <div class="userImg"><img src="./asset/images/user/user_4.jpg" alt=""></div>
-                        <div class="userName">
-                            <span class="ko">홍길동 </span><span>/</span><span class="en"> KIM JIN HO</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="userBox">
-                    <a href="#a;">
-                        <div class="userImg"><img src="./asset/images/user/user_1.jpg" alt=""></div>
-                        <div class="userName">
-                            <span class="ko">홍길동 </span><span>/</span><span class="en"> KIM JIN HO</span>
-                        </div>
-                    </a>
-                </li>
-            </ul>
-        </section>
+        <form id="drawing_worker_form" method="post" action="/drawing-board">
+            <input id="FACTORY_AREA" name="FACTORY_AREA" type="hidden" value="${FACTORY_AREA}">
+            <input id="EQUIP_ID" name="EQUIP_ID" type="hidden" value="${EQUIP_ID}">
+            <input id="USER_ID" name="USER_ID" type="hidden" value="">
+            <section class="contents">
+                <ul class="userWrap">
+                    <c:forEach var="user" items="#{user}">
+                    <li class="userBox">
+                        <a href="#" class="userTag" attr="${user.USER_ID}">
+                            <div class="userImg"><img src="${user.FILE_PATH}" alt=""></div>
+                            <div class="userName">
+                                <span class="ko">${user.USER_ID} </span><span>/</span><span class="en"> ${user.USER_NM}</span>
+                            </div>
+                        </a>
+                    </li>
+                    </c:forEach>
+                </ul>
+            </section>
+        </form>
     </div>
 <script type='text/javascript'>
+
+    $(function () {
+        $(".userTag").on('click', function(){
+           $("#USER_ID").val($(this).attr("attr"));
+
+           $("#drawing_worker_form").submit();
+        });
+
+        $(".langBtn").find("button").on('click', function(){
+            $(".langBtn").find("button").each(function() {
+                $(this).removeClass("on");
+            });
+
+            $(this).addClass("on");
+        });
+    });
 
 </script>
 </body>
