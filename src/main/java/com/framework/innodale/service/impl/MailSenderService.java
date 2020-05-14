@@ -1,5 +1,6 @@
 package com.framework.innodale.service.impl;
 
+import com.framework.innodale.component.MailSenderAgent;
 import com.framework.innodale.dao.InnodaleDao;
 import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
 import org.apache.commons.logging.Log;
@@ -8,7 +9,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 @Service
@@ -32,30 +32,30 @@ public class MailSenderService {
 
         try{
 
-            if(AjaxUtil.isScheduleRunning()) {
-
-                // Demon Key 생성, 자동화 발신 이메일 정보만 UPDATE 한다.
-                hashMap.put("SKEY", VelocityUtil.getUUIDString("mail"));
-
-                // 발송일이 현재 시간보다 적은것은 모두 처리 한다.
-                innodaleDao.sampleMaterialUpdateKey(session, "mail", "setSendEmailSessionKey", hashMap);
-
-                ArrayList<HashMap<String, String>> sendMailData = innodaleDao.commonSelectList(session, "mail.selectSendMailList", hashMap);
-
-                if(sendMailData.size() > 0){
-                    log.info("update automaticMessage count=[" + sendMailData.size() + "]");
-                }
-
-                if(sendMailData != null && sendMailData.size() > 0){
-                    for(HashMap<String, String> mailInfo : sendMailData){
-                        updateEmailSendConditsion(session, mailInfo, hashMap);
-                        // 2 second Next Mail Send
-                        Thread.sleep(2000);
-                    }
-                    // 5 second Next Mail Group 조회
-                    Thread.sleep(5000);
-                }
-            }
+//            if(AjaxUtil.isScheduleRunning()) {
+//
+//                // Demon Key 생성, 자동화 발신 이메일 정보만 UPDATE 한다.
+//                hashMap.put("SKEY", VelocityUtil.getUUIDString("mail"));
+//
+//                // 발송일이 현재 시간보다 적은것은 모두 처리 한다.
+//                innodaleDao.sampleMaterialUpdateKey(session, "mail", "setSendEmailSessionKey", hashMap);
+//
+//                ArrayList<HashMap<String, String>> sendMailData = innodaleDao.commonSelectList(session, "mail.selectSendMailList", hashMap);
+//
+//                if(sendMailData.size() > 0){
+//                    log.info("update automaticMessage count=[" + sendMailData.size() + "]");
+//                }
+//
+//                if(sendMailData != null && sendMailData.size() > 0){
+//                    for(HashMap<String, String> mailInfo : sendMailData){
+//                        updateEmailSendConditsion(session, mailInfo, hashMap);
+//                        // 2 second Next Mail Send
+//                        Thread.sleep(2000);
+//                    }
+//                    // 5 second Next Mail Group 조회
+//                    Thread.sleep(5000);
+//                }
+//            }
         } catch(Exception e) {
             log.error("Exception in Service: " + e.toString());
         }
@@ -81,15 +81,11 @@ public class MailSenderService {
              * 02 : 취소메일(CANCEL)
              */
             if(mailType != null && ("01".equals(mailType) || "02".equals(mailType)) ){
-                innodaleDao.sampleMaterialUpdateKey(session, "mail", "updatePOSendemailCondi", mailInfo);
+                // innodaleDao.sampleMaterialUpdateKey(session, "mail", "updatePOSendemailCondi", mailInfo);
             }
 
 
-        }catch(MessagingException messagingException){
-            log.error(messagingException.getMessage(), messagingException.getCause());
-            mailInfo.put("STATUS", "EMSTS010");
-            mailInfo.put("ERROR_NOTE", messagingException.getMessage());
-        }catch(Exception exception){
+        } catch(Exception exception){
             log.error(exception.getMessage(), exception.getCause());
             mailInfo.put("STATUS", "EMSTS010");
             mailInfo.put("ERROR_NOTE", exception.getMessage());
@@ -97,7 +93,7 @@ public class MailSenderService {
             try{
                 // 메일 전송 완료 처리 (성공, 실패, 실패내용, 오류 코드로 처리 한다.)
                 mailInfo.put("SKEY", bean.get("SKEY"));
-                innodaleDao.sampleMaterialUpdateKey(session, "mail", "updateEmailCondi", mailInfo);
+                //innodaleDao.sampleMaterialUpdateKey(session, "mail", "updateEmailCondi", mailInfo);
 
             }catch(Exception exception){
                 exception.printStackTrace();

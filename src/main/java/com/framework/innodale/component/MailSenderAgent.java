@@ -61,11 +61,11 @@ public class MailSenderAgent {
                 message.setSubject((String)mailInfo.get("TITLE"));
                 message.setText((String)mailInfo.get("CONTEXT"), true);
 
-                if(mailInfo.containsKey("FILE_SEQ") && !"".equals(mailInfo.get("FILE_SEQ"))) {
-                    String file = root+mailInfo.get("FILE_PATH")+ File.separator +mailInfo.get("FILE_NM");
-                    FileSystemResource fsr = new FileSystemResource(file);
-                    message.addAttachment(mailInfo.get("ORIGINAL_FILE_NM"), fsr);
-                }
+//                if(mailInfo.containsKey("FILE_SEQ") && !"".equals(mailInfo.get("FILE_SEQ"))) {
+//                    String file = root+mailInfo.get("FILE_PATH")+ File.separator +mailInfo.get("FILE_NM");
+//                    FileSystemResource fsr = new FileSystemResource(file);
+//                    message.addAttachment(mailInfo.get("ORIGINAL_FILE_NM"), fsr);
+//                }
 
             };
         };
