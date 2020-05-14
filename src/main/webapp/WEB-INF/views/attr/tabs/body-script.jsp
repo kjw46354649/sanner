@@ -38,7 +38,7 @@
 
 <!-- print -->
 <script type="text/javascript" src="/resource/plugins/printThis/printThis.js"></script>
-
+<script type="text/javascript" src='/resource/plugins/waitme/waitMe.js'></script>
 <script type="text/javascript" src="/resource/plugins/dhtmlx/suite.min.js"></script>
 <script type='text/javascript'>
 
@@ -49,6 +49,15 @@
     const TODAY = new Date();
     const CURRENT_YEAR = TODAY.getFullYear();
     const CURRENT_MONTH = TODAY.getMonth();
+    var $waitMeMainContainer;
+
+    $.fn.startWaitMe = function() {
+        $waitMeMainContainer = $('#waitMeContainerDiv').waitMe({});
+    };
+
+    $.fn.stopWaitMe = function() {
+        $waitMeMainContainer.waitMe('hide');
+    };
 
     $(document).ready(function() {
 
@@ -59,11 +68,6 @@
             $(".contentsWrap").append(containerDiv).trigger('create');
             tabMenuFn();
         });
-
-        $(window).resize( function() {
-            // addRoyalTabCallBackMethod();
-            // console.log(parseInt($('#view-scroller').outerHeight(true)));
-        } );
 
         $.ajax({
             url: '/json-list',
@@ -78,7 +82,7 @@
             complete: function(){}
         });
 
-    });
+    })
 
     /**
      * @description Ajax Post

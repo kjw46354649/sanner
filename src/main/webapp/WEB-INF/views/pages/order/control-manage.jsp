@@ -1847,7 +1847,7 @@
                 $("#drawingPrintActionBtn").unbind().click(function (e) {
                     e.stopPropagation();
                     commonDrawingPrintPopup.hide();
-                    $(".cadDrawingPrint").css("display","");
+                    $(this).startWaitMe();
                     $(".cadDrawingPrint").html(printHtml).trigger('create');
                     callback(true);
                     return;
@@ -1859,7 +1859,11 @@
             };
             drawingBarcodePrintModalConfirm(function(confirm){
                 if(confirm){
-                    callWindowModalDrawingPopup();
+                    setTimeout(function() {
+                        $(this).stopWaitMe();
+                        $(".cadDrawingPrint").css("display","");
+                        callWindowModalDrawingPopup();
+                    }, 2000);
                 }
             });
         });
@@ -1909,7 +1913,7 @@
                 $("#drawingPrintActionBtn").unbind().click(function (e) {
                     e.stopPropagation();
                     commonDrawingPrintPopup.hide();
-                    $(".cadDrawingPrint").css("display","");
+                    $(this).startWaitMe();
                     $(".cadDrawingPrint").html(printHtml).trigger('create');
                     callback(true);
                     return;
@@ -1921,7 +1925,11 @@
             };
             drawingPrintModalConfirm(function(confirm){
                 if(confirm){
-                    callWindowModalDrawingPopup();
+                    setTimeout(function() {
+                        $(this).stopWaitMe();
+                        $(".cadDrawingPrint").css("display","");
+                        callWindowModalDrawingPopup();
+                    }, 2000);
                 }
             });
         });

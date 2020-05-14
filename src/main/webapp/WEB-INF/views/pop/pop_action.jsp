@@ -53,11 +53,14 @@
     <!--Include pqTouch file to provide support for touch devices (optional)-->
     <script type="text/javascript" src="/resource/plugins/paramquery/pqTouch/pqtouch.min.js" ></script>
     <script type="text/javascript" src="/resource/plugins/paramquery/pqSelect/pqselect.min.js" ></script>
+<%--    <script type="text/javascript" src="/resource/plugins/scanner/jquery.scannerdetection.js" ></script>--%>
+    <script type="text/javascript" src="/resource/plugins/scanner/onscan.js" ></script>
+<%--    <script type="text/javascript" src="/resource/plugins/scanner/jquery.pos.js" ></script>--%>
     <%--<script type="text/javascript" src="/resource/plugins/dhtmlx/suite.min.js"></script>--%>
 </head>
 <%--<body>--%>
-<body onresize="parent.resizeTo(1920,1080)" onload="parent.resizeTo(1920,1080)">
-    <div class="page estimate">
+<body onresize="parent.resizeTo(1920,1080)" onload="parent.resizeTo(1920,1080)" id="scannerbarcodeDiv">
+    <div class="page estimate" >
         <div class="topWrap">
             <div class="conWrap">
                 <form id="pop_search_form">
@@ -103,9 +106,34 @@
         var g_code;
         let $popMasterGrid;
         let popMasterGridId = 'control_parts_pop_grid';
+        // let $popScannerBarcode = $("#scannerbarcodeDiv");
 
         $(function () {
             'use strict';
+
+            // onScan.attachTo(document, {
+            onScan.attachTo(document, {
+                onScan: function(sScanned, iQty) {
+                    console.log("onScan");
+                    console.log(sScanned);
+                }
+                // keyCodeMapper: function(oEvent) {
+                //     // Look for special keycodes or other event properties specific to
+                //     // your scanner
+                //     if (oEvent.which = 'your_special_key_code') {
+                //         return 'xxx';
+                //     }
+                //     // Fall back to the default decoder in all other cases
+                //     return onScan.decodeKeyEvent(oEvent);
+                // }
+            });
+
+            // $popScannerBarcode.pos();
+            // $popScannerBarcode.on('scan.pos.barcode', function(event){
+            //     var barcode = event.code;
+            //     console.log(barcode);
+            //     //handle your code here....
+            // });
 
             let popMasterColModel = [
                 {title: '긴급', clsHead: 'control_manage_view_quality', dataType: 'string', dataIndx: 'EMERGENCY_YN'},
@@ -220,12 +248,15 @@
             });
 
             $("#barCodeImg").on('click', function(){
+                console.log('click')
                 $("#popBarcode").focus();
             });
 
             $("#popRefresh").on('click', function(){
                 refreshDate();
             });
+
+            $("#popBarcode").focus();
 
         });
 

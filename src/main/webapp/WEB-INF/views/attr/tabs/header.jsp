@@ -34,6 +34,7 @@
 <link href="/resource/asset/css/style.css" rel="stylesheet" type="text/css" />
 
 <link href="/resource/asset/css/customer.css" rel="stylesheet" type="text/css" />
+<link href="/resource/plugins/waitme/waitMe.css" rel="stylesheet" type="text/css"/>
 
 <link href="/resource/main/js/jquery-ui-timepicker-addon.css" rel="stylesheet" type="text/css" />
 

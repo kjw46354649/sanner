@@ -13,24 +13,26 @@
     <tiles:insertAttribute name="body-default-script"/>
 </head>
 <body>
-    <dl id="skiptoContent">
-        <dt><strong class="invisible">바로가기 메뉴</strong></dt>
-        <dd><a href="#bodyWrap">본문 바로가기</a></dd>
-        <dd><a href="#gnbWrap">주메뉴 바로가기</a></dd>
-    </dl>
-    <hr />
-    <div class="bodyWrap" id="bodyWrap">
-        <section class="containerBody">
-            <div class="navbarWrap">
-                <div class="locationWrap"><%--<ul><li><a href="#a;">Home</a></li></ul>--%></div>
-            </div>
-            <div class="tabMenuWrap">
-                <ul class="tabMenu"></ul>
-            </div>
-            <div class="contentsWrap"></div>
-            <tiles:insertAttribute name="body-menu"/>
-        </section>
+    <div id="waitMeContainerDiv">
+        <dl id="skiptoContent">
+            <dt><strong class="invisible">바로가기 메뉴</strong></dt>
+            <dd><a href="#bodyWrap">본문 바로가기</a></dd>
+            <dd><a href="#gnbWrap">주메뉴 바로가기</a></dd>
+        </dl>
+        <hr />
+        <div class="bodyWrap" id="bodyWrap">
+            <section class="containerBody">
+                <div class="navbarWrap">
+                    <div class="locationWrap"><%--<ul><li><a href="#a;">Home</a></li></ul>--%></div>
+                </div>
+                <div class="tabMenuWrap">
+                    <ul class="tabMenu"></ul>
+                </div>
+                <div class="contentsWrap"></div>
+                <tiles:insertAttribute name="body-menu"/>
+            </section>
+        </div>
+        <tiles:insertAttribute name="bottom"/>
     </div>
-    <tiles:insertAttribute name="bottom"/>
 </body>
 </html>
