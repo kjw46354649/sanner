@@ -40,6 +40,11 @@
 <script type="text/javascript" src="/resource/plugins/printThis/printThis.js"></script>
 
 <script type="text/javascript" src="/resource/plugins/dhtmlx/suite.min.js"></script>
+
+<!-- combotree -->
+<script type="text/javascript" src="/resource/main/js/combotree/comboTreePlugin.js" ></script>
+<script type="text/javascript" src="/resource/main/js/combotree/icontains.js" ></script>
+
 <script type='text/javascript'>
 
     var g_code;
