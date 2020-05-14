@@ -37,6 +37,8 @@
 <link href="/resource/plugins/waitme/waitMe.css" rel="stylesheet" type="text/css"/>
 
 <link href="/resource/main/js/jquery-ui-timepicker-addon.css" rel="stylesheet" type="text/css" />
+<link href="/resource/main/js/combotree/style.css" rel="stylesheet" type="text/css" />
+
 
 
 

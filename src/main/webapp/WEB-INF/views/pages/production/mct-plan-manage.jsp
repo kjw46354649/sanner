@@ -39,30 +39,16 @@
         <div class="conWrap">
             <div class="tableWrap">
                 <ul>
-                    <li id="layout_1_1">
-
-                    </li>
-                    <li id="layout_1_2">
-
-                    </li>
-                    <li id="layout_1_3">
-
-                    </li>
-                    <li id="layout_1_4">
-
-                    </li>
+                    <li id="layout_1_1" style="min-width: 506px;"></li>
+                    <li id="layout_1_2" style="min-width: 506px;"></li>
+                    <li id="layout_1_3" style="min-width: 506px;"></li>
+                    <li id="layout_1_4"></li>
                 </ul>
                 <ul>
-                    <li id="layout_2_1">
-
-                    </li>
-                    <li id="layout_2_2">
-
-                    </li>
-                    <li id="layout_2_3">
-                    </li>
-                    <li id="layout_2_4">
-                    </li>
+                    <li id="layout_2_1" style="min-width: 506px;"></li>
+                    <li id="layout_2_2" style="min-width: 506px;"></li>
+                    <li id="layout_2_3" style="min-width: 506px;"></li>
+                    <li id="layout_2_4"></li>
                 </ul>
             </div>
         </div>
@@ -141,6 +127,7 @@
     $(function () {
         'use strict';
         /* variable */
+        const TWENTY_SECONDS = 20000;
         const insertQueryList = ['machine.insertMctPlan'];
         const updateQueryList = ['machine.updateMctPlan'];
         const deleteQueryList = ['machine.deleteMctPlan'];
@@ -153,7 +140,7 @@
         let postData = fnFormToJsonArrayData('#MCT_PLAN_MANAGE_SEARCH_FORM');
         let parameters = {'url': '/json-list', 'data': postData};
 
-        const createdynamicForm = function (row, col, order, equipId) {
+        const createdynamicForm = function (row, col, order, equipId, equipNm) {
             let str = '';
 
             str += '<form id="MCT_NC' + order + '_PLAN_FORM" role="form">';
@@ -161,12 +148,12 @@
             str += '    <input type="hidden" name="EQUIP_ID" id="EQUIP_ID" value="' + equipId + '">';
             str += '    <div class="table">';
             str += '        <div class="titleWrap">';
-            str += '            <span class="tableLabel">NC' + order +'</span>';
-            str += '            <span class="data_ipt" id="NC' + order + '_CONTROL_NUM">C19-625-0799-0order#1</span>';
-            str += '            <p class="listTxt">';
-            str += '                <span id="NC' + order + '_MATERIAL_DETAIL">SMorder5C</span>';
-            str += '                <span id="NC' + order + '_PART_UNIT_QTY">20EA</span>';
-            str += '                <span id="NC' + order + '_WORK_USER_ID">홍길동</span>';
+            str += '            <span class="tableLabel">' + equipNm +'</span>';
+            str += '            <span class="data_ipt" id="NC' + order + '_CONTROL_NUM" style="display: none;"></span>';
+            str += '            <p class="listTxt" style="display: none;">';
+            str += '                <span id="NC' + order + '_MATERIAL_DETAIL"></span>';
+            str += '                <span id="NC' + order + '_PART_UNIT_QTY"></span>';
+            str += '                <span id="NC' + order + '_WORK_USER_ID"></span>';
             str += '            </p>';
             str += '        </div>';
             str += '        <div class="listWrap">';
@@ -176,7 +163,7 @@
             str += '                    <div id="PROCESS_PLAN_GRID' + order + '"></div>';
             str += '                </div>';
             str += '                <div class="footerWrap">';
-            str += '                    <span>Total <span id="NC' + order + '_TOTAL_RECORDS">13</span>rows <span id="NC' + order + '_TOTAL_PART_UNIT_QUANTITY">1</span>ea <span id="NC' + order + '_TOTAL_WORKING_TIME">583</span>min</span>';
+            str += '                    <span>Total <span id="NC' + order + '_TOTAL_RECORDS">0</span>rows <span id="NC' + order + '_TOTAL_PART_UNIT_QUANTITY">0</span>ea <span id="NC' + order + '_TOTAL_WORKING_TIME">0</span>min</span>';
             str += '                </div>';
             str += '            </div>';
             str += '        </div>';
@@ -193,10 +180,25 @@
                 let row = thisParameter.LAYOUT_ROW;
                 let col = thisParameter.LAYOUT_COL;
                 let equipId = thisParameter.EQUIP_ID;
+                let equipNm = thisParameter.EQUIP_NM;
                 // $('#MCT_NC' + (i + 1) + '_PLAN_FORM > #EQUIP_ID').val(data.list[i].EQUIP_ID);
-                createdynamicForm(row, col, i + 1, equipId);
+                createdynamicForm(row, col, i + 1, equipId, equipNm);
             }
         }, parameters, '');
+
+        const EQUIP_LIST = (function () {
+            let list = [];
+            let parameters = ({'url':'/json-list', 'data': {'queryId': 'dataSource.getEquipList'}});
+
+            fnPostAjax(function (data, callFunctionParam) {
+                for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
+                    let thisParameter = data.list[i];
+
+                    list.push({'value': thisParameter.CODE_CD, 'text': thisParameter.CODE_NM});
+                }
+            }, parameters, '');
+            return list;
+        })();
 
         let processPlanPostData1 = fnFormToJsonArrayData('#MCT_NC1_PLAN_FORM');
         let processPlanPostData2 = fnFormToJsonArrayData('#MCT_NC2_PLAN_FORM');
@@ -214,9 +216,59 @@
             {title: '납기', dataType: 'string', dataIndx: 'INNER_DUE_DT'},
             {title: '관리번호', width: 70, dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {title: 'Part 수량', dataType: 'string', dataIndx: 'PART_UNIT_QTY'},
-            {title: '소재', dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
+            {title: '소재', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1027')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let workType = fnGetCommCodeGridSelectBox('1027');
+                        let index = workType.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = workType.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+
+                        }
+
+                        return (index < 0) ? cellData : workType[index].text;
+                    }
+                }
+            },
             {title: '규격', dataType: 'string', dataIndx: 'STANDARD_SIZE'},
-            {title: '현재위치', dataType: 'string', dataIndx: 'POP_POSITION'},
+            {title: '현재위치', dataType: 'string', dataIndx: 'POP_POSITION',
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let position = fnGetCommCodeGridSelectBox('1009');
+                        let index = position.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = position.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+
+                        }
+
+                        return (index < 0) ? cellData : position[index].text;
+                    }
+                }
+            },
             {title: '예상', dataType: 'string', dataIndx: 'WORKING_TIME'},
             {
                 title: '', width: 50, dataType: 'string', dataIndx: 'DELETE_BUTTON', editable: false,
@@ -264,27 +316,15 @@
                 accept: '.dnd1, .dnd2, .dnd3, .dnd4, .master'
             },
             complete: function () {
-                this.flex();
-                let data = $processPlanGrid1.pqGrid('option', 'dataModel.data');
+                // this.flex();
+                let data = this.options.dataModel.data
                 let totalRecords = data.length;
-                let totalPartUnitQuantity = 0;
-                let totalWorkingTime = 0;
+                let tableElement = this.element.closest('.table');
 
                 if (totalRecords) {
-                    $('#NC1_CONTROL_NUM').html(data[0].CONTROL_NUM);
-                    $('#NC1_MATERIAL_DETAIL').html(data[0].CONTROL_NUM);
-                    $('#NC1_PART_UNIT_QTY').html(data[0].PART_UNIT_QTY);
-                    $('#NC1_WORK_USER_ID').html(data[0].WORK_USER_ID);
+                    showTitle(data, tableElement);
+                    changeFooter(data, tableElement);
                 }
-
-                for (let i = 0; i < totalRecords; i++) {
-                    totalPartUnitQuantity += data[i].PART_UNIT_QTY ? parseInt(data[i].PART_UNIT_QTY) : 0;
-                    totalWorkingTime += data[i].WORKING_TIME ? parseInt(data[i].WORKING_TIME) : 0;
-                }
-
-                $('#NC1_TOTAL_RECORDS').html(totalRecords);
-                $('#NC1_TOTAL_PART_UNIT_QUANTITY').html(totalPartUnitQuantity);
-                $('#NC1_TOTAL_WORKING_TIME').html(totalWorkingTime);
             },
             moveNode: function (event, ui) {
                 changeSortNum(this, $processPlanGrid1);
@@ -343,27 +383,15 @@
                 accept: '.dnd1, .dnd3, .dnd4, .master',
             },
             complete: function () {
-                this.flex();
-                let data = $processPlanGrid2.pqGrid('option', 'dataModel.data');
+                // this.flex();
+                let data = this.options.dataModel.data
                 let totalRecords = data.length;
-                let totalPartUnitQuantity = 0;
-                let totalWorkingTime = 0;
+                let tableElement = this.element.closest('.table');
 
                 if (totalRecords) {
-                    $('#NC2_CONTROL_NUM').html(data[0].CONTROL_NUM);
-                    $('#NC2_MATERIAL_DETAIL').html(data[0].CONTROL_NUM);
-                    $('#NC2_PART_UNIT_QTY').html(data[0].PART_UNIT_QTY);
-                    $('#NC2_WORK_USER_ID').html(data[0].WORK_USER_ID);
+                    showTitle(data, tableElement);
+                    changeFooter(data, tableElement);
                 }
-
-                for (let i = 0; i < totalRecords; i++) {
-                    totalPartUnitQuantity += data[i].PART_UNIT_QTY ? parseInt(data[i].PART_UNIT_QTY) : 0;
-                    totalWorkingTime += data[i].WORKING_TIME ? parseInt(data[i].WORKING_TIME) : 0;
-                }
-
-                $('#NC2_TOTAL_RECORDS').html(totalRecords);
-                $('#NC2_TOTAL_PART_UNIT_QUANTITY').html(totalPartUnitQuantity);
-                $('#NC2_TOTAL_WORKING_TIME').html(totalWorkingTime);
             },
             moveNode: function (event, ui) {
                 changeSortNum(this, $processPlanGrid2);
@@ -423,27 +451,15 @@
                 accept: '.dnd1, .dnd2, .dnd4, .master'
             },
             complete: function () {
-                this.flex();
-                let data = $processPlanGrid3.pqGrid('option', 'dataModel.data');
+                // this.flex();
+                let data = this.options.dataModel.data
                 let totalRecords = data.length;
-                let totalPartUnitQuantity = 0;
-                let totalWorkingTime = 0;
+                let tableElement = this.element.closest('.table');
 
                 if (totalRecords) {
-                    $('#NC3_CONTROL_NUM').html(data[0].CONTROL_NUM);
-                    $('#NC3_MATERIAL_DETAIL').html(data[0].CONTROL_NUM);
-                    $('#NC3_PART_UNIT_QTY').html(data[0].PART_UNIT_QTY);
-                    $('#NC3_WORK_USER_ID').html(data[0].WORK_USER_ID);
+                    showTitle(data, tableElement);
+                    changeFooter(data, tableElement);
                 }
-
-                for (let i = 0; i < totalRecords; i++) {
-                    totalPartUnitQuantity += data[i].PART_UNIT_QTY ? parseInt(data[i].PART_UNIT_QTY) : 0;
-                    totalWorkingTime += data[i].WORKING_TIME ? parseInt(data[i].WORKING_TIME) : 0;
-                }
-
-                $('#NC3_TOTAL_RECORDS').html(totalRecords);
-                $('#NC3_TOTAL_PART_UNIT_QUANTITY').html(totalPartUnitQuantity);
-                $('#NC3_TOTAL_WORKING_TIME').html(totalWorkingTime);
             },
             moveNode: function (event, ui) {
                 changeSortNum(this, $processPlanGrid3);
@@ -503,27 +519,15 @@
                 accept: '.dnd1, .dnd2, .dnd3, .master'
             },
             complete: function () {
-                this.flex();
-                let data = $processPlanGrid4.pqGrid('option', 'dataModel.data');
+                // this.flex();
+                let data = this.options.dataModel.data
                 let totalRecords = data.length;
-                let totalPartUnitQuantity = 0;
-                let totalWorkingTime = 0;
+                let tableElement = this.element.closest('.table');
 
                 if (totalRecords) {
-                    $('#NC4_CONTROL_NUM').html(data[0].CONTROL_NUM);
-                    $('#NC4_MATERIAL_DETAIL').html(data[0].CONTROL_NUM);
-                    $('#NC4_PART_UNIT_QTY').html(data[0].PART_UNIT_QTY);
-                    $('#NC4_WORK_USER_ID').html(data[0].WORK_USER_ID);
+                    showTitle(data, tableElement);
+                    changeFooter(data, tableElement);
                 }
-
-                for (let i = 0; i < totalRecords; i++) {
-                    totalPartUnitQuantity += data[i].PART_UNIT_QTY ? parseInt(data[i].PART_UNIT_QTY) : 0;
-                    totalWorkingTime += data[i].WORKING_TIME ? parseInt(data[i].WORKING_TIME) : 0;
-                }
-
-                $('#NC4_TOTAL_RECORDS').html(totalRecords);
-                $('#NC4_TOTAL_PART_UNIT_QUANTITY').html(totalPartUnitQuantity);
-                $('#NC4_TOTAL_WORKING_TIME').html(totalWorkingTime);
             },
             moveNode: function (event, ui) {
                 changeSortNum(this, $processPlanGrid4);
@@ -559,8 +563,8 @@
         let processTargetGridPostData = fnFormToJsonArrayData('#MCT_PROCESS_TARGET_FORM');
         const processTargetGridColModel = [
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
-            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ'},
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ'},
+            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: '납기', dataType: 'string', dataIndx: 'INNER_DUE_DT'},
             {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN'},
             {title: '주요', dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
@@ -569,56 +573,206 @@
                 title: 'MCT Plan/Actual', align: 'center', colModel: [
                     {
                         title: 'Seq1', align: 'center', colModel: [
-                            {title: 'Seq1', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
-                            {title: 'Seq1', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
+                            {title: '', datatype: 'string', dataIndx: 'EQUIP_ID_1',
+                                render: function (ui) {
+                                    let cellData = ui.cellData;
+                                    let status = ui.rowData.STATUS_1;
+                                    let backgroundColor = colorClassification(status);
+
+                                    if (status) {
+                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                                    }
+
+                                    if (cellData) {
+                                        let index = EQUIP_LIST.findIndex(function (element) {
+                                            return element.value === cellData;
+                                        });
+                                        return (index < 0) ? cellData : EQUIP_LIST[index].text;
+                                    }
+                                }
+                            },
+                            {title: '', datatype: 'string', dataIndx: 'WORKING_TIME_1', editable: true,
+                                render: function (ui) {
+                                    let status = ui.rowData.STATUS_1;
+                                    let backgroundColor = colorClassification(status);
+
+                                    if (status) {
+                                        return $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                                    }
+
+                                    if (ui.cellData) {
+                                        return ui.cellData + '분';
+                                    }
+                                }
+                            },
+                            {title: '', datatype: 'string', dataIndx: 'STATUS_1', hidden: true},
+                            {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_1', hidden: true}
                         ]
                     },
                     {
                         title: 'Seq2', align: 'center', colModel: [
-                            {title: 'Seq2', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
-                            {title: 'Seq2', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
+                            {title: '', datatype: 'string', dataIndx: 'EQUIP_ID_2',
+                                render: function (ui) {
+                                    let cellData = ui.cellData;
+                                    let status = ui.rowData.STATUS_2;
+                                    let backgroundColor = colorClassification(status);
+
+                                    if (status) {
+                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                                    }
+
+                                    if (cellData) {
+                                        let index = EQUIP_LIST.findIndex(function (element) {
+                                            return element.value === cellData;
+                                        });
+                                        return (index < 0) ? cellData : EQUIP_LIST[index].text;
+                                    }
+                                }
+                            },
+                            {title: '', datatype: 'string', dataIndx: 'WORKING_TIME_2', editable: true,
+                                render: function (ui) {
+                                    let status = ui.rowData.STATUS_2;
+                                    let backgroundColor = colorClassification(status);
+
+                                    if (status) {
+                                        return $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                                    }
+
+                                    if (ui.cellData) {
+                                        return ui.cellData + '분';
+                                    }
+                                }
+                            },
+                            {title: '', datatype: 'string', dataIndx: 'STATUS_2', hidden: true},
+                            {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_2', hidden: true}
                         ]
                     },
                     {
                         title: 'Seq3', align: 'center', colModel: [
-                            {title: 'Seq3', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
-                            {title: 'Seq3', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
+                            {title: '', datatype: 'string', dataIndx: 'EQUIP_ID_3',
+                                render: function (ui) {
+                                    let cellData = ui.cellData;
+                                    let status = ui.rowData.STATUS_3;
+                                    let backgroundColor = colorClassification(status);
+
+                                    if (status) {
+                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                                    }
+
+                                    if (cellData) {
+                                        let index = EQUIP_LIST.findIndex(function (element) {
+                                            return element.value === cellData;
+                                        });
+                                        return (index < 0) ? cellData : EQUIP_LIST[index].text;
+                                    }
+                                }
+                            },
+                            {title: '', datatype: 'string', dataIndx: 'WORKING_TIME_3', editable: true,
+                                render: function (ui) {
+                                    let status = ui.rowData.STATUS_3;
+                                    let backgroundColor = colorClassification(status);
+
+                                    if (status) {
+                                        return $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                                    }
+
+                                    if (ui.cellData) {
+                                        return ui.cellData + '분';
+                                    }
+                                }
+                            },
+                            {title: '', datatype: 'string', dataIndx: 'STATUS_3', hidden: true},
+                            {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_3', hidden: true}
                         ]
                     },
                     {
                         title: 'Seq4', align: 'center', colModel: [
-                            {title: 'Seq4', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
-                            {title: 'Seq4', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
+                            {title: '', datatype: 'string', dataIndx: 'EQUIP_ID_4',
+                                render: function (ui) {
+                                    let cellData = ui.cellData;
+                                    let status = ui.rowData.STATUS_4;
+                                    let backgroundColor = colorClassification(status);
+
+                                    if (status) {
+                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                                    }
+
+                                    if (cellData) {
+                                        let index = EQUIP_LIST.findIndex(function (element) {
+                                            return element.value === cellData;
+                                        });
+                                        return (index < 0) ? cellData : EQUIP_LIST[index].text;
+                                    }
+                                }
+                            },
+                            {title: '', datatype: 'string', dataIndx: 'WORKING_TIME_4', editable: true,
+                                render: function (ui) {
+                                    let status = ui.rowData.STATUS_4;
+                                    let backgroundColor = colorClassification(status);
+
+                                    if (status) {
+                                        return $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                                    }
+
+                                    if (ui.cellData) {
+                                        return ui.cellData + '분';
+                                    }
+                                }
+                            },
+                            {title: '', datatype: 'string', dataIndx: 'STATUS_4', hidden: true},
+                            {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_4', hidden: true}
                         ]
                     },
                 ]
             },
-            {title: '현재위치', dataType: 'string', dataIndx: 'POP_POSITION'},
-            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM'},
+            {title: '현재위치', dataType: 'string', dataIndx: 'POP_POSITION',
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let position = fnGetCommCodeGridSelectBox('1009');
+                        let index = position.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = position.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+
+                        }
+
+                        return (index < 0) ? cellData : position[index].text;
+                    }
+                }
+            },
+            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS'},
             {
                 title: '가공진행 현황', align: 'center', colModel: [
-                    {title: 'NC', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY'},
-                    {title: '밀링', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
-                    {title: '선반', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
-                    {title: '연마', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
+                    {title: 'NC', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_NC'},
+                    {title: '밀링', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_MILLING'},
+                    {title: '선반', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_RACK'},
+                    {title: '연마', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_GRINDING'},
                 ]
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM'},
+            {title: '관리번호', width: 120, dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM'},
-            {title: '소재종류상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
+            {title: '소재종류<br>상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
             {title: '수량', dataType: 'integer', dataIndx: 'ORDER_QTY'},
-            {title: '규격', dataType: 'string', dataIndx: 'STANDARD_SIZE'},
-            {title: '소재 Size', dataType: 'string', dataIndx: 'MATERIAL_SIZE'},
+            {title: '규격', width: 120, dataType: 'string', dataIndx: 'STANDARD_SIZE'},
+            {title: '소재 Size', width: 120, dataType: 'string', dataIndx: 'MATERIAL_SIZE'},
             {title: '비고 기록사항', dataType: 'string', dataIndx: 'NOTE'},
-            {title: '예상가공<br>시간(분)', dataType: 'integer', dataIndx: 'OUTSIDE_STATUS_DT'},
+            {title: '예상가공<br>시간(분)', dataType: 'integer', dataIndx: 'WORKING_TIME_TOTAL'},
             {title: '가공계획<br>비고', dataType: 'string', dataIndx: 'MCT_NOTE', editable: true},
             {
-                title: '작업<br>구분', dataType: 'string', dataIndx: 'MCT_WORK_TYPE',
+                title: '작업<br>구분', dataType: 'string', dataIndx: 'MCT_WORK_TYPE', editable: true,
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
                     labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1033')
+                    options: fnGetCommCodeGridSelectBox('1011')
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -626,7 +780,7 @@
                     if (cellData === '') {
                         return '';
                     } else {
-                        let workType = fnGetCommCodeGridSelectBox('1033');
+                        let workType = fnGetCommCodeGridSelectBox('1011');
                         let index = workType.findIndex(function (element) {
                             return element.text === cellData;
                         });
@@ -642,15 +796,43 @@
                     }
                 }
             },
-            {title: '이전위치', dataType: 'string', dataIndx: 'POP_PREV_POSITION'},
+            {title: '이전위치', dataType: 'string', dataIndx: 'POP_PREV_POSITION',
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let position = fnGetCommCodeGridSelectBox('1009');
+                        let index = position.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = position.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+
+                        }
+
+                        return (index < 0) ? cellData : position[index].text;
+                    }
+                }
+            },
             {
                 title: '과거 경험<br>(NC설계기준)', align: 'center', colModel: [
-                    {title: '동그라미', datatype: 'string', dataIndx: 'ORIGINAL_SIDE_QTY'},
-                    {title: '이름', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY'},
+                    {title: '', datatype: 'string', dataIndx: 'PAST_WORKER_BOOL',
+                        render: function (ui) {
+                            if (ui.cellData) {
+                                return '<span>○</span>';
+                            }
+                        }
+                    },
+                    {title: '', datatype: 'string', dataIndx: 'PAST_WORKER'},
                 ]
             },
-            {title: '확정 일시', dataType: 'string', dataIndx: 'SATAUS_DT'},
-            {title: '소재입고<br>일시', dataType: 'string', dataIndx: 'MATERIAL_INNER_DT'}
+            {title: '확정 일시', width: 110, dataType: 'string', dataIndx: 'SATAUS_DT'},
+            {title: '소재입고<br>일시', width: 110, dataType: 'string', dataIndx: 'MATERIAL_INNER_DT'}
         ];
         const processTargetGridObj = {
             height: '100%',
@@ -681,17 +863,21 @@
                 }
             },
             complete: function () {
-                this.flex();
+                // this.flex();
             },
-            cellSave: function () {
+            cellSave: function (event, ui) {
+                console.log('cellSave');
                 if (ui.oldVal === undefined && ui.newVal === null) {
                     $processTargetGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                } else {
+                    changeMctPlanFromTarget(ui);
+                    fnModifyPQGrid($processTargetGrid, [], ['machine.updateMctTarget']);
                 }
             }
         };
 
         /* 함수 */
-        let modifyPQGrid = function (grid, insertQueryList, updateQueryList, deleteQueryList) {
+        const modifyPQGrid = function (grid, insertQueryList, updateQueryList, deleteQueryList) {
             let parameters;
             let gridInstance = grid.pqGrid('getInstance').grid;
             //추가 또는 수정된 값이 있으면 true
@@ -709,12 +895,14 @@
                 }, parameters, '');
             }
         };
+
         const refreshMctPlanGrids = function () {
             $processPlanGrid1.pqGrid('refreshDataAndView');
             $processPlanGrid2.pqGrid('refreshDataAndView');
             $processPlanGrid3.pqGrid('refreshDataAndView');
             $processPlanGrid4.pqGrid('refreshDataAndView');
         };
+
         const refreshTargetGrid = function () {
             $processTargetGrid.pqGrid('refreshDataAndView');
         };
@@ -726,7 +914,6 @@
         const hideGrid = function () {
             $('[id^=MCT_NC][id$=PLAN_FORM]').hide();
         };
-
         const showGrid = function () {
             let postData = fnFormToJsonArrayData('#MCT_PLAN_MANAGE_SEARCH_FORM');
             let parameters = {'url': '/json-list', 'data': postData};
@@ -754,12 +941,37 @@
             });
         };
 
+        const changeMctPlanFromTarget = function (ui) {
+            if (ui.dataIndx.includes('WORKING_TIME')) {
+                let order = ui.dataIndx.slice(-1);
+                let mctPlanSeqStr = 'MCT_PLAN_SEQ_' + order;
+                let mctPlanSeq = ui.rowData[mctPlanSeqStr];
+                let parameters;
+                let gridInstance = $processTargetGrid.pqGrid('getInstance').grid;
+                //추가 또는 수정된 값이 있으면 true
+                if (gridInstance.isDirty()) {
+                    let changes = gridInstance.getChanges({format: 'byVal'});
+                    let QUERY_ID_ARRAY = {
+                        'insertQueryId': [],
+                        'updateQueryId': ['machine.updateMctPlanFromTarget']
+                    };
+                    changes.queryIdList = QUERY_ID_ARRAY;
+                    changes.updateList[0].MCT_PLAN_SEQ = mctPlanSeq;
+                    changes.updateList[0].WORKING_TIME = parseInt(ui.value);
+                    parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
+                    fnPostAjax(function (data, callFunctionParam) {
+                        $processTargetGrid.pqGrid('refreshDataAndView');
+                    }, parameters, '');
+                }
+                return false;
+            }
+        };
+
         /**
          * @description
          * @param {object | jQuery} grid
          */
         const changeSortNum = function (kk, grid) {
-            debugger;
             let rowListConvert = [];
             let ids = kk.pageData().map(function (rd) {
                 return rd.MCT_PLAN_SEQ;
@@ -770,6 +982,63 @@
                 rowListConvert.push(tempObject);
             }
             grid.pqGrid('updateRow', {rowList: rowListConvert, checkEditable: false});
+        };
+
+        const colorClassification = function (status) {
+            let backgroundColor = '';
+
+            switch (status) {
+                case '가동중':
+                    backgroundColor = 'bg-green';
+                    break;
+                case '완료':
+                    backgroundColor = 'bg-light_blue';
+                    break;
+                case '비가동상태':
+                    backgroundColor = 'bg-yellow';
+                    break;
+                case '일시정지상태':
+                    backgroundColor = 'bg-orange';
+                    break;
+            }
+
+            return backgroundColor;
+        };
+
+        const showTitle = function (data, tableElement) {
+            debugger;
+            let firstData = data[0];
+            let controlNumElement = $(tableElement).find('.data_ipt');
+            let listTxtElement = $(tableElement).find('.listTxt');
+            let materialDetailElement = listTxtElement.children('[id$=MATERIAL_DETAIL]');
+            let partUnitQtyElement = listTxtElement.children('[id$=PART_UNIT_QTY]');
+            let workUserIdElement = listTxtElement.children('[id$=WORK_USER_ID]');
+
+            controlNumElement.show();
+            listTxtElement.show();
+
+            controlNumElement.html(firstData.CONTROL_NUM);
+            materialDetailElement.html(firstData.MATERIAL_DETAIL);
+            partUnitQtyElement.html(firstData.PART_UNIT_QTY);
+            workUserIdElement.html(firstData.WORK_USER_ID);
+        };
+
+        const changeFooter = function (data, tableElement) {
+            let totalPartUnitQuantity = 0;
+            let totalWorkingTime = 0;
+            let totalRecords = data.length;
+            let totalRecordsElement = $(tableElement).find('[id$=TOTAL_RECORDS]');
+            let totalPartUnitQuantityElement = $(tableElement).find('[id$=TOTAL_PART_UNIT_QUANTITY]');
+            let totalWorkingTimeElement = $(tableElement).find('[id$=TOTAL_WORKING_TIME]');
+
+            for (let i = 0; i < totalRecords; i++) {
+                totalPartUnitQuantity += data[i].PART_UNIT_QTY ? parseInt(data[i].PART_UNIT_QTY) : 0;
+                totalWorkingTime += data[i].WORKING_TIME ? parseInt(data[i].WORKING_TIME) : 0;
+            }
+
+            totalRecordsElement.html(totalRecords);
+            totalPartUnitQuantityElement.html(totalPartUnitQuantity);
+            totalWorkingTimeElement.html(totalWorkingTime);
         };
         /* 함수 */
 
@@ -796,6 +1065,12 @@
         $processPlanGrid3 = $('#' + processPlanGrid3Id).pqGrid(processPlanObj3);
         $processPlanGrid4 = $('#' + processPlanGrid4Id).pqGrid(processPlanObj4);
         $processTargetGrid = $('#' + processTargetGridId).pqGrid(processTargetGridObj);
+
+
+        /*setInterval(function () {
+            refreshMctPlanGrids();
+            refreshTargetGrid();
+        }, TWENTY_SECONDS);*/
         /* init */
     });
 </script>
