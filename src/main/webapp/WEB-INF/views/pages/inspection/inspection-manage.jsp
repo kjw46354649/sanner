@@ -8,21 +8,19 @@
     <div class="topWrap">
         <form class="form-inline" id="inspection_manage_form" name="inspection_manage_form" role="form">
             <input type="hidden" name="queryId" id="queryId" value="inspection.selectInspectionList">
-            <div class="gubunWrap row3_topWrap" >
+            <div class="gubunWrap row2_topWrap" >
                 <ul>
                     <li>
                         <span class="slt_wrap">
-                            <label class="label_100" for="SEL_COMP_CD">사업자</label>
-                            <select class="wd_200" name="SEL_COMP_CD" id="SEL_COMP_CD" title="사업자">
-                                <option value=""><spring:message code="com.form.top.all.option" /></option>
+                            <label class="label_100" for="SEL_ORDER_COMP_CD">발주업체</label>
+                            <select class="wd_200" name="SEL_ORDER_COMP_CD" id="SEL_ORDER_COMP_CD" title="발주업체">
+                                <option value="" selected="selected">ALL</option>
                             </select>
                         </span>
                         <span class="gubun"></span>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="SEL_ORDER_COMP_CD">발주사</label>
-                            <select class="wd_200" name="SEL_ORDER_COMP_CD" id="SEL_ORDER_COMP_CD" title="발주사">
-                                <option value="" selected="selected">ALL</option>
-                            </select>
+                        <span class="ipu_wrap">
+                            <label class="label_100" for="SEL_CONTROL_NUM">관리번호</label>
+                            <input type="text" class="wd_200" name="SEL_CONTROL_NUM" id="SEL_CONTROL_NUM" title="관리번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
@@ -31,8 +29,13 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
-                            <label class="label_100" for="SEL_ITEM_NM">품명</label>
-                            <input type="text" class="wd_200" name="SEL_ITEM_NM" id="SEL_ITEM_NM" title="품명">
+                            <label class="label_100" for="SEL_POP_SEQ">현재위치</label>
+                             <select id="SEL_POP_SEQ" name="SEL_POP_SEQ" title="현재위치" data-required="true" class="wd_200">
+                                <option value=""><spring:message code="com.form.top.all.option" /></option>
+                                <c:forEach var="vlocale" items="${HighCode.H_1009}">
+                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap right_float">
@@ -40,31 +43,16 @@
                         </span>
                     </li>
                     <li>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="SEL_CONTROL_NUM">관리번호</label>
-                            <input type="text" class="wd_200" name="SEL_CONTROL_NUM" id="SEL_CONTROL_NUM" title="관리번호">
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="SEL_MATERIAL_DETAIL">소재 Type</label>
-                             <select id="SEL_MATERIAL_DETAIL" name="SEL_MATERIAL_DETAIL" data-required="true" class="wd_200">
-                                <option value=""><spring:message code="com.form.top.all.option" /></option>
-                                    <c:forEach var="vlocale" items="${HighCode.H_1027}">
-                                        <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
-                                    </c:forEach>
-                            </select>
-                        </span>
-                        <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label for="SEL_WAREHOUSE_CD" class="label_100">창고</label>
-                            <select id="SEL_WAREHOUSE_CD" name="SEL_WAREHOUSE_CD" title="창고" data-required="true" class="wd_200">
-                                <option value=""><spring:message code="com.form.top.all.option" /></option>
-                                <c:forEach var="vlocale" items="${HighCode.H_1049}">
-                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
-                                </c:forEach>
+                            <label class="label_100" for="SEL_OUTSIDE_COMP_CD">외주업체</label>
+                            <select class="wd_200" name="SEL_OUTSIDE_COMP_CD" id="SEL_OUTSIDE_COMP_CD">
+                                <option value="">All</option>
                             </select>
                         </span>
                         <span class="gubun"></span>
+                        <span class="txt_span"><label class="label_100" for="SEL_INSPECT_GRADE">Option</label></span>
+                        <span class="chk_box"><input id="SEL_INSPECT_GRADE" name="SEL_INSPECT_GRADE" type="checkbox"><label for="SEL_INSPECT_GRADE">검사완료품 제외</label></span>
+                        <span class="chk_box"><input id="SEL_OUTSIDE_YN" name="SEL_OUTSIDE_YN" type="checkbox"><label for="SEL_OUTSIDE_YN">외주대상 제외</label></span>
                     </li>
                 </ul>
             </div>
@@ -73,7 +61,7 @@
     <div class="bottomWrap inspectionBWrap">
         <div class="hWrap">
             <div class="d-inline">
-                <span class="barCode"><img src="/resource/asset/images/common/img_barcode.png" alt="바코드" id="inspectionBarcodeImg"></span>
+                <span class="barCode"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="inspectionBarcodeImg"></span>
                 <span class="barCodeTxt">&nbsp;<input type="text" class="wd_270_barcode" name="INSPECTION_BARCODE_NUM" id="INSPECTION_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요"></span>
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn" id="inspection_manage_detail_btn">상세정보 조회</button>
@@ -107,9 +95,9 @@
         <%--<button type="button" class="pop_close">닫기</button>--%>
         <div class="qualityWrap">
             <div class="h_area">
-					<span class="buttonWrap">
-						<button type="button" class="onoff left on">Sampling</button>
-						<button type="button" class="onoff right">전수검사</button>
+					<span class="buttonWrap" id="WORK_TYPE_DIV">
+						<button type="button" class="onoff left on" id="WORK_TYPE_DIV_1">Sampling</button>
+						<button type="button" class="onoff right" id="WORK_TYPE_DIV_2">전수검사</button>
 					</span>
                 <ul class="listWrap">
                     <li class="tit blue">Seq.</li>
@@ -133,7 +121,7 @@
                     </span>
                 </div>
                 <div class="buttonWrap">
-                    <button type="button" class="gradeBtn green"><span>A</span></button>
+                    <button type="button" class="gradeBtn green on"><span>A</span></button>
                     <button type="button" class="gradeBtn blue"><span>B</span></button>
                     <button type="button" class="gradeBtn yellow"><span>C</span></button>
                     <button type="button" class="gradeBtn red"><span>D</span></button>
@@ -655,13 +643,11 @@
 
          })
          $("#inspection_manage_search_btn").on('click', function () {
-            console.log("inspection_manage_search_btn 11111111");
-            return;
+             console.log(fnFormToJsonArrayData('#inspection_manage_form'));
             inspectionManageGridId01.pqGrid("option", "dataModel.postData", function(ui){
                 return fnFormToJsonArrayData('#inspection_manage_form');
             } );
             inspectionManageGridId01.pqGrid("refreshDataAndView");
-
         });
 
 
@@ -731,15 +717,25 @@
 
         $("#INSPECTION_BARCODE_NUM").on({
             focus: function () {
-                $("#inspectionBarcodeImg").attr("src","/resource/asset/images/common/img_barcode_on.png");
+                $("#inspectionBarcodeImg").attr("src","/resource/asset/images/common/img_barcode_long_on.png");
             },
             blur: function () {
-                $("#inspectionBarcodeImg").attr("src","/resource/asset/images/common/img_barcode.png");
+                $("#inspectionBarcodeImg").attr("src","/resource/asset/images/common/img_barcode_long.png");
             }
         });
 
-
-
+        fnCommCodeDatasourceSelectBoxCreate($('#inspection_manage_form').find('#SEL_ORDER_COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOrderCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#inspection_manage_form').find('#SEL_OUTSIDE_COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
+        });
+        $("#inspection_manage_pop_form").find("#WORK_TYPE_DIV > button").on('click', function (e) {
+            $(this).siblings().removeClass("on");
+            $(this).addClass("on");
+        });
     });
 
 
