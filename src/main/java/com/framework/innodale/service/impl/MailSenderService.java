@@ -2,7 +2,6 @@ package com.framework.innodale.service.impl;
 
 import com.framework.innodale.component.MailSenderAgent;
 import com.framework.innodale.dao.InnodaleDao;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.session.SqlSession;
