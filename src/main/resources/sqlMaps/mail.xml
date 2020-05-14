@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="mail">
+
+    <!-- STATUS EMSTS001: 메일 발송 등록, EMSTS002: 메일 재발 송, EMSTS005: 메일 발송 대기, EMSTS999: 메일 발송 성공, EMSTS010:메일 발송 오류  -->
+    <update id="setSendEmailSessionKey" parameterType="java.util.HashMap" >
+		<![CDATA[
+        UPDATE TBL_MAIL_BOX
+        SET STATUS = 'EMSTS005',
+            SKEY = #{SKEY}
+        WHERE 1 = 1
+          AND STATUS IN ('EMSTS001', 'EMSTS002')
+        LIMIT 10
+        ]]>
+	</update>
+
+    <update id="updateApplicationScheduleMailSenderInit" parameterType="java.util.HashMap">
+        UPDATE TBL_MAIL_BOX
+        SET
+            STATUS = 'EMSTS002'
+        WHERE 1 = 1
+            AND STATUS IN ('EMSTS010')
+    </update>
+
+    <select id="selectSendMailList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		<![CDATA[
+        SELECT
+            A.MAIL_BOX_SEQ,
+            A.TITLE,
+            A.CONTEXT,
+            A.SEND_NAME,
+            A.SEND_EMAIL,
+            A.RECV_EMAIL,
+            A.CC_EMAIL,
+            A.HCC_EMAIL,
+            A.GFILE_SEQ,
+            A.MAIL_TYPE,
+            A.REF_KEY
+        FROM TBL_MAIL_BOX A
+        WHERE 1 = 1
+          AND SKEY = #{SKEY}
+          AND STATUS = 'EMSTS005'
+        ]]>
+	</select>
+
+    <update id="updateEmailCondi" parameterType="java.util.HashMap" >
+        UPDATE TBL_MAIL_BOX
+        SET
+            STATUS = #{STATUS},
+            SEND_DT = NOW()
+            <if test='ERROR_NOTE != null and ERROR_NOTE != ""'>
+                , ERROR_NOTE = #{ERROR_NOTE}
+            </if>
+        WHERE 1 = 1
+            AND MAIL_BOX_SEQ = #{MAIL_BOX_SEQ}
+            AND SKEY = #{SKEY}
+    </update>
+
+</mapper>
