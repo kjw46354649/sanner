@@ -73,6 +73,9 @@ $(document).ready(function(){
 
 			});
 		}
+		setTimeout(function () {
+			currentTabBarcodeEnable("tab_" + pid);
+		}, 500);
 	});
 
 	// $('.gnbWrap .depth2 li > a').on('click' , function(){
@@ -115,8 +118,33 @@ function tabMenuFn() {
 		$('.tabMenuWrap ul li').removeClass('on');
 		$(this).parents('li').addClass('on');
 		$('.contentsWrap').find('#view_' + tabId).show();
+		barcodeDisableAll();
+		currentTabBarcodeEnable(tabId);
 	});
 }
+
+function barcodeDisableAll() {
+	$('span.barCode').each(function () {
+		$(this).children('img').attr('src', '/resource/asset/images/common/img_barcode.png');
+	});
+}
+
+function currentTabBarcodeEnable(tabId) {
+	let pageBarcode = $('.contentsWrap').find('#view_' + tabId).find('.page').find('span.barCode');
+
+	if (pageBarcode) {
+		pageBarcode.children('img').attr('src', '/resource/asset/images/common/img_barcode_on.png');
+	}
+}
+
+$(document).on('click', '.barCode', function (e) {
+	let thisElementSrc = $(this).children('img').attr('src');
+	barcodeDisableAll();
+	let imgOn = "/resource/asset/images/common/img_barcode_on.png";
+	let img = "/resource/asset/images/common/img_barcode.png";
+	let src = (thisElementSrc === imgOn) ? img : imgOn;
+	$(this).children('img').attr('src', src);
+});
 
 // function tabMenuFn(){
 // 	var divIdName = 'paddPage' + chk; // 예제를 위한 처리
