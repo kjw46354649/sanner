@@ -89,14 +89,44 @@
         ORDER BY X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
     </select>
     <select id="selectInspectionPopInfoBasic" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        select 1 from dual
+        SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+          , A.CONTROL_NUM, B.PART_NUM, B.DRAWING_NUM
+          , ( SELECT SUM(M.ORDER_QTY) * B.PART_UNIT_QTY
+              FROM jmes.TBL_CONTROL_PART_ORDER M
+              WHERE M.CONTROL_SEQ = B.CONTROL_SEQ
+                AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+            ) AS ORDER_QTY
+        FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
+        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+          AND B.CONTROL_SEQ = #{CONTROL_SEQ}
+          AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </select>
+    <insert id="insertInspectionMaster" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_INSPECT (CONTROL_SEQ, CONTROL_DETAIL_SEQ, INSPECT_SEQ
+                                      , INSPECT_METHOD, INSPECT_USER_ID, INSPECT_GRADE, INSPECT_RESULT, INSPECT_DESC
+                                      , ERROR_QTY, ERROR_PROCESS, ERROR_REASON, ERROR_ACTION, ERROR_NOTE
+                                      , INSERT_ID )
+        VALUES (    #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}
+                  , (SELECT IFNULL(MAX(INSPECT_SEQ),0) + 1 FROM jmes.TBL_INSPECT WHERE CONTROL_SEQ = #{CONTROL_SEQ} AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ})
+                  , #{INSPECT_METHOD}, #{INSPECT_USER_ID}, #{INSPECT_GRADE}, #{INSPECT_RESULT}, #{INSPECT_DESC}
+                  , #{ERROR_QTY}, #{ERROR_PROCESS}, #{ERROR_REASON}, #{ERROR_ACTION}, #{ERROR_NOTE}
+                  , #{LOGIN_USER_ID}
+                )
+    </insert>
+    <delete id="deleteInspectionMaster" parameterType="java.util.HashMap">
+        DELETE FROM jmes.TBL_INSPECT
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+          AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+          AND INSPECT_SEQ = (SELECT MAX(INSPECT_SEQ) FROM jmes.TBL_INSPECT WHERE CONTROL_SEQ = #{CONTROL_SEQ} AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ})
+    </delete>
     <select id="selectInspectionPopInfoGrid01" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         select 1 from dual
     </select>
     <select id="selectInspectionPopInfoGrid02" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         select 1 from dual
     </select>
+
+
     <select id="selectCommItemDetailInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         select 2 AS SEQ from dual
     </select>

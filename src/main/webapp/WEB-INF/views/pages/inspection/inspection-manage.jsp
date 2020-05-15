@@ -90,63 +90,69 @@
 <div class="popup_container inspection" id="inspection_manage_pop" style="display: none;">
     <form class="form-inline" id="inspection_manage_pop_form" name="inspection_manage_pop_form" role="form">
         <input type="hidden" name="queryId" id="queryId" value="inspection.selectInspectionPopInfoBasic">
+        <input type="hidden" name="INSPECT_GRADE" id="INSPECT_GRADE" value="">
+        <input type="hidden" name="INSPECT_METHOD" id="INSPECT_METHOD" value="">
+        <input type="hidden" name="ERROR_QTY" id="ERROR_QTY" value="">
+        <input type="hidden" name="ORDER_QTY" id="ORDER_QTY" value="">
+        <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ" value="">
+        <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ" value="">
+
     <div class="layerPopup">
         <h3>품질 실적 등록</h3>
         <%--<button type="button" class="pop_close">닫기</button>--%>
         <div class="qualityWrap">
             <div class="h_area">
-					<span class="buttonWrap" id="WORK_TYPE_DIV">
-						<button type="button" class="onoff left on" id="WORK_TYPE_DIV_1">Sampling</button>
-						<button type="button" class="onoff right" id="WORK_TYPE_DIV_2">전수검사</button>
+					<span class="buttonWrap" id="inspect_method_btn">
+						<button type="button" class="onoff left on" id="inspect_method_1">Sampling</button>
+						<button type="button" class="onoff right" id="inspect_method_2">전수검사</button>
 					</span>
                 <ul class="listWrap">
                     <li class="tit blue">Seq.</li>
                     <li>04</li>
                     <li class="tit bagic">작성자</li>
                     <li class="slt">
-                        <select id="writesSltd" name="writeSltd" title="작성자">
-                            <option value="" selected="selected">홍길동</option>
-                            <option value="1">-ALL-</option>
-                            <option value="2">-ALL-</option>
+                        <select id="INSPECT_USER_ID" name="INSPECT_USER_ID" data-required="true">
+                            <option value=""><spring:message code="com.form.top.sel.option" /></option>
                         </select>
                     </li>
                 </ul>
             </div>
             <div class="m_area">
                 <div class="numWrap">
-                    <span><b>&#9900; 수량 :</b><i>12</i></span>
-                    <span><b>&#9900; 불량수량 :</b><i>0</i>
-                        <button type="button" id="btnPlus" class="btn_plus" style="display: none">더하기</button>
-                        <button type="button" class="btn_minus" style="display: none">빼기</button>
+                    <span><b>&#9900; 수량 :</b><i id="ORDER_QTY_VIEW">0</i></span>
+                    <span><b>&#9900; 불량수량 :</b><i id="ERROR_QTY_VIEW">0</i>
+                        <button type="button" id="inspection_manage_pop_plus_btn" class="btn_plus" style="display: none">더하기</button>
+                        <button type="button" id="inspection_manage_pop_plus_minus" class="btn_minus" style="display: none">빼기</button>
                     </span>
                 </div>
-                <div class="buttonWrap">
-                    <button type="button" class="gradeBtn green on"><span>A</span></button>
-                    <button type="button" class="gradeBtn blue"><span>B</span></button>
-                    <button type="button" class="gradeBtn yellow"><span>C</span></button>
-                    <button type="button" class="gradeBtn red"><span>D</span></button>
+                <div class="buttonWrap" id="inspect_grade_btn">
+                    <button type="button" class="gradeBtn " id="inspect_grade_GRD010"><span>A</span></button>
+                    <button type="button" class="gradeBtn " id="inspect_grade_GRD020"><span>B</span></button>
+                    <button type="button" class="gradeBtn " id="inspect_grade_GRD030"><span>C</span></button>
+                    <button type="button" class="gradeBtn " id="inspect_grade_GRD040"><span>D</span></button>
                 </div>
             </div>
             <div class="t_area">
                 <div class="t_h">
                     <span class="list_t">검사코드</span>
                     <span>
-							<select id="codeSltd" name="codeSltd" title="검사코드">
-								<option value="" selected="selected">01 평탄도 미흡</option>
-								<option value="1">-ALL-</option>
-								<option value="2">-ALL-</option>
+							<select id="INSPECT_RESULT" name="INSPECT_RESULT" title="검사코드">
+                                <c:forEach var="vlocale" items="${HighCode.H_1019}">
+                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                                </c:forEach>
 							</select>
 						</span>
                     <span class="list_t">상세내용</span>
-                    <span class="wide">약간의 오버플로우 발생</span>
+                    <span class="wide"><input type="text" class="wd_405_left_10" name="INSPECT_DESC" id="INSPECT_DESC" title="상세내용"></span>
                 </div>
+
                 <table class="colStyle">
                     <%--<caption></caption>--%>
                     <colgroup>
-                        <col width="24%">
-                        <col width="24%">
-                        <col width="*">
-                        <col width="24%">
+                        <col width="5%">
+                        <col width="5%">
+                        <col width="50%">
+                        <col width="5%">
                     </colgroup>
                     <tr>
                         <th scope="col">발생공정</th>
@@ -156,10 +162,31 @@
 
                     </tr>
                     <tr>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
+                        <td>
+                            <select id="ERROR_PROCESS" name="ERROR_PROCESS" title="발생공정">
+                                <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                <c:forEach var="vlocale" items="${HighCode.H_1010}">
+                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </td>
+                        <td>
+                            <select id="ERROR_REASON" name="ERROR_REASON" title="원인">
+                                <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                <c:forEach var="vlocale" items="${HighCode.H_1032}">
+                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </td>
+                        <td><input type="text" class="wd_405_left_10" name="ERROR_NOTE" id="ERROR_NOTE" title="조치방안비고"></td>
+                        <td>
+                        <select id="ERROR_ACTION" name="ERROR_ACTION" title="조치">
+                            <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                            <c:forEach var="vlocale" items="${HighCode.H_1025}">
+                                <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                            </c:forEach>
+                        </select>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -585,9 +612,9 @@
 
 
         $("#inspection_manage_pop").on('hide.bs.modal', function(){
-           // fnResetFrom("inspection_manage_pop_form");
-           // $("#inspection_manage_form").find("#queryId").val("inspection.selectInsideStockList");
-           // $("#inspection_manage_search_btn").trigger("click");
+           fnResetFrom("inspection_manage_pop_form");
+           $("#inspection_manage_form").find("#queryId").val("inspection.selectInsideStockList");
+           $("#inspection_manage_search_btn").trigger("click");
         });
         $("#inspection_manage_pop").on('show.bs.modal', function(){
             //popType : 그리드입출고 GRID_IN, GRID_OUT, 바코드 BARCODE
@@ -600,7 +627,7 @@
         //     //$("#stock_manage_pop_form").find("#DRAWING_NUM").attr("readonly", true);
         //$("#stock_manage_pop_form").find("#WAREHOUSE_CD").attr("disabled", true);
 
-            fnResetFrom("inspection_manage_pop_form");
+            //fnResetFrom("inspection_manage_pop_form");
 
             $("#inspection_manage_pop_form").find("#queryId").val("inspection.selectInspectionPopInfoBasic");
             let parameters = {
@@ -610,18 +637,13 @@
             fnPostAjax(function (data, callFunctionParam) {
                 let dataInfo = data.info;
                 if(dataInfo == null ) {
-                    fnResetFrom("inspection_manage_pop_form");
+                    alert("해당 데이터가 존재하지 않습니다.");
+                    $('#inspection_manage_pop').modal('hide');
                 }else{
                     fnJsonDataToForm("inspection_manage_pop_form", dataInfo);
-                    // $("#stock_manage_pop_form").find("#footer_msg").html(footer_msg);
-                    // $("#stock_manage_pop_form").find("#ORDER_QTY").html(dataInfo.ORDER_QTY);
-                    // $("#stock_manage_pop_form").find("#ORIGINAL_ORDER_QTY").val(dataInfo.ORDER_QTY);
-                    // $("#stock_manage_pop_form").find("#ORIGINAL_POP_STOCK_QTY_AFTER").val(dataInfo.POP_STOCK_QTY_AFTER);
-                    // $("#stock_manage_pop_form").find("#WAREHOUSE_CD").val(dataInfo.WAREHOUSE_CD);
-                    // $("#stock_manage_pop_form").find("#WAREHOUSE_CD").change();
-                    // setTimeout(function() {
-                    //     $("#stock_manage_pop_form").find("#LOC_SEQ").val(dataInfo.LOC_SEQ);
-                    // }, 1000);
+                    $("#inspection_manage_pop_form").find("#ORDER_QTY_VIEW").html(dataInfo.ORDER_QTY);
+                    $("#inspection_manage_pop_form").find("#ERROR_QTY_VIEW").html("0");
+
 
                 }
             }, parameters, '');
@@ -693,24 +715,12 @@
             $('#inspection_manage_pop').modal('hide');
         });
 
-        $("#stock_manage_pop_form").find("#WAREHOUSE_CD").change(function(){
-            // let WAREHOUSE_CD = this.value;
-            // let paramData = {"url":"/json-list", "data": {"WAREHOUSE_CD": WAREHOUSE_CD, "queryId": 'inspection.selectWarehouseLocationList'}};
-            // fnCommCodeDatasourceSelectBoxCreate($("#stock_manage_pop_form").find("#LOC_SEQ"), 'all', paramData);
-        });
-
-        // fnCommCodeDatasourceSelectBoxCreate($('#stock_manage_form').find('#SEL_COMP_CD'), 'all', {
-        //     'url': '/json-list',
-        //     'data': {'queryId': 'dataSource.getBusinessCompanyList'}
-        // });
-        // fnCommCodeDatasourceSelectBoxCreate($('#stock_manage_form').find('#SEL_ORDER_COMP_CD'), 'all', {
-        //     'url': '/json-list',
-        //     'data': {'queryId': 'dataSource.getOrderCompanyList'}
-        // });
-
         $("#INSPECTION_BARCODE_NUM").on('keyup', function(e) {
             if (e.keyCode == 13) {
                 fnResetFrom("inspection_manage_pop_form");
+
+                $("#inspection_manage_pop_form").find("#CONTROL_SEQ").val("2094");
+                $("#inspection_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val("2160");
                 $('#inspection_manage_pop').modal('show');
             }
         });
@@ -732,10 +742,86 @@
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
         });
-        $("#inspection_manage_pop_form").find("#WORK_TYPE_DIV > button").on('click', function (e) {
+        fnCommCodeDatasourceSelectBoxCreate($('#inspection_manage_pop_form').find('#INSPECT_USER_ID'), '', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getUserList'}
+        });
+
+
+
+        $("#inspection_manage_pop_form").find("#inspect_method_btn > button").on('click', function (e) {
             $(this).siblings().removeClass("on");
             $(this).addClass("on");
+            let targetId = this.id.replace("inspect_method_","");
+            $("#inspection_manage_pop_form").find("#INSPECT_METHOD").val(targetId);
         });
+        $("#inspection_manage_pop_form").find("#inspect_grade_btn > button").on('click', function (e) {
+
+            let targetId = this.id.replace("inspect_grade_","");
+            $("#inspection_manage_pop_form").find("#INSPECT_GRADE").val(targetId);
+            if(targetId == "GRD040"){
+                $("#inspection_manage_pop_plus_btn").show();
+                $("#inspection_manage_pop_plus_minus").show();
+
+                let errQty = $("#inspection_manage_pop_form").find("#ORDER_QTY").val();
+                $("#inspection_manage_pop_form").find("#ERROR_QTY").val(errQty);
+                $("#inspection_manage_pop_form").find("#ERROR_QTY_VIEW").html(errQty);
+
+            }else{
+                $("#inspection_manage_pop_plus_btn").hide();
+                $("#inspection_manage_pop_plus_minus").hide();
+
+                $("#inspection_manage_pop_form").find("#ERROR_QTY").val("0");
+                $("#inspection_manage_pop_form").find("#ERROR_QTY_VIEW").html("0");
+            }
+            //display
+            $(this).siblings().removeClass();
+            $(this).siblings().addClass("gradeBtn");
+            if(targetId == "GRD010"){
+                $(this).addClass("green");
+            }else if(targetId == "GRD020"){
+                $(this).addClass("blue");
+            }else if(targetId == "GRD030"){
+                $(this).addClass("yellow");
+            }else if(targetId == "GRD040"){
+                $(this).addClass("red");
+            }
+        });
+        $('#inspection_manage_pop_plus_btn').on('click', function(e) {
+            inspectionManagePopCalcQty("PLUS");
+        });
+        $('#inspection_manage_pop_plus_minus').on('click', function(e) {
+            inspectionManagePopCalcQty("MINUS");
+        });
+        $('#inspection_manage_pop_all_btn').on('click', function(e) {
+            // let ORIGINAL_POP_STOCK_QTY_AFTER = $('#stock_manage_pop_form').find('#ORIGINAL_POP_STOCK_QTY_AFTER').val();
+            // let ORIGINAL_ORDER_QTY =  $('#stock_manage_pop_form').find('#ORIGINAL_ORDER_QTY').val();
+            //
+            // $('#stock_manage_pop_form').find('#ORDER_QTY').html(ORIGINAL_ORDER_QTY);
+            // $('#stock_manage_pop_form').find('#POP_STOCK_QTY_AFTER').val(ORIGINAL_POP_STOCK_QTY_AFTER);
+
+        });
+        let inspectionManagePopCalcQty = function(type){
+
+            let POP_ORDER_QTY = $('#inspection_manage_pop_form').find('#ORDER_QTY').val();//입고수량
+            let POP_ERROR_QTY = $('#inspection_manage_pop_form').find('#ERROR_QTY').val();//입고수량
+
+            if(type == "PLUS"){
+                if(parseInt(POP_ORDER_QTY) >  parseInt(POP_ERROR_QTY)) {
+                    POP_ERROR_QTY = parseInt(POP_ERROR_QTY) + 1;
+                }
+            }else if(type == "MINUS"){
+                if(parseInt(POP_ERROR_QTY) >  0){
+                    POP_ERROR_QTY = parseInt(POP_ERROR_QTY)-1;
+                }
+            }
+            $('#inspection_manage_pop_form').find('#ERROR_QTY').val(POP_ERROR_QTY);
+            $('#inspection_manage_pop_form').find('#ERROR_QTY_VIEW').html(POP_ERROR_QTY);
+        }
+
+
+
+
     });
 
 
