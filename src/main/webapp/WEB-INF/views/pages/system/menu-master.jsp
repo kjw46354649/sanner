@@ -1,24 +1,45 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
-<div class="container-fluid wrapper">
-	<div class="col-md-3">
-		<div class="row">
-			<h5 class="title"><i class="i i-menu"></i><span> 견적관리 </span></h5>
+<div class="page onegrid">
+	<div class="bottomWrap">
+		<div class="tableTopWrap">
+			<div class="buttonWrap right_sort">
+				<button type="button" id="menuMasterAddBtn" class="defaultBtn radius">추가</button>
+				<button type="button" id="menuMasterSaveBtn" class="defaultBtn radius green">저장</button>
+			</div>
+			<div class="conWrap">
+				<div id="menu_master_top_grid" style="margin:auto; height: auto; width: auto;" ></div>
+				<div class="right_sort">
+					전체 조회 건수 (Total : <span id="menu_master_total_records" style="color: #00b3ee">0</span>)
+				</div>
+			</div>
+		</div>
+		<div class="tableBottomWrap">
+			<div class="buttonWrap right_sort">
+				<button type="button" id="menuDetailAddBtn" class="defaultBtn radius">추가</button>
+				<button type="button" id="menuDetailSaveBtn" class="defaultBtn radius green">저장</button>
+			</div>
+			<div class="conWrap">
+				<div id="menu_master_bot_grid" style="margin:auto; height: auto; width: auto;" ></div>
+				<div class="right_sort">
+					전체 조회 건수 (Total : <span id="menu_detail_total_records" style="color: #00b3ee">0</span>)
+				</div>
+			</div>
 		</div>
 	</div>
-	<div class="col-md-12">
-		<div id="menu_master_top_grid" class="jqx-refresh"></div>
-	</div>
-	<div class="col-md-12">
-		<div id="menu_master_bot_grid" class="jqx-refresh"></div>
-	</div>
-	<!--content-->
 </div>
 
 <script type="text/javascript">
 
+	let $menuMasterAddBtn = $("#menuMasterAddBtn");
+	let $menuMasterSaveBtn = $("#menuMasterSaveBtn");
+
+	let $menuDetailAddBtn = $("#menuDetailAddBtn");
+	let $menuDetailSaveBtn = $("#menuDetailSaveBtn");
+
 	$(document).ready(function() {
 		'use strict';
 		let click_seq;
+
 		let menuMasterTopGrid = $("#menu_master_top_grid");
 		let menuMasterBotGrid = $("#menu_master_bot_grid");
 
@@ -72,9 +93,20 @@
 		];
 
 		menuMasterTopGrid.pqGrid({
-			width: "100%",
-			height: 350,
-			scrollModel: {autoFit: true},
+			minHeight: "auto",
+			height: 480,
+			width: "auto",
+			selectionModel: { type: 'row', mode: 'single'} ,
+			swipeModel: {on: false},
+			collapsible: false,
+			trackModel: {on: true},
+			resizable: false,
+			flexWidth: false,
+			scrollModel: { autoFit: true },
+			showTitle: false,
+			numberCell: {title: 'No.'},
+			columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
+			colModel: topColModel,
 			dataModel: {
 				location: "remote",
 				dataType: "json",
@@ -87,12 +119,11 @@
 					return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
 				}
 			},
-			selectionModel: { type: 'row', mode: 'single'} ,
-			swipeModel: {on: false},
-			colModel: topColModel,
-			numberCell: {width: 30, title: "No", show: true },
-			trackModel: {on: true},
-			resizable: true,
+			dataReady: function (event, ui) {
+				let data = menuMasterTopGrid.pqGrid('option', 'dataModel.data');
+				let totalRecords = data.length;
+				$('#menu_master_total_records').html(totalRecords);
+			},
 			complete: function(event, ui) {
 				menuMasterTopGrid.pqGrid('setSelection', {rowIndx:0} );
 			},
@@ -102,59 +133,56 @@
 					click_seq=menu_seq;
 					selectSubList(menu_seq);
 				}
-			},
-			toolbar: {
-				cls: 'pq-toolbar-crud',
-				items: [
-					{
-						type: 'button', label: 'add', listener: {
-							'click': function (evt, ui) {
-								menuMasterTopGrid.pqGrid('addNodes', [{}], 0);
-							}
-						}
+			}
+		});
+
+		$menuMasterAddBtn.click(function(){
+			menuMasterTopGrid.pqGrid('addNodes', [{}], 0);
+		});
+
+		$menuMasterSaveBtn.click(function(){
+			let grid = menuMasterTopGrid.pqGrid('getInstance').grid;
+			//추가 또는 수정된 값이 있으면 true
+			if (grid.isDirty()) {
+				let changes = grid.getChanges({format: 'byVal'});
+				let QUERY_ID_ARRAY = {
+					'insertQueryId': ['insertTopMenuCode','insertTopMenuKr','insertTopMenuEn'],
+					'updateQueryId': ['updateTopMenuCode','updateTopMenuKr','updateTopMenuEn']
+				};
+				changes.queryIdList = QUERY_ID_ARRAY;
+				$.ajax({
+					type: 'POST',
+					url: '/paramQueryModifyGrid',
+					async: true,
+					dataType: 'json',
+					data: {'data': JSON.stringify(changes)},
+					success: function (result) {
+						menuMasterTopGrid.pqGrid("refreshDataAndView");
 					},
-					{
-						type: 'button', label: 'save', listener: {
-							'click': function (evt, ui) {
-								let grid = menuMasterTopGrid.pqGrid('getInstance').grid;
-								//추가 또는 수정된 값이 있으면 true
-								console.log(grid);
-								if (grid.isDirty()) {
-									let changes = grid.getChanges({format: 'byVal'});
-									let QUERY_ID_ARRAY = {
-										'insertQueryId': ['insertTopMenuCode','insertTopMenuKr','insertTopMenuEn'],
-										'updateQueryId': ['updateTopMenuCode','updateTopMenuKr','updateTopMenuEn']
-									};
-
-									changes.queryIdList = QUERY_ID_ARRAY;
-									console.log(changes);
-									$.ajax({
-										type: 'POST',
-										url: '/paramQueryModifyGrid',
-										async: true,
-										dataType: 'json',
-										data: {'data': JSON.stringify(changes)},
-										success: function (result) {
-											menuMasterTopGrid.pqGrid("refreshDataAndView");
-										},
-										error: function (e) {
-											console.error(e);
-										}
-									});
-
-								}
-							}
-						}
+					error: function (e) {
+						console.error(e);
 					}
-				]
+				});
+
 			}
 		});
 
 		function selectSubList(MENU_SEQ){
 			menuMasterBotGrid.pqGrid({
-				width: "100%",
-				height: 400,
-				scrollModel: {autoFit: true},
+				minHeight: "auto",
+				height: 280,
+				width: "auto",
+				selectionModel: { type: 'row', mode: 'single'} ,
+				swipeModel: {on: false},
+				collapsible: false,
+				trackModel: {on: true},
+				resizable: false,
+				flexWidth: false,
+				scrollModel: { autoFit: true },
+				showTitle: false,
+				numberCell: {title: 'No.'},
+				columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
+				colModel: botColModel,
 				dataModel: {
 					location: "remote",
 					dataType: "json",
@@ -167,55 +195,44 @@
 						return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
 					}
 				},
-				selectionModel: { type: 'row', mode: 'single'} ,
-				//swipeModel: {on: false},
-				colModel: botColModel,
-				numberCell: {width: 30, title: "No" , show: true},
-				trackModel: {on: true},
-				resizable: true,
-				toolbar: {
-					items: [
-						{
-							type: 'button', label: 'add', listener: {
-								'click': function (evt, ui) {
-									menuMasterBotGrid.pqGrid('addNodes', [{"PARENT_MENU_SEQ": click_seq}], 0);
-								}
-							}
-						},
-						{
-							type: 'button', label: 'save', listener: {
-								'click': function (evt, ui) {
-									let grid = menuMasterBotGrid.pqGrid('getInstance').grid;
-									//추가 또는 수정된 값이 있으면 true
-									if (grid.isDirty()) {
-										let changes = grid.getChanges();
-										let QUERY_ID_ARRAY = {
-											'insertQueryId': ['insertSubMenuCode','insertTopMenuKr','insertTopMenuEn'],
-											'updateQueryId': ['updateSubMenuCode','updateTopMenuKr','updateTopMenuEn']
-										};
-										changes.queryIdList = QUERY_ID_ARRAY;
-										console.log(JSON.stringify(changes));
-										$.ajax({
-											type: 'POST',
-											url: '/paramQueryModifyGrid',
-											async: true,
-											dataType: 'json',
-											data: {'data': JSON.stringify(changes)},
-											success: function (result) {
-												menuMasterTopGrid.pqGrid("refreshDataAndView");
-											},
-											error: function (e) {
-												console.error(e);
-											}
-										});
-									}
-								}
-							}
-						}
-					]
+				dataReady: function (event, ui) {
+					let data = menuMasterBotGrid.pqGrid('option', 'dataModel.data');
+					let totalRecords = data.length;
+					$('#menu_detail_total_records').html(totalRecords);
 				}
 			});
 			menuMasterBotGrid.pqGrid("refreshDataAndView");
+
+			$menuDetailAddBtn.click(function(){
+				menuMasterBotGrid.pqGrid('addNodes', [{"PARENT_MENU_SEQ": click_seq}], 0);
+			});
+
+			$menuDetailSaveBtn.click(function(){
+				let grid = menuMasterBotGrid.pqGrid('getInstance').grid;
+				//추가 또는 수정된 값이 있으면 true
+				if (grid.isDirty()) {
+					let changes = grid.getChanges();
+					let QUERY_ID_ARRAY = {
+						'insertQueryId': ['insertSubMenuCode','insertTopMenuKr','insertTopMenuEn'],
+						'updateQueryId': ['updateSubMenuCode','updateTopMenuKr','updateTopMenuEn']
+					};
+					changes.queryIdList = QUERY_ID_ARRAY;
+					console.log(JSON.stringify(changes));
+					$.ajax({
+						type: 'POST',
+						url: '/paramQueryModifyGrid',
+						async: true,
+						dataType: 'json',
+						data: {'data': JSON.stringify(changes)},
+						success: function (result) {
+							menuMasterTopGrid.pqGrid("refreshDataAndView");
+						},
+						error: function (e) {
+							console.error(e);
+						}
+					});
+				}
+			});
 		}
 
 	});
