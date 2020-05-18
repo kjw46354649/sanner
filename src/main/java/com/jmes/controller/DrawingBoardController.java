@@ -1,6 +1,8 @@
 package com.jmes.controller;
 
+import com.framework.innodale.component.CommonUtility;
 import com.framework.innodale.service.InnodaleService;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,28 +29,33 @@ public class DrawingBoardController {
 
     @RequestMapping(value="/drawing")
     public String drawingLogin(Model model, HttpServletRequest request, Locale locale) throws Exception {
-
         logger.info("pop page submit");
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("queryId", "drawingMapper.selectDrawingEquipment");
-
-        model.addAttribute("equipment",innodaleService.getList(hashMap));
 
         return "board/login";
     }
 
     @RequestMapping(value="/drawing-worker")
     public String drawingWorker(Model model, HttpServletRequest request, Locale locale) throws Exception {
-
         logger.info("pop page submit");
+        HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
+
+        hashMap.put("queryId", "drawingMapper.selectDrawingUser");
+        model.addAttribute("user",innodaleService.getList(hashMap));
+
+        model.addAttribute("FACTORY_AREA",  hashMap.get("FACTORY_AREA"));
+        model.addAttribute("EQUIP_ID" ,  hashMap.get("EQUIP_ID"));
 
         return "board/drawing-worker";
     }
 
     @RequestMapping(value="/drawing-board")
     public String drawingBoard(Model model, HttpServletRequest request, Locale locale) throws Exception {
-
         logger.info("pop page submit");
+
+        HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
+
+        hashMap.put("queryId", "drawingMapper.selectDrawingBoardLastWork");
+        model.addAttribute("list",innodaleService.getList(hashMap));
 
         return "board/drawing-board";
     }

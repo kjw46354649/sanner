@@ -9,7 +9,7 @@
     <input type="file" id="click_multifile_chose_btn" name="click_multifile_chose_btn" multiple  style="display: none;">
 </form>
 <form id="estimate_version_up_sequence_form">
-    <input type="hidden" id="hidden_est_seq" id="hidden_est_seq">
+    <input type="hidden" id="hidden_est_seq" name="hidden_est_seq">
 </form>
 <!-- CAD 도면 업로드 공통 Start -->
 <div class="modal" id="common_cad_file_attach_pop" tabindex="-1" role="dialog" aria-hidden="true">

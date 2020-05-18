@@ -4,17 +4,129 @@
 <mapper namespace="inspection">
 
     <select id="selectInspectionList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        select 1 from dual
+        SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
+        , X.INNER_DUE_DT
+        , X.POP_SEQ, jmes.SF_GET_CODE_NM('1009', X.POP_SEQ, 'KR') AS POP_NM
+        , X.OUTSIDE_COMP_CD
+        , ( SELECT M.COMP_NM        FROM jmes.TBL_COMPANY M        WHERE M.COMP_CD = X.OUTSIDE_COMP_CD        ) AS OUTSIDE_COMP_NM
+        , X.PART_STATUS, jmes.SF_GET_CODE_NM('1013', X.PART_STATUS, 'KR') AS PART_STATUS_NM
+        , X.CONTROL_NUM
+        , X.PART_NUM
+        , X.DRAWING_NUM
+        , X.MATERIAL_DETAIL, jmes.SF_GET_CODE_NM('1027', X.MATERIAL_DETAIL, 'KR') AS MATERIAL_DETAIL_NM
+        , X.WORK_TYPE, jmes.SF_GET_CODE_NM('1033', X.WORK_TYPE, 'KR') AS WORK_TYPE_NM
+        , X.MATERIAL_TYPE, jmes.SF_GET_CODE_NM('1035', X.MATERIAL_TYPE, 'KR') AS MATERIAL_TYPE_NM
+        , ( SELECT SUM(M.ORDER_QTY) * X.PART_UNIT_QTY        FROM jmes.TBL_CONTROL_PART_ORDER M        WHERE M.CONTROL_SEQ = X.CONTROL_SEQ        AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
+          ) AS ORDER_QTY
+        , X.SIZE_TXT
+        , jmes.SF_GET_DATE_F(Y.WORK_FINISH_DT,'YY','M') AS WORK_FINISH_DT
+        , ( SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = Y.WORK_USER_ID) AS WORK_USER_NM
+        , ( SELECT M.EQUIP_NM FROM jmes.TBL_EQUIP M WHERE M.EQUIP_ID = Y.EQUIP_ID) AS EQUIP_NM
+        , X.MCT_NOTE
+        , X.NOTE
+        , (SELECT COUNT(M.INSPECT_SEQ) FROM jmes.TBL_INSPECT M WHERE M.INSPECT_SEQ <![CDATA[ <= ]]> X.INSPECT_SEQ) AS INSPECT_NUM   -- 화면상 Seq.
+        , ( SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = Z.INSPECT_USER_ID) AS INSPECT_USER_NM
+        , jmes.SF_GET_CODE_NM('1060', Z.INSPECT_METHOD, 'KR') AS INSPECT_METHOD_NM
+        FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ        , jmes.SF_GET_DATE_F(B.INNER_DUE_DT,'YY','') AS INNER_DUE_DT
+        , ( SELECT MAX(M.POP_SEQ)            FROM jmes.TBL_POP M            WHERE M.CONTROL_SEQ = B.CONTROL_SEQ            AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+            ) AS POP_SEQ
+        , A.ORDER_COMP_CD
+        , B.OUTSIDE_YN
+        , B.OUTSIDE_COMP_CD
+        , B.PART_STATUS
+        , A.CONTROL_NUM
+        , B.PART_NUM
+        , B.DRAWING_NUM
+        , B.MATERIAL_DETAIL
+        , B.WORK_TYPE
+        , B.MATERIAL_TYPE
+        , B.PART_UNIT_QTY
+        , B.SIZE_TXT
+        , B.MCT_NOTE
+        , ( SELECT MAX(M.MCT_WORK_SEQ)
+            FROM jmes.TBL_MCT_WORK M, jmes.TBL_EQUIP N
+            WHERE M.EQUIP_ID = N.EQUIP_ID
+            AND N.EQUIP_KIND = '1'
+            AND M.CONTROL_SEQ = B.CONTROL_SEQ
+            AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+            AND M.WORK_FINISH_DT IS NOT NULL
+        ) AS MCT_WORK_SEQ
+        , ( SELECT MAX(M.INSPECT_SEQ)
+            FROM jmes.TBL_INSPECT M
+            WHERE M.CONTROL_SEQ = B.CONTROL_SEQ
+            AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+        ) AS INSPECT_SEQ
+        , A.NOTE
+            FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
+            WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+            AND B.PART_STATUS IN ('PRO009','PRO010','PRO011')
+        ) X LEFT OUTER JOIN jmes.TBL_MCT_WORK Y
+        ON X.MCT_WORK_SEQ = Y.MCT_WORK_SEQ
+        LEFT OUTER JOIN jmes.TBL_INSPECT Z
+        ON X.INSPECT_SEQ = Z.INSPECT_SEQ
+        <if test="SEL_INSPECT_GRADE or SEL_INSPECT_GRADE == true">
+            AND Z.INSPECT_GRADE IN ('A','B','C')  -- 검사완료품 제외를 체크하면
+        </if>
+        WHERE 1 = 1
+        <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
+            AND X.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
+        </if>
+        <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null">
+            AND X.CONTROL_NUM = #{SEL_CONTROL_NUM}
+        </if>
+        <if test="SEL_DRAWING_NUM !='' and SEL_DRAWING_NUM != null">
+            AND X.DRAWING_NUM = #{SEL_DRAWING_NUM}
+        </if>
+        <if test="SEL_POP_SEQ !='' and SEL_POP_SEQ != null">
+            AND X.POP_SEQ = #{SEL_POP_SEQ}
+        </if>
+        <if test="SEL_OUTSIDE_COMP_CD !='' and SEL_OUTSIDE_COMP_CD != null">
+            AND X.OUTSIDE_COMP_CD = #{SEL_OUTSIDE_COMP_CD}
+        </if>
+        <if test="SEL_OUTSIDE_YN or SEL_OUTSIDE_YN == true">
+            AND IFNULL(X.OUTSIDE_YN,0) = 'N'  -- 외주대상 제외 체크하면
+        </if>
+        ORDER BY X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
     </select>
     <select id="selectInspectionPopInfoBasic" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        select 1 from dual
+        SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+          , A.CONTROL_NUM, B.PART_NUM, B.DRAWING_NUM
+          , ( SELECT SUM(M.ORDER_QTY) * B.PART_UNIT_QTY
+              FROM jmes.TBL_CONTROL_PART_ORDER M
+              WHERE M.CONTROL_SEQ = B.CONTROL_SEQ
+                AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+            ) AS ORDER_QTY
+        FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
+        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+          AND B.CONTROL_SEQ = #{CONTROL_SEQ}
+          AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </select>
+    <insert id="insertInspectionMaster" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_INSPECT (CONTROL_SEQ, CONTROL_DETAIL_SEQ, INSPECT_SEQ
+                                      , INSPECT_METHOD, INSPECT_USER_ID, INSPECT_GRADE, INSPECT_RESULT, INSPECT_DESC
+                                      , ERROR_QTY, ERROR_PROCESS, ERROR_REASON, ERROR_ACTION, ERROR_NOTE
+                                      , INSERT_ID )
+        VALUES (    #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}
+                  , (SELECT IFNULL(MAX(INSPECT_SEQ),0) + 1 FROM jmes.TBL_INSPECT WHERE CONTROL_SEQ = #{CONTROL_SEQ} AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ})
+                  , #{INSPECT_METHOD}, #{INSPECT_USER_ID}, #{INSPECT_GRADE}, #{INSPECT_RESULT}, #{INSPECT_DESC}
+                  , #{ERROR_QTY}, #{ERROR_PROCESS}, #{ERROR_REASON}, #{ERROR_ACTION}, #{ERROR_NOTE}
+                  , #{LOGIN_USER_ID}
+                )
+    </insert>
+    <delete id="deleteInspectionMaster" parameterType="java.util.HashMap">
+        DELETE FROM jmes.TBL_INSPECT
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+          AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+          AND INSPECT_SEQ = (SELECT MAX(INSPECT_SEQ) FROM jmes.TBL_INSPECT WHERE CONTROL_SEQ = #{CONTROL_SEQ} AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ})
+    </delete>
     <select id="selectInspectionPopInfoGrid01" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         select 1 from dual
     </select>
     <select id="selectInspectionPopInfoGrid02" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         select 1 from dual
     </select>
+
+
     <select id="selectCommItemDetailInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         select 2 AS SEQ from dual
     </select>

@@ -59,4 +59,15 @@
         WHERE 1=1
     </insert>
 
+    <select id="selectBarcodeInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            CONTROL_SEQ,
+            CONTROL_DETAIL_SEQ,
+            CONTROL_VER
+        FROM TBL_CONTROL_BARCODE
+        WHERE 1 = 1
+            AND BARCODE_NUM = #{popBarcode}
+            AND DEL_YN = 'N'
+    </select>
+
 </mapper>
