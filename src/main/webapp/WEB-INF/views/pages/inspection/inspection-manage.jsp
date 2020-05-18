@@ -90,8 +90,8 @@
 <div class="popup_container inspection" id="inspection_manage_pop" style="display: none;">
     <form class="form-inline" id="inspection_manage_pop_form" name="inspection_manage_pop_form" role="form">
         <input type="hidden" name="queryId" id="queryId" value="inspection.selectInspectionPopInfoBasic">
-        <input type="hidden" name="INSPECT_GRADE" id="INSPECT_GRADE" value="">
-        <input type="hidden" name="INSPECT_METHOD" id="INSPECT_METHOD" value="">
+        <input type="hidden" name="INSPECT_GRADE" id="INSPECT_GRADE" value="GRD010">
+        <input type="hidden" name="INSPECT_METHOD" id="INSPECT_METHOD" value="1">
         <input type="hidden" name="ERROR_QTY" id="ERROR_QTY" value="">
         <input type="hidden" name="ORDER_QTY" id="ORDER_QTY" value="">
         <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ" value="">
@@ -107,8 +107,8 @@
 						<button type="button" class="onoff right" id="inspect_method_2">전수검사</button>
 					</span>
                 <ul class="listWrap">
-                    <li class="tit blue">Seq.</li>
-                    <li>04</li>
+<%--                    <li class="tit blue">Seq.</li>--%>
+<%--                    <li>04</li>--%>
                     <li class="tit bagic">작성자</li>
                     <li class="slt">
                         <select id="INSPECT_USER_ID" name="INSPECT_USER_ID" data-required="true">
@@ -126,7 +126,7 @@
                     </span>
                 </div>
                 <div class="buttonWrap" id="inspect_grade_btn">
-                    <button type="button" class="gradeBtn " id="inspect_grade_GRD010"><span>A</span></button>
+                    <button type="button" class="gradeBtn green" id="inspect_grade_GRD010"><span>A</span></button>
                     <button type="button" class="gradeBtn " id="inspect_grade_GRD020"><span>B</span></button>
                     <button type="button" class="gradeBtn " id="inspect_grade_GRD030"><span>C</span></button>
                     <button type="button" class="gradeBtn " id="inspect_grade_GRD040"><span>D</span></button>
@@ -163,7 +163,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <select id="ERROR_PROCESS" name="ERROR_PROCESS" title="발생공정">
+                            <select id="ERROR_PROCESS" name="ERROR_PROCESS" title="발생공정" disabled>
                                 <option value=""><spring:message code="com.form.top.sel.option" /></option>
                                 <c:forEach var="vlocale" items="${HighCode.H_1010}">
                                     <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
@@ -171,16 +171,16 @@
                             </select>
                         </td>
                         <td>
-                            <select id="ERROR_REASON" name="ERROR_REASON" title="원인">
+                            <select id="ERROR_REASON" name="ERROR_REASON" title="원인" disabled>
                                 <option value=""><spring:message code="com.form.top.sel.option" /></option>
                                 <c:forEach var="vlocale" items="${HighCode.H_1032}">
                                     <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
                         </td>
-                        <td><input type="text" class="wd_405_left_10" name="ERROR_NOTE" id="ERROR_NOTE" title="조치방안비고"></td>
+                        <td><input type="text" class="wd_405_left_10" name="ERROR_NOTE" id="ERROR_NOTE" title="조치방안비고" readonly></td>
                         <td>
-                        <select id="ERROR_ACTION" name="ERROR_ACTION" title="조치">
+                        <select id="ERROR_ACTION" name="ERROR_ACTION" title="조치" disabled>
                             <option value=""><spring:message code="com.form.top.sel.option" /></option>
                             <c:forEach var="vlocale" items="${HighCode.H_1025}">
                                 <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
@@ -246,7 +246,7 @@
             </div>
         </div>
         <div class="btnWrap">
-            <button type="button" class="submit">submit</button>
+            <button type="button" id="inspection_manage_pop_save" class="submit">submit</button>
             <button type="button" id="popClose" class="cancel">cancel</button>
         </div>
     </div>
@@ -410,10 +410,13 @@
         $("#inspection_manage_form").find("#queryId").val("inspection.selectInspectionList");
         inspectionManagePostData01 = fnFormToJsonArrayData('#inspection_manage_form');
         inspectionManageColModel01 = [
-            {title: '납기', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 95, width: 95, editable: false},
-            {title: '현재위치', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 150, width: 150, editable: false},
-            {title: '외주가공', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 150, width: 150, editable: false},
-            {title: '진행상태', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 150, width: 150, editable: false},
+            {title: 'INSPECT_SEQ', dataType: 'string', dataIndx: 'INSPECT_SEQ', hidden:true},
+            {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden:true},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden:true},
+            {title: '납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', minWidth: 95, width: 95, editable: false},
+            {title: '현재위치', dataType: 'string', dataIndx: 'POP_NM', minWidth: 150, width: 150, editable: false},
+            {title: '외주가공', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', minWidth: 150, width: 150, editable: false},
+            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', minWidth: 150, width: 150, editable: false},
             {title: '카드', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 40, minWidth: 40, editable: false,
                 render: function (ui) {
                     let rowIndx = ui.rowIndx, grid = this;
@@ -421,9 +424,9 @@
                     return '';
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 200, width: 200, editable: false},
-            {title: 'Part', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 40, width: 40, editable: false},
-            {title: '도면번호', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 200, width: 200, editable: false},
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 200, width: 200, editable: false},
+            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 40, width: 40, editable: false},
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 200, width: 200, editable: false},
             {title: '눈', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 40, minWidth: 40, editable: false,
                 render: function (ui) {
                     let rowIndx = ui.rowIndx, grid = this;
@@ -431,25 +434,28 @@
                     return '';
                 }
             },
-            {title: '소재종류', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 120, width: 120, editable: false},
-            {title: '작업형태', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 120, width: 120, editable: false},
-            {title: '소재분류', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 120, width: 120, editable: false},
-            {title: '수량', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 40, width: 40, editable: false},
-            {title: '규격', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 120, width: 120, editable: false},
+            {title: 'MATERIAL_DETAIL', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden:true},
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 120, width: 120, editable: false},
+            {title: 'WORK_TYPE', dataType: 'string', dataIndx: 'WORK_TYPE', hidden:true},
+            {title: '작업형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM', minWidth: 120, width: 120, editable: false},
+            {title: 'MATERIAL_TYPE', dataType: 'string', dataIndx: 'MATERIAL_TYPE', hidden:true},
+            {title: '소재분류', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', minWidth: 120, width: 120, editable: false},
+            {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false},
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 120, width: 120, editable: false},
             {
                 title: '최근 MCT 실적', datatype: 'string', align: 'center', colModel: [
-                    {title: '날짜', datatype: 'string', dataIndx: 'ORIGINAL_SIDE_QTY', minWidth: 120, width: 120, editable: false},
-                    {title: '작업자', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY', minWidth: 100, width: 100, editable: false},
-                    {title: 'NC No.', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY', minWidth: 120, width: 120, editable: false},
-                    {title: '비고', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY', minWidth: 300, width: 300, editable: false}
+                    {title: '날짜', datatype: 'string', dataIndx: 'WORK_FINISH_DT', minWidth: 120, width: 120, editable: false},
+                    {title: '작업자', datatype: 'string', dataIndx: 'WORK_USER_NM', minWidth: 100, width: 100, editable: false},
+                    {title: 'NC No.', datatype: 'string', dataIndx: 'EQUIP_NM', minWidth: 120, width: 120, editable: false},
+                    {title: '비고', datatype: 'string', dataIndx: 'MCT_NOTE', minWidth: 300, width: 300, editable: false}
                 ]
             },
-            {title: '주문사항 비고', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 120, width: 120, editable: false},
+            {title: '주문사항 비고', dataType: 'string', dataIndx: 'NOTE', minWidth: 120, width: 120, editable: false},
             {
                 title: '최근 품질 실적', datatype: 'string', align: 'center', colModel: [
-                    {title: 'seq', datatype: 'string', dataIndx: 'ORIGINAL_SIDE_QTY', minWidth: 40, width: 40, editable: false},
-                    {title: '담당관', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY', minWidth: 100, width: 100, editable: false},
-                    {title: '측정방법', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY', minWidth: 120, width: 120, editable: false},
+                    {title: 'seq', datatype: 'string', dataIndx: 'INSPECT_NUM', minWidth: 40, width: 40, editable: false},
+                    {title: '담당관', datatype: 'string', dataIndx: 'INSPECT_USER_NM', minWidth: 100, width: 100, editable: false},
+                    {title: '측정방법', datatype: 'string', dataIndx: 'INSPECT_METHOD_NM', minWidth: 120, width: 120, editable: false},
                     {title: '발주량', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY', minWidth: 80, width: 80, editable: false},
                     {title: '등급', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY', minWidth: 80, width: 80, editable: false},
                     {title: '합/불', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY', minWidth: 80, width: 80, editable: false},
@@ -462,17 +468,18 @@
                     {title: '조치', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY', minWidth: 80, width: 80, editable: false},
                     {title: '조치방안', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY', minWidth: 120, width: 120, editable: false},
                     {title: '작성일자', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY', minWidth: 120, width: 120, editable: false},
-                    {title: 'PDF', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 40, minWidth: 40, editable: false,
+                    {title: '', align: 'center', dataType: 'string', dataIndx: 'CONTROL_SEQ_INSERT', width: 40, minWidth: 65, editable: false,
                         render: function (ui) {
                             let rowIndx = ui.rowIndx, grid = this;
-                            if (ui.rowData['DXF_GFILE_SEQ'] > 0) return "[결과등록]";
+                            if (ui.rowData['CONTROL_SEQ'] > 0) return "[결과등록]";
                             return '';
                         }
                     },
-                    {title: 'PDF', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ2', width: 40, minWidth: 40, editable: false,
+                    {title: '', align: 'center', dataType: 'string', dataIndx: 'CONTROL_SEQ_DELETE', width: 40, minWidth: 65, editable: false,
                         render: function (ui) {
                             let rowIndx = ui.rowIndx, grid = this;
-                            if (ui.rowData['DXF_GFILE_SEQ'] > 0) return "[실적삭제]";
+                            console.log(ui.rowData['INSPECT_SEQ']);
+                            if (ui.rowData['INSPECT_SEQ'] > 0) return "[실적삭제]";
                             return '';
                         }
                     }
@@ -511,28 +518,34 @@
                 SelectedRowIndex = [];
                 let selectList = ui.addList;
                 for (let i = 0; i < selectList.length; i++) {
+                    console.log(selectList[i].rowIndx);
                     SelectedRowIndex.push(selectList[i].rowIndx);
                 }
             },
             cellClick: function (event, ui) {
                 let rowIndx = ui.rowIndx, $grid = this;
-                //if (ui.rowData['INSIDE_STOCK_NUM'] != undefined){
-                    if (ui.dataIndx == 'INSIDE_STOCK_QTY_IN') {//입고
-                        fnResetFrom("inspection_manage_pop_form");
-                        $("#inspection_manage_form").find("#V_INSIDE_STOCK_NUM").val(ui.rowData['INSIDE_STOCK_NUM']);
-                        $('#inspection_manage_pop').modal('show');
-                    }
-                    if (ui.dataIndx == 'INSIDE_STOCK_QTY_OUT') {//출고
+                if (ui.rowData['CONTROL_SEQ'] != undefined && ui.rowData['CONTROL_SEQ'] >0) {
+                    if (ui.dataIndx == 'CONTROL_SEQ_INSERT') {
 
-                        if (ui.rowData['INSIDE_STOCK_CURR_QTY'] <= 0){
-                            alert("출고할 재고수량이 없습니다.");
-                        }else{
-                            fnResetFrom("inspection_manage_pop_form");
-                            $("#inspection_manage_form").find("#V_INSIDE_STOCK_NUM").val(ui.rowData['INSIDE_STOCK_NUM']);
-                            $('#inspection_manage_pop').modal('show');
+                        fnResetFrom("inspection_manage_pop_form");
+                        $("#inspection_manage_pop_form").find("#CONTROL_SEQ").val(ui.rowData['CONTROL_SEQ']);
+                        $("#inspection_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val(ui.rowData['CONTROL_DETAIL_SEQ']);
+                        $('#inspection_manage_pop').modal('show');
+
+                    }
+                }
+                if (ui.rowData['INSPECT_SEQ'] != undefined && ui.rowData['INSPECT_SEQ'] >0) {
+                    if (ui.dataIndx == 'CONTROL_SEQ_DELETE') {
+                        if(confirm("검사실적이 바로 삭제됩니다.\n삭제 하시겠습니까?")){
+                            fnDeletePQGrid(inspectionManageGridId01, [rowIndx], "inspection.deleteInspectionMaster");
+                            setTimeout(function() {
+                                $("#inspection_manage_form").find("#queryId").val("inspection.selectInspectionList");
+                                $("#inspection_manage_search_btn").trigger("click");
+                            }, 500);
+
                         }
                     }
-                //}
+                }
             }
         });
         /**  리스트 그리드 선언 끝 **/
@@ -613,7 +626,7 @@
 
         $("#inspection_manage_pop").on('hide.bs.modal', function(){
            fnResetFrom("inspection_manage_pop_form");
-           $("#inspection_manage_form").find("#queryId").val("inspection.selectInsideStockList");
+           $("#inspection_manage_form").find("#queryId").val("inspection.selectInspectionList");
            $("#inspection_manage_search_btn").trigger("click");
         });
         $("#inspection_manage_pop").on('show.bs.modal', function(){
@@ -643,6 +656,8 @@
                     fnJsonDataToForm("inspection_manage_pop_form", dataInfo);
                     $("#inspection_manage_pop_form").find("#ORDER_QTY_VIEW").html(dataInfo.ORDER_QTY);
                     $("#inspection_manage_pop_form").find("#ERROR_QTY_VIEW").html("0");
+                    $("#inspection_manage_pop_form").find("#INSPECT_METHOD").val("1");
+                    $("#inspection_manage_pop_form").find("#INSPECT_METHOD").val("GRD010");
 
 
                 }
@@ -676,8 +691,13 @@
 
 
 
-        $('#inside_stock_pop_save_btn').on('click', function () {
-            //규격 validation
+        $('#inspection_manage_pop_save').on('click', function () {
+            // validation
+
+            $("#inspection_manage_pop_form").find("#ERROR_PROCESS").attr("disabled", false);
+            $("#inspection_manage_pop_form").find("#ERROR_REASON").attr("disabled", false);
+            $("#inspection_manage_pop_form").find("#ERROR_ACTION").attr("disabled", false);
+            $("#inspection_manage_pop_form").find("#ERROR_NOTE").attr("readonly", false);
 
             // $("#stock_manage_pop_form").find("#POP_TYPE").val($("#stock_manage_form").find("#popType").val());
             // $("#stock_manage_pop_form").find("#IN_OUT_QTY").val($("#stock_manage_pop_form").find("#ORDER_QTY").html());
@@ -707,7 +727,13 @@
             //         $('#stock_manage_pop').modal('hide');
             //     }
             // }, parameters, '');
+            $("#inspection_manage_pop_form").find("#queryId").val("inspection.insertInspectionMaster");
 
+            let parameters = {'url': '/json-create', 'data': $("#inspection_manage_pop_form").serialize() };
+            fnPostAjax(function (data, callFunctionParam) {
+                alert("등록이 완료되었습니다.");
+                $('#inspection_manage_pop').modal('hide');
+            }, parameters, '');
 
         });
 
@@ -718,7 +744,7 @@
         $("#INSPECTION_BARCODE_NUM").on('keyup', function(e) {
             if (e.keyCode == 13) {
                 fnResetFrom("inspection_manage_pop_form");
-
+                alert("바코드 임의로 키넣어놨음. 삭제 필요");
                 $("#inspection_manage_pop_form").find("#CONTROL_SEQ").val("2094");
                 $("#inspection_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val("2160");
                 $('#inspection_manage_pop').modal('show');
@@ -759,6 +785,12 @@
 
             let targetId = this.id.replace("inspect_grade_","");
             $("#inspection_manage_pop_form").find("#INSPECT_GRADE").val(targetId);
+
+            $("#inspection_manage_pop_form").find("#ERROR_PROCESS").val("");
+            $("#inspection_manage_pop_form").find("#ERROR_REASON").val("");
+            $("#inspection_manage_pop_form").find("#ERROR_ACTION").val("");
+            $("#inspection_manage_pop_form").find("#ERROR_NOTE").val("");
+
             if(targetId == "GRD040"){
                 $("#inspection_manage_pop_plus_btn").show();
                 $("#inspection_manage_pop_plus_minus").show();
@@ -767,12 +799,26 @@
                 $("#inspection_manage_pop_form").find("#ERROR_QTY").val(errQty);
                 $("#inspection_manage_pop_form").find("#ERROR_QTY_VIEW").html(errQty);
 
+
+
+                $("#inspection_manage_pop_form").find("#ERROR_PROCESS").attr("disabled", false);
+                $("#inspection_manage_pop_form").find("#ERROR_REASON").attr("disabled", false);
+                $("#inspection_manage_pop_form").find("#ERROR_ACTION").attr("disabled", false);
+                $("#inspection_manage_pop_form").find("#ERROR_NOTE").attr("readonly", false);
+
             }else{
                 $("#inspection_manage_pop_plus_btn").hide();
                 $("#inspection_manage_pop_plus_minus").hide();
 
                 $("#inspection_manage_pop_form").find("#ERROR_QTY").val("0");
                 $("#inspection_manage_pop_form").find("#ERROR_QTY_VIEW").html("0");
+
+
+                $("#inspection_manage_pop_form").find("#ERROR_PROCESS").attr("disabled", true);
+                $("#inspection_manage_pop_form").find("#ERROR_REASON").attr("disabled", true);
+                $("#inspection_manage_pop_form").find("#ERROR_ACTION").attr("disabled", true);
+                $("#inspection_manage_pop_form").find("#ERROR_NOTE").attr("readonly", true);
+
             }
             //display
             $(this).siblings().removeClass();
