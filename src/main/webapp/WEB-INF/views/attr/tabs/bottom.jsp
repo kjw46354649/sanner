@@ -9,7 +9,7 @@
     <input type="file" id="click_multifile_chose_btn" name="click_multifile_chose_btn" multiple  style="display: none;">
 </form>
 <form id="estimate_version_up_sequence_form">
-    <input type="hidden" id="hidden_est_seq" id="hidden_est_seq">
+    <input type="hidden" id="hidden_est_seq" name="hidden_est_seq">
 </form>
 <div class="modal" id="common_cad_file_attach_pop" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg cadDrawing">
@@ -109,6 +109,10 @@
         </table>
     </div>
 </div>
+<form id="barcode_form">
+    <input type="hidden" id="queryId" name="queryId" value="popMapper.selectBarcodeInfo">
+    <input type="hidden" id="popBarcode" name="popBarcode">
+</form>
 <script type="text/javascript">
 
     let $cadFileConvertUploadCompletedBtn = $("#cadFileConvertUploadCompletedBtn");
