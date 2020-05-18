@@ -10,7 +10,6 @@
     <div class="topWrap">
         <form class="form-inline" id="user_master_search_form" name="user_master_search_form" role="form">
             <input type="hidden" name="queryId" id="queryId" value="systemMapper.selectUserMasterList">
-            <input type="hidden" name="" id="" value="">
             <div class="hWrap">
                 <span class="ipu_wrap">
                     <label for="sel_user_nm">사용자 이름</label>
@@ -34,7 +33,7 @@
             <div class="conWrap">
                 <div id="user_manager_grid" style="margin:auto; height: auto; width: auto;" ></div>
                 <div class="right_sort">
-                    전체 조회 건수 (Total : <span id="CONFIRM_ORDER_TOTAL_RECORDS" style="color: #00b3ee">0</span>)
+                    전체 조회 건수 (Total : <span id="user_master_total_records" style="color: #00b3ee">0</span>)
                 </div>
             </div>
         </div>
@@ -68,7 +67,7 @@
         ];
         let userMasterObj = {
             minHeight: "auto",
-            height: 760,
+            height: 770,
             width: "auto",
             selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
@@ -88,10 +87,10 @@
                     return {data: response.data};
                 }
             },
-            complete: function () {
+            dataReady: function (event, ui) {
                 let data = $userMasterGrid.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
-                $('#CONFIRM_ORDER_TOTAL_RECORDS').html(totalRecords);
+                $('#user_master_total_records').html(totalRecords);
             },
             // toolbar: userMasterToolbar,
             toolbar: false,

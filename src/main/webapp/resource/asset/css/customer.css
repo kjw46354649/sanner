@@ -28,13 +28,34 @@
 .onegrid .bottomWrap .hWrap .rightSpan { float: right; display: inline-block; }
 .onegrid .bottomWrap .tableWrap { margin: 5px 20px; position: relative; }
 .onegrid .bottomWrap .tableWrap .buttonWrap { padding: 5px 0; display: block; }
-.onegrid .bottomWrap .tableWrap .conWrap { height: calc(100vh - 160px); width: 100%; }
+.onegrid .bottomWrap .tableWrap .conWrap { height: 800px; width: 100%; }
 .onegrid .bottomWrap .tableWrap .conWrap img { width: 100%; height: 100%; }
 
+/* Single Grid */
+.onegrid .bottomWrap .tableNotSearchOneGridWrap { margin: 5px 20px; position: relative; }
+.onegrid .bottomWrap .tableNotSearchOneGridWrap .buttonWrap { padding: 5px 0; display: block; }
+.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap { height: 875px; width: 100%; }
+.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap img { width: 100%; height: 100%; }
 
-.pq-theme .ui-state-default, .pq-theme .ui-button{
+/*# Master & Detail Grid */
+.onegrid .bottomWrap .tableTopWrap { margin: 5px 20px; position: relative; }
+.onegrid .bottomWrap .tableTopWrap .buttonWrap { padding: 5px 0; display: block; }
+.onegrid .bottomWrap .tableTopWrap .conWrap { height: 500px; width: 100%; }
+.onegrid .bottomWrap .tableTopWrap .conWrap img { width: 100%; height: 100%; }
 
-}
+.onegrid .bottomWrap .tableBottomWrap { margin: 5px 20px; position: relative; }
+.onegrid .bottomWrap .tableBottomWrap .buttonWrap { padding: 5px 0; display: block; }
+.onegrid .bottomWrap .tableBottomWrap .conWrap { height: 300px; width: 100%; }
+.onegrid .bottomWrap .tableBottomWrap .conWrap img { width: 100%; height: 100%; }
+.onegrid .bottomWrap .tableOneSearchBottomWrap { margin: 5px 20px; position: relative; }
+.onegrid .bottomWrap .tableOneSearchBottomWrap .buttonWrap { padding: 5px 0; display: block; }
+.onegrid .bottomWrap .tableOneSearchBottomWrap .conWrap { height: 250px; width: 100%; }
+.onegrid .bottomWrap .tableOneSearchBottomWrap .conWrap img { width: 100%; height: 100%; }
+
+/*# Master & Detail vertical Grid */
+.onegrid .bottomWrap .left-30Warp { float: left; width: 472px; height: 100%; }
+.onegrid .bottomWrap .right-70Warp { float: right; margin-left: 10px; width: calc(100% - 482px); height: 100%; }
+
 
 .form-group1 .group-item { display: inline-block; width: 24.5%; padding: 0.5vh 0.5vw; }
 .form-group1 .group-item-option { display: inline-block; width: 5%; padding: 0.5vh 0.5vw; }

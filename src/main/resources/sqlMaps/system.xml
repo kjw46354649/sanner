@@ -188,8 +188,8 @@
                NOTE
         FROM TBL_CODE_GROUP
         WHERE 1 = 1
-        <if test="HIGH_NM != null and HIGH_NM != ''">
-            AND HIGH_NM LIKE CONCAT('%', #{HIGH_NM}, '%')
+        <if test="sel_group_code_nm != null and sel_group_code_nm != ''">
+            AND HIGH_NM LIKE CONCAT('%', #{sel_group_code_nm}, '%')
         </if>
     </select>
 
@@ -317,8 +317,8 @@
                NOTE
         FROM TBL_ROLE
         WHERE 1 = 1
-        <if test="ROLE_NM != null and ROLE_NM != ''">
-            AND ROLE_NM LIKE CONCAT('%', #{ROLE_NM}, '%')
+        <if test="sel_authority_group_nm != null and sel_authority_group_nm != ''">
+            AND ROLE_NM LIKE CONCAT('%', #{sel_authority_group_nm}, '%')
         </if>
     </select>
 
@@ -391,7 +391,7 @@
 			CASE WHEN A.PARENT_MENU_SEQ = '0' THEN A.MENU_NM_EN ELSE '' END PARENT_MENU_NM,
 			CASE WHEN A.PARENT_MENU_SEQ = '0' THEN '' ELSE A.MENU_NM_EN END MENU_NM,
 			A.PARENT_MENU_SEQ, #{ROLE_SEQ} AS ROLE_SEQ, CONCAT(#{ROLE_SEQ}, CD_NO) AS CD_NO,
-            IFNULL(C.ACCESS_CD, '0') AS ACCESS_CD, SF_GET_CODE_NM('1043', IFNULL(C.ACCESS_CD, '0'), 'EN') AS ACCESS_NM
+            IFNULL(C.ACCESS_CD, 'N') AS ACCESS_CD, SF_GET_CODE_NM('1042', IFNULL(C.ACCESS_CD, 'N'), 'EN') AS ACCESS_NM
 		FROM MENU_CTE A
 			LEFT OUTER JOIN TBL_MENU B ON A.PARENT_MENU_SEQ = B.MENU_SEQ
 			LEFT OUTER JOIN TBL_ROLE_MENU C ON A.MENU_SEQ = C.MENU_SEQ AND ROLE_SEQ = #{ROLE_SEQ}
