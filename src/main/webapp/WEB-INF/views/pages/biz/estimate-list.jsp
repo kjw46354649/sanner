@@ -204,8 +204,20 @@
                     }
                 }
             },
+            {title: '첨부파일', dataType: 'string', dataIndx: 'ETC_GFILE_SEQ',
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="downloadViewPopup" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#downloadViewPopup").bind("click", function () {
+                        let rowData = ui.rowData;
+                        commonFileDownloadPopupCall(rowData.ETC_GFILE_SEQ);
+                    });
+                }
+            },
             {title: '발송일시', dataType: 'string', dataIndx: 'SEND_DT', editable: false},
-            {title: '', dataType: 'string', dataIndx: '', editable: false, width: 40},
             {title: '주문접수', dataType: 'date', dataIndx: '', editable: false, width: 60,
                 render: function(ui){
                     let EST_STATUS = ui.rowData.EST_STATUS;
@@ -218,7 +230,7 @@
                             '</a>';
                     }
                 }
-            }
+            },
         ];
 
         let estimateMasterBotColModel= [

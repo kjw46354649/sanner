@@ -2,8 +2,6 @@ package com.framework.innodale.component;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -16,13 +14,11 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component("mailSenderAgent")
 public class MailSenderAgent {
-
-    @Autowired
-    private Environment environment;
 
     @Autowired
     public JavaMailSender javaMailSender;
@@ -32,7 +28,7 @@ public class MailSenderAgent {
     /**
      * 메일 전송 부분
      */
-    public void sendEmail(final HashMap<String, String> mailInfo) throws AddressException, AuthenticationFailedException, MessagingException, UnsupportedEncodingException {
+    public void sendEmail(final Map<String, Object> mailInfo) throws AddressException, AuthenticationFailedException, MessagingException, UnsupportedEncodingException {
 
         MimeMessagePreparator preparator = new MimeMessagePreparator() {
             public void prepare(MimeMessage mimeMessage) throws MessagingException, UnsupportedEncodingException {
@@ -42,7 +38,7 @@ public class MailSenderAgent {
                 message.setReplyTo(new InternetAddress((String)mailInfo.get("SEND_EMAIL")));
                 message.setFrom((String)mailInfo.get("SEND_EMAIL"), (String)mailInfo.get("SEND_NAME"));
 
-                String setToEmail [] = mailInfo.get("RECV_EMAIL").split(",");
+                String setToEmail [] = ((String)mailInfo.get("RECV_EMAIL")).split(",");
                 message.setTo(setToEmail);
 
                 if(mailInfo.containsKey("HCC_EMAIL") && !"".equals(mailInfo.get("HCC_EMAIL"))){
@@ -52,7 +48,7 @@ public class MailSenderAgent {
                 if(mailInfo.containsKey("CC_EMAIL") && !"".equals(mailInfo.get("CC_EMAIL"))){
                     // 참조
                     //message.setCc(new InternetAddress((String)mailInfo.get("CC_EMAIL")));
-                    String cc [] = mailInfo.get("CC_EMAIL").split(",");
+                    String cc [] = ((String)mailInfo.get("CC_EMAIL")).split(",");
                     message.setCc(cc);
                 }
 
@@ -61,11 +57,15 @@ public class MailSenderAgent {
                 message.setSubject((String)mailInfo.get("TITLE"));
                 message.setText((String)mailInfo.get("CONTEXT"), true);
 
-//                if(mailInfo.containsKey("FILE_SEQ") && !"".equals(mailInfo.get("FILE_SEQ"))) {
-//                    String file = root+mailInfo.get("FILE_PATH")+ File.separator +mailInfo.get("FILE_NM");
-//                    FileSystemResource fsr = new FileSystemResource(file);
-//                    message.addAttachment(mailInfo.get("ORIGINAL_FILE_NM"), fsr);
-//                }
+                if(mailInfo.containsKey("attachFileList") && mailInfo.get("attachFileList") != null) {
+                    List<Map<String, Object>> attachFileList = (List<Map<String, Object>>)mailInfo.get("attachFileList");
+                    for(Map<String, Object> fileInfo : attachFileList){
+                        String file = (String)fileInfo.get("FILE_PATH");
+                        FileSystemResource fsr = new FileSystemResource(file);
+                        message.addAttachment((String)fileInfo.get("ORIGINAL_FILE_NM"), fsr);
+                    }
+
+                }
 
             };
         };

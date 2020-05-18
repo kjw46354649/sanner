@@ -186,14 +186,21 @@ public class CommonUtility {
         return resultMap;
     }
 
-
     /**
      * Random 번호 추출
      * @return
      */
     public static String getUUIDString(){
+        return UUID.randomUUID().toString();
+    }
+
+    /**
+     * Random 번호 추출
+     * @return
+     */
+    public static String getUUIDString(String sType){
         UUID uuid = UUID.randomUUID();
-        return uuid.toString();
+        return "key".equals(sType)? uuid.toString().replaceAll("-", "").substring(0, 18) : uuid.toString().replaceAll("-", "");
     }
 
 
@@ -531,9 +538,7 @@ public class CommonUtility {
     }
 
     public static String getServerType() {
-
         String OS = System.getProperty("os.name").toLowerCase();
-
         if (OS.contains("win")) {
             return "window";
         } else {

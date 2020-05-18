@@ -29,22 +29,55 @@ public class StaticUrlController {
     @Autowired
     ServletContext context;
 
+    /**
+     * 업로드 이미지  <IMG ~ 처리
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/imageViewer")
     public String imageViewerController(Model model, HttpServletRequest request, HttpServletResponse response)  throws Exception{
         return "/common/image_viewer";
     }
 
+    /**
+     * 사용안함 (x)
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/drawingPrint")
     public String drawingPrintController(Model model, HttpServletRequest request, HttpServletResponse response)  throws Exception{
         return "/common/drawing_print";
     }
 
+    /**
+     * 고정 페이지 호출 처리
+     * @param model
+     * @param request
+     * @param response
+     * @param pathName
+     * @param fileName
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/static/{pathName}/{fileName}")
     public String staticUrlController(Model model, HttpServletRequest request, HttpServletResponse response,
                                       @PathVariable("pathName") String pathName, @PathVariable("fileName") String fileName)  throws Exception{
         return "/pages/" + pathName + "/" + fileName;
     }
 
+    /**
+     * 바코드 생성 처리
+     * @param codeType
+     * @param barcode
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/barcode/{codeType}/{barcode}")
     public ModelAndView barcodeUrlController(@PathVariable("codeType") String codeType, @PathVariable("barcode") String barcode) throws Exception {
 
@@ -57,6 +90,14 @@ public class StaticUrlController {
         return modelAndView;
     }
 
+    /**
+     * 업로드 이미지 처리
+     * @param GFILE_SEQ
+     * @param req
+     * @param res
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/image/{gfileSeq}")
     public ModelAndView imageFileView(@PathVariable("gfileSeq") String GFILE_SEQ, HttpServletRequest req, HttpServletResponse res) throws Exception {
 
@@ -75,14 +116,44 @@ public class StaticUrlController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/fileDownload/{gfileSeq}")
-    public ModelAndView fileDownloadView(@PathVariable("gfileSeq") String GFILE_SEQ, HttpServletRequest req, HttpServletResponse res) throws Exception {
+    /**
+     * 하나의 Gfile로 구성되면 다운로드 처리
+     * @param GFILE_SEQ
+     * @param req
+     * @param res
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/downloadGfile/{gfileSeq}")
+    public ModelAndView downloadGFileView(@PathVariable("gfileSeq") String GFILE_SEQ, HttpServletRequest req, HttpServletResponse res) throws Exception {
 
         ModelAndView modelAndView = new ModelAndView();
 
         HashMap<String, Object> fileInfo = new HashMap<String, Object>();
         fileInfo.put("GFILE_SEQ", GFILE_SEQ);
         fileInfo.put("queryId", "common.selectGfileFileSingleInfo");
+        modelAndView.setViewName("fileDownloadView");
+        modelAndView.addObject("fileInfo", innodaleService.getInfo(fileInfo));
+
+        return modelAndView;
+    }
+
+    /**
+     * 하나의 gfile에 여러개의 fileseq로 구성될때 fileSeq로 다운로드 처리
+     * @param GFILE_SEQ
+     * @param req
+     * @param res
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/downloadfile/{gfileSeq}")
+    public ModelAndView downloadFileView(@PathVariable("gfileSeq") String GFILE_SEQ, HttpServletRequest req, HttpServletResponse res) throws Exception {
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        HashMap<String, Object> fileInfo = new HashMap<String, Object>();
+        fileInfo.put("GFILE_SEQ", GFILE_SEQ);
+        fileInfo.put("queryId", "common.selectFileSingleInfo");
         modelAndView.setViewName("fileDownloadView");
         modelAndView.addObject("fileInfo", innodaleService.getInfo(fileInfo));
 

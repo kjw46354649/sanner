@@ -612,7 +612,7 @@
         downloadActionForm.name='downloadActionForm';
         downloadActionForm.method='POST';
         downloadActionForm.target='_self';
-        downloadActionForm.action= '/fileDownload/' + GfileSeq;
+        downloadActionForm.action= '/downloadGfile/' + GfileSeq;
 
         document.body.appendChild(downloadActionForm);
         downloadActionForm.submit();

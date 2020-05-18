@@ -11,6 +11,7 @@
 <form id="estimate_version_up_sequence_form">
     <input type="hidden" id="hidden_est_seq" id="hidden_est_seq">
 </form>
+<!-- CAD 도면 업로드 공통 Start -->
 <div class="modal" id="common_cad_file_attach_pop" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg cadDrawing">
         <div class="modal-content">
@@ -24,7 +25,7 @@
                     <input type="hidden" id="actionType" name="actionType" value="">
                     <input type="hidden" id="fileGrid" name="fileGrid" value="">
                     <div class="buttonWrap">
-                            <button type="button" class="defaultBtn radius blue right_float" id="cadFileConvertUploadCompletedBtn">Save</button>
+                        <button type="button" class="defaultBtn radius blue right_float" id="cadFileConvertUploadCompletedBtn">Save</button>
                     </div>
                     <div id="common_cad_file_attach_grid" style="margin:auto;"></div>
                     <div class="right_sort fileTableInfoWrap">
@@ -34,11 +35,11 @@
                         <table class="colStyle mg-top20" id="attachDragAndDrop" >
                             <caption></caption>
                             <thead>
-                                <tr>
-                                    <th scope="col" class="fileName txt">파일명</th>
-                                    <th scope="col" class="etcInfo">용량</th>
-                                    <th scope="col" class="etcInfo"></th>
-                                </tr>
+                            <tr>
+                                <th scope="col" class="fileName txt">파일명</th>
+                                <th scope="col" class="etcInfo">용량</th>
+                                <th scope="col" class="etcInfo"></th>
+                            </tr>
                             </thead>
                             <tbody class="files"></tbody>
                         </table>
@@ -51,6 +52,29 @@
         </div>
     </div>
 </div>
+<!-- CAD 도면 업로드 공통 End -->
+<!-- 파일 다운로드 공통 Start -->
+<div class="modal" id="common_file_download_pop" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg cadDrawing">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                <h2 class="headerTitle_01">다운로드</h2>
+            </div>
+            <div class="modal-body">
+                <form class="" role="form" id="common_file_download_form" name="common_file_download_form">
+                    <input type="hidden" id="GFILE_SEQ" name="GFILE_SEQ" value="">
+                    <div id="common_file_download_grid" style="margin:auto;"></div>
+                    <div class="right_sort fileTableInfoWrap">
+                        <h4>전체 조회 건수 (Total : <span id="filedownloadTotalCount" style="color: #00b3ee">0</span>)</h4>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 파일 다운로드 공통 End -->
+<!-- 인쇄 도면 div start -->
 <div class="modal" id="common_drawing_print_popup" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog cadDrawing" role="document">
         <div class="modal-content">
@@ -68,67 +92,27 @@
         </div>
     </div>
 </div>
-<div class="cadDrawingPrint" style="display: none; height: 1px;">
-    <div class="print">
-        <table class="drawingArea" style="table-layout: fixed; word-wrap:break-word;">
-            <caption></caption>
-            <tbody>
-                <tr class="controlInfo">
-                    <td scope="col" width="28%" rowspan="2" class="center_sort">
-                        <img src="/barcode/code128/1234567890" class="barcode">
-                    </td>
-                    <td scope="col" width="10%" rowspan="2" class="center_sort">진성정밀</td>
-                    <td scope="col" width="3%" class="center_sort">cseq</td>
-                    <td scope="col" width="10%" rowspan="2" class="center_sort">관리번호</td>
-                    <td scope="col" width="3%" class="center_sort">part</td>
-                    <td scope="col" width="10%" colspan="2" class="center_sort">규격</td>
-                    <td scope="col" width="10%" class="center_sort">형태</td>
-                    <td scope="col" width="10%" class="center_sort">열처리여부</td>
-                    <td scope="col" width="3%" rowspan="2" class="center_sort">발주수량</td>
-                    <td scope="col" width="5%" class="center_sort">원칭</td>
-                    <td scope="col" width="5%" class="center_sort">대칭</td>
-                    <td scope="col" width="5%" class="center_sort">납기</td>
-                </tr>
-                <tr class="controlInfo">
-                    <td scope="col" class="center_sort">dseq</td>
-                    <td scope="col" class="center_sort">part</td>
-                    <td scope="col" class="center_sort">소재종류</td>
-                    <td scope="col" class="center_sort">표면처리</td>
-                    <td scope="col" class="center_sort">긴급여부</td>
-                    <td scope="col" class="center_sort">주요검사</td>
-                    <td scope="col" class="center_sort">원</td>
-                    <td scope="col" class="center_sort">대</td>
-                    <td scope="col" class="center_sort">일자</td>
-                </tr>
-                <tr class="imageInfo">
-                    <td scope="col" colspan="14">
-                        <img src="/image/5296" class="drawingImage">
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+<div class="cadDrawingPrint" style="display: none; height: 1px;"></div>
+<!-- 인쇄 div end -->
 <script type="text/javascript">
 
     let $cadFileConvertUploadCompletedBtn = $("#cadFileConvertUploadCompletedBtn");
     let commonCadFileAttachPopup = $("#common_cad_file_attach_pop");
     let commonDrawingPrintPopup = $("#common_drawing_print_popup");
     let commonCadFileAttachGridId = "common_cad_file_attach_grid";
-    let estimateCadFileColModel;
-    let controlCadFileColModel;
-    let controlCadRevFileColModel;
-    let insideStockCadFileColModel;
     let commonCadFileAttachObj;
     let $commonCadFileAttachGrid;
-    let commonCadFileAttachColModel;
-    let commonCadFileAttachToolbar;
-    var empty_data = [];
+    let empty_data = [];
+
+    let commonFileDownloadPopup = $("#common_file_download_pop");
+    let commonFileDownloadGridId = "common_file_download_grid";
+    let $commonFileDownloadGrid;
 
     $(function() {
         'use strict';
 
-        estimateCadFileColModel =  [
+        /** 캐드 파일 업로드 시작 스크립트 **/
+        let estimateCadFileColModel =  [
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 1, minWidth: 70},
             {title: 'EST_SEQ', dataType: 'string', dataIndx: 'EST_SEQ', hidden: true, width: 1, minWidth: 70},
             {title: 'NEW_DRAWING_NUM', dataType: 'string', dataIndx: 'NEW_DRAWING_NUM', hidden: true, width: 1, minWidth: 70},
@@ -141,7 +125,7 @@
             {title: '도면번호', align: 'center', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 155, minWidth: 100}
         ];
 
-        controlCadFileColModel =  [
+        let controlCadFileColModel =  [
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 70, minWidth: 70},
             {title: 'DXF_GFILE_SEQ', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 70, minWidth: 70},
             {title: 'NEW_DRAWING_NUM', dataType: 'string', dataIndx: 'NEW_DRAWING_NUM', hidden: true, width: 70, minWidth: 70},
@@ -153,7 +137,7 @@
             {title: 'Rev', align: 'center', dataType: 'string', dataIndx: 'DRAWING_VER', width: 50, minWidth: 50}
         ];
 
-        controlCadRevFileColModel =  [
+        let controlCadRevFileColModel =  [
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 70, minWidth: 70},
             {title: 'DXF_GFILE_SEQ', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 70, minWidth: 70},
             {title: 'NEW_DRAWING_NUM', dataType: 'string', dataIndx: 'NEW_DRAWING_NUM', hidden: true, width: 70, minWidth: 70},
@@ -166,7 +150,7 @@
             {title: '변경일자', align: 'center', dataType: 'string', dataIndx: 'DRAWING_UP_DT', width: 100, minWidth: 50}
         ];
 
-        insideStockCadFileColModel =  [
+        let insideStockCadFileColModel =  [
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 70, minWidth: 70},
             {title: 'DXF_GFILE_SEQ', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 70, minWidth: 70},
             {title: 'NEW_DRAWING_NUM', dataType: 'string', dataIndx: 'NEW_DRAWING_NUM', hidden: true, width: 70, minWidth: 70},
@@ -347,6 +331,55 @@
         $('#attachDragAndDrop > tbody').html('');
         $('#attachDragAndDrop > tbody').append(fileHtml).trigger('create');
     }
+    /** 캐드 파일 업로드 종료  스크립트 **/
+
+    /** 파일 다운로드 시작 스크립트 **/
+    let commonFileDownloadModel =  [
+        {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 1, minWidth: 70},
+        {title: 'FILE_SEQ', dataType: 'string', dataIndx: 'FILE_SEQ', hidden: true, width: 1, minWidth: 70},
+        {title: '파일명', dataType: 'string', dataIndx: 'NEW_DRAWING_NUM', hidden: true, width: 1, minWidth: 70},
+        {title: '용량', dataType: 'string', dataIndx: 'SEQ', hidden: true, width: 1, minWidth: 70},
+        {title: '파일 타입', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 1, minWidth: 70},
+        {title: '다운로드', align: 'center', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 155, minWidth: 100}
+    ];
+
+    let commonFileDownloadObj = {
+        height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+        selectionModel : {type: 'row', mode: 'single'}, numberCell: {title: 'No.'}, dragColumns: {enabled: false},
+        editable : false,
+        scrollModel: {autoFit: false}, trackModel: {on: true}, showBottom : true, postRenderInterval: -1, //call postRender synchronously.
+        columnTemplate: { align: 'center', halign: 'center', hvalign: 'center' }, //to vertically center align the header cells.
+        colModel: commonFileDownloadModel,
+        dataModel: {
+            location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+            postData: {queryId: 'common.selectGfileFileListInfo', 'GFILE_SEQ': $("#common_file_download_form").find("#GFILE_SEQ").val()},
+            recIndx: 'ROWNUM',
+            getData: function (dataJSON) {
+                return {data: dataJSON.data || []};
+            }
+        },
+        dataReady: function (event, ui) {
+            let data = $commonFileDownloadGrid.pqGrid('option', 'dataModel.data');
+            let totalRecords = data.length;
+            $('#filedownloadTotalCount').html(totalRecords);
+        },
+    };
+
+    commonFileDownloadPopup.on('show.bs.modal',function(e) {
+        $commonFileDownloadGrid = $('#' + commonFileDownloadGridId).pqGrid(commonFileDownloadObj);
+        $commonFileDownloadGrid.pqGrid('option', 'colModel', commonFileDownloadModel);
+        $commonFileDownloadGrid.pqGrid('refresh');
+    });
+
+    commonFileDownloadPopup.on('hide.bs.modal',function(e) {
+        $commonFileDownloadGrid.pqGrid('destroy');
+    });
+
+    let commonFileDownloadPopupCall = function(GfileKey){
+        $("#common_file_download_form").find("#GFILE_SEQ").val(GfileKey);
+        commonCadFileAttachPopup.modal('show');
+    };
+    /** 파일 다운로드 종료 스크립트 **/
 
     function fn_getFileSize(fileSize){
         var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];

@@ -1,15 +1,16 @@
 package com.framework.innodale.service.impl;
 
+import com.framework.innodale.component.CommonUtility;
 import com.framework.innodale.component.MailSenderAgent;
 import com.framework.innodale.dao.InnodaleDao;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class MailSenderService {
@@ -24,40 +25,46 @@ public class MailSenderService {
 
     //	@Async
 //	@Scheduled(fixedRate=60000)  // 30 secound,	1000 = 1sec
-    public void updateEmailSend(){
+    public void manageMailSenderActionService(){
 
-        log.info("updateEmailSend start");
+        log.info("manageMailSenderActionService start");
 
-        HashMap<String, String> hashMap = new HashMap<String, String>();
+        HashMap<String, Object> hashMap = new HashMap<String, Object>();
 
         try{
 
-//            if(AjaxUtil.isScheduleRunning()) {
-//
-//                // Demon Key 생성, 자동화 발신 이메일 정보만 UPDATE 한다.
-//                hashMap.put("SKEY", VelocityUtil.getUUIDString("mail"));
-//
-//                // 발송일이 현재 시간보다 적은것은 모두 처리 한다.
-//                innodaleDao.sampleMaterialUpdateKey(session, "mail", "setSendEmailSessionKey", hashMap);
-//
-//                ArrayList<HashMap<String, String>> sendMailData = innodaleDao.commonSelectList(session, "mail.selectSendMailList", hashMap);
-//
-//                if(sendMailData.size() > 0){
-//                    log.info("update automaticMessage count=[" + sendMailData.size() + "]");
-//                }
-//
-//                if(sendMailData != null && sendMailData.size() > 0){
-//                    for(HashMap<String, String> mailInfo : sendMailData){
-//                        updateEmailSendConditsion(session, mailInfo, hashMap);
-//                        // 2 second Next Mail Send
-//                        Thread.sleep(2000);
-//                    }
-//                    // 5 second Next Mail Group 조회
-//                    Thread.sleep(5000);
-//                }
-//            }
+            // Demon Key 생성, 자동화 발신 이메일 정보만 UPDATE 한다.
+            hashMap.put("SKEY", CommonUtility.getUUIDString("mail"));
+
+            // 발송일이 현재 시간보다 적은것은 모두 처리 한다.
+            hashMap.put("queryId", "mail.setSendEmailSessionKey");
+            innodaleDao.update(hashMap);
+
+            hashMap.put("queryId", "mail.selectSendMailList");
+            List<Map<String, Object>> sendMailData = innodaleDao.getList(hashMap);
+
+            if(sendMailData.size() > 0){
+                log.info("update automaticMessage count=[" + sendMailData.size() + "]");
+            }
+
+            if(sendMailData != null && sendMailData.size() > 0){
+                for(Map<String, Object> mailInfo : sendMailData){
+
+                    // 첨부 파일이 있을 경우 처리
+                    if(mailInfo.containsValue("GFILE_SEQ") && mailInfo.get("GFILE_SEQ") != null){
+                        mailInfo.put("queryId", "mail.selectGfileFileListInfo");
+                        mailInfo.put("attachFileList", innodaleDao.getList(mailInfo));
+                    }
+
+                    updateEmailSendConditsion(mailInfo, hashMap);
+                    // 2 second Next Mail Send
+                    Thread.sleep(2000);
+                }
+                // 5 second Next Mail Group 조회
+                Thread.sleep(5000);
+            }
         } catch(Exception e) {
-            log.error("Exception in Service: " + e.toString());
+            log.error("Exception in manageMailSenderActionService Service: " + e.toString());
         }
     }
 
@@ -66,24 +73,13 @@ public class MailSenderService {
      * @param mailInfo
      * @param bean
      */
-    private void updateEmailSendConditsion(SqlSession session, HashMap<String, String> mailInfo, HashMap<String, String> bean){
+    private void updateEmailSendConditsion(Map<String, Object> mailInfo, HashMap<String, Object> bean){
 
         try{
 
             // 실시간 발송은 사용자수신 상태와 상관없이 메일을 무조건 발송한다.
             mailInfo.put("STATUS", "EMSTS999");
             mailSenderAgent.sendEmail(mailInfo);
-
-            String mailType = (String)mailInfo.get("MAIL_TYPE");
-            /* 메일 발송 오류로 실제 메일 발송 이후에 메일 발송 일자를 셋팅한다. */
-            /* MAIL TYPE
-             * 01 : 일반메일(NORMAL, EXTRA, ADD)
-             * 02 : 취소메일(CANCEL)
-             */
-            if(mailType != null && ("01".equals(mailType) || "02".equals(mailType)) ){
-                // innodaleDao.sampleMaterialUpdateKey(session, "mail", "updatePOSendemailCondi", mailInfo);
-            }
-
 
         } catch(Exception exception){
             log.error(exception.getMessage(), exception.getCause());
@@ -92,8 +88,9 @@ public class MailSenderService {
         }finally{
             try{
                 // 메일 전송 완료 처리 (성공, 실패, 실패내용, 오류 코드로 처리 한다.)
-                mailInfo.put("SKEY", bean.get("SKEY"));
-                //innodaleDao.sampleMaterialUpdateKey(session, "mail", "updateEmailCondi", mailInfo);
+                mailInfo.put("SKEY",    bean.get("SKEY"));
+                mailInfo.put("queryId", "mail.updateEmailCondi");
+                innodaleDao.update(mailInfo);
 
             }catch(Exception exception){
                 exception.printStackTrace();

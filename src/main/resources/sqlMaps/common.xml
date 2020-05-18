@@ -81,7 +81,7 @@
         SELECT
             A.GFILE_SEQ, B.FILE_SEQ, B.ORGINAL_FILE_NM, B.FILE_PATH, TIME_PATH
         FROM jmes.TBL_FILE_GROUP A
-                 INNER JOIN jmes.TBL_FILE B ON A.GFILE_SEQ = B.GFILE_SEQ
+            INNER JOIN jmes.TBL_FILE B ON A.GFILE_SEQ = B.GFILE_SEQ
         WHERE A.GFILE_SEQ  = #{GFILE_SEQ}
     </select>
 
@@ -97,5 +97,20 @@
             </foreach>
     </select>
 
+    <select id="selectFileSingleInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.GFILE_SEQ, B.FILE_SEQ, B.ORGINAL_FILE_NM, B.FILE_PATH, TIME_PATH
+        FROM jmes.TBL_FILE_GROUP A
+            INNER JOIN jmes.TBL_FILE B ON A.GFILE_SEQ = B.GFILE_SEQ AND B.FILE_SEQ = #{FILE_SEQ}
+        WHERE 1 = 1
+    </select>
+
+    <select id="selectGfileFileListInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.GFILE_SEQ, B.FILE_SEQ, B.ORGINAL_FILE_NM, B.FILE_PATH, TIME_PATH
+        FROM jmes.TBL_FILE_GROUP A
+                 INNER JOIN jmes.TBL_FILE B ON A.GFILE_SEQ = B.GFILE_SEQ
+        WHERE A.GFILE_SEQ  = #{GFILE_SEQ}
+    </select>
 
 </mapper>
