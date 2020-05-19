@@ -498,6 +498,19 @@
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
+        const COMPANY_STAFF = (function () {
+            let list = [];
+            let parameters = {'url': '/json-list', 'data': {'queryId': 'dataSource.getCompanyStaffList'}};
+
+            fnPostAjax(function (data, callFunctionParam) {
+                for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
+                    let obj = data.list[i];
+
+                    list.push({value: obj.CODE_CD, text: obj.CODE_NM, compCd: obj.COMP_CD});
+                }
+            }, parameters, '');
+            return list;
+        })();
         let selectedRowIndex = [];
         let $orderManagementGrid;
         const gridId = 'CONTROL_MANAGE_GRID';
@@ -520,17 +533,86 @@
                     {title: '변경일시', width: 95, datatype: 'date', dataIndx: 'CONTROL_STATUS_DT'}
                 ]
             },
-            {title: '사업자<br>구분', clsHead: 'display_none', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자<br>구분', width: 70, dataType: 'string', dataIndx: 'COMP_NM'},
-            {title: '발주업체', clsHead: 'display_none', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '구매담당', clsHead: 'display_none', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', hidden: true},
-            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM'},
+            {title: '사업자<br>구분', clsHead: 'display_none', width: 70, dataType: 'string', dataIndx: 'COMP_CD', editable: true,
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: BUSINESS_COMPANY},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let index = BUSINESS_COMPANY.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = BUSINESS_COMPANY.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : BUSINESS_COMPANY[index].text;
+                    }
+                }
+            },
+            {title: '발주업체', clsHead: 'display_none', dataType: 'string', dataIndx: 'ORDER_COMP_CD', editable: true,
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: ORDER_COMPANY},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let index = ORDER_COMPANY.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = ORDER_COMPANY.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : ORDER_COMPANY[index].text;
+                    }
+                }
+            },
+            {title: '구매담당', clsHead: 'display_none', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', editable: true,
+                editor: {
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: function (ui) {
+                        let companyStaffList = COMPANY_STAFF.filter(function (value, index, array) {
+                            return value.compCd == ui.rowData.ORDER_COMP_CD;
+                        });
+
+                        return companyStaffList;
+                    }
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let index = COMPANY_STAFF.findIndex(function (element) {
+                            return element.text == cellData;
+                        });
+
+                        if (index < 0) {
+                            index = COMPANY_STAFF.findIndex(function (element) {
+                                return element.value == cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : COMPANY_STAFF[index].text;
+                    }
+                }
+            },
             {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', editable: true, styleHead: {'font-weight': 'bold'}},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true},
             {title: 'INV No.<br>(거래명세No.)', width: 100, dataType: 'string', dataIndx: 'CHARGE_USER_ID'},
-            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', editable: true},
-            {title: '모듈', dataType: 'string', dataIndx: 'MODULE_NM', editable: true},
+            {title: '프로젝트', width: 200, dataType: 'string', dataIndx: 'PROJECT_NM', editable: true},
+            {title: '모듈', width: 70, dataType: 'string', dataIndx: 'MODULE_NM', editable: true},
             {title: '납품처', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM', editable: true},
             {title: '비고(라벨)', dataType: 'string', dataIndx: 'LABEL_NOTE', editable: true},
             {title: '주요<br>검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
@@ -712,7 +794,7 @@
             },
             editModel: {clicksToEdit: 1},
             complete: function (event, ui) {
-                this.flex();
+                // this.flex();
                 let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
 
                 $('#CONTROL_MANAGE_RECORDS').html(data.length);
@@ -721,7 +803,9 @@
                 console.group('cellClick');
                 console.log(ui.rowData);
                 console.groupEnd();
-                if(ui.rowData.IMG_GFILE_SEQ) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);    // 셀 선택시 도면 View 실행 중인경우 이미지 표시 하기
+                if(ui.rowData.IMG_GFILE_SEQ) {
+                    callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ)  // 셀 선택시 도면 View 실행 중인경우 이미지 표시 하기
+                };
                 if (ui.dataIndx === 'PART_NUM' && ui.rowData.WORK_TYPE === 'WTP020') {
                     let newRowData = fnCloneObj(ui.rowData);
                     let data = $orderManagementGrid.pqGrid('option', 'dataModel.data'), totalRecords = data.length;
@@ -766,6 +850,7 @@
 
                     if (firstRow === lastRow) selectedRowIndex[0] = firstRow;
                     else for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
+                    console.log(selectedRowIndex);
                 }
             },
             change: function (evt, ui) {
@@ -860,10 +945,44 @@
                     }
                 }
             },
-            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM'},
+            {
+                title: '구매<br>담당자', dataType: 'string', dataIndx: 'ORDER_STAFF_NM',
+                editor: {
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: function (ui) {
+                        let companyStaffList = COMPANY_STAFF.filter(function (value, index, array) {
+                            return value.compCd == ui.rowData.ORDER_COMP_CD;
+                        });
+
+                        return companyStaffList;
+                    }
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let index = COMPANY_STAFF.findIndex(function (element) {
+                            return element.text == cellData;
+                        });
+
+                        if (index < 0) {
+                            index = COMPANY_STAFF.findIndex(function (element) {
+                                return element.value == cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : COMPANY_STAFF[index].text;
+                    }
+                }
+            },
             {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM'},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
-            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM'},
+            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM'},
+            {title: '모듈', dataType: 'string', dataIndx: 'MODULE_NM'},
+            {title: '납품처', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM'},
+            {title: '비고(라벨)', dataType: 'string', dataIndx: 'LABEL_NOTE'},
             {
                 title: '주요 검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION',
                 editor: {
@@ -1047,7 +1166,7 @@
             {title: '가공납기', dataType: 'string', dataIndx: 'INNER_DUE_DT'},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT'},
             {
-                title: '소재상세종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
+                title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -1207,7 +1326,7 @@
             ]
         };
         const popupObj = {
-            // height: 600,
+            height: 700,
             collapsible: false,
             resizable: true,
             showTitle: false,
