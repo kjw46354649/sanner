@@ -2,6 +2,7 @@ package com.jmes.controller;
 
 import com.framework.innodale.component.CommonUtility;
 import com.framework.innodale.service.InnodaleService;
+import com.jmes.service.DrawingBoardService;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,9 @@ public class DrawingBoardController {
 
     @Autowired
     private MessageSource messageSource;
+
+    @Autowired
+    public DrawingBoardService drawingBoardService;
 
     @RequestMapping(value="/drawing")
     public String drawingLogin(Model model, HttpServletRequest request, Locale locale) throws Exception {
@@ -58,5 +62,15 @@ public class DrawingBoardController {
         model.addAttribute("list",innodaleService.getList(hashMap));
 
         return "board/drawing-board";
+    }
+
+    @RequestMapping(value="/drawing-board-save")
+    public String drawingBoardSave(Model model, HttpServletRequest request, Locale locale) throws Exception {
+        logger.info("pop page submit");
+
+        HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
+        drawingBoardService.drawingBoardSave(hashMap);
+
+        return "jsonView";
     }
 }

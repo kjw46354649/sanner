@@ -4,7 +4,7 @@
 <mapper namespace="inspection">
 
     <select id="selectInspectionList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
+        SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, Z.INSPECT_SEQ
         , X.INNER_DUE_DT
         , X.POP_SEQ, jmes.SF_GET_CODE_NM('1009', X.POP_SEQ, 'KR') AS POP_NM
         , X.OUTSIDE_COMP_CD
@@ -107,7 +107,7 @@
                                       , ERROR_QTY, ERROR_PROCESS, ERROR_REASON, ERROR_ACTION, ERROR_NOTE
                                       , INSERT_ID )
         VALUES (    #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}
-                  , (SELECT IFNULL(MAX(INSPECT_SEQ),0) + 1 FROM jmes.TBL_INSPECT WHERE CONTROL_SEQ = #{CONTROL_SEQ} AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ})
+                  , (SELECT IFNULL(MAX(A.INSPECT_SEQ),0) + 1 FROM jmes.TBL_INSPECT A WHERE A.CONTROL_SEQ = #{CONTROL_SEQ} AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ})
                   , #{INSPECT_METHOD}, #{INSPECT_USER_ID}, #{INSPECT_GRADE}, #{INSPECT_RESULT}, #{INSPECT_DESC}
                   , #{ERROR_QTY}, #{ERROR_PROCESS}, #{ERROR_REASON}, #{ERROR_ACTION}, #{ERROR_NOTE}
                   , #{LOGIN_USER_ID}
@@ -117,7 +117,7 @@
         DELETE FROM jmes.TBL_INSPECT
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
           AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-          AND INSPECT_SEQ = (SELECT MAX(INSPECT_SEQ) FROM jmes.TBL_INSPECT WHERE CONTROL_SEQ = #{CONTROL_SEQ} AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ})
+          AND INSPECT_SEQ = (SELECT MAX(A.INSPECT_SEQ) FROM jmes.TBL_INSPECT A WHERE A.CONTROL_SEQ = #{CONTROL_SEQ} AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ})
     </delete>
     <select id="selectInspectionPopInfoGrid01" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         select 1 from dual
