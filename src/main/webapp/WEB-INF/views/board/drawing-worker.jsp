@@ -18,7 +18,15 @@
     <div class="bodyWrap user" id="bodyWrap">
         <!-- contents 영역에 각페이지 명에 맞는 class 추가 !! -->
         <header>
-            <div class="head">사용자 선택하기 <span>NC</span></div>
+            <div class="head">사용자 선택하기
+                <span>
+                    <select id="DEPT" name="DEPT" title="부서">
+                        <c:forEach var="code" items="${HighCode.H_1061}">
+                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                        </c:forEach>
+                    </select>
+                </span>
+            </div>
             <div class="langBtn">
                 <button type="button" class="on">Korean</button>
                 <button type="button">English</button>
@@ -31,7 +39,7 @@
             <section class="contents">
                 <ul class="userWrap">
                     <c:forEach var="user" items="#{user}">
-                    <li class="userBox">
+                    <li class="userBox" attr="${user.DEPT}">
                         <a href="#" class="userTag" attr="${user.USER_ID}">
                             <div class="userImg"><img src="${user.FILE_PATH}" alt=""></div>
                             <div class="userName">
@@ -47,6 +55,19 @@
 <script type='text/javascript'>
 
     $(function () {
+        $("#DEPT").on('change', function(){
+            let selDept = $(this).val();
+
+            $(".userWrap").find("li").each(function() {
+                let dept = $(this).attr("attr");
+                if(selDept == dept) {
+                    $(this).css("display", 'block');
+                }else{
+                    $(this).css("display", 'none');
+                }
+            });
+        });
+
         $(".userTag").on('click', function(){
            $("#USER_ID").val($(this).attr("attr"));
 

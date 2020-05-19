@@ -130,7 +130,7 @@
         const TWENTY_SECONDS = 20000;
         const insertQueryList = ['machine.insertMctPlan'];
         const updateQueryList = ['machine.updateMctPlan'];
-        const deleteQueryList = ['machine.deleteMctPlan'];
+        const deleteQueryList = ['machine.deleteMctPlan', 'machine.deleteMctWork'];
         let $processPlanGrid1, $processPlanGrid2, $processPlanGrid3, $processPlanGrid4;
         const processPlanGrid1Id = 'PROCESS_PLAN_GRID1';
         const processPlanGrid2Id = 'PROCESS_PLAN_GRID2';
@@ -212,9 +212,10 @@
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'MCT_PLAN_SEQ', dataType: 'integer', dataIndx: 'MCT_PLAN_SEQ', hidden: true},
             {title: 'WORK_USER_ID', dataType: 'string', dataIndx: 'WORK_USER_ID', hidden: true},
+            {title: 'WORK_STATUS', dataType: 'string', dataIndx: 'WORK_STATUS', hidden: true},
             {title: 'SORT_NUM', dataType: 'integer', dataIndx: 'SORT_NUM', hidden: true},
-            {title: '납기', dataType: 'string', dataIndx: 'INNER_DUE_DT'},
-            {title: '관리번호', width: 70, dataType: 'string', dataIndx: 'CONTROL_NUM'},
+            {title: '납기', width: 110, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
+            {title: '관리번호', width: 120, dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {title: 'Part 수량', dataType: 'string', dataIndx: 'PART_UNIT_QTY'},
             {title: '소재', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
                 editor: {
@@ -246,7 +247,7 @@
                 }
             },
             {title: '규격', dataType: 'string', dataIndx: 'STANDARD_SIZE'},
-            {title: '현재위치', dataType: 'string', dataIndx: 'POP_POSITION',
+            {title: '현재위치', width: 80, dataType: 'string', dataIndx: 'POP_POSITION',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -309,17 +310,31 @@
             dragModel: {
                 on: true,
                 clsDnD: 'dnd1',
-                diHelper: ['CONTROL_NUM']
+                diHelper: ['CONTROL_NUM'],
             },
             dropModel: {
                 on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .master'
+                accept: '.dnd2, .dnd3, .dnd4, .master',
+                drop: function (evt, ui) {
+                    let Drag = ui.helper.data('Drag');
+                    let uiDrag = Drag.getUI();
+                    let equipId = $('#MCT_NC1_PLAN_FORM > #EQUIP_ID').val();
+                    uiDrag.rowData.EQUIP_ID = equipId;
+                    console.log(uiDrag);
+
+                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $processPlanGrid1.pqGrid('option', 'dataModel.data').length;
+                    $processPlanGrid1.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
+
+                    changeSortNum(this, $processPlanGrid1);
+                }
             },
             complete: function () {
                 // this.flex();
-                let data = this.options.dataModel.data
+                let data = this.options.dataModel.data;
                 let totalRecords = data.length;
                 let tableElement = this.element.closest('.table');
+
+                changeTitleColor(data, tableElement);
 
                 if (totalRecords) {
                     showTitle(data, tableElement);
@@ -327,6 +342,7 @@
                 }
             },
             moveNode: function (event, ui) {
+                console.count('moveNode');
                 changeSortNum(this, $processPlanGrid1);
             },
             cellSave: function (evt, ui) {
@@ -335,14 +351,8 @@
                 }
             },
             change: function (event, ui) {
-                if (ui.source === 'addNodes' && ui.addList.length > 0) {
-                    let equipId = $('#MCT_NC1_PLAN_FORM > #EQUIP_ID').val();
-
-                    changeSortNum(this, $processPlanGrid1);
-
-                    //TODO: rowIndx 0
-                    $processPlanGrid1.pqGrid('updateRow', {rowIndx: 0, row: {EQUIP_ID: equipId}});
-                }
+                console.count('change');
+                console.log(ui);
 
                 if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
                     modifyPQGrid($processPlanGrid1, insertQueryList, updateQueryList, deleteQueryList);
@@ -384,9 +394,11 @@
             },
             complete: function () {
                 // this.flex();
-                let data = this.options.dataModel.data
+                let data = this.options.dataModel.data;
                 let totalRecords = data.length;
                 let tableElement = this.element.closest('.table');
+
+                changeTitleColor(data, tableElement);
 
                 if (totalRecords) {
                     showTitle(data, tableElement);
@@ -394,18 +406,22 @@
                 }
             },
             moveNode: function (event, ui) {
+                console.count('moveNode');
                 changeSortNum(this, $processPlanGrid2);
             },
             cellSave: function (evt, ui) {
+                console.count('cellSave');
                 if (ui.oldVal === undefined && ui.newVal === null) {
                     $processPlanGrid2.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                 }
             },
             change: function (event, ui) {
+                console.count('change');
+                console.log(ui);
                 if (ui.source === 'addNodes' && ui.addList.length > 0) {
                     let equipId = $('#MCT_NC2_PLAN_FORM > #EQUIP_ID').val();
 
-                    changeSortNum(this, $processPlanGrid1);
+                    changeSortNum(this, $processPlanGrid2);
 
                     //TODO: rowIndx 0
                     $processPlanGrid2.pqGrid('updateRow', {rowIndx: 0, row: {EQUIP_ID: equipId}});
@@ -417,7 +433,7 @@
                 }
 
                 if (ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    changeSortNum(this, $processPlanGrid1);
+                    changeSortNum(this, $processPlanGrid2);
                 }
             }
         };
@@ -452,9 +468,11 @@
             },
             complete: function () {
                 // this.flex();
-                let data = this.options.dataModel.data
+                let data = this.options.dataModel.data;
                 let totalRecords = data.length;
                 let tableElement = this.element.closest('.table');
+
+                changeTitleColor(data, tableElement);
 
                 if (totalRecords) {
                     showTitle(data, tableElement);
@@ -473,7 +491,7 @@
                 if (ui.source === 'addNodes' && ui.addList.length > 0) {
                     let equipId = $('#MCT_NC3_PLAN_FORM > #EQUIP_ID').val();
 
-                    changeSortNum(this, $processPlanGrid1);
+                    changeSortNum(this, $processPlanGrid3);
 
                     //TODO: rowIndx 0
                     $processPlanGrid3.pqGrid('updateRow', {rowIndx: 0, row: {EQUIP_ID: equipId}});
@@ -485,7 +503,7 @@
                 }
 
                 if (ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    changeSortNum(this, $processPlanGrid1);
+                    changeSortNum(this, $processPlanGrid3);
                 }
             }
         };
@@ -520,9 +538,11 @@
             },
             complete: function () {
                 // this.flex();
-                let data = this.options.dataModel.data
+                let data = this.options.dataModel.data;
                 let totalRecords = data.length;
                 let tableElement = this.element.closest('.table');
+
+                changeTitleColor(data, tableElement);
 
                 if (totalRecords) {
                     showTitle(data, tableElement);
@@ -541,7 +561,7 @@
                 if (ui.source === 'addNodes' && ui.addList.length > 0) {
                     let equipId = $('#MCT_NC4_PLAN_FORM > #EQUIP_ID').val();
 
-                    changeSortNum(this, $processPlanGrid1);
+                    changeSortNum(this, $processPlanGrid4);
 
                     //TODO: rowIndx 0
                     $processPlanGrid4.pqGrid('updateRow', {rowIndx: 0, row: {EQUIP_ID: equipId}});
@@ -553,7 +573,7 @@
                 }
 
                 if (ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    changeSortNum(this, $processPlanGrid1);
+                    changeSortNum(this, $processPlanGrid4);
                 }
             }
         };
@@ -563,9 +583,9 @@
         let processTargetGridPostData = fnFormToJsonArrayData('#MCT_PROCESS_TARGET_FORM');
         const processTargetGridColModel = [
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
-            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-            {title: '납기', dataType: 'string', dataIndx: 'INNER_DUE_DT'},
+            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: false},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: false},
+            {title: '납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
             {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN'},
             {title: '주요', dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
             {title: '형태', dataType: 'string', dataIndx: 'WORK_NM'},
@@ -759,7 +779,29 @@
             },
             {title: '관리번호', width: 120, dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM'},
-            {title: '소재종류<br>상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
+            {title: '소재종류<br>상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let materialDetail = fnGetCommCodeGridSelectBox('1027');
+                        let index = materialDetail.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = materialDetail.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+
+                        }
+
+                        return (index < 0) ? cellData : materialDetail[index].text;
+                    }
+                }
+            },
             {title: '수량', dataType: 'integer', dataIndx: 'ORDER_QTY'},
             {title: '규격', width: 120, dataType: 'string', dataIndx: 'STANDARD_SIZE'},
             {title: '소재 Size', width: 120, dataType: 'string', dataIndx: 'MATERIAL_SIZE'},
@@ -856,10 +898,8 @@
                 on: true,
                 clsDnD: 'master',
                 diHelper: ['CONTROL_NUM'],
-                // FIXME:
-                beforeDrop: function (evt, uiDrop) {
-                    console.log(evt);
-                    console.log(uiDrop);
+                beforeDrop: function () {
+
                 }
             },
             complete: function () {
@@ -922,6 +962,7 @@
                 for (let i = 0, listLength = data.list.length; i < listLength; i++) {
                     $('#MCT_NC' + (i + 1) + '_PLAN_FORM').show();
                     $('#MCT_NC' + (i + 1) + '_PLAN_FORM > #EQUIP_ID').val(data.list[i].EQUIP_ID);
+                    $('#MCT_NC' + (i + 1) + '_PLAN_FORM > #EQUIP_ID').val(data.list[i].EQUIP_ID);
                 }
             }, parameters, '');
         };
@@ -976,6 +1017,7 @@
             let ids = kk.pageData().map(function (rd) {
                 return rd.MCT_PLAN_SEQ;
             });
+            debugger;
 
             for (let i = 0, length = ids.length; i < length; i++) {
                 let tempObject = {rowIndx: i, newRow: {'SORT_NUM': (i + 1)}};
@@ -1006,7 +1048,6 @@
         };
 
         const showTitle = function (data, tableElement) {
-            debugger;
             let firstData = data[0];
             let controlNumElement = $(tableElement).find('.data_ipt');
             let listTxtElement = $(tableElement).find('.listTxt');
@@ -1021,6 +1062,33 @@
             materialDetailElement.html(firstData.MATERIAL_DETAIL);
             partUnitQtyElement.html(firstData.PART_UNIT_QTY);
             workUserIdElement.html(firstData.WORK_USER_ID);
+        };
+
+        const changeTitleColor = function (data, tableElement) {
+            let firstData = data[0];
+            let tableLabelElement = $(tableElement).find('.tableLabel');
+            let labelColorId = 'bg-yellow';
+
+            if (firstData !== undefined && firstData.hasOwnProperty('WORK_STATUS')) {
+                switch (firstData.WORK_STATUS) {
+                    case '가동중':
+                        labelColorId = 'bg-green';
+                        break;
+                    case '완료':
+                        labelColorId = 'bg-light_blue';
+                        break;
+                    case '비가동상태':
+                        labelColorId = 'bg-yellow';
+                        break;
+                    case '일시정지상태':
+                        labelColorId = 'bg-orange';
+                        break;
+                }
+            }
+
+            tableLabelElement.removeClass();
+            tableLabelElement.addClass('tableLabel');
+            tableLabelElement.addClass(labelColorId);
         };
 
         const changeFooter = function (data, tableElement) {
