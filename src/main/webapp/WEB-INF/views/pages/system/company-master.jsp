@@ -569,7 +569,7 @@
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect', recIndx: 'STAFF_SEQ',
                 postData: systemCompanyRegisterPostData,
                 getData: function (dataJSON) {
-                    console.log();
+                    // console.log();
                     return {data: dataJSON.data};
                 }
             },
@@ -664,12 +664,12 @@
                     for(let tempI=0; tempI<totalRecords; tempI++){
                         $type1Grid.pqGrid("updateRow", { 'rowIndx': tempI , row: { 'APPLY_YN': 'N' } });
                     }
-                    console.log("beforeCheck");
+                    /// console.log("beforeCheck");
                 }
 
             },
             check: function (evt, ui) {
-                console.log("check");
+                // console.log("check");
             }
 
         };
@@ -880,7 +880,6 @@
                 //if(dataInfo == null || "" == dataInfo.COMP_CD) {
                 if(false) {
                 }else{
-                    console.log("fnJsonDataToForm 1");
                     if(dataInfo == null || "" == dataInfo.COMP_CD) {
                         fnResetFrom("company_master_register_form");
                     }else{
@@ -1163,7 +1162,7 @@
                 result = result.substring(0, result.length-1);
 
                 $("#company_master_register_form").find("#compType").val(result);
-                console.log($("#company_master_register_form").find("#compType").val());
+                // console.log($("#company_master_register_form").find("#compType").val());
 
 
                 let parameters = {
