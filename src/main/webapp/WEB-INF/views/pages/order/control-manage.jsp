@@ -712,7 +712,7 @@
             },
             editModel: {clicksToEdit: 1},
             complete: function (event, ui) {
-                this.flex();
+                // this.flex();
                 let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
 
                 $('#CONTROL_MANAGE_RECORDS').html(data.length);
@@ -806,9 +806,9 @@
                 console.groupEnd();
             },
             columnResize: function (event, ui) {
-                cosole.count();
-                console.log(event);
-                console.log(ui);
+                // cosole.count();
+                // console.log(event);
+                // console.log(ui);
             }
         };
         let $orderRegisterGrid;

@@ -16,7 +16,7 @@
     <div class="topWrap">
         <form class="form-inline" id="SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectSalesClosingHistoryList">
-            <div class="gubunWrap row_two">
+            <div class="none_gubunWrap row2_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -45,19 +45,19 @@
                             <input type="text" class="wd_200" name="NOTE" id="NOTE">
                         </span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap right_float">
-                            <button type="button" class="defaultBtn radius blue" id="CONTROL_SALES_CLOSING_HISTORY_SEARCH">검색</button>
-                        </span>
+                        <span class="ipu_wrap"></span>
                     </li>
                     <li>
                         <span class="ipu_wrap">
                             <label class="label_100">마감년월</label>
                         </span>
-                        <select name="CLOSE_YEAR_LEFT" id="CLOSE_YEAR_LEFT"></select>
-                        <select name="CLOSE_MONTH_LEFT" id="CLOSE_MONTH_LEFT"></select><span style="margin: 10px 0; vertical-align: middle; font-size: 1.4rem;">~</span>
-                        <select name="CLOSE_YEAR_RIGHT" id="CLOSE_YEAR_RIGHT" disabled></select>
-                        <select name="CLOSE_MONTH_RIGHT" id="CLOSE_MONTH_RIGHT" disabled></select>
-                        <span class="chk_box" style="margin-left: 10px;"><input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH"><label for="RANGE_SEARCH"> Range 검색</label></span>
+                        <span class="chk_box"><select name="CLOSE_YEAR_LEFT" id="CLOSE_YEAR_LEFT"></select></span>
+                        <span class="chk_box"><select name="CLOSE_MONTH_LEFT" id="CLOSE_MONTH_LEFT"></select><span style="margin: 10px 0; vertical-align: middle; font-size: 1.4rem;"> &nbsp;&nbsp;~</span></span>
+                        <span class="chk_box"><select name="CLOSE_YEAR_RIGHT" id="CLOSE_YEAR_RIGHT" disabled></select></span>
+                        <span class="chk_box"><select name="CLOSE_MONTH_RIGHT" id="CLOSE_MONTH_RIGHT" disabled></select></span>
+                        <%--<span class="chk_box" style="margin-left: 10px;"><input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH">
+                        <label for="RANGE_SEARCH"> Range 검색</label></span>--%>
+                        <button type="button" class="right_float defaultBtn radius blue" id="CONTROL_SALES_CLOSING_HISTORY_SEARCH">검색</button>
                     </li>
                 </ul>
             </div>
@@ -66,7 +66,7 @@
     <div class="topWrap" style="display: none">
         <form class="form-inline" id="MONTH_SALE_STATUS_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectMonthSaleStatusList">
-            <div class="gubunWrap row_two">
+            <div class="none_gubunWrap row2_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -113,14 +113,14 @@
             </div>
         </form>
     </div>
-    <div class="bottomWrap">
-        <div class="hWrap">
-            <div>
-                <div class="rightSpan">
-                    <button type="button" class="defaultBtn btn-120w green" id="CLOSING_HISTORY_SAVE">저장</button>
-                </div>
-            </div>
-        </div>
+    <div class="bottomWrap" style="height: 810px;">
+<%--        <div class="hWrap">--%>
+<%--            <div>--%>
+<%--                <div class="rightSpan">--%>
+<%--                    <button type="button" class="defaultBtn btn-120w green" id="CLOSING_HISTORY_SAVE">저장</button>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--        </div>--%>
         <div class="tableWrap jmestabs" id="CONTROL_SALES_STATUS_TABS" style="padding: 10px 0;">
             <ul class="smallTabMenuTabs">
                 <li class="active">
@@ -129,6 +129,9 @@
                 <li>
                     <a href="#MONTHLY_SALES_STATUS" data-toggle="tab" aria-expanded="false">월별 매출현황</a>
                 </li>
+                <div class="right_float" >
+                    <button type="button" class="defaultBtn btn-120w green" style="font-weight:normal;" id="CLOSING_HISTORY_SAVE">저장</button>
+                </div>
             </ul>
             <div class="tab-content">
                 <ul class="active conWrap" id="CLOSING_HISTORY">
@@ -193,7 +196,7 @@
             {title: '비고', dataType: 'string', dataIndx: 'CLOSE_NOTE', editable: true}
         ];
         let tab1Obj = {
-            height: 700,
+            height: 750,
             collapsible: false,
             resizable: true,
             showTitle: false,
@@ -395,7 +398,6 @@
 
         $('#CLOSING_HISTORY_SAVE').on('click', function (event) {
             const updateQueryList = ['orderMapper.updateControlMaster', 'orderMapper.updateControlPart'];
-
             fnModifyPQGrid($closingHistoryGrid, [], updateQueryList);
         });
 

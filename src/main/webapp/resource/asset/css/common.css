@@ -393,3 +393,9 @@ table.boardList .txtP{color: #7030a0;}
 .bg-green {  background-color: #ffd966; }
 .bg-yellow { background-color: #ffff00; }
 .bg-orange { background-color: #ffc000; }
+
+.pq-grid-col, .pq-grid-row>.pq-grid-cell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
