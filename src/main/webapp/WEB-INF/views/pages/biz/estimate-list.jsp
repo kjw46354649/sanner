@@ -590,13 +590,24 @@
                     parameter = {
                         'queryId': 'insertEstimateDetailVersion',
                         'EST_SEQ': $("#estimate_master_hidden_form #EST_SEQ").val(),
-                        'N_EST_SEQ' : $("#estimate_master_hidden_form #N_EST_SEQ").val()
+                        'N_EST_SEQ': $("#estimate_master_hidden_form #N_EST_SEQ").val()
                     };
                     parameters = {'url': '/json-create', 'data': parameter};
-                    fnPostAjax('', parameters, '');
+                    fnPostAjax(function(data, callFunctionParam){
+                        parameter = {
+                            'queryId': 'insertEstimateReceiverVersion',
+                            'EST_SEQ': $("#estimate_master_hidden_form #EST_SEQ").val(),
+                            'N_EST_SEQ': $("#estimate_master_hidden_form #N_EST_SEQ").val()
+                        };
+                        parameters = {'url': '/json-create', 'data': parameter};
+                        fnPostAjax('',parameters, '');
 
-                    $("a[pid='100012']").trigger("click");
-                    $("#test").trigger('click');
+                        $("a[pid='100012']").trigger("click");
+                        setTimeout(function(){
+                            $("#test").trigger('click');
+                        }, 500)
+
+                    }, parameters, '');
                 }, parameters, '');
             }, parameters, '');
         });
@@ -683,7 +694,10 @@
             $("#estimate_version_up_sequence_form #hidden_est_seq").val(seq);
 
             $("a[pid='100012']").trigger("click");
-            $("#test").trigger('click');
+            setTimeout(function(){
+                $("#test").trigger('click');
+            }, 500)
+
         }
     });
 

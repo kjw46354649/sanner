@@ -47,7 +47,7 @@ public class DrawingBoardController {
         model.addAttribute("user",innodaleService.getList(hashMap));
 
         model.addAttribute("FACTORY_AREA",  hashMap.get("FACTORY_AREA"));
-        model.addAttribute("EQUIP_ID" ,  hashMap.get("EQUIP_ID"));
+        model.addAttribute("EQUIP_SEQ" ,  hashMap.get("EQUIP_SEQ"));
 
         return "board/drawing-worker";
     }

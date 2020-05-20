@@ -21,15 +21,13 @@
 <div class="modal" id="drawing_worker_target_list_popup" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-body">
+                <div class="slecBox" id="equip_tab"><a href="#">${list.EQUIP_NM} 스케줄</a></div>
+                <div class="slecBox" id="area_tab"><a href="#">${list.FACTORY_NM}</a></div>
                 <button type="button" class="close" data-dismiss="modal">
                     <span>×</span>
                 </button>
-                <div class="slecBox" id="equip_tab"><a href="#">${list.EQUIP_NM} 스케줄</a></div>
-                <div class="slecBox" id="area_tab"><a href="#">${list.FACTORY_NM}</a></div>
-            </div>
-            <div class="modal-body">
-                <div class="tableWrap jmestabs" id="drawing_board_target_tabs">
+                <div class="tableWrap">
                     <div class="tab-content">
                         <div class="equipWrap">
                             <table class="modal-table">
@@ -269,7 +267,7 @@
         <div class="leftLogWrap">
             <form id="drawing_log_out_form" method="POST" action="/drawing-worker">
                 <input id="FACTORY_AREA" name="FACTORY_AREA" type="hidden" value="${list.FACTORY_AREA}">
-                <input id="EQUIP_ID" name="EQUIP_ID" type="hidden" value="${list.EQUIP_ID}">
+                <input id="EQUIP_SEQ" name="EQUIP_SEQ" type="hidden" value="${list.EQUIP_SEQ}">
                 <div class="logInWrap">
                     <div class="mainTit">${list.EQUIP_NM} </div>
                     <div class="userWrap">
@@ -289,11 +287,11 @@
         </div>
         <div class="rightWorkWrap">
             <div class="workInWrap">
-                <div class="contsTitWrap">
+                <div class="contsTitWrap" id="workMainLastConts">
                     <div class="contsTit">최근 작업내용</div>
                     <div class="slecBox"><a href="#">작업대상 선택</a></div>
                 </div>
-                <div class="contsTitWrap">
+                <div class="contsTitWrap" id="workMainProgressConts" style="">
                     <div class="contsTit">진행중인 작업</div>
                     <div class="endBox"><a href="#">종료하기</a></div>
                     <div class="stopBox"><a href="#">일시</br>정지</a></div>

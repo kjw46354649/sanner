@@ -18,6 +18,44 @@ public class EstimateServiceImpl implements EstimateService {
     public EstimateDao estimateDao;
 
     @Override
+    public void registerEstimateSave(HashMap<String, Object> hashMap) throws Exception {
+        String jsonDetail = (String) hashMap.get("ESTIMATE_DETAIL_DATA");
+        String jsonReceive = (String) hashMap.get("ESTIMATE_RECEIVER_DATA");
+        String EST_SEQ = (String) hashMap.get("EST_SEQ");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayList<Map<String, Object>> jsonMap = null;
+        Map<String, Object> data = new HashMap<String, Object>();
+
+        // Estimate Master Insert
+        estimateDao.insertEstimateMaster(hashMap);
+
+        if (jsonDetail != null) {
+            jsonMap = objectMapper.readValue(jsonDetail, new TypeReference<ArrayList<Map<String, Object>>>() {
+            });
+        }
+
+        for(int i=0; i<jsonMap.size(); i++) {
+            data = jsonMap.get(i);
+            data.put("EST_SEQ",EST_SEQ);
+
+            estimateDao.insertEstimateDetail(data);
+        }
+
+        if (jsonReceive != null) {
+            jsonMap = objectMapper.readValue(jsonReceive, new TypeReference<ArrayList<Map<String, Object>>>() {
+            });
+        }
+
+        for(int i=0; i<jsonMap.size(); i++) {
+            data = jsonMap.get(i);
+            data.put("EST_SEQ",EST_SEQ);
+
+            estimateDao.insertEstimateReceiver(data);
+        }
+    }
+
+    @Override
     public void registerEstimateOrder(HashMap<String, Object> hashMap) throws Exception {
         String jsonObject = (String) hashMap.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
