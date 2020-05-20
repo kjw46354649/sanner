@@ -16,7 +16,7 @@
     <div class="topWrap">
         <form class="form-inline" id="OUTSIDE_CLOSE_HISTORY_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="outMapper.selectOutsideCloseHistoryList">
-            <div class="gubunWrap row_three">
+            <div class="gubunWrap row3_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -25,16 +25,19 @@
                                 <option value="">All</option>
                             </select>
                         </span>
+                        <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="ORDER_COMP_CD">발주사</label>
                             <select class="wd_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
                                 <option value="">All</option>
                             </select>
                         </span>
+                        <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="DRAWING_NUM">도면번호</label>
                             <input type="text" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM">
                         </span>
+                        <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="ITEM_NM">품명</label>
                             <input type="text" class="wd_200" name="ITEM_NM" id="ITEM_NM">
@@ -49,10 +52,12 @@
                             <label class="label_100" for="CONTROL_NUM">관리번호</label>
                             <input type="text" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM">
                         </span>
+                        <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="ORDER_NUM">발주번호</label>
                             <input type="text" class="wd_200" name="ORDER_NUM" id="ORDER_NUM">
                         </span>
+                        <span class="gubun"></span>
                         <span class="slt_wrap">
                             <!-- TODO: 규격 -->
                             <label class="label_100" for="STANDARD">규격</label>
@@ -60,6 +65,7 @@
                                 <option></option>
                             </select>
                         </span>
+                        <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="MODULE_NM">모듈명</label>
                             <input type="text" class="wd_200" name="MODULE_NM" id="MODULE_NM">
@@ -71,6 +77,7 @@
                             <select class="wd_100" name="OUTSIDE_CLOSE_YEAR" id="OUTSIDE_CLOSE_YEAR"></select>
                             <select class="wd_100" name="OUTSIDE_CLOSE_MONTH" id="OUTSIDE_CLOSE_MONTH"></select>
                         </span>
+                        <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="UNIT_PRICE">단가</label>
                             <select class="wd_100" class="two" id="UNIT_PRICE">
@@ -78,6 +85,7 @@
                             </select>
                             <input type="text" class="wd_100" class="two" id="UNIT_PRICE_1">
                         </span>
+                        <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="AMOUNT_SUM">금액합산</label>
                             <input type="text" class="wd_200" name="AMOUNT_SUM" id="AMOUNT_SUM" readonly>

@@ -196,7 +196,7 @@
             {title: '비고', dataType: 'string', dataIndx: 'CLOSE_NOTE', editable: true}
         ];
         let tab1Obj = {
-            height: 750,
+            height: 700,
             collapsible: false,
             resizable: true,
             showTitle: false,
@@ -398,6 +398,7 @@
 
         $('#CLOSING_HISTORY_SAVE').on('click', function (event) {
             const updateQueryList = ['orderMapper.updateControlMaster', 'orderMapper.updateControlPart'];
+
             fnModifyPQGrid($closingHistoryGrid, [], updateQueryList);
         });
 

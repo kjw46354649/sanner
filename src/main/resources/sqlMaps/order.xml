@@ -278,29 +278,37 @@
             ORDER_STAFF_SEQ,
             DESIGNER_NM,
             NOTE,
+            PROJECT_NM,
             MODULE_NM,
+            DELIVERY_COMP_NM,
+            LABEL_NOTE,
             MAIN_INSPECTION,
             EMERGENCY_YN,
             CONTROL_STATUS,
             STATUS_DT
+            <!-- ,INSERT_ID -->
         ) VALUES
         <foreach collection="list" item="item" separator=",">
         (
-            (SELECT IFNULL(max(A.CONTROL_SEQ), NEXTVAL(SEQ_CONTROL))
+            (SELECT IFNULL(MAX(A.CONTROL_SEQ), NEXTVAL(SEQ_CONTROL))
             FROM TBL_CONTROL A
             WHERE A.CONTROL_NUM = #{item.CONTROL_NUM}),
             #{item.CONTROL_NUM},
-            1,
+            0,
             #{item.COMP_CD},
             #{item.ORDER_COMP_CD},
             SF_GET_STAFF_SEQ(#{item.ORDER_COMP_CD}, #{item.ORDER_STAFF_NM}),
             #{item.DESIGNER_NM},
             #{item.NOTE},
+            #{item.PROJECT_NM},
             #{item.MODULE_NM},
+            #{item.DELIVERY_COMP_NM},
+            #{item.LABEL_NOTE},
             #{item.MAIN_INSPECTION},
             #{item.EMERGENCY_YN},
             #{item.CONTROL_STATUS},
             NOW()
+            <!-- ,INSERT_ID -->
         )
         </foreach>
     </insert>
@@ -346,14 +354,14 @@
             NEXTVAL(SEQ_CONTROL_PART),
             #{item.PART_NUM},
             #{item.DRAWING_NUM},
-            1,
+            0,
             #{item.PREV_DRAWING_NUM},
             #{item.ITEM_NM},
             #{item.WORK_CD},
             #{item.OUTSIDE_YN},
             #{item.WORK_FACTORY},
             #{item.MATERIAL_SUPPLY_YN},
-            REPLACE(STR_TO_DATE(#{item.INNER_DUE_DT},'%y-%m-%d'), '-', SPACE(0)),
+            REPLACE(#{item.INNER_DUE_DT}, '-', SPACE(0)),
             #{item.SIZE_TXT},
             SF_GET_SIZE_TXT('SIZE_TYPE', #{item.SIZE_TXT}),
             SF_GET_SIZE_TXT('SIZE_W', #{item.SIZE_TXT}),
@@ -404,8 +412,8 @@
             NEXTVAL(SEQ_CONTROL_PART_ORDER),
             #{item.ORDER_NUM},
             #{item.ORDER_QTY},
-            REPLACE(STR_TO_DATE(#{item.ORDER_DUE_DT}, '%y-%m-%d'), '-', SPACE(0)),
-            REPLACE(STR_TO_DATE(#{item.DELIVERY_DT}, '%y-%m-%d'), '-', SPACE(0))
+            REPLACE(#{item.ORDER_DUE_DT}, '-', SPACE(0)),
+            REPLACE(#{item.DELIVERY_DT}, '-', SPACE(0))
             <!-- ,NULL -->
         )
         </foreach>
@@ -1050,5 +1058,37 @@
         Z.MM,
         Z.CONTROL_TYPE
     </select>
+
+    <insert id="insertControlBarcode" parameterType="java.util.HashMap" >
+        INSERT INTO TBL_CONTROL_BARCODE (
+            BARCODE_NUM,
+            CONTROL_SEQ,
+            CONTROL_DETAIL_SEQ,
+            CONTROL_VER,
+            DRAWING_VER
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+        (
+            (SELECT CONCAT('C', DATE_FORMAT(CURDATE(), '%y%m'), LPAD(SUBSTR(MAX(A.BARCODE_NUM), 6) + 1, 5, '0'))
+            FROM TBL_CONTROL_BARCODE A
+            WHERE A.BARCODE_NUM LIKE CONCAT('C', DATE_FORMAT(CURDATE(), '%y%m'), '%')),
+            (SELECT B.CONTROL_SEQ
+            FROM TBL_CONTROL B
+            WHERE B.CONTROL_NUM = #{item.CONTROL_NUM}),
+            (SELECT C.CONTROL_DETAIL_SEQ
+            FROM TBL_CONTROL_PART C
+                INNER JOIN TBL_CONTROL D ON C.CONTROL_SEQ = D.CONTROL_SEQ
+            WHERE
+                D.CONTROL_NUM = #{item.CONTROL_NUM}
+                AND C.CONTROL_DETAIL_SEQ NOT IN (SELECT E.CONTROL_DETAIL_SEQ
+                                                FROM TBL_CONTROL_BARCODE E
+                                                WHERE E.CONTROL_SEQ = C.CONTROL_SEQ)
+                                                ORDER BY C.CONTROL_DETAIL_SEQ
+                                                LIMIT 1),
+            IFNULL (#{CONTROL_VER}, 0),
+            IFNULL (#{DRAWING_VER}, 0)
+        )
+        </foreach>
+    </insert>
 
 </mapper>

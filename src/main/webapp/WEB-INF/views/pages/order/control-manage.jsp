@@ -120,12 +120,14 @@
                         </span>
                     </li>
                     <li>
-                        <span class="txt_span pd-right20">Option</span>
-                        <span class="chk_box"><input id="option1" type="checkbox"><label for="option1"> 자재사급</label></span>
-                        <span class="chk_box"><input id="option2" type="checkbox"><label for="option2"> 외주</label></span>
-                        <span class="chk_box"><input id="option3" type="checkbox"><label for="option3"> 未단가</label></span>
-                        <span class="chk_box"><input id="option4" type="checkbox"><label for="option4"> 긴급</label></span>
-                        <span class="chk_box"><input id="option5" type="checkbox"><label for="option5"> part 숨기기</label></span>
+                        <span>
+                            <span class="ipu_wrap"><label class="label_100">Option</label></span>
+                            <span class="chk_box"><input id="option1" type="checkbox"><label for="option1"> 자재사급</label></span>
+                            <span class="chk_box"><input id="option2" type="checkbox"><label for="option2"> 외주</label></span>
+                            <span class="chk_box"><input id="option3" type="checkbox"><label for="option3"> 未단가</label></span>
+                            <span class="chk_box"><input id="option4" type="checkbox"><label for="option4"> 긴급</label></span>
+                            <span class="chk_box"><input id="option5" type="checkbox"><label for="option5"> part 숨기기</label></span>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -498,6 +500,19 @@
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
+        const COMPANY_STAFF = (function () {
+            let list = [];
+            let parameters = {'url': '/json-list', 'data': {'queryId': 'dataSource.getCompanyStaffList'}};
+
+            fnPostAjax(function (data, callFunctionParam) {
+                for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
+                    let obj = data.list[i];
+
+                    list.push({value: obj.CODE_CD, text: obj.CODE_NM, compCd: obj.COMP_CD});
+                }
+            }, parameters, '');
+            return list;
+        })();
         let selectedRowIndex = [];
         let $orderManagementGrid;
         const gridId = 'CONTROL_MANAGE_GRID';
@@ -520,17 +535,86 @@
                     {title: '변경일시', width: 95, datatype: 'date', dataIndx: 'CONTROL_STATUS_DT'}
                 ]
             },
-            {title: '사업자<br>구분', clsHead: 'display_none', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자<br>구분', width: 70, dataType: 'string', dataIndx: 'COMP_NM'},
-            {title: '발주업체', clsHead: 'display_none', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '구매담당', clsHead: 'display_none', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', hidden: true},
-            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM'},
+            {title: '사업자<br>구분', clsHead: 'display_none', width: 70, dataType: 'string', dataIndx: 'COMP_CD', editable: true,
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: BUSINESS_COMPANY},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let index = BUSINESS_COMPANY.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = BUSINESS_COMPANY.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : BUSINESS_COMPANY[index].text;
+                    }
+                }
+            },
+            {title: '발주업체', clsHead: 'display_none', dataType: 'string', dataIndx: 'ORDER_COMP_CD', editable: true,
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: ORDER_COMPANY},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let index = ORDER_COMPANY.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = ORDER_COMPANY.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : ORDER_COMPANY[index].text;
+                    }
+                }
+            },
+            {title: '구매담당', clsHead: 'display_none', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', editable: true,
+                editor: {
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: function (ui) {
+                        let companyStaffList = COMPANY_STAFF.filter(function (value, index, array) {
+                            return value.compCd == ui.rowData.ORDER_COMP_CD;
+                        });
+
+                        return companyStaffList;
+                    }
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let index = COMPANY_STAFF.findIndex(function (element) {
+                            return element.text == cellData;
+                        });
+
+                        if (index < 0) {
+                            index = COMPANY_STAFF.findIndex(function (element) {
+                                return element.value == cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : COMPANY_STAFF[index].text;
+                    }
+                }
+            },
             {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', editable: true, styleHead: {'font-weight': 'bold'}},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true},
             {title: 'INV No.<br>(거래명세No.)', width: 100, dataType: 'string', dataIndx: 'CHARGE_USER_ID'},
-            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', editable: true},
-            {title: '모듈', dataType: 'string', dataIndx: 'MODULE_NM', editable: true},
+            {title: '프로젝트', width: 200, dataType: 'string', dataIndx: 'PROJECT_NM', editable: true},
+            {title: '모듈', width: 70, dataType: 'string', dataIndx: 'MODULE_NM', editable: true},
             {title: '납품처', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM', editable: true},
             {title: '비고(라벨)', dataType: 'string', dataIndx: 'LABEL_NOTE', editable: true},
             {title: '주요<br>검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
@@ -721,7 +805,9 @@
                 console.group('cellClick');
                 console.log(ui.rowData);
                 console.groupEnd();
-                if(ui.rowData.IMG_GFILE_SEQ) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);    // 셀 선택시 도면 View 실행 중인경우 이미지 표시 하기
+                if(ui.rowData.IMG_GFILE_SEQ) {
+                    callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ)  // 셀 선택시 도면 View 실행 중인경우 이미지 표시 하기
+                };
                 if (ui.dataIndx === 'PART_NUM' && ui.rowData.WORK_TYPE === 'WTP020') {
                     let newRowData = fnCloneObj(ui.rowData);
                     let data = $orderManagementGrid.pqGrid('option', 'dataModel.data'), totalRecords = data.length;
@@ -766,6 +852,7 @@
 
                     if (firstRow === lastRow) selectedRowIndex[0] = firstRow;
                     else for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
+                    console.log(selectedRowIndex);
                 }
             },
             change: function (evt, ui) {
@@ -860,10 +947,44 @@
                     }
                 }
             },
-            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM'},
+            {
+                title: '구매<br>담당자', dataType: 'string', dataIndx: 'ORDER_STAFF_NM',
+                editor: {
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: function (ui) {
+                        let companyStaffList = COMPANY_STAFF.filter(function (value, index, array) {
+                            return value.compCd == ui.rowData.ORDER_COMP_CD;
+                        });
+
+                        return companyStaffList;
+                    }
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let index = COMPANY_STAFF.findIndex(function (element) {
+                            return element.text == cellData;
+                        });
+
+                        if (index < 0) {
+                            index = COMPANY_STAFF.findIndex(function (element) {
+                                return element.value == cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : COMPANY_STAFF[index].text;
+                    }
+                }
+            },
             {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM'},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
-            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM'},
+            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM'},
+            {title: '모듈', dataType: 'string', dataIndx: 'MODULE_NM'},
+            {title: '납품처', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM'},
+            {title: '비고(라벨)', dataType: 'string', dataIndx: 'LABEL_NOTE'},
             {
                 title: '주요 검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION',
                 editor: {
@@ -1047,7 +1168,7 @@
             {title: '가공납기', dataType: 'string', dataIndx: 'INNER_DUE_DT'},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT'},
             {
-                title: '소재상세종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
+                title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -1207,7 +1328,7 @@
             ]
         };
         const popupObj = {
-            // height: 600,
+            height: 700,
             collapsible: false,
             resizable: true,
             showTitle: false,
@@ -1510,9 +1631,9 @@
             let bottom = $('#view_tab_100021 .bottomWrap');
             let con = $('#view_tab_100021 .bottomWrap .tableWrap .conWrap');
 
-            top.stop().animate({height: 159}, 300, 'easeOutCubic');
-            bottom.stop().animate({height: 730}, 300, 'easeOutCubic');
-            con.stop().animate({height: 562}, 300, 'easeOutCubic');
+            top.stop().animate({'height': '130px'}, 300, 'easeOutCubic');
+            bottom.stop().animate({'height': '770px'}, 300, 'easeOutCubic');
+            con.css({'height': '640px'});
 
             $orderManagementGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
         };
@@ -1523,9 +1644,9 @@
             let bottom = $('#view_tab_100021 .bottomWrap');
             let con = $('#view_tab_100021 .bottomWrap .tableWrap .conWrap');
 
-            top.stop().animate({height: 47}, 300, 'easeInCubic');
-            bottom.stop().animate({height: 840},300, 'easeOutCubic');
-            con.stop().animate({height: 699}, 300, 'easeInCubic');
+            top.stop().animate({'height': '40px'}, 300, 'easeInCubic');
+            bottom.stop().animate({'height': '855px'}, 300, 'easeOutCubic');
+            con.css({'height': '714px'});
 
             $orderManagementGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
         }

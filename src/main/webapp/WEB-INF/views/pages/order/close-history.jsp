@@ -16,7 +16,7 @@
     <div class="topWrap">
         <form class="form-inline" id="CLOSE_HISTORY_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="selectCloseHistoryList">
-            <div class="basicWrap">
+            <div class="gubunWrap row4_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -104,19 +104,23 @@
                             <select class="wd_100" class="two" name="CLOSE_MONTH" id="CLOSE_MONTH"></select>
                         </div>
                         <span class="gubun"></span>
-                        <span class="txt_span pd-right20">조회 Option</span>
-                        <span class="chk_box"><input type="checkbox" name="DEADLINE" id="DEADLINE"><label for="DEADLINE">마감</label></span>
-                        <span class="chk_box"><input type="checkbox" name="END" id="END"><label for="END">종료</label></span>
+                        <span class="ipu_wrap"><label class="label_100">조회 Option</label></span>
+                        <span class="wd_200" style="display: inline-block;">
+                            <span class="chk_box"><input type="checkbox" name="DEADLINE" id="DEADLINE"><label for="DEADLINE">마감</label></span>
+                            <span class="chk_box"><input type="checkbox" name="END" id="END"><label for="END">종료</label></span>
+                        </span>
                         <span class="gubun"></span>
-                        <span class="txt_span pd-right20">항목 Option</span>
-                        <span class="chk_box"><input type="checkbox" name="PART_NUM" id="PART_NUM"><label for="PART_NUM">Part</label></span>
-                        <span class="chk_box"><input type="checkbox" name="ORDER_NUM" id="ORDER_NUM"><label for="ORDER_NUM">발주번호</label></span>
+                        <span class="ipu_wrap"><label class="label_100">항목 Option</label></span>
+                        <span class="wd_200" style="display: inline-block;">
+                            <span class="chk_box"><input type="checkbox" name="PART_NUM" id="PART_NUM"><label for="PART_NUM">Part</label></span>
+                            <span class="chk_box"><input type="checkbox" name="ORDER_NUM" id="ORDER_NUM"><label for="ORDER_NUM">발주번호</label></span>
+                        </span>
                     </li>
                 </ul>
             </div>
         </form>
     </div>
-    <div class="bottomWrap">
+    <div class="bottomWrap row4_bottomWrap">
         <div class="hWrap">
             <button type="button" class="defaultBtn btn-120w" id="DEADLINE_OR_END_CANCLE">마감/종료 취소</button>
             <div class="rightSpan">
