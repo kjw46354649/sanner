@@ -106,8 +106,11 @@
                                 <option></option>
                             </select>
                         </span>
-                        <span class="txt_span pd-right20">Option</span>
-                        <span class="chk_box"><input type="checkbox" name="DEPOSIT_STATUS_DISPLAY" id="DEPOSIT_STATUS_DISPLAY"><label for="DEPOSIT_STATUS_DISPLAY">입금현황 표시</label></span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap"><label class="label_100">Option</label></span>
+                        <span class="wd_200" style="display: inline-block;">
+                            <span class="chk_box"><input type="checkbox" name="DEPOSIT_STATUS_DISPLAY" id="DEPOSIT_STATUS_DISPLAY"><label for="DEPOSIT_STATUS_DISPLAY">입금현황 표시</label></span>
+                        </span>
                     </li>
                 </ul>
             </div>
