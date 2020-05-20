@@ -123,12 +123,14 @@
                         </span>
                     </li>
                     <li>
-                        <span class="txt_span pd-right20">Option</span>
-                        <span class="chk_box"><input id="option1" type="checkbox"><label for="option1"> 입고완료</label></span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="AMOUNT_SUM">금액총합계</label>
-                            <input type="text" class="wd_200" id="AMOUNT_SUM" readonly>
+                        <span>
+                            <span class="ipu_wrap"><label class="label_100">Option</label></span>
+                            <span class="chk_box wd_200"><input id="option1" type="checkbox"><label for="option1"> 입고완료</label></span>
+                            <span class="gubun"></span>
+                            <span class="ipu_wrap">
+                                <label class="label_100" for="AMOUNT_SUM">금액총합계</label>
+                                <input type="text" class="wd_200" id="AMOUNT_SUM" readonly>
+                            </span>
                         </span>
                     </li>
                 </ul>
@@ -788,9 +790,9 @@
             let bottom = $('#view_tab_100031 .bottomWrap');
             let con = $('#view_tab_100031 .bottomWrap .tableWrap .conWrap');
 
-            top.stop().animate({height: 159}, 300, 'easeOutCubic');
-            bottom.stop().animate({height: 730}, 300, 'easeOutCubic');
-            con.stop().animate({height: 562}, 300, 'easeOutCubic');
+            top.stop().animate({'height': '130px'}, 300, 'easeOutCubic');
+            bottom.stop().animate({'height': '770px'}, 300, 'easeOutCubic');
+            con.css({'height': '640px'});
 
             $outsideOrderManageGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
         };
@@ -801,9 +803,9 @@
             let bottom = $('#view_tab_100031 .bottomWrap');
             let con = $('#view_tab_100031 .bottomWrap .tableWrap .conWrap');
 
-            top.stop().animate({height: 47}, 300, 'easeInCubic');
-            bottom.stop().animate({height: 840},300, 'easeOutCubic');
-            con.stop().animate({height: 699}, 300, 'easeInCubic');
+            top.stop().animate({'height': '40px'}, 300, 'easeInCubic');
+            bottom.stop().animate({'height': '855px'}, 300, 'easeOutCubic');
+            con.css({'height': '764px'});
 
             $outsideOrderManageGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
         }

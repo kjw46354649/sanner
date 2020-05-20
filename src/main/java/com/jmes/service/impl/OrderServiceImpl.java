@@ -30,6 +30,7 @@ public class OrderServiceImpl implements OrderService {
         this.orderDao.insertControlMaster(hashMap);
         this.orderDao.insertControlPart(hashMap);
         this.orderDao.insertControlPartOrder(hashMap);
+        this.orderDao.insertControlBarcode(hashMap);
     }
 
     @Override
@@ -48,6 +49,7 @@ public class OrderServiceImpl implements OrderService {
         this.orderDao.insertControlMaster(hashMap);
         this.orderDao.insertControlPart(hashMap);
         this.orderDao.insertControlPartOrder(hashMap);
+        this.orderDao.insertControlBarcode(hashMap);
         this.orderDao.insertControlProgressList(hashMap);
     }
 

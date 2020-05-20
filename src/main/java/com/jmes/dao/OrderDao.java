@@ -27,4 +27,6 @@ public interface OrderDao {
     void updateControlStatus(HashMap<String, Object> hashMap) throws SQLException;
 
     void updateControlPartStatus(HashMap<String, Object> hashMap) throws SQLException;
+
+    void insertControlBarcode(Map<String, Object> hashMap) throws SQLException;
 }

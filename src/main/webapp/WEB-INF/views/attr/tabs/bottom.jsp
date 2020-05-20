@@ -94,6 +94,10 @@
 </div>
 <div class="cadDrawingPrint" style="display: none; height: 1px;"></div>
 <!-- 인쇄 div end -->
+<form id="barcode_form">
+    <input type="hidden" id="queryId" name="queryId" value="popMapper.selectBarcodeInfo">
+    <input type="hidden" id="popBarcode" name="popBarcode">
+</form>
 <script type="text/javascript">
 
     let $cadFileConvertUploadCompletedBtn = $("#cadFileConvertUploadCompletedBtn");

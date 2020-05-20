@@ -71,4 +71,9 @@ public class OrderDaoImpl implements OrderDao {
 
     }
 
+    @Override
+    public void insertControlBarcode(Map<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("insertControlBarcode", hashMap);
+    }
+
 }

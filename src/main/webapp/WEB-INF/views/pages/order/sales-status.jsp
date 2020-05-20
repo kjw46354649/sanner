@@ -16,7 +16,7 @@
     <div class="topWrap">
         <form class="form-inline" id="SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectSalesClosingHistoryList">
-            <div class="gubunWrap row_two">
+            <div class="none_gubunWrap row2_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -45,19 +45,19 @@
                             <input type="text" class="wd_200" name="NOTE" id="NOTE">
                         </span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap right_float">
-                            <button type="button" class="defaultBtn radius blue" id="CONTROL_SALES_CLOSING_HISTORY_SEARCH">검색</button>
-                        </span>
+                        <span class="ipu_wrap"></span>
                     </li>
                     <li>
                         <span class="ipu_wrap">
                             <label class="label_100">마감년월</label>
                         </span>
-                        <select name="CLOSE_YEAR_LEFT" id="CLOSE_YEAR_LEFT"></select>
-                        <select name="CLOSE_MONTH_LEFT" id="CLOSE_MONTH_LEFT"></select><span style="margin: 10px 0; vertical-align: middle; font-size: 1.4rem;">~</span>
-                        <select name="CLOSE_YEAR_RIGHT" id="CLOSE_YEAR_RIGHT" disabled></select>
-                        <select name="CLOSE_MONTH_RIGHT" id="CLOSE_MONTH_RIGHT" disabled></select>
-                        <span class="chk_box" style="margin-left: 10px;"><input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH"><label for="RANGE_SEARCH"> Range 검색</label></span>
+                        <span class="chk_box"><select name="CLOSE_YEAR_LEFT" id="CLOSE_YEAR_LEFT"></select></span>
+                        <span class="chk_box"><select name="CLOSE_MONTH_LEFT" id="CLOSE_MONTH_LEFT"></select><span style="margin: 10px 0; vertical-align: middle; font-size: 1.4rem;"> &nbsp;&nbsp;~</span></span>
+                        <span class="chk_box"><select name="CLOSE_YEAR_RIGHT" id="CLOSE_YEAR_RIGHT" disabled></select></span>
+                        <span class="chk_box"><select name="CLOSE_MONTH_RIGHT" id="CLOSE_MONTH_RIGHT" disabled></select></span>
+                        <%--<span class="chk_box" style="margin-left: 10px;"><input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH">
+                        <label for="RANGE_SEARCH"> Range 검색</label></span>--%>
+                        <button type="button" class="right_float defaultBtn radius blue" id="CONTROL_SALES_CLOSING_HISTORY_SEARCH">검색</button>
                     </li>
                 </ul>
             </div>
@@ -66,7 +66,7 @@
     <div class="topWrap" style="display: none">
         <form class="form-inline" id="MONTH_SALE_STATUS_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectMonthSaleStatusList">
-            <div class="gubunWrap row_two">
+            <div class="none_gubunWrap row2_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -106,21 +106,24 @@
                                 <option></option>
                             </select>
                         </span>
-                        <span class="txt_span pd-right20">Option</span>
-                        <span class="chk_box"><input type="checkbox" name="DEPOSIT_STATUS_DISPLAY" id="DEPOSIT_STATUS_DISPLAY"><label for="DEPOSIT_STATUS_DISPLAY">입금현황 표시</label></span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap"><label class="label_100">Option</label></span>
+                        <span class="wd_200" style="display: inline-block;">
+                            <span class="chk_box"><input type="checkbox" name="DEPOSIT_STATUS_DISPLAY" id="DEPOSIT_STATUS_DISPLAY"><label for="DEPOSIT_STATUS_DISPLAY">입금현황 표시</label></span>
+                        </span>
                     </li>
                 </ul>
             </div>
         </form>
     </div>
-    <div class="bottomWrap">
-        <div class="hWrap">
-            <div>
-                <div class="rightSpan">
-                    <button type="button" class="defaultBtn btn-120w green" id="CLOSING_HISTORY_SAVE">저장</button>
-                </div>
-            </div>
-        </div>
+    <div class="bottomWrap" style="height: 810px;">
+<%--        <div class="hWrap">--%>
+<%--            <div>--%>
+<%--                <div class="rightSpan">--%>
+<%--                    <button type="button" class="defaultBtn btn-120w green" id="CLOSING_HISTORY_SAVE">저장</button>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--        </div>--%>
         <div class="tableWrap jmestabs" id="CONTROL_SALES_STATUS_TABS" style="padding: 10px 0;">
             <ul class="smallTabMenuTabs">
                 <li class="active">
@@ -129,6 +132,9 @@
                 <li>
                     <a href="#MONTHLY_SALES_STATUS" data-toggle="tab" aria-expanded="false">월별 매출현황</a>
                 </li>
+                <div class="right_float" >
+                    <button type="button" class="defaultBtn btn-120w green" style="font-weight:normal;" id="CLOSING_HISTORY_SAVE">저장</button>
+                </div>
             </ul>
             <div class="tab-content">
                 <ul class="active conWrap" id="CLOSING_HISTORY">
@@ -351,32 +357,6 @@
             $detailListViewGrid = $('#' + detailListViewGridId).pqGrid(detailListViewObj);
         });
 
-        /* init */
-        fnCommCodeDatasourceSelectBoxCreate($('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM').find('#ORDER_COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOrderCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#MONTH_SALE_STATUS_SEARCH_FORM ').find('#COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#MONTH_SALE_STATUS_SEARCH_FORM ').find('#ORDER_COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOrderCompanyList'}
-        });
-        $closingHistoryGrid = $('#' + tab1GridId).pqGrid(tab1Obj);
-        $monthlySalesStatusGrid = $('#' + tab2GridId).pqGrid(tab2Obj);
-
-        fnAppendSelectboxYear('CLOSE_YEAR_LEFT', 10);
-        fnAppendSelectboxMonth('CLOSE_MONTH_LEFT');
-        fnAppendSelectboxYear('CLOSE_YEAR_RIGHT', 10);
-        fnAppendSelectboxMonth('CLOSE_MONTH_RIGHT');
-        fnAppendSelectboxYear('MONTH_SALE_YEAR', 10);
-
         $('#CLOSE_YEAR_LEFT').on('change', function () {
             fnAppendSelectboxMonth('CLOSE_MONTH_LEFT', this.value);
         });
@@ -406,6 +386,47 @@
                 $('.hWrap').toggle();
             }
         });
+
+        $('#CONTROL_SALES_CLOSING_HISTORY_SEARCH').on('click', function () {
+            $closingHistoryGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+                return fnFormToJsonArrayData('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM');
+            });
+            $closingHistoryGrid.pqGrid('refreshDataAndView');
+        });
+
+        $('#CONTROL_MONTH_SALE_STATUS_SEARCH').on('click', function () {
+            $monthlySalesStatusGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+                return fnFormToJsonArrayData('#MONTH_SALE_STATUS_SEARCH_FORM');
+            });
+            $monthlySalesStatusGrid.pqGrid('refreshDataAndView');
+        });
+
+        /* init */
+        fnCommCodeDatasourceSelectBoxCreate($('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM').find('#ORDER_COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOrderCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#MONTH_SALE_STATUS_SEARCH_FORM ').find('#COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#MONTH_SALE_STATUS_SEARCH_FORM ').find('#ORDER_COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOrderCompanyList'}
+        });
+        $closingHistoryGrid = $('#' + tab1GridId).pqGrid(tab1Obj);
+        $monthlySalesStatusGrid = $('#' + tab2GridId).pqGrid(tab2Obj);
+
+        fnAppendSelectboxYear('CLOSE_YEAR_LEFT', 10);
+        fnAppendSelectboxMonth('CLOSE_MONTH_LEFT');
+        $('#CLOSE_MONTH_LEFT').val(1).prop('selected', true);
+        fnAppendSelectboxYear('CLOSE_YEAR_RIGHT', 10);
+        fnAppendSelectboxMonth('CLOSE_MONTH_RIGHT');
+        fnAppendSelectboxYear('MONTH_SALE_YEAR', 10);
         /* init */
     });
 </script>

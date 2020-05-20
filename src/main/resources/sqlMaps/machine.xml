@@ -209,8 +209,9 @@
             A.SIZE_TXT, <!-- 규격 -->
             C.POP_POSITION, <!-- 현재위치 -->
             D.WORKING_TIME,  <!-- 예상 시간(분) -->
+            D.SORT_NUM,
             F.WORK_USER_ID,
-            D.SORT_NUM
+            F.WORK_STATUS
         FROM TBL_CONTROL_PART A
             INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             LEFT OUTER JOIN TBL_POP C ON A.CONTROL_SEQ = C.CONTROL_SEQ
@@ -221,7 +222,9 @@
             LEFT OUTER JOIN TBL_MCT_WORK F ON A.CONTROL_SEQ = F.CONTROL_SEQ
                                               AND A.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
                                               AND E.EQUIP_ID = F.EQUIP_ID
-        WHERE E.EQUIP_ID = #{EQUIP_ID}
+        WHERE
+            E.EQUIP_ID = #{EQUIP_ID}
+            AND D.DEL_YN = 'N'
         ORDER BY D.SORT_NUM
     </select>
     <insert id="insertMctPlan"  parameterType="java.util.HashMap" >
@@ -251,9 +254,28 @@
         WHERE MCT_PLAN_SEQ = #{MCT_PLAN_SEQ}
     </update>
     <delete id="deleteMctPlan" parameterType="java.util.HashMap">
-        DELETE
-        FROM TBL_MCT_PLAN
-        WHERE MCT_PLAN_SEQ = #{MCT_PLAN_SEQ};
+        UPDATE TBL_MCT_PLAN
+        SET
+            UPDATE_DT = NOW(),
+            <!-- UPDATE_ID = NULL, -->
+            DEL_YN = 'Y'
+        WHERE
+            MCT_PLAN_SEQ = #{MCT_PLAN_SEQ}
+    </delete>
+    <delete id="deleteMctWork" parameterType="java.util.HashMap">
+        UPDATE TBL_MCT_WORK
+        SET
+            UPDATE_DT = NOW(),
+            <!-- UPDATE_ID = NULL, -->
+            DEL_YN = 'Y'
+        WHERE
+            MCT_WORK_SEQ = (SELECT MCT_WORK_SEQ
+                            FROM TBL_MCT_WORK
+                            WHERE
+                                DEL_YN = 'N'
+                                AND CONTROL_SEQ = #{CONTROL_SEQ}
+                                AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+                                AND EQUIP_ID = #{EQUIP_ID})
     </delete>
     <sql id="mctManage">
         SELECT
@@ -297,6 +319,7 @@
             WHERE
                 AA.CONTROL_SEQ = A.CONTROL_SEQ
                 AND	AA.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+                AND BB.DEL_YN = 'N'
                 AND CC.PROCESS_TYPE = 'MPR010'
             GROUP BY
                 AA.CONTROL_SEQ,
@@ -309,6 +332,7 @@
             WHERE
                 AA.CONTROL_SEQ = A.CONTROL_SEQ
                 AND	AA.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+                AND BB.DEL_YN = 'N'
                 AND CC.PROCESS_TYPE = 'MPR020'
             GROUP BY
                 AA.CONTROL_SEQ,
@@ -321,6 +345,7 @@
             WHERE
                 AA.CONTROL_SEQ = A.CONTROL_SEQ
                 AND	AA.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+                AND BB.DEL_YN = 'N'
                 AND CC.PROCESS_TYPE = 'MPR030'
             GROUP BY
                 AA.CONTROL_SEQ,
@@ -333,6 +358,7 @@
             WHERE
                 AA.CONTROL_SEQ = A.CONTROL_SEQ
                 AND	AA.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+                AND BB.DEL_YN = 'N'
                 AND CC.PROCESS_TYPE = 'MPR040'
             GROUP BY
                 AA.CONTROL_SEQ,
@@ -349,7 +375,8 @@
             WHERE
                 CONTROL_SEQ = A.CONTROL_SEQ
                 AND CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
-                AND EQUIP_ID IS NOT NULL) AS WORKING_TIME_TOTAL, <!-- 예상가공 시간(분) -->
+                AND EQUIP_ID IS NOT NULL
+                AND DEL_YN = 'N') AS WORKING_TIME_TOTAL, <!-- 예상가공 시간(분) -->
             A.MCT_NOTE, <!-- 가공계획 비고 -->
             A.MCT_WORK_TYPE, <!-- 작업 구분 -->
             H.POP_PREV_POSITION, <!-- 이전 위치 -->
@@ -523,14 +550,14 @@
                                                    AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
             LEFT OUTER JOIN TBL_MATERIAL_ORDER D ON A.CONTROL_SEQ = D.CONTROL_SEQ
                                                     AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-            INNER JOIN TBL_MCT_PLAN E ON A.CONTROL_SEQ = E.CONTROL_SEQ
-                                         AND A.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
-            LEFT OUTER JOIN TBL_MCT_WORK F ON A.CONTROL_SEQ = F.CONTROL_SEQ
-                                              AND A.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
-            INNER JOIN TBL_EQUIP G ON E.EQUIP_ID = G.EQUIP_ID
-                                      AND F.EQUIP_ID = G.EQUIP_ID
-            LEFT OUTER JOIN TBL_POP H ON A.CONTROL_SEQ = H.CONTROL_SEQ
-                                         AND A.CONTROL_DETAIL_SEQ = H.CONTROL_DETAIL_SEQ
+            <!-- 	LEFT OUTER JOIN TBL_MCT_PLAN E ON A.CONTROL_SEQ = E.CONTROL_SEQ -->
+            <!-- 	                             AND A.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ -->
+            <!-- 	LEFT OUTER JOIN TBL_MCT_WORK F ON A.CONTROL_SEQ = F.CONTROL_SEQ -->
+            <!-- 	                                  AND A.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ -->
+            <!-- 	INNER JOIN TBL_EQUIP G ON E.EQUIP_ID = G.EQUIP_ID -->
+            <!-- 	                          AND F.EQUIP_ID = G.EQUIP_ID -->
+            INNER JOIN TBL_POP H ON A.CONTROL_SEQ = H.CONTROL_SEQ
+                                    AND A.CONTROL_DETAIL_SEQ = H.CONTROL_DETAIL_SEQ
         WHERE 1 = 1
             AND B.CONTROL_STATUS = 'ORD001' <!-- 주문확정 -->
             AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO008')

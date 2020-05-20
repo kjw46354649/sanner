@@ -71,8 +71,6 @@
     margin-bottom: 15px;     position: relative;}
 /*.estimate .topWrap .gubunWrap { border-right: 1px solid #e5e5e5; overflow: hidden; width: 97%; box-sizing: border-box; padding: 5px 15px; height: 47px; }*/
 .estimate .topWrap .gubunWrap { border-right: 1px solid #e5e5e5; overflow: hidden; width: 97%; box-sizing: border-box; padding: 5px 15px; height: 37px; }
-.estimate .topWrap .gubunWrap.row_two { border-right: 1px solid #e5e5e5; overflow: hidden; width: 100%; box-sizing: border-box; padding: 5px 15px; height: 94px; }
-.estimate .topWrap .gubunWrap.row_three { border-right: 1px solid #e5e5e5; overflow: hidden; width: 100%; box-sizing: border-box; padding: 5px 15px; height: 125px; }
 .estimate .topWrap .gubunWrap ul { font-size: 0; }
 /*.estimate .topWrap .gubunWrap ul li { padding: 6px 0; }*/
 .estimate .topWrap .gubunWrap ul li { padding: 2px 0; }
@@ -82,6 +80,20 @@
 .estimate .topWrap .gubunWrap ul li label { }
 .estimate .topWrap .gubunWrap ul li select { }
 .estimate .topWrap .gubunWrap ul li input { }
+
+.estimate .topWrap .none_gubunWrap {border-right: 1px solid #e5e5e5;overflow: hidden;width: 100%;box-sizing: border-box;padding: 5px 15px;height: 37px;}
+.estimate .topWrap .none_gubunWrap.row_two { border-right: 1px solid #e5e5e5; overflow: hidden; width: 100%; box-sizing: border-box; padding: 5px 15px; height: 94px; }
+.estimate .topWrap .none_gubunWrap.row_three { border-right: 1px solid #e5e5e5; overflow: hidden; width: 100%; box-sizing: border-box; padding: 5px 15px; height: 125px; }
+.estimate .topWrap .none_gubunWrap ul { font-size: 0; }
+/*.estimate .topWrap .gubunWrap ul li { padding: 6px 0; }*/
+.estimate .topWrap .none_gubunWrap ul li { padding: 2px 0; }
+.estimate .topWrap .none_gubunWrap ul li *{ }
+.estimate .topWrap .none_gubunWrap ul li:nth-child(4n) { padding-right: 0; }
+.estimate .topWrap .none_gubunWrap ul li:nth-child(4n+1) { }
+.estimate .topWrap .none_gubunWrap ul li label { }
+.estimate .topWrap .none_gubunWrap ul li select { }
+.estimate .topWrap .none_gubunWrap ul li input { }
+
 /*.estimate .basicWrap { border-right: 1px solid #e5e5e5; overflow: hidden; width: 100%; box-sizing: border-box; padding: 5px 15px; height: 148px; }*/
 .estimate .basicWrap { /*border-bottom: 1px solid #e2e2e2;*/ border-right: 1px solid #e5e5e5; overflow: hidden; width: 100%; box-sizing: border-box; padding: 5px 15px; height: 68px; }
 .estimate .basicWrap ul { font-size: 0; }

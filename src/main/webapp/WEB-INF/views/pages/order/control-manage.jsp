@@ -120,12 +120,14 @@
                         </span>
                     </li>
                     <li>
-                        <span class="txt_span pd-right20">Option</span>
-                        <span class="chk_box"><input id="option1" type="checkbox"><label for="option1"> 자재사급</label></span>
-                        <span class="chk_box"><input id="option2" type="checkbox"><label for="option2"> 외주</label></span>
-                        <span class="chk_box"><input id="option3" type="checkbox"><label for="option3"> 未단가</label></span>
-                        <span class="chk_box"><input id="option4" type="checkbox"><label for="option4"> 긴급</label></span>
-                        <span class="chk_box"><input id="option5" type="checkbox"><label for="option5"> part 숨기기</label></span>
+                        <span>
+                            <span class="ipu_wrap"><label class="label_100">Option</label></span>
+                            <span class="chk_box"><input id="option1" type="checkbox"><label for="option1"> 자재사급</label></span>
+                            <span class="chk_box"><input id="option2" type="checkbox"><label for="option2"> 외주</label></span>
+                            <span class="chk_box"><input id="option3" type="checkbox"><label for="option3"> 未단가</label></span>
+                            <span class="chk_box"><input id="option4" type="checkbox"><label for="option4"> 긴급</label></span>
+                            <span class="chk_box"><input id="option5" type="checkbox"><label for="option5"> part 숨기기</label></span>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -141,7 +143,8 @@
                 <button type="button" class="defaultBtn btn-120w" data-toggle="modal"
                         data-target="#ESTIMATE_REGISTER_POPUP">견적등록
                 </button>
-                <button type="button" class="defaultBtn btn-120w" id="SPECIFICATION_ON_TRANSACTION">거래명세표</button>
+                <button type="button" class="defaultBtn btn-120w" data-toggle="modal"
+                        data-target="#CONTROL_TRANSACTION_STATEMENT_POPUP">거래명세표</button>
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn btn-120w" id="ESTIMATE_AUTOMATIC_CALCULATION">견적자동계산</button>
                     <button type="button" class="defaultBtn btn-120w" id="ESTIMATE_LIST_PRINT">견적List출력</button>
@@ -210,100 +213,122 @@
     </div>
 </div>
 
-<%--<div class="popup_container" id="CONTROL_CLOSE_POPUP" style="display: none;">
+<div class="popup_container" id="CONTROL_CLOSE_POPUP" style="display: none;">
     <div class="layerPopup">
         <h3 style="margin-bottom: 10px;">월 마감 진행</h3>
         <button type="button" class="pop_close">닫기</button>
         <div>
-            <div class="col-md-5">
+            <div style="width: 450px; float:left;">
                 <div id="CONTROL_CLOSE_LEFT_GRID"></div>
             </div>
-            <div class="col-md-2">
+            <div style="width: 70px; float:left;">
                 화살표 ~>
             </div>
-            <div class="col-md-5">
+            <div style="width: 450px; float:left;">
                 <div id="CONTROL_CLOSE_RIGHT_GRID"></div>
             </div>
         </div>
-    </div>
-</div>--%>
-
-<div class="modal" id="" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
-                        class="sr-only">Close</span></button>
-                <h4 class="modal-title"></h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-5">
-                        <div id="CONTROL_CLOSE_LEFT_GRID"></div>
-                    </div>
-                    <div class="col-md-2">
-                        화살표~>
-                    </div>
-                    <div class="col-md-5">
-                        <div id="CONTROL_CLOSE_RIGHT_GRID"></div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <form class="form-inline" id="CONTROL_CLOSE_FORM" role="form">
-                            <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectControlCloseLeftList">
-                            <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
-                            <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                            <div class="col-md-8">
-                                <div class="col-md-3">
-                                    <label>대상 년/월</label>
-                                </div>
-                                <div class="col-md-5">
-                                    <label for="CONTROL_CLOSE_YEAR"></label><select name="CONTROL_CLOSE_YEAR" id="CONTROL_CLOSE_YEAR">
-                                    <option></option>
-                                </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="CONTROL_CLOSE_MONTH"></label><select name="CONTROL_CLOSE_MONTH" id="CONTROL_CLOSE_MONTH">
-                                    <option></option>
-                                </select>
-                                </div>
+        <div style="display:inline-block; margin-top: 20px;">
+            <div style="display:inline-block; padding-left: 10px; float: left;">
+                <form class="form-inline" id="CONTROL_CLOSE_FORM" role="form">
+                    <input type="hidden" name="queryId" id="queryId" value="selectControlCloseLeftList">
+                    <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
+                    <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
+                    <div style="display:inline-block; width: 646px; float: left;">
+                        <div style="display:inline-block;">
+                            <label style="font-size: 12px; color: #343434; line-height: 25px; display: inline-block; padding: 0 10px;">대상 년/월</label>
+                        </div>
+                        <div style="display:inline-block;">
+                            <label for="CONTROL_CLOSE_YEAR"></label><select name="CONTROL_CLOSE_YEAR" id="CONTROL_CLOSE_YEAR">
+                            <option></option>
+                        </select>
+                        </div>
+                        <div style="display:inline-block;">
+                            <label for="CONTROL_CLOSE_MONTH"></label><select name="CONTROL_CLOSE_MONTH" id="CONTROL_CLOSE_MONTH">
+                            <option></option>
+                        </select>
+                        </div>
+                        <div style="display:inline-block; margin-left: 10px;">
+                            <div style="display:inline-block;">
+                                <label for="CLOSE_VER" style="font-size: 12px; color: #343434; line-height: 25px; display: inline-block; padding: 0 10px;">차수</label>
                             </div>
-                            <div class="col-md-4">
-                                <div class="col-md-6">
-                                    <label for="CLOSE_VER">차수</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <select name="CLOSE_VER" id="CLOSE_VER">
-                                        <option value="1">
-                                            1차
-                                        </option>
-                                        <option value="2">
-                                            2차
-                                        </option>
-                                        <option value="3">
-                                            3차
-                                        </option>
-                                        <option value="4">
-                                            4차
-                                        </option>
-                                    </select>
-                                </div>
+                            <div style="display:inline-block;">
+                                <select name="CLOSE_VER" id="CLOSE_VER">
+                                    <option value="1">
+                                        1차
+                                    </option>
+                                    <option value="2">
+                                        2차
+                                    </option>
+                                    <option value="3">
+                                        3차
+                                    </option>
+                                    <option value="4">
+                                        4차
+                                    </option>
+                                </select>
                             </div>
-                        </form>
-                    </div>
-                    <div class="col-md-6">
-                        <b>진행 하시겠습니까?</b>
-                        <div class="text-right">
-                            <button id="CONTROL_CLOSE_YES">Yes</button>
-                            <button id="CONTROL_CLOSE_NO">No</button>
                         </div>
                     </div>
+                </form>
+            </div>
+            <div style="display:inline-block; float: left;">
+                <span style="font-size: 12px; color: #343434; line-height: 25px; display: inline-block; padding: 0 10px;">진행 하시겠습니까?</span>
+                <div class="text-right" style="display: inline-block;">
+                    <button class="defaultBtn" id="CONTROL_CLOSE_YES">Yes</button>
+                    <button class="defaultBtn" id="CONTROL_CLOSE_NO">No</button>
                 </div>
             </div>
-            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+<div class="popup_container" id="CONTROL_TRANSACTION_STATEMENT_POPUP" style="display: none;">
+    <div class="layerPopup">
+        <h3 style="margin-bottom: 10px;">거래 명세표</h3>
+        <button type="button" class="pop_close">닫기</button>
+
+        <!-- 버튼 -->
+        <div class="buttonWrap">
+            <div style="float: right">
+                <button>라벨 출력</button>
+                <button>Save</button>
+                <button>Save & Export</button>
+            </div>
+        </div>
+
+        <!-- 기본 정보 -->
+        <div>
+            <h5>기본정보</h5>
+            <table>
+                <tbody>
+                <tr>
+                    <td>발주사</td>
+                    <td>제이스텍</td>
+                    <td>공급사</td>
+                    <td>진성정밀</td>
+                </tr>
+                <tr>
+                    <td>구매 담당자</td>
+                    <td>김구매</td>
+                    <td>금액 합계</td>
+                    <td>1,234,567</td>
+                </tr>
+                <tr>
+                    <td>INV No.</td>
+                    <td>고유명사-공급사-발주사-SEQ</td>
+                    <td>subject</td>
+                    <td><input type="text" value="4세대 인라인 조립기"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 상세 리스트 -->
+        <div>
+            <h5>상세 리스트</h5>
+            <div id="CONTROL_TRANSACTION_STATEMENT_DETAIL_LIST_GRID"></div>
+        </div>
     </div>
 </div>
 
@@ -498,6 +523,19 @@
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
+        const COMPANY_STAFF = (function () {
+            let list = [];
+            let parameters = {'url': '/json-list', 'data': {'queryId': 'dataSource.getCompanyStaffList'}};
+
+            fnPostAjax(function (data, callFunctionParam) {
+                for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
+                    let obj = data.list[i];
+
+                    list.push({value: obj.CODE_CD, text: obj.CODE_NM, compCd: obj.COMP_CD});
+                }
+            }, parameters, '');
+            return list;
+        })();
         let selectedRowIndex = [];
         let $orderManagementGrid;
         const gridId = 'CONTROL_MANAGE_GRID';
@@ -520,21 +558,145 @@
                     {title: '변경일시', width: 95, datatype: 'date', dataIndx: 'CONTROL_STATUS_DT'}
                 ]
             },
-            {title: '사업자<br>구분', clsHead: 'display_none', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자<br>구분', width: 70, dataType: 'string', dataIndx: 'COMP_NM'},
-            {title: '발주업체', clsHead: 'display_none', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '구매담당', clsHead: 'display_none', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', hidden: true},
-            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM'},
+            {title: '사업자<br>구분', clsHead: 'display_none', width: 70, dataType: 'string', dataIndx: 'COMP_CD', editable: true,
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: BUSINESS_COMPANY},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let index = BUSINESS_COMPANY.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = BUSINESS_COMPANY.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : BUSINESS_COMPANY[index].text;
+                    }
+                }
+            },
+            {title: '발주업체', clsHead: 'display_none', dataType: 'string', dataIndx: 'ORDER_COMP_CD', editable: true,
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: ORDER_COMPANY},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let index = ORDER_COMPANY.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = ORDER_COMPANY.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : ORDER_COMPANY[index].text;
+                    }
+                }
+            },
+            {title: '구매담당', clsHead: 'display_none', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', editable: true,
+                editor: {
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: function (ui) {
+                        let companyStaffList = COMPANY_STAFF.filter(function (value, index, array) {
+                            return value.compCd == ui.rowData.ORDER_COMP_CD;
+                        });
+
+                        return companyStaffList;
+                    }
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let index = COMPANY_STAFF.findIndex(function (element) {
+                            return element.text == cellData;
+                        });
+
+                        if (index < 0) {
+                            index = COMPANY_STAFF.findIndex(function (element) {
+                                return element.value == cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : COMPANY_STAFF[index].text;
+                    }
+                }
+            },
             {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', editable: true, styleHead: {'font-weight': 'bold'}},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true},
             {title: 'INV No.<br>(거래명세No.)', width: 100, dataType: 'string', dataIndx: 'CHARGE_USER_ID'},
-            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', editable: true},
-            {title: '모듈', dataType: 'string', dataIndx: 'MODULE_NM', editable: true},
+            {title: '프로젝트', width: 200, dataType: 'string', dataIndx: 'PROJECT_NM', editable: true},
+            {title: '모듈', width: 70, dataType: 'string', dataIndx: 'MODULE_NM', editable: true},
             {title: '납품처', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM', editable: true},
             {title: '비고(라벨)', dataType: 'string', dataIndx: 'LABEL_NOTE', editable: true},
-            {title: '주요<br>검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
-            {title: '긴급', clsHead: 'control_manage_view_quality', dataType: 'string', dataIndx: 'EMERGENCY_YN'},
+            {title: '주요<br>검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION', editable: true,
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1059')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let mainInspection = fnGetCommCodeGridSelectBox('1059');
+                        let index = mainInspection.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = mainInspection.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : mainInspection[index].text;
+                    }
+                }
+            },
+            {title: '긴급', clsHead: 'control_manage_view_quality', dataType: 'string', dataIndx: 'EMERGENCY_YN', editable: true,
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1042')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let yesOrNo = fnGetCommCodeGridSelectBox('1042');
+                        let index = yesOrNo.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = yesOrNo.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+
+                        }
+
+                        return (index < 0) ? cellData : yesOrNo[index].text;
+                    }
+                }
+            },
             {title: 'CONTROL_VER', clsHead: 'control_manage_view_close', dataType: 'string', dataIndx: 'CONTROL_VER', hidden: true},
             {title: '관리번호', clsHead: 'control_manage_view_estimate', width: 100, dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true},
             {
@@ -548,21 +710,182 @@
             {title: '도면번호버전', dataType: 'string', dataIndx: 'DRAWING_VER', hidden: true},
             {title: '도면번호', width: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', editable: true},
             {title: '품명', width: 110, dataType: 'string', dataIndx: 'ITEM_NM', editable: true},
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true},
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM'},
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: true,
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1033')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let workType = fnGetCommCodeGridSelectBox('1033');
+                        let index = workType.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = workType.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+
+                        }
+                        console.log(index);
+                        return (index < 0) ? cellData : workType[index].text;
+                    }
+                }
+            },
             {title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN'},
-            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', hidden: true},
-            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY_NM'},
-            {title: '소재<br>사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN'},
+            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', editable: true,
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1014')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let workFactory = fnGetCommCodeGridSelectBox('1014');
+                        let index = workFactory.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = workFactory.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : workFactory[index].text;
+                    }
+                }
+            },
+            {title: '소재<br>사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', editable: true,
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1042')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let yesOrNo = fnGetCommCodeGridSelectBox('1042');
+                        let index = yesOrNo.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = yesOrNo.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+
+                        }
+
+                        return (index < 0) ? cellData : yesOrNo[index].text;
+                    }
+                }
+            },
             {title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT', editable: true},
             {title: '규격', width: 110, dataType: 'string', dataIndx: 'SIZE_TXT', editable: true},
-            {title: '소재<br>종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden: true},
-            {title: '소재<br>종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
+            {title: '소재<br>종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', editable: true,
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1027')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let materialDetail = fnGetCommCodeGridSelectBox('1027');
+                        let index = materialDetail.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = materialDetail.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : materialDetail[index].text;
+                    }
+                }
+            },
             {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE', hidden: true},
             {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM'},
-            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', hidden: true},
-            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM'},
-            {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT'},
+            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', editable: true,
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1029')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let materialKind = fnGetCommCodeGridSelectBox('1029');
+
+                        let index = materialKind.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = materialKind.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : materialKind[index].text;
+                    }
+                }
+            },
+            {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', editable: true,
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1039')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let surfaceTreat = fnGetCommCodeGridSelectBox('1039');
+                        let index = surfaceTreat.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = surfaceTreat.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : surfaceTreat[index].text;
+                    }
+                }
+            },
             {title: '소재비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', editable: true},
             {title: 'Part<br>단위<br>수량', dataType: 'integer', dataIndx: 'PART_UNIT_QTY'},
             {title: '주문<br>수량', dataType: 'integer', dataIndx: 'ORDER_QTY_TOTAL'},
@@ -710,18 +1033,16 @@
                     return {data: dataJSON.data};
                 }
             },
-            editModel: {clicksToEdit: 1},
+            // editModel: {clicksToEdit: 1},
             complete: function (event, ui) {
-                this.flex();
+                // this.flex();
                 let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
 
                 $('#CONTROL_MANAGE_RECORDS').html(data.length);
             },
             cellClick: function (event, ui) {
-                console.group('cellClick');
-                console.log(ui.rowData);
-                console.groupEnd();
-                if(ui.rowData.IMG_GFILE_SEQ) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);    // 셀 선택시 도면 View 실행 중인경우 이미지 표시 하기
+                if(ui.rowData.IMG_GFILE_SEQ) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);  // 셀 선택시 도면 View 실행 중인경우 이미지 표시 하기
+
                 if (ui.dataIndx === 'PART_NUM' && ui.rowData.WORK_TYPE === 'WTP020') {
                     let newRowData = fnCloneObj(ui.rowData);
                     let data = $orderManagementGrid.pqGrid('option', 'dataModel.data'), totalRecords = data.length;
@@ -766,6 +1087,7 @@
 
                     if (firstRow === lastRow) selectedRowIndex[0] = firstRow;
                     else for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
+                    console.log(selectedRowIndex);
                 }
             },
             change: function (evt, ui) {
@@ -806,9 +1128,9 @@
                 console.groupEnd();
             },
             columnResize: function (event, ui) {
-                cosole.count();
-                console.log(event);
-                console.log(ui);
+                // cosole.count();
+                // console.log(event);
+                // console.log(ui);
             }
         };
         let $orderRegisterGrid;
@@ -860,17 +1182,17 @@
                     }
                 }
             },
-            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM'},
-            {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM'},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
-            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM'},
             {
-                title: '주요 검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION',
+                title: '구매<br>담당자', dataType: 'string', dataIndx: 'ORDER_STAFF_NM',
                 editor: {
-                    type: 'select',
-                    valueIndx: 'value',
-                    labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1052')
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: function (ui) {
+                        let companyStaffList = COMPANY_STAFF.filter(function (value, index, array) {
+                            return value.compCd == ui.rowData.ORDER_COMP_CD;
+                        });
+
+                        return companyStaffList;
+                    }
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -878,7 +1200,41 @@
                     if (cellData === '') {
                         return '';
                     } else {
-                        let mainInspection = fnGetCommCodeGridSelectBox('1052');
+                        let index = COMPANY_STAFF.findIndex(function (element) {
+                            return element.text == cellData;
+                        });
+
+                        if (index < 0) {
+                            index = COMPANY_STAFF.findIndex(function (element) {
+                                return element.value == cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : COMPANY_STAFF[index].text;
+                    }
+                }
+            },
+            {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM'},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
+            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM'},
+            {title: '모듈', dataType: 'string', dataIndx: 'MODULE_NM'},
+            {title: '납품처', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM'},
+            {title: '비고(라벨)', dataType: 'string', dataIndx: 'LABEL_NOTE'},
+            {
+                title: '주요 검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION',
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1059')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let mainInspection = fnGetCommCodeGridSelectBox('1059');
                         let index = mainInspection.findIndex(function (element) {
                             return element.text === cellData;
                         });
@@ -952,13 +1308,13 @@
                             });
 
                         }
-
+                        console.log(index);
                         return (index < 0) ? cellData : workType[index].text;
                     }
                 }
             },
             {
-                title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN',
+                title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN', editable: true,
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -1047,7 +1403,7 @@
             {title: '가공납기', dataType: 'string', dataIndx: 'INNER_DUE_DT'},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT'},
             {
-                title: '소재상세종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
+                title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -1207,7 +1563,7 @@
             ]
         };
         const popupObj = {
-            // height: 600,
+            height: 700,
             collapsible: false,
             resizable: true,
             showTitle: false,
@@ -1228,7 +1584,7 @@
             change: function (evt, ui) {
                 if (ui.source === 'paste') {
                     const addListLength = ui.addList.length;
-                    const mainInspectionList = fnGetCommCodeGridSelectBox('1052');
+                    const mainInspectionList = fnGetCommCodeGridSelectBox('1059');
                     const workTypeList = fnGetCommCodeGridSelectBox('1033');
                     const workFactoryList = fnGetCommCodeGridSelectBox('1014');
                     const materialDetailList = fnGetCommCodeGridSelectBox('1027');
@@ -1344,7 +1700,7 @@
             {title: '마감금액', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'}
         ];
         let controlCloseLeftObj = {
-            // height: 600,
+            height: 600,
             collapsible: false,
             resizable: true,
             showTitle: false,
@@ -1378,7 +1734,7 @@
             }
         ];
         let controlCloseRightObj = {
-            // height: 600,
+            height: 600,
             collapsible: false,
             resizable: true,
             showTitle: false,
@@ -1464,7 +1820,7 @@
                 }
             }
             for (let i = 0; i < orderCompCdList.length; i++) {
-                orderCompCdStr += orderCompCdList[i];
+                orderCompCdStr += '\'' + orderCompCdList[i] + '\'';
 
                 if (i < orderCompCdList.length - 1) {
                     orderCompCdStr += ',';
@@ -1500,7 +1856,7 @@
 
             fnPostAjax(function (data) {
                 $controlCloseRightGrid.pqGrid('option', 'dataModel.data', data.list);
-                $controlCloseRightGrid.pqGrid('refresh');
+                $controlCloseRightGrid.pqGrid('refreshView');
             }, parameters, '');
         };
 
@@ -1510,9 +1866,9 @@
             let bottom = $('#view_tab_100021 .bottomWrap');
             let con = $('#view_tab_100021 .bottomWrap .tableWrap .conWrap');
 
-            top.stop().animate({height: 159}, 300, 'easeOutCubic');
-            bottom.stop().animate({height: 730}, 300, 'easeOutCubic');
-            con.stop().animate({height: 562}, 300, 'easeOutCubic');
+            top.stop().animate({'height': '130px'}, 300, 'easeOutCubic');
+            bottom.stop().animate({'height': '770px'}, 300, 'easeOutCubic');
+            con.css({'height': '640px'});
 
             $orderManagementGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
         };
@@ -1523,9 +1879,9 @@
             let bottom = $('#view_tab_100021 .bottomWrap');
             let con = $('#view_tab_100021 .bottomWrap .tableWrap .conWrap');
 
-            top.stop().animate({height: 47}, 300, 'easeInCubic');
-            bottom.stop().animate({height: 840},300, 'easeOutCubic');
-            con.stop().animate({height: 699}, 300, 'easeInCubic');
+            top.stop().animate({'height': '40px'}, 300, 'easeInCubic');
+            bottom.stop().animate({'height': '855px'}, 300, 'easeOutCubic');
+            con.css({'height': '714px'});
 
             $orderManagementGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
         }
@@ -1778,10 +2134,8 @@
             });
         });
         // 거래명세표
-        $('#SPECIFICATION_ON_TRANSACTION').on('click', function () {
-            let gridData = $orderManagementGrid.pqGrid('option', 'dataModel.data');
-            console.log(gridData);
-            alert('개발중입니다.');
+        $('#CONTROL_TRANSACTION_STATEMENT_POPUP').on('show.bs.modal', function () {
+
         });
         // 견적자동계산
         $('#ESTIMATE_AUTOMATIC_CALCULATION').on('click', function () {
@@ -1969,7 +2323,6 @@
                 rowData.CLOSE_MONTH = $('#CONTROL_CLOSE_YEAR').val() + $('#CONTROL_CLOSE_MONTH').val();
                 list.push(rowData);
             }
-
             // rightGrid
             let parameters = {'url': '/insertMonthFinishClose', 'data': {data: JSON.stringify(list)}};
             fnPostAjax(function (data, callFunctionParam) {

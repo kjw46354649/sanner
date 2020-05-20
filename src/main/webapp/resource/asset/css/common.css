@@ -123,6 +123,7 @@ option { font-size: 12px; }
 .defaultBtn { height: 27px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; display: inline-block; text-align: center; padding: 0 20px; border: 1px solid #e5e5e5; box-sizing: border-box; }
 .defaultBtn.btn-120w { display: inline-block; overflow: hidden; width: 120px; height: 27px; margin: 0 5px; padding: 0 10px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
 
+
 .yelllowGra { background: #ffc63a; border: 1px solid #ffc63a; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#FFC63A)";/*IE 8*/ -moz-box-shadow: 1px 1px 3px 3px rgba(255, 198, 58, 0.3);/*FF 3.5+*/ -webkit-box-shadow: 1px 1px 2px 2px rgba(255, 198, 58, 0.3);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#FFC63A); 3-4,Chrome, iOS 4.0.2-4.2, Android 2.3+*/box-shadow: 1px 1px 2px 2px rgba(255, 198, 58, 0.3); /*IE 5.5-7*/ }
 .blueGra { background: #2b89fa; border: 1px solid #2b89fa; color: #fff; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#2B89FA)";/*IE 8*/ -moz-box-shadow: 1px 1px 2px 2px rgba(43, 137, 250, 0.3);/*FF 3.5+*/ -webkit-box-shadow: 1px 1px 2px 2px rgba(43, 137, 250, 0.3);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#2B89FA); box-shadow: 1px 1px 2px 2px rgba(43, 137, 250, 0.3); /*IE 5.5-7*/ }
 .blackGra { background: #454545; border: 1px solid #454545; color: #fff; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#454545)";/*IE 8*/ -moz-box-shadow: 1px 1px 3px 3px rgba(69, 69, 69, 0.3);/*FF 3.5+*/ -webkit-box-shadow: 1px 1px 2px 2px rgba(69, 69, 69, 0.3);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#454545); box-shadow: 1px 1px 2px 2px rgba(69, 69, 69, 0.3); /*IE 5.5-7*/ }
@@ -164,8 +165,13 @@ option { font-size: 12px; }
 .gradeBtn.purple { border: 1px solid #76139f; background: #bd67e1 }
 .submit { width: 120px; height: 32px; font-size: 0; background: url(../images/common/btn_submit.png)no-repeat 0 0; }
 .cancel { width: 110px; height: 32px; font-size: 0; background: url(../images/common/btn_cancel.png)no-repeat 0 0; }
-.icon_btn { height: 28px; border: 1px solid #a3a3a3; font-size: 13px; font-family: 'NotoKrB'; position: relative; color: #010101; box-sizing: border-box; line-height: 26px; padding: 0 12px 0 27px;
-}
+.icon_btn { height: 28px; border: 1px solid #a3a3a3; font-size: 13px; font-family: 'NotoKrB'; position: relative; color: #010101; box-sizing: border-box; line-height: 26px; padding: 0 12px 0 27px; }
+
+.defaultBtn.mct { background-color: #8cfef0; }
+.defaultBtn.mct:disabled { background-color: #afabab; }
+.camFinishBtn { background-color: #0070c0; color: #ffffff; }
+.camPauseBtn { background-color: #fff2cc; }
+.camCancelBtn { background-color: #b4c7e7; }
 
 .icon_btn.search:before { content: ''; width: 9px; height: 12px; background: url(../images/common/ico_search.jpg)no-repeat 0 0; position: absolute; top: 8px; left: 12px; }
 .icon_btn.search_eng:before { content: ''; width: 9px; height: 12px; background: url(../images/common/ico_search.jpg)no-repeat 0 0; position: absolute; top: 8px; left: 11px; }
@@ -356,12 +362,19 @@ table.boardList .txtP{color: #7030a0;}
 .popup_container:before { content: 'modal_bg'; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; opacity: .5; text-indent: -999em; font-size: 0; }
 .layerPopup { position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; background: #fff; width: 1012px; height: 800px; border: 1px solid #ababab; padding: 20px; box-sizing: border-box; }
 .layerPopup h3 { font-size: 20px; font-family: 'NotoKrB'; color: #000; display: inline-block; }
+.layerPopup h5 { font-size: 16px; font-family: 'NotoKrB'; color: #000; margin: 10px; }
 .layerPopup .pop_close { width: 23px; height: 23px; position: absolute; top: 12px; right: 12px; font-size: 0; background: url(../images/common/btn_popup.png)no-repeat 0 0; }
-.layerPopup .buttonWrap { font-size: 0; display: inline-block; }
+.layerPopup .buttonWrap { display: block; overflow: hidden; }
+.layerPopup .buttonWrap button { border: 1px solid #808080; padding: 5px 10px; text-align: center; display: inline-block; font-size: 12px; margin: 4px 2px; cursor: pointer; }
 .layerPopup .buttonWrap .onoff { height: 35px; padding: 0 20px; border: 1px solid #b6b6b6; font-size: 13px; color: #8e8e8e; background: #f3f1f1; border-left: 0; border-right: 0; }
 .layerPopup .buttonWrap .onoff.left { border-radius: 5px 0 0 5px; border-left: 1px solid #b6b6b6; }
 .layerPopup .buttonWrap .onoff.right { border-radius: 0px 5px 5px 0px; border-right: 1px solid #b6b6b6; }
 .layerPopup .buttonWrap .onoff.on { border: 1px solid #8a8a8a; background: #ebebeb; color: #000; }
+.layerPopup table { width: 100%; border: 1px solid #808080; border-collapse: collapse; }
+.layerPopup table > tr, td { height: 30px; text-align: center; font-size: 12px; border: 1px solid #808080; }
+.layerPopup table > tr > td > input[] { width: 100%; }
+.layerPopup table > tr > td > input { width: 100%; }
+.td input:focus, .td textarea:focus{     outline: none; }
 
 
 
@@ -387,3 +400,9 @@ table.boardList .txtP{color: #7030a0;}
 .bg-green {  background-color: #ffd966; }
 .bg-yellow { background-color: #ffff00; }
 .bg-orange { background-color: #ffc000; }
+
+.pq-grid-col, .pq-grid-row>.pq-grid-cell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
