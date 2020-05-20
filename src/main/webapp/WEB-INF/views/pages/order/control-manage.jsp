@@ -212,100 +212,73 @@
     </div>
 </div>
 
-<%--<div class="popup_container" id="CONTROL_CLOSE_POPUP" style="display: none;">
+<div class="popup_container" id="CONTROL_CLOSE_POPUP" style="display: none;">
     <div class="layerPopup">
         <h3 style="margin-bottom: 10px;">월 마감 진행</h3>
         <button type="button" class="pop_close">닫기</button>
         <div>
-            <div class="col-md-5">
+            <div style="width: 450px; float:left;">
                 <div id="CONTROL_CLOSE_LEFT_GRID"></div>
             </div>
-            <div class="col-md-2">
+            <div style="width: 70px; float:left;">
                 화살표 ~>
             </div>
-            <div class="col-md-5">
+            <div style="width: 450px; float:left;">
                 <div id="CONTROL_CLOSE_RIGHT_GRID"></div>
             </div>
         </div>
-    </div>
-</div>--%>
-
-<div class="modal" id="" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
-                        class="sr-only">Close</span></button>
-                <h4 class="modal-title"></h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-5">
-                        <div id="CONTROL_CLOSE_LEFT_GRID"></div>
-                    </div>
-                    <div class="col-md-2">
-                        화살표~>
-                    </div>
-                    <div class="col-md-5">
-                        <div id="CONTROL_CLOSE_RIGHT_GRID"></div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <form class="form-inline" id="CONTROL_CLOSE_FORM" role="form">
-                            <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectControlCloseLeftList">
-                            <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
-                            <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                            <div class="col-md-8">
-                                <div class="col-md-3">
-                                    <label>대상 년/월</label>
-                                </div>
-                                <div class="col-md-5">
-                                    <label for="CONTROL_CLOSE_YEAR"></label><select name="CONTROL_CLOSE_YEAR" id="CONTROL_CLOSE_YEAR">
-                                    <option></option>
-                                </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="CONTROL_CLOSE_MONTH"></label><select name="CONTROL_CLOSE_MONTH" id="CONTROL_CLOSE_MONTH">
-                                    <option></option>
-                                </select>
-                                </div>
+        <div style="display:inline-block; margin-top: 20px;">
+            <div style="display:inline-block; padding-left: 10px; float: left;">
+                <form class="form-inline" id="CONTROL_CLOSE_FORM" role="form">
+                    <input type="hidden" name="queryId" id="queryId" value="selectControlCloseLeftList">
+                    <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
+                    <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
+                    <div style="display:inline-block; width: 646px; float: left;">
+                        <div style="display:inline-block;">
+                            <label style="font-size: 12px; color: #343434; line-height: 25px; display: inline-block; padding: 0 10px;">대상 년/월</label>
+                        </div>
+                        <div style="display:inline-block;">
+                            <label for="CONTROL_CLOSE_YEAR"></label><select name="CONTROL_CLOSE_YEAR" id="CONTROL_CLOSE_YEAR">
+                            <option></option>
+                        </select>
+                        </div>
+                        <div style="display:inline-block;">
+                            <label for="CONTROL_CLOSE_MONTH"></label><select name="CONTROL_CLOSE_MONTH" id="CONTROL_CLOSE_MONTH">
+                            <option></option>
+                        </select>
+                        </div>
+                        <div style="display:inline-block; margin-left: 10px;">
+                            <div style="display:inline-block;">
+                                <label for="CLOSE_VER" style="font-size: 12px; color: #343434; line-height: 25px; display: inline-block; padding: 0 10px;">차수</label>
                             </div>
-                            <div class="col-md-4">
-                                <div class="col-md-6">
-                                    <label for="CLOSE_VER">차수</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <select name="CLOSE_VER" id="CLOSE_VER">
-                                        <option value="1">
-                                            1차
-                                        </option>
-                                        <option value="2">
-                                            2차
-                                        </option>
-                                        <option value="3">
-                                            3차
-                                        </option>
-                                        <option value="4">
-                                            4차
-                                        </option>
-                                    </select>
-                                </div>
+                            <div style="display:inline-block;">
+                                <select name="CLOSE_VER" id="CLOSE_VER">
+                                    <option value="1">
+                                        1차
+                                    </option>
+                                    <option value="2">
+                                        2차
+                                    </option>
+                                    <option value="3">
+                                        3차
+                                    </option>
+                                    <option value="4">
+                                        4차
+                                    </option>
+                                </select>
                             </div>
-                        </form>
-                    </div>
-                    <div class="col-md-6">
-                        <b>진행 하시겠습니까?</b>
-                        <div class="text-right">
-                            <button id="CONTROL_CLOSE_YES">Yes</button>
-                            <button id="CONTROL_CLOSE_NO">No</button>
                         </div>
                     </div>
+                </form>
+            </div>
+            <div style="display:inline-block; float: left;">
+                <span style="font-size: 12px; color: #343434; line-height: 25px; display: inline-block; padding: 0 10px;">진행 하시겠습니까?</span>
+                <div class="text-right" style="display: inline-block;">
+                    <button class="defaultBtn" id="CONTROL_CLOSE_YES">Yes</button>
+                    <button class="defaultBtn" id="CONTROL_CLOSE_NO">No</button>
                 </div>
             </div>
-            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
     </div>
 </div>
 
@@ -617,8 +590,63 @@
             {title: '모듈', width: 70, dataType: 'string', dataIndx: 'MODULE_NM', editable: true},
             {title: '납품처', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM', editable: true},
             {title: '비고(라벨)', dataType: 'string', dataIndx: 'LABEL_NOTE', editable: true},
-            {title: '주요<br>검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
-            {title: '긴급', clsHead: 'control_manage_view_quality', dataType: 'string', dataIndx: 'EMERGENCY_YN'},
+            {title: '주요<br>검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION', editable: true,
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1059')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let mainInspection = fnGetCommCodeGridSelectBox('1059');
+                        let index = mainInspection.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = mainInspection.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : mainInspection[index].text;
+                    }
+                }
+            },
+            {title: '긴급', clsHead: 'control_manage_view_quality', dataType: 'string', dataIndx: 'EMERGENCY_YN', editable: true,
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1042')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let yesOrNo = fnGetCommCodeGridSelectBox('1042');
+                        let index = yesOrNo.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = yesOrNo.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+
+                        }
+
+                        return (index < 0) ? cellData : yesOrNo[index].text;
+                    }
+                }
+            },
             {title: 'CONTROL_VER', clsHead: 'control_manage_view_close', dataType: 'string', dataIndx: 'CONTROL_VER', hidden: true},
             {title: '관리번호', clsHead: 'control_manage_view_estimate', width: 100, dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true},
             {
@@ -632,16 +660,95 @@
             {title: '도면번호버전', dataType: 'string', dataIndx: 'DRAWING_VER', hidden: true},
             {title: '도면번호', width: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', editable: true},
             {title: '품명', width: 110, dataType: 'string', dataIndx: 'ITEM_NM', editable: true},
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true},
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM'},
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: true,
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1033')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let workType = fnGetCommCodeGridSelectBox('1033');
+                        let index = workType.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = workType.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+
+                        }
+                        console.log(index);
+                        return (index < 0) ? cellData : workType[index].text;
+                    }
+                }
+            },
             {title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN'},
-            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', hidden: true},
-            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY_NM'},
+            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', editable: true,
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1014')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let workFactory = fnGetCommCodeGridSelectBox('1014');
+                        let index = workFactory.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = workFactory.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : workFactory[index].text;
+                    }
+                }
+            },
             {title: '소재<br>사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN'},
             {title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT', editable: true},
             {title: '규격', width: 110, dataType: 'string', dataIndx: 'SIZE_TXT', editable: true},
-            {title: '소재<br>종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden: true},
-            {title: '소재<br>종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
+            {title: '소재<br>종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', editable: true,
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1027')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let materialDetail = fnGetCommCodeGridSelectBox('1027');
+                        let index = materialDetail.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = materialDetail.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : materialDetail[index].text;
+                    }
+                }
+            },
             {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE', hidden: true},
             {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM'},
             {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', hidden: true},
@@ -802,12 +909,8 @@
                 $('#CONTROL_MANAGE_RECORDS').html(data.length);
             },
             cellClick: function (event, ui) {
-                console.group('cellClick');
-                console.log(ui.rowData);
-                console.groupEnd();
-                if(ui.rowData.IMG_GFILE_SEQ) {
-                    callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ)  // 셀 선택시 도면 View 실행 중인경우 이미지 표시 하기
-                };
+                if(ui.rowData.IMG_GFILE_SEQ) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);  // 셀 선택시 도면 View 실행 중인경우 이미지 표시 하기
+
                 if (ui.dataIndx === 'PART_NUM' && ui.rowData.WORK_TYPE === 'WTP020') {
                     let newRowData = fnCloneObj(ui.rowData);
                     let data = $orderManagementGrid.pqGrid('option', 'dataModel.data'), totalRecords = data.length;
@@ -991,7 +1094,7 @@
                     type: 'select',
                     valueIndx: 'value',
                     labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1052')
+                    options: fnGetCommCodeGridSelectBox('1059')
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -999,7 +1102,7 @@
                     if (cellData === '') {
                         return '';
                     } else {
-                        let mainInspection = fnGetCommCodeGridSelectBox('1052');
+                        let mainInspection = fnGetCommCodeGridSelectBox('1059');
                         let index = mainInspection.findIndex(function (element) {
                             return element.text === cellData;
                         });
@@ -1073,7 +1176,7 @@
                             });
 
                         }
-
+                        console.log(index);
                         return (index < 0) ? cellData : workType[index].text;
                     }
                 }
@@ -1349,7 +1452,7 @@
             change: function (evt, ui) {
                 if (ui.source === 'paste') {
                     const addListLength = ui.addList.length;
-                    const mainInspectionList = fnGetCommCodeGridSelectBox('1052');
+                    const mainInspectionList = fnGetCommCodeGridSelectBox('1059');
                     const workTypeList = fnGetCommCodeGridSelectBox('1033');
                     const workFactoryList = fnGetCommCodeGridSelectBox('1014');
                     const materialDetailList = fnGetCommCodeGridSelectBox('1027');
@@ -1465,7 +1568,7 @@
             {title: '마감금액', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'}
         ];
         let controlCloseLeftObj = {
-            // height: 600,
+            height: 600,
             collapsible: false,
             resizable: true,
             showTitle: false,
@@ -1499,7 +1602,7 @@
             }
         ];
         let controlCloseRightObj = {
-            // height: 600,
+            height: 600,
             collapsible: false,
             resizable: true,
             showTitle: false,
@@ -1585,7 +1688,7 @@
                 }
             }
             for (let i = 0; i < orderCompCdList.length; i++) {
-                orderCompCdStr += orderCompCdList[i];
+                orderCompCdStr += '\'' + orderCompCdList[i] + '\'';
 
                 if (i < orderCompCdList.length - 1) {
                     orderCompCdStr += ',';
@@ -1621,7 +1724,7 @@
 
             fnPostAjax(function (data) {
                 $controlCloseRightGrid.pqGrid('option', 'dataModel.data', data.list);
-                $controlCloseRightGrid.pqGrid('refresh');
+                $controlCloseRightGrid.pqGrid('refreshView');
             }, parameters, '');
         };
 
@@ -2090,7 +2193,6 @@
                 rowData.CLOSE_MONTH = $('#CONTROL_CLOSE_YEAR').val() + $('#CONTROL_CLOSE_MONTH').val();
                 list.push(rowData);
             }
-
             // rightGrid
             let parameters = {'url': '/insertMonthFinishClose', 'data': {data: JSON.stringify(list)}};
             fnPostAjax(function (data, callFunctionParam) {

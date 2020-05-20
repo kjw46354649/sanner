@@ -354,32 +354,6 @@
             $detailListViewGrid = $('#' + detailListViewGridId).pqGrid(detailListViewObj);
         });
 
-        /* init */
-        fnCommCodeDatasourceSelectBoxCreate($('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM').find('#ORDER_COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOrderCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#MONTH_SALE_STATUS_SEARCH_FORM ').find('#COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#MONTH_SALE_STATUS_SEARCH_FORM ').find('#ORDER_COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOrderCompanyList'}
-        });
-        $closingHistoryGrid = $('#' + tab1GridId).pqGrid(tab1Obj);
-        $monthlySalesStatusGrid = $('#' + tab2GridId).pqGrid(tab2Obj);
-
-        fnAppendSelectboxYear('CLOSE_YEAR_LEFT', 10);
-        fnAppendSelectboxMonth('CLOSE_MONTH_LEFT');
-        fnAppendSelectboxYear('CLOSE_YEAR_RIGHT', 10);
-        fnAppendSelectboxMonth('CLOSE_MONTH_RIGHT');
-        fnAppendSelectboxYear('MONTH_SALE_YEAR', 10);
-
         $('#CLOSE_YEAR_LEFT').on('change', function () {
             fnAppendSelectboxMonth('CLOSE_MONTH_LEFT', this.value);
         });
@@ -409,6 +383,47 @@
                 $('.hWrap').toggle();
             }
         });
+
+        $('#CONTROL_SALES_CLOSING_HISTORY_SEARCH').on('click', function () {
+            $closingHistoryGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+                return fnFormToJsonArrayData('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM');
+            });
+            $closingHistoryGrid.pqGrid('refreshDataAndView');
+        });
+
+        $('#CONTROL_MONTH_SALE_STATUS_SEARCH').on('click', function () {
+            $monthlySalesStatusGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+                return fnFormToJsonArrayData('#MONTH_SALE_STATUS_SEARCH_FORM');
+            });
+            $monthlySalesStatusGrid.pqGrid('refreshDataAndView');
+        });
+
+        /* init */
+        fnCommCodeDatasourceSelectBoxCreate($('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM').find('#ORDER_COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOrderCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#MONTH_SALE_STATUS_SEARCH_FORM ').find('#COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#MONTH_SALE_STATUS_SEARCH_FORM ').find('#ORDER_COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOrderCompanyList'}
+        });
+        $closingHistoryGrid = $('#' + tab1GridId).pqGrid(tab1Obj);
+        $monthlySalesStatusGrid = $('#' + tab2GridId).pqGrid(tab2Obj);
+
+        fnAppendSelectboxYear('CLOSE_YEAR_LEFT', 10);
+        fnAppendSelectboxMonth('CLOSE_MONTH_LEFT');
+        $('#CLOSE_MONTH_LEFT').val(1).prop('selected', true);
+        fnAppendSelectboxYear('CLOSE_YEAR_RIGHT', 10);
+        fnAppendSelectboxMonth('CLOSE_MONTH_RIGHT');
+        fnAppendSelectboxYear('MONTH_SALE_YEAR', 10);
         /* init */
     });
 </script>

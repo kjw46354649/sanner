@@ -15,7 +15,7 @@
 <div class="page process_confirm">
     <div class="leftWrap1 left_float">
         <div>
-            <form class="form-inline" id="CONFIRM_ORDER_SEARCH_FORM" role="form">
+            <form class="form-inline" id="CONFIRM_ORDER_SEARCH_FORM" role="form" onsubmit="return false;">
                 <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectConfirmOrderList">
                 <div class="mg-bottom10">
                     <div class="row">
@@ -220,7 +220,7 @@
             }
         ];
         let leftObj = {
-            height: 750,
+            height: 780,
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             resizable: true,
@@ -297,7 +297,7 @@
             }
         ];
         let rightTopObj = {
-            height: 300,
+            height: 325,
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             resizable: true,
@@ -368,7 +368,7 @@
             {title: '발생일시', dataType: 'string', dataIndx: 'STATUS_DT', editable: false}
         ];
         let rightBotObj = {
-            height: 300,
+            height: 325,
             collapsible: false,
             resizable: true,
             showTitle: false,
@@ -432,8 +432,6 @@
             let QUERY_ID_ARRAY;
             changes.updateList.push(newRowData);
             let parameters;
-            console.log(newRowData);
-            debugger;
 
             if (isProcessAssembly(rowData)) {
                 QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateControlPartStatusAll', 'orderMapper.insertControlPartProgressAll']};
@@ -498,25 +496,19 @@
 
         $("#CONFIRM_ORDER_BARCODE_NUM").on('keyup', function(e) {
             if (e.keyCode === 13) {
-                console.log(this.val());
-                alert('goto home!');
+                $('#barcode_form').children('#queryId').val('popMapper.selectBarcodeInfo');
+                $('#barcode_form').children('#popBarcode').val(this.value);
+
+                let parameters = {'url': '/json-list', 'data': $('#barcode_form').serialize()};
+
+                fnPostAjax(function (data, callFunctionParam) {
+                    let list = data.list[0];
+                    updatePartStatus(list, 'PRO002');
+                }, parameters, '');
+
+                e.preventDefault();
             }
-            e.preventDefault();
         });
 
-        $('#barcode_form').on('submit', function(event) {
-            let formElement = this;
-            $(formElement).children('#queryId').val('popMapper.selectBarcodeInfo');
-
-            let parameters = {'url': '/json-list', 'data': $(formElement).serialize()};
-
-            fnPostAjax(function (data, callFunctionParam) {
-                let list = data.list[0];
-                updatePartStatus(list, 'PRO002');
-            }, parameters, '');
-
-            event.preventDefault();
-
-        });
     });
 </script>
