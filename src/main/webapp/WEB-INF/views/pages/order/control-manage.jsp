@@ -143,7 +143,8 @@
                 <button type="button" class="defaultBtn btn-120w" data-toggle="modal"
                         data-target="#ESTIMATE_REGISTER_POPUP">견적등록
                 </button>
-                <button type="button" class="defaultBtn btn-120w" id="SPECIFICATION_ON_TRANSACTION">거래명세표</button>
+                <button type="button" class="defaultBtn btn-120w" data-toggle="modal"
+                        data-target="#CONTROL_TRANSACTION_STATEMENT_POPUP">거래명세표</button>
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn btn-120w" id="ESTIMATE_AUTOMATIC_CALCULATION">견적자동계산</button>
                     <button type="button" class="defaultBtn btn-120w" id="ESTIMATE_LIST_PRINT">견적List출력</button>
@@ -278,6 +279,55 @@
                     <button class="defaultBtn" id="CONTROL_CLOSE_NO">No</button>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="popup_container" id="CONTROL_TRANSACTION_STATEMENT_POPUP" style="display: none;">
+    <div class="layerPopup">
+        <h3 style="margin-bottom: 10px;">거래 명세표</h3>
+        <button type="button" class="pop_close">닫기</button>
+
+        <!-- 버튼 -->
+        <div class="buttonWrap">
+            <div style="float: right">
+                <button>라벨 출력</button>
+                <button>Save</button>
+                <button>Save & Export</button>
+            </div>
+        </div>
+
+        <!-- 기본 정보 -->
+        <div>
+            <h5>기본정보</h5>
+            <table>
+                <tbody>
+                <tr>
+                    <td>발주사</td>
+                    <td>제이스텍</td>
+                    <td>공급사</td>
+                    <td>진성정밀</td>
+                </tr>
+                <tr>
+                    <td>구매 담당자</td>
+                    <td>김구매</td>
+                    <td>금액 합계</td>
+                    <td>1,234,567</td>
+                </tr>
+                <tr>
+                    <td>INV No.</td>
+                    <td>고유명사-공급사-발주사-SEQ</td>
+                    <td>subject</td>
+                    <td><input type="text" value="4세대 인라인 조립기"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 상세 리스트 -->
+        <div>
+            <h5>상세 리스트</h5>
+            <div id="CONTROL_TRANSACTION_STATEMENT_DETAIL_LIST_GRID"></div>
         </div>
     </div>
 </div>
@@ -718,7 +768,35 @@
                     }
                 }
             },
-            {title: '소재<br>사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN'},
+            {title: '소재<br>사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', editable: true,
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1042')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let yesOrNo = fnGetCommCodeGridSelectBox('1042');
+                        let index = yesOrNo.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = yesOrNo.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+
+                        }
+
+                        return (index < 0) ? cellData : yesOrNo[index].text;
+                    }
+                }
+            },
             {title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT', editable: true},
             {title: '규격', width: 110, dataType: 'string', dataIndx: 'SIZE_TXT', editable: true},
             {title: '소재<br>종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', editable: true,
@@ -751,9 +829,63 @@
             },
             {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE', hidden: true},
             {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM'},
-            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', hidden: true},
-            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM'},
-            {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT'},
+            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', editable: true,
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1029')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let materialKind = fnGetCommCodeGridSelectBox('1029');
+
+                        let index = materialKind.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = materialKind.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : materialKind[index].text;
+                    }
+                }
+            },
+            {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', editable: true,
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1039')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let surfaceTreat = fnGetCommCodeGridSelectBox('1039');
+                        let index = surfaceTreat.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = surfaceTreat.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : surfaceTreat[index].text;
+                    }
+                }
+            },
             {title: '소재비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', editable: true},
             {title: 'Part<br>단위<br>수량', dataType: 'integer', dataIndx: 'PART_UNIT_QTY'},
             {title: '주문<br>수량', dataType: 'integer', dataIndx: 'ORDER_QTY_TOTAL'},
@@ -901,7 +1033,7 @@
                     return {data: dataJSON.data};
                 }
             },
-            editModel: {clicksToEdit: 1},
+            // editModel: {clicksToEdit: 1},
             complete: function (event, ui) {
                 // this.flex();
                 let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
@@ -1182,7 +1314,7 @@
                 }
             },
             {
-                title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN',
+                title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN', editable: true,
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -2002,10 +2134,8 @@
             });
         });
         // 거래명세표
-        $('#SPECIFICATION_ON_TRANSACTION').on('click', function () {
-            let gridData = $orderManagementGrid.pqGrid('option', 'dataModel.data');
-            console.log(gridData);
-            alert('개발중입니다.');
+        $('#CONTROL_TRANSACTION_STATEMENT_POPUP').on('show.bs.modal', function () {
+
         });
         // 견적자동계산
         $('#ESTIMATE_AUTOMATIC_CALCULATION').on('click', function () {
