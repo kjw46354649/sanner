@@ -120,12 +120,14 @@
                         </span>
                     </li>
                     <li>
-                        <span class="txt_span pd-right20">Option</span>
-                        <span class="chk_box"><input id="option1" type="checkbox"><label for="option1"> 자재사급</label></span>
-                        <span class="chk_box"><input id="option2" type="checkbox"><label for="option2"> 외주</label></span>
-                        <span class="chk_box"><input id="option3" type="checkbox"><label for="option3"> 未단가</label></span>
-                        <span class="chk_box"><input id="option4" type="checkbox"><label for="option4"> 긴급</label></span>
-                        <span class="chk_box"><input id="option5" type="checkbox"><label for="option5"> part 숨기기</label></span>
+                        <span>
+                            <span class="ipu_wrap"><label class="label_100">Option</label></span>
+                            <span class="chk_box"><input id="option1" type="checkbox"><label for="option1"> 자재사급</label></span>
+                            <span class="chk_box"><input id="option2" type="checkbox"><label for="option2"> 외주</label></span>
+                            <span class="chk_box"><input id="option3" type="checkbox"><label for="option3"> 未단가</label></span>
+                            <span class="chk_box"><input id="option4" type="checkbox"><label for="option4"> 긴급</label></span>
+                            <span class="chk_box"><input id="option5" type="checkbox"><label for="option5"> part 숨기기</label></span>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -1629,9 +1631,9 @@
             let bottom = $('#view_tab_100021 .bottomWrap');
             let con = $('#view_tab_100021 .bottomWrap .tableWrap .conWrap');
 
-            top.stop().animate({height: 159}, 300, 'easeOutCubic');
-            bottom.stop().animate({height: 730}, 300, 'easeOutCubic');
-            con.stop().animate({height: 562}, 300, 'easeOutCubic');
+            top.stop().animate({'height': '130px'}, 300, 'easeOutCubic');
+            bottom.stop().animate({'height': '770px'}, 300, 'easeOutCubic');
+            con.css({'height': '640px'});
 
             $orderManagementGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
         };
@@ -1642,9 +1644,9 @@
             let bottom = $('#view_tab_100021 .bottomWrap');
             let con = $('#view_tab_100021 .bottomWrap .tableWrap .conWrap');
 
-            top.stop().animate({height: 47}, 300, 'easeInCubic');
-            bottom.stop().animate({height: 840},300, 'easeOutCubic');
-            con.stop().animate({height: 699}, 300, 'easeInCubic');
+            top.stop().animate({'height': '40px'}, 300, 'easeInCubic');
+            bottom.stop().animate({'height': '855px'}, 300, 'easeOutCubic');
+            con.css({'height': '714px'});
 
             $orderManagementGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
         }

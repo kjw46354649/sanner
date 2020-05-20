@@ -16,7 +16,7 @@
     <div class="topWrap">
         <form class="form-inline" id="SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectSalesClosingHistoryList">
-            <div class="gubunWrap row_two">
+            <div class="gubunWrap row2_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -53,11 +53,13 @@
                         <span class="ipu_wrap">
                             <label class="label_100">마감년월</label>
                         </span>
-                        <select name="CLOSE_YEAR_LEFT" id="CLOSE_YEAR_LEFT"></select>
-                        <select name="CLOSE_MONTH_LEFT" id="CLOSE_MONTH_LEFT"></select><span style="margin: 10px 0; vertical-align: middle; font-size: 1.4rem;">~</span>
-                        <select name="CLOSE_YEAR_RIGHT" id="CLOSE_YEAR_RIGHT" disabled></select>
-                        <select name="CLOSE_MONTH_RIGHT" id="CLOSE_MONTH_RIGHT" disabled></select>
-                        <span class="chk_box" style="margin-left: 10px;"><input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH"><label for="RANGE_SEARCH"> Range 검색</label></span>
+                        <span>
+                            <select name="CLOSE_YEAR_LEFT" id="CLOSE_YEAR_LEFT"></select>
+                            <select name="CLOSE_MONTH_LEFT" id="CLOSE_MONTH_LEFT"></select><span style="margin: 10px 0; vertical-align: middle; font-size: 1.4rem;">~</span>
+                            <select name="CLOSE_YEAR_RIGHT" id="CLOSE_YEAR_RIGHT" disabled></select>
+                            <select name="CLOSE_MONTH_RIGHT" id="CLOSE_MONTH_RIGHT" disabled></select>
+                            <span class="chk_box" style="margin-left: 10px;"><input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH"><label for="RANGE_SEARCH"> Range 검색</label></span>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -66,7 +68,7 @@
     <div class="topWrap" style="display: none">
         <form class="form-inline" id="MONTH_SALE_STATUS_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectMonthSaleStatusList">
-            <div class="gubunWrap row_two">
+            <div class="gubunWrap row2_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -113,7 +115,7 @@
             </div>
         </form>
     </div>
-    <div class="bottomWrap">
+    <div class="bottomWrap row2_bottomWrap">
         <div class="hWrap">
             <div>
                 <div class="rightSpan">
