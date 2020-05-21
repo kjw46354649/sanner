@@ -1124,15 +1124,140 @@
     </insert>
 
     <select id="moneyReceiveStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT now() AS NOWDATE FROM DUAL
+        SELECT
+            ROW_NUMBER() OVER () AS ROW_NUM,
+            Z.COMP_CD, Z.COMP_NM, Z.ORDER_COMP_CD, Z.ORDER_COMP_NM, Z.CLOSE_MONTH, Z.ORDER_AMT, Z.CLOSE_MONTH_NM
+        FROM (
+                 SELECT
+                     A.COMP_CD,
+                     (SELECT Z.COMP_NM FORM FROM jmes.TBL_COMPANY Z WHERE Z.COMP_CD = A.COMP_CD) AS COMP_NM,
+                     A.ORDER_COMP_CD,
+                     (SELECT Z.COMP_NM FORM FROM jmes.TBL_COMPANY Z WHERE Z.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM,
+                     D.CLOSE_MONTH, DATE_FORMAT(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m'), '%Y-%m') as CLOSE_MONTH_NM,
+                     SUM(B.UNIT_FINAL_AMT * C.ORDER_QTY) AS ORDER_AMT
+                 FROM jmes.TBL_CONTROL A
+                          INNER JOIN jmes.TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND IFNULL(B.PART_NUM, '0') = '0'
+                          INNER JOIN jmes.TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                          INNER JOIN jmes.TBL_MONTH_CLOSE_DETAIL D ON A.CONTROL_SEQ = D.CONTROL_SEQ
+                                <if test="MONEY_MANAGE_STATUS_YEAR != null and MONEY_MANAGE_STATUS_YEAR != ''">
+                                    AND D.CLOSE_MONTH LIKE CONCAT(#{MONEY_MANAGE_STATUS_YEAR}, '%')
+                                </if>
+                 WHERE A.DEL_YN = 'N'
+                    <if test="COMP_CD != null and COMP_CD != ''">
+                        AND A.COMP_CD = #{COMP_CD}
+                    </if>
+                    <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                        AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+                    </if>
+                 GROUP BY A.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH
+             ) Z
+                 LEFT OUTER JOIN jmes.TBL_MONEY_MONTH_NOTE E ON Z.CLOSE_MONTH = E.YYYYMM AND E.COMP_CD = Z.COMP_CD AND E.ORDER_COMP_CD = Z.ORDER_COMP_CD
+        ORDER BY Z.COMP_CD, Z.ORDER_COMP_CD
     </select>
 
     <select id="moneyManageSalesList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT now() AS NOWDATE FROM DUAL
+        SELECT
+            ROW_NUMBER() OVER () AS ROW_NUM,
+            Z.COMP_CD, Z.COMP_NM, Z.ORDER_COMP_CD, Z.ORDER_COMP_NM, Z.CLOSE_MONTH, Z.ORDER_AMT, Z.CLOSE_MONTH_NM, E.NOTE
+        FROM (
+            SELECT
+                A.COMP_CD,
+                (SELECT Z.COMP_NM FORM FROM jmes.TBL_COMPANY Z WHERE Z.COMP_CD = A.COMP_CD) AS COMP_NM,
+                A.ORDER_COMP_CD,
+                (SELECT Z.COMP_NM FORM FROM jmes.TBL_COMPANY Z WHERE Z.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM,
+                D.CLOSE_MONTH, DATE_FORMAT(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m'), '%Y-%m') as CLOSE_MONTH_NM,
+                SUM(B.UNIT_FINAL_AMT * C.ORDER_QTY) AS ORDER_AMT
+            FROM jmes.TBL_CONTROL A
+                INNER JOIN jmes.TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND IFNULL(B.PART_NUM, '0') = '0'
+                INNER JOIN jmes.TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                INNER JOIN jmes.TBL_MONTH_CLOSE_DETAIL D ON A.CONTROL_SEQ = D.CONTROL_SEQ
+                    <if test="MONEY_MANAGE_STATUS_YEAR != null and MONEY_MANAGE_STATUS_YEAR != ''">
+                        AND D.CLOSE_MONTH LIKE CONCAT(#{MONEY_MANAGE_STATUS_YEAR}, '%')
+                    </if>
+            WHERE A.DEL_YN = 'N'
+                <if test="COMP_CD != null and COMP_CD != ''">
+                    AND A.COMP_CD = #{COMP_CD}
+                </if>
+                <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                    AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+                </if>
+            GROUP BY A.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH
+        ) Z
+            LEFT OUTER JOIN jmes.TBL_MONEY_MONTH_NOTE E ON Z.CLOSE_MONTH = E.YYYYMM AND E.COMP_CD = Z.COMP_CD AND E.ORDER_COMP_CD = Z.ORDER_COMP_CD
+        ORDER BY Z.COMP_CD, Z.ORDER_COMP_CD, Z.CLOSE_MONTH
     </select>
 
     <select id="moneyManageReceiveList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT now() AS NOWDATE FROM DUAL
+        SELECT
+            A.DEPOSIT_SEQ,
+            A.COMP_CD,
+            (SELECT Z.COMP_NM FORM FROM jmes.TBL_COMPANY Z WHERE Z.COMP_CD = A.COMP_CD) AS COMP_NM,
+            A.ORDER_COMP_CD,
+            (SELECT Z.COMP_NM FORM FROM jmes.TBL_COMPANY Z WHERE Z.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM,
+            A.DEPOSIT_DT, DATE_FORMAT(STR_TO_DATE(A.DEPOSIT_DT, '%Y%m%d'), '%Y-%m-%d') AS DEPOSIT_DATE, A.DEPOSIT_AMT,
+            A.DEPOSIT_TYPE, jmes.SF_GET_CODE_NM('1074', A.DEPOSIT_TYPE, 'KR') AS DEPOSIT_TYPE_NM,
+            A.DUE_DT, DATE_FORMAT(STR_TO_DATE(A.DUE_DT, '%Y%m%d'), '%Y-%m-%d') AS DUE_DATE, A.DUE_PAY_YN, A.DUE_PAY_AMT, A.NOTE
+        FROM jmes.TBL_MONEY_DEPOSIT A
+        WHERE 1 = 1
+            <if test="COMP_CD != null and COMP_CD != ''">
+                AND A.COMP_CD = #{COMP_CD}
+            </if>
+            <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+            </if>
+            <if test="MONEY_RECEIVE_CLOSE_YEAR_ST != null and MONEY_RECEIVE_CLOSE_YEAR_ST != ''">
+                AND A.DEPOSIT_DT BETWEEN CONCAT(#{MONEY_RECEIVE_CLOSE_YEAR_ST}, #{MONEY_RECEIVE_CLOSE_MONTH_ST}, '01') AND CONCAT(#{MONEY_RECEIVE_CLOSE_YEAR_ED}, #{MONEY_RECEIVE_CLOSE_MONTH_ED}, '31')
+            </if>
+        ORDER BY A.COMP_CD, A.ORDER_COMP_CD, A.DEPOSIT_DT
     </select>
+
+    <delete id="deleteMoneyManageReceive" parameterType="java.util.HashMap">
+        DELETE FROM jmes.TBL_MONEY_DEPOSIT
+        WHERE DEPOSIT_SEQ = ${DEPOSIT_SEQ}
+    </delete>
+
+    <insert id="insertMoneyManageReceive" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_MONEY_DEPOSIT
+            (DEPOSIT_SEQ, COMP_CD, ORDER_COMP_CD, DEPOSIT_DT,
+             DEPOSIT_AMT, DEPOSIT_TYPE, DUE_DT, DUE_PAY_YN, DUE_PAY_AMT, NOTE, INSERT_ID)
+        VALUES
+            (NEXTVAL(SEQ_MONEY_DEPOSIT), #{COMP_CD}, #{ORDER_COMP_CD}, REPLACE(#{DEPOSIT_DATE}, '-', SPACE(0)),
+             #{DEPOSIT_AMT}, #{DEPOSIT_TYPE}, REPLACE(#{DUE_DATE}, '-', SPACE(0)), #{DUE_PAY_YN}, #{DUE_PAY_AMT}, #{NOTE}, 'system');
+    </insert>
+
+    <update id="updateMoneyManageReceive" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_MONEY_DEPOSIT
+            SET
+                <if test="COMP_CD != null and COMP_CD != ''">
+                    COMP_CD = #{COMP_CD},
+                </if>
+                <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                    ORDER_COMP_CD = #{ORDER_COMP_CD},
+                </if>
+                <if test="DEPOSIT_DATE != null and DEPOSIT_DATE != ''">
+                    DEPOSIT_DT = REPLACE(#{DEPOSIT_DATE}, '-', SPACE(0)),
+                </if>
+                <if test="DEPOSIT_AMT != null and DEPOSIT_AMT != ''">
+                    COMP_CD = #{DEPOSIT_AMT},
+                </if>
+                <if test="DEPOSIT_TYPE != null and DEPOSIT_TYPE != ''">
+                    DEPOSIT_TYPE = #{DEPOSIT_TYPE},
+                </if>
+                <if test="DUE_DATE != null and DUE_DATE != ''">
+                    DUE_DT = REPLACE(#{DUE_DATE}, '-', SPACE(0)),
+                </if>
+                <if test="DUE_PAY_YN != null and DUE_PAY_YN != ''">
+                    DUE_PAY_YN = #{DUE_PAY_YN},
+                </if>
+                <if test="DUE_PAY_AMT != null and DUE_PAY_AMT != ''">
+                    DUE_PAY_AMT = #{DUE_PAY_AMT},
+                </if>
+                <if test="NOTE != null and NOTE != ''">
+                    NOTE = #{NOTE},
+                </if>
+                UPDATE_DT = NOW(),
+                UPDATE_ID = 'test'
+        WHERE DEPOSIT_SEQ = ${DEPOSIT_SEQ}
+    </update>
 
 </mapper>
