@@ -114,7 +114,7 @@
                     </div>
 
                 </div>
-                <div class="resultWrap99 list99" style="height: 410px;">
+                <div class="resultWrap99 list99" style="height: 440px;">
                     <div class="leftWrap">
                         <input type="hidden" id="LOGO_GFILE_SEQ" name="LOGO_GFILE_SEQ" value="">
                         <img src="/image/999" id="LOGO_GFILE_SRC" width="388px" height="150px" alt="사진" >
@@ -208,6 +208,16 @@
                                 <th scope="row">FAX</th>
                                 <td>
                                     <input type="text" id="COMP_FAX" name="COMP_FAX" value="" class="wd_150" data-notblank="true" class="form-control" placeholder="FAX">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">약어</th>
+                                <td>
+                                    <input type="text" id=" ABBR_NM" name=" ABBR_NM" value="" class="wd_150" data-notblank="true" class="form-control" placeholder="약어">
+                                </td>
+                                <th scope="row">업체명2</th>
+                                <td>
+                                    <input type="text" id="COMP_NM2" name="COMP_NM2" value="" class="wd_150" data-notblank="true" class="form-control" placeholder="업체명2">
                                 </td>
                             </tr>
                             <tr>
