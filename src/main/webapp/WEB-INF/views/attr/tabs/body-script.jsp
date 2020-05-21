@@ -714,7 +714,6 @@
         for (let i = year; i > year - severalYears; i--) {
             $('#' + id).append(new Option(i + '년', i));
         }
-
         $('#' + id).val(CURRENT_YEAR).prop('selected', true);
     };
 

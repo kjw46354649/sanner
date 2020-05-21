@@ -25,6 +25,10 @@
 				</div>
 			</div>
 		</div>
+		<form class="form-inline" id="menu_detail_search_form" name="menu_detail_search_form" role="form">
+			<input type="hidden" name="queryId" id="queryId" value="systemMapper.selectUserSubMenuList">
+			<input type="hidden" name="PARENT_MENU_SEQ" id="PARENT_MENU_SEQ" value="">
+		</form>
 	</div>
 </div>
 
@@ -36,12 +40,17 @@
 	let $menuDetailAddBtn = $("#menuDetailAddBtn");
 	let $menuDetailSaveBtn = $("#menuDetailSaveBtn");
 
+	let menuMasterTopGridID = "menu_master_top_grid";
+	let menuMasterBotGridID = "menu_master_bot_grid";
+
+	let menuMasterTopGrid;
+	let menuMasterBotGrid;
+
+	let menuBotPostData = fnFormToJsonArrayData('menu_detail_search_form');
+
 	$(document).ready(function() {
 		'use strict';
 		let click_seq;
-
-		let menuMasterTopGrid = $("#menu_master_top_grid");
-		let menuMasterBotGrid = $("#menu_master_bot_grid");
 
 		let topColModel= [
 			{title: 'MENU_SEQ'			, dataType: 'string',  dataIndx: 'MENU_SEQ'			, hidden: true},
@@ -92,7 +101,7 @@
 			}
 		];
 
-		menuMasterTopGrid.pqGrid({
+		let menuMasterObj = {
 			minHeight: "auto",
 			height: 480,
 			width: "auto",
@@ -130,11 +139,51 @@
 			rowSelect: function( event, ui ) {
 				if(ui.addList.length > 0 ) {
 					let menu_seq = ui.addList[0].rowData.MENU_SEQ;
-					click_seq=menu_seq;
-					selectSubList(menu_seq);
+					// click_seq=menu_seq;
+					$("#menu_detail_search_form").find("#PARENT_MENU_SEQ").val(menu_seq);
+					menuMasterBotGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+						return fnFormToJsonArrayData('menu_detail_search_form');
+					});
+					menuMasterBotGrid.pqGrid('refreshDataAndView');
 				}
 			}
-		});
+		};
+		menuMasterTopGrid = $('#' + menuMasterTopGridID).pqGrid(menuMasterObj);
+
+		let menuMasterBotObj = {
+			minHeight: "auto",
+			height: 280,
+			width: "auto",
+			selectionModel: { type: 'row', mode: 'single'} ,
+			swipeModel: {on: false},
+			collapsible: false,
+			trackModel: {on: true},
+			resizable: false,
+			flexWidth: false,
+			scrollModel: { autoFit: true },
+			showTitle: false,
+			numberCell: {title: 'No.'},
+			columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
+			colModel: botColModel,
+			dataModel: {
+				location: "remote",
+				dataType: "json",
+				method: "POST",
+				url: "/paramQueryGridSelect",
+				postData: fnFormToJsonArrayData('menu_detail_search_form'),
+				recIndx: 'MENU_SUB_SEQ',
+				getData: function (dataJSON) {
+					let data = dataJSON.data;
+					return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
+				}
+			},
+			dataReady: function (event, ui) {
+				let data = menuMasterBotGrid.pqGrid('option', 'dataModel.data');
+				let totalRecords = data.length;
+				$('#menu_detail_total_records').html(totalRecords);
+			}
+		};
+		menuMasterBotGrid = $('#' + menuMasterBotGridID).pqGrid(menuMasterBotObj);
 
 		$menuMasterAddBtn.click(function(){
 			menuMasterTopGrid.pqGrid('addNodes', [{}], 0);
@@ -167,73 +216,42 @@
 			}
 		});
 
-		function selectSubList(MENU_SEQ){
-			menuMasterBotGrid.pqGrid({
-				minHeight: "auto",
-				height: 280,
-				width: "auto",
-				selectionModel: { type: 'row', mode: 'single'} ,
-				swipeModel: {on: false},
-				collapsible: false,
-				trackModel: {on: true},
-				resizable: false,
-				flexWidth: false,
-				scrollModel: { autoFit: true },
-				showTitle: false,
-				numberCell: {title: 'No.'},
-				columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
-				colModel: botColModel,
-				dataModel: {
-					location: "remote",
-					dataType: "json",
-					method: "POST",
-					url: "/paramQueryGridSelect",
-					postData: { "queryId" : "systemMapper.selectUserSubMenuList", "PARENT_MENU_SEQ": MENU_SEQ},
-					recIndx: 'MENU_SUB_SEQ',
-					getData: function (dataJSON) {
-						let data = dataJSON.data;
-						return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
+		$menuDetailAddBtn.click(function(){
+			menuMasterBotGrid.pqGrid('addNodes', [{"PARENT_MENU_SEQ": click_seq}], 0);
+		});
+
+		$menuDetailSaveBtn.click(function(){
+			let grid = menuMasterBotGrid.pqGrid('getInstance').grid;
+			//추가 또는 수정된 값이 있으면 true
+
+			console.log(grid.isDirty());
+
+			if (grid.isDirty()) {
+				let changes = grid.getChanges();
+				let QUERY_ID_ARRAY = {
+					'insertQueryId': ['insertSubMenuCode','insertTopMenuKr','insertTopMenuEn'],
+					'updateQueryId': ['updateSubMenuCode','updateTopMenuKr','updateTopMenuEn']
+				};
+				changes.queryIdList = QUERY_ID_ARRAY;
+				console.log(JSON.stringify(changes));
+				$.ajax({
+					type: 'POST',
+					url: '/paramQueryModifyGrid',
+					async: true,
+					dataType: 'json',
+					data: {'data': JSON.stringify(changes)},
+					success: function (result) {
+						menuMasterBotGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+							return fnFormToJsonArrayData('menu_detail_search_form');
+						});
+						menuMasterBotGrid.pqGrid('refreshDataAndView');
+					},
+					error: function (e) {
+						console.error(e);
 					}
-				},
-				dataReady: function (event, ui) {
-					let data = menuMasterBotGrid.pqGrid('option', 'dataModel.data');
-					let totalRecords = data.length;
-					$('#menu_detail_total_records').html(totalRecords);
-				}
-			});
-			menuMasterBotGrid.pqGrid("refreshDataAndView");
-
-			$menuDetailAddBtn.click(function(){
-				menuMasterBotGrid.pqGrid('addNodes', [{"PARENT_MENU_SEQ": click_seq}], 0);
-			});
-
-			$menuDetailSaveBtn.click(function(){
-				let grid = menuMasterBotGrid.pqGrid('getInstance').grid;
-				//추가 또는 수정된 값이 있으면 true
-				if (grid.isDirty()) {
-					let changes = grid.getChanges();
-					let QUERY_ID_ARRAY = {
-						'insertQueryId': ['insertSubMenuCode','insertTopMenuKr','insertTopMenuEn'],
-						'updateQueryId': ['updateSubMenuCode','updateTopMenuKr','updateTopMenuEn']
-					};
-					changes.queryIdList = QUERY_ID_ARRAY;
-					console.log(JSON.stringify(changes));
-					$.ajax({
-						type: 'POST',
-						url: '/paramQueryModifyGrid',
-						async: true,
-						dataType: 'json',
-						data: {'data': JSON.stringify(changes)},
-						success: function (result) {
-							menuMasterTopGrid.pqGrid("refreshDataAndView");
-						},
-						error: function (e) {
-							console.error(e);
-						}
-					});
-				}
-			});
-		}
+				});
+			}
+		});
 
 	});
 </script>

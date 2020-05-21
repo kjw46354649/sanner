@@ -301,13 +301,30 @@
         });
 
         $commonCodeSaveBtn.click(function(e){
-            let commonCodeTopInsertQueryList = ['insertCommonGroupCode'];
-            let commonCodeTopUpdateQueryList = ['updateCommonGroupCode'];
-            fnModifyPQGrid($commonCodeBotGrid, commonCodeTopInsertQueryList, commonCodeTopUpdateQueryList);
-            $commonCodeBotGrid.pqGrid("option", "dataModel.postData", function(ui){
-                return fnFormToJsonArrayData('common_code_search_form');
-            } );
-            $commonCodeBotGrid.pqGrid("refreshDataAndView");
+
+            let gridInstance = $commonCodeBotGrid.pqGrid('getInstance').grid;
+            //추가 또는 수정된 값이 있으면 true
+            if (gridInstance.isDirty()) {
+                let changes = gridInstance.getChanges({format: 'byVal'});
+                let parameters = {
+                    'url': '/commonCodeModifyGrid',
+                    'data': {data: JSON.stringify(changes)}
+                };
+                fnPostAjax(function (data, callFunctionParam) {
+                    $commonCodeBotGrid.pqGrid("option", "dataModel.postData", function(ui){
+                        return fnFormToJsonArrayData('common_code_search_form');
+                    } );
+                    $commonCodeBotGrid.pqGrid("refreshDataAndView");
+                }, parameters, '');
+            }
+
+            // let commonCodeTopInsertQueryList = ['insertCommonGroupCode'];
+            // let commonCodeTopUpdateQueryList = ['updateCommonGroupCode'];
+            // fnModifyPQGrid($commonCodeBotGrid, commonCodeTopInsertQueryList, commonCodeTopUpdateQueryList);
+            // $commonCodeBotGrid.pqGrid("option", "dataModel.postData", function(ui){
+            //     return fnFormToJsonArrayData('common_code_search_form');
+            // } );
+            // $commonCodeBotGrid.pqGrid("refreshDataAndView");
         });
 
         // const reloadCommonCodeTopGrid = function () {
