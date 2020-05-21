@@ -1123,4 +1123,16 @@
         </foreach>
     </insert>
 
+    <select id="moneyReceiveStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT now() AS NOWDATE FROM DUAL
+    </select>
+
+    <select id="moneyManageSalesList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT now() AS NOWDATE FROM DUAL
+    </select>
+
+    <select id="moneyManageReceiveList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT now() AS NOWDATE FROM DUAL
+    </select>
+
 </mapper>
