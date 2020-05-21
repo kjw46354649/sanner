@@ -57,4 +57,15 @@ public class OrderController {
         this.orderService.insertMonthFinishClose(map);
         return "jsonView";
     }
+
+    /**
+     * @description 거래명세표 저장
+     */
+    @RequestMapping(value = "/insertInvoice", method = RequestMethod.POST)
+    public String insertInvoice(HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+        System.out.println(map);
+        this.orderService.insertInvoice(map);
+        return "jsonView";
+    }
 }

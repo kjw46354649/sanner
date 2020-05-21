@@ -76,4 +76,14 @@ public class OrderDaoImpl implements OrderDao {
         sqlSessionTemplate.insert("insertControlBarcode", hashMap);
     }
 
+    @Override
+    public void insertInvoice(HashMap<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("insertInvoice", hashMap);
+    }
+
+    @Override
+    public void insertInvoiceDetail(HashMap<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("insertInvoiceDetail", hashMap);
+    }
+
 }

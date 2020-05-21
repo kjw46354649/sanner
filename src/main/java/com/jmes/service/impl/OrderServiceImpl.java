@@ -84,4 +84,34 @@ public class OrderServiceImpl implements OrderService {
             this.orderDao.insertMonthFinishCloseHistory(hashMap);
         }
     }
+
+    @Override
+    public void insertInvoice(Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+        ArrayList<HashMap<String, Object>> infoData = null;
+        ArrayList<HashMap<String, Object>> listData = null;
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<HashMap<String, Object>>() {});
+
+        if (jsonMap.containsKey("info-data"))
+            infoData = (ArrayList<HashMap<String, Object>>) jsonMap.get("info-data");
+
+        if (jsonMap.containsKey("list-data"))
+            listData = (ArrayList<HashMap<String, Object>>) jsonMap.get("list-data");
+
+        if (infoData != null && infoData.size() > 0) {
+            for (HashMap<String, Object> hashMap : infoData) {
+                this.orderDao.insertInvoice(hashMap);
+            }
+        }
+
+        if (listData != null && listData.size() > 0) {
+            for (HashMap<String, Object> hashMap : listData) {
+                this.orderDao.insertInvoiceDetail(hashMap);
+            }
+        }
+    }
 }
