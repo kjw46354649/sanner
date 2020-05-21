@@ -44,12 +44,12 @@
                             </select>
                         </span>
                         <span class="gubun"></span>
-                        <span class="slt_wrap">
-                            <label for="SEL_CONSUMABLE_DETAIL" class="label_100">자재상세종류</label>
-                            <select id="SEL_CONSUMABLE_DETAIL" name="SEL_CONSUMABLE_DETAIL" title="자재상세종류" data-required="true" class="wd_200">
-                                <option value=""><spring:message code="com.form.top.all.option" /></option>
-                            </select>
-                        </span>
+<%--                        <span class="slt_wrap">--%>
+<%--                            <label for="SEL_CONSUMABLE_DETAIL" class="label_100">자재상세종류</label>--%>
+<%--                            <select id="SEL_CONSUMABLE_DETAIL" name="SEL_CONSUMABLE_DETAIL" title="자재상세종류" data-required="true" class="wd_200">--%>
+<%--                                <option value=""><spring:message code="com.form.top.all.option" /></option>--%>
+<%--                            </select>--%>
+<%--                        </span>--%>
                         <span class="ipu_wrap right_float"><button type="button" class="defaultBtn radius blue" id="searchBtn">검색</button></span>
                     </li>
                     <li>
@@ -377,26 +377,26 @@
                     }
                 }
             },
-            {title: '자재상세종류', dataType: 'string', dataIndx: 'CONSUMABLE_DETAIL_NM', minWidth: 120,
-                editor: {
-                    type: 'select',
-                    mapIndices: { name: "CONSUMABLE_DETAIL_NM", id: "CONSUMABLE_DETAIL" },
-                    valueIndx: "value",
-                    labelIndx: "text",
-                    options: function(ui) {
-                        let rowData = mainGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        let CONSUMABLE_TYPE = rowData["CONSUMABLE_TYPE"];
-
-                        return fnGetCommCodeRefCdGridSelectBox('1054', CONSUMABLE_TYPE);
-                    },
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = mainGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["CONSUMABLE_DETAIL"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
-                    }
-                }
-            },
+            // {title: '자재상세종류', dataType: 'string', dataIndx: 'CONSUMABLE_DETAIL_NM', minWidth: 120,
+            //     editor: {
+            //         type: 'select',
+            //         mapIndices: { name: "CONSUMABLE_DETAIL_NM", id: "CONSUMABLE_DETAIL" },
+            //         valueIndx: "value",
+            //         labelIndx: "text",
+            //         options: function(ui) {
+            //             let rowData = mainGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+            //             let CONSUMABLE_TYPE = rowData["CONSUMABLE_TYPE"];
+            //
+            //             return fnGetCommCodeRefCdGridSelectBox('1054', CONSUMABLE_TYPE);
+            //         },
+            //         getData: function(ui) {
+            //             let clave = ui.$cell.find("select").val();
+            //             let rowData = mainGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+            //             rowData["CONSUMABLE_DETAIL"]=clave;
+            //             return ui.$cell.find("select option[value='"+clave+"']").text();
+            //         }
+            //     }
+            // },
             {title: '보유수량', dataType: 'string', dataIndx: 'STOCK_QTY', editable: false},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true},
             {title: '입고', dataType: 'integer', dataIndx: 'IN_QTY', editable: true},
@@ -478,7 +478,7 @@
             {title: '자재관리번호', dataType: 'string', dataIndx: 'CONSUMABLE_NUM', editable: false},
             {title: '자재명', dataType: 'string', dataIndx: 'CONSUMABLE_NM', editable: false},
             {title: '자재종류', dataType: 'string', dataIndx: 'CONSUMABLE_TYPE_NM', editable: false},
-            {title: '자재상세종류', dataType: 'string', dataIndx: 'CONSUMABLE_DETAIL_NM', editable: false},
+            // {title: '자재상세종류', dataType: 'string', dataIndx: 'CONSUMABLE_DETAIL_NM', editable: false},
             {title: '입고수량', dataType: 'string', dataIndx: 'IN_QTY', editable: false},
             {title: '불출수량', dataType: 'string', dataIndx: 'OUT_QTY', editable: false},
             {title: '요청자', dataType: 'string', dataIndx: 'REQUEST_USER_NM', editable: false},
@@ -543,12 +543,12 @@
             let paramData = {"url":"/json-list", "data": {"WAREHOUSE_CD": WAREHOUSE_CD, "queryId": 'material.selectWarehouseLocationList'}};
             fnCommCodeDatasourceSelectBoxCreate($("#search_form").find("#SEL_LOC_SEQ"), 'all', paramData);
         });
-        $("#search_form").find("#SEL_CONSUMABLE_TYPE").change(function(){
-            let highCd =  1054;
-            let refCD =  this.value;
-            fnCommCodeRefCdDynamicSelectBoxCreate($("#search_form").find("#SEL_CONSUMABLE_DETAIL"), highCd, 'all', refCD);
-
-        });
+        // $("#search_form").find("#SEL_CONSUMABLE_TYPE").change(function(){
+        //     let highCd =  1054;
+        //     let refCD =  this.value;
+        //     fnCommCodeRefCdDynamicSelectBoxCreate($("#search_form").find("#SEL_CONSUMABLE_DETAIL"), highCd, 'all', refCD);
+        //
+        // });
         let fnGetCommCodeRefCdGridSelectBox = function (highCd, refCd) {
             'use strict';
             let selectBoxContents = [];

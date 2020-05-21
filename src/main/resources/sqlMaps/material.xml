@@ -559,7 +559,6 @@
         , A.CONSUMABLE_NUM
         , A.CONSUMABLE_NM
         , A.CONSUMABLE_TYPE, jmes.SF_GET_CODE_NM('1053', A.CONSUMABLE_TYPE, 'EN') AS CONSUMABLE_TYPE_NM
-        , A.CONSUMABLE_DETAIL, jmes.SF_GET_CODE_NM('1054', A.CONSUMABLE_DETAIL, 'EN') AS CONSUMABLE_DETAIL_NM
         , (SELECT IFNULL(SUM(IN_QTY),0) FROM jmes.TBL_CONSUMABLE_IN WHERE CONSUMABLE_STOCK_SEQ = A.CONSUMABLE_STOCK_SEQ) - (SELECT IFNULL(SUM(OUT_QTY),0) FROM jmes.TBL_CONSUMABLE_OUT WHERE CONSUMABLE_STOCK_SEQ = A.CONSUMABLE_STOCK_SEQ) AS STOCK_QTY
         , A.NOTE
         , NULL AS IN_QTY
@@ -577,9 +576,6 @@
         </if>
         <if test="SEL_CONSUMABLE_TYPE !='' and SEL_CONSUMABLE_TYPE != null">
             AND A.CONSUMABLE_TYPE = #{SEL_CONSUMABLE_TYPE}
-        </if>
-        <if test="SEL_CONSUMABLE_DETAIL !='' and SEL_CONSUMABLE_DETAIL != null">
-            AND A.CONSUMABLE_DETAIL = #{SEL_CONSUMABLE_DETAIL}
         </if>
         <if test="SEL_CONSUMABLE_NUM !='' and SEL_CONSUMABLE_NUM != null">
             AND A.CONSUMABLE_NUM LIKE CONCAT('%', #{SEL_CONSUMABLE_NUM}, '%')
@@ -601,7 +597,6 @@
         SET
               CONSUMABLE_NM = #{CONSUMABLE_NM}
             , CONSUMABLE_TYPE = #{CONSUMABLE_TYPE}
-            , CONSUMABLE_DETAIL = #{CONSUMABLE_DETAIL}
             , NOTE = #{NOTE}
             , ACTIVE_YN = #{ACTIVE_YN}
             , UPDATE_ID = #{LOGIN_USER_ID}
@@ -613,12 +608,12 @@
         (
             CONSUMABLE_STOCK_SEQ, WAREHOUSE_CD, LOC_SEQ,
             CONSUMABLE_NUM, CONSUMABLE_NM, CONSUMABLE_TYPE,
-            CONSUMABLE_DETAIL, NOTE, ACTIVE_YN,
+            NOTE, ACTIVE_YN,
             INSERT_ID, INSERT_DT
         )VALUES(
             NEXTVAL(jmes.SEQ_CONSUMABLE_STOCK), #{WAREHOUSE_CD}, #{LOC_SEQ},
             #{CONSUMABLE_NUM}, #{CONSUMABLE_NM}, #{CONSUMABLE_TYPE},
-            #{CONSUMABLE_DETAIL}, #{NOTE}, #{ACTIVE_YN},
+            #{NOTE}, #{ACTIVE_YN},
             #{LOGIN_USER_ID}, NOW()
         )
     </insert>
@@ -656,7 +651,6 @@
             , X.CONSUMABLE_NUM
             , X.CONSUMABLE_NM
             , jmes.SF_GET_CODE_NM('1053', X.CONSUMABLE_TYPE, 'KR') AS CONSUMABLE_TYPE_NM
-            , jmes.SF_GET_CODE_NM('1054', X.CONSUMABLE_DETAIL, 'KR') AS CONSUMABLE_DETAIL_NM
             , X.IN_QTY
             , X.OUT_QTY
             , (SELECT USER_NM FROM jmes.TBL_USER WHERE USER_ID = X.REQUEST_USER_ID) AS REQUEST_USER_NM
@@ -665,7 +659,7 @@
             SELECT
                 '1' AS IN_OUT_TYPE
                 , A.WAREHOUSE_CD, A.LOC_SEQ, A.CONSUMABLE_NUM, A.CONSUMABLE_NM
-                , A.CONSUMABLE_TYPE, A.CONSUMABLE_DETAIL, B.IN_QTY, NULL AS OUT_QTY
+                , A.CONSUMABLE_TYPE, B.IN_QTY, NULL AS OUT_QTY
                 , B.INSERT_ID AS REQUEST_USER_ID, B.IN_DT AS IN_OUT_DT
             FROM jmes.TBL_CONSUMABLE_STOCK A, jmes.TBL_CONSUMABLE_IN B
             WHERE A.CONSUMABLE_STOCK_SEQ = B.CONSUMABLE_STOCK_SEQ
@@ -677,9 +671,6 @@
                 </if>
                 <if test="SEL_CONSUMABLE_TYPE !='' and SEL_CONSUMABLE_TYPE != null">
                     AND A.CONSUMABLE_TYPE = #{SEL_CONSUMABLE_TYPE}
-                </if>
-                <if test="SEL_CONSUMABLE_DETAIL !='' and SEL_CONSUMABLE_DETAIL != null">
-                    AND A.CONSUMABLE_DETAIL = #{SEL_CONSUMABLE_DETAIL}
                 </if>
                 <if test="SEL_CONSUMABLE_NUM !='' and SEL_CONSUMABLE_NUM != null">
                     AND A.CONSUMABLE_NUM LIKE CONCAT('%', #{SEL_CONSUMABLE_NUM}, '%')
@@ -700,7 +691,7 @@
             SELECT
                  '2' AS IN_OUT_TYPE
                 , A.WAREHOUSE_CD, A.LOC_SEQ, A.CONSUMABLE_NUM, A.CONSUMABLE_NM
-                , A.CONSUMABLE_TYPE, A.CONSUMABLE_DETAIL, NULL AS IN_QTY, B.OUT_QTY
+                , A.CONSUMABLE_TYPE, NULL AS IN_QTY, B.OUT_QTY
                 , B.REQUEST_USER_ID, B.OUT_DT AS IN_OUT_DT
             FROM jmes.TBL_CONSUMABLE_STOCK A, jmes.TBL_CONSUMABLE_OUT B
             WHERE A.CONSUMABLE_STOCK_SEQ = B.CONSUMABLE_STOCK_SEQ
@@ -712,9 +703,6 @@
                 </if>
                 <if test="SEL_CONSUMABLE_TYPE !='' and SEL_CONSUMABLE_TYPE != null">
                     AND A.CONSUMABLE_TYPE = #{SEL_CONSUMABLE_TYPE}
-                </if>
-                <if test="SEL_CONSUMABLE_DETAIL !='' and SEL_CONSUMABLE_DETAIL != null">
-                    AND A.CONSUMABLE_DETAIL = #{SEL_CONSUMABLE_DETAIL}
                 </if>
                 <if test="SEL_CONSUMABLE_NUM !='' and SEL_CONSUMABLE_NUM != null">
                     AND A.CONSUMABLE_NUM LIKE CONCAT('%', #{SEL_CONSUMABLE_NUM}, '%')
@@ -758,8 +746,6 @@
           , A.MATERIAL_DETAIL
           , jmes.SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, 'KR') AS MATERIAL_DETAIL_NM
           , (SELECT IFNULL(SUM(IN_QTY),0) FROM jmes.TBL_INSIDE_IN WHERE INSIDE_STOCK_NUM = A.INSIDE_STOCK_NUM) - (SELECT IFNULL(SUM(OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT WHERE INSIDE_STOCK_NUM = A.INSIDE_STOCK_NUM) AS INSIDE_STOCK_CURR_QTY
-          , A.ORIGINAL_SIDE_QTY
-          , A.OTHER_SIDE_QTY
           , A.WAREHOUSE_CD
           , jmes.SF_GET_CODE_NM('1049', A.WAREHOUSE_CD, 'KR') AS WAREHOUSE_CD_NM
           , A.LOC_SEQ
@@ -852,7 +838,7 @@
             SIZE_T,
             SIZE_D,
             SIZE_L,
-            ORIGINAL_SIDE_QTY, OTHER_SIDE_QTY, WAREHOUSE_CD,
+            WAREHOUSE_CD,
             LOC_SEQ, NOTE, INSERT_ID
         )VALUES (
             #{INSIDE_STOCK_NUM}, #{ORDER_COMP_CD}, #{DRAWING_NUM}, #{ITEM_NM}, #{COMP_CD},
@@ -864,15 +850,13 @@
             SF_GET_SIZE_TXT('SIZE_T', #{SIZE_TXT}),
             SF_GET_SIZE_TXT('SIZE_D', #{SIZE_TXT}),
             SF_GET_SIZE_TXT('SIZE_L', #{SIZE_TXT}),
-            #{ORIGINAL_SIDE_QTY}, #{OTHER_SIDE_QTY}, #{WAREHOUSE_CD},
+            #{WAREHOUSE_CD},
             #{LOC_SEQ}, #{NOTE}, #{LOGIN_USER_ID}
         )
     </insert>
     <update id="updateInsideStock" parameterType="java.util.HashMap">
         UPDATE jmes.TBL_INSIDE_STOCK
         SET COMP_CD = #{COMP_CD}
-            , ORIGINAL_SIDE_QTY = #{ORIGINAL_SIDE_QTY}
-            , OTHER_SIDE_QTY = #{OTHER_SIDE_QTY}
             , WAREHOUSE_CD = #{WAREHOUSE_CD}
             , LOC_SEQ = #{LOC_SEQ}
             , NOTE = #{NOTE}
