@@ -28,7 +28,7 @@
                         </select>
                     </li>
                     <li><label for="menu_2">메뉴선택</label>
-                        <select id="menu_2" name="EQUIP_ID" title="메뉴선택">
+                        <select id="menu_2" name="EQUIP_SEQ" title="메뉴선택">
                             <option value="" selected="selected">NC-1</option>
                             <option value="1">NC-1</option>
                             <option value="2">NC-1</option>
@@ -76,7 +76,7 @@
 
         for(let i=0; i < equipmentData.length; i++) {
             if(location == equipmentData[i].FACTORY_AREA) {
-                html += '<option value="'+equipmentData[i].EQUIP_ID+'">'+equipmentData[i].EQUIP_NM+'</option>';
+                html += '<option value="'+equipmentData[i].EQUIP_SEQ+'">'+equipmentData[i].EQUIP_NM+'</option>';
             }
         }
         $("#menu_2").html(html);

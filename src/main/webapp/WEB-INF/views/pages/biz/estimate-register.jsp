@@ -111,6 +111,9 @@
                         <span class="gubun"></span>
                     </li>
                 </ul>
+                <input type="hidden" id="ESTIMATE_DETAIL_DATA" name="ESTIMATE_DETAIL_DATA">
+                <input type="hidden" id="ESTIMATE_RECEIVER_DATA" name="ESTIMATE_RECEIVER_DATA">
+                <input type="hidden" id="EMAIL_CONTENT" name="EMAIL_CONTENT">
             </div>
         </form>
         <div class="tableWrap">
@@ -142,7 +145,7 @@
                     <div class="resultWrap">
                         <div class="float_left col-md-5 col-sm-5" style="width: 46% !important;">
                             <div class="">
-                                <h3>메일내용</h3><textarea class="col-md-12 col-sm-12" id="EMAIL_CONTENT" name="EMAIL_CONTENT" style="height: 300px;"></textarea>
+                                <h3>메일내용</h3><textarea class="col-md-12 col-sm-12" id="EMAIL_CONTENT_TXT" name="EMAIL_CONTENT_TXT" style="height: 300px;"></textarea>
                             </div>
                         </div>
                         <div class="float_right col-md-6 col-sm-6">
@@ -325,7 +328,6 @@
             ], hidden: true},
             {title: '항목별 견적정보', align: "center", colModel: [
                     {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT', format: '#,###'},
-                    /*{title: '소재마감', dataType: 'integer', dataIndx: '', format: '#,###'},   */
                     {title: '표면 처리비', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###'},
                     {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT', format: '#,###'},
                     {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###'},
@@ -335,7 +337,6 @@
             {title: '최종견적가', dataType: 'float', dataIndx: 'FINAL_EST_UNIT_PRICE', format: '#,###', width: 80},
             {title: '금액 계', dataType: 'float', dataIndx: 'DTL_AMOUNT', format: '#,###', width: 80},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
-            //{title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ'},
             {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ',
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadView" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
@@ -349,7 +350,6 @@
                     });
                 }
             },
-            //{title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ'},
             {
                 title: 'IMG', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ',
                 render: function (ui) {
@@ -367,10 +367,10 @@
         ];
 
         let estimateRegisterBotColModel= [
-            {title: '', dataType: 'string', dataIndx: 'STAFF_SEQ', hidden: true },
-            {title: '성함', dataType: 'string', dataIndx: 'STAFF_NM' },
-            {title: '메일주소', dataType: 'string', dataIndx: 'STAFF_EMAIL' },
-            {title: '전화번호', dataType: 'string', dataIndx: 'STAFF_TEL' }
+            {title: '', dataType: 'string', dataIndx: 'SEQ', hidden: true },
+            {title: '성함', dataType: 'string', dataIndx: 'RECEIVER_NM', minWidth: "30%"},
+            {title: '메일주소', dataType: 'string', dataIndx: 'RECEIVER_EMAIL', minWidth: "30%"},
+            {title: '전화번호', dataType: 'string', dataIndx: 'RECEIVER_TEL', minWidth: "30%"}
         ];
 
         estimateRegisterTopGrid.pqGrid({
@@ -457,19 +457,19 @@
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
                     url: "/paramQueryGridSelect",
-                    postData: { 'queryId': 'selectCompanyStaffEmailList', 'COMP_CD': COMP_CD},
+                    postData: { 'queryId': 'selectEstimateStaffEmailList', 'COMP_CD': COMP_CD},
                     getData: function (dataJSON) {
                         let data = dataJSON.data;
                         return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                     }
                 },
-                scrollModel: {autoFit: true},
+                scrollModel: {autoFit: false},
                 numberCell: {width: 30, title: "No", show: true },
-                selectionModel: { type: 'row', mode: 'single'} ,
+                //selectionModel: { type: 'row', mode: 'single'} ,
                 collapsible: false,
                 swipeModel: {on: false},
                 trackModel: {on: true},
-                resizable: true,
+                resizable: false,
                 colModel: estimateRegisterBotColModel,
                 showTitle: false,
                 title: false,
@@ -494,19 +494,7 @@
         });
 
         function estimateRegisterSaveCallBack(response, callMethodParam){
-            let estimateRegisterInsertQueryList = ['insertEstimateDetail'];
-            let estimateRegisterUpdateQueryList = ['updateEstimateDetail'];
-            let EST_SEQ = $("#estimate_version_up_sequence_form #hidden_est_seq").val();
-
-            let data = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data');
-            let totalRecords = data.length;
-            for(let tempI=0; tempI<totalRecords; tempI++){
-                estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': tempI , row: { 'EST_SEQ': EST_SEQ } });
-            }
-
-            $("#estimate_register_hidden_form #EST_SEQ").val(EST_SEQ);
-            fnModifyPQGrid(estimateRegisterTopGrid, estimateRegisterInsertQueryList, estimateRegisterUpdateQueryList);
-            //estimateRegisterReloadPageData();
+            estimateRegisterReloadPageData();
         };
 
         function estimateRegisterReloadPageData(){
@@ -526,15 +514,16 @@
                 $("#estimate_register_info_form #DTL_AMOUNT").val(list.DTL_AMOUNT);
                 $("#estimate_register_info_form #INSERT_DT").val(list.INSERT_DT);
                 $("#estimate_register_info_form #SEND_DT").val(list.SEND_DT);
+                $("#EMAIL_CONTENT_TXT").val(list.EMAIL_CONTENT);
                 $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
 
                 $("#estimate_register_excel_download #EST_SEQ").val(EST_SEQ);
 
                 postData = { 'queryId': 'estimate.selectEstimateDetailList', 'EST_SEQ': EST_SEQ };
-                if(estimateRegisterTopGrid.hasClass('pq-grid')){
-                    //estimateRegisterTopGrid.pqGrid('destroy');
-                }
                 fnRequestGidData(estimateRegisterTopGrid, postData);
+
+                postData = { 'queryId': 'estimate.selectEstimateReceiverList', 'EST_SEQ': EST_SEQ };
+                fnRequestGidData(estimateRegisterBotGrid, postData);
             }, parameter, '');
         };
 
@@ -565,9 +554,19 @@
 
                 $("#estimate_register_info_form #queryId").val('insertEstimateMaster');
                 $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
+
+
+                let detail_data = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data');
+                let mail_data = $("#EMAIL_CONTENT_TXT").val();
+                let receiver_data = estimateRegisterBotGrid.pqGrid('option', 'dataModel.data');
+                $("#estimate_register_info_form #ESTIMATE_DETAIL_DATA").val(JSON.stringify(detail_data));
+                $("#estimate_register_info_form #ESTIMATE_RECEIVER_DATA").val(JSON.stringify(receiver_data));
+                $("#estimate_register_info_form #EMAIL_CONTENT").val(mail_data);
+
                 $("#estimate_version_up_sequence_form #hidden_est_seq").val(EST_SEQ);
 
-                parameters = {'url': '/json-create', 'data': $("#estimate_register_info_form").serialize()};
+
+                parameters = {'url': '/registerEstimateSave', 'data': $("#estimate_register_info_form").serialize()};
                 fnPostAjax(estimateRegisterSaveCallBack, parameters, '');
 
             }, parameters, '');

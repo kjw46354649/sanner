@@ -368,12 +368,12 @@
                 ]
             },
             {title: '재고수량(EA)', dataType: 'integer', dataIndx: 'INSIDE_STOCK_CURR_QTY', editable: function (ui) { return gridCellEditable(ui);}},
-            {
-                title: '대칭', datatype: 'integer', align: 'center', colModel: [
-                    {title: '원칭', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY', editable: true},
-                    {title: '대칭', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY', editable: true}
-                ]
-            },
+            // {
+            //     title: '대칭', datatype: 'integer', align: 'center', colModel: [
+            //         {title: '원칭', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY', editable: true},
+            //         {title: '대칭', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY', editable: true}
+            //     ]
+            // },
             {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_CD_NM', editable: true,
                 editor: {
                     type: 'select',
