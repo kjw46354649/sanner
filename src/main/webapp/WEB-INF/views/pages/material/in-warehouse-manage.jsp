@@ -12,7 +12,7 @@
         <div class="modal-content">
             <div class="modal-header topWrap">
                 <div class="hWrap">
-                    <h2>소재주문 진행</h2>
+                    <h2>위치정보 관리</h2>
                 </div>
             </div>
             <div class="topWrap">
@@ -22,19 +22,13 @@
                     <div class="panel-body line_tit portlet-body form bg-light">
                         <!-- grid table -->
                         <section class="bg-light">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="panel panel-default">
-                                        <div class="row">
-                                            <div class="col-md-12 col-sm-12">
-                                                <div class="gridWrap">
-                                                    <div class="hWrap">
-                                                        <button type="button" class="search_btn" id="btnItemOrderRegisterSearch">검색</button>
-                                                    </div>
-                                                    <div id="in_warehouse_manage_warehouse_grid" class="jqx-refresh"></div>
-                                                </div>
-                                            </div>
+                            <div class="panel panel-default">
+                                <div class="tableWrap">
+                                    <div class="gridWrap">
+                                        <div class="hWrap">
+                                            <button type="button" class="search_btn" id="btnItemOrderRegisterSearch">검색</button>
                                         </div>
+                                        <div id="in_warehouse_manage_warehouse_grid" class="jqx-refresh"></div>
                                     </div>
                                 </div>
                             </div>
@@ -146,7 +140,7 @@
             <ul class="smallTabMenuTabs">
                 <li class="active"><a href="#IN_WAREHOUSE_MANAGE_TAB1" data-toggle="tab" aria-expanded="true">현황관리</a></li>
                 <li><a href="#IN_WAREHOUSE_MANAGE_TAB2" data-toggle="tab" aria-expanded="false">불출이력</a></li>
-                <div class="right_sort">
+                <div class="right_sort" id="IN_WAREHOUSE_MANAGE_BUTTON">
                     <button type="button" class="defaultBtn btn-120w" id="btnInWarehouseManageOutBarcode">소재불출(바코드)</button>
                     <button type="button" class="defaultBtn btn-120w" id="btnInWarehouseManageLocation">위치정보관리</button>
                     <button type="button" class="defaultBtn radius" id="btnInWarehouseManageAdd">추가</button>
@@ -171,7 +165,7 @@
                     </div>
                 </ul>
                 <ul class="" id="IN_WAREHOUSE_MANAGE_TAB2">
-                    <div class="conMainWrap">
+                    <div class="conMainWrap" style="height: 740px">
                         <div id="in_warehouse_manage_out_grid01"></div>
                         <div class="right_sort">
                             전체 조회 건수 (Total : <span id="in_warehouse_manage_out_grid01_records" style="color: #00b3ee">0</span>)
@@ -204,7 +198,7 @@
         let inWarehouseManageSelectedRowIndex =[];
         let inWarehouseManageManageColModel01= [
             {title: '', dataType: 'string', dataIndx: 'MY_MAT_STOCK_SEQ', hidden: true},
-            {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_NM', width: 120 ,
+            {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_NM', width: "7%" ,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "WAREHOUSE_NM", id: "WAREHOUSE_CD" },
@@ -219,7 +213,7 @@
                     }
                 }
             } ,
-            {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM', width: 80 ,
+            {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM', width: "7%" ,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "MATERIAL_KIND_NM", id: "MATERIAL_KIND" },
@@ -248,7 +242,7 @@
                     }
                 }
             } ,
-            {title: '소재종류상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM' , minWidth: 100,
+            {title: '소재종류상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM' , minWidth: "8%",
                 editor: {
                     type: 'select',
                     mapIndices: { name: "MATERIAL_DETAIL_NM", id: "MATERIAL_DETAIL" },
@@ -329,17 +323,17 @@
                     }
                 }
             },
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', minWidth: 200 },
-            {title: '입고', dataType: 'string', dataIndx: 'IN_QTY', minWidth: 60 },
-            {title: '불출요청', dataType: 'string', dataIndx: '', minWidth: 80 ,
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', minWidth: 600 },
+            {title: '입고', dataType: 'string', dataIndx: 'IN_QTY', minWidth: "3%" },
+            {title: '불출요청', dataType: 'string', dataIndx: '', minWidth: "5%" ,
                 render: function(ui){
-                    return '<input type="button" value="불출"/>';
+                    return '<input type="button" value="불출" style="width:70px;"/>';
                 }
             }
         ];
 
         let inWarehouseManageManageColModel02= [
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM' },
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM' ,},
             {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM' },
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM' },
             {title: '불출대기 목록', align: "center", colModel: [
@@ -359,23 +353,32 @@
         ];
 
         let inWarehouseManageOutColModel= [
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_SEQ' },
-            {title: '형태', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ' },
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ' },
-            {title: '불출대기 목록', align: "center", colModel: [
-                    {title: '가로', dataType: 'string', dataIndx: 'SIZE_W'},
-                    {title: '세로', dataType: 'string', dataIndx: 'SIZE_H'},
-                    {title: '두께(T)', dataType: 'string', dataIndx: 'SIZE_T'},
-                    {title: '파이', dataType: 'string', dataIndx: 'SIZE_D'},
-                    {title: '길이(L)', dataType: 'string', dataIndx: 'SIZE_L'},
-                ]},
-            {title: '요청수량', dataType: 'string', dataIndx: 'MATERIAL_COMP_CD', width: 80 , editable: false} ,
-            {title: '창고', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 120, editable: false},
-            {title: '위치', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 120, editable: false},
-            {title: '주문번호', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 120, editable: false},
-            {title: '요청일시', dataType: 'string', dataIndx: 'SIZE_TXT', width: 120, editable: false},
-            {title: '요청자', dataType: 'string', dataIndx: 'ORDER_QTY' , editable: false},
-            {title: '수동 불출', dataType: 'string', dataIndx: 'ORDER_NOTE', editable: false}
+            {title: '수불구분', dataType: 'string', dataIndx: 'IN_OUT_TYPE', minWidth: '5%',
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "IN_OUT_TYPE", id: "IN_OUT_TYPE" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1055'),
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let rowData = inWarehouseManageManageGrid01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["IN_OUT_TYPE"]=clave;
+                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    }
+                }
+            },
+            {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_NM', minWidth: '9%' },
+            {title: '위치', dataType: 'string', dataIndx: 'LOC_NM', minWidth: '9%' },
+            {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM', minWidth: '5%'} ,
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: '9%'},
+            {title: '구격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: '9%'},
+            {title: '입고수량', dataType: 'string', dataIndx: 'IN_QTY', minWidth: '5%'},
+            {title: '불출수량', dataType: 'string', dataIndx: 'OUT_QTY', minWidth: '5%'},
+            {title: '요청자', dataType: 'string', dataIndx: 'REGISTED_ID', minWidth: '6%' },
+            {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', minWidth: '10%'},
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: '10%'},
+            {title: '수행일시', dataType: 'string', dataIndx: 'REGISTED_DT', minWidth: '14%'}
         ];
 
         let inWarehouseManageWarehouseColModel= [
@@ -510,7 +513,7 @@
                 }
             },
             columnTemplate: {align: 'center', hvalign: 'center'},
-            scrollModel: {autoFit: true},
+            scrollModel: {autoFit: false},
             numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
@@ -557,7 +560,7 @@
         selectInWarehouseManageManageGrid02List();
         function selectInWarehouseManageManageGrid02List(){
             inWarehouseManageManageGrid02.pqGrid({
-                width: "100%", height: 250,
+                width: "100%", height: 272,
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
                     url: "/paramQueryGridSelect",
@@ -612,6 +615,7 @@
             trackModel: {on: true},
             colModel: inWarehouseManageOutColModel,
             showTitle: false,
+            editable: false,
             complete: function(event, ui) {
                 this.flex();
                 let data = inWarehouseManageOutGrid.pqGrid('option', 'dataModel.data');
@@ -664,6 +668,7 @@
                 ui.newPanel.find('.pq-grid').pqGrid('refresh');
                 $('#in_warehouse_manage_out_search_form').toggle(); // show -> hide , hide -> show
                 $('#in_warehouse_manage_search_form').toggle(); // show -> hide , hide -> show
+                $("#IN_WAREHOUSE_MANAGE_BUTTON").toggle();
             }
         });
 

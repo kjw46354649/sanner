@@ -34,7 +34,7 @@
         </header>
         <form id="drawing_worker_form" method="post" action="/drawing-board">
             <input id="FACTORY_AREA" name="FACTORY_AREA" type="hidden" value="${FACTORY_AREA}">
-            <input id="EQUIP_ID" name="EQUIP_ID" type="hidden" value="${EQUIP_ID}">
+            <input id="EQUIP_SEQ" name="EQUIP_SEQ" type="hidden" value="${EQUIP_SEQ}">
             <input id="USER_ID" name="USER_ID" type="hidden" value="">
             <section class="contents">
                 <ul class="userWrap">

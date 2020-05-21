@@ -29,17 +29,17 @@ public class MachineServiceImpl implements MachineService {
     @Override
     public void managerEquip(Model model, Map<String, Object> map) throws Exception {
 
-       String EQUIP_ID = (String) map.get("EQUIP_ID");
+       String EQUIP_SEQ = (String) map.get("EQUIP_SEQ");
 
        //1. insert update 유무 확인
-       if("".equals(EQUIP_ID)){
+       if("".equals(EQUIP_SEQ)){
            //2-1 seq 가져오기
            map.put("queryId", "machine.selectMachineSeq");
            Map<String, Object> seqMap = innodaleDao.getInfo(map);
 
            //2-2. 마스터 insert
-           EQUIP_ID = (String)seqMap.get("SEQ");
-           map.put("EQUIP_ID", EQUIP_ID);
+           EQUIP_SEQ = (String)seqMap.get("SEQ");
+           map.put("EQUIP_SEQ", EQUIP_SEQ);
            map.put("queryId", "machine.insertMachineMaster");
            innodaleDao.create(map);
 
@@ -63,21 +63,21 @@ public class MachineServiceImpl implements MachineService {
                if (addList.size() > 0) {
                    for (HashMap<String, Object> hashMap : addList) {
                        hashMap.put("queryId", "machine.insertMachineMasterHistory");
-                       hashMap.put("EQUIP_ID", EQUIP_ID);
+                       hashMap.put("EQUIP_SEQ", EQUIP_SEQ);
                        this.innodaleDao.insertGrid(hashMap);
                    }
                }
                if (updateList.size() > 0) {
                    for (HashMap<String, Object> hashMap : updateList) {
                        hashMap.put("queryId", "machine.updateMachineMasterHistory");
-                       hashMap.put("EQUIP_ID", EQUIP_ID);
+                       hashMap.put("EQUIP_SEQ", EQUIP_SEQ);
                        this.innodaleDao.updateGrid(hashMap);
                    }
                }
                if (deleteList.size() > 0) {
                    for (HashMap<String, Object> hashMap : deleteList) {
                        hashMap.put("queryId", "machine.deleteMachineMasterHistory");
-                       hashMap.put("EQUIP_ID", EQUIP_ID);
+                       hashMap.put("EQUIP_SEQ", EQUIP_SEQ);
                        this.innodaleDao.deleteGrid(hashMap);
                    }
                }

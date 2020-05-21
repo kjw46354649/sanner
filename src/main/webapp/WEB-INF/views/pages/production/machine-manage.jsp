@@ -15,7 +15,7 @@
         <form class="form-inline" id="machine_manage_search_form" name="machine_manage_search_form" role="form">
             <input type="hidden" id="queryId" name="queryId" value="machine.selectMachineList">
             <input type="hidden" id="SEL_EQUIP_KIND" name="SEL_EQUIP_KIND" value="1">
-            <div class="gubunWrap">
+            <div class="gubunWrap row2_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -30,12 +30,13 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label for="SEL_EQUIP_SIZE" class="label_100">장비규격</label>
-                            <select id="SEL_EQUIP_SIZE" name="SEL_EQUIP_SIZE" title="장비규격" data-required="true"  class="wd_200">
-                                <option value=""><spring:message code="com.form.top.all.option" /></option>
-                                <c:forEach var="vlocale" items="${HighCode.H_1034}">
-                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
+                            <input type="text" name="SEL_EQUIP_SIZE" id="SEL_EQUIP_SIZE" placeholder="장비규격" value="" title="장비규격" class="wd_200">
+<%--                            <select id="SEL_EQUIP_SIZE" name="SEL_EQUIP_SIZE" title="장비규격" data-required="true"  class="wd_200">--%>
+<%--                                <option value=""><spring:message code="com.form.top.all.option" /></option>--%>
+<%--                                <c:forEach var="vlocale" items="${HighCode.H_1034}">--%>
+<%--                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>--%>
+<%--                                </c:forEach>--%>
+<%--                            </select>--%>
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label for="SEL_EQUIP_NM" class="label_100">장비명</label>
@@ -84,10 +85,10 @@
 
             </div>
         </form>
-        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
+<%--        <button type="button" class="topWrap_btn">펼치기 / 접기</button>--%>
     </div>
 
-    <div class="bottomWrap">
+    <div class="bottomWrap row2_bottomWrap">
 <%--        <div class="hWrap2">--%>
 <%--&lt;%&ndash;        <div class="buttonWrap" >&ndash;%&gt;--%>
 <%--            <div class="right_sort">--%>
@@ -167,7 +168,7 @@
         <input type="hidden" id="queryId" name="queryId" value="machine.selectMachineInfo">
         <input type="hidden" id="SEQ" name="SEQ" value="">
         <input type="hidden" id="EQUIP_KIND" name="EQUIP_KIND" value="">
-        <input type="hidden" id="EQUIP_ID" name="EQUIP_ID" value="" >
+        <input type="hidden" id="EQUIP_SEQ" name="EQUIP_SEQ" value="" >
         <input type="hidden" id="historyGrid" name="historyGrid" value="" >
 
         <div class="layerPopup">
@@ -201,7 +202,7 @@
                             </colgroup>
                             <tr>
                                 <th scope="row">Item ID</th>
-                                <td id="EQUIP_ID_NM"></td>
+                                <td><input type="text" name="EQUIP_ID" id="EQUIP_ID" placeholder="Item ID" value="" title="Item ID" class="wd_150"></td>
                                 <th scope="row">구분</th>
                                 <td id="EQUIP_KIND_NM"></td>
                             </tr>
@@ -230,12 +231,13 @@
                                 </td>
                                 <th scope="row">장비규격</th>
                                 <td>
-                                    <select id="EQUIP_SIZE" name="EQUIP_SIZE" data-required="true" class="wd_150">
-                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
-                                        <c:forEach var="vlocale" items="${HighCode.H_1034}">
-                                            <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
-                                        </c:forEach>
-                                    </select>
+                                    <input type="text" name="EQUIP_SIZE" id="EQUIP_SIZE" placeholder="장비규격" value="" title="장비규격" class="wd_150">
+<%--                                    <select id="EQUIP_SIZE" name="EQUIP_SIZE" data-required="true" class="wd_150">--%>
+<%--                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>--%>
+<%--                                        <c:forEach var="vlocale" items="${HighCode.H_1034}">--%>
+<%--                                            <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>--%>
+<%--                                        </c:forEach>--%>
+<%--                                    </select>--%>
                                 </td>
                             </tr>
                             <tr>
@@ -273,18 +275,28 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row">구입시기</th>
+                            <th scope="row">구입시기</th>
+                            <td>
+                                <input class="datepicker-input wd_150" type="text" name="PURCHASE_DT" id="PURCHASE_DT" placeholder="" value="" title="구입시기" readonly >
+                            </td>
+                            <th scope="row">리셀러</th>
+                            <td>
+                                <select id="RESELLER_CD" name="RESELLER_CD" data-required="true" class="wd_150">
+                                    <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                    <c:forEach var="vlocale" items="${HighCode.H_1022}">
+                                        <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
+                                    </c:forEach>
+                                </select>
+                            </td>
+                        </tr>
+                            <tr>
+                                <th scope="row">Model No.</th>
                                 <td>
-                                    <input class="datepicker-input wd_150" type="text" name="PURCHASE_DT" id="PURCHASE_DT" placeholder="" value="" title="구입시기" readonly >
+                                    <input type="text" name="MODEL_NUM" id="MODEL_NUM" placeholder="Model No." value="" title="Model No." class="wd_150">
                                 </td>
-                                <th scope="row">리셀러</th>
+                                <th scope="row">제조번호</th>
                                 <td>
-                                    <select id="RESELLER_CD" name="RESELLER_CD" data-required="true" class="wd_150">
-                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
-                                        <c:forEach var="vlocale" items="${HighCode.H_1022}">
-                                            <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
-                                        </c:forEach>
-                                    </select>
+                                    <input type="text" name="SERIAL_NUM" id="SERIAL_NUM" placeholder="제조번호" value="" title="제조번호" class="wd_150">
                                 </td>
                             </tr>
                             <tr>
@@ -330,42 +342,10 @@
                     </div>
 
 
-<%--                    <div id="div_tabs2">--%>
-<%--                        <div class="">&nbsp;--%>
-<%--                            <ul class="nav nav-tabs m-b-n-xxs">--%>
-<%--                                <li class="active" id="_TAB3_TITLE">--%>
-<%--                                    <a href="#_TAB3" data-toggle="tab" aria-expanded="true">작동로그</a>--%>
-<%--                                </li>--%>
-<%--                                <li class="" id="_TAB4_TITLE">--%>
-<%--                                    <a href="#_TAB4" data-toggle="tab" aria-expanded="false">정비이력</a>--%>
-<%--                                </li>--%>
-<%--                            </ul>--%>
-<%--                            <div class="panel panel-default tab-content">--%>
-<%--                                <ul class="list-group tab-pane active" id="_TAB3">--%>
-<%--                                    <div class="row">--%>
-<%--                                        <div id="machine_manage_log_grid"></div>--%>
-<%--                                    </div>--%>
-<%--                                </ul>--%>
-<%--                                <ul class="list-group tab-pane list-group-alt list-group-lg" id="_TAB4">--%>
-<%--                                    <div class="row">--%>
-<%--                                        <div id="machine_manage_history_grid"></div>--%>
-<%--                                    </div>--%>
-<%--                                </ul>--%>
-<%--                            </div>--%>
-<%--                        </div>--%>
-<%--                    </div>--%>
-
-
-
-
-
-
 
                 </div>
             </div>
-            <%--            <div class="btnWrap">--%>
-            <%--                <button type="button" class="defaultBtn">CLOSE</button>--%>
-            <%--            </div>--%>
+
         </div>
 
 </div>
@@ -424,11 +404,12 @@
                     // });
                 }
             },
+            {title: 'EQUIP_SEQ', dataType: 'string', dataIndx: 'EQUIP_SEQ', hidden:true},
             {title: 'Item ID', dataType: 'string', dataIndx: 'EQUIP_ID'},
             {title: '장비명', dataType: 'string', dataIndx: 'EQUIP_NM'},
             {title: '공정', dataType: 'string', dataIndx: 'PROCESS_TYPE_NM',width: 70},
             {title: '장비종류', dataType: 'string', dataIndx: 'EQUIP_TYPE_NM',width: 70},
-            {title: '장비규격', dataType: 'string', dataIndx: 'EQUIP_SIZE_NM',width: 70},
+            {title: '장비규격', dataType: 'string', dataIndx: 'EQUIP_SIZE',width: 70},
             {title: '제조사', dataType: 'string', dataIndx: 'EQUIP_COMP_NM'},
             {title: '리셀러', dataType: 'string', dataIndx: 'RESELLER_NM'},
             {title: '설치위치', dataType: 'string', dataIndx: 'FACTORY_AREA_NM'},
@@ -469,10 +450,10 @@
             },
             cellDblClick: function (event, ui) {
                 if (ui.dataIndx === 'PHOTO_GFILE_SEQ' || ui.dataIndx === 'EQUIP_NM'){
-                    let target = ui.rowData.EQUIP_ID;
-
+                    let target = ui.rowData.EQUIP_SEQ;
+                    console.log(ui.rowData.EQUIP_SEQ);
                     fnResetFrom("machine_manage_pop_form");
-                    $("#machine_manage_pop_form").find("#EQUIP_ID").val(target);
+                    $("#machine_manage_pop_form").find("#EQUIP_SEQ").val(target);
                     $('#CURRENT_POPUP').modal('show');
                 }
             }
@@ -497,11 +478,12 @@
                     // });
                 }
             },
+            {title: 'EQUIP_SEQ', dataType: 'string', dataIndx: 'EQUIP_SEQ', hidden:true},
             {title: 'Item ID', dataType: 'string', dataIndx: 'EQUIP_ID'},
             {title: '장비명', dataType: 'string', dataIndx: 'EQUIP_NM'},
             {title: '공정', dataType: 'string', dataIndx: 'PROCESS_TYPE_NM'},
             {title: '장비종류', dataType: 'string', dataIndx: 'EQUIP_TYPE_NM'},
-            {title: '장비규격', dataType: 'string', dataIndx: 'EQUIP_SIZE_NM'},
+            {title: '장비규격', dataType: 'string', dataIndx: 'EQUIP_SIZE'},
             {title: '제조사', dataType: 'string', dataIndx: 'EQUIP_COMP_NM'},
             {title: '리셀러', dataType: 'string', dataIndx: 'RESELLER_NM'},
             {title: '설치위치', dataType: 'string', dataIndx: 'FACTORY_AREA_NM'},
@@ -511,7 +493,7 @@
             {title: '담당(부)', dataType: 'string', dataIndx: 'SUB_USER_NM'},
             {title: '작동시작(누적)', dataType: 'string', dataIndx: 'WORKING_TIME'},
             //{title: '최근<br>정비일시', dataType: 'string', dataIndx: ''},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE'}
         ];
         etcObj = {
             width: "100%",
@@ -541,10 +523,10 @@
             },
             cellClick: function (event, ui) {
                 if (ui.dataIndx === 'PHOTO_GFILE_SEQ' || ui.dataIndx === 'EQUIP_NM'){
-                    let target = ui.rowData.EQUIP_ID;
+                    let target = ui.rowData.EQUIP_SEQ;
 
                     fnResetFrom("machine_manage_pop_form");
-                    $("#machine_manage_pop_form").find("#EQUIP_ID").val(target);
+                    $("#machine_manage_pop_form").find("#EQUIP_SEQ").val(target);
                     $('#CURRENT_POPUP').modal('show');
                 }
             }
@@ -633,6 +615,7 @@
         }
         historyPostData = fnFormToJsonArrayData('#machine_manage_pop_form');
         historyColModel = [
+            {title: 'EQUIP_SEQ', dataType: 'string', dataIndx: 'EQUIP_SEQ', hidden:true},
             {title: 'EQUIP_ID', dataType: 'string', dataIndx: 'EQUIP_ID', hidden:true},
             {title: 'SEQ', dataType: 'string', dataIndx: 'SEQ', hidden:true},
             {title: '정비 작업종류', dataType: 'string', dataIndx: 'REPAIR_TYPE_NM',
@@ -739,8 +722,8 @@
             }
         ];
         $("#machine_manage_pop_form").find("#queryId").val("machine.selectMachineHistoryList");
-        $('#' + historyGridId).pqGrid({
-        //historyObj = {
+        //$('#' + historyGridId).pqGrid({
+        historyObj = {
             width: "100%", height: 200,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
@@ -756,8 +739,8 @@
                 hvalign: 'center'
             },
             scrollModel: {autoFit: true},
-            numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
-            selectionModel: { type: 'row', mode: 'single'} ,
+            numberCell: {width: 30, title: "No", show: true, styleHead: {'vertical-align': 'middle'}},
+            selectionModel: {type: 'row', mode: 'single'},
             swipeModel: {on: false},
             showTitle: false,
             collapsible: false,
@@ -775,9 +758,9 @@
                 let rowIndx = ui.rowIndx, $grid = this;
 
                 if (ui.dataIndx == 'AFTER_GFILE_SEQ') {
-                    if (ui.rowData['AFTER_GFILE_SEQ'] > 0){
+                    if (ui.rowData['AFTER_GFILE_SEQ'] > 0) {
                         callWindowImageViewer(ui.rowData.AFTER_GFILE_SEQ);
-                    }else{
+                    } else {
                         callGridSingleFileUpload($historyGrid, rowIndx, 'AFTER_GFILE_SEQ');
                     }
 
@@ -787,9 +770,9 @@
                 }
                 if (ui.dataIndx == 'BEFORE_GFILE_SEQ') {
 
-                    if (ui.rowData['BEFORE_GFILE_SEQ'] > 0){
+                    if (ui.rowData['BEFORE_GFILE_SEQ'] > 0) {
                         callWindowImageViewer(ui.rowData.BEFORE_GFILE_SEQ);
-                    }else{
+                    } else {
                         callGridSingleFileUpload($historyGrid, rowIndx, 'BEFORE_GFILE_SEQ');
                     }
 
@@ -798,8 +781,8 @@
                 }
                 if (ui.dataIndx == 'SEQ') {
 
-                    $historyGrid.pqGrid("updateRow", { rowIndx: rowIndx , row: { "BEFORE_GFILE_SEQ": "" } });
-                    $historyGrid.pqGrid("updateRow", { rowIndx: rowIndx , row: { "AFTER_GFILE_SEQ": "" } });
+                    $historyGrid.pqGrid("updateRow", {rowIndx: rowIndx, row: {"BEFORE_GFILE_SEQ": ""}});
+                    $historyGrid.pqGrid("updateRow", {rowIndx: rowIndx, row: {"AFTER_GFILE_SEQ": ""}});
 
                     var gridInstance = $historyGrid.pqGrid('getInstance').grid;
                     var changes = gridInstance.getChanges({format: 'byVal'});
@@ -809,7 +792,9 @@
                     return;
                 }
             }
-        });
+            //});
+        };
+        $historyGrid = $('#' + historyGridId).pqGrid(historyObj);
         // $("#machine_manage_pop_form").find("#queryId").val("machine.selectMachineHistoryList");
         // $historyGrid = $('#' + historyGridId).pqGrid(historyObj);
         /**  정비이력 그리드 선언 끝 **/
@@ -818,12 +803,12 @@
 
         $("#machine_manage_pop_form").find("#addHistoryBtn").click(function(event){
 
-            let EQUIP_ID = $("#machine_manage_pop_form").find("#EQUIP_ID").val();
-            if(EQUIP_ID == ""){
+            let EQUIP_SEQ = $("#machine_manage_pop_form").find("#EQUIP_SEQ").val();
+            if(EQUIP_SEQ == ""){
                 alert("마스터 정보를 먼저 저장해 주십시오.");
                 return;
             }else{
-                $historyGrid.pqGrid('addNodes', [{"EQUIP_ID":EQUIP_ID}], 0);
+                $historyGrid.pqGrid('addNodes', [{"EQUIP_SEQ":EQUIP_SEQ}], 0);
             }
 
         });
@@ -838,15 +823,15 @@
 
         $newBtn.click(function(event){
             fnResetFrom("machine_manage_pop_form");
-            $("#machine_manage_pop_form").find("#EQUIP_ID").val("");
+            $("#machine_manage_pop_form").find("#EQUIP_SEQ").val("");
             $('#CURRENT_POPUP').modal('show');
         });
         $saveBtn.click(function(event){
 
             if(confirm("저장 하시겠습니까?")){
                 // 그리드 데이터 폼에 넣기 to-do
-                let EQUIP_ID = $("#machine_manage_pop_form").find("#EQUIP_ID").val();
-                if(EQUIP_ID != ""){
+                let EQUIP_SEQ = $("#machine_manage_pop_form").find("#EQUIP_SEQ").val();
+                if(EQUIP_SEQ != ""){
                     var gridInstance = $historyGrid.pqGrid('getInstance').grid;
                     var changes = gridInstance.getChanges({format: 'byVal'});
                     $("#machine_manage_pop_form").find("#historyGrid").val(JSON.stringify(changes));
@@ -1026,12 +1011,13 @@
             'url': '/json-info',
             'data': $('#machine_manage_pop_form').serialize()
         };
+        console.log($('#machine_manage_pop_form').serialize());
         fnPostAjax(function (data, callFunctionParam) {
             let dataInfo = data.info;
 
             if(dataInfo == null ) {
                 fnResetFrom("machine_manage_pop_form");
-                $("#machine_manage_pop_form").find("#EQUIP_ID_NM").html("");
+                //$("#machine_manage_pop_form").find("#EQUIP_ID_NM").html("");
                 $("#machine_manage_pop_form").find("#PHOTO_GFILE_SEQ").val("");
                 $("#machine_manage_pop_form").find("#PHOTO_GFILE_SRC").attr("src", "/image/999");
             }else{
@@ -1041,7 +1027,7 @@
                 $("#machine_manage_pop_form").find("#PHOTO_GFILE_SEQ").val(dataInfo.PHOTO_GFILE_SEQ);
                 $("#machine_manage_pop_form").find("#PHOTO_GFILE_SRC").attr("src", "/image/" + dataInfo.PHOTO_GFILE_SEQ);
 
-                $("#machine_manage_pop_form").find("#EQUIP_ID_NM").html(dataInfo.EQUIP_ID);
+                //$("#machine_manage_pop_form").find("#EQUIP_ID_NM").html(dataInfo.EQUIP_ID);
             }
 
             let equip_kind = $("#machine_manage_search_form").find("#SEL_EQUIP_KIND").val();
