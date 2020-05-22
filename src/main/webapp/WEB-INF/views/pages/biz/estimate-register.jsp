@@ -46,42 +46,35 @@
         <!-- /.modal-dialog -->
     </div>
 </div>
-<div class="modal" id="estimate_register_mail_form" tabindex="-1" role="dialog" aria-hidden="true">
-    <input type="hidden" id="queryId" name="queryId" value="selectEstimateResigerEmail">
-    <input type="hidden" id="EST_SEQ" name="EST_SEQ">
+<div class="modal" id="estimate_register_mail_popup" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg cadDrawing">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                <h2 class="headerTitle_01">도면 등록</h2>
+                <h2 class="headerTitle_01">Mail Box</h2>
             </div>
             <div class="modal-body">
-                <form class="" role="form" id="common_cad_file_attach_form" name="common_cad_file_attach_form">
-                    <input type="hidden" id="queryId" name="queryId" value="">
-                    <input type="hidden" id="actionType" name="actionType" value="">
-                    <input type="hidden" id="fileGrid" name="fileGrid" value="">
-                    <div class="buttonWrap">
-                        <button type="button" class="defaultBtn radius blue right_float" id="cadFileConvertUploadCompletedBtn">Save</button>
-                    </div>
-                    <div id="common_cad_file_attach_grid" style="margin:auto;"></div>
-                    <div class="right_sort fileTableInfoWrap">
-                        <h4>전체 조회 건수 (Total : <span id="cadFileUploadTotalCount" style="color: #00b3ee">0</span>)</h4>
-                    </div>
-                    <div class="fileTableWrap">
-                        <table class="colStyle mg-top20" id="attachDragAndDrop" >
-                            <caption></caption>
-                            <thead>
+                <form class="" role="form" id="estimate_register_mail_form" name="common_cad_file_attach_form">
+                    <input type="hidden" id="queryId" name="queryId" value="selectEstimateResigerEmail">
+                    <input type="hidden" id="EST_SEQ" name="EST_SEQ">
+                    <div class="tableWrap">
+                        <table style="width:100%">
                             <tr>
-                                <th scope="col" class="fileName txt">파일명</th>
-                                <th scope="col" class="etcInfo">용량</th>
-                                <th scope="col" class="etcInfo"></th>
+                                <th>Name:</th>
+                                <td>Bill Gates</td>
                             </tr>
-                            </thead>
-                            <tbody class="files"></tbody>
+                            <tr>
+                                <th>Telephone:</th>
+                                <td>555 77 854</td>
+                            </tr>
+                            <tr>
+                                <th>Telephone:</th>
+                                <td>555 77 855</td>
+                            </tr>
                         </table>
                     </div>
-                    <div class="fileTableInfoWrap right_float">
-                        <h4>첨부파일 개수 : <span id="successCntHtml">0</span><span class="errorInfo">에러파일 : <span id="errorCntHtml">0</span></span></h4>
+                    <div class="buttonWrap">
+                        <button type="button" class="defaultBtn radius blue right_float" id="cadFileConvertUploadCompletedBtn">Save</button>
                     </div>
                 </form>
             </div>
@@ -784,11 +777,20 @@
             }, parameters, '');
         }
 
+        /** Modal 처리 **/
+        $('#estimate_register_mail_popup').on('hide.bs.modal', function() {
+
+        });
+
+        $('#estimate_register_mail_popup').on('show.bs.modal',function() {
+
+        });
+
         /** 버튼 처리 **/
         $("#btn_estimate_register_submit").on("click", function(){
             fnEstimateRegisterSave();
             //Popup Show
-            $("#estimate_register_mail_form").modal('open');
+            $("#estimate_register_mail_popup").show();
         });
 
         $("#btn_estimate_register_save").on("click", function(){
