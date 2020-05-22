@@ -145,6 +145,8 @@
                 </button>
                 <button type="button" class="defaultBtn btn-120w" data-toggle="modal"
                         data-target="#TRANSACTION_STATEMENT_POPUP">거래명세표</button>
+                <button type="button" class="defaultBtn btn-120w" data-toggle="modal"
+                        data-target="#TRANSACTION_STATEMENT_LIST_POPUP">거래명세표 List</button>
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn btn-120w" id="ESTIMATE_AUTOMATIC_CALCULATION">견적자동계산</button>
                     <button type="button" class="defaultBtn btn-120w" id="ESTIMATE_LIST_PRINT">견적List출력</button>
@@ -338,6 +340,25 @@
     </div>
 </div>
 
+<div class="popup_container" id="TRANSACTION_STATEMENT_LIST_POPUP" style="display: none;">
+    <div class="layerPopup">
+        <h3 style="margin-bottom: 10px;">거래 명세표 List</h3>
+        <button type="button" class="pop_close">닫기</button>
+
+        <!-- 버튼 -->
+        <div class="buttonWrap">
+            <div style="float: right">
+                <button class="popupBtn red" id="TRANSACTION_STATEMENT_DELETE">삭제</button>
+                <button class="popupBtn" id="TRANSACTION_STATEMENT_LABEL_PRINT">출력</button>
+            </div>
+        </div>
+
+        <div>
+            <div id="TRANSACTION_STATEMENT_LIST_GRID"></div>
+        </div>
+    </div>
+</div>
+
 <div class="modal" id="ESTIMATE_REGISTER_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -519,7 +540,7 @@
 <form id="transaction_statement_excel_download" method="POST">
     <input type="hidden" id="sqlId" name="sqlId" value="selectTransactionStatementInfoExcel:selectTransactionStatementListExcel"/>
     <input type="hidden" id="mapInputId" name="mapInputId" value="info:data"/>
-    <input type="hidden" id="paramName" name="paramName" value="OUTSIDE_ORDER_NUM:COMP_CD:ORDER_STAFF_SEQ"/>
+    <input type="hidden" id="paramName" name="paramName" value="CONTROL_SEQ_STR:COMP_CD:ORDER_COMP_CD"/>
     <input type="hidden" id="paramData" name="paramData" value=""/>
     <input type="hidden" id="template" name="template" value="transaction_statement_template"/>
 </form>
@@ -550,6 +571,7 @@
             return list;
         })();
         let selectedRowIndex = [];
+        let selectedInvoiceRowIndex = []; //거래명세표 List 삭제시 사용
         let $orderManagementGrid;
         const gridId = 'CONTROL_MANAGE_GRID';
         let postData = fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM');
@@ -1781,6 +1803,49 @@
                 }
             }
         };
+
+        let $transactionStatementListGrid;
+        const transactionStatementListGridId = 'TRANSACTION_STATEMENT_LIST_GRID';
+        const transactionStatementListColModel = [
+            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
+            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+            {title: 'INV No.', dataType: 'string', dataIndx: 'INVOICE_NUM'},
+            {title: '구매담당자', dataType: 'string', dataIndx: 'ORDER_STAFF_NM'},
+            {title: '공급사', dataType: 'string', dataIndx: 'COMP_NM'},
+            {title: '품수', dataType: 'integer', dataIndx: 'PACKING_CNT'},
+            {title: '수량', dataType: 'integer', dataIndx: 'ORDER_QTY'},
+            {title: '금액합계', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
+            {title: 'Subject', dataType: 'string', dataIndx: 'INVOICE_TITLE'},
+            {title: 'Updated', width: 70, dataType: 'string', dataIndx: 'INVOICE_DT'},
+            {title: '출력일시', dataType: 'date', dataIndx: ''},
+        ];
+        const transactionStatementListPostData = {'queryId': 'orderMapper.selectTransactionStatementList'}
+        const transactionStatementListObj = {
+            height: 500,
+            collapsible: false,
+            resizable: true,
+            showTitle: false,
+            strNoRows: g_noData,
+            scrollModel: {autoFit: true},
+            dragColumns: {enabled: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            colModel: transactionStatementListColModel,
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: transactionStatementListPostData,
+                getData: function (dataJSON) {return {data: dataJSON.data};}
+            },
+            selectChange: function (event, ui) {
+                if (ui.selection.iCells.ranges[0] !== undefined) {
+                    selectedInvoiceRowIndex = [];
+                    let firstRow = ui.selection.iCells.ranges[0].r1;
+                    let lastRow = ui.selection.iCells.ranges[0].r2;
+
+                    if (firstRow === lastRow) selectedInvoiceRowIndex[0] = firstRow;
+                    else for (let i = firstRow; i <= lastRow; i++) selectedInvoiceRowIndex.push(i);
+                }
+            },
+        };
         /* variable */
 
         /* function */
@@ -2324,16 +2389,40 @@
                     controlSeqStr += ',';
                 }
             }
-
-            console.log(controlSeqList);
-            console.log(compCdList);
-            console.log(orderCompCdList);
-            return false;
-
-
             $('#transaction_statement_excel_download #paramData').val(controlSeqStr + ':' + compCdList[0] + ':' + orderCompCdList[0]);
-
             fnReportFormToHiddenFormPageAction('transaction_statement_excel_download', '/downloadExcel');
+        });
+
+        $('#TRANSACTION_STATEMENT_LIST_POPUP').on({
+            'show.bs.modal': function () {
+                $transactionStatementListGrid = $('#' + transactionStatementListGridId).pqGrid(transactionStatementListObj);
+            },
+            'hide.bs.modal': function () {
+                $transactionStatementListGrid.pqGrid('destroy');
+            }
+        });
+
+        $('#TRANSACTION_STATEMENT_DELETE').on('click', function () {
+            let parameters;
+            let rowDataArray = [];
+            let selectedRowCount = selectedInvoiceRowIndex.length;
+
+            for (let i = 0; i < selectedRowCount; i++) {
+                rowDataArray[i] = $transactionStatementListGrid.pqGrid('getRowData', {rowIndx: selectedInvoiceRowIndex[i]});
+            }
+            parameters = {'url': '/deleteInvoice', 'data': {data: JSON.stringify(rowDataArray)}}
+
+            fnPostAjax(function (data, callFunctionParam) {
+                if (selectedRowCount > 0) {
+                    let rowListConvert = [];
+
+                    for (let row of selectedInvoiceRowIndex) {
+                        rowListConvert.push({'rowIndx': row});
+                    }
+
+                    $transactionStatementListGrid.pqGrid('deleteRow', {rowList: rowListConvert});
+                }
+            }, parameters, '');
         });
 
         // 견적자동계산

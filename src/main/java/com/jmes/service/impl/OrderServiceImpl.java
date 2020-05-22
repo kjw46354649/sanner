@@ -114,4 +114,20 @@ public class OrderServiceImpl implements OrderService {
             }
         }
     }
+
+    @Override
+    public void deleteInvoice(Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayList<Map<String, Object>> jsonMap = null;
+
+        if (jsonObject != null) {
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<Map<String, Object>>>() {});
+        }
+
+        for (Map<String, Object> hashMap : jsonMap) {
+            this.orderDao.deleteInvoiceDetail(hashMap);
+            this.orderDao.deleteInvoice(hashMap);
+        }
+    }
 }

@@ -86,4 +86,14 @@ public class OrderDaoImpl implements OrderDao {
         sqlSessionTemplate.insert("insertInvoiceDetail", hashMap);
     }
 
+    @Override
+    public void deleteInvoice(Map<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.delete("deleteInvoice", hashMap);
+    }
+
+    @Override
+    public void deleteInvoiceDetail(Map<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.delete("deleteInvoiceDetail", hashMap);
+    }
+
 }
