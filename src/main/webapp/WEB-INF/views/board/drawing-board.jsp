@@ -274,7 +274,7 @@
                         <div class="userImg"><img src="/resource/asset/images/user/user.jpg" alt=""></div>
                         <div class="userInfo">
                             <p class="name">${list.USER_NM}</p>
-                            <p><span class="dept">관리부</span> / <span class="position"></span>차장</p>
+                            <p><span class="dept">${list.JOB_TITLE}</span> / <span class="position"></span>${list.POSITION_NM}</p>
                         </div>
                         <div class="logStatus"><button type="submit">Log off</button></div>
                     </div>

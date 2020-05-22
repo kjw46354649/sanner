@@ -84,6 +84,8 @@
             UNIT_SURFACE_AUTO_YN, UNIT_PROCESS_AUTO_YN,
             UNIT_AMT_NOTE AS UNIT_AMT_NOTE, UNIT_FINAL_EST_AMT,
             NOTE AS NOTE, DWG_GFILE_SEQ, DXF_GFILE_SEQ, PDF_GFILE_SEQ, IMG_GFILE_SEQ,
+            IFNULL(UNIT_MATERIAL_AMT, 0) + IFNULL(UNIT_TM_AMT, 0) + IFNULL(UNIT_GRIND_AMT, 0) + IFNULL(UNIT_HEAT_AMT, 0) +
+            IFNULL(UNIT_SURFACE_AMT, 0) + IFNULL(UNIT_PROCESS_AMT, 0) + IFNULL(UNIT_ETC_AMT, 0) AS CALCUL_EST_UNIT_COST,
             CASE WHEN UNIT_FINAL_EST_AMT IS NOT NULL THEN IFNULL(UNIT_FINAL_EST_AMT, 0) * IFNULL(ITEM_QTY, 0)
                 ELSE (IFNULL(UNIT_MATERIAL_AMT, 0) + IFNULL(UNIT_TM_AMT, 0) + IFNULL(UNIT_GRIND_AMT, 0) + IFNULL(UNIT_HEAT_AMT, 0) +
                         IFNULL(UNIT_SURFACE_AMT, 0) + IFNULL(UNIT_PROCESS_AMT, 0) + IFNULL(UNIT_ETC_AMT, 0)) * IFNULL(ITEM_QTY, 0)
@@ -91,7 +93,7 @@
         FROM TBL_ESTIMATE_DETAIL
         WHERE 1=1
             AND EST_SEQ = #{EST_SEQ}
-        ORDER BY PROJECT_NM, MODULE_NM, ITEM_NM, PART_NUM
+        ORDER BY SEQ
     </select>
 
     <select id="selectEstimateReceiverList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -175,11 +177,13 @@
     <insert id="insertEstimateMaster" parameterType="java.util.HashMap">
         INSERT INTO TBL_ESTIMATE
             (EST_SEQ, EST_VER, EST_NUM, ORDER_COMP_CD, ORDER_STAFF_SEQ, COMP_CD, EST_USER_ID,
-            EST_TITLE, EST_STATUS, EMAIL_CONTENT, DEL_YN, INSERT_DT, INSERT_ID)
+            EST_TITLE, EST_STATUS, EMAIL_TITLE, EMAIL_CONTENT, DEL_YN, INSERT_DT, INSERT_ID)
         SELECT
             #{EST_SEQ} AS EST_SEQ, EST_VER, EST_NUM,
             #{ORDER_COMP_CD} AS ORDER_COMP_CD, #{ORDER_STAFF_SEQ} AS ORDER_STAFF_SEQ, #{COMP_CD} AS COMP_CD, #{EST_USER_ID} AS EST_USER_ID,
-            #{EST_TITLE} AS EST_TITLE, 'EST010' AS EST_STATUS, #{EMAIL_CONTENT} AS EMAIL_CONTENT, 'N' AS DEL_YN, NOW() AS INSERT_DT, NULL AS INSERT_ID
+            #{EST_TITLE} AS EST_TITLE, 'EST010' AS EST_STATUS,
+            CONCAT('[견적서송부 ', IFNULL(EST_NUM, SPACE(0)), IFNULL(EST_TITLE, SPACE(0))) AS EMAIL_TITLE,
+            #{EMAIL_CONTENT} AS EMAIL_CONTENT, 'N' AS DEL_YN, NOW() AS INSERT_DT, NULL AS INSERT_ID
         FROM (
             SELECT
                 0 AS EST_VER,
@@ -193,6 +197,7 @@
             COMP_CD = #{COMP_CD},
             EST_USER_ID = #{EST_USER_ID},
             EST_TITLE = #{EST_TITLE},
+            EST_TITLE = (SELECT CONCAT('[견적서송부 ', IFNULL(EST_NUM, SPACE(0)), IFNULL(EST_TITLE, SPACE(0))) FROM TBL_ESTIMATE WHERE EST_SEQ = #{EST_SEQ}),
             EMAIL_CONTENT = #{EMAIL_CONTENT},
             UPDATE_DT = NOW(),
             UPDATE_ID = NULL
@@ -348,6 +353,16 @@
     <delete id="deleteEstimateDetail"  parameterType="java.util.HashMap">
         DELETE FROM TBL_ESTIMATE_DETAIL
         WHERE EST_SEQ = #{EST_SEQ}
+    </delete>
+
+    <delete id="deleteEstimateReceiver"  parameterType="java.util.HashMap">
+        DELETE FROM TBL_ESTIMATE_RECEIVER
+        WHERE EST_SEQ = #{EST_SEQ}
+    </delete>
+
+    <delete id="deleteEstimateEachReceiver"  parameterType="java.util.HashMap">
+        DELETE FROM TBL_ESTIMATE_RECEIVER
+        WHERE SEQ = #{SEQ}
     </delete>
 
     <insert id="insertEstimateMasterVersion"  parameterType="java.util.HashMap">

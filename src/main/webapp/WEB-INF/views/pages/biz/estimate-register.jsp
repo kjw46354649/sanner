@@ -207,30 +207,43 @@
         let $btnEstimateRegisterDrawAdd = $("#btnEstimateRegisterDrawAdd");
 
         let estimateRegisterTopColModel= [
-            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', width: 80 } ,
+            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', width: 150 } ,
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', width: 80 } ,
-            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 80 } ,
-            {title: '', dataType: 'string', dataIndx: 'DRAWING_YN', width: 30 } ,
+            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 170 } ,
+            /*{title: '', dataType: 'string', dataIndx: 'DRAWING_YN', width: 30 } ,*/
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', validations: [{ type: 'minLen', value: 1, msg: "Required"}], width: 100 } ,
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', width: 50 } ,
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 100 } ,
             {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
-            {title: '작업구분', dataType: 'string', dataIndx: 'WORK_TYPE_NM',
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: true,
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "WORK_TYPE_NM", id: "WORK_TYPE" },
-                    valueIndx: "value",
-                    labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1033'),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["WORK_TYPE"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1033')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let workType = fnGetCommCodeGridSelectBox('1033');
+                        let index = workType.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = workType.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+
+                        }
+                        return (index < 0) ? cellData : workType[index].text;
                     }
                 }
             },
-            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM' ,
+            /*{title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM' ,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "MATERIAL_TYPE_NM", id: "MATERIAL_TYPE" },
@@ -244,57 +257,97 @@
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
                 }
-            },
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM',
+            },*/
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "MATERIAL_DETAIL_NM", id: "MATERIAL_DETAIL" },
                     valueIndx: "value",
                     labelIndx: "text",
                     options: fnGetCommCodeGridSelectBox('1027'),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["MATERIAL_DETAIL"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let workFactory = fnGetCommCodeGridSelectBox('1027');
+                        let index = workFactory.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = workFactory.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : workFactory[index].text;
                     }
                 }
             },
-            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM',
+            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND',
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "MATERIAL_KIND_NM", id: "MATERIAL_KIND" },
                     valueIndx: "value",
                     labelIndx: "text",
                     options: fnGetCommCodeGridSelectBox('1029'),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["MATERIAL_KIND"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let workFactory = fnGetCommCodeGridSelectBox('1029');
+                        let index = workFactory.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = workFactory.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : workFactory[index].text;
                     }
                 }
             },
-            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT_NM', width: 80,
+            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', width: 80,
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "SURFACE_TREAT_NM", id: "SURFACE_TREAT" },
                     valueIndx: "value",
                     labelIndx: "text",
                     options: fnGetCommCodeGridSelectBox('1039'),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["SURFACE_TREAT"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let workFactory = fnGetCommCodeGridSelectBox('1039');
+                        let index = workFactory.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = workFactory.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : workFactory[index].text;
                     }
                 }
+
             },
             {title: '소재 비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE' },
             {title: '소재마감', align: "center", colModel:[
-                    {title: 'TM각비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_TM'},
-                    {title: '연마비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND'},
-                    {title: '열처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT'},
+                    {title: 'TM각비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_TM', width: 70 },
+                    {title: '연마비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND', width: 70 },
+                    {title: '열처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', width: 70 },
                 ]},
             {title: '상세 가공요건', align: "center", colModel:[
                 {title:'선반', dataType: 'string', dataIndx: 'DETAIL_LATHE'},
@@ -311,11 +364,26 @@
                     valueIndx: "value",
                     labelIndx: "text",
                     options: fnGetCommCodeGridSelectBox('1042'),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["MATERIAL_SUPPLY_YN"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let yesOrNo = fnGetCommCodeGridSelectBox('1042');
+                        let index = yesOrNo.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = yesOrNo.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+
+                        }
+
+                        return (index < 0) ? cellData : yesOrNo[index].text;
                     }
                 }
             },
@@ -328,13 +396,16 @@
             ], hidden: true},
             {title: '항목별 견적정보', align: "center", colModel: [
                     {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT', format: '#,###'},
-                    {title: '표면 처리비', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###'},
+                    {title: 'TM각비', datatype: 'string', dataIndx: 'UNIT_TM_AMT', format: '#,###'},
+                    {title: '연마비', datatype: 'string', dataIndx: 'UNIT_GRIND_AMT', format: '#,###'},
+                    {title: '열처리', datatype: 'string', dataIndx: 'UNIT_HEAT_AMT', format: '#,###'},
+                    {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###'},
                     {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT', format: '#,###'},
                     {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###'},
                     {title: '견적비고', dataType: 'integer', dataIndx: 'UNIT_AMT_NOTE'}
                 ]},
             {title: '계산견적단가', dataType: 'float', dataIndx: 'CALCUL_EST_UNIT_COST', format: '#,###', width: 80},
-            {title: '최종견적가', dataType: 'float', dataIndx: 'FINAL_EST_UNIT_PRICE', format: '#,###', width: 80},
+            {title: '최종견적가', dataType: 'float', dataIndx: 'UNIT_FINAL_EST_AMT', format: '#,###', width: 80},
             {title: '금액 계', dataType: 'float', dataIndx: 'DTL_AMOUNT', format: '#,###', width: 80},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
             {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ',
@@ -367,10 +438,31 @@
         ];
 
         let estimateRegisterBotColModel= [
-            {title: '', dataType: 'string', dataIndx: 'SEQ', hidden: true },
             {title: '성함', dataType: 'string', dataIndx: 'RECEIVER_NM', minWidth: "30%"},
             {title: '메일주소', dataType: 'string', dataIndx: 'RECEIVER_EMAIL', minWidth: "30%"},
-            {title: '전화번호', dataType: 'string', dataIndx: 'RECEIVER_TEL', minWidth: "30%"}
+            {title: '전화번호', dataType: 'string', dataIndx: 'RECEIVER_TEL', minWidth: "30%"},
+            {title: '', dataType: 'string', dataIndx: 'SEQ', editable: false, width: 30 ,
+                render: function (ui) {
+                    return '<button id="receiverRemove" class="ui-icon ui-icon-close" style="cursor: pointer"></button>'
+                },
+                postRender: function (ui) {
+                    let grid = this;
+                    let $cell = grid.getCell(ui);
+                    let rowIndex = ui.rowIndx;
+                    $cell.find('#receiverRemove').on('click', function (event) {
+                        alert(ui.rowData.SEQ);
+                        let parameter = {
+                            'queryId': 'deleteEstimateEachReceiver',
+                            'SEQ': ui.rowData.SEQ
+                        };
+                        let parameters = {'url': '/json-remove', 'data': parameter};
+                        fnPostAjax(function(data, callFunctionParam){
+                            estimateRegisterBotGrid.pqGrid('deleteRow', { rowIndx: rowIndex });
+                        }, parameters, '');
+                    });
+                }
+            }
+            //{title: 'SEQ', dataType: 'string', dataIndx: 'SEQ', hidden: true }
         ];
 
         estimateRegisterTopGrid.pqGrid({
@@ -388,7 +480,7 @@
             scrollModel: { autoFit: false },
             columnTemplate: {align: 'center', hvalign: 'center'},
             numberCell: {width: 30, title: "No", show: true },
-            selectionModel: { type: 'row', mode: 'single'} ,
+            //selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
             collapsible: false,
             trackModel: {on: true},
@@ -401,7 +493,7 @@
                 this.flex();
                 let data = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data');
 
-                $('#estimate_master_top_grid_records').html(data.length);
+                $('#estimate_register_top_grid_records').html(data.length);
             },
             selectChange: function (event, ui) {
                 if (ui.selection.iCells.ranges[0] !== undefined) {
@@ -419,24 +511,97 @@
                 }
             },
             change: function( event, ui ) {
+                if (ui.source === 'paste') {
+                    const addListLength = ui.addList.length;
+                    const workTypeList = fnGetCommCodeGridSelectBox('1033');
+                    const materialDetailList = fnGetCommCodeGridSelectBox('1027');
+                    const materialKindList = fnGetCommCodeGridSelectBox('1029');
+                    const surfaceTreatList = fnGetCommCodeGridSelectBox('1039');
+                    let rowListConvert = [];
+
+                    for (let i = 0; i < addListLength; i++) {
+                        const newRowData = ui.addList[i].newRow;
+                        const rowIndx = ui.addList[i].rowIndx;
+                        let workType = null;
+                        let materialDetail = null;
+                        let materialKind = null;
+                        let surfaceTreat = null;
+
+                        // 작업형태
+                        if (newRowData.WORK_TYPE !== undefined) {
+                            let index = workTypeList.findIndex(function (element) {
+                                return element.text === newRowData.WORK_TYPE;
+                            });
+
+                            if (index >= 0) workType = workTypeList[index].value;
+                        }
+                        //소재 상세
+                        if (newRowData.MATERIAL_DETAIL !== undefined) {
+                            let index = materialDetailList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_DETAIL;
+                            });
+
+                            if (index >= 0) materialDetail = materialDetailList[index].value;
+                        }
+                        // 소재형태
+                        if (newRowData.MATERIAL_KIND !== undefined) {
+                            let index = materialKindList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_KIND;
+                            });
+
+                            if (index >= 0) materialKind = materialKindList[index].value;
+                        }
+                        // 표면처리
+                        if (newRowData.SURFACE_TREAT !== undefined) {
+                            let index = surfaceTreatList.findIndex(function (element) {
+                                return element.text === newRowData.SURFACE_TREAT;
+                            });
+
+                            if (index >= 0) surfaceTreat = surfaceTreatList[index].value;
+                        }
+
+                        let tempObject = {
+                            rowIndx: rowIndx,
+                            newRow: {
+                                'WORK_TYPE': workType,
+                                'MATERIAL_DETAIL': materialDetail,
+                                'MATERIAL_KIND': materialKind,
+                                'SURFACE_TREAT': surfaceTreat
+                            }
+                        };
+                        rowListConvert.push(tempObject);
+                    }
+                    estimateRegisterTopGrid.pqGrid('updateRow', {rowList: rowListConvert});
+                }
+
                 if(ui.source == 'edit'){
                     let rowIndx = ui.updateList[0].rowIndx;
                     let calculateEstimateAmt = 0;
                     let data = ui.updateList[0].rowData;
                     let UNIT_MATERIAL_AMT = data.UNIT_MATERIAL_AMT == null || data.UNIT_MATERIAL_AMT == '' ? 0 : parseFloat(data.UNIT_MATERIAL_AMT);
+                    let UNIT_TM_AMT = data.UNIT_TM_AMT == null || data.UNIT_TM_AMT == '' ? 0 : parseFloat(data.UNIT_TM_AMT);
+                    let UNIT_GRIND_AMT = data.UNIT_GRIND_AMT == null || data.UNIT_GRIND_AMT == '' ? 0 : parseFloat(data.UNIT_GRIND_AMT);
+                    let UNIT_HEAT_AMT = data.UNIT_HEAT_AMT == null || data.UNIT_HEAT_AMT == '' ? 0 : parseFloat(data.UNIT_HEAT_AMT);
                     let UNIT_SURFACE_AMT = data.UNIT_SURFACE_AMT == null || data.UNIT_SURFACE_AMT == '' ? 0 : parseFloat(data.UNIT_SURFACE_AMT);
                     let UNIT_PROCESS_AMT = data.UNIT_PROCESS_AMT == null || data.UNIT_PROCESS_AMT == '' ? 0 : parseFloat(data.UNIT_PROCESS_AMT);
                     let UNIT_ETC_AMT = data.UNIT_ETC_AMT == null || data.UNIT_ETC_AMT == '' ? 0 : parseFloat(data.UNIT_ETC_AMT);
                     let ITEM_QTY = data.ITEM_QTY == null || data.ITEM_QTY == '' ? 0 : parseFloat(data.ITEM_QTY);
 
                     calculateEstimateAmt += UNIT_MATERIAL_AMT;
+                    calculateEstimateAmt += UNIT_TM_AMT;
+                    calculateEstimateAmt += UNIT_GRIND_AMT;
+                    calculateEstimateAmt += UNIT_HEAT_AMT;
                     calculateEstimateAmt += UNIT_SURFACE_AMT;
                     calculateEstimateAmt += UNIT_PROCESS_AMT;
                     calculateEstimateAmt += UNIT_ETC_AMT;
-                    /*console.log("UNIT_MATERIAL_AMT:"+"["+UNIT_MATERIAL_AMT+"], "+"UNIT_SURFACE_AMT:"+"["+UNIT_SURFACE_AMT+"], "+
-                        "UNIT_PROCESS_AMT:"+"["+UNIT_PROCESS_AMT+"], "+"UNIT_ETC_AMT:"+"["+UNIT_ETC_AMT+"]"+ "calculateEstimateAmt:"+"["+calculateEstimateAmt+"]");*/
 
                     estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'CALCUL_EST_UNIT_COST': calculateEstimateAmt } });
+
+                    let UNIT_FINAL_EST_AMT = ui.updateList[0].newRow.UNIT_FINAL_EST_AMT
+                    if(UNIT_FINAL_EST_AMT != undefined){
+                        calculateEstimateAmt = UNIT_FINAL_EST_AMT;
+                    }
+                    estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'UNIT_FINAL_EST_AMT': calculateEstimateAmt } });
 
                     calculateEstimateAmt *= ITEM_QTY;
                     estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'DTL_AMOUNT': calculateEstimateAmt } });
@@ -452,6 +617,9 @@
         selectEstimateBotList('');
 
         function selectEstimateBotList(COMP_CD) {
+            if(estimateRegisterBotGrid.hasClass('pq-grid')){
+                estimateRegisterBotGrid.pqGrid('destroy');
+            }
             estimateRegisterBotGrid.pqGrid({
                 height: 100,
                 dataModel: {
@@ -463,6 +631,7 @@
                         return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                     }
                 },
+                postRenderInterval: -1,
                 scrollModel: {autoFit: false},
                 numberCell: {width: 30, title: "No", show: true },
                 //selectionModel: { type: 'row', mode: 'single'} ,
@@ -478,7 +647,7 @@
                     this.flex();
                     let data = estimateRegisterBotGrid.pqGrid('option', 'dataModel.data');
 
-                    $('#estimate_master_bot_grid_records').html(data.length);
+                    $('#estimate_register_bot_grid_records').html(data.length);
                 },
             });
 
