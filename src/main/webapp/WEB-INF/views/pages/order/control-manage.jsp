@@ -144,7 +144,7 @@
                         data-target="#ESTIMATE_REGISTER_POPUP">견적등록
                 </button>
                 <button type="button" class="defaultBtn btn-120w" data-toggle="modal"
-                        data-target="#CONTROL_TRANSACTION_STATEMENT_POPUP">거래명세표</button>
+                        data-target="#TRANSACTION_STATEMENT_POPUP">거래명세표</button>
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn btn-120w" id="ESTIMATE_AUTOMATIC_CALCULATION">견적자동계산</button>
                     <button type="button" class="defaultBtn btn-120w" id="ESTIMATE_LIST_PRINT">견적List출력</button>
@@ -283,7 +283,7 @@
     </div>
 </div>
 
-<div class="popup_container" id="CONTROL_TRANSACTION_STATEMENT_POPUP" style="display: none;">
+<div class="popup_container" id="TRANSACTION_STATEMENT_POPUP" style="display: none;">
     <div class="layerPopup">
         <h3 style="margin-bottom: 10px;">거래 명세표</h3>
         <button type="button" class="pop_close">닫기</button>
@@ -291,13 +291,13 @@
         <!-- 버튼 -->
         <div class="buttonWrap">
             <div style="float: right">
-                <button class="popupBtn" id="CONTROL_TRANSACTION_STATEMENT_LABEL_PRINT">라벨 출력</button>
-                <button class="popupBtn green" id="CONTROL_TRANSACTION_STATEMENT_SAVE">Save</button>
-                <button class="popupBtn blue" id="CONTROL_TRANSACTION_STATEMENT_SAVE_EXPORT">Save & Export</button>
+                <button class="popupBtn" id="TRANSACTION_STATEMENT_LABEL_PRINT">라벨 출력</button>
+                <button class="popupBtn green" id="TRANSACTION_STATEMENT_SAVE">Save</button>
+                <button class="popupBtn blue" id="TRANSACTION_STATEMENT_SAVE_EXPORT">Save & Export</button>
             </div>
         </div>
 
-        <form name="CONTROL_TRANSACTION_STATEMENT_FORM" id="CONTROL_TRANSACTION_STATEMENT_FORM" role="form">
+        <form name="TRANSACTION_STATEMENT_FORM" id="TRANSACTION_STATEMENT_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectControlTransactionStatementList">
             <input type="hidden" name="COMP_CD" id="COMP_CD">
             <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
@@ -305,7 +305,7 @@
             <!-- 기본 정보 -->
             <div>
                 <h5>기본정보</h5>
-                <table class="table">
+                <table class="tableL">
                     <tbody>
                     <tr>
                         <td>발주사</td>
@@ -332,7 +332,7 @@
             <!-- 상세 리스트 -->
             <div>
                 <h5>상세 리스트</h5>
-                <div id="CONTROL_TRANSACTION_STATEMENT_DETAIL_GRID"></div>
+                <div id="TRANSACTION_STATEMENT_DETAIL_GRID"></div>
             </div>
         </form>
     </div>
@@ -516,6 +516,13 @@
     </div>
 </div>
 
+<form id="transaction_statement_excel_download" method="POST">
+    <input type="hidden" id="sqlId" name="sqlId" value="selectTransactionStatementInfoExcel:selectTransactionStatementListExcel"/>
+    <input type="hidden" id="mapInputId" name="mapInputId" value="info:data"/>
+    <input type="hidden" id="paramName" name="paramName" value="OUTSIDE_ORDER_NUM:COMP_CD:ORDER_STAFF_SEQ"/>
+    <input type="hidden" id="paramData" name="paramData" value=""/>
+    <input type="hidden" id="template" name="template" value="transaction_statement_template"/>
+</form>
 
 <script>
     $(function () {
@@ -1244,8 +1251,7 @@
             },
             {
                 title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN',
-                editor: {
-                    type: 'select',
+                editor: {type: 'select',
                     valueIndx: 'value',
                     labelIndx: 'text',
                     options: fnGetCommCodeGridSelectBox('1042')
@@ -1743,9 +1749,9 @@
             }
         };
         
-        let $controlTransactionStatementDetailGrid;
-        const controlTransactionStatementDetailGridId = 'CONTROL_TRANSACTION_STATEMENT_DETAIL_GRID';
-        const controlTransactionStatementDetailColModel = [
+        let $transactionStatementDetailGrid;
+        const transactionStatementDetailGridId = 'TRANSACTION_STATEMENT_DETAIL_GRID';
+        const transactionStatementDetailColModel = [
             {title: '주문상태', dataType: 'string', dataIndx: 'CONTROL_STATUS_NM'},
             {title: '발주번호', dataType: 'string', dataIndx: 'ORDER_NUM'},
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM'},
@@ -1757,7 +1763,7 @@
             {title: '포장수량', dataType: 'integer', format: '#,###', dataIndx: 'PACKING_CNT', editable: true},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true},
         ];
-        const controlTransactionStatementDetailObj = {
+        const transactionStatementDetailObj = {
             height: 500,
             collapsible: false,
             resizable: true,
@@ -1766,7 +1772,7 @@
             scrollModel: {autoFit: true},
             dragColumns: {enabled: false},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
-            colModel: controlTransactionStatementDetailColModel,
+            colModel: transactionStatementDetailColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: {'queryId': 'dataSource.emptyGrid'},
@@ -1906,7 +1912,23 @@
             con.css({'height': '714px'});
 
             $orderManagementGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
-        }
+        };
+
+        const transactionStatementSave = function () {
+            let tempList = [];
+            let infoPostData = fnFormToJsonArrayData('#TRANSACTION_STATEMENT_FORM');
+            let listPostData = $transactionStatementDetailGrid.pqGrid('option', 'dataModel.data');
+            tempList.push(infoPostData);
+            let postData = {
+                'info-data': tempList,
+                'list-data': listPostData
+            };
+
+            let parameters = {'url': '/insertInvoice', 'data': {data: JSON.stringify(postData)}}
+            fnPostAjax(function (data) {
+                alert("<spring:message code='com.alert.default.save.success' />");
+            }, parameters, '');
+        };
         /* function */
 
         /* event */
@@ -1962,7 +1984,7 @@
         });
 
         $('#CONTROL_MANAGE_SAVE').on('click', function () {
-            const updateQueryList = ['updateControlMaster', 'updateControlPart', 'updateControlPartOrder', 'insertControlProgress', 'insertControlPartProgress'];
+            const updateQueryList = ['orderMapper.updateControlMaster', 'orderMapper.updateControlPart', 'orderMapper.updateControlPartOrder', 'orderMapper.insertControlProgress', 'orderMapper.insertControlPartProgress'];
 
             fnModifyPQGrid($orderManagementGrid, [], updateQueryList);
         });
@@ -2155,7 +2177,7 @@
             });
         });
         // 거래명세표
-        $('#CONTROL_TRANSACTION_STATEMENT_POPUP').on({
+        $('#TRANSACTION_STATEMENT_POPUP').on({
             'show.bs.modal': function () {
                 let selectedRowCount = selectedRowIndex.length;
                 let list = [];
@@ -2217,14 +2239,14 @@
                     }
                 }
 
-                $('#CONTROL_TRANSACTION_STATEMENT_FORM > #COMP_CD').val(compCdList[0]);
-                $('#CONTROL_TRANSACTION_STATEMENT_FORM > #ORDER_COMP_CD').val(orderCompCdList[0]);
-                $('#CONTROL_TRANSACTION_STATEMENT_FORM > #CONTROL_SEQ_STR').val(controlSeqStr);
+                $('#TRANSACTION_STATEMENT_FORM > #COMP_CD').val(compCdList[0]);
+                $('#TRANSACTION_STATEMENT_FORM > #ORDER_COMP_CD').val(orderCompCdList[0]);
+                $('#TRANSACTION_STATEMENT_FORM > #CONTROL_SEQ_STR').val(controlSeqStr);
 
-                let postData = fnFormToJsonArrayData('#CONTROL_TRANSACTION_STATEMENT_FORM');
+                let postData = fnFormToJsonArrayData('#TRANSACTION_STATEMENT_FORM');
 
-                $controlTransactionStatementDetailGrid = $('#' + controlTransactionStatementDetailGridId).pqGrid(controlTransactionStatementDetailObj);
-                fnRequestGidData($controlTransactionStatementDetailGrid, postData);
+                $transactionStatementDetailGrid = $('#' + transactionStatementDetailGridId).pqGrid(transactionStatementDetailObj);
+                fnRequestGidData($transactionStatementDetailGrid, postData);
 
                 postData.queryId = 'orderMapper.selectControlTransactionStatementInfo';
                 let parameters = {'url': '/json-info', 'data': postData};
@@ -2232,44 +2254,86 @@
                 fnPostAjax(function (data) {
                     let obj = data.info;
 
-                    $('#CONTROL_TRANSACTION_STATEMENT_FORM #COMP_NM').text(obj.COMP_NM);
-                    $('#CONTROL_TRANSACTION_STATEMENT_FORM #ORDER_COMP_NM').text(obj.ORDER_COMP_NM);
-                    $('#CONTROL_TRANSACTION_STATEMENT_FORM #TOTAL_AMT').text(obj.TOTAL_AMT);
-                    $('#CONTROL_TRANSACTION_STATEMENT_FORM #INVOICE_NUM').text(obj.INVOICE_NUM);
+                    $('#TRANSACTION_STATEMENT_FORM #COMP_NM').text(obj.COMP_NM);
+                    $('#TRANSACTION_STATEMENT_FORM #ORDER_COMP_NM').text(obj.ORDER_COMP_NM);
+                    $('#TRANSACTION_STATEMENT_FORM #TOTAL_AMT').text(obj.TOTAL_AMT);
+                    $('#TRANSACTION_STATEMENT_FORM #INVOICE_NUM').text(obj.INVOICE_NUM);
 
                     postData.queryId = 'orderMapper.selectTransactionStatementOrderStaff';
                     let parameters = {'url': '/json-list', 'data': postData};
 
                     fnPostAjax(function (data) {
-                        $('#CONTROL_TRANSACTION_STATEMENT_FORM #ORDER_STAFF_SEQ').empty();
+                        $('#TRANSACTION_STATEMENT_FORM #ORDER_STAFF_SEQ').empty();
 
                         for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
                             let obj = data.list[i];
 
-                            $('#CONTROL_TRANSACTION_STATEMENT_FORM #ORDER_STAFF_SEQ').append(new Option(obj.ORDER_STAFF_NM, obj.ORDER_STAFF_SEQ));
+                            $('#TRANSACTION_STATEMENT_FORM #ORDER_STAFF_SEQ').append(new Option(obj.ORDER_STAFF_NM, obj.ORDER_STAFF_SEQ));
                         }
                     }, parameters, '');
                 }, parameters, '');
             },
         'hide.bs.modal': function () {
-                $controlTransactionStatementDetailGrid.pqGrid('destroy');
+                $transactionStatementDetailGrid.pqGrid('destroy');
             }
         });
 
-        $('#CONTROL_TRANSACTION_STATEMENT_SAVE').on('click', function () {
-            let tempList = [];
-            let infoPostData = fnFormToJsonArrayData('#CONTROL_TRANSACTION_STATEMENT_FORM');
-            let listPostData = $controlTransactionStatementDetailGrid.pqGrid('option', 'dataModel.data');
-            tempList.push(infoPostData);
-            let postData = {
-                'info-data': tempList,
-                'list-data': listPostData
-            };
+        $('#TRANSACTION_STATEMENT_SAVE').on('click', function () {
+            transactionStatementSave();
+        });
 
-            let parameters = {'url': '/insertInvoice', 'data': {data: JSON.stringify(postData)}}
-            fnPostAjax(function (data) {
-                alert("<spring:message code='com.alert.default.save.success' />");
-            }, parameters, '');
+        $('#TRANSACTION_STATEMENT_SAVE_EXPORT').on('click', function () {
+            transactionStatementSave();
+
+
+            let selectedRowCount = selectedRowIndex.length;
+            let list = [];
+            let controlSeqList = [];
+            let compCdList = [];
+            let orderCompCdList = [];
+            let controlSeqStr = '';
+
+            if (!selectedRowCount) {
+                alert('하나 이상 선택!');
+                return false;
+            }
+
+            for (let i = 0; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+
+                list.push(rowData);
+                controlSeqList.push(rowData.CONTROL_SEQ);
+                compCdList.push(rowData.COMP_CD);
+                orderCompCdList.push(rowData.ORDER_COMP_CD);
+            }
+            // 중복제거
+            controlSeqList = controlSeqList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+            compCdList = compCdList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+
+            for (let i = 0; i < controlSeqList.length; i++) {
+                controlSeqStr += controlSeqList[i];
+
+                if (i < controlSeqList.length - 1) {
+                    controlSeqStr += ',';
+                }
+            }
+
+            console.log(controlSeqList);
+            console.log(compCdList);
+            console.log(orderCompCdList);
+            return false;
+
+
+            $('#transaction_statement_excel_download #paramData').val(controlSeqStr + ':' + compCdList[0] + ':' + orderCompCdList[0]);
+
+            fnReportFormToHiddenFormPageAction('transaction_statement_excel_download', '/downloadExcel');
         });
 
         // 견적자동계산
