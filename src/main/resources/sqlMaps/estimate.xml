@@ -186,7 +186,7 @@
             #{EMAIL_CONTENT} AS EMAIL_CONTENT, 'N' AS DEL_YN, NOW() AS INSERT_DT, NULL AS INSERT_ID
         FROM (
             SELECT
-                0 AS EST_VER,
+                0 AS EST_VER, EST_TITLE,
                 CONCAT('EST-', DATE_FORMAT(NOW(), '%Y%m%d'), LPAD(CAST(COUNT(*)+1 AS CHAR), 3, '0')) EST_NUM
             FROM TBL_ESTIMATE
             WHERE DATE_FORMAT(INSERT_DT, '%Y%m%d') = DATE_FORMAT(NOW(), '%Y%m%d')
@@ -502,5 +502,9 @@
             UPDATE_ID = NULL
         WHERE EST_SEQ = #{EST_SEQ}
     </update>
+
+    <select id="selectEstimateResigerEmail" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+    </select>
 
 </mapper>
