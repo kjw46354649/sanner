@@ -101,14 +101,14 @@
                 </div>
             </div>
             <div class="conMainWrap">
-                <div id="estimate_master_top_grid" class="jqx-refresh"></div>
+                <div id="estimate_master_top_grid"></div>
                 <div class="right_sort">
                     전체 조회 건수 (Total : <span id="estimate_master_top_grid_records" style="color: #00b3ee">0</span>)
                 </div>
             </div>
             <br/>
             <div class="conWrap" style="height:404px;">
-                <div id="estimate_master_bot_grid" class="jqx-refresh"></div>
+                <div id="estimate_master_bot_grid"></div>
                 <div class="right_sort">
                     전체 조회 건수 (Total : <span id="estimate_master_bot_grid_records" style="color: #00b3ee">0</span>)
                 </div>
@@ -141,8 +141,8 @@
     $(function () {
         let estimateMasterTopColModel= [
             //{title: 'No.', dataType: 'string', dataIndx: 'EST_SEQ'},
-            {title: 'Status', dataType: 'string', dataIndx: 'EST_STATUS_NM', editable: false, width: 80},
-            {title: '발주사', dataType: 'string', dataIndx: 'ORDER_COMP_NM',
+            {title: 'Status', dataType: 'string', dataIndx: 'EST_STATUS_NM', editable: false, width: 120 },
+            {title: '발주사', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 150 ,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "ORDER_COMP_NM", id: "ORDER_COMP_CD" },
@@ -157,8 +157,8 @@
                     }
                 }
             },
-            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', editable: false, width: 60},
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM',
+            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', editable: false, width: 100 },
+            {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM', width: 100 ,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "COMP_NM", id: "COMP_CD" },
@@ -173,9 +173,9 @@
                     }
                 }
             },
-            {title: '견적번호', dataType: 'string', dataIndx: 'EST_NUM', editable: false, width: 150},
-            {title: '차수', dataType: 'string', dataIndx: 'EST_VER', editable: false, width: 50},
-            {title: '', dataType: 'string', dataIndx: '', editable: false, width: 30,
+            {title: '견적번호', dataType: 'string', dataIndx: 'EST_NUM', editable: false, width: 180 },
+            {title: '차수', dataType: 'string', dataIndx: 'EST_VER', editable: false, width: 50 },
+            {title: '', dataType: 'string', dataIndx: '', editable: false, width: 30 ,
                 render: function(ui){
                     let EST_STATUS = ui.rowData.EST_STATUS;
                     let EST_SEQ = ui.rowData.EST_SEQ;
@@ -185,11 +185,11 @@
                         '</a>';
                 }
             },
-            {title: '제목', dataType: 'string', dataIndx: 'EST_TITLE', width: 180},
+            {title: '제목', dataType: 'string', dataIndx: 'EST_TITLE', width: 180 },
             {title: '품수', dataType: 'string', dataIndx: 'DTL_CNT', editable: false},
             {title: '금액 계', dataType: 'string', dataIndx: 'DTL_AMOUNT', format: '#,###'},
-            {title: '등록일시', dataType: 'date', dataIndx: 'INSERT_DT', editable: false},
-            {title: '견적담당', dataType: 'string', dataIndx: 'EST_USER',
+            {title: '등록일시', dataType: 'date', dataIndx: 'INSERT_DT', editable: false, width: 120 },
+            {title: '견적담당', dataType: 'string', dataIndx: 'EST_USER', width: 120 ,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "EST_USER", id: "EST_USER_ID" },
@@ -218,7 +218,7 @@
                 }
             },
             {title: '발송일시', dataType: 'string', dataIndx: 'SEND_DT', editable: false},
-            {title: '주문접수', dataType: 'date', dataIndx: '', editable: false, width: 60,
+            {title: '주문접수', dataType: 'date', dataIndx: '', editable: false, width: 60 ,
                 render: function(ui){
                     let EST_STATUS = ui.rowData.EST_STATUS;
                     let EST_SEQ = ui.rowData.EST_SEQ;
@@ -234,38 +234,43 @@
         ];
 
         let estimateMasterBotColModel= [
-            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', width: 80 } ,
+            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', width: 150 } ,
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', width: 80 } ,
-            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 80 } ,
-            {title: '', dataType: 'string', dataIndx: 'DRAWING_YN', width: 30 } ,
+            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 170 } ,
+            /*{title: '', dataType: 'string', dataIndx: 'DRAWING_YN', width: 30 } ,*/
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', validations: [{ type: 'minLen', value: 1, msg: "Required"}], width: 100 } ,
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', width: 50 ,
-                render: function (ui) {
-                    if (ui.rowData.WORK_TYPE === 'WTP020') {
-                        return '<a href="#" id="estimatePartPlus">' +
-                            '<span data-idx="'+ui.rowIndx+'" class="ui-icon ui-icon-plus" style="cursor: pointer"></span>' +
-                            '</a>'
-                    }
-                }
-            } ,
+            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', width: 50 } ,
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 100 } ,
             {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
-            {title: '작업구분', dataType: 'string', dataIndx: 'WORK_TYPE_NM',
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: true,
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "WORK_TYPE_NM", id: "WORK_TYPE" },
-                    valueIndx: "value",
-                    labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1033'),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = estimateMasterBotGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["WORK_TYPE"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1033')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let workType = fnGetCommCodeGridSelectBox('1033');
+                        let index = workType.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = workType.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+
+                        }
+                        return (index < 0) ? cellData : workType[index].text;
                     }
                 }
             },
-            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM' ,
+            /*{title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM' ,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "MATERIAL_TYPE_NM", id: "MATERIAL_TYPE" },
@@ -274,62 +279,102 @@
                     options: fnGetCommCodeGridSelectBox('1035'),
                     getData: function(ui) {
                         let clave = ui.$cell.find("select").val();
-                        let rowData = estimateMasterBotGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
                         rowData["MATERIAL_TYPE"]=clave;
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
                 }
-            },
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM',
+            },*/
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "MATERIAL_DETAIL_NM", id: "MATERIAL_DETAIL" },
                     valueIndx: "value",
                     labelIndx: "text",
                     options: fnGetCommCodeGridSelectBox('1027'),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = estimateMasterBotGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["MATERIAL_DETAIL"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let workFactory = fnGetCommCodeGridSelectBox('1027');
+                        let index = workFactory.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = workFactory.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : workFactory[index].text;
                     }
                 }
             },
-            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM',
+            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND',
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "MATERIAL_KIND_NM", id: "MATERIAL_KIND" },
                     valueIndx: "value",
                     labelIndx: "text",
                     options: fnGetCommCodeGridSelectBox('1029'),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = estimateMasterBotGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["MATERIAL_KIND"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let workFactory = fnGetCommCodeGridSelectBox('1029');
+                        let index = workFactory.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = workFactory.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : workFactory[index].text;
                     }
                 }
             },
-            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT_NM', width: 80,
+            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', width: 80,
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "SURFACE_TREAT_NM", id: "SURFACE_TREAT" },
                     valueIndx: "value",
                     labelIndx: "text",
                     options: fnGetCommCodeGridSelectBox('1039'),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = estimateMasterBotGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["SURFACE_TREAT"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let workFactory = fnGetCommCodeGridSelectBox('1039');
+                        let index = workFactory.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = workFactory.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : workFactory[index].text;
                     }
                 }
+
             },
             {title: '소재 비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE' },
             {title: '소재마감', align: "center", colModel:[
-                    {title: 'TM각비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_TM'},
-                    {title: '연마비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND'},
-                    {title: '열처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT'},
+                    {title: 'TM각비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_TM', width: 70 },
+                    {title: '연마비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND', width: 70 },
+                    {title: '열처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', width: 70 },
                 ]},
             {title: '상세 가공요건', align: "center", colModel:[
                     {title:'선반', dataType: 'string', dataIndx: 'DETAIL_LATHE'},
@@ -346,11 +391,26 @@
                     valueIndx: "value",
                     labelIndx: "text",
                     options: fnGetCommCodeGridSelectBox('1042'),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = estimateMasterBotGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["MATERIAL_SUPPLY_YN"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let yesOrNo = fnGetCommCodeGridSelectBox('1042');
+                        let index = yesOrNo.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = yesOrNo.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+
+                        }
+
+                        return (index < 0) ? cellData : yesOrNo[index].text;
                     }
                 }
             },
@@ -363,17 +423,18 @@
                 ], hidden: true},
             {title: '항목별 견적정보', align: "center", colModel: [
                     {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT', format: '#,###'},
-                    /*{title: '소재마감', dataType: 'integer', dataIndx: '', format: '#,###'},   */
-                    {title: '표면 처리비', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###'},
+                    {title: 'TM각비', datatype: 'string', dataIndx: 'UNIT_TM_AMT', format: '#,###'},
+                    {title: '연마비', datatype: 'string', dataIndx: 'UNIT_GRIND_AMT', format: '#,###'},
+                    {title: '열처리', datatype: 'string', dataIndx: 'UNIT_HEAT_AMT', format: '#,###'},
+                    {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###'},
                     {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT', format: '#,###'},
                     {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###'},
                     {title: '견적비고', dataType: 'integer', dataIndx: 'UNIT_AMT_NOTE'}
                 ]},
             {title: '계산견적단가', dataType: 'float', dataIndx: 'CALCUL_EST_UNIT_COST', format: '#,###', width: 80},
-            {title: '최종견적가', dataType: 'float', dataIndx: 'FINAL_EST_UNIT_PRICE', format: '#,###', width: 80},
+            {title: '최종견적가', dataType: 'float', dataIndx: 'UNIT_FINAL_EST_AMT', format: '#,###', width: 80},
             {title: '금액 계', dataType: 'float', dataIndx: 'DTL_AMOUNT', format: '#,###', width: 80},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
-            //{title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ'},
             {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ',
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadView" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
@@ -387,7 +448,6 @@
                     });
                 }
             },
-            //{title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ'},
             {
                 title: 'IMG', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ',
                 render: function (ui) {
@@ -410,14 +470,13 @@
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'EST_SEQ',
                 url: "/paramQueryGridSelect",
-                //postData: fnFormToJsonArrayData(),
                 postData: fnFormToJsonArrayData('#estimate_master_search_form'),
                 getData: function (dataJSON) {
                     let data = dataJSON.data;
                     return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                 }
             },
-            scrollModel: { autoFit: true },
+            //scrollModel: { autoFit: false },
             columnTemplate: {align: 'center', hvalign: 'center'},
             numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'row', mode: 'single'} ,
@@ -429,12 +488,16 @@
             showTitle: false,
             strNoRows: g_noData,
             complete: function(event, ui) {
-                estimateMasterTopGrid.pqGrid('setSelection', {rowIndx:0} );
-
                 this.flex();
                 let data = estimateMasterTopGrid.pqGrid('option', 'dataModel.data');
 
                 $('#estimate_master_top_grid_records').html(data.length);
+
+                if(data.length > 0){
+                    estimateMasterTopGrid.pqGrid('setSelection', {rowIndx:0} );
+                }else{
+                    selectEstimateBotList('');
+                }
             },
             selectChange: function (event, ui) {
                 if (ui.selection.iCells.ranges[0] !== undefined) {
@@ -486,10 +549,10 @@
                     }
                 },
                 postRenderInterval: -1, //call postRender synchronously.
-                scrollModel: { autoFit: true },
+                scrollModel: { autoFit: false },
                 columnTemplate: {align: 'center', hvalign: 'center'},
                 numberCell: {width: 30, title: "No", show: true },
-                selectionModel: { type: 'row', mode: 'single'} ,
+                //selectionModel: { type: 'row', mode: 'single'} ,
                 swipeModel: {on: false},
                 collapsible: false,
                 trackModel: {on: true},
@@ -508,17 +571,30 @@
                         let rowIndx = ui.updateList[0].rowIndx;
                         let calculateEstimateAmt = 0;
                         let data = ui.updateList[0].rowData;
-                        let UNIT_MATERIAL_AMT = data.UNIT_MATERIAL_AMT == null || data.UNIT_MATERIAL_AMT == '' ? 0 : parseInt(data.UNIT_MATERIAL_AMT);
-                        let UNIT_SURFACE_AMT = data.UNIT_SURFACE_AMT == null || data.UNIT_SURFACE_AMT == '' ? 0 : parseInt(data.UNIT_SURFACE_AMT);
-                        let UNIT_PROCESS_AMT = data.UNIT_PROCESS_AMT == null || data.UNIT_PROCESS_AMT == '' ? 0 : parseInt(data.UNIT_PROCESS_AMT);
-                        let UNIT_ETC_AMT = data.UNIT_ETC_AMT == null || data.UNIT_ETC_AMT == '' ? 0 : parseInt(data.UNIT_ETC_AMT);
-                        let ITEM_QTY = data.ITEM_QTY == null || data.ITEM_QTY == '' ? 0 : parseInt(data.ITEM_QTY);
+                        let UNIT_MATERIAL_AMT = data.UNIT_MATERIAL_AMT == null || data.UNIT_MATERIAL_AMT == '' ? 0 : parseFloat(data.UNIT_MATERIAL_AMT);
+                        let UNIT_TM_AMT = data.UNIT_TM_AMT == null || data.UNIT_TM_AMT == '' ? 0 : parseFloat(data.UNIT_TM_AMT);
+                        let UNIT_GRIND_AMT = data.UNIT_GRIND_AMT == null || data.UNIT_GRIND_AMT == '' ? 0 : parseFloat(data.UNIT_GRIND_AMT);
+                        let UNIT_HEAT_AMT = data.UNIT_HEAT_AMT == null || data.UNIT_HEAT_AMT == '' ? 0 : parseFloat(data.UNIT_HEAT_AMT);
+                        let UNIT_SURFACE_AMT = data.UNIT_SURFACE_AMT == null || data.UNIT_SURFACE_AMT == '' ? 0 : parseFloat(data.UNIT_SURFACE_AMT);
+                        let UNIT_PROCESS_AMT = data.UNIT_PROCESS_AMT == null || data.UNIT_PROCESS_AMT == '' ? 0 : parseFloat(data.UNIT_PROCESS_AMT);
+                        let UNIT_ETC_AMT = data.UNIT_ETC_AMT == null || data.UNIT_ETC_AMT == '' ? 0 : parseFloat(data.UNIT_ETC_AMT);
+                        let ITEM_QTY = data.ITEM_QTY == null || data.ITEM_QTY == '' ? 0 : parseFloat(data.ITEM_QTY);
 
                         calculateEstimateAmt += UNIT_MATERIAL_AMT;
+                        calculateEstimateAmt += UNIT_TM_AMT;
+                        calculateEstimateAmt += UNIT_GRIND_AMT;
+                        calculateEstimateAmt += UNIT_HEAT_AMT;
                         calculateEstimateAmt += UNIT_SURFACE_AMT;
                         calculateEstimateAmt += UNIT_PROCESS_AMT;
                         calculateEstimateAmt += UNIT_ETC_AMT;
+
                         estimateMasterBotGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'CALCUL_EST_UNIT_COST': calculateEstimateAmt } });
+
+                        let UNIT_FINAL_EST_AMT = ui.updateList[0].newRow.UNIT_FINAL_EST_AMT
+                        if(UNIT_FINAL_EST_AMT != undefined){
+                            calculateEstimateAmt = UNIT_FINAL_EST_AMT;
+                        }
+                        estimateMasterBotGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'UNIT_FINAL_EST_AMT': calculateEstimateAmt } });
 
                         calculateEstimateAmt *= ITEM_QTY;
                         estimateMasterBotGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'DTL_AMOUNT': calculateEstimateAmt } });
@@ -544,8 +620,35 @@
         });
 
         $("#btnEstimateListDelete").on('click', function(){
-            let ESTIMATE_MASTER_QUERY_ID = ['deleteEstimateMaster', 'deleteEstimateDetail'];
-            fnDeletePQGrid(estimateMasterTopGrid, estimateMasterSelectedRowIndex, ESTIMATE_MASTER_QUERY_ID);
+            /*let ESTIMATE_MASTER_QUERY_ID = ['deleteEstimateMaster', 'deleteEstimateDetail'];
+            fnDeletePQGrid(estimateMasterTopGrid, estimateMasterSelectedRowIndex, ESTIMATE_MASTER_QUERY_ID);*/
+
+            let parameter = {
+                'queryId': 'deleteEstimateReceiver',
+                'EST_SEQ': $("#estimate_master_hidden_form #EST_SEQ").val(),
+            };
+            let parameters = {'url': '/json-remove', 'data': parameter};
+            fnPostAjax(function(data, callFunctionParam){
+                parameter = {
+                    'queryId': 'deleteEstimateDetail',
+                    'EST_SEQ': $("#estimate_master_hidden_form #EST_SEQ").val(),
+                };
+                parameters = {'url': '/json-remove', 'data': parameter};
+                fnPostAjax(function(data, callFunctionParam){
+                    parameter = {
+                        'queryId': 'deleteEstimateMaster',
+                        'EST_SEQ': $("#estimate_master_hidden_form #EST_SEQ").val(),
+                        'EST_VER': $("#estimate_master_hidden_form #EST_VER").val()
+                    };
+                    parameters = {'url': '/json-remove', 'data': parameter};
+                    fnPostAjax(function(data, callFunctionParam){
+                        estimateMasterTopGrid.pqGrid('option', "dataModel.postData", function (ui) {
+                            return (fnFormToJsonArrayData('#estimate_master_search_form'));
+                        });
+                        estimateMasterTopGrid.pqGrid('refreshDataAndView');
+                    }, parameters, '');
+                }, parameters, '');
+            }, parameters, '');
         });
 
         $("#btnEstimateListSave").on('click', function(){
@@ -697,7 +800,7 @@
             setTimeout(function(){
                 $("#test").trigger('click');
             }, 500)
-
+            event.preventDefault();
         }
     });
 

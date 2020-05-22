@@ -18,7 +18,8 @@
             A.ORDER_COMP_CD, SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM,
             A.COMP_CD, SF_GET_COMP_NM(A.COMP_CD) AS ORDER_COMP_NM,
             A.CONTROL_STATUS, SF_GET_CODE_NM('1038', A.CONTROL_STATUS, 'EN') AS CONTROL_STATUS_NM,
-            B.STATUS_DT, SF_GET_CODE_NM('1013', B.PART_STATUS, 'EN') AS PART_STATUS_NM,
+            SF_GET_DATE_F(B.STATUS_DT,'YYYY','M') AS STATUS_DT,
+            SF_GET_CODE_NM('1013', B.PART_STATUS, 'EN') AS PART_STATUS_NM,
             A.ORDER_STAFF_SEQ, B.PART_STATUS, B.DRAWING_NUM, B.DRAWING_VER, B.PART_NUM,
             CASE WHEN F.MATERIAL_TYPE IS NOT NULL THEN F.MATERIAL_TYPE
                 ELSE SF_GET_ETC_CD('1000', B.MATERIAL_TYPE)
@@ -43,7 +44,7 @@
             F.MATERIAL_COMP_CD AS M_COMP_CD, SF_GET_COMP_NM(F.MATERIAL_COMP_CD) AS M_COMP_NM,
             F.ORDER_QTY AS M_ORDER_QTY, F.ORDER_NOTE AS M_ORDER_NOTE, F.SIZE_TXT AS M_SIZE_TXT, G.REQUEST_CD,
             F.ORDER_STATUS AS M_STATUS, SF_GET_CODE_NM('1028', F.ORDER_STATUS, 'EN') AS M_STATUS_NM,
-            F.ORDER_DT AS M_ORDER_DT,
+            SF_GET_DATE_F(F.ORDER_DT,'YYYY','M') AS M_ORDER_DT,
             I.SIZE_TXT AS OUT_SIZE_TXT, H.OUT_QTY,
             CASE WHEN H.MY_MAT_OUT_SEQ IS NOT NULL THEN 'Y' ELSE 'N' END OUT_YN
         FROM TBL_CONTROL A
@@ -250,7 +251,7 @@
             SF_GET_SIZE_TXT('SIZE_D', #{M_SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_L', #{M_SIZE_TXT}),
             #{MATERIAL_TYPE}, #{MATERIAL_DETAIL}, #{MATERIAL_KIND},
             #{M_ORDER_NOTE}, #{M_ORDER_QTY}, #{ORDER_AMT},
-            'MST01', NOW(), #{IN_DT}, #{CANCEL_DT},
+            'MST002', NOW(), #{IN_DT}, #{CANCEL_DT},
             #{INSERT_DT}, #{INSERT_ID}, #{CANCEL_USER_ID}
         )
         ON DUPLICATE KEY UPDATE
@@ -275,14 +276,21 @@
             UPDATE_ID = NULL
     </update>
 
-    <update id="updateItemOrderRegisterCancel" parameterType="java.util.HashMap">
+    <update id="updateItemOrderRegisterMaterialOrderCancel" parameterType="java.util.HashMap">
         UPDATE TBL_MATERIAL_ORDER
         SET UPDATE_DT = NOW(),
             MATERIAL_ORDER_NUM = NULL,
-            ORDER_STATUS = #{ORDER_STATUS},
+            ORDER_STATUS = NULL,
             ORDER_DT = NULL,
             UPDATE_ID = NULL
-        WHERE MATERIAL_ORDER_SEQ = #{MATERIAL_ORDER_SEQ}
+        WHERE MATERIAL_ORDER_SEQ IN(${MATERIAL_ORDER_SEQ})
+    </update>
+
+    <update id="updateItemOrderRegisterControlPartCancel" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET PART_STATUS = 'PRO002'
+        WHERE 1=1
+            AND CONCAT(CONTROL_SEQ, CONTROL_DETAIL_SEQ) IN(${CONCAT_SEQ})
     </update>
 
     <select id="selectItemOrderHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">

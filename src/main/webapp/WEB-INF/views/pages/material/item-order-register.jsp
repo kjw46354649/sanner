@@ -7,66 +7,42 @@
 --%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
-<div class="modal" id="item_order_register_popup" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">소재주문 진행</h4>
-            </div>
-            <div class="buttonWrap">
-                <span class="d-inline">
-                    <span class="ipu_wrap"><label class="label_100" for="item_order_register_material_order_num">소재주문번호</label><input type="text" name="" id="item_order_register_material_order_num" class="wd_200" value="" title="소재주문업체"></span>
+
+<div class="popup_container" id="item_order_register_popup" style="display: none;">
+    <div class="layerPopup">
+        <h3 style="margin-bottom: 10px;">위치정보 관리</h3>
+        <button type="button" class="pop_close">닫기</button>
+        <div class="buttonWrap">
+            <span class="d-inline">
+                <span class="ipu_wrap"><label class="label_80" for="item_order_register_material_order_num">소재주문번호</label><input type="text" name="" id="item_order_register_material_order_num" class="wd_200" value="" title="소재주문업체"></span>
+                <span class="right_float">
                     <button type="button" class="defaultBtn btn-120w" id="btnItemOrderRegisterPopAdd">추가</button>
-                    <span class="right_float">
-                        <button type="button" class="defaultBtn btn-120w" id="btnItemOrderRegisterPopOrder">저장 & 제출</button>
-                    </span>
+                    <button type="button" class="defaultBtn btn-120w" id="btnItemOrderRegisterPopOrder">저장 & 제출</button>
                 </span>
-            </div>
-            <div class="modal-body">
-                <form class="form-inline" role="form" id="item_order_register_popup_form" name="item_order_register_popup_form">
-                    <input type="hidden" id="queryId" name="queryId" value="selectItemOrderRegisterPopList"/>
-                    <input type="hidden" id="CONCAT_SEQ" name="CONCAT_SEQ"/>
-                    <div class="panel-body line_tit portlet-body form bg-light">
-                        <!-- grid table -->
-                        <section class="bg-light">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="panel panel-default">
-                                        <header class="panel-heading">
-                                            <strong>상세 리스트</strong>
-                                        </header>
-                                        <div class="row">
-                                            <div class="col-md-12 col-sm-12">
-                                                <div class="gridWrap">
-                                                    <div id="item_order_register_popup_top_grid" class="jqx-refresh"></div>
-                                                    <div class="right_sort">
-                                                        전체 조회 건수 (Total : <span id="item_order_register_popup_top_grid_records" style="color: #00b3ee">0</span>)
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12 col-sm-12">
-                                                <div class="gridWrap">
-                                                    <div id="item_order_register_popup_bot_grid" class="jqx-refresh"></div>
-                                                    <div class="right_sort">
-                                                        전체 조회 건수 (Total : <span id="item_order_register_popup_bot_grid_records" style="color: #00b3ee">0</span>)
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                </form>
-            </div>
-            <!-- /.modal-content -->
+            </span>
         </div>
-        <!-- /.modal-dialog -->
+        <br/>
+        <form class="form-inline" role="form" id="item_order_register_popup_form" name="item_order_register_popup_form">
+            <input type="hidden" id="queryId" name="queryId" value="selectItemOrderRegisterPopList"/>
+            <input type="hidden" id="CONCAT_SEQ" name="CONCAT_SEQ"/>
+            <input type="hidden" id="MATERIAL_ORDER_SEQ" name="MATERIAL_ORDER_SEQ"/>
+            <div class="tableWrap">
+                <div id="item_order_register_popup_top_grid"></div>
+                <div class="right_sort">
+                    전체 조회 건수 (Total : <span id="item_order_register_popup_top_grid_records" style="color: #00b3ee">0</span>)
+                </div>
+            </div>
+            <br/>
+            <div class="gridWrap">
+                <div id="item_order_register_popup_bot_grid"></div>
+                <div class="right_sort">
+                    전체 조회 건수 (Total : <span id="item_order_register_popup_bot_grid_records" style="color: #00b3ee">0</span>)
+                </div>
+            </div>
+        </form>
     </div>
 </div>
+
 <div class="page estimate">
     <div class="topWrap">
         <form class="form-inline" id="item_order_register_search_form" name="item_order_register_search_form" role="form">
@@ -97,9 +73,21 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label class="label_100" for="DRAWING_NUM">소재주문번호</label><input type="text" name="DRAWING_NUM" id="DRAWING_NUM" class="wd_200" value="" title="소재주문번호"></span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label class="label_100" for="M_ORDER_COMP_CD">소재주문업체</label><input type="text" name="M_ORDER_COMP_CD" id="M_ORDER_COMP_CD" class="wd_200" value="" title="소재주문업체"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="M_ORDER_COMP_CD">소재주문업체</label>
+                            <select type="text" name="M_ORDER_COMP_CD" id="M_ORDER_COMP_CD" class="wd_200">
+                            </select>
+                        </span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label class="label_100" for="MATERIAL_DETAIL">소재종류</label><input type="text" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200" value="" title="소재주문업체"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="MATERIAL_DETAIL">소재종류</label>
+                            <select type="text" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200">
+                                <option value="">Select</option>
+                                <c:forEach var="code" items="${HighCode.H_1027}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </span>
                     </li>
                     <li class="">
                         <span class="txt_span pd-right20"><label class="label_100" for="MODULE_NM">기간 조회</label></span>
@@ -218,6 +206,16 @@
 <script type="text/javascript">
     $(function () {
         'use strict';
+        let dateEditor = function (ui) {
+            let $inp = ui.$cell.find("input"), $grid = $(this);
+            $inp.datepicker({
+                changeMonth: true, changeYear: true, showAnim: '', dateFormat: 'yy-mm-dd',
+                onSelect: function () { this.firstOpen = true; },
+                beforeShow: function (input, inst) {return !this.firstOpen; },
+                onClose: function () { this.focus(); }
+            });
+        };
+
         let itemOrderRegisterSelectedRowIndex;
         let itemOrderRegisterLeftGrid = $("#item_order_register_left_grid");
         let itemOrderRegisterRightGrid = $("#item_order_register_right_grid");
@@ -257,9 +255,7 @@
                     mapIndices: { name: "M_COMP_NM", id: "M_COMP_CD" },
                     valueIndx: "value",
                     labelIndx: "text",
-                    //options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}}),
-                    options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}}),
-                    //options: fnGetCommCodeGridSelectBox('1007'),
+                    options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceCompanyList'}}),
                     getData: function(ui) {
                         let clave = ui.$cell.find("select").val();
                         let rowData = itemOrderRegisterLeftGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
@@ -354,7 +350,7 @@
                     {title: '불출', dataType: 'string', dataIndx: 'OUT_YN'},
                 ]},
             {title: '비고', dataType: 'string', dataIndx: 'DTL_AMOUNT'},
-            {title: '주문<br>요청 일시', dataType: 'date', dataIndx: 'M_ORDER_DT', editable: false}
+            {title: '주문<br>요청 일시', dataType: 'date', dataIndx: 'M_ORDER_DT',  width: 120, editable: false}
         ];
 
         let itemOrderRegisterRightColModel= [
@@ -381,51 +377,88 @@
         ];
 
         let itemOrderRegisterPopTopColModel= [
-            {title: '', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
-            {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
-            {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', hidden: false},
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM' , validations: [{ type: 'minLen', value: 1, msg: "Required"}],
+            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE' , validations: [{ type: 'minLen', value: 1, msg: "Required"}],
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "MATERIAL_TYPE_NM", id: "MATERIAL_TYPE" },
-                    valueIndx: "value",
-                    labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1035'),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = itemOrderRegisterRightGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["MATERIAL_TYPE"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1035')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let materialDetail = fnGetCommCodeGridSelectBox('1035');
+                        let index = materialDetail.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = materialDetail.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : materialDetail[index].text;
                     }
                 }
             },
-            {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND' , validations: [{ type: 'minLen', value: 1, msg: "Required"}],
+            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND' , validations: [{ type: 'minLen', value: 1, msg: "Required"}],
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "MATERIAL_KIND", id: "MATERIAL_KIND" },
-                    valueIndx: "value",
-                    labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1029'),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = itemOrderRegisterRightGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["MATERIAL_KIND"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1029')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let materialKind = fnGetCommCodeGridSelectBox('1029');
+
+                        let index = materialKind.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = materialKind.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : materialKind[index].text;
                     }
                 }
             },
-            {title: '상세종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM' , validations: [{ type: 'minLen', value: 1, msg: "Required"}],
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL' , validations: [{ type: 'minLen', value: 1, msg: "Required"}],
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "MATERIAL_DETAIL_NM", id: "MATERIAL_DETAIL" },
-                    valueIndx: "value",
-                    labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1027'),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = itemOrderRegisterRightGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["MATERIAL_DETAIL"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1027')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let materialDetail = fnGetCommCodeGridSelectBox('1027');
+                        let index = materialDetail.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = materialDetail.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : materialDetail[index].text;
                     }
                 }
             },
@@ -439,7 +472,7 @@
                     mapIndices: { name: "M_COMP_NM", id: "M_COMP_CD" },
                     valueIndx: "value",
                     labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1007'),
+                    options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceCompanyList'}}),
                     getData: function(ui) {
                         let clave = ui.$cell.find("select").val();
                         let rowData = itemOrderRegisterLeftGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
@@ -448,11 +481,15 @@
                     }
                 }
             },
-            {title: '납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', width: 80, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
+            {title: '납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', width: 80,
+                editable: true, editor: { type: 'textbox', init: dateEditor } },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 120, editable: false},
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', editable: false},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 120, editable: false},
-            {title: '원<br>발주량', dataType: 'string', dataIndx: 'ORDER_QTY ', editable: false}
+            {title: '원<br>발주량', dataType: 'string', dataIndx: 'ORDER_QTY ', editable: false},
+            {title: '', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
+            {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
+            {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', hidden: true}
         ];
 
         let itemOrderRegisterPopBotColModel= [
@@ -700,7 +737,7 @@
             selectionModel: { type: 'cell', mode: 'multiple'} ,
             swipeModel: {on: false},
             collapsible: false,
-            resizable: true,
+            resizable: false,
             trackModel: {on: true},
             colModel: itemOrderRegisterLeftColModel,
             showTitle: false,
@@ -777,7 +814,7 @@
                 trackModel: {on: true},
                 swipeModel: {on: false},
                 collapsible: false,
-                resizable: true,
+                resizable: false,
                 colModel: itemOrderRegisterRightColModel,
                 showTitle: false,
                 title: false,
@@ -817,7 +854,7 @@
                     }
                 },
                 columnTemplate: {align: 'center', hvalign: 'center'},
-                scrollModel: {autoFit: true},
+                scrollModel: {autoFit: false},
                 numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'row', mode: 'single'} ,
                 swipeModel: {on: false},
@@ -826,6 +863,7 @@
                 trackModel: {on: true},
                 colModel: itemOrderRegisterPopTopColModel,
                 showTitle: false,
+                title: false,
                 complete: function (event, ui) {
                     this.flex();
                     let data = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data');
@@ -850,7 +888,7 @@
                     }
                 },
                 virtualX: true, virtualY: true,
-                scrollModel: {autoFit: true},
+                scrollModel: {autoFit: false},
                 numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'row', mode: 'single', column: true } ,
                 swipeModel: {on: false},
@@ -858,6 +896,7 @@
                 resizable: false,
                 colModel: itemOrderRegisterPopBotColModel,
                 showTitle: false,
+                title: false,
                 complete: function (event, ui) {
                     this.flex();
                     let data = itemOrderRegisterPopBotGrid.pqGrid('option', 'dataModel.data');
@@ -895,7 +934,38 @@
         });
 
         $("#btnItemOrderRegisterCancel").on('click', function(){
+            let concatSeqDataArray = "";
+            let orderSeqDataArray = "";
+            let selectedRowCount = itemOrderRegisterSelectedRowIndex.length;
+            for (let i = 0; i < selectedRowCount; i++) {
+                let CONTROL_SEQ = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).CONTROL_SEQ;
+                let CONTROL_DETAIL_SEQ = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).CONTROL_DETAIL_SEQ;
+                let MATERIAL_ORDER_SEQ = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).MATERIAL_ORDER_SEQ;
 
+                concatSeqDataArray += "'"+CONTROL_SEQ+""+CONTROL_DETAIL_SEQ+"',";
+                orderSeqDataArray += "'"+MATERIAL_ORDER_SEQ+"',";
+            }
+            let CONCAT_SEQ = concatSeqDataArray.substr(0 , concatSeqDataArray.length-1);
+            let ORDER_SEQ = orderSeqDataArray.substr(0 , orderSeqDataArray.length-1);
+
+            $("#item_order_register_popup_form #CONCAT_SEQ").val(CONCAT_SEQ);
+            $("#item_order_register_popup_form #MATERIAL_ORDER_SEQ").val(ORDER_SEQ);
+
+            let parameter = {
+                'queryId': 'updateItemOrderRegisterMaterialOrderCancel',
+                'MATERIAL_ORDER_SEQ': $("#item_order_register_popup_form #MATERIAL_ORDER_SEQ").val(),
+            };
+            let parameters = {'url': '/json-remove', 'data': parameter};
+            fnPostAjax(function(data, callFunctionParam){
+                parameter = {
+                    'queryId': 'updateItemOrderRegisterControlPartCancel',
+                    'CONCAT_SEQ': $("#item_order_register_popup_form #CONCAT_SEQ").val(),
+                };
+                parameters = {'url': '/json-remove', 'data': parameter};
+                fnPostAjax(function(data, callFunctionParam){
+                    $("#btnItemOrderRegisterSearch").trigger('click');
+                }, parameters, '');
+            }, parameters, '');
         });
 
         $("#btnItemOrderRegisterCurrentStock").on('click', function(){
@@ -991,6 +1061,7 @@
 
         /** 공통 코드 이외의 처리 부분 **/
         fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#M_ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceCompanyList'}});
         fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
     });
 </script>
