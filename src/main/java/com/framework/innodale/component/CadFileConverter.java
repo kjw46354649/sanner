@@ -25,8 +25,8 @@ public class CadFileConverter {
 
     public static String cadfile_converter(File sourceFile, String convertPath) throws IOException, InterruptedException {
 
-        License license = new License();
-        license.setLicense("Aspose.CAD.lic");
+//        License license = new License();
+//        license.setLicense("Aspose.CAD.lic");
 
         String message = "DXF File Converter Success!.";
 
