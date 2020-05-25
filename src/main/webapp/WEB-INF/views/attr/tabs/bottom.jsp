@@ -80,10 +80,15 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close drawingPrintCloseBtn" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                <h2 class="modal-title">출력 정보</h2>
+                <h2 class="modal-title" id="commonConfirmHeadHtml">출력 정보</h2>
             </div>
             <div class="modal-body">
-                <div><h4><img style='width: 32px; height: 32px;' src='/resource/main/images/print.png'>&nbsp;&nbsp;<span id="drawingPrintMessageHtml">32 건의 바코드 도면이 출력 됩니다.</span> 진행하시겠습니까?</h4></div>
+                <div id="commonConfirmBodyHtml">
+                    <h4>
+                        <img style='width: 32px; height: 32px;' src='/resource/main/images/print.png'>&nbsp;&nbsp;
+                        <span>32 건의 바코드 도면이 출력 됩니다.</span> 진행하시겠습니까?
+                    </h4>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" id="drawingPrintActionBtn" class="defaultBtn radius blue">출력</button>
