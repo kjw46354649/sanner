@@ -255,4 +255,81 @@
         AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
         AND ORDER_SEQ = #{ORDER_SEQ}
     </update>
+
+    <select id="selectOutgoingOutType3" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        /* 도면 바코드 입력시 정보  */
+        SELECT
+              X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
+            , X.CONTROL_NUM
+            , X.DRAWING_NUM
+            , CONCAT(X.ORDER_QTY - X.OUT_QTY, '/', X.ORDER_QTY) AS QTY_INFO
+            , X.ORDER_QTY - X.OUT_QTY AS PLAN_QTY
+        FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                    , A.CONTROL_NUM
+                    , B.DRAWING_NUM
+                    , jmes.SF_GET_CONTROL_ORDER_QTY(A.CONTROL_SEQ, 0) AS ORDER_QTY
+                    , (SELECT IFNULL(SUM(M.OUT_QTY),0) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS OUT_QTY
+                FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
+                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                AND B.CONTROL_SEQ = #{CONTROL_SEQ}
+                AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+        ) X
+    </select>
+    <insert id="insertOutgoingOutType3" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_OUT (OUT_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, ORDER_SEQ, OUT_QTY, INSERT_ID)
+        SELECT NEXTVAL(jmes.OUT_SEQ) AS OUT_SEQ
+          , A.CONTROL_SEQ
+          , A.CONTROL_DETAIL_SEQ
+          , A.ORDER_SEQ
+          , A.ORDER_QTY - (SELECT IFNULL(SUM(M.OUT_QTY),0) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = A.ORDER_SEQ) AS OUT_QTY
+          , #{LOGIN_USER_ID} AS INSERT_ID
+        FROM jmes.TBL_CONTROL_PART_ORDER A
+        WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
+          AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </insert>
+
+    <select id="selectOutgoingOutType4" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.ORDER_SEQ
+          , X.CONTROL_NUM
+          , X.DRAWING_NUM
+          , X.ORDER_NUM
+          , CONCAT(X.ORDER_QTY,'(',X.PACKING_CNT,')') AS QTY_INFO
+          , X.PACKING_CNT - X.OUT_PACKING_CNT - 1 AS REMAIN_PACKING_CNT
+          , CONCAT(X.PACKING_CNT,'-',X.PACKING_NUM) AS MY_PACKING_NUM
+        FROM (  SELECT T.CONTROL_SEQ, T.CONTROL_DETAIL_SEQ, T.ORDER_SEQ
+                  , A.CONTROL_NUM
+                  , B.DRAWING_NUM
+                  , C.ORDER_NUM
+                  , jmes.SF_GET_CONTROL_ORDER_QTY(T.CONTROL_SEQ, T.ORDER_SEQ) AS ORDER_QTY
+                  , C.PACKING_CNT
+                  , T.PACKING_NUM
+                  , (SELECT IFNULL(COUNT(PACKING_NUM),0) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = T.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = T.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = T.ORDER_SEQ) AS OUT_PACKING_CNT
+                FROM jmes.TBL_OUT_BARCODE T
+                  , jmes.TBL_CONTROL A
+                  , jmes.TBL_CONTROL_PART B
+                  , jmes.TBL_CONTROL_PART_ORDER C
+                WHERE T.CONTROL_SEQ = A.CONTROL_SEQ
+                  AND T.CONTROL_SEQ = B.CONTROL_SEQ
+                  AND T.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                  AND T.CONTROL_SEQ = C.CONTROL_SEQ
+                  AND T.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                  AND T.ORDER_SEQ = C.ORDER_SEQ
+                  AND T.BARCODE_NUM = #{BARCODE_NUM}
+                  AND T.DEL_YN = 'N'
+            ) X
+    </select>
+    <insert id="insertOutgoingOutType4" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_OUT (OUT_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, ORDER_SEQ, PACKING_NUM, INSERT_ID)
+        SELECT NEXTVAL(jmes.OUT_SEQ) AS OUT_SEQ
+          , A.CONTROL_SEQ
+          , A.CONTROL_DETAIL_SEQ
+          , A.ORDER_SEQ
+          , A.PACKING_NUM
+          , #{LOGIN_USER_ID} AS INSERT_ID
+        FROM jmes.TBL_OUT_BARCODEL A
+        WHERE A.BARCODE_NUM = #{BARCODE_NUM}
+          AND IFNULL(DEL_YN,'N') = 'N'
+          AND NOT EXISTS (SELECT 1 FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = A.ORDER_SEQ AND M.PACKING_NUM IS NULL)
+
+    </insert>
 </mapper>
