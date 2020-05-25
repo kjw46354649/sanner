@@ -8,11 +8,22 @@
 	</select>
 
     <select id="selectUserMasterList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT USER_ID,
-               USER_NM,
-               USER_PWD,
-               DEL_YN,
-               SF_GET_CODE_NM(1042, DEL_YN, 'EN') AS DEL_YN_NM
+        SELECT
+            USER_ID,
+            USER_NM,
+            USER_TEL,
+            USER_EMAIL,
+            USER_PWD,
+            ROLE_SEQ,
+            (SELECT ROLE_NM FROM TBL_ROLE WHERE TBL_ROLE.ROLE_SEQ = TBL_USER.ROLE_SEQ) AS ROLE_SEQ_NM,
+            POSITION_NM,
+            JOB_TITLE,
+            DEL_YN,
+            DEPARTMENT,
+            SF_GET_CODE_NM(1061, DEPARTMENT, 'EN') AS DEPARTMENT_NM,
+            SF_GET_CODE_NM(1042, DEL_YN, 'EN') AS DEL_YN_NM,
+            PHOTO_GFILE_SEQ,
+            INSERT_DT
         FROM TBL_USER
         WHERE 1=1
             <if test="user_id != null and user_id != ''">
@@ -21,19 +32,26 @@
             <if test="sel_user_nm != null and sel_user_nm != ''">
                 AND upper(USER_NM) LIKE CONCAT('%', upper(#{sel_user_nm}), '%')
             </if>
-        LIMIT 20
     </select>
 
     <insert id="insertUser" parameterType="java.util.HashMap">
 		INSERT INTO TBL_USER
-            (USER_ID, USER_NM, USER_PWD, DEL_YN, ROLE_SEQ, INSERT_DT, INSERT_ID, UPDATE_DT, UPDATE_ID)
-        VALUES(#{USER_ID}, #{USER_NM}, #{USER_PWD}, 'N', NULL, NOW(), NULL, NULL, NULL)
+            (USER_ID, USER_NM, USER_PWD, USER_TEL, USER_EMAIL, POSITION_NM, JOB_TITLE, PHOTO_GFILE_SEQ, DEPARTMENT, ROLE_SEQ, DEL_YN, INSERT_DT, INSERT_ID, UPDATE_DT, UPDATE_ID)
+        VALUES(#{USER_ID}, #{USER_NM}, #{USER_PWD}, #{USER_TEL}, #{USER_EMAIL}, #{POSITION_NM}, #{JOB_TITLE}, #{PHOTO_GFILE_SEQ}, #{DEPARTMENT}, #{ROLE_SEQ}, 'N', NULL, NOW(), NULL, NULL, NULL)
 	</insert>
 
     <update id="updateUser" parameterType="java.util.HashMap">
       UPDATE TBL_USER
       SET USER_NM = #{USER_NM},
-          USER_PWD = #{USER_PWD}
+          USER_PWD = #{USER_PWD},
+          USER_TEL = #{USER_TEL},
+          USER_EMAIL = #{USER_EMAIL},
+          POSITION_NM = #{POSITION_NM},
+          JOB_TITLE = #{JOB_TITLE},
+          DEPARTMENT = #{DEPARTMENT},
+          ROLE_SEQ = #{ROLE_SEQ},
+          PHOTO_GFILE_SEQ = #{PHOTO_GFILE_SEQ},
+          DEL_YN = #{DEL_YN}
       WHERE USER_ID = #{USER_ID}
    </update>
 
@@ -309,7 +327,7 @@
                 <!-- ,UPDATE_ID = 'USER_ID' -->
    </update>
 
-    <select id="selectAuthorityGroupList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+   <select id="selectAuthorityGroupList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT ROLE_SEQ,
                ROLE_NM,
                DEL_YN,

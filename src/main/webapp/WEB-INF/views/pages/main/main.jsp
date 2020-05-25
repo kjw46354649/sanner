@@ -121,26 +121,91 @@
     <div class="rightWrap">
         <div class="tableWrap">
             <div class="hWrap">
-                <h2>금일 가공 대상 List</h2>
-                <span class="chk_box mg-left20"><input id="pr_ex" type="checkbox"><label for="pr_ex"> 가공완료제외</label></span>
-                <span class="slt_wrap mg-left10">
-									<select id="customSltd" name="customSltd" title="발주처 선태">
-										<option value="" selected="selected">-발주처-</option>
-										<option value="1">-발주처-</option>
-										<option value="2">-발주처-</option>
-									</select>
-									<select id="materSltd" class="mg-left5" name="materSltd" title="재질선택">
-										<option value="" selected="selected">-재질-</option>
-										<option value="1">-재질-</option>
-										<option value="2">-재질-</option>
-									</select>
-								</span>
-                <span class="ipu_wrap mg-left10"><label for="dateSltd">조회일자</label><input type="text" name="dateSltd" id="dateSltd" placeholder="" value="2019/12/18" title="조회일자"></span>
-                <span class="refresh"><a href="#a;"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></a></span>
+                <form class="form-inline" id="main_master_search_form" name="main_master_search_form" role="form">
+                    <h2>금일 가공 대상 List</h2>
+                    <span class="chk_box mg-left20"><input id="pr_ex" type="checkbox"><label for="pr_ex"> 가공완료제외</label></span>
+                    <span class="slt_wrap mg-left10">
+                        <select id="customSltd" name="customSltd" title="발주처 선태">
+                            <option value="" selected="selected">-발주처-</option>
+                            <option value="1">-발주처-</option>
+                            <option value="2">-발주처-</option>
+                        </select>
+                        <select id="materSltd" class="mg-left5" name="materSltd" title="재질선택">
+                            <option value="" selected="selected">-재질-</option>
+                            <option value="1">-재질-</option>
+                            <option value="2">-재질-</option>
+                        </select>
+                    </span>
+                    <span class="ipu_wrap mg-left10"><label for="dateSltd">조회일자</label><input type="text" name="dateSltd" id="dateSltd" placeholder="" value="2019/12/18" title="조회일자"></span>
+                    <span class="refresh"><a href="#a;"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></a></span>
+                </form>
             </div>
             <div class="conWrap">
-                <img src="/resource/asset/images/common/img_table_sp.jpg" alt="테이블샘플">
+                <div id="main_manager_grid" style="margin:auto; height: auto; width: auto;" ></div>
+                <div class="right_sort">
+                    전체 조회 건수 (Total : <span id="main_master_total_records" style="color: #00b3ee">0</span>)
+                </div>
+<%--                <img src="/resource/asset/images/common/img_table_sp.jpg" alt="테이블샘플">--%>
             </div>
         </div>
     </div>
 </div>
+<script>
+
+    let $mainMasterGrid;
+    let mainMasterGridId = 'main_manager_grid';
+    let mainMasterPostData = fnFormToJsonArrayData('main_master_search_form');
+
+    // $(function () {
+    //     'use strict';
+    //     let mainMasterColModel = [
+    //         {title: '아이디', dataType: 'string', dataIndx: 'USER_ID', width: 100,// editable: true,
+    //             editable: function (ui) {
+    //                 if (ui.rowData.INSERT_DT) {
+    //                     return false;
+    //                 }else {
+    //                     return true;
+    //                 }
+    //             },
+    //         },
+    //         {title: '이름', dataType: 'string', dataIndx: 'USER_NM', width: 120},
+    //         {title: '패스워드', dataType: 'string', dataIndx: 'USER_PWD', width: 80},
+    //         {title: '연락처', dataType: 'string', dataIndx: 'USER_TEL', width: 120},
+    //         {title: '이메일', dataType: 'string', dataIndx: 'USER_EMAIL', width: 150},
+    //         {title: '직급', dataType: 'string', dataIndx: 'POSITION_NM', width: 150},
+    //         {title: '직책', dataType: 'string', dataIndx: 'JOB_TITLE', width: 150},
+    //         {title: '권한부서', dataType: 'string', dataIndx: 'ROLE_SEQ', width: 150}
+    //     ];
+    //
+    //     let mainMasterObj = {
+    //         minHeight: "auto",
+    //         height: 765,
+    //         width: "auto",
+    //         selectionModel: { type: 'row', mode: 'single'} ,
+    //         swipeModel: {on: false},
+    //         collapsible: false,
+    //         trackModel: {on: true},
+    //         resizable: false,
+    //         flexWidth: false,
+    //         scrollModel: { autoFit: true },
+    //         showTitle: false,
+    //         numberCell: {title: 'No.'},
+    //         columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
+    //         colModel: mainMasterColModel,
+    //         dataModel: {
+    //             recIndx: 'USER_ID', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+    //             postData: mainMasterPostData,
+    //             getData: function (response, textStatus, jqXHR) {
+    //                 return {data: response.data};
+    //             }
+    //         },
+    //         dataReady: function (event, ui) {
+    //             let data = $mainMasterGrid.pqGrid('option', 'dataModel.data');
+    //             let totalRecords = data.length;
+    //             $('#main_master_total_records').html(totalRecords);
+    //         },
+    //         toolbar: false,
+    //     };
+    //     $mainMasterGrid = $('#' + mainMasterGridId).pqGrid(mainMasterObj);
+    // });
+</script>
