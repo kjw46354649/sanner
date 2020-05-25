@@ -689,7 +689,8 @@
                 $("#estimate_register_info_form #DTL_AMOUNT").val(list.DTL_AMOUNT);
                 $("#estimate_register_info_form #INSERT_DT").val(list.INSERT_DT);
                 $("#estimate_register_info_form #SEND_DT").val(list.SEND_DT);
-                $("#EMAIL_CONTENT_TXT").val(list.EMAIL_CONTENT);
+                //$("#EMAIL_CONTENT_TXT").val(list.EMAIL_CONTENT);
+                CKEDITOR.instances.EMAIL_CONTENT_TXT.setData(list.EMAIL_CONTENT);
                 $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
 
                 $("#estimate_register_excel_download #EST_SEQ").val(EST_SEQ);
@@ -730,7 +731,8 @@
 
 
                 let detail_data = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data');
-                let mail_data = $("#EMAIL_CONTENT_TXT").val();
+                //let mail_data = $("#EMAIL_CONTENT_TXT").val();
+                let mail_data = CKEDITOR.instances.TEMPLATE_CONTENT_E.getData();
                 let receiver_data = estimateRegisterBotGrid.pqGrid('option', 'dataModel.data');
                 $("#estimate_register_info_form #ESTIMATE_DETAIL_DATA").val(JSON.stringify(detail_data));
                 $("#estimate_register_info_form #ESTIMATE_RECEIVER_DATA").val(JSON.stringify(receiver_data));
@@ -852,5 +854,7 @@
             callWindowImageViewer(999);
         });
 
+        /* CKEDITOR 부분 */
+        CKEDITOR.replace( 'EMAIL_CONTENT_TXT', { height: 176 });
     });
 </script>
