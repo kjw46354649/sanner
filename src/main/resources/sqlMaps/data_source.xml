@@ -95,4 +95,13 @@
             AND DEL_YN = 'N'
     </select>
 
+    <select id="selectRoleCommonCode" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            ROLE_SEQ AS CODE_CD,
+            ROLE_NM  AS CODE_NM
+        FROM TBL_ROLE
+        WHERE 1 = 1
+        ORDER BY ROLE_NM
+    </select>
+
 </mapper>

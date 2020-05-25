@@ -53,21 +53,82 @@
 
     $(function () {
         'use strict';
+
+        const ROLE_SEQ_OPTION = fnCommCodeDatasourceGridSelectBoxCreate({
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.selectRoleCommonCode'}
+        });
+
         let userMasterColModel = [
-            {title: 'USER_ID', dataType: 'string', dataIndx: 'USER_ID', editable: true},
-            {title: 'USER_NM', dataType: 'string', dataIndx: 'USER_NM'},
-            {title: 'USER_PWD', dataType: 'string', dataIndx: 'USER_PWD', width: 150},
+            {title: '아이디', dataType: 'string', dataIndx: 'USER_ID', width: 100,// editable: true,
+                editable: function (ui) {
+                    if (ui.rowData.INSERT_DT) {
+                        return false;
+                    }else {
+                        return true;
+                    }
+                },
+            },
+            {title: '이름', dataType: 'string', dataIndx: 'USER_NM', width: 120},
+            {title: '패스워드', dataType: 'string', dataIndx: 'USER_PWD', width: 80},
+            {title: '연락처', dataType: 'string', dataIndx: 'USER_TEL', width: 120},
+            {title: '이메일', dataType: 'string', dataIndx: 'USER_EMAIL', width: 150},
+            {title: '직급', dataType: 'string', dataIndx: 'POSITION_NM', width: 150},
+            {title: '직책', dataType: 'string', dataIndx: 'JOB_TITLE', width: 150},
+            {title: '부서', dataType: 'string', dataIndx: 'DEPARTMENT', width: 150,
+                editor: {
+                    type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1061')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    let departmentOption = fnGetCommCodeGridSelectBox('1061');
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let index = departmentOption.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = departmentOption.findIndex(function (element) {
+                                return element.value == cellData;
+                            });
+                        }
+                        return (index < 0) ? cellData : departmentOption[index].text;
+                    }
+                }
+            },
+            {title: '권한그룹', dataType: 'integer', dataIndx: 'ROLE_SEQ', editable: true,
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: ROLE_SEQ_OPTION},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let index = ROLE_SEQ_OPTION.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+                        if (index < 0) {
+                            index = ROLE_SEQ_OPTION.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+                        return (index < 0) ? cellData : ROLE_SEQ_OPTION[index].text;
+                    }
+                }
+            },
             {
-                title: 'Use YN', dataType: 'select', dataIndx: 'DEL_YN_NM', width: 150,
+                title: '사용여부', dataType: 'select', dataIndx: 'DEL_YN_NM', width: 70,
                 editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text',
                     options: fnGetCommCodeGridSelectBox('1042')
                 }
             }
         ];
+
         let userMasterObj = {
             minHeight: "auto",
-            height: 770,
+            height: 765,
             width: "auto",
             selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
