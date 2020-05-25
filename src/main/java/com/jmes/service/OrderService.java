@@ -14,4 +14,6 @@ public interface OrderService {
     void insertMonthFinishClose(Map<String, Object> map) throws Exception;
 
     void insertInvoice(Map<String, Object> map) throws Exception;
+
+    void deleteInvoice(Map<String, Object> map) throws Exception;
 }

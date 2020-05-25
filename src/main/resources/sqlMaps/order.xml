@@ -1376,4 +1376,61 @@
         WHERE DEPOSIT_SEQ = ${DEPOSIT_SEQ}
     </update>
 
+    <select id="selectTransactionStatementList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            X.ORDER_COMP_CD,
+            X.ORDER_COMP_NM,
+            X.INVOICE_NUM,
+            X.ORDER_STAFF_SEQ,
+            X.ORDER_STAFF_NM,
+            X.COMP_CD,
+            X.COMP_NM,
+            X.PACKING_CNT,
+            SUM(X.ORDER_QTY) AS ORDER_QTY,
+            SUM(X.TOTAL_AMT) AS TOTAL_AMT,
+            X.INVOICE_TITLE,
+            SF_GET_DATE_F(X.INVOICE_DT,'YYYY','M') AS INVOICE_DT,
+            ''
+        FROM (SELECT
+                  A.ORDER_COMP_CD,
+                  SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM,
+                  A.INVOICE_NUM,
+                  A.ORDER_STAFF_SEQ,
+                  SF_GET_STAFF_NM(A.ORDER_STAFF_SEQ) AS ORDER_STAFF_NM,
+                  A.COMP_CD, -- 공급사
+                  SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM,
+                  B.PACKING_CNT,  -- 품수
+                  (SELECT P.UNIT_FINAL_AMT
+                   FROM TBL_CONTROL_PART P
+                       INNER JOIN TBL_CONTROL_PART_ORDER Q ON P.CONTROL_SEQ = Q.CONTROL_SEQ
+                                                              AND P.CONTROL_DETAIL_SEQ = Q.CONTROL_DETAIL_SEQ
+                   WHERE P.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS UNIT_FINAL_AMT,
+                  (SELECT Q.ORDER_QTY
+                   FROM TBL_CONTROL_PART P
+                       INNER JOIN TBL_CONTROL_PART_ORDER Q ON P.CONTROL_SEQ = Q.CONTROL_SEQ
+                                                              AND P.CONTROL_DETAIL_SEQ = Q.CONTROL_DETAIL_SEQ
+                   WHERE P.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS ORDER_QTY,
+                  (SELECT P.UNIT_FINAL_AMT * Q.ORDER_QTY
+                   FROM TBL_CONTROL_PART P
+                       INNER JOIN TBL_CONTROL_PART_ORDER Q ON P.CONTROL_SEQ = Q.CONTROL_SEQ
+                                                              AND P.CONTROL_DETAIL_SEQ = Q.CONTROL_DETAIL_SEQ
+                   WHERE P.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT,
+                  A.INVOICE_TITLE,
+                  A.INVOICE_DT, <!-- UPDATED DT -->
+                  '' <!-- 출력일시 -->
+              FROM TBL_INVOICE A
+                  INNER JOIN TBL_INVOICE_DETAIL B ON A.INVOICE_NUM = B.INVOICE_NUM) X
+        GROUP BY X.INVOICE_NUM
+    </select>
+
+    <delete id="deleteInvoice" parameterType="java.util.HashMap">
+        DELETE FROM TBL_INVOICE
+        WHERE INVOICE_NUM = #{INVOICE_NUM};
+    </delete>
+
+    <delete id="deleteInvoiceDetail" parameterType="java.util.HashMap">
+        DELETE FROM TBL_INVOICE_DETAIL
+        WHERE INVOICE_NUM = #{INVOICE_NUM};
+    </delete>
+
 </mapper>

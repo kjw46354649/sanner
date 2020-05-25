@@ -33,4 +33,9 @@ public interface OrderDao {
     void insertInvoice(HashMap<String, Object> hashMap) throws SQLException;
 
     void insertInvoiceDetail(HashMap<String, Object> hashMap) throws SQLException;
+
+    void deleteInvoice(Map<String, Object> hashMap) throws SQLException;
+
+    void deleteInvoiceDetail(Map<String, Object> hashMap) throws SQLException;
+
 }

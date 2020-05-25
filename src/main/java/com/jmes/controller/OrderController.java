@@ -64,8 +64,17 @@ public class OrderController {
     @RequestMapping(value = "/insertInvoice", method = RequestMethod.POST)
     public String insertInvoice(HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
-        System.out.println(map);
         this.orderService.insertInvoice(map);
+        return "jsonView";
+    }
+
+    /**
+     * @description 거래 명세표 삭제
+     */
+    @RequestMapping(value = "/deleteInvoice", method = RequestMethod.POST)
+    public String deleteInvoice(HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+        this.orderService.deleteInvoice(map);
         return "jsonView";
     }
 }
