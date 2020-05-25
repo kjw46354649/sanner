@@ -57,4 +57,24 @@
             AND SKEY = #{SKEY}
     </update>
 
+    <insert id="insertEstimateSubmitMail" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_MAIL_BOX
+        (
+            MAIL_BOX_SEQ, TITLE, CONTEXT,
+            SEND_NAME, SEND_EMAIL, RECV_EMAIL,
+            CC_EMAIL, HCC_EMAIL, GFILE_SEQ, SEND_DT, MAIL_TYPE,
+            STATUS, SKEY, ERROR_NOTE, DEL_YN, TEMPLATE_SEQ,
+            REF_KEY, REF_01, REF_02, REF_03, REF_04, REF_05,
+            INSERT_DT, INSERT_ID
+        )
+        SELECT
+            NEXTVAL(SEQ_MAIL), TEMPLATE_TITLE,  TEMPLATE_CONTENT,
+            SEND_NAME, SEND_EMAIL, RECV_EMAIL,
+            CC_EMAIL, '', #{GFILE_SEQ}, NOW(), #{MAIL_TYPE},
+            #{STATUS}, #{SKEY}, #{ERROR_NOTE}, 'N', TEMPLATE_SEQ,
+            #{REF_KEY}, #{REF_01}, #{REF_02}, #{REF_03}, #{REF_04}, #{REF_05},
+            NOW(), #{INSERT_ID}
+        FROM TBL_MAIL_TEMPLATE
+        WHERE TEMPLATE_SEQ = 1
+    </insert>
 </mapper>

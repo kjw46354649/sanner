@@ -48,6 +48,9 @@
 <!-- barcode -->
 <script type="text/javascript" src="/resource/plugins/scanner/onscan.js" ></script>
 
+<!-- CK Editor -->
+<script type="text/javascript" src="/resource/plugins/ckeditor/ckeditor.js" ></script>
+
 <script type='text/javascript'>
 
     var g_code;
@@ -838,4 +841,19 @@
 
     }
 
+    /**
+     * Common Comfirm Box
+     * @param headHtml Confirm Header Text
+     * @param bodyHtml Confirm Body Html
+     * @param yesHtml Confirm Yes button Text
+     * @param noHtml Confirm No button Text
+     */
+    let fnCommonConfirmBoxCreate = function(headHtml, bodyHtml, yesHtml, noHtml){
+        $("#commonConfirmHeadHtml").html(headHtml);
+        $("#commonConfirmBodyHtml").html(bodyHtml);
+        $("#commonConfirmBodyHtml").html(bodyHtml);
+        $("#commonConfirmBodyHtml").html(bodyHtml);
+        $("#commonConfirmYesBtn").html(yesHtml);
+        $("#commonConfirmNoBtn").html(noHtml);
+    }
 </script>

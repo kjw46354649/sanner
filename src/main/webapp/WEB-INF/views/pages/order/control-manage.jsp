@@ -2485,6 +2485,7 @@
             }
             let drawingBarcodePrintModalConfirm = function(callback){
                 $("#drawingPrintMessageHtml").html(selectedRowCount + " 건의 바코드 도면이 출력 됩니다.");
+
                 commonDrawingPrintPopup.show();
                 $("#drawingPrintActionBtn").unbind().click(function (e) {
                     e.stopPropagation();

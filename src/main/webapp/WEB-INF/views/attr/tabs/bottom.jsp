@@ -75,7 +75,7 @@
 </div>
 <!-- 파일 다운로드 공통 End -->
 <!-- 인쇄 도면 div start -->
-<div class="modal" id="common_drawing_print_popup" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal" id="common_confirm_popup" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog cadDrawing" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -91,8 +91,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" id="drawingPrintActionBtn" class="defaultBtn radius blue">출력</button>
-                <button type="button" class="defaultBtn radius drawingPrintCloseBtn" data-dismiss="modal">아니오</button>
+                <button type="button" id="commonConfirmYesBtn" class="defaultBtn radius blue">출력</button>
+                <button type="button" id="commonConfirmNoBtn" class="defaultBtn radius drawingPrintCloseBtn" data-dismiss="modal">아니오</button>
             </div>
         </div>
     </div>
@@ -107,7 +107,7 @@
 
     let $cadFileConvertUploadCompletedBtn = $("#cadFileConvertUploadCompletedBtn");
     let commonCadFileAttachPopup = $("#common_cad_file_attach_pop");
-    let commonDrawingPrintPopup = $("#common_drawing_print_popup");
+    let commonConfirmPopup = $("#common_confirm_popup");
     let commonCadFileAttachGridId = "common_cad_file_attach_grid";
     let commonCadFileAttachObj;
     let $commonCadFileAttachGrid;

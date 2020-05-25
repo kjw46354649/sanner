@@ -732,4 +732,45 @@
 
 
     <!-- 여기까지 예전 소스 -->
+
+
+    <select id="selectMailTemplateList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            TEMPLATE_SEQ, TEMPLATE_TITLE, TEMPLATE_CONTENT,
+            SEND_NAME, SEND_EMAIL, RECV_EMAIL, CC_EMAIL,
+            INSERT_DT, INSERT_ID, UPDATE_DT, UPDATE_ID
+        FROM jmes.TBL_MAIL_TEMPLATE
+        WHERE 1=1
+        <if test="TEMPLATE_SEQ !='' and TEMPLATE_SEQ != null">
+            AND TEMPLATE_SEQ = #{TEMPLATE_SEQ}
+        </if>
+        <if test="SEARCH_TITLE !='' and SEARCH_TITLE != null">
+            AND TEMPLATE_TITLE = #{SEARCH_TITLE}
+        </if>
+        ORDER BY TEMPLATE_SEQ
+    </select>
+
+    <insert id="insertUpdateMailTemplate" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_MAIL_TEMPLATE
+            (TEMPLATE_SEQ, TEMPLATE_TITLE, TEMPLATE_CONTENT,
+            SEND_NAME, SEND_EMAIL, RECV_EMAIL, CC_EMAIL,
+            INSERT_DT, INSERT_ID)
+        VALUES
+            (
+            CASE WHEN TEMPLATE_SEQ IS NULL THEN NEXTVAL(SEQ_TEMPLATE) ELSE TEMPLATE_SEQ END ,
+            #{TEMPLATE_TITLE}, #{TEMPLATE_CONTENT},
+            #{SEND_NAME}, #{SEND_EMAIL}, #{RECV_EMAIL}, #{CC_EMAIL},
+            #{INSERT_DT}, #{INSERT_ID}
+            )
+        ON DUPLICATE KEY UPDATE
+            TEMPLATE_TITLE = #{TEMPLATE_TITLE},
+            TEMPLATE_CONTENT = #{TEMPLATE_CONTENT},
+            SEND_NAME = #{SEND_NAME},
+            SEND_EMAIL = #{SEND_EMAIL},
+            RECV_EMAIL = #{RECV_EMAIL},
+            CC_EMAIL = #{CC_EMAIL},
+            UPDATE_DT = #{UPDATE_DT},
+            UPDATE_ID = #{UPDATE_ID}
+    </insert>
+
 </mapper>

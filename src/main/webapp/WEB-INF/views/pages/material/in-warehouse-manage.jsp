@@ -17,7 +17,7 @@
             </div>
             <div class="topWrap">
                 <form class="form-inline" role="form" id="in_warehouse_manage_warehouse_popup_form" name="in_warehouse_manage_warehouse_popup_form">
-                    <input type="hidden" id="queryId" name="queryId" value="selectInWarehouseManageWarehouseList">
+                    <input type="hidden" id="queryId" name="queryId" value="material.selectInWarehouseManageWarehouseList">
                     <input type="hidden" id="WAREHOUSE_CD" name="WAREHOUSE_CD" value="">
                     <div class="panel-body line_tit portlet-body form bg-light">
                         <!-- grid table -->
@@ -44,7 +44,7 @@
 <div class="page estimate machineWrap">
         <form class="form-inline" id="in_warehouse_manage_search_form" name="in_warehouse_manage_search_form" role="form">
             <div class="topWrap">
-                <input type="hidden" name="queryId" id="queryId" value="selectInWarehouseManageList">
+                <input type="hidden" name="queryId" id="queryId" value="material.selectInWarehouseManageList">
                 <div class="gubunWrap row3_topWrap">
                     <ul>
                         <li>
@@ -91,7 +91,7 @@
 
         <form class="form-inline" id="in_warehouse_manage_out_search_form" name="in_warehouse_manage_out_search_form" role="form" style="display: none">
             <div class="topWrap">
-                <input type="hidden" name="queryId" id="queryId" value="selectInWarehouseManageOutList">
+                <input type="hidden" name="queryId" id="queryId" value="material.selectInWarehouseManageOutList">
                 <div class="gubunWrap row3_topWrap">
                     <ul>
                         <li>
@@ -178,13 +178,13 @@
 </div>
 
 <form id="in_warehouse_manage_hidden_form" name="in_warehouse_manage_hidden_form">
-    <input type="hidden" id="queryId" name="queryId" value="selectInWarehouseManageListDetail"/>
+    <input type="hidden" id="queryId" name="queryId" value="material.selectInWarehouseManageListDetail"/>
     <input type="hidden" id="MY_MAT_STOCK_SEQ" name="MY_MAT_STOCK_SEQ"/>
     <input type="hidden" id="MATERIAL_COMP_CD" name="MATERIAL_COMP_CD"/>
 </form>
 
 <form id="in_warehouse_manage_out_hidden_form" name="in_warehouse_manage_out_hidden_form">
-    <input type="hidden" id="queryId" name="queryId" value="selectInWarehouseManageOutList"/>
+    <input type="hidden" id="queryId" name="queryId" value="material.selectInWarehouseManageOutList"/>
 </form>
 
 <script type="text/javascript">
@@ -349,25 +349,29 @@
             {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120, editable: false},
             {title: '요청일시', dataType: 'string', dataIndx: 'OUT_DT', width: 120, editable: false},
             {title: '요청자', dataType: 'string', dataIndx: 'OUT_USER_ID' , editable: false},
-            {title: '수동 불출', dataType: 'string', dataIndx: 'ORDER_NOTE', editable: false}
+            {title: '수동 불출', dataType: 'string', dataIndx: 'MY_MAT_OUT_SEQ', editable: false,
+                render: function (ui) {
+                    return '<button id="inWarehouseManualOut" style="cursor: pointer">불출</button>'
+                },
+                postRender: function (ui) {
+                    let grid = this;
+                    let $cell = grid.getCell(ui);
+                    $cell.find('#inWarehouseManualOut').on('click', function (event) {
+                        let parameter = {
+                            'queryId': 'material.updateInWarehouseOut',
+                            'MY_MAT_OUT_SEQ': ui.rowData.MY_MAT_OUT_SEQ
+                        };
+                        let parameters = {'url': '/json-update', 'data': parameter};
+                        fnPostAjax(function(data, callFunctionParam){
+                            selectInWarehouseManageManageGrid02List();
+                        }, parameters, '');
+                    });
+                }
+            }
         ];
 
         let inWarehouseManageOutColModel= [
-            {title: '수불구분', dataType: 'string', dataIndx: 'IN_OUT_TYPE', minWidth: '5%',
-                editor: {
-                    type: 'select',
-                    mapIndices: { name: "IN_OUT_TYPE", id: "IN_OUT_TYPE" },
-                    valueIndx: "value",
-                    labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1055'),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = inWarehouseManageManageGrid01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["IN_OUT_TYPE"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
-                    }
-                }
-            },
+            {title: '수불구분', dataType: 'string', dataIndx: 'IN_OUT_NM', minWidth: '5%'},
             {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_NM', minWidth: '9%' },
             {title: '위치', dataType: 'string', dataIndx: 'LOC_NM', minWidth: '9%' },
             {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM', minWidth: '5%'} ,
@@ -417,7 +421,7 @@
                 {
                     type: 'button', label: 'Delete', icon: 'ui-icon-plus', style: 'float: left;', listener: {
                         'click': function (evt, ui) {
-                            $("#in_warehouse_manage_hidden_form #queryId").val("deleteInWarehouseManage");
+                            $("#in_warehouse_manage_hidden_form #queryId").val("material.deleteInWarehouseManage");
                             let parameters = {'url': '/json-list', 'data': fnFormToJsonArrayData('#in_warehouse_manage_hidden_form')};
 
                             fnPostAjax(function (data, callFunctionParam) {
@@ -549,7 +553,7 @@
                 let MY_MAT_STOCK_SEQ = ui.addList[0].rowData.MY_MAT_STOCK_SEQ;
                 let LOC_SEQ = ui.addList[0].rowData.LOC_SEQ;
 
-                $("#in_warehouse_manage_hidden_form #queryId").val("selectInWarehouseManageListDetail");
+                $("#in_warehouse_manage_hidden_form #queryId").val("material.selectInWarehouseManageListDetail");
                 $("#in_warehouse_manage_hidden_form #MY_MAT_STOCK_SEQ").val(MY_MAT_STOCK_SEQ);
                 $("#in_warehouse_manage_hidden_form #LOC_SEQ").val(LOC_SEQ);
                 selectInWarehouseManageManageGrid02List();
@@ -570,6 +574,7 @@
                         return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                     }
                 },
+                postRenderInterval: -1, //call postRender synchronously.
                 columnTemplate: {align: 'center', hvalign: 'center'},
                 scrollModel: {autoFit: true},
                 numberCell: {width: 30, title: "No", show: true },
@@ -711,11 +716,11 @@
         });
 
         $("#btnInWarehouseManageRemove").on('click', function(){
-            $("#in_warehouse_manage_hidden_form #queryId").val("deleteInWarehouseManageDetail");
+            $("#in_warehouse_manage_hidden_form #queryId").val("material.deleteInWarehouseManageDetail");
             let parameters = {'url': '/json-list', 'data': fnFormToJsonArrayData('#in_warehouse_manage_hidden_form')};
 
             fnPostAjax(function (data, callFunctionParam) {
-                $("#in_warehouse_manage_hidden_form #queryId").val("deleteInWarehouseManageMaster");
+                $("#in_warehouse_manage_hidden_form #queryId").val("material.deleteInWarehouseManageMaster");
                 let parameters = {'url': '/json-list', 'data': fnFormToJsonArrayData('#in_warehouse_manage_hidden_form')};
                 fnPostAjax(function (data, callFunctionParam) {
                     inWarehouseManageManageGrid01.pqGrid("refreshDataAndView");
@@ -755,7 +760,7 @@
         queryElement.type = "hidden";
         queryElement.id = "queryId";
         queryElement.name = "queryId";
-        queryElement.setAttribute("value", "updateItemOrderHistoryInspection");
+        queryElement.setAttribute("value", "material.updateItemOrderHistoryInspection");
 
         seqElement.type = "hidden";
         seqElement.id = "MATERIAL_ORDER_SEQ";
