@@ -14,7 +14,7 @@
         <form class="form-inline" id="search_form" name="search_form" role="form">
             <input type="hidden" id="queryId" name="queryId" value="material.selectConsumableList">
             <input type="hidden" id="SEL_TAB_TYPE" name="SEL_TAB_TYPE" value="1">
-            <div class="gubunWrap">
+            <div class="gubunWrap row3_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -105,10 +105,10 @@
 
             </div>
         </form>
-        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
+<%--        <button type="button" class="topWrap_btn">펼치기 / 접기</button>--%>
     </div>
 
-    <div class="bottomWrap">
+    <div class="bottomWrap row3_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
 
@@ -418,7 +418,7 @@
             }
         ];
         mainGridId01.pqGrid({
-            width: "100%", height: 600,
+            width: "100%", height: 700,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'CONSUMABLE_STOCK_SEQ',
                 url: "/paramQueryGridSelect",
@@ -485,7 +485,7 @@
             {title: '입력일시', dataType: 'string', dataIndx: 'IN_OUT_DT', editable: false}
         ];
         mainGridId02.pqGrid({
-            width: "100%", height: 600,
+            width: "100%", height: 700,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'CONSUMABLE_STOCK_SEQ',
                 url: "/paramQueryGridSelect",
