@@ -75,19 +75,24 @@
 </div>
 <!-- 파일 다운로드 공통 End -->
 <!-- 인쇄 도면 div start -->
-<div class="modal" id="common_drawing_print_popup" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal" id="common_confirm_popup" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog cadDrawing" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close drawingPrintCloseBtn" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                <h2 class="modal-title">출력 정보</h2>
+                <h2 class="modal-title" id="commonConfirmHeadHtml">출력 정보</h2>
             </div>
             <div class="modal-body">
-                <div><h4><img style='width: 32px; height: 32px;' src='/resource/main/images/print.png'>&nbsp;&nbsp;<span id="drawingPrintMessageHtml">32 건의 바코드 도면이 출력 됩니다.</span> 진행하시겠습니까?</h4></div>
+                <div id="commonConfirmBodyHtml">
+                    <h4>
+                        <img style='width: 32px; height: 32px;' src='/resource/main/images/print.png'>&nbsp;&nbsp;
+                        <span>32 건의 바코드 도면이 출력 됩니다.</span> 진행하시겠습니까?
+                    </h4>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" id="drawingPrintActionBtn" class="defaultBtn radius blue">출력</button>
-                <button type="button" class="defaultBtn radius drawingPrintCloseBtn" data-dismiss="modal">아니오</button>
+                <button type="button" id="commonConfirmYesBtn" class="defaultBtn radius blue">출력</button>
+                <button type="button" id="commonConfirmNoBtn" class="defaultBtn radius drawingPrintCloseBtn" data-dismiss="modal">아니오</button>
             </div>
         </div>
     </div>
@@ -102,7 +107,7 @@
 
     let $cadFileConvertUploadCompletedBtn = $("#cadFileConvertUploadCompletedBtn");
     let commonCadFileAttachPopup = $("#common_cad_file_attach_pop");
-    let commonDrawingPrintPopup = $("#common_drawing_print_popup");
+    let commonConfirmPopup = $("#common_confirm_popup");
     let commonCadFileAttachGridId = "common_cad_file_attach_grid";
     let commonCadFileAttachObj;
     let $commonCadFileAttachGrid;

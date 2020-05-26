@@ -244,3 +244,10 @@
 /*# Master & Detail vertical Grid */
 .moneygrid .bottomWrap .left-30Warp { float: left; width: 472px; height: 100%; }
 .moneygrid .bottomWrap .right-70Warp { float: right; margin-left: 10px; width: calc(100% - 482px); height: 100%; }
+
+
+/* System Mail Template */
+table.templateStyle th, table.templateStyle td { padding: 12px 13px; font-size: 14px; }
+table.templateStyle th { border: 1px solid #8ad7e7; background: #337ab7; color: white; font-family: 'NotoKrM'; }
+table.templateStyle td { border: 1px solid #cdcfd0; width: 100% !important;}
+table.templateStyle td input { width: 100% !important;}

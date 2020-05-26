@@ -46,41 +46,6 @@
         <!-- /.modal-dialog -->
     </div>
 </div>
-<div class="modal" id="estimate_register_mail_popup" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg cadDrawing">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                <h2 class="headerTitle_01">Mail Box</h2>
-            </div>
-            <div class="modal-body">
-                <form class="" role="form" id="estimate_register_mail_form" name="common_cad_file_attach_form">
-                    <input type="hidden" id="queryId" name="queryId" value="selectEstimateResigerEmail">
-                    <input type="hidden" id="EST_SEQ" name="EST_SEQ">
-                    <div class="tableWrap">
-                        <table style="width:100%">
-                            <tr>
-                                <th>Name:</th>
-                                <td>Bill Gates</td>
-                            </tr>
-                            <tr>
-                                <th>Telephone:</th>
-                                <td>555 77 854</td>
-                            </tr>
-                            <tr>
-                                <th>Telephone:</th>
-                                <td>555 77 855</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="buttonWrap">
-                        <button type="button" class="defaultBtn radius blue right_float" id="cadFileConvertUploadCompletedBtn">Save</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="page estimate">
     <div class="topWrap">
@@ -181,7 +146,13 @@
                     <div class="resultWrap">
                         <div class="float_left col-md-5 col-sm-5" style="width: 46% !important;">
                             <div class="">
-                                <h3>메일내용</h3><textarea class="col-md-12 col-sm-12" id="EMAIL_CONTENT_TXT" name="EMAIL_CONTENT_TXT" style="height: 300px;"></textarea>
+                                <h3>메일내용
+                                    <div class="right_float">
+                                        <input type="checkbox" id="estimateRegisterAutoEmailSend"><label for="estimateRegisterAutoEmailSend"> 자동메일발송 사용</label>
+                                    </div>
+                                </h3>
+                                <textarea class="col-md-12 col-sm-12" id="EMAIL_CONTENT_TXT" name="EMAIL_CONTENT_TXT" style="height: 300px;">
+                                </textarea>
                             </div>
                         </div>
                         <div class="float_right col-md-6 col-sm-6">
@@ -718,7 +689,8 @@
                 $("#estimate_register_info_form #DTL_AMOUNT").val(list.DTL_AMOUNT);
                 $("#estimate_register_info_form #INSERT_DT").val(list.INSERT_DT);
                 $("#estimate_register_info_form #SEND_DT").val(list.SEND_DT);
-                $("#EMAIL_CONTENT_TXT").val(list.EMAIL_CONTENT);
+                //$("#EMAIL_CONTENT_TXT").val(list.EMAIL_CONTENT);
+                CKEDITOR.instances.EMAIL_CONTENT_TXT.setData(list.EMAIL_CONTENT);
                 $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
 
                 $("#estimate_register_excel_download #EST_SEQ").val(EST_SEQ);
@@ -759,7 +731,8 @@
 
 
                 let detail_data = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data');
-                let mail_data = $("#EMAIL_CONTENT_TXT").val();
+                //let mail_data = $("#EMAIL_CONTENT_TXT").val();
+                let mail_data = CKEDITOR.instances.TEMPLATE_CONTENT_E.getData();
                 let receiver_data = estimateRegisterBotGrid.pqGrid('option', 'dataModel.data');
                 $("#estimate_register_info_form #ESTIMATE_DETAIL_DATA").val(JSON.stringify(detail_data));
                 $("#estimate_register_info_form #ESTIMATE_RECEIVER_DATA").val(JSON.stringify(receiver_data));
@@ -789,8 +762,56 @@
         /** 버튼 처리 **/
         $("#btn_estimate_register_submit").on("click", function(){
             fnEstimateRegisterSave();
-            //Popup Show
-            $("#estimate_register_mail_popup").show();
+
+            //Confirm Box
+            let headHtml = "messsage", bodyHtml ="", yseBtn="예", noBtn="아니오";
+
+            let autoEmailYn = $("#estimateRegisterAutoEmailSend").is(":checked");
+            if(autoEmailYn){
+                bodyHtml =
+                    '<h4>\n' +
+                    '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
+                    '<span>메일을 송신합니다. 계속 진행하시겠습니까?</span>' +
+                    '</h4>';
+            }else{
+                bodyHtml =
+                    '<h4>\n' +
+                    '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
+                    '<span>메일 송신 없이 완료처리만 진행합니다.\n 진행하시겠습니까?</span>' +
+                    '</h4>';
+            }
+
+            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+            let estimateRegisterSubmitConfirm = function(callback) {
+                commonConfirmPopup.show();
+                $("#drawingPrintActionBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                    $(this).startWaitMe();
+                    callback(true);
+                    return;
+                });
+                $(".drawingPrintCloseBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                });
+            };
+            estimateRegisterSubmitConfirm(function(confirm){
+                if(autoEmailYn){
+                    if(confirm){
+
+                    }else{
+
+                    }
+
+                }else{
+                    if(confirm){
+
+                    }else{
+
+                    }
+                }
+            });
         });
 
         $("#btn_estimate_register_save").on("click", function(){
@@ -833,5 +854,7 @@
             callWindowImageViewer(999);
         });
 
+        /* CKEDITOR 부분 */
+        CKEDITOR.replace( 'EMAIL_CONTENT_TXT', { height: 176 });
     });
 </script>

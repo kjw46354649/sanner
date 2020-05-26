@@ -217,14 +217,15 @@
                     });
                 }
             },
-            {title: '발송일시', dataType: 'string', dataIndx: 'SEND_DT', editable: false},
+            {title: '메일발송일시', dataType: 'string', dataIndx: 'SEND_DT', editable: false},
+            {title: '메일발송여부', dataType: 'string', dataIndx: 'SEND_YN', editable: false},
             {title: '주문접수', dataType: 'date', dataIndx: '', editable: false, width: 60 ,
                 render: function(ui){
-                    let EST_STATUS = ui.rowData.EST_STATUS;
+                    let CONTROL_YN = ui.rowData.CONTROL_YN;
                     let EST_SEQ = ui.rowData.EST_SEQ;
                     let EST_VER = ui.rowData.EST_VER;
 
-                    if(EST_STATUS == 'EST010'){
+                    if(CONTROL_YN == 'N') {
                         return '<a href="#" id="estimateOrder">' +
                             '<span data-seq="'+EST_SEQ+'" data-ver="'+EST_VER+'" class="ui-icon ui-icon-arrowthick-1-e"></span>' +
                             '</a>';
@@ -793,15 +794,13 @@
         let seq = event.target.dataset.seq;
         let status = event.target.dataset.status;
 
-        if(status == 'EST010'){
-            $("#estimate_version_up_sequence_form #hidden_est_seq").val(seq);
+        $("#estimate_version_up_sequence_form #hidden_est_seq").val(seq);
 
-            $("a[pid='100012']").trigger("click");
-            setTimeout(function(){
-                $("#test").trigger('click');
-            }, 500)
-            event.preventDefault();
-        }
+        $("a[pid='100012']").trigger("click");
+        setTimeout(function(){
+            $("#test").trigger('click');
+        }, 500)
+        event.preventDefault();
     });
 
 
