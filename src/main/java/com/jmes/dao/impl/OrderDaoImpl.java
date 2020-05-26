@@ -96,4 +96,14 @@ public class OrderDaoImpl implements OrderDao {
         sqlSessionTemplate.delete("deleteInvoiceDetail", hashMap);
     }
 
+    @Override
+    public void insertControlExcel(Map<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("insertControlExcel", hashMap);
+    }
+
+    @Override
+    public void insertControlExcelBatch(Map<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("procedure.SP_CONTROL_EXCEL_BATCH", hashMap);
+    }
+
 }

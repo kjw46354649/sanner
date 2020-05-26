@@ -38,4 +38,7 @@ public interface OrderDao {
 
     void deleteInvoiceDetail(Map<String, Object> hashMap) throws SQLException;
 
+    void insertControlExcel(Map<String, Object> hashMap) throws SQLException;
+
+    void insertControlExcelBatch(Map<String, Object> hashMap) throws SQLException;
 }

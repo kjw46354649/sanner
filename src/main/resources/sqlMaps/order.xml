@@ -175,7 +175,8 @@
             DATE_FORMAT(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m'), '%Y.%m월') AS CLOSE_MONTH_TRAN,
             CONCAT(D.CLOSE_VER, '차') AS CLOSE_VER,
             CONCAT(CAST(SUM(C.ORDER_QTY) AS CHAR), '건') AS ORDER_QTY,
-            SUM(B.UNIT_FINAL_AMT) AS UNIT_FINAL_AMT
+            SUM(B.UNIT_FINAL_AMT) AS TOTAL_AMT,
+            SUM(E.FINAL_NEGO_AMT) AS FINAL_NEGO_AMT
         FROM
             TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
@@ -183,14 +184,16 @@
                                                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
             INNER JOIN TBL_MONTH_CLOSE_DETAIL D ON A.CONTROL_SEQ = D.CONTROL_SEQ
                                                    AND A.COMP_CD = D.COMP_CD
+                                                   AND A.ORDER_COMP_CD = D.ORDER_COMP_CD
                                                    AND D.CLOSE_MONTH = CONCAT(#{CONTROL_CLOSE_YEAR}, #{CONTROL_CLOSE_MONTH})
-                                                   AND D.CLOSE_VER = #{CLOSE_VER}
             INNER JOIN TBL_MONTH_CLOSE E ON D.CLOSE_MONTH = E.CLOSE_MONTH
                                             AND D.CLOSE_VER = E.CLOSE_VER
                                             AND D.COMP_CD = E.COMP_CD
                                             AND D.ORDER_COMP_CD = E.ORDER_COMP_CD
         WHERE A.ORDER_COMP_CD IN (${ORDER_COMP_CD})
-        GROUP BY A.ORDER_COMP_CD
+        GROUP BY
+            A.ORDER_COMP_CD,
+            D.CLOSE_VER
     </select>
 
     <select id="selectControlCloseRightList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -1432,5 +1435,92 @@
         DELETE FROM TBL_INVOICE_DETAIL
         WHERE INVOICE_NUM = #{INVOICE_NUM};
     </delete>
+
+    <insert id="insertControlExcel" statementType="CALLABLE" parameterType="java.util.HashMap" >
+        INSERT INTO TBL_CONTROL_EXCEL (
+            JOB_SEQ,
+            JOB_SEQ_KEY,
+            PRICE_CONFIRM,
+            COMP_CD,
+            ORDER_COMP_CD,
+            ORDER_STAFF_SEQ,
+            DESIGNER_NM,
+            NOTE,
+            PROJECT_NM,
+            MODULE_NM,
+            DELIVERY_COMP_NM,
+            LABEL_NOTE,
+            MAIN_INSPECTION,
+            EMERGENCY_YN,
+            CONTROL_NUM,
+            PART_NUM,
+            DRAWING_NUM,
+            ITEM_NM,
+            WORK_TYPE,
+            OUTSIDE_YN,
+            WORK_FACTORY,
+            MATERIAL_SUPPLY_YN,
+            INNER_DUE_DT,
+            SIZE_TXT,
+            MATERIAL_DETAIL,
+            MATERIAL_KIND,
+            SURFACE_TREAT,
+            MATERIAL_NOTE,
+            PART_UNIT_QTY,
+            ORIGINAL_SIDE_QTY,
+            OTHER_SIDE_QTY,
+            ORDER_NUM,
+            ORDER_QTY,
+            ORDER_DUE_DT,
+            DELIVERY_DT,
+            UNIT_FINAL_EST_AMT,
+            UNIT_FINAL_AMT,
+            PREV_DRAWING_NUM,
+            CONTROL_STATUS
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+        (
+            NEXTVAL(SEQ_DUMMY),
+            #{IN_UID},
+            #{item.PRICE_CONFIRM},
+            #{item.COMP_CD},
+            #{item.ORDER_COMP_CD},
+            #{item.ORDER_STAFF_SEQ},
+            #{item.DESIGNER_NM},
+            #{item.NOTE},
+            #{item.PROJECT_NM},
+            #{item.MODULE_NM},
+            #{item.DELIVERY_COMP_NM},
+            #{item.LABEL_NOTE},
+            #{item.MAIN_INSPECTION},
+            #{item.EMERGENCY_YN},
+            #{item.CONTROL_NUM},
+            #{item.PART_NUM},
+            #{item.DRAWING_NUM},
+            #{item.ITEM_NM},
+            #{item.WORK_TYPE},
+            #{item.OUTSIDE_YN},
+            #{item.WORK_FACTORY},
+            #{item.MATERIAL_SUPPLY_YN},
+            #{item.INNER_DUE_DT},
+            #{item.SIZE_TXT},
+            #{item.MATERIAL_DETAIL},
+            #{item.MATERIAL_KIND},
+            #{item.SURFACE_TREAT},
+            #{item.MATERIAL_NOTE},
+            #{item.PART_UNIT_QTY},
+            #{item.ORIGINAL_SIDE_QTY},
+            #{item.OTHER_SIDE_QTY},
+            #{item.ORDER_NUM},
+            #{item.ORDER_QTY},
+            #{item.ORDER_DUE_DT},
+            #{item.DELIVERY_DT},
+            CAST(REPLACE(#{item.UNIT_FINAL_EST_AMT}, ',' ,SPACE(0)) AS INTEGER),
+            CAST(REPLACE(#{item.UNIT_FINAL_AMT}, ',' ,SPACE(0)) AS INTEGER),
+            #{item.PREV_DRAWING_NUM},
+            #{item.CONTROL_STATUS}
+        )
+        </foreach>
+    </insert>
 
 </mapper>

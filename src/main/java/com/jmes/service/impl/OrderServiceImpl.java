@@ -1,5 +1,6 @@
 package com.jmes.service.impl;
 
+import java.util.UUID;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jmes.dao.OrderDao;
@@ -20,17 +21,17 @@ public class OrderServiceImpl implements OrderService {
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<Map<String, Object>> jsonMap = null;
         Map<String, Object> hashMap = new HashMap<String, Object>();
+        String uuid = UUID.randomUUID().toString();
 
         if (jsonObject != null) {
-            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<Map<String, Object>>>() {
-            });
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<Map<String, Object>>>() {});
         }
-        hashMap.put("list", jsonMap);
 
-        this.orderDao.insertControlMaster(hashMap);
-        this.orderDao.insertControlPart(hashMap);
-        this.orderDao.insertControlPartOrder(hashMap);
-        this.orderDao.insertControlBarcode(hashMap);
+        hashMap.put("list", jsonMap);
+        hashMap.put("IN_UID", uuid);
+
+        this.orderDao.insertControlExcel(hashMap);
+        this.orderDao.insertControlExcelBatch(hashMap);
     }
 
     @Override
@@ -39,18 +40,21 @@ public class OrderServiceImpl implements OrderService {
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<Map<String, Object>> jsonMap = null;
         Map<String, Object> hashMap = new HashMap<String, Object>();
+        String uuid = UUID.randomUUID().toString();
 
         if (jsonObject != null) {
-            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<Map<String, Object>>>() {
-            });
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<Map<String, Object>>>() {});
         }
-        hashMap.put("list", jsonMap);
 
-        this.orderDao.insertControlMaster(hashMap);
-        this.orderDao.insertControlPart(hashMap);
-        this.orderDao.insertControlPartOrder(hashMap);
-        this.orderDao.insertControlBarcode(hashMap);
-        this.orderDao.insertControlProgressList(hashMap);
+        for (Map<String, Object> tempMap : jsonMap) {
+            tempMap.put("CONTROL_STATUS", "ORD001");
+        }
+
+        hashMap.put("list", jsonMap);
+        hashMap.put("IN_UID", uuid);
+
+        this.orderDao.insertControlExcel(hashMap);
+        this.orderDao.insertControlExcelBatch(hashMap);
     }
 
     @Override

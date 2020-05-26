@@ -150,8 +150,8 @@
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn btn-120w" id="ESTIMATE_AUTOMATIC_CALCULATION">견적자동계산</button>
                     <button type="button" class="defaultBtn btn-120w" id="ESTIMATE_LIST_PRINT">견적List출력</button>
-                    <button type="button" class="defaultBtn btn-120w" id="BARCODE_DRAWING_PRINT">바코드도면 출력</button>
                     <button type="button" class="defaultBtn btn-120w" id="DRAWING_PRINT">도면 출력</button>
+                    <button type="button" class="defaultBtn btn-120w" id="BARCODE_DRAWING_PRINT">바코드도면 출력</button>
                     <button type="button" class="defaultBtn btn-120w" id="BARCODE_PRINT">바코드 출력</button>
                     <button type="button" class="defaultBtn btn-120w" id="LABEL_PRINT">라벨 출력</button>
                 </div>
@@ -291,8 +291,8 @@
         <button type="button" class="pop_close">닫기</button>
 
         <!-- 버튼 -->
-        <div class="buttonWrap">
-            <div style="float: right">
+        <div class="buttonWrap" style="display: block; overflow: hidden;">
+            <div class="right_float">
                 <button class="popupBtn" id="TRANSACTION_STATEMENT_LABEL_PRINT">라벨 출력</button>
                 <button class="popupBtn green" id="TRANSACTION_STATEMENT_SAVE">Save</button>
                 <button class="popupBtn blue" id="TRANSACTION_STATEMENT_SAVE_EXPORT">Save & Export</button>
@@ -305,7 +305,7 @@
             <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
             <input type="hidden" name="CONTROL_SEQ_STR" id="CONTROL_SEQ_STR">
             <!-- 기본 정보 -->
-            <div>
+            <div style="margin-bottom: 10px;">
                 <h5>기본정보</h5>
                 <table class="tableL">
                     <tbody>
@@ -1159,6 +1159,33 @@
         const popupGridId = 'ORDER_REGISTER_GRID';
         const popupColModel = [
             {
+                title: '단가확인', dataType: 'string', dataIndx: 'PRICE_CONFIRM',
+                editor: {
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1079')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let priceConfirm = fnGetCommCodeGridSelectBox('1079');
+                        let index = priceConfirm.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = priceConfirm.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+                        console.log(index);
+                        return (index < 0) ? cellData : priceConfirm[index].text;
+                    }
+                }
+            },
+            {
                 title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD',
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: BUSINESS_COMPANY},
                 render: function (ui) {
@@ -1245,9 +1272,7 @@
             {
                 title: '주요 검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION',
                 editor: {
-                    type: 'select',
-                    valueIndx: 'value',
-                    labelIndx: 'text',
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
                     options: fnGetCommCodeGridSelectBox('1059')
                 },
                 render: function (ui) {
@@ -1544,12 +1569,6 @@
                     type: 'button', label: 'Save & 확정', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function () {
                             let data = $orderRegisterGrid.pqGrid('option', 'dataModel.data');
-                            let dataLength = data.length;
-
-                            for (let i = 0; i < dataLength; i++) {
-                                data[i].CONTROL_STATUS = 'ORD001';
-                            }
-
                             let parameters = {
                                 'url': '/registerNewOrderConfirm',
                                 'data': {data: JSON.stringify(data)}
@@ -1604,6 +1623,7 @@
             change: function (evt, ui) {
                 if (ui.source === 'paste') {
                     const addListLength = ui.addList.length;
+                    const priceConfirmList = fnGetCommCodeGridSelectBox('1079');
                     const mainInspectionList = fnGetCommCodeGridSelectBox('1059');
                     const workTypeList = fnGetCommCodeGridSelectBox('1033');
                     const workFactoryList = fnGetCommCodeGridSelectBox('1014');
@@ -1615,6 +1635,7 @@
                     for (let i = 0; i < addListLength; i++) {
                         const newRowData = ui.addList[i].newRow;
                         const rowIndx = ui.addList[i].rowIndx;
+                        let priceConfirm = null;
                         let compCd = null;
                         let orderCompCd = null;
                         let mainInspection = null;
@@ -1624,6 +1645,14 @@
                         let materialKind = null;
                         let surfaceTreat = null;
 
+                        console.log(priceConfirmList);
+                        // 단가확인
+                        if (newRowData.PRICE_CONFIRM !== undefined) {
+                            let index = priceConfirmList.findIndex(function (element) {
+                                return element.text === newRowData.PRICE_CONFIRM;
+                            });
+                            if (index >= 0) priceConfirm = priceConfirmList[index].value;
+                        }
                         // 사업자
                         if (newRowData.COMP_CD !== undefined) {
                             let index = BUSINESS_COMPANY.findIndex(function (element) {
@@ -1692,6 +1721,7 @@
                         let tempObject = {
                             rowIndx: rowIndx,
                             newRow: {
+                                'PRICE_CONFIRM': priceConfirm,
                                 'COMP_CD': compCd,
                                 'ORDER_COMP_CD': orderCompCd,
                                 'MAIN_INSPECTION': mainInspection,
@@ -1717,7 +1747,8 @@
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
             {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
-            {title: '마감금액', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'}
+            {title: '마감금액', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
+            {title: '네고금액', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT'}
         ];
         let controlCloseLeftObj = {
             height: 600,
@@ -1933,12 +1964,12 @@
                     let closeVer = data.list[0] === null ? 1 : data.list[0].MAX_CLOSE_VER;
                     $('#CONTROL_CLOSE_FORM #CLOSE_VER').val(closeVer).prop('selected', true);
                 }, parameters, '');
-            }
 
-            $controlCloseLeftGrid.pqGrid('option', 'dataModel.postData', function () {
-                return (fnFormToJsonArrayData('#CONTROL_CLOSE_FORM'));
-            });
-            $controlCloseLeftGrid.pqGrid('refreshDataAndView');
+                $controlCloseLeftGrid.pqGrid('option', 'dataModel.postData', function () {
+                    return (fnFormToJsonArrayData('#CONTROL_CLOSE_FORM'));
+                });
+                $controlCloseLeftGrid.pqGrid('refreshDataAndView');
+            }
 
             let controlCloseRightPostData = fnFormToJsonArrayData('#CONTROL_CLOSE_FORM');
             controlCloseRightPostData.list = list;
@@ -2252,7 +2283,7 @@
                 let controlSeqStr = '';
 
                 if (!selectedRowCount) {
-                    alert('하나 이상 선택!');
+                    alert('하나 이상 선택해주세요');
                     return false;
                 }
 
@@ -2484,8 +2515,11 @@
                 '</div>';
             }
             let drawingBarcodePrintModalConfirm = function(callback){
-                $("#drawingPrintMessageHtml").html(selectedRowCount + " 건의 바코드 도면이 출력 됩니다.");
-
+                let text = '<h4>' +
+                    '           <img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
+                    '               <span>' + selectedRowCount + ' 건의 바코드 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
+                    '       </h4>';
+                $("#commonConfirmBodyHtml").html(text);
                 commonDrawingPrintPopup.show();
                 $("#drawingPrintActionBtn").unbind().click(function (e) {
                     e.stopPropagation();
@@ -2512,7 +2546,88 @@
         });
         // 바코드출력
         $('#BARCODE_PRINT').on('click', function () {
-            alert('개발중입니다.');
+            let printHtml = "";
+            let selectedRowCount = selectedRowIndex.length;
+            for (let i = 0; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                console.log(rowData);
+
+                printHtml += '<div class="print">\n' +
+                    '            <table class="drawingArea barcodeLabel" style="table-layout: fixed; word-wrap: break-word;">\n' +
+                    '                <tbody>\n' +
+                    '                    <tr>\n' +
+                    '                        <td class="header" rowspan="2">관리번호</td>\n' +
+                    '                        <td rowspan="2" colspan="5">' + rowData.CONTROL_NUM + '</td>\n' +
+                    '                        <td>0</td>\n' +
+                    '                    </tr>\n' +
+                    '                    <tr>\n' +
+                    '                        <td>1</td>\n' +
+                    '                    </tr>\n' +
+                    '                    <tr>\n' +
+                    '                        <td class="header" rowspan="2">수량</td>\n' +
+                    '                        <td rowspan="2">' + rowData.ORDER_QTY_TOTAL + 'EA</td>\n' + //TODO: 확인필요
+                    '                        <td>원칭</td>\n' +
+                    '                        <td>대칭</td>\n' +
+                    '                        <td class="header" rowspan="2">가공납기</td>\n' +
+                    '                        <td rowspan="2" colspan="2">' + rowData.INNER_DUE_DT + '</td>\n' +
+                    '                    </tr>\n' +
+                    '                    <tr>\n' +
+                    '                        <td>' + rowData.ORIGINAL_SIDE_QTY + '</td>\n' +
+                    '                        <td>' + rowData.OTHER_SIDE_QTY + '</td>\n' +
+                    '                    </tr>\n' +
+                    '                    <tr>\n' +
+                    '                        <td class="header">도면번호</td>\n' +
+                    '                        <td colspan="3">' + rowData.DRAWING_NUM + '</td>\n' +
+                    '                        <td class="header">재질</td>\n' +
+                    '                        <td colspan="2">AL</td>\n' +
+                    '                    </tr>\n' +
+                    '                    <tr>\n' +
+                    '                        <td class="header">규격</td>\n' +
+                    '                        <td colspan="3">' + rowData.SIZE_TXT + '</td>\n' +
+                    '                        <td class="header">표면처리</td>\n' +
+                    '                        <td colspan="2"> + rowData.SURFACE_TREAT + </td>\n' + //TODO:
+                    '                    </tr>\n' +
+                    '                    <tr>\n' +
+                    '                        <td class="header">형태/기타</td>\n' +
+                    '                        <td>' + rowData.WORK_TYPE + '</td>\n' + //TODO: WORK_TYPE_NM
+                    '                        <td>긴급</td>\n' + //TODO: 긴급
+                    '                        <td>열처리</td>\n' + //TODO: 열처리
+                    '                        <td class="header">검사</td>\n' +
+                    '                        <td colspan="2">' + rowData.MAIN_INSPECTION + '</td>\n' + //TODO: MAIN_INSCPETCTION
+                    '                    </tr>\n' +
+                    '                    <tr>\n' +
+                    '                        <td colspan="4">바코드 llliillilllilli</td>\n' +
+                    '                        <td colspan="3">진성정밀</td>\n' +
+                    '                    </tr>\n' +
+                    '                </tbody>\n' +
+                    '            </table>\n' +
+                    '        </div>';
+            }
+            let drawingPrintModalConfirm = function (callback) {
+                $("#commonConfirmBodyHtml").html(selectedRowCount + " 건의 바코드가 출력 됩니다.");
+                commonDrawingPrintPopup.show();
+                $("#drawingPrintActionBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonDrawingPrintPopup.hide();
+                    $(this).startWaitMe();
+                    $(".cadDrawingPrint").html(printHtml).trigger('create');
+                    callback(true);
+                    return;
+                });
+                $(".drawingPrintCloseBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonDrawingPrintPopup.hide();
+                });
+            };
+            drawingPrintModalConfirm(function (confirm) {
+                if (confirm) {
+                    setTimeout(function () {
+                        $(this).stopWaitMe();
+                        $(".cadDrawingPrint").css("display", "");
+                        callWindowModalDrawingPopup();
+                    }, 2000);
+                }
+            });
         });
         // 라벨출력
         $('#LABEL_PRINT').on('click', function () {
@@ -2551,7 +2666,11 @@
                     '</div>';
             }
             let drawingPrintModalConfirm = function(callback){
-                $("#drawingPrintMessageHtml").html(selectedRowCount + " 건의 바코드 도면이 출력 됩니다.");
+                let text = '<h4>' +
+                    '           <img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
+                    '               <span>' + selectedRowCount + ' 건의 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
+                    '       </h4>';
+                $("#commonConfirmBodyHtml").html(text);
                 commonDrawingPrintPopup.show();
                 $("#drawingPrintActionBtn").unbind().click(function (e) {
                     e.stopPropagation();
