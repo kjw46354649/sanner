@@ -29,8 +29,8 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
-                            <label class="label_100" for="SEL_발주번호">발주번호</label>
-                            <input type="text" class="wd_200" name="SEL_발주번호" id="SEL_발주번호" title="발주번호">
+                            <label class="label_100" for="SEL_ORDER_NUM">발주번호</label>
+                            <input type="text" class="wd_200" name="SEL_ORDER_NUM" id="SEL_ORDER_NUM" title="발주번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap right_float">
@@ -68,9 +68,9 @@
                             </span>
                         </div>
                         <span class="gubun"></span>
-                        <span class="txt_span"><label class="label_100" for="SEL_INSPECT_GRADE">Option</label></span>
-                        <span class="chk_box"><input id="SEL_INSPECT_GRADE" name="SEL_INSPECT_GRADE" type="checkbox"><label for="SEL_INSPECT_GRADE">지연대상 항시 상단표시</label></span>
-                        <span class="chk_box"><input id="SEL_OUTSIDE_YN" name="SEL_OUTSIDE_YN" type="checkbox"><label for="SEL_OUTSIDE_YN">Part 단위 표시</label></span>
+                        <span class="txt_span"><label class="label_100" for="SEL_DELAY_TOP">Option</label></span>
+                        <span class="chk_box"><input id="SEL_DELAY_TOP" name="SEL_DELAY_TOP" type="checkbox"><label for="SEL_DELAY_TOP">지연대상 항시 상단표시</label></span>
+                        <span class="chk_box"><input id="SEL_PART_NUM_VIEW_YN" name="SEL_PART_NUM_VIEW_YN" type="checkbox"><label for="SEL_PART_NUM_VIEW_YN">Part 단위 표시</label></span>
                     </li>
                 </ul>
             </div>
@@ -99,56 +99,81 @@
     </div>
 </div>
 
-<!-- 품질실적 layer popup : S -->
-<div class="popup_container inspection" id="outgoing_manage_pop" style="display: none;">
-    <form class="form-inline" id="outgoing_manage_pop_form" name="outgoing_manage_pop_form" role="form">
-        <input type="hidden" name="queryId" id="queryId" value="inspection.selectOutgoingPopInfoBasic">
+<!-- 반품 품질실적 layer popup : S -->
+<div class="popup_container inspection outgoing" id="outgoing_manage_return_pop" style="display: none;">
+    <form class="form-inline" id="outgoing_manage_return_form" name="outgoing_manage_return_form" role="form">
+        <input type="hidden" name="queryId" id="queryId" value="inspection.selectOutgoingReturnInfo1">
+        <input type="hidden" name="ORG_REAL_OUT_QTY" id="ORG_REAL_OUT_QTY" value="">
         <input type="hidden" name="ERROR_QTY" id="ERROR_QTY" value="">
-        <input type="hidden" name="ORDER_QTY" id="ORDER_QTY" value="">
         <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ" value="">
         <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ" value="">
+        <input type="hidden" name="ORDER_SEQ" id="ORDER_SEQ" value="">
 
-    <div class="layerPopup">
-        <h3>품질 실적 등록</h3>
+    <div class="layerPopup" style="height: 510px">
+        <h3>반품실적등록</h3>
         <%--<button type="button" class="pop_close">닫기</button>--%>
         <div class="qualityWrap">
-            <div class="h_area">
-					<span class="buttonWrap" id="inspect_method_btn">
-						<button type="button" class="onoff left on" id="inspect_method_1">Sampling</button>
-						<button type="button" class="onoff right" id="inspect_method_2">전수검사</button>
-					</span>
-                <ul class="listWrap">
-<%--                    <li class="tit blue">Seq.</li>--%>
-<%--                    <li>04</li>--%>
-                    <li class="tit bagic">작성자</li>
-                    <li class="slt">
-                        <select id="INSPECT_USER_ID" name="INSPECT_USER_ID" data-required="true">
-                            <option value=""><spring:message code="com.form.top.sel.option" /></option>
-                        </select>
-                    </li>
-                </ul>
-            </div>
-            <div class="m_area">
-                <div class="numWrap">
-                    <span><b>&#9900; 수량 :</b><i id="ORDER_QTY_VIEW">0</i></span>
-                    <span><b>&#9900; 불량수량 :</b><i id="ERROR_QTY_VIEW">0</i>
-                        <button type="button" id="outgoing_manage_pop_plus_btn" class="btn_plus" style="display: none">더하기</button>
-                        <button type="button" id="outgoing_manage_pop_plus_minus" class="btn_minus" style="display: none">빼기</button>
-                    </span>
-                </div>
-                <div class="buttonWrap" id="inspect_grade_btn">
-                    <button type="button" class="gradeBtn green" id="inspect_grade_GRD010"><span>A</span></button>
-                    <button type="button" class="gradeBtn " id="inspect_grade_GRD020"><span>B</span></button>
-                    <button type="button" class="gradeBtn " id="inspect_grade_GRD030"><span>C</span></button>
-                    <button type="button" class="gradeBtn " id="inspect_grade_GRD040"><span>D</span></button>
-                </div>
-            </div>
             <div class="t_area">
                 <div class="t_h">
-                    <span class="list_t">검사코드</span>
+                    <span class="list_t">반품종류</span>
                     <span>
-							<select id="INSPECT_RESULT" name="INSPECT_RESULT" title="검사코드">
-                                <c:forEach var="vlocale" items="${HighCode.H_1019}">
+							<select id="INSPECT_GRADE" name="INSPECT_GRADE" title="반품종류">
+                                <c:forEach var="vlocale" items="${HighCode.H_1040}">
+                                    <c:if test="${vlocale.CODE_CD == 'GRD050' or vlocale.CODE_CD == 'GRD060'}">
+                                        <option value="${vlocale.CODE_CD}">${vlocale.NOTE}</option>
+                                    </c:if>
+                                </c:forEach>
+							</select>
+						</span>
+                    <span class="wide">&nbsp;</span>
+                </div>
+
+                <table class="colStyle">
+                    <%--<caption></caption>--%>
+                    <colgroup>
+                        <col width="50px">
+                        <col width="50px">
+                        <col width="50px">
+                        <col width="170px">
+                        <col width="100px">
+                    </colgroup>
+                    <tr>
+                        <th scope="col">주문수량</th>
+                        <th scope="col">출고수량</th>
+                        <th scope="col">출고일</th>
+                        <th scope="col">반품수량</th>
+                        <th scope="col">작성자</th>
+
+                    </tr>
+                    <tr>
+                        <td id="ORDER_QTY_RETURN_VIEW"></td>
+                        <td id="REAL_OUT_QTY_RETURN_VIEW"></td>
+                        <td id="OUT_FINISH_DT_RETURN_VIEW"></td>
+                        <td>
+                            <button type="button" class="btn_plus" id="outgoing_manage_return_pop_plus_btn">더하기</button>
+                            <span class="text" id="ERROR_QTY_VIEW">0</span>
+                            <button type="button" class="btn_minus" id="outgoing_manage_return_pop_minus_btn">빼기</button>
+                            <button type="button" class="btn_allPlus" id="outgoing_manage_return_pop_all_btn">전량</button>
+                        </td>
+                        <script>
+
+                        </script>
+                        <td>
+                            <select id="INSPECT_USER_ID" name="INSPECT_USER_ID" data-required="true">
+                                <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <h2>&nbsp;</h2>
+            <div class="t_area">
+                <div class="t_h">
+                    <span class="list_t">불량코드</span>
+                    <span>
+							<select id="INSPECT_RESULT" name="INSPECT_RESULT" title="불량코드">
+                                 <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                <c:forEach var="vlocale" items="${HighCode.H_1020}">
                                     <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                 </c:forEach>
 							</select>
@@ -161,12 +186,10 @@
                     <%--<caption></caption>--%>
                     <colgroup>
                         <col width="5%">
-                        <col width="5%">
                         <col width="50%">
                         <col width="5%">
                     </colgroup>
                     <tr>
-                        <th scope="col">발생공정</th>
                         <th scope="col">원인</th>
                         <th scope="col">조치방안 및 비고</th>
                         <th scope="col">조치</th>
@@ -174,29 +197,21 @@
                     </tr>
                     <tr>
                         <td>
-                            <select id="ERROR_PROCESS" name="ERROR_PROCESS" title="발생공정" disabled>
-                                <option value=""><spring:message code="com.form.top.sel.option" /></option>
-                                <c:forEach var="vlocale" items="${HighCode.H_1010}">
-                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
-                        </td>
-                        <td>
-                            <select id="ERROR_REASON" name="ERROR_REASON" title="원인" disabled>
+                            <select id="ERROR_REASON" name="ERROR_REASON" title="원인" >
                                 <option value=""><spring:message code="com.form.top.sel.option" /></option>
                                 <c:forEach var="vlocale" items="${HighCode.H_1032}">
                                     <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
                         </td>
-                        <td><input type="text" class="wd_405_left_10" name="ERROR_NOTE" id="ERROR_NOTE" title="조치방안비고" readonly></td>
+                        <td><input type="text" class="wd_405_left_10" name="ERROR_NOTE" id="ERROR_NOTE" title="조치방안비고" ></td>
                         <td>
-                        <select id="ERROR_ACTION" name="ERROR_ACTION" title="조치" disabled>
-                            <option value=""><spring:message code="com.form.top.sel.option" /></option>
-                            <c:forEach var="vlocale" items="${HighCode.H_1025}">
-                                <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
-                            </c:forEach>
-                        </select>
+                            <select id="ERROR_ACTION" name="ERROR_ACTION" title="조치" >
+                                <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                <c:forEach var="vlocale" items="${HighCode.H_1025}">
+                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
                         </td>
                     </tr>
                 </table>
@@ -213,57 +228,49 @@
                         <col width="15%">
                         <col width="15%">
                     </colgroup>
-                    <tr>
-                        <th>관리번호</th>
-                        <td class="red">신진철강</td>
-                        <th>도면번호</th>
-                        <td class="red">하나알루</td>
-                        <th>납기</th>
-                        <td>10/21 (긴급)</td>
-                    </tr>
-                    <tr>
-                        <th>품명</th>
-                        <td>신진철강</td>
-                        <th>소재종류</th>
-                        <td>하나알루</td>
-                        <th>수량(원칭,대칭)</th>
-                        <td>12</td>
-                    </tr>
-                    <tr>
-                        <th>규격</th>
-                        <td>신진철강</td>
-                        <th>후처리</th>
-                        <td>하나알루</td>
-                        <th>가공형태</th>
-                        <td>수정가공</td>
-                    </tr>
-                    <tr>
-                        <th>진행상태</th>
-                        <td>검사대기</td>
-                        <th>발주업체</th>
-                        <td>삼성전자</td>
-                        <th>외주업체</th>
-                        <td>SJ테크</td>
-                    </tr>
+                     <tr>
+                         <th>관리번호</th>
+                         <td id="CONTROL_NUM_VIEW_T" class="red"></td>
+                         <th>도면번호</th>
+                         <td id="DRAWING_NUM_VIEW_T" class="red"></td>
+                         <th>납기</th>
+                         <td id="INNER_DUE_DT_VIEW_T" ></td>
+                     </tr>
+                     <tr>
+                         <th>품명</th>
+                         <td id="ITEM_NM_VIEW_T"></td>
+                         <th>소재종류</th>
+                         <td id="MATERIAL_DETAIL_NM_VIEW_T"></td>
+                         <th>수량(원칭,대칭)</th>
+                         <td id="ORDER_QTY_INFO_VIEW_T"></td>
+                     </tr>
+                     <tr>
+                         <th>규격</th>
+                         <td id="SIZE_TXT_VIEW_T"></td>
+                         <th>후처리</th>
+                         <td id="SURFACE_TREAT_NM_VIEW_T"></td>
+                         <th>가공형태</th>
+                         <td id="WORK_TYPE_NM_VIEW_T"></td>
+                     </tr>
+                     <tr>
+                         <th>진행상태</th>
+                         <td id="PART_STATUS_NM_VIEW_T"></td>
+                         <th>발주업체</th>
+                         <td id="ORDER_COMP_NM_VIEW_T"></td>
+                         <th>외주업체</th>
+                         <td id="OUTSIDE_COMP_NM_VIEW_T"></td>
+                     </tr>
                 </table>
-            </div>
-            <h4>공유사항</h4>
-            <div class="list4">
-                <div id="outgoing_manage_grid_pop_01"></div>
-            </div>
-            <h4>공유사항</h4>
-            <div class="list3">
-                <div id="outgoing_manage_grid_pop_02"></div>
             </div>
         </div>
         <div class="btnWrap">
-            <button type="button" id="outgoing_manage_pop_save" class="submit">submit</button>
-            <button type="button" id="popClose" class="cancel">cancel</button>
+            <button type="button" id="outgoing_manage_return_pop_save" class="submit">submit</button>
+            <button type="button" id="outgoing_manage_return_pop_close" class="cancel">cancel</button>
         </div>
     </div>
     </form>
 </div>
-<!-- 품질실적 layer popup : E -->
+<!-- 반품 품질실적 layer popup : E -->
 
 
 <!-- 화면 버튼 mini popup : S -->
@@ -341,11 +348,12 @@
 <!-- 라벨 mini popup : S -->
 <div class="popup_container" id="outgoing_manage_pop_type_label" style="display: none;">
     <form class="form-inline" id="outgoing_manage_pop_type_label_form" name="outgoing_manage_pop_type_label_form" role="form">
-<%--        <input type="hidden" id="queryId" name="queryId" value="inspection.selectOutgoingOutType4">--%>
-<%--        <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value="">--%>
-<%--        <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value="">--%>
-<%--        <input type="hidden" id="ORDER_SEQ" name="ORDER_SEQ" value="">--%>
-<%--        <input type="hidden" id="PACKING_NUM" name="PACKING_NUM" value="">--%>
+        <input type="hidden" id="queryId" name="queryId" value="inspection.selectOutgoingOutType4">
+        <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value="">
+        <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value="">
+        <input type="hidden" id="ORDER_SEQ" name="ORDER_SEQ" value="">
+        <input type="hidden" id="PACKING_NUM" name="PACKING_NUM" value="">
+        <input type="hidden" id="BARCODE_NUM" name="BARCODE_NUM" value="">
         <div class="miniPopup">
             <div class="headWrap">
                 <h4 id="pop_title">출고실적 등록</h4>
@@ -474,30 +482,31 @@
             {title: 'ORDER_SEQ', dataType: 'string', dataIndx: 'ORDER_SEQ', hidden:true},
             {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden:true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden:true},
-            {title: '발주처', dataType: 'string', dataIndx: 'xxxx', minWidth: 95, width: 95, editable: false},
-            {title: '발주번호', dataType: 'string', dataIndx: 'xxxx', minWidth: 95, width: 95, editable: false},
-            {title: '요망납기', dataType: 'string', dataIndx: 'xxxx', minWidth: 150, width: 150, editable: false},
-            {title: '가공납기', dataType: 'string', dataIndx: 'xxxx', minWidth: 150, width: 150, editable: false},
-            {title: '외주가공', dataType: 'string', dataIndx: 'xxxx', minWidth: 150, width: 150, editable: false},
-            {title: '관리번호', dataType: 'string', dataIndx: 'xxxx', minWidth: 200, width: 200, editable: false},
-            {title: 'Part', dataType: 'string', dataIndx: 'xxxx', minWidth: 40, width: 40, editable: false},
-            {title: '', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 40, minWidth: 40, editable: false,
-                render: function (ui) {
-                    let rowIndx = ui.rowIndx, grid = this;
-                    if (ui.rowData['DXF_GFILE_SEQ'] > 0) return "[눈]";
-                    return '';
-                }
-            },
-            {title: '도면번호', dataType: 'string', dataIndx: 'xxxx', minWidth: 200, width: 200, editable: false},
-            {title: '형태', dataType: 'string', dataIndx: 'xxxx', minWidth: 200, width: 200, editable: false},
-            {title: 'MATERIAL_DETAIL', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden:true},
+            {title: 'INSPECT_SEQ', dataType: 'string', dataIndx: 'INSPECT_SEQ', hidden:true},
+            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', minWidth: 95, width: 95, editable: false},
+            {title: '발주번호', dataType: 'string', dataIndx: 'ORDER_NUM', minWidth: 95, width: 95, editable: false},
+            {title: '요망납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', minWidth: 150, width: 150, editable: false},
+            {title: '가공납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', minWidth: 150, width: 150, editable: false},
+            {title: '외주가공', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', minWidth: 150, width: 150, editable: false},
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 200, width: 200, editable: false},
+            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 40, width: 40, editable: false},
+            // {title: '', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 40, minWidth: 40, editable: false,
+            //     render: function (ui) {
+            //         let rowIndx = ui.rowIndx, grid = this;
+            //         if (ui.rowData['DXF_GFILE_SEQ'] > 0) return "[눈]";
+            //         return '';
+            //     }
+            // },
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 200, width: 200, editable: false},
+            {title: '형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM', minWidth: 200, width: 200, editable: false},
+            // {title: 'MATERIAL_DETAIL', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden:true},
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 120, width: 120, editable: false},
-            {title: '후처리', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 120, width: 120, editable: false},
+            {title: '후처리', dataType: 'string', dataIndx: 'SURFACE_TREAT_NM', minWidth: 120, width: 120, editable: false},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 120, width: 120, editable: false},
             {title: '주문수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 60, width: 60, editable: false},
-            {title: '출고수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 60, width: 60, editable: false},
-            {title: '출고일시', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 60, width: 60, editable: false},
-            {title: '반품일시', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 60, width: 60, editable: false},
+            {title: '출고수량', dataType: 'string', dataIndx: 'OUT_QTY', minWidth: 60, width: 60, editable: false},
+            {title: '출고일시', dataType: 'string', dataIndx: 'OUT_DT', minWidth: 60, width: 60, editable: false},
+            {title: '반품일시', dataType: 'string', dataIndx: 'OUT_RETURN_DT', minWidth: 60, width: 60, editable: false},
             {title: '포장묶음', dataType: 'integer', dataIndx: 'PACKING_CNT', minWidth: 60, width: 60, editable: true},
             {title: '', align: 'center', dataType: 'string', dataIndx: 'MANUAL_OUT', width: 40, minWidth: 40, editable: false,
                 render: function (ui) {
@@ -522,17 +531,17 @@
             },
            {
                 title: '최근 품질 실적', datatype: 'string', align: 'center', colModel: [
-                    {title: 'Seq.', datatype: 'string', dataIndx: 'WORK_FINISH_DT', minWidth: 120, width: 120, editable: false},
-                    {title: '검사결과', datatype: 'string', dataIndx: 'WORK_USER_NM', minWidth: 100, width: 100, editable: false},
-                    {title: '', datatype: 'string', dataIndx: 'EQUIP_NM', minWidth: 120, width: 120, editable: false},
-                    {title: '불량코드', datatype: 'string', dataIndx: 'MCT_NOTE', minWidth: 300, width: 300, editable: false},
-                   {title: '비고', datatype: 'string', dataIndx: 'MCT_NOTE', minWidth: 300, width: 300, editable: false},
-                   {title: '조치', datatype: 'string', dataIndx: 'MCT_NOTE', minWidth: 300, width: 300, editable: false},
-                   {title: '조치방안', datatype: 'string', dataIndx: 'MCT_NOTE', minWidth: 300, width: 300, editable: false}
+                    {title: 'Seq.', datatype: 'string', dataIndx: 'Q_SEQ', minWidth: 120, width: 120, editable: false},
+                    {title: '검사결과', datatype: 'string', dataIndx: 'Q_INSPECT_GRADE_NOTE', minWidth: 100, width: 100, editable: false},
+                    {title: '', datatype: 'string', dataIndx: 'Q_ERROR_QTY', minWidth: 120, width: 120, editable: false},
+                    {title: '불량코드', datatype: 'string', dataIndx: 'Q_INSPECT_RESULT_NM', minWidth: 300, width: 300, editable: false},
+                   {title: '비고', datatype: 'string', dataIndx: 'Q_INSPECT_DESC', minWidth: 300, width: 300, editable: false},
+                   {title: '조치', datatype: 'string', dataIndx: 'Q_ERROR_ACTION_NM', minWidth: 300, width: 300, editable: false},
+                   {title: '조치방안', datatype: 'string', dataIndx: 'Q_ERROR_NOTE', minWidth: 300, width: 300, editable: false}
                 ]
             },
-            {title: '가공진행상태', dataType: 'string', dataIndx: 'NOTE', minWidth: 120, width: 120, editable: false},
-            {title: '현재위치(POP/DB)', dataType: 'string', dataIndx: 'NOTE', minWidth: 120, width: 120, editable: false}
+            {title: '가공진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', minWidth: 120, width: 120, editable: false},
+            {title: '현재위치(POP/DB)', dataType: 'string', dataIndx: 'POP_NM', minWidth: 120, width: 120, editable: false}
         ];
         outgoingManageGridId01.pqGrid({
             width: "100%", height: 700,
@@ -606,7 +615,11 @@
 
                     }
                     if (ui.dataIndx == 'MANUAL_RETURN') {
-                        alert('MANUAL_RETURN');
+                        fnResetFrom("outgoing_manage_return_form");
+                        $("#outgoing_manage_return_form").find("#CONTROL_SEQ").val(ui.rowData['CONTROL_SEQ']);
+                        $("#outgoing_manage_return_form").find("#CONTROL_DETAIL_SEQ").val(ui.rowData['CONTROL_DETAIL_SEQ']);
+                        $("#outgoing_manage_return_form").find("#ORDER_SEQ").val(ui.rowData['ORDER_SEQ']);
+                        $('#outgoing_manage_return_pop').modal('show');
                     }
                     if (ui.dataIndx == 'MANUAL_LABEL') {
                         alert('MANUAL_LABEL');
@@ -616,9 +629,93 @@
             }
         });
         /**  리스트 그리드 선언 끝 **/
+        $('#outgoing_manage_return_pop_save').on('click', function () {
+            // validation
+            $('#outgoing_manage_return_form').find("#INSPECT_RESULT").attr("disabled", false);
+            $('#outgoing_manage_return_form').find("#ERROR_REASON").attr("disabled", false);
+            $('#outgoing_manage_return_form').find("#INSPECT_DESC").attr("readonly", false);
+
+            $("#outgoing_manage_return_form").find("#queryId").val("inspection.insertOutgoingReturn,inspection.updateOutgoingReturnAfter1,inspection.updateOutgoingReturnAfter2");
+
+            let data = $("#outgoing_manage_return_form").serialize();
+            let parameters = {'url': '/json-manager', 'data': data};
+            fnPostAjax(function (data, callFunctionParam) {
+                alert("등록이 완료되었습니다.");
+                $('#outgoing_manage_return_pop').modal('hide');
+            }, parameters, '');
+        });
+        $('#outgoing_manage_return_pop_close').on('click', function () {
+            $('#outgoing_manage_return_pop').modal('hide');
+        });
+        $("#outgoing_manage_return_pop").on('hide.bs.modal', function(){
+            fnResetFrom("outgoing_manage_return_form");
+            $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
+            $("#outgoing_manage_search_btn").trigger("click");
+        });
+        $("#outgoing_manage_return_pop").on('show.bs.modal', function(){
+
+            $("#outgoing_manage_return_form").find("#queryId").val("inspection.selectOutgoingReturnInfo1");
+            let parameters = {
+                'url': '/json-info',
+                'data': $('#outgoing_manage_return_form').serialize()
+            };
+            fnPostAjax(function (data, callFunctionParam) {
+                let dataInfo = data.info;
+                if(dataInfo == null ) {
+                    alert("해당 데이터가 존재하지 않습니다.");
+                    $('#outgoing_manage_return_pop').modal('hide');
+                }else{
+                    fnJsonDataToForm("outgoing_manage_return_form", dataInfo);
+                    $("#outgoing_manage_return_form").find("#ORG_REAL_OUT_QTY").val(dataInfo.REAL_OUT_QTY);
+                    $("#outgoing_manage_return_form").find("#ERROR_QTY").val("0");
+                    $("#outgoing_manage_return_form").find("#ERROR_QTY_VIEW").html("0");
+                    $("#outgoing_manage_return_form").find("#ORDER_QTY_RETURN_VIEW").html(dataInfo.ORDER_QTY);
+                    $("#outgoing_manage_return_form").find("#REAL_OUT_QTY_RETURN_VIEW").html(dataInfo.REAL_OUT_QTY);
+                    $("#outgoing_manage_return_form").find("#OUT_FINISH_DT_RETURN_VIEW").html(dataInfo.OUT_FINISH_DT);
+                    /*let view = dataInfo.NEW_OUT_QTY + "/" + dataInfo.ORDER_QTY;
+                    $("#outgoing_manage_pop_type_1_form").find("#outgoing_manage_pop_type_1_form_view_1").html(view);
+                    $("#outgoing_manage_pop_type_1_form").find("#outgoing_manage_pop_type_1_form_view_2").html("0");
+                    $("#outgoing_manage_pop_type_1_form").find("#NEW_OUT_QTY_VIEW").html(dataInfo.NEW_OUT_QTY);
+                    $("#outgoing_manage_pop_type_1_form").find("#ORG_NEW_OUT_QTY").val(dataInfo.NEW_OUT_QTY);
+                    */
+
+                    //기본정보 S **********************
+                    $("#outgoing_manage_return_form").find("#queryId").val("inspection.selectOutgoingReturnInfo2");
+                    let parameters = {
+                        'url': '/json-info',
+                        'data': $('#outgoing_manage_return_form').serialize()
+                    };
+                    fnPostAjax(function (data, callFunctionParam) {
+                        let dataInfo = data.info;
+                        if(dataInfo == null ) {
+                        }else{
+                            //fnJsonDataToForm("outgoing_manage_return_form", dataInfo);
+
+                            $("#outgoing_manage_return_form").find("#CONTROL_NUM" + "_VIEW_T").html(dataInfo.CONTROL_NUM);
+                            $("#outgoing_manage_return_form").find("#DRAWING_NUM" + "_VIEW_T").html(dataInfo.DRAWING_NUM);
+                            $("#outgoing_manage_return_form").find("#INNER_DUE_DT" + "_VIEW_T").html(dataInfo.INNER_DUE_DT);
+                            $("#outgoing_manage_return_form").find("#ITEM_NM" + "_VIEW_T").html(dataInfo.ITEM_NM);
+                            $("#outgoing_manage_return_form").find("#MATERIAL_DETAIL_NM" + "_VIEW_T").html(dataInfo.MATERIAL_DETAIL_NM);
+                            $("#outgoing_manage_return_form").find("#ORDER_QTY_INFO" + "_VIEW_T").html(dataInfo.ORDER_QTY_INFO);
+                            $("#outgoing_manage_return_form").find("#SIZE_TXT" + "_VIEW_T").html(dataInfo.SIZE_TXT);
+                            $("#outgoing_manage_return_form").find("#SURFACE_TREAT_NM" + "_VIEW_T").html(dataInfo.SURFACE_TREAT_NM);
+                            $("#outgoing_manage_return_form").find("#WORK_TYPE_NM" + "_VIEW_T").html(dataInfo.WORK_TYPE_NM);
+                            $("#outgoing_manage_return_form").find("#PART_STATUS_NM" + "_VIEW_T").html(dataInfo.PART_STATUS_NM);
+                            $("#outgoing_manage_return_form").find("#ORDER_COMP_NM" + "_VIEW_T").html(dataInfo.ORDER_COMP_NM);
+                            $("#outgoing_manage_return_form").find("#OUTSIDE_COMP_NM" + "_VIEW_T").html(dataInfo.OUTSIDE_COMP_NM);
+
+                        }
+                    }, parameters, '');
+                    //기본정보 E **********************
 
 
 
+                }
+            }, parameters, '');
+
+
+
+        })
 
         $("#outgoing_manage_pop_type_1").on('hide.bs.modal', function(){
            fnResetFrom("outgoing_manage_pop_type_1_form");
@@ -709,12 +806,42 @@
             $('#outgoing_manage_pop_type_1_form').find('#NEW_OUT_QTY_VIEW').html(NEW_OUT_QTY);
             $('#outgoing_manage_pop_type_1_form').find('#NEW_OUT_QTY').val(NEW_OUT_QTY);
         }
+        $('#outgoing_manage_return_pop_plus_btn').on('click', function(e) {
+            outgoingManageReturnPopCalcQty("PLUS");
+        });
+        $('#outgoing_manage_return_pop_minus_btn').on('click', function(e) {
+            outgoingManageReturnPopCalcQty("MINUS");
+        });
+        $('#outgoing_manage_return_pop_all_btn').on('click', function(e) {
+            let ORG_REAL_OUT_QTY = $('#outgoing_manage_return_form').find('#ORG_REAL_OUT_QTY').val();
 
+            $('#outgoing_manage_return_form').find('#ERROR_QTY_VIEW').html(ORG_REAL_OUT_QTY);
+            $('#outgoing_manage_return_form').find('#ERROR_QTY').val(ORG_REAL_OUT_QTY);
+
+        });
+        let outgoingManageReturnPopCalcQty = function(type){
+            let ORG_REAL_OUT_QTY = $('#outgoing_manage_return_form').find('#ORG_REAL_OUT_QTY').val();
+            let ERROR_QTY = $('#outgoing_manage_return_form').find('#ERROR_QTY').val();
+
+            console.log("ERROR_QTY",ERROR_QTY);
+            if(type == "PLUS"){
+                if(parseInt(ORG_REAL_OUT_QTY) > parseInt(ERROR_QTY)) {
+                    ERROR_QTY = parseInt(ERROR_QTY) + 1;
+                }
+            }else if(type == "MINUS"){
+                if(parseInt(ERROR_QTY) >  0){
+                    ERROR_QTY = parseInt(ERROR_QTY)-1;
+                }
+            }
+
+            $('#outgoing_manage_return_form').find('#ERROR_QTY_VIEW').html(ERROR_QTY);
+            $('#outgoing_manage_return_form').find('#ERROR_QTY').val(ERROR_QTY);
+        }
         $('#outgoing_manage_mini_pop_save_btn').on('click', function () {
             // validation
-            $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.insertOutgoingOutType1");
+            $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.insertOutgoingOutType1,inspection.updateOutgoingOutType1After1,inspection.updateOutgoingOutType1After2");
 
-            let parameters = {'url': '/json-create', 'data': $("#outgoing_manage_pop_type_1_form").serialize() };
+            let parameters = {'url': '/json-manager', 'data': $("#outgoing_manage_pop_type_1_form").serialize() };
             fnPostAjax(function (data, callFunctionParam) {
                 alert("등록이 완료되었습니다.");
                 $('#outgoing_manage_pop_type_1').modal('hide');
@@ -723,9 +850,8 @@
         });
         $('#outgoing_manage_out_btn').on('click', function () {
             // validation
-            let dynamicSql = "";
+            /*let dynamicSql = "";
             let rowData = "";
-
             let selectedRowCount = outgoingManageSelectedRowIndex.length;
             for (let i = 0; i < selectedRowCount; i++) {
                 rowData = outgoingManageGridId01.pqGrid('getRowData', {rowIndx: outgoingManageSelectedRowIndex[i]});
@@ -739,6 +865,25 @@
                 'DYNAMIC_PARAM': dynamicSql
             };
             let parameters = {'url': '/json-create', 'data': data };
+            */
+            let list = new Array() ;
+            for (let i = 0; i < outgoingManageSelectedRowIndex.length; i++) {
+                let rowData = outgoingManageGridId01.pqGrid('getRowData', {rowIndx: outgoingManageSelectedRowIndex[i]});
+                list.push(rowData);
+            }
+
+            let changes = {
+                'addList': list,
+                'updateList': list
+            };
+            let QUERY_ID_ARRAY = {
+                'insertQueryId': ['inspection.insertOutgoingOutType2'],
+                'updateQueryId': ['inspection.updateOutgoingOutType1After1', 'inspection.updateOutgoingOutType1After2']
+            };
+            changes.queryIdList = QUERY_ID_ARRAY;
+            let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
+
+
             fnPostAjax(function (data, callFunctionParam) {
                 alert("등록이 완료되었습니다.");
                 fnResetFrom("outgoing_manage_pop_type_1_form");
@@ -757,6 +902,26 @@
         $('#outgoing_manage_pop_type_control_close_btn').on('click', function () {
             $('#outgoing_manage_pop_type_control').modal('hide');
         });
+        $('#outgoing_manage_return_form').find("#INSPECT_GRADE").on('change', function () {
+
+            let value = $(this).val();
+            $('#outgoing_manage_return_form').find("#INSPECT_RESULT").val("");
+            $('#outgoing_manage_return_form').find("#ERROR_REASON").val("");
+            $('#outgoing_manage_return_form').find("#INSPECT_DESC").val("");
+            if(value == "GRD050"){
+
+                $('#outgoing_manage_return_form').find("#INSPECT_RESULT").attr("disabled", true);
+                $('#outgoing_manage_return_form').find("#ERROR_REASON").attr("disabled", true);
+                $('#outgoing_manage_return_form').find("#INSPECT_DESC").attr("readonly", true);
+
+
+            }else if(value == "GRD060"){
+                $('#outgoing_manage_return_form').find("#INSPECT_RESULT").attr("disabled", false);
+                $('#outgoing_manage_return_form').find("#ERROR_REASON").attr("disabled", false);
+                $('#outgoing_manage_return_form').find("#INSPECT_DESC").attr("readonly", false);
+            }
+
+        });
 
         $("#OUTGOING_BARCODE_NUM").on('keyup', function(e) {
             if (e.keyCode == 13) {
@@ -766,10 +931,10 @@
                 let barcodeType = barcodeNum.charAt(0).toUpperCase();
                 let barcodesql = "";
 
-                if(barcodeType == "L"){
+                if(barcodeType == "L"){//라벨
                     //barcodesql = "common.selectOutBarcodeInfo";//라벨바코드 뒤지 않고 바로 가져오게 수정
                     barcodesql = "common.selectOutgoingOutType4";
-                }else if(barcodeType == "C"){
+                }else if(barcodeType == "C"){//도면
                     barcodesql = "common.selectControlBarcodeInfo";
                 }else{
                     alert("알수 없는 바코드 타입입니다.[" + barcodeNum +"]");
@@ -793,10 +958,11 @@
                             $("#outgoing_manage_pop_type_label_form").find("#outgoing_manage_pop_type_label_form_view_3").html(data.MY_PACKING_NUM);
 
                             //. 저장하기
-                            //$("#outgoing_manage_pop_type_label_form").find("#queryId").val("inspection.insertOutgoingOutType4");
-                            //let parameters = {'url': '/json-create', 'data': $('#outgoing_manage_pop_type_label_form').serialize() };
-                            let data = {'queryId': 'inspection.insertOutgoingOutType4','BARCODE_NUM': barcodeNum};
-                            let parameters = {'url': '/json-create', 'data': data };
+                            $("#outgoing_manage_pop_type_label_form").find("#queryId").val("inspection.insertOutgoingOutType4,inspection.updateOutgoingOutType4After1,inspection.updateOutgoingOutType4After2");
+                            $("#outgoing_manage_pop_type_label_form").find("#BARCODE_NUM").val(barcodeNum);
+                            let parameters = {'url': '/json-manager', 'data': $('#outgoing_manage_pop_type_label_form').serialize() };
+                            //let data = {'queryId': 'inspection.insertOutgoingOutType4','BARCODE_NUM': barcodeNum};
+                            //let parameters = {'url': '/json-create', 'data': data };
                             fnPostAjax(function (data, callFunctionParam) {
 
                                 //. 모달 띄우기
@@ -829,8 +995,9 @@
                                     $("#outgoing_manage_pop_type_control_form").find("#outgoing_manage_pop_type_control_form_view_3").html(data.PLAN_QTY);
 
                                     //. 저장하기
-                                    $("#outgoing_manage_pop_type_control_form").find("#queryId").val("inspection.insertOutgoingOutType3");
-                                    let parameters = {'url': '/json-create', 'data': $('#outgoing_manage_pop_type_control_form').serialize() };
+                                    $("#outgoing_manage_pop_type_control_form").find("#queryId").val("inspection.insertOutgoingOutType3,inspection.updateOutgoingOutType3After1,inspection.updateOutgoingOutType3After2");
+                                    //let parameters = {'url': '/json-create', 'data': $('#outgoing_manage_pop_type_control_form').serialize() };
+                                    let parameters = {'url': '/json-manager', 'data': $('#outgoing_manage_pop_type_control_form').serialize()};
                                     fnPostAjax(function (data, callFunctionParam) {
 
                                         //. 모달 띄우기
@@ -870,7 +1037,10 @@
             }
         });
 
-
+        fnCommCodeDatasourceSelectBoxCreate($('#outgoing_manage_return_pop').find('#INSPECT_USER_ID'), '', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getUserList'}
+        });
 
 
 
