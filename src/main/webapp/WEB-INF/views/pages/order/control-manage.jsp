@@ -346,7 +346,7 @@
         <button type="button" class="pop_close">닫기</button>
 
         <!-- 버튼 -->
-        <div class="buttonWrap">
+        <div class="buttonWrap" style="display: block; overflow: hidden;">
             <div style="float: right">
                 <button class="popupBtn red" id="TRANSACTION_STATEMENT_DELETE">삭제</button>
                 <button class="popupBtn" id="TRANSACTION_STATEMENT_LABEL_PRINT">출력</button>
@@ -586,36 +586,37 @@
             {title: 'PART_STATUS', clsHead: 'display_none', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true},
 
             {
-                title: '주문상태', align: 'center', colModel: [
+                title: '주문상태', clsHead: 'cantChange', align: 'center', colModel: [
                     {title: '상태', clsHead: 'display_none', datatype: 'string', dataIndx: 'CONTROL_STATUS_ORIGINAL', hidden: true},
                     {title: '상태', clsHead: 'display_none', dataIndx: 'CONTROL_STATUS', hidden: true},
-                    {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_NM'},
-                    {title: '변경일시', width: 95, datatype: 'date', dataIndx: 'CONTROL_STATUS_DT'}
+                    {title: '상태', clsHead: 'cantChange', datatype: 'string', dataIndx: 'CONTROL_STATUS_NM'},
+                    {title: '변경일시', clsHead: 'cantChange', width: 95, datatype: 'date', dataIndx: 'CONTROL_STATUS_DT'}
                 ]
             },
-            {title: '사업자<br>구분', clsHead: 'display_none', width: 70, dataType: 'string', dataIndx: 'COMP_CD', editable: true,
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: BUSINESS_COMPANY},
+            {title: '단가확인', clsHead: 'selectChange', width: 70, dataType: 'string', dataIndx: 'PRICE_CONFIRM', editable: true,
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text',  options: fnGetCommCodeGridSelectBox('1079')},
                 render: function (ui) {
                     let cellData = ui.cellData;
 
                     if (cellData === '') {
                         return '';
                     } else {
-                        let index = BUSINESS_COMPANY.findIndex(function (element) {
+                        let priceConfirm = fnGetCommCodeGridSelectBox('1079');
+                        let index = priceConfirm.findIndex(function (element) {
                             return element.text === cellData;
                         });
 
                         if (index < 0) {
-                            index = BUSINESS_COMPANY.findIndex(function (element) {
+                            index = priceConfirm.findIndex(function (element) {
                                 return element.value === cellData;
                             });
-                        }
 
-                        return (index < 0) ? cellData : BUSINESS_COMPANY[index].text;
+                        }
+                        return (index < 0) ? cellData : priceConfirm[index].text;
                     }
                 }
             },
-            {title: '발주업체', clsHead: 'display_none', dataType: 'string', dataIndx: 'ORDER_COMP_CD', editable: true,
+            {title: '발주업체', clsHead: 'selectChange', dataType: 'string', dataIndx: 'ORDER_COMP_CD', editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: ORDER_COMPANY},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -637,7 +638,7 @@
                     }
                 }
             },
-            {title: '구매담당', clsHead: 'display_none', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', editable: true,
+            {title: '구매담당', clsHead: 'selectChange', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', editable: true,
                 editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text',
                     options: function (ui) {
@@ -668,20 +669,15 @@
                     }
                 }
             },
-            {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', editable: true, styleHead: {'font-weight': 'bold'}},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true},
-            {title: 'INV No.<br>(거래명세No.)', width: 100, dataType: 'string', dataIndx: 'CHARGE_USER_ID'},
-            {title: '프로젝트', width: 200, dataType: 'string', dataIndx: 'PROJECT_NM', editable: true},
-            {title: '모듈', width: 70, dataType: 'string', dataIndx: 'MODULE_NM', editable: true},
-            {title: '납품처', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM', editable: true},
-            {title: '비고(라벨)', dataType: 'string', dataIndx: 'LABEL_NOTE', editable: true},
-            {title: '주요<br>검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION', editable: true,
-                editor: {
-                    type: 'select',
-                    valueIndx: 'value',
-                    labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1059')
-                },
+            {title: '설계자', clsHead: 'inputChange', dataType: 'string', dataIndx: 'DESIGNER_NM', editable: true, styleHead: {'font-weight': 'bold'}},
+            {title: '비고', clsHead: 'inputChange', dataType: 'string', dataIndx: 'NOTE', editable: true},
+            {title: 'INV No.<br>(거래명세No.)', clsHead: 'cantChange', width: 100, dataType: 'string', dataIndx: 'CHARGE_USER_ID'},
+            {title: '프로젝트', clsHead: 'inputChange', width: 200, dataType: 'string', dataIndx: 'PROJECT_NM', editable: true},
+            {title: '모듈', clsHead: 'inputChange', width: 70, dataType: 'string', dataIndx: 'MODULE_NM', editable: true},
+            {title: '납품처', clsHead: 'inputChange', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM', editable: true},
+            {title: '비고(라벨)', clsHead: 'inputChange', dataType: 'string', dataIndx: 'LABEL_NOTE', editable: true},
+            {title: '주요<br>검사품', clsHead: 'selectChange', dataType: 'string', dataIndx: 'MAIN_INSPECTION', editable: true,
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1059')},
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -703,7 +699,7 @@
                     }
                 }
             },
-            {title: '긴급', clsHead: 'control_manage_view_quality', dataType: 'string', dataIndx: 'EMERGENCY_YN', editable: true,
+            {title: '긴급', clsHead: 'selectChange control_manage_view_quality', dataType: 'string', dataIndx: 'EMERGENCY_YN', editable: true,
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -733,19 +729,48 @@
                 }
             },
             {title: 'CONTROL_VER', clsHead: 'control_manage_view_close', dataType: 'string', dataIndx: 'CONTROL_VER', hidden: true},
-            {title: '관리번호', clsHead: 'control_manage_view_estimate', width: 100, dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true},
+            {title: '관리번호', clsHead: 'inputChange control_manage_view_estimate', width: 130, dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true},
             {
-                title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM',
+                title: 'Part', clsHead: 'cantChange', dataType: 'integer', dataIndx: 'PART_NUM',
                 render: function (ui) {
                     if (ui.rowData.WORK_TYPE === 'WTP020') {
-                        return "<span>플러스버튼</span>";
+                        return '<span class="ui-icon ui-icon-circle-plus" name="PART_NUM_PLUS_BUTTON"></span>';
                     }
+                },
+                postRender: function (ui) {
+                    let grid = this;
+                    let $cell = grid.getCell(ui);
+
+                    $cell.find('[name=PART_NUM_PLUS_BUTTON]').on('click', function (event) {
+                        let rowData = fnCloneObj(ui.rowData);
+                        let data = $orderManagementGrid.pqGrid('option', 'dataModel.data'), totalRecords = data.length;
+                        let newPartNum = 0, lastRowIndex = 0, newRowData;
+
+                        for (let i = 0; i < totalRecords; i++) {
+                            if (data[i].CONTROL_SEQ === rowData.CONTROL_SEQ) {
+                                newPartNum++;
+                                lastRowIndex = data[i].pq_ri;
+                            }
+                        }
+
+                        newRowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: lastRowIndex});
+                        newRowData = fnCloneObj(newRowData);
+                        newRowData.ROWNUM = totalRecords + 1;
+                        newRowData.PART_NUM = newPartNum;
+
+                        $orderManagementGrid.pqGrid('addRow', {
+                            newRow: newRowData,
+                            rowIndx: lastRowIndex + 1,
+                            checkEditable: false
+                        });
+                        event.preventDefault();
+                    });
                 }
             },
             {title: '도면번호버전', dataType: 'string', dataIndx: 'DRAWING_VER', hidden: true},
-            {title: '도면번호', width: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', editable: true},
-            {title: '품명', width: 110, dataType: 'string', dataIndx: 'ITEM_NM', editable: true},
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: true,
+            {title: '도면번호', clsHead: 'inputChange', width: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', editable: true},
+            {title: '품명', clsHead: 'inputChange', width: 110, dataType: 'string', dataIndx: 'ITEM_NM', editable: true},
+            {title: '작업<br>형태', clsHead: 'selectChange', dataType: 'string', dataIndx: 'WORK_TYPE', editable: true,
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -773,8 +798,8 @@
                     }
                 }
             },
-            {title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN'},
-            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', editable: true,
+            {title: '외주', clsHead: 'selectChange', dataType: 'string', dataIndx: 'OUTSIDE_YN'},
+            {title: '수행<br>공장', clsHead: 'selectChange', dataType: 'string', dataIndx: 'WORK_FACTORY', editable: true,
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -934,9 +959,27 @@
                     {
                         title: '', datatype: 'string', dataIndx: 'ORDER_NUM_PLUS_BUTTON',
                         render: function (ui) {
-                            if (ui.rowData.WORK_NM === 'WTP020') {
-                                return '<span>플러스버튼</span>';
+                            if (ui.rowData.WORK_TYPE === 'WTP010' || ui.rowData.WORK_TYPE === 'WTP020' || ui.rowData.WORK_TYPE === 'WTP030') {
+                                return '<span class="ui-icon ui-icon-circle-plus" name="ORDER_NUM_PLUS_BUTTON"></span>';
                             }
+                        },
+                        postRender: function (ui) {
+                            let grid = this;
+                            let $cell = grid.getCell(ui);
+
+                            $cell.find('[name=ORDER_NUM_PLUS_BUTTON]').on('click', function (event) {
+                                let newRowData = fnCloneObj(ui.rowData);
+                                let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
+                                let totalRecords = data.length;
+
+                                newRowData.ROWNUM = totalRecords + 1;
+                                $orderManagementGrid.pqGrid('addRow', {
+                                    newRow: newRowData,
+                                    rowIndx: ui.rowIndx + 1,
+                                    checkEditable: false
+                                });
+                                event.preventDefault();
+                            });
                         }
                     },
                     {title: '발주번호', width: 90, datatype: 'string', dataIndx: 'ORDER_NUM', editable: true},
@@ -1053,7 +1096,6 @@
             height: 700,
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
-            resizable: true,
             showTitle: false,
             numberCell: {title: 'No.'},
             trackModel: {on: true},
@@ -1075,42 +1117,6 @@
             },
             cellClick: function (event, ui) {
                 if(ui.rowData.IMG_GFILE_SEQ) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);  // 셀 선택시 도면 View 실행 중인경우 이미지 표시 하기
-
-                if (ui.dataIndx === 'PART_NUM' && ui.rowData.WORK_TYPE === 'WTP020') {
-                    let newRowData = fnCloneObj(ui.rowData);
-                    let data = $orderManagementGrid.pqGrid('option', 'dataModel.data'), totalRecords = data.length;
-                    let newPartNum = 0, newRowIndex = 0;
-
-                    for (let i = 0; i < totalRecords; i++) {
-                        if (data[i].CONTROL_SEQ === newRowData.CONTROL_SEQ) {
-                            newPartNum++;
-                            newRowIndex = data[i].pq_ri + 1;
-                        }
-                    }
-
-                    newRowData.ROWNUM = totalRecords + 1;
-                    newRowData.PART_NUM = newPartNum;
-                    newRowData.WORK_TYPE = 'WTP010';
-
-                    $orderManagementGrid.pqGrid('addRow', {
-                        newRow: newRowData,
-                        rowIndx: newRowIndex,
-                        checkEditable: false
-                    });
-                }
-
-                if (ui.dataIndx === 'ORDER_NUM_PLUS_BUTTON' && ui.rowData.WORK_TYPE === 'WTP020') {
-                    let newRowData = fnCloneObj(ui.rowData);
-                    let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
-                    let totalRecords = data.length;
-
-                    newRowData.ROWNUM = totalRecords + 1;
-                    $orderManagementGrid.pqGrid('addRow', {
-                        newRow: newRowData,
-                        rowIndx: ui.rowIndx + 1,
-                        checkEditable: false
-                    });
-                }
             },
             selectChange: function (event, ui) {
                 if (ui.selection.iCells.ranges[0] !== undefined) {
@@ -2520,18 +2526,18 @@
                     '               <span>' + selectedRowCount + ' 건의 바코드 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
                     '       </h4>';
                 $("#commonConfirmBodyHtml").html(text);
-                commonDrawingPrintPopup.show();
-                $("#drawingPrintActionBtn").unbind().click(function (e) {
+                commonConfirmPopup.show();
+                $("#commonConfirmYesBtn").unbind().click(function (e) {
                     e.stopPropagation();
-                    commonDrawingPrintPopup.hide();
+                    commonConfirmPopup.hide();
                     $(this).startWaitMe();
                     $(".cadDrawingPrint").html(printHtml).trigger('create');
                     callback(true);
                     return;
                 });
-                $(".drawingPrintCloseBtn").unbind().click(function(e) {
+                $(".commonConfirmCloseBtn").unbind().click(function(e) {
                     e.stopPropagation();
-                    commonDrawingPrintPopup.hide();
+                    commonConfirmPopup.hide();
                 });
             };
             drawingBarcodePrintModalConfirm(function(confirm){
@@ -2605,18 +2611,18 @@
             }
             let drawingPrintModalConfirm = function (callback) {
                 $("#commonConfirmBodyHtml").html(selectedRowCount + " 건의 바코드가 출력 됩니다.");
-                commonDrawingPrintPopup.show();
-                $("#drawingPrintActionBtn").unbind().click(function (e) {
+                commonConfirmPopup.show();
+                $("#commonConfirmYesBtn").unbind().click(function (e) {
                     e.stopPropagation();
-                    commonDrawingPrintPopup.hide();
+                    commonConfirmPopup.hide();
                     $(this).startWaitMe();
                     $(".cadDrawingPrint").html(printHtml).trigger('create');
                     callback(true);
                     return;
                 });
-                $(".drawingPrintCloseBtn").unbind().click(function (e) {
+                $(".commonConfirmCloseBtn").unbind().click(function (e) {
                     e.stopPropagation();
-                    commonDrawingPrintPopup.hide();
+                    commonConfirmPopup.hide();
                 });
             };
             drawingPrintModalConfirm(function (confirm) {
@@ -2671,18 +2677,18 @@
                     '               <span>' + selectedRowCount + ' 건의 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
                     '       </h4>';
                 $("#commonConfirmBodyHtml").html(text);
-                commonDrawingPrintPopup.show();
-                $("#drawingPrintActionBtn").unbind().click(function (e) {
+                commonConfirmPopup.show();
+                $("#commonConfirmYesBtn").unbind().click(function (e) {
                     e.stopPropagation();
-                    commonDrawingPrintPopup.hide();
+                    commonConfirmPopup.hide();
                     $(this).startWaitMe();
                     $(".cadDrawingPrint").html(printHtml).trigger('create');
                     callback(true);
                     return;
                 });
-                $(".drawingPrintCloseBtn").unbind().click(function(e) {
+                $(".commonConfirmCloseBtn").unbind().click(function(e) {
                     e.stopPropagation();
-                    commonDrawingPrintPopup.hide();
+                    commonConfirmPopup.hide();
                 });
             };
             drawingPrintModalConfirm(function(confirm){
@@ -2737,6 +2743,10 @@
                 $orderManagementGrid.pqGrid('refreshDataAndView');
                 $controlCloseLeftGrid.pqGrid('refreshDataAndView');
             }, parameters, '');
+        });
+
+        $('.pop_close').on('click', function () {
+            $(this).parent('.layerPopup').parent('.popup_container').modal('hide');
         });
 
         /* 견적등록 */

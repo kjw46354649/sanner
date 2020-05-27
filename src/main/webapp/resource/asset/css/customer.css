@@ -251,3 +251,7 @@ table.templateStyle th, table.templateStyle td { padding: 12px 13px; font-size: 
 table.templateStyle th { border: 1px solid #8ad7e7; background: #337ab7; color: white; font-family: 'NotoKrM'; }
 table.templateStyle td { border: 1px solid #cdcfd0; width: 100% !important;}
 table.templateStyle td input { width: 100% !important;}
+
+.pq-grid-col.cantChange { background-color: #bfbfbf; font-weight: bold; color: black; }
+.pq-grid-col.selectChange { background-color: #aac8ed; font-weight: bold; color: black; }
+.pq-grid-col.inputChange { background-color: #aac8ed; font-weight: bold; color: #ffffff; }

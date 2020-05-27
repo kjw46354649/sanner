@@ -13,6 +13,7 @@
             A.CONTROL_STATUS AS CONTROL_STATUS_ORIGINAL, <!-- 주문관리상태 -->
             SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR') AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
             SF_GET_DATE_F(A.STATUS_DT,'YY','M') AS CONTROL_STATUS_DT, <!-- 상태확정일 -->
+            A.PRICE_CONFIRM, <!-- 단가확인 -->
             A.COMP_CD, <!-- 사업자구분 -->
             SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM, <!-- 사업자구분 이름 -->
             A.ORDER_COMP_CD, <!-- 발주업체 -->
@@ -111,7 +112,7 @@
             A.DEL_YN
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+            LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
                                                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
             LEFT OUTER JOIN TBL_MONTH_CLOSE_DETAIL D ON A.CONTROL_SEQ = D.CONTROL_SEQ
                                                         AND A.COMP_CD = D.COMP_CD
