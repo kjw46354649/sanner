@@ -164,4 +164,37 @@ public class InnodaleServiceImpl implements InnodaleService {
         }
     }
 
+    /**
+     * 여러 SQL 삽입/갱신/삭제
+     *
+     * @param map
+     * @throws Exception
+     */
+    @Override
+    public void managerJson(Map<String, Object> map) throws Exception {
+
+        String queryIdList[]  = ((String)map.get("queryId")).split("\\,");
+
+        if (queryIdList != null && queryIdList.length > 0)
+        {
+            for (int i = 0; i < queryIdList.length; i++)
+            {
+                String queryId = (String) queryIdList[i];
+                if(queryId.startsWith("insert") || queryId.startsWith("create")){
+                    map.put("queryId",queryId);
+                    this.innodaleDao.create(map);
+                }
+                if(queryId.startsWith("update") || queryId.startsWith("modify")){
+                    map.put("queryId",queryId);
+                    this.innodaleDao.update(map);
+                }
+                if(queryId.startsWith("delete") || queryId.startsWith("remove")){
+                    map.put("queryId",queryId);
+                    this.innodaleDao.remove(map);
+                }
+            }
+        }
+
+    }
+
 }

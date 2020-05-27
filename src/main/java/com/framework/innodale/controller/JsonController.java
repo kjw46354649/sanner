@@ -69,4 +69,19 @@ public class JsonController {
         return "jsonView";
     }
 
+    /**
+     * Json manage
+     */
+    @RequestMapping(value = "/json-manager",  method= RequestMethod.POST)
+    public String jsonManager(Model model, HttpServletRequest request, HttpSession session) throws Exception{
+
+        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+        innodaleService.managerJson(hashMap);
+
+        model.addAttribute("result", "true");
+        //model.addAttribute("message", "처리 할수 없는 파일 형식 입니다.");
+
+        return "jsonView";
+    }
+
 }
