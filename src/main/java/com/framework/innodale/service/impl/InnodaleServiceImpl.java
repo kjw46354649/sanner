@@ -180,15 +180,18 @@ public class InnodaleServiceImpl implements InnodaleService {
             for (int i = 0; i < queryIdList.length; i++)
             {
                 String queryId = (String) queryIdList[i];
-                if(queryId.startsWith("insert") || queryId.startsWith("create")){
+                String queryIdArr[] = queryId.split("\\.");
+                System.out.println(queryIdArr[0]);
+                System.out.println(queryIdArr[1]);
+                if(queryIdArr[1].startsWith("insert") || queryIdArr[1].startsWith("create")){
                     map.put("queryId",queryId);
                     this.innodaleDao.create(map);
                 }
-                if(queryId.startsWith("update") || queryId.startsWith("modify")){
+                if(queryIdArr[1].startsWith("update") || queryIdArr[1].startsWith("modify")){
                     map.put("queryId",queryId);
                     this.innodaleDao.update(map);
                 }
-                if(queryId.startsWith("delete") || queryId.startsWith("remove")){
+                if(queryIdArr[1].startsWith("delete") || queryIdArr[1].startsWith("remove")){
                     map.put("queryId",queryId);
                     this.innodaleDao.remove(map);
                 }
