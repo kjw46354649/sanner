@@ -189,7 +189,13 @@
                         <span class="slt_wrap namePlusSlt">
                         <label for="SUPPLY_UNIT_COST_APPLY">공급단가적용</label>
                         <select id="SUPPLY_UNIT_COST_APPLY" title="공급단가적용">
-                            <option></option>
+                            <option value="">-Select-</option>
+                            <option value="1">1%</option>
+                            <option value="3">3%</option>
+                            <option value="5">5%</option>
+                            <option value="10">10%</option>
+                            <option value="15">15%</option>
+                            <option value="20">20%</option>
                         </select>
                         </span>
                     </div>
@@ -594,14 +600,14 @@
                 ]
             },
             {title: '단가확인', clsHead: 'selectChange', width: 70, dataType: 'string', dataIndx: 'PRICE_CONFIRM', editable: true,
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text',  options: fnGetCommCodeGridSelectBox('1079')},
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text',  options: fnGetCommCodeGridSelectBox('1017')},
                 render: function (ui) {
                     let cellData = ui.cellData;
 
                     if (cellData === '') {
                         return '';
                     } else {
-                        let priceConfirm = fnGetCommCodeGridSelectBox('1079');
+                        let priceConfirm = fnGetCommCodeGridSelectBox('1017');
                         let index = priceConfirm.findIndex(function (element) {
                             return element.text === cellData;
                         });
@@ -700,12 +706,7 @@
                 }
             },
             {title: '긴급', clsHead: 'selectChange control_manage_view_quality', dataType: 'string', dataIndx: 'EMERGENCY_YN', editable: true,
-                editor: {
-                    type: 'select',
-                    valueIndx: 'value',
-                    labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1042')
-                },
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -798,7 +799,30 @@
                     }
                 }
             },
-            {title: '외주', clsHead: 'selectChange', dataType: 'string', dataIndx: 'OUTSIDE_YN'},
+            {title: '외주', clsHead: 'selectChange', dataType: 'string', dataIndx: 'OUTSIDE_YN', editable: true,
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let yesOrNo = fnGetCommCodeGridSelectBox('1042');
+                        let index = yesOrNo.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = yesOrNo.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+
+                        }
+
+                        return (index < 0) ? cellData : yesOrNo[index].text;
+                    }
+                }
+            },
             {title: '수행<br>공장', clsHead: 'selectChange', dataType: 'string', dataIndx: 'WORK_FACTORY', editable: true,
                 editor: {
                     type: 'select',
@@ -1032,6 +1056,7 @@
             {title: '최종<br>견적단가', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', editable: true},
             {title: '견적<br>합계금액', width: 90, dataType: 'integer', dataIndx: 'RUSWJRGKQRpRMADOR'},
             {title: '최종<br>공급단가', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', editable: true},
+            {title: '최종<br>공급단가', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT_ORIGINAL', hidden: true},
             {title: '합계금액', dataType: 'integer', dataIndx: 'FINAL_AMOUNT'},
             {title: '종전가', width: 100, dataType: 'integer', dataIndx: 'WHDWJSRK'},
             {title: '변경전<br>도면번호', width: 120, dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', editable: true},
@@ -1116,9 +1141,13 @@
                 $('#CONTROL_MANAGE_RECORDS').html(data.length);
             },
             cellClick: function (event, ui) {
+                supplyUnitCostInit(); // 공급단가적용 초기화
+
                 if(ui.rowData.IMG_GFILE_SEQ) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);  // 셀 선택시 도면 View 실행 중인경우 이미지 표시 하기
             },
             selectChange: function (event, ui) {
+                supplyUnitCostInit(); // 공급단가적용 초기화
+
                 if (ui.selection.iCells.ranges[0] !== undefined) {
                     selectedRowIndex = [];
                     let firstRow = ui.selection.iCells.ranges[0].r1;
@@ -1168,7 +1197,7 @@
                 title: '단가확인', dataType: 'string', dataIndx: 'PRICE_CONFIRM',
                 editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1079')
+                    options: fnGetCommCodeGridSelectBox('1017')
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -1176,7 +1205,7 @@
                     if (cellData === '') {
                         return '';
                     } else {
-                        let priceConfirm = fnGetCommCodeGridSelectBox('1079');
+                        let priceConfirm = fnGetCommCodeGridSelectBox('1017');
                         let index = priceConfirm.findIndex(function (element) {
                             return element.text === cellData;
                         });
@@ -1629,7 +1658,7 @@
             change: function (evt, ui) {
                 if (ui.source === 'paste') {
                     const addListLength = ui.addList.length;
-                    const priceConfirmList = fnGetCommCodeGridSelectBox('1079');
+                    const priceConfirmList = fnGetCommCodeGridSelectBox('1017');
                     const mainInspectionList = fnGetCommCodeGridSelectBox('1059');
                     const workTypeList = fnGetCommCodeGridSelectBox('1033');
                     const workFactoryList = fnGetCommCodeGridSelectBox('1014');
@@ -1782,7 +1811,8 @@
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
             {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
-            {title: '변경후 마감금액', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
+            {title: '변경 후 마감금액', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
+            {title: '변경 후 네고금액', dataType: 'integer', format: '#,###', dataIndx: 'NEGO_AMT'},
             {
                 title: '추가 금액', align: 'center', colModel: [
                     {title: '', datatype: 'string', dataIndx: 'ADD_QTY'},
@@ -2031,6 +2061,19 @@
                 alert("<spring:message code='com.alert.default.save.success' />");
             }, parameters, '');
         };
+
+        const noSelectedRowAlert = function () {
+            if (selectedRowIndex.length > 0) {
+                return false;
+            } else {
+                alert('하나 이상 선택해주세요');
+                return true;
+            }
+        };
+
+        const supplyUnitCostInit = function () {
+            $('#SUPPLY_UNIT_COST_APPLY option:eq(0)').prop('selected', true); // 공급단가적용 초기화?
+        };
         /* function */
 
         /* event */
@@ -2129,6 +2172,10 @@
 
         $('#CONTROL_CLOSE_POPUP').on({
             'show.bs.modal': function () {
+                if (noSelectedRowAlert()) {
+                    return false;
+                }
+
                 let selectedRowCount = selectedRowIndex.length;
 
                 for (let i = 0; i < selectedRowCount; i++) {
@@ -2281,17 +2328,17 @@
         // 거래명세표
         $('#TRANSACTION_STATEMENT_POPUP').on({
             'show.bs.modal': function () {
+                if (noSelectedRowAlert()) {
+                    return false;
+                }
+                console.log(1);
+
                 let selectedRowCount = selectedRowIndex.length;
                 let list = [];
                 let controlSeqList = [];
                 let compCdList = [];
                 let orderCompCdList = [];
                 let controlSeqStr = '';
-
-                if (!selectedRowCount) {
-                    alert('하나 이상 선택해주세요');
-                    return false;
-                }
 
                 for (let i = 0; i < selectedRowCount; i++) {
                     let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
@@ -2702,6 +2749,25 @@
             });
         });
 
+        $('#SUPPLY_UNIT_COST_APPLY').on('change', function () {
+            if (noSelectedRowAlert()) return false;
+
+            let number = $('#SUPPLY_UNIT_COST_APPLY option:selected').val();
+            let rate = 100 - number;
+
+            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                let supplyUnitPrice = (rowData.UNIT_FINAL_AMT_ORIGINAL * (rate / 100)).toFixed(0);
+
+                $orderManagementGrid.pqGrid('updateRow', {'rowIndx': selectedRowIndex[i], row: {'UNIT_FINAL_AMT': supplyUnitPrice}});
+
+                /*if (rowData.CONTROL_STATUS_ORIGINAL !== 'ORD001') {
+                    alert('주문 상태가 확정일 때 월 마감이 가능합니다.');
+                    return false;
+                }*/
+
+            }
+        });
         /* event */
 
         /* init */
