@@ -155,9 +155,6 @@
                             <button type="button" class="btn_minus" id="outgoing_manage_return_pop_minus_btn">빼기</button>
                             <button type="button" class="btn_allPlus" id="outgoing_manage_return_pop_all_btn">전량</button>
                         </td>
-                        <script>
-
-                        </script>
                         <td>
                             <select id="INSPECT_USER_ID" name="INSPECT_USER_ID" data-required="true">
                                 <option value=""><spring:message code="com.form.top.sel.option" /></option>
