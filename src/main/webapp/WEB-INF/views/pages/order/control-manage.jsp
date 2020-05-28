@@ -2331,7 +2331,6 @@
                 if (noSelectedRowAlert()) {
                     return false;
                 }
-                console.log(1);
 
                 let selectedRowCount = selectedRowIndex.length;
                 let list = [];
@@ -2434,20 +2433,17 @@
         $('#TRANSACTION_STATEMENT_SAVE_EXPORT').on('click', function () {
             transactionStatementSave();
 
+            if (noSelectedRowAlert()) {
+                return false;
+            }
 
-            let selectedRowCount = selectedRowIndex.length;
             let list = [];
             let controlSeqList = [];
             let compCdList = [];
             let orderCompCdList = [];
             let controlSeqStr = '';
 
-            if (!selectedRowCount) {
-                alert('하나 이상 선택!');
-                return false;
-            }
-
-            for (let i = 0; i < selectedRowCount; i++) {
+            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
 
                 list.push(rowData);
