@@ -216,7 +216,7 @@
                         <th>소재종류</th>
                         <td id="MATERIAL_DETAIL_NM_VIEW_T"></td>
                         <th>수량(원칭,대칭)</th>
-                        <td id="ORDER_QTY_VIEW_T"></td>
+                        <td id="ORDER_QTY_INFO_VIEW_T"></td>
                     </tr>
                     <tr>
                         <th>규격</th>
@@ -414,6 +414,8 @@
             {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden:true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden:true},
             {title: 'MCT_WORK_SEQ', dataType: 'string', dataIndx: 'MCT_WORK_SEQ', hidden:true},
+            {title: 'INSPECT_TYPE', dataType: 'string', dataIndx: 'INSPECT_TYPE', hidden:true},
+            {title: 'INSPECT_GRADE', dataType: 'string', dataIndx: 'INSPECT_GRADE', hidden:true},
             {title: '납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', minWidth: 95, width: 95, editable: false},
             {title: '현재위치', dataType: 'string', dataIndx: 'POP_NM', minWidth: 150, width: 150, editable: false},
             {title: '외주가공', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', minWidth: 150, width: 150, editable: false},
@@ -554,8 +556,8 @@
         $("#inspection_manage_pop_form").find("#queryId").val("inspection.selectInspectionPopInfoList1");
         inspectionManagePostDataPop01 = fnFormToJsonArrayData('#inspection_manage_pop_form');
         inspectionManageColModelPop01 = [
-            {title: '입력구분', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', maxWidth: 150, width: 150, editable: false},
-            {title: '비고', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 95, width: 95, editable: false}
+            {title: '입력구분', dataType: 'string', dataIndx: 'NOTE_TYPE_NM', maxWidth: 150, width: 150, editable: false},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', minWidth: 95, width: 95, editable: false}
         ];
         inspectionManageGridIdPop01.pqGrid({
             width: "100%", height: 90,
@@ -662,7 +664,7 @@ console.log(dataInfo);
                     $("#inspection_manage_pop_form").find("#INNER_DUE_DT" + "_VIEW_T").html(dataInfo.INNER_DUE_DT);
                     $("#inspection_manage_pop_form").find("#ITEM_NM" + "_VIEW_T").html(dataInfo.ITEM_NM);
                     $("#inspection_manage_pop_form").find("#MATERIAL_DETAIL_NM" + "_VIEW_T").html(dataInfo.MATERIAL_DETAIL_NM);
-                    $("#inspection_manage_pop_form").find("#ORDER_QTY" + "_VIEW_T").html(dataInfo.ORDER_QTY);
+                    $("#inspection_manage_pop_form").find("#ORDER_QTY_INFO" + "_VIEW_T").html(dataInfo.ORDER_QTY);
                     $("#inspection_manage_pop_form").find("#SIZE_TXT" + "_VIEW_T").html(dataInfo.SIZE_TXT);
                     $("#inspection_manage_pop_form").find("#SURFACE_TREAT_NM" + "_VIEW_T").html(dataInfo.SURFACE_TREAT_NM);
                     $("#inspection_manage_pop_form").find("#WORK_TYPE_NM" + "_VIEW_T").html(dataInfo.WORK_TYPE_NM);
@@ -673,7 +675,7 @@ console.log(dataInfo);
                     $("#inspection_manage_pop_form").find("#ORDER_QTY_VIEW").html(dataInfo.ORDER_QTY);
                     $("#inspection_manage_pop_form").find("#ERROR_QTY_VIEW").html("0");
                     $("#inspection_manage_pop_form").find("#INSPECT_METHOD").val("1");
-                    $("#inspection_manage_pop_form").find("#INSPECT_METHOD").val("GRD010");
+                    $("#inspection_manage_pop_form").find("#INSPECT_GRADE").val("GRD010");
 
 
                 }

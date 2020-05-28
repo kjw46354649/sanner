@@ -89,4 +89,12 @@ public interface InnodaleService {
          * @throws Exception
          */
         void CRUDGrid(Map<String, Object> map) throws Exception;
+
+        /**
+         * 저장, 삭제, 수정
+         * @param hashMap
+         * @throws Exception
+         */
+        public void managerJson(Map<String, Object> hashMap) throws Exception;
+
 }
