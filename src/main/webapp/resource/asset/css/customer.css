@@ -56,6 +56,15 @@
 .onegrid .bottomWrap .left-30Warp { float: left; width: 472px; height: 100%; }
 .onegrid .bottomWrap .right-70Warp { float: right; margin-left: 10px; width: calc(100% - 482px); height: 100%; }
 
+/*# Master & Detail vertical Grid */
+.onegrid .bottomWrap .left-40Warp { float: left; width: calc(100% - 1020px); height: 100%; }
+.onegrid .bottomWrap .right-60Warp { float: right; margin-left: 10px; width: 1010px; height: 100%; }
+
+/* control business status three grid */
+.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap h2 { font-size: 1.5em; padding: 5px;}
+.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap .left-Warp{ width: 333.3px; height: 150px;}
+.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap .center-Warp { width: 333.3px; height: 150px; }
+.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap .right-Warp { width: 333.3px; height: 150px }
 
 .form-group1 .group-item { display: inline-block; width: 24.5%; padding: 0.5vh 0.5vw; }
 .form-group1 .group-item-option { display: inline-block; width: 5%; padding: 0.5vh 0.5vw; }
@@ -261,3 +270,13 @@ table.templateStyle td input { width: 100% !important;}
 .pq-grid-col.inputChange { background-color: #aac8ed; font-weight: bold; color: #ffffff; }
 
 .layerPopup .btn_allPlus{ width: 60px; height: 30px; line-height: 25px; background: #880000; color: #fff; border-radius: 5px; border: 1px solid #b10000; box-sizing: border-box; font-size: 14px; float: right;-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#000000)";/*IE 8*/
+
+.fc-toolbar.fc-header-toolbar {
+    margin-bottom: 0.9em;
+}
+
+/** FULL CALENDER HOLIDAY COLOR SETTING **/
+.fc-day-top.fc-sat.fc-past { color:#0000FF; }     /* 토요일 */
+.fc-day-top.fc-sun.fc-past { color:#FF0000; }    /* 일요일 */
+.fc-day-top.fc-sat.fc-future { color:#0000FF; }     /* 토요일 */
+.fc-day-top.fc-sun.fc-future { color:#FF0000; }    /* 일요일 */

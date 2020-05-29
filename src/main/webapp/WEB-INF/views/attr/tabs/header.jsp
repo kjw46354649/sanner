@@ -11,6 +11,8 @@
 <!-- <link rel="icon" href="/asset/images/common/favicon.ico"> -->
 <!-- Android&IOS Touch Icon -->
 <!-- <link rel="apple-touch-icon-precomposed" href="/asset/images/common/favicon-152.png"> -->
+<link rel="stylesheet" href="/resource/plugins/fullcalendar/core/main.css"  />
+<link rel="stylesheet" href="/resource/plugins/fullcalendar/daygrid/main.css"  />
 <!--jQueryUI version >= 1.11.4 only -->
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css" />
 <!--ParamQuery Grid css files-->
@@ -26,6 +28,10 @@
 <!-- print -->
 <%--<link href="/resource/plugins/printThis/assets/css/normalize.css" rel="stylesheet" type="text/css" />--%>
 <%--<link href="/resource/plugins/printThis/assets/css/skeleton.css" rel="stylesheet" type="text/css" />--%>
+<!-- calendar -->
+<link href='/resource/plugins/fullcalendar/core/main.css' rel='stylesheet' />
+<link href='/resource/plugins/fullcalendar/daygrid/main.css' rel='stylesheet' />
+
 
 <link href="/resource/asset/css/reset.css" rel="stylesheet" type="text/css" />
 <link href="/resource/asset/css/webFont.css" rel="stylesheet" type="text/css" />
@@ -38,6 +44,8 @@
 
 <link href="/resource/main/js/jquery-ui-timepicker-addon.css" rel="stylesheet" type="text/css" />
 <link href="/resource/main/js/combotree/style.css" rel="stylesheet" type="text/css" />
+
+
 
 
 
