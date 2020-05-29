@@ -773,4 +773,21 @@
             UPDATE_ID = #{UPDATE_ID}
     </insert>
 
+    <insert id="insertSchedulerNote" parameterType="java.util.HashMap" >
+        INSERT INTO jmes.TBL_CALENDAR
+            (CAL_DT, CAL_TYPE, NOTE, INSERT_ID)
+        VALUES
+            (REPLACE(#{CAL_DT}, '-', SPACE(0)), '99', #{NOTE}, NULL)
+    </insert>
+
+    <select id="selectSchedulerNote" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            DATE_FORMAT(STR_TO_DATE(CAL_DT, '%Y%m%d'), '%Y-%m-%d') as `start`,
+            NOTE AS `title`
+        FROM jmes.TBL_CALENDAR
+        WHERE 1 = 1
+            AND CAL_DT BETWEEN #{SEL_START_DATE} AND #{SEL_END_DATE}
+            AND CAL_TYPE = '99'
+    </select>
+
 </mapper>

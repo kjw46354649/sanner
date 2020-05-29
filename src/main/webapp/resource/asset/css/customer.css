@@ -56,6 +56,15 @@
 .onegrid .bottomWrap .left-30Warp { float: left; width: 472px; height: 100%; }
 .onegrid .bottomWrap .right-70Warp { float: right; margin-left: 10px; width: calc(100% - 482px); height: 100%; }
 
+/*# Master & Detail vertical Grid */
+.onegrid .bottomWrap .left-40Warp { float: left; width: calc(100% - 1020px); height: 100%; }
+.onegrid .bottomWrap .right-60Warp { float: right; margin-left: 10px; width: 1010px; height: 100%; }
+
+/* control business status three grid */
+.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap h2 { font-size: 1.5em; padding: 5px;}
+.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap .left-Warp{ width: 333.3px; height: 150px;}
+.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap .center-Warp { width: 333.3px; height: 150px; }
+.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap .right-Warp { width: 333.3px; height: 150px }
 
 .form-group1 .group-item { display: inline-block; width: 24.5%; padding: 0.5vh 0.5vw; }
 .form-group1 .group-item-option { display: inline-block; width: 5%; padding: 0.5vh 0.5vw; }
@@ -251,3 +260,13 @@ table.templateStyle th, table.templateStyle td { padding: 12px 13px; font-size: 
 table.templateStyle th { border: 1px solid #8ad7e7; background: #337ab7; color: white; font-family: 'NotoKrM'; }
 table.templateStyle td { border: 1px solid #cdcfd0; width: 100% !important;}
 table.templateStyle td input { width: 100% !important;}
+
+.fc-toolbar.fc-header-toolbar {
+    margin-bottom: 0.9em;
+}
+
+/** FULL CALENDER HOLIDAY COLOR SETTING **/
+.fc-day-top.fc-sat.fc-past { color:#0000FF; }     /* 토요일 */
+.fc-day-top.fc-sun.fc-past { color:#FF0000; }    /* 일요일 */
+.fc-day-top.fc-sat.fc-future { color:#0000FF; }     /* 토요일 */
+.fc-day-top.fc-sun.fc-future { color:#FF0000; }    /* 일요일 */

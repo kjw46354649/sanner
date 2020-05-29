@@ -12,6 +12,12 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/fmt' prefix='fmt' %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/functions' prefix='fn' %>
 
+<script src="/resource/plugins/jspPrint/zip.js"></script>
+<script src="/resource/plugins/jspPrint/zip-ext.js"></script>
+<script src="/resource/plugins/jspPrint/deflate.js"></script>
+<script src="/resource/plugins/jspPrint/JSPrintManager.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.5/bluebird.min.js"></script>
 <script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
 <!-- Bootstrap -->
 <script src='/resource/main/js/bootstrap.js'></script>
@@ -50,6 +56,12 @@
 
 <!-- CK Editor -->
 <script type="text/javascript" src="/resource/plugins/ckeditor/ckeditor.js" ></script>
+
+<script type="text/javascript" src='/resource/plugins/fullcalendar/core/main.js'></script>
+<script type="text/javascript" src='/resource/plugins/fullcalendar/interaction/main.js'></script>
+<script type="text/javascript" src='/resource/plugins/fullcalendar/daygrid/main.js'></script>
+<%--<script type="text/javascript" src='/resource/plugins/fullcalendar/moment/main.js'></script>--%>
+<script class="cssdesk" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.0/moment.min.js" type="text/javascript"></script>
 
 <script type='text/javascript'>
 
