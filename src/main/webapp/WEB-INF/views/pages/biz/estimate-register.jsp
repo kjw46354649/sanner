@@ -791,7 +791,7 @@
                     callback(true);
                     return;
                 });
-                $(".drawingPrintCloseBtn").unbind().click(function (e) {
+                $(".commonConfirmCloseBtn").unbind().click(function (e) {
                     e.stopPropagation();
                     commonConfirmPopup.hide();
                 });

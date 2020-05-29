@@ -4,7 +4,7 @@
 <mapper namespace="procedure">
 
     <update id="SP_CONTROL_EXCEL_BATCH" statementType="CALLABLE" >
-        { call sedo_erp.SP_COTROL_EXCEL_BATCH(#{IN_UID}) }
+        { call jmes.SP_CONTROL_BATCH(#{IN_UID}) }
     </update>
 
 </mapper>

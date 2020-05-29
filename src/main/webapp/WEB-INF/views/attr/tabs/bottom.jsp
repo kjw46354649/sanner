@@ -79,7 +79,7 @@
     <div class="modal-dialog cadDrawing" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close drawingPrintCloseBtn" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close commonConfirmCloseBtn" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
                 <h2 class="modal-title" id="commonConfirmHeadHtml">출력 정보</h2>
             </div>
             <div class="modal-body">
@@ -92,7 +92,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" id="commonConfirmYesBtn" class="defaultBtn radius blue">출력</button>
-                <button type="button" id="commonConfirmNoBtn" class="defaultBtn radius drawingPrintCloseBtn" data-dismiss="modal">아니오</button>
+                <button type="button" id="commonConfirmNoBtn" class="defaultBtn radius commonConfirmCloseBtn" data-dismiss="modal">아니오</button>
             </div>
         </div>
     </div>

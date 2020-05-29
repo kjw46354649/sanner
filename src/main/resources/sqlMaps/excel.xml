@@ -107,7 +107,8 @@
             B.COMP_FAX,
             '()', <!-- 금액 합계 -->
             A.INVOICE_NUM, <!-- INV No. -->
-            A.INVOICE_TITLE
+            A.INVOICE_TITLE,
+            SF_GET_DATE_F(NOW(),'YYYY','M') AS NOW
         FROM TBL_INVOICE A 
             INNER JOIN TBL_COMPANY B ON A.COMP_CD = B.COMP_CD 
         WHERE INVOICE_NUM = (SELECT INVOICE_NUM
