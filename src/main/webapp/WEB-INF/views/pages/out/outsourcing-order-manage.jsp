@@ -456,8 +456,8 @@
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: false},
             {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true},
             {title: 'OUTSIDE_REQUEST_SEQ', dataType: 'integer', dataIndx: 'OUTSIDE_REQUEST_SEQ', hidden: true},
-            {title: '담당자', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', hidden: true},
-            {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
+            {title: '담당자', dataType: 'integer', dataIndx: 'ORDER_STAFF_SEQ', hidden: true},
+            {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: false},
             {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_NM'},
             {title: '외주<br>구분', dataType: 'string', dataIndx: 'OUTSIDE_YN'},
             {title: '원발주<br>상태', dataType: 'string', dataIndx: 'CONTROL_STATUS_NM'},
@@ -947,7 +947,16 @@
             con.css({'height': '764px'});
 
             $outsideOrderManageGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
-        }
+        };
+
+        const noSelectedRowAlert = function () {
+            if (selectedRowIndex.length > 0) {
+                return false;
+            } else {
+                alert('하나 이상 선택해주세요');
+                return true;
+            }
+        };
         /* function */
 
         /* event */
@@ -974,31 +983,34 @@
         });
 
         $('#ORDER_EXTRACTION').on('click', function () {
-            let selectedRowCount = selectedRowIndex.length;
+            if (noSelectedRowAlert()) {
+                return false;
+            }
+
             let outsideOrderNumStr = '';
             let orderStaffSeqStr = '';
-            let compCdList = [];
+            let orderCompCdList = [];
 
-            // outsourcing_order_excel_download paramData
-            // OUTSIDE_ORDER_NUM:COMP_CD:ORDER_STAFF_SEQ
-
-            for (let i = 0; i < selectedRowCount; i++) {
+            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = $outsideOrderManageGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
 
                 outsideOrderNumStr = rowData.OUTSIDE_ORDER_NUM;
-                compCdList.push(rowData.OUTSIDE_COMP_CD);
+                orderCompCdList.push(rowData.OUTSIDE_COMP_CD);
                 orderStaffSeqStr = rowData.ORDER_STAFF_SEQ;
             }
             // 중복제거
-            compCdList = compCdList.filter(function (element, index, array) {
+            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
             });
 
-            if (compCdList.length > 1) {
+            if (orderCompCdList.length > 1) {
                 alert('선택된 대상들의 외주업체는 반드시 동일해야함');
                 return false;
             }
-            $('#outsourcing_order_excel_download #paramData').val(outsideOrderNumStr + ':' + compCdList[0] + ':' + orderStaffSeqStr);
+            // if(orderCompCdList[0] == undefined) {
+            //     console.log('undefined!');
+            // }
+            $('#outsourcing_order_excel_download #paramData').val(outsideOrderNumStr + ':' + orderCompCdList[0] + ':' + orderStaffSeqStr);
 
             fnReportFormToHiddenFormPageAction('outsourcing_order_excel_download', '/downloadExcel');
         });
@@ -1034,7 +1046,7 @@
                 list.push(rowData);
             }
 
-            let parameters = {'url': '/insertOutsideClose', 'data': {data: JSON.stringify(list)}}
+            let parameters = {'url': '/createOutsideClose', 'data': {data: JSON.stringify(list)}}
             fnPostAjax(function (data, callFunctionParam) {
                 $outsideOrderManageGrid.pqGrid('refreshDataAndView');
                 $outsideCloseLeftGrid.pqGrid('refreshDataAndView');
