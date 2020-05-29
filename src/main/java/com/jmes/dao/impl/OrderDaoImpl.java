@@ -31,13 +31,13 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public void insertControlProgress(HashMap<String, Object> hashMap) throws SQLException {
-        sqlSessionTemplate.insert("insertControlProgress", hashMap);
+    public void createControlProgress(HashMap<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("createControlProgress", hashMap);
     }
 
     @Override
-    public void insertControlProgressList(Map<String, Object> hashMap) throws SQLException {
-        sqlSessionTemplate.insert("insertControlProgressList", hashMap);
+    public void createControlProgressList(Map<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("createControlProgressList", hashMap);
     }
 
     @Override
@@ -51,13 +51,13 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public void insertMonthFinishClose(HashMap<String, Object> hashMap) throws SQLException {
-        sqlSessionTemplate.insert("insertMonthFinishClose", hashMap);
+    public void createMonthFinishClose(HashMap<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("createMonthFinishClose", hashMap);
     }
 
     @Override
-    public void insertMonthFinishCloseHistory(HashMap<String, Object> hashMap) throws SQLException {
-        sqlSessionTemplate.insert("insertMonthFinishCloseHistory", hashMap);
+    public void createMonthFinishCloseHistory(HashMap<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("createMonthFinishCloseHistory", hashMap);
     }
 
     @Override
@@ -77,32 +77,32 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public void insertInvoice(HashMap<String, Object> hashMap) throws SQLException {
-        sqlSessionTemplate.insert("insertInvoice", hashMap);
+    public void createInvoice(HashMap<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("createInvoice", hashMap);
     }
 
     @Override
-    public void insertInvoiceDetail(HashMap<String, Object> hashMap) throws SQLException {
-        sqlSessionTemplate.insert("insertInvoiceDetail", hashMap);
+    public void createInvoiceDetail(HashMap<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("createInvoiceDetail", hashMap);
     }
 
     @Override
-    public void deleteInvoice(Map<String, Object> hashMap) throws SQLException {
-        sqlSessionTemplate.delete("deleteInvoice", hashMap);
+    public void removeInvoice(Map<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.delete("removeInvoice", hashMap);
     }
 
     @Override
-    public void deleteInvoiceDetail(Map<String, Object> hashMap) throws SQLException {
-        sqlSessionTemplate.delete("deleteInvoiceDetail", hashMap);
+    public void removeInvoiceDetail(Map<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.delete("removeInvoiceDetail", hashMap);
     }
 
     @Override
-    public void insertControlExcel(Map<String, Object> hashMap) throws SQLException {
-        sqlSessionTemplate.insert("insertControlExcel", hashMap);
+    public void createControlExcel(Map<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("createControlExcel", hashMap);
     }
 
     @Override
-    public void insertControlExcelBatch(Map<String, Object> hashMap) throws SQLException {
+    public void createControlExcelBatch(Map<String, Object> hashMap) throws SQLException {
         sqlSessionTemplate.insert("procedure.SP_CONTROL_EXCEL_BATCH", hashMap);
     }
 

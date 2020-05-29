@@ -21,11 +21,11 @@ public class OrderController {
     /**
      * @description 신규 주문 등록
      */
-    @RequestMapping(value = "/registerNewOrder", method = RequestMethod.POST)
-    public String registerNewOrder(HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/createNewOrder", method = RequestMethod.POST)
+    public String createNewOrder(HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
 
-        this.orderService.registerNewOrder(map);
+        this.orderService.createNewOrder(map);
 
         return "jsonView";
     }
@@ -33,11 +33,11 @@ public class OrderController {
     /**
      * @description 신규 주문 등록 & 확정
      */
-    @RequestMapping(value = "/registerNewOrderConfirm", method = RequestMethod.POST)
-    public String registerNewOrderConfirm(HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/createNewOrderConfirm", method = RequestMethod.POST)
+    public String createNewOrderConfirm(HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
 
-        this.orderService.registerNewOrderConfirm(map);
+        this.orderService.createNewOrderConfirm(map);
 
         return "jsonView";
     }
@@ -51,30 +51,30 @@ public class OrderController {
         return "jsonView";
     }
 
-    @RequestMapping(value = "/insertMonthFinishClose", method = RequestMethod.POST)
-    public String insertMonthFinishClose(HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/createMonthFinishClose", method = RequestMethod.POST)
+    public String createMonthFinishClose(HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
-        this.orderService.insertMonthFinishClose(map);
+        this.orderService.createMonthFinishClose(map);
         return "jsonView";
     }
 
     /**
      * @description 거래명세표 저장
      */
-    @RequestMapping(value = "/insertInvoice", method = RequestMethod.POST)
-    public String insertInvoice(HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/createInvoice", method = RequestMethod.POST)
+    public String createInvoice(HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
-        this.orderService.insertInvoice(map);
+        this.orderService.createInvoice(map);
         return "jsonView";
     }
 
     /**
      * @description 거래 명세표 삭제
      */
-    @RequestMapping(value = "/deleteInvoice", method = RequestMethod.POST)
-    public String deleteInvoice(HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/removeInvoice", method = RequestMethod.POST)
+    public String removeInvoice(HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
-        this.orderService.deleteInvoice(map);
+        this.orderService.removeInvoice(map);
         return "jsonView";
     }
 }

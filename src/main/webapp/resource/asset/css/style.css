@@ -444,3 +444,21 @@ div.drawingTit,span.drawingTit{background-color: #e8f0f0; font-family: 'NotoKrB'
 .process_confirm p { display:inline; font-size: 1.6rem; font-family: 'NotoKrB'; color: #000; }
 .process_confirm label { font-size: 1.2rem; color: #343434;}
 .process_confirm hr { margin-top:0; margin-bottom: 10px; border: 0; border-top: 1px solid #e2e2e2; }
+
+.controlCloseLayerPopup { position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; background: #fff; width: 1012px; height: 420px; border: 1px solid #ababab; padding: 20px; box-sizing: border-box; }
+.controlCloseLayerPopup > div + div { margin-top: 10px; }
+.controlCloseLayerPopup hr { display:block; border: 1px solid black; margin-top: 5px; margin-bottom: 15px; }
+.controlCloseLayerPopup h3 { font-size: 20px; font-family: 'NotoKrB'; color: #000; }
+.controlCloseLayerPopup h5 { font-size: 16px; font-family: 'NotoKrB'; color: #000; }
+.controlCloseLayerPopup .pop_close { width: 23px; height: 23px; position: absolute; top: 12px; right: 12px; font-size: 0; background: url(../images/common/btn_popup.png)no-repeat 0 0; }
+.controlCloseLayerPopup .buttonWrap { display: inline-block; }
+.controlCloseLayerPopup .buttonWrap + div { margin-top: 10px; }
+.controlCloseLayerPopup .buttonWrap .leftbuttonWrap { width: 450px; text-align: right; }
+.controlCloseLayerPopup .buttonWrap .leftbuttonWrap > div:nth-child(2) { margin: 0 10; }
+.controlCloseLayerPopup button:disabled { background-color: lightgray; }
+
+.arrow {display:inline-block; background:#7d1919; position:relative;}
+.arrow.right_Arrow {width:20px; height:10px;}
+.arrow:after {content:''; position:absolute; width:0; height:0; border-style:solid;}
+.arrow.right_Arrow:after {border-width:15px 20px;}
+.arrow.right_Arrow:after {border-color:transparent transparent transparent #7d1919; top:-10px; left:20px;}

@@ -12,17 +12,17 @@ public interface OrderDao {
 
     void insertControlPartOrder(Map<String, Object> hashMap) throws SQLException;
 
-    void insertControlProgress(HashMap<String, Object> hashMap) throws SQLException;
+    void createControlProgress(HashMap<String, Object> hashMap) throws SQLException;
 
-    void insertControlProgressList(Map<String, Object> hashMap) throws SQLException;
+    void createControlProgressList(Map<String, Object> hashMap) throws SQLException;
 
     void insertControlPartProgressList(Map<String, Object> hashMap) throws SQLException;
 
     List<Map<String, Object>> selectControlCloseRightList(Map<String, Object> map) throws SQLException;
 
-    void insertMonthFinishClose(HashMap<String, Object> hashMap) throws SQLException;
+    void createMonthFinishClose(HashMap<String, Object> hashMap) throws SQLException;
 
-    void insertMonthFinishCloseHistory(HashMap<String, Object> hashMap) throws SQLException;
+    void createMonthFinishCloseHistory(HashMap<String, Object> hashMap) throws SQLException;
 
     void updateControlStatus(HashMap<String, Object> hashMap) throws SQLException;
 
@@ -30,15 +30,15 @@ public interface OrderDao {
 
     void insertControlBarcode(Map<String, Object> hashMap) throws SQLException;
 
-    void insertInvoice(HashMap<String, Object> hashMap) throws SQLException;
+    void createInvoice(HashMap<String, Object> hashMap) throws SQLException;
 
-    void insertInvoiceDetail(HashMap<String, Object> hashMap) throws SQLException;
+    void createInvoiceDetail(HashMap<String, Object> hashMap) throws SQLException;
 
-    void deleteInvoice(Map<String, Object> hashMap) throws SQLException;
+    void removeInvoice(Map<String, Object> hashMap) throws SQLException;
 
-    void deleteInvoiceDetail(Map<String, Object> hashMap) throws SQLException;
+    void removeInvoiceDetail(Map<String, Object> hashMap) throws SQLException;
 
-    void insertControlExcel(Map<String, Object> hashMap) throws SQLException;
+    void createControlExcel(Map<String, Object> hashMap) throws SQLException;
 
-    void insertControlExcelBatch(Map<String, Object> hashMap) throws SQLException;
+    void createControlExcelBatch(Map<String, Object> hashMap) throws SQLException;
 }

@@ -22,7 +22,7 @@
             SF_GET_STAFF_NM(A.ORDER_STAFF_SEQ) AS ORDER_STAFF_NM, <!-- 구매담당자 이름 -->
             A.DESIGNER_NM, <!-- 설계자 -->
             A.NOTE, <!-- 비고 -->
-            '', <!-- 거래명세서 no ㅇㄷ? -->
+            F.INVOICE_NUM, <!-- 거래명세서 no -->
             A.PROJECT_NM, <!-- 프로젝트 -->
             A.MODULE_NM, <!-- 모듈명 -->
             A.DELIVERY_COMP_NM, <!-- 납품처명 -->
@@ -122,6 +122,8 @@
                                                  AND D.CLOSE_MONTH = E.CLOSE_MONTH
                                                  AND D.ORDER_COMP_CD = E.ORDER_COMP_CD
                                                  AND D.CLOSE_VER = E.CLOSE_VER
+            LEFT OUTER JOIN TBL_INVOICE_DETAIL F ON B.CONTROL_SEQ = F.CONTROL_SEQ
+                                                    AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
     </sql>
 
     <select id="selectControlManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -163,9 +165,9 @@
 
     <select id="selectControlCloseVer" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT MAX(CLOSE_VER) AS MAX_CLOSE_VER
-        FROM TBL_CONTROL_CLOSE
+        FROM TBL_MONTH_CLOSE
         WHERE
-            CONTROL_SEQ IN (${CONTROL_SEQ})
+            ORDER_COMP_CD IN (${ORDER_COMP_CD})
             AND CLOSE_MONTH = CONCAT(#{CONTROL_CLOSE_YEAR}, #{CONTROL_CLOSE_MONTH})
     </select>
 
@@ -257,7 +259,7 @@
             ORDER_COMP_CD
     </select>
 
-    <insert id="insertMonthFinishClose" parameterType="java.util.HashMap" >
+    <insert id="createMonthFinishClose" parameterType="java.util.HashMap" >
         INSERT INTO TBL_MONTH_CLOSE (
             COMP_CD,
             CLOSE_MONTH,
@@ -276,7 +278,7 @@
 		        UPDATE_DT = NOW()
     </insert>
 
-    <insert id="insertMonthFinishCloseHistory" parameterType="java.util.HashMap" >
+    <insert id="createMonthFinishCloseHistory" parameterType="java.util.HashMap" >
         INSERT INTO TBL_MONTH_CLOSE_DETAIL (
             COMP_CD,
             CLOSE_MONTH,
@@ -445,7 +447,7 @@
         </foreach>
     </insert>
 
-    <insert id="insertControlProgress" parameterType="java.util.HashMap" >
+    <insert id="createControlProgress" parameterType="java.util.HashMap" >
         INSERT INTO TBL_CONTROL_PROGRESS (
             CONTROL_SEQ,
             SEQ,
@@ -459,7 +461,7 @@
         )
     </insert>
 
-    <insert id="insertControlProgressList" parameterType="java.util.HashMap" >
+    <insert id="createControlProgressList" parameterType="java.util.HashMap" >
         INSERT INTO TBL_CONTROL_PROGRESS (
             CONTROL_SEQ,
             SEQ,
@@ -642,6 +644,54 @@
         </if>
         <if test="OTHER_SIDE_QTY != null and OTHER_SIDE_QTY != ''">
             OTHER_SIDE_QTY = #{OTHER_SIDE_QTY},
+        </if>
+        <if test="UNIT_MATERIAL_AMT != null and UNIT_MATERIAL_AMT != ''">
+            UNIT_MATERIAL_AMT = #{UNIT_MATERIAL_AMT},
+        </if>
+        <if test="UNIT_TM_AMT != null and UNIT_TM_AMT != ''">
+            UNIT_TM_AMT = #{UNIT_TM_AMT},
+        </if>
+        <if test="UNIT_GRIND_AMT != null and UNIT_GRIND_AMT != ''">
+            UNIT_GRIND_AMT = #{UNIT_GRIND_AMT},
+        </if>
+        <if test="UNIT_HEAT_AMT != null and UNIT_HEAT_AMT != ''">
+            UNIT_HEAT_AMT = #{UNIT_HEAT_AMT},
+        </if>
+        <if test="UNIT_SURFACE_AMT != null and UNIT_SURFACE_AMT != ''">
+            UNIT_SURFACE_AMT = #{UNIT_SURFACE_AMT},
+        </if>
+        <if test="UNIT_PROCESS_AMT != null and UNIT_PROCESS_AMT != ''">
+            UNIT_PROCESS_AMT = #{UNIT_PROCESS_AMT},
+        </if>
+        <if test="UNIT_ETC_AMT != null and UNIT_ETC_AMT != ''">
+            UNIT_ETC_AMT = #{UNIT_ETC_AMT},
+        </if>
+        <if test="UNIT_MATERIAL_AUTO_YN != null and UNIT_MATERIAL_AUTO_YN != ''">
+            UNIT_MATERIAL_AUTO_YN = #{UNIT_MATERIAL_AUTO_YN},
+        </if>
+        <if test="UNIT_TM_AUTO_YN != null and UNIT_TM_AUTO_YN != ''">
+            UNIT_TM_AUTO_YN = #{UNIT_TM_AUTO_YN},
+        </if>
+        <if test="UNIT_GRIND_AUTO_YN != null and UNIT_GRIND_AUTO_YN != ''">
+            UNIT_GRIND_AUTO_YN = #{UNIT_GRIND_AUTO_YN},
+        </if>
+        <if test="UNIT_HEAT_AUTO_YN != null and UNIT_HEAT_AUTO_YN != ''">
+            UNIT_HEAT_AUTO_YN = #{UNIT_HEAT_AUTO_YN},
+        </if>
+        <if test="UNIT_SURFACE_AUTO_YN != null and UNIT_SURFACE_AUTO_YN != ''">
+            UNIT_SURFACE_AUTO_YN = #{UNIT_SURFACE_AUTO_YN},
+        </if>
+        <if test="UNIT_PROCESS_AUTO_YN != null and UNIT_PROCESS_AUTO_YN != ''">
+            UNIT_PROCESS_AUTO_YN = #{UNIT_PROCESS_AUTO_YN},
+        </if>
+        <if test="UNIT_AMT_NOTE != null and UNIT_AMT_NOTE != ''">
+            UNIT_AMT_NOTE = #{UNIT_AMT_NOTE},
+        </if>
+        <if test="UNIT_FINAL_EST_AMT != null and UNIT_FINAL_EST_AMT != ''">
+            UNIT_FINAL_EST_AMT = #{UNIT_FINAL_EST_AMT},
+        </if>
+        <if test="UNIT_FINAL_AMT != null and UNIT_FINAL_AMT != ''">
+            UNIT_FINAL_AMT = #{UNIT_FINAL_AMT},
         </if>
         <if test="PART_STATUS != null and PART_STATUS != ''">
             PART_STATUS = #{PART_STATUS},
@@ -1125,8 +1175,9 @@
             SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM , <!-- 발주사 -->
             A.COMP_CD, <!-- 공급사 -->
             SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM, <!-- 공급사 -->
-            CONCAT('IV-', (SELECT LPAD(SUBSTR(MAX(INVOICE_NUM), 4) + 1, 6, 0)
-                           FROM TBL_INVOICE)) AS INVOICE_NUM, <!-- 인보이스 넘버 -->
+            IFNULL((SELECT MAX(INVOICE_NUM)
+                    FROM TBL_INVOICE_DETAIL
+                    WHERE CONTROL_SEQ IN (${CONTROL_SEQ_STR})), CONCAT('IV-', (SELECT LPAD(SUBSTR(MAX(A.INVOICE_NUM), 4) + 1, 6, 0) AS INV_SEQ FROM TBL_INVOICE A))) AS INVOICE_NUM, <!-- 인보이스 넘버 -->
             (SELECT FORMAT(SUM(B.UNIT_FINAL_AMT * C.ORDER_QTY), 0)
             FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
@@ -1141,9 +1192,9 @@
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
                                                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-            INNER JOIN TBL_INVOICE_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ
+            LEFT JOIN TBL_INVOICE_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ
                                                AND B.CONTROL_DETAIL_SEQ  = D.CONTROL_DETAIL_SEQ
-            INNER JOIN TBL_INVOICE E ON D.INVOICE_NUM = E.INVOICE_NUM
+            LEFT JOIN TBL_INVOICE E ON D.INVOICE_NUM = E.INVOICE_NUM
         WHERE 1 = 1
             AND A.CONTROL_SEQ IN (${CONTROL_SEQ_STR})
             AND A.COMP_CD = #{COMP_CD}
@@ -1196,7 +1247,7 @@
         A.ORDER_STAFF_SEQ
     </select>
 
-    <insert id="insertInvoice" parameterType="java.util.HashMap" >
+    <insert id="createInvoice" parameterType="java.util.HashMap" >
         INSERT INTO TBL_INVOICE (
             INVOICE_NUM,
             COMP_CD,
@@ -1205,17 +1256,22 @@
             INVOICE_TITLE,
             INVOICE_DT
         ) VALUES (
-            (CONCAT('IV-', (SELECT LPAD(SUBSTR(MAX(A.INVOICE_NUM), 4) + 1, 6, 0) AS INV_SEQ
-                           FROM TBL_INVOICE A))),
+            IFNULL((SELECT MAX(INVOICE_NUM)
+                    FROM TBL_INVOICE_DETAIL
+                    WHERE CONTROL_SEQ IN (7269)), CONCAT('IV-', (SELECT LPAD(SUBSTR(MAX(A.INVOICE_NUM), 4) + 1, 6, 0) AS INV_SEQ FROM TBL_INVOICE A))),
             #{COMP_CD},
             #{ORDER_COMP_CD},
             #{ORDER_STAFF_SEQ},
             #{INVOICE_TITLE},
             NOW()
-        )
+        ) ON DUPLICATE KEY
+	        UPDATE
+	            INVOICE_TITLE = #{INVOICE_TITLE},
+		        INVOICE_DT = NOW(),
+		        UPDATE_DT = NOW()
     </insert>
 
-    <insert id="insertInvoiceDetail" parameterType="java.util.HashMap" >
+    <insert id="createInvoiceDetail" parameterType="java.util.HashMap" >
         INSERT INTO TBL_INVOICE_DETAIL (
             INVOICE_NUM,
             CONTROL_SEQ,
@@ -1223,13 +1279,18 @@
             PACKING_CNT,
             NOTE
         ) VALUES (
-            (CONCAT('IV-', (SELECT LPAD(SUBSTR(MAX(A.INVOICE_NUM), 4), 6, 0) AS INV_SEQ
-                           FROM TBL_INVOICE A))),
+            IFNULL((SELECT MAX(INVOICE_NUM)
+                    FROM TBL_INVOICE_DETAIL
+                    WHERE CONTROL_SEQ IN (7269)), CONCAT('IV-', (SELECT LPAD(SUBSTR(MAX(A.INVOICE_NUM), 4) + 1, 6, 0) AS INV_SEQ FROM TBL_INVOICE A))),
             #{CONTROL_SEQ},
             #{CONTROL_DETAIL_SEQ},
             #{PACKING_CNT},
             #{NOTE}
-        )
+        ) ON DUPLICATE KEY
+            UPDATE
+                PACKING_CNT = #{PACKING_CNT},
+                NOTE = #{NOTE},
+                UPDATE_DT = NOW()
     </insert>
 
     <select id="moneyReceiveStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -1393,40 +1454,32 @@
                   A.COMP_CD, -- 공급사
                   SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM,
                   B.PACKING_CNT,  -- 품수
-                  (SELECT P.UNIT_FINAL_AMT
-                   FROM TBL_CONTROL_PART P
-                       INNER JOIN TBL_CONTROL_PART_ORDER Q ON P.CONTROL_SEQ = Q.CONTROL_SEQ
-                                                              AND P.CONTROL_DETAIL_SEQ = Q.CONTROL_DETAIL_SEQ
-                   WHERE P.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS UNIT_FINAL_AMT,
-                  (SELECT Q.ORDER_QTY
-                   FROM TBL_CONTROL_PART P
-                       INNER JOIN TBL_CONTROL_PART_ORDER Q ON P.CONTROL_SEQ = Q.CONTROL_SEQ
-                                                              AND P.CONTROL_DETAIL_SEQ = Q.CONTROL_DETAIL_SEQ
-                   WHERE P.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS ORDER_QTY,
-                  (SELECT P.UNIT_FINAL_AMT * Q.ORDER_QTY
-                   FROM TBL_CONTROL_PART P
-                       INNER JOIN TBL_CONTROL_PART_ORDER Q ON P.CONTROL_SEQ = Q.CONTROL_SEQ
-                                                              AND P.CONTROL_DETAIL_SEQ = Q.CONTROL_DETAIL_SEQ
-                   WHERE P.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT,
+                  C.UNIT_FINAL_AMT,
+                  D.ORDER_QTY,
+                  C.UNIT_FINAL_AMT * D.ORDER_QTY AS TOTAL_AMT,
                   A.INVOICE_TITLE,
-                  A.INVOICE_DT, <!-- UPDATED DT -->
-                  '' <!-- 출력일시 -->
+                  A.INVOICE_DT, -- UPDATED DT
+                  '' -- 출력일시
               FROM TBL_INVOICE A
-                  INNER JOIN TBL_INVOICE_DETAIL B ON A.INVOICE_NUM = B.INVOICE_NUM) X
+                  INNER JOIN TBL_INVOICE_DETAIL B ON A.INVOICE_NUM = B.INVOICE_NUM
+                  INNER JOIN TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                  INNER JOIN TBL_CONTROL_PART_ORDER D ON C.CONTROL_SEQ = D.CONTROL_SEQ
+                                                         AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+              WHERE B.CONTROL_SEQ IN (#{CONTROL_SEQ})) X
         GROUP BY X.INVOICE_NUM
     </select>
 
-    <delete id="deleteInvoice" parameterType="java.util.HashMap">
+    <delete id="removeInvoice" parameterType="java.util.HashMap">
         DELETE FROM TBL_INVOICE
         WHERE INVOICE_NUM = #{INVOICE_NUM};
     </delete>
 
-    <delete id="deleteInvoiceDetail" parameterType="java.util.HashMap">
+    <delete id="removeInvoiceDetail" parameterType="java.util.HashMap">
         DELETE FROM TBL_INVOICE_DETAIL
         WHERE INVOICE_NUM = #{INVOICE_NUM};
     </delete>
 
-    <insert id="insertControlExcel" statementType="CALLABLE" parameterType="java.util.HashMap" >
+    <insert id="createControlExcel" statementType="CALLABLE" parameterType="java.util.HashMap" >
         INSERT INTO TBL_CONTROL_EXCEL (
             JOB_SEQ,
             JOB_SEQ_KEY,

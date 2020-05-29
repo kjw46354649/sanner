@@ -198,6 +198,10 @@
 .cadDrawingPrint .print table.drawingArea tbody .controlInfo .barcode{width:95%; height:50px; padding: 3px;}
 .cadDrawingPrint .print table.drawingArea tbody .imageInfo{ /*height:1040px;*/ /*width:100%;*/}
 .cadDrawingPrint .print table.drawingArea tbody .drawingImage{ /*height:1040px;*/ width:98%; text-align: center; padding: 2px;}
+/*.cadDrawingPrint .print table.drawingArea tbody .barcode { background-color: #E8E8E8; }*/
+.print table.drawingArea.barcodeLabel { width: 90mm; height: 50mm; margin: 2mm; border: 1px solid black; border-collapse: collapse; }
+.print table.drawingArea.barcodeLabel td { border: 1px solid black; text-align: center; vertical-align: middle; font-size: 10px; }
+.print table.drawingArea.barcodeLabel td.header { background-color: #E8E8E8; }
 
 @page cadDrawingPrintPage {
     /*size: 8.27in 11.69in;*/

@@ -5,15 +5,15 @@ import java.util.Map;
 
 public interface OrderService {
 
-    void registerNewOrder(Map<String, Object> map) throws Exception;
+    void createNewOrder(Map<String, Object> map) throws Exception;
 
-    void registerNewOrderConfirm(Map<String, Object> map) throws Exception;
+    void createNewOrderConfirm(Map<String, Object> map) throws Exception;
 
     List<Map<String, Object>> selectControlCloseRightList(Map<String, Object> map) throws Exception;
 
-    void insertMonthFinishClose(Map<String, Object> map) throws Exception;
+    void createMonthFinishClose(Map<String, Object> map) throws Exception;
 
-    void insertInvoice(Map<String, Object> map) throws Exception;
+    void createInvoice(Map<String, Object> map) throws Exception;
 
-    void deleteInvoice(Map<String, Object> map) throws Exception;
+    void removeInvoice(Map<String, Object> map) throws Exception;
 }

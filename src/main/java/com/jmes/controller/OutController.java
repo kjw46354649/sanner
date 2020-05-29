@@ -20,11 +20,11 @@ public class OutController {
     /**
      * 그리드 삽입/갱신
      */
-    @RequestMapping(value = "/insertOutsideClose", method = RequestMethod.POST)
-    public String insertOutsideClose(HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/createOutsideClose", method = RequestMethod.POST)
+    public String createOutsideClose(HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
 
-        this.outService.insertOutsideClose(map);
+        this.outService.createOutsideClose(map);
 
         return "jsonView";
     }

@@ -95,9 +95,6 @@
                             <input type="text" class="wd_200" name="NOTE" id="NOTE">
                         </span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap right_float">
-                            <button type="button" class="defaultBtn radius blue" id="CONTROL_MONTH_SALE_STATUS_SEARCH">검색</button>
-                        </span>
                     </li>
                     <li>
                         <span class="slt_wrap">
@@ -111,6 +108,7 @@
                         <span class="wd_200" style="display: inline-block;">
                             <span class="chk_box"><input type="checkbox" name="DEPOSIT_STATUS_DISPLAY" id="DEPOSIT_STATUS_DISPLAY"><label for="DEPOSIT_STATUS_DISPLAY">입금현황 표시</label></span>
                         </span>
+                        <button type="button" class="right_float defaultBtn radius blue" id="CONTROL_MONTH_SALE_STATUS_SEARCH">검색</button>
                     </li>
                 </ul>
             </div>
@@ -199,28 +197,15 @@
             numberCell: {title: 'No.'},
             scrollModel: {autoFit: true},
             trackModel: {on: true},
-            columnTemplate: {
-                align: 'center',
-                halign: 'center',
-                hvalign: 'center', //to vertically center align the header cells.
-                editable: false
-            },
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
             colModel: tab1ColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: tab1PostData,
-                recIndx: 'ROWNUM',
+                postData: {'queryId': 'dataSource.emptyGrid'}, recIndx: 'ROWNUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
-            },
-            cellClick: function (event, ui) {
-                console.log(ui);
-                let rowData = ui.rowData;
-                if (ui.dataIndx === 'ITEM_NUMBER') {
-                    console.log('clcickckdlalgldlsxlzlxlxkzkzks');
-                }
-            },
+            }
         };
         let $detailListViewGrid;
         const detailListViewGridId = 'DETAIL_LIST_VIEW_GRID';
@@ -366,11 +351,13 @@
 
         };
 
-        $('#DETAIL_LIST_VIEW_POPUP').on('show.bs.modal', function (event) {
-            console.group('DETAIL_LIST_VIEW_POPUP ON');
-            console.log(event);
-            console.groupEnd();
-            $detailListViewGrid = $('#' + detailListViewGridId).pqGrid(detailListViewObj);
+        $('#DETAIL_LIST_VIEW_POPUP').on({
+            'show.bs.modal': function () {
+                $detailListViewGrid = $('#' + detailListViewGridId).pqGrid(detailListViewObj);
+            },
+            'hide.bs.modal': function () {
+                $detailListViewGrid.pqGrid('destroy');
+            }
         });
 
         $('#CLOSE_YEAR_LEFT').on('change', function () {
@@ -441,9 +428,11 @@
         fnAppendSelectboxMonth('CLOSE_MONTH_RIGHT');
         fnAppendSelectboxYear('MONTH_SALE_YEAR', 10);
 
-
-
         $closingHistoryGrid = $('#' + tab1GridId).pqGrid(tab1Obj);
+        $closingHistoryGrid.pqGrid('option', 'dataModel.postData', function () {
+            return (fnFormToJsonArrayData('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM'));
+        });
+        $closingHistoryGrid.pqGrid('refreshDataAndView');
         $monthlySalesStatusGrid = $('#' + tab2GridId).pqGrid(tab2Obj);
         /* init */
     });
