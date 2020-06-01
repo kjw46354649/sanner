@@ -190,8 +190,9 @@
         });
 
         $mailTemplateMasterAddBtn.click(function(event){
-            $("#mail_template_search_form #TEMPLATE_SEQ").val('');
+            $("#mail_template_record_popup_form #queryId").val('systemMapper.insertUpdateMailTemplate');
             $("#mail_template_record_popup_form #TEMPLATE_SEQ").val('');
+            $("#mail_template_search_form #TEMPLATE_SEQ").val('');
             $("#mail_template_record_popup").modal('show');;
         });
 
@@ -217,6 +218,7 @@
         $('#mail_template_record_popup').on('hide.bs.modal', function() {
             fnResetFrom('mail_template_record_popup_form');
             CKEDITOR.instances.TEMPLATE_CONTENT_E.setData('');
+            $("#mail_template_search_form #TEMPLATE_SEQ").val('');
         });
 
         $('#mail_template_record_popup').on('show.bs.modal',function() {

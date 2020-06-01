@@ -92,7 +92,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" id="commonConfirmYesBtn" class="defaultBtn radius blue">출력</button>
-                <button type="button" id="commonConfirmNoBtn" class="defaultBtn radius commonConfirmCloseBtn" data-dismiss="modal">아니오</button>
+                <button type="button" id="commonConfirmCloseBtn" class="defaultBtn radius commonConfirmCloseBtn" data-dismiss="modal">아니오</button>
             </div>
         </div>
     </div>

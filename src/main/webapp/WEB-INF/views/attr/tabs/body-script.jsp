@@ -551,7 +551,7 @@
      */
     let fnCommCodeDatasourceSelectBoxCreate = function ($formId, selectType, parmamData) {
         'use strict';
-        fnPostAjax(function (data, callFunctionParam) {
+        fnPostAjaxAsync(function (data, callFunctionParam) {
             $formId[0].options.length = 0;
             fnSelectBoxTopSetting($formId, selectType);
             for(let i=0; i < data.list.length; i++){
@@ -586,7 +586,7 @@
     let fnCommCodeDatasourceGridSelectBoxCreate = function (parmamData) {
         'use strict';
         let selectBoxContents = [];
-        fnPostAjax(function (data, callFunctionParam) {
+        fnPostAjaxAsync(function (data, callFunctionParam) {
             for(let i=0; i < data.list.length; i++){
                 selectBoxContents.push({'value':data.list[i].CODE_CD, 'text':data.list[i].CODE_NM});
             }

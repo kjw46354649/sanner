@@ -732,7 +732,7 @@
 
                 let detail_data = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data');
                 //let mail_data = $("#EMAIL_CONTENT_TXT").val();
-                let mail_data = CKEDITOR.instances.TEMPLATE_CONTENT_E.getData();
+                let mail_data = CKEDITOR.instances.EMAIL_CONTENT_TXT.getData();
                 let receiver_data = estimateRegisterBotGrid.pqGrid('option', 'dataModel.data');
                 $("#estimate_register_info_form #ESTIMATE_DETAIL_DATA").val(JSON.stringify(detail_data));
                 $("#estimate_register_info_form #ESTIMATE_RECEIVER_DATA").val(JSON.stringify(receiver_data));
@@ -749,15 +749,6 @@
 
             }, parameters, '');
         }
-
-        /** Modal 처리 **/
-        $('#estimate_register_mail_popup').on('hide.bs.modal', function() {
-
-        });
-
-        $('#estimate_register_mail_popup').on('show.bs.modal',function() {
-
-        });
 
         /** 버튼 처리 **/
         $("#btn_estimate_register_submit").on("click", function(){
@@ -784,10 +775,9 @@
             fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
             let estimateRegisterSubmitConfirm = function(callback) {
                 commonConfirmPopup.show();
-                $("#drawingPrintActionBtn").unbind().click(function (e) {
+                $("#commonConfirmYesBtn").unbind().click(function (e) {
                     e.stopPropagation();
                     commonConfirmPopup.hide();
-                    $(this).startWaitMe();
                     callback(true);
                     return;
                 });
@@ -797,18 +787,21 @@
                 });
             };
             estimateRegisterSubmitConfirm(function(confirm){
-                if(autoEmailYn){
-                    if(confirm){
+                if(confirm) {
+                    $("#estimate_register_info_form #queryId").val('estimate.updateEstimateMasterFinish');
+                    let parameters = {
+                        'url': '/json-update',
+                        'data': $("#estimate_register_info_form").serialize()
+                    };
+                    fnPostAjax(estimateRegisterSaveCallBack, parameters, '');
 
-                    }else{
-
-                    }
-
-                }else{
-                    if(confirm){
-
-                    }else{
-
+                    if (autoEmailYn) {
+                        $("#estimate_register_info_form #queryId").val('mail.insertEstimateSubmitMail');
+                        let parameters = {
+                            'url': '/json-update',
+                            'data': $("#estimate_register_info_form").serialize()
+                        };
+                        fnPostAjax(estimateRegisterSaveCallBack, parameters, '');
                     }
                 }
             });
