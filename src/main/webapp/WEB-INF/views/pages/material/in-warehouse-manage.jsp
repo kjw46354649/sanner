@@ -41,6 +41,139 @@
         <!-- /.modal-dialog -->
     </div>
 </div>
+<div class="popup_container" id="in_warehouse_manage_out_popup" style="display: none;">
+    <div class="layerPopup" style="height: fit-content;">
+        <h3 style="margin-bottom: 10px;">소재 불출 진행</h3>
+        <button type="button" class="pop_close">닫기</button>
+        <br/>
+        <form class="form-inline" role="form" id="in_warehouse_manage_out_popup_form" name="in_warehouse_manage_out_popup_form">
+            <input type="hidden" id="queryId" name="queryId" value="insertInWarehouseManageOutPop"/>
+            <input type="hidden" id="MY_MAT_STOCK_SEQ" name="MY_MAT_STOCK_SEQ"/>
+            <div class="tableWrap">
+                <table>
+                    <tbody>
+                        <tr class="outTopTableStyle">
+                            <th rowspan="2">창고명</th><th rowspan="2">위치</th>
+                            <th rowspan="2">형태</th><th rowspan="2">소재종류</th>
+                            <th colspan="5">소재 Size</th><th rowspan="2">보유수량</th>
+                        </tr>
+                        <tr class="outTopTableStyle">
+                            <th>가로</th><th>세로</th><th>두께</th>
+                            <th>파이</th><th>길이(L)</th>
+                        </tr>
+                        <tr class="outTopTableStyle">
+                            <td><input type="text" id="WAREHOUSE_NM" name="WAREHOUSE_NM" readonly></td>
+                            <td><input type="text" id="LOC_NM" name="LOC_NM" readonly></td>
+                            <td><input type="text" id="MATERIAL_KIND_NM" name="MATERIAL_KIND_NM" readonly></td>
+                            <td><input type="text" id="MATERIAL_DETAIL_NM" name="MATERIAL_DETAIL_NM" readonly></td>
+                            <td><input type="text" id="SIZE_W" name="SIZE_W" readonly></td>
+                            <td><input type="text" id="SIZE_H" name="SIZE_H" readonly></td>
+                            <td><input type="text" id="SIZE_T" name="SIZE_T" readonly></td>
+                            <td><input type="text" id="SIZE_D" name="SIZE_D" readonly></td>
+                            <td><input type="text" id="SIZE_L" name="SIZE_L" readonly></td>
+                            <td><input type="text" id="STOCK_QTY" name="STOCK_QTY" readonly></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br/>
+            <div class="tableWrap">
+                <table>
+                    <tbody>
+                        <tr class="outMidTableStyle"><th>보유수량</th><th>남은수량</th><th>불출수량</th><th>요청자</th></tr>
+                        <tr class="outMidTableStyle">
+                            <td><input type="text" id="STOCK_QTY" name="STOCK_QTY" readonly></td>
+                            <td><input type="text" id="REMAIN_QTY" name="REMAIN_QTY" readonly></td>
+                            <td><input type="text" id="OUT_QTY" name="OUT_QTY"></td>
+                            <td>
+                                <select id="OUT_USER_ID" name="OUT_USER_ID">
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </br>
+                <table>
+                    <tr class="outBotTableStyle">
+                        <th>용도</th>
+                        <td><input id="NOTE" name="NOTE" type="text" style='width: 100%;'></td>
+                    </tr>
+                </table>
+            </div>
+            <p> 불출 하시겠습니까?</p>
+            <div class="popBtnWrap">
+                <button class="btnSave" id="btnInWarehouseManageOutPopSave">저장</button>
+                <button class="btnCancel" id="btnInWarehouseManageOutPopCancel">취소</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="popup_container" id="in_warehouse_manage_scan_barcode_popup" style="display: none;">
+    <div class="layerPopup" style="height: fit-content;">
+        <h3 style="margin-bottom: 10px;">소재 불출 진행</h3>
+        <button type="button" class="pop_close">닫기</button>
+        <br/>
+        <form class="form-inline" role="form" id="in_warehouse_manage_scan_barcode_popup_form" name="in_warehouse_manage_out_popup_form">
+            <input type="hidden" id="queryId" name="queryId" value="material.selectInWarehousePop"/>
+            <input type="hidden" id="TYPE" name="TYPE" value=""/>
+            <input type="hidden" id="MY_MAT_OUT_SEQ" name="MY_MAT_OUT_SEQ"/>
+            <input type="hidden" id="BARCODE_NUM" name="BARCODE_NUM"/>
+            <div class="tableWrap">
+                <span class="barCode"><img id="barCodeImg" src="/resource/asset/images/common/img_barcode_long.png" alt="바코드"></span>
+                <span class="barCodeTxt ipu_wrap"><input type="text" name="popBarcode" id="popBarcode" value="" readonly></span>
+                <br/>
+                <table>
+                    <tr class="outBotTableStyle">
+                        <th>관리번호</th>
+                        <td><input id="CONTROL_NUM" name="CONTROL_NUM" type="text" style='width: 100%;'></td>
+                    </tr>
+                </table>
+            </div>
+            </br>
+            <div class="tableWrap">
+                <table id="inWarehouseManageScanPopDynamicTable">
+                    <tbody>
+                    <tr class="outTopTableStyle">
+                        <th rowspan="2">No.</th><th rowspan="2">형태</th>
+                        <th rowspan="2">소재종류</th><th colspan="5">불출대기 목록</th>
+                        <th rowspan="2">보유수량</th><th rowspan="2">요청수량</th>
+                        <th rowspan="2">창고</th><th rowspan="2">위치</th>
+                        <th rowspan="2">주문번호</th><th rowspan="2">요청일시</th>
+                    </tr>
+                    <tr class="outTopTableStyle">
+                        <th>가로</th><th>세로</th><th>두께</th>
+                        <th>파이</th><th>길이(L)</th>
+                    </tr>
+                    <tr class="outTopTableStyle" id="dynamicTableTr">
+                        <td><input type="text" id="SEQ" name="SEQ" readonly></td>
+                        <td><input type="text" id="MATERIAL_KIND_NM" name="MATERIAL_KIND_NM" readonly></td>
+                        <td><input type="text" id="MATERIAL_DETAIL_NM" name="MATERIAL_DETAIL_NM" readonly></td>
+                        <td><input type="text" id="SIZE_W" name="SIZE_W" readonly></td>
+                        <td><input type="text" id="SIZE_H" name="SIZE_H" readonly></td>
+                        <td><input type="text" id="SIZE_T" name="SIZE_T" readonly></td>
+                        <td><input type="text" id="SIZE_D" name="SIZE_D" readonly></td>
+                        <td><input type="text" id="SIZE_L" name="SIZE_L" readonly></td>
+                        <td><input type="text" id="STOCK_QTY" name="STOCK_QTY" readonly></td>
+                        <td><input type="text" id="OUT_QTY" name="OUT_QTY" readonly></td>
+                        <td><input type="text" id="WAREHOUSE_NM" name="WAREHOUSE_NM" readonly></td>
+                        <td><input type="text" id="LOC_NM" name="LOC_NM" readonly></td>
+                        <td><input type="text" id="ORDER_NUM" name="ORDER_NUM" readonly></td>
+                        <td><input type="text" id="ORDER_DT" name="ORDER_DT" readonly></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br/>
+            <p> 불출 하시겠습니까?</p>
+            <div class="popBtnWrap">
+                <button class="btnSave" id="btnInWarehouseManageScanPopSave">저장</button>
+                <button class="btnCancel" id="btnInWarehouseManageScanPopCancel">취소</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="page estimate machineWrap">
         <form class="form-inline" id="in_warehouse_manage_search_form" name="in_warehouse_manage_search_form" role="form">
             <div class="topWrap">
@@ -258,37 +391,8 @@
                 }
             } ,
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 150 } ,
-            /*{title: '가로', dataType: 'string', dataIndx: 'SIZE_W', minWidth: 60 ,
-                editable: function(ui) {
-                    let rowData = inWarehouseManageManageGrid01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                    return getSizeEditYn('SIZE_W', rowData);
-                }
-            },
-            {title: '세로', dataType: 'string', dataIndx: 'SIZE_H', minWidth: 60 ,
-                editable: function(ui) {
-                    let rowData = inWarehouseManageManageGrid01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                    return getSizeEditYn('SIZE_H', rowData);
-                }
-            },
-            {title: '두께(T)', dataType: 'string', dataIndx: 'SIZE_T', minWidth: 60 ,
-                editable: function(ui) {
-                    let rowData = inWarehouseManageManageGrid01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                    return getSizeEditYn('SIZE_T', rowData);
-                }
-            },
-            {title: '지름(D)', dataType: 'string', dataIndx: 'SIZE_D', minWidth: 60 ,
-                editable: function(ui) {
-                    let rowData = inWarehouseManageManageGrid01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                    return getSizeEditYn('SIZE_D', rowData);
-                }
-            },
-            {title: '길이(L)', dataType: 'string', dataIndx: 'SIZE_L', minWidth: 60 ,
-                editable: function(ui) {
-                    let rowData = inWarehouseManageManageGrid01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                    return getSizeEditYn('SIZE_L', rowData);
-                }
-            },*/
             {title: '보유수량', dataType: 'string', dataIndx: 'STOCK_QTY', minWidth: 80 },
+            {title: '불출대기수량', dataType: 'string', dataIndx: 'OUT_WAIT_QTY', minWidth: 80 },
             {title: '상세위치', dataType: 'string', dataIndx: 'LOC_NM', minWidth: 120,
                 editor: {
                     type: 'select',
@@ -327,9 +431,23 @@
             {title: '입고', dataType: 'string', dataIndx: 'IN_QTY', minWidth: "3%" },
             {title: '불출요청', dataType: 'string', dataIndx: '', minWidth: "5%" ,
                 render: function(ui){
-                    return '<input type="button" value="불출" style="width:70px;"/>';
+                    return '<input type="button" id="inWarehouseOutPop" value="불출" style="width:70px;"/>';
+                },
+                postRender: function (ui) {
+                    let grid = this;
+                    let $cell = grid.getCell(ui);
+                    $cell.find('#inWarehouseOutPop').on('click', function (event) {
+                        $("#in_warehouse_manage_out_popup").modal("show");
+
+                        fnJsonDataToForm('in_warehouse_manage_out_popup', ui.rowData);
+                    });
                 }
-            }
+            },
+            {title: '가로', dataType: 'string', dataIndx: 'SIZE_W', hidden: true },
+            {title: '세로', dataType: 'string', dataIndx: 'SIZE_H', hidden: true },
+            {title: '두께(T)', dataType: 'string', dataIndx: 'SIZE_T', hidden: true },
+            {title: '지름(D)', dataType: 'string', dataIndx: 'SIZE_D', hidden: true },
+            {title: '길이(L)', dataType: 'string', dataIndx: 'SIZE_L', hidden: true }
         ];
 
         let inWarehouseManageManageColModel02= [
@@ -357,14 +475,11 @@
                     let grid = this;
                     let $cell = grid.getCell(ui);
                     $cell.find('#inWarehouseManualOut').on('click', function (event) {
-                        let parameter = {
-                            'queryId': 'material.updateInWarehouseOut',
-                            'MY_MAT_OUT_SEQ': ui.rowData.MY_MAT_OUT_SEQ
-                        };
-                        let parameters = {'url': '/json-update', 'data': parameter};
-                        fnPostAjax(function(data, callFunctionParam){
-                            selectInWarehouseManageManageGrid02List();
-                        }, parameters, '');
+                        $("#in_warehouse_manage_scan_barcode_popup_form #TYPE").val('manual');
+                        $("#in_warehouse_manage_scan_barcode_popup_form #MY_MAT_OUT_SEQ").val(ui.rowData.MY_MAT_OUT_SEQ);
+                        $("#in_warehouse_manage_scan_barcode_popup_form #BARCODE_NUM").val('');
+
+                        $("#in_warehouse_manage_scan_barcode_popup").modal('show');
                     });
                 }
             }
@@ -516,6 +631,7 @@
                     return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                 }
             },
+            postRenderInterval: -1,
             columnTemplate: {align: 'center', hvalign: 'center'},
             scrollModel: {autoFit: false},
             numberCell: {width: 30, title: "No", show: true },
@@ -629,31 +745,6 @@
             },
         });
 
-        function getSizeEditYn(typeNm, rowData){
-            let MATERIAL_KIND = rowData['MATERIAL_KIND'];
-            if(MATERIAL_KIND == 'SHP010'){
-                if(typeNm == 'SIZE_W')  return true;
-                if(typeNm == 'SIZE_H')  return true;
-                if(typeNm == 'SIZE_T')  return true;
-                if(typeNm == 'SIZE_D')  return false;
-                if(typeNm == 'SIZE_L')  return false;
-
-            }else if(MATERIAL_KIND == 'SHP020'){
-                if(typeNm == 'SIZE_W')  return false;
-                if(typeNm == 'SIZE_H')  return false;
-                if(typeNm == 'SIZE_T')  return false;
-                if(typeNm == 'SIZE_D')  return true;
-                if(typeNm == 'SIZE_L')  return true;
-
-            }else if(MATERIAL_KIND == 'SHP030'){
-                if(typeNm == 'SIZE_W')  return true;
-                if(typeNm == 'SIZE_H')  return true;
-                if(typeNm == 'SIZE_T')  return false;
-                if(typeNm == 'SIZE_D')  return false;
-                if(typeNm == 'SIZE_L')  return true;
-            }
-        }
-
         $("#btnInWarehouseManageManageSearch").on('click', function(){
             inWarehouseManageManageGrid01.pqGrid('option', "dataModel.postData", function (ui) {
                 return (fnFormToJsonArrayData('#in_warehouse_manage_search_form'));
@@ -710,6 +801,73 @@
             inWarehouseManageWarehousePopupGrid.pqGrid("refreshDataAndView");
         });
 
+        $('#in_warehouse_manage_scan_barcode_popup').on('show.bs.modal',function() {
+            fnSearchScanTableOnData();
+        });
+
+        $('#in_warehouse_manage_scan_barcode_popup').on('hide.bs.modal',function() {
+            $("#in_warehouse_manage_scan_barcode_popup_form #TYPE").val('');
+            $("#in_warehouse_manage_scan_barcode_popup_form #MY_MAT_OUT_SEQ").val('');
+            $("#in_warehouse_manage_scan_barcode_popup_form #BARCODE_NUM").val('');
+
+            $("#in_warehouse_manage_scan_barcode_popup_form").find('#dynamicTableTr').remove();
+        });
+
+        function fnSearchScanTableOnData(){
+            $("#in_warehouse_manage_scan_barcode_popup_form").find('#dynamicTableTr').remove();
+
+            let MY_MAT_OUT_SEQ = $("#in_warehouse_manage_scan_barcode_popup_form #MY_MAT_OUT_SEQ").val();
+            let BARCODE_NUM = $("#in_warehouse_manage_scan_barcode_popup_form #BARCODE_NUM").val();
+            if(MY_MAT_OUT_SEQ == '' && BARCODE_NUM == ''){
+                fnMakeScanTableTdOnData('');
+            } else {
+                let parameters = {'url': '/json-list', 'data': fnFormToJsonArrayData('in_warehouse_manage_scan_barcode_popup_form')};
+                fnPostAjax(function(data, callFunctionParam){
+                    fnMakeScanTableTdOnData(data);
+                }, parameters, '');
+            }
+        }
+        function fnMakeScanTableTdOnData(data){
+            let html = "";
+            let list = data.list;
+            if(data != '') {
+                for(var i=0; i<list.length; i++) {
+                    html +='<tr class="outTopTableStyle" id="dynamicTableTr">';
+                    html += '<td><input type="text" id="SEQ" name="SEQ" value="'+ list[i].SEQ +'" readonly></td>';
+                    html += '<td><input type="text" id="MATERIAL_KIND_NM" name="MATERIAL_KIND_NM" value="'+ fnEmptyValReturn(list[i].MATERIAL_KIND_NM) +'" readonly></td>';
+                    html += '<td><input type="text" id="MATERIAL_DETAIL_NM" name="MATERIAL_DETAIL_NM" value="'+ fnEmptyValReturn(list[i].MATERIAL_DETAIL_NM) +'" readonly></td>';
+                    html += '<td><input type="text" id="SIZE_W" name="SIZE_W" value="'+ fnEmptyValReturn(list[i].SIZE_W) +'" readonly></td>';
+                    html += '<td><input type="text" id="SIZE_H" name="SIZE_H" value="'+ fnEmptyValReturn(list[i].SIZE_H) +'" readonly></td>';
+                    html += '<td><input type="text" id="SIZE_T" name="SIZE_T" value="'+ fnEmptyValReturn(list[i].SIZE_T) +'" readonly></td>';
+                    html += '<td><input type="text" id="SIZE_D" name="SIZE_D" value="'+ fnEmptyValReturn(list[i].SIZE_D) +'" readonly></td>';
+                    html += '<td><input type="text" id="SIZE_L" name="SIZE_L" value="'+ fnEmptyValReturn(list[i].SIZE_L) +'" readonly></td>';
+                    html += '<td><input type="text" id="STOCK_QTY" name="STOCK_QTY" value="'+ fnEmptyValReturn(list[i].STOCK_QTY) +'" readonly></td>';
+                    html += '<td><input type="text" id="OUT_QTY" name="OUT_QTY" value="'+ fnEmptyValReturn(list[i].OUT_QTY) +'"></td>';
+                    html += '<td><input type="text" id="WAREHOUSE_NM" name="WAREHOUSE_NM" value="'+ fnEmptyValReturn(list[i].WAREHOUSE_NM) +'" readonly></td>';
+                    html += '<td><input type="text" id="LOC_NM" name="LOC_NM" value="'+ fnEmptyValReturn(list[i].LOC_NM) +'" readonly></td>';
+                    html += '<td><input type="text" id="MATERIAL_ORDER_NUM" name="MATERIAL_ORDER_NUM" value="'+ fnEmptyValReturn(list[i].MATERIAL_ORDER_NUM) +'" readonly></td>';
+                    html += '<td><input type="text" id="ORDER_DT" name="ORDER_DT" value="'+ fnEmptyValReturn(list[i].ORDER_DT) +'" readonly></td>';
+                    html += '</tr>';
+
+                    $("#in_warehouse_manage_scan_barcode_popup_form #CONTROL_NUM").val(fnEmptyValReturn(list[i].CONTROL_NUM));
+                }
+            }
+
+            $("#in_warehouse_manage_scan_barcode_popup_form #inWarehouseManageScanPopDynamicTable tbody").append(html);
+        }
+
+        function fnEmptyValReturn(data){
+            if(data == undefined || data == null) data = ''
+            return data;
+        }
+
+        /** Element Event **/
+        $("#popBarcode").on('keyup', function(event){
+            $("#in_warehouse_manage_scan_barcode_popup_form #BARCODE_NUM").val($(this).val());
+            $("#in_warehouse_manage_scan_barcode_popup_form #MY_MAT_OUT_SEQ").val('');
+            fnSearchScanTableOnData();
+        });
+
         /** 버튼 처리 **/
         $("#btnInWarehouseManageAdd").on('click', function(){
             inWarehouseManageManageGrid01.pqGrid('addNodes', [{}], 0);
@@ -729,7 +887,11 @@
         });
 
         $("#btnInWarehouseManageOutBarcode").on('click', function(){
+            $("#in_warehouse_manage_scan_barcode_popup_form #TYPE").val('scan');
+            $("#in_warehouse_manage_scan_barcode_popup_form #MY_MAT_OUT_SEQ").val('');
+            $("#in_warehouse_manage_scan_barcode_popup_form #BARCODE_NUM").val('');
 
+            $("#in_warehouse_manage_scan_barcode_popup").modal("show");
         });
 
         $("#btnInWarehouseManageLocation").on('click', function(){
@@ -741,43 +903,32 @@
             fnModifyPQGrid(inWarehouseManageManageGrid01, inWarehouseManageInsertUpdateQueryList, inWarehouseManageInsertUpdateQueryList);
         });
 
+        $("#btnInWarehouseManageScanPopSave").on('click', function(){
+            let type = $("#in_warehouse_manage_scan_barcode_popup_form #TYPE").val();
+            let my_mat_out_seq = $("#in_warehouse_manage_scan_barcode_popup_form #MY_MAT_OUT_SEQ").val();
+            let barcode_num = $("#in_warehouse_manage_scan_barcode_popup_form #BARCODE_NUM").val();
+            let parameter;
+
+            if(type == 'manual'){
+                parameter = {
+                    'queryId': 'material.updateInWarehouseOut',
+                    'MY_MAT_OUT_SEQ': my_mat_out_seq
+                };
+            } else if(type == 'scan') {
+                parameter = {
+                    'queryId': 'material.updateInWarehouseScan',
+                    'BARCODE_NUM': barcode_num
+                };
+            }
+            let parameters = {'url': '/json-update', 'data': parameter};
+            fnPostAjax(function(data, callFunctionParam){
+                selectInWarehouseManageManageGrid02List();
+            }, parameters, '');
+        });
+
+
+        fnCommCodeDatasourceSelectBoxCreate($("#in_warehouse_manage_out_popup_form").find("#OUT_USER_ID"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}});
+
     });
 
-    $(document).on('click', '#item_warehouse_manage_out', function(event){
-        let seq = event.target.dataset.seq;
-        let col = event.target.dataset.col;
-        let val = event.target.dataset.val;
-
-        let valueElement = document.createElement("input");
-        let queryElement = document.createElement("input");
-        let seqElement = document.createElement("input");
-
-        valueElement.type = "hidden";
-        valueElement.id = col;
-        valueElement.name = col;
-        valueElement.setAttribute("value", val);
-
-        queryElement.type = "hidden";
-        queryElement.id = "queryId";
-        queryElement.name = "queryId";
-        queryElement.setAttribute("value", "material.updateItemOrderHistoryInspection");
-
-        seqElement.type = "hidden";
-        seqElement.id = "MATERIAL_ORDER_SEQ";
-        seqElement.name = "MATERIAL_ORDER_SEQ";
-        seqElement.setAttribute("value", seq);
-
-        $("#item_order_history_inspection_hidden_form").empty();
-        $("#item_order_history_inspection_hidden_form").append(valueElement);
-        $("#item_order_history_inspection_hidden_form").append(queryElement);
-        $("#item_order_history_inspection_hidden_form").append(seqElement);
-
-        let parameters = {'url': '/json-update', 'data': $("#item_order_history_inspection_hidden_form").serialize()};
-        fnPostAjax(function (data, callFunctionParam) {
-            inWarehouseManageManageGrid02.pqGrid('option', "dataModel.postData", function (ui) {
-                return (fnFormToJsonArrayData('#item_order_history_hidden_form'));
-            });
-            inWarehouseManageManageGrid02.pqGrid('refreshDataAndView');
-        }, parameters, '');
-    });
 </script>

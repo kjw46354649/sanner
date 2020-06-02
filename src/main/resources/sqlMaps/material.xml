@@ -45,58 +45,67 @@
             F.ORDER_QTY AS M_ORDER_QTY, F.ORDER_NOTE AS M_ORDER_NOTE, F.SIZE_TXT AS M_SIZE_TXT, G.REQUEST_CD,
             F.ORDER_STATUS AS M_STATUS, SF_GET_CODE_NM('1028', F.ORDER_STATUS, 'EN') AS M_STATUS_NM,
             SF_GET_DATE_F(F.ORDER_DT,'YYYY','M') AS M_ORDER_DT,
-            I.SIZE_TXT AS OUT_SIZE_TXT, H.OUT_QTY,
-            CASE WHEN H.MY_MAT_OUT_SEQ IS NOT NULL THEN 'Y' ELSE 'N' END OUT_YN
+            I.SIZE_TXT AS OUT_SIZE_TXT, H.OUT_QTY, H.MY_MAT_OUT_SEQ,
+            CASE WHEN Z.MY_MAT_OUT_SEQ IS NOT NULL THEN 'Y' ELSE 'N' END OUT_YN
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.WORK_TYPE = 'WTP010'
                 AND B.PART_STATUS IN( 'PRO002', 'PRO004')
             INNER JOIN TBL_CONTROL_PART_ORDER D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-            LEFT OUTER JOIN TBL_MATERIAL_ORDER F ON D.CONTROL_SEQ = F.CONTROL_SEQ AND F.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_MATERIAL_ORDER F ON D.CONTROL_SEQ = F.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
             LEFT OUTER JOIN TBL_MATERIAL_ORDER_REQUEST G ON F.MATERIAL_ORDER_SEQ AND G.MATERIAL_ORDER_SEQ
-            LEFT OUTER JOIN TBL_MY_MATERIAL_OUT H ON H.CONTROL_SEQ = F.CONTROL_SEQ AND F.CONTROL_DETAIL_SEQ = H.CONTROL_DETAIL_SEQ
-            LEFT OUTER JOIN TBL_MY_MATERIAL_STOCK I ON I.MY_MAT_STOCK_SEQ = H.MY_MAT_STOCK_SEQ
+            LEFT OUTER JOIN TBL_MY_MATERIAL_OUT H ON D.CONTROL_SEQ = H.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = H.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_MY_MATERIAL_STOCK I ON H.MY_MAT_STOCK_SEQ = I.MY_MAT_STOCK_SEQ
+            LEFT OUTER JOIN TBL_MY_MATERIAL_OUT Z ON Z.CONTROL_SEQ = D.CONTROL_SEQ AND Z.CONTROL_DETAIL_SEQ = H.CONTROL_DETAIL_SEQ
+				AND Z.OUT_STATUS = 'OUT002'
         WHERE A.CONTROL_STATUS = 'ORD001'
         ORDER BY A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, F.MATERIAL_ORDER_SEQ
     </select>
 
     <select id="selectItemOrderRegisterDetail" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-        A.MY_MAT_STOCK_SEQ, A.WAREHOUSE_CD, SF_GET_CODE_NM('1049', A.WAREHOUSE_CD, 'EN') AS WAREHOUSE_NM,
-        A.MATERIAL_TYPE, SF_GET_ETC_NM( '1000', A.MATERIAL_TYPE) AS MATERIAL_TYPE_NM,
-        A.MATERIAL_DETAIL, SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, 'EN') AS MATERIAL_DETAIL_NM,
-        A.MATERIAL_KIND, SF_GET_CODE_NM('1029', A.MATERIAL_KIND, 'EN') AS MATERIAL_KIND_NM,
-        A.SIZE_TXT, A.LOC_SEQ, B.LOC_NM,
-        SUM(IFNULL(C.IN_QTY, 0)) - SUM(IFNULL(D.OUT_QTY, 0)) AS STOCK_QTY,
-        D.MY_MAT_OUT_SEQ, E.OUT_QTY AS OUT_QTY,
-        CASE WHEN E.CONTROL_DETAIL_SEQ IS NOT NULL THEN 'Y' ELSE 'N' END OUT_YN,
-        A.NOTE
-        FROM TBL_MY_MATERIAL_STOCK A
-        INNER JOIN TBL_WAREHOUSE_LOCATION B ON A.WAREHOUSE_CD = B.WAREHOUSE_CD AND A.LOC_SEQ = B.LOC_SEQ AND B.DEL_YN = 'N'
-        LEFT OUTER JOIN TBL_MY_MATERIAL_IN C ON A.MY_MAT_STOCK_SEQ = C.MY_MAT_STOCK_SEQ
-        LEFT OUTER JOIN TBL_MY_MATERIAL_OUT D ON A.MY_MAT_STOCK_SEQ = D.MY_MAT_STOCK_SEQ
-        LEFT OUTER JOIN TBL_MY_MATERIAL_OUT E ON A.MY_MAT_STOCK_SEQ = E.MY_MAT_STOCK_SEQ
-            AND E.OUT_STATUS = 'OUT001'
-            <if test="CONTROL_SEQ !='' and CONTROL_SEQ != null">
-                AND E.CONTROL_SEQ = #{CONTROL_SEQ}
+        SELECT *
+        FROM (
+            SELECT
+                A.MY_MAT_STOCK_SEQ, A.WAREHOUSE_CD, SF_GET_CODE_NM('1049', A.WAREHOUSE_CD, 'EN') AS WAREHOUSE_NM,
+                A.MATERIAL_TYPE, SF_GET_ETC_NM( '1000', A.MATERIAL_TYPE) AS MATERIAL_TYPE_NM,
+                A.MATERIAL_DETAIL, SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, 'EN') AS MATERIAL_DETAIL_NM,
+                A.MATERIAL_KIND, SF_GET_CODE_NM('1029', A.MATERIAL_KIND, 'EN') AS MATERIAL_KIND_NM,
+                A.SIZE_TXT, A.LOC_SEQ, B.LOC_NM,
+                SUM(IFNULL(C.IN_QTY, 0)) - SUM(IFNULL(D.OUT_QTY, 0)) AS STOCK_QTY,
+                SUM(IFNULL(C.IN_QTY, 0)) - SUM(IFNULL(F.OUT_QTY, 0)) AS COMPLETE_STOCK_QTY,
+                D.MY_MAT_OUT_SEQ, E.OUT_QTY AS OUT_QTY,
+                CASE WHEN E.CONTROL_DETAIL_SEQ IS NOT NULL THEN 'Y' ELSE 'N' END OUT_YN,
+                A.NOTE
+            FROM TBL_MY_MATERIAL_STOCK A
+                INNER JOIN TBL_WAREHOUSE_LOCATION B ON A.WAREHOUSE_CD = B.WAREHOUSE_CD AND A.LOC_SEQ = B.LOC_SEQ AND B.DEL_YN = 'N'
+                LEFT OUTER JOIN TBL_MY_MATERIAL_IN C ON A.MY_MAT_STOCK_SEQ = C.MY_MAT_STOCK_SEQ
+                LEFT OUTER JOIN TBL_MY_MATERIAL_OUT D ON A.MY_MAT_STOCK_SEQ = D.MY_MAT_STOCK_SEQ
+                LEFT OUTER JOIN TBL_MY_MATERIAL_OUT E ON A.MY_MAT_STOCK_SEQ = E.MY_MAT_STOCK_SEQ
+                    AND E.OUT_STATUS = 'OUT001'
+                    <if test="CONTROL_SEQ !='' and CONTROL_SEQ != null">
+                        AND E.CONTROL_SEQ = #{CONTROL_SEQ}
+                    </if>
+                    <if test="CONTROL_DETAIL_SEQ !='' and CONTROL_DETAIL_SEQ != null">
+                        AND E.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+                    </if>
+                LEFT OUTER JOIN TBL_MY_MATERIAL_OUT F ON A.MY_MAT_STOCK_SEQ = F.MY_MAT_STOCK_SEQ
+            WHERE 1=1
+            <if test="WAREHOUSE_CD !='' and WAREHOUSE_CD != null">
+                AND A.WAREHOUSE_CD = #{WAREHOUSE_CD}
             </if>
-            <if test="CONTROL_DETAIL_SEQ !='' and CONTROL_DETAIL_SEQ != null">
-                AND E.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            <if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
+                AND A.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
             </if>
+            <if test="AREA !='' and AREA != null">
+                AND A.AREA = #{AREA}
+            </if>
+            <if test="CONDITION !='' and CONDITION != null">
+                AND A.CONDITION = #{CONDITION}
+            </if>
+            GROUP BY A.WAREHOUSE_CD, A.MATERIAL_KIND, A.MATERIAL_DETAIL, A.SIZE_TXT
+            ) Z
         WHERE 1=1
-        <if test="WAREHOUSE_CD !='' and WAREHOUSE_CD != null">
-            AND A.WAREHOUSE_CD = #{WAREHOUSE_CD}
-        </if>
-        <if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
-            AND A.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
-        </if>
-        <if test="AREA !='' and AREA != null">
-            AND A.AREA = #{AREA}
-        </if>
-        <if test="CONDITION !='' and CONDITION != null">
-            AND A.CONDITION = #{CONDITION}
-        </if>
-        GROUP BY A.WAREHOUSE_CD, A.MATERIAL_KIND, A.MATERIAL_DETAIL, A.SIZE_TXT
-        ORDER BY A.WAREHOUSE_CD, A.LOC_SEQ
+            AND Z.COMPLETE_STOCK_QTY > 0
+        ORDER BY Z.WAREHOUSE_CD, Z.LOC_SEQ
     </select>
 
     <select id="selectItemOrderRegisterPopList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -225,6 +234,11 @@
             UPDATE_ID = NULL
     </update>
 
+    <delete id="deleteItemOrderRegisterOut" parameterType="java.util.HashMap">
+        DELETE FROM TBL_MY_MATERIAL_OUT
+        WHERE MY_MAT_OUT_SEQ = #{MY_MAT_OUT_SEQ}
+    </delete>
+
     <update id="insertUpdateItemOrderRegisterPopSave" parameterType="java.util.HashMap">
         INSERT INTO TBL_MATERIAL_ORDER
         (
@@ -317,6 +331,7 @@
                     A.ORDER_NOTE, A.ORDER_QTY, A.ORDER_AMT,
                     INSPECT_MATERIAL_YN, INSPECT_SURFACE_YN, INSPECT_SIZE_YN, INSPECT_NOTE,
                     ORDER_STATUS, ORDER_DT,
+                    CASE WHEN IN_DT IS NOT NULL THEN 'Y' ELSE 'N' END IN_YN,
                     IN_DT, CANCEL_DT,
                     A.INSERT_DT, A.INSERT_ID, A.UPDATE_DT, A.UPDATE_ID,
                     CANCEL_USER_ID
@@ -330,6 +345,7 @@
                     A.ORDER_NOTE, A.ORDER_QTY, A.ORDER_AMT,
                     INSPECT_MATERIAL_YN, INSPECT_SURFACE_YN, INSPECT_SIZE_YN, INSPECT_NOTE,
                     ORDER_STATUS, ORDER_DT,
+                    CASE WHEN IN_DT IS NOT NULL THEN 'Y' ELSE 'N' END IN_YN,
                     IN_DT, CANCEL_DT,
                     A.INSERT_DT, A.INSERT_ID, A.UPDATE_DT, A.UPDATE_ID,
                     CANCEL_USER_ID
@@ -360,8 +376,19 @@
         <if test="INSPECT_NOTE != '' and INSPECT_NOTE != null">
             INSPECT_NOTE = #{INSPECT_NOTE},
         </if>
-            UPDATE_ID = NULL,
+            UPDATE_ID = NULL
         WHERE MATERIAL_ORDER_SEQ = #{MATERIAL_ORDER_SEQ}
+    </update>
+
+    <update id="updateItemOrderHistoryIn" parameterType="java.util.HashMap">
+        UPDATE TBL_MATERIAL_ORDER
+        SET IN_DT = NOW(),
+            UPDATE_DT = NOW(),
+            UPDATE_ID = NULL
+        WHERE MATERIAL_ORDER_SEQ = #{MATERIAL_ORDER_SEQ}
+            AND INSPECT_MATERIAL_YN = 'Y'
+            AND INSPECT_SURFACE_YN = 'Y'
+            AND INSPECT_SIZE_YN = 'Y'
     </update>
 
     <update id="updateItemOrderStatus" parameterType="java.util.HashMap">
@@ -384,6 +411,7 @@
             A.LOC_SEQ, B.LOC_NM,
             /*A.STOCK_QTY,*/
             SUM(IFNULL(C.IN_QTY, 0)) - SUM(IFNULL(D.OUT_QTY, 0)) AS STOCK_QTY,
+            SUM(CASE WHEN D.OUT_STATUS = 'OUT001' THEN D.OUT_QTY ELSE 0 END) AS OUT_WAIT_QTY,
             A.NOTE
         FROM TBL_MY_MATERIAL_STOCK A
             INNER JOIN TBL_WAREHOUSE_LOCATION B ON A.WAREHOUSE_CD = B.WAREHOUSE_CD AND A.LOC_SEQ = B.LOC_SEQ AND B.DEL_YN = 'N'
@@ -573,9 +601,56 @@
 
     <update id="updateInWarehouseOut" parameterType="java.util.HashMap">
         UPDATE TBL_MY_MATERIAL_OUT
-        SET OUT_STATUS = 'OUT002'
+        SET OUT_STATUS = 'OUT002',
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{UPDATE_ID}
         WHERE MY_MAT_OUT_SEQ = #{MY_MAT_OUT_SEQ}
     </update>
+
+    <update id="updateInWarehouseScan" parameterType="java.util.HashMap">
+        UPDATE TBL_MY_MATERIAL_OUT A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                AND C.BARCODE_NUM = #{BARCODE_NUM}
+        SET A.OUT_STATUS = 'OUT002',
+            A.UPDATE_DT = NOW(),
+            A.UPDATE_ID = #{UPDATE_ID}
+    </update>
+
+    <select id="selectInWarehousePop" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            ROW_NUMBER () OVER (ORDER BY A.MY_MAT_STOCK_SEQ) AS SEQ,
+            F.CONTROL_SEQ, E.CONTROL_DETAIL_SEQ, A.MY_MAT_STOCK_SEQ, C.MY_MAT_OUT_SEQ,
+            F.CONTROL_NUM,
+            E.MATERIAL_TYPE, SF_GET_ETC_NM( '1000', A.MATERIAL_TYPE) AS MATERIAL_TYPE_NM,
+            A.MATERIAL_DETAIL, SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, 'EN') AS MATERIAL_DETAIL_NM,
+            A.MATERIAL_KIND, SF_GET_CODE_NM('1029', A.MATERIAL_KIND, 'EN') AS MATERIAL_KIND_NM,
+            A.SIZE_TXT, A.SIZE_TYPE, A.SIZE_W, A.SIZE_H, A.SIZE_T, A.SIZE_D, A.SIZE_L,
+            SUM(IFNULL(Z.IN_QTY, 0)) - SUM(IFNULL(C.OUT_QTY, 0)) AS STOCK_QTY,
+            C.OUT_QTY, C.OUT_DT, C.OUT_USER_ID,
+            A.WAREHOUSE_CD, SF_GET_CODE_NM('1049', A.WAREHOUSE_CD, 'EN') AS WAREHOUSE_NM,
+            A.LOC_SEQ, B.LOC_NM,
+            D.MATERIAL_ORDER_NUM, D.ORDER_DT,
+            G.BARCODE_NUM
+        FROM TBL_MY_MATERIAL_STOCK A
+            INNER JOIN TBL_WAREHOUSE_LOCATION B ON A.WAREHOUSE_CD = B.WAREHOUSE_CD AND A.LOC_SEQ = B.LOC_SEQ
+                AND B.DEL_YN = 'N'
+            INNER JOIN TBL_MY_MATERIAL_OUT C ON A.MY_MAT_STOCK_SEQ = C.MY_MAT_STOCK_SEQ
+                AND C.OUT_STATUS = 'OUT001'
+                <if test="MY_MAT_OUT_SEQ !='' and MY_MAT_OUT_SEQ !=null">
+                    AND C.MY_MAT_OUT_SEQ = #{MY_MAT_OUT_SEQ}
+                </if>
+            INNER JOIN TBL_MATERIAL_ORDER D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_CONTROL_PART E ON E.CONTROL_SEQ = D.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_CONTROL F ON E.CONTROL_SEQ = F.CONTROL_SEQ AND F.DEL_YN = 'N'
+            INNER JOIN TBL_CONTROL_BARCODE G ON E.CONTROL_SEQ = G.CONTROL_SEQ AND E.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ AND G.DEL_YN = 'N' AND G.DRAWING_VER = E.DRAWING_VER
+                <if test="BARCODE_NUM !='' and BARCODE_NUM !=null">
+                    AND G.BARCODE_NUM = #{BARCODE_NUM}
+                </if>
+            LEFT OUTER JOIN TBL_MY_MATERIAL_IN Z ON A.MY_MAT_STOCK_SEQ = Z.MY_MAT_STOCK_SEQ
+        WHERE A.DEL_YN ='N'
+        ORDER BY A.MY_MAT_STOCK_SEQ
+    </select>
 
     <select id="selectConsumableInCnt" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT COUNT(*) AS CNT FROM jmes.TBL_CONSUMABLE_IN WHERE CONSUMABLE_STOCK_SEQ = #{CONSUMABLE_STOCK_SEQ}

@@ -16,7 +16,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDao orderDao;
 
     @Override
-    public void registerNewOrder(Map<String, Object> map) throws Exception {
+    public void createNewOrder(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<Map<String, Object>> jsonMap = null;
@@ -30,12 +30,12 @@ public class OrderServiceImpl implements OrderService {
         hashMap.put("list", jsonMap);
         hashMap.put("IN_UID", uuid);
 
-        this.orderDao.insertControlExcel(hashMap);
-        this.orderDao.insertControlExcelBatch(hashMap);
+        this.orderDao.createControlExcel(hashMap);
+        this.orderDao.createControlExcelBatch(hashMap);
     }
 
     @Override
-    public void registerNewOrderConfirm(Map<String, Object> map) throws Exception {
+    public void createNewOrderConfirm(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<Map<String, Object>> jsonMap = null;
@@ -53,8 +53,8 @@ public class OrderServiceImpl implements OrderService {
         hashMap.put("list", jsonMap);
         hashMap.put("IN_UID", uuid);
 
-        this.orderDao.insertControlExcel(hashMap);
-        this.orderDao.insertControlExcelBatch(hashMap);
+        this.orderDao.createControlExcel(hashMap);
+        this.orderDao.createControlExcelBatch(hashMap);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void insertMonthFinishClose(Map<String, Object> map) throws Exception {
+    public void createMonthFinishClose(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<HashMap<String, Object>> jsonArray = null;
@@ -83,14 +83,14 @@ public class OrderServiceImpl implements OrderService {
         for (HashMap<String, Object> hashMap : jsonArray) {
             hashMap.put("CONTROL_STATUS", "ORD003");
             this.orderDao.updateControlStatus(hashMap);
-            this.orderDao.insertControlProgress(hashMap);
-            this.orderDao.insertMonthFinishClose(hashMap);
-            this.orderDao.insertMonthFinishCloseHistory(hashMap);
+            this.orderDao.createControlProgress(hashMap);
+            this.orderDao.createMonthFinishClose(hashMap);
+            this.orderDao.createMonthFinishCloseHistory(hashMap);
         }
     }
 
     @Override
-    public void insertInvoice(Map<String, Object> map) throws Exception {
+    public void createInvoice(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
@@ -108,19 +108,19 @@ public class OrderServiceImpl implements OrderService {
 
         if (infoData != null && infoData.size() > 0) {
             for (HashMap<String, Object> hashMap : infoData) {
-                this.orderDao.insertInvoice(hashMap);
+                this.orderDao.createInvoice(hashMap);
             }
         }
 
         if (listData != null && listData.size() > 0) {
             for (HashMap<String, Object> hashMap : listData) {
-                this.orderDao.insertInvoiceDetail(hashMap);
+                this.orderDao.createInvoiceDetail(hashMap);
             }
         }
     }
 
     @Override
-    public void deleteInvoice(Map<String, Object> map) throws Exception {
+    public void removeInvoice(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<Map<String, Object>> jsonMap = null;
@@ -130,8 +130,8 @@ public class OrderServiceImpl implements OrderService {
         }
 
         for (Map<String, Object> hashMap : jsonMap) {
-            this.orderDao.deleteInvoiceDetail(hashMap);
-            this.orderDao.deleteInvoice(hashMap);
+            this.orderDao.removeInvoiceDetail(hashMap);
+            this.orderDao.removeInvoice(hashMap);
         }
     }
 }

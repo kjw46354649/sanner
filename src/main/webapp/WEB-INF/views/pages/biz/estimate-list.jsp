@@ -477,7 +477,7 @@
                     return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                 }
             },
-            //scrollModel: { autoFit: false },
+            scrollModel: { autoFit: false },
             columnTemplate: {align: 'center', hvalign: 'center'},
             numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'row', mode: 'single'} ,

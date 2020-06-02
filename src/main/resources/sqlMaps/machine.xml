@@ -186,6 +186,7 @@
     </delete>
     <select id="selectEquipId" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
+            EQUIP_SEQ,
             EQUIP_ID,
             EQUIP_NM,
             LAYOUT_ROW,
@@ -198,6 +199,7 @@
     <select id="selectProcessPlanGridList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER () OVER () AS ROWNUM,
+            E.EQUIP_SEQ,
             E.EQUIP_ID,
             A.CONTROL_SEQ,
             A.CONTROL_DETAIL_SEQ,
@@ -218,26 +220,26 @@
                                          AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
             INNER JOIN TBL_MCT_PLAN D ON A.CONTROL_SEQ = D.CONTROL_SEQ
                                          AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-            INNER JOIN TBL_EQUIP E ON D.EQUIP_ID = E.EQUIP_ID
+            INNER JOIN TBL_EQUIP E ON D.EQUIP_SEQ = E.EQUIP_SEQ
             LEFT OUTER JOIN TBL_MCT_WORK F ON A.CONTROL_SEQ = F.CONTROL_SEQ
                                               AND A.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
-                                              AND E.EQUIP_ID = F.EQUIP_ID
+                                              AND E.EQUIP_SEQ = F.EQUIP_SEQ
         WHERE
-            E.EQUIP_ID = #{EQUIP_ID}
+            E.EQUIP_SEQ = #{EQUIP_SEQ}
             AND D.DEL_YN = 'N'
         ORDER BY D.SORT_NUM
     </select>
     <insert id="insertMctPlan"  parameterType="java.util.HashMap" >
         INSERT INTO TBL_MCT_PLAN (
             MCT_PLAN_SEQ,
-            EQUIP_ID,
+            EQUIP_SEQ,
             CONTROL_SEQ,
             CONTROL_DETAIL_SEQ,
             WORKING_TIME,
             SORT_NUM
         ) VALUES(
             NEXTVAL(SEQ_MCT_PLAN),
-            #{EQUIP_ID},
+            #{EQUIP_SEQ},
             #{CONTROL_SEQ},
             #{CONTROL_DETAIL_SEQ},
             #{WORKING_TIME},
@@ -247,7 +249,7 @@
     <update id="updateMctPlan"  parameterType="java.util.HashMap" >
         UPDATE TBL_MCT_PLAN
         SET
-            EQUIP_ID = #{EQUIP_ID},
+            EQUIP_SEQ = #{EQUIP_SEQ},
             WORKING_TIME = #{WORKING_TIME},
             SORT_NUM = #{SORT_NUM},
             UPDATE_DT = NOW()
@@ -275,7 +277,7 @@
                                 DEL_YN = 'N'
                                 AND CONTROL_SEQ = #{CONTROL_SEQ}
                                 AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-                                AND EQUIP_ID = #{EQUIP_ID})
+                                AND EQUIP_SEQ = #{EQUIP_SEQ})
     </delete>
     <sql id="mctManage">
         SELECT
@@ -294,19 +296,19 @@
                 WHEN A.WORK_TYPE = 'WTP040' THEN '재'
             END AS WORK_NM, <!-- 형태 -->
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 1, 'MCT_PLAN_SEQ') AS MCT_PLAN_SEQ_1,
-            SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 1, 'EQUIP_ID') AS EQUIP_ID_1,
+            SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 1, 'EQUIP_SEQ') AS EQUIP_SEQ_1,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 1, 'WORKING_TIME') AS WORKING_TIME_1,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 1, 'STATUS') AS STATUS_1,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 2, 'MCT_PLAN_SEQ') AS MCT_PLAN_SEQ_2,
-            SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 2, 'EQUIP_ID')  AS EQUIP_ID_2,
+            SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 2, 'EQUIP_SEQ')  AS EQUIP_SEQ_2,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 2, 'WORKING_TIME') AS WORKING_TIME_2,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 2, 'STATUS') AS STATUS_2,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 3, 'MCT_PLAN_SEQ') AS MCT_PLAN_SEQ_3,
-            SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 3, 'EQUIP_ID')  AS EQUIP_ID_3,
+            SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 3, 'EQUIP_SEQ')  AS EQUIP_SEQ_3,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 3, 'WORKING_TIME') AS WORKING_TIME_3,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 3, 'STATUS') AS STATUS_3,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 4, 'MCT_PLAN_SEQ') AS MCT_PLAN_SEQ_4,
-            SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 4, 'EQUIP_ID')  AS EQUIP_ID_4,
+            SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 4, 'EQUIP_SEQ')  AS EQUIP_SEQ_4,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 4, 'WORKING_TIME') AS WORKING_TIME_4,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 4, 'STATUS') AS STATUS_4,
             H.POP_POSITION, <!-- 현재위치 -->
@@ -315,7 +317,7 @@
             FROM TBL_CONTROL_PART AA
                 INNER JOIN TBL_MCT_WORK BB ON AA.CONTROL_SEQ = BB.CONTROL_SEQ
                                              AND AA.CONTROL_DETAIL_SEQ = BB.CONTROL_DETAIL_SEQ
-                INNER JOIN TBL_EQUIP CC ON BB.EQUIP_ID = CC.EQUIP_ID
+                INNER JOIN TBL_EQUIP CC ON BB.EQUIP_SEQ = CC.EQUIP_SEQ
             WHERE
                 AA.CONTROL_SEQ = A.CONTROL_SEQ
                 AND	AA.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
@@ -328,7 +330,7 @@
             FROM TBL_CONTROL_PART AA
                 INNER JOIN TBL_MCT_WORK BB ON AA.CONTROL_SEQ = BB.CONTROL_SEQ
                                              AND AA.CONTROL_DETAIL_SEQ = BB.CONTROL_DETAIL_SEQ
-                INNER JOIN TBL_EQUIP CC ON BB.EQUIP_ID = CC.EQUIP_ID
+                INNER JOIN TBL_EQUIP CC ON BB.EQUIP_SEQ = CC.EQUIP_SEQ
             WHERE
                 AA.CONTROL_SEQ = A.CONTROL_SEQ
                 AND	AA.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
@@ -341,7 +343,7 @@
             FROM TBL_CONTROL_PART AA
                 INNER JOIN TBL_MCT_WORK BB ON AA.CONTROL_SEQ = BB.CONTROL_SEQ
                                              AND AA.CONTROL_DETAIL_SEQ = BB.CONTROL_DETAIL_SEQ
-                INNER JOIN TBL_EQUIP CC ON BB.EQUIP_ID = CC.EQUIP_ID
+                INNER JOIN TBL_EQUIP CC ON BB.EQUIP_SEQ = CC.EQUIP_SEQ
             WHERE
                 AA.CONTROL_SEQ = A.CONTROL_SEQ
                 AND	AA.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
@@ -354,7 +356,7 @@
             FROM TBL_CONTROL_PART AA
                 INNER JOIN TBL_MCT_WORK BB ON AA.CONTROL_SEQ = BB.CONTROL_SEQ
                                              AND AA.CONTROL_DETAIL_SEQ = BB.CONTROL_DETAIL_SEQ
-                INNER JOIN TBL_EQUIP CC ON BB.EQUIP_ID = CC.EQUIP_ID
+                INNER JOIN TBL_EQUIP CC ON BB.EQUIP_SEQ = CC.EQUIP_SEQ
             WHERE
                 AA.CONTROL_SEQ = A.CONTROL_SEQ
                 AND	AA.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
@@ -375,7 +377,7 @@
             WHERE
                 CONTROL_SEQ = A.CONTROL_SEQ
                 AND CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
-                AND EQUIP_ID IS NOT NULL
+                AND EQUIP_SEQ IS NOT NULL
                 AND DEL_YN = 'N') AS WORKING_TIME_TOTAL, <!-- 예상가공 시간(분) -->
             A.MCT_NOTE, <!-- 가공계획 비고 -->
             A.MCT_WORK_TYPE, <!-- 작업 구분 -->
@@ -420,7 +422,7 @@
         <!-- 	INNER JOIN TBL_EQUIP G ON E.EQUIP_ID = G.EQUIP_ID -->
         <!-- 	                          AND F.EQUIP_ID = G.EQUIP_ID -->
         INNER JOIN TBL_POP H ON A.CONTROL_SEQ = H.CONTROL_SEQ
-        AND A.CONTROL_DETAIL_SEQ = H.CONTROL_DETAIL_SEQ
+                                AND A.CONTROL_DETAIL_SEQ = H.CONTROL_DETAIL_SEQ
         WHERE 1 = 1
             AND B.CONTROL_STATUS = 'ORD001' <!-- 주문확정 -->
             AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO008')

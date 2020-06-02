@@ -67,7 +67,6 @@
                                                    AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
     </sql>
 
-
     <select id="selectOutsideOrderManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         <include refid="outManage" />
         WHERE 1 = 1
@@ -310,7 +309,7 @@
             OUTSIDE_REQUEST_SEQ = #{OUTSIDE_REQUEST_SEQ}
     </update>
 
-    <insert id="insertOutsideClose" parameterType="java.util.HashMap" >
+    <insert id="createOutsideClose" parameterType="java.util.HashMap" >
         INSERT INTO TBL_OUTSIDE_CLOSE (
             CLOSE_MONTH,
             CLOSE_VER,
@@ -328,7 +327,7 @@
 		        CLOSE_DT = NOW()
     </insert>
 
-    <insert id="insertOutsideCloseHistory" parameterType="java.util.HashMap" >
+    <insert id="createOutsideCloseHistory" parameterType="java.util.HashMap" >
         INSERT INTO jmes.TBL_OUTSIDE_CLOSE_HISTORY (
             HISTORY_SEQ,
             HISTORY_DT,

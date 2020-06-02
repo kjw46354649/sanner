@@ -501,7 +501,7 @@
         });
 
         $('#CONTROL_CLOSE_HISTORY_SAVE').on('click', function () {
-            const updateQueryList = ['orderMapper.updateControlStatus', 'orderMapper.insertControlProgress'];
+            const updateQueryList = ['orderMapper.updateControlStatus', 'orderMapper.createControlProgress'];
 
             fnModifyPQGrid($closeHistoryGrid, [], updateQueryList);
         });

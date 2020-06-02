@@ -4,9 +4,9 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 public interface OutDao {
-    void insertOutsideClose(HashMap<String, Object> hashMap) throws SQLException;
+    void createOutsideClose(HashMap<String, Object> hashMap) throws SQLException;
 
-    void insertOutsideCloseHistory(HashMap<String, Object> hashMap) throws SQLException;
+    void createOutsideCloseHistory(HashMap<String, Object> hashMap) throws SQLException;
 
     void updateOutsideCloseRequest(HashMap<String, Object> hashMap) throws SQLException;
 }

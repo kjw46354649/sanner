@@ -156,35 +156,83 @@
                     {title: '소재', dataType: 'string', dataIndx: 'INSPECT_MATERIAL_YN', editable: false,
                         render: function(ui){
                             let icon = ui.rowData.INSPECT_MATERIAL_YN == 'Y' ? 'ui-icon-check' : 'ui-icon-closethick';
-                            let returnVal = ui.rowData.INSPECT_MATERIAL_YN == 'Y' ? 'N' : 'Y';
-                            let MATERIAL_ORDER_SEQ = ui.rowData.MATERIAL_ORDER_SEQ;
-                            return '<a href="#" id="item_order_history_inspection_check">' +
-                                '   <span data-col="INSPECT_MATERIAL_YN" data-val="'+returnVal+'" data-seq="'+MATERIAL_ORDER_SEQ+'" class="ui-icon '+icon+'"></span></a>';
+                            return '<a href="#" id="itemOrderHistoryMaterialInspection">' +
+                                '   <span data-col="INSPECT_MATERIAL_YN" class="ui-icon '+icon+'"></span></a>';
+                        },
+                        postRender: function (ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui);
+                            $cell.find("#itemOrderHistoryMaterialInspection").bind("click", function () {
+                                if(ui.rowData.IN_YN == 'Y') return false;
+
+                                let returnVal = ui.rowData.INSPECT_MATERIAL_YN == 'Y' ? 'N' : 'Y';
+                                let MATERIAL_ORDER_SEQ = ui.rowData.MATERIAL_ORDER_SEQ;
+
+                                let parameter = {
+                                    'queryId': 'updateItemOrderHistoryInspection',
+                                    'MATERIAL_ORDER_SEQ': MATERIAL_ORDER_SEQ,
+                                    'INSPECT_MATERIAL_YN': returnVal
+                                };
+                                fnInspection(parameter, MATERIAL_ORDER_SEQ);
+                            });
                         }
                     },
                     {title: '외관', dataType: 'string', dataIndx: 'INSPECT_SURFACE_YN', editable: false,
                         render: function(ui){
                             let icon = ui.rowData.INSPECT_SURFACE_YN == 'Y' ? 'ui-icon-check' : 'ui-icon-closethick';
-                            let returnVal = ui.rowData.INSPECT_SURFACE_YN == 'Y' ? 'N' : 'Y';
-                            let MATERIAL_ORDER_SEQ = ui.rowData.MATERIAL_ORDER_SEQ;
-                            return '<a href="#" id="item_order_history_inspection_check">' +
-                                '   <span data-col="INSPECT_SURFACE_YN" data-val="'+returnVal+'" data-seq="'+MATERIAL_ORDER_SEQ+'" class="ui-icon '+icon+'"></span></a>';
+
+                            return '<a href="#" id="itemOrderHistorySurfaceInspection">' +
+                                '   <span data-col="INSPECT_SURFACE_YN" class="ui-icon '+icon+'"></span></a>';
+                        },
+                        postRender: function (ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui);
+                            $cell.find("#itemOrderHistorySurfaceInspection").bind("click", function () {
+                                if(ui.rowData.IN_YN == 'Y') return false;
+
+                                let returnVal = ui.rowData.INSPECT_SURFACE_YN == 'Y' ? 'N' : 'Y';
+                                let MATERIAL_ORDER_SEQ = ui.rowData.MATERIAL_ORDER_SEQ;
+
+                                let parameter = {
+                                    'queryId': 'updateItemOrderHistoryInspection',
+                                    'MATERIAL_ORDER_SEQ': MATERIAL_ORDER_SEQ,
+                                    'INSPECT_SURFACE_YN': returnVal
+                                };
+                                fnInspection(parameter, MATERIAL_ORDER_SEQ);
+                            });
                         }
                     },
                     {title: '치수', dataType: 'string', dataIndx: 'INSPECT_SIZE_YN', editable: false,
                         render: function(ui){
                             let icon = ui.rowData.INSPECT_SIZE_YN == 'Y' ? 'ui-icon-check' : 'ui-icon-closethick';
-                            let returnVal = ui.rowData.INSPECT_SIZE_YN == 'Y' ? 'N' : 'Y';
-                            let MATERIAL_ORDER_SEQ = ui.rowData.MATERIAL_ORDER_SEQ;
-                            return '<a href="#" id="item_order_history_inspection_check">' +
-                                '   <span data-col="INSPECT_SIZE_YN" data-val="'+returnVal+'" data-seq="'+MATERIAL_ORDER_SEQ+'" class="ui-icon '+icon+'"></span></a>';
+
+                            return '<a href="#" id="itemOrderHistorySizeInspection">' +
+                                '   <span data-col="INSPECT_SIZE_YN" class="ui-icon '+icon+'"></span></a>';
+                        },
+                        postRender: function (ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui);
+                            $cell.find("#itemOrderHistorySizeInspection").bind("click", function () {
+                                if(ui.rowData.IN_YN == 'Y') return false;
+
+                                let returnVal = ui.rowData.INSPECT_SIZE_YN == 'Y' ? 'N' : 'Y';
+                                let MATERIAL_ORDER_SEQ = ui.rowData.MATERIAL_ORDER_SEQ;
+
+                                let parameter = {
+                                    'queryId': 'updateItemOrderHistoryInspection',
+                                    'MATERIAL_ORDER_SEQ': MATERIAL_ORDER_SEQ,
+                                    'INSPECT_SIZE_YN': returnVal
+                                };
+                                fnInspection(parameter, MATERIAL_ORDER_SEQ);
+                            });
                         }
                     },
                 ]},
             {title: '검사 비고', dataType: 'string', dataIndx: 'INSPECT_NOTE'},
-            {title: '입고', dataType: 'string', dataIndx: '', width: 80, editable: false,
+            {title: '입고', dataType: 'string', dataIndx: 'IN_YN', width: 80, editable: false,
                 render: function(ui){
-                    return '<a href="#"><span class="ui-icon ui-icon-closethick"></span></a>';
+                    let icon = ui.rowData.IN_YN == 'Y' ? 'ui-icon-check' : 'ui-icon-closethick';
+                    return '<a href="#"><span class="ui-icon '+icon+'"></span></a>';
                 }
             },
             {title: '입고 일시', dataType: 'string', dataIndx: 'IN_DT', editable: false},
@@ -234,8 +282,7 @@
                         cd_prev = data[j - 1] ? data[j - 1][dataIndx] : undefined;
                     if (cd_prev !== undefined && cd == cd_prev) {
                         rc++;
-                    }
-                    else if (rc > 1) {
+                    }else if (rc > 1) {
                         mc.push({ r1: j, c1: i, rc: rc, cc: 1 });
                         rc = 1;
                     }
@@ -318,6 +365,7 @@
                         return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                     }
                 },
+                postRenderInterval: -1,
                 columnTemplate: {align: 'center', hvalign: 'center'},
                 scrollModel: {autoFit: true},
                 numberCell: {width: 30, title: "No", show: true },
@@ -352,43 +400,23 @@
         fnCommCodeDatasourceSelectBoxCreate($("#item_order_history_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
         fnCommCodeDatasourceSelectBoxCreate($("#item_order_history_search_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
 
+        function fnInspection(parameter, MATERIAL_ORDER_SEQ) {
+            let parameters = {'url': '/json-update', 'data': parameter};
+            fnPostAjax(function(data, callFunctionParam){
+                parameter = {
+                    'queryId': 'updateItemOrderHistoryIn',
+                    'MATERIAL_ORDER_SEQ': MATERIAL_ORDER_SEQ,
+                };
+
+                parameters = {'url': '/json-update', 'data': parameter};
+                fnPostAjax(function(data, callFunctionParam){
+                    itemOrderHistoryRightGrid.pqGrid('option', "dataModel.postData", function (ui) {
+                        return (fnFormToJsonArrayData('#item_order_history_hidden_form'));
+                    });
+                    itemOrderHistoryRightGrid.pqGrid('refreshDataAndView');
+                }, parameters, '');
+            }, parameters, '');
+        }
     });
 
-    $(document).on('click', '#item_order_history_inspection_check', function(event){
-        let seq = event.target.dataset.seq;
-        let col = event.target.dataset.col;
-        let val = event.target.dataset.val;
-
-        let valueElement = document.createElement("input");
-        let queryElement = document.createElement("input");
-        let seqElement = document.createElement("input");
-
-        valueElement.type = "hidden";
-        valueElement.id = col;
-        valueElement.name = col;
-        valueElement.setAttribute("value", val);
-
-        queryElement.type = "hidden";
-        queryElement.id = "queryId";
-        queryElement.name = "queryId";
-        queryElement.setAttribute("value", "updateItemOrderHistoryInspection");
-
-        seqElement.type = "hidden";
-        seqElement.id = "MATERIAL_ORDER_SEQ";
-        seqElement.name = "MATERIAL_ORDER_SEQ";
-        seqElement.setAttribute("value", seq);
-
-        $("#item_order_history_inspection_hidden_form").empty();
-        $("#item_order_history_inspection_hidden_form").append(valueElement);
-        $("#item_order_history_inspection_hidden_form").append(queryElement);
-        $("#item_order_history_inspection_hidden_form").append(seqElement);
-
-        let parameters = {'url': '/json-update', 'data': $("#item_order_history_inspection_hidden_form").serialize()};
-        fnPostAjax(function (data, callFunctionParam) {
-            itemOrderHistoryRightGrid.pqGrid('option', "dataModel.postData", function (ui) {
-                return (fnFormToJsonArrayData('#item_order_history_hidden_form'));
-            });
-            itemOrderHistoryRightGrid.pqGrid('refreshDataAndView');
-        }, parameters, '');
-    });
 </script>

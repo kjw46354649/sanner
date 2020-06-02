@@ -17,13 +17,13 @@ public class OutDaoImpl implements OutDao {
     SqlSessionTemplate sqlSessionTemplate;
 
     @Override
-    public void insertOutsideClose(HashMap<String, Object> hashMap) throws SQLException {
-        sqlSessionTemplate.insert("insertOutsideClose", hashMap);
+    public void createOutsideClose(HashMap<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("createOutsideClose", hashMap);
     }
 
     @Override
-    public void insertOutsideCloseHistory(HashMap<String, Object> hashMap) throws SQLException {
-        sqlSessionTemplate.insert("insertOutsideCloseHistory", hashMap);
+    public void createOutsideCloseHistory(HashMap<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("createOutsideCloseHistory", hashMap);
     }
 
     @Override
