@@ -69,7 +69,7 @@
                         </div>
                         <span class="gubun"></span>
                         <span class="txt_span"><label class="label_100" for="SEL_DELAY_TOP">Option</label></span>
-                        <span class="chk_box"><input id="SEL_DELAY_TOP" name="SEL_DELAY_TOP" type="checkbox"><label for="SEL_DELAY_TOP">지연대상 항시 상단표시</label></span>
+<%--                        <span class="chk_box"><input id="SEL_DELAY_TOP" name="SEL_DELAY_TOP" type="checkbox"><label for="SEL_DELAY_TOP">지연대상 항시 상단표시</label></span>--%>
                         <span class="chk_box"><input id="SEL_PART_NUM_VIEW_YN" name="SEL_PART_NUM_VIEW_YN" type="checkbox"><label for="SEL_PART_NUM_VIEW_YN">Part 단위 표시</label></span>
                     </li>
                 </ul>
@@ -83,6 +83,7 @@
                 <span class="barCodeTxt">&nbsp;<input type="text" class="wd_270_barcode" name="OUTGOING_BARCODE_NUM" id="OUTGOING_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요"></span>
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn" id="outgoing_manage_detail_btn">상세정보 조회</button>
+                    <button type="button" class="defaultBtn" id="outgoing_manage_return_complete_btn">반품현황 조회</button>
                     <button type="button" class="defaultBtn" id="outgoing_manage_out_btn">출고등록</button>
                     <button type="button" class="defaultBtn" id="outgoing_manage_label_print_btn">라벨출력</button>
                 </div>
@@ -98,6 +99,30 @@
         </div>
     </div>
 </div>
+
+<!-- 반품 현황 layer popup : S -->
+<div class="popup_container inspection " id="outgoing_manage_return_complete_pop" style="display: none;">
+        <div class="layerPopup" style="height: 510px">
+            <h3>반품 현황 조회</h3>
+            <%--<button type="button" class="pop_close">닫기</button>--%>
+<%--                <h4>기본정보</h4>--%>
+                <div class="list1">
+                    <div class="tableWrap" style="padding: 10px 0;">
+                        <div class="conWrap">
+                            <div id="outgoing_manage_return_complete_pop_grid"></div>
+                            <div class="right_sort">
+                                전체 조회 건수 (Total : <span id="outgoing_manage_return_complete_pop_grid_records" style="color: #00b3ee">0</span>)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="btnWrap">
+                <button type="button" id="outgoing_manage_return_complete_pop_close" class="cancel">cancel</button>
+            </div>
+        </div>
+</div>
+<!-- 반품 현황 layer popup : E -->
 
 <!-- 반품 품질실적 layer popup : S -->
 <div class="popup_container inspection outgoing" id="outgoing_manage_return_pop" style="display: none;">
@@ -502,8 +527,15 @@
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 120, width: 120, editable: false},
             {title: '주문수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 60, width: 60, editable: false},
             {title: '출고수량', dataType: 'string', dataIndx: 'OUT_QTY', minWidth: 60, width: 60, editable: false},
-            {title: '출고일시', dataType: 'string', dataIndx: 'OUT_DT', minWidth: 60, width: 60, editable: false},
-            {title: '반품일시', dataType: 'string', dataIndx: 'OUT_RETURN_DT', minWidth: 60, width: 60, editable: false},
+            {title: '출고일시', dataType: 'string', dataIndx: 'OUT_FINISH_DT', minWidth: 60, width: 60, editable: false},
+            {
+                title: '반품정보', datatype: 'string', align: 'center', colModel: [
+                    {title: '수량', datatype: 'string', dataIndx: 'RETURN_QTY', minWidth: 120, width: 120, editable: false},
+                    {title: '발생일', datatype: 'string', dataIndx: 'RETURN_LAST_DT', minWidth: 100, width: 100, editable: false},
+                    {title: '조치일', datatype: 'string', dataIndx: 'RETURN_FINISH_DT', minWidth: 300, width: 300, editable: false}
+                ]
+            },
+            // {title: '반품일시', dataType: 'string', dataIndx: 'OUT_RETURN_DT', minWidth: 60, width: 60, editable: false},
             {title: '포장묶음', dataType: 'integer', dataIndx: 'PACKING_CNT', minWidth: 60, width: 60, editable: true},
             {title: '', align: 'center', dataType: 'string', dataIndx: 'MANUAL_OUT', width: 40, minWidth: 40, editable: false,
                 render: function (ui) {
@@ -586,7 +618,23 @@
                 if(ui.source == 'edit') {
                     let row = ui.updateList[0].rowData;
                     let newRow = ui.updateList[0].newRow;
+
                     let data = {
+                        'queryId': 'inspection.updateControlPartOrderPackingCnt1,inspection.updateControlPartOrderPackingCnt2,inspection.insertControlPartOrderPackingCnt3',
+                        'CONTROL_SEQ': row.CONTROL_SEQ,
+                        'CONTROL_DETAIL_SEQ': row.CONTROL_DETAIL_SEQ,
+                        'ORDER_SEQ': row.ORDER_SEQ,
+                        'PACKING_CNT': newRow.PACKING_CNT
+                    };
+                    let parameters = {'url': '/json-manager', 'data': data};
+                    fnPostAjax(function (data, callFunctionParam) {
+                        alert("등록이 완료되었습니다.");
+                        $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
+                        $("#outgoing_manage_search_btn").trigger("click");
+                    }, parameters, '');
+
+
+                    /*let data = {
                         'queryId': 'inspection.updateControlPartOrderPackingCnt',
                         'CONTROL_SEQ': row.CONTROL_SEQ,
                         'CONTROL_DETAIL_SEQ': row.CONTROL_DETAIL_SEQ,
@@ -597,7 +645,7 @@
                     fnPostAjax(function (data, callFunctionParam) {
                         $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
                         $("#outgoing_manage_search_btn").trigger("click");
-                    }, parameters, '');
+                    }, parameters, '');*/
                 }
             },
             cellClick: function (event, ui) {
@@ -626,21 +674,124 @@
             }
         });
         /**  리스트 그리드 선언 끝 **/
+
+
+        /**  반품 현황 조회 그리드 선언 시작 **/
+        let outgoingManageGridId02 = $("#outgoing_manage_return_complete_pop_grid");
+        let outgoingManageColModel02;
+        let outgoingManageObj02;
+        let outgoingManagePostData02;
+
+        outgoingManageColModel02 = [
+            {title: 'ORDER_SEQ', dataType: 'string', dataIndx: 'ORDER_SEQ', hidden:true},
+            {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden:true},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden:true},
+            {title: 'INSPECT_SEQ', dataType: 'string', dataIndx: 'INSPECT_SEQ', hidden:true},
+            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', minWidth: 95, width: 95, editable: false},
+            {title: '발주번호', dataType: 'string', dataIndx: 'ORDER_NUM', minWidth: 95, width: 95, editable: false},
+            {title: '외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', minWidth: 120, width: 120, editable: false},
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 200, width: 200, editable: false},
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 200, width: 200, editable: false},
+            {title: '작업형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM', minWidth: 80, width: 80, editable: false},
+            {title: '소재', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 100, width: 100, editable: false},
+            {title: '후처리', dataType: 'string', dataIndx: 'SURFACE_TREAT_NM', minWidth: 100, width: 100, editable: false},
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 120, width: 120, editable: false},
+            {title: '주문수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 60, width: 60, editable: false},
+            {title: '출고', dataType: 'string', dataIndx: 'OUT_QTY', minWidth: 60, width: 60, editable: false},
+            {title: '출고일시', dataType: 'string', dataIndx: 'OUT_FINISH_DT', minWidth: 60, width: 60, editable: false},
+            {
+                title: '반품정보', datatype: 'string', align: 'center', colModel: [
+                    {title: '수량', datatype: 'string', dataIndx: 'ERROR_QTY', minWidth: 60, width: 60, editable: false},
+                    {title: '발생일', datatype: 'string', dataIndx: 'RETURN_DT', minWidth: 80, width: 80, editable: false},
+                    {title: '등급', datatype: 'string', dataIndx: 'INSPECT_GRADE_NM', minWidth: 80, width: 80, editable: false},
+                    {title: '불량코드', datatype: 'string', dataIndx: 'INSPECT_RESULT_NM', minWidth: 100, width: 100, editable: false},
+                    {title: '조치방안', datatype: 'string', dataIndx: 'ERROR_NOTE', minWidth: 100, width: 100, editable: false}
+                ]
+            },
+            {title: '현재위치', dataType: 'string', dataIndx: 'POP_NM', minWidth: 80, width: 80, editable: false},
+            {title: '', align: 'center', dataType: 'string', dataIndx: 'MANUAL_ACTION', width: 80, minWidth: 80, editable: false,
+                render: function (ui) {
+                    let rowIndx = ui.rowIndx, grid = this;
+                    if (ui.rowData['ORDER_SEQ'] > 0) return "[조치완료]";
+                    return '';
+                }
+            }
+        ];
+        outgoingManageGridId02.pqGrid({
+            width: "100%", height: 400,
+            dataModel: {
+                location: "remote", dataType: "json", method: "POST", recIndx: 'INSPECT_SEQ',
+                url: "/paramQueryGridSelect",
+                postData: {},
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            },
+            strNoRows: g_noData,
+            columnTemplate: {align: 'center', hvalign: 'center'},
+            //scrollModel: {autoFit: true},
+            //numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
+            //selectionModel: { type: 'row', mode: 'multiple'} ,
+            swipeModel: {on: false},
+            showTitle: false,
+            collapsible: false,
+            resizable: false,
+            trackModel: {on: true},
+            colModel: outgoingManageColModel02,
+            complete: function () {
+                let data = outgoingManageGridId02.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#outgoing_manage_return_complete_pop_grid_records').html(totalRecords);
+            },
+            cellClick: function (event, ui)
+            {
+                let rowIndx = ui.rowIndx, $grid = this;
+                if (ui.rowData['INSPECT_SEQ'] != undefined && ui.rowData['INSPECT_SEQ'] >0)
+                {
+                    if (ui.dataIndx == 'MANUAL_ACTION') {
+                        let data = {
+                            'queryId': 'inspection.updateOutgoingReturnComplete',
+                            'INSPECT_SEQ': ui.rowData['INSPECT_SEQ']
+                        };
+                        let parameters = {'url': '/json-create', 'data': data };
+                        fnPostAjax(function (data, callFunctionParam) {
+                            alert("등록이 완료되었습니다.");
+                            $('#outgoing_manage_return_complete_pop').modal('hide');
+                            $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
+                            $("#outgoing_manage_search_btn").trigger("click");
+                        }, parameters, '');
+
+                    }
+                }
+            }
+        });
+        /**  반품 현황 조회 그리드 선언 끝 **/
+
         $('#outgoing_manage_return_pop_save').on('click', function () {
             // validation
             $('#outgoing_manage_return_form').find("#INSPECT_RESULT").attr("disabled", false);
             $('#outgoing_manage_return_form').find("#ERROR_REASON").attr("disabled", false);
             $('#outgoing_manage_return_form').find("#INSPECT_DESC").attr("readonly", false);
 
-            $("#outgoing_manage_return_form").find("#queryId").val("inspection.insertOutgoingReturn,inspection.updateOutgoingReturnAfter1,inspection.updateOutgoingReturnAfter2");
 
-            let data = $("#outgoing_manage_return_form").serialize();
-            let parameters = {'url': '/json-manager', 'data': data};
+            $("#outgoing_manage_return_form").find("#queryId").val("inspection.insertOutgoingReturn");
+
+            let parameters = {'url': '/json-create', 'data': $("#outgoing_manage_return_form").serialize() };
             fnPostAjax(function (data, callFunctionParam) {
                 alert("등록이 완료되었습니다.");
                 $('#outgoing_manage_return_pop').modal('hide');
             }, parameters, '');
+
+            // $("#outgoing_manage_return_form").find("#queryId").val("inspection.insertOutgoingReturn,inspection.updateOutgoingReturnAfter1,inspection.updateOutgoingReturnAfter2");
+            //
+            // let data = $("#outgoing_manage_return_form").serialize();
+            // let parameters = {'url': '/json-manager', 'data': data};
+            // fnPostAjax(function (data, callFunctionParam) {
+            //     alert("등록이 완료되었습니다.");
+            //     $('#outgoing_manage_return_pop').modal('hide');
+            // }, parameters, '');
         });
+
         $('#outgoing_manage_return_pop_close').on('click', function () {
             $('#outgoing_manage_return_pop').modal('hide');
         });
@@ -844,6 +995,20 @@
                 $('#outgoing_manage_pop_type_1').modal('hide');
             }, parameters, '');
 
+        });
+        $('#outgoing_manage_return_complete_btn').on('click', function () {
+
+            // $('#' + logGridId).pqGrid("option", "dataModel.postData", function(ui){
+            //     return fnFormToJsonArrayData('#machine_manage_pop_form');
+            // } );
+            $('#outgoing_manage_return_complete_pop').modal('show');
+        });
+        $("#outgoing_manage_return_complete_pop").on('show.bs.modal', function(){
+            outgoingManageGridId02 = outgoingManageGridId02.pqGrid();
+            outgoingManageGridId02.pqGrid("refreshDataAndView");
+        });
+        $('#outgoing_manage_return_complete_pop_close').on('click', function () {
+            $('#outgoing_manage_return_complete_pop').modal('hide');
         });
         $('#outgoing_manage_out_btn').on('click', function () {
             // validation
