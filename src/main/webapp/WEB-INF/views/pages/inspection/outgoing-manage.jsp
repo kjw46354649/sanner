@@ -677,12 +677,18 @@
 
 
         /**  반품 현황 조회 그리드 선언 시작 **/
-        let outgoingManageGridId02 = $("#outgoing_manage_return_complete_pop_grid");
-        let outgoingManageColModel02;
-        let outgoingManageObj02;
-        let outgoingManagePostData02;
+        let outgoingReturnCompleteGridId = 'outgoing_manage_return_complete_pop_grid';
+        let outgoingReturnCompleteColModel;
+        let outgoingReturnCompleteObj;
+        let $outgoingReturnCompleteGrid;
 
-        outgoingManageColModel02 = [
+
+        // let outgoingManageGridId02 = $("#outgoing_manage_return_complete_pop_grid");
+        // let outgoingManageColModel02;
+        // let outgoingManageObj02;
+        // let outgoingManagePostData02;
+
+        outgoingReturnCompleteColModel = [
             {title: 'ORDER_SEQ', dataType: 'string', dataIndx: 'ORDER_SEQ', hidden:true},
             {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden:true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden:true},
@@ -717,12 +723,13 @@
                 }
             }
         ];
-        outgoingManageGridId02.pqGrid({
+        //outgoingManageGridId02.pqGrid({
+        outgoingReturnCompleteObj ={
             width: "100%", height: 400,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'INSPECT_SEQ',
                 url: "/paramQueryGridSelect",
-                postData: {},
+                postData:  {queryId: 'inspection.selectOutgoingReturnCompleteList'},
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -737,9 +744,9 @@
             collapsible: false,
             resizable: false,
             trackModel: {on: true},
-            colModel: outgoingManageColModel02,
+            colModel: outgoingReturnCompleteColModel,
             complete: function () {
-                let data = outgoingManageGridId02.pqGrid('option', 'dataModel.data');
+                let data = $outgoingReturnCompleteGrid.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
                 $('#outgoing_manage_return_complete_pop_grid_records').html(totalRecords);
             },
@@ -764,7 +771,8 @@
                     }
                 }
             }
-        });
+        //});
+        };
         /**  반품 현황 조회 그리드 선언 끝 **/
 
         $('#outgoing_manage_return_pop_save').on('click', function () {
@@ -1004,8 +1012,10 @@
             $('#outgoing_manage_return_complete_pop').modal('show');
         });
         $("#outgoing_manage_return_complete_pop").on('show.bs.modal', function(){
-            outgoingManageGridId02 = outgoingManageGridId02.pqGrid();
-            outgoingManageGridId02.pqGrid("refreshDataAndView");
+            //outgoingManageGridId02.pqGrid("refreshDataAndView");
+            $outgoingReturnCompleteGrid = $('#' + outgoingReturnCompleteGridId).pqGrid(outgoingReturnCompleteObj);
+            $outgoingReturnCompleteGrid.pqGrid( "option", "dataModel.data",  {queryId: 'inspection.selectOutgoingReturnCompleteList'} );
+            $outgoingReturnCompleteGrid.pqGrid("refreshDataAndView");
         });
         $('#outgoing_manage_return_complete_pop_close').on('click', function () {
             $('#outgoing_manage_return_complete_pop').modal('hide');
