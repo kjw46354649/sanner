@@ -7,6 +7,29 @@
 		SELECT DATE_FORMAT(NOW(), '%Y%m%d') AS CURDATE FROM DUAL
 	</select>
 
+    <select id="selectLoginUserInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            USER_ID,
+            USER_NM,
+            USER_TEL,
+            USER_EMAIL,
+            USER_PWD,
+            ROLE_SEQ,
+            (SELECT ROLE_NM FROM TBL_ROLE WHERE TBL_ROLE.ROLE_SEQ = TBL_USER.ROLE_SEQ) AS ROLE_SEQ_NM,
+            POSITION_NM,
+            JOB_TITLE,
+            DEPARTMENT,
+            SF_GET_CODE_NM(1061, DEPARTMENT, 'EN') AS DEPARTMENT_NM,
+            SF_GET_CODE_NM(1042, DEL_YN, 'EN') AS DEL_YN_NM,
+            PHOTO_GFILE_SEQ
+        FROM TBL_USER
+        WHERE 1=1
+            AND DEL_YN = 'N'
+            <if test="userId != null and userId != ''">
+                AND USER_ID LIKE CONCAT('%', #{userId}, '%')
+            </if>
+    </select>
+
     <select id="selectUserMasterList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             USER_ID,
@@ -76,18 +99,23 @@
                 A.MENU_SEQ, A.MENU_LINK, A.PARENT_MENU_SEQ, A.SORT_NUM, A.DEL_YN, A.NOTE,
 				B.MENU_NM AS MENU_NM_KR, C.MENU_NM AS MENU_NM_EN,
 				SF_GET_CODE_NM(1042, A.DEL_YN, 'EN') AS DEL_YN_NM,
-                CONCAT(A.SORT_NUM, 0) AS CD_NO
+                CONCAT(CASE WHEN LENGTH(A.SORT_NUM) >= 2 THEN A.SORT_NUM ELSE LPAD(A.SORT_NUM, 2, '0') END, 0) AS CD_NO
 			FROM TBL_MENU A
 				INNER JOIN TBL_MENU_LANG B ON A.MENU_SEQ = B.MENU_SEQ AND B.LANG_CD = 'KR'
 				INNER JOIN TBL_MENU_LANG C ON A.MENU_SEQ = C.MENU_SEQ AND C.LANG_CD = 'EN'
 			WHERE 1 = 1
 				AND A.DEL_YN = 'N' AND A.PARENT_MENU_SEQ = 0
+                AND EXISTS (SELECT * FROM jmes.TBL_MENU D, jmes.TBL_ROLE_MENU E
+                          WHERE A.MENU_SEQ = D.PARENT_MENU_SEQ AND D.DEL_YN = 'N' AND D.MENU_SEQ = E.MENU_SEQ
+                            AND E.ROLE_SEQ = #{ROLE_SEQ} AND E.ACCESS_CD = 'Y'
+                )
 			UNION ALL
 			SELECT
                 A.MENU_SEQ, A.MENU_LINK, A.PARENT_MENU_SEQ, A.SORT_NUM, A.DEL_YN, A.NOTE,
 				B.MENU_NM AS MENU_NM_KR, C.MENU_NM AS MENU_NM_EN,
 				SF_GET_CODE_NM(1042, A.DEL_YN, 'EN') AS DEL_YN_NM,
-                CONCAT(D.SORT_NUM, A.SORT_NUM) AS CD_NO
+                CONCAT(CASE WHEN LENGTH(D.SORT_NUM) >= 2 THEN D.SORT_NUM ELSE LPAD(D.SORT_NUM, 2, '0') END,
+                       CASE WHEN LENGTH(A.SORT_NUM) >= 2 THEN A.SORT_NUM ELSE LPAD(A.SORT_NUM, 2, '0') END) AS CD_NO
 			FROM TBL_MENU A
 				INNER JOIN TBL_MENU_LANG B ON A.MENU_SEQ = B.MENU_SEQ AND B.LANG_CD = 'KR'
 				INNER JOIN TBL_MENU_LANG C ON A.MENU_SEQ = C.MENU_SEQ AND C.LANG_CD = 'EN'
@@ -96,16 +124,20 @@
 			WHERE 1 = 1
 				AND A.DEL_YN = 'N'
 				AND A.PARENT_MENU_SEQ > 0
+                AND EXISTS (SELECT * FROM jmes.TBL_ROLE_MENU F
+                          WHERE A.MENU_SEQ = F.MENU_SEQ
+                            AND F.ROLE_SEQ = #{ROLE_SEQ} AND F.ACCESS_CD = 'Y'
+                )
 		)
 		SELECT
 			A.MENU_SEQ, CONCAT('/static', B.MENU_LINK, A.MENU_LINK) AS MENU_LINK,
 			CASE WHEN A.PARENT_MENU_SEQ = '0' THEN A.MENU_NM_EN ELSE '' END PARENT_MENU_NM,
 			CASE WHEN A.PARENT_MENU_SEQ = '0' THEN '' ELSE A.MENU_NM_EN END MENU_NM,
-			A.PARENT_MENU_SEQ, CONCAT(1000, CD_NO) AS CD_NO
+			A.PARENT_MENU_SEQ, CONCAT(#{ROLE_SEQ}, CD_NO) AS CD_NO
 		FROM MENU_CTE A
 			LEFT OUTER JOIN TBL_MENU B ON A.PARENT_MENU_SEQ = B.MENU_SEQ
 		WHERE 1 = 1
-		ORDER BY CAST(A.CD_NO AS DOUBLE)
+		ORDER BY A.CD_NO
     </select>
 
     <select id="selectUserTopMenuList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -383,7 +415,7 @@
                 A.MENU_SEQ, A.MENU_LINK, A.PARENT_MENU_SEQ, A.SORT_NUM, A.DEL_YN, A.NOTE,
 				B.MENU_NM AS MENU_NM_KR, C.MENU_NM AS MENU_NM_EN,
 				SF_GET_CODE_NM(1042, A.DEL_YN, 'EN') AS DEL_YN_NM,
-                CONCAT(A.SORT_NUM, 0) AS CD_NO
+                CONCAT(CASE WHEN LENGTH(A.SORT_NUM) >= 2 THEN A.SORT_NUM ELSE LPAD(A.SORT_NUM, 2, '0') END, 0) AS CD_NO
 			FROM TBL_MENU A
 				INNER JOIN TBL_MENU_LANG B ON A.MENU_SEQ = B.MENU_SEQ AND B.LANG_CD = 'KR'
 				INNER JOIN TBL_MENU_LANG C ON A.MENU_SEQ = C.MENU_SEQ AND C.LANG_CD = 'EN'
@@ -394,7 +426,8 @@
                 A.MENU_SEQ, A.MENU_LINK, A.PARENT_MENU_SEQ, A.SORT_NUM, A.DEL_YN, A.NOTE,
 				B.MENU_NM AS MENU_NM_KR, C.MENU_NM AS MENU_NM_EN,
 				SF_GET_CODE_NM(1042, A.DEL_YN, 'EN') AS DEL_YN_NM,
-                CONCAT(D.SORT_NUM, A.SORT_NUM) AS CD_NO
+                CONCAT(CASE WHEN LENGTH(D.SORT_NUM) >= 2 THEN D.SORT_NUM ELSE LPAD(D.SORT_NUM, 2, '0') END,
+                       CASE WHEN LENGTH(A.SORT_NUM) >= 2 THEN A.SORT_NUM ELSE LPAD(A.SORT_NUM, 2, '0') END) AS CD_NO
 			FROM TBL_MENU A
 				INNER JOIN TBL_MENU_LANG B ON A.MENU_SEQ = B.MENU_SEQ AND B.LANG_CD = 'KR'
 				INNER JOIN TBL_MENU_LANG C ON A.MENU_SEQ = C.MENU_SEQ AND C.LANG_CD = 'EN'
@@ -414,7 +447,7 @@
 			LEFT OUTER JOIN TBL_MENU B ON A.PARENT_MENU_SEQ = B.MENU_SEQ
 			LEFT OUTER JOIN TBL_ROLE_MENU C ON A.MENU_SEQ = C.MENU_SEQ AND ROLE_SEQ = #{ROLE_SEQ}
 		WHERE 1 = 1
-		ORDER BY CAST(A.CD_NO AS DOUBLE)
+		ORDER BY A.CD_NO
     </select>
 
     <insert id="insertAuthorityMenuManagement" parameterType="java.util.HashMap">
@@ -704,9 +737,6 @@
         WHERE COMP_CD = #{COMP_CD}
     </update>
 
-
-
-
     <!-- 여기부터 예전 소스 -->
     <update id="deleteCompanyMaster" parameterType="java.util.HashMap">
         UPDATE jmes.TBL_COMPANY
@@ -717,10 +747,6 @@
         WHERE COMP_CD = #{COMP_CD}
     </update>
 
-
-
-
-
     <select id="getCompanyMasterStaffList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             STAFF_SEQ, COMP_CD, STAFF_NM, POSITION_NM, JOB_TITLE, STAFF_TEL, STAFF_EMAIL, MAIN_YN, NOTE
@@ -730,10 +756,7 @@
         ORDER BY STAFF_NM
     </select>
 
-
     <!-- 여기까지 예전 소스 -->
-
-
     <select id="selectMailTemplateList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             TEMPLATE_SEQ, TEMPLATE_TITLE, TEMPLATE_CONTENT,
@@ -775,9 +798,9 @@
 
     <insert id="insertSchedulerNote" parameterType="java.util.HashMap" >
         INSERT INTO jmes.TBL_CALENDAR
-            (CAL_DT, CAL_TYPE, NOTE, INSERT_ID)
+            (CAL_SEQ, CAL_DT, CAL_TYPE, NOTE, INSERT_ID)
         VALUES
-            (REPLACE(#{CAL_DT}, '-', SPACE(0)), '99', #{NOTE}, NULL)
+            (NEXTVAL(SEQ_CAL), REPLACE(#{CAL_DT}, '-', SPACE(0)), '99', #{NOTE}, NULL)
     </insert>
 
     <select id="selectSchedulerNote" parameterType="java.util.HashMap" resultType="java.util.HashMap">

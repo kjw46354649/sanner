@@ -59,7 +59,7 @@
                 if (title) {
                     let parameters = {'url': '/json-create', 'data': {'queryId':'systemMapper.insertSchedulerNote', 'CAL_DT': arg.startStr, 'NOTE':title}};
                     fnPostAjax(function (data, callFunctionParam) {
-                        schedulerCalendar.getEventSources();
+                        schedulerCalendar.refetchEvents();
                     }, parameters, '');
                 }
                 schedulerCalendar.unselect()
@@ -87,7 +87,23 @@
             , eventBorderColor : '#5c6a96'
             , eventBackgroundColor : '#ffffff'
             // , events : eventData
-            // , eventClick : fn_calEventClick // 이벤트 클릭 시
+            , eventClick : function(calEvent, jsEvent, view) {
+                alert('Event: ' + calEvent.title);
+                alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+                alert('View: ' + view.name);
+                console.log("eventClick");
+                console.log(date);
+                console.log(jsEvent);
+                console.log(view);
+                let title = prompt('일정 메모');
+                if (title) {
+                    let parameters = {'url': '/json-create', 'data': {'queryId':'systemMapper.insertSchedulerNote', 'CAL_DT': arg.startStr, 'NOTE':title}};
+                    fnPostAjax(function (data, callFunctionParam) {
+                        schedulerCalendar.refetchEvents();
+                    }, parameters, '');
+                }
+                schedulerCalendar.unselect()
+            } // 이벤트 클릭 시
             // , dateClick : fn_calDateClick // 백그라운드 클릭시
             , droppable : false // this allows things to be dropped onto the calendar
             // , drop : fn_calDrop  // 그리드에서 긁어올 때

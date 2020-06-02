@@ -15,14 +15,14 @@
             <h1 class="logo"><a href="/main"><span class="invisible">진성정밀 MES 시스템</span></a></h1>
             <div class="profileWrap">
                 <span class="imgWrap"><img src="asset/images/common/profile.png" alt=""></span>
-                <span class="textWrap"><b>홍길동</b>님 안녕하세요.</span>
-                <span class="btnWrap"><button type="button" class="btn"></button></span>
+                <span class="textWrap"><b>${authUserInfo.USER_NM}</b>님 안녕하세요.</span>
+                <a href="/userLotout"><span class="btnWrap"><button type="button" class="btn"></button></span></a>
             </div>
             <div class="gnbWrap" id="gnbWrap">
                 <ul>
         <c:set var="menuCnt" value="0"/>
         <c:set var="parentMenuSeq" value=""/>
-        <c:forEach var="menu" items="${LocalMenu}">
+        <c:forEach var="menu" items="${authUserMenu}">
             <c:if test="${menu.PARENT_MENU_SEQ eq 0}">
                 <c:if test="${menuCnt > 0}">
                             </ul>
@@ -44,66 +44,6 @@
                             </ul>
                         </div>
                     </li>
-<%--                    <li class="depth1 no1 on">--%>
-<%--                        <a href="#a;">견적접수</a>--%>
-<%--                        <div class="depth2">--%>
-<%--                            <ul>--%>
-<%--                                <li><a href="#a;">견적관리</a></li>--%>
-<%--                                <li><a href="#a;">견적서 작성</a></li>--%>
-<%--                                <li><a href="#a;">견적표준 계산 관리</a></li>--%>
-<%--                                <li><a href="#a;">견적서 작성</a></li>--%>
-<%--                                <li><a href="#a;">견적 표준 계산 관리</a></li>--%>
-<%--                            </ul>--%>
-<%--                        </div>--%>
-<%--                    </li>--%>
-<%--                    <li class="depth1 no2">--%>
-<%--                        <a href="#a;">주문관리</a>--%>
-<%--                        <div class="depth2">--%>
-<%--                            <ul>--%>
-<%--                                <li><a href="#a;">견적관리</a></li>--%>
-<%--                                <li><a href="#a;">견적서 작성</a></li>--%>
-<%--                                <li><a href="#a;">견적표준 계산 관리</a></li>--%>
-<%--                                <li><a href="#a;">견적서 작성</a></li>--%>
-<%--                                <li><a href="#a;">견적 표준 계산 관리</a></li>--%>
-<%--                            </ul>--%>
-<%--                        </div>--%>
-<%--                    </li>--%>
-<%--                    <li class="depth1 no3">--%>
-<%--                        <a href="#a;">외주관리</a>--%>
-<%--                        <div class="depth2">--%>
-<%--                            <ul>--%>
-<%--                                <li><a href="#a;">견적관리</a></li>--%>
-<%--                                <li><a href="#a;">견적서 작성</a></li>--%>
-<%--                                <li><a href="#a;">견적표준 계산 관리</a></li>--%>
-<%--                                <li><a href="#a;">견적서 작성</a></li>--%>
-<%--                                <li><a href="#a;">견적 표준 계산 관리</a></li>--%>
-<%--                            </ul>--%>
-<%--                        </div>--%>
-<%--                    </li>--%>
-<%--                    <li class="depth1 no4">--%>
-<%--                        <a href="#a;">주문관리</a>--%>
-<%--                        <div class="depth2">--%>
-<%--                            <ul>--%>
-<%--                                <li><a href="#a;">견적관리</a></li>--%>
-<%--                                <li><a href="#a;">견적서 작성</a></li>--%>
-<%--                                <li><a href="#a;">견적표준 계산 관리</a></li>--%>
-<%--                                <li><a href="#a;">견적서 작성</a></li>--%>
-<%--                                <li><a href="#a;">견적 표준 계산 관리</a></li>--%>
-<%--                            </ul>--%>
-<%--                        </div>--%>
-<%--                    </li>--%>
-<%--                    <li class="depth1 no5">--%>
-<%--                        <a href="#a;">외주관리</a>--%>
-<%--                        <div class="depth2">--%>
-<%--                            <ul>--%>
-<%--                                <li><a href="#a;">견적관리</a></li>--%>
-<%--                                <li><a href="#a;">견적서 작성</a></li>--%>
-<%--                                <li><a href="#a;">견적표준 계산 관리</a></li>--%>
-<%--                                <li><a href="#a;">견적서 작성</a></li>--%>
-<%--                                <li><a href="#a;">견적 표준 계산 관리</a></li>--%>
-<%--                            </ul>--%>
-<%--                        </div>--%>
-<%--                    </li>--%>
                 </ul>
             </div>
             <div class="sideWrap">

@@ -113,8 +113,8 @@ public class WebContextConfig implements WebMvcConfigurer {
     @Bean
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-//        messageSource.setBasenames("classpath:/messages/common");
-        messageSource.setBasenames("/WEB-INF/messages/common");
+        messageSource.setBasenames("classpath:/messages/message-common");
+//        messageSource.setBasenames("/WEB-INF/messages");
         messageSource.setDefaultEncoding("UTF-8");
         messageSource.setCacheSeconds(5);
         return messageSource;
@@ -123,7 +123,7 @@ public class WebContextConfig implements WebMvcConfigurer {
     @Bean
     public LocaleResolver localeResolver() {
         CookieLocaleResolver localeResolver = new CookieLocaleResolver();
-        localeResolver.setDefaultLocale(new Locale("en"));
+        localeResolver.setDefaultLocale(Locale.KOREAN);
         localeResolver.setCookieName("lang");
         return localeResolver;
     }
@@ -142,7 +142,7 @@ public class WebContextConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(aspectInterceptor());
+        registry.addInterceptor(localeChangeInterceptor()).addPathPatterns("/**");
     }
 
 }
