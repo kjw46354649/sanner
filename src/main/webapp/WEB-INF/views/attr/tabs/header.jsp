@@ -11,8 +11,8 @@
 <!-- <link rel="icon" href="/asset/images/common/favicon.ico"> -->
 <!-- Android&IOS Touch Icon -->
 <!-- <link rel="apple-touch-icon-precomposed" href="/asset/images/common/favicon-152.png"> -->
-<link rel="stylesheet" href="/resource/plugins/fullcalendar/core/main.css"  />
-<link rel="stylesheet" href="/resource/plugins/fullcalendar/daygrid/main.css"  />
+<%--<link rel="stylesheet" href="/resource/plugins/fullcalendar/core/main.css"  />--%>
+<%--<link rel="stylesheet" href="/resource/plugins/fullcalendar/daygrid/main.css"  />--%>
 <!--jQueryUI version >= 1.11.4 only -->
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css" />
 <!--ParamQuery Grid css files-->
