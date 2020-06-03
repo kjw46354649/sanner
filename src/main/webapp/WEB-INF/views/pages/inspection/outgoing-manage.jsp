@@ -501,6 +501,7 @@
         $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
         outgoingManagePostData01 = fnFormToJsonArrayData('#outgoing_manage_form');
         outgoingManageColModel01 = [
+            {title: 'BARCODE_NUM', dataType: 'string', dataIndx: 'BARCODE_NUM', hidden:true},
             {title: 'ORDER_SEQ', dataType: 'string', dataIndx: 'ORDER_SEQ', hidden:true},
             {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden:true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden:true},
@@ -667,7 +668,65 @@
                         $('#outgoing_manage_return_pop').modal('show');
                     }
                     if (ui.dataIndx == 'MANUAL_LABEL') {
-                        alert('MANUAL_LABEL');
+
+                        let formData = new Array();
+                        formData[0] = ui.rowData['BARCODE_NUM'];
+
+                        console.log(JSON.stringify({'data': formData}));
+
+                        let callback = $.Callbacks();
+                        $.ajax({
+                            type: 'POST',
+                            url: '/barcodePrint',
+                            dataType: 'json',
+                            //data: {data : JSON.stringify({'data': formData})},
+                            data: {data : JSON.stringify(formData)},
+                            success: function (data, textStatus, jqXHR) {
+                                if (textStatus === 'success') {
+                                    // if (data.exception === null) {
+                                    callback.add(callFunction);
+                                    callback.fire(jQuery.parseJSON(data));
+                                    // } else {
+                                    <%--alert('<spring:message code='com.alert.default.failText' />');--%>
+                                    // }
+                                } else {
+                                    // alert('fail=[' + json.msg + ']111');
+                                }
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                // alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
+                                // if (errorThrown == 'Forbidden') {
+                                //     $(this).fnHiddenFormPageAction('/');
+                                // }
+                            }
+                        });
+                        return;
+
+                        let elem = document.getElementById('barcodeForm');
+                        if(elem != null && typeof(elem) !== undefined){
+                            $('#barcodeForm').remove()
+                        }
+                        let barcodeForm = document.createElement("form");
+                        barcodeForm.setAttribute("id", "barcodeForm");
+                        barcodeForm.setAttribute("name", "barcodeForm");
+                        barcodeForm.hidden=true;
+                        barcodeForm.name='barcodeForm';
+                        barcodeForm.method='POST';
+                        barcodeForm.target='_self';
+                        barcodeForm.action= '/barcodePrint';
+
+                        let inputElement = document.createElement("input");
+                        inputElement.value = barcodeArr;
+                        inputElement.name = "BARCODE_NUM";
+                        barcodeForm.appendChild(inputElement);
+
+                        document.body.appendChild(barcodeForm);
+                        barcodeForm.submit();
+
+                        //fnReportFormToHiddenFormPageAction("estimate_master_excel_download", "/downloadExcel");
+
+
+
                     }
                 }
 

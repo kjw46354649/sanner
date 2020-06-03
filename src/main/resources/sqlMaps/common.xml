@@ -184,7 +184,6 @@
         , C.DRAWING_NUM
         , D.ORDER_NUM
         , B.MODULE_NM
-        , D.ORDER_DUE_DT
         , jmes.SF_GET_DATE_F(D.ORDER_DUE_DT,'YYYY','') AS ORDER_DUE_DT
         , B.CONTROL_NUM
         , B.DELIVERY_COMP_NM
