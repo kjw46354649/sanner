@@ -469,7 +469,7 @@
                     return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                 }
             },
-            scrollModel: { autoFit: false },
+            //scrollModel: { autoFit: false },
             columnTemplate: {align: 'center', hvalign: 'center'},
             numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'row', mode: 'single'} ,
@@ -581,7 +581,6 @@
                         calculateEstimateAmt += UNIT_PROCESS_AMT;
                         calculateEstimateAmt += UNIT_ETC_AMT;
 
-                        estimateMasterBotGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'CALCUL_EST_UNIT_COST': calculateEstimateAmt } });
 
                         let UNIT_FINAL_EST_AMT = ui.updateList[0].newRow.UNIT_FINAL_EST_AMT
                         if(UNIT_FINAL_EST_AMT != undefined){
@@ -802,21 +801,21 @@
 
         $("#estimate_version_up_sequence_form #hidden_est_seq").val(seq);
 
-        $("a[pid='100012']").trigger("click");
+        $("a[pid='10000102']").trigger("click");
         setTimeout(function(){
             $("#test").trigger('click');
-        }, 500)
+        }, 800)
         event.preventDefault();
     });
 
 
+    let role_seq = '${authUserInfo.ROLE_SEQ}';
     // topWrap 확장 함수
     function topMenuOpen(){
-        var top = $('#view_tab_100011 .gubunWrap');
-        var bottom = $('#view_tab_100011 .bottomWrap');
-        var con = $('#view_tab_100011 .bottomWrap .tableWrap .conWrap');
+        var top = $('#view_tab_'+ role_seq +'0101 .gubunWrap');
+        var bottom = $('#view_tab_'+ role_seq +'0101 .bottomWrap');
+        var con = $('#view_tab_'+ role_seq +'0101 .bottomWrap .tableWrap .conWrap');
 
-        // top.stop().animate({height:'122px'},300, 'easeOutCubic');
         top.stop().animate({height:'95px'},300, 'easeOutCubic');
         bottom.stop().animate({height:'796px'},300, 'easeOutCubic');
         con.css({height:'346px'});
@@ -826,11 +825,10 @@
 
     // topWrap 축소 함수
     function topMenuClose(){
-        var top = $('#view_tab_100011 .gubunWrap');
-        var bottom = $('#view_tab_100011 .bottomWrap');
-        var con = $('#view_tab_100011 .bottomWrap .tableWrap .conWrap');
+        var top = $('#view_tab_'+ role_seq +'0101 .gubunWrap');
+        var bottom = $('#view_tab_'+ role_seq +'0101 .bottomWrap');
+        var con = $('#view_tab_'+ role_seq +'0101 .bottomWrap .tableWrap .conWrap');
 
-        // top.stop().animate({height:'47px'},300, 'easeOutCubic');
         top.stop().animate({height:'37px'},300, 'easeOutCubic');
         bottom.stop().animate({height:'854px'},300, 'easeOutCubic');
         con.css({height:'404px'});

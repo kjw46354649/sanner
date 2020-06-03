@@ -1347,10 +1347,9 @@
 
     <select id="moneyReceiveStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ROW_NUMBER() OVER(ORDER BY Z.COMP_CD, Z.ORDER_COMP_CD) AS ROW_NUM, Z.COMP_CD,
-            (SELECT A.COMP_NM FORM FROM jmes.TBL_COMPANY A WHERE A.COMP_CD = Z.COMP_CD) AS COMP_CD_NM,
-            Z.ORDER_COMP_CD,
-            (SELECT A.COMP_NM FORM FROM jmes.TBL_COMPANY A WHERE A.COMP_CD = Z.ORDER_COMP_CD) AS ORDER_COMP_NM,
+            ROW_NUMBER() OVER(ORDER BY Z.COMP_CD, Z.ORDER_COMP_CD) AS ROW_NUM,
+            Z.COMP_CD, (SELECT A.COMP_NM FORM FROM jmes.TBL_COMPANY A WHERE A.COMP_CD = Z.COMP_CD) AS COMP_CD_NM,
+            Z.ORDER_COMP_CD, (SELECT A.COMP_NM FORM FROM jmes.TBL_COMPANY A WHERE A.COMP_CD = Z.ORDER_COMP_CD) AS ORDER_COMP_NM,
             Z.CLOSE_YEAR, SUM(Z.SALE_AMT) AS SALE_AMT, SUM(Z.CASH_AMT) AS CASH_AMT, SUM(Z.PAPER_AMT) AS PAPER_AMT,
             SUM(Z.DEPOSIT_TOTAL_AMT) AS DEPOSIT_TOTAL_AMT, SUM(Z.NOT_DEPOSIT_AMT) AS NOT_DEPOSIT_AMT,
             (SUM(Z.SALE_AMT) + SUM(Z.NOT_DEPOSIT_AMT)) - SUM(Z.DEPOSIT_TOTAL_AMT) AS NOT_DEPOSIT_TOTAL_AMT,
@@ -1415,6 +1414,18 @@
         GROUP BY Z.COMP_CD, Z.ORDER_COMP_CD, Z.CLOSE_YEAR
         ORDER BY Z.COMP_CD, Z.ORDER_COMP_CD
     </select>
+
+    <insert id="insertMoneyYearNote" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_MONEY_YEAR_NOTE
+            (YYYY, COMP_CD, ORDER_COMP_CD, NOTE, INSERT_ID)
+        VALUES
+            (#{CLOSE_YEAR}, #{COMP_CD}, #{ORDER_COMP_CD}, #{NOTE}, 'system')
+        ON DUPLICATE KEY
+            UPDATE
+                NOTE = #{NOTE},
+                UPDATE_DT = NOW(),
+                UPDATE_ID = 'system'
+    </insert>
 
     <select id="moneyManageSalesList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT

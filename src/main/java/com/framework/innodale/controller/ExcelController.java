@@ -76,7 +76,6 @@ public class ExcelController {
 
             //Resource resource = new ClassPathResource("classpath:excelTemplate" + File.separator + templateFileName + "data.txt");
             //InputStream inputStream = resource.getInputStream();
-
             is = new BufferedInputStream(new FileInputStream(excelDir + File.separator + templateFileName + ".xlsx"));
             XLSTransformer xls = new XLSTransformer();
             workbook = xls.transformXLS(is, map);
@@ -98,6 +97,7 @@ public class ExcelController {
             if (fileInputStream != null) fileInputStream.close();
         }
     }
+
 
 
     @RequestMapping("/itemOrderRegisterOrderSheetPrint")
