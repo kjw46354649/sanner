@@ -173,22 +173,151 @@
 
 
     <select id="selectCommItemDetailInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        select 2 AS SEQ from dual
+        SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+          , A.CONTROL_NUM
+          , B.DRAWING_NUM
+          , CONCAT(jmes.SF_GET_DATE_F(B.INNER_DUE_DT,'YYYY',''), CASE WHEN A.EMERGENCY_YN = 'Y' THEN ' (긴급)' ELSE ' ' END) AS INNER_DUE_DT
+          , B.ITEM_NM
+          , A.MODULE_NM
+          , CASE WHEN IFNULL(B.ORIGINAL_SIDE_QTY,0) + IFNULL(B.OTHER_SIDE_QTY,0) > 0 THEN CONCAT(jmes.SF_GET_CONTROL_ORDER_QTY(B.CONTROL_SEQ, 0),' (',IFNULL(B.ORIGINAL_SIDE_QTY,0),',',IFNULL(B.OTHER_SIDE_QTY,0),')')
+                 ELSE jmes.SF_GET_CONTROL_ORDER_QTY(B.CONTROL_SEQ, 0)
+            END ORDER_QTY_INFO
+          , B.SIZE_TXT
+          , jmes.SF_GET_MATERIAL_SIZE_TXT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS MATERIAL_SIZE_TXT
+          , jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, 'KR') AS WORK_TYPE_NM
+          , jmes.SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, 'KR') AS MATERIAL_DETAIL_NM
+          , jmes.SF_GET_CODE_NM('1039', B.SURFACE_TREAT, 'KR') AS SURFACE_TREAT_NM
+          , CASE WHEN B.MATERIAL_SUPPLY_YN = 'Y' THEN '사급'
+                 ELSE (SELECT jmes.SF_GET_CODE_NM('1033', M.ORDER_STATUS, 'KR') FROM jmes.TBL_MATERIAL_ORDER M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
+            END AS MATERIAL_ORDER_STATUS_NM
+          , jmes.SF_GET_CODE_NM('1013', B.PART_STATUS, 'KR') AS PART_STATUS_NM
+          , B.DRAWING_VER
+          , B.DXF_GFILE_SEQ       -- 확인필요
+          , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
+          , A.DESIGNER_NM
+          , CASE WHEN B.OUTSIDE_YN = 'Y' THEN (SELECT CONCAT('Y / ', IFNULL(MAX(M.COMP_NM),SPACE(0))) FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = B.OUTSIDE_COMP_CD)
+                 WHEN IFNULL(B.OUTSIDE_YN,'N') = 'N' THEN 'N'
+            END AS OUTSIDE_INFO
+          , ( SELECT M.COMP_NM
+              FROM jmes.TBL_COMPANY M
+              WHERE M.COMP_CD = B.OUTSIDE_COMP_CD
+            ) AS OUTSIDE_COMP_NM
+          , CASE WHEN A.CONTROL_STATUS IN ('ORD001','ORD003','ORD004') THEN (SELECT jmes.SF_GET_DATE_F(MAX(M.STATUS_DT),'YYYY','') FROM jmes.TBL_CONTROL_PROGRESS M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.ORDER_STATUS = 'ORD001') END AS CONTROL_CONFIRM_DT
+          , jmes.SF_GET_DATE_F(A.OUT_FINISH_DT,'YYYY','') AS OUT_FINISH_DT
+          , ( SELECT CONCAT(jmes.SF_GET_DATE_F(Q.INSERT_DT,'YYYY',''),' / ',(SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = Q.WORK_USER_ID))
+              FROM jmes.TBL_CAM P, jmes.TBL_CAM_DETAIL Q, jmes.TBL_CONTROL_PART R
+              WHERE P.CAM_SEQ = Q.CAM_SEQ
+                AND P.CONTROL_SEQ = R.CONTROL_SEQ
+                AND P.CONTROL_DETAIL_SEQ = R.CONTROL_DETAIL_SEQ
+                AND R.DRAWING_NUM = B.DRAWING_NUM
+              ORDER BY Q.SEQ DESC
+              LIMIT 1
+            ) AS WORK_HISTORY_INFO
+        FROM jmes.TBL_CONTROL A
+          , jmes.TBL_CONTROL_PART B
+        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+          AND B.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </select>
+    <select id="selectCommItemDetailInfo2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        -- MPR040(선반), MPR010(NC), MPR020(밀링), MPR030(연마)
+        SELECT IFNULL(SUM(X.WORK_TIME),0) AS WORK_TIME_TOTAL
+          , IFNULL(SUM(CASE WHEN X.PROCESS_TYPE = 'MPR040' THEN WORK_TIME END),0) AS WORK_TIME_MPR040
+          , IFNULL(SUM(CASE WHEN X.PROCESS_TYPE = 'MPR010' THEN WORK_TIME END),0) AS WORK_TIME_MPR010
+          , IFNULL(SUM(CASE WHEN X.PROCESS_TYPE = 'MPR020' THEN WORK_TIME END),0) AS WORK_TIME_MPR020
+          , IFNULL(SUM(CASE WHEN X.PROCESS_TYPE = 'MPR030' THEN WORK_TIME END),0) AS WORK_TIME_MPR030
+        FROM (  SELECT C.PROCESS_TYPE, SUM(TIMESTAMPDIFF(MINUTE, B.WORK_START_DT, B.WORK_STOP_DT)) AS WORK_TIME
+                FROM jmes.TBL_MCT_WORK A, jmes.TBL_MCT_WORK_TIME B, jmes.TBL_EQUIP C
+                WHERE A.MCT_WORK_SEQ = B.MCT_WORK_SEQ
+                  AND A.EQUIP_SEQ = C.EQUIP_SEQ
+                  AND A.DEL_YN = 'N'
+                  AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+                  AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+                  AND C.PROCESS_TYPE IN ('MPR010','MPR020','MPR030','MPR040')
+                GROUP BY C.PROCESS_TYPE
+              ) X
     </select>
     <select id="selectCommItemDetailInfoGrid1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        select 3 AS SEQ from dual
+        SELECT ROW_NUMBER() OVER(ORDER BY A.MCT_WORK_SEQ) AS RNUM
+          , B.PROCESS_TYPE, jmes.SF_GET_CODE_NM('1010', B.PROCESS_TYPE, 'KR') AS PROCESS_TYPE_NM
+          , B.EQUIP_NM
+          , A.WORK_STATUS
+          , jmes.SF_GET_DATE_F(A.WORK_START_DT,'YY','M') AS WORK_START_DT
+          , jmes.SF_GET_DATE_F(A.WORK_FINISH_DT,'YY','M') AS WORK_FINISH_DT
+          , (SELECT SUM(TIMESTAMPDIFF(MINUTE, M.WORK_START_DT, M.WORK_STOP_DT)) FROM jmes.TBL_MCT_WORK_TIME M WHERE M.MCT_WORK_SEQ = A.MCT_WORK_SEQ) AS WORKING_TIME     -- 확인
+          , (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = A.WORK_USER_ID) AS WORK_USER
+          , A.FINISH_QTY
+          , A.ERROR_QTY
+        FROM jmes.TBL_MCT_WORK A, jmes.TBL_EQUIP B
+        WHERE A.EQUIP_SEQ = B.EQUIP_SEQ
+          AND A.DEL_YN = 'N'
+          AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+          AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+        ORDER BY 1 DESC
     </select>
     <select id="selectCommItemDetailInfoGrid2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        select 4 AS SEQ from dual
+        SELECT A.POP_SEQ
+          , jmes.SF_GET_CODE_NM('1009', A.POP_POSITION, 'KR') AS POP_POSITION_NM
+          , jmes.SF_GET_DATE_F(A.POP_DT,'YY','') AS POP_DT
+        FROM jmes.TBL_POP A
+        WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
+          AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+        ORDER BY A.POP_SEQ DESC
     </select>
     <select id="selectCommItemDetailInfoGrid3" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        select 5 AS SEQ from dual
+       SELECT jmes.SF_GET_CODE_NM('1078', X.NOTE_TYPE, 'KR') AS NOTE_TYPE_NM
+          , X.NOTE
+        FROM (  SELECT '1' AS NOTE_TYPE, A.NOTE FROM jmes.TBL_CONTROL A WHERE A.CONTROL_SEQ = #{CONTROL_SEQ} AND A.NOTE IS NOT NULL
+                UNION ALL
+                SELECT '2' AS NOTE_TYPE, A.MCT_NOTE AS NOTE FROM jmes.TBL_CONTROL_PART A WHERE A.CONTROL_SEQ = #{CONTROL_SEQ} AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ} AND A.MCT_NOTE IS NOT NULL
+                UNION ALL
+                SELECT '3' AS NOTE_TYPE, A.NOTE FROM TBL_CAM A WHERE A.CONTROL_SEQ = #{CONTROL_SEQ} AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ} AND A.NOTE IS NOT NULL
+              ) X
     </select>
     <select id="selectCommItemDetailInfoGrid4" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        select 6 AS SEQ from dual
+        SELECT ROW_NUMBER() OVER(ORDER BY B.CAM_SEQ) AS RNUM
+          , B.CAM_SEQ
+          , B.WORK_DIRECTION    -- 코드명 확인
+          , B.WORK_DESC
+          , (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = B.WORK_USER_ID) AS WORK_USER_NM
+          , B.CAM_GFILE_SEQ    -- 확인
+          , CASE WHEN A.START_DT IS NOT NULL AND A.FINISH_DT IS NULL THEN '(진행중)' END AS STATUS_INFO
+          , CASE WHEN A.FINISH_DT IS NOT NULL THEN jmes.SF_GET_DATE_F(A.FINISH_DT,'YYYY','M')
+                 WHEN A.START_DT IS NOT NULL THEN jmes.SF_GET_DATE_F(A.START_DT,'YYYY','M')
+            END UPDATE_TIME_INFO
+        FROM jmes.TBL_CAM A, jmes.TBL_CAM_DETAIL B
+        WHERE A.CAM_SEQ = B.CAM_SEQ
+          AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+          AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+        ORDER BY 1 DESC
     </select>
     <select id="selectCommItemDetailInfoGrid5" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        select 7 AS SEQ from dual
+        SELECT ROW_NUMBER() OVER(ORDER BY A.INSPECT_SEQ) AS Q_SEQ
+          , (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = A.INSPECT_USER_ID) AS Q_INSPECT_USER_NM
+          , jmes.SF_GET_CODE_NM('1060', A.INSPECT_METHOD, 'KR') AS Q_INSPECT_METHOD_NM
+          , CASE WHEN A.INSPECT_TYPE = '2' THEN jmes.SF_GET_DATE_F(A.INSERT_DT,'YY','M') END AS Q_RETURN_DT
+          , (SELECT NOTE FROM jmes.TBL_CODE WHERE HIGH_CD = '1040' AND CODE_CD = A.INSPECT_GRADE) AS Q_INSPECT_GRADE_NOTE
+          , CASE WHEN A.INSPECT_TYPE = '1' THEN ( SELECT IFNULL(SUM(N.ORDER_QTY) * M.PART_UNIT_QTY,0)
+                                                  FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL_PART_ORDER N
+                                                  WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                                    AND M.CONTROL_DETAIL_SEQ = N.CONTROL_DETAIL_SEQ
+                                                    AND M.CONTROL_SEQ = #{CONTROL_SEQ}
+                                                    AND M.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+                                                ) - IFNULL(A.ERROR_QTY,0)
+            END AS Q_OK_QTY
+          , A.ERROR_QTY AS Q_ERROR_QTY
+          , CASE WHEN A.INSPECT_TYPE = '1' THEN CASE WHEN A.INSPECT_GRADE = 'GRD040' THEN jmes.SF_GET_CODE_NM('1020', A.INSPECT_RESULT, 'KR') END
+                 WHEN A.INSPECT_TYPE = '2' THEN jmes.SF_GET_CODE_NM('1021', A.INSPECT_RESULT, 'KR')
+            END AS Q_INSPECT_RESULT_NM
+          , A.INSPECT_DESC AS Q_INSPECT_DESC
+          , jmes.SF_GET_CODE_NM('1032', A.ERROR_REASON, 'KR') AS Q_ERROR_REASON_NM
+          , jmes.SF_GET_CODE_NM('1025', A.ERROR_ACTION, 'KR') AS Q_ERROR_ACTION_NM
+          , A.ERROR_NOTE AS Q_ERROR_NOTE
+          , jmes.SF_GET_DATE_F(A.INSERT_DT,'YY','M') AS Q_DT
+        FROM jmes.TBL_INSPECT A
+        WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
+          AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+        ORDER BY 1 DESC
     </select>
 
     <select id="selectOutgoingList" parameterType="java.util.HashMap" resultType="java.util.HashMap">

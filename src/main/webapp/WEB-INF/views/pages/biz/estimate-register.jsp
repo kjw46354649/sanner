@@ -190,13 +190,7 @@
     <input type="hidden" id="queryId" name="queryId" value="selectEstimateDetailList"/>
     <input type="hidden" id="EST_SEQ" name="EST_SEQ" value=""/>
 </form>
-<form id="estimate_register_excel_download" method="POST">
-    <input type="hidden" id="sqlId" name="sqlId" value="selectEstimateDetailListExcel"/>
-    <input type="hidden" id="mapInputId" name="mapInputId" value="data"/>
-    <input type="hidden" id="paramName" name="paramName" value="EST_SEQ"/>
-    <input type="hidden" id="paramData" name="paramData" value=""/>
-    <input type="hidden" id="template" name="template" value="estimate_list_template"/>
-</form>
+
 <script type="text/javascript">
     $(function () {
         /** 공통 코드 이외의 처리 부분 **/
@@ -621,6 +615,7 @@
         });
 
         selectEstimateBotList('');
+        btnDisabled('');
 
         function selectEstimateBotList(COMP_CD) {
             if(estimateRegisterBotGrid.hasClass('pq-grid')){
@@ -693,13 +688,15 @@
                 CKEDITOR.instances.EMAIL_CONTENT_TXT.setData(list.EMAIL_CONTENT);
                 $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
 
-                $("#estimate_register_excel_download #EST_SEQ").val(EST_SEQ);
+                $("#common_excel_form #paramData").val(EST_SEQ);
 
                 postData = { 'queryId': 'estimate.selectEstimateDetailList', 'EST_SEQ': EST_SEQ };
                 fnRequestGidData(estimateRegisterTopGrid, postData);
 
                 postData = { 'queryId': 'estimate.selectEstimateReceiverList', 'EST_SEQ': EST_SEQ };
                 fnRequestGidData(estimateRegisterBotGrid, postData);
+
+                btnDisabled(list.EST_STATUS);
             }, parameter, '');
         };
 
@@ -822,7 +819,12 @@
         });
 
         $("#btnEstimateRegisterEstimateListExcel").on('click', function(){
-            fnReportFormToHiddenFormPageAction("estimate_register_excel_download", "/downloadExcel");
+            $("#common_excel_form #sqlId").val('selectEstimateDetailListExcel');
+            $("#common_excel_form #mapInputId").val('data');
+            $("#common_excel_form #paramName").val('EST_SEQ');
+            $("#common_excel_form #template").val('estimate_list_template');
+
+            fnReportFormToHiddenFormPageAction("common_excel_form", "/downloadExcel");
         });
 
         $("#chkEstimateRegisterDetail").on('click', function(){
@@ -850,4 +852,20 @@
         /* CKEDITOR 부분 */
         CKEDITOR.replace( 'EMAIL_CONTENT_TXT', { height: 176 });
     });
+
+    function btnDisabled(status) {
+        if(status == 'EST020'){
+            $("#btn_estimate_register_save").attr('disabled', true);
+            $("#btn_estimate_register_submit").attr('disabled', true);
+            $("#btnEstimateRegisterAdd").attr('disabled', true);
+            $("#btnEstimateRegisterDelete").attr('disabled', true);
+
+        }else {
+            $("#btn_estimate_register_save").attr('disabled', false);
+            $("#btn_estimate_register_submit").attr('disabled', false);
+            $("#btnEstimateRegisterAdd").attr('disabled', false);
+            $("#btnEstimateRegisterDelete").attr('disabled', false);
+        }
+    }
+
 </script>
