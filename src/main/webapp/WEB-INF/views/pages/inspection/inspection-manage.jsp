@@ -254,140 +254,15 @@
 </div>
 <!-- 품질실적 layer popup : E -->
 
-<!-- 제품상세정보 layer popup : S -->
-<div class="popup_container g_item_detail_pop" id="g_item_detail_pop" style="display: none;">
-    <form class="form-inline" id="g_item_detail_pop_form" name="g_item_detail_pop_form" role="form">
-        <div class="layerPopup">
-            <h3>제품상세정보</h3>
-            <span class="right">
-                <span class="barCode" ><img src="/resource/asset/images/common/img_barcode.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>
-                <span class="barCodeTxt" >&nbsp;<input type="text" class="wd_270_barcode" style="height: 39px;" name="g_item_detail_pop_barcode_num" id="g_item_detail_pop_barcode_num" placeholder="도면의 바코드를 스캔해 주세요"></span>
-            </span>
-            <div class="qualityWrap">
-                <h4>기본정보</h4>
-                <div class="list1">
-                    <table class="rowStyle">
-                        <colgroup>
-                            <col width="16%">
-                            <col width="16%">
-                            <col width="16%">
-                            <col width="16%">
-                            <col width="16%">
-                            <col width="16%">
-                        </colgroup>
-                        <tr>
-                            <th>관리번호</th>
-                            <td id="SEQ" class="red"></td>
-                            <th>도면번호</th>
-                            <td id="SEQ" class="red"></td>
-                            <th>납기</th>
-                            <td id="SEQ"></td>
-                        </tr>
-                        <tr>
-                            <th>품명</th>
-                            <td id="SEQ"></td>
-                            <th>모듈</th>
-                            <td id="SEQ"></td>
-                            <th>수량(원칭,대칭)</th>
-                            <td id="SEQ"></td>
-                        </tr>
-                        <tr>
-                            <th>규격</th>
-                            <td id="SEQ"></td>
-                            <th>소재Size</th>
-                            <td id="SEQ"></td>
-                            <th>가공형태</th>
-                            <td id="SEQ"></td>
-                        </tr>
-                        <tr>
-                            <th>소재종류</th>
-                            <td id="SEQ"></td>
-                            <th>후처리</th>
-                            <td id="SEQ"></td>
-                            <th>소재주문상태</th>
-                            <td id="SEQ"></td>
-                        </tr>
-                        <tr>
-                            <th>진행상태</th>
-                            <td id="SEQ"></td>
-                            <th>도면수정Rev.</th>
-                            <td id="SEQ"></td>
-                            <th>도면파일</th>
-                            <td id="SEQ"></td>
-                        </tr>
-                        <tr>
-                            <th>발주업체</th>
-                            <td id="SEQ"></td>
-                            <th>설계자</th>
-                            <td id="SEQ"></td>
-                            <th>외주여부/업체</th>
-                            <td id="SEQ"></td>
-                        </tr>
-                        <tr>
-                            <th>확정일자</th>
-                            <td id="SEQ"></td>
-                            <th>출고일자</th>
-                            <td id="SEQ"></td>
-                            <th>과거수행경험</th>
-                            <td id="SEQ"></td>
-                        </tr>
 
-                    </table>
-                </div>
-
-                <div class="listdiv">
-                    <div class="tableWrap" >
-                        <ul class="conWrapPop60">
-                            <h4>가공이력</h4>
-                            <span class="slt_wrap namePlusSlt rightName" >
-                                <label for="g_item_detail_pop_grid_01_info_1">총시간</label>
-                                <input type="text" id="g_item_detail_pop_grid_01_info_1" class="wd_50" title="총시간">
-                                <label for="g_item_detail_pop_grid_01_info_2">선반</label>
-                                <input type="text" id="g_item_detail_pop_grid_01_info_2" class="wd_50" title="선반">
-                                <label for="g_item_detail_pop_grid_01_info_3">NC</label>
-                                <input type="text" id="g_item_detail_pop_grid_01_info_3" class="wd_50" title="NC">
-                                <label for="g_item_detail_pop_grid_01_info_4">밀링</label>
-                                <input type="text" id="g_item_detail_pop_grid_01_info_4" class="wd_50" title="밀링">
-                                <label for="g_item_detail_pop_grid_01_info_5">연마</label>
-                                <input type="text" id="g_item_detail_pop_grid_01_info_5" class="wd_50" title="연마">
-                            </span>
-                            <div id="g_item_detail_pop_grid_01" class="jqx-refresh"></div>
-                        </ul>
-                        <ul class="conWrapPop40">
-                            <h4>위치변동이력</h4>
-                            <div id="g_item_detail_pop_grid_02" class="jqx-refresh"></div>
-                        </ul>
-                    </div>
-                </div>
-                <div class="listdiv">
-                    <div class="tableWrap" >
-                        <ul class="conWrapPop60">
-                            <h4>공유사항</h4>
-                            <div id="g_item_detail_pop_grid_03" class="jqx-refresh"></div>
-                        </ul>
-                        <ul class="conWrapPop40">
-                            <h4>CAM작업이력</h4>
-                            <div id="g_item_detail_pop_grid_04" class="jqx-refresh"></div>
-                        </ul>
-                    </div>
-                </div>
-                <h4>품질사항</h4>
-                <div class="list4">
-                    <div id="g_item_detail_pop_grid_05" class="jqx-refresh"></div>
-                </div>
-            </div>
-            <div class="btnWrap">
-                <button type="button" id="g_item_detail_pop_grid_05_pop_close" class="cancel">CLOSE</button>
-            </div>
-        </div>
-    </form>
-</div>
-<!-- 제품상세정보 layer popup : E -->
 
 
 
 
 <script>
+
+
+
     $(function () {
         'use strict';
 
@@ -404,7 +279,7 @@
         let inspectionManageGridIdPop02 = $("#inspection_manage_grid_pop_02");
         let inspectionManageColModelPop02;
         let inspectionManagePostDataPop02;
-        
+
 
         /**  리스트 그리드 선언 시작 **/
         $("#inspection_manage_form").find("#queryId").val("inspection.selectInspectionList");
@@ -592,8 +467,8 @@
             {title: '측정방법', dataType: 'string', dataIndx: 'Q_INSPECT_METHOD_NM',  width: 95, editable: false},
             {title: '반품일', dataType: 'string', dataIndx: 'Q_RETURN_DT',  width: 95, editable: false},
             {title: '합/불', dataType: 'string', dataIndx: 'Q_INSPECT_GRADE_NOTE',  width: 95, editable: false},
-            {title: '양품', dataType: 'string', dataIndx: 'Q_OK_QTY',  width: 95, editable: false},
-            {title: '불량/반품', dataType: 'string', dataIndx: 'Q_ERROR_QTY',  width: 95, editable: false},
+            // {title: '양품', dataType: 'string', dataIndx: 'Q_OK_QTY',  width: 95, editable: false},
+            {title: '수량', dataType: 'string', dataIndx: 'Q_ERROR_QTY',  width: 95, editable: false},
             {title: '불량코드', dataType: 'string', dataIndx: 'Q_INSPECT_RESULT_NM',  width: 95, editable: false},
             {title: '상세및비고', dataType: 'string', dataIndx: 'Q_INSPECT_DESC',  width: 95, editable: false},
             {title: '원인', dataType: 'string', dataIndx: 'Q_ERROR_REASON_NM',  width: 95, editable: false},
@@ -910,7 +785,32 @@ console.log(dataInfo);
             $('#inspection_manage_pop_form').find('#ERROR_QTY_VIEW').html(POP_ERROR_QTY);
         }
 
+        $("#inspection_manage_detail_btn").on('click', function(e){
+            console.log(SelectedRowIndex);
+            // alert("test data ");
+            if(SelectedRowIndex.length >0){
+            //   if(true){
+                let rowDataArray = inspectionManageGridId01.pqGrid('getRowData', {rowIndx: SelectedRowIndex[0]});
+                console.log(rowDataArray);
+                let CONTROL_DETAIL_SEQ = rowDataArray.CONTROL_DETAIL_SEQ;
+                let CONTROL_SEQ = rowDataArray.CONTROL_SEQ;
 
+
+
+
+                 // CONTROL_DETAIL_SEQ = "7269";
+                 // CONTROL_SEQ = "4502";
+
+
+
+
+
+                g_item_detail_pop_view(CONTROL_SEQ,CONTROL_DETAIL_SEQ);
+            }else{
+                alert("그리드를 선택해 주십시오.");
+            }
+
+        });
 
 
     });
@@ -936,227 +836,6 @@ console.log(dataInfo);
         }
     }
 
-    $(function () {
-        /** 공통 제품상세 정보 */
 
-            let g_ItemDetailPopGridId01 =  $("#g_item_detail_pop_grid_01");
-            let g_ItemDetailPopColModel01 = [
-                {title: '공정', dataType: 'string', dataIndx: 'SEQ', width: 95, editable: false},
-                {title: '기기명', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false},
-                {title: '진행상태', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false},
-                {title: '시작', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false},
-                {title: '종료', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false},
-                {title: '소요시간', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false},
-                {title: '작업자', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false},
-                {title: '수량', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false},
-                {title: '불량', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false}
-            ];
-            //g_ItemDetailPopGridId01.pqGrid({
-            let g_ItemDetailPopObj01 = {
-                width: "100%", height: 120,
-                dataModel: {
-                    location: "remote", dataType: "json", method: "POST", recIndx: 'INSIDE_STOCK_NUM',
-                    url: "/paramQueryGridSelect",
-                    //postData: fnFormToJsonArrayData('g_item_detail_pop_form'),
-                    postData: {queryId: 'inspection.selectCommItemDetailInfo', 'V_PARAM': ''},
-                    getData: function (dataJSON) {
-                        return {data: dataJSON.data};
-                    }
-                },
-                strNoRows: g_noData,
-                columnTemplate: {align: 'center', hvalign: 'center'},
-                scrollModel: {autoFit: true},
-                numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
-                selectionModel: { type: 'row', mode: 'single'} ,
-                swipeModel: {on: false},
-                showTitle: false,
-                collapsible: false,
-                resizable: false,
-                trackModel: {on: true},
-                colModel: g_ItemDetailPopColModel01
-            };
-
-
-            let g_ItemDetailPopGridId02 =  $("#g_item_detail_pop_grid_02");
-            let g_ItemDetailPopColModel02 = [
-                {title: '상태/위치', dataType: 'string', dataIndx: 'SEQ', width: 150, editable: false},
-                {title: '이벤트일시', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 95, width: 150, editable: false}
-            ];
-             let g_ItemDetailPopObj02 = {
-                width: "100%", height: 120,
-                dataModel: {
-                    location: "remote", dataType: "json", method: "POST", recIndx: 'INSIDE_STOCK_NUM',
-                    url: "/paramQueryGridSelect",
-                    postData: fnFormToJsonArrayData('g_item_detail_pop_form'),
-                    getData: function (dataJSON) {
-                        return {data: dataJSON.data};
-                    }
-                },
-                strNoRows: g_noData,
-                columnTemplate: {align: 'center', hvalign: 'center'},
-                scrollModel: {autoFit: true},
-                numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
-                selectionModel: { type: 'row', mode: 'single'} ,
-                swipeModel: {on: false},
-                showTitle: false,
-                collapsible: false,
-                resizable: false,
-                trackModel: {on: true},
-                colModel: g_ItemDetailPopColModel02
-            };
-
-            let g_ItemDetailPopGridId03 =  $("#g_item_detail_pop_grid_03");
-            let g_ItemDetailPopColModel03 = [
-                {title: '입력구분', dataType: 'string', dataIndx: 'SEQ', width: 150, editable: false},
-                {title: '비고', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 95, width: 150, editable: false}
-            ];
-            let g_ItemDetailPopObj03 = {
-                width: "100%", height: 120,
-                dataModel: {
-                    location: "remote", dataType: "json", method: "POST", recIndx: 'INSIDE_STOCK_NUM',
-                    url: "/paramQueryGridSelect",
-                    postData: fnFormToJsonArrayData('g_item_detail_pop_form'),
-                    getData: function (dataJSON) {
-                        return {data: dataJSON.data};
-                    }
-                },
-                strNoRows: g_noData,
-                columnTemplate: {align: 'center', hvalign: 'center'},
-                scrollModel: {autoFit: true},
-                numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
-                selectionModel: { type: 'row', mode: 'single'} ,
-                swipeModel: {on: false},
-                showTitle: false,
-                collapsible: false,
-                resizable: false,
-                trackModel: {on: true},
-                colModel: g_ItemDetailPopColModel03
-            };
-
-            let g_ItemDetailPopGridId04 =  $("#g_item_detail_pop_grid_04");
-            let g_ItemDetailPopColModel04 = [
-                {title: 'Step', dataType: 'string', dataIndx: 'SEQ', width: 95, editable: false},
-                {title: '상태', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false},
-                {title: '시작', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false},
-                {title: '종료', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false},
-                {title: '작업자', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false},
-                {title: '파일', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false}
-            ];
-            let g_ItemDetailPopObj04 = {
-                width: "100%", height: 120,
-                dataModel: {
-                    location: "remote", dataType: "json", method: "POST", recIndx: 'INSIDE_STOCK_NUM',
-                    url: "/paramQueryGridSelect",
-                    postData: fnFormToJsonArrayData('g_item_detail_pop_form'),
-                    getData: function (dataJSON) {
-                        return {data: dataJSON.data};
-                    }
-                },
-                strNoRows: g_noData,
-                columnTemplate: {align: 'center', hvalign: 'center'},
-                scrollModel: {autoFit: true},
-                numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
-                selectionModel: { type: 'row', mode: 'single'} ,
-                swipeModel: {on: false},
-                showTitle: false,
-                collapsible: false,
-                resizable: false,
-                trackModel: {on: true},
-                colModel: g_ItemDetailPopColModel04
-            };
-
-            let g_ItemDetailPopGridId05 =  $("#g_item_detail_pop_grid_05");
-            let g_ItemDetailPopColModel05 = [
-                {title: '작성자', dataType: 'string', dataIndx: 'SEQ', width: 95, editable: false},
-                {title: '측정방법', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false},
-                {title: '반품일', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false},
-                {title: '등급', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false},
-                {title: '수량', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false},
-                {title: '불량코드', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false},
-                {title: '상세및비고', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false},
-                {title: '원인', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false},
-                {title: '조치', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false},
-                {title: '조치방안', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false},
-                {title: '작성일자', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 95, editable: false}
-            ];
-            let g_ItemDetailPopObj05 = {
-                width: "100%", height: 120,
-                dataModel: {
-                    location: "remote", dataType: "json", method: "POST", recIndx: 'INSIDE_STOCK_NUM',
-                    url: "/paramQueryGridSelect",
-                    postData: fnFormToJsonArrayData('g_item_detail_pop_form'),
-                    getData: function (dataJSON) {
-                        return {data: dataJSON.data};
-                    }
-                },
-                strNoRows: g_noData,
-                columnTemplate: {align: 'center', hvalign: 'center'},
-                scrollModel: {autoFit: true},
-                numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
-                selectionModel: { type: 'row', mode: 'single'} ,
-                swipeModel: {on: false},
-                showTitle: false,
-                collapsible: false,
-                resizable: false,
-                trackModel: {on: true},
-                colModel: g_ItemDetailPopColModel05
-            };
-
-
-        let g_item_detail_pop_view = function(V_PARAM){
-
-            let parameters = {
-                'url': '/json-info',
-                'data': {queryId: 'inspection.selectCommItemDetailInfo', 'V_PARAM': '00'}
-            };
-            fnPostAjax(function (data, callFunctionParam) {
-                let dataInfo = data.info;
-                if(dataInfo == null ) {
-                    fnResetFrom("g_item_detail_pop_form");
-                }else{
-                    //fnJsonDataToForm("stock_manage_pop_form", dataInfo);
-                    $("#g_item_detail_pop_form").find("#SEQ").html(dataInfo.SEQ);
-
-
-
-                }
-            }, parameters, '');
-
-            g_ItemDetailPopObj01.dataModel.postData = {queryId: 'inspection.selectCommItemDetailInfoGrid1', 'V_PARAM': '11'};
-            g_ItemDetailPopGridId01.pqGrid(g_ItemDetailPopObj01);
-
-            g_ItemDetailPopObj02.dataModel.postData = {queryId: 'inspection.selectCommItemDetailInfoGrid2', 'V_PARAM': '22'};
-            g_ItemDetailPopGridId02.pqGrid(g_ItemDetailPopObj02);
-
-            g_ItemDetailPopObj03.dataModel.postData = {queryId: 'inspection.selectCommItemDetailInfoGrid3', 'V_PARAM': '33'};
-            g_ItemDetailPopGridId03.pqGrid(g_ItemDetailPopObj03);
-
-            g_ItemDetailPopObj04.dataModel.postData = {queryId: 'inspection.selectCommItemDetailInfoGrid4', 'V_PARAM': '44'};
-            g_ItemDetailPopGridId04.pqGrid(g_ItemDetailPopObj04);
-
-            g_ItemDetailPopObj05.dataModel.postData = {queryId: 'inspection.selectCommItemDetailInfoGrid5', 'V_PARAM': '55'};
-            g_ItemDetailPopGridId05.pqGrid(g_ItemDetailPopObj05);
-
-        }
-        $("#g_item_detail_pop").on('hide.bs.modal', function(){
-            fnResetFrom("g_item_detail_pop_form");
-            g_ItemDetailPopGridId01.pqGrid('destroy');
-            g_ItemDetailPopGridId02.pqGrid('destroy');
-            g_ItemDetailPopGridId03.pqGrid('destroy');
-            g_ItemDetailPopGridId04.pqGrid('destroy');
-            g_ItemDetailPopGridId05.pqGrid('destroy');
-        });
-
-        $('#g_item_detail_pop_grid_05_pop_close').on('click', function () {
-            $('#g_item_detail_pop').modal('hide');
-        });
-
-        $("#inspection_manage_detail_btn").on('click', function(e){
-            $('#g_item_detail_pop').modal('show');
-            g_item_detail_pop_view('');
-        });
-
-    });
-    /**  공통 제품상세 정보  끝 **/
 
 </script>
