@@ -78,6 +78,46 @@
         WHERE TEMPLATE_SEQ = 0
     </insert>
 
+    <insert id="insertItemOrderRegisterPopSubmitMail" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_MAIL_BOX
+        (
+            MAIL_BOX_SEQ, TITLE, CONTEXT,
+            SEND_NAME, SEND_EMAIL, RECV_EMAIL,
+            CC_EMAIL, HCC_EMAIL, GFILE_SEQ, MAIL_TYPE,
+            STATUS, DEL_YN, TEMPLATE_SEQ,
+            REF_KEY, REF_01, REF_02, REF_03, REF_04, REF_05,
+            INSERT_DT, INSERT_ID
+        )
+        SELECT
+            NEXTVAL(SEQ_MAIL),
+            REPLACE(REPLACE(REPLACE(A.TEMPLATE_TITLE
+									, '%COMP_NM%', IFNULL(E.COMP_NM, SPACE(0)))
+							, '%MATERIAL_ORDER_NUM%' , IFNULL(B.MATERIAL_ORDER_NUM, SPACE(0)))
+					, '%ORDER_COMP_NM%', IFNULL(C.COMP_NM, SPACE(0)))
+			AS TEMPLATE_TITLE,
+            REPLACE(REPLACE(REPLACE(A.TEMPLATE_CONTENT
+									, '%ORDER_COMP_NM%', IFNULL(C.COMP_NM, SPACE(0)))
+							, '%COMP_NM%' , IFNULL(E.COMP_NM, SPACE(0)))
+					, '%INNER_TABLE%', IFNULL(#{INNER_TABLE}, SPACE(0)))
+            AS TEMPLATE_CONTENT,
+            E.COMP_NM AS SEND_NAME,
+            E.COMP_EMAIL AS SEND_EMAIL,
+            C.COMP_EMAIL AS RECV_EMAIL,
+            CC_EMAIL, '' AS HCC_EMAIL, #{GFILE_SEQ}, #{MAIL_TYPE},
+            'EMSTS001', 'N' AS DEL_YN, A.TEMPLATE_SEQ,
+            #{REF_KEY}, #{REF_01}, #{REF_02}, #{REF_03}, #{REF_04}, #{REF_05},
+            NOW() AS INSERT_DT, #{INSERT_ID}
+        FROM TBL_MAIL_TEMPLATE A
+			, TBL_MATERIAL_ORDER B
+            INNER JOIN TBL_COMPANY C ON B.MATERIAL_COMP_CD = C.COMP_CD
+            INNER JOIN TBL_CONTROL D ON B.CONTROL_SEQ = D.CONTROL_SEQ
+            INNER JOIN TBL_COMPANY E ON D.COMP_CD = E.COMP_CD
+        WHERE A.TEMPLATE_SEQ = 1
+			AND B.MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
+			AND B.MATERIAL_COMP_CD = #{MATERIAL_COMP_CD}
+		GROUP BY B.MATERIAL_ORDER_NUM
+    </insert>
+
     <insert id="insertOutsideRequestSubmitMail" parameterType="java.util.HashMap">
         INSERT INTO jmes.TBL_MAIL_BOX
         (

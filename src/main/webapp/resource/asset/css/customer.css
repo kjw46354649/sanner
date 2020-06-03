@@ -306,33 +306,41 @@ table .outBotTableStyle td{ border: 1px solid #acb9b9; color: #616161; text-alig
 .fc-day-top.fc-sun.fc-future { color:#FF0000; }    /* 일요일 */
 
 /* paramquery color 지정 */
+/* No 컬럼 */
+.pq-table-left, .pq-table-lt {
+    width: 100%;
+    background-color: #bfbfbf;
+    font-weight: bold;
+    color: black ;
+}
+/* 일반 Header */
 .pq-grid-row:first-child>.pq-grid-col {
     border-top-color: transparent;
     background-color: #bfbfbf;
     font-weight: bold;
     color: black;
 }
-.pq-table-left, .pq-table-lt {
-    width: 100%;
-    background-color: #bfbfbf !important;
-    font-weight: bold !important;
-    color: black !important;
-}
 .pq-grid-row:last-child>.pq-grid-col {
     border-bottom-width: 0;
-    background-color: #bfbfbf !important;
-    font-weight: bold !important;
-    color: black !important;
+    background-color: #bfbfbf ;
+    font-weight: bold;
+    color: black ;
 }
-
 .pq-grid-row:not(:last-child)>.pq-grid-col {
     border-bottom-color: transparent;
-    background-color: #bfbfbf !important;
-    font-weight: bold !important;
-    color: black !important;
+    background-color: #bfbfbf ;
+    font-weight: bold ;
+    color: black ;
 }
 
 /* 수금 관리 테이블 아래 매출 현황 합계 */
 .moneySalesMonthTable {padding: 10px 0px;}
 .moneySalesMonthTable table {border: 1px solid #cecece; width: 100%;}
 .moneySalesMonthTable table td { border: 1px solid #cdcfd0; line-height: 2.0em;}
+
+/** Button Disabled **/
+button:disabled {
+    background: #dddddd !important;
+    color: #212121 !important;
+    border: 1px solid #e5e5e5 !important;
+}

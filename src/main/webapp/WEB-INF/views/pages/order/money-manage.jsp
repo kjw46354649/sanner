@@ -231,18 +231,104 @@
         let moneyManageStatusModel = [
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD_NM'},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '2020년 <BR>매출현황', dataType: 'string', dataIndx: 'SALES_MONEY'},
+            {title: '2020년 <BR>매출현황', dataType: 'string', dataIndx: 'SALE_AMT',
+                summary: {
+                    type: "sum",
+                    edit: true
+                },
+            },
             {
                 title: '2020년 수금현황', clsHead: 'cantChange', align: 'center', colModel: [
-                    {title: '현금', dataType: 'string', dataIndx: 'SALES_MONEY_PAYMENT'},
-                    {title: '어음', dataType: 'string', dataIndx: 'SALES_MONEY_PAPER'},
-                    {title: '합계', dataType: 'string', dataIndx: 'SALES_MONEY_TOTLE'},
+                    {title: '현금', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CASH_AMT',
+                        summary: {
+                            type: "sum",
+                            edit: true
+                        },
+                    },
+                    {title: '어음', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PAPER_AMT',
+                        summary: {
+                            type: "sum",
+                            edit: true
+                        },
+                    },
+                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DEPOSIT_TOTAL_AMT',
+                        summary: {
+                            type: "sum",
+                            edit: true
+                        },
+                    },
                 ]
             },
-            {title: '전년도 총 <BR>미수금액', dataType: 'string', dataIndx: 'BEFORE_DUE_OUT_AMOUNT'},
-            {title: '총미수금 현황<BR>2020년', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT'},
-            {title: '비고', dataType: 'string', dataIndx: 'CLOSE_NOTE', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}}
+            {title: '전년도 총 <BR>미수금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'NOT_DEPOSIT_AMT',
+                summary: {
+                    type: "sum",
+                    edit: true
+                },
+            },
+            {title: '총미수금 현황<BR>2020년', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'NOT_DEPOSIT_TOTAL_AMT',
+                summary: {
+                    type: "sum",
+                    edit: true
+                },
+            },
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}}
         ];
+
+        //calculate sum of 3rd and 4th column.
+        let moneyManageStatusGroupModel = {
+            on: true,
+            header:false,
+            headerMenu: false,
+            indent: 10,
+            dataIndx: ['COMP_CD_NM'],
+            summaryInTitleRow: '',
+            summaryEdit: false,
+            showSummary: [true], //to display summary at end of every group.
+            collapsed: [false],
+            grandSummary: true,
+            merge: true,
+            nodeClose: false,
+        };
+
+        let moneyManageStatusObj = {
+            height: 770, collapsible: false, resizable: true, selectionModel: { type: 'row', mode: 'single'} , showTitle: false, strNoRows: g_noData, numberCell: {title: 'No.'}, scrollModel: {autoFit: true}, trackModel: {on: true},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center',  editable: false},
+            colModel: moneyManageStatusModel, toolbar: false,
+            groupModel: moneyManageStatusGroupModel,
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: fnFormToJsonArrayData('money_manage_status_search_form'), recIndx: 'ROW_NUM',
+                getData: function (dataJSON) {
+                    let data = dataJSON.data;
+                    return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
+                }
+            },
+            dataReady: function (event, ui) {
+                let data = $moneyManageStatusGrid.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#money_manage_status_total_records').html(totalRecords);
+                // $moneyManageStatusGrid.pqGrid('option', 'summaryData', function (ui) {
+                //     return calculateSummary();
+                // });
+                $moneyManageStatusGrid.pqGrid({
+                    refresh: function( event, ui ) {
+                        $("span.pq-group-icon").hide();
+                        $("span.pq-group-toggle").hide();
+                        $("#pq-head-cell-u2-0-2-right").find("span.pq-title-span").html("2019년<br>매출현황");
+                        $("#pq-head-cell-u2-0-3-right").find("span.pq-title-span").html("2019년 수금현황");
+                        $("#pq-head-cell-u2-0-7-right").find("span.pq-title-span").html("총미수금 현황<br>2019년");
+                    }
+                });
+            }
+        };
+        $moneyManageStatusGrid = $('#' + moneyManageStatusGridID).pqGrid(moneyManageStatusObj);
+
+        $moneyManageStatusSearchBtn.click(function(){
+            $moneyManageStatusGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+                return fnFormToJsonArrayData('money_manage_status_search_form');
+            });
+            $moneyManageStatusGrid.pqGrid('refreshDataAndView');
+        });
 
         let moneySalesMonthModel = [
             {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true},
@@ -342,33 +428,6 @@
                 align: 'right', dataType: 'integer', format: '#,###'},
             {title: '비고', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: 'NOTE', editable: true}
         ];
-
-        let moneyManageStatusObj = {
-            height: 770, collapsible: false, resizable: true, selectionModel: { type: 'row', mode: 'single'} , showTitle: false, strNoRows: g_noData, numberCell: {title: 'No.'}, scrollModel: {autoFit: true}, trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center',  editable: false},
-            colModel: moneyManageStatusModel, toolbar: false,
-            dataModel: {
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: fnFormToJsonArrayData('money_manage_status_search_form'), recIndx: 'DEPOSIT_SEQ',
-                getData: function (dataJSON) {
-                    let data = dataJSON.data;
-                    return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
-                }
-            },
-            dataReady: function (event, ui) {
-                let data = $moneyManageStatusGrid.pqGrid('option', 'dataModel.data');
-                let totalRecords = data.length;
-                $('#money_manage_status_total_records').html(totalRecords);
-            }
-        };
-        $moneyManageStatusGrid = $('#' + moneyManageStatusGridID).pqGrid(moneyManageStatusObj);
-
-        $moneyManageStatusSearchBtn.click(function(){
-            $moneyManageStatusGrid.pqGrid('option', 'dataModel.postData', function (ui) {
-                return fnFormToJsonArrayData('money_manage_status_search_form');
-            });
-            $moneyManageStatusGrid.pqGrid('refreshDataAndView');
-        });
 
         /** 상세 수금 현환 **/
         let moneySalesMonthObj = {
