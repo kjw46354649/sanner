@@ -16,7 +16,7 @@
     <div class="topWrap">
         <form class="form-inline" id="OUTSIDE_ORDER_MANAGE_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="outMapper.selectOutsideOrderManageList">
-            <div class="gubunWrap">
+            <div class="none_gubunWrap row4_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -42,10 +42,7 @@
                             <label class="label_100" for="ITEM_NM">품명</label>
                             <input type="text" class="wd_200" name="ITEM_NM" id="ITEM_NM">
                         </span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap right_float">
-                            <button type="button" class="defaultBtn radius blue" id="OUTSIDE_ORDER_SEARCH">검색</button>
-                        </span>
+
                     </li>
                     <li>
                         <span class="ipu_wrap">
@@ -84,21 +81,21 @@
                             </select>
                         </span>
                         <span class="radio_box">
-                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_1" value="today" checked><label for="fr_1001_1">오늘</label>
+                            <input reqcd="R" type="radio" name="OUTSIDE_MANAGE_TERM" id="OUTSIDE_CAL_TODAY" value="today" checked><label for="OUTSIDE_CAL_TODAY">오늘</label>
                         </span>
                         <span class="radio_box">
-                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_2" value="current_month"><label for="fr_1001_2">현재월</label>
+                            <input reqcd="R" type="radio" name="OUTSIDE_MANAGE_TERM" id="OUTSIDE_CAL_CURRENT_MONTH" value="current_month"><label for="OUTSIDE_CAL_CURRENT_MONTH">현재월</label>
                         </span>
                         <span class="radio_box">
-                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_3" value="three_months"><label for="fr_1001_3">3개월</label>
+                            <input reqcd="R" type="radio" name="OUTSIDE_MANAGE_TERM" id="OUTSIDE_CAL_THREE_MONTHS" value="three_months"><label for="OUTSIDE_CAL_THREE_MONTHS">3개월</label>
                         </span>
                         <div class="calendar_wrap">
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="CONTROL_MANAGE_START_DATE" id="CONTROL_MANAGE_START_DATE"><button type="button">달력선택</button>
+                                <input type="text" title="달력정보" name="OUTSIDE_MANAGE_START_DATE" id="OUTSIDE_MANAGE_START_DATE"><button type="button">달력선택</button>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="CONTROL_MANAGE_END_DATE" id="CONTROL_MANAGE_END_DATE" readonly><button type="button">달력선택</button>
+                                <input type="text" title="달력정보" name="OUTSIDE_MANAGE_END_DATE" id="OUTSIDE_MANAGE_END_DATE" readonly><button type="button">달력선택</button>
                             </span>
                             <span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>
                         </div>
@@ -132,18 +129,20 @@
                                 <input type="text" class="wd_200" id="AMOUNT_SUM" readonly>
                             </span>
                         </span>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" class="defaultBtn radius blue" id="OUTSIDE_ORDER_SEARCH">검색</button>
+                        </span>
                     </li>
                 </ul>
             </div>
         </form>
-        <button type="button" class="topWrap_btn" id="OUTSIDE_ORDER_MANAGE_TOPWRAP_BTN">펼치기 / 접기</button>
     </div>
-    <div class="bottomWrap row1_bottomWrap">
+    <div class="bottomWrap row4_bottomWrap">
         <div class="hWrap">
             <button type="button" class="defaultBtn btn-120w" data-toggle="modal" data-target="#REQUEST_OUTSIDE_POPUP">
                 외주가공 요청
             </button>
-            <button type="button" class="defaultBtn btn-120w" data-toggle="modal" data-target="#CANCEL_PROCESSING_REQUEST_POPUP">
+            <button type="button" class="defaultBtn btn-120w" data-toggle="modal" data-target="#CANCEL_REQUEST_OUTSIDE_POPUP">
                 가공요청 취소
             </button>
             <button type="button" class="defaultBtn btn-120w" id="ORDER_EXTRACTION">발주서 추출</button>
@@ -185,18 +184,15 @@
             </select>
         </div>
 
-        <form class="form-inline" id="control_estimate_register_info_form" name="control_estimate_register_info_form" role="form">
+        <form class="form-inline" name="REQUEST_OUTSIDE_MAIL_FORM" id="REQUEST_OUTSIDE_MAIL_FORM" role="form">
             <input type="hidden" id="queryId" name="queryId" value="">
             <input type="hidden" id="EST_SEQ" name="EST_SEQ" value="">
             <h5>메일내용</h5>
-            <div class="right_float">
-                <input type="checkbox" id="estimateRegisterAutoEmailSend"><label for="estimateRegisterAutoEmailSend"> 자동메일발송 사용</label>
-            </div>
             <div>
                 <textarea class="col-md-12 col-sm-12" name="EMAIL_CONTENT_TXT" id="REQUEST_OUTSIDE_EMAIL_CONTENT_TXT" style="height: 100px;"> </textarea>
             </div>
             <h5>메일수신처</h5>
-            <div id="MAIL_RECIPIENT_GRID"></div>
+            <div id="REQUEST_OUTSIDE_MAIL_RECIPIENT_GRID"></div>
 
             <h5>첨부파일</h5>
             <div class="fileTableWrap">
@@ -222,115 +218,56 @@
     </div>
 </div>
 
-<%--<div class="modal" id="REQUEST_OUTSIDE_POPUP" tabindex="-1" role="dialog" aria-hidden="true">--%>
-<%--    <div class="modal-dialog modal-lg">--%>
-<%--        <div class="modal-content">--%>
-<%--            <div class="row m-b-md">--%>
-<%--                <div class="col-sm-12">--%>
-<%--                    <section class="panel panel-default">--%>
-<%--                        <header class="panel-heading font-bold">--%>
-<%--                            외주 가공 요청--%>
-<%--                            <div class="btnSaveCloseBox">--%>
-<%--                                <div type="button" class="btn btn-success btn-sm btn-default" id="OUTSIDE_PROCESS_REQUEST_SAVE">--%>
-<%--                                    Save & Submit--%>
-<%--                                </div>--%>
-<%--                            </div>--%>
-<%--                        </header>--%>
-<%--                        <div class="panel-body">--%>
-<%--                            <form class="form-inline" id="OUTSIDE_PROCESS_REQUEST_FORM" role="form">--%>
-<%--                                <input type="hidden" name="queryId" id="queryId" value="selectOutsideProcessRequestList"/>--%>
-<%--                                <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ"/>--%>
-<%--                                <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ"/>--%>
-<%--                                <div class="panel-body line_tit portlet-body form bg-light">--%>
-<%--                                    <!-- grid table -->--%>
-<%--                                    <section class="bg-light">--%>
-<%--                                        <div class="row">--%>
-<%--                                            <div class="col-md-12 col-sm-12">--%>
-<%--                                                <div class="panel panel-default">--%>
-<%--                                                    <header class="panel-heading">--%>
-<%--                                                        <strong>메일 내용</strong>--%>
-<%--                                                    </header>--%>
-<%--                                                    <div class="row">--%>
-<%--                                                        <div class="gridWrap">--%>
-<%--                                                            <textarea class="col-md-12 col-sm-12" id="EMAIL_CONTENT" name="EMAIL_CONTENT"></textarea>--%>
-<%--                                                        </div>--%>
-<%--                                                    </div>--%>
-<%--                                                </div>--%>
-<%--                                            </div>--%>
-<%--                                        </div>--%>
-<%--                                    </section>--%>
-<%--                                    <section class="bg-light">--%>
-<%--                                        <div class="row">--%>
-<%--                                            <div class="col-md-6 col-sm-6">--%>
-<%--                                                <div class="panel panel-default">--%>
-<%--                                                    <header class="panel-heading">--%>
-<%--                                                        <strong>메일 수신처</strong>--%>
-<%--                                                    </header>--%>
-<%--                                                    <div class="gridWrap">--%>
-<%--                                                        <div id="MAIL_RECIPIENT_GRID"></div>--%>
-<%--                                                    </div>--%>
-<%--                                                </div>--%>
-<%--                                            </div>--%>
-<%--                                            <div class="col-md-6 col-sm-6">--%>
-<%--                                                <div class="panel panel-default">--%>
-<%--                                                    <header class="panel-heading">--%>
-<%--                                                        <strong>첨부파일</strong>--%>
-<%--                                                    </header>--%>
-<%--                                                    <div class="gridWrap">--%>
-<%--                                                        <input type="file">--%>
-<%--                                                    </div>--%>
-<%--                                                </div>--%>
-<%--                                            </div>--%>
-<%--                                        </div>--%>
-<%--                                    </section>--%>
-<%--                                    <section class="bg-light">--%>
-<%--                                        <div class="row">--%>
-<%--                                            <div class="col-md-12">--%>
-<%--                                                <div id="OUTSIDE_REQUEST_GRID"></div>--%>
-<%--                                            </div>--%>
-<%--                                        </div>--%>
-<%--                                    </section>--%>
-<%--                                </div>--%>
-<%--                            </form>--%>
-<%--                        </div>--%>
-<%--                    </section>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--            <!-- /.modal-content -->--%>
-<%--        </div>--%>
-<%--        <!-- /.modal-dialog -->--%>
-<%--    </div>--%>
-<%--</div>--%>
+<div class="popup_container" id="CANCEL_REQUEST_OUTSIDE_POPUP" style="display: none;">
+    <div class="layerPopup" style="overflow: scroll;">
+        <h3 style="margin-bottom: 10px;">외주 가공 취소 요청</h3>
+        <button type="button" class="pop_close">닫기</button>
 
-<div class="modal" id="CANCEL_PROCESSING_REQUEST_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
-                        class="sr-only">Close</span></button>
-                <h4 class="modal-title">외주가공 요청</h4>
+        <!-- 버튼 -->
+        <div class="buttonWrap" style="display: block; overflow: hidden;">
+            <div class="right_float">
+                <button class="popupBtn green" id="CANCEL_REQUEST_OUTSIDE_SAVE_SUBMIT">저장 & 제출</button>
             </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <label class="label_100" for="SUBCONTRACTOR_REQUESTED">요청 외주업체</label>
-                        <select class="wd_200" name="" id="SUBCONTRACTOR_REQUESTED">
-
-                        </select>
-                        <textarea></textarea>
-                    </div>
-                    <div class="col-md-6">
-                        <div id="MAIL_GRID"></div>
-                        <div class="dropfile visible-lg">
-                            <small>Drag and Drop file here</small>
-                        </div>
-                    </div>
-                </div>
-                <div id="ORDER_REGISTER_GRID"></div>
-            </div>
-            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
+
+        <div>
+            <label for="">요청 외주 업체</label>
+            <select class="" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
+                <option></option>
+            </select>
+        </div>
+
+        <form class="form-inline" name="CANCEL_REQUEST_OUTSIDE_MAIL_FORM" id="CANCEL_REQUEST_OUTSIDE_MAIL_FORM" role="form">
+            <input type="hidden" id="queryId" name="queryId" value="">
+            <input type="hidden" id="EST_SEQ" name="EST_SEQ" value="">
+            <h5>메일내용</h5>
+            <div>
+                <textarea class="col-md-12 col-sm-12" name="CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT" id="CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT" style="height: 100px;"> </textarea>
+            </div>
+            <h5>메일수신처</h5>
+            <div id="CANCEL_REQUEST_OUTSIDE_MAIL_RECIPIENT_GRID"></div>
+
+            <h5>첨부파일</h5>
+            <div class="fileTableWrap">
+                <table class="colStyle" id="attachDragAndDrop">
+                    <caption></caption>
+                    <thead>
+                    <tr>
+                        <th scope="col" class="fileName txt">파일명</th>
+                        <th scope="col" class="etcInfo">용량</th>
+                        <th scope="col" class="etcInfo"></th>
+                    </tr>
+                    </thead>
+                    <tbody class="files"></tbody>
+                </table>
+            </div>
+        </form>
+        <form class="form-inline" id="CANCEL_REQUEST_OUTSIDE_FORM" role="form">
+            <input type="hidden" name="queryId" id="queryId" value="selectOutsideProcessRequestList"/>
+            <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ"/>
+            <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ"/>
+            <div id="CANCEL_REQUEST_OUTSIDE_GRID"></div>
+        </form>
     </div>
 </div>
 
@@ -389,83 +326,10 @@
     </div>
 </div>
 
-
-<div class="popup_container" id="OUTSIDE_CLOSE_POPUP" style="display: none;">
-    <div class="layerPopup">
-        <h3 style="margin-bottom: 10px;">월 마감 진행(외주주문)</h3>
-        <button type="button" class="pop_close">닫기</button>
-        <div>
-            <div style="width: 450px; float:left;">
-                <div id="OUTSIDE_CLOSE_LEFT_GRID"></div>
-            </div>
-            <div style="width: 70px; float:left;">
-                화살표 ~>
-            </div>
-            <div style="width: 450px; float:left;">
-                <div id="OUTSIDE_CLOSE_RIGHT_GRID"></div>
-            </div>
-        </div>
-        <div style="display:inline-block; margin-top: 20px;">
-            <div style="display:inline-block; padding-left: 10px; float: left;">
-                <form class="form-inline" id="OUTSIDE_CLOSE_LEFT_FORM" role="form">
-                    <input type="hidden" name="queryId" id="queryId" value="outMapper.selectOutsideCloseLeftList">
-                    <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ">
-                    <input type="hidden" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
-                    <div style="display:inline-block; width: 646px; float: left;">
-                        <div style="display:inline-block;">
-                            <label style="font-size: 12px; color: #343434; line-height: 25px; display: inline-block; padding: 0 10px;">대상 년/월</label>
-                        </div>
-                        <div style="display:inline-block;">
-                            <label for="OUTSIDE_CLOSE_YEAR"></label>
-                            <select name="OUTSIDE_CLOSE_YEAR" id="OUTSIDE_CLOSE_YEAR">
-                                <option></option>
-                            </select>
-                        </div>
-                        <div style="display:inline-block;">
-                            <label for="OUTSIDE_CLOSE_MONTH"></label>
-                            <select name="OUTSIDE_CLOSE_MONTH" id="OUTSIDE_CLOSE_MONTH">
-                                <option></option>
-                            </select>
-                        </div>
-                        <div style="display:inline-block; margin-left: 10px;">
-                            <div style="display:inline-block;">
-                                <label for="CLOSE_VER" style="font-size: 12px; color: #343434; line-height: 25px; display: inline-block; padding: 0 10px;">차수</label>
-                            </div>
-                            <div style="display:inline-block;">
-                                <select name="CLOSE_VER" id="CLOSE_VER">
-                                    <option value="1">
-                                        1차
-                                    </option>
-                                    <option value="2">
-                                        2차
-                                    </option>
-                                    <option value="3">
-                                        3차
-                                    </option>
-                                    <option value="4">
-                                        4차
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div style="display:inline-block; float: left;">
-                <span style="font-size: 12px; color: #343434; line-height: 25px; display: inline-block; padding: 0 10px;">진행 하시겠습니까?</span>
-                <div class="text-right" style="display: inline-block;">
-                    <button class="defaultBtn" id="OUTSIDE_CLOSE_YES">Yes</button>
-                    <button class="defaultBtn" id="OUTSIDE_CLOSE_NO">No</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <form id="outsourcing_order_excel_download" method="POST">
     <input type="hidden" id="sqlId" name="sqlId" value="selectOutsourcingOrderExcel:selectOutsourcingOrderInfoExcel"/>
     <input type="hidden" id="mapInputId" name="mapInputId" value="data:info"/>
-    <input type="hidden" id="paramName" name="paramName" value="OUTSIDE_ORDER_NUM:COMP_CD:ORDER_STAFF_SEQ"/>
+    <input type="hidden" id="paramName" name="paramName" value="OUTSIDE_ORDER_NUM:COMP_CD:ORDER_STAFF_SEQ:CONTROL_SEQ:CONTROL_DETAIL_SEQ"/>
     <input type="hidden" id="paramData" name="paramData" value=""/>
     <input type="hidden" id="template" name="template" value="outsourcing_order_template"/>
 </form>
@@ -484,12 +348,12 @@
         let postData = fnFormToJsonArrayData('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM');
         const colModel = [
             {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true},
-            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: false},
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: false},
+            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true},
             {title: 'OUTSIDE_REQUEST_SEQ', dataType: 'integer', dataIndx: 'OUTSIDE_REQUEST_SEQ', hidden: true},
             {title: '담당자', dataType: 'integer', dataIndx: 'ORDER_STAFF_SEQ', hidden: true},
-            {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: false},
+            {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_NM'},
             {title: '외주<br>구분', dataType: 'string', dataIndx: 'OUTSIDE_YN'},
             {title: '원발주<br>상태', dataType: 'string', dataIndx: 'CONTROL_STATUS_NM'},
@@ -657,7 +521,6 @@
                 }
             },
             complete: function () {
-                this.flex();
                 let data = $outsideOrderManageGrid.pqGrid('option', 'dataModel.data');
 
                 $('#OUTSIDE_ORDER_MANAGE_RECORDS').html(data.length);
@@ -679,7 +542,7 @@
             }
         };
         let $mailRecipientGrid;
-        const mailRecipientGridId = 'MAIL_RECIPIENT_GRID';
+        const mailRecipientGridId = 'REQUEST_OUTSIDE_MAIL_RECIPIENT_GRID';
         const mailRecipientColModel = [
             {title: '', dataType: 'string', dataIndx: 'STAFF_SEQ', hidden: true},
             {title: '성함', dataType: 'string', dataIndx: 'STAFF_NM'},
@@ -722,53 +585,23 @@
                 title: '요청가공', align: 'center', colModel: [
                     {
                         title: '완제품', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN', editable: true,
-                        type: 'checkbox',
-                        cb: {
-                            all: false, //header checkbox to affect checkboxes on all pages.
-                            header: false, //for header checkbox.
-                            check: 'Y', //check the checkbox when cell value is "YES".
-                            uncheck: 'N' //uncheck when "NO".
-                        }
+                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
                     {
                         title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN', editable: true,
-                        type: 'checkbox',
-                        cb: {
-                            all: false, //header checkbox to affect checkboxes on all pages.
-                            header: false, //for header checkbox.
-                            check: 'Y', //check the checkbox when cell value is "YES".
-                            uncheck: 'N' //uncheck when "NO".
-                        }
+                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
                     {
                         title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN', editable: true,
-                        type: 'checkbox',
-                        cb: {
-                            all: false, //header checkbox to affect checkboxes on all pages.
-                            header: false, //for header checkbox.
-                            check: 'Y', //check the checkbox when cell value is "YES".
-                            uncheck: 'N' //uncheck when "NO".
-                        }
+                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
                     {
                         title: '표면<br>처리', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN', editable: true,
-                        type: 'checkbox',
-                        cb: {
-                            all: false, //header checkbox to affect checkboxes on all pages.
-                            header: false, //for header checkbox.
-                            check: 'Y', //check the checkbox when cell value is "YES".
-                            uncheck: 'N' //uncheck when "NO".
-                        }
+                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
                     {
                         title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC', editable: true,
-                        type: 'checkbox',
-                        cb: {
-                            all: false, //header checkbox to affect checkboxes on all pages.
-                            header: false, //for header checkbox.
-                            check: 'Y', //check the checkbox when cell value is "YES".
-                            uncheck: 'N' //uncheck when "NO".
-                        }
+                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     }
                 ]
             },
@@ -784,12 +617,52 @@
             trackModel: {on: true},
             scrollModel: {autoFit: true},
             dragColumns: {enabled: false},
-            columnTemplate: {
-                align: 'center',
-                halign: 'center',
-                hvalign: 'center',
-                editable: false
-            },
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            colModel: outsideProcessRequestColModel,
+            strNoRows: g_noData,
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                recIndx: 'ROWNUM',
+                postData: {'queryId': 'dataSource.emptyGrid'},
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            }
+        };
+        let $cancelMailRecipientGrid;
+        const cancelMailRecipientGridId = 'CANCEL_REQUEST_OUTSIDE_MAIL_RECIPIENT_GRID';
+        const cancelMailRecipientObj = {
+            height: 100,
+            collapsible: false,
+            resizable: false,
+            showTitle: false,
+            scrollModel: {autoFit: true},
+            dragColumns: {enabled: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            colModel: mailRecipientColModel,
+            toolbar: toolbar,
+            strNoRows: g_noData,
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: {'queryId': 'dataSource.selectCompanyStaffEmailList', 'COMP_CD': ''}, // TODO: COMP_CD 변수
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            }
+        };
+
+        let $cancelRequestOutsideGrid;
+        const cancelRequestOutsideGridId = 'OUTSIDE_REQUEST_GRID';
+        const cancelRequestOutsideObj = {
+            height: 200,
+            collapsible: false,
+            resizable: true,
+            showTitle: false,
+            numberCell: {title: 'No.'},
+            trackModel: {on: true},
+            scrollModel: {autoFit: true},
+            dragColumns: {enabled: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
             colModel: outsideProcessRequestColModel,
             strNoRows: g_noData,
             dataModel: {
@@ -819,6 +692,7 @@
             collapsible: false,
             resizable: false,
             showTitle: false,
+            strNoRows: g_noData,
             scrollModel: {autoFit: true},
             dragColumns: {enabled: false},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
@@ -862,7 +736,7 @@
             }
         };
 
-        let loadOutsideProcessData = function () {
+        const loadOutsideProcessData = function () {
             let selectedRowCount = selectedRowIndex.length;
             let controlSeqStr = '';
             let controlDetailSeqStr = '';
@@ -885,6 +759,31 @@
                 return (fnFormToJsonArrayData('#OUTSIDE_PROCESS_REQUEST_FORM'));
             });
             $outsideProcessRequestGrid.pqGrid('refreshDataAndView');
+        };
+
+        const loadCancelRequestOutsideData = function () {
+            let selectedRowCount = selectedRowIndex.length;
+            let controlSeqStr = '';
+            let controlDetailSeqStr = '';
+
+            for (let i = 0; i < selectedRowCount; i++) {
+                let rowData = $outsideOrderManageGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                controlSeqStr += rowData.CONTROL_SEQ;
+                controlDetailSeqStr += rowData.CONTROL_DETAIL_SEQ;
+
+                if (i < selectedRowCount - 1) {
+                    controlSeqStr += ',';
+                    controlDetailSeqStr += ',';
+                }
+            }
+
+            $('#CANCEL_REQUEST_OUTSIDE_FORM > #CONTROL_SEQ').val(controlSeqStr);
+            $('#CANCEL_REQUEST_OUTSIDE_FORM > #CONTROL_DETAIL_SEQ').val(controlDetailSeqStr);
+
+            $cancelRequestOutsideGrid.pqGrid('option', 'dataModel.postData', function () {
+                return (fnFormToJsonArrayData('#CANCEL_REQUEST_OUTSIDE_FORM'));
+            });
+            $cancelRequestOutsideGrid.pqGrid('refreshDataAndView');
         };
 
         let loadOutsideCloseData = function () {
@@ -972,55 +871,69 @@
                 return true;
             }
         };
+
+        const changeDate = function (newDate = new Date(), today = new Date()) {
+            $('#OUTSIDE_MANAGE_START_DATE').val(newDate.yyyymmdd());
+            $('#OUTSIDE_MANAGE_END_DATE').val(today.yyyymmdd());
+        };
         /* function */
 
         /* event */
-        $('#OUTSIDE_ORDER_MANAGE_TOPWRAP_BTN').on('click', function () {
-            if ($(this).hasClass('on')) {
-                topMenuClose();
-                $(this).removeClass('on');
-            } else {
-                topMenuOpen();
-                $(this).addClass('on');
+        $('[name=OUTSIDE_MANAGE_TERM]').change(function () {
+            let value = $(this).val(), today = new Date(), newDate = new Date();
+            console.log(value);
+            switch (value) {
+                case 'today':
+                    changeDate(newDate, today);
+                    break;
+                case 'current_month':
+                    newDate.setDate(1);
+
+                    changeDate(newDate, today);
+                    break;
+                case 'three_months':
+                    newDate.setMonth(newDate.getMonth() - 3);
+
+                    changeDate(newDate, today);
+                    break;
             }
+
+            // $('#CONTROL_MANAGE_DATEPICKER_READ_ONLY').prop('checked', true);
+            // createOrDestroyDatepicker();
         });
 
         $('#REQUEST_OUTSIDE_POPUP').on('show.bs.modal', function () {
+            if (noSelectedRowAlert()) {
+                return false;
+            }
+
             $mailRecipientGrid = $('#' + mailRecipientGridId).pqGrid(mailRecipientObj);
-            // estimateRegisterBotGrid.pqGrid({
-            //     height: 100,
-            //     dataModel: {
-            //         location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
-            //         url: "/paramQueryGridSelect",
-            //         postData: { 'queryId': 'selectEstimateStaffEmailList', 'COMP_CD': COMP_CD},
-            //         getData: function (dataJSON) {
-            //             return {data: dataJSON.data};
-            //         }
-            //     },
-            //     postRenderInterval: -1,
-            //     scrollModel: {autoFit: false},
-            //     numberCell: {width: 30, title: "No", show: true },
-            //     //selectionModel: { type: 'row', mode: 'single'} ,
-            //     collapsible: false,
-            //     swipeModel: {on: false},
-            //     trackModel: {on: true},
-            //     resizable: false,
-            //     colModel: estimateRegisterBotColModel,
-            //     showTitle: false,
-            //     title: false,
-            //     strNoRows: g_noData,
-            //     complete: function (event, ui) {
-            //         let data = estimateRegisterBotGrid.pqGrid('option', 'dataModel.data');
-            //
-            //         $('#control_estimate_register_bot_grid_records').html(data.length);
-            //     },
-            // });
             $outsideProcessRequestGrid = $('#' + outsideProcessRequestGridId).pqGrid(outsideProcessRequestObj);
             loadOutsideProcessData();
+
+            // let mail_data = CKEDITOR.instances.REQUEST_OUTSIDE_EMAIL_CONTENT_TXT.getData();
+            // console.log(mail_data);
+            // $("#REQUEST_OUTSIDE_EMAIL_CONTENT_TXT").val('mail_data');
+
+        });
+
+        $('#CANCEL_REQUEST_OUTSIDE_POPUP').on({
+            'show.bs.modal': function () {
+                if (noSelectedRowAlert()) {
+                    return false;
+                }
+
+                $cancelMailRecipientGrid = $('#' + cancelMailRecipientGridId).pqGrid(cancelMailRecipientObj);
+                $cancelRequestOutsideGrid = $('#' + cancelRequestOutsideGridId).pqGrid(cancelRequestOutsideObj);
+                loadCancelRequestOutsideData();
+            },
+            'hide.bs.modal': function () {
+
+            }
         });
 
         $('#OUTSIDE_PROCESS_REQUEST_SAVE').on('click', function () {
-            const updateQueryList = ['updateOutsideProcessRequest'];
+            const updateQueryList = ['outMapper.updateOutsideProcessRequest'];
 
             fnModifyPQGrid($outsideProcessRequestGrid, [], updateQueryList);
         });
@@ -1030,19 +943,34 @@
                 return false;
             }
 
+            let controlSeqStr = '';
+            let controlDetailSeqStr = '';
             let outsideOrderNumStr = '';
             let orderStaffSeqStr = '';
+            let controlSeqList = [];
+            let controlDetailSeqList = [];
             let orderCompCdList = [];
 
             for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = $outsideOrderManageGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
 
-                outsideOrderNumStr = rowData.OUTSIDE_ORDER_NUM;
+                console.log(rowData)
                 orderCompCdList.push(rowData.OUTSIDE_COMP_CD);
+                controlSeqList.push(rowData.CONTROL_SEQ);
+                controlDetailSeqList.push(rowData.CONTROL_DETAIL_SEQ);
+                outsideOrderNumStr = rowData.OUTSIDE_ORDER_NUM;
                 orderStaffSeqStr = rowData.ORDER_STAFF_SEQ;
             }
+            console.log(controlSeqList);
+            console.log(controlDetailSeqList);
             // 중복제거
+            controlSeqList = controlSeqList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
             orderCompCdList = orderCompCdList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+            controlDetailSeqList = controlDetailSeqList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
             });
 
@@ -1050,16 +978,49 @@
                 alert('선택된 대상들의 외주업체는 반드시 동일해야함');
                 return false;
             }
+
+            for (let i = 0, CONTROL_SEQ_LIST_LENGTH = controlSeqList.length; i < CONTROL_SEQ_LIST_LENGTH; i++) {
+                controlSeqStr += controlSeqList[i];
+
+                if (i < CONTROL_SEQ_LIST_LENGTH - 1) {
+                    controlSeqStr += ',';
+                }
+            }
+            for (let i = 0, CONTROL_DETAIL_SEQ_LIST_LENGTH = controlDetailSeqList.length; i < CONTROL_DETAIL_SEQ_LIST_LENGTH; i++) {
+                controlDetailSeqStr += controlDetailSeqList[i];
+
+                if (i < CONTROL_DETAIL_SEQ_LIST_LENGTH - 1) {
+                    controlDetailSeqStr += ',';
+                }
+            }
             // if(orderCompCdList[0] == undefined) {
             //     console.log('undefined!');
             // }
-            $('#outsourcing_order_excel_download #paramData').val(outsideOrderNumStr + ':' + orderCompCdList[0] + ':' + orderStaffSeqStr);
+            $('#outsourcing_order_excel_download #paramData').val(outsideOrderNumStr + ':' + orderCompCdList[0] + ':' + orderStaffSeqStr + ':' + controlSeqStr + ':' + controlDetailSeqStr);
 
             fnReportFormToHiddenFormPageAction('outsourcing_order_excel_download', '/downloadExcel');
         });
 
         $('#OUTSIDE_CLOSE_POPUP').on({
             'show.bs.modal': function () {
+                let selectedRowCount = selectedRowIndex.length;
+                let outsideCompCdList = [];
+
+                for (let i = 0; i < selectedRowCount; i++) {
+                    let rowData = $outsideOrderManageGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+
+                    outsideCompCdList.push(rowData.OUTSIDE_COMP_CD);
+                }
+                // 중복제거
+                outsideCompCdList = outsideCompCdList.filter(function (element, index, array) {
+                    return array.indexOf(element) === index;
+                });
+
+                if (outsideCompCdList.length === 0 || outsideCompCdList[0] === undefined) {
+                    alert('외주업체가 없습니다!');
+                    return false;
+                }
+
                 fnAppendSelectboxYear('OUTSIDE_CLOSE_YEAR', 3);
                 fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH', CURRENT_YEAR);
 
@@ -1092,11 +1053,13 @@
             let parameters = {'url': '/createOutsideClose', 'data': {data: JSON.stringify(list)}}
             fnPostAjax(function (data, callFunctionParam) {
                 $outsideOrderManageGrid.pqGrid('refreshDataAndView');
-                $outsideCloseLeftGrid.pqGrid('refreshDataAndView');
+                // $outsideCloseLeftGrid.pqGrid('refreshDataAndView');
+                $('#OUTSIDE_CLOSE_POPUP').modal('hide');
             }, parameters, '');
         });
 
-        $('#OUTSIDE_CLOSE_NO').on('click', function () {
+        $('.OUTSIDE_CLOSE_NO').on('click', function () {
+            console.log('click');
             $('#OUTSIDE_CLOSE_POPUP').modal('hide');
         });
 
@@ -1117,7 +1080,16 @@
 
         });
 
+        $('.pop_close').on('click', function () {
+            $(this).parent('.layerPopup').parent('.popup_container').modal('hide');
+        });
+
         /* init */
+        $('#OUTSIDE_MANAGE_START_DATE').datepicker();
+        $('#OUTSIDE_MANAGE_END_DATE').datepicker();
+        $('#OUTSIDE_MANAGE_START_DATE').datepicker('setDate', 'today');
+        $('#OUTSIDE_MANAGE_END_DATE').datepicker('setDate', 'today');
+
         fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getBusinessCompanyList'}
@@ -1135,69 +1107,52 @@
 
         /* 견적 요청*/
         // CKEDITOR 부분
-        CKEDITOR.replace( 'REQUEST_OUTSIDE_EMAIL_CONTENT_TXT', { height: 176 });
+        CKEDITOR.replace('REQUEST_OUTSIDE_EMAIL_CONTENT_TXT', {height: 176});
         function getCadUploadBlankHtml(){
             return'<tr><td colspan="3" class="spanArea" >마우스로 파일을 Drag & Drop 하세요.</td></tr><tr><td colspan="3"></td></tr><tr><td colspan="3"></td></tr>';
         }
 
-        let estimateRegisterBotGrid = $("#control_estimate_register_bot_grid");
-        const estimateRegisterBotColModel= [
-            {title: '성함', dataType: 'string', dataIndx: 'RECEIVER_NM', minWidth: "30%"},
-            {title: '메일주소', dataType: 'string', dataIndx: 'RECEIVER_EMAIL', minWidth: "30%"},
-            {title: '전화번호', dataType: 'string', dataIndx: 'RECEIVER_TEL', minWidth: "30%"},
-            {title: '', dataType: 'string', dataIndx: 'SEQ', editable: false, width: 30 ,
-                render: function (ui) {
-                    return '<button id="receiverRemove" class="ui-icon ui-icon-close" style="cursor: pointer"></button>'
-                },
-                postRender: function (ui) {
-                    let grid = this;
-                    let $cell = grid.getCell(ui);
-                    let rowIndex = ui.rowIndx;
-                    $cell.find('#receiverRemove').on('click', function (event) {
-                        let parameter = {
-                            'queryId': 'deleteEstimateEachReceiver',
-                            'SEQ': ui.rowData.SEQ
-                        };
-                        let parameters = {'url': '/json-remove', 'data': parameter};
-                        fnPostAjax(function(data, callFunctionParam){
-                            estimateRegisterBotGrid.pqGrid('deleteRow', { rowIndx: rowIndex });
-                        }, parameters, '');
-                    });
-                }
-            }
-            //{title: 'SEQ', dataType: 'string', dataIndx: 'SEQ', hidden: true }
-        ];
-
+        // let estimateRegisterBotGrid = $("#control_estimate_register_bot_grid");
+        // const estimateRegisterBotColModel= [
+        //     {title: '성함', dataType: 'string', dataIndx: 'RECEIVER_NM', minWidth: "30%"},
+        //     {title: '메일주소', dataType: 'string', dataIndx: 'RECEIVER_EMAIL', minWidth: "30%"},
+        //     {title: '전화번호', dataType: 'string', dataIndx: 'RECEIVER_TEL', minWidth: "30%"},
+        //     {title: '', dataType: 'string', dataIndx: 'SEQ', editable: false, width: 30 ,
+        //         render: function (ui) {
+        //             return '<button id="receiverRemove" class="ui-icon ui-icon-close" style="cursor: pointer"></button>'
+        //         },
+        //         postRender: function (ui) {
+        //             let grid = this;
+        //             let $cell = grid.getCell(ui);
+        //             let rowIndex = ui.rowIndx;
+        //             $cell.find('#receiverRemove').on('click', function (event) {
+        //                 let parameter = {
+        //                     'queryId': 'deleteEstimateEachReceiver',
+        //                     'SEQ': ui.rowData.SEQ
+        //                 };
+        //                 let parameters = {'url': '/json-remove', 'data': parameter};
+        //                 fnPostAjax(function(data, callFunctionParam){
+        //                     estimateRegisterBotGrid.pqGrid('deleteRow', { rowIndx: rowIndex });
+        //                 }, parameters, '');
+        //             });
+        //         }
+        //     }
+        //     //{title: 'SEQ', dataType: 'string', dataIndx: 'SEQ', hidden: true }
+        // ];
 
         // 파일 업로드
         let fileHtml = getCadUploadBlankHtml();
         $('#REQUEST_OUTSIDE_POPUP #attachDragAndDrop > tbody').html('');
         $('#REQUEST_OUTSIDE_POPUP #attachDragAndDrop > tbody').append(fileHtml).trigger('create');
 
-        // TODO: 함수명 변경 : 견적요청 저장
-        const requestSave = function () {
-
-        };
-
-        // TODO: 함수명 변경 : 견적요청 발송
-        const reqeustSendEmail = function () {
-            //Confirm Box
+        const outsideRequestConfirm = function () {
             let headHtml = 'messsage', bodyHtml = '', yseBtn = '예', noBtn = '아니오';
             let autoEmailYn = $('#estimateRegisterAutoEmailSend').is(':checked');
 
-            if (autoEmailYn) {
-                bodyHtml =
-                    '<h4>\n' +
-                    '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
-                    '<span>메일을 송신합니다. 계속 진행하시겠습니까?</span>' +
-                    '</h4>';
-            } else {
-                bodyHtml =
-                    '<h4>\n' +
-                    '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
-                    '<span>메일 송신 없이 완료처리만 진행합니다.\n 진행하시겠습니까?</span>' +
-                    '</h4>';
-            }
+            bodyHtml =
+                '<h4>\n' +
+                '        <span>이미 가공이 진행되고 있을 수 있습니다. 반드시 해당업체 확인 후에 진행바랍니다. 취소 진행 및 메일발송을 진행하시겠습니까?</span>\n' +
+                '</h4>';
 
             fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
             let estimateRegisterSubmitConfirm = function (callback) {
@@ -1215,18 +1170,27 @@
             };
             estimateRegisterSubmitConfirm(function (confirm) {
                 if (confirm) {
-                    if (autoEmailYn) {
-                        // $("#estimate_register_info_form #queryId").val('mail.insertEstimateSubmitMail');
-                        let parameters = {
-                            'url': '/json-create',
-                            'data': {queryId: 'mail.insertEstimateSubmitMail'}
-                        };
-                        fnPostAjax(function (data, callFunctionParam) {
-                            console.log(data);
-                        }, parameters, '');
-                    }
+                    outsideRequestSave();
+                    outsideRequestSendEmail();
+                    // $("#estimate_register_info_form #queryId").val('mail.insertEstimateSubmitMail');
                 }
             });
+        };
+
+        const outsideRequestSave = function () {
+            const updateQueryList = ['outMapper.updateOutsideProcessRequest'];
+
+            fnModifyPQGrid($outsideProcessRequestGrid, [], updateQueryList);
+        };
+
+        const outsideRequestSendEmail = function () {
+            let parameters = {
+                'url': '/json-create',
+                'data': {queryId: 'mail.insertOutsideRequestSubmitMail'}
+            };
+            fnPostAjax(function (data, callFunctionParam) {
+                console.log(data);
+            }, parameters, '');
         };
 
         fnCommCodeDatasourceSelectBoxCreate($('#REQUEST_OUTSIDE_POPUP').find('#OUTSIDE_COMP_CD'), 'select', {
@@ -1242,11 +1206,82 @@
                 reqeustSendEmail();
             }*/
            //test
-            requestSave();
-            reqeustSendEmail();
+
+            outsideRequestConfirm();
+        });
+        /* 가공 요청*/
+
+        /* 가공 취소 요청 */
+        CKEDITOR.replace('CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT', {height: 176});
+        $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM #attachDragAndDrop > tbody').html('');
+        $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM #attachDragAndDrop > tbody').append(fileHtml).trigger('create');
+
+        const cancelRequestOutsideConfirm = function () {
+            let headHtml = 'messsage', bodyHtml = '', yseBtn = '예', noBtn = '아니오';
+            let autoEmailYn = $('#estimateRegisterAutoEmailSend').is(':checked');
+
+            bodyHtml =
+                '<h4>\n' +
+                '        <span>이미 가공이 진행되고 있을 수 있습니다. 반드시 해당업체 확인 후에 진행바랍니다. 취소 진행 및 메일발송을 진행하시겠습니까?</span>\n' +
+                '</h4>';
+
+            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+            let estimateRegisterSubmitConfirm = function (callback) {
+                commonConfirmPopup.show();
+                $("#commonConfirmYesBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                    callback(true);
+                    return;
+                });
+                $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                });
+            };
+            estimateRegisterSubmitConfirm(function (confirm) {
+                if (confirm) {
+                    cancelRequestOutsideSave();
+                    cancelRequestOutsideSendEmail();
+                    // $("#estimate_register_info_form #queryId").val('mail.insertEstimateSubmitMail');
+                }
+            });
+        };
+
+        const cancelRequestOutsideSave = function () {
+            const updateQueryList = ['outMapper.updateOutsideProcessRequest'];
+
+            fnModifyPQGrid($outsideProcessRequestGrid, [], updateQueryList);
+        };
+
+        const cancelRequestOutsideSendEmail = function () {
+            let parameters = {
+                'url': '/json-create',
+                'data': {queryId: 'mail.insertOutsideRequestSubmitMail'}
+            };
+            fnPostAjax(function (data, callFunctionParam) {
+                console.log(data);
+            }, parameters, '');
+        };
+
+        fnCommCodeDatasourceSelectBoxCreate($('#REQUEST_OUTSIDE_POPUP').find('#OUTSIDE_COMP_CD'), 'select', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
         });
 
-        /* 견적 요청*/
+        $('#CANCEL_REQUEST_OUTSIDE_SAVE_SUBMIT').on('click', function (){
+            /* real
+            let success = false;
+             success = cancelRequestOutsideSave();
+             if (success) {
+                 cancelRequestOutsideSendEmail();
+             }*/
+            //test
+
+            cancelRequestOutsideConfirm();
+        });
+        /* 가공 취소 요청 */
+
 
 
         /* init */

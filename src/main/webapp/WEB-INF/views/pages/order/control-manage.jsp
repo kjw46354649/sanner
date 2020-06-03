@@ -1920,9 +1920,10 @@
 
         // topWrap 확장 함수
         const topMenuOpen = function () {
-            let top = $('#view_tab_100021 .gubunWrap');
-            let bottom = $('#view_tab_100021 .bottomWrap');
-            let con = $('#view_tab_100021 .bottomWrap .tableWrap .conWrap');
+            let rollSeq = '${authUserInfo.ROLE_SEQ}';
+            let top = $('#view_tab_' + rollSeq + '0201 .gubunWrap');
+            let bottom = $('#view_tab_' + rollSeq + '0201 .bottomWrap');
+            let con = $('#view_tab_' + rollSeq + '0201 .bottomWrap .tableWrap .conWrap');
 
             top.stop().animate({'height': '130px'}, 300, 'easeOutCubic');
             bottom.stop().animate({'height': '770px'}, 300, 'easeOutCubic');
@@ -1933,9 +1934,10 @@
 
         // topWrap 축소 함수
         const topMenuClose = function () {
-            let top = $('#view_tab_100021 .gubunWrap');
-            let bottom = $('#view_tab_100021 .bottomWrap');
-            let con = $('#view_tab_100021 .bottomWrap .tableWrap .conWrap');
+            let rollSeq = '${authUserInfo.ROLE_SEQ}';
+            let top = $('#view_tab_' + rollSeq + '0201 .gubunWrap');
+            let bottom = $('#view_tab_' + rollSeq + '0201 .bottomWrap');
+            let con = $('#view_tab_' + rollSeq + '0201 .bottomWrap .tableWrap .conWrap');
 
             top.stop().animate({'height': '40px'}, 300, 'easeInCubic');
             bottom.stop().animate({'height': '855px'}, 300, 'easeOutCubic');
