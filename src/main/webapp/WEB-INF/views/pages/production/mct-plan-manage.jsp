@@ -31,9 +31,9 @@
                                 </span>
                 <span class="refresh mg-left10"><button type="button" id="MCT_PLAN_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
                 <span class="buttonWrap">
-                                    <button type="button" class="defaultBtn black">도면보기</button>
-                                    <button type="button" class="defaultBtn sky">레이아웃관리</button>
-                                </span>
+                    <button type="button" class="defaultBtn black" id="MCT_PLAN_MANAGE_DRAWING_VIEW">도면보기</button>
+                    <button type="button" class="defaultBtn sky">레이아웃관리</button>
+                </span>
             </div>
         </form>
         <div class="conWrap">
@@ -315,8 +315,6 @@
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: processPlanPostData1, recIndx: 'ROWNUM',
                 getData: function (dataJSON) {
-                    console.log(dataJSON);
-                    console.log(dataJSON.data);
                     return {data: dataJSON.data};
                 }
             },
@@ -327,13 +325,12 @@
             },
             dropModel: {
                 on: true,
-                accept: '.dnd2, .dnd3, .dnd4, .master',
+                accept: '.dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .master',
                 drop: function (evt, ui) {
                     let Drag = ui.helper.data('Drag');
                     let uiDrag = Drag.getUI();
                     let equipSeq = $('#MCT_NC1_PLAN_FORM > #EQUIP_SEQ').val();
                     uiDrag.rowData.EQUIP_SEQ = equipSeq;
-                    console.log(uiDrag);
 
                     let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $processPlanGrid1.pqGrid('option', 'dataModel.data').length;
                     $processPlanGrid1.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
@@ -342,7 +339,6 @@
                 }
             },
             complete: function () {
-                // this.flex();
                 let data = this.options.dataModel.data;
                 let totalRecords = data.length;
                 let tableElement = this.element.closest('.table');
@@ -355,25 +351,22 @@
                 }
             },
             moveNode: function (event, ui) {
-                console.count('moveNode');
-                changeSortNum(this, $processPlanGrid1);
+                changeSortNum(this, $(this.element.context));
             },
             cellSave: function (evt, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {
-                    $processPlanGrid1.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                    $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                 }
             },
             change: function (event, ui) {
-                console.count('change');
-                console.log(ui);
 
                 if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    modifyPQGrid($processPlanGrid1, insertQueryList, updateQueryList, deleteQueryList);
+                    modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
                     refreshTargetGrid();
                 }
 
                 if (ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    changeSortNum(this, $processPlanGrid1);
+                    changeSortNum(this, $(this.element.context));
                 }
             }
         };
@@ -403,10 +396,9 @@
             },
             dropModel: {
                 on: true,
-                accept: '.dnd1, .dnd3, .dnd4, .master',
+                accept: '.dnd1, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .master'
             },
             complete: function () {
-                // this.flex();
                 let data = this.options.dataModel.data;
                 let totalRecords = data.length;
                 let tableElement = this.element.closest('.table');
@@ -419,32 +411,22 @@
                 }
             },
             moveNode: function (event, ui) {
-                console.count('moveNode');
-                changeSortNum(this, $processPlanGrid2);
+                changeSortNum(this, $(this.element.context));
             },
             cellSave: function (evt, ui) {
-                console.count('cellSave');
                 if (ui.oldVal === undefined && ui.newVal === null) {
-                    $processPlanGrid2.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                    $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                 }
             },
             change: function (event, ui) {
-                if (ui.source === 'addNodes' && ui.addList.length > 0) {
-                    let equipSeq = $('#MCT_NC2_PLAN_FORM > #EQUIP_SEQ').val();
-
-                    changeSortNum(this, $processPlanGrid2);
-
-                    //TODO: rowIndx 0
-                    $processPlanGrid2.pqGrid('updateRow', {rowIndx: 0, row: {EQUIP_SEQ: equipSeq}});
-                }
 
                 if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    modifyPQGrid($processPlanGrid2, insertQueryList, updateQueryList, deleteQueryList);
+                    modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
                     refreshTargetGrid();
                 }
 
                 if (ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    changeSortNum(this, $processPlanGrid2);
+                    changeSortNum(this, $(this.element.context));
                 }
             }
         };
@@ -475,10 +457,9 @@
             },
             dropModel: {
                 on: true,
-                accept: '.dnd1, .dnd2, .dnd4, .master'
+                accept: '.dnd1, .dnd2, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .master'
             },
             complete: function () {
-                // this.flex();
                 let data = this.options.dataModel.data;
                 let totalRecords = data.length;
                 let tableElement = this.element.closest('.table');
@@ -491,30 +472,22 @@
                 }
             },
             moveNode: function (event, ui) {
-                changeSortNum(this, $processPlanGrid3);
+                changeSortNum(this, $(this.element.context));
             },
             cellSave: function (evt, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {
-                    $processPlanGrid3.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                    $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                 }
             },
             change: function (event, ui) {
-                if (ui.source === 'addNodes' && ui.addList.length > 0) {
-                    let equipSeq = $('#MCT_NC3_PLAN_FORM > #EQUIP_SEQ').val();
-
-                    changeSortNum(this, $processPlanGrid3);
-
-                    //TODO: rowIndx 0
-                    $processPlanGrid3.pqGrid('updateRow', {rowIndx: 0, row: {EQUIP_SEQ: equipSeq}});
-                }
 
                 if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    modifyPQGrid($processPlanGrid3, insertQueryList, updateQueryList, deleteQueryList);
+                    modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
                     refreshTargetGrid();
                 }
 
                 if (ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    changeSortNum(this, $processPlanGrid3);
+                    changeSortNum(this, $(this.element.context));
                 }
             }
         };
@@ -545,10 +518,9 @@
             },
             dropModel: {
                 on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .master'
+                accept: '.dnd1, .dnd2, .dnd3, .dnd5, .dnd6, .dnd7, .dnd8, .master'
             },
             complete: function () {
-                // this.flex();
                 let data = this.options.dataModel.data;
                 let totalRecords = data.length;
                 let tableElement = this.element.closest('.table');
@@ -561,30 +533,266 @@
                 }
             },
             moveNode: function (event, ui) {
-                changeSortNum(this, $processPlanGrid4);
+                changeSortNum(this, $(this.element.context));
             },
             cellSave: function (evt, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {
-                    $processPlanGrid4.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                    $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                 }
             },
             change: function (event, ui) {
-                if (ui.source === 'addNodes' && ui.addList.length > 0) {
-                    let equipSeq = $('#MCT_NC4_PLAN_FORM > #EQUIP_SEQ').val();
-
-                    changeSortNum(this, $processPlanGrid4);
-
-                    //TODO: rowIndx 0
-                    $processPlanGrid4.pqGrid('updateRow', {rowIndx: 0, row: {EQUIP_SEQ: equipSeq}});
-                }
 
                 if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    modifyPQGrid($processPlanGrid4, insertQueryList, updateQueryList, deleteQueryList);
+                    modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
                     refreshTargetGrid();
                 }
 
                 if (ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    changeSortNum(this, $processPlanGrid4);
+                    changeSortNum(this, $(this.element.context));
+                }
+            }
+        };
+        const processPlanObj5 = {
+            height: '100%',
+            collapsible: false,
+            postRenderInterval: -1, //call postRender synchronously.
+            resizable: true,
+            showTitle: false,
+            numberCell: {title: 'No.'},
+            scrollModel: {autoFit: true},
+            trackModel: {on: true},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
+            colModel: processPlanColModel,
+            strNoRows: g_noData,
+            dataModel: {
+                // location: 'remote', dataType: 'json', method: 'POST', url: '/dataSource.emptyGrid',
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: processPlanPostData5, recIndx: 'ROWNUM',
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            },
+            dragModel: {
+                on: true,
+                clsDnD: 'dnd5',
+                diHelper: ['CONTROL_NUM']
+            },
+            dropModel: {
+                on: true,
+                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd6, .dnd7, .dnd8, .master'
+            },
+            complete: function () {
+                let data = this.options.dataModel.data;
+                let totalRecords = data.length;
+                let tableElement = this.element.closest('.table');
+
+                changeTitleColor(data, tableElement);
+
+                if (totalRecords) {
+                    showTitle(data, tableElement);
+                    changeFooter(data, tableElement);
+                }
+            },
+            moveNode: function (event, ui) {
+                changeSortNum(this, $(this.element.context));
+            },
+            cellSave: function (evt, ui) {
+                if (ui.oldVal === undefined && ui.newVal === null) {
+                    $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                }
+            },
+            change: function (event, ui) {
+
+                if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
+                    modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
+                    refreshTargetGrid();
+                }
+
+                if (ui.source === 'delete' || ui.source === 'deleteNodes') {
+                    changeSortNum(this, $(this.element.context));
+                }
+            }
+        };
+        const processPlanObj6 = {
+            height: '100%',
+            collapsible: false,
+            postRenderInterval: -1, //call postRender synchronously.
+            resizable: true,
+            showTitle: false,
+            numberCell: {title: 'No.'},
+            scrollModel: {autoFit: true},
+            trackModel: {on: true},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
+            colModel: processPlanColModel,
+            strNoRows: g_noData,
+            dataModel: {
+                // location: 'remote', dataType: 'json', method: 'POST', url: '/dataSource.emptyGrid',
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: processPlanPostData6, recIndx: 'ROWNUM',
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            },
+            dragModel: {
+                on: true,
+                clsDnD: 'dnd6',
+                diHelper: ['CONTROL_NUM']
+            },
+            dropModel: {
+                on: true,
+                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd7, .dnd8, .master'
+            },
+            complete: function () {
+                let data = this.options.dataModel.data;
+                let totalRecords = data.length;
+                let tableElement = this.element.closest('.table');
+
+                changeTitleColor(data, tableElement);
+
+                if (totalRecords) {
+                    showTitle(data, tableElement);
+                    changeFooter(data, tableElement);
+                }
+            },
+            moveNode: function (event, ui) {
+                changeSortNum(this, $(this.element.context));
+            },
+            cellSave: function (evt, ui) {
+                if (ui.oldVal === undefined && ui.newVal === null) {
+                    $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                }
+            },
+            change: function (event, ui) {
+
+                if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
+                    modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
+                    refreshTargetGrid();
+                }
+
+                if (ui.source === 'delete' || ui.source === 'deleteNodes') {
+                    changeSortNum(this, $(this.element.context));
+                }
+            }
+        };
+        const processPlanObj7 = {
+            height: '100%',
+            collapsible: false,
+            postRenderInterval: -1, //call postRender synchronously.
+            resizable: true,
+            showTitle: false,
+            numberCell: {title: 'No.'},
+            scrollModel: {autoFit: true},
+            trackModel: {on: true},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
+            colModel: processPlanColModel,
+            strNoRows: g_noData,
+            dataModel: {
+                // location: 'remote', dataType: 'json', method: 'POST', url: '/dataSource.emptyGrid',
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: processPlanPostData7, recIndx: 'ROWNUM',
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            },
+            dragModel: {
+                on: true,
+                clsDnD: 'dnd7',
+                diHelper: ['CONTROL_NUM']
+            },
+            dropModel: {
+                on: true,
+                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd8, .master'
+            },
+            complete: function () {
+                let data = this.options.dataModel.data;
+                let totalRecords = data.length;
+                let tableElement = this.element.closest('.table');
+
+                changeTitleColor(data, tableElement);
+
+                if (totalRecords) {
+                    showTitle(data, tableElement);
+                    changeFooter(data, tableElement);
+                }
+            },
+            moveNode: function (event, ui) {
+                changeSortNum(this, $(this.element.context));
+            },
+            cellSave: function (evt, ui) {
+                if (ui.oldVal === undefined && ui.newVal === null) {
+                    $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                }
+            },
+            change: function (event, ui) {
+
+                if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
+                    modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
+                    refreshTargetGrid();
+                }
+
+                if (ui.source === 'delete' || ui.source === 'deleteNodes') {
+                    changeSortNum(this, $(this.element.context));
+                }
+            }
+        };
+        const processPlanObj8 = {
+            height: '100%',
+            collapsible: false,
+            postRenderInterval: -1, //call postRender synchronously.
+            resizable: true,
+            showTitle: false,
+            numberCell: {title: 'No.'},
+            scrollModel: {autoFit: true},
+            trackModel: {on: true},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
+            colModel: processPlanColModel,
+            strNoRows: g_noData,
+            dataModel: {
+                // location: 'remote', dataType: 'json', method: 'POST', url: '/dataSource.emptyGrid',
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: processPlanPostData8, recIndx: 'ROWNUM',
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            },
+            dragModel: {
+                on: true,
+                clsDnD: 'dnd8',
+                diHelper: ['CONTROL_NUM']
+            },
+            dropModel: {
+                on: true,
+                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .master'
+            },
+            complete: function () {
+                let data = this.options.dataModel.data;
+                let totalRecords = data.length;
+                let tableElement = this.element.closest('.table');
+
+                changeTitleColor(data, tableElement);
+
+                if (totalRecords) {
+                    showTitle(data, tableElement);
+                    changeFooter(data, tableElement);
+                }
+            },
+            moveNode: function (event, ui) {
+                changeSortNum(this, $(this.element.context));
+            },
+            cellSave: function (evt, ui) {
+                if (ui.oldVal === undefined && ui.newVal === null) {
+                    $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                }
+            },
+            change: function (event, ui) {
+
+                if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
+                    modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
+                    refreshTargetGrid();
+                }
+
+                if (ui.source === 'delete' || ui.source === 'deleteNodes') {
+                    changeSortNum(this, $(this.element.context));
                 }
             }
         };
@@ -596,6 +804,7 @@
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: false},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: false},
+            {title: 'IMG_GFILE_SEQ', dataType: 'integer', dataIndx: 'IMG_GFILE_SEQ', hidden: false},
             {title: '납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
             {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN'},
             {title: '주요', dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
@@ -604,19 +813,23 @@
                 title: 'MCT Plan/Actual', align: 'center', colModel: [
                     {
                         title: 'Seq1', align: 'center', colModel: [
-                            {title: '', datatype: 'string', dataIndx: 'EQUIP_SEQ_1',
+                            {title: '', datatype: 'integer', dataIndx: 'EQUIP_SEQ_1',
                                 render: function (ui) {
                                     let cellData = ui.cellData;
                                     let status = ui.rowData.STATUS_1;
                                     let backgroundColor = colorClassification(status);
 
+/*
                                     if (status) {
                                         $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
                                     }
+*/
 
                                     if (cellData) {
+                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+
                                         let index = EQUIP_LIST.findIndex(function (element) {
-                                            return element.value === cellData;
+                                            return element.value === Number(cellData);
                                         });
                                         return (index < 0) ? cellData : EQUIP_LIST[index].text;
                                     }
@@ -624,15 +837,18 @@
                             },
                             {title: '', datatype: 'string', dataIndx: 'WORKING_TIME_1', editable: true,
                                 render: function (ui) {
+                                    let cellData = ui.cellData;
                                     let status = ui.rowData.STATUS_1;
                                     let backgroundColor = colorClassification(status);
 
-                                    if (status) {
+                                    /*if (status) {
                                         return $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                                    }
+                                    }*/
 
-                                    if (ui.cellData) {
-                                        return ui.cellData + '분';
+                                    if (cellData) {
+                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+
+                                        return cellData + '분';
                                     }
                                 }
                             },
@@ -642,19 +858,17 @@
                     },
                     {
                         title: 'Seq2', align: 'center', colModel: [
-                            {title: '', datatype: 'string', dataIndx: 'EQUIP_SEQ_2',
+                            {title: '', datatype: 'integer', dataIndx: 'EQUIP_SEQ_2',
                                 render: function (ui) {
                                     let cellData = ui.cellData;
                                     let status = ui.rowData.STATUS_2;
                                     let backgroundColor = colorClassification(status);
 
-                                    if (status) {
-                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                                    }
-
                                     if (cellData) {
+                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+
                                         let index = EQUIP_LIST.findIndex(function (element) {
-                                            return element.value === cellData;
+                                            return element.value === Number(cellData);
                                         });
                                         return (index < 0) ? cellData : EQUIP_LIST[index].text;
                                     }
@@ -662,15 +876,14 @@
                             },
                             {title: '', datatype: 'string', dataIndx: 'WORKING_TIME_2', editable: true,
                                 render: function (ui) {
+                                    let cellData = ui.cellData;
                                     let status = ui.rowData.STATUS_2;
                                     let backgroundColor = colorClassification(status);
 
-                                    if (status) {
-                                        return $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                                    }
+                                    if (cellData) {
+                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
 
-                                    if (ui.cellData) {
-                                        return ui.cellData + '분';
+                                        return cellData + '분';
                                     }
                                 }
                             },
@@ -680,19 +893,17 @@
                     },
                     {
                         title: 'Seq3', align: 'center', colModel: [
-                            {title: '', datatype: 'string', dataIndx: 'EQUIP_SEQ_3',
+                            {title: '', datatype: 'integer', dataIndx: 'EQUIP_SEQ_3',
                                 render: function (ui) {
                                     let cellData = ui.cellData;
                                     let status = ui.rowData.STATUS_3;
                                     let backgroundColor = colorClassification(status);
 
-                                    if (status) {
-                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                                    }
-
                                     if (cellData) {
+                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+
                                         let index = EQUIP_LIST.findIndex(function (element) {
-                                            return element.value === cellData;
+                                            return element.value === Number(cellData);
                                         });
                                         return (index < 0) ? cellData : EQUIP_LIST[index].text;
                                     }
@@ -700,15 +911,14 @@
                             },
                             {title: '', datatype: 'string', dataIndx: 'WORKING_TIME_3', editable: true,
                                 render: function (ui) {
+                                    let cellData = ui.cellData;
                                     let status = ui.rowData.STATUS_3;
                                     let backgroundColor = colorClassification(status);
 
-                                    if (status) {
-                                        return $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                                    }
+                                    if (cellData) {
+                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
 
-                                    if (ui.cellData) {
-                                        return ui.cellData + '분';
+                                        return cellData + '분';
                                     }
                                 }
                             },
@@ -718,19 +928,17 @@
                     },
                     {
                         title: 'Seq4', align: 'center', colModel: [
-                            {title: '', datatype: 'string', dataIndx: 'EQUIP_SEQ_4',
+                            {title: '', datatype: 'integer', dataIndx: 'EQUIP_SEQ_4',
                                 render: function (ui) {
                                     let cellData = ui.cellData;
                                     let status = ui.rowData.STATUS_4;
                                     let backgroundColor = colorClassification(status);
 
-                                    if (status) {
-                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                                    }
-
                                     if (cellData) {
+                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+
                                         let index = EQUIP_LIST.findIndex(function (element) {
-                                            return element.value === cellData;
+                                            return element.value === Number(cellData);
                                         });
                                         return (index < 0) ? cellData : EQUIP_LIST[index].text;
                                     }
@@ -738,15 +946,14 @@
                             },
                             {title: '', datatype: 'string', dataIndx: 'WORKING_TIME_4', editable: true,
                                 render: function (ui) {
+                                    let cellData = ui.cellData;
                                     let status = ui.rowData.STATUS_4;
                                     let backgroundColor = colorClassification(status);
 
-                                    if (status) {
-                                        return $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                                    }
+                                    if (cellData) {
+                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
 
-                                    if (ui.cellData) {
-                                        return ui.cellData + '분';
+                                        return cellData + '분';
                                     }
                                 }
                             },
@@ -917,7 +1124,6 @@
                 // this.flex();
             },
             cellSave: function (event, ui) {
-                console.log('cellSave');
                 if (ui.oldVal === undefined && ui.newVal === null) {
                     $processTargetGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                 } else {
@@ -931,7 +1137,7 @@
         const modifyPQGrid = function (grid, insertQueryList, updateQueryList, deleteQueryList) {
             let parameters;
             let gridInstance = grid.pqGrid('getInstance').grid;
-            debugger;
+            
             //추가 또는 수정된 값이 있으면 true
             if (gridInstance.isDirty()) {
                 let changes = gridInstance.getChanges({format: 'byVal'});
@@ -1030,11 +1236,10 @@
          */
         const changeSortNum = function (kk, grid) {
             let rowListConvert = [];
-            console.log(kk);
             let ids = kk.pageData().map(function (rd) {
                 return rd.MCT_PLAN_SEQ;
             });
-            debugger;
+            
 
             for (let i = 0, length = ids.length; i < length; i++) {
                 let tempObject = {rowIndx: i, newRow: {'SORT_NUM': (i + 1)}};
@@ -1047,15 +1252,19 @@
             let backgroundColor = '';
 
             switch (status) {
-                case '가동중':
+                // 가동중
+                case 'PRO007':
                     backgroundColor = 'bg-green';
                     break;
-                case '완료':
+                // 완료
+                case 'PRO008':
                     backgroundColor = 'bg-light_blue';
                     break;
+                // 비가동상태
                 case '비가동상태':
                     backgroundColor = 'bg-yellow';
                     break;
+                // 일시정지상태
                 case '일시정지상태':
                     backgroundColor = 'bg-orange';
                     break;
@@ -1167,7 +1376,7 @@
                     }
                 },
                 change: function (event, ui) {
-                    debugger;
+                    
                     if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
                         modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
                         refreshTargetGrid();
@@ -1197,17 +1406,21 @@
         $('#MCT_TARGET_REFRESH').on('click', function () {
             refreshTargetGrid();
         });
+
+        $('#MCT_PLAN_MANAGE_DRAWING_VIEW').on('click', function () {
+            callWindowImageViewer(999);
+        });
         /* event */
 
         /* init */
-        $processPlanGrid1 = createPQGrid(processPlanGrid1Id, processPlanPostData1);
-        $processPlanGrid2 = createPQGrid(processPlanGrid2Id, processPlanPostData2);
-        $processPlanGrid3 = createPQGrid(processPlanGrid3Id, processPlanPostData3);
-        $processPlanGrid4 = createPQGrid(processPlanGrid4Id, processPlanPostData4);
-        $processPlanGrid5 = createPQGrid(processPlanGrid5Id, processPlanPostData5);
-        $processPlanGrid6 = createPQGrid(processPlanGrid6Id, processPlanPostData6);
-        $processPlanGrid7 = createPQGrid(processPlanGrid7Id, processPlanPostData7);
-        $processPlanGrid8 = createPQGrid(processPlanGrid8Id, processPlanPostData8);
+        $processPlanGrid1 = $('#' + processPlanGrid1Id).pqGrid(processPlanObj1);
+        $processPlanGrid2 = $('#' + processPlanGrid2Id).pqGrid(processPlanObj2);
+        $processPlanGrid3 = $('#' + processPlanGrid3Id).pqGrid(processPlanObj3);
+        $processPlanGrid4 = $('#' + processPlanGrid4Id).pqGrid(processPlanObj4);
+        $processPlanGrid5 = $('#' + processPlanGrid5Id).pqGrid(processPlanObj5);
+        $processPlanGrid6 = $('#' + processPlanGrid6Id).pqGrid(processPlanObj6);
+        $processPlanGrid7 = $('#' + processPlanGrid7Id).pqGrid(processPlanObj7);
+        $processPlanGrid8 = $('#' + processPlanGrid8Id).pqGrid(processPlanObj8);
         $processTargetGrid = $('#' + processTargetGridId).pqGrid(processTargetGridObj);
 
         /*setInterval(function () {

@@ -132,7 +132,7 @@
             A.DEL_YN = 'N'
             AND (A.CONTROL_STATUS IS NULL OR A.CONTROL_STATUS IN ('ORD001', 'ORD002'))
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
-             AND A.CONTROL_NUM = #{CONTROL_NUM}
+             AND A.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
         </if>
         <if test="COMP_CD != null and COMP_CD != ''">
              AND A.COMP_CD = #{COMP_CD}
@@ -223,17 +223,17 @@
                 0 AS ADD_QTY,
                 0 AS ADD_UNIT_FINAL_AMT
             FROM TBL_CONTROL A
-                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = B.CONTROL_SEQ
-                                                       AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                INNER JOIN TBL_MONTH_CLOSE_DETAIL D ON A.CONTROL_SEQ = D.CONTROL_SEQ
-                                                       AND A.COMP_CD = D.COMP_CD
-                                                       AND A.ORDER_COMP_CD = D.ORDER_COMP_CD
-                                                       AND D.CLOSE_MONTH = CONCAT('2020', '04')
-                INNER JOIN TBL_MONTH_CLOSE E ON D.CLOSE_MONTH = E.CLOSE_MONTH
-                                                       AND D.CLOSE_VER = E.CLOSE_VER
-                                                       AND D.COMP_CD = E.COMP_CD
-                                                       AND D.ORDER_COMP_CD = E.ORDER_COMP_CD
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                                   AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_MONTH_CLOSE_DETAIL D ON A.CONTROL_SEQ = D.CONTROL_SEQ
+                                                   AND A.COMP_CD = D.COMP_CD
+                                                   AND A.ORDER_COMP_CD = D.ORDER_COMP_CD
+                                                   AND D.CLOSE_MONTH = CONCAT(#{CONTROL_CLOSE_YEAR}, #{CONTROL_CLOSE_MONTH})
+            INNER JOIN TBL_MONTH_CLOSE E ON D.CLOSE_MONTH = E.CLOSE_MONTH
+                                            AND D.CLOSE_VER = E.CLOSE_VER
+                                            AND D.COMP_CD = E.COMP_CD
+                                            AND D.ORDER_COMP_CD = E.ORDER_COMP_CD
                 WHERE
                     A.ORDER_COMP_CD IN (${ORDER_COMP_CD})
                     AND D.CLOSE_VER = #{CLOSE_VER}
@@ -274,6 +274,7 @@
             #{CLOSE_NOTE}
         ) ON DUPLICATE KEY
 	        UPDATE
+	            CLOSE_NOTE = #{CLOSE_NOTE},
 	            CLOSE_DT = NOW(),
 		        UPDATE_DT = NOW()
     </insert>
@@ -286,17 +287,19 @@
             CLOSE_VER,
             CONTROL_SEQ,
             CLOSE_DETAIL_NOTE
-        ) VALUES(
+        )
+        SELECT
             #{COMP_CD},
             #{CLOSE_MONTH},
             #{ORDER_COMP_CD},
             #{CLOSE_VER},
             #{CONTROL_SEQ},
             #{CLOSE_DETAIL_NOTE}
-        )
+        FROM DUAL
+        WHERE #{WORK_TYPE} <![CDATA[ <> ]]> 'WTP050'
     </insert>
 
-    <insert id="insertControlMaster" parameterType="java.util.HashMap" >
+    <insert id="createControlMaster" parameterType="java.util.HashMap" >
         INSERT IGNORE INTO TBL_CONTROL (
             CONTROL_SEQ,
             CONTROL_NUM,
@@ -341,7 +344,7 @@
         </foreach>
     </insert>
 
-    <insert id="insertControlPart" parameterType="java.util.HashMap" >
+    <insert id="createControlPart" parameterType="java.util.HashMap" >
         INSERT INTO TBL_CONTROL_PART (
             CONTROL_SEQ,
             CONTROL_DETAIL_SEQ,
@@ -373,46 +376,43 @@
             UNIT_FINAL_EST_AMT,
             UNIT_FINAL_AMT,
             STATUS_DT
-        ) VALUES
-        <foreach collection="list" item="item" separator=",">
-        (
+        ) VALUES (
             (SELECT CONTROL_SEQ
             FROM TBL_CONTROL
-            WHERE CONTROL_NUM = #{item.CONTROL_NUM}),
+            WHERE CONTROL_NUM = #{CONTROL_NUM}),
             NEXTVAL(SEQ_CONTROL_PART),
-            #{item.PART_NUM},
-            #{item.DRAWING_NUM},
+            #{PART_NUM},
+            #{DRAWING_NUM},
             0,
-            #{item.PREV_DRAWING_NUM},
-            #{item.ITEM_NM},
-            #{item.WORK_TYPE},
-            IFNULL(#{item.OUTSIDE_YN}, 'N'),
-            #{item.WORK_FACTORY},
-            IFNULL(#{item.MATERIAL_SUPPLY_YN}, 'N'),
-            REPLACE(#{item.INNER_DUE_DT}, '-', SPACE(0)),
-            #{item.SIZE_TXT},
-            SF_GET_SIZE_TXT('SIZE_TYPE', #{item.SIZE_TXT}),
-            SF_GET_SIZE_TXT('SIZE_W', #{item.SIZE_TXT}),
-            SF_GET_SIZE_TXT('SIZE_H', #{item.SIZE_TXT}),
-            SF_GET_SIZE_TXT('SIZE_T', #{item.SIZE_TXT}),
-            SF_GET_SIZE_TXT('SIZE_D', #{item.SIZE_TXT}),
-            SF_GET_SIZE_TXT('SIZE_L', #{item.SIZE_TXT}),
-            SF_GET_ETC_CD(1027, #{item.MATERIAL_DETAIL}),
-            #{item.MATERIAL_DETAIL},
-            #{item.MATERIAL_KIND},
-            #{item.SURFACE_TREAT},
-            #{item.MATERIAL_NOTE},
-            #{item.PART_UNIT_QTY},
-            #{item.ORIGINAL_SIDE_QTY},
-            #{item.OTHER_SIDE_QTY},
-            REPLACE(#{item.UNIT_FINAL_EST_AMT}, ',', SPACE(0)),
-            REPLACE(#{item.UNIT_FINAL_AMT}, ',', SPACE(0)),
+            #{PREV_DRAWING_NUM},
+            #{ITEM_NM},
+            #{WORK_TYPE},
+            IFNULL(#{OUTSIDE_YN}, 'N'),
+            #{WORK_FACTORY},
+            IFNULL(#{MATERIAL_SUPPLY_YN}, 'N'),
+            REPLACE(#{INNER_DUE_DT}, '-', SPACE(0)),
+            #{SIZE_TXT},
+            SF_GET_SIZE_TXT('SIZE_TYPE', #{SIZE_TXT}),
+            SF_GET_SIZE_TXT('SIZE_W', #{SIZE_TXT}),
+            SF_GET_SIZE_TXT('SIZE_H', #{SIZE_TXT}),
+            SF_GET_SIZE_TXT('SIZE_T', #{SIZE_TXT}),
+            SF_GET_SIZE_TXT('SIZE_D', #{SIZE_TXT}),
+            SF_GET_SIZE_TXT('SIZE_L', #{SIZE_TXT}),
+            SF_GET_ETC_CD(1027, #{MATERIAL_DETAIL}),
+            #{MATERIAL_DETAIL},
+            #{MATERIAL_KIND},
+            #{SURFACE_TREAT},
+            #{MATERIAL_NOTE},
+            #{PART_UNIT_QTY},
+            #{ORIGINAL_SIDE_QTY},
+            #{OTHER_SIDE_QTY},
+            REPLACE(#{UNIT_FINAL_EST_AMT}, ',', SPACE(0)),
+            REPLACE(#{UNIT_FINAL_AMT}, ',', SPACE(0)),
             NOW()
         )
-        </foreach>
     </insert>
 
-    <insert id="insertControlPartOrder" parameterType="java.util.HashMap" >
+    <insert id="createControlPartOrder" parameterType="java.util.HashMap" >
         INSERT INTO TBL_CONTROL_PART_ORDER (
             CONTROL_SEQ,
             CONTROL_DETAIL_SEQ,
@@ -422,29 +422,20 @@
             ORDER_DUE_DT,
             DELIVERY_DT
             <!-- ,INSERT_ID -->
-        ) VALUES
-        <foreach collection="list" item="item" separator=",">
-        (
-            (SELECT CONTROL_SEQ
-             FROM TBL_CONTROL A
-             WHERE A.CONTROL_NUM = #{item.CONTROL_NUM}),
-            (SELECT B.CONTROL_DETAIL_SEQ
-             FROM TBL_CONTROL_PART B
-                INNER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-             WHERE C.CONTROL_NUM = #{item.CONTROL_NUM}
-                   AND B.CONTROL_DETAIL_SEQ NOT IN (SELECT CONTROL_DETAIL_SEQ
-                                                    FROM TBL_CONTROL_PART_ORDER D
-                                                    WHERE D.CONTROL_SEQ = B.CONTROL_SEQ)
-             ORDER BY B.CONTROL_DETAIL_SEQ
-             LIMIT 1),
-            NEXTVAL(SEQ_CONTROL_PART_ORDER),
-            #{item.ORDER_NUM},
-            #{item.ORDER_QTY},
-            REPLACE(#{item.ORDER_DUE_DT}, '-', SPACE(0)),
-            REPLACE(#{item.DELIVERY_DT}, '-', SPACE(0))
-            <!-- ,NULL -->
         )
-        </foreach>
+        SELECT
+            #{CONTROL_SEQ},
+            #{CONTROL_DETAIL_SEQ},
+            NEXTVAL(SEQ_CONTROL_PART_ORDER),
+            #{ORDER_NUM},
+            #{ORDER_QTY},
+            REPLACE(#{ORDER_DUE_DT}, '-', SPACE(0)),
+            REPLACE(#{DELIVERY_DT}, '-', SPACE(0))
+            <!-- ,NULL -->
+        FROM DUAL
+        WHERE
+            #{ORDER_QTY} IS NOT NULL
+            AND NOT EXISTS (SELECT * FROM TBL_CONTROL_PART_ORDER WHERE ORDER_NUM = #{ORDER_NUM})
     </insert>
 
     <insert id="createControlProgress" parameterType="java.util.HashMap" >
@@ -482,7 +473,7 @@
         </foreach>
     </insert>
 
-    <insert id="insertControlPartProgress" parameterType="java.util.HashMap" >
+    <insert id="createControlPartProgress" parameterType="java.util.HashMap" >
         INSERT INTO TBL_CONTROL_PART_PROGRESS (
             CONTROL_SEQ,
             CONTROL_DETAIL_SEQ,
@@ -499,7 +490,7 @@
         )
     </insert>
 
-    <insert id="insertControlPartProgressAll" parameterType="java.util.HashMap" >
+    <insert id="createControlPartProgressAll" parameterType="java.util.HashMap" >
         INSERT INTO TBL_CONTROL_PART_PROGRESS (
             CONTROL_SEQ,
             CONTROL_DETAIL_SEQ,
@@ -518,7 +509,7 @@
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
     </insert>
 
-    <insert id="insertControlPartProgressList" parameterType="java.util.HashMap" >
+    <insert id="createControlPartProgressList" parameterType="java.util.HashMap" >
         INSERT INTO TBL_CONTROL_PART_PROGRESS (
             CONTROL_SEQ,
             CONTROL_DETAIL_SEQ,
@@ -582,8 +573,17 @@
         <if test="NOTE != null and NOTE != ''">
             NOTE = #{NOTE},
         </if>
+        <if test="PROJECT_NM != null and PROJECT_NM != ''">
+            PROJECT_NM = #{PROJECT_NM},
+        </if>
         <if test="MODULE_NM != null and MODULE_NM != ''">
             MODULE_NM = #{MODULE_NM},
+        </if>
+        <if test="DELIVERY_COMP_NM != null and DELIVERY_COMP_NM != ''">
+            DELIVERY_COMP_NM = #{DELIVERY_COMP_NM},
+        </if>
+        <if test="LABEL_NOTE != null and DELIVERY_COMP_NM != ''">
+            LABEL_NOTE = #{LABEL_NOTE},
         </if>
         <if test="MAIN_INSPECTION != null and MAIN_INSPECTION != ''">
             MAIN_INSPECTION = #{MAIN_INSPECTION},
@@ -593,6 +593,12 @@
         </if>
         <if test="CONTROL_STATUS != null and CONTROL_STATUS != ''">
             CONTROL_STATUS = #{CONTROL_STATUS},
+        </if>
+        <if test="EST_SEQ != null and EST_SEQ != ''">
+            EST_SEQ = #{EST_SEQ},
+        </if>
+        <if test="PRICE_CONFIRM != null and PRICE_CONFIRM != ''">
+            PRICE_CONFIRM = #{PRICE_CONFIRM},
         </if>
             STATUS_DT = NOW(),
             UPDATE_DT = NOW()
@@ -776,7 +782,7 @@
         <include refid="controlManage" />
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001'
-            AND B.OUTSIDE_YN IS NULL
+            AND B.OUTSIDE_YN = 'N'
             AND B.PART_STATUS IS NULL
         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
@@ -806,7 +812,7 @@
                WHERE 1 = 1
                    AND CONTROL_SEQ = #{CONTROL_SEQ}
                    AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-                   AND WORK_TYPE = 'WTP020') AS FLAG
+                   AND WORK_TYPE = 'WTP050') AS FLAG
     </select>
 
     <update id="updateControlStatus" parameterType="java.util.HashMap">
@@ -842,8 +848,8 @@
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001'
             AND B.PART_STATUS = 'PRO002'
-            AND B.WORK_TYPE NOT IN ('WTP020')
-            AND B.OUTSIDE_YN IS NULL
+            AND B.WORK_TYPE NOT IN ('WTP050')
+            AND B.OUTSIDE_YN = 'N'
         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
@@ -871,8 +877,33 @@
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001'
             <!-- AND B.PART_STATUS = 'PRO001' -->
-            AND B.WORK_TYPE NOT IN ('WTP020')
+            AND B.WORK_TYPE NOT IN ('WTP050')
             AND B.OUTSIDE_YN = 'Y'
+        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+            AND C.ORDER_COMP_CD = #{ORDER_COMP_CD}
+        </if>
+        <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
+            AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
+        </if>
+        ORDER BY
+            C.CONTROL_SEQ,
+            B.PART_NUM
+        <choose>
+            <when test="SORT_BY == 'OCM00'">
+                ,C.ORDER_DUE_DT <if test="DESCENDING != null and DESCENDING != ''">DESC</if>
+            </when>
+            <when test="SORT_BY == 'OCM01'">
+                ,B.INNER_DUE_DT <if test="DESCENDING != null and DESCENDING != ''">DESC</if>
+            </when>
+        </choose>
+    </select>
+
+    <select id="selectProcessCompleteList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        <include refid="controlManage"/>
+        WHERE 1 = 1
+            AND A.CONTROL_STATUS = 'ORD001'
+            AND B.PART_STATUS = 'PRO009'
+            AND B.WORK_TYPE NOT IN ('WTP050')
         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
             AND C.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
@@ -1005,8 +1036,12 @@
     <select id="selectCloseHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         <include refid="controlManage"/>
         WHERE 1 = 1
+            AND A.DEL_YN = 'N'
             AND A.CONTROL_STATUS IN ('ORD003', 'ORD004')
             <!-- AND DATE_FORMAT(A.STATUS_DT, '%Y%m') = CONCAT(#{CLOSE_YEAR}, #{CLOSE_MONTH}) -->
+        <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
+            AND A.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
+        </if>
         <if test="COMP_CD != null and COMP_CD != ''">
             AND A.COMP_CD = #{COMP_CD}
         </if>
@@ -1278,19 +1313,16 @@
             INVOICE_TITLE,
             INVOICE_DT
         ) VALUES (
-            IFNULL((SELECT MAX(INVOICE_NUM)
-                    FROM TBL_INVOICE_DETAIL
-                    WHERE CONTROL_SEQ IN (7269)), CONCAT('IV-', (SELECT LPAD(SUBSTR(MAX(A.INVOICE_NUM), 4) + 1, 6, 0) AS INV_SEQ FROM TBL_INVOICE A))),
+            #{INVOICE_NUM},
             #{COMP_CD},
             #{ORDER_COMP_CD},
             #{ORDER_STAFF_SEQ},
             #{INVOICE_TITLE},
             NOW()
         ) ON DUPLICATE KEY
-	        UPDATE
-	            INVOICE_TITLE = #{INVOICE_TITLE},
-		        INVOICE_DT = NOW(),
-		        UPDATE_DT = NOW()
+            UPDATE
+                INVOICE_TITLE = #{INVOICE_TITLE},
+                UPDATE_DT = NOW()
     </insert>
 
     <insert id="createInvoiceDetail" parameterType="java.util.HashMap" >
@@ -1301,9 +1333,7 @@
             PACKING_CNT,
             NOTE
         ) VALUES (
-            IFNULL((SELECT MAX(INVOICE_NUM)
-                    FROM TBL_INVOICE_DETAIL
-                    WHERE CONTROL_SEQ IN (7269)), CONCAT('IV-', (SELECT LPAD(SUBSTR(MAX(A.INVOICE_NUM), 4) + 1, 6, 0) AS INV_SEQ FROM TBL_INVOICE A))),
+            #{INVOICE_NUM},
             #{CONTROL_SEQ},
             #{CONTROL_DETAIL_SEQ},
             #{PACKING_CNT},
@@ -1485,7 +1515,7 @@
         WHERE INVOICE_NUM = #{INVOICE_NUM};
     </delete>
 
-    <insert id="createControlExcel" statementType="CALLABLE" parameterType="java.util.HashMap" >
+    <insert id="createControlExcel" parameterType="java.util.HashMap" >
         INSERT INTO TBL_CONTROL_EXCEL (
             JOB_SEQ,
             JOB_SEQ_KEY,

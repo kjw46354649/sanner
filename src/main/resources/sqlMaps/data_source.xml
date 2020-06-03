@@ -89,7 +89,7 @@
     </select>
 
     <select id="getEquipList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT EQUIP_ID AS CODE_CD, EQUIP_NM AS CODE_NM
+        SELECT EQUIP_SEQ AS CODE_CD, EQUIP_NM AS CODE_NM
         FROM TBL_EQUIP
         WHERE 1 = 1
             AND DEL_YN = 'N'

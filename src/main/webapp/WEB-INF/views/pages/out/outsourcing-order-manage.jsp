@@ -141,8 +141,7 @@
     <div class="bottomWrap row1_bottomWrap">
         <div class="hWrap">
             <button type="button" class="defaultBtn btn-120w" data-toggle="modal" data-target="#REQUEST_OUTSIDE_POPUP">
-                외주가공
-                요청
+                외주가공 요청
             </button>
             <button type="button" class="defaultBtn btn-120w" data-toggle="modal" data-target="#CANCEL_PROCESSING_REQUEST_POPUP">
                 가공요청 취소
@@ -167,86 +166,142 @@
     </div>
 </div>
 
-<%-- modal --%>
-<div class="modal" id="REQUEST_OUTSIDE_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="row m-b-md">
-                <div class="col-sm-12">
-                    <section class="panel panel-default">
-                        <header class="panel-heading font-bold">
-                            외주 가공 요청
-                            <div class="btnSaveCloseBox">
-                                <div type="button" class="btn btn-success btn-sm btn-default" id="OUTSIDE_PROCESS_REQUEST_SAVE">
-                                    Save & Submit
-                                </div>
-                            </div>
-                        </header>
-                        <div class="panel-body">
-                            <form class="form-inline" id="OUTSIDE_PROCESS_REQUEST_FORM" role="form">
-                                <input type="hidden" name="queryId" id="queryId" value="selectOutsideProcessRequestList"/>
-                                <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ"/>
-                                <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ"/>
-                                <div class="panel-body line_tit portlet-body form bg-light">
-                                    <!-- grid table -->
-                                    <section class="bg-light">
-                                        <div class="row">
-                                            <div class="col-md-12 col-sm-12">
-                                                <div class="panel panel-default">
-                                                    <header class="panel-heading">
-                                                        <strong>메일 내용</strong>
-                                                    </header>
-                                                    <div class="row">
-                                                        <div class="gridWrap">
-                                                            <textarea class="col-md-12 col-sm-12" id="EMAIL_CONTENT" name="EMAIL_CONTENT"></textarea>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </section>
-                                    <section class="bg-light">
-                                        <div class="row">
-                                            <div class="col-md-6 col-sm-6">
-                                                <div class="panel panel-default">
-                                                    <header class="panel-heading">
-                                                        <strong>메일 수신처</strong>
-                                                    </header>
-                                                    <div class="gridWrap">
-                                                        <div id="MAIL_RECIPIENT_GRID"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 col-sm-6">
-                                                <div class="panel panel-default">
-                                                    <header class="panel-heading">
-                                                        <strong>첨부파일</strong>
-                                                    </header>
-                                                    <div class="gridWrap">
-                                                        <input type="file">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </section>
-                                    <section class="bg-light">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div id="OUTSIDE_REQUEST_GRID"></div>
-                                            </div>
-                                        </div>
-                                    </section>
-                                </div>
-                            </form>
-                        </div>
-                    </section>
-                </div>
+<div class="popup_container" id="REQUEST_OUTSIDE_POPUP" style="display: none;">
+    <div class="layerPopup" style="overflow: scroll;">
+        <h3 style="margin-bottom: 10px;">외주 가공 요청</h3>
+        <button type="button" class="pop_close">닫기</button>
+
+        <!-- 버튼 -->
+        <div class="buttonWrap" style="display: block; overflow: hidden;">
+            <div class="right_float">
+                <button class="popupBtn green" id="REQUEST_OUTSIDE_SAVE_SUBMIT">저장 & 제출</button>
             </div>
-            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
+
+        <div>
+            <label for="">요청 외주 업체</label>
+            <select class="" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
+                <option></option>
+            </select>
+        </div>
+
+        <form class="form-inline" id="control_estimate_register_info_form" name="control_estimate_register_info_form" role="form">
+            <input type="hidden" id="queryId" name="queryId" value="">
+            <input type="hidden" id="EST_SEQ" name="EST_SEQ" value="">
+            <h5>메일내용</h5>
+            <div class="right_float">
+                <input type="checkbox" id="estimateRegisterAutoEmailSend"><label for="estimateRegisterAutoEmailSend"> 자동메일발송 사용</label>
+            </div>
+            <div>
+                <textarea class="col-md-12 col-sm-12" name="EMAIL_CONTENT_TXT" id="REQUEST_OUTSIDE_EMAIL_CONTENT_TXT" style="height: 100px;"> </textarea>
+            </div>
+            <h5>메일수신처</h5>
+            <div id="MAIL_RECIPIENT_GRID"></div>
+
+            <h5>첨부파일</h5>
+            <div class="fileTableWrap">
+                <table class="colStyle" id="attachDragAndDrop">
+                    <caption></caption>
+                    <thead>
+                    <tr>
+                        <th scope="col" class="fileName txt">파일명</th>
+                        <th scope="col" class="etcInfo">용량</th>
+                        <th scope="col" class="etcInfo"></th>
+                    </tr>
+                    </thead>
+                    <tbody class="files"></tbody>
+                </table>
+            </div>
+        </form>
+        <form class="form-inline" id="OUTSIDE_PROCESS_REQUEST_FORM" role="form">
+            <input type="hidden" name="queryId" id="queryId" value="selectOutsideProcessRequestList"/>
+            <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ"/>
+            <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ"/>
+            <div id="OUTSIDE_REQUEST_GRID"></div>
+        </form>
     </div>
 </div>
+
+<%--<div class="modal" id="REQUEST_OUTSIDE_POPUP" tabindex="-1" role="dialog" aria-hidden="true">--%>
+<%--    <div class="modal-dialog modal-lg">--%>
+<%--        <div class="modal-content">--%>
+<%--            <div class="row m-b-md">--%>
+<%--                <div class="col-sm-12">--%>
+<%--                    <section class="panel panel-default">--%>
+<%--                        <header class="panel-heading font-bold">--%>
+<%--                            외주 가공 요청--%>
+<%--                            <div class="btnSaveCloseBox">--%>
+<%--                                <div type="button" class="btn btn-success btn-sm btn-default" id="OUTSIDE_PROCESS_REQUEST_SAVE">--%>
+<%--                                    Save & Submit--%>
+<%--                                </div>--%>
+<%--                            </div>--%>
+<%--                        </header>--%>
+<%--                        <div class="panel-body">--%>
+<%--                            <form class="form-inline" id="OUTSIDE_PROCESS_REQUEST_FORM" role="form">--%>
+<%--                                <input type="hidden" name="queryId" id="queryId" value="selectOutsideProcessRequestList"/>--%>
+<%--                                <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ"/>--%>
+<%--                                <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ"/>--%>
+<%--                                <div class="panel-body line_tit portlet-body form bg-light">--%>
+<%--                                    <!-- grid table -->--%>
+<%--                                    <section class="bg-light">--%>
+<%--                                        <div class="row">--%>
+<%--                                            <div class="col-md-12 col-sm-12">--%>
+<%--                                                <div class="panel panel-default">--%>
+<%--                                                    <header class="panel-heading">--%>
+<%--                                                        <strong>메일 내용</strong>--%>
+<%--                                                    </header>--%>
+<%--                                                    <div class="row">--%>
+<%--                                                        <div class="gridWrap">--%>
+<%--                                                            <textarea class="col-md-12 col-sm-12" id="EMAIL_CONTENT" name="EMAIL_CONTENT"></textarea>--%>
+<%--                                                        </div>--%>
+<%--                                                    </div>--%>
+<%--                                                </div>--%>
+<%--                                            </div>--%>
+<%--                                        </div>--%>
+<%--                                    </section>--%>
+<%--                                    <section class="bg-light">--%>
+<%--                                        <div class="row">--%>
+<%--                                            <div class="col-md-6 col-sm-6">--%>
+<%--                                                <div class="panel panel-default">--%>
+<%--                                                    <header class="panel-heading">--%>
+<%--                                                        <strong>메일 수신처</strong>--%>
+<%--                                                    </header>--%>
+<%--                                                    <div class="gridWrap">--%>
+<%--                                                        <div id="MAIL_RECIPIENT_GRID"></div>--%>
+<%--                                                    </div>--%>
+<%--                                                </div>--%>
+<%--                                            </div>--%>
+<%--                                            <div class="col-md-6 col-sm-6">--%>
+<%--                                                <div class="panel panel-default">--%>
+<%--                                                    <header class="panel-heading">--%>
+<%--                                                        <strong>첨부파일</strong>--%>
+<%--                                                    </header>--%>
+<%--                                                    <div class="gridWrap">--%>
+<%--                                                        <input type="file">--%>
+<%--                                                    </div>--%>
+<%--                                                </div>--%>
+<%--                                            </div>--%>
+<%--                                        </div>--%>
+<%--                                    </section>--%>
+<%--                                    <section class="bg-light">--%>
+<%--                                        <div class="row">--%>
+<%--                                            <div class="col-md-12">--%>
+<%--                                                <div id="OUTSIDE_REQUEST_GRID"></div>--%>
+<%--                                            </div>--%>
+<%--                                        </div>--%>
+<%--                                    </section>--%>
+<%--                                </div>--%>
+<%--                            </form>--%>
+<%--                        </div>--%>
+<%--                    </section>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--            <!-- /.modal-content -->--%>
+<%--        </div>--%>
+<%--        <!-- /.modal-dialog -->--%>
+<%--    </div>--%>
+<%--</div>--%>
+
 <div class="modal" id="CANCEL_PROCESSING_REQUEST_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -278,6 +333,63 @@
         <!-- /.modal-dialog -->
     </div>
 </div>
+
+<div class="popup_container" id="OUTSIDE_CLOSE_POPUP" style="display: none;">
+    <div class="controlCloseLayerPopup">
+        <h3> 마감 진행(외주주문)</h3>
+        <hr>
+        <button type="button" class="pop_close OUTSIDE_CLOSE_NO">닫기</button>
+        <div class="buttonWrap">
+            <form class="form-inline" id="OUTSIDE_CLOSE_LEFT_FORM" role="form">
+                <input type="hidden" name="queryId" id="queryId" value="outMapper.selectOutsideCloseLeftList">
+                <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ">
+                <input type="hidden" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
+                <div class="leftbuttonWrap">
+                    <div class="d-inline-block">
+                        <label for="OUTSIDE_CLOSE_YEAR"></label>
+                        <select name="OUTSIDE_CLOSE_YEAR" id="OUTSIDE_CLOSE_YEAR">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="d-inline-block">
+                        <label for="OUTSIDE_CLOSE_MONTH"></label>
+                        <select name="OUTSIDE_CLOSE_MONTH" id="OUTSIDE_CLOSE_MONTH">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="d-inline-block">
+                        <select name="CLOSE_VER" id="CLOSE_VER">
+                            <option value="1">1차</option>
+                            <option value="2">2차</option>
+                            <option value="3">3차</option>
+                            <option value="4">4차</option>
+                            <option value="5">5차</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="d-inline-block">
+            <div style="width: 450px; float:left;">
+                <div id="OUTSIDE_CLOSE_LEFT_GRID"></div>
+            </div>
+            <div style="display: flex; float:left; align-items: center; justify-content: center; width: 70px; height: 250px;">
+                <span class="arrow right_Arrow"></span>
+            </div>
+            <div style="width: 450px; float:left;">
+                <div id="OUTSIDE_CLOSE_RIGHT_GRID"></div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button class="defaultBtn" id="OUTSIDE_CLOSE_YES">저장</button>
+            <button class="defaultBtn OUTSIDE_CLOSE_NO">닫기</button>
+        </div>
+    </div>
+</div>
+
+
 <div class="popup_container" id="OUTSIDE_CLOSE_POPUP" style="display: none;">
     <div class="layerPopup">
         <h3 style="margin-bottom: 10px;">월 마감 진행(외주주문)</h3>
@@ -349,86 +461,6 @@
         </div>
     </div>
 </div>
-<%--
-<div class="modal" id="OUTSIDE_CLOSE_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
-                        class="sr-only">Close</span></button>
-                <h4 class="modal-title">월 마감 진행(외주주문)</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-5">
-                        <div id="OUTSIDE_CLOSE_LEFT_GRID"></div>
-                    </div>
-                    <div class="col-md-2">
-                        화살표~>
-                    </div>
-                    <div class="col-md-5">
-                        <div id="OUTSIDE_CLOSE_RIGHT_GRID"></div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <form class="form-inline" id="OUTSIDE_CLOSE_LEFT_FORM" role="form">
-                            <input type="hidden" name="queryId" id="queryId" value="selectOutsideCloseLeftList">
-                            <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ">
-                            <input type="hidden" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
-                            <div class="col-md-8">
-                                <div class="col-md-3">
-                                    <label class="label_100" class="control-label">대상 년/월</label>
-                                </div>
-                                <div class="col-md-5">
-                                    <select class="wd_200" name="OUTSIDE_CLOSE_YEAR" id="OUTSIDE_CLOSE_YEAR">
-                                        <option></option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <select class="wd_200" name="OUTSIDE_CLOSE_MONTH" id="OUTSIDE_CLOSE_MONTH">
-                                        <option></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="col-md-6">
-                                    <label class="label_100" for="CLOSE_VER">차수</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
-                                        <option value="1">
-                                            1차
-                                        </option>
-                                        <option value="2">
-                                            2차
-                                        </option>
-                                        <option value="3">
-                                            3차
-                                        </option>
-                                        <option value="4">
-                                            4차
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                    </div>
-                    </form>
-                    <div class="col-md-6">
-                        <b>진행 하시겠습니까?</b>
-                        <div class="text-right">
-                            <button id="OUTSIDE_CLOSE_YES">Yes</button>
-                            <button id="OUTSIDE_CLOSE_NO">No</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-</div>
---%>
 
 <form id="outsourcing_order_excel_download" method="POST">
     <input type="hidden" id="sqlId" name="sqlId" value="selectOutsourcingOrderExcel:selectOutsourcingOrderInfoExcel"/>
@@ -654,37 +686,20 @@
             {title: '메일주소', dataType: 'string', dataIndx: 'STAFF_EMAIL'},
             {title: '전화번호', dataType: 'string', dataIndx: 'STAFF_TEL'}
         ];
-        const mailRecipientToolbar = {
-            items: [
-                {
-                    type: 'button', label: 'Delete', icon: 'ui-icon-disk', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {
-
-                        }
-                    }
-                }
-            ]
-        };
         const mailRecipientObj = {
-            height: 200,
+            height: 100,
             collapsible: false,
-            resizable: true,
+            resizable: false,
             showTitle: false,
             scrollModel: {autoFit: true},
             dragColumns: {enabled: false},
-            columnTemplate: {
-                align: 'center',
-                halign: 'center',
-                hvalign: 'center',
-                editable: false
-            },
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
             colModel: mailRecipientColModel,
             toolbar: toolbar,
             strNoRows: g_noData,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                // postData: {'queryId': 'dataSource.selectCompanyStaffEmailList', 'COMP_CD': 'COMP_CD'}, // TODO: COMP_CD 변수
-                postData: {'queryId': 'dataSource.emptyGrid', 'COMP_CD': 'COMP_CD'}, // TODO: COMP_CD 변수
+                postData: {'queryId': 'dataSource.selectCompanyStaffEmailList', 'COMP_CD': ''}, // TODO: COMP_CD 변수
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -800,9 +815,9 @@
             {title: '마감금액', dataType: 'string', dataIndx: 'TOTAL_AMT'}
         ];
         const outsideCloseLeftObj = {
-            height: 600,
+            height: 250,
             collapsible: false,
-            resizable: true,
+            resizable: false,
             showTitle: false,
             scrollModel: {autoFit: true},
             dragColumns: {enabled: false},
@@ -832,13 +847,13 @@
             }
         ];
         const outsideCloseRightObj = {
-            height: 500,
+            height: 250,
             collapsible: false,
-            resizable: true,
+            resizable: false,
             showTitle: false,
             scrollModel: {autoFit: true},
             dragColumns: {enabled: false},
-            columnTemplate: { align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
             colModel: outsideCloseRightColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -858,8 +873,8 @@
                 controlDetailSeqStr += rowData.CONTROL_DETAIL_SEQ;
 
                 if (i < selectedRowCount - 1) {
-                    controlSeqStr += ','
-                    controlDetailSeqStr += ','
+                    controlSeqStr += ',';
+                    controlDetailSeqStr += ',';
                 }
             }
 
@@ -972,6 +987,34 @@
 
         $('#REQUEST_OUTSIDE_POPUP').on('show.bs.modal', function () {
             $mailRecipientGrid = $('#' + mailRecipientGridId).pqGrid(mailRecipientObj);
+            // estimateRegisterBotGrid.pqGrid({
+            //     height: 100,
+            //     dataModel: {
+            //         location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
+            //         url: "/paramQueryGridSelect",
+            //         postData: { 'queryId': 'selectEstimateStaffEmailList', 'COMP_CD': COMP_CD},
+            //         getData: function (dataJSON) {
+            //             return {data: dataJSON.data};
+            //         }
+            //     },
+            //     postRenderInterval: -1,
+            //     scrollModel: {autoFit: false},
+            //     numberCell: {width: 30, title: "No", show: true },
+            //     //selectionModel: { type: 'row', mode: 'single'} ,
+            //     collapsible: false,
+            //     swipeModel: {on: false},
+            //     trackModel: {on: true},
+            //     resizable: false,
+            //     colModel: estimateRegisterBotColModel,
+            //     showTitle: false,
+            //     title: false,
+            //     strNoRows: g_noData,
+            //     complete: function (event, ui) {
+            //         let data = estimateRegisterBotGrid.pqGrid('option', 'dataModel.data');
+            //
+            //         $('#control_estimate_register_bot_grid_records').html(data.length);
+            //     },
+            // });
             $outsideProcessRequestGrid = $('#' + outsideProcessRequestGridId).pqGrid(outsideProcessRequestObj);
             loadOutsideProcessData();
         });
@@ -1053,6 +1096,10 @@
             }, parameters, '');
         });
 
+        $('#OUTSIDE_CLOSE_NO').on('click', function () {
+            $('#OUTSIDE_CLOSE_POPUP').modal('hide');
+        });
+
         $('#OUTSIDE_ORDER_SEARCH').on('click', function () {
             $outsideOrderManageGrid.pqGrid('option', 'dataModel.postData', function (ui) {
                 return (fnFormToJsonArrayData('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM'));
@@ -1085,6 +1132,123 @@
         });
 
         $outsideOrderManageGrid = $('#' + gridId).pqGrid(obj);
+
+        /* 견적 요청*/
+        // CKEDITOR 부분
+        CKEDITOR.replace( 'REQUEST_OUTSIDE_EMAIL_CONTENT_TXT', { height: 176 });
+        function getCadUploadBlankHtml(){
+            return'<tr><td colspan="3" class="spanArea" >마우스로 파일을 Drag & Drop 하세요.</td></tr><tr><td colspan="3"></td></tr><tr><td colspan="3"></td></tr>';
+        }
+
+        let estimateRegisterBotGrid = $("#control_estimate_register_bot_grid");
+        const estimateRegisterBotColModel= [
+            {title: '성함', dataType: 'string', dataIndx: 'RECEIVER_NM', minWidth: "30%"},
+            {title: '메일주소', dataType: 'string', dataIndx: 'RECEIVER_EMAIL', minWidth: "30%"},
+            {title: '전화번호', dataType: 'string', dataIndx: 'RECEIVER_TEL', minWidth: "30%"},
+            {title: '', dataType: 'string', dataIndx: 'SEQ', editable: false, width: 30 ,
+                render: function (ui) {
+                    return '<button id="receiverRemove" class="ui-icon ui-icon-close" style="cursor: pointer"></button>'
+                },
+                postRender: function (ui) {
+                    let grid = this;
+                    let $cell = grid.getCell(ui);
+                    let rowIndex = ui.rowIndx;
+                    $cell.find('#receiverRemove').on('click', function (event) {
+                        let parameter = {
+                            'queryId': 'deleteEstimateEachReceiver',
+                            'SEQ': ui.rowData.SEQ
+                        };
+                        let parameters = {'url': '/json-remove', 'data': parameter};
+                        fnPostAjax(function(data, callFunctionParam){
+                            estimateRegisterBotGrid.pqGrid('deleteRow', { rowIndx: rowIndex });
+                        }, parameters, '');
+                    });
+                }
+            }
+            //{title: 'SEQ', dataType: 'string', dataIndx: 'SEQ', hidden: true }
+        ];
+
+
+        // 파일 업로드
+        let fileHtml = getCadUploadBlankHtml();
+        $('#REQUEST_OUTSIDE_POPUP #attachDragAndDrop > tbody').html('');
+        $('#REQUEST_OUTSIDE_POPUP #attachDragAndDrop > tbody').append(fileHtml).trigger('create');
+
+        // TODO: 함수명 변경 : 견적요청 저장
+        const requestSave = function () {
+
+        };
+
+        // TODO: 함수명 변경 : 견적요청 발송
+        const reqeustSendEmail = function () {
+            //Confirm Box
+            let headHtml = 'messsage', bodyHtml = '', yseBtn = '예', noBtn = '아니오';
+            let autoEmailYn = $('#estimateRegisterAutoEmailSend').is(':checked');
+
+            if (autoEmailYn) {
+                bodyHtml =
+                    '<h4>\n' +
+                    '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
+                    '<span>메일을 송신합니다. 계속 진행하시겠습니까?</span>' +
+                    '</h4>';
+            } else {
+                bodyHtml =
+                    '<h4>\n' +
+                    '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
+                    '<span>메일 송신 없이 완료처리만 진행합니다.\n 진행하시겠습니까?</span>' +
+                    '</h4>';
+            }
+
+            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+            let estimateRegisterSubmitConfirm = function (callback) {
+                commonConfirmPopup.show();
+                $("#commonConfirmYesBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                    callback(true);
+                    return;
+                });
+                $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                });
+            };
+            estimateRegisterSubmitConfirm(function (confirm) {
+                if (confirm) {
+                    if (autoEmailYn) {
+                        // $("#estimate_register_info_form #queryId").val('mail.insertEstimateSubmitMail');
+                        let parameters = {
+                            'url': '/json-create',
+                            'data': {queryId: 'mail.insertEstimateSubmitMail'}
+                        };
+                        fnPostAjax(function (data, callFunctionParam) {
+                            console.log(data);
+                        }, parameters, '');
+                    }
+                }
+            });
+        };
+
+        fnCommCodeDatasourceSelectBoxCreate($('#REQUEST_OUTSIDE_POPUP').find('#OUTSIDE_COMP_CD'), 'select', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
+        });
+
+        $('#REQUEST_OUTSIDE_SAVE_SUBMIT').on('click', function (){
+           /* real
+           let success = false;
+            success = requestSave();
+            if (success) {
+                reqeustSendEmail();
+            }*/
+           //test
+            requestSave();
+            reqeustSendEmail();
+        });
+
+        /* 견적 요청*/
+
+
         /* init */
     });
 </script>
