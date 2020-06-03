@@ -103,6 +103,14 @@
     <input type="hidden" id="queryId" name="queryId" value="popMapper.selectBarcodeInfo">
     <input type="hidden" id="popBarcode" name="popBarcode">
 </form>
+<!-- Excel Hidden Form -->
+<form id="common_excel_form" method="POST">
+    <input type="hidden" id="sqlId" name="sqlId" value="selectEstimateDetailListExcel"/>
+    <input type="hidden" id="mapInputId" name="mapInputId" value="data"/>
+    <input type="hidden" id="paramName" name="paramName" value="EST_SEQ"/>
+    <input type="hidden" id="paramData" name="paramData" value=""/>
+    <input type="hidden" id="template" name="template" value="estimate_list_template"/>
+</form>
 <!-- 제품상세정보 layer popup : S -->
 <div class="popup_container g_item_detail_pop" id="g_item_detail_pop" style="display: none;">
     <form class="form-inline" id="g_item_detail_pop_form" name="g_item_detail_pop_form" role="form">

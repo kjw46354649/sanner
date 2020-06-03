@@ -155,6 +155,4 @@ public class MaterialServiceImpl implements MaterialService {
         model.addAttribute("result",		"success");
     }
 
-
-
 }

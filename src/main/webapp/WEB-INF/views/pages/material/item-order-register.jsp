@@ -11,7 +11,7 @@
 <div class="popup_container" id="item_order_register_popup" style="display: none;">
     <div class="layerPopup">
         <h3 style="margin-bottom: 10px;">소재 주문</h3>
-        <button type="button" class="pop_close">닫기</button>
+        <button type="button" class="pop_close close">닫기</button>
         <div class="buttonWrap">
             <span class="d-inline">
                 <span class="ipu_wrap"><label class="label_80" for="item_order_register_material_order_num">소재주문번호</label><input type="text" name="" id="item_order_register_material_order_num" class="wd_200" value="" title="소재주문업체"></span>
@@ -33,11 +33,11 @@
                 </div>
             </div>
             <br/>
-            <div class="gridWrap">
-                <div id="item_order_register_popup_bot_grid"></div>
+            <div class="gridWrap popupTableDiv">
+                <%--<div id="item_order_register_popup_bot_grid"></div>
                 <div class="right_sort">
                     전체 조회 건수 (Total : <span id="item_order_register_popup_bot_grid_records" style="color: #00b3ee">0</span>)
-                </div>
+                </div>--%>
             </div>
         </form>
     </div>
@@ -271,18 +271,31 @@
             {title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ', editable: false},
             {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', editable: false},
             {title: '요망<br>납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', width: 80, editable: false},
-            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM',
+            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND',
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "MATERIAL_KIND_NM", id: "MATERIAL_KIND" },
-                    valueIndx: "value",
-                    labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1029'),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = itemOrderRegisterLeftGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["MATERIAL_TYPE"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1029')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let data = fnGetCommCodeGridSelectBox('1029');
+
+                        let index = data.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = data.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : data[index].text;
                     }
                 }
             },
@@ -708,7 +721,6 @@
                 },
                 virtualX: true, virtualY: true,
                 scrollModel: {autoFit: false},
-                numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'row', mode: 'single', column: true } ,
                 swipeModel: {on: false},
                 collapsible: false,
@@ -728,6 +740,8 @@
             fnPostAjax(function (data, callFunctionParam) {
                 let list = data.list[0];
                 $("#item_order_register_material_order_num").val(list.MATERIAL_ORDER_NUM);
+
+                itemOrderRegisterPopOrderSheet();
             }, parameters, '');
         });
 
@@ -887,10 +901,210 @@
             let itemOrderRegisterInsertUpdateQueryList = ['insertUpdateItemOrderRegisterPopSave','updateItemOrderRegister'];
             fnModifyPQGrid(itemOrderRegisterPopTopGrid, itemOrderRegisterInsertUpdateQueryList, itemOrderRegisterInsertUpdateQueryList);
 
-            //$("#item_order_register_popup").modal('toggle');
-            $("#btnItemOrderRegisterSearch").trigger('click');
-            //itemOrderRegisterLeftGrid.pqGrid("refreshDataAndView");
+            //Popup table 생성
+            makeInnerTable();
+            //메일 여부
+            itemOrderRegisterPopMail();
+
         });
+
+        function makeMailInnerTable(list)
+        {
+            var ref_key="";
+            var table="";
+
+            var font_header =" background:lightgray; font-weight:600;";
+            var st_center="border:1px solid #d0d0d0; text-align:center; padding:0px 15px 0px 15px;";
+
+            table += "<table style='border-spacing:0; min-width:50%;'><tr>";
+            table += "<td style='"+ st_center + font_header +"'>발주업체</td>";
+            table += "<td style='"+ st_center + font_header +"'>공급업체</td>";
+            table += "<td style='"+ st_center + font_header +"'>형태</td>";
+            table += "<td style='"+ st_center + font_header +"'>상세종류</td>";
+            table += "<td style='"+ st_center + font_header +"'>소재Size</td>";
+            table += "<td style='"+ st_center + font_header +"'>주문</td>";
+            table += "<td style='"+ st_center + font_header +"'>비고</td>";
+            table += "<td style='"+ st_center + font_header +"'>납기</td>" + "</tr>";
+
+            for(var i=0; i<list.length; i++)
+            {
+                var material_order_seq = list[i].MATERIAL_ORDER_SEQ;
+
+                table += "<tr>";
+                table += "<td style='"+ st_center	+"'>"	+ list[i].MATERIAL_COMP_NM +"</td>";
+                table += "<td style='"+ st_center 	+"'>"	+ list[i].COMP_NM+"</td>";
+                table += "<td style='"+ st_center 	+"'>"	+ list[i].MATERIAL_KIND_NM+"</td>";
+                table += "<td style='"+ st_center	+"'>"	+ list[i].MATERIAL_DETAIL_NM+"</td>";
+                table += "<td style='"+ st_center 	+"'>"	+ list[i].SIZE_TXT+"</td>";
+                table += "<td style='"+ st_center 	+"'>"	+ list[i].ORDER_QTY +"</td>";
+                table += "<td style='"+ st_center 	+"'>"	+ list[i].ORDER_NOTE +"</td>";
+                table += "<td style='"+ st_center	+"'>" 	+ list[i].ORDER_DT +"</td>";
+                table += "</tr>";
+
+                ref_key += "'"+material_order_seq+"',";
+
+            }
+            table += "</table>";
+        }
+        function makeInnerTable(list)
+        {
+            let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num").val();
+
+            let table="";
+            var font_header =" background:lightblue; font-weight:500; font-size: 15px;";
+            var font_context ="font-size: 15px;";
+            var st_center="border:1px solid #a8a8a8; text-align:center; padding:0px 15px 0px 15px;";
+            var row_span ="rowspan='2'";
+
+            let parameter = {
+                'queryId': 'selectItemOrderRegisterPopTable',
+                'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM
+            };
+            let parameters = {'url': '/json-list', 'data': parameter};
+            fnPostAjax(function (data, callFunctionParam) {
+                let list = data.list;
+
+                console.log(list);
+                table += "<table style='border-spacing:0; width:100%;'><tr>";
+                table += "<td style='"+ st_center + font_header +"'>업체</td>";
+                for(var i=0; i<list.length; i++) {
+                    table += "<td style='"+ st_center + font_header +"'>"	+ list[i].MATERIAL_COMP_NM +"</td>";
+                }
+                table += "</tr>";
+                table += "<tr>";
+                table += "<td style='"+ st_center + font_header +"'>담당자</td>";
+                for(var j=0; j<list.length; j++) {
+                    table += "<td style='"+ st_center + font_header +"'>"	+ list[j].MATERIAL_COMP_EMAIL +"</td>";
+                }
+                table += "</tr>";
+                table += "<tr>";
+                table += "<td style='"+ st_center + font_context +"'>내용</td>";
+                for(var h=0; h<list.length; h++){
+                    table += "<td style='"+ st_center + font_context +"'>" 	+ list[h].CONTENTS +"</td>";
+                }
+                table += "</tr></table>";
+
+                console.log(table);
+                $(".popupTableDiv").html(table);
+            }, parameters, '');
+        }
+
+        function itemOrderRegisterPopMail() {
+            let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num").val();
+
+            //Confirm Box
+            let headHtml = "Information", bodyHtml ="", yseBtn="예", noBtn="아니오";
+            bodyHtml =
+                '<h4>\n' +
+                '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
+                '<span>주문서를 발송하시겠습니까?</span>' +
+                '</h4>';
+
+            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+            let itemOrderRegisterPopSubmitConfirm = function(callback) {
+                commonConfirmPopup.show();
+                commonConfirmPopup.css("z-index", 99999999);
+                $("#commonConfirmYesBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                    callback(true);
+                    return;
+                });
+                $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                    itemOrderRegisterPopOrderSheet();
+                });
+            };
+            itemOrderRegisterPopSubmitConfirm(function(confirm){
+                if(confirm) {
+                    let parameter = {
+                        'queryId': 'selectItemOrderRegisterPopMailTable',
+                        'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM
+                    };
+                    let parameters = {'url': '/json-list', 'data': parameter};
+                    fnPostAjax(function (data, callFunctionParam) {
+                        let list = data.list;
+                        let compareCd = list[0].MATERIAL_COMP_CD;
+                        let compCd = "";
+                        let tableList = [];
+                        let innerTable = "";
+
+                        for(var i=0; i<list.length; i++) {
+                            compCd = list[i].MATERIAL_COMP_CD;
+                            if(i == list.length-1 || compareCd != compCd) {
+                                innerTable = makeMailInnerTable(tableList);
+                                let parameter = {
+                                    'queryId': 'insertItemOrderRegisterPopSubmitMail',
+                                    'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
+                                    'MATERIAL_COMP_CD': compareCd,
+                                    'INNER_TABLE': innerTable
+                                };
+                                let parameters = {'url': '/json-create', 'data': parameter};
+
+                                tableList = [];
+                                fnPostAjaxAsync(function (data, callFunctionParam) {
+                                }, parameters, '');
+
+                                compareCd = compCd;
+                            }
+                            tableList.push(list[i]);
+                        }
+
+                        innerTable = makeMailInnerTable(tableList);
+                        let parameter = {
+                            'queryId': 'insertItemOrderRegisterPopSubmitMail',
+                            'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
+                            'MATERIAL_COMP_CD': compareCd,
+                            'INNER_TABLE': innerTable
+                        };
+                        let parameters = {'url': '/json-create', 'data': parameter};
+                        fnPostAjaxAsync(function (data, callFunctionParam) {
+                            itemOrderRegisterPopOrderSheet();
+                        }, parameters, '');
+                    }, parameters, '');
+
+                }
+            });
+        }
+
+        function itemOrderRegisterPopOrderSheet() {
+            let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num").val();
+
+            //Confirm Box
+            let headHtml = "Information", bodyHtml ="", yseBtn="예", noBtn="아니오";
+            bodyHtml =
+                '<h4>\n' +
+                '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
+                '<span>성공적으로 발송되었습니다.</br>주문서를 출력하시겠습니까?</span>' +
+                '</h4>';
+
+            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+            let itemOrderRegisterPopSubmitConfirm = function(callback) {
+                commonConfirmPopup.show();
+                $("#commonConfirmYesBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                    callback(true);
+                    return;
+                });
+                $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                });
+            };
+            itemOrderRegisterPopSubmitConfirm(function(confirm){
+                if(confirm) {
+                    $("#common_excel_form #sqlId").val('selectItemOrderRegisterPopTable:selectItemOrderRegisterOrderSheetListExcel');
+                    $("#common_excel_form #mapInputId").val('data');
+                    $("#common_excel_form #paramName").val('MATERIAL_ORDER_NUM');
+                    $("#common_excel_form #paramData").val(MATERIAL_ORDER_NUM);
+                    $("#common_excel_form #template").val('item_order_sheet_template');
+                    fnReportFormToHiddenFormPageAction("common_excel_form", "/itemOrderRegisterOrderSheetPrint");
+                }
+            });
+        }
+
 
         /** 공통 코드 이외의 처리 부분 **/
         fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
