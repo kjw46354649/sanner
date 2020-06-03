@@ -99,9 +99,9 @@
                     </li>
                     <li>
                         <div class="slt_wrap">
-                            <label class="label_100" for="CLOSE_YEAR">마감/종료 월</label>
-                            <select class="wd_100" class="two" name="CLOSE_YEAR" id="CLOSE_YEAR"></select>
-                            <select class="wd_100" class="two" name="CLOSE_MONTH" id="CLOSE_MONTH"></select>
+                            <label class="label_100">마감/종료 월</label>
+                            <select class="wd_100" class="two" name="CLOSE_YEAR" id="CLOSE_HISTORY_CLOSE_YEAR"></select>
+                            <select class="wd_100" class="two" name="CLOSE_MONTH" id="CLOSE_HISTORY_CLOSE_MONTH"></select>
                         </div>
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label class="label_100">조회 Option</label></span>
@@ -122,7 +122,7 @@
     </div>
     <div class="bottomWrap row4_bottomWrap">
         <div class="hWrap">
-            <button type="button" class="defaultBtn btn-120w" id="DEADLINE_OR_END_CANCLE">마감/종료 취소</button>
+            <button type="button" class="defaultBtn btn-120w" id="DEADLINE_OR_END_CANCEL">마감/종료 취소</button>
             <div class="rightSpan">
                 <button type="button" class="defaultBtn btn-120w" id="DRAWING_VIEW">도면 View</button>
                 <button type="button" class="defaultBtn btn-120w green" id="CONTROL_CLOSE_HISTORY_SAVE">저장</button>
@@ -488,11 +488,8 @@
             });
             $closeHistoryGrid.pqGrid('refreshDataAndView');
         });
-        // $('#CLOSE_YEAR').on('change', function() {
-        //     fnAppendSelectboxMonth('CLOSE_MONTH', this.value);
-        // });
 
-        $('#DEADLINE_OR_END_CANCLE').on('click', function () {
+        $('#DEADLINE_OR_END_CANCEL').on('click', function () {
             updateControlStatus();
         });
 
@@ -516,8 +513,9 @@
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
-        fnAppendSelectboxYear('CLOSE_YEAR', 10);
-        fnAppendSelectboxMonth('CLOSE_MONTH', CURRENT_YEAR);
+        fnAppendSelectboxYear('CLOSE_HISTORY_CLOSE_YEAR', 10);
+        fnAppendSelectboxMonth('CLOSE_HISTORY_CLOSE_MONTH');
+        $('#CLOSE_HISTORY_CLOSE_MONTH').val(postData.CLOSE_MONTH);
         $closeHistoryGrid = $('#' + gridId).pqGrid(obj);
         /* init */
     });
