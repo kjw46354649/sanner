@@ -21,21 +21,21 @@
                     <li>
                         <span class="slt_wrap">
                             <label class="label_100" for="COMP_CD">사업자</label>
-                            <select class="wd_200" name="COMP_CD" id="COMP_CD">
+                            <select class="wd_150" name="COMP_CD" id="COMP_CD">
                                 <option value="">All</option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="ORDER_COMP_CD">발주처</label>
-                            <select class="wd_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
+                            <select class="wd_150" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
                                 <option value="">All</option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="MONEY_MANAGE_STATUS_YEAR">조회 년도</label>
-                            <select class="wd_200" name="MONEY_MANAGE_STATUS_YEAR" id="MONEY_MANAGE_STATUS_YEAR"></select>
+                            <select class="wd_150" name="MONEY_MANAGE_STATUS_YEAR" id="MONEY_MANAGE_STATUS_YEAR"></select>
                         </span>
                         <button type="button" class="right_float defaultBtn radius blue" id="moneyManageStatusSearchBtn">검색</button>
                     </li>
@@ -51,14 +51,14 @@
                     <li>
                         <span class="slt_wrap">
                             <label class="label_100" for="COMP_CD">사업자</label>
-                            <select class="wd_200" name="COMP_CD" id="COMP_CD">
+                            <select class="wd_150" name="COMP_CD" id="COMP_CD">
                                 <option value="">All</option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="ORDER_COMP_CD">발주사</label>
-                            <select class="wd_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
+                            <select class="wd_150" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
                                 <option value="">All</option>
                             </select>
                         </span>
@@ -106,12 +106,48 @@
                         <div class="conWrap">
                             <div class="left-30Warp">
                                 <div id="moneySalesMonthGrid"></div>
+                                <div class="moneySalesMonthTable">
+                                    <table class="inlineTable">
+                                        <tbody>
+                                            <tr>
+                                                <td style="width:50%; background-color: #bfbfbf; text-align: center; font-weight: bold;">매출금액 합계</td>
+                                                <td style="width:50%; padding-right:20px; text-align: right; font-weight: bold;"><span id="slaeAmount">0</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width:50%; background-color: #bfbfbf; text-align: center; font-weight: bold;">VAT 포함합계</td>
+                                                <td style="width:50%; padding-right:20px; text-align: right; font-weight: bold;""><span id="slaeTotalAmount">0</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                                 <div class="right_sort">
                                     전체 조회 건수 (Total : <span id="money_sales_month_total_records" style="color: #00b3ee">0</span>)
                                 </div>
                             </div>
                             <div class="right-70Warp">
                                 <div id="moneyReceiveStatusGrid"></div>
+                                <div class="moneySalesMonthTable">
+                                    <table class="inlineTable">
+                                        <tbody>
+                                        <tr>
+                                            <td style="width:12%; background-color: #bfbfbf; text-align: center; font-weight: bold;"></td>
+                                            <td style="width:18%; background-color: #bfbfbf; text-align: center; font-weight: bold;">입금액(현금+어음)</td>
+                                            <td style="width:17%; background-color: #bfbfbf; text-align: center; font-weight: bold;">발행어음</td>
+                                            <td style="width:18%; background-color: #bfbfbf; text-align: center; font-weight: bold;">지급완료 어음</td>
+                                            <td style="width:18%; background-color: #bfbfbf; text-align: center; font-weight: bold;">실지급액(할인률%)</td>
+                                            <td style="width:17%; background-color: #bfbfbf; text-align: center; font-weight: bold;">미지급 어음</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="background-color: #bfbfbf; text-align: center; font-weight: bold;">합계</td>
+                                            <td style="padding-right:10px; text-align: right; font-weight: bold;"><span id="moneySales01">0</span></td>
+                                            <td style="padding-right:10px; text-align: right; font-weight: bold;"><span id="moneySales02">0</span></td>
+                                            <td style="padding-right:10px; text-align: right; font-weight: bold;"><span id="moneySales03">0</span></td>
+                                            <td style="padding-right:10px; text-align: right; font-weight: bold;"><span id="moneySales04">0</span></td>
+                                            <td style="padding-right:10px; text-align: right; font-weight: bold;"><span id="moneySales05">0</span></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                                 <div class="right_sort">
                                     전체 조회 건수 (Total : <span id="money_receive_status_total_records" style="color: #00b3ee">0</span>)
                                 </div>
@@ -188,22 +224,24 @@
             });
         };
 
+        $('#MONEY_RECEIVE_CLOSE_MONTH_ED').val(((money_today.getMonth() + 1) < 10 ? '0' : '') + (money_today.getMonth() + 1)).prop('selected', true);
         money_today.setMonth(money_today.getMonth() - 1);   // before 1 month
         $('#MONEY_RECEIVE_CLOSE_MONTH_ST').val(((money_today.getMonth() + 1) < 10 ? '0' : '') + (money_today.getMonth() + 1)).prop('selected', true);
-        $('#MONEY_RECEIVE_CLOSE_MONTH_ED').val(((money_today.getMonth() + 1) < 10 ? '0' : '') + (money_today.getMonth() + 1)).prop('selected', true);
 
         let moneyManageStatusModel = [
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
+            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD_NM'},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '매출현황', dataType: 'string', dataIndx: 'ORDER_COMP_CD'},
-            {title: '만기전 어음', dataType: 'string', dataIndx: 'QUARTER'},
-            {title: '미수금(어음제외)', dataType: 'string', dataIndx: 'FINISH_MONTH'},
-            {title: '현금', dataType: 'string', dataIndx: 'CLOSE_VER'},
-            {title: '어음', dataType: 'string', dataIndx: 'OUTSIDE_COMP_CD'},
-            {title: '합계', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM'},
-            {title: '총만기전 어음', dataType: 'string', dataIndx: 'ITEM_NUMBER'},
-            {title: '총미수금 현황(어음제외)', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT'},
-            {title: '비고', dataType: 'string', dataIndx: 'CLOSE_NOTE', editable: true}
+            {title: '2020년 <BR>매출현황', dataType: 'string', dataIndx: 'SALES_MONEY'},
+            {
+                title: '2020년 수금현황', clsHead: 'cantChange', align: 'center', colModel: [
+                    {title: '현금', dataType: 'string', dataIndx: 'SALES_MONEY_PAYMENT'},
+                    {title: '어음', dataType: 'string', dataIndx: 'SALES_MONEY_PAPER'},
+                    {title: '합계', dataType: 'string', dataIndx: 'SALES_MONEY_TOTLE'},
+                ]
+            },
+            {title: '전년도 총 <BR>미수금액', dataType: 'string', dataIndx: 'BEFORE_DUE_OUT_AMOUNT'},
+            {title: '총미수금 현황<BR>2020년', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT'},
+            {title: '비고', dataType: 'string', dataIndx: 'CLOSE_NOTE', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}}
         ];
 
         let moneySalesMonthModel = [
@@ -211,13 +249,13 @@
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '매출년월', dataType: 'string', dataIndx: 'CLOSE_MONTH_NM'},
-            {title: '매출금액', dataType: 'string', dataIndx: 'ORDER_AMT'},
-            {title: '비고', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: 'NOTE', editable: true}
+            {title: '매출금액', dataIndx: 'ORDER_AMT', align: 'right', dataType: 'integer', format: '#,###'},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true}
         ];
 
         let moneyReceiveStatusModel = [
             {title: 'DEPOSIT_SEQ', dataType: 'integer', dataIndx: 'DEPOSIT_SEQ', hidden: true},
-            {title: '사업자<br>구분', clsHead: 'display_none', width: 70, dataType: 'string', dataIndx: 'COMP_CD', editable: true,
+            {title: '사업자 구분', clsHead: 'display_none', width: 70, dataType: 'string', dataIndx: 'COMP_CD', editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: MONEY_BUSINESS_COMPANY},
                 styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
                 render: function (ui) {
@@ -260,7 +298,8 @@
             {title: '입금월일', dataType: "string", styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'}, dataIndx: 'DEPOSIT_DATE',
                 editable: true, editor: { type: 'textbox', init: dateEditor }
             },
-            {title: '입금액', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: 'DEPOSIT_AMT'},
+            {title: '입금액', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: 'DEPOSIT_AMT',
+                align: 'right', dataType: 'integer', format: '#,###'},
             {title: '종류', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'}, dataIndx: 'DEPOSIT_TYPE', editable: true,
                 editor: {
                     type: 'select',
@@ -299,7 +338,8 @@
                     uncheck: "N" //uncheck when "NO".
                 }
             },
-            {title: '어음지급액', dataType: 'string', dataIndx: 'DUE_PAY_AMT', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}},
+            {title: '어음지급액', dataIndx: 'DUE_PAY_AMT', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},
+                align: 'right', dataType: 'integer', format: '#,###'},
             {title: '비고', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: 'NOTE', editable: true}
         ];
 
@@ -332,7 +372,7 @@
 
         /** 상세 수금 현환 **/
         let moneySalesMonthObj = {
-            height: 770, width: 472, selectionModel: { type: 'row', mode: 'single'} , swipeModel: {on: false}, collapsible: false,
+            height: 700, width: 472, selectionModel: { type: 'row', mode: 'single'} , swipeModel: {on: false}, collapsible: false,
             trackModel: {on: true}, resizable: false, flexWidth: false, scrollModel: { autoFit: true }, showTitle: false, numberCell: {title: 'No.'},
             toolbar: false, columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
             colModel: moneySalesMonthModel,
@@ -347,7 +387,15 @@
             dataReady: function (event, ui) {
                 let data = $moneySalesMonthGrid.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
-                $('#money_sales_month_total_records').html(moneySalesMonthObj);
+                let totalSalesAmount = 0;
+                for (let i = 0; i < totalRecords; i++) {
+                    let rowData = data[i];
+                    totalSalesAmount += parseInt(rowData.ORDER_AMT);
+                }
+                let vatAmount = parseInt((totalSalesAmount * 10) / 100) + totalSalesAmount;
+                $('#slaeAmount').html(numberWithCommas(totalSalesAmount));
+                $('#slaeTotalAmount').html(numberWithCommas(vatAmount));
+                $('#money_sales_month_total_records').html(totalRecords);
             }
         };
         $moneySalesMonthGrid = $('#' + moneySalesMonthGridID).pqGrid(moneySalesMonthObj);
@@ -359,7 +407,7 @@
         };
 
         let moneyReceiveStatusObj = {
-            height: 770, width: "100%", selectionModel: { type: 'row', mode: 'single'} , swipeModel: {on: false}, collapsible: false,
+            height: 700, width: "100%", selectionModel: { type: 'row', mode: 'single'} , swipeModel: {on: false}, collapsible: false,
             trackModel: {on: true}, resizable: false, flexWidth: false, scrollModel: { autoFit: true }, showTitle: false, numberCell: {title: 'No.'},
             toolbar: false, columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
             colModel: moneyReceiveStatusModel,
@@ -374,6 +422,25 @@
             dataReady: function (event, ui) {
                 let data = $moneyReceiveStatusGrid.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
+                let moneySales01=0, moneySales02=0, moneySales03=0, moneySales04=0, moneySales05=0, duePayPer=0;
+                for (let i = 0; i < totalRecords; i++) {
+                    let rowData = data[i];
+                    moneySales01 += parseInt(rowData.DEPOSIT_AMT);
+                    if(rowData.DEPOSIT_TYPE == 2 || rowData.DEPOSIT_TYPE == 3) moneySales02 += parseInt(rowData.DEPOSIT_AMT);
+                    if(rowData.DUE_PAY_YN == 'Y'){
+                        moneySales03 += parseInt(rowData.DEPOSIT_AMT);
+                        moneySales04 += parseInt(rowData.DUE_PAY_AMT);
+                    }
+                    if(rowData.OVER_DATE_YN == 'Y'){
+                        moneySales05 += parseInt(rowData.DEPOSIT_AMT);
+                    }
+                }
+                if(moneySales04 > 0) duePayPer = (((moneySales03 - moneySales04) / moneySales03) * 100).toFixed(1);
+                $('#moneySales01').html(numberWithCommas(moneySales01));
+                $('#moneySales02').html(numberWithCommas(moneySales02));
+                $('#moneySales03').html(numberWithCommas(moneySales03));
+                $('#moneySales04').html(numberWithCommas(moneySales04) + "(" + duePayPer + '%)');
+                $('#moneySales05').html(numberWithCommas(moneySales05));
                 $('#money_receive_status_total_records').html(totalRecords);
             },
             selectChange: function (event, ui) {

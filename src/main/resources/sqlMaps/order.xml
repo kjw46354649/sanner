@@ -1383,12 +1383,14 @@
         SELECT
             A.DEPOSIT_SEQ,
             A.COMP_CD,
-            (SELECT Z.COMP_NM FORM FROM jmes.TBL_COMPANY Z WHERE Z.COMP_CD = A.COMP_CD) AS COMP_NM,
+            (SELECT Z.COMP_NM FORM FROM jmes.TBL_COMPANY Z WHERE Z.COMP_CD = A.COMP_CD) AS COMP_CD_NM,
             A.ORDER_COMP_CD,
             (SELECT Z.COMP_NM FORM FROM jmes.TBL_COMPANY Z WHERE Z.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM,
             A.DEPOSIT_DT, DATE_FORMAT(STR_TO_DATE(A.DEPOSIT_DT, '%Y%m%d'), '%Y-%m-%d') AS DEPOSIT_DATE, A.DEPOSIT_AMT,
             A.DEPOSIT_TYPE, jmes.SF_GET_CODE_NM('1074', A.DEPOSIT_TYPE, 'KR') AS DEPOSIT_TYPE_NM,
-            A.DUE_DT, DATE_FORMAT(STR_TO_DATE(A.DUE_DT, '%Y%m%d'), '%Y-%m-%d') AS DUE_DATE, A.DUE_PAY_YN, A.DUE_PAY_AMT, A.NOTE
+            A.DUE_DT, DATE_FORMAT(STR_TO_DATE(A.DUE_DT, '%Y%m%d'), '%Y-%m-%d') AS DUE_DATE,
+            CASE WHEN IFNULL(A.DUE_DT, '99991231') <![CDATA[ <= ]]> DATE_FORMAT(NOW(), '%Y%m%d') AND DEPOSIT_TYPE IN ('2', '3') THEN 'Y' ELSE 'N' END OVER_DATE_YN,
+            A.DUE_PAY_YN, A.DUE_PAY_AMT, A.NOTE
         FROM jmes.TBL_MONEY_DEPOSIT A
         WHERE 1 = 1
             <if test="COMP_CD != null and COMP_CD != ''">
@@ -1420,33 +1422,15 @@
     <update id="updateMoneyManageReceive" parameterType="java.util.HashMap">
         UPDATE jmes.TBL_MONEY_DEPOSIT
             SET
-                <if test="COMP_CD != null and COMP_CD != ''">
-                    COMP_CD = #{COMP_CD},
-                </if>
-                <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-                    ORDER_COMP_CD = #{ORDER_COMP_CD},
-                </if>
-                <if test="DEPOSIT_DATE != null and DEPOSIT_DATE != ''">
-                    DEPOSIT_DT = REPLACE(#{DEPOSIT_DATE}, '-', SPACE(0)),
-                </if>
-                <if test="DEPOSIT_AMT != null and DEPOSIT_AMT != ''">
-                    COMP_CD = #{DEPOSIT_AMT},
-                </if>
-                <if test="DEPOSIT_TYPE != null and DEPOSIT_TYPE != ''">
-                    DEPOSIT_TYPE = #{DEPOSIT_TYPE},
-                </if>
-                <if test="DUE_DATE != null and DUE_DATE != ''">
-                    DUE_DT = REPLACE(#{DUE_DATE}, '-', SPACE(0)),
-                </if>
-                <if test="DUE_PAY_YN != null and DUE_PAY_YN != ''">
-                    DUE_PAY_YN = IFNULL(#{DUE_PAY_YN}, 'N'),
-                </if>
-                <if test="DUE_PAY_AMT != null and DUE_PAY_AMT != ''">
-                    DUE_PAY_AMT = #{DUE_PAY_AMT},
-                </if>
-                <if test="NOTE != null and NOTE != ''">
-                    NOTE = #{NOTE},
-                </if>
+                COMP_CD = #{COMP_CD},
+                ORDER_COMP_CD = #{ORDER_COMP_CD},
+                DEPOSIT_DT = REPLACE(#{DEPOSIT_DATE}, '-', SPACE(0)),
+                DEPOSIT_AMT = #{DEPOSIT_AMT},
+                DEPOSIT_TYPE = #{DEPOSIT_TYPE},
+                DUE_DT = REPLACE(#{DUE_DATE}, '-', SPACE(0)),
+                DUE_PAY_YN = IFNULL(#{DUE_PAY_YN}, 'N'),
+                DUE_PAY_AMT = #{DUE_PAY_AMT},
+                NOTE = #{NOTE},
                 UPDATE_DT = NOW(),
                 UPDATE_ID = 'test'
         WHERE DEPOSIT_SEQ = ${DEPOSIT_SEQ}
