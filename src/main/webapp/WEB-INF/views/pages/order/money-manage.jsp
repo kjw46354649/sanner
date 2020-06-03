@@ -231,18 +231,58 @@
         let moneyManageStatusModel = [
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD_NM'},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '2020년 <BR>매출현황', dataType: 'string', dataIndx: 'SALES_MONEY'},
+            {title: '2020년 <BR>매출현황', dataType: 'string', dataIndx: 'SALE_AMT'},
             {
                 title: '2020년 수금현황', clsHead: 'cantChange', align: 'center', colModel: [
-                    {title: '현금', dataType: 'string', dataIndx: 'SALES_MONEY_PAYMENT'},
-                    {title: '어음', dataType: 'string', dataIndx: 'SALES_MONEY_PAPER'},
-                    {title: '합계', dataType: 'string', dataIndx: 'SALES_MONEY_TOTLE'},
+                    {title: '현금', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CASH_AMT',
+                        summary: {
+                            type: "sum",
+                            edit: true
+                        },
+                    },
+                    {title: '어음', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PAPER_AMT',
+                        summary: {
+                            type: "sum",
+                            edit: true
+                        },
+                    },
+                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DEPOSIT_TOTAL_AMT',
+                        summary: {
+                            type: "sum",
+                            edit: true
+                        },
+                    },
                 ]
             },
-            {title: '전년도 총 <BR>미수금액', dataType: 'string', dataIndx: 'BEFORE_DUE_OUT_AMOUNT'},
-            {title: '총미수금 현황<BR>2020년', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT'},
-            {title: '비고', dataType: 'string', dataIndx: 'CLOSE_NOTE', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}}
+            {title: '전년도 총 <BR>미수금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'NOT_DEPOSIT_AMT'},
+            {title: '총미수금 현황<BR>2020년', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'NOT_DEPOSIT_TOTAL_AMT'},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}}
         ];
+
+        //calculate sum of 3rd and 4th column.
+        function calculateSummary() {
+            let cashTotal= 0, paperTotal = 0, depositTotal = 0, notDepositAmt = 0, notDepositTotalAmt = 0;
+            let data = $moneyManageStatusGrid.pqGrid('option', 'dataModel.data');
+            for (var i = 0; i < data.length; i++) {
+                var row = data[i];
+                cashTotal += (row[6] * 1);
+            }
+
+            var totalData = ["<b>Total: </b>", "", "", cashTotal, paperTotal, depositTotal, notDepositAmt, notDepositTotalAmt];
+            return [totalData]; //2 dimensional array.
+        }
+
+        let moneyManageStatusGroupModel = {
+            on: true,
+            // headerMenu: false,
+            indent: 10,
+            dataIndx: ['COMP_CD_NM'],
+            //summaryInTitleRow: '',
+            //summaryEdit: false,
+            //titleIndx: 'grp',
+            showSummary: [true], //to display summary at end of every group.
+            //collapsed: [false]
+        };
 
         let moneySalesMonthModel = [
             {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true},
@@ -347,9 +387,11 @@
             height: 770, collapsible: false, resizable: true, selectionModel: { type: 'row', mode: 'single'} , showTitle: false, strNoRows: g_noData, numberCell: {title: 'No.'}, scrollModel: {autoFit: true}, trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center',  editable: false},
             colModel: moneyManageStatusModel, toolbar: false,
+            groupModel: moneyManageStatusGroupModel,
+            //summaryData: calculateSummary(),
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: fnFormToJsonArrayData('money_manage_status_search_form'), recIndx: 'DEPOSIT_SEQ',
+                postData: fnFormToJsonArrayData('money_manage_status_search_form'), recIndx: 'ROW_NUM',
                 getData: function (dataJSON) {
                     let data = dataJSON.data;
                     return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
