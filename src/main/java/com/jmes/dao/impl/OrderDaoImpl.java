@@ -16,18 +16,18 @@ public class OrderDaoImpl implements OrderDao {
     SqlSessionTemplate sqlSessionTemplate;
 
     @Override
-    public void insertControlMaster(Map<String, Object> hashMap) throws SQLException {
-        sqlSessionTemplate.insert("insertControlMaster", hashMap);
+    public void createControlMaster(Map<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("createControlMaster", hashMap);
     }
 
     @Override
-    public void insertControlPart(Map<String, Object> hashMap) throws SQLException {
-        sqlSessionTemplate.insert("insertControlPart", hashMap);
+    public void createControlPart(Map<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("createControlPart", hashMap);
     }
 
     @Override
-    public void insertControlPartOrder(Map<String, Object> hashMap) throws SQLException {
-        sqlSessionTemplate.insert("insertControlPartOrder", hashMap);
+    public void createControlPartOrder(Map<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("createControlPartOrder", hashMap);
     }
 
     @Override
@@ -41,8 +41,8 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public void insertControlPartProgressList(Map<String, Object> hashMap) throws SQLException {
-        sqlSessionTemplate.insert("insertControlPartProgressList", hashMap);
+    public void createControlPartProgressList(Map<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("createControlPartProgressList", hashMap);
     }
 
     @Override

@@ -284,6 +284,7 @@
             ROW_NUMBER () OVER () AS ROWNUM,
             A.CONTROL_SEQ,
             A.CONTROL_DETAIL_SEQ,
+            A.IMG_GFILE_SEQ,
             SF_GET_DATE_F(A.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT, <!-- 납기 -->
             CASE
                 WHEN B.EMERGENCY_YN = 'Y' THEN '긴'

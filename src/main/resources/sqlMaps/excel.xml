@@ -145,46 +145,6 @@
             AND B.WORK_TYPE NOT IN ('WTP050')
     </select>
 
-    <select id="selectTransactionStatementListDataExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-            ROW_NUMBER () OVER() AS ROWNUM,
-            X.ORDER_COMP_CD,
-            X.ORDER_COMP_NM,
-            X.INVOICE_NUM,
-            X.ORDER_STAFF_SEQ,
-            X.ORDER_STAFF_NM,
-            X.COMP_CD,
-            X.COMP_NM,
-            X.PACKING_CNT,
-            SUM(X.ORDER_QTY) AS ORDER_QTY,
-            SUM(X.TOTAL_AMT) AS TOTAL_AMT,
-            X.INVOICE_TITLE,
-            SF_GET_DATE_F(X.INVOICE_DT,'YYYY','M') AS INVOICE_DT,
-            ''
-        FROM (SELECT
-                  A.ORDER_COMP_CD,
-                  SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM,
-                  A.INVOICE_NUM,
-                  A.ORDER_STAFF_SEQ,
-                  SF_GET_STAFF_NM(A.ORDER_STAFF_SEQ) AS ORDER_STAFF_NM,
-                  A.COMP_CD, <!-- 공급사 -->
-                  SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM,
-                  B.PACKING_CNT,  <!-- 품수 -->
-                  C.UNIT_FINAL_AMT,
-                  D.ORDER_QTY,
-                  C.UNIT_FINAL_AMT * D.ORDER_QTY AS TOTAL_AMT,
-                  A.INVOICE_TITLE,
-                  A.INVOICE_DT, <!-- UPDATED DT -->
-                  '' <!-- 출력일시 -->
-              FROM TBL_INVOICE A
-                  INNER JOIN TBL_INVOICE_DETAIL B ON A.INVOICE_NUM = B.INVOICE_NUM
-                  INNER JOIN TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-                  INNER JOIN TBL_CONTROL_PART_ORDER D ON C.CONTROL_SEQ = D.CONTROL_SEQ
-                                                         AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-              WHERE B.CONTROL_SEQ IN (#{CONTROL_SEQ})) X
-        GROUP BY X.INVOICE_NUM
-    </select>
-
     <select id="selectControlEstimateDetailListExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
         ROW_NUMBER () OVER () AS ROWNUM,

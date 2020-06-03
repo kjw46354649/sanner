@@ -96,6 +96,7 @@ public class OrderServiceImpl implements OrderService {
         Map<String, Object> jsonMap = null;
         ArrayList<HashMap<String, Object>> infoData = null;
         ArrayList<HashMap<String, Object>> listData = null;
+        String invoiceNum = "";
 
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<HashMap<String, Object>>() {});
@@ -108,12 +109,14 @@ public class OrderServiceImpl implements OrderService {
 
         if (infoData != null && infoData.size() > 0) {
             for (HashMap<String, Object> hashMap : infoData) {
+                invoiceNum = (String) hashMap.get("INVOICE_NUM");
                 this.orderDao.createInvoice(hashMap);
             }
         }
 
         if (listData != null && listData.size() > 0) {
             for (HashMap<String, Object> hashMap : listData) {
+                hashMap.put("INVOICE_NUM", invoiceNum);
                 this.orderDao.createInvoiceDetail(hashMap);
             }
         }
@@ -121,17 +124,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void removeInvoice(Map<String, Object> map) throws Exception {
-        String jsonObject = (String) map.get("data");
-        ObjectMapper objectMapper = new ObjectMapper();
-        ArrayList<Map<String, Object>> jsonMap = null;
-
-        if (jsonObject != null) {
-            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<Map<String, Object>>>() {});
-        }
-
-        for (Map<String, Object> hashMap : jsonMap) {
-            this.orderDao.removeInvoiceDetail(hashMap);
-            this.orderDao.removeInvoice(hashMap);
-        }
+        this.orderDao.removeInvoiceDetail(map);
+        this.orderDao.removeInvoice(map);
     }
 }

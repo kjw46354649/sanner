@@ -72,8 +72,8 @@
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001'
             AND B.OUTSIDE_YN = 'Y'
-            AND B.WORK_TYPE != 'WTP020' <!-- 가공조립 -->
-            AND NOT EXISTS (SELECT 1
+            AND B.WORK_TYPE != 'WTP050' <!-- 파트가공 -->
+            AND NOT EXISTS (SELECT *
                             FROM TBL_OUTSIDE_CLOSE
                             WHERE
                                 CONTROL_SEQ = B.CONTROL_SEQ

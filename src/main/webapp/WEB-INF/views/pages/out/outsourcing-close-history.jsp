@@ -371,7 +371,7 @@
 
         $('#OUTSIDE_CLOSE_CANCEL').on('click', function () {
             updateControlPartStatus();
-            const updateQueryList = ['orderMapper.updateControlPartStatus', 'orderMapper.insertControlPartProgress'];
+            const updateQueryList = ['orderMapper.updateControlPartStatus', 'orderMapper.createControlPartProgress'];
             const deleteQuery = 'outMapper.deleteOutsideClose';
 
             fnModifyPQGrid($outsideCloseHistoryGrid, [], updateQueryList);

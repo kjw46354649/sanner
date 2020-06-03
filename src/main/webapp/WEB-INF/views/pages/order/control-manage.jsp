@@ -1,4 +1,4 @@
-<%--
+` <%--
   Created by IntelliJ IDEA.
   User: seongjun-innodale
   Date: 2020-03-18
@@ -145,10 +145,9 @@
                 </button>
                 <button type="button" class="defaultBtn btn-120w" data-toggle="modal"
                         data-target="#TRANSACTION_STATEMENT_POPUP">거래명세표</button>
-                <button type="button" class="defaultBtn btn-120w" data-toggle="modal"
-                        data-target="#TRANSACTION_STATEMENT_LIST_POPUP">거래명세표 List</button>
+                <%--<button type="button" class="defaultBtn btn-120w" data-toggle="modal"
+                        data-target="#TRANSACTION_STATEMENT_LIST_POPUP">거래명세표 List</button>--%>
                 <div class="rightSpan">
-                    <button type="button" class="defaultBtn btn-120w" id="ESTIMATE_AUTOMATIC_CALCULATION">견적자동계산</button>
                     <button type="button" class="defaultBtn btn-120w" id="ESTIMATE_LIST_PRINT">견적List출력</button>
                     <button type="button" class="defaultBtn btn-120w" id="DRAWING_PRINT">도면 출력</button>
                     <button type="button" class="defaultBtn btn-120w" id="BARCODE_DRAWING_PRINT">바코드도면 출력</button>
@@ -285,8 +284,9 @@
         <div class="buttonWrap" style="display: block; overflow: hidden;">
             <div class="right_float">
                 <button class="popupBtn" id="TRANSACTION_STATEMENT_LABEL_PRINT">라벨 출력</button>
-                <button class="popupBtn green" id="TRANSACTION_STATEMENT_SAVE">Save</button>
-                <button class="popupBtn blue" id="TRANSACTION_STATEMENT_SAVE_EXPORT">Save & Export</button>
+                <button class="popupBtn red" id="TRANSACTION_STATEMENT_DELETE">삭제</button>
+                <button class="popupBtn green" id="TRANSACTION_STATEMENT_SAVE">저장</button>
+                <button class="popupBtn blue" id="TRANSACTION_STATEMENT_EXPORT">엑셀 출력</button>
             </div>
         </div>
 
@@ -316,7 +316,7 @@
                     </tr>
                     <tr>
                         <td>INV No.</td>
-                        <td name="INVOICE_NUM" id="INVOICE_NUM"></td>
+                        <td><input type="text" name="INVOICE_NUM" id="INVOICE_NUM" readonly></td>
                         <td>제목</td>
                         <td><input type="text" name="INVOICE_TITLE" id="INVOICE_TITLE" value="4세대 인라인 조립기"></td>
                     </tr>
@@ -333,25 +333,25 @@
     </div>
 </div>
 
-<div class="popup_container" id="TRANSACTION_STATEMENT_LIST_POPUP" style="display: none;">
-    <div class="layerPopup">
-        <h3 style="margin-bottom: 10px;">거래 명세표 List</h3>
-        <button type="button" class="pop_close">닫기</button>
+<%--<div class="popup_container" id="TRANSACTION_STATEMENT_LIST_POPUP" style="display: none;">--%>
+<%--    <div class="layerPopup">--%>
+<%--        <h3 style="margin-bottom: 10px;">거래 명세표 List</h3>--%>
+<%--        <button type="button" class="pop_close">닫기</button>--%>
 
-        <!-- 버튼 -->
-        <div class="buttonWrap" style="display: block; overflow: hidden;">
-            <div style="float: right">
-                <button class="popupBtn red" id="TRANSACTION_STATEMENT_DELETE">삭제</button>
-<%--                <button class="popupBtn" id="TRANSACTION_STATEMENT_LABEL_PRINT">출력</button>--%>
-                <button class="popupBtn" id="TRANSACTION_STATEMENT_EXPORT">Export</button>
-            </div>
-        </div>
+<%--        <!-- 버튼 -->--%>
+<%--        <div class="buttonWrap" style="display: block; overflow: hidden;">--%>
+<%--            <div style="float: right">--%>
+<%--                <button class="popupBtn red" id="TRANSACTION_STATEMENT_DELETE">삭제</button>--%>
+<%--&lt;%&ndash;                <button class="popupBtn" id="TRANSACTION_STATEMENT_LABEL_PRINT">출력</button>&ndash;%&gt;--%>
+<%--                <button class="popupBtn" id="TRANSACTION_STATEMENT_EXPORT">Export</button>--%>
+<%--            </div>--%>
+<%--        </div>--%>
 
-        <div>
-            <div id="TRANSACTION_STATEMENT_LIST_GRID"></div>
-        </div>
-    </div>
-</div>
+<%--        <div>--%>
+<%--            <div id="TRANSACTION_STATEMENT_LIST_GRID"></div>--%>
+<%--        </div>--%>
+<%--    </div>--%>
+<%--</div>--%>
 
 <div class="popup_container" id="ESTIMATE_REGISTER_POPUP" style="display: none;">
     <div class="layerPopup" style="overflow: scroll;">
@@ -361,8 +361,8 @@
         <!-- 버튼 -->
         <div class="buttonWrap" style="display: block; overflow: hidden;">
             <div class="right_float">
-                <button class="popupBtn green" id="TRANSACTION_STATEMENT_SAVE">저장</button>
-                <button class="popupBtn blue" id="TRANSACTION_STATEMENT_SAVE_EXPORT">제출</button>
+                <button class="popupBtn green" id="">저장</button>
+                <button class="popupBtn blue" id="">제출</button>
             </div>
         </div>
 
@@ -401,7 +401,7 @@
                     <td>&nbsp;</td>
                     <td class="header">견적 담당자</td>
                     <td>
-                        <select>
+                        <select name="EST_USER_ID" id="EST_USER_ID">
                             <option></option>
                         </select>
                     </td>
@@ -433,7 +433,7 @@
                 <input type="checkbox" id="estimateRegisterAutoEmailSend"><label for="estimateRegisterAutoEmailSend"> 자동메일발송 사용</label>
             </div>
             <div>
-                <textarea class="col-md-12 col-sm-12" id="EMAIL_CONTENT_TXT" name="EMAIL_CONTENT_TXT" style="height: 100px;"> </textarea>
+                <textarea class="col-md-12 col-sm-12" name="EMAIL_CONTENT_TXT" id="CONTROL_ESTIMATE_EMAIL_CONTENT_TXT" style="height: 100px;"> </textarea>
             </div>
             <h5>메일수신처</h5>
             <div id="control_estimate_register_bot_grid"></div>
@@ -514,7 +514,6 @@
             return list;
         })();
         let selectedRowIndex = [];
-        let selectedInvoiceRowIndex = []; //거래명세표 List 삭제시 사용
         let $orderManagementGrid;
         const gridId = 'CONTROL_MANAGE_GRID';
         let postData = fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM');
@@ -614,7 +613,7 @@
             },
             {title: '설계자', clsHead: 'inputChange', dataType: 'string', dataIndx: 'DESIGNER_NM', editable: true, styleHead: {'font-weight': 'bold'}},
             {title: '비고', clsHead: 'inputChange', dataType: 'string', dataIndx: 'NOTE', editable: true},
-            {title: 'INV No.<br>(거래명세No.)', clsHead: 'cantChange', width: 100, dataType: 'string', dataIndx: 'CHARGE_USER_ID'},
+            {title: 'INV No.<br>(거래명세No.)', clsHead: 'cantChange', width: 100, dataType: 'string', dataIndx: 'INVOICE_NUM'},
             {title: '프로젝트', clsHead: 'inputChange', width: 200, dataType: 'string', dataIndx: 'PROJECT_NM', editable: true},
             {title: '모듈', clsHead: 'inputChange', width: 70, dataType: 'string', dataIndx: 'MODULE_NM', editable: true},
             {title: '납품처', clsHead: 'inputChange', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM', editable: true},
@@ -647,23 +646,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let yesOrNo = fnGetCommCodeGridSelectBox('1042');
-                        let index = yesOrNo.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = yesOrNo.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-
-                        }
-
-                        return (index < 0) ? cellData : yesOrNo[index].text;
-                    }
+                    return cellData === 'Y' ? cellData : '';
                 }
             },
             {title: 'CONTROL_VER', clsHead: 'control_manage_view_close', dataType: 'string', dataIndx: 'CONTROL_VER', hidden: true},
@@ -741,23 +724,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let yesOrNo = fnGetCommCodeGridSelectBox('1042');
-                        let index = yesOrNo.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = yesOrNo.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-
-                        }
-
-                        return (index < 0) ? cellData : yesOrNo[index].text;
-                    }
+                    return cellData === 'Y' ? cellData : '';
                 }
             },
             {title: '수행<br>공장', clsHead: 'selectChange', dataType: 'string', dataIndx: 'WORK_FACTORY', editable: true,
@@ -798,23 +765,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let yesOrNo = fnGetCommCodeGridSelectBox('1042');
-                        let index = yesOrNo.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = yesOrNo.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-
-                        }
-
-                        return (index < 0) ? cellData : yesOrNo[index].text;
-                    }
+                    return cellData === 'Y' ? cellData : '';
                 }
             },
             {title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT', editable: true},
@@ -1055,7 +1006,13 @@
                 title: '외주현황', align: 'center', colModel: [
                     {title: '외주업체', datatype: 'string', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
                     {title: '외주업체', datatype: 'string', dataIndx: 'OUTSIDE_COMP_NM'},
-                    {title: '자재사급', datatype: 'string', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN'},
+                    {title: '자재사급', datatype: 'string', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+
+                            return cellData === 'Y' ? cellData : '';
+                        }
+                    },
                     {title: '외주단가', datatype: 'integer', dataIndx: 'OUTSIDE_UNIT_AMT'},
                     {title: '합계금액', datatype: 'integer', dataIndx: 'OUTSIDE_FINAL_AMT'},
                     {title: '요망납기', datatype: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
@@ -1139,53 +1096,63 @@
                 if (ui.source === 'edit') {
                     let rowIndx = ui.updateList[0].rowIndx;
                     let data = ui.updateList[0].rowData;
-                    console.log(rowIndx);
-                    console.log(data);
-                    let UNIT_MATERIAL_AMT = data.UNIT_MATERIAL_AMT == null || data.UNIT_MATERIAL_AMT == '' ? 0 : Number(data.UNIT_MATERIAL_AMT); // 소재비
-                    let UNIT_TM_AMT = data.UNIT_TM_AMT == null || data.UNIT_TM_AMT == '' ? 0 : Number(data.UNIT_TM_AMT); //TM각비
-                    let UNIT_GRIND_AMT = data.UNIT_GRIND_AMT == null || data.UNIT_GRIND_AMT == '' ? 0 : Number(data.UNIT_GRIND_AMT); // 연마비
-                    let UNIT_HEAT_AMT = data.UNIT_HEAT_AMT == null || data.UNIT_HEAT_AMT == '' ? 0 : Number(data.UNIT_HEAT_AMT); // 열처리
-                    let UNIT_SURFACE_AMT = data.UNIT_SURFACE_AMT == null || data.UNIT_SURFACE_AMT == '' ? 0 : Number(data.UNIT_SURFACE_AMT); // 표면처리
-                    let UNIT_PROCESS_AMT = data.UNIT_PROCESS_AMT == null || data.UNIT_PROCESS_AMT == '' ? 0 : Number(data.UNIT_PROCESS_AMT); // 가공비
-                    let UNIT_ETC_AMT = data.UNIT_ETC_AMT == null || data.UNIT_ETC_AMT == '' ? 0 : Number(data.UNIT_ETC_AMT); // 기타추가
-                    let ORDER_QTY = data.ORDER_QTY == null || data.ORDER_QTY == '' ? 0 : Number(data.ORDER_QTY); //발주 수량
-                    let calculateEstimateAmount = 0; // 견적금액(계산 견적단가)
-                    calculateEstimateAmount += UNIT_MATERIAL_AMT;
-                    calculateEstimateAmount += UNIT_TM_AMT;
-                    calculateEstimateAmount += UNIT_GRIND_AMT;
-                    calculateEstimateAmount += UNIT_HEAT_AMT;
-                    calculateEstimateAmount += UNIT_SURFACE_AMT;
-                    calculateEstimateAmount += UNIT_PROCESS_AMT;
-                    calculateEstimateAmount += UNIT_ETC_AMT;
+                    let newRow = ui.updateList[0].newRow;
+                    let array = ['UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'ORDER_QTY'];
+                    let estimateFlag = false;
 
-                    let unitFinalEstimateAmount = ui.updateList[0].newRow.UNIT_FINAL_EST_AMT || calculateEstimateAmount; // 최종 견적단가
-                    let estimatedTotalAmount = unitFinalEstimateAmount * ORDER_QTY; // 견적 합계 금액
-                    let unitFinalAmount = ui.updateList[0].newRow.UNIT_FINAL_AMT || estimatedTotalAmount; // 최종 공급단가
-                    let finalAmount = unitFinalAmount * ORDER_QTY;// 합계 금액
-                    let row;
-
-                    if(ui.updateList[0].newRow.UNIT_FINAL_AMT) {
-                        row = {
-                            'CALCUL_EST_UNIT_COST': calculateEstimateAmount, // 계산 견적단가
-                            // 'UNIT_FINAL_EST_AMT': unitFinalEstimateAmount, // 최종 견적단가
-                            // 'EST_TOTAL_AMOUNT': estimatedTotalAmount, // 견적 합계금액 = 최종 견적단가 * 발주수량
-                            'UNIT_FINAL_AMT': unitFinalAmount, // 최종 공급단가
-                            'FINAL_AMT': finalAmount // 합계 금액 = 최종 공급단가 * 발주수량
-                        };
-                    } else {
-                        row = {
-                            'CALCUL_EST_UNIT_COST': calculateEstimateAmount, // 계산 견적단가
-                            'UNIT_FINAL_EST_AMT': unitFinalEstimateAmount, // 최종 견적단가
-                            'EST_TOTAL_AMOUNT': estimatedTotalAmount, // 견적 합계금액 = 최종 견적단가 * 발주수량
-                            'UNIT_FINAL_AMT': unitFinalAmount, // 최종 공급단가
-                            'FINAL_AMT': finalAmount // 합계 금액 = 최종 공급단가 * 발주수량
-                        };
+                    for (let value of array) {
+                        if (newRow.hasOwnProperty(value)) {
+                            estimateFlag = true;
+                        }
                     }
-                    $orderManagementGrid.pqGrid('updateRow', {
-                        rowIndx: rowIndx,
-                        row: row,
-                        checkEditable: false
-                    });
+
+                    if (estimateFlag) {
+                        let UNIT_MATERIAL_AMT = data.UNIT_MATERIAL_AMT == null || data.UNIT_MATERIAL_AMT == '' ? 0 : Number(data.UNIT_MATERIAL_AMT); // 소재비
+                        let UNIT_TM_AMT = data.UNIT_TM_AMT == null || data.UNIT_TM_AMT == '' ? 0 : Number(data.UNIT_TM_AMT); //TM각비
+                        let UNIT_GRIND_AMT = data.UNIT_GRIND_AMT == null || data.UNIT_GRIND_AMT == '' ? 0 : Number(data.UNIT_GRIND_AMT); // 연마비
+                        let UNIT_HEAT_AMT = data.UNIT_HEAT_AMT == null || data.UNIT_HEAT_AMT == '' ? 0 : Number(data.UNIT_HEAT_AMT); // 열처리
+                        let UNIT_SURFACE_AMT = data.UNIT_SURFACE_AMT == null || data.UNIT_SURFACE_AMT == '' ? 0 : Number(data.UNIT_SURFACE_AMT); // 표면처리
+                        let UNIT_PROCESS_AMT = data.UNIT_PROCESS_AMT == null || data.UNIT_PROCESS_AMT == '' ? 0 : Number(data.UNIT_PROCESS_AMT); // 가공비
+                        let UNIT_ETC_AMT = data.UNIT_ETC_AMT == null || data.UNIT_ETC_AMT == '' ? 0 : Number(data.UNIT_ETC_AMT); // 기타추가
+                        let ORDER_QTY = data.ORDER_QTY == null || data.ORDER_QTY == '' ? 0 : Number(data.ORDER_QTY); //발주 수량
+                        let calculateEstimateAmount = 0; // 견적금액(계산 견적단가)
+                        calculateEstimateAmount += UNIT_MATERIAL_AMT;
+                        calculateEstimateAmount += UNIT_TM_AMT;
+                        calculateEstimateAmount += UNIT_GRIND_AMT;
+                        calculateEstimateAmount += UNIT_HEAT_AMT;
+                        calculateEstimateAmount += UNIT_SURFACE_AMT;
+                        calculateEstimateAmount += UNIT_PROCESS_AMT;
+                        calculateEstimateAmount += UNIT_ETC_AMT;
+
+                        let unitFinalEstimateAmount = ui.updateList[0].newRow.UNIT_FINAL_EST_AMT || calculateEstimateAmount; // 최종 견적단가
+                        let estimatedTotalAmount = unitFinalEstimateAmount * ORDER_QTY; // 견적 합계 금액
+                        let unitFinalAmount = ui.updateList[0].newRow.UNIT_FINAL_AMT || estimatedTotalAmount; // 최종 공급단가
+                        let finalAmount = unitFinalAmount * ORDER_QTY;// 합계 금액
+                        let row;
+
+                        if (ui.updateList[0].newRow.UNIT_FINAL_AMT) {
+                            row = {
+                                'CALCUL_EST_UNIT_COST': calculateEstimateAmount, // 계산 견적단가
+                                // 'UNIT_FINAL_EST_AMT': unitFinalEstimateAmount, // 최종 견적단가
+                                // 'EST_TOTAL_AMOUNT': estimatedTotalAmount, // 견적 합계금액 = 최종 견적단가 * 발주수량
+                                'UNIT_FINAL_AMT': unitFinalAmount, // 최종 공급단가
+                                'FINAL_AMT': finalAmount // 합계 금액 = 최종 공급단가 * 발주수량
+                            };
+                        } else {
+                            row = {
+                                'CALCUL_EST_UNIT_COST': calculateEstimateAmount, // 계산 견적단가
+                                'UNIT_FINAL_EST_AMT': unitFinalEstimateAmount, // 최종 견적단가
+                                'EST_TOTAL_AMOUNT': estimatedTotalAmount, // 견적 합계금액 = 최종 견적단가 * 발주수량
+                                'UNIT_FINAL_AMT': unitFinalAmount, // 최종 공급단가
+                                'FINAL_AMT': finalAmount // 합계 금액 = 최종 공급단가 * 발주수량
+                            };
+                        }
+                        $orderManagementGrid.pqGrid('updateRow', {
+                            rowIndx: rowIndx,
+                            row: row,
+                            checkEditable: false
+                        });
+                    }
                 }
             },
             cellSave: function (evt, ui) {
@@ -1345,23 +1312,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let yesOrNo = fnGetCommCodeGridSelectBox('1042');
-                        let index = yesOrNo.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = yesOrNo.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-
-                        }
-
-                        return (index < 0) ? cellData : yesOrNo[index].text;
-                    }
+                    return cellData === 'Y' ? cellData : '';
                 }
             },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM'},
@@ -1466,22 +1417,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let yesOrNo = fnGetCommCodeGridSelectBox('1042');
-                        let index = yesOrNo.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = yesOrNo.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : yesOrNo[index].text;
-                    }
+                    return cellData === 'Y' ? cellData : '';
                 }
             },
             {title: '가공납기', dataType: 'string', dataIndx: 'INNER_DUE_DT'},
@@ -1615,6 +1551,7 @@
 
                             fnPostAjax(function () {
                                 alert("<spring:message code='com.alert.default.save.success' />");
+                                $('#CONTROL_MANGE_POPUP').modal('hide');
                                 $orderRegisterGrid.pqGrid('refreshDataAndView');
                                 $orderManagementGrid.pqGrid('refreshDataAndView');
                             }, parameters, '');
@@ -1632,6 +1569,7 @@
 
                             fnPostAjax(function () {
                                 alert("<spring:message code='com.alert.default.save.success' />");
+                                $('#CONTROL_MANGE_POPUP').modal('hide');
                                 $orderRegisterGrid.pqGrid('refreshDataAndView');
                                 $orderManagementGrid.pqGrid('refreshDataAndView');
                             }, parameters, '');
@@ -1801,9 +1739,7 @@
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: {'queryId': 'dataSource.emptyGrid'},
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                }
+                getData: function (dataJSON) {return {data: dataJSON.data};}
             }
         };
         let $controlCloseRightGrid;
@@ -1816,7 +1752,7 @@
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
             {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
             {title: '변경 후 마감금액', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
-            {title: '변경 후 네고금액', dataType: 'integer', format: '#,###', dataIndx: 'NEGO_AMT'},
+            {title: '변경 후 네고금액', dataType: 'integer', format: '#,###', dataIndx: 'NEGO_AMT', editable: true},
             {
                 title: '추가 금액', align: 'center', colModel: [
                     {title: '', datatype: 'string', dataIndx: 'ADD_QTY'},
@@ -1829,7 +1765,7 @@
             collapsible: false,
             resizable: false,
             showTitle: false,
-            scrollModel: {autoFit: true},
+            // scrollModel: {autoFit: true},
             dragColumns: {enabled: false},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
             colModel: controlCloseRightColModel,
@@ -2008,22 +1944,6 @@
             $orderManagementGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
         };
 
-        const transactionStatementSave = function () {
-            let tempList = [];
-            let infoPostData = fnFormToJsonArrayData('#TRANSACTION_STATEMENT_FORM');
-            let listPostData = $transactionStatementDetailGrid.pqGrid('option', 'dataModel.data');
-            tempList.push(infoPostData);
-            let postData = {
-                'info-data': tempList,
-                'list-data': listPostData
-            };
-
-            let parameters = {'url': '/createInvoice', 'data': {data: JSON.stringify(postData)}}
-            fnPostAjax(function (data) {
-                alert("<spring:message code='com.alert.default.save.success' />");
-            }, parameters, '');
-        };
-
         const noSelectedRowAlert = function () {
             if (selectedRowIndex.length > 0) {
                 return false;
@@ -2091,9 +2011,10 @@
         });
 
         $('#CONTROL_MANAGE_SAVE').on('click', function () {
-            const updateQueryList = ['orderMapper.updateControlMaster', 'orderMapper.updateControlPart', 'orderMapper.updateControlPartOrder', 'orderMapper.createControlProgress', 'orderMapper.insertControlPartProgress'];
+            const insertQueryList = ['orderMapper.createControlPart', 'orderMapper.createControlPartOrder'];
+            const updateQueryList = ['orderMapper.updateControlMaster', 'orderMapper.updateControlPart', 'orderMapper.updateControlPartOrder', 'orderMapper.createControlProgress', 'orderMapper.createControlPartProgress'];
 
-            fnModifyPQGrid($orderManagementGrid, [], updateQueryList);
+            fnModifyPQGrid($orderManagementGrid, insertQueryList, updateQueryList);
         });
 
         $('#CONTROL_MANAGE_DELETE').on('click', function () {
@@ -2300,6 +2221,7 @@
                 let controlSeqList = [];
                 let compCdList = [];
                 let orderCompCdList = [];
+                let invoiceNumList = [];
                 let controlSeqStr = '';
 
                 for (let i = 0; i < selectedRowCount; i++) {
@@ -2309,6 +2231,7 @@
                     controlSeqList.push(rowData.CONTROL_SEQ);
                     compCdList.push(rowData.COMP_CD);
                     orderCompCdList.push(rowData.ORDER_COMP_CD);
+                    invoiceNumList.push(rowData.INVOICE_NUM);
                 }
                 // 중복제거
                 controlSeqList = controlSeqList.filter(function (element, index, array) {
@@ -2320,6 +2243,10 @@
                 orderCompCdList = orderCompCdList.filter(function (element, index, array) {
                     return array.indexOf(element) === index;
                 });
+                invoiceNumList = invoiceNumList.filter(function (element, index, array) {
+                    return array.indexOf(element) === index;
+                });
+                console.log(invoiceNumList);
 
                 if (controlSeqList.length === 0) {
                     alert('에러!');
@@ -2339,6 +2266,10 @@
                 }
                 if (orderCompCdList.length > 1) {
                     alert('선택된 대상들의 발주사와 공급사는 동일해야 합니다.');
+                    return false;
+                }
+                if (invoiceNumList.length > 1) {
+                    alert('선택된 대상들의 거래명세 번호는 동일해야 합니다.');
                     return false;
                 }
 
@@ -2368,7 +2299,7 @@
                     $('#TRANSACTION_STATEMENT_FORM #COMP_NM').text(obj.COMP_NM);
                     $('#TRANSACTION_STATEMENT_FORM #ORDER_COMP_NM').text(obj.ORDER_COMP_NM);
                     $('#TRANSACTION_STATEMENT_FORM #TOTAL_AMT').text(obj.TOTAL_AMT);
-                    $('#TRANSACTION_STATEMENT_FORM #INVOICE_NUM').text(obj.INVOICE_NUM);
+                    $('#TRANSACTION_STATEMENT_FORM #INVOICE_NUM').val(obj.INVOICE_NUM);
                 }, parameters, '');
 
                 /* 구매 담당자 */
@@ -2393,20 +2324,62 @@
         });
 
         $('#TRANSACTION_STATEMENT_SAVE').on('click', function () {
-            transactionStatementSave();
+            let tempList = [];
+            let infoPostData = fnFormToJsonArrayData('#TRANSACTION_STATEMENT_FORM');
+            let listPostData = $transactionStatementDetailGrid.pqGrid('option', 'dataModel.data');
+            tempList.push(infoPostData);
+            console.log(tempList);
+            let postData = {
+                'info-data': tempList,
+                'list-data': listPostData
+                // 'INVOICE_NUM':
+            };
+
+            let parameters = {'url': '/createInvoice', 'data': {data: JSON.stringify(postData)}}
+            fnPostAjax(function (data) {
+                alert("<spring:message code='com.alert.default.save.success' />");
+                $orderManagementGrid.pqGrid('refreshDataAndView');
+            }, parameters, '');
         });
 
-        $('#TRANSACTION_STATEMENT_SAVE_EXPORT').on('click', function () {
-            transactionStatementSave();
+        $('#TRANSACTION_STATEMENT_DELETE').on('click', function () {
+            let parameters;
+            let selectedRowCount = selectedRowIndex.length;
+            let invoiceNumList = [];
 
-            if (noSelectedRowAlert()) {
+            for (let i = 0; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+
+                invoiceNumList.push(rowData.INVOICE_NUM);
+            }
+            // 중복제거
+            invoiceNumList = invoiceNumList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+
+            if (invoiceNumList[0] === undefined) {
+                alert('삭제할 거래명세표가 없습니다.');
+                return false;
+            }
+            if (invoiceNumList.length > 1) {
+                alert('선택된 대상들의 거래명세 번호는 동일해야 합니다.');
                 return false;
             }
 
+            parameters = {'url': '/removeInvoice', 'data': {INVOICE_NUM: invoiceNumList[0]}};
+
+            fnPostAjax(function (data, callFunctionParam) {
+                console.log(data);
+                alert('삭제!');
+            }, parameters, '');
+        });
+
+        $('#TRANSACTION_STATEMENT_EXPORT').on('click', function () {
             let list = [];
             let controlSeqList = [];
             let compCdList = [];
             let orderCompCdList = [];
+            let invoiceNumList = [];
             let controlSeqStr = '';
 
             for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
@@ -2416,6 +2389,7 @@
                 controlSeqList.push(rowData.CONTROL_SEQ);
                 compCdList.push(rowData.COMP_CD);
                 orderCompCdList.push(rowData.ORDER_COMP_CD);
+                invoiceNumList.push(rowData.INVOICE_NUM);
             }
             // 중복제거
             controlSeqList = controlSeqList.filter(function (element, index, array) {
@@ -2427,6 +2401,14 @@
             orderCompCdList = orderCompCdList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
             });
+            invoiceNumList = invoiceNumList.filter(function (element, index, array) {f
+                return array.indexOf(element) === index;
+            });
+
+            if (invoiceNumList[0] === undefined) {
+                alert('엑셀출력할 거래명세표가 없습니다.');
+                return false;
+            }
 
             for (let i = 0; i < controlSeqList.length; i++) {
                 controlSeqStr += controlSeqList[i];
@@ -2439,133 +2421,8 @@
             fnReportFormToHiddenFormPageAction('transaction_statement_excel_download', '/downloadExcel');
         });
 
-
-        $('#TRANSACTION_STATEMENT_LIST_POPUP').on({
-            'show.bs.modal': function () {
-                let controlSeqList = [];
-                let controlSeqStr = '';
-
-                for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
-                    let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
-                    controlSeqList.push(rowData.CONTROL_SEQ);
-                }
-                // 중복제거
-                controlSeqList = controlSeqList.filter(function (element, index, array) {
-                    return array.indexOf(element) === index;
-                });
-
-                for (let i = 0, controlSeqListLength = controlSeqList.length; i < controlSeqListLength; i++) {
-                    controlSeqStr += controlSeqList[i];
-
-                    if (i < controlSeqListLength - 1) {
-                        controlSeqStr += ',';
-                    }
-                }
-
-                const transactionStatementListGridId = 'TRANSACTION_STATEMENT_LIST_GRID';
-                const transactionStatementListColModel = [
-                    {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
-                    {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-                    {title: 'INV No.', dataType: 'string', dataIndx: 'INVOICE_NUM'},
-                    {title: '구매담당자', dataType: 'string', dataIndx: 'ORDER_STAFF_NM'},
-                    {title: '공급사', dataType: 'string', dataIndx: 'COMP_NM'},
-                    {title: '품수', dataType: 'integer', dataIndx: 'PACKING_CNT'},
-                    {title: '수량', dataType: 'integer', dataIndx: 'ORDER_QTY'},
-                    {title: '금액합계', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
-                    {title: 'Subject', dataType: 'string', dataIndx: 'INVOICE_TITLE'},
-                    {title: 'Updated', width: 70, dataType: 'string', dataIndx: 'INVOICE_DT'},
-                    {title: '출력일시', dataType: 'date', dataIndx: ''},
-                ];
-                const transactionStatementListPostData = {'queryId': 'orderMapper.selectTransactionStatementList', 'CONTROL_SEQ': controlSeqStr};
-                const transactionStatementListObj = {
-                    height: 500,
-                    collapsible: false,
-                    resizable: false,
-                    showTitle: false,
-                    strNoRows: g_noData,
-                    scrollModel: {autoFit: true},
-                    dragColumns: {enabled: false},
-                    columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
-                    colModel: transactionStatementListColModel,
-                    dataModel: {
-                        location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                        postData: transactionStatementListPostData,
-                        getData: function (dataJSON) {return {data: dataJSON.data};}
-                    },
-                    selectChange: function (event, ui) {
-                        if (ui.selection.iCells.ranges[0] !== undefined) {
-                            selectedInvoiceRowIndex = [];
-                            let firstRow = ui.selection.iCells.ranges[0].r1;
-                            let lastRow = ui.selection.iCells.ranges[0].r2;
-
-                            if (firstRow === lastRow) selectedInvoiceRowIndex[0] = firstRow;
-                            else for (let i = firstRow; i <= lastRow; i++) selectedInvoiceRowIndex.push(i);
-                        }
-                    },
-                };
-                $transactionStatementListGrid = $('#' + transactionStatementListGridId).pqGrid(transactionStatementListObj);
-            },
-            'hide.bs.modal': function () {
-                $transactionStatementListGrid.pqGrid('destroy');
-            }
-        });
-
-        $('#TRANSACTION_STATEMENT_DELETE').on('click', function () {
-            let parameters;
-            let rowDataArray = [];
-            let selectedRowCount = selectedInvoiceRowIndex.length;
-
-            for (let i = 0; i < selectedRowCount; i++) {
-                rowDataArray[i] = $transactionStatementListGrid.pqGrid('getRowData', {rowIndx: selectedInvoiceRowIndex[i]});
-            }
-            parameters = {'url': '/removeInvoice', 'data': {data: JSON.stringify(rowDataArray)}}
-
-            fnPostAjax(function (data, callFunctionParam) {
-                if (selectedRowCount > 0) {
-                    let rowListConvert = [];
-
-                    for (let row of selectedInvoiceRowIndex) {
-                        rowListConvert.push({'rowIndx': row});
-                    }
-
-                    $transactionStatementListGrid.pqGrid('deleteRow', {rowList: rowListConvert});
-                }
-            }, parameters, '');
-        });
-
-        $('#TRANSACTION_STATEMENT_EXPORT').on('click', function () {
-            console.log(11);
-            let controlSeqList = [];
-            let controlSeqStr = '';
-
-            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
-                controlSeqList.push(rowData.CONTROL_SEQ);
-            }
-            // 중복제거
-            controlSeqList = controlSeqList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-
-            for (let i = 0, controlSeqListLength = controlSeqList.length; i < controlSeqListLength; i++) {
-                controlSeqStr += controlSeqList[i];
-
-                if (i < controlSeqListLength - 1) {
-                    controlSeqStr += ',';
-                }
-            }
-
-            $('#transaction_statement_list_excel_download > #paramData').val(controlSeqStr);
-            fnReportFormToHiddenFormPageAction('transaction_statement_list_excel_download', '/downloadExcel');
-        });
-
-        // 견적자동계산
-        $('#ESTIMATE_AUTOMATIC_CALCULATION').on('click', function () {
-            alert('개발중입니다.');
-        });
         // 견적List출력
         $('#ESTIMATE_LIST_PRINT').on('click', function () {
-            alert('개발중입니다.');
             let controlSeqList = [];
             let controlSeqStr = '';
 
@@ -2868,6 +2725,8 @@
         $('#CONTROL_CLOSE_YES').on('click', function () {
             let selectedRowCount = selectedRowIndex.length;
             let list = [];
+            let controlSeqList = [];
+            let controlSeqStr = '';
 
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
@@ -2879,9 +2738,9 @@
             let parameters = {'url': '/createMonthFinishClose', 'data': {data: JSON.stringify(list)}};
             fnPostAjax(function (data, callFunctionParam) {
                 $orderManagementGrid.pqGrid('refreshDataAndView');
-                $controlCloseLeftGrid.pqGrid('refreshDataAndView');
-                $controlCloseRightGrid.pqGrid('refreshDataAndView');
-                $('#CONTROL_CLOSE_YES').prop("disabled", true);
+                // $controlCloseLeftGrid.pqGrid('refreshDataAndView');
+                // $controlCloseRightGrid.pqGrid('refreshDataAndView');
+                $('#CONTROL_CLOSE_POPUP').modal('hide');
             }, parameters, '');
         });
 
@@ -2895,10 +2754,7 @@
 
         /* 견적등록 */
         /** 공통 코드 이외의 처리 부분 **/
-            // fnCommCodeDatasourceSelectBoxCreate($("#control_estimate_register_info_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
-            // fnCommCodeDatasourceSelectBoxCreate($("#control_estimate_register_info_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
-            // fnCommCodeDatasourceSelectBoxCreate($("#control_estimate_register_info_form").find("#EST_USER_ID"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}});
-            // fnCommCodeDatasourceSelectBoxCreate($("#control_estimate_register_info_form").find("#ORDER_STAFF_SEQ"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getCompanyStaffList'}});
+
         let estimateRegisterSelectedRowIndex;
 
         let estimateRegisterTopGrid = $("#control_estimate_register_top_grid");
@@ -3233,8 +3089,8 @@
                 $("#control_estimate_register_info_form #DTL_AMOUNT").val(list.DTL_AMOUNT);
                 $("#control_estimate_register_info_form #INSERT_DT").val(list.INSERT_DT);
                 $("#control_estimate_register_info_form #SEND_DT").val(list.SEND_DT);
-                //$("#EMAIL_CONTENT_TXT").val(list.EMAIL_CONTENT);
-                CKEDITOR.instances.EMAIL_CONTENT_TXT.setData(list.EMAIL_CONTENT);
+                //$("#CONTROL_ESTIMATE_EMAIL_CONTENT_TXT").val(list.EMAIL_CONTENT);
+                CKEDITOR.instances.CONTROL_ESTIMATE_EMAIL_CONTENT_TXT.setData(list.EMAIL_CONTENT);
                 $("#control_estimate_register_info_form #EST_SEQ").val(EST_SEQ);
 
                 $("#estimate_register_excel_download #EST_SEQ").val(EST_SEQ);
@@ -3275,8 +3131,8 @@
 
 
                 let detail_data = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data');
-                //let mail_data = $("#EMAIL_CONTENT_TXT").val();
-                let mail_data = CKEDITOR.instances.EMAIL_CONTENT_TXT.getData();
+                //let mail_data = $("#CONTROL_ESTIMATE_EMAIL_CONTENT_TXT").val();
+                let mail_data = CKEDITOR.instances.CONTROL_ESTIMATE_EMAIL_CONTENT_TXT.getData();
                 let receiver_data = estimateRegisterBotGrid.pqGrid('option', 'dataModel.data');
                 $("#control_estimate_register_info_form #ESTIMATE_DETAIL_DATA").val(JSON.stringify(detail_data));
                 $("#control_estimate_register_info_form #ESTIMATE_RECEIVER_DATA").val(JSON.stringify(receiver_data));
@@ -3392,10 +3248,15 @@
         });
 
         /* CKEDITOR 부분 */
-        CKEDITOR.replace( 'EMAIL_CONTENT_TXT', { height: 176 });
+        CKEDITOR.replace( 'CONTROL_ESTIMATE_EMAIL_CONTENT_TXT', { height: 176 });
         /* 견적등록 */
         $('#ESTIMATE_REGISTER_POPUP').on({
             'show.bs.modal': function () {
+                fnCommCodeDatasourceSelectBoxCreate($("#control_estimate_register_info_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
+                // fnCommCodeDatasourceSelectBoxCreate($("#control_estimate_register_info_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
+                fnCommCodeDatasourceSelectBoxCreate($("#control_estimate_register_info_form").find("#EST_USER_ID"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}});
+                fnCommCodeDatasourceSelectBoxCreate($("#control_estimate_register_info_form").find("#ORDER_STAFF_SEQ"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getCompanyStaffList'}});
+
                 estimateRegisterTopGrid.pqGrid({
                     height: 180,
                     dataModel: {
