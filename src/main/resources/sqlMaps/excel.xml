@@ -55,8 +55,34 @@
 
     <select id="selectOutsourcingOrderInfoExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
+            DATE_FORMAT(CURDATE(), '%Y년 %m월 %d일') AS DATE,
             SF_GET_COMP_NM(#{#{COMP_CD}) AS ORDER_COMP_NM,
-            IF(#{ORDER_STAFF_SEQ} = 'undefined', SF_GET_STAFF_NM(NULL), SF_GET_STAFF_NM(#{ORDER_STAFF_SEQ})) AS ORDER_STAFF_NM
+            IF(#{ORDER_STAFF_SEQ} = 'undefined', SF_GET_STAFF_NM(NULL), SF_GET_STAFF_NM(#{ORDER_STAFF_SEQ})) AS ORDER_STAFF_NM,
+            SUM(B.OUTSIDE_ORDER_NUM) AS ORDER_NUM_SUM,
+            SUM(B.OUTSIDE_UNIT_AMT) AS OUTSIDE_UNIT_SUM
+        FROM TBL_CONTROL A
+        INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+        INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                               AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+        LEFT OUTER JOIN TBL_OUTSIDE_REQUEST_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ
+                                                        AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+        LEFT OUTER JOIN TBL_OUTSIDE_REQUEST E ON D.OUTSIDE_REQUEST_SEQ = E.OUTSIDE_REQUEST_SEQ
+        LEFT OUTER JOIN TBL_OUTSIDE_CLOSE F ON B.CONTROL_SEQ = F.CONTROL_SEQ
+                                               AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
+        LEFT OUTER JOIN TBL_OUTSIDE_CLOSE_HISTORY G ON F.CONTROL_SEQ = G.CONTROL_SEQ
+                                                       AND F.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ
+                                                       AND F.CLOSE_MONTH = G.CLOSE_MONTH
+                                                       AND F.CLOSE_VER = G.CLOSE_VER
+        WHERE
+            (A.CONTROL_STATUS IS NULL OR A.CONTROL_STATUS IN ('ORD001', 'ORD002'))
+            AND B.WORK_TYPE != 'WTP050'
+            AND B.CONTROL_SEQ IN (${CONTROL_SEQ})
+            AND B.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})
+            AND NOT EXISTS (SELECT *
+                            FROM TBL_OUTSIDE_CLOSE
+                            WHERE
+                                CONTROL_SEQ = B.CONTROL_SEQ
+                                AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
     </select>
 
     <select id="selectOutsourcingOrderExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -72,8 +98,9 @@
             B.SIZE_TXT, <!-- 규격 -->
             B.MATERIAL_DETAIL, <!-- 소재 -->
             B.OUTSIDE_ORDER_NUM, <!-- 발주량 -->
-            B.OUTSIDE_UNIT_AMT <!-- 단가 -->
-        <!-- SUM(B.OUTSIDE_ORDER_NUM * B.OUTSIDE_UNIT_AMT) -->
+            B.OUTSIDE_UNIT_AMT, <!-- 단가 -->
+            B.OUTSIDE_UNIT_AMT * B.OUTSIDE_ORDER_NUM AS SUM_AMT, <!-- 합계 -->
+            B.OUTSIDE_NOTE <!-- 비고 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
@@ -89,8 +116,14 @@
                                                            AND F.CLOSE_VER = G.CLOSE_VER
         WHERE
             (A.CONTROL_STATUS IS NULL OR A.CONTROL_STATUS IN ('ORD001', 'ORD002'))
-            AND B.WORK_TYPE != 'WTP010'
-            AND B.OUTSIDE_ORDER_NUM = #{OUTSIDE_ORDER_NUM}
+            AND B.WORK_TYPE != 'WTP050' <!-- 파트가공 -->
+            AND B.CONTROL_SEQ IN (${CONTROL_SEQ})
+            AND B.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})
+            AND NOT EXISTS (SELECT *
+                            FROM TBL_OUTSIDE_CLOSE
+                            WHERE
+                                CONTROL_SEQ = B.CONTROL_SEQ
+                                AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
         ORDER BY
             A.CONTROL_SEQ,
             B.PART_NUM
