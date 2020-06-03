@@ -868,4 +868,8 @@
         $("#commonConfirmYesBtn").html(yesHtml);
         $("#commonConfirmNoBtn").html(noHtml);
     }
+
+    let numberWithCommas = function(numberVal) {
+        return numberVal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 </script>

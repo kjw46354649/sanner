@@ -6,17 +6,17 @@ import java.util.List;
 import java.util.Map;
 
 public interface OrderDao {
-    void insertControlMaster(Map<String, Object> hashMap) throws SQLException;
+    void createControlMaster(Map<String, Object> hashMap) throws SQLException;
 
-    void insertControlPart(Map<String, Object> hashMap) throws SQLException;
+    void createControlPart(Map<String, Object> hashMap) throws SQLException;
 
-    void insertControlPartOrder(Map<String, Object> hashMap) throws SQLException;
+    void createControlPartOrder(Map<String, Object> hashMap) throws SQLException;
 
     void createControlProgress(HashMap<String, Object> hashMap) throws SQLException;
 
     void createControlProgressList(Map<String, Object> hashMap) throws SQLException;
 
-    void insertControlPartProgressList(Map<String, Object> hashMap) throws SQLException;
+    void createControlPartProgressList(Map<String, Object> hashMap) throws SQLException;
 
     List<Map<String, Object>> selectControlCloseRightList(Map<String, Object> map) throws SQLException;
 
