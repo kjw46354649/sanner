@@ -29,8 +29,8 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
-                            <label class="label_100" for="SEL_POP_SEQ">현재위치</label>
-                             <select id="SEL_POP_SEQ" name="SEL_POP_SEQ" title="현재위치" data-required="true" class="wd_200">
+                            <label class="label_100" for="SEL_POP_POSITION">현재위치</label>
+                             <select id="SEL_POP_POSITION" name="SEL_POP_POSITION" title="현재위치" data-required="true" class="wd_200">
                                 <option value=""><spring:message code="com.form.top.all.option" /></option>
                                 <c:forEach var="vlocale" items="${HighCode.H_1009}">
                                     <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>

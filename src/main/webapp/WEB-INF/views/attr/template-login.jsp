@@ -19,8 +19,13 @@
     <link href="/resource/asset/css/common.css" rel="stylesheet" type="text/css" />
     <link href="/resource/asset/css/layout.css" rel="stylesheet" type="text/css" />
     <link href="/resource/asset/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/resource/plugins/validation_engine/css/validationEngine.jquery.css" rel="stylesheet" type="text/css" />
+
     <script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
+    <script type="text/javascript" src="/resource/plugins/validation_engine/js/jquery.validationEngine.js"></script>
+    <script type="text/javascript" src="/resource/plugins/validation_engine/js/languages/jquery.validationEngine-en.js"></script>
+
     <!-- include Head : e -->
 </head>
 <body>
@@ -29,7 +34,6 @@
     <dd><a href="#bodyWrap">본문 바로가기</a></dd>
     <dd><a href="#gnbWrap">주메뉴 바로가기</a></dd>
 </dl> -->
-<hr />
 <header>
     <div class="header login">
         <h1 class="logo"><a href="/"><span class="invisible">진성정밀 MES 시스템</span></a></h1>

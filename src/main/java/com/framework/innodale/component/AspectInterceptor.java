@@ -65,10 +65,10 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
             session.setAttribute("HighCode", CommonUtility.getCode(innodaleService.getList(hashMap)));
         }
 
-        if(session.getAttribute("LocalMenu") == null){
-            hashMap.put("queryId", "systemMapper.selectSessionMenuList");
-            session.setAttribute("LocalMenu", innodaleService.getList(hashMap));
-        }
+//        if(session.getAttribute("LocalMenu") == null){
+//            hashMap.put("queryId", "systemMapper.selectSessionMenuList");
+//            session.setAttribute("LocalMenu", innodaleService.getList(hashMap));
+//        }
 
         System.out.println("postHandle session.getId()=[" + session.getId() + "]" );
     }
