@@ -48,8 +48,6 @@
 </div>
 
 <div class="page estimate">
-    <div class="topWrap">
-    </div>
     <div class="bottomWrap full_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
@@ -198,6 +196,12 @@
         fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
         fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#EST_USER_ID"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}});
         fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#ORDER_STAFF_SEQ"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getCompanyStaffList'}});
+
+        let context = "<p style=\"text-align:left\"><strong><span style=\"font-size:11.0pt\"><span style=\"font-family:&quot;맑은 고딕&quot;\"><span style=\"color:black\">견적번호 </span></span></span><span style=\"font-size:11.0pt\"><span style=\"font-family:Calibri\"><span style=\"color:black\">:&nbsp;&nbsp;</span></span></span></strong></p>\n" +
+            "\n" +
+            "<p style=\"text-align:left\"><strong><span style=\"font-size:11.0pt\"><span style=\"font-family:&quot;맑은 고딕&quot;\"><span style=\"color:black\">제목 </span></span></span><span style=\"font-size:11.0pt\"><span style=\"font-family:&quot;Segoe UI&quot;\"><span style=\"color:black\">:&nbsp;&nbsp;</span></span></span></strong></p>\n" +
+            "\n" +
+            "<p style=\"text-align:left\"><strong><span style=\"font-size:11.0pt\"><span style=\"font-family:&quot;맑은 고딕&quot;\"><span style=\"color:black\">수신처</span></span></span> <span style=\"font-size:11.0pt\"><span style=\"font-family:Calibri\"><span style=\"color:black\">:&nbsp;</span></span></span></strong></p>\n";
 
         'use strict';
         let estimateRegisterSelectedRowIndex;
@@ -685,6 +689,7 @@
                 $("#estimate_register_info_form #INSERT_DT").val(list.INSERT_DT);
                 $("#estimate_register_info_form #SEND_DT").val(list.SEND_DT);
                 //$("#EMAIL_CONTENT_TXT").val(list.EMAIL_CONTENT);
+                context = list.EMAIL_CONTENT;
                 CKEDITOR.instances.EMAIL_CONTENT_TXT.setData(list.EMAIL_CONTENT);
                 $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
 
@@ -851,6 +856,7 @@
 
         /* CKEDITOR 부분 */
         CKEDITOR.replace( 'EMAIL_CONTENT_TXT', { height: 176 });
+        CKEDITOR.instances.EMAIL_CONTENT_TXT.setData(context);
     });
 
     function btnDisabled(status) {
