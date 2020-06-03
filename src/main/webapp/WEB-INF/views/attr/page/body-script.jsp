@@ -145,6 +145,9 @@
         var parameters;
         var gridInstance = grid.pqGrid('getInstance').grid;
         //추가 또는 수정된 값이 있으면 true
+
+        console.log(gridInstance.isDirty());
+
         if (gridInstance.isDirty()) {
             var changes = gridInstance.getChanges({format: 'byVal'});
             var QUERY_ID_ARRAY = {
