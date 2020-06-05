@@ -872,4 +872,38 @@
     let numberWithCommas = function(numberVal) {
         return numberVal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
+
+    let fnBarcodePrint = function (callFunction, formData, callFunctionParam) {
+        'use strict';
+        let callback = $.Callbacks();
+
+        $.ajax({
+            type: 'POST',
+            url: '/barcodePrint',
+            dataType: 'json',
+            //data: {data : JSON.stringify({'data': formData})},
+            data: {data : JSON.stringify(formData)},
+            success: function (data, textStatus, jqXHR) {
+                if (textStatus === 'success') {
+                    console.log('data=[' + data + ']111');
+                    console.log(data);
+                    // if (data.exception === null) {
+                    callback.add(callFunction);
+                    //callback.fire(jQuery.parseJSON(data));
+                    callback.fire(data);
+                    // } else {
+                    <%--alert('<spring:message code='com.alert.default.failText' />');--%>
+                    // }
+                } else {
+                    console.log('fail=[' + json.msg + ']111');
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
+                // if (errorThrown == 'Forbidden') {
+                //     $(this).fnHiddenFormPageAction('/');
+                // }
+            }
+        });
+    };
 </script>
