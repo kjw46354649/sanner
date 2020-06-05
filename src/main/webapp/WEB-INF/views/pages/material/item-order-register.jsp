@@ -10,36 +10,40 @@
 
 <div class="popup_container" id="item_order_register_popup" style="display: none;">
     <div class="layerPopup">
-        <h3 style="margin-bottom: 10px;">소재 주문</h3>
-        <button type="button" class="pop_close close">닫기</button>
-        <div class="buttonWrap">
-            <span class="d-inline">
-                <span class="ipu_wrap"><label class="label_80" for="item_order_register_material_order_num">소재주문번호</label><input type="text" name="" id="item_order_register_material_order_num" class="wd_200" value="" title="소재주문업체"></span>
-                <span class="right_float">
-                    <button type="button" class="defaultBtn btn-120w" id="btnItemOrderRegisterPopAdd">추가</button>
-                    <button type="button" class="defaultBtn btn-120w" id="btnItemOrderRegisterPopOrder">저장 & 제출</button>
+            <div id="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                <h3 style="margin-bottom: 10px;">소재 주문</h3>
+            </div>
+            <div class="modal-body">
+                <span class="d-inline">
+                    <span class="ipu_wrap"><label class="label_80" for="item_order_register_material_order_num">소재주문번호</label><input type="text" name="" id="item_order_register_material_order_num" class="wd_200" value="" title="소재주문업체"></span>
                 </span>
-            </span>
-        </div>
-        <br/>
-        <form class="form-inline" role="form" id="item_order_register_popup_form" name="item_order_register_popup_form">
-            <input type="hidden" id="queryId" name="queryId" value="selectItemOrderRegisterPopList"/>
-            <input type="hidden" id="CONCAT_SEQ" name="CONCAT_SEQ"/>
-            <input type="hidden" id="MATERIAL_ORDER_SEQ" name="MATERIAL_ORDER_SEQ"/>
-            <div class="tableWrap">
-                <div id="item_order_register_popup_top_grid"></div>
-                <div class="right_sort">
-                    전체 조회 건수 (Total : <span id="item_order_register_popup_top_grid_records" style="color: #00b3ee">0</span>)
+                <div class="right_float">
+                    <button type="button" class="defaultBtn radius" id="btnItemOrderRegisterPopAdd">추가</button>
+                    <button type="button" class="defaultBtn radius green" id="btnItemOrderRegisterPopSave">저장</button>
+                    <button type="button" class="defaultBtn radius" id="btnItemOrderRegisterPopSubmit">제출</button>
                 </div>
+                <br/>
+                <form class="form-inline" role="form" id="item_order_register_popup_form" name="item_order_register_popup_form">
+                    <input type="hidden" id="queryId" name="queryId" value="selectItemOrderRegisterPopList"/>
+                    <input type="hidden" id="CONCAT_SEQ" name="CONCAT_SEQ"/>
+                    <input type="hidden" id="MATERIAL_ORDER_NUM" name="MATERIAL_ORDER_NUM"/>
+                    <input type="hidden" id="MATERIAL_ORDER_SEQ" name="MATERIAL_ORDER_SEQ"/>
+                    <div class="tableWrap">
+                        <div id="item_order_register_popup_top_grid"></div>
+                        <div class="right_sort">
+                            전체 조회 건수 (Total : <span id="item_order_register_popup_top_grid_records" style="color: #00b3ee">0</span>)
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="gridWrap popupTableDiv" style="overflow: scroll">
+                        <%--<div id="item_order_register_popup_bot_grid"></div>
+                        <div class="right_sort">
+                            전체 조회 건수 (Total : <span id="item_order_register_popup_bot_grid_records" style="color: #00b3ee">0</span>)
+                        </div>--%>
+                    </div>
+                </form>
             </div>
-            <br/>
-            <div class="gridWrap popupTableDiv">
-                <%--<div id="item_order_register_popup_bot_grid"></div>
-                <div class="right_sort">
-                    전체 조회 건수 (Total : <span id="item_order_register_popup_bot_grid_records" style="color: #00b3ee">0</span>)
-                </div>--%>
-            </div>
-        </form>
     </div>
 </div>
 
@@ -270,7 +274,7 @@
             {title: '도면Rev.', dataType: 'string', dataIndx: 'DRAWING_VER ', editable: false},
             {title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ', editable: false},
             {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', editable: false},
-            {title: '요망<br>납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', width: 80, editable: false},
+            {title: '가공<br>납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', width: 80, editable: false},
             {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND',
                 editor: {
                     type: 'select',
@@ -355,6 +359,7 @@
             {title: '보유소재 충당수량', align: "center", colModel: [
                     {title: '소재<br>Size', dataType: 'string', dataIndx: 'OUT_SIZE_TXT'},
                     {title: '수량', dataType: 'string', dataIndx: 'OUT_QTY'},
+                    {title: '불출완료수량', dataType: 'string', dataIndx: 'COMPLETE_OUT_QTY'},
                     {title: '', dataType: 'string', dataIndx: '',
                         render: function(ui){
                             return '<input type="button" id="itemOrderRegisterOutReset" value="reset"/>';
@@ -496,8 +501,8 @@
                     }
                 }
             },
-            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', width: 80, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
-            {title: '요청<br>사항', dataType: 'string', dataIndx: 'REQUEST_CD', width: 120},
+            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', width: 150, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
+            {title: '요청<br>사항', dataType: 'string', dataIndx: 'REQUEST_CD', width: 200},
             {title: '비고', dataType: 'string', dataIndx: 'M_ORDER_NOTE'},
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY' , validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
             {title: '주문업체', dataType: 'string', dataIndx: 'M_COMP_CD', width: 120, validations: [{ type: 'minLen', value: 1, msg: "Required"}],
@@ -527,7 +532,7 @@
                     }
                 }
             },
-            {title: '납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', width: 80,
+            {title: '납기', dataType: 'string', dataIndx: 'HOPE_DUE_DT', width: 150,
                 editable: true, editor: { type: 'textbox', init: dateEditor } },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 120, editable: false},
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', editable: false},
@@ -670,11 +675,11 @@
         $('#item_order_register_popup').on('hide.bs.modal', function() {
             itemOrderRegisterPopTopGrid.pqGrid( "destroy" );
             itemOrderRegisterPopBotGrid.pqGrid( "destroy" );
+            $(".popupTableDiv").html('');
         });
 
         $('#item_order_register_popup').on('show.bs.modal',function() {
-            let CONCAT_SEQ = $("#item_order_register_popup_form #CONCAT_SEQ").val();
-
+            let MATERIAL_ORDER_NUM = "";
             itemOrderRegisterPopTopGrid.pqGrid({
                 width: "100%", height: 500,
                 dataModel: {
@@ -699,7 +704,7 @@
                 complete: function (event, ui) {
                     this.flex();
                     let data = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data');
-
+                    MATERIAL_ORDER_NUM = data[0].MATERIAL_ORDER_NUM;
                     $('#item_order_register_popup_top_grid_records').html(data.length);
                 },
                 cellSave: function (evt, ui) {
@@ -736,13 +741,15 @@
                 }
             });
 
-            let parameters = {'url': '/json-list', 'data': {'queryId': 'selectItemOrderRegisterNextMaterialOrderNum'}};
-            fnPostAjax(function (data, callFunctionParam) {
-                let list = data.list[0];
-                $("#item_order_register_material_order_num").val(list.MATERIAL_ORDER_NUM);
-
-                itemOrderRegisterPopOrderSheet();
-            }, parameters, '');
+            setTimeout(function(){
+                let parameters = {'url': '/json-list', 'data': {'queryId': 'selectItemOrderRegisterNextMaterialOrderNum'}};
+                fnPostAjaxAsync(function (data, callFunctionParam) {
+                    let list = data.list[0];
+                    if(MATERIAL_ORDER_NUM == '' || MATERIAL_ORDER_NUM == undefined) MATERIAL_ORDER_NUM = list.MATERIAL_ORDER_NUM;
+                    $("#item_order_register_material_order_num").val(MATERIAL_ORDER_NUM);
+                    makeInnerTable();
+                }, parameters, '');
+            }, 900)
         });
 
         /** 버튼 처리 **/
@@ -756,13 +763,38 @@
         $("#btnItemOrderRegisterOrder").on('click', function(){
             let rowDataArray = "";
             let selectedRowCount = itemOrderRegisterSelectedRowIndex.length;
+            let orderList = [];
+            let MATERIAL_ORDER_NUM = "";
             for (let i = 0; i < selectedRowCount; i++) {
                 let CONTROL_SEQ = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).CONTROL_SEQ;
                 let CONTROL_DETAIL_SEQ = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).CONTROL_DETAIL_SEQ;
                 rowDataArray += "'"+CONTROL_SEQ+""+CONTROL_DETAIL_SEQ+"',";
+
+                MATERIAL_ORDER_NUM = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).MATERIAL_ORDER_NUM;
+                orderList.push(MATERIAL_ORDER_NUM);
+
             }
             let CONCAT_SEQ = rowDataArray.substr(0 , rowDataArray.length-1);
-            $("#item_order_register_popup_form #CONCAT_SEQ").val(CONCAT_SEQ);
+
+            // 중복제거
+            orderList = orderList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+
+            if (orderList.length > 1) {
+                alert('주문번호를 확인 해 주세요.');
+                return false;
+            }
+
+            if(MATERIAL_ORDER_NUM == '' || MATERIAL_ORDER_NUM == undefined) {
+                $("#item_order_register_popup_form #queryId").val("selectItemOrderRegisterPopListSeq");
+                $("#item_order_register_popup_form #CONCAT_SEQ").val(CONCAT_SEQ);
+                $("#item_order_register_popup_form #MATERIAL_ORDER_NUM").val("");
+            }else{
+                $("#item_order_register_popup_form #queryId").val("selectItemOrderRegisterPopListNum");
+                $("#item_order_register_popup_form #CONCAT_SEQ").val("");
+                $("#item_order_register_popup_form #MATERIAL_ORDER_NUM").val(MATERIAL_ORDER_NUM);
+            }
             $("#item_order_register_popup").modal('toggle');
         });
 
@@ -770,14 +802,29 @@
             let concatSeqDataArray = "";
             let orderSeqDataArray = "";
             let selectedRowCount = itemOrderRegisterSelectedRowIndex.length;
+            let availableCancel = true;
+
             for (let i = 0; i < selectedRowCount; i++) {
                 let CONTROL_SEQ = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).CONTROL_SEQ;
                 let CONTROL_DETAIL_SEQ = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).CONTROL_DETAIL_SEQ;
                 let MATERIAL_ORDER_SEQ = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).MATERIAL_ORDER_SEQ;
+                let ORDER_STATUS = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).ORDER_STATUS;
 
                 concatSeqDataArray += "'"+CONTROL_SEQ+""+CONTROL_DETAIL_SEQ+"',";
                 orderSeqDataArray += "'"+MATERIAL_ORDER_SEQ+"',";
+
+                // 소재 입고 상태
+                if(ORDER_STATUS == 'MST004') {
+                    availableCancel = false;
+                    break;
+                }
             }
+
+            if( !availableCancel ) {
+                alert("상태를 확인 해 주세요.");
+                return false;
+            }
+
             let CONCAT_SEQ = concatSeqDataArray.substr(0 , concatSeqDataArray.length-1);
             let ORDER_SEQ = orderSeqDataArray.substr(0 , orderSeqDataArray.length-1);
 
@@ -891,21 +938,25 @@
             itemOrderRegisterPopTopGrid.pqGrid('addNodes', [{}], 0);
         });
 
-        $("#btnItemOrderRegisterPopOrder").on('click', function(){
+        $("#btnItemOrderRegisterPopSave").on('click', function(){
             let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num").val();
             let data = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data');
             let totalRecords = data.length;
             for(let tempI=0; tempI<totalRecords; tempI++){
                 itemOrderRegisterPopTopGrid.pqGrid("updateRow", { 'rowIndx': tempI , row: { 'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM } });
             }
-            let itemOrderRegisterInsertUpdateQueryList = ['insertUpdateItemOrderRegisterPopSave','updateItemOrderRegister'];
+            let itemOrderRegisterInsertUpdateQueryList = ['insertUpdateItemOrderRegisterPopSave'];
             fnModifyPQGrid(itemOrderRegisterPopTopGrid, itemOrderRegisterInsertUpdateQueryList, itemOrderRegisterInsertUpdateQueryList);
 
-            //Popup table 생성
-            makeInnerTable();
+            setTimeout(function(){
+                //Popup table 생성
+                makeInnerTable();
+            }, 900)
+        });
+
+        $("#btnItemOrderRegisterPopSubmit").on('click', function(){
             //메일 여부
             itemOrderRegisterPopMail();
-
         });
 
         function makeMailInnerTable(list)
@@ -944,9 +995,12 @@
                 ref_key += "'"+material_order_seq+"',";
 
             }
+
             table += "</table>";
+            return table;
         }
-        function makeInnerTable(list)
+
+        function makeInnerTable()
         {
             let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num").val();
 
@@ -961,30 +1015,45 @@
                 'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM
             };
             let parameters = {'url': '/json-list', 'data': parameter};
-            fnPostAjax(function (data, callFunctionParam) {
+            fnPostAjaxAsync(function (data, callFunctionParam) {
                 let list = data.list;
 
-                console.log(list);
-                table += "<table style='border-spacing:0; width:100%;'><tr>";
-                table += "<td style='"+ st_center + font_header +"'>업체</td>";
-                for(var i=0; i<list.length; i++) {
-                    table += "<td style='"+ st_center + font_header +"'>"	+ list[i].MATERIAL_COMP_NM +"</td>";
+                if(list.length > 0 ){
+                    table += "<table style='border-spacing:0; width:100%;'><tr>";
+                    table += "<td style='"+ st_center + font_header +"'>업체</td>";
+                    for(var i=0; i<list.length; i++) {
+                        table += "<td style='"+ st_center + font_header +"'>"	+ list[i].MATERIAL_COMP_NM +"</td>";
+                    }
+                    table += "</tr>";
+                    table += "<tr>";
+                    table += "<td style='"+ st_center + font_header +"'>담당자</td>";
+                    for(var j=0; j<list.length; j++) {
+                        table += "<td style='"+ st_center + font_header +"'>"	+ list[j].MATERIAL_COMP_EMAIL +"</td>";
+                    }
+                    table += "</tr>";
+                    table += "<tr>";
+                    table += "<td style='"+ st_center + font_context +"'>내용</td>";
+                    for(var h=0; h<list.length; h++){
+                        table += "<td style='"+ st_center + font_context +"'>" 	+ list[h].CONTENTS +"</td>";
+                    }
+                    table += "</tr></table>";
+                }else{
+                    table = "<table style='border-spacing:0; width:100%;'>";
+                    table += "<tr><td style='"+ st_center + font_header +"'>업체</td>";
+                    table += "<td style='"+ st_center + font_header +"'></td>";
+                    table += "<td style='"+ st_center + font_header +"'></td>";
+                    table += "<td style='"+ st_center + font_header +"'></td></tr>";
+                    table += "<tr><td style='"+ st_center + font_header +"'>담당자</td>";
+                    table += "<td style='"+ st_center + font_header +"'></td>";
+                    table += "<td style='"+ st_center + font_header +"'></td>";
+                    table += "<td style='"+ st_center + font_header +"'></td></tr>";
+                    table += "<tr><td style='"+ st_center + font_context +"'>내용</td>";
+                    table += "<td style='"+ st_center + font_context +"'></td>";
+                    table += "<td style='"+ st_center + font_context +"'></td>";
+                    table += "<td style='"+ st_center + font_context +"'></td></tr>";
+                    table += "</table>";
                 }
-                table += "</tr>";
-                table += "<tr>";
-                table += "<td style='"+ st_center + font_header +"'>담당자</td>";
-                for(var j=0; j<list.length; j++) {
-                    table += "<td style='"+ st_center + font_header +"'>"	+ list[j].MATERIAL_COMP_EMAIL +"</td>";
-                }
-                table += "</tr>";
-                table += "<tr>";
-                table += "<td style='"+ st_center + font_context +"'>내용</td>";
-                for(var h=0; h<list.length; h++){
-                    table += "<td style='"+ st_center + font_context +"'>" 	+ list[h].CONTENTS +"</td>";
-                }
-                table += "</tr></table>";
 
-                console.log(table);
                 $(".popupTableDiv").html(table);
             }, parameters, '');
         }
@@ -992,80 +1061,105 @@
         function itemOrderRegisterPopMail() {
             let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num").val();
 
-            //Confirm Box
-            let headHtml = "Information", bodyHtml ="", yseBtn="예", noBtn="아니오";
-            bodyHtml =
-                '<h4>\n' +
-                '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
-                '<span>주문서를 발송하시겠습니까?</span>' +
-                '</h4>';
+            let list = new Array() ;
+            let rowCount = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length;
+            for (let i = 0; i < rowCount; i++) {
+                let rowData = itemOrderRegisterPopTopGrid.pqGrid('getRowData', {rowIndx: i});
+                list.push(rowData);
+            }
 
-            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-            let itemOrderRegisterPopSubmitConfirm = function(callback) {
-                commonConfirmPopup.show();
-                commonConfirmPopup.css("z-index", 99999999);
-                $("#commonConfirmYesBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                    callback(true);
-                    return;
-                });
-                $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                    itemOrderRegisterPopOrderSheet();
-                });
+            let changes = {
+                'addList': list,
+                'updateList': list
             };
-            itemOrderRegisterPopSubmitConfirm(function(confirm){
-                if(confirm) {
-                    let parameter = {
-                        'queryId': 'selectItemOrderRegisterPopMailTable',
-                        'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM
-                    };
-                    let parameters = {'url': '/json-list', 'data': parameter};
-                    fnPostAjax(function (data, callFunctionParam) {
-                        let list = data.list;
-                        let compareCd = list[0].MATERIAL_COMP_CD;
-                        let compCd = "";
-                        let tableList = [];
-                        let innerTable = "";
+            let QUERY_ID_ARRAY = {
+                'insertQueryId': ['insertUpdateItemOrderRegisterPopStatus'],
+                'updateQueryId': ['updateItemOrderRegisterPartStatus'],
+            };
+            changes.queryIdList = QUERY_ID_ARRAY;
+            let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
+            fnPostAjax(function (data, callFunctionParam) {
+                //Confirm Box
+                let headHtml = "Information", bodyHtml ="", yseBtn="예", noBtn="아니오";
+                bodyHtml =
+                    '<h4>\n' +
+                    '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
+                    '<span>주문서를 발송하시겠습니까?</span>' +
+                    '</h4>';
 
-                        for(var i=0; i<list.length; i++) {
-                            compCd = list[i].MATERIAL_COMP_CD;
-                            if(i == list.length-1 || compareCd != compCd) {
-                                innerTable = makeMailInnerTable(tableList);
-                                let parameter = {
-                                    'queryId': 'insertItemOrderRegisterPopSubmitMail',
-                                    'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
-                                    'MATERIAL_COMP_CD': compareCd,
-                                    'INNER_TABLE': innerTable
-                                };
-                                let parameters = {'url': '/json-create', 'data': parameter};
-
-                                tableList = [];
-                                fnPostAjaxAsync(function (data, callFunctionParam) {
-                                }, parameters, '');
-
-                                compareCd = compCd;
-                            }
-                            tableList.push(list[i]);
-                        }
-
-                        innerTable = makeMailInnerTable(tableList);
+                fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+                let itemOrderRegisterPopSubmitConfirm = function(callback) {
+                    commonConfirmPopup.show();
+                    commonConfirmPopup.css("z-index", 99999999);
+                    $("#commonConfirmYesBtn").unbind().click(function (e) {
+                        e.stopPropagation();
+                        commonConfirmPopup.hide();
+                        callback(true);
+                        return;
+                    });
+                    $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                        e.stopPropagation();
+                        commonConfirmPopup.hide();
+                        itemOrderRegisterPopOrderSheet();
+                    });
+                };
+                itemOrderRegisterPopSubmitConfirm(function(confirm){
+                    if(confirm) {
                         let parameter = {
-                            'queryId': 'insertItemOrderRegisterPopSubmitMail',
-                            'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
-                            'MATERIAL_COMP_CD': compareCd,
-                            'INNER_TABLE': innerTable
+                            'queryId': 'selectItemOrderRegisterPopMailTable',
+                            'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM
                         };
-                        let parameters = {'url': '/json-create', 'data': parameter};
+                        let parameters = {'url': '/json-list', 'data': parameter};
                         fnPostAjaxAsync(function (data, callFunctionParam) {
-                            itemOrderRegisterPopOrderSheet();
-                        }, parameters, '');
-                    }, parameters, '');
+                            let list = data.list;
+                            let compareCd = list[0].MATERIAL_COMP_CD;
+                            let compCd = "";
+                            let tableList = [];
+                            let innerTable = "";
 
-                }
-            });
+                            for(var i=0; i<list.length; i++) {
+                                compCd = list[i].MATERIAL_COMP_CD;
+                                if(i == list.length-1 || compareCd != compCd) {
+                                    innerTable = makeMailInnerTable(tableList);
+                                    let parameter = {
+                                        'queryId': 'insertItemOrderRegisterPopSubmitMail',
+                                        'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
+                                        'MATERIAL_COMP_CD': compareCd,
+                                        'INNER_TABLE': innerTable
+                                    };
+                                    let parameters = {'url': '/json-create', 'data': parameter};
+
+                                    tableList = [];
+                                    fnPostAjaxAsync(function (data, callFunctionParam) {
+                                    }, parameters, '');
+
+                                    compareCd = compCd;
+                                }
+                                tableList.push(list[i]);
+                            }
+
+                            innerTable = makeMailInnerTable(tableList);
+                            let parameter = {
+                                'queryId': 'insertItemOrderRegisterPopSubmitMail',
+                                'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
+                                'MATERIAL_COMP_CD': compareCd,
+                                'INNER_TABLE': innerTable
+                            };
+                            let parameters = {'url': '/json-create', 'data': parameter};
+                            fnPostAjaxAsync(function (data, callFunctionParam) {
+                                let parameter = {
+                                    'queryId': 'updateItemOrderRegisterOrderStatus',
+                                    'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
+                                };
+                                let parameters = {'url': '/json-update', 'data': parameter};
+                                fnPostAjaxAsync(function (data, callFunctionParam) {
+                                    itemOrderRegisterPopOrderSheet();
+                                }, parameters, '');
+                            }, parameters, '');
+                        }, parameters, '');
+                    }
+                });
+            }, parameters, '');
         }
 
         function itemOrderRegisterPopOrderSheet() {

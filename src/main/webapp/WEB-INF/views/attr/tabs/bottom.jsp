@@ -62,7 +62,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
                 <h2 class="headerTitle_01">다운로드</h2>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="commonFileUpdatePop">
                 <form class="" role="form" id="common_file_download_form" name="common_file_download_form">
                     <input type="hidden" id="GFILE_SEQ" name="GFILE_SEQ" value="">
                     <div id="common_file_download_grid" style="margin:auto;"></div>
@@ -489,12 +489,44 @@
 
     /** 파일 다운로드 시작 스크립트 **/
     let commonFileDownloadModel =  [
-        {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 1, minWidth: 70},
-        {title: 'FILE_SEQ', dataType: 'string', dataIndx: 'FILE_SEQ', hidden: true, width: 1, minWidth: 70},
-        {title: '파일명', dataType: 'string', dataIndx: 'NEW_DRAWING_NUM', hidden: true, width: 1, minWidth: 70},
+        {title: 'GFILE_SEQ', dataType: 'string', dataIndx: 'GFILE_SEQ', hidden: true},
+        {title: '파일명', dataType: 'string', dataIndx: 'ORGINAL_FILE_NM', width: 200, minWidth: 70},
         {title: '용량', dataType: 'string', dataIndx: 'SEQ', hidden: true, width: 1, minWidth: 70},
         {title: '파일 타입', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 1, minWidth: 70},
-        {title: '다운로드', align: 'center', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 155, minWidth: 100}
+        {title: '다운로드', align: 'center', dataType: 'string', dataIndx: 'FILE_SEQ', width: 155, minWidth: 100,
+            render: function (ui) {
+                if (ui.cellData) return '<span id="downloadSingleFile" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+            },
+            postRender: function (ui) {
+                let grid = this,
+                    $cell = grid.getCell(ui);
+                $cell.find("#downloadSingleFile").bind("click", function () {
+                    let rowData = ui.rowData;
+                    alert(rowData.FILE_SEQ);
+                    fnSingleFileDownloadFormPageAction(rowData.FILE_SEQ);
+                });
+            }
+        },
+        {title: '삭제', align: 'center', dataType: 'string', dataIndx: 'FILE_SEQ', width: 155, minWidth: 100,
+            render: function (ui) {
+                if (ui.cellData) return '<span id="deleteSingleFile" class="ui-icon ui-icon-close" style="cursor: pointer"></span>'
+            },
+            postRender: function (ui) {
+                let grid = this;
+                let $cell = grid.getCell(ui);
+                $cell.find('#deleteSingleFile').on('click', function (event) {
+                    let rowData = ui.rowData;
+                    let parameter = {
+                        'queryId': 'common.deleteFileKey',
+                        'FILE_SEQ': rowData.FILE_SEQ
+                    };
+                    let parameters = {'url': '/json-remove', 'data': parameter};
+                    fnPostAjaxAsync(function(data, callFunctionParam){
+                        $commonFileDownloadGrid.pqGrid('refreshDataAndView');
+                    }, parameters, '');
+                });
+            }
+        }
     ];
 
     let commonFileDownloadObj = {
@@ -507,12 +539,17 @@
         dataModel: {
             location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
             postData: {queryId: 'common.selectGfileFileListInfo', 'GFILE_SEQ': $("#common_file_download_form").find("#GFILE_SEQ").val()},
-            recIndx: 'ROWNUM',
+            recIndx: 'FILE_SEQ',
             getData: function (dataJSON) {
                 return {data: dataJSON.data || []};
             }
         },
         dataReady: function (event, ui) {
+            if($commonFileDownloadGrid == undefined){
+                $commonFileDownloadGrid = $('#' + commonFileDownloadGridId).pqGrid(commonFileDownloadObj);
+                $commonFileDownloadGrid.pqGrid('option', 'colModel', commonFileDownloadModel);
+                $commonFileDownloadGrid.pqGrid('refresh');
+            }
             let data = $commonFileDownloadGrid.pqGrid('option', 'dataModel.data');
             let totalRecords = data.length;
             $('#filedownloadTotalCount').html(totalRecords);
@@ -520,6 +557,9 @@
     };
 
     commonFileDownloadPopup.on('show.bs.modal',function(e) {
+        if($commonFileDownloadGrid != undefined){
+            $commonFileDownloadGrid.pqGrid('destroy');
+        }
         $commonFileDownloadGrid = $('#' + commonFileDownloadGridId).pqGrid(commonFileDownloadObj);
         $commonFileDownloadGrid.pqGrid('option', 'colModel', commonFileDownloadModel);
         $commonFileDownloadGrid.pqGrid('refresh');
@@ -531,9 +571,56 @@
 
     let commonFileDownloadPopupCall = function(GfileKey){
         $("#common_file_download_form").find("#GFILE_SEQ").val(GfileKey);
-        commonCadFileAttachPopup.modal('show');
+        commonFileDownloadPopup.modal('show');
     };
     /** 파일 다운로드 종료 스크립트 **/
+
+    /** 파일 업로드 스크립트 **/
+    let uploadControlFiles = [];
+
+    let commonFileUpdatePop = $("#commonFileUpdatePop");
+    let commonFileUploadGetData = commonFileUpdatePop.on("dragenter", function(e) {  //드래그 요소가 들어왔을떄
+        $(this).addClass('drag-over');
+    }).on("dragleave", function(e) {  //드래그 요소가 나갔을때
+        $(this).removeClass('drag-over');
+    }).on("dragover", function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+    }).on('drop', function(e) {  //드래그한 항목을 떨어뜨렸을때
+        e.preventDefault();
+        $(this).removeClass('drag-over');
+        let cadFiles = e.originalEvent.dataTransfer.files; //드래그&드랍 항목
+        for(let i = 0; i < cadFiles.length; i++) {
+            let file = cadFiles[i];
+            uploadControlFiles.push(file); //업로드 목록에 추가
+        }
+        if (uploadControlFiles.length > 0) { // file upload
+            let formData = new FormData();
+            $.each(uploadControlFiles, function(i, file) {
+                if(file.upload != 'disable') //삭제하지 않은 이미지만 업로드 항목으로 추가
+                    formData.append('file', file, file.name);
+            });
+            formData.append('queryId', $('#common_cad_file_attach_form').find("#queryId").val() + "_select");
+            uploadControlFiles = [];    // 파일 업로드 정보 초기화
+            $commonFileDownloadGrid.pqGrid('refreshDataAndView');
+            fnFormDataFileUploadAjax(function (data) {
+                let fileUploadList = data.fileUploadList;
+                if (fileUploadList.length <= 0) {
+                    alert("주문 정보가 없습니다. 주문 정보를 확인 해 주세요.");
+                    return false;
+                }
+                $commonFileDownloadGrid.pqGrid('option', {editable: true});
+                $commonFileDownloadGrid.pqGrid('addNodes', fileUploadList, 0);
+                $commonFileDownloadGrid.pqGrid('option', {editable: false});   // 수정 여부를 false 처리 한다.
+                $commonFileDownloadGrid.pqGrid('refresh');
+                let GFILE_SEQ = fileUploadList[0].GFILE_SEQ;
+                $("#common_file_download_form").find("#GFILE_SEQ").val(GFILE_SEQ);
+
+                $(this).parent().find()
+            }, formData, '');
+        }
+    });
+    /** 파일 업로드 스크립트 종료 **/
 
     function fn_getFileSize(fileSize){
         var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];

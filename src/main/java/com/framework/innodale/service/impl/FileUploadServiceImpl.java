@@ -41,6 +41,8 @@ public class FileUploadServiceImpl implements FileUploadService {
         ArrayList<HashMap<String, Object>> resultList = new ArrayList<HashMap<String, Object>>();
         Iterator<String> itr = (Iterator<String>)request.getFileNames();
 
+        int fileSeq = 0;
+
         if(itr.hasNext()) {
 
             List<MultipartFile> fileList = request.getFiles(itr.next());
@@ -62,16 +64,23 @@ public class FileUploadServiceImpl implements FileUploadService {
                 fileMap.put("FILE_EXT", extName);
                 fileMap.put("FILE_SIZE", multipartFile.getSize());
 
-                if (!hashMap.containsKey("GFILE_SEQ") || "".equals(String.valueOf(hashMap.get("GFILE_SEQ")))) {
-                    fileMap.put("GFILE_SEQ", "");                   // GFILE 신규 등록
-                    fileMap.put("queryId", "common.insertFileGroup");
-                    innodaleDao.update(fileMap);
-                } else {
-                    fileMap.put("GFILE_SEQ", hashMap.get("GFILE_SEQ"));                 // 기존 파일 삭제
-                    fileMap.put("queryId", "common.deleteGFileKey");
-                    innodaleDao.create(fileMap);
+                if(fileSeq != 0) {
+                    fileMap.put("GFILE_SEQ", fileSeq);
+                }else {
+                    if (!hashMap.containsKey("GFILE_SEQ") || "".equals(String.valueOf(hashMap.get("GFILE_SEQ")))) {
+                        fileMap.put("GFILE_SEQ", "");                   // GFILE 신규 등록
+                        fileMap.put("queryId", "common.insertFileGroup");
+                        innodaleDao.update(fileMap);
+
+                        fileSeq = (int) fileMap.get("GFILE_SEQ");
+                    } else {
+                        fileMap.put("GFILE_SEQ", hashMap.get("GFILE_SEQ"));                 // 기존 파일 삭제
+                        fileMap.put("queryId", "common.deleteGFileKey");
+                        innodaleDao.create(fileMap);
+                    }
                 }
 
+                fileMap.put("FILE_SEQ", "");
                 fileMap.put("queryId", "common.insertFile");    // 신규 파일 등록
                 innodaleDao.create(fileMap);
 
@@ -83,6 +92,7 @@ public class FileUploadServiceImpl implements FileUploadService {
         model.addAttribute("message",      "업로드를 완료 하였습니다.");
 
         model.addAttribute("fileUploadList", resultList);
+        model.addAttribute("GFILE_SEQ", fileSeq);
     }
 
     @Override

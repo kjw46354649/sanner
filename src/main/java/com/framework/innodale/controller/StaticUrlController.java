@@ -140,19 +140,19 @@ public class StaticUrlController {
 
     /**
      * 하나의 gfile에 여러개의 fileseq로 구성될때 fileSeq로 다운로드 처리
-     * @param GFILE_SEQ
+     * @param FILE_SEQ
      * @param req
      * @param res
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/downloadfile/{gfileSeq}")
-    public ModelAndView downloadFileView(@PathVariable("gfileSeq") String GFILE_SEQ, HttpServletRequest req, HttpServletResponse res) throws Exception {
+    public ModelAndView downloadFileView(@PathVariable("gfileSeq") String FILE_SEQ, HttpServletRequest req, HttpServletResponse res) throws Exception {
 
         ModelAndView modelAndView = new ModelAndView();
 
         HashMap<String, Object> fileInfo = new HashMap<String, Object>();
-        fileInfo.put("GFILE_SEQ", GFILE_SEQ);
+        fileInfo.put("FILE_SEQ", FILE_SEQ);
         fileInfo.put("queryId", "common.selectFileSingleInfo");
         modelAndView.setViewName("fileDownloadView");
         modelAndView.addObject("fileInfo", innodaleService.getInfo(fileInfo));

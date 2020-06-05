@@ -36,11 +36,14 @@
     </update>
 
     <insert id="insertFile" parameterType="java.util.HashMap">
+        <selectKey keyProperty="FILE_SEQ" resultType="int" order="BEFORE">
+            SELECT NEXTVAL(SEQ_FILE) FROM DUAL
+        </selectKey>
         INSERT INTO jmes.TBL_FILE
         (FILE_SEQ, FILE_NM, FILE_PATH, TIME_PATH, ORGINAL_FILE_NM, FILE_TYPE, FILE_EXT, FILE_SIZE,
             GFILE_SEQ, INSERT_ID)
         VALUES
-        (NEXTVAL(SEQ_FILE), #{FILE_NM}, #{FILE_PATH}, #{TIME_PATH}, #{ORGINAL_FILE_NM}, #{FILE_TYPE}, #{FILE_EXT}, #{FILE_SIZE},
+        (#{FILE_SEQ}, #{FILE_NM}, #{FILE_PATH}, #{TIME_PATH}, #{ORGINAL_FILE_NM}, #{FILE_TYPE}, #{FILE_EXT}, #{FILE_SIZE},
             #{GFILE_SEQ}, 'admin')
     </insert>
 

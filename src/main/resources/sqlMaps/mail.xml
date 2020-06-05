@@ -62,20 +62,20 @@
         (
             MAIL_BOX_SEQ, TITLE, CONTEXT,
             SEND_NAME, SEND_EMAIL, RECV_EMAIL,
-            CC_EMAIL, HCC_EMAIL, GFILE_SEQ, SEND_DT, MAIL_TYPE,
-            STATUS, SKEY, ERROR_NOTE, DEL_YN, TEMPLATE_SEQ,
-            REF_KEY, REF_01, REF_02, REF_03, REF_04, REF_05,
-            INSERT_DT, INSERT_ID
+            CC_EMAIL, HCC_EMAIL, GFILE_SEQ,
+            STATUS, DEL_YN, TEMPLATE_SEQ,
+            REF_KEY, INSERT_DT, INSERT_ID
         )
         SELECT
-            NEXTVAL(SEQ_MAIL), TEMPLATE_TITLE,  TEMPLATE_CONTENT,
-            SEND_NAME, SEND_EMAIL, RECV_EMAIL,
-            CC_EMAIL, '', #{GFILE_SEQ}, NOW(), #{MAIL_TYPE},
-            'EMSTS001', #{SKEY}, #{ERROR_NOTE}, 'N', TEMPLATE_SEQ,
-            #{REF_KEY}, #{REF_01}, #{REF_02}, #{REF_03}, #{REF_04}, #{REF_05},
-            NOW(), #{INSERT_ID}
-        FROM TBL_MAIL_TEMPLATE
-        WHERE TEMPLATE_SEQ = 0
+            #{MAIL_BOX_SEQ}, A.EMAIL_TITLE, A.EMAIL_CONTENT,
+            B.COMP_NM, B.COMP_EMAIL, C.COMP_EMAIL,
+            '' AS CC_EMAIL, '' AS HCC_EMAIL, A.ETC_GILE_SEQ,
+            'EMSTS001', 'N', 0,
+            A.EST_SEQ, NOW(), #{USER_ID}
+        FROM jmes.TBL_ESTIMATE A
+            INNER JOIN TBL_COMPANY B ON A.COMP_CD = B.COMP_CD
+            INNER JOIN TBL_COMPANY C ON A.ORDER_COMP_CD = C.COMP_CD
+        WHERE EST_SEQ = #{EST_SEQ}
     </insert>
 
     <insert id="insertItemOrderRegisterPopSubmitMail" parameterType="java.util.HashMap">

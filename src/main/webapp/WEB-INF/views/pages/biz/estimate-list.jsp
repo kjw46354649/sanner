@@ -93,8 +93,8 @@
                     <button type="button" class="smallBtn yellow">견적정보</button>
                     <button type="button" class="smallBtn yellow">금액정보</button>
                     <span class="slt_wrap namePlusSlt right_float">
-<%--                        <label for="selEstimateListExcel">견적서 추출</label>--%>
-<%--                        <select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출"></select>--%>
+                        <label for="selEstimateListExcel">견적서 추출</label>
+                        <select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출"></select>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateListExcel">견적서 출력</button>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateListDrawView">도면 보기</button>
                     </span>
@@ -232,7 +232,46 @@
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 170 } ,
             /*{title: '', dataType: 'string', dataIndx: 'DRAWING_YN', width: 30 } ,*/
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', validations: [{ type: 'minLen', value: 1, msg: "Required"}], width: 100 } ,
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', width: 50 } ,
+            {
+                title: 'Part', clsHead: 'cantChange', dataType: 'integer', dataIndx: 'PART_NUM',
+                render: function (ui) {
+                    if (ui.rowData.WORK_TYPE === 'WTP020') {
+                        return '<span class="ui-icon ui-icon-circle-plus" id="estimateListPartNumPlus"></span>';
+                    }
+                },
+                postRender: function (ui) {
+                    let grid = this;
+                    let $cell = grid.getCell(ui);
+
+                    $cell.find("#estimateListPartNumPlus").on('click', function (event) {
+                        let rowData = fnCloneObj(ui.rowData);
+                        let data = estimateMasterBotGrid.pqGrid('option', 'dataModel.data'), totalRecords = data.length;
+                        let newPartNum = 0, lastRowIndex = 0, newRowData;
+                        let SEQ = "";
+
+                        for (let i = 0; i < totalRecords; i++) {
+                            if (data[i].SEQ === rowData.SEQ) {
+                                SEQ = data[i].SEQ;
+                                newPartNum++;
+                                lastRowIndex = data[i].pq_ri;
+                            }
+                        }
+
+                        newRowData = estimateMasterBotGrid.pqGrid('getRowData', {rowIndx: lastRowIndex});
+                        newRowData = fnCloneObj(newRowData);
+                        newRowData.ROWNUM = totalRecords + 1;
+                        newRowData.PART_NUM = newPartNum;
+                        newRowData.PARENT_SEQ = SEQ;
+
+                        estimateMasterBotGrid.pqGrid('addRow', {
+                            newRow: newRowData,
+                            rowIndx: lastRowIndex + 1,
+                            checkEditable: false
+                        });
+                        event.preventDefault();
+                    });
+                }
+            } ,
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 100 } ,
             {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
             {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: true,
@@ -365,9 +404,90 @@
             },
             {title: '소재 비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE' },
             {title: '소재마감', align: "center", colModel:[
-                    {title: 'TM각비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_TM', width: 70 },
-                    {title: '연마비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND', width: 70 },
-                    {title: '열처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', width: 70 },
+                    {title: 'TM각비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_TM', width: 70,
+                        editor: {
+                            type: 'select',
+                            valueIndx: "value",
+                            labelIndx: "text",
+                            options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010'),
+                        },
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+
+                            if (cellData === '') {
+                                return '';
+                            } else {
+                                let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
+                                let index = workFactory.findIndex(function (element) {
+                                    return element.text === cellData;
+                                });
+
+                                if (index < 0) {
+                                    index = workFactory.findIndex(function (element) {
+                                        return element.value === cellData;
+                                    });
+                                }
+
+                                return (index < 0) ? cellData : workFactory[index].text;
+                            }
+                        }
+                    },
+                    {title: '연마비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND', width: 70,
+                        editor: {
+                            type: 'select',
+                            valueIndx: "value",
+                            labelIndx: "text",
+                            options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020'),
+                        },
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+
+                            if (cellData === '') {
+                                return '';
+                            } else {
+                                let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
+                                let index = workFactory.findIndex(function (element) {
+                                    return element.text === cellData;
+                                });
+
+                                if (index < 0) {
+                                    index = workFactory.findIndex(function (element) {
+                                        return element.value === cellData;
+                                    });
+                                }
+
+                                return (index < 0) ? cellData : workFactory[index].text;
+                            }
+                        }
+                    },
+                    {title: '열처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', width: 70,
+                        editor: {
+                            type: 'select',
+                            valueIndx: "value",
+                            labelIndx: "text",
+                            options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030'),
+                        },
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+
+                            if (cellData === '') {
+                                return '';
+                            } else {
+                                let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
+                                let index = workFactory.findIndex(function (element) {
+                                    return element.text === cellData;
+                                });
+
+                                if (index < 0) {
+                                    index = workFactory.findIndex(function (element) {
+                                        return element.value === cellData;
+                                    });
+                                }
+
+                                return (index < 0) ? cellData : workFactory[index].text;
+                            }
+                        }
+                    },
                 ]},
             {title: '상세 가공요건', align: "center", colModel:[
                     {title:'선반', dataType: 'string', dataIndx: 'DETAIL_LATHE'},
@@ -509,8 +629,11 @@
             },
             rowSelect: function( event, ui ) {
                 //if(ui.addList.length > 0 ) {
+                btnDisabled(ui.addList[0].rowData.EST_STATUS);
+
                 let EST_SEQ = ui.addList[0].rowData.EST_SEQ;
                 let EST_VER = ui.addList[0].rowData.EST_VER;
+
                 $("#estimate_master_hidden_form #EST_SEQ").val(EST_SEQ);
                 $("#estimate_master_hidden_form #EST_VER").val(EST_VER);
                 $("#common_excel_form #paramData").val(EST_SEQ);
@@ -834,6 +957,17 @@
         con.css({height:'404px'});
 
         estimateMasterBotGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
+    }
+
+    function btnDisabled(status) {
+        if(status == 'EST020'){
+            $("#btnEstimateListDelete").attr('disabled', true);
+            $("#btnEstimateListSave").attr('disabled', true);
+
+        }else {
+            $("#btnEstimateListDelete").attr('disabled', false);
+            $("#btnEstimateListSave").attr('disabled', false);
+        }
     }
 
 </script>

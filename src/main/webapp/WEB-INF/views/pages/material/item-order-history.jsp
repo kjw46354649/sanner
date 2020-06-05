@@ -119,6 +119,8 @@
     <input type="hidden" id="queryId" name="queryId" value="selectItemOrderHistoryListDetail"/>
     <input type="hidden" id="MATERIAL_ORDER_NUM" name="MATERIAL_ORDER_NUM"/>
     <input type="hidden" id="MATERIAL_COMP_CD" name="MATERIAL_COMP_CD"/>
+    <input type="hidden" id="MATERIAL_ORDER_SEQ" name="MATERIAL_ORDER_SEQ"/>
+    <input type="hidden" id="CONCAT_SEQ" name="CONCAT_SEQ"/>
 </form>
 
 <form id="item_order_history_inspection_hidden_form" name="item_order_history_inspection_hidden_form">
@@ -145,9 +147,9 @@
             {title: '.', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
             {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120 , editable: false} ,
             {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_CD', width: 80 , editable: false} ,
-            {title: '소재종류', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 120, editable: false},
-            {title: '형태', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 120, editable: false},
-            {title: '상세종류', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 120, editable: false},
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', width: 120, editable: false},
+            {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM', width: 120, editable: false},
+            {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM', width: 120, editable: false},
             {title: '소재Size', dataType: 'string', dataIndx: 'SIZE_TXT', width: 120, editable: false},
             {title: '주문', dataType: 'string', dataIndx: 'ORDER_QTY' , editable: false},
             {title: '비고', dataType: 'string', dataIndx: 'ORDER_NOTE', editable: false},
@@ -239,61 +241,6 @@
             {title: '관리번호', dataType: 'string', dataIndx: '', editable: false}
         ];
 
-        let itemOrderHistoryLeftToolbar = {
-            items: [
-                {
-                    type: 'button', label: '주문취소', style: 'float: left;', listener: {
-                        'click': function (evt, ui) {
-                        }
-                    }
-                }
-            ]
-        };
-        let itemOrderHistoryRightToolbar = {
-            items: [
-                {
-                    type: 'button', label: 'Save', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {
-                        }
-                    }
-                },
-                {
-                    type: 'button', label: '주문서출력', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {
-                        }
-                    }
-                }
-            ]
-        };
-
-        function autoMerge(grid, refresh) {
-            var mc = [],
-                CM = grid.option("colModel"),
-                i = CM.length,
-                data = grid.option("dataModel.data");
-
-            while (i--) {
-                var dataIndx = CM[i].dataIndx,
-                    rc = 1,
-                    j = data.length;
-
-                while (j--) {
-                    var cd = data[j][dataIndx],
-                        cd_prev = data[j - 1] ? data[j - 1][dataIndx] : undefined;
-                    if (cd_prev !== undefined && cd == cd_prev) {
-                        rc++;
-                    }else if (rc > 1) {
-                        mc.push({ r1: j, c1: i, rc: rc, cc: 1 });
-                        rc = 1;
-                    }
-                }
-            }
-            grid.option("mergeCells", mc);
-            if (refresh) {
-                grid.refreshView();
-            }
-        };
-
         itemOrderHistoryLeftGrid.pqGrid({
             height: '100%',
             dataModel: {
@@ -316,9 +263,6 @@
             colModel: itemOrderHistoryLeftColModel,
             showTitle: false,
             title: false,
-            sort: function () {
-                autoMerge(this);
-            },
             complete: function(event, ui) {
                 this.flex();
                 let data = itemOrderHistoryLeftGrid.pqGrid('option', 'dataModel.data');
@@ -344,8 +288,13 @@
                 //if(ui.addList.length > 0 ) {
                 let MATERIAL_ORDER_NUM = ui.addList[0].rowData.MATERIAL_ORDER_NUM;
                 let MATERIAL_COMP_CD = ui.addList[0].rowData.MATERIAL_COMP_CD;
+                let MATERIAL_ORDER_SEQ = ui.addList[0].rowData.MATERIAL_ORDER_SEQ;
+                let CONTROL_SEQ = ui.addList[0].rowData.CONTROL_SEQ;
+                let CONTROL_DETAIL_SEQ = ui.addList[0].rowData.CONTROL_DETAIL_SEQ;
                 $("#item_order_history_hidden_form #MATERIAL_ORDER_NUM").val(MATERIAL_ORDER_NUM);
                 $("#item_order_history_hidden_form #MATERIAL_COMP_CD").val(MATERIAL_COMP_CD);
+                $("#item_order_history_hidden_form #CONCAT_SEQ").val(CONTROL_SEQ+""+CONTROL_DETAIL_SEQ);
+                $("#item_order_history_hidden_form #MATERIAL_ORDER_SEQ").val(MATERIAL_ORDER_SEQ);
                 selectItemOrderHistoryRightList();
                 //}
             }
@@ -396,6 +345,33 @@
             itemOrderHistoryLeftGrid.pqGrid('refreshDataAndView');
         });
 
+        $("#btnItemOrderHistorySave").on('click', function(){
+
+        });
+
+        $("#btnItemOrderHistoryExcel").on('click', function(){
+
+        });
+
+        $("#btnItemOrderHistoryCancel").on('click', function(){
+            let parameter = {
+                'queryId': 'updateItemOrderRegisterMaterialOrderCancel',
+                'MATERIAL_ORDER_SEQ': $("#item_order_history_hidden_form #MATERIAL_ORDER_SEQ").val(),
+            };
+            let parameters = {'url': '/json-remove', 'data': parameter};
+            fnPostAjax(function(data, callFunctionParam){
+                parameter = {
+                    'queryId': 'updateItemOrderRegisterControlPartCancel',
+                    'CONCAT_SEQ': $("#item_order_history_hidden_form #CONCAT_SEQ").val(),
+                };
+                parameters = {'url': '/json-remove', 'data': parameter};
+                fnPostAjax(function(data, callFunctionParam){
+                    $("#btnItemOrderRegisterSearch").trigger('click');
+                }, parameters, '');
+            }, parameters, '');
+        });
+
+
         /** 공통 코드 이외의 처리 부분 **/
         fnCommCodeDatasourceSelectBoxCreate($("#item_order_history_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
         fnCommCodeDatasourceSelectBoxCreate($("#item_order_history_search_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
@@ -404,16 +380,24 @@
             let parameters = {'url': '/json-update', 'data': parameter};
             fnPostAjax(function(data, callFunctionParam){
                 parameter = {
-                    'queryId': 'updateItemOrderHistoryIn',
+                    'queryId': 'updateItemOrderHistoryOrderIn',
                     'MATERIAL_ORDER_SEQ': MATERIAL_ORDER_SEQ,
                 };
 
                 parameters = {'url': '/json-update', 'data': parameter};
                 fnPostAjax(function(data, callFunctionParam){
-                    itemOrderHistoryRightGrid.pqGrid('option', "dataModel.postData", function (ui) {
-                        return (fnFormToJsonArrayData('#item_order_history_hidden_form'));
-                    });
-                    itemOrderHistoryRightGrid.pqGrid('refreshDataAndView');
+                    parameter = {
+                        'queryId': 'updateItemOrderHistoryOrderIn',
+                        'MATERIAL_ORDER_SEQ': MATERIAL_ORDER_SEQ,
+                    };
+
+                    parameters = {'url': '/json-update', 'data': parameter};
+                    fnPostAjax(function(data, callFunctionParam){
+                        itemOrderHistoryRightGrid.pqGrid('option', "dataModel.postData", function (ui) {
+                            return (fnFormToJsonArrayData('#item_order_history_hidden_form'));
+                        });
+                        itemOrderHistoryRightGrid.pqGrid('refreshDataAndView');
+                    }, parameters, '');
                 }, parameters, '');
             }, parameters, '');
         }
