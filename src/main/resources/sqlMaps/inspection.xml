@@ -153,12 +153,12 @@
         INSERT INTO jmes.TBL_INSPECT (INSPECT_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ
                                       , INSPECT_METHOD, INSPECT_USER_ID, INSPECT_GRADE, INSPECT_RESULT, INSPECT_DESC
                                       , ERROR_QTY, ERROR_PROCESS, ERROR_REASON, ERROR_ACTION, ERROR_NOTE
-                                      , INSERT_ID, INSPECT_TYPE )
+                                      , INSERT_ID, INSPECT_TYPE, INSPECT_NUM )
         VALUES (    NEXTVAL(SEQ_INSPECT)
                   , #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}
                   , #{INSPECT_METHOD}, #{INSPECT_USER_ID}, #{INSPECT_GRADE}, #{INSPECT_RESULT}, #{INSPECT_DESC}
                   , #{ERROR_QTY}, #{ERROR_PROCESS}, #{ERROR_REASON}, #{ERROR_ACTION}, #{ERROR_NOTE}
-                  , #{LOGIN_USER_ID}, '1'
+                  , #{LOGIN_USER_ID}, '1', (SELECT COUNT(*) + 1 FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = #{CONTROL_SEQ} AND M.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ})
                 )
     </insert>
     <delete id="deleteInspectionMaster" parameterType="java.util.HashMap">
@@ -350,7 +350,6 @@
         , T.Q_ERROR_NOTE
         , T.PART_STATUS_NM
         , T.POP_NM
-        , T.BARCODE_NUM
         FROM (  SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.ORDER_SEQ, X.INSPECT_SEQ
         , ( SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = X.ORDER_COMP_CD) AS ORDER_COMP_NM
         , X.ORDER_NUM
@@ -400,7 +399,6 @@
             AND M.INSPECT_TYPE = '2'
             AND M.RETURN_SETTLEMENT_DT IS NULL
             ) AS  RETURN_ING_CNT
-        ,X.BARCODE_NUM
         FROM (  SELECT C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, C.ORDER_SEQ
         , (SELECT MAX(M.MCT_WORK_SEQ) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N') AS MCT_WORK_SEQ
         , (SELECT MAX(M.INSPECT_SEQ) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ) AS INSPECT_SEQ
@@ -424,13 +422,6 @@
         , (SELECT COUNT(M.PACKING_NUM) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = C.ORDER_SEQ) AS ORDER_PACKING_NUM_CNT
         , (SELECT SUM(M.OUT_QTY) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = C.ORDER_SEQ) AS ORDER_OUT_QTY
         , (SELECT MAX(M.OUT_DT) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = C.ORDER_SEQ) AS ORDER_OUT_DT
-        ,(
-            SELECT BARCODE_NUM
-            FROM jmes.TBL_OUT_BARCODE ZY
-            WHERE ZY.CONTROL_SEQ = C.CONTROL_SEQ
-            AND ZY.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-            AND ZY.ORDER_SEQ = C.ORDER_SEQ
-        ) AS BARCODE_NUM
         FROM jmes.TBL_CONTROL A
         , jmes.TBL_CONTROL_PART B
         , jmes.TBL_CONTROL_PART_ORDER C
@@ -783,6 +774,50 @@
     <update id="updateOutgoingReturnComplete" parameterType="java.util.HashMap">
         UPDATE jmes.TBL_INSPECT SET RETURN_SETTLEMENT_DT = NOW() WHERE INSPECT_SEQ = #{INSPECT_SEQ}
     </update>
+
+    <select id="selectOutgoingLabelType1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.CONTROL_NUM
+        , B.DRAWING_NUM
+        , C.ORDER_NUM
+        , C.ORDER_QTY
+        , C.PACKING_CNT
+        ,C.CONTROL_SEQ,C.CONTROL_DETAIL_SEQ,C.ORDER_SEQ
+        FROM jmes.TBL_CONTROL A
+        , jmes.TBL_CONTROL_PART B
+        , jmes.TBL_CONTROL_PART_ORDER C
+        WHERE A.CONTROL_SEQ = C.CONTROL_SEQ
+        AND B.CONTROL_SEQ = C.CONTROL_SEQ
+        AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+        AND C.CONTROL_SEQ = #{CONTROL_SEQ}
+        AND C.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+        AND C.ORDER_SEQ = #{ORDER_SEQ}
+     </select>
+    <select id="selectOutgoingLabelType1Combo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            BARCODE_NUM AS CODE_CD, PACKING_NUM AS CODE_NM
+        FROM jmes.TBL_OUT_BARCODE
+        WHERE 1=1
+        AND CONTROL_SEQ = #{CONTROL_SEQ}
+        AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+        AND ORDER_SEQ = #{ORDER_SEQ}
+        AND DEL_YN = 'N'
+        ORDER BY PACKING_NUM
+    </select>
+    <select id="selectOutgoingLabelType2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT BARCODE_NUM FROM jmes.TBL_OUT_BARCODE
+        WHERE 1=1
+        AND CONTROL_SEQ = #{CONTROL_SEQ}
+        AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+        AND ORDER_SEQ = #{ORDER_SEQ}
+        AND DEL_YN = 'N'
+    </select>
+    <select id="selectOutgoingLabelType3" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.BARCODE_NUM
+        FROM jmes.TBL_OUT_BARCODE A
+        WHERE A.CONTROL_SEQ = (SELECT M.CONTROL_SEQ FROM jmes.TBL_CONTROL_BARCODE M WHERE M.BARCODE_NUM = #{BARCODE_NUM} AND M.DEL_YN = 'N')
+            AND A.DEL_YN = 'N'
+        ORDER BY A.CONTROL_DETAIL_SEQ, A.ORDER_SEQ, A.PACKING_NUM
+    </select>
 
 <!--    <update id="updateOutgoingReturnAfter1" parameterType="java.util.HashMap">-->
 <!--        UPDATE jmes.TBL_CONTROL_PART_ORDER-->

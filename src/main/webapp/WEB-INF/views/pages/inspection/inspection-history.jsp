@@ -63,7 +63,7 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="testcombo">소재 Type</label>
-                            <input type="text" class="wd_200" name="SEL_CONTROL_NUM" id="testcombo" placeholder="ALL(복수선택가능)" title="관리번호">
+                            <input type="text" class="wd_200" name="XXXX" id="testcombo" placeholder="ALL(복수선택가능)" title="관리번호">
                         </span>
 
                         <span class="gubun"></span>
