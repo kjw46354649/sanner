@@ -502,6 +502,10 @@
             AND A.EST_SEQ = #{EST_SEQ}
     </insert>
 
+    <select id="selectEstimateMailNextSequence" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT NEXTVAL(SEQ_MAIL) AS MAIL_BOX_SEQ FROM DUAL
+    </select>
+
     <update id="updateEstimateMasterFinish" parameterType="java.util.HashMap">
         UPDATE TBL_ESTIMATE
         SET
@@ -511,6 +515,15 @@
         WHERE EST_SEQ = #{EST_SEQ}
     </update>
 
+    <update id="updateEstimateMasterSend" parameterType="java.util.HashMap">
+        UPDATE TBL_ESTIMATE
+        SET
+            SEND_DT = NOW(),
+            MAIL_BOX_SEQ = #{MAIL_BOX_SEQ},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = NULL
+        WHERE EST_SEQ = #{EST_SEQ}
+    </update>
     <select id="selectEstimateInfoFromControl" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             A.COMP_CD, <!-- 사업자(공급사) -->
@@ -521,7 +534,7 @@
             SUM(B.UNIT_FINAL_EST_AMT) AS DTL_AMOUNT, <!-- 견적금액 -->
             (SELECT TEMPLATE_CONTENT FROM TBL_MAIL_TEMPLATE WHERE TEMPLATE_SEQ = 0) AS EMAIL_CONTENT
         FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ 
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
         WHERE
             A.CONTROL_SEQ IN (${CONTROL_SEQ})
         GROUP BY  A.COMP_CD, A.ORDER_COMP_CD, A.ORDER_STAFF_SEQ
@@ -599,4 +612,22 @@
         WHERE A.CONTROL_SEQ IN (${CONTROL_SEQ})
     </select>
 
+    <update id="updateEstimateMasterSend" parameterType="java.util.HashMap">
+        UPDATE TBL_ESTIMATE
+        SET
+            SEND_DT = NOW(),
+            MAIL_BOX_SEQ = #{MAIL_BOX_SEQ},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = NULL
+        WHERE EST_SEQ = #{EST_SEQ}
+    </update>
+    <update id="updateEstimateMasterSend" parameterType="java.util.HashMap">
+        UPDATE TBL_ESTIMATE
+        SET
+            SEND_DT = NOW(),
+            MAIL_BOX_SEQ = #{MAIL_BOX_SEQ},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = NULL
+        WHERE EST_SEQ = #{EST_SEQ}
+    </update>
 </mapper>

@@ -198,6 +198,12 @@
 .cadDrawing .modal-body table.colStyle td.spanArea { width: 856px; text-align: center; }
 .cadDrawing .modal-body table.colStyle th { background: #fbfbfb; border-bottom: 1px solid #f3f3f3; }
 
+.estimate .popup #estimateAttachDragAndDrop th.fileName { width: 472px; text-align: center; }
+.estimate .popup #estimateAttachDragAndDrop th.etcInfo { width: 154px; text-align: center; }
+.estimate .popup #estimateAttachDragAndDrop td.fileName{ width: 472px; text-align: left; }
+.estimate .popup #estimateAttachDragAndDrop td.etcInfo { width: 154px; text-align: right; }
+.estimate .popup #estimateAttachDragAndDrop th { background: #fbfbfb; border-bottom: 1px solid #f3f3f3; }
+
 .cadDrawingPrint { /*width: 21cm; min-height: 29.7cm;*/ /*margin: 0 auto;*/ max-height: 29.7cm; background: #ee212b;}
 /*.cadDrawingPrint .print { border: 1px #0b0b0b solid; padding: 0.5cm; background:#fff; height: 290mm; page-break-after: always;}*/
 .cadDrawingPrint .print { background:#fff; /*height: 297mm;*/ page-break-after: always; }

@@ -480,6 +480,19 @@
         return selectBoxContents;
     };
 
+    let fnGetCommCodeGridSelectBoxEtc = function (highCd, refCd) {
+        'use strict';
+        let selectBoxContents = [];
+        for(var i=0; i < g_code.length; i++){
+            if(g_code[i].HIGH_CD == highCd){
+                if(g_code[i].REF_CD == refCd){
+                    selectBoxContents.push({'value':g_code[i].CODE_CD, 'text':g_code[i].CODE_NM_KR});
+                }
+            }
+        }
+        return selectBoxContents;
+    };
+
     let fnGetCommCodeGridToolbarSelectBox = function (highCd, selMode) {
         'use strict';
         let selectBoxContents = [];
@@ -673,6 +686,24 @@
         downloadActionForm.method='POST';
         downloadActionForm.target='_self';
         downloadActionForm.action= '/downloadGfile/' + GfileSeq;
+
+        document.body.appendChild(downloadActionForm);
+        downloadActionForm.submit();
+    };
+
+    let fnSingleFileDownloadFormPageAction = function(fileSeq) {
+        let elem = document.getElementById('downloadActionForm');
+        if(elem != null && typeof(elem) !== undefined){
+            $('#downloadActionForm').remove()
+        }
+        let downloadActionForm = document.createElement("form");
+        downloadActionForm.setAttribute("id", "downloadActionForm");
+        downloadActionForm.setAttribute("name", "downloadActionForm");
+        downloadActionForm.hidden=true;
+        downloadActionForm.name='downloadActionForm';
+        downloadActionForm.method='POST';
+        downloadActionForm.target='_self';
+        downloadActionForm.action= '/downloadfile/' + fileSeq;
 
         document.body.appendChild(downloadActionForm);
         downloadActionForm.submit();

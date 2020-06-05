@@ -66,6 +66,7 @@
         <form class="form-inline" id="estimate_register_info_form" name="estimate_register_info_form" role="form">
             <input type="hidden" id="queryId" name="queryId" value="">
             <input type="hidden" id="EST_SEQ" name="EST_SEQ" value="">
+            <input type="hidden" id="MAIL_BOX_SEQ" name="MAIL_BOX_SEQ" value="">
             <div class="basicWrap">
                 <ul>
                     <li>
@@ -161,19 +162,16 @@
                                     전체 조회 건수 (Total : <span id="estimate_register_bot_grid_records" style="color: #00b3ee">0</span>)
                                 </div>
                             </div>
-                            <h3 style="text-align: left;">첨부파일</h3>
-                            <div class="fileTableWrap">
-                                <table class="colStyle" id="attachDragAndDrop">
-                                    <caption></caption>
-                                    <thead>
-                                    <tr>
-                                        <th scope="col" class="fileName txt">파일명</th>
-                                        <th scope="col" class="etcInfo">용량</th>
-                                        <th scope="col" class="etcInfo"></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody class="files"></tbody>
-                                </table>
+                            <h3 style="text-align: left;">첨부파일
+                                <div class="right_float">
+                                    <button type="button" class="defaultBtn radius" id="btnEstimateRegisterFileUpload">추가</button>
+                                </div>
+                            </h3>
+                            <div class="conMainWrap" id="estimateFileUpdate">
+                                <div id="estimate_register_file_grid"></div>
+                                <div class="right_sort">
+                                    전체 조회 건수 (Total : <span id="estimate_register_file_grid_records" style="color: #00b3ee">0</span>)
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -191,6 +189,8 @@
 </form>
 
 <script type="text/javascript">
+    let estimateRegisterFileGrid;
+
     $(function () {
         /** 공통 코드 이외의 처리 부분 **/
         fnCommCodeDatasourceSelectBoxCreate($("#estimate_register_info_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
@@ -206,7 +206,7 @@
 
         'use strict';
         let estimateRegisterSelectedRowIndex;
-
+        estimateRegisterFileGrid = $("#estimate_register_file_grid");
         let estimateRegisterTopGrid = $("#estimate_register_top_grid");
         let estimateRegisterBotGrid = $("#estimate_register_bot_grid");
         let $btnEstimateRegisterDrawView = $("#btnEstimateRegisterDrawView");
@@ -347,13 +347,93 @@
                         return (index < 0) ? cellData : workFactory[index].text;
                     }
                 }
-
             },
             {title: '소재 비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE' },
             {title: '소재마감', align: "center", colModel:[
-                    {title: 'TM각비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_TM', width: 70 },
-                    {title: '연마비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND', width: 70 },
-                    {title: '열처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', width: 70 },
+                    {title: 'TM각비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_TM', width: 70,
+                        editor: {
+                            type: 'select',
+                            valueIndx: "value",
+                            labelIndx: "text",
+                            options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010'),
+                        },
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+
+                            if (cellData === '') {
+                                return '';
+                            } else {
+                                let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
+                                let index = workFactory.findIndex(function (element) {
+                                    return element.text === cellData;
+                                });
+
+                                if (index < 0) {
+                                    index = workFactory.findIndex(function (element) {
+                                        return element.value === cellData;
+                                    });
+                                }
+
+                                return (index < 0) ? cellData : workFactory[index].text;
+                            }
+                        }
+                    },
+                    {title: '연마비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND', width: 70,
+                        editor: {
+                            type: 'select',
+                            valueIndx: "value",
+                            labelIndx: "text",
+                            options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020'),
+                        },
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+
+                            if (cellData === '') {
+                                return '';
+                            } else {
+                                let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
+                                let index = workFactory.findIndex(function (element) {
+                                    return element.text === cellData;
+                                });
+
+                                if (index < 0) {
+                                    index = workFactory.findIndex(function (element) {
+                                        return element.value === cellData;
+                                    });
+                                }
+
+                                return (index < 0) ? cellData : workFactory[index].text;
+                            }
+                        }
+                    },
+                    {title: '열처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', width: 70,
+                        editor: {
+                            type: 'select',
+                            valueIndx: "value",
+                            labelIndx: "text",
+                            options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030'),
+                        },
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+
+                            if (cellData === '') {
+                                return '';
+                            } else {
+                                let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
+                                let index = workFactory.findIndex(function (element) {
+                                    return element.text === cellData;
+                                });
+
+                                if (index < 0) {
+                                    index = workFactory.findIndex(function (element) {
+                                        return element.value === cellData;
+                                    });
+                                }
+
+                                return (index < 0) ? cellData : workFactory[index].text;
+                            }
+                        }
+                    },
                 ]},
             {title: '상세 가공요건', align: "center", colModel:[
                 {title:'선반', dataType: 'string', dataIndx: 'DETAIL_LATHE'},
@@ -658,6 +738,11 @@
             });
 
             estimateRegisterBotGrid.pqGrid("refreshDataAndView");
+
+            // 파일 업로드
+            estimateRegisterFileGrid.pqGrid(commonFileDownloadObj);
+            estimateRegisterFileGrid.pqGrid('option', 'colModel', commonFileDownloadModel);
+            estimateRegisterFileGrid.pqGrid('option', 'height', '136').pqGrid('refresh');
         };
 
 
@@ -703,16 +788,12 @@
                 fnRequestGidData(estimateRegisterBotGrid, postData);
 
                 btnDisabled(list.EST_STATUS);
+
+                //파일
+                $("#common_file_download_form").find("#GFILE_SEQ").val(list.ETC_GFILE_SEQ);
+
             }, parameter, '');
         };
-
-        function getCadUploadBlankHtml(){
-            return'<tr><td colspan="3" class="spanArea" >마우스로 파일을 Drag & Drop 하세요.</td></tr><tr><td colspan="3"></td></tr><tr><td colspan="3"></td></tr>';
-        }
-
-        let fileHtml = getCadUploadBlankHtml();
-        $('#attachDragAndDrop > tbody').html('');
-        $('#attachDragAndDrop > tbody').append(fileHtml).trigger('create');
 
         $(document).on('click', '#test', function(){
             estimateRegisterReloadPageData();
@@ -796,16 +877,23 @@
                         'url': '/json-update',
                         'data': $("#estimate_register_info_form").serialize()
                     };
-                    fnPostAjax(estimateRegisterSaveCallBack, parameters, '');
-
-                    if (autoEmailYn) {
-                        $("#estimate_register_info_form #queryId").val('mail.insertEstimateSubmitMail');
-                        let parameters = {
-                            'url': '/json-update',
-                            'data': $("#estimate_register_info_form").serialize()
-                        };
-                        fnPostAjax(estimateRegisterSaveCallBack, parameters, '');
-                    }
+                    fnPostAjax(function(){
+                        if (autoEmailYn) {
+                            let parameter = { 'queryId': 'selectEstimateMailNextSequence' };
+                            parameters = {'url': '/json-list', 'data': parameter};
+                            fnPostAjaxAsync(function(data, callFunctionParam){
+                                let list = data.list[0];
+                                let MAIL_BOX_SEQ = list.MAIL_BOX_SEQ;
+                                $("#estimate_register_info_form #MAIL_BOX_SEQ").val(MAIL_BOX_SEQ);
+                                $("#estimate_register_info_form #queryId").val('mail.insertEstimateSubmitMail');
+                                parameters = {
+                                    'url': '/json-update',
+                                    'data': $("#estimate_register_info_form").serialize()
+                                };
+                                fnPostAjax(estimateRegisterSaveCallBack, parameters, '');
+                            }, parameters, '');
+                        }
+                    }, parameters, '');
                 }
             });
         });
@@ -843,6 +931,11 @@
 
         $("#selEstimateListExcel").on('click', function(){
 
+        });
+
+        $("#btnEstimateRegisterFileUpload").on('click', function(){
+            let GfileKey = $("#common_file_download_form").find("#GFILE_SEQ").val();
+            commonFileDownloadPopupCall(GfileKey);
         });
 
         /* 도면 등록 팝업 호출 */
@@ -918,5 +1011,166 @@
         }
     }
 
+
+    /** 파일 업로드 스크립트 **/
+    let uploadControlFiles = [];
+
+    let commonFileUpdatePop = $("#estimateFileUpdate");
+    let commonFileUploadGetData = commonFileUpdatePop.on("dragenter", function(e) {  //드래그 요소가 들어왔을떄
+        $(this).addClass('drag-over');
+    }).on("dragleave", function(e) {  //드래그 요소가 나갔을때
+        $(this).removeClass('drag-over');
+    }).on("dragover", function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+    }).on('drop', function(e) {  //드래그한 항목을 떨어뜨렸을때
+        e.preventDefault();
+        $(this).removeClass('drag-over');
+        let cadFiles = e.originalEvent.dataTransfer.files; //드래그&드랍 항목
+        for(let i = 0; i < cadFiles.length; i++) {
+            let file = cadFiles[i];
+            uploadControlFiles.push(file); //업로드 목록에 추가
+        }
+        if (uploadControlFiles.length > 0) { // file upload
+            let formData = new FormData();
+            $.each(uploadControlFiles, function(i, file) {
+                if(file.upload != 'disable') //삭제하지 않은 이미지만 업로드 항목으로 추가
+                    formData.append('file', file, file.name);
+            });
+            formData.append('queryId', $('#common_cad_file_attach_form').find("#queryId").val() + "_select");
+            uploadControlFiles = [];    // 파일 업로드 정보 초기화
+            estimateRegisterFileGrid.pqGrid('refreshDataAndView');
+            fnFormDataFileUploadAjax(function (data) {
+                console.log(data);
+                let fileUploadList = data.fileUploadList;
+                if (fileUploadList.length <= 0) {
+                    alert("주문 정보가 없습니다. 주문 정보를 확인 해 주세요.");
+                    return false;
+                }
+                // 도면 번호 없는 경우 삭제 처리
+                let gridData = estimateRegisterFileGrid.pqGrid('option', 'dataModel.data')
+                let delKdys = [];
+                $.each(gridData, function (key, rowData) {
+                    if (!rowData.EST_SEQ) {
+                        delKdys.push({'rowIndx': rowData});
+                    }
+                });
+                estimateRegisterFileGrid.pqGrid('deleteRow', {rowList: delKdys});
+                estimateRegisterFileGrid.pqGrid('option', {editable: true});
+                estimateRegisterFileGrid.pqGrid('addNodes', fileUploadList, 0);
+                estimateRegisterFileGrid.pqGrid('option', {editable: false});   // 수정 여부를 false 처리 한다.
+                estimateRegisterFileGrid.pqGrid('refresh');
+            }, formData, '');
+        }
+    });
+    /** 파일 업로드 스크립트 종료 **/
+
+
+    /** 파일 업로드 스크립트 **/
+    let uploadControlFiles = [];
+
+    let commonFileUpdatePop = $("#estimateFileUpdate");
+    let commonFileUploadGetData = commonFileUpdatePop.on("dragenter", function(e) {  //드래그 요소가 들어왔을떄
+        $(this).addClass('drag-over');
+    }).on("dragleave", function(e) {  //드래그 요소가 나갔을때
+        $(this).removeClass('drag-over');
+    }).on("dragover", function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+    }).on('drop', function(e) {  //드래그한 항목을 떨어뜨렸을때
+        e.preventDefault();
+        $(this).removeClass('drag-over');
+        let cadFiles = e.originalEvent.dataTransfer.files; //드래그&드랍 항목
+        for(let i = 0; i < cadFiles.length; i++) {
+            let file = cadFiles[i];
+            uploadControlFiles.push(file); //업로드 목록에 추가
+        }
+        if (uploadControlFiles.length > 0) { // file upload
+            let formData = new FormData();
+            $.each(uploadControlFiles, function(i, file) {
+                if(file.upload != 'disable') //삭제하지 않은 이미지만 업로드 항목으로 추가
+                    formData.append('file', file, file.name);
+            });
+            formData.append('queryId', $('#common_cad_file_attach_form').find("#queryId").val() + "_select");
+            uploadControlFiles = [];    // 파일 업로드 정보 초기화
+            estimateRegisterFileGrid.pqGrid('refreshDataAndView');
+            fnFormDataFileUploadAjax(function (data) {
+                console.log(data);
+                let fileUploadList = data.fileUploadList;
+                if (fileUploadList.length <= 0) {
+                    alert("주문 정보가 없습니다. 주문 정보를 확인 해 주세요.");
+                    return false;
+                }
+                // 도면 번호 없는 경우 삭제 처리
+                let gridData = estimateRegisterFileGrid.pqGrid('option', 'dataModel.data')
+                let delKdys = [];
+                $.each(gridData, function (key, rowData) {
+                    if (!rowData.EST_SEQ) {
+                        delKdys.push({'rowIndx': rowData});
+                    }
+                });
+                estimateRegisterFileGrid.pqGrid('deleteRow', {rowList: delKdys});
+                estimateRegisterFileGrid.pqGrid('option', {editable: true});
+                estimateRegisterFileGrid.pqGrid('addNodes', fileUploadList, 0);
+                estimateRegisterFileGrid.pqGrid('option', {editable: false});   // 수정 여부를 false 처리 한다.
+                estimateRegisterFileGrid.pqGrid('refresh');
+            }, formData, '');
+        }
+    });
+    /** 파일 업로드 스크립트 종료 **/
+
+
+    /** 파일 업로드 스크립트 **/
+    let uploadControlFiles = [];
+
+    let commonFileUpdatePop = $("#estimateFileUpdate");
+    let commonFileUploadGetData = commonFileUpdatePop.on("dragenter", function(e) {  //드래그 요소가 들어왔을떄
+        $(this).addClass('drag-over');
+    }).on("dragleave", function(e) {  //드래그 요소가 나갔을때
+        $(this).removeClass('drag-over');
+    }).on("dragover", function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+    }).on('drop', function(e) {  //드래그한 항목을 떨어뜨렸을때
+        e.preventDefault();
+        $(this).removeClass('drag-over');
+        let cadFiles = e.originalEvent.dataTransfer.files; //드래그&드랍 항목
+        for(let i = 0; i < cadFiles.length; i++) {
+            let file = cadFiles[i];
+            uploadControlFiles.push(file); //업로드 목록에 추가
+        }
+        if (uploadControlFiles.length > 0) { // file upload
+            let formData = new FormData();
+            $.each(uploadControlFiles, function(i, file) {
+                if(file.upload != 'disable') //삭제하지 않은 이미지만 업로드 항목으로 추가
+                    formData.append('file', file, file.name);
+            });
+            formData.append('queryId', $('#common_cad_file_attach_form').find("#queryId").val() + "_select");
+            uploadControlFiles = [];    // 파일 업로드 정보 초기화
+            estimateRegisterFileGrid.pqGrid('refreshDataAndView');
+            fnFormDataFileUploadAjax(function (data) {
+                console.log(data);
+                let fileUploadList = data.fileUploadList;
+                if (fileUploadList.length <= 0) {
+                    alert("주문 정보가 없습니다. 주문 정보를 확인 해 주세요.");
+                    return false;
+                }
+                // 도면 번호 없는 경우 삭제 처리
+                let gridData = estimateRegisterFileGrid.pqGrid('option', 'dataModel.data')
+                let delKdys = [];
+                $.each(gridData, function (key, rowData) {
+                    if (!rowData.EST_SEQ) {
+                        delKdys.push({'rowIndx': rowData});
+                    }
+                });
+                estimateRegisterFileGrid.pqGrid('deleteRow', {rowList: delKdys});
+                estimateRegisterFileGrid.pqGrid('option', {editable: true});
+                estimateRegisterFileGrid.pqGrid('addNodes', fileUploadList, 0);
+                estimateRegisterFileGrid.pqGrid('option', {editable: false});   // 수정 여부를 false 처리 한다.
+                estimateRegisterFileGrid.pqGrid('refresh');
+            }, formData, '');
+        }
+    });
+    /** 파일 업로드 스크립트 종료 **/
 
 </script>

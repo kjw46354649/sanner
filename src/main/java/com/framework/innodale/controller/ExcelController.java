@@ -74,6 +74,7 @@ public class ExcelController {
                 map.put(arrayMapInputIds[j], dataList);
             }
 
+
             //Resource resource = new ClassPathResource("classpath:excelTemplate" + File.separator + templateFileName + "data.txt");
             //InputStream inputStream = resource.getInputStream();
             is = new BufferedInputStream(new FileInputStream(excelDir + File.separator + templateFileName + ".xlsx"));
@@ -149,9 +150,6 @@ public class ExcelController {
 
             System.out.println("#######################################");
             System.out.println(infoList);
-            System.out.println(infoList.get(0));
-            System.out.println(infoList.get(1));
-            System.out.println(infoList.get(2));
             System.out.println(infoList.get(0).get("MATERIAL_COMP_NM"));
             System.out.println(infoList.get(0).get("MATERIAL_COMP_EMAIL"));
             System.out.println(infoList.get(0).get("MATERIAL_COMP_CD"));
