@@ -184,6 +184,7 @@
 </div>
 
 <input type="button" id="test">
+<input type="button" id="updateFromControl" style="display: none;">
 <form id="estimate_register_hidden_form" method="POST">
     <input type="hidden" id="queryId" name="queryId" value="selectEstimateDetailList"/>
     <input type="hidden" id="EST_SEQ" name="EST_SEQ" value=""/>
@@ -857,6 +858,49 @@
         /* CKEDITOR 부분 */
         CKEDITOR.replace( 'EMAIL_CONTENT_TXT', { height: 176 });
         CKEDITOR.instances.EMAIL_CONTENT_TXT.setData(context);
+
+        $('#updateFromControl').on('click', function () {
+            let CONTROL_SEQ = $("#estimate_version_up_sequence_form #hidden_control_seq").val();
+            let postData = { 'queryId': 'estimate.selectEstimateInfoFromControl', 'CONTROL_SEQ': CONTROL_SEQ };
+            let parameter = {'url': '/json-info', 'data': postData};
+
+            fnPostAjax(function (data, callFunctionParam) {
+                let info = data.info;
+
+                $("#estimate_register_info_form #ORDER_COMP_CD").val(info.ORDER_COMP_CD);
+                // $("#estimate_register_info_form #EST_TITLE").val(info.EST_TITLE);
+                $("#estimate_register_info_form #ORDER_STAFF_SEQ").val(info.ORDER_STAFF_SEQ);
+                $("#estimate_register_info_form #COMP_CD").val(info.COMP_CD);
+                // $("#estimate_register_info_form #EST_USER_ID").val(info.EST_USER_ID);
+                // $("#estimate_register_info_form #EST_NUM").val(info.EST_NUM + ' (' + info.EST_VER + ')');
+                $("#estimate_register_info_form #DTL_CNT").val(info.DTL_CNT);
+                $("#estimate_register_info_form #DTL_AMOUNT").val(info.DTL_AMOUNT);
+                $("#estimate_register_info_form #INSERT_DT").val(info.INSERT_DT);
+                // $("#estimate_register_info_form #SEND_DT").val(info.SEND_DT);
+                //$("#EMAIL_CONTENT_TXT").val(list.EMAIL_CONTENT);
+                context = info.EMAIL_CONTENT;
+                CKEDITOR.instances.EMAIL_CONTENT_TXT.setData(info.EMAIL_CONTENT);
+                // $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
+                //
+                // $("#common_excel_form #paramData").val(EST_SEQ);
+
+
+                //
+                // postData = { 'queryId': 'estimate.selectEstimateReceiverList', 'EST_SEQ': EST_SEQ };
+                // fnRequestGidData(estimateRegisterBotGrid, postData);
+
+                // btnDisabled(list.EST_STATUS);
+
+                btnDisabled();
+            }, parameter, '');
+
+            postData = { 'queryId': 'estimate.selectEstimateListFromControl', 'CONTROL_SEQ': CONTROL_SEQ };
+            fnRequestGidData(estimateRegisterTopGrid, postData);
+
+            postData = { 'queryId': 'estimate.selectEstimateReceiverListFromControl', 'CONTROL_SEQ': CONTROL_SEQ };
+            fnRequestGidData(estimateRegisterBotGrid, postData);
+
+        });
     });
 
     function btnDisabled(status) {
@@ -873,5 +917,6 @@
             $("#btnEstimateRegisterDelete").attr('disabled', false);
         }
     }
+
 
 </script>
