@@ -119,10 +119,10 @@
         <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
         <div class="layerPopup">
             <h3>제품상세정보</h3>
-            <%--<span class="right">
+            <span class="right">
                 <span class="barCode" ><img src="/resource/asset/images/common/img_barcode.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>
                 <span class="barCodeTxt" >&nbsp;<input type="text" class="wd_270_barcode" style="height: 39px;" name="g_item_detail_pop_barcode_num" id="g_item_detail_pop_barcode_num" placeholder="도면의 바코드를 스캔해 주세요"></span>
-            </span>--%>
+            </span>
             <div class="qualityWrap">
                 <h4>기본정보</h4>
                 <div class="list1">

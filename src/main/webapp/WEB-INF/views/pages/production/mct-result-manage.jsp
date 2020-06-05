@@ -14,58 +14,52 @@
 
 <div class="page estimate">
     <div class="topWrap">
-        <form id="barcode_form" role="form">
-            <input type="hidden" id="barcode_input">
-        </form>
-        <form class="form-inline" id="MCT_RESULT_MANAGE_SEARCH_FORM" role="form">
+        <form class="form-inline" id="mct_result_manage_search_form" role="form">
             <input type="hidden" name="queryId" id="queryId" value="machine.selectResultManageList">
-            <div class="gubunWrap row_two">
+            <div class="none_gubunWrap row2_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
-			<input type="text" id="justAnInputBox" placeholder="Select" autocomplete="off"/>
-
-<%--                            <label class="label_100" for="COMP_CD">NC NO.</label>
-                            <select class="wd_200" name="COMP_CD" id="COMP_CD">
+                            <label class="label_100" for="EQUIP_ID">NC NO.</label>
+                            <select class="wd_200" name="EQUIP_ID" id="EQUIP_ID">
                                 <option value="">All</option>
-                            </select>--%>
+                            </select>
                         </span>
+                        <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="ORDER_COMP_CD">재질</label>
                             <select class="wd_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
                                 <option value="">All</option>
                             </select>
                         </span>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="CONTROL_NUM">관리번호</label>
-                            <input type="text" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM">
-                        </span>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="DRAWING_NUM">도면번호</label>
-                            <input type="text" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM">
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="DEGREE">관리번호</label>
+                            <select class="wd_200" name="DEGREE" id="DEGREE">
+                                <option value="">All</option>
+                            </select>
                         </span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap right_float">
-                            <button type="button" class="defaultBtn radius blue" id="MCT_RESULT_MANAGE_SEARCH">검색</button>
+                        <span class="ipu_wrap">
+                            <label class="label_100" for="NOTE">도면번호</label>
+                            <input type="text" class="wd_200" name="NOTE" id="NOTE">
                         </span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap"></span>
                     </li>
                     <li>
                         <span class="slt_wrap">
-                            <label class="label_100" for="FACTORY_AREA">AREA 구분</label>
-                            <select name="FACTORY_AREA" id="FACTORY_AREA">
-                                <c:forEach var="code" items="${HighCode.H_1005}">
-                                    <c:if test="${code.ETC1 == 'MCT_PROCESS_PLAN'}">
-                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:if>
-                                </c:forEach>
+                            <label class="label_100" for="EQUIP_ID">AREA 구분</label>
+                            <select class="wd_200" name="EQUIP_ID" id="EQUIP_ID">
+                                <option value="">All</option>
                             </select>
                         </span>
-                        <span class="txt_span pd-right20">Option</span>
-                        <span class="chk_box"><input id="option1" type="checkbox"><label for="option1"> 자재사급</label></span>
-                        <span class="chk_box"><input id="option2" type="checkbox"><label for="option2"> 외주</label></span>
-                        <span class="chk_box"><input id="option3" type="checkbox"><label for="option3"> 未단가</label></span>
-                        <span class="chk_box"><input id="option4" type="checkbox"><label for="option4"> 긴급</label></span>
-                        <span class="chk_box"><input id="option5" type="checkbox"><label for="option5"> part 숨기기</label></span>
+                        <span class="gubun"></span>
+                        <span class="txt_span"><label class="label_100" for="SEL_INSPECT_GRADE">Option</label></span>
+                        <span class="chk_box"><input id="SEL_INSPECT_GRADE" name="SEL_INSPECT_GRADE" type="checkbox"><label for="SEL_INSPECT_GRADE">PLAN 미배정 제외</label></span>
+                        <span class="chk_box"><input id="SEL_OUTSIDE_YN" name="SEL_OUTSIDE_YN" type="checkbox"><label for="SEL_OUTSIDE_YN">선택 NC 완료 대상 제외</label></span>
+                        <span class="chk_box"><input id="SEL_OUTSIDE_YN" name="SEL_OUTSIDE_YN" type="checkbox"><label for="SEL_OUTSIDE_YN">가공완료 상태 제외</label></span>
+                        <button type="button" class="right_float defaultBtn radius blue" id="CONTROL_SALES_CLOSING_HISTORY_SEARCH">검색</button>
                     </li>
                 </ul>
             </div>
@@ -74,275 +68,59 @@
     <div class="bottomWrap row3_bottomWrap">
         <div class="hWrap">
             <div class="rightSpan">
-                <button type="button" class="defaultBtn btn-120w" id="MCT_RESULT_DETAIL_VIEW" onclick="alert('개발중입니다')">상세정보 조회</button>
-                <button type="button" class="defaultBtn btn-120w" id="MCT_RESULT_DRAWING_VIEW" onclick="alert('개발중입니다')">도면보기</button>
+                <button type="button" class="defaultBtn btn-120w" id="mctResultDetailViewBtn" >상세정보 조회</button>
+                <button type="button" class="defaultBtn btn-120w" id="mctResultDrawingViewBtn" >도면보기</button>
             </div>
         </div>
-        <div class="tableWrap">
+        <div class="tableWrap" style="padding: 10px 0;">
             <div class="conWrap">
-                <div id="MCT_RESULT_MANAGE_GRID"></div>
+                <div id="machine_result_manage_grid" class="jqx-refresh"></div>
+                <div class="right_sort">
+                    전체 조회 건수 (Total : <span id="machine_result_manage_grid-total-records" style="color: #00b3ee">0</span>)
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+
+    let $mctResultManageGrid;
+    let machineResultManageGridId = 'machine_result_manage_grid';
+    let machineResultManagePostData = fnFormToJsonArrayData('#mct_result_manage_search_form');
+    let machineResultManagecolModel;
+
+    let $mctResultDrawingViewBtn = $("#mctResultDrawingViewBtn");
+    let $mctResultDetailViewBtn = $("#mctResultDetailViewBtn");
+
     $(function () {
         'use strict';
-        let $mctResultManageGrid;
-        const gridId = 'MCT_RESULT_MANAGE_GRID';
-        let postData = fnFormToJsonArrayData('#MCT_RESULT_MANAGE_SEARCH_FORM');
-        const colModel = [
+        machineResultManagecolModel = [
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-            {title: 'CAM<br>진행', dataType: 'string', dataIndx: 'camwlsgod'},
-            {title: '납기', dataType: 'string', dataIndx: 'INNER_DUE_DT'},
-            {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN'},
-            {title: '주요', dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
-            {title: '형태', dataType: 'string', dataIndx: 'WORK_NM'},
-            {
-                title: 'MCT Plan/Actual', align: 'center', colModel: [
-                    {
-                        title: 'Seq1', align: 'center', colModel: [
-                            {title: '', datatype: 'string', dataIndx: 'EQUIP_ID_1',
-                                render: function (ui) {
-                                    let cellData = ui.cellData;
-                                    let status = ui.rowData.STATUS_1;
-                                    let backgroundColor = colorClassification(status);
-
-                                    if (status) {
-                                        $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                                    }
-
-                                    if (cellData) {
-                                        let index = EQUIP_LIST.findIndex(function (element) {
-                                            return element.value === cellData;
-                                        });
-                                        return (index < 0) ? cellData : EQUIP_LIST[index].text;
-                                    }
-                                }
-                            },
-                            {title: '', datatype: 'string', dataIndx: 'WORKING_TIME_1', editable: true,
-                                render: function (ui) {
-                                    let status = ui.rowData.STATUS_1;
-                                    let backgroundColor = colorClassification(status);
-
-                                    if (status) {
-                                        return $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                                    }
-
-                                    if (ui.cellData) {
-                                        return ui.cellData + '분';
-                                    }
-                                }
-                            },
-                            {title: '', datatype: 'string', dataIndx: 'STATUS_1', hidden: true},
-                            {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_1', hidden: true}
-                        ]
-                    },
-                    {
-                        title: 'Seq2', align: 'center', colModel: [
-                            {title: '', datatype: 'string', dataIndx: 'EQUIP_ID_2',
-                                render: function (ui) {
-                                    let cellData = ui.cellData;
-                                    let status = ui.rowData.STATUS_2;
-                                    let backgroundColor = colorClassification(status);
-
-                                    if (status) {
-                                        $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                                    }
-
-                                    if (cellData) {
-                                        let index = EQUIP_LIST.findIndex(function (element) {
-                                            return element.value === cellData;
-                                        });
-                                        return (index < 0) ? cellData : EQUIP_LIST[index].text;
-                                    }
-                                }
-                            },
-                            {title: '', datatype: 'string', dataIndx: 'WORKING_TIME_2', editable: true,
-                                render: function (ui) {
-                                    let status = ui.rowData.STATUS_2;
-                                    let backgroundColor = colorClassification(status);
-
-                                    if (status) {
-                                        return $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                                    }
-
-                                    if (ui.cellData) {
-                                        return ui.cellData + '분';
-                                    }
-                                }
-                            },
-                            {title: '', datatype: 'string', dataIndx: 'STATUS_2', hidden: true},
-                            {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_2', hidden: true}
-                        ]
-                    },
-                    {
-                        title: 'Seq3', align: 'center', colModel: [
-                            {title: '', datatype: 'string', dataIndx: 'EQUIP_ID_3',
-                                render: function (ui) {
-                                    let cellData = ui.cellData;
-                                    let status = ui.rowData.STATUS_3;
-                                    let backgroundColor = colorClassification(status);
-
-                                    if (status) {
-                                        $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                                    }
-
-                                    if (cellData) {
-                                        let index = EQUIP_LIST.findIndex(function (element) {
-                                            return element.value === cellData;
-                                        });
-                                        return (index < 0) ? cellData : EQUIP_LIST[index].text;
-                                    }
-                                }
-                            },
-                            {title: '', datatype: 'string', dataIndx: 'WORKING_TIME_3', editable: true,
-                                render: function (ui) {
-                                    let status = ui.rowData.STATUS_3;
-                                    let backgroundColor = colorClassification(status);
-
-                                    if (status) {
-                                        return $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                                    }
-
-                                    if (ui.cellData) {
-                                        return ui.cellData + '분';
-                                    }
-                                }
-                            },
-                            {title: '', datatype: 'string', dataIndx: 'STATUS_3', hidden: true},
-                            {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_3', hidden: true}
-                        ]
-                    },
-                    {
-                        title: 'Seq4', align: 'center', colModel: [
-                            {title: '', datatype: 'string', dataIndx: 'EQUIP_ID_4',
-                                render: function (ui) {
-                                    let cellData = ui.cellData;
-                                    let status = ui.rowData.STATUS_4;
-                                    let backgroundColor = colorClassification(status);
-
-                                    if (status) {
-                                        $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                                    }
-
-                                    if (cellData) {
-                                        let index = EQUIP_LIST.findIndex(function (element) {
-                                            return element.value === cellData;
-                                        });
-                                        return (index < 0) ? cellData : EQUIP_LIST[index].text;
-                                    }
-                                }
-                            },
-                            {title: '', datatype: 'string', dataIndx: 'WORKING_TIME_4', editable: true,
-                                render: function (ui) {
-                                    let status = ui.rowData.STATUS_4;
-                                    let backgroundColor = colorClassification(status);
-
-                                    if (status) {
-                                        return $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                                    }
-
-                                    if (ui.cellData) {
-                                        return ui.cellData + '분';
-                                    }
-                                }
-                            },
-                            {title: '', datatype: 'string', dataIndx: 'STATUS_4', hidden: true},
-                            {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_4', hidden: true}
-                        ]
-                    },
-                ]
-            },
-            {title: '현재위치', dataType: 'string', dataIndx: 'POP_POSITION'},
-            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS'},
-            {
-                title: '가공진행 현황', align: 'center', colModel: [
-                    {title: 'NC', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY'},
-                    {title: '밀링', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
-                    {title: '선반', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
-                    {title: '연마', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
-                ]
-            },
-            {title: '', dataType: 'string',
-                render: function (ui) {
-                    return '<span class="ui-icon ui-icon-newwin" name="MCT_RESULT_DETAIL_VIEW" style="cursor: pointer;"></span>';
-                },
-                postRender: function (ui) {
-                    // let rowIndx = ui.rowIndx;
-                    let grid = this;
-                    let $cell = grid.getCell(ui);
-                    $cell.find('[name=MCT_RESULT_DETAIL_VIEW]').on('click', function () {
-                        alert('개발중입니다.');
-                    });
-                }
-            },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM'},
-            {title: '소재종류상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
-            {title: '수량', dataType: 'integer', dataIndx: 'ORDER_QTY'},
-            {title: '규격', dataType: 'string', dataIndx: 'STANDARD_SIZE'},
-            {title: '소재 Size', dataType: 'string', dataIndx: 'MATERIAL_SIZE'},
-            {title: '비고 기록사항', dataType: 'string', dataIndx: 'NOTE'},
-            {title: '예상가공<br>시간(분)', dataType: 'integer', dataIndx: 'OUTSIDE_STATUS_DT'},
-            {
-                title: '작업<br>구분', dataType: 'string', dataIndx: 'MCT_WORK_TYPE',
-                editor: {
-                    type: 'select',
-                    valueIndx: 'value',
-                    labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1033')
-                },
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let workType = fnGetCommCodeGridSelectBox('1033');
-                        let index = workType.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = workType.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-
-                        }
-
-                        return (index < 0) ? cellData : workType[index].text;
-                    }
-                }
-            },
-            {title: 'CAM 작업 수행', width: 150, dataType: 'string', dataIndx: 'zoawkrdjqtngod',
+            {title: 'CAM<br>진행', dataType: 'string', dataIndx: 'CAM_STATUS'},
+            {title: 'CAM 작업 수행', minWidth: 100, width: 100, dataType: 'string', dataIndx: 'CAM_STATUS',
                 render: function (ui) {
                     //TODO: cam 상태
-
-                     console.log(ui);
-                     const startBtn = '<button type="button" class="defaultBtn mct" name="MCT_WORK_ACTION" value="start">시작</button>';
-                     const deleteBtn = '<button type="button" class="defaultBtn mct" name="MCT_WORK_ACTION" value="delete">삭제</button>';
-                     const deleteDisabledBtn = '<button type="button" class="defaultBtn mct" disabled name="MCT_WORK_ACTION" value="delete">삭제</button>';
-                     const finishBtn = '<button type="button" class="defaultBtn camFinishBtn" name="MCT_WORK_ACTION" value="finish">완료</button>';
-                     const pauseBtn = '<button type="button" class="defaultBtn camPauseBtn" name="MCT_WORK_ACTION" value="pause">중지</button>';
-                     const cancelBtn = '<button type="button" class="defaultBtn camCancelBtn" name="MCT_WORK_ACTION" value="cancel">취소</button>';
-
-                    switch (status) {
-                        case '진행중':
-                            return finishBtn + pauseBtn + cancelBtn;
-                            break;
-                        case '대기':
-                            return startBtn + deleteDisabledBtn;
-                            break;
-                        case '완료':
-                            return startBtn + deleteBtn;
-                            break;
-                        default:
-                            return startBtn + deleteDisabledBtn;
-                    }
+                    const startBtn = '<button type="button" class="miniBtn orange">시작</button>';
+                    const startDisableBtn = '<button type="button" class="miniBtn black">시작</button>';
+                    const finishBtn = '<button type="button" class="miniBtn blue" >완료</button>';
+                    const finishDisableBtn = '<button type="button" class="miniBtn black" >완료</button>';
+                    // switch (status) {
+                    //     case '진행중':
+                    //         return finishBtn + pauseBtn + cancelBtn;
+                    //         break;
+                    //     case '대기':
+                    //         return startBtn + deleteDisabledBtn;
+                    //         break;
+                    //     case '완료':
+                    //         return startBtn + deleteBtn;
+                    //         break;
+                    //     default:
+                    //         return startBtn + deleteDisabledBtn;
+                    // }
+                    return startBtn + '&nbsp;' + finishBtn;
                 },
                 postRender: function (ui) {
                     // let rowIndx = ui.rowIndx;
@@ -366,61 +144,219 @@
                     });
                 }
             },
+            {title: '납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', minWidth: 15, width: 40},
+            {title: '긴<br>급', dataType: 'string', dataIndx: 'EMERGENCY_YN', minWidth: 15, width: 20},
+            {title: '주<br>요', dataType: 'string', dataIndx: 'MAIN_INSPECTION', minWidth: 15, width: 20},
+            {title: '형<br>태', dataType: 'string', dataIndx: 'WORK_NM', minWidth: 15, width: 20},
+            {
+                title: 'MCT Plan/Actual', align: 'center', colModel: [
+                    {title: 'Seq.1', datatype: 'string', dataIndx: 'EQUIP_SEQ_1', minWidth: 15, width: 40,
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let status = ui.rowData.STATUS_1;
+                            let backgroundColor = colorClassification(status);
+
+                            if (status) {
+                                $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                            }
+
+                            if (cellData) {
+                                let index = EQUIP_LIST.findIndex(function (element) {
+                                    return element.value === cellData;
+                                });
+                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
+                            }
+                        }
+                    },
+                    {title: 'W/T', datatype: 'string', dataIndx: 'WORKING_TIME_1', editable: true, minWidth: 15, width: 40,
+                        render: function (ui) {
+                            let status = ui.rowData.STATUS_1;
+                            let backgroundColor = colorClassification(status);
+
+                            if (status) {
+                                return $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                            }
+
+                            if (ui.cellData) {
+                                return ui.cellData + '분';
+                            }
+                        }
+                    },
+                    {title: '', datatype: 'string', dataIndx: 'STATUS_1', hidden: true},
+                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_1', hidden: true},
+                    {title: 'Seq.2', datatype: 'string', dataIndx: 'EQUIP_ID_2', minWidth: 15, width: 40,
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let status = ui.rowData.STATUS_2;
+                            let backgroundColor = colorClassification(status);
+
+                            if (status) {
+                                $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                            }
+
+                            if (cellData) {
+                                let index = EQUIP_LIST.findIndex(function (element) {
+                                    return element.value === cellData;
+                                });
+                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
+                            }
+                        }
+                    },
+                    {title: 'W/T', datatype: 'string', dataIndx: 'WORKING_TIME_2', editable: true, minWidth: 15, width: 40,
+                        render: function (ui) {
+                            let status = ui.rowData.STATUS_2;
+                            let backgroundColor = colorClassification(status);
+
+                            if (status) {
+                                return $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                            }
+
+                            if (ui.cellData) {
+                                return ui.cellData + '분';
+                            }
+                        }
+                    },
+                    {title: '', datatype: 'string', dataIndx: 'STATUS_2', hidden: true},
+                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_2', hidden: true},
+                    {title: 'Seq.3', datatype: 'string', dataIndx: 'EQUIP_ID_3', minWidth: 15, width: 40,
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let status = ui.rowData.STATUS_3;
+                            let backgroundColor = colorClassification(status);
+                            if (status) {
+                                $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                            }
+                            if (cellData) {
+                                let index = EQUIP_LIST.findIndex(function (element) {
+                                    return element.value === cellData;
+                                });
+                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
+                            }
+                        }
+                    },
+                    {title: 'W/T', datatype: 'string', dataIndx: 'WORKING_TIME_3', editable: true, minWidth: 15, width: 40,
+                        render: function (ui) {
+                            let status = ui.rowData.STATUS_3;
+                            let backgroundColor = colorClassification(status);
+                            if (status) {
+                                return $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                            }
+                            if (ui.cellData) {
+                                return ui.cellData + '분';
+                            }
+                        }
+                    },
+                    {title: '', datatype: 'string', dataIndx: 'STATUS_3', hidden: true},
+                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_3', hidden: true},
+                    {title: 'Seq.4', datatype: 'string', dataIndx: 'EQUIP_ID_4', minWidth: 15, width: 40,
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let status = ui.rowData.STATUS_4;
+                            let backgroundColor = colorClassification(status);
+                            if (status) {
+                                $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                            }
+                            if (cellData) {
+                                let index = EQUIP_LIST.findIndex(function (element) {
+                                    return element.value === cellData;
+                                });
+                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
+                            }
+                        }
+                    },
+                    {title: 'W/T', datatype: 'string', dataIndx: 'WORKING_TIME_4', editable: true, minWidth: 15, width: 40,
+                        render: function (ui) {
+                            let status = ui.rowData.STATUS_4;
+                            let backgroundColor = colorClassification(status);
+
+                            if (status) {
+                                return $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                            }
+
+                            if (ui.cellData) {
+                                return ui.cellData + '분';
+                            }
+                        }
+                    },
+                    {title: '', datatype: 'string', dataIndx: 'STATUS_4', hidden: true},
+                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_4', hidden: true},
+                ]
+            },
+            {title: '현재위치', dataType: 'string', dataIndx: 'POP_POSITION', minWidth: 20, width: 80},
+            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', minWidth: 20, width: 80},
+            {
+                title: '가공진행 현황', align: 'center', colModel: [
+                    {title: 'NC', datatype: 'integer', dataIndx: 'PROCESS_NC', minWidth: 20, width: 30},
+                    {title: '밀링', datatype: 'integer', dataIndx: 'PROCESS_MILLING', minWidth: 20, width: 30},
+                    {title: '선반', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_RACK', minWidth: 20, width: 30},
+                    {title: '연마', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_GRINDING', minWidth: 20, width: 30},
+                ]
+            },
+            {title: '', dataType: 'string', minWidth: 20, width: 30,
+                render: function (ui) {
+                    return '<span class="ui-icon ui-icon-newwin" name="MCT_RESULT_DETAIL_VIEW" style="cursor: pointer;"></span>';
+                },
+                postRender: function (ui) {
+                    // let rowIndx = ui.rowIndx;
+                    let grid = this;
+                    let $cell = grid.getCell(ui);
+                    $cell.find('[name=MCT_RESULT_DETAIL_VIEW]').on('click', function () {
+                        let rowData = ui.rowData;
+                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ);
+                    });
+                }
+            },
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 50, width: 160},
+            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 10, width: 30},
+            {title: '소재종류상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 40, width: 80},
+            {title: '수량', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40},
+            {title: '규격', dataType: 'string', dataIndx: 'STANDARD_SIZE', minWidth: 40, width: 80},
+            {title: '소재 Size', dataType: 'string', dataIndx: 'MATERAIL_ORDER_SIZE', minWidth: 40, width: 80},
+            {title: '비고 기록사항', dataType: 'string', dataIndx: 'CONTROL_NOTE', minWidth: 40, width: 100},
+            {title: '예상가공<br>시간(M)', dataType: 'integer', dataIndx: 'MCT_WORK_TIME', minWidth: 15, width: 50},
+            {title: '작업<br>구분', dataType: 'string', dataIndx: 'MCT_WORK_TYPE_NM', minWidth: 15, width: 50},
             {
                 title: 'CAM 작업 실적', align: 'center', colModel: [
-                    {title: 'step', datatype: 'integer', dataIndx: 'tmxpq'},
-                    {title: '가공위치', datatype: 'string', dataIndx: 'rkrhddnlcl'},
-                    {title: '작업내용', datatype: 'string', dataIndx: 'wkrdjqsodyd'},
-                    {title: '작업자', datatype: 'string', dataIndx: 'wkrdjqwk'},
-                    {title: '파일', datatype: 'string', dataIndx: 'vkdlf'},
-                    {title: '비고 및 공유사항', datatype: 'string', dataIndx: 'qlrhalcrhddbtkgkd'},
-                    {title: 'Update', datatype: 'string', dataIndx: 'djqepdlxm'}
+                    {title: 'step', datatype: 'integer', dataIndx: 'CAM_STEP', minWidth: 30, width: 35},
+                    {title: '가공위치', datatype: 'string', dataIndx: 'WORK_DIRECTION', minWidth: 30, width: 50},
+                    {title: '작업내용', datatype: 'string', dataIndx: 'WORK_DESC', minWidth: 30, width: 100},
+                    {title: '작업자', datatype: 'string', dataIndx: 'WORK_USER_ID', minWidth: 30, width: 50},
+                    {title: '파일', datatype: 'string', dataIndx: '', minWidth: 30, width: 60},
+                    {title: '비고 및 공유사항', datatype: 'string', dataIndx: 'NOTE', minWidth: 100, width: 150},
+                    {title: '업데이트', datatype: 'string', dataIndx: 'CAM_FINISH_DT', minWidth: 75, width: 75}
                 ]
             },
-            {title: '이전<br>위치', dataType: 'string', dataIndx: 'POP_PREV_POSITION'},
+            {title: '이전<br>위치', dataType: 'string', dataIndx: 'POP_PREV_POSITION', minWidth: 70, width: 70},
             {
                 title: '과거 경험(NC 기준)', align: 'center', colModel: [
-                    {title: '1ea L/T', datatype: 'string', dataIndx: '1ea L/T'},
-                    {title: '날짜', datatype: 'string', dataIndx: '날짜'},
-                    {title: '수행자', datatype: 'string', dataIndx: '수행자'}
+                    {title: '1ea L/T', datatype: 'string', dataIndx: '1ea L/T', minWidth: 60, width: 60},
+                    {title: '날짜', datatype: 'string', dataIndx: '날짜', minWidth: 75, width: 75},
+                    {title: '수행자', datatype: 'string', dataIndx: '수행자', minWidth: 50, width: 50}
                 ]
             },
-            {
-                title: '과거 경험(NC 기준)', align: 'center', colModel: [
-                    {title: '1ea L/T', datatype: 'string', dataIndx: '1ea L/T'},
-                    {title: '날짜', datatype: 'string', dataIndx: '날짜'},
-                    {title: '수행자', datatype: 'string', dataIndx: '수행자'}
-                ]
-            },
-            {title: '가공확정<br>일시', dataType: 'string', dataIndx: 'SATAUS_DT'},
-            {title: '소재입고<br>일시', dataType: 'string', dataIndx: 'MATERIAL_INNER_DT'},
+            {title: '가공확정<br>일시', dataType: 'string', dataIndx: 'SATAUS_DT', minWidth: 75, width: 75},
+            {title: '소재입고<br>일시', dataType: 'string', dataIndx: 'MATERIAL_RECEIPT_DT', minWidth: 75, width: 75},
             {
                 title: '품질현황', align: 'center', colModel: [
-                    {title: 'Seq.', datatype: 'integer', dataIndx: 'seq11'},
-                    {title: '판정', datatype: 'string', dataIndx: '날짜'},
-                    {title: '불량Code', datatype: 'string', dataIndx: '불량code'},
-                    {title: '원인', datatype: 'string', dataIndx: '원인'},
-                    {title: '작성일자', datatype: 'string', dataIndx: '작성일자'}
+                    {title: 'Seq.', datatype: 'integer', dataIndx: 'INSPECT_STEP', minWidth: 30, width: 35},
+                    {title: '판정', datatype: 'string', dataIndx: 'INSPECT_GRADE', minWidth: 30, width: 35},
+                    {title: '불량코드', datatype: 'string', dataIndx: 'INSPECT_RESULT', minWidth: 30, width: 70},
+                    {title: '불량수량', datatype: 'string', dataIndx: 'ERROR_QTY', minWidth: 20, width: 55},
+                    {title: '불량원인', datatype: 'string', dataIndx: 'ERROR_REASON', minWidth: 30, width: 70},
+                    {title: '조치방안', datatype: 'string', dataIndx: 'ERROR_NOTE', minWidth: 30, width: 70},
+                    {title: '작성일자', datatype: 'string', dataIndx: 'INSPECT_DT', minWidth: 75, width: 75}
                 ]
             }
         ];
 
-        const obj = {
-            minHeight: '100%',
-            height: 700,
-            collapsible: false,
-            postRenderInterval: -1, //call postRender synchronously.
-            resizable: true,
-            showTitle: false,
-            strNoRows: g_noData,
-            numberCell: {title: 'No.'},
-            // scrollModel: {autoFit: true},
-            trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
-            colModel: colModel,
+        let machineResultManageObj = {
+            minHeight: '100%', height: 700, collapsible: false, postRenderInterval: -1, //call postRender synchronously.
+            resizable: false, showTitle: false, strNoRows: g_noData, numberCell: {title: 'No.'},
+            trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            colModel: machineResultManagecolModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: postData, recIndx: 'ROWNUM',
+                postData: machineResultManagePostData, recIndx: 'ROWNUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -458,24 +394,18 @@
             });
             $mctResultManageGrid.pqGrid('refreshDataAndView');
         });
-        
-        $('#MCT_RESULT_DETAIL_VIEW').on('click', function () {
 
+        /** 제품 상세 보기 */
+        $mctResultDetailViewBtn.click(function(event) {
+            g_item_detail_pop_view("", "");
         });
+
+        /** 도면 보기 **/
+        $mctResultDrawingViewBtn.click(function(event) {
+            callWindowImageViewer(999);
+        });
+
         /* event */
-
-        /* init */
-        /*
-        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_CLOSE_HISTORY_SEARCH_FORM').find('#COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_CLOSE_HISTORY_SEARCH_FORM').find('#ORDER_COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOrderCompanyList'}
-        });
-        */
-        $mctResultManageGrid = $('#' + gridId).pqGrid(obj);
-        /* init */
+        $mctResultManageGrid = $('#' + machineResultManageGridId).pqGrid(machineResultManageObj);
     });
 </script>
