@@ -10,6 +10,7 @@
 </form>
 <form id="estimate_version_up_sequence_form">
     <input type="hidden" id="hidden_est_seq" name="hidden_est_seq">
+    <input type="hidden" id="hidden_control_seq" name="hidden_control_seq">
 </form>
 <!-- CAD 도면 업로드 공통 Start -->
 <div class="modal" id="common_cad_file_attach_pop" tabindex="-1" role="dialog" aria-hidden="true">

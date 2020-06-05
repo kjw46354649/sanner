@@ -96,6 +96,7 @@
         <input type="hidden" name="ORDER_QTY" id="ORDER_QTY" value="">
         <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ" value="">
         <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ" value="">
+        <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ" value="">
 
     <div class="layerPopup">
         <h3>품질 실적 등록</h3>
