@@ -1408,7 +1408,10 @@
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getUserList'}
         });
-
+        fnCommCodeDatasourceSelectBoxCreate($('#outgoing_manage_form').find('#SEL_ORDER_COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOrderCompanyList'}
+        });
 
 
 
