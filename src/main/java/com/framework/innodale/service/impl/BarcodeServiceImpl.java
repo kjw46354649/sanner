@@ -46,14 +46,8 @@ public class BarcodeServiceImpl implements BarcodeService {
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<String> list = null;
 
-
-
-
         if (jsonObject != null)
             list = objectMapper.readValue(jsonObject, ArrayList.class);
-            //list = objectMapper.readValue(jsonObject, new ArrayList<String>().getClass());
-            //new TypeReference<ArrayList<String>>(){}.getType();
-            //jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
 
         int cnt = 0;
 
@@ -67,7 +61,6 @@ public class BarcodeServiceImpl implements BarcodeService {
 
                 barcodeMap.put("BARCODE_NUM",number);
                 barcodeMap.put("BARCODE_TYPE",barcodeType);
-                System.out.println("barcodeType conterl=" + barcodeType);
                 if("L".equals(barcodeType)){//라벨
                     barcodeMap.put("queryId","common.selectBarcodePrintInfoOut");
                     barcodeMap = this.innodaleDao.getInfo(barcodeMap);
@@ -79,7 +72,6 @@ public class BarcodeServiceImpl implements BarcodeService {
                 }
 
                 if(barcodeMap != null){
-                    System.out.println("barcodeMap conterl=" + barcodeMap);
                     String rtn = barcodePrintUtil.barcodePrint(barcodeMap, barcodeIp, barcodePort, barcodeType);
                     if("OK".equals(rtn)){
                         cnt++;
@@ -91,7 +83,6 @@ public class BarcodeServiceImpl implements BarcodeService {
         model.addAttribute("result",       "success");
         model.addAttribute("message",      "프린트를 완료 하였습니다.[" + cnt +"건]");
 
-//        model.addAttribute("fileUploadList", resultList);
     }
 
 }

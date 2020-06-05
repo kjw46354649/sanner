@@ -26,17 +26,15 @@ public class BarcodePrintUtil {
         String message = "OK";
         Socket socket = null;
         BufferedWriter bufWriter = null;
-        System.out.println("barcodePrint 111111=" + barcodeInfo.toString());
         try {
             socket = new Socket(barcodeIp, barcodePort);
             bufWriter = new BufferedWriter( new OutputStreamWriter( socket.getOutputStream(),"euc-kr"));
-            System.out.println("barcodePrint barcodeType=" + barcodeType);
             if("L".equals(barcodeType)){//라벨
                 getBOut(bufWriter, barcodeInfo);
             }else if("C".equals(barcodeType)) {//도면
                 getBControl(bufWriter, barcodeInfo);
             }
-            System.out.println("barcodePrint bufWriter=" + bufWriter.toString());
+//            System.out.println("barcodePrint bufWriter=" + bufWriter.toString());
             bufWriter.newLine();
             bufWriter.flush();
             socket.close();
@@ -242,33 +240,11 @@ public class BarcodePrintUtil {
                     rtn = (String)returnStr.get(line-1);
                 }
             }
-            //76
-//            System.out.println(String.format("%1$,.0f", totalLen));
-
-
-
-            System.out.println(returnStr.size());
-            System.out.println(rtn);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
         return rtn;
-    }
-    public static void main(String[] args){
-        try{
-            ArrayList<String> barcodeNumber = new ArrayList<String>();
-
-            barcodeNumber.add("22222");
-            barcodeNumber.add("333333");
-            barcodeNumber.add("111111");
-
-          //  barcodePrint(barcodeNumber);
-
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
     }
 
 }
