@@ -76,11 +76,11 @@ public class BarcodePrintUtil {
             bufWriter.write("^FO210,78^A1N^FD" + doNull((String)barcodeInfo.get("DRAWING_NUM"))+ "^FS");
             bufWriter.write("^FO4,111^A1N^GB709,1,1^FS");
             bufWriter.write("^FO10,148^A1N^FD수         량^FS");
-            bufWriter.write("^FO200,148^A1N^FD" + doNull((String)barcodeInfo.get("ORDER_QTY"))+ "^FS");
+            bufWriter.write("^FO200,148^A1N^FD" + barcodeInfo.get("ORDER_QTY")+ "^FS");
             bufWriter.write("^FO350,118^A1N^FD원칭^FS");
             bufWriter.write("^FO430,118^A1N^FD대칭^FS");
-            bufWriter.write("^FO361,165^A1N^FD" + doNull((String)barcodeInfo.get("ORIGINAL_SIDE_QTY"))+ "^FS");
-            bufWriter.write("^FO440,165^A1N^FD" + doNull((String)barcodeInfo.get("OTHER_SIDE_QTY"))+ "^FS");
+            bufWriter.write("^FO361,165^A1N^FD" + barcodeInfo.get("ORIGINAL_SIDE_QTY")+ "^FS");
+            bufWriter.write("^FO440,165^A1N^FD" + barcodeInfo.get("OTHER_SIDE_QTY")+ "^FS");
             bufWriter.write("^FO500,148^A1N^FD가공납기^FS");
             bufWriter.write("^FO620,148^A1N^FD" + doNull((String)barcodeInfo.get("INNER_DUE_DT"))+ "^FS");
             bufWriter.write("^FO4,200^GB709,1,1^FS");
@@ -122,8 +122,8 @@ public class BarcodePrintUtil {
         bufWriter.write("^FO10,10^BY2^BCN,45,N,N,N^FD" + doNull((String)barcodeInfo.get("BARCODE_NUM"))+ "^FS");
         bufWriter.write("^FO350,4^GB45,57,1^FS");
         bufWriter.write("^CFJ,23");
-        bufWriter.write("^FO365,12^A1N^FD" + doNull((String)barcodeInfo.get("PACKING_NUM"))+ "^FS");
-        bufWriter.write("^FO365,37^A1N^FD" + doNull((String)barcodeInfo.get("PACKING_CNT"))+ "^FS");
+        bufWriter.write("^FO365,12^A1N^FD" + barcodeInfo.get("PACKING_NUM")+ "^FS");
+        bufWriter.write("^FO365,37^A1N^FD" + barcodeInfo.get("PACKING_CNT")+ "^FS");
         bufWriter.write("^FO470,25^A1N^FD" + doNull((String)barcodeInfo.get("COMP_NM"))+ "^FS");
         bufWriter.write("^CFJ,20");
         bufWriter.write("^FO4,60^GB710,55,1^FS");
@@ -147,22 +147,33 @@ public class BarcodePrintUtil {
         bufWriter.write("^FO90,235^A1N^FD" + doNull((String)barcodeInfo.get("CONTROL_NUM"))+ "^FS");
         bufWriter.write("^FO485,235^A1N^FD납 품 처^FS");
         bufWriter.write("^FO565,235^A1N^FD" + doNull((String)barcodeInfo.get("DELIVERY_COMP_NM"))+ "^FS");
+
         bufWriter.write("^FO10,285^A1N^FD프로젝트^FS");
-        bufWriter.write("^FO90,285^A1N^FD" + doNull((String)barcodeInfo.get("PROJECT_NM"))+ "^FS");
+
+        String projectNm = (String)barcodeInfo.get("PROJECT_NM");
+        String projectNm_line1 = doNull(getNoteArr(projectNm,1, 42));
+        if(!"".equals(projectNm_line1)){
+            bufWriter.write("^FO90,270^A1N^FD"+projectNm_line1+"^FS");
+        }
+        String projectNm_line2 = doNull(getNoteArr(projectNm,2, 42));
+        if(!"".equals(projectNm_line2)){
+            bufWriter.write("^FO90,295^A1N^FD"+projectNm_line2+"^FS");
+        }
+
         bufWriter.write("^FO482,285^A1N^FD규격/수량^FS");
         bufWriter.write("^FO565,285^A1N^FD" + doNull((String)barcodeInfo.get("SIZE_QTY_INFO"))+ "^FS");
         bufWriter.write("^FO10,345^A1N^FDRemark^FS");
 
         String remark = (String)barcodeInfo.get("LABEL_NOTE");
-        String line1 = doNull(getNoteArr(remark,1));
+        String line1 = doNull(getNoteArr(remark,1, 68));
         if(!"".equals(line1)){
             bufWriter.write("^FO90,325^A1N^FD"+line1+"^FS");
         }
-        String line2 = doNull(getNoteArr(remark,2));
+        String line2 = doNull(getNoteArr(remark,2, 68));
         if(!"".equals(line2)){
             bufWriter.write("^FO90,350^A1N^FD"+line2+"^FS");
         }
-        String line3 = doNull(getNoteArr(remark,3));
+        String line3 = doNull(getNoteArr(remark,3, 68));
         if(!"".equals(line3)){
             bufWriter.write("^FO90,375^A1N^FD"+line3+"^FS");
         }
@@ -182,7 +193,7 @@ public class BarcodePrintUtil {
         return rtnVal;
     }
 
-    public static String getNoteArr(String note, int line ) {
+    public static String getNoteArr(String note, int line, int maxLen ) {
 
         StringBuffer newMunja = new StringBuffer();
         String rtn = "";
@@ -195,9 +206,10 @@ public class BarcodePrintUtil {
 
             double totalLen = 0;
             List returnStr = new ArrayList();
-            if (!"".equals(note)) {
+            System.out.println("note="+note);
+            if (note != null && !"".equals(note) && !"NULL".equals(note)) {
                 int munjaLen = note.length();
-                int totcnt = (munjaLen/68)+1;
+                //int totcnt = (munjaLen/maxLen)+1;
 
                 for (int i = 0; i < munjaLen; i++) {
                     char munjaEach = note.charAt(i);
@@ -213,7 +225,7 @@ public class BarcodePrintUtil {
                     }
 
                     newMunja.append(munjaEach);
-                    if (totalLen > 68) {
+                    if (totalLen > maxLen) {
                         returnStr.add(newMunja.toString());
                         System.out.println(newMunja.toString());
                         newMunja = new StringBuffer();
