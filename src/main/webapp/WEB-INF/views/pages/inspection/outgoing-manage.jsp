@@ -1268,7 +1268,6 @@
         $("#OUTGOING_BARCODE_NUM").on('keyup', function(e) {
 
             let OUTGOING_BARCODE_PRINT_TYPE = $('input[name="OUTGOING_BARCODE_PRINT_TYPE"]:checked').val();
-            alert(OUTGOING_BARCODE_PRINT_TYPE);
             if(OUTGOING_BARCODE_PRINT_TYPE == "1"){//출고
                 if (e.keyCode == 13) {
                     //fnResetFrom("outgoing_manage_pop_form");
