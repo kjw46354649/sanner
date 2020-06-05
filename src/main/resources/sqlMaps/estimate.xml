@@ -612,22 +612,4 @@
         WHERE A.CONTROL_SEQ IN (${CONTROL_SEQ})
     </select>
 
-    <update id="updateEstimateMasterSend" parameterType="java.util.HashMap">
-        UPDATE TBL_ESTIMATE
-        SET
-            SEND_DT = NOW(),
-            MAIL_BOX_SEQ = #{MAIL_BOX_SEQ},
-            UPDATE_DT = NOW(),
-            UPDATE_ID = NULL
-        WHERE EST_SEQ = #{EST_SEQ}
-    </update>
-    <update id="updateEstimateMasterSend" parameterType="java.util.HashMap">
-        UPDATE TBL_ESTIMATE
-        SET
-            SEND_DT = NOW(),
-            MAIL_BOX_SEQ = #{MAIL_BOX_SEQ},
-            UPDATE_DT = NOW(),
-            UPDATE_ID = NULL
-        WHERE EST_SEQ = #{EST_SEQ}
-    </update>
 </mapper>
