@@ -511,4 +511,92 @@
         WHERE EST_SEQ = #{EST_SEQ}
     </update>
 
+    <select id="selectEstimateInfoFromControl" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.COMP_CD, <!-- 사업자(공급사) -->
+            A.ORDER_STAFF_SEQ, <!-- 구매 담당자 -->
+            A.ORDER_COMP_CD, <!-- 발주사 -->
+            DATE_FORMAT(A.STATUS_DT, '%Y-%m-%d %T') INSERT_DT, <!-- 수정일시 -->
+            COUNT(A.CONTROL_SEQ) AS DTL_CNT,
+            SUM(B.UNIT_FINAL_EST_AMT) AS DTL_AMOUNT, <!-- 견적금액 -->
+            (SELECT TEMPLATE_CONTENT FROM TBL_MAIL_TEMPLATE WHERE TEMPLATE_SEQ = 0) AS EMAIL_CONTENT
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ 
+        WHERE
+            A.CONTROL_SEQ IN (${CONTROL_SEQ})
+        GROUP BY  A.COMP_CD, A.ORDER_COMP_CD, A.ORDER_STAFF_SEQ
+    </select>
+
+    <select id="selectEstimateListFromControl" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            ROW_NUMBER () OVER () AS ROWNUM,
+            A.PROJECT_NM,
+            A.MODULE_NM,
+            B.ITEM_NM,
+            B.DRAWING_NUM,
+            B.PART_NUM,
+            B.SIZE_TXT,
+            B.WORK_TYPE,
+            SF_GET_CODE_NM(1033, B.WORK_TYPE, 'EN') AS WORK_TYPE_NM,
+            B.MATERIAL_TYPE,
+            SF_GET_CODE_NM(1035, B.MATERIAL_TYPE, 'EN') AS MATERIAL_TYPE_NM,
+            B.MATERIAL_DETAIL,
+            SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, 'EN') AS MATERIAL_DETAIL_NM,
+            B.MATERIAL_KIND,
+            SF_GET_CODE_NM(1029, B.MATERIAL_KIND, 'EN') AS MATERIAL_KIND_NM,
+            B.SURFACE_TREAT,
+            SF_GET_CODE_NM(1039, B.SURFACE_TREAT, 'EN') AS SURFACE_TREAT_NM,
+            B.MATERIAL_NOTE,
+            B.DETAIL_LATHE,
+            B.DETAIL_SURFACE,
+            B.DETAIL_CLAMPING,
+            B.DETAIL_POCKET,
+            B.DETAIL_DRILL,
+            B.DETAIL_DIFFICULTY,
+            B.MATERIAL_FINISH_TM,
+            B.MATERIAL_FINISH_GRIND,
+            B.MATERIAL_FINISH_HEAT,
+            B.UNIT_MATERIAL_AMT,
+            B.UNIT_TM_AMT,
+            B.UNIT_GRIND_AMT,
+            B.UNIT_HEAT_AMT,
+            B.UNIT_SURFACE_AMT,
+            B.UNIT_PROCESS_AMT,
+            B.UNIT_ETC_AMT,
+            B.UNIT_MATERIAL_AUTO_YN,
+            B.UNIT_TM_AUTO_YN,
+            B.UNIT_GRIND_AUTO_YN,
+            B.UNIT_HEAT_AUTO_YN,
+            B.UNIT_SURFACE_AUTO_YN,
+            B.UNIT_PROCESS_AUTO_YN,
+            B.UNIT_AMT_NOTE,
+            B.UNIT_FINAL_EST_AMT,
+            A.NOTE, -- NOTE
+            B.DWG_GFILE_SEQ,
+            B.DXF_GFILE_SEQ,
+            B.PDF_GFILE_SEQ,
+            B.IMG_GFILE_SEQ,
+            IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_TM_AMT, 0) + IFNULL(B.UNIT_GRIND_AMT, 0) + IFNULL(B.UNIT_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0) AS CALCUL_EST_UNIT_COST,
+            CASE
+                WHEN B.UNIT_FINAL_EST_AMT IS NOT NULL THEN IFNULL(B.UNIT_FINAL_EST_AMT, 0) * IFNULL(C.ORDER_QTY, 0)
+                ELSE (IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_TM_AMT, 0) + IFNULL(B.UNIT_GRIND_AMT, 0) + IFNULL(B.UNIT_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0)) * IFNULL(C.ORDER_QTY, 0)
+            END AS DTL_AMOUNT
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                                   AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+        WHERE A.CONTROL_SEQ IN (${CONTROL_SEQ})
+    </select>
+
+    <select id="selectEstimateReceiverListFromControl" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.STAFF_SEQ,
+            A.STAFF_NM AS RECEIVER_NM,
+            A.STAFF_EMAIL AS RECEIVER_EMAIL,
+            A.STAFF_TEL AS RECEIVER_TEL
+        FROM  TBL_COMPANY_STAFF A
+            INNER JOIN TBL_CONTROL B ON A.STAFF_SEQ = B.ORDER_STAFF_SEQ
+        WHERE A.CONTROL_SEQ IN (${CONTROL_SEQ})
+    </select>
+
 </mapper>

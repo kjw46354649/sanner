@@ -265,10 +265,6 @@ table.templateStyle th { border: 1px solid #8ad7e7; background: #337ab7; color: 
 table.templateStyle td { border: 1px solid #cdcfd0; width: 100% !important;}
 table.templateStyle td input { width: 100% !important;}
 
-.pq-grid-col.cantChange { background-color: #bfbfbf; font-weight: bold; color: black; }
-.pq-grid-col.selectChange { background-color: #aac8ed; font-weight: bold; color: black; }
-.pq-grid-col.inputChange { background-color: #aac8ed; font-weight: bold; color: #ffffff; }
-
 .layerPopup .btn_allPlus{ width: 60px; height: 30px; line-height: 25px; background: #880000; color: #fff; border-radius: 5px; border: 1px solid #b10000; box-sizing: border-box; font-size: 14px; float: right;-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#000000)";} /*IE 8*/
 
 /* In Warehouse Manage Popup*/
