@@ -12,6 +12,7 @@
             C.ORDER_SEQ, <!-- 발주번호일련번호 -->
             A.CONTROL_STATUS AS CONTROL_STATUS_ORIGINAL, <!-- 주문관리상태 -->
             SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR') AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
+            A.CONTROL_VER, <!-- 관리번호버전 -->
             SF_GET_DATE_F(A.STATUS_DT,'YY','M') AS CONTROL_STATUS_DT, <!-- 상태확정일 -->
             A.PRICE_CONFIRM, <!-- 단가확인 -->
             A.COMP_CD, <!-- 사업자구분 -->
@@ -32,7 +33,6 @@
             A.EMERGENCY_YN, <!-- 긴급 -->
             SF_GET_CODE_NM(1042, A.EMERGENCY_YN, 'EN') AS EMERGENCY_YN_NM, <!-- 긴급 -->
             IF(A.EMERGENCY_YN IS NULL, SPACE(0), '긴급') AS EMERGENCY_BARCODE_NM, <!-- 바코드 긴급 -->
-            A.CONTROL_VER, <!-- 관리번호버전 -->
             A.CONTROL_NUM, <!-- 관리번호 -->
             IFNULL(B.PART_NUM, SPACE(0)) AS PART_NUM, <!-- Part -->
             B.DRAWING_VER, <!-- 도면번호버전 -->
@@ -56,11 +56,7 @@
             IFNULL(B.MATERIAL_FINISH_HEAT, SPACE(0)) AS MATERIAL_FINISH_HEAT, <!-- 열처리 -->
             B.MATERIAL_NOTE, <!-- 소재비고 -->
             B.PART_UNIT_QTY, <!-- Part단위수량 -->
-            (IFNULL(B.PART_UNIT_QTY, 1) * IFNULL(C.ORDER_QTY, (SELECT MAX(ORDER_QTY)
-                                                               FROM TBL_CONTROL_PART_ORDER AA
-                                                               INNER JOIN TBL_CONTROL_PART BB ON AA.CONTROL_SEQ = BB.CONTROL_SEQ AND AA.CONTROL_DETAIL_SEQ = BB.CONTROL_DETAIL_SEQ
-                                                               WHERE
-                                                                   AA.CONTROL_SEQ = B.CONTROL_SEQ))) AS ORDER_QTY_TOTAL, <!-- 주문 수량 -->
+            SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS ORDER_QTY_TOTAL, <!-- 주문 수량 -->
             C.ORDER_NUM, <!-- 발주번호 -->
             IFNULL(C.ORDER_QTY, SPACE(0)) AS ORDER_QTY, <!-- 발주정보_수량 -->
             IFNULL(B.ORIGINAL_SIDE_QTY, SPACE(0)) AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
@@ -90,12 +86,14 @@
             B.UNIT_ETC_AMT, <!-- 항목별단가_기타추가 -->
             B.UNIT_AMT_NOTE, <!-- 항목별단가_견적비고 -->
             B.UNIT_FINAL_EST_AMT, <!-- 최종견적단가 -->
+            (IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_TM_AMT, 0) + IFNULL(B.UNIT_GRIND_AMT, 0) + IFNULL(B.UNIT_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0)) * C.ORDER_QTY AS EST_TOTAL_AMOUNT, <!-- 견적 합계 금액 -->
             B.UNIT_FINAL_AMT, <!-- 최종공급단가 -->
             B.UNIT_FINAL_AMT AS UNIT_FINAL_AMT_ORIGINAL, <!-- 최종공급단가 -->
+            B.UNIT_FINAL_AMT * C.ORDER_QTY AS FINAL_AMT, <!-- 합계 금액 -->
             B.PREV_DRAWING_NUM, <!-- 변경전도면번호 -->
-            SF_GET_DATE_F(D.CLOSE_MONTH, 'YY', '') AS CLOSE_MONTH, <!-- 마감 월 -->
+            DATE_FORMAT(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m'), '%Y-%m') AS CLOSE_MONTH, <!-- 마감 월 -->
             CONCAT(D.CLOSE_VER, '건') AS CLOSE_VER, <!-- 차수 -->
-            '', <!-- 작성자 -->
+            D.INSERT_ID AS CLOSE_USER_ID, <!-- 작성자 -->
             SF_GET_DATE_F(E.CLOSE_DT,'YY','M') AS CLOSE_DT, <!-- 마감일시 -->
             B.DXF_GFILE_SEQ, <!-- DXF -->
             B.IMG_GFILE_SEQ, <!-- IMG(PNG) -->
@@ -1279,12 +1277,35 @@
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-            AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                                                AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
         WHERE 1 = 1
             AND A.CONTROL_SEQ IN (${CONTROL_SEQ_STR})
             AND A.COMP_CD = #{COMP_CD}
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
             AND B.WORK_TYPE NOT IN ('WTP050') <!-- Part 부속은 제외(작업형태 파트가공) -->
+            AND NOT EXISTS (SELECT * FROM TBL_INVOICE WHERE INVOICE_NUM = #{INVOICE_NUM})
+        UNION ALL
+            SELECT
+            ROW_NUMBER () OVER () AS ROWNUM,
+            A.CONTROL_SEQ,
+            B.CONTROL_DETAIL_SEQ,
+            SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR') AS CONTROL_STATUS_NM,
+            C.ORDER_NUM,
+            B.DRAWING_NUM,
+            B.SIZE_TXT,
+            '',
+            B.UNIT_FINAL_AMT,
+            C.ORDER_QTY,
+            B.UNIT_FINAL_AMT * C.ORDER_QTY AS TOTAL_AMT,
+            C.PACKING_CNT
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                                   AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_INVOICE_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ
+                                               AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_INVOICE E ON D.INVOICE_NUM = E.INVOICE_NUM
+            WHERE E.INVOICE_NUM = #{INVOICE_NUM}
     </select>
 
     <select id="selectTransactionStatementOrderStaff" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -1657,7 +1678,7 @@
         SELECT
             ROW_NUMBER() OVER() AS ROW_NUM,
             A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ,
-            CASE WHEN A.EMERGENCY_YN = 'Y' THEN '긴급' ELSE '' END EMERGENCY_YN_NM,
+            CASE WHEN A.EMERGENCY_YN = 'Y' THEN '긴' ELSE '' END EMERGENCY_YN_NM,
             A.ORDER_COMP_CD, SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM,
             DATE_FORMAT(STR_TO_DATE(C.ORDER_DUE_DT, '%Y%m%d'), '%m-%d') as ORDER_DUE_DT,
             DATE_FORMAT(STR_TO_DATE(C.DELIVERY_DT, '%Y%m%d'), '%m-%d') as DELIVERY_DT,

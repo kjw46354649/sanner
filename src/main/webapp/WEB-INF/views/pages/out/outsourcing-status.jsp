@@ -267,7 +267,7 @@
         /* variable */
 
         $('#TAB1_SEARCH').on('click', function () {
-            tab1PostData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM')
+            tab1PostData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM');
             $outsideCloseStatusGrid.pqGrid('option', 'dataModel.postData', function (ui) {
                 return tab1PostData;
             });
@@ -275,7 +275,7 @@
         });
 
         $('#TAB2_SEARCH').on('click', function () {
-            tab2PostData = fnFormToJsonArrayData('#MONTH_OUTSIDE_STATUS_SEARCH_FORM')
+            tab2PostData = fnFormToJsonArrayData('#MONTH_OUTSIDE_STATUS_SEARCH_FORM');
             $monthlyOutsideStatusGrid.pqGrid('option', 'dataModel.postData', function (ui) {
                 return tab2PostData;
             });

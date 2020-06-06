@@ -164,6 +164,29 @@
 <script>
     $(function () {
         'use strict';
+        fnCommCodeDatasourceSelectBoxCreate($('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM').find('#ORDER_COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOrderCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#MONTH_SALE_STATUS_SEARCH_FORM ').find('#COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#MONTH_SALE_STATUS_SEARCH_FORM ').find('#ORDER_COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOrderCompanyList'}
+        });
+        fnAppendSelectboxYear('CLOSE_YEAR_LEFT', 10);
+        fnAppendSelectboxMonth('CLOSE_MONTH_LEFT');
+        $('#CLOSE_MONTH_LEFT').val('01').prop('selected', true);
+        fnAppendSelectboxYear('CLOSE_YEAR_RIGHT', 10);
+        fnAppendSelectboxMonth('CLOSE_MONTH_RIGHT');
+        fnAppendSelectboxYear('MONTH_SALE_YEAR', 10);
+
         /* variable */
         let $closingHistoryGrid;
         const tab1GridId = 'CLOSING_HISTORY_GRID';
@@ -178,17 +201,34 @@
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
             {title: '발주사', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주사', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '품수', dataType: 'string', dataIndx: 'ITEM_NUMBER',
+            {title: '품수', dataType: 'string', dataIndx: 'ITEM_NUMBER', summary: {type: 'sum', edit: true},
                 render: function (ui) {
-                    return ("<a href='#DETAIL_LIST_VIEW_POPUP' class='' id='' data-target='' data-toggle='modal' " +
-                        "data-refform='DETAIL_LIST_VIEW_POPUP'><u>" + ui.cellData + "</u></a>");
+                    if(ui.rowData.pq_grandsummary) {
+                        return ui.cellData;
+                    } else {
+                        return ("<a href='#DETAIL_LIST_VIEW_POPUP' class='' id='' data-target='' data-toggle='modal' " +
+                            "data-refform='DETAIL_LIST_VIEW_POPUP'><u>" + ui.cellData + "</u></a>");
+                    }
                 }
             },
-            {title: '최종 공급가', datatype: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
-            {title: '부가세액', datatype: 'integer', format: '#,###', dataIndx: 'VAT_AMOUNT'},
-            {title: '합계금액', datatype: 'integer', format: '#,###', dataIndx: 'TOTAL_AMOUNT'},
+            {title: '최종 공급가', datatype: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', summary: {type: 'sum', edit: true}},
+            {title: '부가세액', datatype: 'integer', format: '#,###', dataIndx: 'VAT_AMOUNT', summary: {type: 'sum', edit: true}},
+            {title: '합계금액', datatype: 'integer', format: '#,###', dataIndx: 'TOTAL_AMOUNT', summary: {type: 'sum', edit: true}},
             {title: '비고', dataType: 'string', dataIndx: 'CLOSE_NOTE', editable: true}
         ];
+        const tab1GroupModel = {
+            on: true, header:false,
+            headerMenu: false,
+            indent: 10,
+            dataIndx: ['COMP_CD'],
+            summaryInTitleRow: '',
+            summaryEdit: false,
+            // showSummary: [true], //to display summary at end of every group.
+            collapsed: [false],
+            grandSummary: true,
+            merge: true,
+            nodeClose: false,
+        };
         const tab1Obj = {
             height: 700,
             collapsible: false,
@@ -199,14 +239,17 @@
             trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
             colModel: tab1ColModel,
+            groupModel: tab1GroupModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'dataSource.emptyGrid'}, recIndx: 'ROWNUM',
+                postData: fnFormToJsonArrayData('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM'), recIndx: 'ROWNUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
             }
         };
+        $closingHistoryGrid = $('#' + tab1GridId).pqGrid(tab1Obj);
+
         let $detailListViewGrid;
         const detailListViewGridId = 'DETAIL_LIST_VIEW_GRID';
         let detailListViewPostData = fnFormToJsonArrayData('#MONTH_SALE_STATUS_SEARCH_FORM');
@@ -277,34 +320,34 @@
             {title: '구분', dataType: 'string', dataIndx: 'STATUS_TYPE',},
             {
                 title: '1분기', align: 'center', colModel: [
-                    {title: '1월', datatype: 'integer', format: '#,###', dataIndx: '01_AMT', editable: true},
-                    {title: '2월', datatype: 'integer', format: '#,###', dataIndx: '02_AMT', editable: true},
-                    {title: '3월', datatype: 'integer', format: '#,###', dataIndx: '03_AMT', editable: true},
-                    {title: '합계', datatype: 'integer', format: '#,###', dataIndx: '03_SUM_AMT', editable: true}
+                    {title: '1월', datatype: 'integer', format: '#,###', dataIndx: '01_AMT', summary: {type: 'sum'}},
+                    {title: '2월', datatype: 'integer', format: '#,###', dataIndx: '02_AMT', summary: {type: 'sum'}},
+                    {title: '3월', datatype: 'integer', format: '#,###', dataIndx: '03_AMT', summary: {type: 'sum'}},
+                    {title: '합계', datatype: 'integer', format: '#,###', dataIndx: '03_SUM_AMT', summary: {type: 'sum'}}
                 ]
             },
             {
                 title: '2분기', align: 'center', colModel: [
-                    {title: '4월', datatype: 'integer', format: '#,###', dataIndx: '04_AMT', editable: true},
-                    {title: '5월', datatype: 'integer', format: '#,###', dataIndx: '05_AMT', editable: true},
-                    {title: '6월', datatype: 'integer', format: '#,###', dataIndx: '06_AMT', editable: true},
-                    {title: '합계', datatype: 'integer', format: '#,###', dataIndx: '06_SUM_AMT', editable: true}
+                    {title: '4월', datatype: 'integer', format: '#,###', dataIndx: '04_AMT', summary: {type: 'sum'}},
+                    {title: '5월', datatype: 'integer', format: '#,###', dataIndx: '05_AMT', summary: {type: 'sum'}},
+                    {title: '6월', datatype: 'integer', format: '#,###', dataIndx: '06_AMT', summary: {type: 'sum'}},
+                    {title: '합계', datatype: 'integer', format: '#,###', dataIndx: '06_SUM_AMT', summary: {type: 'sum'}}
                 ]
             },
             {
                 title: '3분기', align: 'center', colModel: [
-                    {title: '7월', datatype: 'integer', format: '#,###', dataIndx: '07_AMT', editable: true},
-                    {title: '8월', datatype: 'integer', format: '#,###', dataIndx: '08_AMT', editable: true},
-                    {title: '9월', datatype: 'integer', format: '#,###', dataIndx: '09_AMT', editable: true},
-                    {title: '합계', datatype: 'integer', format: '#,###', dataIndx: '09_SUM_AMT', editable: true}
+                    {title: '7월', datatype: 'integer', format: '#,###', dataIndx: '07_AMT', summary: {type: 'sum'}},
+                    {title: '8월', datatype: 'integer', format: '#,###', dataIndx: '08_AMT', summary: {type: 'sum'}},
+                    {title: '9월', datatype: 'integer', format: '#,###', dataIndx: '09_AMT', summary: {type: 'sum'}},
+                    {title: '합계', datatype: 'integer', format: '#,###', dataIndx: '09_SUM_AMT', summary: {type: 'sum'}}
                 ]
             },
             {
                 title: '4분기', align: 'center', colModel: [
-                    {title: '10월', datatype: 'integer', format: '#,###', dataIndx: '10_AMT', editable: true},
-                    {title: '11월', datatype: 'integer', format: '#,###', dataIndx: '11_AMT', editable: true},
-                    {title: '12월', datatype: 'integer', format: '#,###', dataIndx: '12_AMT', editable: true},
-                    {title: '합계', datatype: 'integer', format: '#,###', dataIndx: '12_SUM_AMT', editable: true}
+                    {title: '10월', datatype: 'integer', format: '#,###', dataIndx: '10_AMT', summary: {type: 'sum'}},
+                    {title: '11월', datatype: 'integer', format: '#,###', dataIndx: '11_AMT', summary: {type: 'sum'}},
+                    {title: '12월', datatype: 'integer', format: '#,###', dataIndx: '12_AMT', summary: {type: 'sum'}},
+                    {title: '합계', datatype: 'integer', format: '#,###', dataIndx: '12_SUM_AMT', summary: {type: 'sum'}}
                 ]
             },
             {title: '합계', datatype: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}
@@ -323,6 +366,19 @@
         //     collapsed: [false, false, false],
         //     summaryEdit: false
         // };
+        const tab2GroupModel = {
+            on: true, header:false,
+            headerMenu: false,
+            indent: 10,
+            dataIndx: ['COMP_CD'],
+            summaryInTitleRow: '',
+            summaryEdit: false,
+            // showSummary: [true], //to display summary at end of every group.
+            collapsed: [false],
+            grandSummary: true,
+            merge: true,
+            nodeClose: false,
+        };
         const tab2Obj = {
             height: 750,
             collapsible: false,
@@ -333,7 +389,7 @@
             // trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
             colModel: tab2ColModel,
-            // groupModel: tab2GroupModel,
+            groupModel: tab2GroupModel,
             toolPanel: {
                 show: false  //show toolPanel initially.
             },
@@ -405,34 +461,12 @@
         });
 
         /* init */
-        fnCommCodeDatasourceSelectBoxCreate($('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM').find('#ORDER_COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOrderCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#MONTH_SALE_STATUS_SEARCH_FORM ').find('#COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#MONTH_SALE_STATUS_SEARCH_FORM ').find('#ORDER_COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOrderCompanyList'}
-        });
-        fnAppendSelectboxYear('CLOSE_YEAR_LEFT', 10);
-        fnAppendSelectboxMonth('CLOSE_MONTH_LEFT');
-        $('#CLOSE_MONTH_LEFT').val('01').prop('selected', true);
-        fnAppendSelectboxYear('CLOSE_YEAR_RIGHT', 10);
-        fnAppendSelectboxMonth('CLOSE_MONTH_RIGHT');
-        fnAppendSelectboxYear('MONTH_SALE_YEAR', 10);
 
-        $closingHistoryGrid = $('#' + tab1GridId).pqGrid(tab1Obj);
-        $closingHistoryGrid.pqGrid('option', 'dataModel.postData', function () {
-            return (fnFormToJsonArrayData('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM'));
-        });
-        $closingHistoryGrid.pqGrid('refreshDataAndView');
+
+        // $closingHistoryGrid.pqGrid('option', 'dataModel.postData', function () {
+        //     return (fnFormToJsonArrayData('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM'));
+        // });
+        // $closingHistoryGrid.pqGrid('refreshDataAndView');
         $monthlySalesStatusGrid = $('#' + tab2GridId).pqGrid(tab2Obj);
         /* init */
     });

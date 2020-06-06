@@ -122,7 +122,7 @@
     </div>
     <div class="bottomWrap row4_bottomWrap">
         <div class="hWrap">
-            <button type="button" class="defaultBtn btn-120w" id="DEADLINE_OR_END_CANCEL">마감/종료 취소</button>
+            <button type="button" class="defaultBtn btn-120w" data-toggle="modal" data-target="#CONTROL_CLOSE_CANCEL_POPUP">마감/종료 취소</button>
             <div class="rightSpan">
                 <button type="button" class="defaultBtn btn-120w" id="DRAWING_VIEW">도면 View</button>
                 <button type="button" class="defaultBtn btn-120w green" id="CONTROL_CLOSE_HISTORY_SAVE">저장</button>
@@ -157,6 +157,31 @@
     </div>
 </div>
 
+<div class="popup_container" id="CONTROL_CLOSE_CANCEL_POPUP" style="display: none;">
+    <div class="controlCloseLayerPopup">
+        <h3>월 마감 취소 진행</h3>
+        <hr>
+        <button type="button" class="pop_close CONTROL_CLOSE_NO">닫기</button>
+        <div class="d-inline-block">
+            <div style="width: 450px; float:left;">
+                <div id="CONTROL_CLOSE_CANCEL_LEFT_GRID"></div>
+            </div>
+            <div style="display: flex; float:left; align-items: center; justify-content: center; width: 70px; height: 250px;">
+                <span class="arrow right_Arrow"></span>
+            </div>
+            <div style="width: 450px; float:left;">
+                <div id="CONTROL_CLOSE_CANCEL_RIGHT_GRID"></div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button class="defaultBtn" id="CONTROL_CLOSE_YES">저장</button>
+            <button class="defaultBtn CONTROL_CLOSE_NO">닫기</button>
+        </div>
+    </div>
+</div>
+
+
 <script>
     $(function () {
         'use strict';
@@ -170,32 +195,13 @@
         const colModel = [
             {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true, colModel: []},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true, colModel: []},
-            {
-                title: 'CONTROL_PROGRESS_SEQ',
-                dataType: 'integer',
-                dataIndx: 'CONTROL_PROGRESS_SEQ',
-                hidden: true,
-                colModel: []
-            },
+            {title: 'CONTROL_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'CONTROL_PROGRESS_SEQ', hidden: true, colModel: []},
             {title: 'ORDER_STATUS', dataType: 'integer', dataIndx: 'ORDER_STATUS', hidden: true, colModel: []},
             {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true, colModel: []},
-            {
-                title: 'CONTROL_DETAIL_SEQ',
-                dataType: 'integer',
-                dataIndx: 'CONTROL_DETAIL_SEQ',
-                hidden: true,
-                colModel: []
-            },
-            {
-                title: 'PART_PROGRESS_SEQ',
-                dataType: 'integer',
-                dataIndx: 'PART_PROGRESS_SEQ',
-                hidden: true,
-                colModel: []
-            },
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true, colModel: []},
+            {title: 'PART_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true, colModel: []},
             {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true, colModel: []},
-            {
-                title: '주문상태', align: 'center', colModel: [
+            {title: '주문상태', align: 'center', colModel: [
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS', hidden: true},
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_NM'},
                     {title: '변경일시', minWidth: 100, datatype: 'date', dataIndx: 'CONTROL_STATUS_DT'}
@@ -209,27 +215,29 @@
             {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', colModel: []},
             {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', editable: true, colModel: []},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true, colModel: []},
-            {
-                title: 'INV No.<br>(거래명세No.)',
-                minWidth: 100,
-                dataType: 'string',
-                dataIndx: 'CHARGE_USER_ID',
-                colModel: []
-            },
+            {title: 'INV No.<br>(거래명세No.)', minWidth: 100, dataType: 'string', dataIndx: 'INVOICE_NUM', colModel: []},
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', editable: true, colModel: []},
             {
                 title: '주요<br>검사품', dataType: 'select', dataIndx: 'MAIN_INSPECTION', colModel: [],
-                editor: {
-                    type: 'select',
-                    mapIndices: {name: 'MAIN_INSPECTION_NM', id: 'MAIN_INSPECTION'},
-                    valueIndx: 'value',
-                    labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1045'),
-                    getData: function (ui) {
-                        let clave = ui.$cell.find('select').val();
-                        let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: ui.rowIndx});
-                        rowData['MAIN_INSPECTION'] = clave;
-                        return ui.$cell.find("select option[value='" + clave + "']").text();
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1059')},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let mainInspection = fnGetCommCodeGridSelectBox('1059');
+                        let index = mainInspection.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = mainInspection.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : mainInspection[index].text;
                     }
                 }
             },
@@ -356,7 +364,7 @@
                 title: '마감/취소 현황', align: 'center', colModel: [
                     {title: '마감월', datatype: 'string', dataIndx: 'CLOSE_MONTH'},
                     {title: '차수', datatype: 'string', dataIndx: 'CLOSE_VER'},
-                    {title: '작성자', datatype: 'string', dataIndx: 'akrkacnlthtkwrtjdwk'},
+                    {title: '작성자', datatype: 'string', dataIndx: 'CLOSE_USER_ID'},
                     {title: '일시', datatype: 'string', dataIndx: 'CLOSE_DT'}
                 ]
             },
@@ -457,6 +465,66 @@
                 }
             }
         };
+        let $controlCloseHistoryLeftGrid;
+        const controlCloseHistoryLeftGridId = 'CONTROL_CLOSE_CANCEL_LEFT_GRID';
+        const controlCloseCancelColModel = [
+            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
+            {title: '사업자', width: 70,  dataType: 'string', dataIndx: 'COMP_NM'},
+            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
+            {title: '발주처', width: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
+            {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
+            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
+            {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
+            {title: '공급가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
+            {title: '마감금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'}
+        ];
+        const controlCloseCancelObj = {
+            height: 300,
+            collapsible: false,
+            resizable: false,
+            showTitle: false,
+            // scrollModel: {autoFit: true},
+            dragColumns: {enabled: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            colModel: controlCloseCancelColModel,
+            strNoRows: g_noData,
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: {'queryId': 'dataSource.emptyGrid'},
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            }
+        };
+        // const controlCloseHistoryLeftColModel = [
+        //     {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP', hidden: true},
+        //     {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+        //     {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
+        //     {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
+        //     {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
+        //     {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
+        //     {title: '마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
+        //     {title: '네고금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT'}
+        // ];
+        // const controlCloseHistoryLeftObj = {
+        //     height: 250,
+        //     collapsible: false,
+        //     resizable: false,
+        //     showTitle: false,
+        //     scrollModel: {autoFit: true},
+        //     dragColumns: {enabled: false},
+        //     columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+        //     colModel: controlCloseHistoryLeftColModel,
+        //     dataModel: {
+        //         location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+        //         postData: {'queryId': 'dataSource.emptyGrid'},
+        //         getData: function (dataJSON) {return {data: dataJSON.data};}
+        //     }
+        // };
+        let $controlCloseHistoryRightGrid;
+        const controlCloseHistoryRightGridId = 'CONTROL_CLOSE_CANCEL_RIGHT_GRID';
+
         /* variable */
 
         /* function */
@@ -489,8 +557,92 @@
             $closeHistoryGrid.pqGrid('refreshDataAndView');
         });
 
-        $('#DEADLINE_OR_END_CANCEL').on('click', function () {
-            updateControlStatus();
+        let loadControlCloseCancelData = function() {
+          console.log(selectedRowIndex);
+            let postData = fnFormToJsonArrayData('#CONTROL_CLOSE_FORM');
+            postData.queryId = 'orderMapper.selectControlCloseVer';
+            let parameters = {'url': '/json-list', 'data': postData};
+
+            let list = [];
+            let controlSeqList = [];
+            let compCdList = [];
+            let orderCompCdList = [];
+            let orderStaffSeqList = [];
+            let controlSeqStr = '';
+
+            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+
+                list.push(rowData);
+                controlSeqList.push(rowData.CONTROL_SEQ);
+                compCdList.push(rowData.COMP_CD);
+                orderCompCdList.push(rowData.ORDER_COMP_CD);
+                orderStaffSeqList.push(rowData.ORDER_STAFF_SEQ);
+            }
+            // 중복제거
+            controlSeqList = controlSeqList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+            compCdList = compCdList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+            orderStaffSeqList = orderStaffSeqList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+
+            if (controlSeqList.length === 0) {
+                alert('에러!');
+                return false;
+            }
+            // if (compCdList.length === 0 || compCdList[0] === undefined) {
+            //     alert('공급사(사업자)가 없습니다!');
+            //     return false;
+            // }
+            // if (orderCompCdList.length === 0 || orderCompCdList[0] === undefined) {
+            //     alert('발주사가 없습니다!');
+            //     return false;
+            // }
+            if (compCdList.length > 1) {
+                alert('선택된 대상들의 사업자는 동일해야 합니다.');
+                return false;
+            }
+            if (orderCompCdList.length > 1) {
+                alert('선택된 대상들의 발주사는 동일해야 합니다.');
+                return false;
+            }
+            if (orderStaffSeqList.length > 1) {
+                alert('선택된 대상들의 구매 담당자는 동일해야 합니다.');
+                return false;
+            }
+
+            for (let i = 0; i < controlSeqList.length; i++) {
+                controlSeqStr += controlSeqList[i];
+
+                if (i < controlSeqList.length - 1) {
+                    controlSeqStr += ',';
+                }
+            }
+        };
+
+        $('#CONTROL_CLOSE_CANCEL_POPUP').on({
+            'show.bs.modal': function () {
+                // updateControlStatus();
+                if (noSelectedRowAlert()) {
+                    return false;
+                }
+
+                $controlCloseHistoryLeftGrid = $('#' + controlCloseHistoryLeftGridId).pqGrid(controlCloseCancelObj);
+                $controlCloseHistoryRightGrid = $('#' + controlCloseHistoryRightGridId).pqGrid(controlCloseCancelObj);
+
+
+            },
+            'hide.bs.modal': function () {
+                $controlCloseHistoryLeftGrid.pqGrid('destroy');
+                $controlCloseHistoryRightGrid.pqGrid('destroy');
+            }
         });
 
         $('#DRAWING_VIEW').on('click', function () {

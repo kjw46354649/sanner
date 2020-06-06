@@ -16,8 +16,8 @@
                         <form class="form-inline" id="business_status_search_form" name="business_status_search_form" role="form">
                             <input type="hidden" name="queryId" id="queryId" value="orderMapper.businessOutgoingList">
                             <span class="ipu_wrap left_float">
-                                <label for="dateSltd">조회일자</label>
-                                <input type="text" name="INNER_DUE_DT" id="INNER_DUE_DT" placeholder="" value="" class="wd_100" title="조회일자">
+                                <label for="BUSINESS_STATUS_INNER_DUE_DT">조회일자</label>
+                                <input type="text" class="wd_100" name="INNER_DUE_DT" id="BUSINESS_STATUS_INNER_DUE_DT">
                             </span>
                             <span class="slt_wrap mg-left10">
                                 <select class="wd_150" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
@@ -112,6 +112,13 @@
             , datesRender: function(info) {
                 businessCalendar.getEventSources();
             }
+            ,dateClick: function(info) {
+                $('#business_status_search_form').find('#BUSINESS_STATUS_INNER_DUE_DT').datepicker('setDate', info.dateStr);
+                $businessOutgoingListGrid.pqGrid('option', 'dataModel.postData', function () {
+                    return (fnFormToJsonArrayData('#business_status_search_form'));
+                });
+                $businessOutgoingListGrid.pqGrid('refreshDataAndView');
+            }
             , defaultDate : TODAY // 기준일자
             , editable : false
             , eventLimit : true // allow "more" link when too many events
@@ -187,9 +194,8 @@
         // loadMonthSalesList();
 
 
-        $('#business_status_search_form').find('#INNER_DUE_DT').datepicker();
-        $('#business_status_search_form').find('#INNER_DUE_DT').datepicker('setDate', 'today');
-
+        $('#business_status_search_form').find('#BUSINESS_STATUS_INNER_DUE_DT').datepicker();
+        $('#business_status_search_form').find('#BUSINESS_STATUS_INNER_DUE_DT').datepicker('setDate', 'today');
         fnCommCodeDatasourceSelectBoxCreate($('#business_status_search_form').find('#ORDER_COMP_CD'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
@@ -201,7 +207,8 @@
         });
 
         let businessStatusColModel = [
-            {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN_NM', width: 40,},
+            {title: '긴', dataType: 'string', dataIndx: 'EMERGENCY_YN_NM', width: 40,},
+            {title: '중', dataType: 'string', dataIndx: '', width: 40,},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 80},
             {title: '납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', width: 50},
             {title: '출고', dataType: 'string', dataIndx: 'DELIVERY_DT', width: 50},
@@ -210,7 +217,7 @@
             {title: '발주번호', dataType: 'string', dataIndx: 'ORDER_NUM', width: 120},
             {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', width: 80},
             {title: '현재위치', dataType: 'string', dataIndx: 'LAST_POP_POSITION', width: 80},
-            {title: '검사', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', width: 30},
+            {title: '검사', dataType: 'string', dataIndx: 'INSPECT_GRADE', width: 30},
             {title: '담당자', dataType: 'string', dataIndx: 'USER_NM', width: 80}
         ];
 
@@ -333,6 +340,13 @@
         };
         $businessOverDangerListGrid = $('#' + businessOverDangerListGridId).pqGrid(businessOverDangerObj);
 
+
+        $('#BUSINESS_STATUS_INNER_DUE_DT').on('change', function () {
+            $businessOutgoingListGrid.pqGrid('option', 'dataModel.postData', function () {
+                return (fnFormToJsonArrayData('#business_status_search_form'));
+            });
+            $businessOutgoingListGrid.pqGrid('refreshDataAndView');
+        });
     });
 
 </script>
