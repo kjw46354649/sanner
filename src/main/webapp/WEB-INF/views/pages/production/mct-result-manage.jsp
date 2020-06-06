@@ -11,7 +11,82 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-
+<!-- cam 작업관리 popup -->
+<div class="popup_container cma_work_manage_detail_pop" id="cma_work_manage_detail_pop" style="display: none;">
+    <form class="form-inline" id="cam_work_manage_pop_form" name="cam_work_manage_pop_form" role="form">
+        <input type="hidden" id="queryId" name="queryId" value="machine.selectCommItemDetailInfo"/>
+        <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value=""/>
+        <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
+        <div class="layerPopup">
+            <h3>CAM 작업 관리</h3>
+            <button type="button" class="pop_close mg-top10 mg-right8" id="popClose2">닫기</button>
+            <div class="qualityWrap">
+                <h4>관리번호</h4>
+                <div class="list1">
+                    <table class="rowStyle">
+                        <colgroup>
+                            <col width="10%">
+                            <col width="60%">
+                            <col width="15%">
+                            <col width="15%">
+                        </colgroup>
+                        <tr>
+                            <th>관리번호</th>
+                            <td id="CONTROL_NUM" class="red"></td>
+                            <th>도면번호</th>
+                            <td id="DRAWING_NUM" class="red"></td>
+                            <th colspan="2">주문수량</th>
+                            <td colspan="2" id="INNER_DUE_DT"></td>
+                        </tr>
+                        <tr>
+                            <th>도면번호</th>
+                            <td id="ITEM_NM"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="listdiv">
+                    <div class="tableWrap" >
+                        <ul class="conWrapPop60">
+                            <h4>가공실적 및 기록사항</h4>
+                            <div id="cam_work_manage_pop_grid" class=""></div>
+                        </ul>
+                    </div>
+                </div>
+                <div class="listdiv">
+                    <table class="rowStyle conWrapPopLeft50">
+                        <colgroup>
+                            <col width="100%">
+                        </colgroup>
+                        <tr>
+                            <th>경험 기록사항(Lessons Learned)</th>
+                        </tr>
+                        <tr>
+                            <th><textarea id="HISTORY_NOTE" name="HISTORY_NOTE"></textarea></th>
+                        </tr>
+                    </table>
+                    <table class="rowStyle conWrapPopRi50">
+                        <colgroup>
+                            <col width="100%">
+                        </colgroup>
+                        <tr>
+                            <th>비고 및 공유사항</th>
+                        </tr>
+                        <tr>
+                            <th><textarea id="NOTE" name="NOTE"></textarea></th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="btnWrap">
+                <button type="button" class="defaultBtn orange" id="camWorkTempSaveBtn">임시저장</button>
+                <button type="button" class="defaultBtn green" id="camWorkSaveAndCompleteBtn">저장 & 완료</button>
+                <button type="button" class="defaultBtn red" id="camWorkCancelBtn">취소</button>
+                <button type="button" class="defaultBtn grayPopGra" id="camWorkManageCloseBtn">닫기</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- cam 작업 관리 popup -->
 <div class="page estimate">
     <div class="topWrap">
         <form class="form-inline" id="mct_result_manage_search_form" role="form">
@@ -103,9 +178,9 @@
             {title: 'CAM 작업 수행', minWidth: 100, width: 100, dataType: 'string', dataIndx: 'CAM_STATUS',
                 render: function (ui) {
                     //TODO: cam 상태
-                    const startBtn = '<button type="button" class="miniBtn orange">시작</button>';
+                    const startBtn = '<button type="button" class="miniBtn orange" id="CAM_WORK_START_ACTION">시작</button>';
                     const startDisableBtn = '<button type="button" class="miniBtn black">시작</button>';
-                    const finishBtn = '<button type="button" class="miniBtn blue" >완료</button>';
+                    const finishBtn = '<button type="button" class="miniBtn blue" id="CAM_WORK_COMPLETE_ACTION">완료</button>';
                     const finishDisableBtn = '<button type="button" class="miniBtn black" >완료</button>';
                     // switch (status) {
                     //     case '진행중':
@@ -126,20 +201,18 @@
                     // let rowIndx = ui.rowIndx;
                     let grid = this;
                     let $cell = grid.getCell(ui);
-                    $cell.find('[name=MCT_WORK_ACTION]').on('click', function () {
-                        switch (this.value) {
-                            case 'start':
-                                // 상세정보 조회 open
-                                break;
-                            case 'delete':
-                                break;
-                            case 'finish':
-                                break;
-                            case 'pause':
-                                break;
-                            case 'cancel':
-                                break;
-                        }
+                    $cell.find('#CAM_WORK_START_ACTION').bind('click', function () {
+                        let rowData = ui.rowData;
+                        let CONTROL_DETAIL_SEQ = rowData.CONTROL_DETAIL_SEQ;
+                        let CONTROL_SEQ = rowData.CONTROL_SEQ;
+
+                        console.log(CONTROL_DETAIL_SEQ);
+                        console.log(CONTROL_SEQ);
+
+                        g_item_detail_pop_view(CONTROL_SEQ, CONTROL_DETAIL_SEQ);
+                    });
+                    $cell.find('#CAM_WORK_COMPLETE_ACTION').bind('click', function () {
+
                         alert('개발중입니다.');
                     });
                 }
@@ -386,13 +459,50 @@
             return backgroundColor;
         };
         /* function */
+        /** 제품 시작 상세 표시 **/
+        let cam_work_manage_pop = function(CONTROL_SEQ, CONTROL_DETAIL_SEQ) {
+            // fnCommCodeDatasourceSelectBoxCreate($("#g_item_detail_pop_form").find("#CAM_WORK_USER_ID"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}});
+            //
+            // $("#cam_work_manage_pop_form").find("#CONTROL_SEQ").val(CONTROL_SEQ);
+            // $("#cam_work_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val(CONTROL_DETAIL_SEQ);
+            //
+            // $('#cma_work_manage_detail_pop').modal('show');
+            //
+            // //기본정보
+            // $("#g_item_detail_pop_form").find("#queryId").val('inspection.selectCommItemDetailInfo');
+            // let parameters = {
+            //     'url': '/json-info',
+            //     'data': fnFormToJsonArrayData('g_item_detail_pop_form')
+            // };
+            // fnPostAjax(function (data, callFunctionParam) {
+            //     let dataInfo = data.info;
+            //     if(dataInfo == null ) {
+            //         fnResetFrom("g_item_detail_pop_form");
+            //     }else{
+            //         //fnJsonDataToForm("stock_manage_pop_form", dataInfo);
+            //         $("#g_item_detail_pop_form").find("#CONTROL_NUM").html(dataInfo.CONTROL_NUM);
+            //         $("#g_item_detail_pop_form").find("#DRAWING_NUM").html(dataInfo.DRAWING_NUM);
+            //         $("#g_item_detail_pop_form").find("#INNER_DUE_DT").html(dataInfo.INNER_DUE_DT);
+            //     }
+            //     $("#g_item_detail_pop_form").find("#queryId").val('inspection.selectCommItemDetailInfoGrid1');
+            //     g_ItemDetailPopObj01.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
+            //     g_ItemDetailPopGridId01.pqGrid(g_ItemDetailPopObj01);
+            //
+            // }, parameters, '');
+            //
+            // }
+            // $("#cma_work_manage_detail_pop").on('hide.bs.modal', function(){
+            //     fnResetFrom("cam_work_manage_pop_form");
+            //     g_ItemDetailPopGridId01.pqGrid('destroy');
+            // });
+        }
 
         /* event */
         $('#MCT_RESULT_MANAGE_SEARCH').on('click', function () {
-            $mctResultManageGrid.pqGrid('option', 'dataModel.postData', function (ui) {
-                return (fnFormToJsonArrayData('#MCT_RESULT_MANAGE_SEARCH_FORM'));
-            });
-            $mctResultManageGrid.pqGrid('refreshDataAndView');
+            // $mctResultManageGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+            //     return (fnFormToJsonArrayData('#MCT_RESULT_MANAGE_SEARCH_FORM'));
+            // });
+            // $mctResultManageGrid.pqGrid('refreshDataAndView');
         });
 
         /** 제품 상세 보기 */

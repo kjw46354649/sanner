@@ -57,8 +57,8 @@
 <%--                    <select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출"></select>--%>
                     <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawAdd">도면 등록</button>
                     <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawView">도면 보기</button>
-                    <button type="button" class="defaultBtn radius green" id="btn_estimate_register_save">저장</button>
-                    <button type="button" class="defaultBtn radius blue" id="btn_estimate_register_submit">제출</button>
+                    <button type="button" class="defaultBtn radius green authorizedBtn" id="btn_estimate_register_save">저장</button>
+                    <button type="button" class="defaultBtn radius blue authorizedBtn" id="btn_estimate_register_submit">제출</button>
                 </div>
             </div>
             <%--<span class="chk_box mg-left15"><input id="chkEstimateRegisterDetail" type="checkbox"><label for="chkEstimateRegisterDetail"> 견적상세요건</label></span>--%>
@@ -66,7 +66,9 @@
         <form class="form-inline" id="estimate_register_info_form" name="estimate_register_info_form" role="form">
             <input type="hidden" id="queryId" name="queryId" value="">
             <input type="hidden" id="EST_SEQ" name="EST_SEQ" value="">
+            <input type="hidden" id="GFILE_SEQ" name="GFILE_SEQ" value="">
             <input type="hidden" id="MAIL_BOX_SEQ" name="MAIL_BOX_SEQ" value="">
+            <input type="hidden" id="EST_STATUS" name="EST_STATUS" value="">
             <div class="basicWrap">
                 <ul>
                     <li>
@@ -128,8 +130,8 @@
                             <option>10%</option>
                             <option>20%</option>
                         </select>
-                        <button type="button" class="defaultBtn radius" id="btnEstimateRegisterAdd">추가</button>
-                        <button type="button" class="defaultBtn radius red" id="btnEstimateRegisterDelete">삭제</button>
+                        <button type="button" class="defaultBtn radius authorizedBtn" id="btnEstimateRegisterAdd">추가</button>
+                        <button type="button" class="defaultBtn radius red authorizedBtn" id="btnEstimateRegisterDelete">삭제</button>
                     </span>
                 </div>
             </div>
@@ -164,7 +166,7 @@
                             </div>
                             <h3 style="text-align: left;">첨부파일
                                 <div class="right_float">
-                                    <button type="button" class="defaultBtn radius" id="btnEstimateRegisterFileUpload">추가</button>
+                                    <button type="button" class="defaultBtn radius authorizedBtn" id="btnEstimateRegisterFileUpload">추가</button>
                                 </div>
                             </h3>
                             <div class="conMainWrap" id="estimateFileUpdate">
@@ -547,8 +549,89 @@
                     });
                 }
             }
-            //{title: 'SEQ', dataType: 'string', dataIndx: 'SEQ', hidden: true }
         ];
+
+        let estimateRegisterFileModel =  [
+            {title: 'GFILE_SEQ', dataType: 'string', dataIndx: 'GFILE_SEQ', hidden: true},
+            {title: '파일명', dataType: 'string', dataIndx: 'ORGINAL_FILE_NM', width: 500, minWidth: 70,
+                render: function(ui) {
+                    let returnVal = ui.cellData;
+                    if(ui.rowData.FILE_SEQ != undefined){
+                        returnVal += '<span id=\"downloadSingleFile\" class=\"ui-icon ui-icon-search\" style=\"cursor: pointer\"></span>';
+                    }
+                    return returnVal;
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#downloadSingleFile").bind("click", function () {
+                        let rowData = ui.rowData;
+                        alert(rowData.FILE_SEQ);
+                        fnSingleFileDownloadFormPageAction(rowData.FILE_SEQ);
+                    });
+                }
+            },
+            {title: '용량', dataType: 'string', dataIndx: 'FILE_SIZE',  width: 100, minWidth: 100,
+                render: function(ui) {
+                    return fn_getFileSize(ui.cellData);
+                }
+
+            },
+            {title: '업로드 일시', dataType: 'string', dataIndx: 'INSERT_DT',  width: 110, minWidth: 70},
+            {title: '', align: 'center', dataType: 'string', dataIndx: 'FILE_SEQ', width: 40, minWidth: 40,
+                render: function (ui) {
+                    let EST_STATUS = $("#estimate_register_info_form #EST_STATUS").val();
+                    let returnVal = "";
+                    if (ui.cellData) {
+                        if(EST_STATUS != 'EST020') returnVal = '<span id="deleteSingleFile" class="ui-icon ui-icon-close" style="cursor: pointer"></span>';
+
+                        return returnVal;
+                    }
+                },
+                postRender: function (ui) {
+                    let grid = this;
+                    let $cell = grid.getCell(ui);
+                    $cell.find('#deleteSingleFile').on('click', function (event) {
+                        let rowData = ui.rowData;
+                        let parameter = {
+                            'queryId': 'common.deleteFileKey',
+                            'FILE_SEQ': rowData.FILE_SEQ
+                        };
+                        let parameters = {'url': '/json-remove', 'data': parameter};
+                        fnPostAjaxAsync(function(data, callFunctionParam){
+                            let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': rowData.GFILE_SEQ };
+                            fnRequestGidData(estimateRegisterFileGrid, postData);
+                        }, parameters, '');
+                    });
+                }
+            }
+        ];
+
+        let estimateRegisterFileObj = {
+            height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            selectionModel : {type: 'row', mode: 'single'}, numberCell: {title: 'No.'}, dragColumns: {enabled: false},
+            editable : false,
+            scrollModel: {autoFit: false}, trackModel: {on: true}, showBottom : true, postRenderInterval: -1, //call postRender synchronously.
+            columnTemplate: { align: 'center', halign: 'center', hvalign: 'center' }, //to vertically center align the header cells.
+            colModel: estimateRegisterFileModel,
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: {queryId: 'common.selectGfileFileListInfo', 'GFILE_SEQ': $("#estimate_register_info_form").find("#GFILE_SEQ").val()},
+                recIndx: 'FILE_SEQ',
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data || []};
+                }
+            },
+            dataReady: function (event, ui) {
+                if(estimateRegisterFileGrid == undefined){
+                    estimateRegisterFileGrid.pqGrid(estimateRegisterFileObj);
+                    estimateRegisterFileGrid.pqGrid('refresh');
+                }
+                let data = estimateRegisterFileGrid.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#estimate_register_file_grid_records').html(totalRecords);
+            },
+        };
 
         estimateRegisterTopGrid.pqGrid({
             height: 380,
@@ -722,6 +805,7 @@
                 numberCell: {width: 30, title: "No", show: true },
                 //selectionModel: { type: 'row', mode: 'single'} ,
                 collapsible: false,
+                columnTemplate: { align: 'center', halign: 'center', hvalign: 'center' },
                 swipeModel: {on: false},
                 trackModel: {on: true},
                 resizable: false,
@@ -740,8 +824,8 @@
             estimateRegisterBotGrid.pqGrid("refreshDataAndView");
 
             // 파일 업로드
-            estimateRegisterFileGrid.pqGrid(commonFileDownloadObj);
-            estimateRegisterFileGrid.pqGrid('option', 'colModel', commonFileDownloadModel);
+            estimateRegisterFileGrid.pqGrid(estimateRegisterFileObj);
+            estimateRegisterFileGrid.pqGrid('option', 'colModel', estimateRegisterFileModel);
             estimateRegisterFileGrid.pqGrid('option', 'height', '136').pqGrid('refresh');
         };
 
@@ -764,6 +848,7 @@
             let parameter = {'url': '/json-list', 'data': postData};
             fnPostAjax(function (data, callFunctionParam) {
                 let list = data.list[0];
+                $("#estimate_register_info_form #EST_STATUS").val(list.EST_STATUS);
                 $("#estimate_register_info_form #ORDER_COMP_CD").val(list.ORDER_COMP_CD);
                 $("#estimate_register_info_form #EST_TITLE").val(list.EST_TITLE);
                 $("#estimate_register_info_form #ORDER_STAFF_SEQ").val(list.ORDER_STAFF_SEQ);
@@ -774,6 +859,7 @@
                 $("#estimate_register_info_form #DTL_AMOUNT").val(list.DTL_AMOUNT);
                 $("#estimate_register_info_form #INSERT_DT").val(list.INSERT_DT);
                 $("#estimate_register_info_form #SEND_DT").val(list.SEND_DT);
+                $("#estimate_register_info_form #GFILE_SEQ").val(list.ETC_GFILE_SEQ);
                 //$("#EMAIL_CONTENT_TXT").val(list.EMAIL_CONTENT);
                 context = list.EMAIL_CONTENT;
                 CKEDITOR.instances.EMAIL_CONTENT_TXT.setData(list.EMAIL_CONTENT);
@@ -787,8 +873,10 @@
                 postData = { 'queryId': 'estimate.selectEstimateReceiverList', 'EST_SEQ': EST_SEQ };
                 fnRequestGidData(estimateRegisterBotGrid, postData);
 
-                btnDisabled(list.EST_STATUS);
+                postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': list.ETC_GFILE_SEQ };
+                fnRequestGidData(estimateRegisterFileGrid, postData);
 
+                btnDisabled(list.EST_STATUS);
                 //파일
                 $("#common_file_download_form").find("#GFILE_SEQ").val(list.ETC_GFILE_SEQ);
 
@@ -934,8 +1022,9 @@
         });
 
         $("#btnEstimateRegisterFileUpload").on('click', function(){
-            let GfileKey = $("#common_file_download_form").find("#GFILE_SEQ").val();
-            commonFileDownloadPopupCall(GfileKey);
+            let GfileKey = $("#estimate_register_info_form #GFILE_SEQ").val();
+            $("#common_file_download_form").find("#GFILE_SEQ").val(GfileKey);
+            commonFileDownUploadPopupCall(GfileKey, 'estimateRegisterFileUploadCallback');
         });
 
         /* 도면 등록 팝업 호출 */
@@ -998,17 +1087,35 @@
 
     function btnDisabled(status) {
         if(status == 'EST020'){
-            $("#btn_estimate_register_save").attr('disabled', true);
+            $(".authorizedBtn").attr('disabled', true);
+            /*$("#btn_estimate_register_save").attr('disabled', true);
             $("#btn_estimate_register_submit").attr('disabled', true);
             $("#btnEstimateRegisterAdd").attr('disabled', true);
             $("#btnEstimateRegisterDelete").attr('disabled', true);
+            $("#btnEstimateRegisterFileUpload").attr('disabled', true);*/
 
         }else {
-            $("#btn_estimate_register_save").attr('disabled', false);
+            $(".authorizedBtn").attr('disabled', false);
+            /*$("#btn_estimate_register_save").attr('disabled', false);
             $("#btn_estimate_register_submit").attr('disabled', false);
             $("#btnEstimateRegisterAdd").attr('disabled', false);
             $("#btnEstimateRegisterDelete").attr('disabled', false);
+            $("#btnEstimateRegisterFileUpload").attr('disabled', false);*/
         }
     }
+    function estimateRegisterFileUploadCallback(GfileSeq){
+        if(!GfileSeq) {
+            $("#estimate_register_info_form #GFILE_SEQ").val('');
+            let parameter = {
+                'queryId': 'estimate.updateEstimateMasterGfileSeq',
+                'EST_SEQ': $("#estimate_register_info_form #EST_SEQ").val()
+            };
+            let parameters = {'url': '/json-update', 'data': parameter};
+            fnPostAjaxAsync('', parameters, '');
+        }
 
+        $("#estimate_register_info_form #GFILE_SEQ").val(GfileSeq);
+        let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileSeq };
+        fnRequestGidData(estimateRegisterFileGrid, postData);
+    };
 </script>

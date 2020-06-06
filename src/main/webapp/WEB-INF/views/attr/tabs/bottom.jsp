@@ -55,7 +55,7 @@
 </div>
 <!-- CAD 도면 업로드 공통 End -->
 <!-- 파일 다운로드 공통 Start -->
-<div class="modal" id="common_file_download_pop" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal" id="common_file_download_upload_pop" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg cadDrawing">
         <div class="modal-content">
             <div class="modal-header">
@@ -65,7 +65,9 @@
             <div class="modal-body" id="commonFileUpdatePop">
                 <form class="" role="form" id="common_file_download_form" name="common_file_download_form">
                     <input type="hidden" id="GFILE_SEQ" name="GFILE_SEQ" value="">
-                    <div id="common_file_download_grid" style="margin:auto;"></div>
+                    <input type="hidden" id="callFunction" name="callFunction" value="">
+                    <input type="hidden" id="deleteYn" name="deleteYn" value="">
+                    <div id="common_file_download_upload_grid" style="margin:auto;"></div>
                     <div class="right_sort fileTableInfoWrap">
                         <h4>전체 조회 건수 (Total : <span id="filedownloadTotalCount" style="color: #00b3ee">0</span>)</h4>
                     </div>
