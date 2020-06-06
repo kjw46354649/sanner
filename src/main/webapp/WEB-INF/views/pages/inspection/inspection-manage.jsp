@@ -87,7 +87,7 @@
 </div>
 
 <!-- 품질실적 layer popup : S -->
-<div class="popup_container inspection" id="inspection_manage_pop" style="display: none;">
+<div class="popup_container inspection" id="inspection_manage_pop" style="display: ;">
     <form class="form-inline" id="inspection_manage_pop_form" name="inspection_manage_pop_form" role="form">
         <input type="hidden" name="queryId" id="queryId" value="inspection.selectInspectionPopInfoBasic">
         <input type="hidden" name="INSPECT_GRADE" id="INSPECT_GRADE" value="GRD010">
@@ -100,7 +100,7 @@
 
     <div class="layerPopup">
         <h3>품질 실적 등록</h3>
-        <%--<button type="button" class="pop_close">닫기</button>--%>
+        <button type="button" class="pop_close mg-top10 mg-right8" id="popClose2">닫기</button>
         <div class="qualityWrap">
             <div class="h_area">
 					<span class="buttonWrap" id="inspect_method_btn">
@@ -246,9 +246,12 @@
                 <div id="inspection_manage_grid_pop_02"></div>
             </div>
         </div>
+        <style>
+
+        </style>
         <div class="btnWrap">
-            <button type="button" id="inspection_manage_pop_save" class="submit">submit</button>
-            <button type="button" id="popClose" class="cancel">cancel</button>
+            <button type="button" class="defaultBtn bluePopGra" id="inspection_manage_pop_save">저장</button>
+            <button type="button" class="defaultBtn grayPopGra" id="popClose">닫기</button>
         </div>
     </div>
     </form>
@@ -631,7 +634,7 @@ console.log(dataInfo);
 
         });
 
-        $('#inspection_manage_pop_form').find('#popClose').on('click', function () {
+        $('#inspection_manage_pop_form').find('#popClose, #popClose2').on('click', function () {
             $('#inspection_manage_pop').modal('hide');
         });
 
