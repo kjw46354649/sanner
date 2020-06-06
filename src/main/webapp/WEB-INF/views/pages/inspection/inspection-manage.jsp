@@ -87,7 +87,7 @@
 </div>
 
 <!-- 품질실적 layer popup : S -->
-<div class="popup_container inspection" id="inspection_manage_pop" style="display: ;">
+<div class="popup_container inspection" id="inspection_manage_pop" style="display: none;">
     <form class="form-inline" id="inspection_manage_pop_form" name="inspection_manage_pop_form" role="form">
         <input type="hidden" name="queryId" id="queryId" value="inspection.selectInspectionPopInfoBasic">
         <input type="hidden" name="INSPECT_GRADE" id="INSPECT_GRADE" value="GRD010">
@@ -250,7 +250,7 @@
 
         </style>
         <div class="btnWrap">
-            <button type="button" class="defaultBtn bluePopGra" id="inspection_manage_pop_save">저장</button>
+            <button type="button" class="defaultBtn greenPopGra" id="inspection_manage_pop_save">저장</button>
             <button type="button" class="defaultBtn grayPopGra" id="popClose">닫기</button>
         </div>
     </div>

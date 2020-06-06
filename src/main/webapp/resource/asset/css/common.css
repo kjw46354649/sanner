@@ -141,7 +141,7 @@ option { font-size: 12px; }
 }
 
 .grayPopGra { background: #999; border: 1px solid #999; color: #fff; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#2B89FA)";/*IE 8*/  width: 100px; height: 30px; font-size: 15px;}
-.bluePopGra { background: #2b89fa; border: 1px solid #2b89fa; color: #fff; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#2B89FA)";/*IE 8*/ width: 100px; height: 30px; font-size: 15px;}
+.greenPopGra { background: #4d8d1a; border: 1px solid #4d8d1a; color: #fff; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#2B89FA)";/*IE 8*/ width: 100px; height: 30px; font-size: 15px;}
 
 .miniBtn { height: 20px; padding: 0 10px; font-size: 12px; color: #000; background: #fcfcfc; line-height: 18px; font-family: 'NotoKrM'; display: inline-block; text-align: center; border: 1px solid #afafaf; border-radius: 2px; box-sizing: border-box; }
 
