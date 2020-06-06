@@ -364,7 +364,7 @@ table.boardList .txtP{color: #7030a0;}
 .hg_55{height:55px !important;font-size:17px !important;line-height: 53px !important}
 
 /* popup */
-.popup_container { z-index: 9999; position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
+.popup_container { z-index: 1050; position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 .popup_container:before { content: 'modal_bg'; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; opacity: .5; text-indent: -999em; font-size: 0; }
 .layerPopup { position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; background: #fff; width: 1012px; height: 800px; border: 1px solid #ababab; padding: 20px; box-sizing: border-box; }
 .layerPopup h3 { font-size: 20px; font-family: 'NotoKrB'; color: #000; display: inline-block; }
