@@ -349,18 +349,18 @@
                     {title: '조치', datatype: 'string', dataIndx: 'Q_ERROR_ACTION_NM', minWidth: 80, width: 80, editable: false},
                     {title: '조치방안', datatype: 'string', dataIndx: 'Q_ERROR_NOTE', minWidth: 120, width: 120, editable: false},
                     {title: '작성일자', datatype: 'string', dataIndx: 'Q_DT', minWidth: 120, width: 120, editable: false},
-                    {title: '', align: 'center', dataType: 'string', dataIndx: 'CONTROL_SEQ_INSERT', width: 40, minWidth: 65, editable: false,
+                    {title: '', align: 'center', dataType: 'string', dataIndx: 'CONTROL_SEQ_INSERT', width: 100, minWidth: 100, editable: false,
                         render: function (ui) {
                             let rowIndx = ui.rowIndx, grid = this;
-                            if (ui.rowData['CONTROL_SEQ'] > 0) return "[결과등록]";
+                            if (ui.rowData['CONTROL_SEQ'] > 0) return "<button type=\"button\" class=\"miniBtn black\">결과등록</button>";
                             return '';
                         }
                     },
-                    {title: '', align: 'center', dataType: 'string', dataIndx: 'CONTROL_SEQ_DELETE', width: 40, minWidth: 65, editable: false,
+                    {title: '', align: 'center', dataType: 'string', dataIndx: 'CONTROL_SEQ_DELETE', width: 100, minWidth: 100, editable: false,
                         render: function (ui) {
                             let rowIndx = ui.rowIndx, grid = this;
                             console.log(ui.rowData['INSPECT_SEQ']);
-                            if (ui.rowData['INSPECT_SEQ'] > 0) return "[실적삭제]";
+                            if (ui.rowData['INSPECT_SEQ'] > 0) return "<button type=\"button\" class=\"miniBtn black\">실적삭제</button>";
                             return '';
                         }
                     }

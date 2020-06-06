@@ -108,23 +108,26 @@
 
 <!-- 반품 현황 layer popup : S -->
 <div class="popup_container inspection " id="outgoing_manage_return_complete_pop" style="display: none;">
-        <div class="layerPopup" style="height: 510px">
+        <div class="layerPopup" style="height: 545px">
             <h3>반품 현황 조회</h3>
+            <button type="button" class="pop_close mg-top10 mg-right8" id="outgoing_manage_return_complete_pop_close2">닫기</button>
             <%--<button type="button" class="pop_close">닫기</button>--%>
 <%--                <h4>기본정보</h4>--%>
-                <div class="list1">
-                    <div class="tableWrap" style="padding: 10px 0;">
-                        <div class="conWrap">
-                            <div id="outgoing_manage_return_complete_pop_grid"></div>
-                            <div class="right_sort">
-                                전체 조회 건수 (Total : <span id="outgoing_manage_return_complete_pop_grid_records" style="color: #00b3ee">0</span>)
-                            </div>
+            <div class="h_area mg-bottom10">
+
+            </div>
+            <div class="list1">
+                <div class="tableWrap" >
+                    <div class="conWrap">
+                        <div id="outgoing_manage_return_complete_pop_grid"></div>
+                        <div class="right_sort">
+                            전체 조회 건수 (Total : <span id="outgoing_manage_return_complete_pop_grid_records" style="color: #00b3ee">0</span>)
                         </div>
                     </div>
                 </div>
             </div>
             <div class="btnWrap">
-                <button type="button" id="outgoing_manage_return_complete_pop_close" class="cancel">cancel</button>
+                <button type="button" class="defaultBtn grayPopGra" id="outgoing_manage_return_complete_pop_close">닫기</button>
             </div>
         </div>
 </div>
@@ -139,11 +142,16 @@
         <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ" value="">
         <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ" value="">
         <input type="hidden" name="ORDER_SEQ" id="ORDER_SEQ" value="">
-
-    <div class="layerPopup" style="height: 510px">
+        <%--.grayPopGra { background: #999; border: 1px solid #999; color: #fff; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#2B89FA)";/*IE 8*/  width: 100px; height: 30px; font-size: 15px;}
+        .greenPopGra { background: #4d8d1a; border: 1px solid #4d8d1a; color: #fff; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#2B89FA)";/*IE 8*/ width: 100px; height: 30px; font-size: 15px;}--%>
+    <div class="layerPopup" style="height: 530px">
         <h3>반품실적등록</h3>
+        <button type="button" class="pop_close mg-top10 mg-right8" id="outgoing_manage_return_pop_close2">닫기</button>
         <%--<button type="button" class="pop_close">닫기</button>--%>
         <div class="qualityWrap">
+            <div class="h_area mg-bottom10">
+
+            </div>
             <div class="t_area">
                 <div class="t_h">
                     <span class="list_t">반품종류</span>
@@ -292,8 +300,8 @@
             </div>
         </div>
         <div class="btnWrap">
-            <button type="button" id="outgoing_manage_return_pop_save" class="submit">submit</button>
-            <button type="button" id="outgoing_manage_return_pop_close" class="cancel">cancel</button>
+            <button type="button" class="defaultBtn greenPopGra" id="outgoing_manage_return_pop_save">저장</button>
+            <button type="button" class="defaultBtn grayPopGra" id="outgoing_manage_return_pop_close">닫기</button>
         </div>
     </div>
     </form>
@@ -313,14 +321,15 @@
         <input type="hidden" id="NEW_OUT_QTY" name="NEW_OUT_QTY" value="">
         <input type="hidden" id="ORG_NEW_OUT_QTY" name="ORG_NEW_OUT_QTY" value="">
 
-
-
         <div class="miniPopup">
-            <div class="headWrap">
-                <h4 id="pop_title">출고실적 등록</h4>
-                <%--<button class="closeBtn">닫기</button>--%>
-            </div>
+<%--            <div class="headWrap2">--%>
+<%--                <h4 id="pop_title">출고실적 등록</h4>--%>
+<%--                <button class="pop_close">닫기</button>--%>
+<%--            </div>--%>
+
             <div class="contentWrap">
+                <h3>출고실적 등록</h3>
+                <button type="button" class="pop_close" id="popClose2">닫기</button>
                 <table>
                     <caption></caption>
                     <colgroup>
@@ -343,7 +352,7 @@
                         <td colspan="4"><input type="text" name="ORDER_NUM" id="ORDER_NUM"  value="" title="발주번호" class="wd_250" readonly></td>
                     </tr>
                     <tr>
-                        <th>출고대상수량</th>
+                        <th>대상수량</th>
                         <td id="outgoing_manage_pop_type_1_form_view_1"></td>
                         <th>잔여수량</th>
                         <td colspan="2" id="outgoing_manage_pop_type_1_form_view_2"></td>
@@ -363,8 +372,8 @@
                 <div class="process">
                     <span class="pr_txt"><b>출고</b>를 진행하시겠습니까?</span>
                     <div class="btnWrap">
-                        <button type="button" class="submit" id="outgoing_manage_mini_pop_save_btn">submit</button>
-                        <button type="button" class="cancel" id="outgoing_manage_mini_pop_close_btn">cancel</button>
+                        <button type="button" class="defaultBtn greenPopGra" id="outgoing_manage_mini_pop_save_btn">저장</button>
+                        <button type="button" class="defaultBtn grayPopGra" id="outgoing_manage_mini_pop_close_btn">닫기</button>
                     </div>
                 </div>
             </div>
@@ -383,11 +392,12 @@
         <input type="hidden" id="PACKING_NUM" name="PACKING_NUM" value="">
         <input type="hidden" id="BARCODE_NUM" name="BARCODE_NUM" value="">
         <div class="miniPopup">
-            <div class="headWrap">
-                <h4 id="pop_title">출고실적 등록</h4>
-                <%--<button class="closeBtn">닫기</button>--%>
-            </div>
+<%--            <div class="headWrap">--%>
+<%--                <h4 id="pop_title">출고실적 등록</h4>--%>
+<%--                &lt;%&ndash;<button class="closeBtn">닫기</button>&ndash;%&gt;--%>
+<%--            </div>--%>
             <div class="contentWrap">
+                <h3>출고실적 등록</h3>
                 <table>
                     <caption></caption>
                     <colgroup>
@@ -426,7 +436,7 @@
                 <div class="process">
                     <span class="pr_txt"><b>출고</b>처리되었습니다.</span>
                     <div class="btnWrap">
-                        <button type="button" class="cancel" id="outgoing_manage_pop_type_label_close_btn">cancel</button>
+                        <button type="button" class="defaultBtn grayPopGra" id="outgoing_manage_pop_type_label_close_btn">닫기</button>
                     </div>
                 </div>
             </div>
@@ -443,11 +453,12 @@
         <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value="">
 
         <div class="miniPopup">
-            <div class="headWrap">
-                <h4 id="pop_title">출고실적 등록</h4>
-                <%--<button class="closeBtn">닫기</button>--%>
-            </div>
+<%--            <div class="headWrap">--%>
+<%--                <h4 id="pop_title">출고실적 등록</h4>--%>
+<%--                &lt;%&ndash;<button class="closeBtn">닫기</button>&ndash;%&gt;--%>
+<%--            </div>--%>
             <div class="contentWrap">
+                <h3>출고실적 등록</h3>
                 <table>
                     <caption></caption>
                     <colgroup>
@@ -482,7 +493,7 @@
                 <div class="process">
                     <span class="pr_txt"><b>출고</b>처리되었습니다.</span>
                     <div class="btnWrap">
-                        <button type="button" class="cancel" id="outgoing_manage_pop_type_control_close_btn">cancel</button>
+                        <button type="button" class="defaultBtn grayPopGra" id="outgoing_manage_pop_type_control_close_btn">닫기</button>
                     </div>
                 </div>
             </div>
@@ -501,11 +512,13 @@
 
 
         <div class="miniPopup">
-            <div class="headWrap">
-                <h4 id="pop_title">라벨 출력</h4>
-<%--                <button id="label_print_close" class="closeBtn">닫기</button>--%>
-            </div>
+            <%--<div class="headWrap">
+&lt;%&ndash;                <h4 id="pop_title">라벨 출력</h4>&ndash;%&gt;
+&lt;%&ndash;                <button id="label_print_close" class="closeBtn">닫기</button>&ndash;%&gt;
+            </div>--%>
             <div class="contentWrap">
+                <h3>라벨 출력</h3>
+                <button type="button" class="pop_close" id="outgoing_manage_pop_label_type_1_close_btn2">닫기</button>
                 <table>
                     <caption></caption>
                     <colgroup>
@@ -544,15 +557,13 @@
                     </tr>
                 </table>
             </div>
-<%--            <div class="footerWrap">--%>
-<%--                <div class="process">--%>
-<%--                    <span class="pr_txt"><b>출고</b>를 진행하시겠습니까?</span>--%>
-<%--                    <div class="btnWrap">--%>
-<%--                        <button type="button" class="submit" id="outgoing_manage_mini_pop_save_btn">submit</button>--%>
-<%--                        <button type="button" class="cancel" id="outgoing_manage_mini_pop_close_btn">cancel</button>--%>
-<%--                    </div>--%>
-<%--                </div>--%>
-<%--            </div>--%>
+            <div class="footerWrap">
+                <div class="process">
+                   <div class="btnWrap">
+                       <button type="button" class="defaultBtn grayPopGra" id="outgoing_manage_pop_label_type_1_close_btn">닫기</button>
+                   </div>
+                </div>
+            </div>
         </div>
     </form>
 </div>
@@ -613,24 +624,24 @@
             },
             // {title: '반품일시', dataType: 'string', dataIndx: 'OUT_RETURN_DT', minWidth: 60, width: 60, editable: false},
             {title: '포장묶음', dataType: 'integer', dataIndx: 'PACKING_CNT', minWidth: 60, width: 60, editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}},
-            {title: '', align: 'center', dataType: 'string', dataIndx: 'MANUAL_OUT', width: 40, minWidth: 40, editable: false,
+            {title: '', align: 'center', dataType: 'string', dataIndx: 'MANUAL_OUT', width: 70, minWidth: 70, editable: false,
                 render: function (ui) {
                     let rowIndx = ui.rowIndx, grid = this;
-                    if (ui.rowData['ORDER_SEQ'] > 0) return "[출고]";
+                    if (ui.rowData['ORDER_SEQ'] > 0) return "<button type=\"button\" class=\"miniBtn black\">출고</button>";
                     return '';
                 }
             },
-            {title: '', align: 'center', dataType: 'string', dataIndx: 'MANUAL_RETURN', width: 40, minWidth: 40, editable: false,
+            {title: '', align: 'center', dataType: 'string', dataIndx: 'MANUAL_RETURN', width: 70, minWidth: 70, editable: false,
                 render: function (ui) {
                     let rowIndx = ui.rowIndx, grid = this;
-                    if (ui.rowData['ORDER_SEQ'] > 0) return "[반품]";
+                    if (ui.rowData['ORDER_SEQ'] > 0) return "<button type=\"button\" class=\"miniBtn blue\">반품</button>";
                     return '';
                 }
             },
-            {title: '', align: 'center', dataType: 'string', dataIndx: 'MANUAL_LABEL', width: 40, minWidth: 40, editable: false,
+            {title: '', align: 'center', dataType: 'string', dataIndx: 'MANUAL_LABEL', width: 70, minWidth: 70, editable: false,
                 render: function (ui) {
                     let rowIndx = ui.rowIndx, grid = this;
-                    if (ui.rowData['ORDER_SEQ'] > 0) return "[라벨]";
+                    if (ui.rowData['ORDER_SEQ'] > 0) return "<button type=\"button\" class=\"miniBtn orange\">라벨</button>";
                     return '';
                 }
             },
@@ -884,8 +895,13 @@
             //     $('#outgoing_manage_return_pop').modal('hide');
             // }, parameters, '');
         });
-
-        $('#outgoing_manage_return_pop_close').on('click', function () {
+        $('#outgoing_manage_return_complete_pop_close, #outgoing_manage_return_complete_pop_close2').on('click', function () {
+              $('#outgoing_manage_return_complete_pop').modal('hide');
+        });
+        $('#outgoing_manage_pop_label_type_1_close_btn, #outgoing_manage_pop_label_type_1_close_btn2').on('click', function () {
+                    $('#outgoing_manage_pop_label_type_1').modal('hide');
+        });
+        $('#outgoing_manage_return_pop_close, #outgoing_manage_return_pop_close2').on('click', function () {
             $('#outgoing_manage_return_pop').modal('hide');
         });
         $("#outgoing_manage_return_pop").on('hide.bs.modal', function(){
@@ -1236,7 +1252,7 @@
         });
 
 
-        $('#outgoing_manage_mini_pop_close_btn').on('click', function () {
+        $('#outgoing_manage_mini_pop_close_btn, #popClose2').on('click', function () {
             $('#outgoing_manage_pop_type_1').modal('hide');
         });
         $('#outgoing_manage_pop_type_label_close_btn').on('click', function () {
