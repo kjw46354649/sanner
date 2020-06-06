@@ -76,7 +76,7 @@
 </div>
 <!-- 파일 다운로드 공통 End -->
 <!-- 인쇄 도면 div start -->
-<div class="modal" id="common_confirm_popup" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal common_confirm_popup" id="common_confirm_popup" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog cadDrawing" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -129,12 +129,15 @@
                 <div class="h_area">
                     <span class="buttonWrap" id="inspect_method_btn">
                         <span style="height: 30px;float: left;">&nbsp;</span>
+                        <span class="work_info">
+                            <label for="CAM_WORK_USER_ID" class="wd_100" style="background-color: #73139b;color: #fff; padding-left: 10px; text-align: center;">CAM 작업자: </label>
+                            <select id="CAM_WORK_USER_ID" name="CAM_WORK_USER_ID" title="견적 담당자" class="wd_200"></select>
+                        </span>
                     </span>
-                    <ul class="listWrap">
+                    <ul class="listWrap right_float">
                        <span class="barCode" ><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>
                       <span class="barCodeTxt" >&nbsp;<input type="text" class="wd_270_barcode hg_30"  name="g_item_detail_pop_barcode_num" id="g_item_detail_pop_barcode_num" placeholder="도면의 바코드를 스캔해 주세요"></span>
                     </ul>
-
                  </div>
                 <h4>기본정보</h4>
                 <div class="list1">
@@ -253,6 +256,7 @@
                 </div>
             </div>
             <div class="btnWrap">
+                <button type="button" class="defaultBtn purple" id="camWorkStartBtn">CAM 작업시작</button>
                 <button type="button" class="defaultBtn grayPopGra" id="g_item_detail_pop_grid_05_pop_close">닫기</button>
             </div>
         </div>
@@ -821,11 +825,12 @@
 
     let g_item_detail_pop_view = function(CONTROL_SEQ, CONTROL_DETAIL_SEQ){
 
-        $('#g_item_detail_pop').modal('show');
-
+        fnCommCodeDatasourceSelectBoxCreate($("#g_item_detail_pop_form").find("#CAM_WORK_USER_ID"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}});
 
         $("#g_item_detail_pop_form").find("#CONTROL_SEQ").val(CONTROL_SEQ);
         $("#g_item_detail_pop_form").find("#CONTROL_DETAIL_SEQ").val(CONTROL_DETAIL_SEQ);
+
+        $('#g_item_detail_pop').modal('show');
 
         //기본정보
         $("#g_item_detail_pop_form").find("#queryId").val('inspection.selectCommItemDetailInfo');
@@ -939,6 +944,32 @@
     $("#g_item_detail_pop_form").find('#g_item_detail_pop_grid_05_pop_close, #popClose2').on('click', function () {
         $('#g_item_detail_pop').modal('hide');
     });
+
+    $("#g_item_detail_pop_form").find('#camWorkStartBtn').on('click', function () {
+        let headHtml = "CAM 작업 정보", yseBtn="예", noBtn="아니오";
+        let bodyHtml = "<h4><img style='width: 32px; height: 32px;' src='/resource/main/images/print.png'>&nbsp;&nbsp;<span>CAM 작업을 시작 하시겠습니까?</span></h4>";
+        fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+
+        let camWorkStartSubmitConfirm = function(callback) {
+            commonConfirmPopup.show();
+            $("#commonConfirmYesBtn").unbind().click(function (e) {
+                e.stopPropagation();
+                commonConfirmPopup.hide();
+                callback(true);
+                return;
+            });
+            $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                e.stopPropagation();
+                commonConfirmPopup.hide();
+            });
+        };
+        camWorkStartSubmitConfirm(function(confirm){
+            if(confirm) {
+                alert("저장 처리");
+            }
+        });
+    });
+
     $("#g_item_detail_pop_barcode_num").on({
         focus: function () {
             $("#g_item_detail_pop_barcode_img").attr("src","/resource/asset/images/common/img_barcode_long_on.png");

@@ -67,7 +67,7 @@
 
     var g_code;
     var multiFileUploadBox = [];    // 임시 형태의 file upload 저장소
-    var g_noData = '<div style="font-size:18px;margin-top:20px;">No Data</div>';
+    var g_noData = '<div style="font-size:14px;margin-top:20px;">Not Found Data.</div>';
     var windowImageViewer;
     const TODAY = new Date();
     const CURRENT_YEAR = TODAY.getFullYear();
@@ -131,9 +131,8 @@
 
     const currentModalBarcodeEnable = function (element) {
         let barcodeElements = $(element).find('span.barCode');
-
         if (barcodeElements.length) {
-            $(barcodeElements[0]).children('img').attr('src', '/resource/asset/images/common/img_barcode_on.png');
+            $(barcodeElements[0]).children('img').attr('src', '/resource/asset/images/common/img_barcode_long_on.png');
         }
     };
 
@@ -737,6 +736,7 @@
     let fnAlertMessageAutoClose = function (messageType) {
         let windowMessageHtml = '<spring:message code="com.alert.default.save.success" javaScriptEscape="true"/>';
         if(messageType == 'del') windowMessageHtml = '<spring:message code="com.alert.default.remove.success" javaScriptEscape="true"/>';
+        if(messageType == 'camstart') windowMessageHtml = '<spring:message code="com.alert.default.remove.success" javaScriptEscape="true"/>';
         dhx.message({
             text: windowMessageHtml,
             expire: 3000,
@@ -893,8 +893,6 @@
      */
     let fnCommonConfirmBoxCreate = function(headHtml, bodyHtml, yesHtml, noHtml){
         $("#commonConfirmHeadHtml").html(headHtml);
-        $("#commonConfirmBodyHtml").html(bodyHtml);
-        $("#commonConfirmBodyHtml").html(bodyHtml);
         $("#commonConfirmBodyHtml").html(bodyHtml);
         $("#commonConfirmYesBtn").html(yesHtml);
         $("#commonConfirmNoBtn").html(noHtml);

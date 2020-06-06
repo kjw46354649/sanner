@@ -54,7 +54,7 @@
 .contentsWrap:after { content: ''; width: 0; height: 0; display: block; overflow: hidden; clear: both; }
 
 /*.tabMenuWrap{ padding-top: 17px; margin-left: 270px; min-height: 28px;}*/
-.tabMenuWrap{ padding-top: 8px; margin-left: 270px; min-height: 28px;}
+.tabMenuWrap{ padding-top: 8px; margin-left: 270px; min-height: 37px;}
 .tabMenuWrap ul:after{}
 .tabMenuWrap ul li{}
 .tabMenuWrap ul li a{}

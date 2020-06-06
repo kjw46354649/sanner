@@ -550,7 +550,7 @@
         SELECT
             ROW_NUMBER () OVER () AS ROWNUM,
             A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.IMG_GFILE_SEQ,
-            DATE_FORMAT(STR_TO_DATE(A.INNER_DUE_DT, '%Y%m%d'), '%m-%d') AS INNER_DUE_DT, <!-- 내부가공납기 -->
+            jmes.SF_GET_DATE_F(A.INNER_DUE_DT, '', '') AS INNER_DUE_DT, <!-- 내부가공납기 -->
             CASE WHEN B.EMERGENCY_YN = 'Y' THEN '긴' END AS EMERGENCY_YN, <!-- 긴급 -->
             CASE WHEN B.MAIN_INSPECTION = 'Y' THEN '주' END AS MAIN_INSPECTION, <!-- 주요 검사품 -->
             CASE WHEN A.WORK_TYPE = 'WTP030' THEN '수' WHEN A.WORK_TYPE = 'WTP040' THEN '재' END AS WORK_NM, <!-- 형태 -->
@@ -588,9 +588,7 @@
             A.PART_NUM, <!-- Part -->
             A.MATERIAL_DETAIL, <!-- 소재종류 상세 -->
             IFNULL(SF_GET_CODE_NM(1027, A.MATERIAL_DETAIL, 'KR'), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류 -->
-            (CASE WHEN A.PART_NUM IS NOT NULL THEN A.PART_UNIT_QTY * (SELECT SUM(P.ORDER_QTY) FROM jmes.TBL_CONTROL_PART_ORDER P WHERE P.CONTROL_SEQ = A.CONTROL_SEQ GROUP BY P.CONTROL_SEQ)
-                  ELSE (SELECT SUM(P.ORDER_QTY) FROM jmes.TBL_CONTROL_PART_ORDER P WHERE P.CONTROL_SEQ = A.CONTROL_SEQ GROUP BY P.CONTROL_SEQ)
-                END) AS ORDER_QTY, <!-- 수량 -->
+            jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS ORDER_QTY, <!-- 수량 -->
             A.SIZE_TXT AS STANDARD_SIZE, <!-- 규격 -->
             jmes.SF_GET_MATERIAL_SIZE_TXT(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MATERAIL_ORDER_SIZE,	<!-- 소재 주문 규격 -->
             B.NOTE AS CONTROL_NOTE, <!-- 주문 확정 비고 -->
@@ -609,9 +607,9 @@
             CASE WHEN H.CAM_GFILE_SEQ IS NOT NULL THEN (SELECT FILE_SEQ FROM TBL_FILE I WHERE H.CAM_GFILE_SEQ = I.GFILE_SEQ AND I.FILE_TYPE = 'CAM') ELSE SPACE(0) END CAM_FILE_SEQ, <!-- CAM FILE -->
             CASE WHEN H.CAM_GFILE_SEQ IS NOT NULL THEN (SELECT FILE_SEQ FROM TBL_FILE I WHERE H.CAM_GFILE_SEQ = I.GFILE_SEQ AND I.FILE_TYPE = 'NC') ELSE SPACE(0) END NC_FILE_SEQ, <!-- NC FILE -->
             G.NOTE, <!-- CAM 비고 및 공유사항 -->
-            DATE_FORMAT(G.FINISH_DT, '%m-%d %H:%i') AS CAM_FINISH_DT, <!-- CAM 업데이트 일시, -->
+            jmes.SF_GET_DATE_F(G.FINISH_DT, '', 'M') AS CAM_FINISH_DT, <!-- CAM 업데이트 일시, -->
             C.POP_PREV_POSITION, <!-- 이전 위치 -->
-            DATE_FORMAT(A.STATUS_DT, '%m-%d %H:%i') AS SATAUS_DT, <!-- 확정 일시 -->
+            jmes.SF_GET_DATE_F(A.STATUS_DT, '', 'M') AS SATAUS_DT, <!-- 확정 일시 -->
             jmes.SF_GET_MATERIAL_RECEIPT_DT(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MATERIAL_RECEIPT_DT, <!-- 소재 입고 일시 -->
             J.INSPECT_SEQ AS INSPECT_STEP, <!-- 풀질 스탭 -->
             SF_GET_CODE_NM(1040, J.INSPECT_GRADE, 'EN') AS INSPECT_GRADE,
@@ -622,7 +620,7 @@
             J.ERROR_QTY, <!-- 불량 수량 -->
             SF_GET_CODE_NM(1032, J.ERROR_REASON, 'EN') AS ERROR_REASON, <!-- 불량 원인 -->
             J.ERROR_NOTE, <!-- 불량 조치방안 -->
-            DATE_FORMAT(J.INSERT_DT, '%m-%d %H:%i') AS INSPECT_DT <!-- 풀질현황 -->
+            jmes.SF_GET_DATE_F(J.INSERT_DT, '', '') AS INSPECT_DT <!-- 풀질현황 -->
         FROM jmes.TBL_CONTROL_PART A
                  INNER JOIN jmes.TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.CONTROL_STATUS = 'ORD001' <!-- 주문확정 -->
                  LEFT OUTER JOIN jmes.TBL_POP C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
@@ -642,4 +640,59 @@
         GROUP BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
         ORDER BY B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), A.INNER_DUE_DT
     </select>
+
+    <insert id="insertMctCamWork"  parameterType="java.util.HashMap" >
+        INSERT INTO jmes.TBL_CAM
+        (CAM_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, START_DT, INSERT_ID)
+        VALUES
+        (CASE WHEN #{CAM_SEQ} IS NOT NULL THEN #{CAM_SEQ} ELSE NEXTVAL(SEQ_CAM) END,
+            #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}, NOW(), #{authUserInfo.USER_ID})
+        ON DUPLICATE KEY UPDATE
+            HISTORY_NOTE = #{HISTORY_NOTE},
+            NOTE = #{NOTE},
+            FINISH_DT = null,
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{authUserInfo.USER_ID}
+    </insert>
+
+    <delete id="deleteMctCamWork"  parameterType="java.util.HashMap" >
+        DELETE FROM jmes.TBL_CAM
+        WHERE CAM_SEQ = #{CAM_SEQ}
+    </delete>
+
+    <update id="updateMctCamWorkComplete"  parameterType="java.util.HashMap" >
+        UPDATE jmes.TBL_CAM
+        SET
+            HISTORY_NOTE = #{HISTORY_NOTE},
+            NOTE = #{NOTE},
+            FINISH_DT = NOW(),
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{authUserInfo.USER_ID}
+        WHERE CAM_SEQ = #{CAM_SEQ}
+    </update>
+
+    <insert id="insertMctCamDetailWork"  parameterType="java.util.HashMap" >
+        INSERT INTO jmes.TBL_CAM_DETAIL
+        (CAM_SEQ, SEQ, WORK_DIRECTRION, WORK_DESC, WORK_USER_ID, DESIGN_QTY, CAM_GFILE_SEQ, INSERT_ID)
+        VALUES
+        (#{CAM_SEQ}, CASE WHEN #{SEQ} IS NOT NULL THEN #{SEQ} ELSE (SELECT IFNULL(MAX(B.SEQ), 1) + 1 FROM jmes.TBL_CAM_DETAIL B WHERE B.CAM_SEQ = #{CAM_SEQ}) END,
+            #{WORK_DIRECTRION}, #{WORK_DESC}, #{WORK_USER_ID}, #{DESIGN_QTY}, #{CAM_GFILE_SEQ}, #{authUserInfo.USER_ID} )
+        ON DUPLICATE KEY UPDATE
+            WORK_DIRECTRION = #{WORK_DIRECTRION},
+            WORK_DESC = #{WORK_DESC},
+            WORK_USER_ID = #{WORK_USER_ID},
+            DESIGN_QTY = #{DESIGN_QTY},
+            CAM_GFILE_SEQ = #{CAM_GFILE_SEQ},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{authUserInfo.USER_ID}
+    </insert>
+
+    <delete id="deleteMctCamDetailWork"  parameterType="java.util.HashMap" >
+        DELETE FROM jmes.TBL_CAM_DETAIL
+        WHERE 1 = 1
+            AND CAM_SEQ = #{CAM_SEQ}
+            AND SEQ = #{SEQ}
+    </delete>
+
+
 </mapper>
