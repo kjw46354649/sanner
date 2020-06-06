@@ -851,7 +851,7 @@
                 $("#g_item_detail_pop_form").find("#DRAWING_VER").html(dataInfo.DRAWING_VER);
 
 
-                let filedownlod = '<button type="button" class="smallBtn red" onclick="javascript:fnSingleFileDownloadFormPageAction(dataInfo.DXF_GFILE_SEQ);"><i class="fa fa-trash"></i><span >다운로드</span></button>';
+                let filedownlod = "<button type='button' class='smallBtn red' onclick=\"javascript:fnSingleFileDownloadFormPageAction('" + dataInfo.DXF_GFILE_SEQ + "');\"><i class='fa fa-trash'></i><span >다운로드</span></button>";
 
                 $("#g_item_detail_pop_form").find("#DXF_GFILE_SEQ").html(filedownlod);
 
@@ -905,13 +905,17 @@
         g_ItemDetailPopObj05.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
         g_ItemDetailPopGridId05.pqGrid(g_ItemDetailPopObj05);
 
-        setTimeout(function() {
-            let rowDataArray = g_ItemDetailPopGrid04.pqGrid('getRowData', {rowIndx: 0});
-            if(rowDataArray != null){
-                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_04_info1").html(rowDataArray.STATUS_INFO);
-                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_04_info2").val(rowDataArray['UPDATE_TIME_INFO']);
-            }
-        }, 2000);
+        let data4 = g_ItemDetailPopGrid04.pqGrid('option', 'dataModel.data');
+
+        if(data4 != null){
+            setTimeout(function() {
+                let rowDataArray = g_ItemDetailPopGrid04.pqGrid('getRowData', {rowIndx: 0});
+                if(rowDataArray != null){
+                     $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_04_info1").html(rowDataArray.STATUS_INFO);
+                     $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_04_info2").val(rowDataArray['UPDATE_TIME_INFO']);
+                }
+            }, 2000);
+        }
 
         $("#g_item_detail_pop_form").find("#g_item_detail_pop_barcode_num").focus();
     }
@@ -947,9 +951,7 @@
                     }else{
                         let CONTROL_SEQ =  dataInfo.CONTROL_SEQ;
                         let CONTROL_DETAIL_SEQ =  dataInfo.CONTROL_DETAIL_SEQ;
-                        $("#inspection_manage_pop_form").find("#CONTROL_SEQ").val(CONTROL_SEQ);
-                        $("#inspection_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val(CONTROL_DETAIL_SEQ);
-                        $('#inspection_manage_pop').modal('show');
+                        g_item_detail_pop_view(CONTROL_SEQ,CONTROL_DETAIL_SEQ);
                     }
                 }, parameters, '');
             }
