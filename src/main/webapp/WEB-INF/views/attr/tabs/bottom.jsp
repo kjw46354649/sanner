@@ -55,7 +55,7 @@
 </div>
 <!-- CAD 도면 업로드 공통 End -->
 <!-- 파일 다운로드 공통 Start -->
-<div class="modal" id="common_file_download_pop" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal" id="common_file_download_upload_pop" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg cadDrawing">
         <div class="modal-content">
             <div class="modal-header">
@@ -65,7 +65,7 @@
             <div class="modal-body" id="commonFileUpdatePop">
                 <form class="" role="form" id="common_file_download_form" name="common_file_download_form">
                     <input type="hidden" id="GFILE_SEQ" name="GFILE_SEQ" value="">
-                    <div id="common_file_download_grid" style="margin:auto;"></div>
+                    <div id="common_file_download_upload_grid" style="margin:auto;"></div>
                     <div class="right_sort fileTableInfoWrap">
                         <h4>전체 조회 건수 (Total : <span id="filedownloadTotalCount" style="color: #00b3ee">0</span>)</h4>
                     </div>
@@ -258,9 +258,9 @@
     let $commonCadFileAttachGrid;
     let empty_data = [];
 
-    let commonFileDownloadPopup = $("#common_file_download_pop");
-    let commonFileDownloadGridId = "common_file_download_grid";
-    let $commonFileDownloadGrid;
+    let commonFileDownUploadPopup = $("#common_file_download_upload_pop");
+    let commonFileDownUploadGridId = "common_file_download_upload_grid";
+    let commonFileDownUploadGrid = $("#common_file_download_upload_grid");
 
     $(function() {
         'use strict';
@@ -488,14 +488,15 @@
     /** 캐드 파일 업로드 종료  스크립트 **/
 
     /** 파일 다운로드 시작 스크립트 **/
-    let commonFileDownloadModel =  [
+    let commonFileDownUploadModel =  [
         {title: 'GFILE_SEQ', dataType: 'string', dataIndx: 'GFILE_SEQ', hidden: true},
-        {title: '파일명', dataType: 'string', dataIndx: 'ORGINAL_FILE_NM', width: 200, minWidth: 70},
-        {title: '용량', dataType: 'string', dataIndx: 'SEQ', hidden: true, width: 1, minWidth: 70},
-        {title: '파일 타입', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 1, minWidth: 70},
-        {title: '다운로드', align: 'center', dataType: 'string', dataIndx: 'FILE_SEQ', width: 155, minWidth: 100,
-            render: function (ui) {
-                if (ui.cellData) return '<span id="downloadSingleFile" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+        {title: '파일명', dataType: 'string', dataIndx: 'ORGINAL_FILE_NM', width: 400, minWidth: 70,
+            render: function(ui) {
+                let returnVal = ui.cellData;
+                if(ui.rowData.FILE_SEQ != undefined){
+                    returnVal += '<span id=\"downloadSingleFile\" class=\"ui-icon ui-icon-search\" style=\"cursor: pointer\"></span>';
+                }
+                return returnVal;
             },
             postRender: function (ui) {
                 let grid = this,
@@ -507,7 +508,14 @@
                 });
             }
         },
-        {title: '삭제', align: 'center', dataType: 'string', dataIndx: 'FILE_SEQ', width: 155, minWidth: 100,
+        {title: '용량', dataType: 'string', dataIndx: 'FILE_SIZE',  width: 1, minWidth: 70,
+            render: function(ui) {
+                return fn_getFileSize(ui.rowData.SIZE);
+            }
+
+        },
+        {title: '업로드 일시', dataType: 'string', dataIndx: 'INSERT_DT',  width: 120, minWidth: 70},
+        {title: '', align: 'center', dataType: 'string', dataIndx: 'FILE_SEQ', width: 70, minWidth: 100,
             render: function (ui) {
                 if (ui.cellData) return '<span id="deleteSingleFile" class="ui-icon ui-icon-close" style="cursor: pointer"></span>'
             },
@@ -522,20 +530,21 @@
                     };
                     let parameters = {'url': '/json-remove', 'data': parameter};
                     fnPostAjaxAsync(function(data, callFunctionParam){
-                        $commonFileDownloadGrid.pqGrid('refreshDataAndView');
+                        let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': ui.cellData };
+                        fnRequestGidData(commonFileDownUploadGrid, postData);
                     }, parameters, '');
                 });
             }
         }
     ];
 
-    let commonFileDownloadObj = {
+    let commonFileDownUploadObj = {
         height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
         selectionModel : {type: 'row', mode: 'single'}, numberCell: {title: 'No.'}, dragColumns: {enabled: false},
         editable : false,
         scrollModel: {autoFit: false}, trackModel: {on: true}, showBottom : true, postRenderInterval: -1, //call postRender synchronously.
         columnTemplate: { align: 'center', halign: 'center', hvalign: 'center' }, //to vertically center align the header cells.
-        colModel: commonFileDownloadModel,
+        colModel: commonFileDownUploadModel,
         dataModel: {
             location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
             postData: {queryId: 'common.selectGfileFileListInfo', 'GFILE_SEQ': $("#common_file_download_form").find("#GFILE_SEQ").val()},
@@ -545,34 +554,33 @@
             }
         },
         dataReady: function (event, ui) {
-            if($commonFileDownloadGrid == undefined){
-                $commonFileDownloadGrid = $('#' + commonFileDownloadGridId).pqGrid(commonFileDownloadObj);
-                $commonFileDownloadGrid.pqGrid('option', 'colModel', commonFileDownloadModel);
-                $commonFileDownloadGrid.pqGrid('refresh');
-            }
-            let data = $commonFileDownloadGrid.pqGrid('option', 'dataModel.data');
+            let data = commonFileDownUploadGrid.pqGrid('option', 'dataModel.data');
             let totalRecords = data.length;
             $('#filedownloadTotalCount').html(totalRecords);
         },
     };
 
-    commonFileDownloadPopup.on('show.bs.modal',function(e) {
-        if($commonFileDownloadGrid != undefined){
-            $commonFileDownloadGrid.pqGrid('destroy');
-        }
-        $commonFileDownloadGrid = $('#' + commonFileDownloadGridId).pqGrid(commonFileDownloadObj);
-        $commonFileDownloadGrid.pqGrid('option', 'colModel', commonFileDownloadModel);
-        $commonFileDownloadGrid.pqGrid('refresh');
-    });
-
-    commonFileDownloadPopup.on('hide.bs.modal',function(e) {
-        $commonFileDownloadGrid.pqGrid('destroy');
-    });
-
-    let commonFileDownloadPopupCall = function(GfileKey){
+    let commonFileDownUploadPopupCall = function(GfileKey, callFunction) {
         $("#common_file_download_form").find("#GFILE_SEQ").val(GfileKey);
-        commonFileDownloadPopup.modal('show');
+        console.log(commonFileDownUploadGrid);
+        commonFileDownUploadGrid.pqGrid(commonFileDownUploadObj);
+        //commonFileDownUploadGrid.pqGrid('option', 'colModel', commonFileDownUploadModel);
+        let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey };
+        fnRequestGidData(commonFileDownUploadGrid, postData);
+
+        commonFileDownUploadPopup.modal('show');
+
+        commonFileDownUploadPopup.on('hide.bs.modal', function (e) {
+            console.log(commonFileDownUploadGrid);
+            commonFileDownUploadGrid.pqGrid('destroy');
+            console.log(commonFileDownUploadGrid);
+
+            let callback = $.Callbacks();
+            callback.add(callFunction);
+            callback.fire($("#common_file_download_form").find("#GFILE_SEQ").val());
+        });
     };
+
     /** 파일 다운로드 종료 스크립트 **/
 
     /** 파일 업로드 스크립트 **/
@@ -590,6 +598,7 @@
         e.preventDefault();
         $(this).removeClass('drag-over');
         let cadFiles = e.originalEvent.dataTransfer.files; //드래그&드랍 항목
+        let GfileSeq = $("#common_file_download_form").find("#GFILE_SEQ").val();
         for(let i = 0; i < cadFiles.length; i++) {
             let file = cadFiles[i];
             uploadControlFiles.push(file); //업로드 목록에 추가
@@ -601,22 +610,21 @@
                     formData.append('file', file, file.name);
             });
             formData.append('queryId', $('#common_cad_file_attach_form').find("#queryId").val() + "_select");
+            formData.append('GFILE_SEQ', GfileSeq);
+
             uploadControlFiles = [];    // 파일 업로드 정보 초기화
-            $commonFileDownloadGrid.pqGrid('refreshDataAndView');
             fnFormDataFileUploadAjax(function (data) {
                 let fileUploadList = data.fileUploadList;
+
+                let GFILE_SEQ = fileUploadList[0].GFILE_SEQ;
                 if (fileUploadList.length <= 0) {
                     alert("주문 정보가 없습니다. 주문 정보를 확인 해 주세요.");
                     return false;
                 }
-                $commonFileDownloadGrid.pqGrid('option', {editable: true});
-                $commonFileDownloadGrid.pqGrid('addNodes', fileUploadList, 0);
-                $commonFileDownloadGrid.pqGrid('option', {editable: false});   // 수정 여부를 false 처리 한다.
-                $commonFileDownloadGrid.pqGrid('refresh');
-                let GFILE_SEQ = fileUploadList[0].GFILE_SEQ;
-                $("#common_file_download_form").find("#GFILE_SEQ").val(GFILE_SEQ);
+                let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GFILE_SEQ };
+                fnRequestGidData(commonFileDownUploadGrid, postData);
 
-                $(this).parent().find()
+                $("#common_file_download_form").find("#GFILE_SEQ").val(GFILE_SEQ);
             }, formData, '');
         }
     });
