@@ -131,6 +131,7 @@
 
     <select id="selectTransactionStatementInfoExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
+            SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM, <!-- 발주사 -->
             B.COMP_NUM, <!-- 사업자번호(사업자등록번호) -->
             B.COMP_NM, <!-- 상호 -->
             B.CEO_NM, <!-- 대표이사 -->
@@ -138,31 +139,43 @@
             B.BUSINESS_ITEM, <!-- 업태 및 종목 -->
             B.COMP_TEL,
             B.COMP_FAX,
-            '()', <!-- 금액 합계 -->
+            B.BUSINESS_TYPE, <!-- 업태 -->
+            B.BUSINESS_ITEM, <!-- 종목 -->
+            (SELECT SUM(B.UNIT_FINAL_AMT * C.ORDER_QTY)
+            FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                                   AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_INVOICE_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ
+                                               AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+            WHERE 1 = 1
+                AND A.CONTROL_SEQ IN (${CONTROL_SEQ_STR})
+                AND A.COMP_CD = #{COMP_CD}
+                AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+                AND B.WORK_TYPE NOT IN ('WTP050')
+                AND B.WORK_TYPE NOT IN ('WTP050')
+            GROUP BY D.INVOICE_NUM) AS TOTAL_AMT, <!-- 금액 합계 -->
             A.INVOICE_NUM, <!-- INV No. -->
             A.INVOICE_TITLE,
-            SF_GET_DATE_F(NOW(),'YYYY','M') AS NOW
+            SF_GET_DATE_F(NOW(),'YYYY','M') AS DATE
         FROM TBL_INVOICE A
             INNER JOIN TBL_COMPANY B ON A.COMP_CD = B.COMP_CD
         WHERE INVOICE_NUM = (SELECT INVOICE_NUM
                              FROM TBL_INVOICE_DETAIL
-                             WHERE CONTROL_SEQ IN (${CONTROL_SEQ_STR})
-                             ORDER BY INVOICE_NUM DESC
-                             LIMIT 1);
+                             WHERE CONTROL_SEQ IN (${CONTROL_SEQ_STR}));
     </select>
 
     <select id="selectTransactionStatementListExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER () OVER () AS ROWNUM,
-            SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR') AS CONTROL_STATUS_NM,
-            C.ORDER_NUM,
-            B.DRAWING_NUM,
-            B.SIZE_TXT,
-            '', <!-- 단위 -->
-            B.UNIT_FINAL_AMT, <!-- 공급단가 -->
+            A.CONTROL_NUM, <!-- 관리번호 -->
+            B.DRAWING_NUM, <!-- 도면번호 -->
+            B.SIZE_TXT, <!-- 규격 -->
+            <!-- SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR') AS CONTROL_STATUS_NM, -->
+            'EA' AS UNIT,  <!-- 단위 -->
             C.ORDER_QTY,  <!-- 수량 -->
+            B.UNIT_FINAL_AMT, <!-- 공급단가 -->
             B.UNIT_FINAL_AMT * C.ORDER_QTY AS TOTAL_AMT, <!-- 금액 계 -->
-            C.PACKING_CNT, <!-- 포장 수량 -->
             D.NOTE <!-- 비고 -->
         FROM TBL_CONTROL A
         INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
