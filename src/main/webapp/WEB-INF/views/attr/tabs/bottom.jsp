@@ -76,7 +76,7 @@
 </div>
 <!-- 파일 다운로드 공통 End -->
 <!-- 인쇄 도면 div start -->
-<div class="modal" id="common_confirm_popup" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal" id="common_confirm_popup" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 10000;">
     <div class="modal-dialog cadDrawing" role="document">
         <div class="modal-content">
             <div class="modal-header">
