@@ -102,8 +102,8 @@
             </div>
             <%--<p> 불출 하시겠습니까?</p>--%>
             <div class="popBtnWrap">
-                <button class="btnSave" id="btnInWarehouseManageOutPopSave">저장</button>
-                <button class="btnCancel" id="btnInWarehouseManageOutPopCancel">취소</button>
+                <button type="button" class="defaultBtn radius green" id="btnInWarehouseManageOutPopSave">저장</button>
+                <button type="button" class="defaultBtn radius" id="btnInWarehouseManageOutPopCancel">취소</button>
             </div>
         </form>
     </div>
@@ -167,8 +167,8 @@
             <br/>
             <%--<p> 불출 하시겠습니까?</p>--%>
             <div class="popBtnWrap">
-                <button class="btnSave" id="btnInWarehouseManageScanPopSave">저장</button>
-                <button class="btnCancel" id="btnInWarehouseManageScanPopCancel">취소</button>
+                <button type="button" class="defaultBtn radius green" id="btnInWarehouseManageScanPopSave">저장</button>
+                <button type="button" class="defaultBtn radius" id="btnInWarehouseManageScanPopCancel">취소</button>
             </div>
         </form>
     </div>

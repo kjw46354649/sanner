@@ -74,7 +74,8 @@
 
     <select id="selectGfileFileImageInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            A.GFILE_SEQ, B.FILE_SEQ, B.ORGINAL_FILE_NM, B.FILE_PATH, TIME_PATH
+            A.GFILE_SEQ, B.FILE_SEQ, B.ORGINAL_FILE_NM, B.FILE_PATH, TIME_PATH, B.FILE_SIZE,
+            SF_GET_DATE_F(B.INSERT_DT,'YYYY','') AS INSERT_DT
         FROM jmes.TBL_FILE_GROUP A
             INNER JOIN jmes.TBL_FILE B ON A.GFILE_SEQ = B.GFILE_SEQ
         WHERE A.GFILE_SEQ  = #{GFILE_SEQ}
@@ -82,7 +83,8 @@
 
     <select id="selectGfileFileSingleInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            A.GFILE_SEQ, B.FILE_SEQ, B.ORGINAL_FILE_NM, B.FILE_PATH, TIME_PATH
+            A.GFILE_SEQ, B.FILE_SEQ, B.ORGINAL_FILE_NM, B.FILE_PATH, TIME_PATH, B.FILE_SIZE,
+            SF_GET_DATE_F(B.INSERT_DT,'YYYY','') AS INSERT_DT
         FROM jmes.TBL_FILE_GROUP A
             INNER JOIN jmes.TBL_FILE B ON A.GFILE_SEQ = B.GFILE_SEQ
         WHERE A.GFILE_SEQ  = #{GFILE_SEQ}
@@ -91,7 +93,8 @@
     <select id="selectGfileFileList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             A.GFILE_SEQ AS DXF_GFILE_SEQ, B.FILE_SEQ, B.TIME_PATH, B.FILE_PATH, REPLACE(B.ORGINAL_FILE_NM, CONCAT('.',B.FILE_EXT), SPACE(0)) AS ORGINAL_FILE_NM,
-            REPLACE(B.FILE_NM, CONCAT('.',B.FILE_EXT), SPACE(0)) AS FILE_NM
+            REPLACE(B.FILE_NM, CONCAT('.',B.FILE_EXT), SPACE(0)) AS FILE_NM, B.FILE_SIZE,
+            SF_GET_DATE_F(B.INSERT_DT,'YYYY','') AS INSERT_DT
         FROM jmes.TBL_FILE_GROUP A
             INNER JOIN jmes.TBL_FILE B ON A.GFILE_SEQ = B.GFILE_SEQ
         WHERE A.GFILE_SEQ  IN
@@ -102,7 +105,8 @@
 
     <select id="selectFileSingleInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            A.GFILE_SEQ, B.FILE_SEQ, B.ORGINAL_FILE_NM, B.FILE_PATH, TIME_PATH
+            A.GFILE_SEQ, B.FILE_SEQ, B.ORGINAL_FILE_NM, B.FILE_PATH, TIME_PATH, B.FILE_SIZE,
+            SF_GET_DATE_F(B.INSERT_DT,'YYYY','') AS INSERT_DT
         FROM jmes.TBL_FILE_GROUP A
             INNER JOIN jmes.TBL_FILE B ON A.GFILE_SEQ = B.GFILE_SEQ AND B.FILE_SEQ = #{FILE_SEQ}
         WHERE 1 = 1
@@ -110,7 +114,8 @@
 
     <select id="selectGfileFileListInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            A.GFILE_SEQ, B.FILE_SEQ, B.ORGINAL_FILE_NM, B.FILE_PATH, TIME_PATH
+            A.GFILE_SEQ, B.FILE_SEQ, B.ORGINAL_FILE_NM, B.FILE_PATH, TIME_PATH, B.FILE_SIZE,
+            SF_GET_DATE_F(B.INSERT_DT,'YYYY','') AS INSERT_DT
         FROM jmes.TBL_FILE_GROUP A
                  INNER JOIN jmes.TBL_FILE B ON A.GFILE_SEQ = B.GFILE_SEQ
         WHERE A.GFILE_SEQ  = #{GFILE_SEQ}

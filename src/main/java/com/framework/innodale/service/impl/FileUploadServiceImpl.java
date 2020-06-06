@@ -41,7 +41,12 @@ public class FileUploadServiceImpl implements FileUploadService {
         ArrayList<HashMap<String, Object>> resultList = new ArrayList<HashMap<String, Object>>();
         Iterator<String> itr = (Iterator<String>)request.getFileNames();
 
-        int fileSeq = 0;
+        System.out.println("#########################################");
+        System.out.println(hashMap);
+        System.out.println(hashMap.get("GFILE_SEQ"));
+        System.out.println("".equals(String.valueOf(hashMap.get("GFILE_SEQ"))));
+        System.out.println("#########################################");
+        String fileSeq = (String) hashMap.get("GFILE_SEQ");
 
         if(itr.hasNext()) {
 
@@ -64,20 +69,20 @@ public class FileUploadServiceImpl implements FileUploadService {
                 fileMap.put("FILE_EXT", extName);
                 fileMap.put("FILE_SIZE", multipartFile.getSize());
 
-                if(fileSeq != 0) {
+                if(!fileSeq.equals("")) {
                     fileMap.put("GFILE_SEQ", fileSeq);
                 }else {
-                    if (!hashMap.containsKey("GFILE_SEQ") || "".equals(String.valueOf(hashMap.get("GFILE_SEQ")))) {
+                    if ("".equals(String.valueOf(hashMap.get("GFILE_SEQ")))) {
                         fileMap.put("GFILE_SEQ", "");                   // GFILE 신규 등록
                         fileMap.put("queryId", "common.insertFileGroup");
                         innodaleDao.update(fileMap);
 
-                        fileSeq = (int) fileMap.get("GFILE_SEQ");
-                    } else {
+                        fileSeq = Integer.toString((int) fileMap.get("GFILE_SEQ"));
+                    }/* else {
                         fileMap.put("GFILE_SEQ", hashMap.get("GFILE_SEQ"));                 // 기존 파일 삭제
                         fileMap.put("queryId", "common.deleteGFileKey");
                         innodaleDao.create(fileMap);
-                    }
+                    }*/
                 }
 
                 fileMap.put("FILE_SEQ", "");
