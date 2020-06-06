@@ -65,6 +65,8 @@
             <div class="modal-body" id="commonFileUpdatePop">
                 <form class="" role="form" id="common_file_download_form" name="common_file_download_form">
                     <input type="hidden" id="GFILE_SEQ" name="GFILE_SEQ" value="">
+                    <input type="hidden" id="callFunction" name="callFunction" value="">
+                    <input type="hidden" id="deleteYn" name="deleteYn" value="">
                     <div id="common_file_download_upload_grid" style="margin:auto;"></div>
                     <div class="right_sort fileTableInfoWrap">
                         <h4>전체 조회 건수 (Total : <span id="filedownloadTotalCount" style="color: #00b3ee">0</span>)</h4>
@@ -514,21 +516,26 @@
                     $cell = grid.getCell(ui);
                 $cell.find("#downloadSingleFile").bind("click", function () {
                     let rowData = ui.rowData;
-                    alert(rowData.FILE_SEQ);
                     fnSingleFileDownloadFormPageAction(rowData.FILE_SEQ);
                 });
             }
         },
         {title: '용량', dataType: 'string', dataIndx: 'FILE_SIZE',  width: 1, minWidth: 70,
             render: function(ui) {
-                return fn_getFileSize(ui.rowData.SIZE);
+                return fn_getFileSize(ui.rowData.FILE_SIZE);
             }
 
         },
         {title: '업로드 일시', dataType: 'string', dataIndx: 'INSERT_DT',  width: 120, minWidth: 70},
         {title: '', align: 'center', dataType: 'string', dataIndx: 'FILE_SEQ', width: 70, minWidth: 100,
             render: function (ui) {
-                if (ui.cellData) return '<span id="deleteSingleFile" class="ui-icon ui-icon-close" style="cursor: pointer"></span>'
+                let deleteYn = $("#common_file_download_form #deleteYn").val();
+                let returnVal = "";
+                if (ui.cellData) {
+                    if(eval(deleteYn)) returnVal = '<span id="deleteSingleFile" class="ui-icon ui-icon-close" style="cursor: pointer"></span>';
+
+                    return returnVal;
+                }
             },
             postRender: function (ui) {
                 let grid = this;
@@ -541,7 +548,7 @@
                     };
                     let parameters = {'url': '/json-remove', 'data': parameter};
                     fnPostAjaxAsync(function(data, callFunctionParam){
-                        let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': ui.cellData };
+                        let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': rowData.GFILE_SEQ };
                         fnRequestGidData(commonFileDownUploadGrid, postData);
                     }, parameters, '');
                 });
@@ -570,26 +577,27 @@
             $('#filedownloadTotalCount').html(totalRecords);
         },
     };
+    commonFileDownUploadPopup.on('show.bs.modal', function (e) {
+        let GfileKey = $("#common_file_download_form").find("#GFILE_SEQ").val();
+        commonFileDownUploadGrid.pqGrid(commonFileDownUploadObj);
+        let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey };
+        fnRequestGidData(commonFileDownUploadGrid, postData);
+    });
+
+    commonFileDownUploadPopup.on('hide.bs.modal', function (e) {
+        commonFileDownUploadGrid.pqGrid('destroy');
+        $("#common_file_download_form #deleteYn").val(true);
+
+        let callFunction = $("#common_file_download_form").find("#callFunction").val();
+        let callback = $.Callbacks();
+        callback.add(eval(callFunction));
+        callback.fire($("#common_file_download_form").find("#GFILE_SEQ").val());
+    });
 
     let commonFileDownUploadPopupCall = function(GfileKey, callFunction) {
         $("#common_file_download_form").find("#GFILE_SEQ").val(GfileKey);
-        console.log(commonFileDownUploadGrid);
-        commonFileDownUploadGrid.pqGrid(commonFileDownUploadObj);
-        //commonFileDownUploadGrid.pqGrid('option', 'colModel', commonFileDownUploadModel);
-        let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey };
-        fnRequestGidData(commonFileDownUploadGrid, postData);
-
+        $("#common_file_download_form").find("#callFunction").val(callFunction);
         commonFileDownUploadPopup.modal('show');
-
-        commonFileDownUploadPopup.on('hide.bs.modal', function (e) {
-            console.log(commonFileDownUploadGrid);
-            commonFileDownUploadGrid.pqGrid('destroy');
-            console.log(commonFileDownUploadGrid);
-
-            let callback = $.Callbacks();
-            callback.add(callFunction);
-            callback.fire($("#common_file_download_form").find("#GFILE_SEQ").val());
-        });
     };
 
     /** 파일 다운로드 종료 스크립트 **/
@@ -967,5 +975,15 @@
     });
 
     /**  공통 제품상세 정보  끝 **/
-
+    function estimateListFileUploadCallback(GfileSeq) {
+        if(!GfileSeq) {
+            let parameter = {
+                'queryId': 'estimate.updateEstimateMasterGfileSeq',
+                'EST_SEQ': $("#estimate_master_hidden_form #EST_SEQ").val()
+            };
+            let parameters = {'url': '/json-update', 'data': parameter};
+            fnPostAjaxAsync('', parameters, '');
+        }
+        $("#btnEstimateListSearch").trigger('click');
+    }
 </script>
