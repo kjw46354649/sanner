@@ -1038,16 +1038,17 @@
             }, formData, '');
         });
         $("#outgoing_manage_detail_btn").on('click', function () {
-            if(SelectedRowIndex.length >0){
-                let rowDataArray = outgoingManageGridId01.pqGrid('getRowData', {rowIndx: SelectedRowIndex[0]});
-                console.log(rowDataArray);
-                let CONTROL_DETAIL_SEQ = rowDataArray.CONTROL_DETAIL_SEQ;
-                let CONTROL_SEQ = rowDataArray.CONTROL_SEQ;
-
-                g_item_detail_pop_view(CONTROL_SEQ,CONTROL_DETAIL_SEQ);
-            }else{
-                alert("그리드를 선택해 주십시오.");
-            }
+            // if(SelectedRowIndex.length >0){
+            //     let rowDataArray = outgoingManageGridId01.pqGrid('getRowData', {rowIndx: SelectedRowIndex[0]});
+            //     console.log(rowDataArray);
+            //     let CONTROL_DETAIL_SEQ = rowDataArray.CONTROL_DETAIL_SEQ;
+            //     let CONTROL_SEQ = rowDataArray.CONTROL_SEQ;
+            //
+            //     g_item_detail_pop_view(CONTROL_SEQ,CONTROL_DETAIL_SEQ);
+            // }else{
+            //     alert("그리드를 선택해 주십시오.");
+            // }
+            g_item_detail_pop_view('','');
         });
          $("#outgoing_manage_search_btn").on('click', function () {
             outgoingManageGridId01.pqGrid("option", "dataModel.postData", function(ui){

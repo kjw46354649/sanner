@@ -790,30 +790,17 @@ console.log(dataInfo);
         }
 
         $("#inspection_manage_detail_btn").on('click', function(e){
-            console.log(SelectedRowIndex);
-            // alert("test data ");
-            if(SelectedRowIndex.length >0){
-            //   if(true){
+          /*  if(SelectedRowIndex.length >0){
                 let rowDataArray = inspectionManageGridId01.pqGrid('getRowData', {rowIndx: SelectedRowIndex[0]});
                 console.log(rowDataArray);
                 let CONTROL_DETAIL_SEQ = rowDataArray.CONTROL_DETAIL_SEQ;
                 let CONTROL_SEQ = rowDataArray.CONTROL_SEQ;
 
-
-
-
-                 // CONTROL_DETAIL_SEQ = "7269";
-                 // CONTROL_SEQ = "4502";
-
-
-
-
-
                 g_item_detail_pop_view(CONTROL_SEQ,CONTROL_DETAIL_SEQ);
             }else{
                 alert("그리드를 선택해 주십시오.");
-            }
-
+            }*/
+            g_item_detail_pop_view('','');
         });
 
 

@@ -120,11 +120,22 @@
         <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
         <div class="layerPopup">
             <h3>제품상세정보</h3>
-            <span class="right">
-                <span class="barCode" ><img src="/resource/asset/images/common/img_barcode.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>
-                <span class="barCodeTxt" >&nbsp;<input type="text" class="wd_270_barcode" style="height: 39px;" name="g_item_detail_pop_barcode_num" id="g_item_detail_pop_barcode_num" placeholder="도면의 바코드를 스캔해 주세요"></span>
-            </span>
+            <button type="button" class="pop_close mg-top10 mg-right8" id="popClose2">닫기</button>
+<%--            <span class="right">--%>
+<%--                <span class="barCode" ><img src="/resource/asset/images/common/img_barcode.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>--%>
+<%--                <span class="barCodeTxt" >&nbsp;<input type="text" class="wd_270_barcode" style="height: 39px;" name="g_item_detail_pop_barcode_num" id="g_item_detail_pop_barcode_num" placeholder="도면의 바코드를 스캔해 주세요"></span>--%>
+<%--            </span>--%>
             <div class="qualityWrap">
+                <div class="h_area">
+                    <span class="buttonWrap" id="inspect_method_btn">
+                        <span style="height: 30px;float: left;">&nbsp;</span>
+                    </span>
+                    <ul class="listWrap">
+                       <span class="barCode" ><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>
+                      <span class="barCodeTxt" >&nbsp;<input type="text" class="wd_270_barcode hg_30"  name="g_item_detail_pop_barcode_num" id="g_item_detail_pop_barcode_num" placeholder="도면의 바코드를 스캔해 주세요"></span>
+                    </ul>
+
+                 </div>
                 <h4>기본정보</h4>
                 <div class="list1">
                     <table class="rowStyle">
@@ -242,7 +253,7 @@
                 </div>
             </div>
             <div class="btnWrap">
-                <button type="button" id="g_item_detail_pop_grid_05_pop_close" class="cancel">CLOSE</button>
+                <button type="button" class="defaultBtn grayPopGra" id="g_item_detail_pop_grid_05_pop_close">닫기</button>
             </div>
         </div>
     </form>
@@ -838,7 +849,11 @@
 
                 $("#g_item_detail_pop_form").find("#PART_STATUS_NM").html(dataInfo.PART_STATUS_NM);
                 $("#g_item_detail_pop_form").find("#DRAWING_VER").html(dataInfo.DRAWING_VER);
-                $("#g_item_detail_pop_form").find("#DXF_GFILE_SEQ").html(dataInfo.DXF_GFILE_SEQ);
+
+
+                let filedownlod = '<button type="button" class="smallBtn red" onclick="javascript:fnSingleFileDownloadFormPageAction(dataInfo.DXF_GFILE_SEQ);"><i class="fa fa-trash"></i><span >다운로드</span></button>';
+
+                $("#g_item_detail_pop_form").find("#DXF_GFILE_SEQ").html(filedownlod);
 
                 $("#g_item_detail_pop_form").find("#ORDER_COMP_NM").html(dataInfo.ORDER_COMP_NM);
                 $("#g_item_detail_pop_form").find("#DESIGNER_NM").html(dataInfo.DESIGNER_NM);
@@ -898,7 +913,7 @@
             }
         }, 2000);
 
-
+        $("#g_item_detail_pop_form").find("#g_item_detail_pop_barcode_num").focus();
     }
     $("#g_item_detail_pop").on('hide.bs.modal', function(){
         fnResetFrom("g_item_detail_pop_form");
@@ -909,9 +924,38 @@
         g_ItemDetailPopGridId05.pqGrid('destroy');
     });
 
-    $("#g_item_detail_pop_form").find('#g_item_detail_pop_grid_05_pop_close').on('click', function () {
+    $("#g_item_detail_pop_form").find('#g_item_detail_pop_grid_05_pop_close, #popClose2').on('click', function () {
         $('#g_item_detail_pop').modal('hide');
     });
+    $("#g_item_detail_pop_barcode_num").on({
+        focus: function () {
+            $("#g_item_detail_pop_barcode_img").attr("src","/resource/asset/images/common/img_barcode_long_on.png");
+        },
+        blur: function () {
+            $("#g_item_detail_pop_barcode_img").attr("src","/resource/asset/images/common/img_barcode_long.png");
+        },
+        keyup: function (e) {
+            if (e.keyCode == 13) {
+                //0. 바코드 정보 가져오기
+                let data = {'queryId': "common.selectControlBarcodeInfo",'BARCODE_NUM': this.value};
+                let parameters = {'url': '/json-info','data': data};
+                fnPostAjax(function (data, callFunctionParam) {
+                    let dataInfo = data.info;
+                    if(dataInfo == null ) {
+                        alert("해당 바코드가 존재하지 않습니다.");
+                        return;
+                    }else{
+                        let CONTROL_SEQ =  dataInfo.CONTROL_SEQ;
+                        let CONTROL_DETAIL_SEQ =  dataInfo.CONTROL_DETAIL_SEQ;
+                        $("#inspection_manage_pop_form").find("#CONTROL_SEQ").val(CONTROL_SEQ);
+                        $("#inspection_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val(CONTROL_DETAIL_SEQ);
+                        $('#inspection_manage_pop').modal('show');
+                    }
+                }, parameters, '');
+            }
+        }
+    });
+
     /**  공통 제품상세 정보  끝 **/
 
 </script>
