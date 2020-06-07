@@ -107,34 +107,35 @@
 
         onScan.attachTo(document, {
             onScan: function(sCode, iQty) { // Alternative to document.addEventListener('scan')
-                let currentTabId = fnCurrentTabId();
-                $('.contentsWrap').find('#view_' + currentTabId).find('span.barCode').each(function (index, element) {
-                    if ($(element).children('img').attr('src') === '/resource/asset/images/common/img_barcode_on.png') {
-                        let inputBarcode = $(element).siblings('.barCodeTxt').children('input:first')
-                        let e = jQuery.Event('keyup', {keyCode: 13});
-
-                        inputBarcode.val(sCode);
-                        inputBarcode.trigger(e);
-                    }
-                });
+                // let currentTabId = fnCurrentTabId();
+                // $('.contentsWrap').find('#view_' + currentTabId).find('span.barCode').each(function (index, element) {
+                //     if ($(element).children('img').attr('src') === '/resource/asset/images/common/img_barcode_on.png') {
+                //         let inputBarcode = $(element).siblings('.barCodeTxt').children('input:first')
+                //         let e = jQuery.Event('keyup', {keyCode: 13});
+                //
+                //         inputBarcode.val(sCode);
+                //         inputBarcode.trigger(e);
+                //     }
+                // });
             }
         });
 
-        $(document).on('show.bs.modal', '.popup_container', function () {
-            barcodeDisableAll();
-            currentModalBarcodeEnable(this);
-        });
-        $(document).on('hide.bs.modal', '.popup_container', function () {
-            currentTabBarcodeEnable(fnCurrentTabId());
-        });
+        // $(document).on('show.bs.modal', '.popup_container', function () {
+        //     barcodeDisableAll();
+        //     currentModalBarcodeEnable(this);
+        // });
+        // $(document).on('hide.bs.modal', '.popup_container', function () {
+        //     currentTabBarcodeEnable(fnCurrentTabId());
+        // });
     });
 
-    const currentModalBarcodeEnable = function (element) {
-        let barcodeElements = $(element).find('span.barCode');
-        if (barcodeElements.length) {
-            $(barcodeElements[0]).children('img').attr('src', '/resource/asset/images/common/img_barcode_long_on.png');
-        }
-    };
+    // const currentModalBarcodeEnable = function (element) {
+    //     let barcodeElements = $(element).find('span.barCode');
+    //
+    //     if (barcodeElements.length) {
+    //         $(barcodeElements[0]).children('img').attr('src', '/resource/asset/images/common/img_barcode_on.png');
+    //     }
+    // };
 
     /**
      * @description 열려있는 탭 id 가져오기

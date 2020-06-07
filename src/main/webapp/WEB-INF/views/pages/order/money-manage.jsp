@@ -327,6 +327,7 @@
                 });
             }
         };
+        debugger;
         $moneyManageStatusGrid = $('#' + moneyManageStatusGridID).pqGrid(moneyManageStatusObj);
 
         $moneyManageStatusSearchBtn.click(function(){

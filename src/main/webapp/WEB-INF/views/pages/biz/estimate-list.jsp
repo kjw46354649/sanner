@@ -205,7 +205,13 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#downloadViewPopup").bind("click", function () {
                         let rowData = ui.rowData;
-                        commonFileDownloadPopupCall(rowData.ETC_GFILE_SEQ);
+                        // 파일
+                        if(rowData.EST_STATUS == 'EST020'){
+                            $("#common_file_download_form #deleteYn").val(false);
+                        }else{
+                            $("#common_file_download_form #deleteYn").val(true);
+                        }
+                        commonFileDownUploadPopupCall(rowData.ETC_GFILE_SEQ, 'estimateListFileUploadCallback');
                     });
                 }
             },
@@ -629,7 +635,8 @@
             },
             rowSelect: function( event, ui ) {
                 //if(ui.addList.length > 0 ) {
-                btnDisabled(ui.addList[0].rowData.EST_STATUS);
+                let EST_STATUS = ui.addList[0].rowData.EST_STATUS;
+                btnDisabled(EST_STATUS);
 
                 let EST_SEQ = ui.addList[0].rowData.EST_SEQ;
                 let EST_VER = ui.addList[0].rowData.EST_VER;
@@ -944,7 +951,7 @@
         con.css({height:'346px'});
 
         estimateMasterBotGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
-    }
+    };
 
     // topWrap 축소 함수
     function topMenuClose(){
@@ -957,7 +964,7 @@
         con.css({height:'404px'});
 
         estimateMasterBotGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
-    }
+    };
 
     function btnDisabled(status) {
         if(status == 'EST020'){
@@ -968,6 +975,6 @@
             $("#btnEstimateListDelete").attr('disabled', false);
             $("#btnEstimateListSave").attr('disabled', false);
         }
-    }
+    };
 
 </script>

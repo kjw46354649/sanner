@@ -652,7 +652,7 @@
         };
 
         let $cancelRequestOutsideGrid;
-        const cancelRequestOutsideGridId = 'OUTSIDE_REQUEST_GRID';
+        const cancelRequestOutsideGridId = 'CANCEL_REQUEST_OUTSIDE_GRID';
         const cancelRequestOutsideObj = {
             height: 200,
             collapsible: false,
@@ -902,19 +902,20 @@
             // createOrDestroyDatepicker();
         });
 
-        $('#REQUEST_OUTSIDE_POPUP').on('show.bs.modal', function () {
-            if (noSelectedRowAlert()) {
-                return false;
+        $('#REQUEST_OUTSIDE_POPUP').on({
+            'show.bs.modal': function () {
+                if (noSelectedRowAlert()) {
+                    return false;
+                }
+
+                $mailRecipientGrid = $('#' + mailRecipientGridId).pqGrid(mailRecipientObj);
+                $outsideProcessRequestGrid = $('#' + outsideProcessRequestGridId).pqGrid(outsideProcessRequestObj);
+                loadOutsideProcessData();
+            },
+            'hide.bs.modal': function () {
+                $mailRecipientGrid.pqGrid('destroy');
+                $outsideProcessRequestGrid.pqGrid('destroy');
             }
-
-            $mailRecipientGrid = $('#' + mailRecipientGridId).pqGrid(mailRecipientObj);
-            $outsideProcessRequestGrid = $('#' + outsideProcessRequestGridId).pqGrid(outsideProcessRequestObj);
-            loadOutsideProcessData();
-
-            // let mail_data = CKEDITOR.instances.REQUEST_OUTSIDE_EMAIL_CONTENT_TXT.getData();
-            // console.log(mail_data);
-            // $("#REQUEST_OUTSIDE_EMAIL_CONTENT_TXT").val('mail_data');
-
         });
 
         $('#CANCEL_REQUEST_OUTSIDE_POPUP').on({
@@ -928,7 +929,8 @@
                 loadCancelRequestOutsideData();
             },
             'hide.bs.modal': function () {
-
+                $cancelMailRecipientGrid.pqGrid('destroy');
+                $cancelRequestOutsideGrid.pqGrid('destroy');
             }
         });
 
@@ -1178,6 +1180,7 @@
         };
 
         const outsideRequestSave = function () {
+            console.log(1);
             const updateQueryList = ['outMapper.updateOutsideProcessRequest'];
 
             fnModifyPQGrid($outsideProcessRequestGrid, [], updateQueryList);
@@ -1199,15 +1202,10 @@
         });
 
         $('#REQUEST_OUTSIDE_SAVE_SUBMIT').on('click', function (){
-           /* real
-           let success = false;
-            success = requestSave();
-            if (success) {
-                reqeustSendEmail();
-            }*/
-           //test
-
-            outsideRequestConfirm();
+            outsideRequestSave();
+            outsideRequestSendEmail();
+            $('#REQUEST_OUTSIDE_POPUP').modal('hide');
+            // outsideRequestConfirm();
         });
         /* 가공 요청*/
 
@@ -1251,7 +1249,7 @@
         const cancelRequestOutsideSave = function () {
             const updateQueryList = ['outMapper.updateOutsideProcessRequest'];
 
-            fnModifyPQGrid($outsideProcessRequestGrid, [], updateQueryList);
+            fnModifyPQGrid($cancelRequestOutsideGrid, [], updateQueryList);
         };
 
         const cancelRequestOutsideSendEmail = function () {

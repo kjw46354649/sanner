@@ -379,6 +379,9 @@ table.boardList .txtP{color: #7030a0;}
 .layerPopup .buttonWrap .onoff.on { border: 1px solid #8a8a8a; background: #ebebeb; color: #000; }
 .layerPopup table.tableL { width: 100%; border: 1px solid #808080; border-collapse: collapse; }
 .layerPopup table.tableL td.header { background-color: #E8E8E8; }
+.layerPopup table.tableL td.headerDisable { background-color: #BFBFBF; color: black; }
+.layerPopup table.tableL td.headerSelectChange { background-color: #73AEE3; color: black; }
+.layerPopup table.tableL td.headerInputChange { background-color: #73AEE3; color: white; }
 .layerPopup table.tableL > tbody > tr > td { height: 30px; text-align: center; font-size: 12px; border: 1px solid #808080; }
 /*.layerPopup table.tableL > tbody > tr > td > input, select { text-align: center; }
 .layerPopup table.tableL > tbody > tr > td > textarea { resize: none; }

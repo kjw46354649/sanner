@@ -169,7 +169,7 @@
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn btn-120w" id="DRAWING_REGISTRATION">도면 등록</button>
                     <button type="button" class="defaultBtn btn-120w" id="DRAWING_CHANGE">도면변경(Rev. up)</button>
-                    <button type="button" class="defaultBtn btn-120w" id="DRAWING_VIEW">도면 View</button>
+                    <button type="button" class="defaultBtn btn-120w" id="CONTROL_MANAGE_DRAWING_VIEW">도면 View</button>
                     <button type="button" class="defaultBtn btn-120w red" id="CONTROL_MANAGE_DELETE">삭제</button>
                     <button type="button" class="defaultBtn btn-120w green" id="CONTROL_MANAGE_SAVE">저장</button>
                 </div>
@@ -299,24 +299,24 @@
                 <table class="tableL">
                     <tbody>
                     <tr>
-                        <td>발주사</td>
+                        <td class="headerDisable">발주사</td>
                         <td id="ORDER_COMP_NM"></td>
-                        <td>공급사</td>
+                        <td class="headerDisable">공급사</td>
                         <td id="COMP_NM"></td>
                     </tr>
                     <tr>
-                        <td>구매 담당자</td>
-                        <td><select name="ORDER_STAFF_SEQ" id="ORDER_STAFF_SEQ">
+                        <td class="headerSelectChange">구매 담당자</td>
+                        <td><select name="ORDER_STAFF_SEQ" id="ORDER_STAFF_SEQ" style="width: 100%; border: 0; text-align: center;">
                             <option></option>
                         </select></td>
-                        <td>금액 합계</td>
+                        <td class="headerDisable">금액 합계</td>
                         <td name="TOTAL_AMT" id="TOTAL_AMT"></td>
                     </tr>
                     <tr>
-                        <td>INV No.</td>
-                        <td><input type="text" name="INVOICE_NUM" id="INVOICE_NUM" readonly></td>
-                        <td>제목</td>
-                        <td><input type="text" name="INVOICE_TITLE" id="INVOICE_TITLE" value="4세대 인라인 조립기"></td>
+                        <td class="headerDisable">INV No.</td>
+                        <td><input type="text" name="INVOICE_NUM" id="INVOICE_NUM" readonly style="width: 100%; border: 0; text-align: center;"></td>
+                        <td class="headerInputChange">제목</td>
+                        <td><input type="text" name="INVOICE_TITLE" id="INVOICE_TITLE" style="width: 100%; border: 0; text-align: center;"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -328,6 +328,9 @@
                 <div id="TRANSACTION_STATEMENT_DETAIL_GRID"></div>
             </div>
         </form>
+        <div class="btnWrap">
+            <button type="button" class="defaultBtn grayPopGra" id="g_item_detail_pop_grid_05_pop_close">닫기</button>
+        </div>
     </div>
 </div>
 
@@ -485,7 +488,7 @@
             {title: '프로젝트', width: 200, dataType: 'string', dataIndx: 'PROJECT_NM', editable: true},
             {title: '모듈', width: 70, dataType: 'string', dataIndx: 'MODULE_NM', editable: true},
             {title: '납품처', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM', editable: true},
-            {title: '비고(라벨)', dataType: 'string', dataIndx: 'LABEL_NOTE', editable: true},
+            {title: '비고(라벨)', width: 100, dataType: 'string', dataIndx: 'LABEL_NOTE', editable: true},
             {title: '주요<br>검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION', editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1059')},
                 render: function (ui) {
@@ -518,7 +521,7 @@
                 }
             },
             {title: 'CONTROL_VER', clsHead: 'control_manage_view_close', dataType: 'string', dataIndx: 'CONTROL_VER', hidden: true},
-            {title: '관리번호', clsHead: ' control_manage_view_estimate', width: 130, dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true},
+            {title: '관리번호', clsHead: ' control_manage_view_estimate', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true},
             {
                 title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM',
                 render: function (ui) {
@@ -557,8 +560,8 @@
                 }
             },
             {title: '도면번호버전', dataType: 'string', dataIndx: 'DRAWING_VER', hidden: true},
-            {title: '도면번호', width: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', editable: true},
-            {title: '품명', width: 110, dataType: 'string', dataIndx: 'ITEM_NM', editable: true},
+            {title: '도면번호', width: 150, dataType: 'string', dataIndx: 'DRAWING_NUM', editable: true},
+            {title: '품명', width: 150, dataType: 'string', dataIndx: 'ITEM_NM', editable: true},
             {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: true,
                 editor: {
                     type: 'select',
@@ -780,14 +783,83 @@
                 ]
             },
             {
-                title: '소재마감', align: 'center', hidden: true, colModel: [
-                    {title: 'TM각비', datatype: 'string', dataIndx: 'MATERIAL_FINISH_TM'},
-                    {title: '연마', datatype: 'string', dataIndx: 'MATERIAL_FINISH_GRIND'},
-                    {title: '열처리', datatype: 'string', dataIndx: 'MATERIAL_FINISH_HEAT'}
+                title: '소재마감', align: 'center', colModel: [
+                    {
+                        title: 'TM각비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_TM', width: 70,
+                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010')},
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+
+                            if (cellData === '') {
+                                return '';
+                            } else {
+                                let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
+                                let index = workFactory.findIndex(function (element) {
+                                    return element.text === cellData;
+                                });
+
+                                if (index < 0) {
+                                    index = workFactory.findIndex(function (element) {
+                                        return element.value === cellData;
+                                    });
+                                }
+
+                                return (index < 0) ? cellData : workFactory[index].text;
+                            }
+                        }
+                    },
+                    {
+                        title: '연마비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND', width: 70,
+                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020')},
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+
+                            if (cellData === '') {
+                                return '';
+                            } else {
+                                let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
+                                let index = workFactory.findIndex(function (element) {
+                                    return element.text === cellData;
+                                });
+
+                                if (index < 0) {
+                                    index = workFactory.findIndex(function (element) {
+                                        return element.value === cellData;
+                                    });
+                                }
+
+                                return (index < 0) ? cellData : workFactory[index].text;
+                            }
+                        }
+                    },
+                    {
+                        title: '열처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', width: 70,
+                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030')},
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+
+                            if (cellData === '') {
+                                return '';
+                            } else {
+                                let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
+                                let index = workFactory.findIndex(function (element) {
+                                    return element.text === cellData;
+                                });
+
+                                if (index < 0) {
+                                    index = workFactory.findIndex(function (element) {
+                                        return element.value === cellData;
+                                    });
+                                }
+
+                                return (index < 0) ? cellData : workFactory[index].text;
+                            }
+                        }
+                    },
                 ]
             },
             {
-                title: '예상소재 Size', align: 'center', hidden: true, colModel: [
+                title: '예상소재 Size', align: 'center', hidden: false, colModel: [
                     {title: '@', datatype: 'string', dataIndx: 'RKFH'},
                     {title: '가로', datatype: 'string', dataIndx: 'SIZE_W_M'},
                     {title: '세로', datatype: 'string', dataIndx: 'SIZE_H_M'},
@@ -798,17 +870,17 @@
             },
             {
                 title: '항목별 계산견적 단가 (10원단위 반올림)', align: 'center', colModel: [
-                    {title: '소재비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_AMT', editable: true},
-                    {title: 'TM각비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_TM_AMT', editable: true},
-                    {title: '연마비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_GRIND_AMT', editable: true},
-                    {title: '열처리', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_HEAT_AMT', editable: true},
-                    {title: '표면처리', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SURFACE_AMT', editable: true},
-                    {title: '가공비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_PROCESS_AMT', editable: true},
-                    {title: '기타추가', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_ETC_AMT', editable: true},
-                    {title: '견적비고', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_AMT_NOTE', editable: true}
+                    {title: '소재비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_AMT', editable: true},
+                    {title: 'TM각비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_TM_AMT', editable: true},
+                    {title: '연마비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_GRIND_AMT', editable: true},
+                    {title: '열처리', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_HEAT_AMT', editable: true},
+                    {title: '표면처리', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SURFACE_AMT', editable: true},
+                    {title: '가공비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_PROCESS_AMT', editable: true},
+                    {title: '기타추가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_ETC_AMT', editable: true},
+                    {title: '견적비고', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_AMT_NOTE', editable: true}
                 ]
             },
-            {title: '계산<br>견적단가', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'CALCUL_EST_UNIT_COST',
+            {title: '계산<br>견적단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CALCUL_EST_UNIT_COST',
                 render: function (ui) {
                     let rowData = ui.rowData;
                     let UNIT_MATERIAL_AMT = rowData.UNIT_MATERIAL_AMT || 0;
@@ -825,17 +897,17 @@
                     }
                 }
             },
-            {title: '최종<br>견적단가', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', editable: true},
-            {title: '견적<br>합계금액', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'EST_TOTAL_AMOUNT'},
-            {title: '최종<br>공급단가', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', editable: true},
-            {title: '합계금액', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMT'},
-            {title: '종전가', width: 100, dataType: 'integer', format: '#,###', dataIndx: 'WHDWJSRK'},
+            {title: '최종<br>견적단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', editable: true},
+            {title: '견적<br>합계금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'EST_TOTAL_AMOUNT'},
+            {title: '최종<br>공급단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', editable: true},
+            {title: '합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMT'},
+            {title: '종전가', width: 100, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'WHDWJSRK'},
             {title: '변경전<br>도면번호', width: 120, dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', editable: true},
             {
                 title: '마감/취소 현황', align: 'center', colModel: [
                     {title: '마감월', datatype: 'string', dataIndx: 'CLOSE_MONTH'},
                     {title: '차수', datatype: 'string', dataIndx: 'CLOSE_VER'},
-                    {title: '작성자', datatype: 'string', dataIndx: 'akrkacnlthtkwrtjdwk'},
+                    {title: '작성자', datatype: 'string', dataIndx: 'CLOSE_USER_ID'},
                     {title: '일시', width: 120, datatype: 'string', dataIndx: 'CLOSE_DT'}
                 ]
             },
@@ -965,10 +1037,11 @@
                     let rowIndx = ui.updateList[0].rowIndx;
                     let data = ui.updateList[0].rowData;
                     let newRow = ui.updateList[0].newRow;
-                    let array = ['UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'ORDER_QTY'];
+                    let array = ['UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'ORDER_QTY', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT'];
                     let estimateFlag = false;
-
+                    console.log(newRow);
                     for (let value of array) {
+                        console.log(value);
                         if (newRow.hasOwnProperty(value)) {
                             estimateFlag = true;
                         }
@@ -994,13 +1067,14 @@
 
                         let unitFinalEstimateAmount = ui.updateList[0].newRow.UNIT_FINAL_EST_AMT || calculateEstimateAmount; // 최종 견적단가
                         let estimatedTotalAmount = unitFinalEstimateAmount * ORDER_QTY; // 견적 합계 금액
-                        let unitFinalAmount = ui.updateList[0].newRow.UNIT_FINAL_AMT || estimatedTotalAmount; // 최종 공급단가
+                        let unitFinalAmount = ui.updateList[0].newRow.UNIT_FINAL_AMT || unitFinalEstimateAmount; // 최종 공급단가
                         let finalAmount = unitFinalAmount * ORDER_QTY;// 합계 금액
+                        console.log(finalAmount);
                         let row;
 
-                        if (ui.updateList[0].newRow.UNIT_FINAL_AMT) {
+                       if (ui.updateList[0].newRow.UNIT_FINAL_AMT) {
                             row = {
-                                'CALCUL_EST_UNIT_COST': calculateEstimateAmount, // 계산 견적단가
+                                // 'CALCUL_EST_UNIT_COST': calculateEstimateAmount, // 계산 견적단가
                                 // 'UNIT_FINAL_EST_AMT': unitFinalEstimateAmount, // 최종 견적단가
                                 // 'EST_TOTAL_AMOUNT': estimatedTotalAmount, // 견적 합계금액 = 최종 견적단가 * 발주수량
                                 'UNIT_FINAL_AMT': unitFinalAmount, // 최종 공급단가
@@ -1215,7 +1289,7 @@
                 }
             },
             {
-                title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN', editable: true,
+                title: '외<br>주', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'OUTSIDE_YN', editable: true,
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -1273,7 +1347,7 @@
                 }
             },
             {
-                title: '소재 사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
+                title: '소재 사급', minWidth: 20, width: 25, dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -1348,13 +1422,8 @@
                 }
             },
             {
-                title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT',
-                editor: {
-                    type: 'select',
-                    valueIndx: 'value',
-                    labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1039')
-                },
+                title: '표면처리', width: 50, dataType: 'string', dataIndx: 'SURFACE_TREAT',
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1039')},
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -1596,11 +1665,11 @@
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP', hidden: true},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
-            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
+            {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
             {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
-            {title: '마감금액', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
-            {title: '네고금액', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT'}
+            {title: '마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
+            {title: '네고금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT'}
         ];
         let controlCloseLeftObj = {
             height: 250,
@@ -1623,15 +1692,15 @@
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
-            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
+            {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
             {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
-            {title: '변경 후 마감금액', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
-            {title: '변경 후 네고금액', dataType: 'integer', format: '#,###', dataIndx: 'NEGO_AMT', editable: true},
+            {title: '변경 후<br>마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
+            {title: '변경 후<br>네고금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'NEGO_AMT', editable: true},
             {
-                title: '추가 금액', align: 'center', colModel: [
-                    {title: '', datatype: 'string', dataIndx: 'ADD_QTY'},
-                    {title: '', datatype: 'integer', format: '#,###', dataIndx: 'ADD_UNIT_FINAL_AMT'}
+                title: '추가 정보', align: 'center', colModel: [
+                    {title: '건수', datatype: 'string', dataIndx: 'ADD_QTY'},
+                    {title: '금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ADD_UNIT_FINAL_AMT'}
                 ]
             }
         ];
@@ -1656,30 +1725,32 @@
         let $transactionStatementDetailGrid;
         const transactionStatementDetailGridId = 'TRANSACTION_STATEMENT_DETAIL_GRID';
         const transactionStatementDetailColModel = [
+            {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true},
             {title: '주문상태', dataType: 'string', dataIndx: 'CONTROL_STATUS_NM'},
             {title: '발주번호', dataType: 'string', dataIndx: 'ORDER_NUM'},
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM'},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT'},
             {title: '단위', dataType: 'string', dataIndx: 'CLOSE_VER'},
             {title: '수량', dataType: 'integer', dataIndx: 'ORDER_QTY'},
-            {title: '공급단가', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
-            {title: '금액 계', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
-            {title: '포장수량', dataType: 'integer', format: '#,###', dataIndx: 'PACKING_CNT', editable: true},
+            {title: '공급단가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
+            {title: '금액 계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
+            {title: '포장수량', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PACKING_CNT', editable: true},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true},
         ];
         const transactionStatementDetailObj = {
-            height: 500,
+            height: 470,
             collapsible: false,
             resizable: false,
             showTitle: false,
             strNoRows: g_noData,
             scrollModel: {autoFit: true},
             dragColumns: {enabled: false},
+            trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
             colModel: transactionStatementDetailColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'dataSource.emptyGrid'},
+                postData: {'queryId': 'dataSource.emptyGrid'}, recIndx: 'ROWNUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -1960,6 +2031,7 @@
             },
             'hide.bs.modal': function () {
                 $controlCloseLeftGrid.pqGrid('destroy');
+                console.log($controlCloseLeftGrid);
                 $controlCloseRightGrid.pqGrid('destroy');
             }
         });
@@ -2145,10 +2217,6 @@
                 $('#TRANSACTION_STATEMENT_FORM > #CONTROL_SEQ_STR').val(controlSeqStr);
 
                 let postData = fnFormToJsonArrayData('#TRANSACTION_STATEMENT_FORM');
-
-                $transactionStatementDetailGrid = $('#' + transactionStatementDetailGridId).pqGrid(transactionStatementDetailObj);
-                fnRequestGidData($transactionStatementDetailGrid, postData);
-
                 postData.queryId = 'orderMapper.selectControlTransactionStatementInfo';
                 let parameters = {'url': '/json-info', 'data': postData};
 
@@ -2159,6 +2227,30 @@
                     $('#TRANSACTION_STATEMENT_FORM #ORDER_COMP_NM').text(obj.ORDER_COMP_NM);
                     $('#TRANSACTION_STATEMENT_FORM #TOTAL_AMT').text(obj.TOTAL_AMT);
                     $('#TRANSACTION_STATEMENT_FORM #INVOICE_NUM').val(obj.INVOICE_NUM);
+
+                    $transactionStatementDetailGrid = $('#' + transactionStatementDetailGridId).pqGrid(transactionStatementDetailObj);
+                    // fnRequestGidData($transactionStatementDetailGrid, postData);
+                    postData.queryId = 'orderMapper.selectControlTransactionStatementList';
+                    parameters = {'url': '/json-list', 'data': postData};
+
+                    fnPostAjax(function (data) {
+                        $transactionStatementDetailGrid.pqGrid('option', 'dataModel.data', data.list);
+                        $transactionStatementDetailGrid.pqGrid('refreshView');
+                        controlSeqList = [];
+                        controlSeqStr = '';
+                        for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
+                            let obj = data.list[i];
+
+                            controlSeqList.push(obj.CONTROL_SEQ);
+                            controlSeqStr += controlSeqList[i];
+
+                            if (i < controlSeqList.length - 1) {
+                                controlSeqStr += ',';
+                            }
+                        }
+                    }, parameters, '');
+
+
                 }, parameters, '');
 
                 /* 구매 담당자 */
@@ -2226,7 +2318,9 @@
             parameters = {'url': '/removeInvoice', 'data': {INVOICE_NUM: invoiceNumList[0]}};
 
             fnPostAjax(function (data, callFunctionParam) {
-                alert('삭제!');
+                alert("<spring:message code='com.alert.default.remove.success' />");
+                $('#TRANSACTION_STATEMENT_POPUP').modal('hide');
+                $orderManagementGrid.pqGrid('refreshDataAndView');
             }, parameters, '');
         });
 
@@ -2257,7 +2351,7 @@
             orderCompCdList = orderCompCdList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
             });
-            invoiceNumList = invoiceNumList.filter(function (element, index, array) {f
+            invoiceNumList = invoiceNumList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
             });
 
@@ -2479,7 +2573,7 @@
             setEstiMatePopup('controlRev', 'orderMapper.manageControlCadRevFiles');
         });
         /** 도면 보기 팝업 호출 */
-        $('#DRAWING_VIEW').on('click', function () {
+        $('#CONTROL_MANAGE_DRAWING_VIEW').on('click', function () {
             callWindowImageViewer(999);
         });
         // 도면출력
@@ -2606,8 +2700,6 @@
                 return false;
             }
 
-            // ORDER_COMP_CD, ORDER_STAFF_SEQ, COMP_CD,
-
             let list = [];
             let controlSeqList = [];
             let compCdList = [];
@@ -2651,11 +2743,11 @@
             //     return false;
             // }
             if (compCdList.length > 1) {
-                alert('선택된 대상들의 발주사와 공급사는 동일해야 합니다.');
+                alert('선택된 대상들의 사업자는 동일해야 합니다.');
                 return false;
             }
             if (orderCompCdList.length > 1) {
-                alert('선택된 대상들의 발주사와 공급사는 동일해야 합니다.');
+                alert('선택된 대상들의 발주사는 동일해야 합니다.');
                 return false;
             }
             if (orderStaffSeqList.length > 1) {
@@ -2674,7 +2766,7 @@
             $('#estimate_version_up_sequence_form > #hidden_control_seq').val(controlSeqStr);
 
             $("a[pid='10000102']").trigger('click');
-            setTimeout(function(){
+            setTimeout(function () {
                 $('#updateFromControl').trigger('click');
             }, 800);
             event.preventDefault();
