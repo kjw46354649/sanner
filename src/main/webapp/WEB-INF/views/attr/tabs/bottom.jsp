@@ -118,6 +118,7 @@
         <input type="hidden" id="queryId" name="queryId" value="inspection.selectCommItemDetailInfo"/>
         <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value=""/>
         <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
+        <input type="hidden" id="CAM_INFO_YN" name="CAM_INFO_YN" value=""/>
         <div class="layerPopup">
             <h3>제품상세정보</h3>
             <button type="button" class="pop_close mg-top10 mg-right8" id="popClose2">닫기</button>
@@ -129,10 +130,10 @@
                 <div class="h_area">
                     <span class="buttonWrap" id="inspect_method_btn">
                         <span style="height: 30px;float: left;">&nbsp;</span>
-                        <span class="work_info">
-                            <label for="CAM_WORK_USER_ID" class="wd_100" style="background-color: #73139b;color: #fff; padding-left: 10px; text-align: center;">CAM 작업자: </label>
-                            <select id="CAM_WORK_USER_ID" name="CAM_WORK_USER_ID" title="견적 담당자" class="wd_200"></select>
-                        </span>
+<%--                        <span class="work_info_area">--%>
+<%--                            <label for="CAM_WORK_USER_ID" class="wd_100 worker">CAM 작업자: </label>--%>
+<%--                            <select id="CAM_WORK_USER_ID" name="CAM_WORK_USER_ID" title="견적 담당자" class="wd_200"></select>--%>
+<%--                        </span>--%>
                     </span>
                     <ul class="listWrap right_float">
                        <span class="barCode" ><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>
@@ -256,7 +257,7 @@
                 </div>
             </div>
             <div class="btnWrap">
-                <button type="button" class="defaultBtn purple" id="camWorkStartBtn">CAM 작업시작</button>
+                <button type="button" class="defaultBtn purple work_info_area" id="g_item_cam_work_start_btn">CAM 작업시작</button>
                 <button type="button" class="defaultBtn grayPopGra" id="g_item_detail_pop_grid_05_pop_close">닫기</button>
             </div>
         </div>
@@ -822,10 +823,16 @@
         colModel: g_ItemDetailPopColModel05
     };
 
+    let g_item_detail_cam_work_pop_view = function(CONTROL_SEQ, CONTROL_DETAIL_SEQ){
+        $("#g_item_detail_pop_form").find("#CAM_INFO_YN").val("Y");
+        $('.work_info_area').show();
+        g_item_detail_pop_view(CONTROL_SEQ, CONTROL_DETAIL_SEQ);
+    }
 
     let g_item_detail_pop_view = function(CONTROL_SEQ, CONTROL_DETAIL_SEQ){
 
-        fnCommCodeDatasourceSelectBoxCreate($("#g_item_detail_pop_form").find("#CAM_WORK_USER_ID"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}});
+        // 작업 worker 지정은 협의 필요
+        // fnCommCodeDatasourceSelectBoxCreate($("#g_item_detail_pop_form").find("#CAM_WORK_USER_ID"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}});
 
         $("#g_item_detail_pop_form").find("#CONTROL_SEQ").val(CONTROL_SEQ);
         $("#g_item_detail_pop_form").find("#CONTROL_DETAIL_SEQ").val(CONTROL_DETAIL_SEQ);
@@ -934,6 +941,7 @@
     }
     $("#g_item_detail_pop").on('hide.bs.modal', function(){
         fnResetFrom("g_item_detail_pop_form");
+        $(".work_info_area").hide();
         g_ItemDetailPopGridId01.pqGrid('destroy');
         g_ItemDetailPopGridId02.pqGrid('destroy');
         g_ItemDetailPopGridId03.pqGrid('destroy');
@@ -944,6 +952,24 @@
     $("#g_item_detail_pop_form").find('#g_item_detail_pop_grid_05_pop_close, #popClose2').on('click', function () {
         $('#g_item_detail_pop').modal('hide');
     });
+
+    $("#g_item_detail_pop_form").find('#g_item_cam_work_start_btn').on('click', function () {
+        // work start 처리
+        // worker 지정 여부
+        if($("#g_item_detail_pop_form").find("#CAM_WORK_USER_ID").val()){
+            alert("CAM 작업자를 선택해 주십시오.")
+            return false;
+        }
+        $("#g_item_detail_pop_form").find("#queryId").val('machine.insertMctCamWork');
+        let parameters = {'url': '/json-create', 'data': $('#g_item_detail_pop_form').serialize()}
+        fnPostAjax(function (data) {
+            $(".work_info_area").hide();
+            alert("<spring:message code='com.alert.default.save.success' />");
+            $orderManagementGrid.pqGrid('refreshDataAndView');
+        }, parameters, '');
+    });
+
+
 
     $("#g_item_detail_pop_form").find('#camWorkStartBtn').on('click', function () {
         let headHtml = "CAM 작업 정보", yseBtn="예", noBtn="아니오";
