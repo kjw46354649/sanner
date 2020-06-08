@@ -482,7 +482,7 @@
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CAM_SEQ', hidden: true},
             {title: 'Step', minWidth: 30, width: 35, dataType: 'integer', dataIndx: 'SEQ'},
-            {title: '가공위치', minWidth: 70, width: 80, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'}, dataType: 'string', dataIndx: 'WORK_DIRECTION',
+            {title: '가공위치', minWidth: 70, width: 80, editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'}, dataType: 'string', dataIndx: 'WORK_DIRECTION',
                 editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1080')
                 },
@@ -505,8 +505,8 @@
                     }
                 }
             },
-            {title: '작업내용', minWidth: 300, width: 350, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataType: 'string', dataIndx: 'WORK_DESC'},
-            {title: '작업자', minWidth: 70, width: 80, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'}, dataType: 'string', dataIndx: 'WORK_USER_ID',
+            {title: '작업내용', minWidth: 300, width: 350, editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataType: 'string', dataIndx: 'WORK_DESC'},
+            {title: '작업자', minWidth: 70, width: 80, editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'}, dataType: 'string', dataIndx: 'WORK_USER_ID',
                 editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}})
                 },
@@ -529,7 +529,7 @@
                     }
                 }
             },
-            {title: '단위수량', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: 'DESIGN_QTY', minWidth: 40, width: 60},
+            {title: '단위수량', dataType: 'string', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: 'DESIGN_QTY', minWidth: 40, width: 60},
             // {title: '계산시간', dataType: 'string', dataIndx: 'WORK_TIME', minWidth: 40, width: 70},
             {title: '대상파일', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: 'CAM_GFILE_SEQ', minWidth: 250, width: 350}
         ];
@@ -603,9 +603,11 @@
 
             //기본정보
             $camWorkManagePopGrid = $('#' + camWorkManagePopGridId).pqGrid(camWorkManagePopObj);
+            popCamWorkReload();
         };
 
         $("#cam_work_manage_detail_pop").find('.cam_work_manage_detail_pop_close').on('click', function () {
+            $camWorkManagePopGrid.pqGrid('destroy');
             $('#cam_work_manage_detail_pop').modal('hide');
             $mctCamManageSearchBtn.trigger("click");
         });
@@ -631,6 +633,7 @@
                 'url': '/managerCamWork',
                 'data': $('#cam_work_manage_pop_form').serialize()
             };
+            $camWorkTempSaveBtn.focus();
             fnPostAjax(function (data, callFunctionParam) {
                 popCamWorkReload();
             }, parameters, '');
@@ -645,6 +648,7 @@
                 'url': '/managerCamWork',
                 'data': $('#cam_work_manage_pop_form').serialize()
             };
+            $camWorkSaveAndCompleteBtn.focus();
             fnPostAjax(function (data, callFunctionParam) {
                 $('#cam_work_manage_detail_pop').modal('hide');
                 $mctCamManageSearchBtn.trigger("click");
@@ -656,11 +660,11 @@
             var gridInstance = $camWorkManagePopGrid.pqGrid('getInstance').grid;
             var changes = gridInstance.getChanges({format: 'byVal'});
             $("#cam_work_manage_pop_form").find("#camWorkGrid").val(JSON.stringify(changes));
-
             let parameters = {
                 'url': '/managerCamWork',
                 'data': $('#cam_work_manage_pop_form').serialize()
             };
+            $camWorkCancelBtn.focus();
             fnPostAjax(function (data, callFunctionParam) {
                 $('#cam_work_manage_detail_pop').modal('hide');
                 $mctCamManageSearchBtn.trigger("click");
