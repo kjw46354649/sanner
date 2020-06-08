@@ -31,7 +31,16 @@ public class ProductionServiceImpl implements ProductionService {
 
                 map.put("queryId", "machine.deleteMctCamWork");
                 innodaleDao.update(map);
+
+                // parts 이전 상태로 변경
+
                 break;
+            case "start":
+                map.put("queryId", "machine.insertMctCamWork");
+                innodaleDao.update(map);
+
+                // parts 상태 업데이트 처리
+
             case "complete":
                 map.put("queryId", "machine.updateMctCamWorkComplete");
                 innodaleDao.update(map);

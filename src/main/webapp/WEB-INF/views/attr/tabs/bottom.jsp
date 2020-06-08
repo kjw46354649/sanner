@@ -65,6 +65,8 @@
             <div class="modal-body" id="commonFileUpdatePop">
                 <form class="" role="form" id="common_file_download_form" name="common_file_download_form">
                     <input type="hidden" id="GFILE_SEQ" name="GFILE_SEQ" value="">
+                    <input type="hidden" id="callElement" name="callElement" value="">
+                    <input type="hidden" id="deleteYn" name="deleteYn" value="">
                     <div id="common_file_download_upload_grid" style="margin:auto;"></div>
                     <div class="right_sort fileTableInfoWrap">
                         <h4>전체 조회 건수 (Total : <span id="filedownloadTotalCount" style="color: #00b3ee">0</span>)</h4>
@@ -118,7 +120,7 @@
         <input type="hidden" id="queryId" name="queryId" value="inspection.selectCommItemDetailInfo"/>
         <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value=""/>
         <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
-        <input type="hidden" id="CAM_INFO_YN" name="CAM_INFO_YN" value=""/>
+<%--        <input type="hidden" id="CAM_INFO_YN" name="CAM_INFO_YN" value=""/>--%>
         <div class="layerPopup">
             <h3>제품상세정보</h3>
             <button type="button" class="pop_close mg-top10 mg-right8" id="popClose2">닫기</button>
@@ -142,7 +144,7 @@
                  </div>
                 <h4>기본정보</h4>
                 <div class="list1">
-                    <table class="rowStyle">
+                    <table class="rowStyle" style="table-layout: fixed;">
                         <colgroup>
                             <col width="10%">
                             <col width="16%">
@@ -162,8 +164,8 @@
                         <tr>
                             <th>품명</th>
                             <td id="ITEM_NM"></td>
-                            <th>모듈</th>
-                            <td id="MODULE_NM"></td>
+                            <th >모듈</th>
+                            <td id="MODULE_NM" style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap;"></td>
                             <th>수량(원칭,대칭)</th>
                             <td id="ORDER_QTY_INFO"></td>
                         </tr>
@@ -257,7 +259,7 @@
                 </div>
             </div>
             <div class="btnWrap">
-                <button type="button" class="defaultBtn purple work_info_area" id="g_item_cam_work_start_btn" style="display: none;">CAM 작업시작</button>
+<%--                <button type="button" class="defaultBtn purple work_info_area" id="g_item_cam_work_start_btn" style="display: none;">CAM 작업시작</button>--%>
                 <button type="button" class="defaultBtn grayPopGra" id="g_item_detail_pop_grid_05_pop_close">닫기</button>
             </div>
         </div>
@@ -274,9 +276,12 @@
     let $commonCadFileAttachGrid;
     let empty_data = [];
 
-    let commonFileDownloadPopup = $("#common_file_download_pop");
-    let commonFileDownloadGridId = "common_file_download_grid";
-    let $commonFileDownloadGrid;
+    let commonFileDownUploadPopup = $("#common_file_download_upload_pop");
+    let commonFileDownUploadGridId = "common_file_download_upload_grid";
+    let commonFileDownUploadGrid = $("#common_file_download_upload_grid");
+
+    let g_ItemDetailPopGrid04;
+    // let $camWorkManagePopGrid;
 
     $(function() {
         'use strict';
@@ -504,14 +509,15 @@
     /** 캐드 파일 업로드 종료  스크립트 **/
 
     /** 파일 다운로드 시작 스크립트 **/
-    let commonFileDownloadModel =  [
+    let commonFileDownUploadModel =  [
         {title: 'GFILE_SEQ', dataType: 'string', dataIndx: 'GFILE_SEQ', hidden: true},
-        {title: '파일명', dataType: 'string', dataIndx: 'ORGINAL_FILE_NM', width: 200, minWidth: 70},
-        {title: '용량', dataType: 'string', dataIndx: 'SEQ', hidden: true, width: 1, minWidth: 70},
-        {title: '파일 타입', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 1, minWidth: 70},
-        {title: '다운로드', align: 'center', dataType: 'string', dataIndx: 'FILE_SEQ', width: 155, minWidth: 100,
-            render: function (ui) {
-                if (ui.cellData) return '<span id="downloadSingleFile" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+        {title: '파일명', dataType: 'string', dataIndx: 'ORGINAL_FILE_NM', width: 400, minWidth: 70,
+            render: function(ui) {
+                let returnVal = ui.cellData;
+                if(ui.rowData.FILE_SEQ != undefined){
+                    returnVal += '<span id=\"downloadSingleFile\" class=\"ui-icon ui-icon-search\" style=\"cursor: pointer\"></span>';
+                }
+                return returnVal;
             },
             postRender: function (ui) {
                 let grid = this,
@@ -523,9 +529,22 @@
                 });
             }
         },
-        {title: '삭제', align: 'center', dataType: 'string', dataIndx: 'FILE_SEQ', width: 155, minWidth: 100,
+        {title: '용량', dataType: 'string', dataIndx: 'FILE_SIZE',  width: 1, minWidth: 70,
+            render: function(ui) {
+                return fn_getFileSize(ui.rowData.FILE_SIZE);
+            }
+
+        },
+        {title: '업로드 일시', dataType: 'string', dataIndx: 'INSERT_DT',  width: 120, minWidth: 70},
+        {title: '', align: 'center', dataType: 'string', dataIndx: 'FILE_SEQ', width: 70, minWidth: 100,
             render: function (ui) {
-                if (ui.cellData) return '<span id="deleteSingleFile" class="ui-icon ui-icon-close" style="cursor: pointer"></span>'
+                let deleteYn = $("#common_file_download_form #deleteYn").val();
+                let returnVal = "";
+                if (ui.cellData) {
+                    if(eval(deleteYn)) returnVal = '<span id="deleteSingleFile" class="ui-icon ui-icon-close" style="cursor: pointer"></span>';
+
+                    return returnVal;
+                }
             },
             postRender: function (ui) {
                 let grid = this;
@@ -538,20 +557,21 @@
                     };
                     let parameters = {'url': '/json-remove', 'data': parameter};
                     fnPostAjaxAsync(function(data, callFunctionParam){
-                        $commonFileDownloadGrid.pqGrid('refreshDataAndView');
+                        let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': rowData.GFILE_SEQ };
+                        fnRequestGidData(commonFileDownUploadGrid, postData);
                     }, parameters, '');
                 });
             }
         }
     ];
 
-    let commonFileDownloadObj = {
+    let commonFileDownUploadObj = {
         height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
         selectionModel : {type: 'row', mode: 'single'}, numberCell: {title: 'No.'}, dragColumns: {enabled: false},
         editable : false,
         scrollModel: {autoFit: false}, trackModel: {on: true}, showBottom : true, postRenderInterval: -1, //call postRender synchronously.
         columnTemplate: { align: 'center', halign: 'center', hvalign: 'center' }, //to vertically center align the header cells.
-        colModel: commonFileDownloadModel,
+        colModel: commonFileDownUploadModel,
         dataModel: {
             location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
             postData: {queryId: 'common.selectGfileFileListInfo', 'GFILE_SEQ': $("#common_file_download_form").find("#GFILE_SEQ").val()},
@@ -561,34 +581,38 @@
             }
         },
         dataReady: function (event, ui) {
-            if($commonFileDownloadGrid == undefined){
-                $commonFileDownloadGrid = $('#' + commonFileDownloadGridId).pqGrid(commonFileDownloadObj);
-                $commonFileDownloadGrid.pqGrid('option', 'colModel', commonFileDownloadModel);
-                $commonFileDownloadGrid.pqGrid('refresh');
-            }
-            let data = $commonFileDownloadGrid.pqGrid('option', 'dataModel.data');
+            let data = commonFileDownUploadGrid.pqGrid('option', 'dataModel.data');
             let totalRecords = data.length;
             $('#filedownloadTotalCount').html(totalRecords);
         },
     };
 
-    commonFileDownloadPopup.on('show.bs.modal',function(e) {
-        if($commonFileDownloadGrid != undefined){
-            $commonFileDownloadGrid.pqGrid('destroy');
-        }
-        $commonFileDownloadGrid = $('#' + commonFileDownloadGridId).pqGrid(commonFileDownloadObj);
-        $commonFileDownloadGrid.pqGrid('option', 'colModel', commonFileDownloadModel);
-        $commonFileDownloadGrid.pqGrid('refresh');
+    commonFileDownUploadPopup.on('show.bs.modal', function (e) {
+        let GfileKey = $("#common_file_download_form").find("#GFILE_SEQ").val();
+        commonFileDownUploadGrid.pqGrid(commonFileDownUploadObj);
+        let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey };
+        fnRequestGidData(commonFileDownUploadGrid, postData);
     });
 
-    commonFileDownloadPopup.on('hide.bs.modal',function(e) {
-        $commonFileDownloadGrid.pqGrid('destroy');
+    commonFileDownUploadPopup.on('hide.bs.modal', function (e) {
+        commonFileDownUploadGrid.pqGrid('destroy');
+        $("#common_file_download_form #deleteYn").val(true);
+
+        let callElement = $("#common_file_download_form").find("#callElement").val();
+        $("#" + callElement ).trigger('click');
     });
 
-    let commonFileDownloadPopupCall = function(GfileKey){
+    /** 파일 업로드 다운로드 Call 함수
+     * GFileSeq
+     * Element ID
+     * Click 이벤트로 CallBack
+     * **/
+    let commonFileDownUploadPopupCall = function(GfileKey, callElement) {
         $("#common_file_download_form").find("#GFILE_SEQ").val(GfileKey);
-        commonFileDownloadPopup.modal('show');
+        $("#common_file_download_form").find("#callElement").val(callElement);
+        commonFileDownUploadPopup.modal('show');
     };
+
     /** 파일 다운로드 종료 스크립트 **/
 
     /** 파일 업로드 스크립트 **/
@@ -606,6 +630,7 @@
         e.preventDefault();
         $(this).removeClass('drag-over');
         let cadFiles = e.originalEvent.dataTransfer.files; //드래그&드랍 항목
+        let GfileSeq = $("#common_file_download_form").find("#GFILE_SEQ").val();
         for(let i = 0; i < cadFiles.length; i++) {
             let file = cadFiles[i];
             uploadControlFiles.push(file); //업로드 목록에 추가
@@ -617,22 +642,21 @@
                     formData.append('file', file, file.name);
             });
             formData.append('queryId', $('#common_cad_file_attach_form').find("#queryId").val() + "_select");
+            formData.append('GFILE_SEQ', GfileSeq);
+
             uploadControlFiles = [];    // 파일 업로드 정보 초기화
-            $commonFileDownloadGrid.pqGrid('refreshDataAndView');
             fnFormDataFileUploadAjax(function (data) {
                 let fileUploadList = data.fileUploadList;
+
+                let GFILE_SEQ = fileUploadList[0].GFILE_SEQ;
                 if (fileUploadList.length <= 0) {
                     alert("주문 정보가 없습니다. 주문 정보를 확인 해 주세요.");
                     return false;
                 }
-                $commonFileDownloadGrid.pqGrid('option', {editable: true});
-                $commonFileDownloadGrid.pqGrid('addNodes', fileUploadList, 0);
-                $commonFileDownloadGrid.pqGrid('option', {editable: false});   // 수정 여부를 false 처리 한다.
-                $commonFileDownloadGrid.pqGrid('refresh');
-                let GFILE_SEQ = fileUploadList[0].GFILE_SEQ;
-                $("#common_file_download_form").find("#GFILE_SEQ").val(GFILE_SEQ);
+                let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GFILE_SEQ };
+                fnRequestGidData(commonFileDownUploadGrid, postData);
 
-                $(this).parent().find()
+                $("#common_file_download_form").find("#GFILE_SEQ").val(GFILE_SEQ);
             }, formData, '');
         }
     });
@@ -815,10 +839,10 @@
         colModel: g_ItemDetailPopColModel05
     };
 
-    let g_item_detail_cam_work_pop_view = function(CONTROL_SEQ, CONTROL_DETAIL_SEQ){
-        $("#g_item_detail_pop_form").find("#CAM_INFO_YN").val("Y");
-        g_item_detail_pop_view(CONTROL_SEQ, CONTROL_DETAIL_SEQ);
-    }
+    // let g_item_detail_cam_work_pop_view = function(CONTROL_SEQ, CONTROL_DETAIL_SEQ){
+    //     $("#g_item_detail_pop_form").find("#CAM_INFO_YN").val("Y");
+    //     g_item_detail_pop_view(CONTROL_SEQ, CONTROL_DETAIL_SEQ);
+    // }
 
     let g_item_detail_pop_view = function(CONTROL_SEQ, CONTROL_DETAIL_SEQ){
 
@@ -848,7 +872,7 @@
                 $("#g_item_detail_pop_form").find("#INNER_DUE_DT").html(dataInfo.INNER_DUE_DT);
 
                 $("#g_item_detail_pop_form").find("#ITEM_NM").html(dataInfo.ITEM_NM);
-                $("#g_item_detail_pop_form").find("#MODULE_NM").html(dataInfo.MODULE_NM);
+                $("#g_item_detail_pop_form").find("#MODULE_NM").html(dataInfo.MODULE_NM).trigger('create');
                 $("#g_item_detail_pop_form").find("#ORDER_QTY_INFO").html(dataInfo.ORDER_QTY_INFO);
 
                 $("#g_item_detail_pop_form").find("#SIZE_TXT").html(dataInfo.SIZE_TXT);
@@ -875,11 +899,11 @@
                 $("#g_item_detail_pop_form").find("#WORK_HISTORY_INFO").html(dataInfo.WORK_HISTORY_INFO);
 
                 /** CAM 작업 여부에 따른 버튼 표시 **/
-                if(dataInfo.CAM_STATUS == "CWS010"){ <!-- 대기 중일때 처리 -->
-                    $('.work_info_area').show();
-                }else{
-                    $('.work_info_area').hide();
-                }
+                // if(dataInfo.CAM_STATUS == "CWS010" || dataInfo.CAM_STATUS == "CWS030"){ <!-- 대기 중일때 처리 -->
+                //     $('.work_info_area').show();
+                // }else{
+                //     $('.work_info_area').hide();
+                // }
             }
         }, parameters, '');
 
@@ -917,7 +941,7 @@
 
         $("#g_item_detail_pop_form").find("#queryId").val('inspection.selectCommItemDetailInfoGrid4');
         g_ItemDetailPopObj04.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
-        let g_ItemDetailPopGrid04 = g_ItemDetailPopGridId04.pqGrid(g_ItemDetailPopObj04);
+        g_ItemDetailPopGrid04 = g_ItemDetailPopGridId04.pqGrid(g_ItemDetailPopObj04);
 
         $("#g_item_detail_pop_form").find("#queryId").val('inspection.selectCommItemDetailInfoGrid5');
         g_ItemDetailPopObj05.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
@@ -940,7 +964,6 @@
     }
     $("#g_item_detail_pop").on('hide.bs.modal', function(){
         fnResetFrom("g_item_detail_pop_form");
-        $(".work_info_area").hide();
         g_ItemDetailPopGridId01.pqGrid('destroy');
         g_ItemDetailPopGridId02.pqGrid('destroy');
         g_ItemDetailPopGridId03.pqGrid('destroy');
@@ -952,48 +975,16 @@
         $('#g_item_detail_pop').modal('hide');
     });
 
-    $("#g_item_detail_pop_form").find('#g_item_cam_work_start_btn').on('click', function () {
-        // work start 처리
-        // worker 지정 여부
-        if($("#g_item_detail_pop_form").find("#CAM_WORK_USER_ID").val()){
-            alert("CAM 작업자를 선택해 주십시오.")
-            return false;
-        }
-        $("#g_item_detail_pop_form").find("#queryId").val('machine.insertMctCamWork');
-        let parameters = {'url': '/json-create', 'data': $('#g_item_detail_pop_form').serialize()}
-        fnPostAjax(function (data) {
-            $(".work_info_area").hide();
-            alert("<spring:message code='com.alert.default.save.success' />");
-            $orderManagementGrid.pqGrid('refreshDataAndView');
-        }, parameters, '');
-    });
-
-
-
-    $("#g_item_detail_pop_form").find('#camWorkStartBtn').on('click', function () {
-        let headHtml = "CAM 작업 정보", yseBtn="예", noBtn="아니오";
-        let bodyHtml = "<h4><img style='width: 32px; height: 32px;' src='/resource/main/images/print.png'>&nbsp;&nbsp;<span>CAM 작업을 시작 하시겠습니까?</span></h4>";
-        fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-
-        let camWorkStartSubmitConfirm = function(callback) {
-            commonConfirmPopup.show();
-            $("#commonConfirmYesBtn").unbind().click(function (e) {
-                e.stopPropagation();
-                commonConfirmPopup.hide();
-                callback(true);
-                return;
-            });
-            $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                e.stopPropagation();
-                commonConfirmPopup.hide();
-            });
-        };
-        camWorkStartSubmitConfirm(function(confirm){
-            if(confirm) {
-                alert("저장 처리");
-            }
-        });
-    });
+    /** cam start 처리 **/
+    <%--$("#g_item_detail_pop_form").find('#g_item_cam_work_start_btn').on('click', function () {--%>
+    <%--    $("#g_item_detail_pop_form").find("#queryId").val('machine.insertMctCamWork');--%>
+    <%--    let parameters = {'url': '/json-create', 'data': $('#g_item_detail_pop_form').serialize()}--%>
+    <%--    fnPostAjax(function (data) {--%>
+    <%--        $(".work_info_area").hide();--%>
+    <%--        alert("<spring:message code='com.alert.default.job.start' />");--%>
+    <%--        g_ItemDetailPopGrid04.pqGrid('refreshDataAndView');--%>
+    <%--    }, parameters, '');--%>
+    <%--});--%>
 
     $("#g_item_detail_pop_barcode_num").on({
         focus: function () {
@@ -1024,4 +1015,16 @@
 
     /**  공통 제품상세 정보  끝 **/
 
+
+    function estimateListFileUploadCallback(GfileSeq) {
+        if(!GfileSeq) {
+            let parameter = {
+                'queryId': 'estimate.updateEstimateMasterGfileSeq',
+                'EST_SEQ': $("#estimate_master_hidden_form #EST_SEQ").val()
+            };
+            let parameters = {'url': '/json-update', 'data': parameter};
+            fnPostAjaxAsync('', parameters, '');
+        }
+        $("#btnEstimateListSearch").trigger('click');
+    }
 </script>

@@ -549,11 +549,12 @@
     <select id="selectResultManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER () OVER () AS ROWNUM,
-            A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.DRAWING_NUM, A.IMG_GFILE_SEQ,
+            A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.DRAWING_NUM, A.IMG_GFILE_SEQ, A.DXF_GFILE_SEQ,
             jmes.SF_GET_DATE_F(A.INNER_DUE_DT, '', '') AS INNER_DUE_DT, <!-- 내부가공납기 -->
             CASE WHEN B.EMERGENCY_YN = 'Y' THEN '긴' END AS EMERGENCY_YN, <!-- 긴급 -->
             CASE WHEN B.MAIN_INSPECTION = 'Y' THEN '주' END AS MAIN_INSPECTION, <!-- 주요 검사품 -->
             CASE WHEN A.WORK_TYPE = 'WTP030' THEN '수' WHEN A.WORK_TYPE = 'WTP040' THEN '재' END AS WORK_NM, <!-- 형태 -->
+            A.ITEM_NM, <!-- 품명 -->
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 1, 'MCT_PLAN_SEQ') AS MCT_PLAN_SEQ_1,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 1, 'EQUIP_SEQ') AS EQUIP_SEQ_1,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 1, 'WORKING_TIME') AS WORKING_TIME_1,
@@ -655,20 +656,29 @@
 
     <select id="selectCamDetailInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.CAM_SEQ, A.SEQ, A.WORK_DIRECTION, A.WORK_DESC, A.WORK_USER_ID, A.DESIGN_QTY, A.WORK_TIME, A.CAM_GFILE_SEQ
+            B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.CAM_SEQ, A.SEQ, A.WORK_DIRECTION, A.WORK_DESC, A.WORK_USER_ID, A.DESIGN_QTY, A.WORK_TIME,
+            C.FILE_SEQ, C.ORGINAL_FILE_NM, D.FILE_SEQ, D.ORGINAL_FILE_NM
         FROM jmes.TBL_CAM_DETAIL A
             INNER JOIN jmes.TBL_CAM B ON A.CAM_SEQ = B.CAM_SEQ
-            LEFT OUTER JOIN jmes.TBL_FILE C ON A.G
+            LEFT OUTER JOIN jmes.TBL_FILE C ON C.GFILE_SEQ = A.CAM_GFILE_SEQ AND C.FILE_KIND = 'EXC'
+            LEFT OUTER JOIN jmes.TBL_FILE D ON D.GFILE_SEQ = A.CAM_GFILE_SEQ AND D.FILE_KIND = 'CAM'
         WHERE 1 = 1
           AND A.CAM_SEQ = #{CAM_SEQ}
+        GROUP BY A.CAM_SEQ, A.SEQ
     </select>
 
     <insert id="insertMctCamWork"  parameterType="java.util.HashMap" >
         INSERT INTO jmes.TBL_CAM
-        (CAM_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, START_DT, INSERT_ID)
+        (CAM_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, START_DT, HISTORY_NOTE, NOTE, INSERT_ID)
         VALUES
         (CASE WHEN #{CAM_SEQ} IS NOT NULL THEN #{CAM_SEQ} ELSE NEXTVAL(SEQ_CAM) END,
-            #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}, NOW(), #{authUserInfo.USER_ID})
+            #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}, NOW(), #{HISTORY_NOTE}, #{NOTE}, #{authUserInfo.USER_ID})
+        ON DUPLICATE KEY UPDATE
+            HISTORY_NOTE = #{HISTORY_NOTE},
+            NOTE = #{NOTE},
+            FINISH_DT= NULL,
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{authUserInfo.USER_ID}
     </insert>
 
     <delete id="deleteMctCamWork"  parameterType="java.util.HashMap" >
@@ -701,7 +711,7 @@
         INSERT INTO jmes.TBL_CAM_DETAIL
         (CAM_SEQ, SEQ, WORK_DIRECTION, WORK_DESC, WORK_USER_ID, DESIGN_QTY, CAM_GFILE_SEQ, INSERT_ID)
         VALUES
-        (#{CAM_SEQ}, (SELECT IFNULL(MAX(B.SEQ), 1) + 1 FROM jmes.TBL_CAM_DETAIL B WHERE B.CAM_SEQ = #{CAM_SEQ}),
+        (#{CAM_SEQ}, (SELECT IFNULL(MAX(B.SEQ), 0) + 1 FROM jmes.TBL_CAM_DETAIL B WHERE B.CAM_SEQ = #{CAM_SEQ}),
             #{WORK_DIRECTION}, #{WORK_DESC}, #{WORK_USER_ID}, #{DESIGN_QTY}, #{CAM_GFILE_SEQ}, #{authUserInfo.USER_ID} )
     </insert>
 

@@ -900,7 +900,10 @@
     }
 
     let numberWithCommas = function(numberVal) {
-        return numberVal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        if(numberVal)
+            return numberVal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        else
+            return numberVal;
     }
 
     let fnBarcodePrint = function (callFunction, formData, callFunctionParam) {

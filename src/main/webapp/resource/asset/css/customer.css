@@ -353,7 +353,7 @@ button:disabled {
 .cam_work_manage_detail_pop .layerPopup .listdiv .conWrapRightPop50{ float: right; width: 48.0%; height: 45px; }
 .cam_work_manage_detail_pop .layerPopup .listdiv .rightName{ float: right; margin-top: 14px;display: inline-block; }
 .cam_work_manage_detail_pop .layerPopup .right{ float: right; display: inline-block; }
-.cam_work_manage_detail_pop .layerPopup {height: 570px;}
+.cam_work_manage_detail_pop .layerPopup {height: 640px;}
 .cam_work_manage_detail_pop .layerPopup h4 {display: inline-block;font-size: 14px; font-family: 'NotoKrB'; color: #000; margin: 15px 0 5px; }
 .cam_work_manage_detail_pop .layerPopup .work_info {display: inline-block;font-size: 14px; font-family: 'NotoKrB'; color: #000; }
 .cam_work_manage_detail_pop .namePlusSlt label { padding: 0 5px; background: #f3f3f3; border: 1px solid #e6e6e6; border-right: 0; border-radius: 3px 0 0 3px; box-sizing: border-box; }
