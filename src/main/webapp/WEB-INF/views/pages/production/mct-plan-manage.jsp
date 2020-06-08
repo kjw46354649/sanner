@@ -23,9 +23,9 @@
                                     <label for="FACTORY_AREA">MCT 센터</label>
                                     <select name="FACTORY_AREA" id="FACTORY_AREA">
                                     <c:forEach var="code" items="${HighCode.H_1005}">
-                                        <c:if test="${code.ETC1 == 'MCT_PROCESS_PLAN'}">
+<%--                                        <c:if test="${code.ETC1 == 'MCT_PROCESS_PLAN'}">--%>
                                             <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                        </c:if>
+<%--                                        </c:if>--%>
                                     </c:forEach>
                                     </select>
                                 </span>
@@ -303,7 +303,7 @@
             height: '100%',
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
-            resizable: true,
+            resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
             // scrollModel: {autoFit: true},
@@ -374,7 +374,7 @@
             height: '100%',
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
-            resizable: true,
+            resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
             scrollModel: {autoFit: true},
@@ -434,7 +434,7 @@
             height: '100%',
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
-            resizable: true,
+            resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
             scrollModel: {autoFit: true},
@@ -495,7 +495,7 @@
             height: '100%',
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
-            resizable: true,
+            resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
             scrollModel: {autoFit: true},
@@ -556,7 +556,7 @@
             height: '100%',
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
-            resizable: true,
+            resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
             scrollModel: {autoFit: true},
@@ -617,7 +617,7 @@
             height: '100%',
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
-            resizable: true,
+            resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
             scrollModel: {autoFit: true},
@@ -678,7 +678,7 @@
             height: '100%',
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
-            resizable: true,
+            resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
             scrollModel: {autoFit: true},
@@ -739,7 +739,7 @@
             height: '100%',
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
-            resizable: true,
+            resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
             scrollModel: {autoFit: true},
@@ -1097,7 +1097,7 @@
         const processTargetGridObj = {
             height: '100%',
             collapsible: false,
-            resizable: true,
+            resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
             // scrollModel: {autoFit: true},
@@ -1340,7 +1340,7 @@
                 height: '100%',
                 collapsible: false,
                 postRenderInterval: -1, //call postRender synchronously.
-                resizable: true,
+                resizable: false,
                 showTitle: false,
                 numberCell: {title: 'No.'},
                 // scrollModel: {autoFit: true},

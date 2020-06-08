@@ -259,7 +259,7 @@
                 </div>
             </div>
             <div class="btnWrap">
-                <button type="button" class="defaultBtn purple work_info_area" id="g_item_cam_work_start_btn">CAM 작업시작</button>
+                <button type="button" class="defaultBtn purple work_info_area" id="g_item_cam_work_start_btn" style="display: none;">CAM 작업시작</button>
                 <button type="button" class="defaultBtn grayPopGra" id="g_item_detail_pop_grid_05_pop_close">닫기</button>
             </div>
         </div>
@@ -838,7 +838,6 @@
 
     let g_item_detail_cam_work_pop_view = function(CONTROL_SEQ, CONTROL_DETAIL_SEQ){
         $("#g_item_detail_pop_form").find("#CAM_INFO_YN").val("Y");
-        $('.work_info_area').show();
         g_item_detail_pop_view(CONTROL_SEQ, CONTROL_DETAIL_SEQ);
     }
 
@@ -862,6 +861,7 @@
             let dataInfo = data.info;
             if(dataInfo == null ) {
                 fnResetFrom("g_item_detail_pop_form");
+                $("#g_item_detail_pop_form").find(".list1").find(".rowStyle").find("td").html('');
             }else{
                 //fnJsonDataToForm("stock_manage_pop_form", dataInfo);
                 $("#g_item_detail_pop_form").find("#CONTROL_NUM").html(dataInfo.CONTROL_NUM);
@@ -883,7 +883,6 @@
                 $("#g_item_detail_pop_form").find("#PART_STATUS_NM").html(dataInfo.PART_STATUS_NM);
                 $("#g_item_detail_pop_form").find("#DRAWING_VER").html(dataInfo.DRAWING_VER);
 
-
                 let filedownlod = "<button type='button' class='smallBtn red' onclick=\"javascript:fnSingleFileDownloadFormPageAction('" + dataInfo.DXF_GFILE_SEQ + "');\"><i class='fa fa-trash'></i><span >다운로드</span></button>";
 
                 $("#g_item_detail_pop_form").find("#DXF_GFILE_SEQ").html(filedownlod);
@@ -895,6 +894,13 @@
                 $("#g_item_detail_pop_form").find("#CONTROL_CONFIRM_DT").html(dataInfo.CONTROL_CONFIRM_DT);
                 $("#g_item_detail_pop_form").find("#OUT_FINISH_DT").html(dataInfo.OUT_FINISH_DT);
                 $("#g_item_detail_pop_form").find("#WORK_HISTORY_INFO").html(dataInfo.WORK_HISTORY_INFO);
+
+                /** CAM 작업 여부에 따른 버튼 표시 **/
+                if(dataInfo.CAM_STATUS == "CWS010"){ <!-- 대기 중일때 처리 -->
+                    $('.work_info_area').show();
+                }else{
+                    $('.work_info_area').hide();
+                }
             }
         }, parameters, '');
 
@@ -939,7 +945,8 @@
         g_ItemDetailPopGridId05.pqGrid(g_ItemDetailPopObj05);
 
         let data4 = g_ItemDetailPopGrid04.pqGrid('option', 'dataModel.data');
-
+        console.log(data4);
+        console.log(g_ItemDetailPopGrid04);
         if(data4 != null){
             setTimeout(function() {
                 let rowDataArray = g_ItemDetailPopGrid04.pqGrid('getRowData', {rowIndx: 0});

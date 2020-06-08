@@ -139,25 +139,22 @@
     </div>
 </div>
 
-<div class="modal" id="DETAIL_LIST_VIEW_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
-                        class="sr-only">Close</span></button>
-                <h4 class="modal-title">신규 주문 등록</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-inline" id="DETAIL_LIST_VIEW_FORM" role="form">
-                    <input type="hidden" name="queryId" id="queryId" value="selectControlCloseLeftList">
-                    <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
-                    <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                    <div id="DETAIL_LIST_VIEW_GRID"></div>
-                </form>
-            </div>
-            <!-- /.modal-content -->
+<div class="popup_container" id="SALES_STATUS_DETAIL_LIST_VIEW_POPUP" style="display: none;">
+    <div class="layerPopup">
+        <h3>상세 List 조회</h3>
+        <hr>
+        <button type="button" class="pop_close" name="SALES_STATUS_DETAIL_LIST_VIEW_POPUP_CLOSE">닫기</button>
+        <div>
+            <form class="form-inline" id="DETAIL_LIST_VIEW_FORM" role="form">
+                <input type="hidden" name="queryId" id="queryId" value="selectControlCloseLeftList">
+                <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
+                <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
+                <div id="DETAIL_LIST_VIEW_GRID"></div>
+            </form>
         </div>
-        <!-- /.modal-dialog -->
+        <div class="btnWrap">
+            <button type="button" class="defaultBtn grayPopGra" name="SALES_STATUS_DETAIL_LIST_VIEW_POPUP_CLOSE">닫기</button>
+        </div>
     </div>
 </div>
 
@@ -192,7 +189,7 @@
         const tab1GridId = 'CLOSING_HISTORY_GRID';
         let tab1PostData = fnFormToJsonArrayData('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM');
         const tab1ColModel = [
-            {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true},
+            {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
             {title: '년도', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
@@ -203,21 +200,24 @@
             {title: '발주사', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '품수', dataType: 'string', dataIndx: 'ITEM_NUMBER', summary: {type: 'sum', edit: true},
                 render: function (ui) {
+                    console.log(ui);
+                    console.log(ui.rowData.pq_grandsummary);
                     if(ui.rowData.pq_grandsummary) {
                         return ui.cellData;
                     } else {
-                        return ("<a href='#DETAIL_LIST_VIEW_POPUP' class='' id='' data-target='' data-toggle='modal' " +
-                            "data-refform='DETAIL_LIST_VIEW_POPUP'><u>" + ui.cellData + "</u></a>");
+                        return ("<a href='#SALES_STATUS_DETAIL_LIST_VIEW_POPUP' data-target='' data-toggle='modal' " +
+                            "data-refform='SALES_STATUS_DETAIL_LIST_VIEW_POPUP'><u>" + ui.cellData + "</u></a>");
                     }
                 }
             },
-            {title: '최종 공급가', datatype: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', summary: {type: 'sum', edit: true}},
-            {title: '부가세액', datatype: 'integer', format: '#,###', dataIndx: 'VAT_AMOUNT', summary: {type: 'sum', edit: true}},
-            {title: '합계금액', datatype: 'integer', format: '#,###', dataIndx: 'TOTAL_AMOUNT', summary: {type: 'sum', edit: true}},
+            {title: '최종 공급가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', summary: {type: 'sum', edit: true}},
+            {title: '부가세액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'VAT_AMOUNT', summary: {type: 'sum', edit: true}},
+            {title: '합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMOUNT', summary: {type: 'sum', edit: true}},
             {title: '비고', dataType: 'string', dataIndx: 'CLOSE_NOTE', editable: true}
         ];
         const tab1GroupModel = {
-            on: true, header:false,
+            on: true,
+            header:false,
             headerMenu: false,
             indent: 10,
             dataIndx: ['COMP_CD'],
@@ -232,7 +232,7 @@
         const tab1Obj = {
             height: 700,
             collapsible: false,
-            resizable: true,
+            resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
             scrollModel: {autoFit: true},
@@ -242,7 +242,7 @@
             groupModel: tab1GroupModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: fnFormToJsonArrayData('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM'), recIndx: 'ROWNUM',
+                postData: fnFormToJsonArrayData('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM'), recIndx: 'ROW_NUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -260,7 +260,7 @@
             {title: 'INV No.<br>(거래명세No.)', minWidth: 100, dataType: 'string', dataIndx: 'CHARGE_USER_ID', colModel: []},
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', colModel: []},
             {title: '관리번호', minWidth: 100, dataType: 'string', dataIndx: 'CONTROL_NUM', colModel: []},
-            {title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM', colModel: []},
+            {title: 'Part', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM', colModel: []},
             {title: '도면번호', minWidth: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', colModel: []},
             {title: '품명', minWidth: 110, dataType: 'string', dataIndx: 'ITEM_NM', colModel: []},
             {title: '작업<br>형태', minWidth: 110, dataType: 'string', dataIndx: 'WORK_NM', colModel: []},
@@ -269,23 +269,23 @@
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', colModel: []},
             {title: '소재<br>종류', minWidth: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', colModel: []},
             {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', colModel: []},
-            {title: 'Part<br>단위<br>수량', dataType: 'integer', dataIndx: 'PART_UNIT_QTY', colModel: []},
+            {title: 'Part<br>단위<br>수량', align: 'right', dataType: 'integer', dataIndx: 'PART_UNIT_QTY', colModel: []},
             {title: '발주번호', minWidth: 90, datatype: 'string', dataIndx: 'ORDER_NUM', colModel: []},
             // {title: '주문<br>수량', dataType: 'string', dataIndx: 'ITEM_QTY', colModel: []},
             {
                 title: '대칭', align: 'center', colModel: [
-                    {title: '원칭', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY'},
-                    {title: '대칭', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'}
+                    {title: '원칭', align: 'right', dataType: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY'},
+                    {title: '대칭', align: 'right', dataType: 'integer', dataIndx: 'OTHER_SIDE_QTY'}
                 ]
             },
-            {title: '견적단가', minWidth: 90, dataType: 'integer', dataIndx: 'UNIT_FINAL_EST_AMT', colModel: []},
-            {title: '공급단가', minWidth: 90, dataType: 'integer', dataIndx: 'UNIT_FINAL_AMT', colModel: []},
-            {title: '합계금액', dataType: 'integer', dataIndx: 'FINAL_AMOUNT', colModel: []}
+            {title: '견적단가', minWidth: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', colModel: []},
+            {title: '공급단가', minWidth: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', colModel: []},
+            {title: '합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMOUNT', colModel: []}
         ];
         const detailListViewObj = {
             // height: 600,
             collapsible: false,
-            resizable: true,
+            resizable: false,
             showTitle: false,
             columnTemplate: {
                 align: 'center',
@@ -320,52 +320,38 @@
             {title: '구분', dataType: 'string', dataIndx: 'STATUS_TYPE',},
             {
                 title: '1분기', align: 'center', colModel: [
-                    {title: '1월', datatype: 'integer', format: '#,###', dataIndx: '01_AMT', summary: {type: 'sum'}},
-                    {title: '2월', datatype: 'integer', format: '#,###', dataIndx: '02_AMT', summary: {type: 'sum'}},
-                    {title: '3월', datatype: 'integer', format: '#,###', dataIndx: '03_AMT', summary: {type: 'sum'}},
-                    {title: '합계', datatype: 'integer', format: '#,###', dataIndx: '03_SUM_AMT', summary: {type: 'sum'}}
+                    {title: '1월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '01_AMT', summary: {type: 'sum'}},
+                    {title: '2월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '02_AMT', summary: {type: 'sum'}},
+                    {title: '3월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '03_AMT', summary: {type: 'sum'}},
+                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '03_SUM_AMT', summary: {type: 'sum'}}
                 ]
             },
             {
                 title: '2분기', align: 'center', colModel: [
-                    {title: '4월', datatype: 'integer', format: '#,###', dataIndx: '04_AMT', summary: {type: 'sum'}},
-                    {title: '5월', datatype: 'integer', format: '#,###', dataIndx: '05_AMT', summary: {type: 'sum'}},
-                    {title: '6월', datatype: 'integer', format: '#,###', dataIndx: '06_AMT', summary: {type: 'sum'}},
-                    {title: '합계', datatype: 'integer', format: '#,###', dataIndx: '06_SUM_AMT', summary: {type: 'sum'}}
+                    {title: '4월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '04_AMT', summary: {type: 'sum'}},
+                    {title: '5월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '05_AMT', summary: {type: 'sum'}},
+                    {title: '6월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '06_AMT', summary: {type: 'sum'}},
+                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '06_SUM_AMT', summary: {type: 'sum'}}
                 ]
             },
             {
                 title: '3분기', align: 'center', colModel: [
-                    {title: '7월', datatype: 'integer', format: '#,###', dataIndx: '07_AMT', summary: {type: 'sum'}},
-                    {title: '8월', datatype: 'integer', format: '#,###', dataIndx: '08_AMT', summary: {type: 'sum'}},
-                    {title: '9월', datatype: 'integer', format: '#,###', dataIndx: '09_AMT', summary: {type: 'sum'}},
-                    {title: '합계', datatype: 'integer', format: '#,###', dataIndx: '09_SUM_AMT', summary: {type: 'sum'}}
+                    {title: '7월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '07_AMT', summary: {type: 'sum'}},
+                    {title: '8월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '08_AMT', summary: {type: 'sum'}},
+                    {title: '9월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '09_AMT', summary: {type: 'sum'}},
+                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '09_SUM_AMT', summary: {type: 'sum'}}
                 ]
             },
             {
                 title: '4분기', align: 'center', colModel: [
-                    {title: '10월', datatype: 'integer', format: '#,###', dataIndx: '10_AMT', summary: {type: 'sum'}},
-                    {title: '11월', datatype: 'integer', format: '#,###', dataIndx: '11_AMT', summary: {type: 'sum'}},
-                    {title: '12월', datatype: 'integer', format: '#,###', dataIndx: '12_AMT', summary: {type: 'sum'}},
-                    {title: '합계', datatype: 'integer', format: '#,###', dataIndx: '12_SUM_AMT', summary: {type: 'sum'}}
+                    {title: '10월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '10_AMT', summary: {type: 'sum'}},
+                    {title: '11월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '11_AMT', summary: {type: 'sum'}},
+                    {title: '12월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '12_AMT', summary: {type: 'sum'}},
+                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '12_SUM_AMT', summary: {type: 'sum'}}
                 ]
             },
-            {title: '합계', datatype: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}
+            {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}
         ];
-        // let tab2GroupModel = {
-        //     on: true, //grouping mode.
-        //     titleIndx: 'grp',
-        //     indent: 20,
-        //     fixCols: false,
-        //     pivot: true, //pivotMode
-        //     groupCols: ['YYYY', 'QUARTER', 'MM'],
-        //     // agg:{AMT: 'sum'},
-        //     header: false, //hide grouping toolbar.
-        //     grandSummary: true, //show grand summary row.
-        //     dataIndx: ['COMP_NM', 'ORDER_COMP_NM', 'CONTROL_NM'],
-        //     collapsed: [false, false, false],
-        //     summaryEdit: false
-        // };
         const tab2GroupModel = {
             on: true, header:false,
             headerMenu: false,
@@ -382,7 +368,7 @@
         const tab2Obj = {
             height: 750,
             collapsible: false,
-            resizable: true,
+            resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
             scrollModel: {autoFit: true},
@@ -395,7 +381,7 @@
             },
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: tab2PostData, recIndx: 'ROWNUM',
+                postData: tab2PostData, recIndx: 'ROW_NUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -407,7 +393,7 @@
 
         };
 
-        $('#DETAIL_LIST_VIEW_POPUP').on({
+        $('#SALES_STATUS_DETAIL_LIST_VIEW_POPUP').on({
             'show.bs.modal': function () {
                 $detailListViewGrid = $('#' + detailListViewGridId).pqGrid(detailListViewObj);
             },
@@ -460,9 +446,10 @@
             $monthlySalesStatusGrid.pqGrid('refreshDataAndView');
         });
 
+        $('[name=SALES_STATUS_DETAIL_LIST_VIEW_POPUP_CLOSE]').on('click', function () {
+            $('#SALES_STATUS_DETAIL_LIST_VIEW_POPUP').modal('hide');
+        });
         /* init */
-
-
         // $closingHistoryGrid.pqGrid('option', 'dataModel.postData', function () {
         //     return (fnFormToJsonArrayData('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM'));
         // });

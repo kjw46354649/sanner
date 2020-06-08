@@ -449,7 +449,7 @@ div.drawingTit,span.drawingTit{background-color: #e8f0f0; font-family: 'NotoKrB'
 
 .controlCloseLayerPopup { position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; background: #fff; width: 1012px; height: 420px; border: 1px solid #ababab; padding: 20px; box-sizing: border-box; }
 .controlCloseLayerPopup > div + div { margin-top: 10px; }
-.controlCloseLayerPopup hr { display:block; border: 1px solid black; margin-top: 5px; margin-bottom: 15px; }
+.controlCloseLayerPopup hr { display:block; border: 1px solid #e0e2e6; margin-top: 10px; margin-bottom: 7px; }
 .controlCloseLayerPopup h3 { font-size: 20px; font-family: 'NotoKrB'; color: #000; }
 .controlCloseLayerPopup h5 { font-size: 16px; font-family: 'NotoKrB'; color: #000; }
 .controlCloseLayerPopup .pop_close { width: 23px; height: 23px; position: absolute; top: 12px; right: 12px; font-size: 0; background: url(../images/common/btn_popup.png)no-repeat 0 0; }

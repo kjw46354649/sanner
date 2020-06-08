@@ -80,7 +80,7 @@ span.comboTreeItemTitle{
 	display: inline-block;
 }
 .comboTreeDropDownContainer .comboTreeItemTitle input[type=checkbox]:checked + label{
-	background-color: #EAEAEA;
+	background-color: #aaaaaa;
 }
 .comboTreeDropDownContainer .comboTreeItemTitle input[type=checkbox] {
 	display: none;

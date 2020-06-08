@@ -96,7 +96,7 @@
             B.DRAWING_NUM, <!-- 도면번호 -->
             B.ITEM_NM, <!-- 품명 -->
             B.SIZE_TXT, <!-- 규격 -->
-            B.MATERIAL_DETAIL, <!-- 소재 -->
+            IFNULL(SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, 'KR'), SPACE(0)) AS MATERIAL_DETAIL, <!-- 소재 종류 -->
             B.OUTSIDE_ORDER_NUM, <!-- 발주량 -->
             B.OUTSIDE_UNIT_AMT, <!-- 단가 -->
             B.OUTSIDE_UNIT_AMT * B.OUTSIDE_ORDER_NUM AS SUM_AMT, <!-- 합계 -->

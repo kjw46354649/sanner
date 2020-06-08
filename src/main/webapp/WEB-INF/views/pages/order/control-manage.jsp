@@ -222,11 +222,12 @@
     <div class="controlCloseLayerPopup">
         <h3>월 마감 진행</h3>
         <hr>
-        <button type="button" class="pop_close CONTROL_CLOSE_NO">닫기</button>
+        <button type="button" class="pop_close" name="CONTROL_CLOSE_NO">닫기</button>
         <div class="buttonWrap">
             <form class="form-inline" id="CONTROL_CLOSE_FORM" role="form">
                 <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectControlCloseLeftList">
                 <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
+                <input type="hidden" name="COMP_CD" id="COMP_CD">
                 <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
                 <div class="leftbuttonWrap">
                     <div class="d-inline-block">
@@ -267,8 +268,8 @@
         </div>
 
         <div class="text-center">
-            <button class="defaultBtn" id="CONTROL_CLOSE_YES">저장</button>
-            <button class="defaultBtn CONTROL_CLOSE_NO">닫기</button>
+            <button type="button" class="defaultBtn greenPopGra" id="CONTROL_CLOSE_YES">저장</button>
+            <button type="button" class="defaultBtn grayPopGra" id="CONTROL_CLOSE_NO">닫기</button>
         </div>
     </div>
 </div>
@@ -329,7 +330,7 @@
             </div>
         </form>
         <div class="btnWrap">
-            <button type="button" class="defaultBtn grayPopGra" id="g_item_detail_pop_grid_05_pop_close">닫기</button>
+            <button type="button" class="defaultBtn grayPopGra" id="TRANSACTION_STATEMENT_POPUP_CLOSE_BUTTON">닫기</button>
         </div>
     </div>
 </div>
@@ -388,7 +389,7 @@
         const gridId = 'CONTROL_MANAGE_GRID';
         let postData = fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM');
         let colModel = [
-            {title: 'ROWNUM', clsHead: 'display_none', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true},
+            {title: 'ROW_NUM', clsHead: 'display_none', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: 'CONTROL_SEQ', clsHead: 'display_none', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_PROGRESS_SEQ', clsHead: 'display_none', dataType: 'integer', dataIndx: 'CONTROL_PROGRESS_SEQ', hidden: true},
             {title: 'ORDER_STATUS', clsHead: 'display_none', dataType: 'integer',dataIndx: 'ORDER_STATUS', hidden: true},
@@ -402,7 +403,7 @@
                     {title: '상태', clsHead: 'display_none', datatype: 'string', dataIndx: 'CONTROL_STATUS_ORIGINAL', hidden: true},
                     {title: '상태', clsHead: 'display_none', dataIndx: 'CONTROL_STATUS', hidden: true},
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_NM'},
-                    {title: '', datatype: 'integer', dataIndx: 'CONTROL_VER'},
+                    {title: '버전', align: 'right', dataType: 'integer', dataIndx: 'CONTROL_VER'},
                     {title: '변경일시', width: 95, datatype: 'date', dataIndx: 'CONTROL_STATUS_DT'}
                 ]
             },
@@ -512,7 +513,7 @@
                     }
                 }
             },
-            {title: '긴급', clsHead: ' control_manage_view_quality', dataType: 'string', dataIndx: 'EMERGENCY_YN', editable: true,
+            {title: '긴<br>급', clsHead: ' control_manage_view_quality', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN', editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -547,7 +548,7 @@
 
                         newRowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: lastRowIndex});
                         newRowData = fnCloneObj(newRowData);
-                        newRowData.ROWNUM = totalRecords + 1;
+                        newRowData.ROW_NUM = totalRecords + 1;
                         newRowData.PART_NUM = newPartNum;
 
                         $orderManagementGrid.pqGrid('addRow', {
@@ -729,12 +730,12 @@
                 }
             },
             {title: '소재비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', editable: true},
-            {title: 'Part<br>단위<br>수량', dataType: 'integer', dataIndx: 'PART_UNIT_QTY'},
-            {title: '주문<br>수량', dataType: 'integer', dataIndx: 'ORDER_QTY_TOTAL'},
+            {title: 'Part<br>단위<br>수량', align: 'right', dataType: 'integer', dataIndx: 'PART_UNIT_QTY'},
+            {title: '주문<br>수량', align: 'right', dataType: 'integer', dataIndx: 'ORDER_QTY_TOTAL'},
             {
                 title: '대칭', align: 'center', colModel: [
-                    {title: '원칭', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY', editable: true},
-                    {title: '대칭', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY', editable: true}
+                    {title: '원칭', align: 'right', dataType: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY', editable: true},
+                    {title: '대칭', align: 'right', dataType: 'integer', dataIndx: 'OTHER_SIDE_QTY', editable: true}
                 ]
             },
             {
@@ -755,7 +756,7 @@
                                 let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
                                 let totalRecords = data.length;
 
-                                newRowData.ROWNUM = totalRecords + 1;
+                                newRowData.ROW_NUM = totalRecords + 1;
                                 $orderManagementGrid.pqGrid('addRow', {
                                     newRow: newRowData,
                                     rowIndx: ui.rowIndx + 1,
@@ -864,8 +865,8 @@
                     {title: '가로', datatype: 'string', dataIndx: 'SIZE_W_M'},
                     {title: '세로', datatype: 'string', dataIndx: 'SIZE_H_M'},
                     {title: '높이', datatype: 'string', dataIndx: 'SIZE_T_M'},
-                    {title: '중량(KG)', datatype: 'string', dataIndx: 'SIZE_D_M'},
-                    {title: '부피(cm3)', datatype: 'string', dataIndx: 'SIZE_L_M'}
+                    {title: '중량<br>(KG)', datatype: 'string', dataIndx: 'SIZE_D_M'},
+                    {title: '부피<br>(cm³)', datatype: 'string', dataIndx: 'SIZE_L_M'}
                 ]
             },
             {
@@ -953,8 +954,8 @@
                             return cellData === 'Y' ? cellData : '';
                         }
                     },
-                    {title: '외주단가', datatype: 'integer', dataIndx: 'OUTSIDE_UNIT_AMT'},
-                    {title: '합계금액', datatype: 'integer', dataIndx: 'OUTSIDE_FINAL_AMT'},
+                    {title: '외주단가', align: 'right', dataType: 'integer', dataIndx: 'OUTSIDE_UNIT_AMT'},
+                    {title: '합계금액', align: 'right', dataType: 'integer', dataIndx: 'OUTSIDE_FINAL_AMT'},
                     {title: '요망납기', datatype: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
                     {title: '입고날짜', datatype: 'string', dataIndx: 'dhlwndlqrhskfWk'},
                     {title: '비고', datatype: 'string', dataIndx: 'OUTSIDE_NOTE'},
@@ -977,7 +978,7 @@
             colModel: colModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: postData, recIndx: 'ROWNUM',
+                postData: postData, recIndx: 'ROW_NUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -1039,9 +1040,7 @@
                     let newRow = ui.updateList[0].newRow;
                     let array = ['UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'ORDER_QTY', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT'];
                     let estimateFlag = false;
-                    console.log(newRow);
                     for (let value of array) {
-                        console.log(value);
                         if (newRow.hasOwnProperty(value)) {
                             estimateFlag = true;
                         }
@@ -1069,7 +1068,6 @@
                         let estimatedTotalAmount = unitFinalEstimateAmount * ORDER_QTY; // 견적 합계 금액
                         let unitFinalAmount = ui.updateList[0].newRow.UNIT_FINAL_AMT || unitFinalEstimateAmount; // 최종 공급단가
                         let finalAmount = unitFinalAmount * ORDER_QTY;// 합계 금액
-                        console.log(finalAmount);
                         let row;
 
                        if (ui.updateList[0].newRow.UNIT_FINAL_AMT) {
@@ -1662,14 +1660,18 @@
         let $controlCloseLeftGrid;
         const controlCloseLeftGridId = 'CONTROL_CLOSE_LEFT_GRID';
         let controlCloseLeftColModel = [
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP', hidden: true},
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
+            {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
+            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
+            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
             {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
             {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
-            {title: '마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
-            {title: '네고금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT'}
+            {title: '공급가', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}, // 2020-06-08 modify
+            // {title: '마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
+            {title: '마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT'} // 2020-06-08 modify
+            // {title: '네고금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT'}
         ];
         let controlCloseLeftObj = {
             height: 250,
@@ -1689,20 +1691,18 @@
         let $controlCloseRightGrid;
         const controlCloseRightGridId = 'CONTROL_CLOSE_RIGHT_GRID';
         let controlCloseRightColModel = [
+            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
+            {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
             {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
             {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
-            {title: '변경 후<br>마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
-            {title: '변경 후<br>네고금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'NEGO_AMT', editable: true},
-            {
-                title: '추가 정보', align: 'center', colModel: [
-                    {title: '건수', datatype: 'string', dataIndx: 'ADD_QTY'},
-                    {title: '금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ADD_UNIT_FINAL_AMT'}
-                ]
-            }
+            {title: '공급가', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}, // 2020-06-08 modify
+            {title: '마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CLOSE_CONTROL_AMT'} // 2020-06-08 modify
+            // {title: '변경 후<br>마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
+            // {title: '변경 후<br>네고금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'NEGO_AMT', editable: true}
         ];
         let controlCloseRightObj = {
             height: 250,
@@ -1725,13 +1725,13 @@
         let $transactionStatementDetailGrid;
         const transactionStatementDetailGridId = 'TRANSACTION_STATEMENT_DETAIL_GRID';
         const transactionStatementDetailColModel = [
-            {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true},
+            {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: '주문상태', dataType: 'string', dataIndx: 'CONTROL_STATUS_NM'},
             {title: '발주번호', dataType: 'string', dataIndx: 'ORDER_NUM'},
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM'},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT'},
             {title: '단위', dataType: 'string', dataIndx: 'CLOSE_VER'},
-            {title: '수량', dataType: 'integer', dataIndx: 'ORDER_QTY'},
+            {title: '수량', align: 'right', dataType: 'integer', dataIndx: 'ORDER_QTY'},
             {title: '공급단가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
             {title: '금액 계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
             {title: '포장수량', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PACKING_CNT', editable: true},
@@ -1750,7 +1750,7 @@
             colModel: transactionStatementDetailColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'dataSource.emptyGrid'}, recIndx: 'ROWNUM',
+                postData: {'queryId': 'dataSource.emptyGrid'}, recIndx: 'ROW_NUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -1799,8 +1799,10 @@
             let selectedRowCount = selectedRowIndex.length;
             let list = [];
             let controlSeqList = [];
+            let compCdList = [];
             let orderCompCdList = [];
             let controlSeqStr = '';
+            let compCdStr = '';
             let orderCompCdStr = '';
 
             for (let i = 0; i < selectedRowCount; i++) {
@@ -1808,33 +1810,49 @@
 
                 list.push(rowData);
                 controlSeqList.push(rowData.CONTROL_SEQ);
+                compCdList.push(rowData.COMP_CD);
                 orderCompCdList.push(rowData.ORDER_COMP_CD);
             }
             // 중복제거
             controlSeqList = controlSeqList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
             });
+            compCdList = compCdList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
             orderCompCdList = orderCompCdList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
             });
 
-            for (let i = 0; i < controlSeqList.length; i++) {
+            for (let i = 0, CONTROL_SEQ_LIST_LENGTH = controlSeqList.length; i < CONTROL_SEQ_LIST_LENGTH; i++) {
                 controlSeqStr += controlSeqList[i];
 
-                if (i < controlSeqList.length - 1) {
+                if (i < CONTROL_SEQ_LIST_LENGTH - 1) {
                     controlSeqStr += ',';
                 }
             }
-            for (let i = 0; i < orderCompCdList.length; i++) {
+            for (let i = 0, COMP_CD_LIST_LENGTH = compCdList.length; i < COMP_CD_LIST_LENGTH; i++) {
+                compCdStr += '\'' + compCdList[i] + '\'';
+
+                if (i < COMP_CD_LIST_LENGTH - 1) {
+                    compCdStr += ',';
+                }
+            }
+            for (let i = 0, ORDER_COMP_CD_LIST_LENGTH = orderCompCdList.length; i < ORDER_COMP_CD_LIST_LENGTH; i++) {
                 orderCompCdStr += '\'' + orderCompCdList[i] + '\'';
 
-                if (i < orderCompCdList.length - 1) {
+                if (i < ORDER_COMP_CD_LIST_LENGTH - 1) {
                     orderCompCdStr += ',';
                 }
             }
 
+
             $('#CONTROL_CLOSE_FORM > #CONTROL_SEQ').val(controlSeqStr);
+            $('#CONTROL_CLOSE_FORM > #COMP_CD').val(compCdStr);
             $('#CONTROL_CLOSE_FORM > #ORDER_COMP_CD').val(orderCompCdStr);
+            console.log(compCdStr);
+            console.log(orderCompCdStr);
+            console.log($('#CONTROL_CLOSE_FORM'));
 
             if (open) {
                 let postData = fnFormToJsonArrayData('#CONTROL_CLOSE_FORM');
@@ -2007,22 +2025,37 @@
                     return false;
                 }
 
-                let selectedRowCount = selectedRowIndex.length;
+                let compCdList = [];
+                let orderCompCdList = [];
 
-                for (let i = 0; i < selectedRowCount; i++) {
+                for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
                     let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
 
-                    if (rowData.CONTROL_STATUS_ORIGINAL !== 'ORD001') {
-                        alert('주문 상태가 확정일 때 월 마감이 가능합니다.');
-                        return false;
-                    }
+                    compCdList.push(rowData.COMP_CD);
+                    orderCompCdList.push(rowData.ORDER_COMP_CD);
+                }
+
+                // 중복제거
+                compCdList = compCdList.filter(function (element, index, array) {
+                    return array.indexOf(element) === index;
+                });
+                orderCompCdList = orderCompCdList.filter(function (element, index, array) {
+                    return array.indexOf(element) === index;
+                });
+                if (compCdList.length > 1) {
+                    alert('선택된 대상들의 발주사와 공급사는 동일해야 합니다.');
+                    return false;
+                }
+                if (orderCompCdList.length > 1) {
+                    alert('선택된 대상들의 발주사와 공급사는 동일해야 합니다.');
+                    return false;
                 }
 
                 fnAppendSelectboxYear('CONTROL_CLOSE_YEAR', 3);
                 fnAppendSelectboxMonth('CONTROL_CLOSE_MONTH');
                 $('#CONTROL_CLOSE_MONTH').val(CURRENT_MONTH < 9 ? '0' + CURRENT_MONTH : CURRENT_MONTH).prop('selected', true);
 
-                $('#CONTROL_CLOSE_POPUP #CLOSE_VER')
+                $('#CONTROL_CLOSE_POPUP #CLOSE_VER');
 
                 $controlCloseLeftGrid = $('#' + controlCloseLeftGridId).pqGrid(controlCloseLeftObj);
                 $controlCloseRightGrid = $('#' + controlCloseRightGridId).pqGrid(controlCloseRightObj);
@@ -2031,7 +2064,6 @@
             },
             'hide.bs.modal': function () {
                 $controlCloseLeftGrid.pqGrid('destroy');
-                console.log($controlCloseLeftGrid);
                 $controlCloseRightGrid.pqGrid('destroy');
             }
         });
@@ -2687,12 +2719,16 @@
             }, parameters, '');
         });
 
-        $('.CONTROL_CLOSE_NO').on('click', function () {
+        $('[name=CONTROL_CLOSE_NO]').on('click', function () {
             $('#CONTROL_CLOSE_POPUP').modal('hide');
         });
 
         $('.pop_close').on('click', function () {
             $(this).parent('.layerPopup').parent('.popup_container').modal('hide');
+        });
+
+        $('#TRANSACTION_STATEMENT_POPUP_CLOSE_BUTTON').on('click', function () {
+            $('#TRANSACTION_STATEMENT_POPUP').modal('hide');
         });
 
         $('#ESTIMATE_REGISTER_FROM_CONTROL').on('click', function (event) {

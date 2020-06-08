@@ -299,7 +299,7 @@
         };
 
         let moneyManageStatusObj = {
-            height: 770, collapsible: false, resizable: true, selectionModel: { type: 'row', mode: 'single'} , showTitle: false, strNoRows: g_noData, numberCell: {title: 'No.'}, scrollModel: {autoFit: true}, trackModel: {on: true},
+            height: 770, collapsible: false, resizable: false, selectionModel: { type: 'row', mode: 'single'} , showTitle: false, strNoRows: g_noData, numberCell: {title: 'No.'}, scrollModel: {autoFit: true}, trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center',  editable: false},
             colModel: moneyManageStatusModel, toolbar: false,
             groupModel: moneyManageStatusGroupModel,
@@ -327,7 +327,6 @@
                 });
             }
         };
-        debugger;
         $moneyManageStatusGrid = $('#' + moneyManageStatusGridID).pqGrid(moneyManageStatusObj);
 
         $moneyManageStatusSearchBtn.click(function(){
@@ -343,7 +342,7 @@
         });
 
         let moneySalesMonthModel = [
-            {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true},
+            {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '매출년월', dataType: 'string', dataIndx: 'CLOSE_MONTH_NM'},
@@ -448,7 +447,7 @@
             toolbar: false, columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
             colModel: moneySalesMonthModel,
             dataModel: {
-                recIndx: 'ROWNUM', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                recIndx: 'ROW_NUM', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: fnFormToJsonArrayData('money_receive_manage_search_form'),
                 getData: function (dataJSON) {
                     let data = dataJSON.data;
