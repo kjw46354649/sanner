@@ -5,7 +5,7 @@
 
     <sql id="outManage">
         SELECT
-            ROW_NUMBER () OVER () AS ROWNUM,
+            ROW_NUMBER () OVER () AS ROW_NUM,
             A.CONTROL_SEQ, <!-- 주문관리일련번호 -->
             B.CONTROL_DETAIL_SEQ, <!-- 주문관리상세일련번호 -->
             C.ORDER_SEQ, <!-- 발주번호일련번호 -->
@@ -106,7 +106,7 @@
     
     <select id="selectOutsideProcessRequestList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ROW_NUMBER () OVER () AS ROWNUM,
+            ROW_NUMBER () OVER () AS ROW_NUM,
             B.CONTROL_SEQ,
             B.CONTROL_DETAIL_SEQ,
             A.CONTROL_NUM, <!-- 관리번호 -->
@@ -298,7 +298,7 @@
 
     <select id="selectOutsideCloseStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ROW_NUMBER () OVER () AS ROWNUM,
+            ROW_NUMBER () OVER () AS ROW_NUM,
             A.COMP_CD,
             SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM,
             SUBSTR(D.CLOSE_MONTH, 1, 4) AS YEAR,
@@ -376,7 +376,7 @@
 
     <select id="selectOutsideYearCloseStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ROW_NUMBER () OVER () AS ROWNUM,
+            ROW_NUMBER () OVER () AS ROW_NUM,
             Z.CLOSE_MONTH,
             Z.COMP_CD,
             (SELECT A.COMP_NM FORM FROM jmes.TBL_COMPANY A WHERE A.COMP_CD = Z.COMP_CD) AS COMP_NM,

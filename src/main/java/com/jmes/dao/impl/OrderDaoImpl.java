@@ -61,6 +61,16 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
+    public void updateControlMaster(HashMap<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.update("updateControlMaster", hashMap);
+    }
+
+    @Override
+    public void updateControlPart(HashMap<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.update("updateControlPart", hashMap);
+    }
+
+    @Override
     public void updateControlStatus(HashMap<String, Object> hashMap) throws SQLException {
         sqlSessionTemplate.update("updateControlStatus", hashMap);
     }

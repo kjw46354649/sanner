@@ -8,11 +8,11 @@ CKEDITOR.editorConfig = function( config ) {
         ['Font', 'FontSize'],
         ['BGColor', 'TextColor' ],
         ['Bold', 'Italic', 'Strike', 'Underline', 'RemoveFormat'],
-        ['Image', 'SpecialChar', 'Smiley'],
+        // ['Image', 'SpecialChar', 'Smiley'],
         ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
         ['NumberedList', 'BulletedList'],
-        ['Link', 'Unlink'],
-        ['Source']
+        // ['Link', 'Unlink'],
+        // ['Source']
     ],
     config.filebrowserUploadMethod = 'form';
 };

@@ -169,44 +169,50 @@
     <div class="layerPopup" style="overflow: scroll;">
         <h3 style="margin-bottom: 10px;">외주 가공 요청</h3>
         <button type="button" class="pop_close">닫기</button>
-
-        <!-- 버튼 -->
-        <div class="buttonWrap" style="display: block; overflow: hidden;">
-            <div class="right_float">
-                <button class="popupBtn green" id="REQUEST_OUTSIDE_SAVE_SUBMIT">저장 & 제출</button>
-            </div>
-        </div>
-
-        <div>
-            <label for="">요청 외주 업체</label>
-            <select class="" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
-                <option></option>
-            </select>
-        </div>
-
+        <hr>
         <form class="form-inline" name="REQUEST_OUTSIDE_MAIL_FORM" id="REQUEST_OUTSIDE_MAIL_FORM" role="form">
             <input type="hidden" id="queryId" name="queryId" value="">
             <input type="hidden" id="EST_SEQ" name="EST_SEQ" value="">
-            <h5>메일내용</h5>
-            <div>
-                <textarea class="col-md-12 col-sm-12" name="EMAIL_CONTENT_TXT" id="REQUEST_OUTSIDE_EMAIL_CONTENT_TXT" style="height: 100px;"> </textarea>
-            </div>
-            <h5>메일수신처</h5>
-            <div id="REQUEST_OUTSIDE_MAIL_RECIPIENT_GRID"></div>
-
-            <h5>첨부파일</h5>
-            <div class="fileTableWrap">
-                <table class="colStyle" id="attachDragAndDrop">
-                    <caption></caption>
-                    <thead>
-                    <tr>
-                        <th scope="col" class="fileName txt">파일명</th>
-                        <th scope="col" class="etcInfo">용량</th>
-                        <th scope="col" class="etcInfo"></th>
-                    </tr>
-                    </thead>
-                    <tbody class="files"></tbody>
-                </table>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr);  grid-template-rows: repeat(2, 1fr); gap: 20px; margin-bottom: 10px;">
+                <div style="grid-column-start: 1; grid-column-end: 2; grid-row-start: 1; grid-row-end: 3;">
+                    <div style="display: inline-block;">
+                        <h5>메일내용</h5>
+                    </div>
+                    <div class="d-inline-block right_float">
+                        <label for="">요청 외주 업체</label>
+                        <select class="" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div>
+                        <textarea name="EMAIL_CONTENT_TXT" id="REQUEST_OUTSIDE_EMAIL_CONTENT_TXT"></textarea>
+                    </div>
+                </div>
+                <div style="grid-column-start: 2; grid-column-end: 3; grid-row-start: 1; grid-row-end: 2;">
+                    <div class="d-inline-block">
+                        <h5>메일수신처</h5>
+                    </div>
+                    <div class="d-inline-block right_float">
+                        <button class="defaultBtn green" id="REQUEST_OUTSIDE_SAVE_SUBMIT">저장 & 제출</button>
+                    </div>
+                    <div id="REQUEST_OUTSIDE_MAIL_RECIPIENT_GRID"></div>
+                </div>
+                <div style="grid-column-start: 2; grid-column-end: 3; grid-row-start: 2; grid-row-end: 3;">
+                    <h5>첨부파일</h5>
+                    <div class="fileTableWrap">
+                        <table class="colStyle" id="attachDragAndDrop">
+                            <caption></caption>
+                            <thead>
+                            <tr>
+                                <th scope="col" class="fileName txt">파일명</th>
+                                <th scope="col" class="etcInfo">용량</th>
+                                <th scope="col" class="etcInfo"></th>
+                            </tr>
+                            </thead>
+                            <tbody class="files"></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </form>
         <form class="form-inline" id="OUTSIDE_PROCESS_REQUEST_FORM" role="form">
@@ -222,44 +228,50 @@
     <div class="layerPopup" style="overflow: scroll;">
         <h3 style="margin-bottom: 10px;">외주 가공 취소 요청</h3>
         <button type="button" class="pop_close">닫기</button>
-
-        <!-- 버튼 -->
-        <div class="buttonWrap" style="display: block; overflow: hidden;">
-            <div class="right_float">
-                <button class="popupBtn green" id="CANCEL_REQUEST_OUTSIDE_SAVE_SUBMIT">저장 & 제출</button>
-            </div>
-        </div>
-
-        <div>
-            <label for="">요청 외주 업체</label>
-            <select class="" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
-                <option></option>
-            </select>
-        </div>
-
+        <hr>
         <form class="form-inline" name="CANCEL_REQUEST_OUTSIDE_MAIL_FORM" id="CANCEL_REQUEST_OUTSIDE_MAIL_FORM" role="form">
             <input type="hidden" id="queryId" name="queryId" value="">
             <input type="hidden" id="EST_SEQ" name="EST_SEQ" value="">
-            <h5>메일내용</h5>
-            <div>
-                <textarea class="col-md-12 col-sm-12" name="CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT" id="CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT" style="height: 100px;"> </textarea>
-            </div>
-            <h5>메일수신처</h5>
-            <div id="CANCEL_REQUEST_OUTSIDE_MAIL_RECIPIENT_GRID"></div>
-
-            <h5>첨부파일</h5>
-            <div class="fileTableWrap">
-                <table class="colStyle" id="attachDragAndDrop">
-                    <caption></caption>
-                    <thead>
-                    <tr>
-                        <th scope="col" class="fileName txt">파일명</th>
-                        <th scope="col" class="etcInfo">용량</th>
-                        <th scope="col" class="etcInfo"></th>
-                    </tr>
-                    </thead>
-                    <tbody class="files"></tbody>
-                </table>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr);  grid-template-rows: repeat(2, 1fr); gap: 20px; margin-bottom: 10px;">
+                <div style="grid-column-start: 1; grid-column-end: 2; grid-row-start: 1; grid-row-end: 3;">
+                    <div style="display: inline-block;">
+                        <h5>메일내용</h5>
+                    </div>
+                    <div class="d-inline-block right_float">
+                        <label for="">요청 외주 업체</label>
+                        <select class="" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div>
+                        <textarea name="CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT" id="CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT"></textarea>
+                    </div>
+                </div>
+                <div style="grid-column-start: 2; grid-column-end: 3; grid-row-start: 1; grid-row-end: 2;">
+                    <div class="d-inline-block">
+                        <h5>메일수신처</h5>
+                    </div>
+                    <div class="d-inline-block right_float">
+                        <button class="defaultBtn green" id="CANCEL_REQUEST_OUTSIDE_SAVE_SUBMIT">저장 & 제출</button>
+                    </div>
+                    <div id="CANCEL_REQUEST_OUTSIDE_MAIL_RECIPIENT_GRID"></div>
+                </div>
+                <div style="grid-column-start: 2; grid-column-end: 3; grid-row-start: 2; grid-row-end: 3;">
+                    <h5>첨부파일</h5>
+                    <div class="fileTableWrap">
+                        <table class="colStyle" id="attachDragAndDrop">
+                            <caption></caption>
+                            <thead>
+                            <tr>
+                                <th scope="col" class="fileName txt">파일명</th>
+                                <th scope="col" class="etcInfo">용량</th>
+                                <th scope="col" class="etcInfo"></th>
+                            </tr>
+                            </thead>
+                            <tbody class="files"></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </form>
         <form class="form-inline" id="CANCEL_REQUEST_OUTSIDE_FORM" role="form">
@@ -347,7 +359,7 @@
         const gridId = 'OUTSIDE_ORDER_MANAGE_GRID';
         let postData = fnFormToJsonArrayData('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM');
         const colModel = [
-            {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true},
+            {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true},
@@ -472,13 +484,13 @@
                 ]
             },
             {title: '요망납기', dataType: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT', editable: true},
-            {title: '외주<br>확정단가', dataType: 'integer', dataIndx: 'OUTSIDE_UNIT_AMT', editable: true},
-            {title: '금액<br>합계', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT'},
-            {title: '외주<br>종전가', dataType: 'string', dataIndx: 'DHLWNWHDWJSRK'},
+            {title: '외주<br>확정단가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_UNIT_AMT', editable: true},
+            {title: '금액<br>합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
+            {title: '외주<br>종전가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DHLWNWHDWJSRK'},
             {
                 title: '원발주 정보', align: 'center', colModel: [
                     {title: '납기', datatype: 'string', dataIndx: 'INNER_DUE_DT'},
-                    {title: '공급단가', datatype: 'string', dataIndx: 'UNIT_FINAL_AMT'},
+                    {title: '공급단가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
                     {title: '발주처', datatype: 'string', dataIndx: 'ORDER_COMP_CD'},
                     {title: '발주처', datatype: 'string', dataIndx: 'ORDER_COMP_NM'}
                 ]
@@ -493,14 +505,13 @@
             },
             {title: '원주문<br>확정 일시', datatype: 'string', dataIndx: 'CONTROL_STATUS_DATE'},
             {title: '외주가공<br>요청일시', dataType: 'string', dataIndx: 'OUTSIDE_REQUEST_DATE'},
-            {title: '외주가공<br>마감일시', dataType: 'string', dataIndx: 'OUTSIDE_FINISH_DATE'},
             {title: 'DXF', dataType: 'string', dataIndx: 'STATUS_DT'}
         ];
         const obj = {
             minHeight: '100%',
-            height: 750,
+            height: 700,
             collapsible: false,
-            resizable: true,
+            resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
             trackModel: {on: true},
@@ -515,7 +526,7 @@
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: postData,
-                recIndx: 'ROWNUM',
+                recIndx: 'ROW_NUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -550,7 +561,7 @@
             {title: '전화번호', dataType: 'string', dataIndx: 'STAFF_TEL'}
         ];
         const mailRecipientObj = {
-            height: 100,
+            height: 135,
             collapsible: false,
             resizable: false,
             showTitle: false,
@@ -572,10 +583,10 @@
         let $outsideProcessRequestGrid;
         const outsideProcessRequestGridId = 'OUTSIDE_REQUEST_GRID';
         const outsideProcessRequestColModel = [
-            {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true},
+            {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: '관리번호', minWidth: 100, dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true},
             {title: '도면번호', minWidth: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', editable: true},
-            {title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: 'Part', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '규격', minWidth: 110, dataType: 'string', dataIndx: 'SIZE_TXT', editable: true},
             {title: '자재<br>종류', minWidth: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
             {title: '표면<br>처리', minWidth: 70, dataType: 'string', dataIndx: 'SURFACE_TREAT'},
@@ -611,7 +622,7 @@
         const outsideProcessRequestObj = {
             height: 200,
             collapsible: false,
-            resizable: true,
+            resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
             trackModel: {on: true},
@@ -622,7 +633,7 @@
             strNoRows: g_noData,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                recIndx: 'ROWNUM',
+                recIndx: 'ROW_NUM',
                 postData: {'queryId': 'dataSource.emptyGrid'},
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
@@ -632,7 +643,7 @@
         let $cancelMailRecipientGrid;
         const cancelMailRecipientGridId = 'CANCEL_REQUEST_OUTSIDE_MAIL_RECIPIENT_GRID';
         const cancelMailRecipientObj = {
-            height: 100,
+            height: 135,
             collapsible: false,
             resizable: false,
             showTitle: false,
@@ -656,7 +667,7 @@
         const cancelRequestOutsideObj = {
             height: 200,
             collapsible: false,
-            resizable: true,
+            resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
             trackModel: {on: true},
@@ -667,7 +678,7 @@
             strNoRows: g_noData,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                recIndx: 'ROWNUM',
+                recIndx: 'ROW_NUM',
                 postData: {'queryId': 'dataSource.emptyGrid'},
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
@@ -1061,7 +1072,6 @@
         });
 
         $('.OUTSIDE_CLOSE_NO').on('click', function () {
-            console.log('click');
             $('#OUTSIDE_CLOSE_POPUP').modal('hide');
         });
 
@@ -1079,7 +1089,19 @@
         });
 
         $('#OUTSIDE_ORDER_MANAGE_DELETE').on('click', function () {
+            let list = [];
+            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
+                let rowData = $outsideOrderManageGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
 
+                list.push(rowData);
+            }
+
+            let parameters = {'url': '/modifyOutsideOrder', 'data': {data: JSON.stringify(list)}};
+
+            fnPostAjax(function (data) {
+                alert("<spring:message code='com.alert.default.remove.success' />");
+                $outsideOrderManageGrid.pqGrid('refreshDataAndView');
+            }, parameters, '');
         });
 
         $('.pop_close').on('click', function () {
@@ -1109,7 +1131,7 @@
 
         /* 견적 요청*/
         // CKEDITOR 부분
-        CKEDITOR.replace('REQUEST_OUTSIDE_EMAIL_CONTENT_TXT', {height: 176});
+        CKEDITOR.replace('REQUEST_OUTSIDE_EMAIL_CONTENT_TXT', {height: 285});
         function getCadUploadBlankHtml(){
             return'<tr><td colspan="3" class="spanArea" >마우스로 파일을 Drag & Drop 하세요.</td></tr><tr><td colspan="3"></td></tr><tr><td colspan="3"></td></tr>';
         }
@@ -1210,7 +1232,7 @@
         /* 가공 요청*/
 
         /* 가공 취소 요청 */
-        CKEDITOR.replace('CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT', {height: 176});
+        CKEDITOR.replace('CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT', {height: 285});
         $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM #attachDragAndDrop > tbody').html('');
         $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM #attachDragAndDrop > tbody').append(fileHtml).trigger('create');
 

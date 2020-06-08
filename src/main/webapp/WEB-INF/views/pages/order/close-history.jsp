@@ -140,28 +140,11 @@
 </div>
 
 <%-- modal --%>
-<div class="modal" id="CONTROL_MANGE_POPUP" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
-                        class="sr-only">Close</span></button>
-                <h4 class="modal-title">신규 주문 등록</h4>
-            </div>
-            <div class="modal-body">
-                <div id="ORDER_REGISTER_GRID"></div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-</div>
-
 <div class="popup_container" id="CONTROL_CLOSE_CANCEL_POPUP" style="display: none;">
     <div class="controlCloseLayerPopup">
         <h3>월 마감 취소 진행</h3>
         <hr>
-        <button type="button" class="pop_close CONTROL_CLOSE_NO">닫기</button>
+        <button type="button" class="pop_close" name="CONTROL_CLOSE_CANCEL_NO">닫기</button>
         <div class="d-inline-block">
             <div style="width: 450px; float:left;">
                 <div id="CONTROL_CLOSE_CANCEL_LEFT_GRID"></div>
@@ -175,8 +158,8 @@
         </div>
 
         <div class="text-center">
-            <button class="defaultBtn" id="CONTROL_CLOSE_YES">저장</button>
-            <button class="defaultBtn CONTROL_CLOSE_NO">닫기</button>
+            <button class="defaultBtn" id="CONTROL_CLOSE_CANCEL_YES">저장</button>
+            <button class="defaultBtn" name="CONTROL_CLOSE_CANCEL_NO">닫기</button>
         </div>
     </div>
 </div>
@@ -193,7 +176,7 @@
         postData.CLOSE_YEAR = CURRENT_YEAR;
         postData.CLOSE_MONTH = CURRENT_MONTH < 10 ? '0' + CURRENT_MONTH : CURRENT_MONTH;
         const colModel = [
-            {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true, colModel: []},
+            {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true, colModel: []},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true, colModel: []},
             {title: 'CONTROL_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'CONTROL_PROGRESS_SEQ', hidden: true, colModel: []},
             {title: 'ORDER_STATUS', dataType: 'integer', dataIndx: 'ORDER_STATUS', hidden: true, colModel: []},
@@ -245,7 +228,7 @@
             {title: 'CONTROL_VER', dataType: 'string', dataIndx: 'CONTROL_VER', hidden: true, colModel: []},
             {title: '관리번호', minWidth: 100, dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true, colModel: []},
             {
-                title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM', colModel: [],
+                title: 'Part', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM', colModel: [],
                 render: function (ui) {
                     if (ui.rowData.WORK_NM === '가공조립') {
                         return "<span>플러스버튼</span>";
@@ -268,12 +251,12 @@
             {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', colModel: []},
             {title: '열<br>처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', colModel: []},
             {title: '소재비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', editable: true, colModel: []},
-            {title: 'Part<br>단위<br>수량', dataType: 'integer', dataIndx: 'PART_UNIT_QTY', colModel: []},
+            {title: 'Part<br>단위<br>수량', align: 'right', dataType: 'integer', dataIndx: 'PART_UNIT_QTY', colModel: []},
             // {title: '주문<br>수량', dataType: 'string', dataIndx: 'ITEM_QTY', colModel: []},
             {
                 title: '대칭', align: 'center', colModel: [
-                    {title: '원칭', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY', editable: true},
-                    {title: '대칭', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY', editable: true},
+                    {title: '원칭', align: 'right', dataType: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY', editable: true},
+                    {title: '대칭', align: 'right', dataType: 'integer', dataIndx: 'OTHER_SIDE_QTY', editable: true},
                 ]
             },
             {
@@ -376,8 +359,8 @@
                     {title: '외주업체', datatype: 'string', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
                     {title: '외주업체', datatype: 'string', dataIndx: 'OUTSIDE_COMP_NM'},
                     {title: '자재사급', datatype: 'string', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN'},
-                    {title: '외주단가', datatype: 'integer', dataIndx: 'OUTSIDE_UNIT_AMT'},
-                    {title: '합계금액', datatype: 'integer', dataIndx: 'OUTSIDE_FINAL_AMT'},
+                    {title: '외주단가', align: 'right', dataType: 'integer', dataIndx: 'OUTSIDE_UNIT_AMT'},
+                    {title: '합계금액', align: 'right', dataType: 'integer', dataIndx: 'OUTSIDE_FINAL_AMT'},
                     {title: '요망납기', datatype: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
                     {title: '입고날짜', datatype: 'string', dataIndx: 'dhlwndlqrhskfWk'},
                     {title: '비고', datatype: 'string', dataIndx: 'OUTSIDE_NOTE'},
@@ -390,7 +373,7 @@
         const obj = {
             height: 658,
             collapsible: false,
-            resizable: true,
+            resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
             // scrollModel: {autoFit: true},
@@ -399,7 +382,7 @@
             colModel: colModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: postData, recIndx: 'ROWNUM',
+                postData: postData, recIndx: 'ROW_NUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -424,7 +407,7 @@
                         }
                     }
 
-                    newRowData.ROWNUM = totalRecords + 1;
+                    newRowData.ROW_NUM = totalRecords + 1;
                     newRowData.PART_NUM = newPartNum;
                     newRowData.WORK_NM = '가공';
                     newRowData.WORK_TYPE = 'FCT01';
@@ -441,7 +424,7 @@
                     let data = $closeHistoryGrid.pqGrid('option', 'dataModel.data');
                     let totalRecords = data.length;
 
-                    newRowData.ROWNUM = totalRecords + 1;
+                    newRowData.ROW_NUM = totalRecords + 1;
                     $closeHistoryGrid.pqGrid('addRow', {
                         newRow: newRowData,
                         rowIndx: ui.rowIndx + 1,
@@ -545,6 +528,15 @@
                 rowListConvert.push(tempObject);
             }
             $closeHistoryGrid.pqGrid('updateRow', {rowList: rowListConvert, checkEditable: false});
+        };
+
+        const noSelectedRowAlert = function () {
+            if (selectedRowIndex.length > 0) {
+                return false;
+            } else {
+                alert('하나 이상 선택해주세요');
+                return true;
+            }
         };
         /* function */
 
@@ -653,6 +645,10 @@
             const updateQueryList = ['orderMapper.updateControlStatus', 'orderMapper.createControlProgress'];
 
             fnModifyPQGrid($closeHistoryGrid, [], updateQueryList);
+        });
+
+        $('[name=CONTROL_CLOSE_CANCEL_NO]').on('click', function () {
+            $('#CONTROL_CLOSE_CANCEL_POPUP').modal('hide');
         });
         /* event */
 
