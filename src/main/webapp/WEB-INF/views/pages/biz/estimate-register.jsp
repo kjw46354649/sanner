@@ -183,8 +183,9 @@
     </div>
 </div>
 
-<input type="button" id="test">
+<input type="button" id="test" style="display: none;">
 <input type="button" id="updateFromControl" style="display: none;">
+<input type="button" id="estimateRegisterFileUpload" style="display: none;">
 <form id="estimate_register_hidden_form" method="POST">
     <input type="hidden" id="queryId" name="queryId" value="selectEstimateDetailList"/>
     <input type="hidden" id="EST_SEQ" name="EST_SEQ" value=""/>
@@ -1021,10 +1022,27 @@
 
         });
 
+        $("#estimateRegisterFileUpload").on('click', function(){
+            let GfileKey = $("#common_file_download_form").find("#GFILE_SEQ").val();
+            if(!GfileKey) {
+                $("#estimate_register_info_form #GFILE_SEQ").val('');
+                let parameter = {
+                    'queryId': 'estimate.updateEstimateMasterGfileSeq',
+                    'EST_SEQ': $("#estimate_register_info_form #EST_SEQ").val()
+                };
+                let parameters = {'url': '/json-update', 'data': parameter};
+                fnPostAjaxAsync('', parameters, '');
+            }
+
+            $("#estimate_register_info_form #GFILE_SEQ").val(GfileKey);
+            let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey };
+            fnRequestGidData(estimateRegisterFileGrid, postData);
+        });
+
         $("#btnEstimateRegisterFileUpload").on('click', function(){
             let GfileKey = $("#estimate_register_info_form #GFILE_SEQ").val();
             $("#common_file_download_form").find("#GFILE_SEQ").val(GfileKey);
-            commonFileDownUploadPopupCall(GfileKey, 'estimateRegisterFileUploadCallback');
+            commonFileDownUploadPopupCall(GfileKey, 'estimateRegisterFileUpload');
         });
 
         /* 도면 등록 팝업 호출 */
@@ -1088,34 +1106,10 @@
     function btnDisabled(status) {
         if(status == 'EST020'){
             $(".authorizedBtn").attr('disabled', true);
-            /*$("#btn_estimate_register_save").attr('disabled', true);
-            $("#btn_estimate_register_submit").attr('disabled', true);
-            $("#btnEstimateRegisterAdd").attr('disabled', true);
-            $("#btnEstimateRegisterDelete").attr('disabled', true);
-            $("#btnEstimateRegisterFileUpload").attr('disabled', true);*/
 
         }else {
             $(".authorizedBtn").attr('disabled', false);
-            /*$("#btn_estimate_register_save").attr('disabled', false);
-            $("#btn_estimate_register_submit").attr('disabled', false);
-            $("#btnEstimateRegisterAdd").attr('disabled', false);
-            $("#btnEstimateRegisterDelete").attr('disabled', false);
-            $("#btnEstimateRegisterFileUpload").attr('disabled', false);*/
         }
     }
-    function estimateRegisterFileUploadCallback(GfileSeq){
-        if(!GfileSeq) {
-            $("#estimate_register_info_form #GFILE_SEQ").val('');
-            let parameter = {
-                'queryId': 'estimate.updateEstimateMasterGfileSeq',
-                'EST_SEQ': $("#estimate_register_info_form #EST_SEQ").val()
-            };
-            let parameters = {'url': '/json-update', 'data': parameter};
-            fnPostAjaxAsync('', parameters, '');
-        }
 
-        $("#estimate_register_info_form #GFILE_SEQ").val(GfileSeq);
-        let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileSeq };
-        fnRequestGidData(estimateRegisterFileGrid, postData);
-    };
 </script>
