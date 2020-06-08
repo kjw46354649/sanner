@@ -110,6 +110,30 @@
     </div>
 </div>
 
+<div class="popup_container" id="OUTSIDE_CLOSE_CANCEL_POPUP" style="display: none;">
+    <div class="controlCloseLayerPopup">
+        <h3>월 마감 취소 진행</h3>
+        <hr>
+        <button type="button" class="pop_close" name="OUTSIDE_CLOSE_NO">닫기</button>
+        <div class="d-inline-block">
+            <div style="width: 450px; float:left;">
+                <div id="OUTSIDE_CLOSE_CANCEL_LEFT_GRID"></div>
+            </div>
+            <div style="display: flex; float:left; align-items: center; justify-content: center; width: 70px; height: 250px;">
+                <span class="arrow right_Arrow"></span>
+            </div>
+            <div style="width: 450px; float:left;">
+                <div id="OUTSIDE_CLOSE_CANCEL_RIGHT_GRID"></div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button class="defaultBtn" id="OUTSIDE_CLOSE_YES">저장</button>
+            <button class="defaultBtn" name="OUTSIDE_CLOSE_NO">닫기</button>
+        </div>
+    </div>
+</div>
+
 <script>
     $(function () {
         'use strict';
@@ -119,51 +143,39 @@
         const gridId = 'OUTSIDE_CLOSE_HISTORY_GRID';
         let postData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_HISTORY_SEARCH_FORM');
         const colModel = [
-            {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true, colModel: []},
-            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true, colModel: []},
-            {
-                title: 'CONTROL_DETAIL_SEQ',
-                dataType: 'integer',
-                dataIndx: 'CONTROL_DETAIL_SEQ',
-                hidden: true,
-                colModel: []
-            },
-            {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true, colModel: []},
-            {
-                title: 'OUTSIDE_REQUEST_SEQ',
-                dataType: 'integer',
-                dataIndx: 'OUTSIDE_REQUEST_SEQ',
-                hidden: true,
-                colModel: []
-            },
-            {title: 'CLOSE_VER', dataType: 'integer', dataIndx: 'CLOSE_VER', hidden: false, colModel: []},
-            {title: 'PART_STATUS', dataType: 'string', dataIndx: 'PART_STATUS', hidden: false, colModel: []},
-            {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: true, colModel: []},
-            {title: '사업자<br>구분', minWidth: 70, dataType: 'string', dataIndx: 'COMP_NM', colModel: []},
-            {title: '외주<br>구분', dataType: 'string', dataIndx: 'OUTSIDE_YN', hidden: true, colModel: []},
-            {title: '원발주<br>상태', minWidth: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM', colModel: []},
-            {title: '외주<br>발주상태', dataType: 'string', dataIndx: 'DHLWNQKFWNTKDXO', hidden: true, colModel: []},
-            {title: '상태변경<br>일시', minWidth: 70, dataType: 'string', dataIndx: 'TKDXOQUSRUDDLFTL', colModel: []},
-            {title: '외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_CD', hidden: true, colModel: []},
-            {title: '외주업체', minWidth: 70, dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', colModel: []},
-            {title: '입고일자', dataType: 'string', dataIndx: 'DLQRHDLFWK', colModel: []},
-            {title: '외주<br>발주번호', dataType: 'string', dataIndx: 'OUTSIDE_ORDER_NUM', editable: true, colModel: []},
-            {title: '비고', dataType: 'string', dataIndx: 'OUTSIDE_NOTE', editable: true, colModel: []},
-            {title: '비고(주문)', dataType: 'select', dataIndx: 'NOTE', colModel: []},
-            {title: '', dataType: 'select', dataIndx: 'RHKSFLQJSGH', colModel: []},
-            {title: '관리번호', minWidth: 70, dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true, colModel: []},
-            {title: '', dataType: 'string', dataIndx: 'EHAUSQJSGH', colModel: []},
-            {title: '도면번호', minWidth: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', editable: true, colModel: []},
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', editable: true, colModel: []},
-            {title: '품명', minWidth: 70, dataType: 'string', dataIndx: 'ITEM_NM', colModel: []},
-            {title: '규격', minWidth: 100, dataType: 'string', dataIndx: 'SIZE_TXT', colModel: []},
-            {title: '자재종류', minWidth: 90, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', colModel: []},
-            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', editable: true, colModel: []},
-            {title: '규격', minWidth: 90, dataType: 'string', dataIndx: 'SIZE_TXT', editable: true, colModel: []},
-            {title: '소재<br>종류', minWidth: 90, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', colModel: []},
-            // {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY', colModel: []},
-            {title: '사급<br>여부', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', colModel: []},
-            {title: '소재<br>제공', dataType: 'string', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN', colModel: []},
+            {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
+            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+            {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true},
+            {title: 'OUTSIDE_REQUEST_SEQ', dataType: 'integer', dataIndx: 'OUTSIDE_REQUEST_SEQ', hidden: true},
+            {title: 'CLOSE_VER', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CLOSE_VER', hidden: false},
+            {title: 'PART_STATUS', dataType: 'string', dataIndx: 'PART_STATUS', hidden: false},
+            {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
+            {title: '사업자<br>구분', minWidth: 70, dataType: 'string', dataIndx: 'COMP_NM'},
+            {title: '외주<br>구분', dataType: 'string', dataIndx: 'OUTSIDE_YN', hidden: true},
+            {title: '원발주<br>상태', minWidth: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+            {title: '외주<br>발주상태', dataType: 'string', dataIndx: 'DHLWNQKFWNTKDXO', hidden: true},
+            {title: '상태변경<br>일시', minWidth: 70, dataType: 'string', dataIndx: 'TKDXOQUSRUDDLFTL'},
+            {title: '외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
+            {title: '외주업체', minWidth: 70, dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM'},
+            {title: '입고일자', dataType: 'string', dataIndx: 'DLQRHDLFWK'},
+            {title: '외주<br>발주번호', dataType: 'string', dataIndx: 'OUTSIDE_ORDER_NUM', editable: true},
+            {title: '비고', dataType: 'string', dataIndx: 'OUTSIDE_NOTE', editable: true},
+            {title: '비고(주문)', dataType: 'select', dataIndx: 'NOTE'},
+            {title: '', dataType: 'select', dataIndx: 'RHKSFLQJSGH'},
+            {title: '관리번호', minWidth: 70, dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true},
+            {title: '', dataType: 'string', dataIndx: 'EHAUSQJSGH'},
+            {title: '도면번호', minWidth: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', editable: true},
+            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', editable: true},
+            {title: '품명', minWidth: 70, dataType: 'string', dataIndx: 'ITEM_NM'},
+            {title: '규격', minWidth: 100, dataType: 'string', dataIndx: 'SIZE_TXT'},
+            {title: '자재종류', minWidth: 90, dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
+            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', editable: true},
+            {title: '규격', minWidth: 90, dataType: 'string', dataIndx: 'SIZE_TXT', editable: true},
+            {title: '소재<br>종류', minWidth: 90, dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
+            // {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
+            {title: '사급<br>여부', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN'},
+            {title: '소재<br>제공', dataType: 'string', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN'},
             {
                 title: '요청 가공 사항', align: 'center', colModel: [
                     {title: '완제품', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN', editable: true},
@@ -173,10 +185,10 @@
                     {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC', editable: true}
                 ]
             },
-            {title: '요망납기', dataType: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT', editable: true, colModel: []},
-            {title: '외주<br>확정단가', dataType: 'integer', dataIndx: 'OUTSIDE_UNIT_AMT', colModel: []},
-            {title: '금액<br>합계', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT', colModel: []},
-            {title: '외주<br>종전가', dataType: 'string', dataIndx: 'DHLWNWHDWJSRK', colModel: []},
+            {title: '요망납기', dataType: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT', editable: true},
+            {title: '외주<br>확정단가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_UNIT_AMT'},
+            {title: '금액<br>합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
+            {title: '외주<br>종전가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DHLWNWHDWJSRK'},
             {
                 title: '원발주 정보', align: 'center', colModel: [
                     {title: '납기', minWidth: 70, datatype: 'string', dataIndx: 'INNER_DUE_DT'},
@@ -193,16 +205,16 @@
                     {title: '측정일시', datatype: 'string', dataIndx: 'CMRWJDDLFTL'}
                 ]
             },
-            {title: '원주문<br>확정 일시', minWidth: 70, datatype: 'string', dataIndx: 'CONTROL_STATUS', colModel: []},
-            {title: '외주가공<br>요청일시.', minWidth: 70, dataType: 'string', dataIndx: 'OUTSIDE_REQUEST_DATE', colModel: []},
-            {title: '외주가공<br>마감일시', minWidth: 70, dataType: 'string', dataIndx: 'OUTSIDE_FINISH_DATE', colModel: []},
-            {title: 'DXF', dataType: 'string', dataIndx: 'STATUS_DT', colModel: []}
+            {title: '원주문<br>확정 일시', minWidth: 70, datatype: 'string', dataIndx: 'CONTROL_STATUS'},
+            {title: '외주가공<br>요청일시.', minWidth: 70, dataType: 'string', dataIndx: 'OUTSIDE_REQUEST_DATE'},
+            {title: '외주가공<br>마감일시', minWidth: 70, dataType: 'string', dataIndx: 'OUTSIDE_FINISH_DATE'},
+            {title: 'DXF', dataType: 'string', dataIndx: 'STATUS_DT'}
         ];
         const obj = {
             minHeight: '100%',
             height: 700,
             collapsible: false,
-            resizable: true,
+            resizable: false,
             showTitle: false,
             strNoRows: g_noData,
             numberCell: {title: 'No.'},
@@ -212,7 +224,7 @@
             colModel: colModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: postData, recIndx: 'ROWNUM',
+                postData: postData, recIndx: 'ROW_NUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -232,7 +244,7 @@
                         }
                     }
 
-                    newRowData.ROWNUM = totalRecords + 1;
+                    newRowData.ROW_NUM = totalRecords + 1;
                     newRowData.PART_NUM = newPartNum;
                     newRowData.WORK_NM = '가공';
                     newRowData.WORK_TYPE = 'FCT01';
@@ -249,7 +261,7 @@
                     let data = $outsideCloseHistoryGrid.pqGrid('option', 'dataModel.data');
                     let totalRecords = data.length;
 
-                    newRowData.ROWNUM = totalRecords + 1;
+                    newRowData.ROW_NUM = totalRecords + 1;
                     $outsideCloseHistoryGrid.pqGrid('addRow', {
                         newRow: newRowData,
                         rowIndx: ui.rowIndx + 1,

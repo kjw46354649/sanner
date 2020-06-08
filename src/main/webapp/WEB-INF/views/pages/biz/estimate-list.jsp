@@ -123,6 +123,7 @@
     <input type="hidden" id="EST_VER" name="EST_VER"/>
     <input type="hidden" id="N_EST_SEQ" name="N_EST_SEQ"/>
 </form>
+<input type="button" id="estimateListFileUpload" style="display: none;">
 
 <script type="text/javascript">
     'use strict';
@@ -211,7 +212,7 @@
                         }else{
                             $("#common_file_download_form #deleteYn").val(true);
                         }
-                        commonFileDownUploadPopupCall(rowData.ETC_GFILE_SEQ, 'estimateListFileUploadCallback');
+                        commonFileDownUploadPopupCall(rowData.ETC_GFILE_SEQ, 'estimateListFileUpload');
                     });
                 }
             },
@@ -849,6 +850,19 @@
                     }, parameters, '');
                 }, parameters, '');
             }, parameters, '');
+        });
+
+        $("#estimateListFileUpload").on('click', function(){
+            let GfileKey = $("#common_file_download_form").find("#GFILE_SEQ").val();
+            if(!GfileKey) {
+                let parameter = {
+                    'queryId': 'estimate.updateEstimateMasterGfileSeq',
+                    'EST_SEQ': $("#estimate_master_hidden_form #EST_SEQ").val()
+                };
+                let parameters = {'url': '/json-update', 'data': parameter};
+                fnPostAjaxAsync('', parameters, '');
+            }
+            $("#btnEstimateListSearch").trigger('click');
         });
 
         $("#chkEstimateListDetail").on('change', function(evt){

@@ -143,14 +143,12 @@
         const MONTH = TODAY.getMonth() + 1;
 
         let $outsideCloseStatusGrid;
-
-        let tab1GridId = 'OUTSIDE_CLOSE_STATUS_GRID';
+        const tab1GridId = 'OUTSIDE_CLOSE_STATUS_GRID';
         let tab1PostData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM');
-
         tab1PostData.CLOSE_YEAR_LEFT = YEAR;
         tab1PostData.CLOSE_MONTH_LEFT = MONTH;
-        let tab1ColModel = [
-            {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true},
+        const tab1ColModel = [
+            {title: 'ROW_NUM', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ROW_NUM', hidden: true},
             {title: '사업자 구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자 구분', dataType: 'string', dataIndx: 'COMP_NM'},
             {title: '년도', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
@@ -159,16 +157,44 @@
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
             {title: '외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
             {title: '외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM'},
-            {title: '품수', dataType: 'string', dataIndx: 'ITEM_NUMBER'},
-            {title: '외주 발주 금액', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT'},
-            {title: '부가세액', dataType: 'string', dataIndx: 'VAT_AMOUNT'},
-            {title: '합계금액', dataType: 'string', dataIndx: 'TOTAL_AMOUNT'},
+            {title: '품수', dataType: 'string', dataIndx: 'ITEM_NUMBER', summary: {type: 'sum', edit: true},
+                render: function (ui) {
+                    if(ui.rowData.pq_grandsummary) {
+                        return ui.cellData;
+                    } else {
+                        return ("<a href='#DETAIL_LIST_VIEW_POPUP' class='' id='' data-target='' data-toggle='modal' " +
+                            "data-refform='DETAIL_LIST_VIEW_POPUP'><u>" + ui.cellData + "</u></a>");
+                    }
+                }
+            },
+            {title: '외주 발주 금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', summary: {type: 'sum', edit: true}},
+            {title: '원 발주<br>금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', summary: {type: 'sum', edit: true}}, // 2020-06-07 add
+            {title: '외주<br>공급가액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', summary: {type: 'sum', edit: true}}, // 2020-06-07 add
+            {title: '외주<br>마감 금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', summary: {type: 'sum', edit: true}}, // 2020-06-07 add
+            {title: '부가세', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'VAT_AMOUNT', summary: {type: 'sum', edit: true}},
+            {title: '부가세<br>합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'VAT_AMOUNT', summary: {type: 'sum', edit: true}}, // 2020-06-07 add
+            {title: '업데이트<br>일시', dataType: 'string', dataIndx: 'VAT_AMOUNT'}, // 2020-06-07 add
+            // {title: '합계금액', dataType: 'string', dataIndx: 'TOTAL_AMOUNT'},
             {title: '비고', dataType: 'string', dataIndx: 'CLOSE_NOTE', editable: true}
         ];
-        let tab1Obj = {
+        const tab1GroupModel = {
+            on: true,
+            header:false,
+            headerMenu: false,
+            indent: 10,
+            dataIndx: ['COMP_CD'],
+            summaryInTitleRow: '',
+            summaryEdit: false,
+            // showSummary: [true], //to display summary at end of every group.
+            collapsed: [false],
+            grandSummary: true,
+            merge: true,
+            nodeClose: false,
+        };
+        const tab1Obj = {
             height: 750,
             collapsible: false,
-            resizable: true,
+            resizable: false,
             showTitle: false,
             strNoRows: g_noData,
             numberCell: {title: 'No.'},
@@ -176,10 +202,11 @@
             trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center',  editable: false},
             colModel: tab1ColModel,
+            groupModel: tab1GroupModel,
             toolbar: false,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: tab1PostData, recIndx: 'ROWNUM',
+                postData: tab1PostData, recIndx: 'ROW_NUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -197,56 +224,55 @@
             {title: '구분', dataType: 'string', dataIndx: 'STATUS_TYPE',},
             {
                 title: '1분기', align: 'center', colModel: [
-                    {title: '1월', datatype: 'integer', dataIndx: 'ORDER_01_AMT', editable: true},
-                    {title: '2월', datatype: 'integer', dataIndx: 'ORDER_02_AMT', editable: true},
-                    {title: '3월', datatype: 'integer', dataIndx: 'ORDER_03_AMT', editable: true},
-                    {title: '합계', datatype: 'integer', dataIndx: 'ORDER_03_SUM_AMT', editable: true},
+                    {title: '1월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_01_AMT', summary: {type: 'sum'}},
+                    {title: '2월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_02_AMT', summary: {type: 'sum'}},
+                    {title: '3월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_03_AMT', summary: {type: 'sum'}},
+                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_03_SUM_AMT', summary: {type: 'sum'}},
                 ]
             },
             {
                 title: '2분기', align: 'center', colModel: [
-                    {title: '4월', datatype: 'integer', dataIndx: 'ORDER_04_AMT', editable: true},
-                    {title: '5월', datatype: 'integer', dataIndx: 'ORDER_05_AMT', editable: true},
-                    {title: '6월', datatype: 'integer', dataIndx: 'ORDER_06_AMT', editable: true},
-                    {title: '합계', datatype: 'integer', dataIndx: 'ORDER_06_SUM_AMT', editable: true},
+                    {title: '4월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_04_AMT', summary: {type: 'sum'}},
+                    {title: '5월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_05_AMT', summary: {type: 'sum'}},
+                    {title: '6월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_06_AMT', summary: {type: 'sum'}},
+                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_06_SUM_AMT', summary: {type: 'sum'}},
                 ]
             },
             {
                 title: '3분기', align: 'center', colModel: [
-                    {title: '7월', datatype: 'integer', dataIndx: 'ORDER_07_AMT', editable: true},
-                    {title: '8월', datatype: 'integer', dataIndx: 'ORDER_08_AMT', editable: true},
-                    {title: '9월', datatype: 'integer', dataIndx: 'ORDER_09_AMT', editable: true},
-                    {title: '합계', datatype: 'integer', dataIndx: 'ORDER_09_SUM_AMT', editable: true},
+                    {title: '7월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_07_AMT', summary: {type: 'sum'}},
+                    {title: '8월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_08_AMT', summary: {type: 'sum'}},
+                    {title: '9월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_09_AMT', summary: {type: 'sum'}},
+                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_09_SUM_AMT', summary: {type: 'sum'}},
                 ]
             },
             {
                 title: '4분기', align: 'center', colModel: [
-                    {title: '10월', datatype: 'integer', dataIndx: 'ORDER_10_AMT', editable: true},
-                    {title: '11월', datatype: 'integer', dataIndx: 'ORDER_11_AMT', editable: true},
-                    {title: '12월', datatype: 'integer', dataIndx: 'ORDER_12_AMT', editable: true},
-                    {title: '합계', datatype: 'integer', dataIndx: 'ORDER_12_SUM_AMT', editable: true},
+                    {title: '10월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_10_AMT', summary: {type: 'sum'}},
+                    {title: '11월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_11_AMT', summary: {type: 'sum'}},
+                    {title: '12월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_12_AMT', summary: {type: 'sum'}},
+                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_12_SUM_AMT', summary: {type: 'sum'}},
                 ]
             },
             {title: '합계', dataType: 'string', dataIndx: 'TOTAL_AMT'}
         ];
-        // const tab2GroupModel = {
-        //     on: true, //grouping mode.
-        //     titleIndx: 'grp',
-        //     indent: 20,
-        //     fixCols: false,
-        //     pivot: true, //pivotMode
-        //     groupCols: ['YYYY', 'QUARTER', 'MM'],
-        //     agg: {OUTPUT_AMT: 'sum', DEPOSIT_AMT: 'sum'},
-        //     header: false, //hide grouping toolbar.
-        //     grandSummary: true, //show grand summary row.
-        //     dataIndx: ['COMP_NM', 'OUTSIDE_COMP_NM'],
-        //     collapsed: [false, false],
-        //     summaryEdit: false
-        // };
+        const tab2GroupModel = {
+            on: true, header:false,
+            headerMenu: false,
+            indent: 10,
+            dataIndx: ['COMP_CD'],
+            summaryInTitleRow: '',
+            summaryEdit: false,
+            // showSummary: [true], //to display summary at end of every group.
+            collapsed: [false],
+            grandSummary: true,
+            merge: true,
+            nodeClose: false,
+        };
         const tab2Obj = {
             height: 750,
             collapsible: false,
-            resizable: true,
+            resizable: false,
             showTitle: false,
             strNoRows: g_noData,
             numberCell: {title: 'No.'},
@@ -254,11 +280,11 @@
             // trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
             colModel: tab2ColModel,
-            // groupModel: tab2GroupModel,
+            groupModel: tab2GroupModel,
             toolPanel: {show: false},
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: tab2PostData, recIndx: 'ROWNUM',
+                postData: tab2PostData, recIndx: 'ROW_NUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }

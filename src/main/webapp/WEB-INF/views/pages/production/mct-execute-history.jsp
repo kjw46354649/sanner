@@ -336,7 +336,7 @@
         const tab1Obj = {
             height: 750,
             collapsible: false,
-            resizable: true,
+            resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
             trackModel: {on: true},
@@ -390,7 +390,7 @@
         let tab2Obj = {
             height: 750,
             collapsible: false,
-            resizable: true,
+            resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
             scrollModel: {autoFit: true},

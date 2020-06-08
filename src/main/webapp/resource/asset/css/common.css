@@ -368,6 +368,7 @@ table.boardList .txtP{color: #7030a0;}
 .popup_container { z-index: 1050; position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 .popup_container:before { content: 'modal_bg'; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; opacity: .5; text-indent: -999em; font-size: 0; }
 .layerPopup { position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; background: #fff; width: 1012px; height: 800px; border: 1px solid #ababab; padding: 20px; box-sizing: border-box; }
+.layerPopup hr { display:block; border: 1px solid #e0e2e6; margin-top: 10px; margin-bottom: 7px; }
 .layerPopup h3 { font-size: 20px; font-family: 'NotoKrB'; color: #000; display: inline-block; }
 .layerPopup h5 { font-size: 16px; font-family: 'NotoKrB'; color: #000; margin-bottom: 10px; }
 .layerPopup .pop_close { width: 23px; height: 23px; position: absolute; top: 12px; right: 12px; font-size: 0; background: url(../images/common/btn_popup.png)no-repeat 0 0; }
@@ -416,5 +417,3 @@ table.boardList .txtP{color: #7030a0;}
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-.d-inline-block { display: inline-block !important; }
