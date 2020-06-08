@@ -118,7 +118,7 @@
         <input type="hidden" id="queryId" name="queryId" value="inspection.selectCommItemDetailInfo"/>
         <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value=""/>
         <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
-        <input type="hidden" id="CAM_INFO_YN" name="CAM_INFO_YN" value=""/>
+<%--        <input type="hidden" id="CAM_INFO_YN" name="CAM_INFO_YN" value=""/>--%>
         <div class="layerPopup">
             <h3>제품상세정보</h3>
             <button type="button" class="pop_close mg-top10 mg-right8" id="popClose2">닫기</button>
@@ -142,7 +142,7 @@
                  </div>
                 <h4>기본정보</h4>
                 <div class="list1">
-                    <table class="rowStyle">
+                    <table class="rowStyle" style="table-layout: fixed;">
                         <colgroup>
                             <col width="10%">
                             <col width="16%">
@@ -162,8 +162,8 @@
                         <tr>
                             <th>품명</th>
                             <td id="ITEM_NM"></td>
-                            <th>모듈</th>
-                            <td id="MODULE_NM"></td>
+                            <th >모듈</th>
+                            <td id="MODULE_NM" style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap;"></td>
                             <th>수량(원칭,대칭)</th>
                             <td id="ORDER_QTY_INFO"></td>
                         </tr>
@@ -257,7 +257,7 @@
                 </div>
             </div>
             <div class="btnWrap">
-                <button type="button" class="defaultBtn purple work_info_area" id="g_item_cam_work_start_btn" style="display: none;">CAM 작업시작</button>
+<%--                <button type="button" class="defaultBtn purple work_info_area" id="g_item_cam_work_start_btn" style="display: none;">CAM 작업시작</button>--%>
                 <button type="button" class="defaultBtn grayPopGra" id="g_item_detail_pop_grid_05_pop_close">닫기</button>
             </div>
         </div>
@@ -277,6 +277,9 @@
     let commonFileDownloadPopup = $("#common_file_download_pop");
     let commonFileDownloadGridId = "common_file_download_grid";
     let $commonFileDownloadGrid;
+
+    let g_ItemDetailPopGrid04;
+    // let $camWorkManagePopGrid;
 
     $(function() {
         'use strict';
@@ -815,10 +818,10 @@
         colModel: g_ItemDetailPopColModel05
     };
 
-    let g_item_detail_cam_work_pop_view = function(CONTROL_SEQ, CONTROL_DETAIL_SEQ){
-        $("#g_item_detail_pop_form").find("#CAM_INFO_YN").val("Y");
-        g_item_detail_pop_view(CONTROL_SEQ, CONTROL_DETAIL_SEQ);
-    }
+    // let g_item_detail_cam_work_pop_view = function(CONTROL_SEQ, CONTROL_DETAIL_SEQ){
+    //     $("#g_item_detail_pop_form").find("#CAM_INFO_YN").val("Y");
+    //     g_item_detail_pop_view(CONTROL_SEQ, CONTROL_DETAIL_SEQ);
+    // }
 
     let g_item_detail_pop_view = function(CONTROL_SEQ, CONTROL_DETAIL_SEQ){
 
@@ -847,7 +850,7 @@
                 $("#g_item_detail_pop_form").find("#INNER_DUE_DT").html(dataInfo.INNER_DUE_DT);
 
                 $("#g_item_detail_pop_form").find("#ITEM_NM").html(dataInfo.ITEM_NM);
-                $("#g_item_detail_pop_form").find("#MODULE_NM").html(dataInfo.MODULE_NM);
+                $("#g_item_detail_pop_form").find("#MODULE_NM").html(dataInfo.MODULE_NM).trigger('create');
                 $("#g_item_detail_pop_form").find("#ORDER_QTY_INFO").html(dataInfo.ORDER_QTY_INFO);
 
                 $("#g_item_detail_pop_form").find("#SIZE_TXT").html(dataInfo.SIZE_TXT);
@@ -874,11 +877,11 @@
                 $("#g_item_detail_pop_form").find("#WORK_HISTORY_INFO").html(dataInfo.WORK_HISTORY_INFO);
 
                 /** CAM 작업 여부에 따른 버튼 표시 **/
-                if(dataInfo.CAM_STATUS == "CWS010"){ <!-- 대기 중일때 처리 -->
-                    $('.work_info_area').show();
-                }else{
-                    $('.work_info_area').hide();
-                }
+                // if(dataInfo.CAM_STATUS == "CWS010" || dataInfo.CAM_STATUS == "CWS030"){ <!-- 대기 중일때 처리 -->
+                //     $('.work_info_area').show();
+                // }else{
+                //     $('.work_info_area').hide();
+                // }
             }
         }, parameters, '');
 
@@ -916,7 +919,7 @@
 
         $("#g_item_detail_pop_form").find("#queryId").val('inspection.selectCommItemDetailInfoGrid4');
         g_ItemDetailPopObj04.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
-        let g_ItemDetailPopGrid04 = g_ItemDetailPopGridId04.pqGrid(g_ItemDetailPopObj04);
+        g_ItemDetailPopGrid04 = g_ItemDetailPopGridId04.pqGrid(g_ItemDetailPopObj04);
 
         $("#g_item_detail_pop_form").find("#queryId").val('inspection.selectCommItemDetailInfoGrid5');
         g_ItemDetailPopObj05.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
@@ -938,7 +941,6 @@
     }
     $("#g_item_detail_pop").on('hide.bs.modal', function(){
         fnResetFrom("g_item_detail_pop_form");
-        $(".work_info_area").hide();
         g_ItemDetailPopGridId01.pqGrid('destroy');
         g_ItemDetailPopGridId02.pqGrid('destroy');
         g_ItemDetailPopGridId03.pqGrid('destroy');
@@ -950,48 +952,16 @@
         $('#g_item_detail_pop').modal('hide');
     });
 
-    $("#g_item_detail_pop_form").find('#g_item_cam_work_start_btn').on('click', function () {
-        // work start 처리
-        // worker 지정 여부
-        if($("#g_item_detail_pop_form").find("#CAM_WORK_USER_ID").val()){
-            alert("CAM 작업자를 선택해 주십시오.")
-            return false;
-        }
-        $("#g_item_detail_pop_form").find("#queryId").val('machine.insertMctCamWork');
-        let parameters = {'url': '/json-create', 'data': $('#g_item_detail_pop_form').serialize()}
-        fnPostAjax(function (data) {
-            $(".work_info_area").hide();
-            alert("<spring:message code='com.alert.default.save.success' />");
-            $orderManagementGrid.pqGrid('refreshDataAndView');
-        }, parameters, '');
-    });
-
-
-
-    $("#g_item_detail_pop_form").find('#camWorkStartBtn').on('click', function () {
-        let headHtml = "CAM 작업 정보", yseBtn="예", noBtn="아니오";
-        let bodyHtml = "<h4><img style='width: 32px; height: 32px;' src='/resource/main/images/print.png'>&nbsp;&nbsp;<span>CAM 작업을 시작 하시겠습니까?</span></h4>";
-        fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-
-        let camWorkStartSubmitConfirm = function(callback) {
-            commonConfirmPopup.show();
-            $("#commonConfirmYesBtn").unbind().click(function (e) {
-                e.stopPropagation();
-                commonConfirmPopup.hide();
-                callback(true);
-                return;
-            });
-            $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                e.stopPropagation();
-                commonConfirmPopup.hide();
-            });
-        };
-        camWorkStartSubmitConfirm(function(confirm){
-            if(confirm) {
-                alert("저장 처리");
-            }
-        });
-    });
+    /** cam start 처리 **/
+    <%--$("#g_item_detail_pop_form").find('#g_item_cam_work_start_btn').on('click', function () {--%>
+    <%--    $("#g_item_detail_pop_form").find("#queryId").val('machine.insertMctCamWork');--%>
+    <%--    let parameters = {'url': '/json-create', 'data': $('#g_item_detail_pop_form').serialize()}--%>
+    <%--    fnPostAjax(function (data) {--%>
+    <%--        $(".work_info_area").hide();--%>
+    <%--        alert("<spring:message code='com.alert.default.job.start' />");--%>
+    <%--        g_ItemDetailPopGrid04.pqGrid('refreshDataAndView');--%>
+    <%--    }, parameters, '');--%>
+    <%--});--%>
 
     $("#g_item_detail_pop_barcode_num").on({
         focus: function () {

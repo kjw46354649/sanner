@@ -31,19 +31,35 @@
                     <table class="rowStyle">
                         <colgroup>
                             <col width="10%">
-                            <col width="60%">
-                            <col width="15%">
-                            <col width="15%">
+                            <col width="40%">
+                            <col width="10%">
+                            <col width="10%">
+                            <col width="10%">
+                            <col width="20%">
                         </colgroup>
                         <tr>
                             <th>관리번호</th>
-                            <td id="CONTROL_NUM"></td>
-                            <th rowspan="2">주문수량</th>
-                            <td rowspan="2" id="ORDER_QTY" style="text-align: right; padding-right: 10px;"></td>
+                            <td id="CONTROL_NUM" colspan="3"></td>
+                            <th>진행상태</th>
+                            <td id="PART_STATUS"></td>
                         </tr>
                         <tr>
                             <th>도면번호</th>
-                            <td id="DRAWING_NUM"></td>
+                            <td id="DRAWING_NUM" colspan="3"></td>
+                            <th >도면파일</th>
+                            <td id="DXF_GFILE_SEQ"></td>
+                        </tr>
+                        <tr>
+                            <th>품명</th>
+                            <td id="ITEM_NM" colspan="3"></td>
+                            <th >주문수량</th>
+                            <td id="ORDER_QTY" style="text-align: right; padding-right: 10px;"></td>
+                        </tr>
+                        <tr>
+                            <th>규격</th>
+                            <td id="STANDARD_SIZE"></td>
+                            <th>소재종류</th>
+                            <td id="MATERIAL_DETAIL_NM" colspan="3"></td>
                         </tr>
                     </table>
                 </div>
@@ -92,9 +108,10 @@
                     </div>
                 </div>
                 <div class="btnWrap">
-                    <button type="button" class="defaultBtn orange" id="camWorkTempSaveBtn">임시저장</button>
-                    <button type="button" class="defaultBtn green" id="camWorkSaveAndCompleteBtn">저장 & 완료</button>
-                    <button type="button" class="defaultBtn red" id="camWorkCancelBtn">작업 취소</button>
+                    <button type="button" class="defaultBtn orange afterStart" id="camWorkTempSaveBtn">임시저장</button>
+                    <button type="button" class="defaultBtn green afterStart" id="camWorkSaveAndCompleteBtn">저장 & 완료</button>
+                    <button type="button" class="defaultBtn purple beforeStart" id="camWorkStartBtn" >작업시작</button>
+                    <button type="button" class="defaultBtn red afterStart" id="camWorkCancelBtn">작업 취소</button>
                     <button type="button" class="defaultBtn grayPopGra cam_work_manage_detail_pop_close">닫기</button>
                 </div>
             </div>
@@ -155,7 +172,7 @@
             </div>
         </form>
     </div>
-    <div class="bottomWrap row3_bottomWrap">
+    <div class="bottomWrap row2_bottomWrap">
         <div class="hWrap">
             <div class="rightSpan">
                 <button type="button" class="defaultBtn btn-120w" id="mctResultDetailViewBtn" >상세정보 조회</button>
@@ -189,6 +206,7 @@
     let $camWorkManagePopAddBtn = $("#camWorkManagePopAddBtn");
     let $camWorkManagePopDelBtn = $("#camWorkManagePopDelBtn");
 
+    let $camWorkStartBtn = $("#camWorkStartBtn");
     let $camWorkTempSaveBtn = $("#camWorkTempSaveBtn");
     let $camWorkSaveAndCompleteBtn = $("#camWorkSaveAndCompleteBtn");
     let $camWorkCancelBtn = $("#camWorkCancelBtn");
@@ -227,7 +245,6 @@
                     let grid = this;
                     let $cell = grid.getCell(ui);
                     let rowData = ui.rowData;
-
                     const startBtn = '<button type="button" class="miniBtn orange" id="CAM_WORK_START_ACTION">시작</button>';
                     const startDisableBtn = '<button type="button" class="miniBtn gray">시작</button>';
                     const finishBtn = '<button type="button" class="miniBtn blue" id="CAM_WORK_COMPLETE_ACTION">완료</button>';
@@ -249,12 +266,12 @@
                     let grid = this;
                     let $cell = grid.getCell(ui);
                     let rowData = ui.rowData;
-                    let CONTROL_SEQ = rowData.CONTROL_SEQ;
-                    let CONTROL_DETAIL_SEQ = rowData.CONTROL_DETAIL_SEQ;
-                    $cell.find('#CAM_WORK_START_ACTION').bind('click', function () {
-                        g_item_detail_cam_work_pop_view(CONTROL_SEQ, CONTROL_DETAIL_SEQ);
+                    $cell.find('#CAM_WORK_START_ACTION').bind('click', function(e) {
+                        e.preventDefault();
+                        camWorkManagePop(rowData);
                     });
-                    $cell.find('#CAM_WORK_COMPLETE_ACTION').bind('click', function () {
+                    $cell.find('#CAM_WORK_COMPLETE_ACTION').bind('click', function(e) {
+                        e.preventDefault();
                         camWorkManagePop(rowData);
                     });
                 }
@@ -463,7 +480,7 @@
         ];
 
         let machineResultManageObj = {
-            minHeight: '100%', height: 700, collapsible: false, postRenderInterval: -1, //call postRender synchronously.
+            minHeight: '100%', height: 750, collapsible: false, postRenderInterval: -1, //call postRender synchronously.
             resizable: false, showTitle: false, strNoRows: g_noData, numberCell: {title: 'No.'},
             trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
             colModel: machineResultManagecolModel,
@@ -482,7 +499,7 @@
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CAM_SEQ', hidden: true},
             {title: 'Step', minWidth: 30, width: 35, dataType: 'integer', dataIndx: 'SEQ'},
-            {title: '가공위치', minWidth: 70, width: 80, editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'}, dataType: 'string', dataIndx: 'WORK_DIRECTION',
+            {title: '가공위치', minWidth: 70, width: 70, editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'}, dataType: 'string', dataIndx: 'WORK_DIRECTION',
                 editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1080')
                 },
@@ -506,7 +523,7 @@
                 }
             },
             {title: '작업내용', minWidth: 300, width: 350, editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataType: 'string', dataIndx: 'WORK_DESC'},
-            {title: '작업자', minWidth: 70, width: 80, editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'}, dataType: 'string', dataIndx: 'WORK_USER_ID',
+            {title: '작업자', minWidth: 70, width: 70, editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'}, dataType: 'string', dataIndx: 'WORK_USER_ID',
                 editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}})
                 },
@@ -531,7 +548,21 @@
             },
             {title: '단위수량', dataType: 'string', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: 'DESIGN_QTY', minWidth: 40, width: 60},
             // {title: '계산시간', dataType: 'string', dataIndx: 'WORK_TIME', minWidth: 40, width: 70},
-            {title: '대상파일', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: 'CAM_GFILE_SEQ', minWidth: 250, width: 350}
+            {title: '대상파일', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: 'CAM_GFILE_SEQ', minWidth: 250, width: 330},
+            {title: '', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: '', minWidth: 50, width: 50,
+                render: function (ui) {
+                    return '<button type="button" class="miniBtn blue" id="CAM_WORK_FILE_ACTION">파일</button>';
+                },
+                postRender: function (ui) {
+                    let grid = this;
+                    let $cell = grid.getCell(ui);
+                    let rowData = ui.rowData;
+                    $cell.find('#CAM_WORK_FILE_ACTION').bind('click', function(e) {
+                        e.preventDefault();
+                        camWorkManagePop(rowData);
+                    });
+                }
+            }
         ];
 
         let camWorkManagePopObj = {
@@ -583,7 +614,6 @@
                     backgroundColor = 'bg-orange';
                     break;
             }
-
             return backgroundColor;
         };
 
@@ -596,12 +626,26 @@
             $("#cam_work_manage_pop_form").find("#CONTROL_NUM").html(rowData.CONTROL_NUM);
             $("#cam_work_manage_pop_form").find("#DRAWING_NUM").html(rowData.DRAWING_NUM);
             $("#cam_work_manage_pop_form").find("#ORDER_QTY").html(numberWithCommas(rowData.ORDER_QTY));
+            $("#cam_work_manage_pop_form").find("#PART_STATUS").html(numberWithCommas(rowData.PART_STATUS));
+            $("#cam_work_manage_pop_form").find("#ITEM_NM").html(numberWithCommas(rowData.ITEM_NM));
+            $("#cam_work_manage_pop_form").find("#STANDARD_SIZE").html(numberWithCommas(rowData.STANDARD_SIZE));
+            $("#cam_work_manage_pop_form").find("#MATERIAL_DETAIL_NM").html(numberWithCommas(rowData.MATERIAL_DETAIL_NM));
             $("#cam_work_manage_pop_form").find("#HISTORY_NOTE").html(numberWithCommas(rowData.HISTORY_NOTE));
             $("#cam_work_manage_pop_form").find("#NOTE").html(numberWithCommas(rowData.NOTE));
 
+            switch (rowData.CAM_STATUS) {
+                case 'CWS010':     // 대기
+                case 'CWS030':     // 완료
+                    $('#cam_work_manage_detail_pop').find(".beforeStart").show();
+                    $('#cam_work_manage_detail_pop').find(".afterStart").hide();
+                    break;
+                default:
+                    $('#cam_work_manage_detail_pop').find(".beforeStart").hide();
+                    $('#cam_work_manage_detail_pop').find(".afterStart").show();
+                    break;
+            }
             $('#cam_work_manage_detail_pop').modal('show');
 
-            //기본정보
             $camWorkManagePopGrid = $('#' + camWorkManagePopGridId).pqGrid(camWorkManagePopObj);
             popCamWorkReload();
         };
@@ -622,6 +666,41 @@
             // let camWorkMasterQueryList = 'deleteMctCamDetailWork';
             // fnDeletePQGrid($camWorkManagePopGrid, camWorkManagePopSelectedRowIndex, camWorkMasterQueryList);
             // popCamWorkReload();
+        });
+
+        $camWorkStartBtn.click(function(event) {
+            let headHtml = "CAM 작업 정보", yseBtn="예", noBtn="아니오";
+            let bodyHtml = "<h4><img style='width: 32px; height: 32px;' src='/resource/main/images/print.png'>&nbsp;&nbsp;<span>CAM 작업을 시작 하시겠습니까?</span></h4>";
+            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+            let camWorkStartSubmitConfirm = function(callback) {
+                commonConfirmPopup.show();
+                $("#commonConfirmYesBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                    callback(true);
+                    return;
+                });
+                $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                });
+            };
+            camWorkStartSubmitConfirm(function(confirm){
+                if(confirm) {
+                    $("#cam_work_manage_pop_form").find("#actionType").val("start");
+                    var gridInstance = $camWorkManagePopGrid.pqGrid('getInstance').grid;
+                    var changes = gridInstance.getChanges({format: 'byVal'});
+                    $("#cam_work_manage_pop_form").find("#camWorkGrid").val(JSON.stringify(changes));
+                    let parameters = {
+                        'url': '/managerCamWork',
+                        'data': $('#cam_work_manage_pop_form').serialize()
+                    };
+                    $camWorkTempSaveBtn.focus();
+                    fnPostAjax(function (data, callFunctionParam) {
+                        popCamWorkReload();
+                    }, parameters, '');
+                }
+            });
         });
 
         $camWorkTempSaveBtn.click(function(event) {
@@ -680,17 +759,13 @@
 
         /** 제품 상세 보기 */
         $mctResultDetailViewBtn.click(function(event) {
-            g_item_detail_cam_work_pop_view("", "");
+            g_item_detail_pop_view("", "");
         });
 
         /** 도면 보기 **/
         $mctResultDrawingViewBtn.click(function(event) {
             callWindowImageViewer(999);
         });
-        /* function */
-
-        /* event */
-        $mctResultManageGrid = $('#' + machineResultManageGridId).pqGrid(machineResultManageObj);
 
         let popCamWorkReload = function(){
             $camWorkManagePopGrid.pqGrid("option", "dataModel.postData", function(ui){
@@ -699,5 +774,12 @@
             $camWorkManagePopGrid.pqGrid("refreshDataAndView");
         }
 
+        /* function */
+
+        /* event */
+        $mctResultManageGrid = $('#' + machineResultManageGridId).pqGrid(machineResultManageObj);
+
     });
+
+
 </script>
