@@ -295,6 +295,7 @@
             {title: 'MCT_WORK_SEQ', dataType: 'string', dataIndx: 'MCT_WORK_SEQ', hidden:true},
             {title: 'INSPECT_TYPE', dataType: 'string', dataIndx: 'INSPECT_TYPE', hidden:true},
             {title: 'INSPECT_GRADE', dataType: 'string', dataIndx: 'INSPECT_GRADE', hidden:true},
+            {title: '가공완료 일시', dataType: 'string', dataIndx: 'WORK_FINISH_DT', minWidth: 150, width: 150, editable: false},
             {title: '납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', minWidth: 95, width: 95, editable: false},
             {title: '현재위치', dataType: 'string', dataIndx: 'POP_NM', minWidth: 150, width: 150, editable: false},
             {title: '외주가공', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', minWidth: 150, width: 150, editable: false},
@@ -309,13 +310,13 @@
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 200, width: 200, editable: false},
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 40, width: 40, editable: false},
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 200, width: 200, editable: false},
-            // {title: '눈', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 40, minWidth: 40, editable: false,
-            //     render: function (ui) {
-            //         let rowIndx = ui.rowIndx, grid = this;
-            //         if (ui.rowData['DXF_GFILE_SEQ'] > 0) return "[눈]";
-            //         return '';
-            //     }
-            // },
+            {title: '', align: 'center', dataType: 'string', dataIndx: 'DETAIL_INFO', width: 40, minWidth: 40, editable: false,
+                render: function (ui) {
+                    let rowIndx = ui.rowIndx, grid = this;
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return "<span class=\"ui-icon ui-icon-circle-zoomin\"></span>";
+                    return '';
+                }
+            },
             // {title: 'MATERIAL_DETAIL', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden:true},
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 120, width: 120, editable: false},
             // {title: 'WORK_TYPE', dataType: 'string', dataIndx: 'WORK_TYPE', hidden:true},
@@ -406,6 +407,9 @@
             cellClick: function (event, ui) {
                 let rowIndx = ui.rowIndx, $grid = this;
                 if (ui.rowData['CONTROL_SEQ'] != undefined && ui.rowData['CONTROL_SEQ'] >0) {
+                    if (ui.dataIndx == 'DETAIL_INFO') {
+                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                    }
                     if (ui.dataIndx == 'CONTROL_SEQ_INSERT') {
 
                         fnResetFrom("inspection_manage_pop_form");
@@ -639,25 +643,31 @@ console.log(dataInfo);
         });
 
         $("#INSPECTION_BARCODE_NUM").on('keyup', function(e) {
-            if (e.keyCode == 13) {
-                fnResetFrom("inspection_manage_pop_form");
 
-                //0. 바코드 정보 가져오기
-                let data = {'queryId': "common.selectControlBarcodeInfo",'BARCODE_NUM': this.value};
-                let parameters = {'url': '/json-info','data': data};
-                fnPostAjax(function (data, callFunctionParam) {
-                    let dataInfo = data.info;
-                    if(dataInfo == null ) {
-                        alert("해당 바코드가 존재하지 않습니다.");
-                        return;
-                    }else{
-                        let CONTROL_SEQ =  dataInfo.CONTROL_SEQ;
-                        let CONTROL_DETAIL_SEQ =  dataInfo.CONTROL_DETAIL_SEQ;
-                        $("#inspection_manage_pop_form").find("#CONTROL_SEQ").val(CONTROL_SEQ);
-                        $("#inspection_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val(CONTROL_DETAIL_SEQ);
-                        $('#inspection_manage_pop').modal('show');
-                    }
-                }, parameters, '');
+            if (e.keyCode == 13) {
+                fnBarcodePrintCheck(function(confirm,callFunctionParam){
+                    let barcodeN = callFunctionParam;
+                    if(confirm){
+                        fnResetFrom("inspection_manage_pop_form");
+
+                        //0. 바코드 정보 가져오기
+                        let data = {'queryId': "common.selectControlBarcodeInfo",'BARCODE_NUM': barcodeN};
+                        let parameters = {'url': '/json-info','data': data};
+                        fnPostAjax(function (data, callFunctionParam) {
+                            let dataInfo = data.info;
+                            if(dataInfo == null ) {
+                                alert("해당 바코드가 존재하지 않습니다.");
+                                return;
+                            }else{
+                                let CONTROL_SEQ =  dataInfo.CONTROL_SEQ;
+                                let CONTROL_DETAIL_SEQ =  dataInfo.CONTROL_DETAIL_SEQ;
+                                $("#inspection_manage_pop_form").find("#CONTROL_SEQ").val(CONTROL_SEQ);
+                                $("#inspection_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val(CONTROL_DETAIL_SEQ);
+                                $('#inspection_manage_pop').modal('show');
+                            }
+                        }, parameters, '');
+                    }else{}
+                },this.value, this.value);
             }
         });
 
