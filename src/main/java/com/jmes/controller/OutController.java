@@ -18,6 +18,18 @@ public class OutController {
     private OutService outService;
 
     /**
+     * 외주주문 삭제
+     */
+    @RequestMapping(value = "/modifyOutsideOrder", method = RequestMethod.POST)
+    public String modifyOutsideOrder(HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.outService.modifyOutsideOrder(map);
+
+        return "jsonView";
+    }
+
+    /**
      * 그리드 삽입/갱신
      */
     @RequestMapping(value = "/createOutsideClose", method = RequestMethod.POST)

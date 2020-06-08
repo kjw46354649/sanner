@@ -21,6 +21,23 @@ public class OutServiceImpl implements OutService {
     public OutDao outDao;
 
     @Override
+    public void modifyOutsideOrder(Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayList<HashMap<String, Object>> jsonArray = null;
+
+        if (jsonObject != null)
+            jsonArray = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<HashMap<String, Object>>>() {});
+
+        for (HashMap<String, Object> hashMap : jsonArray) {
+//            hashMap.put("CONTROL_STATUS", "ORD001");
+            hashMap.put("OUTSIDE_YN", "N");
+//            this.orderDao.updateControlMaster(hashMap);
+            this.orderDao.updateControlPart(hashMap);
+        }
+    }
+
+    @Override
     public void createOutsideClose(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();

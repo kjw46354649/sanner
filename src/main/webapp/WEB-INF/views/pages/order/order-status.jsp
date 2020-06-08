@@ -178,7 +178,7 @@
         OrderStatusLeftGrid.pqGrid({
             height: '100%',
             dataModel: {
-                location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
+                location: "remote", dataType: "json", method: "POST", recIndx: 'ROW_NUM',
                 url: "/paramQueryGridSelect",
                 postData: fnFormToJsonArrayData('#order_status_search_form'),
                 getData: function (dataJSON) {
@@ -192,7 +192,7 @@
             selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
             collapsible: false,
-            resizable: true,
+            resizable: false,
             trackModel: {on: true},
             colModel: OrderStatusLeftColModel,
             showTitle: false,
@@ -238,7 +238,7 @@
             OrderStatusRightGrid.pqGrid({
                 height: '100%',
                 dataModel: {
-                    location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
+                    location: "remote", dataType: "json", method: "POST", recIndx: 'ROW_NUM',
                     url: "/paramQueryGridSelect",
                     postData: fnFormToJsonArrayData('#order_status_hidden_form'),
                     getData: function (dataJSON) {
@@ -252,9 +252,9 @@
                 selectionModel: { type: 'row', mode: 'single'} ,
                 swipeModel: {on: false},
                 collapsible: false,
-                resizable: true,
+                resizable: false,
                 trackModel: {on: true},
-                //resizable: true,
+                //resizable: false,
                 colModel: OrderStatusRightColModel,
                 showTitle: false,
                 title: false,

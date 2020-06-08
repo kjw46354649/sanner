@@ -195,7 +195,7 @@
         const topLeftGridId = 'CONFIRM_ORDER_GRID';
         let topLeftPostData = fnFormToJsonArrayData('#CONFIRM_ORDER_SEARCH_FORM');
         const topLeftColModel = [
-            {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true},
+            {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_STATUS', dataType: 'integer', dataIndx: 'CONTROL_STATUS', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
@@ -213,7 +213,7 @@
             {title: '발주업체', width: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '관리번호', Width: 120, dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {
-                title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM',
+                title: 'Part', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM',
                 render: function (ui) {
                     if (ui.rowData.WORK_NM === '가공조립') {
                         return "<span>플러스버튼</span>";
@@ -426,7 +426,7 @@
         const topRightGridId = 'PROCESS_CONFIRM_GRID';
         let topRightPostData = fnFormToJsonArrayData('#PROCESS_CONFIRM_SEARCH_FORM');
         const topRightColModel = [
-            {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true},
+            {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_STATUS', dataType: 'integer', dataIndx: 'CONTROL_STATUS', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
@@ -436,7 +436,7 @@
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', width: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '관리번호',width: 120, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: 'Part', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY',
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -645,7 +645,7 @@
         const botLeftGridId = 'OUTSIDE_GRID';
         let botLeftPostData = fnFormToJsonArrayData('#OUTSIDE_SEARCH_FORM');
         const botLeftColModel = [
-            {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true},
+            {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_STATUS', dataType: 'integer', dataIndx: 'CONTROL_STATUS', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
@@ -655,7 +655,7 @@
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: 'Part', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM'},
             {
                 title: '외주발송', align: 'center', colModel: [
                     {title: '업체명', datatype: 'string', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
@@ -831,7 +831,7 @@
         const botRightGridId = 'PROCESS_COMPLETE_GRID';
         let botRightPostData = fnFormToJsonArrayData('#PROCESS_COMPLETE_SEARCH_FORM');
         const botRightColModel = [
-            {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true},
+            {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_STATUS', dataType: 'integer', dataIndx: 'CONTROL_STATUS', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
@@ -841,7 +841,7 @@
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', width: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '관리번호', minWidth: 100, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: 'Part', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY',
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -1060,7 +1060,6 @@
             let QUERY_ID_ARRAY;
             changes.updateList.push(newRowData);
             let parameters;
-            debugger;
             if (isProcessAssembly(rowData)) {
                 QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateControlPartStatusAll', 'orderMapper.createControlPartProgressAll']};
                 changes.queryIdList = QUERY_ID_ARRAY;
