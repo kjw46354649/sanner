@@ -833,6 +833,88 @@
             AND A.DEL_YN = 'N'
         ORDER BY A.CONTROL_DETAIL_SEQ, A.ORDER_SEQ, A.PACKING_NUM
     </select>
+    <select id="selectCommItemDetailGridCamPopBefore" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT B.CONTROL_SEQ
+            , B.CONTROL_DETAIL_SEQ
+            , A.ORDER_COMP_CD
+            , B.SIZE_TXT
+            , B.DRAWING_NUM
+            , B.MATERIAL_TYPE
+            , (SELECT M.FILE_SIZE FROM jmes.TBL_FILE M WHERE M.GFILE_SEQ = B.DXF_GFILE_SEQ) AS CAD_FILE_SIZE
+        FROM jmes.TBL_CONTROL A
+            , jmes.TBL_CONTROL_PART B
+        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+            AND B.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </select>
+    <select id="selectCommItemDetailGridCamPop" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
+            , X.CONTROL_NUM, X.PART_NUM, X.ORDER_COMP_NM, X.SIZE_TXT, X.DRAWING_NUM, X.MATERIAL_TYPE_NM, X.CAD_FILE_SIZE
+            , X.CAM_SEQ, X.HISTORY_NOTE
+            , Q.SEQ
+            , jmes.SF_GET_CODE_NM('1080', Q.WORK_DIRECTION, 'KR') AS WORK_DIRECTION_NM
+            , Q.WORK_DESC
+            , Q.DESIGN_QTY
+            , Q.WORK_TIME
+            , (SELECT M.FILE_SEQ FROM jmes.TBL_FILE M WHERE M.GFILE_SEQ = Q.CAM_GFILE_SEQ AND M.FILE_KIND = 'code' LIMIT 1) AS CAM_FILE_SEQ
+            , (SELECT M.FILE_SEQ FROM jmes.TBL_FILE M WHERE M.GFILE_SEQ = Q.CAM_GFILE_SEQ AND M.FILE_KIND = 'code' LIMIT 1) AS NC_FILE_SEQ
+            , (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = Q.WORK_USER_ID) AS WORK_USER_NM
+            , jmes.SF_GET_DATE_F(Q.INSERT_DT,'YY','M') AS Q.CAM_WORK_DT
+            , (X.POINT_1 + X.POINT_2 + X.POINT_3 + X.POINT_4 + X.POINT_5) AS POINT_SUM
+        FROM (  SELECT T.CONTROL_SEQ, T.CONTROL_DETAIL_SEQ
+                    , T.CONTROL_NUM, T.PART_NUM, T.ORDER_COMP_NM, T.SIZE_TXT, T.DRAWING_NUM, T.MATERIAL_TYPE_NM, T.CAD_FILE_SIZE
+                    , P.CAM_SEQ, P.HISTORY_NOTE
+                    , CASE WHEN T.ORDER_COMP_CD = #{ORDER_COMP_CD} THEN 1 ELSE 0 END AS POINT_1
+                    , CASE WHEN T.SIZE_TXT = #{SIZE_TXT} THEN 1 ELSE 0 END AS POINT_2
+                    , CASE WHEN T.DRAWING_NUM = #{DRAWING_NUM} THEN 1 ELSE 0 END AS POINT_3
+                    , CASE WHEN T.MATERIAL_TYPE = #{MATERIAL_TYPE} THEN 1 ELSE 0 END AS POINT_4
+                    , CASE WHEN T.CAD_FILE_SIZE = #{CAD_FILE_SIZE} THEN 1 ELSE 0 END AS POINT_5
+                FROM (  SELECT B.CONTROL_SEQ
+                            , B.CONTROL_DETAIL_SEQ
+                            , A.CONTROL_NUM
+                            , B.PART_NUM
+                            , A.ORDER_COMP_CD
+                            , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
+                            , B.SIZE_TXT
+                            , B.DRAWING_NUM
+                            , B.MATERIAL_TYPE
+                            , jmes.SF_GET_CODE_NM('1035', B.MATERIAL_TYPE, 'KR') AS MATERIAL_TYPE_NM
+                            , (SELECT M.FILE_SIZE FROM TBL_FILE M WHERE M.GFILE_SEQ = B.DXF_GFILE_SEQ) AS CAD_FILE_SIZE
+                        FROM jmes.TBL_CONTROL A
+                            , jmes.TBL_CONTROL_PART B
+                        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                            AND (B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) NOT IN (SELECT #{CONTROL_SEQ},#{CONTROL_DETAIL_SEQ} FROM DUAL)
+                            AND (B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) IN (  -- 1. ORDER_COMP_CD + SIZE_TXT
+                                                                            SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                                                                            FROM jmes.TBL_CONTROL A
+                                                                                , jmes.TBL_CONTROL_PART B
+                                                                            WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                                                                                AND A.DEL_YN = 'N'
+                                                                                AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+                                                                                AND B.SIZE_TXT = #{SIZE_TXT}
+                                                                            UNION
+                                                                            -- 2. ORDER_COMP_CD + DRAWING_NUM
+                                                                            SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                                                                            FROM jmes.TBL_CONTROL A
+                                                                                , jmes.TBL_CONTROL_PART B
+                                                                            WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                                                                                AND A.DEL_YN = 'N'
+                                                                                AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+                                                                                AND B.DRAWING_NUM = #{DRAWING_NUM}
+                                                                            UNION
+                                                                            -- 3. SIZE_TXT + DRAWING_NUM
+                                                                            SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                                                                            FROM jmes.TBL_CONTROL A
+                                                                                , jmes.TBL_CONTROL_PART B
+                                                                            WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                                                                                AND A.DEL_YN = 'N'
+                                                                                AND B.SIZE_TXT = #{SIZE_TXT}
+                                                                                AND B.DRAWING_NUM = #{DRAWING_NUM}
+                                                                         )
+                    ) T LEFT OUTER JOIN jmes.TBL_CAM P ON T.CONTROL_SEQ = P.CONTROL_SEQ AND T.CONTROL_DETAIL_SEQ = P.CONTROL_DETAIL_SEQ
+            ) X LEFT OUTER JOIN jmes.TBL_CAM_DETAIL Q ON X.CAM_SEQ = Q.CAM_SEQ
+            ORDER BY (X.POINT_1 + X.POINT_2 + X.POINT_3 + X.POINT_4 + X.POINT_5) DESC
+    </select>
 
 <!--    <update id="updateOutgoingReturnAfter1" parameterType="java.util.HashMap">-->
 <!--        UPDATE jmes.TBL_CONTROL_PART_ORDER-->

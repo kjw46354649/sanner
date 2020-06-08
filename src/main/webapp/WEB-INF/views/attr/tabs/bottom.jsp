@@ -173,7 +173,7 @@
                             <th>규격</th>
                             <td id="SIZE_TXT"></td>
                             <th>소재Size</th>
-                            <td id="MATERIAL_SIZE_TXT"></td>
+                            <td id="MATERIAL_SIZE_TXT" style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap;"></td>
                             <th>가공형태</th>
                             <td id="WORK_TYPE_NM"></td>
                         </tr>
@@ -266,6 +266,40 @@
     </form>
 </div>
 <!-- 제품상세정보 layer popup : E -->
+
+<!-- CAM 상세정보 layer popup : S -->
+<div class="popup_container g_item_detail_pop" id="g_item_detail_pop_cam_pop" style="display: none;">
+    <form class="form-inline" id="g_item_detail_pop_cam_pop_form" name="g_item_detail_pop_cam_pop_form" role="form">
+        <input type="hidden" id="queryId" name="queryId" value="inspection.selectCommItemDetailGridCamPop"/>
+        <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value=""/>
+        <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
+
+        <input type="hidden" id="ORDER_COMP_CD" name="ORDER_COMP_CD" value=""/>
+        <input type="hidden" id="SIZE_TXT" name="SIZE_TXT" value=""/>
+        <input type="hidden" id="DRAWING_NUM" name="DRAWING_NUM" value=""/>
+        <input type="hidden" id="MATERIAL_TYPE" name="MATERIAL_TYPE" value=""/>
+        <input type="hidden" id="CAD_FILE_SIZE" name="CAD_FILE_SIZE" value=""/>
+
+        <div class="layerPopup">
+            <h3>CAM 작업 상세 조회</h3>
+            <button type="button" class="pop_close mg-top10 mg-right8" id="g_item_detail_pop_cam_pop_grid_pop_close2">닫기</button>
+            <div class="qualityWrap">
+                <div class="h_area">
+
+                 </div>
+                <h4>&nbsp;</h4>
+                <div class="list4">
+                    <div id="g_item_detail_pop_camp_pop_grid_01" class="jqx-refresh"></div>
+                </div>
+            </div>
+            <div class="btnWrap">
+<%--                <button type="button" class="defaultBtn purple work_info_area" id="g_item_cam_work_start_btn" style="display: none;">CAM 작업시작</button>--%>
+                <button type="button" class="defaultBtn grayPopGra" id="g_item_detail_pop_cam_pop_grid_pop_close">닫기</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- CAM 상세정보 layer popup : E -->
 <script type="text/javascript">
 
     let $cadFileConvertUploadCompletedBtn = $("#cadFileConvertUploadCompletedBtn");
@@ -896,7 +930,10 @@
 
                 $("#g_item_detail_pop_form").find("#CONTROL_CONFIRM_DT").html(dataInfo.CONTROL_CONFIRM_DT);
                 $("#g_item_detail_pop_form").find("#OUT_FINISH_DT").html(dataInfo.OUT_FINISH_DT);
-                $("#g_item_detail_pop_form").find("#WORK_HISTORY_INFO").html(dataInfo.WORK_HISTORY_INFO);
+
+                let camPopHtml = dataInfo.WORK_HISTORY_INFO + "  ";
+                camPopHtml += "<button type='button' class='smallBtn yellow' onclick=\"javascript:g_item_detail_pop_cam_pop('" + dataInfo.CONTROL_SEQ + "','" + dataInfo.CONTROL_DETAIL_SEQ + "');\"><i class='fa fa-trash'></i><span >조회</span></button>";
+                $("#g_item_detail_pop_form").find("#WORK_HISTORY_INFO").html(camPopHtml);
 
                 /** CAM 작업 여부에 따른 버튼 표시 **/
                 // if(dataInfo.CAM_STATUS == "CWS010" || dataInfo.CAM_STATUS == "CWS030"){ <!-- 대기 중일때 처리 -->
@@ -995,23 +1032,110 @@
         },
         keyup: function (e) {
             if (e.keyCode == 13) {
-                //0. 바코드 정보 가져오기
-                let data = {'queryId': "common.selectControlBarcodeInfo",'BARCODE_NUM': this.value};
-                let parameters = {'url': '/json-info','data': data};
-                fnPostAjax(function (data, callFunctionParam) {
-                    let dataInfo = data.info;
-                    if(dataInfo == null ) {
-                        alert("해당 바코드가 존재하지 않습니다.");
-                        return;
-                    }else{
-                        let CONTROL_SEQ =  dataInfo.CONTROL_SEQ;
-                        let CONTROL_DETAIL_SEQ =  dataInfo.CONTROL_DETAIL_SEQ;
-                        g_item_detail_pop_view(CONTROL_SEQ,CONTROL_DETAIL_SEQ);
-                    }
-                }, parameters, '');
+                fnBarcodePrintCheck(function(confirm,callFunctionParam){
+                   let barcodeN = callFunctionParam;
+                   if(confirm){
+                        //0. 바코드 정보 가져오기
+                        let data = {'queryId': "common.selectControlBarcodeInfo",'BARCODE_NUM': barcodeN};
+                        let parameters = {'url': '/json-info','data': data};
+                        fnPostAjax(function (data, callFunctionParam) {
+                            let dataInfo = data.info;
+                            if(dataInfo == null ) {
+                                alert("해당 바코드가 존재하지 않습니다.");
+                                return;
+                            }else{
+                                let CONTROL_SEQ =  dataInfo.CONTROL_SEQ;
+                                let CONTROL_DETAIL_SEQ =  dataInfo.CONTROL_DETAIL_SEQ;
+                                g_item_detail_pop_view(CONTROL_SEQ,CONTROL_DETAIL_SEQ);
+                            }
+                        }, parameters, '');
+                   }else{}
+                },this.value, this.value);
             }
         }
     });
+
+    /** cam popup */
+    let g_ItemDetailPopCamPopGridId01 =  $("#g_item_detail_pop_camp_pop_grid_01");
+    let g_ItemDetailPopCamPopColModel01 = [
+            {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden:true},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden:true},
+            {title: 'CAM_SEQ', dataType: 'string', dataIndx: 'CAM_SEQ', hidden:true},
+            {title: '도면', dataType: 'string', dataIndx: '도면', width: 95, editable: false},
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 95, editable: false},
+            {title: 'Parts', dataType: 'string', dataIndx: 'PART_NUM', width: 95, editable: false},
+            {title: '눈', dataType: 'string', dataIndx: '눈', width: 95, editable: false},
+            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 95, editable: false},
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 95, editable: false},
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 95, editable: false},
+            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', width: 95, editable: false},
+            {title: '캐드파일Size', dataType: 'string', dataIndx: 'CAD_FILE_SIZE', width: 95, editable: false},
+            {title: 'Step', dataType: 'string', dataIndx: 'SEQ', width: 95, editable: false},
+            {title: '가공위치', dataType: 'string', dataIndx: 'WORK_DIRECTION_NM', width: 95, editable: false},
+            {title: '작업내용', dataType: 'string', dataIndx: 'WORK_DESC', width: 95, editable: false},
+            {title: '단위수량', dataType: 'string', dataIndx: 'DESIGN_QTY', width: 95, editable: false},
+            {title: '계산시간', dataType: 'string', dataIndx: 'WORK_TIME', width: 95, editable: false},
+            {title: 'CAM', dataType: 'string', dataIndx: 'CAM_FILE_SEQ', width: 95, editable: false},
+            {title: 'NC', dataType: 'string', dataIndx: 'NC_FILE_SEQ', width: 95, editable: false},
+            {title: '작업자', dataType: 'string', dataIndx: 'WORK_USER_NM', width: 95, editable: false},
+            {title: '작업일자', dataType: 'string', dataIndx: 'CAM_WORK_DT', width: 95, editable: false},
+            {title: '경험기록사항<BR>(Lessons Learned)', dataType: 'string', dataIndx: 'HISTORY_NOTE', width: 95, editable: false}
+        ];
+        let g_ItemDetailCamPopPopObj01 = {
+        width: "100%", height: 120,
+        dataModel: {
+           location: "remote", dataType: "json", method: "POST", recIndx: 'RNUM',
+           url: "/paramQueryGridSelect",
+           postData: fnFormToJsonArrayData('g_item_detail_pop_cam_pop_form'),
+           //postData: {queryId: 'inspection.selectCommItemDetailGridCamPop', 'V_PARAM': ''},
+           getData: function (dataJSON) {
+               return {data: dataJSON.data};
+           }
+        },
+        strNoRows: g_noData,
+        columnTemplate: {align: 'center', hvalign: 'center'},
+        scrollModel: {autoFit: true},
+        numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
+        selectionModel: { type: 'row', mode: 'single'} ,
+        swipeModel: {on: false},
+        showTitle: false,
+        collapsible: false,
+        resizable: false,
+        trackModel: {on: true},
+        colModel: g_ItemDetailPopCamPopColModel01
+        };
+    let g_item_detail_pop_cam_pop = function(CONTROL_SEQ,CONTROL_DETAIL_SEQ){
+        $("#g_item_detail_pop_cam_pop_form").find("#queryId").val('inspection.selectCommItemDetailGridCamPop');
+        $("#g_item_detail_pop_cam_pop_form").find("#CONTROL_SEQ").val(CONTROL_SEQ);
+        $("#g_item_detail_pop_cam_pop_form").find("#CONTROL_DETAIL_SEQ").val(CONTROL_DETAIL_SEQ);
+        $('#g_item_detail_pop_cam_pop').modal('show');
+    }
+
+    $("#g_item_detail_pop_cam_pop").on('hide.bs.modal', function(){
+        fnResetFrom("g_item_detail_pop_cam_pop_form");
+        g_ItemDetailPopCamPopGridId01.pqGrid('destroy');
+    });
+    $("#g_item_detail_pop_cam_pop").on('show.bs.modal', function(){
+
+
+        $("#g_item_detail_pop_cam_pop_form").find("#queryId").val('inspection.selectCommItemDetailGridCamPopBefore');
+        let parameters = {
+          'url': '/json-info',
+          'data': fnFormToJsonArrayData('g_item_detail_pop_cam_pop_form')
+        };
+        fnPostAjaxAsync(function (data, callFunctionParam) {
+          let dataInfo = data.info;
+          if(dataInfo == null ) {
+              fnResetFrom("g_item_detail_pop_cam_pop_form");
+          }else{
+              fnJsonDataToForm("g_item_detail_pop_cam_pop_form", dataInfo);
+          }
+        }, parameters, '');
+
+        g_ItemDetailPopCamPopObj01.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_cam_pop_form');
+        g_ItemDetailPopCamPopGridId01.pqGrid(g_ItemDetailCamPopPopObj01);
+    });
+    /** cam popup */
 
     /**  공통 제품상세 정보  끝 **/
 
