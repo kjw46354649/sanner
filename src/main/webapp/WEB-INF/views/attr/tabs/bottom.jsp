@@ -840,6 +840,7 @@
             let dataInfo = data.info;
             if(dataInfo == null ) {
                 fnResetFrom("g_item_detail_pop_form");
+                $("#g_item_detail_pop_form").find(".list1").find(".rowStyle").find("td").html('');
             }else{
                 //fnJsonDataToForm("stock_manage_pop_form", dataInfo);
                 $("#g_item_detail_pop_form").find("#CONTROL_NUM").html(dataInfo.CONTROL_NUM);
@@ -923,7 +924,8 @@
         g_ItemDetailPopGridId05.pqGrid(g_ItemDetailPopObj05);
 
         let data4 = g_ItemDetailPopGrid04.pqGrid('option', 'dataModel.data');
-
+        console.log(data4);
+        console.log(g_ItemDetailPopGrid04);
         if(data4 != null){
             setTimeout(function() {
                 let rowDataArray = g_ItemDetailPopGrid04.pqGrid('getRowData', {rowIndx: 0});
