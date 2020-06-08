@@ -65,8 +65,6 @@
             <div class="modal-body" id="commonFileUpdatePop">
                 <form class="" role="form" id="common_file_download_form" name="common_file_download_form">
                     <input type="hidden" id="GFILE_SEQ" name="GFILE_SEQ" value="">
-                    <input type="hidden" id="callFunction" name="callFunction" value="">
-                    <input type="hidden" id="deleteYn" name="deleteYn" value="">
                     <div id="common_file_download_upload_grid" style="margin:auto;"></div>
                     <div class="right_sort fileTableInfoWrap">
                         <h4>전체 조회 건수 (Total : <span id="filedownloadTotalCount" style="color: #00b3ee">0</span>)</h4>
@@ -120,6 +118,7 @@
         <input type="hidden" id="queryId" name="queryId" value="inspection.selectCommItemDetailInfo"/>
         <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value=""/>
         <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
+        <input type="hidden" id="CAM_INFO_YN" name="CAM_INFO_YN" value=""/>
         <div class="layerPopup">
             <h3>제품상세정보</h3>
             <button type="button" class="pop_close mg-top10 mg-right8" id="popClose2">닫기</button>
@@ -131,12 +130,15 @@
                 <div class="h_area">
                     <span class="buttonWrap" id="inspect_method_btn">
                         <span style="height: 30px;float: left;">&nbsp;</span>
+<%--                        <span class="work_info_area">--%>
+<%--                            <label for="CAM_WORK_USER_ID" class="wd_100 worker">CAM 작업자: </label>--%>
+<%--                            <select id="CAM_WORK_USER_ID" name="CAM_WORK_USER_ID" title="견적 담당자" class="wd_200"></select>--%>
+<%--                        </span>--%>
                     </span>
-                    <ul class="listWrap">
+                    <ul class="listWrap right_float">
                        <span class="barCode" ><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>
                       <span class="barCodeTxt" >&nbsp;<input type="text" class="wd_270_barcode hg_30"  name="g_item_detail_pop_barcode_num" id="g_item_detail_pop_barcode_num" placeholder="도면의 바코드를 스캔해 주세요"></span>
                     </ul>
-
                  </div>
                 <h4>기본정보</h4>
                 <div class="list1">
@@ -255,6 +257,7 @@
                 </div>
             </div>
             <div class="btnWrap">
+                <button type="button" class="defaultBtn purple work_info_area" id="g_item_cam_work_start_btn" style="display: none;">CAM 작업시작</button>
                 <button type="button" class="defaultBtn grayPopGra" id="g_item_detail_pop_grid_05_pop_close">닫기</button>
             </div>
         </div>
@@ -812,14 +815,20 @@
         colModel: g_ItemDetailPopColModel05
     };
 
+    let g_item_detail_cam_work_pop_view = function(CONTROL_SEQ, CONTROL_DETAIL_SEQ){
+        $("#g_item_detail_pop_form").find("#CAM_INFO_YN").val("Y");
+        g_item_detail_pop_view(CONTROL_SEQ, CONTROL_DETAIL_SEQ);
+    }
 
     let g_item_detail_pop_view = function(CONTROL_SEQ, CONTROL_DETAIL_SEQ){
 
-        $('#g_item_detail_pop').modal('show');
-
+        // 작업 worker 지정은 협의 필요
+        // fnCommCodeDatasourceSelectBoxCreate($("#g_item_detail_pop_form").find("#CAM_WORK_USER_ID"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}});
 
         $("#g_item_detail_pop_form").find("#CONTROL_SEQ").val(CONTROL_SEQ);
         $("#g_item_detail_pop_form").find("#CONTROL_DETAIL_SEQ").val(CONTROL_DETAIL_SEQ);
+
+        $('#g_item_detail_pop').modal('show');
 
         //기본정보
         $("#g_item_detail_pop_form").find("#queryId").val('inspection.selectCommItemDetailInfo');
@@ -831,6 +840,7 @@
             let dataInfo = data.info;
             if(dataInfo == null ) {
                 fnResetFrom("g_item_detail_pop_form");
+                $("#g_item_detail_pop_form").find(".list1").find(".rowStyle").find("td").html('');
             }else{
                 //fnJsonDataToForm("stock_manage_pop_form", dataInfo);
                 $("#g_item_detail_pop_form").find("#CONTROL_NUM").html(dataInfo.CONTROL_NUM);
@@ -852,7 +862,6 @@
                 $("#g_item_detail_pop_form").find("#PART_STATUS_NM").html(dataInfo.PART_STATUS_NM);
                 $("#g_item_detail_pop_form").find("#DRAWING_VER").html(dataInfo.DRAWING_VER);
 
-
                 let filedownlod = "<button type='button' class='smallBtn red' onclick=\"javascript:fnSingleFileDownloadFormPageAction('" + dataInfo.DXF_GFILE_SEQ + "');\"><i class='fa fa-trash'></i><span >다운로드</span></button>";
 
                 $("#g_item_detail_pop_form").find("#DXF_GFILE_SEQ").html(filedownlod);
@@ -864,6 +873,13 @@
                 $("#g_item_detail_pop_form").find("#CONTROL_CONFIRM_DT").html(dataInfo.CONTROL_CONFIRM_DT);
                 $("#g_item_detail_pop_form").find("#OUT_FINISH_DT").html(dataInfo.OUT_FINISH_DT);
                 $("#g_item_detail_pop_form").find("#WORK_HISTORY_INFO").html(dataInfo.WORK_HISTORY_INFO);
+
+                /** CAM 작업 여부에 따른 버튼 표시 **/
+                if(dataInfo.CAM_STATUS == "CWS010"){ <!-- 대기 중일때 처리 -->
+                    $('.work_info_area').show();
+                }else{
+                    $('.work_info_area').hide();
+                }
             }
         }, parameters, '');
 
@@ -908,7 +924,8 @@
         g_ItemDetailPopGridId05.pqGrid(g_ItemDetailPopObj05);
 
         let data4 = g_ItemDetailPopGrid04.pqGrid('option', 'dataModel.data');
-
+        console.log(data4);
+        console.log(g_ItemDetailPopGrid04);
         if(data4 != null){
             setTimeout(function() {
                 let rowDataArray = g_ItemDetailPopGrid04.pqGrid('getRowData', {rowIndx: 0});
@@ -923,6 +940,7 @@
     }
     $("#g_item_detail_pop").on('hide.bs.modal', function(){
         fnResetFrom("g_item_detail_pop_form");
+        $(".work_info_area").hide();
         g_ItemDetailPopGridId01.pqGrid('destroy');
         g_ItemDetailPopGridId02.pqGrid('destroy');
         g_ItemDetailPopGridId03.pqGrid('destroy');
@@ -933,6 +951,50 @@
     $("#g_item_detail_pop_form").find('#g_item_detail_pop_grid_05_pop_close, #popClose2').on('click', function () {
         $('#g_item_detail_pop').modal('hide');
     });
+
+    $("#g_item_detail_pop_form").find('#g_item_cam_work_start_btn').on('click', function () {
+        // work start 처리
+        // worker 지정 여부
+        if($("#g_item_detail_pop_form").find("#CAM_WORK_USER_ID").val()){
+            alert("CAM 작업자를 선택해 주십시오.")
+            return false;
+        }
+        $("#g_item_detail_pop_form").find("#queryId").val('machine.insertMctCamWork');
+        let parameters = {'url': '/json-create', 'data': $('#g_item_detail_pop_form').serialize()}
+        fnPostAjax(function (data) {
+            $(".work_info_area").hide();
+            alert("<spring:message code='com.alert.default.save.success' />");
+            $orderManagementGrid.pqGrid('refreshDataAndView');
+        }, parameters, '');
+    });
+
+
+
+    $("#g_item_detail_pop_form").find('#camWorkStartBtn').on('click', function () {
+        let headHtml = "CAM 작업 정보", yseBtn="예", noBtn="아니오";
+        let bodyHtml = "<h4><img style='width: 32px; height: 32px;' src='/resource/main/images/print.png'>&nbsp;&nbsp;<span>CAM 작업을 시작 하시겠습니까?</span></h4>";
+        fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+
+        let camWorkStartSubmitConfirm = function(callback) {
+            commonConfirmPopup.show();
+            $("#commonConfirmYesBtn").unbind().click(function (e) {
+                e.stopPropagation();
+                commonConfirmPopup.hide();
+                callback(true);
+                return;
+            });
+            $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                e.stopPropagation();
+                commonConfirmPopup.hide();
+            });
+        };
+        camWorkStartSubmitConfirm(function(confirm){
+            if(confirm) {
+                alert("저장 처리");
+            }
+        });
+    });
+
     $("#g_item_detail_pop_barcode_num").on({
         focus: function () {
             $("#g_item_detail_pop_barcode_img").attr("src","/resource/asset/images/common/img_barcode_long_on.png");

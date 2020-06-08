@@ -549,7 +549,7 @@
     <select id="selectResultManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER () OVER () AS ROWNUM,
-            A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.IMG_GFILE_SEQ,
+            A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.DRAWING_NUM, A.IMG_GFILE_SEQ,
             jmes.SF_GET_DATE_F(A.INNER_DUE_DT, '', '') AS INNER_DUE_DT, <!-- 내부가공납기 -->
             CASE WHEN B.EMERGENCY_YN = 'Y' THEN '긴' END AS EMERGENCY_YN, <!-- 긴급 -->
             CASE WHEN B.MAIN_INSPECTION = 'Y' THEN '주' END AS MAIN_INSPECTION, <!-- 주요 검사품 -->
@@ -595,10 +595,11 @@
             jmes.SF_GET_MCT_WORK_TIME(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MCT_WORK_TIME,	<!-- 작업 시간 (계획 + 실행) -->
             A.MCT_WORK_TYPE, <!-- MCT 작업 구분 -->
             IFNULL(SF_GET_CODE_NM(1011, A.MCT_WORK_TYPE, 'KR'), SPACE(0)) AS MCT_WORK_TYPE_NM, <!-- MCT 작업 구분 이름 -->
-            CASE WHEN G.START_DT IS NOT NULL AND G.FINISH_DT IS NOT NULL THEN '완료'
-                WHEN G.START_DT IS NOT NULL AND G.FINISH_DT IS NULL THEN '진행중'
-                ELSE '대기'
+            CASE WHEN G.START_DT IS NOT NULL AND G.FINISH_DT IS NOT NULL THEN 'CWS030'
+                WHEN G.START_DT IS NOT NULL AND G.FINISH_DT IS NULL THEN 'CWS020'
+                ELSE 'CWS010'
             END CAM_STATUS, <!-- CAM 상태 -->
+            G.CAM_SEQ, <!-- CAM 마스터 번호 -->
             H.SEQ AS CAM_STEP, <!-- CAM 스탭 -->
             SF_GET_CODE_NM(1080, H.WORK_DIRECTION, 'EN') AS WORK_DIRECTION, <!-- CAM 가공위치 -->
             H.WORK_DESC, <!-- CAM 작업 내용 -->
@@ -606,7 +607,9 @@
             H.CAM_GFILE_SEQ, <!-- CAM 첨부 파일 -->
             CASE WHEN H.CAM_GFILE_SEQ IS NOT NULL THEN (SELECT FILE_SEQ FROM TBL_FILE I WHERE H.CAM_GFILE_SEQ = I.GFILE_SEQ AND I.FILE_TYPE = 'CAM') ELSE SPACE(0) END CAM_FILE_SEQ, <!-- CAM FILE -->
             CASE WHEN H.CAM_GFILE_SEQ IS NOT NULL THEN (SELECT FILE_SEQ FROM TBL_FILE I WHERE H.CAM_GFILE_SEQ = I.GFILE_SEQ AND I.FILE_TYPE = 'NC') ELSE SPACE(0) END NC_FILE_SEQ, <!-- NC FILE -->
+            G.HISTORY_NOTE,  <!-- CAM 기록사항 -->
             G.NOTE, <!-- CAM 비고 및 공유사항 -->
+            CONCAT(IFNULL(G.HISTORY_NOTE, SPACE(0)), IFNULL(G.NOTE, SPACE(0))) AS CAM_WORK_NOTE,    <!-- CAM 작업 기록 및 비고 공유 사항 -->
             jmes.SF_GET_DATE_F(G.FINISH_DT, '', 'M') AS CAM_FINISH_DT, <!-- CAM 업데이트 일시, -->
             C.POP_PREV_POSITION, <!-- 이전 위치 -->
             jmes.SF_GET_DATE_F(A.STATUS_DT, '', 'M') AS SATAUS_DT, <!-- 확정 일시 -->
@@ -641,24 +644,47 @@
         ORDER BY B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), A.INNER_DUE_DT
     </select>
 
+    <select id="selectCamMasterInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.CAM_SEQ, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.START_DT, A.HISTORY_NOTE, A.NOTE
+        FROM jmes.TBL_CAM A
+        WHERE 1 = 1
+          AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+          AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </select>
+
+    <select id="selectCamDetailInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.CAM_SEQ, A.SEQ, A.WORK_DIRECTION, A.WORK_DESC, A.WORK_USER_ID, A.DESIGN_QTY, A.WORK_TIME, A.CAM_GFILE_SEQ
+        FROM jmes.TBL_CAM_DETAIL A
+            INNER JOIN jmes.TBL_CAM B ON A.CAM_SEQ = B.CAM_SEQ
+            LEFT OUTER JOIN jmes.TBL_FILE C ON A.G
+        WHERE 1 = 1
+          AND A.CAM_SEQ = #{CAM_SEQ}
+    </select>
+
     <insert id="insertMctCamWork"  parameterType="java.util.HashMap" >
         INSERT INTO jmes.TBL_CAM
         (CAM_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, START_DT, INSERT_ID)
         VALUES
         (CASE WHEN #{CAM_SEQ} IS NOT NULL THEN #{CAM_SEQ} ELSE NEXTVAL(SEQ_CAM) END,
             #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}, NOW(), #{authUserInfo.USER_ID})
-        ON DUPLICATE KEY UPDATE
-            HISTORY_NOTE = #{HISTORY_NOTE},
-            NOTE = #{NOTE},
-            FINISH_DT = null,
-            UPDATE_DT = NOW(),
-            UPDATE_ID = #{authUserInfo.USER_ID}
     </insert>
 
     <delete id="deleteMctCamWork"  parameterType="java.util.HashMap" >
         DELETE FROM jmes.TBL_CAM
         WHERE CAM_SEQ = #{CAM_SEQ}
     </delete>
+
+    <update id="updateMctCamWork"  parameterType="java.util.HashMap" >
+        UPDATE jmes.TBL_CAM
+        SET
+            HISTORY_NOTE = #{HISTORY_NOTE},
+            NOTE = #{NOTE},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{authUserInfo.USER_ID}
+        WHERE CAM_SEQ = #{CAM_SEQ}
+    </update>
 
     <update id="updateMctCamWorkComplete"  parameterType="java.util.HashMap" >
         UPDATE jmes.TBL_CAM
@@ -673,19 +699,26 @@
 
     <insert id="insertMctCamDetailWork"  parameterType="java.util.HashMap" >
         INSERT INTO jmes.TBL_CAM_DETAIL
-        (CAM_SEQ, SEQ, WORK_DIRECTRION, WORK_DESC, WORK_USER_ID, DESIGN_QTY, CAM_GFILE_SEQ, INSERT_ID)
+        (CAM_SEQ, SEQ, WORK_DIRECTION, WORK_DESC, WORK_USER_ID, DESIGN_QTY, CAM_GFILE_SEQ, INSERT_ID)
         VALUES
-        (#{CAM_SEQ}, CASE WHEN #{SEQ} IS NOT NULL THEN #{SEQ} ELSE (SELECT IFNULL(MAX(B.SEQ), 1) + 1 FROM jmes.TBL_CAM_DETAIL B WHERE B.CAM_SEQ = #{CAM_SEQ}) END,
-            #{WORK_DIRECTRION}, #{WORK_DESC}, #{WORK_USER_ID}, #{DESIGN_QTY}, #{CAM_GFILE_SEQ}, #{authUserInfo.USER_ID} )
-        ON DUPLICATE KEY UPDATE
-            WORK_DIRECTRION = #{WORK_DIRECTRION},
+        (#{CAM_SEQ}, (SELECT IFNULL(MAX(B.SEQ), 1) + 1 FROM jmes.TBL_CAM_DETAIL B WHERE B.CAM_SEQ = #{CAM_SEQ}),
+            #{WORK_DIRECTION}, #{WORK_DESC}, #{WORK_USER_ID}, #{DESIGN_QTY}, #{CAM_GFILE_SEQ}, #{authUserInfo.USER_ID} )
+    </insert>
+
+    <update id="updateMctCamDetailWork"  parameterType="java.util.HashMap" >
+        UPDATE jmes.TBL_CAM_DETAIL
+        SET
+            WORK_DIRECTION = #{WORK_DIRECTION},
             WORK_DESC = #{WORK_DESC},
             WORK_USER_ID = #{WORK_USER_ID},
             DESIGN_QTY = #{DESIGN_QTY},
             CAM_GFILE_SEQ = #{CAM_GFILE_SEQ},
             UPDATE_DT = NOW(),
             UPDATE_ID = #{authUserInfo.USER_ID}
-    </insert>
+        WHERE 1 = 1
+            AND CAM_SEQ = #{CAM_SEQ}
+            AND SEQ = #{SEQ}
+    </update>
 
     <delete id="deleteMctCamDetailWork"  parameterType="java.util.HashMap" >
         DELETE FROM jmes.TBL_CAM_DETAIL

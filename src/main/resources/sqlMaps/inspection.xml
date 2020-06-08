@@ -218,9 +218,13 @@
                 AND R.DRAWING_NUM = B.DRAWING_NUM
               ORDER BY Q.SEQ DESC
               LIMIT 1
-            ) AS WORK_HISTORY_INFO
-        FROM jmes.TBL_CONTROL A
-          , jmes.TBL_CONTROL_PART B
+            ) AS WORK_HISTORY_INFO,
+            CASE WHEN C.START_DT IS NOT NULL AND C.FINISH_DT IS NOT NULL THEN 'CWS030'  <!-- 완료 상태 -->
+                WHEN C.START_DT IS NOT NULL AND C.FINISH_DT IS NULL THEN 'CWS020'   <!-- 진행중 상태 -->
+                ELSE 'CWS010'   <!-- 대기 상태 -->
+            END CAM_STATUS <!-- CAM 작업 상태 -->
+        FROM jmes.TBL_CONTROL A , jmes.TBL_CONTROL_PART B
+            LEFT OUTER JOIN jmes.TBL_CAM C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
           AND B.CONTROL_SEQ = #{CONTROL_SEQ}
             AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}

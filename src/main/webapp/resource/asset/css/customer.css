@@ -249,6 +249,7 @@
 .g_item_detail_pop .layerPopup .right{ float: right; display: inline-block; }
 .g_item_detail_pop .layerPopup{height: 890px;}
 .g_item_detail_pop .layerPopup h4 {display: inline-block;font-size: 14px; font-family: 'NotoKrB'; color: #000; margin: 15px 0 5px; }
+.g_item_detail_pop .layerPopup .worker {display: inline-block; line-height:23px; font-size: 13px; background-color: #73139b;color: #fff; padding-left: 10px; padding-right: 5px; text-align: center; }
 .g_item_detail_pop .layerPopup .work_info {display: inline-block;font-size: 14px; font-family: 'NotoKrB'; color: #000; }
 .g_item_detail_pop .namePlusSlt label { padding: 0 5px; background: #f3f3f3; border: 1px solid #e6e6e6; border-right: 0; border-radius: 3px 0 0 3px; box-sizing: border-box; }
 
@@ -345,15 +346,17 @@ button:disabled {
 .miniPopup .contentWrap .btn_one{ width: 60px; height: 30px; line-height: 25px; background: #098804; color: #fff; border-radius: 5px; border: 1px solid #098804; box-sizing: border-box; font-size: 14px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#000000)";/*IE 8*/}
 
 /** cam 작업 관리 팝업 **/
-.cma_work_manage_detail_pop .layerPopup .listdiv { height: 160px; }
-.cma_work_manage_detail_pop .layerPopup .listdiv .conWrapPop50{ float: left; width: 45.0%; padding-right: 1%; height: 100%; }
-.cma_work_manage_detail_pop .layerPopup .listdiv .conWrapPop50{ float: left; width: 45.0%; padding-right: 1%; height: 100%; }
-.cma_work_manage_detail_pop .layerPopup .listdiv .rightName{ float: right; margin-top: 14px;display: inline-block; }
-.cma_work_manage_detail_pop .layerPopup .right{ float: right; display: inline-block; }
-.cma_work_manage_detail_pop .layerPopup{height: 700px;}
-.cma_work_manage_detail_pop .layerPopup h4 {display: inline-block;font-size: 14px; font-family: 'NotoKrB'; color: #000; margin: 15px 0 5px; }
-.cma_work_manage_detail_pop .layerPopup .work_info {display: inline-block;font-size: 14px; font-family: 'NotoKrB'; color: #000; }
-.cma_work_manage_detail_pop .namePlusSlt label { padding: 0 5px; background: #f3f3f3; border: 1px solid #e6e6e6; border-right: 0; border-radius: 3px 0 0 3px; box-sizing: border-box; }
+.cam_work_manage_detail_pop .layerPopup .griddiv { height: 200px; }
+.cam_work_manage_detail_pop .layerPopup .listdiv { height: 140px; }
+.cam_work_manage_detail_pop .layerPopup .listdiv textarea { outline: none; padding: 0px 0px; border: none; font-size: 14px; }
+.cam_work_manage_detail_pop .layerPopup .listdiv .conWrapLeftPop50{ float: left; width: 48.0%; height: 45px; }
+.cam_work_manage_detail_pop .layerPopup .listdiv .conWrapRightPop50{ float: right; width: 48.0%; height: 45px; }
+.cam_work_manage_detail_pop .layerPopup .listdiv .rightName{ float: right; margin-top: 14px;display: inline-block; }
+.cam_work_manage_detail_pop .layerPopup .right{ float: right; display: inline-block; }
+.cam_work_manage_detail_pop .layerPopup {height: 570px;}
+.cam_work_manage_detail_pop .layerPopup h4 {display: inline-block;font-size: 14px; font-family: 'NotoKrB'; color: #000; margin: 15px 0 5px; }
+.cam_work_manage_detail_pop .layerPopup .work_info {display: inline-block;font-size: 14px; font-family: 'NotoKrB'; color: #000; }
+.cam_work_manage_detail_pop .namePlusSlt label { padding: 0 5px; background: #f3f3f3; border: 1px solid #e6e6e6; border-right: 0; border-radius: 3px 0 0 3px; box-sizing: border-box; }
 
 .miniPopup .pop_close { width: 23px; height: 23px; position: absolute; top: 12px; right: 12px; font-size: 0; background: url(../images/common/btn_popup.png)no-repeat 0 0; margin-right: 2px; margin-top: 8px;}
 .miniPopup h3 { font-size: 20px; font-family: 'NotoKrB'; color: #000; display: inline-block; }
