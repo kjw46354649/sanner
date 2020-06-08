@@ -936,4 +936,47 @@
             }
         });
     };
+
+    let fnBarcodePrintCheck = function(barcodeNumber, callback){
+        //메세지
+        let queryId = "common.selectBarcodePrintControlCheck";
+        let barcodeType = barcodeNumber.charAt(0).toUpperCase();
+
+        if(barcodeType == "L") {//라벨
+            queryId = "common.selectBarcodePrintOutCheck";
+        }
+
+        let postData = { 'queryId': queryId, 'BARCODE_NUM': barcodeNumber};
+
+        let parameter = {'url': '/json-info', 'data': postData};
+        fnPostAjaxAsync(function (data, callFunctionParam) {
+            if(data.info != null && data.info.USE_YN == 'Y'){
+                callback(true);
+                return;
+            }else {
+                let text = '<h4>' +
+                    '           <img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
+                    '               <span>최신 도면이 아닙니다. 사무실에 확인바랍니다.</span><br/>' +
+                    '               <span style=\'margin-left: 40px;\'>무시하고 강제로 진행하시겠습니까?</span>' +
+                    '       </h4>';
+                $("#commonConfirmBodyHtml").html(text);
+                commonConfirmPopup.show();
+
+                $("#commonConfirmYesBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                    //$(this).startWaitMe();
+                    // $(".cadDrawingPrint").html(printHtml).trigger('create');
+                    callback(true);
+                    return;
+                });
+                $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                    callback(false);
+                    return;
+                });
+            }
+        }, parameter, '');
+    }
 </script>
