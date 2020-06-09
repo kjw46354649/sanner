@@ -859,7 +859,7 @@
             , (SELECT M.FILE_SEQ FROM jmes.TBL_FILE M WHERE M.GFILE_SEQ = Q.CAM_GFILE_SEQ AND M.FILE_KIND = 'code' LIMIT 1) AS CAM_FILE_SEQ
             , (SELECT M.FILE_SEQ FROM jmes.TBL_FILE M WHERE M.GFILE_SEQ = Q.CAM_GFILE_SEQ AND M.FILE_KIND = 'code' LIMIT 1) AS NC_FILE_SEQ
             , (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = Q.WORK_USER_ID) AS WORK_USER_NM
-            , jmes.SF_GET_DATE_F(Q.INSERT_DT,'YY','M') AS Q.CAM_WORK_DT
+            , jmes.SF_GET_DATE_F(Q.INSERT_DT,'YY','M') AS CAM_WORK_DT
             , (X.POINT_1 + X.POINT_2 + X.POINT_3 + X.POINT_4 + X.POINT_5) AS POINT_SUM
         FROM (  SELECT T.CONTROL_SEQ, T.CONTROL_DETAIL_SEQ
                     , T.CONTROL_NUM, T.PART_NUM, T.ORDER_COMP_NM, T.SIZE_TXT, T.DRAWING_NUM, T.MATERIAL_TYPE_NM, T.CAD_FILE_SIZE
@@ -879,12 +879,12 @@
                             , B.DRAWING_NUM
                             , B.MATERIAL_TYPE
                             , jmes.SF_GET_CODE_NM('1035', B.MATERIAL_TYPE, 'KR') AS MATERIAL_TYPE_NM
-                            , (SELECT M.FILE_SIZE FROM TBL_FILE M WHERE M.GFILE_SEQ = B.DXF_GFILE_SEQ) AS CAD_FILE_SIZE
+                            , (SELECT M.FILE_SIZE FROM jmes.TBL_FILE M WHERE M.GFILE_SEQ = B.DXF_GFILE_SEQ) AS CAD_FILE_SIZE
                         FROM jmes.TBL_CONTROL A
                             , jmes.TBL_CONTROL_PART B
                         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                             AND (B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) NOT IN (SELECT #{CONTROL_SEQ},#{CONTROL_DETAIL_SEQ} FROM DUAL)
-                            AND (B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) IN (  -- 1. ORDER_COMP_CD + SIZE_TXT
+                            AND (B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) IN (
                                                                             SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
                                                                             FROM jmes.TBL_CONTROL A
                                                                                 , jmes.TBL_CONTROL_PART B
@@ -893,7 +893,6 @@
                                                                                 AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
                                                                                 AND B.SIZE_TXT = #{SIZE_TXT}
                                                                             UNION
-                                                                            -- 2. ORDER_COMP_CD + DRAWING_NUM
                                                                             SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
                                                                             FROM jmes.TBL_CONTROL A
                                                                                 , jmes.TBL_CONTROL_PART B
@@ -902,7 +901,6 @@
                                                                                 AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
                                                                                 AND B.DRAWING_NUM = #{DRAWING_NUM}
                                                                             UNION
-                                                                            -- 3. SIZE_TXT + DRAWING_NUM
                                                                             SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
                                                                             FROM jmes.TBL_CONTROL A
                                                                                 , jmes.TBL_CONTROL_PART B
