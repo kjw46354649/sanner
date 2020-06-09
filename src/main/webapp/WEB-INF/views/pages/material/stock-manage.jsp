@@ -10,7 +10,7 @@
             <input type="hidden" name="queryId" id="queryId" value="material.selectInsideStockList">
             <input type="hidden" name="popType" id="popType" value="">
             <input type="hidden" name="V_INSIDE_STOCK_NUM" id="V_INSIDE_STOCK_NUM" value="">
-            <div class="gubunWrap row3_topWrap" >
+            <div class="none_gubunWrap row3_topWrap" >
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -37,9 +37,7 @@
                             <input type="text" class="wd_200" name="SEL_ITEM_NM" id="SEL_ITEM_NM" title="품명">
                         </span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap right_float">
-                            <button type="button" class="defaultBtn radius blue" id="stock_manage_search_btn">검색</button>
-                        </span>
+
                     </li>
                     <li>
                         <span class="ipu_wrap">
@@ -108,7 +106,7 @@
                                 <span class="nbsp" id="SEL_SIZE_SEARCH_TYPE_R_6_SPAN">~</span>
                             <input type="text" class="wd_50" name="SEL_SIZE_SEARCH_TYPE_R_6" id="SEL_SIZE_SEARCH_TYPE_R_6">
                         </span>
-
+                        <button type="button" class="right_float defaultBtn radius blue" id="stock_manage_search_btn">검색</button>
                         <%--<span class="txt_span pd-right20">조회 Option</span>
                         <span class="chk_box"><input type="checkbox" name="DEADLINE" id="DEADLINE"><label for="DEADLINE">마감</label></span>
                         <span class="chk_box"><input type="checkbox" name="END" id="END"><label for="END">종료</label></span>
@@ -121,7 +119,7 @@
             </div>
         </form>
     </div>
-    <div class="bottomWrap">
+    <div class="bottomWrap row3_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
                 <button type="button" class="defaultBtn" id="stock_manage_new_btn">재고 입고</button>

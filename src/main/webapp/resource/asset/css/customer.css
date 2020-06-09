@@ -94,6 +94,8 @@
 
 .layerPopup .list98 { height: 200px; }
 .layerPopup .list98 .conWrapPop{ float: left; width: 19.0%; padding-right: 1%; height: 100%; }
+.layerPopup .list98_330 { height: 330px; }
+.layerPopup .list98_330 .conWrapPop{ float: left; width: 19.0%; padding-right: 1%; height: 100%; }
 
 .resultWrap99 { -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)"; }
 .resultWrap99 .leftWrap { height: 150px; width: 40%; float: left; }
@@ -367,3 +369,5 @@ button:disabled {
 
 .th_blue_white { background-color: #aac8ed; color: #fffffF; }
 .th_blue_black { background-color: #aac8ed; color: #000; }
+
+.system_company_popup .layerPopup{height: 920px;}
