@@ -14,7 +14,7 @@
         <form class="form-inline" id="search_form" name="search_form" role="form">
             <input type="hidden" id="queryId" name="queryId" value="material.selectConsumableList">
             <input type="hidden" id="SEL_TAB_TYPE" name="SEL_TAB_TYPE" value="1">
-            <div class="gubunWrap row3_topWrap">
+            <div class="none_gubunWrap row3_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -50,7 +50,7 @@
 <%--                                <option value=""><spring:message code="com.form.top.all.option" /></option>--%>
 <%--                            </select>--%>
 <%--                        </span>--%>
-                        <span class="ipu_wrap right_float"><button type="button" class="defaultBtn radius blue" id="searchBtn">검색</button></span>
+
                     </li>
                     <li>
                         <span class="ipu_wrap"><label for="SEL_CONSUMABLE_NUM" class="label_100">자재 관리번호</label>
@@ -99,7 +99,7 @@
                             </span>
                         </div>
                         <span class="chk_box mg-left20">&nbsp;&nbsp;<input id="SEL_TERM_DT_USE" name="SEL_TERM_DT_USE" type="checkbox"><label for="SEL_TERM_DT_USE">선택</label></span>
-
+                        <button type="button" class="right_float defaultBtn radius blue" id="searchBtn">검색</button>
                     </li>
                 </ul>
 
@@ -113,7 +113,7 @@
             <div class="d-inline">
 
                 <div class="rightSpan">
-                    <button type="button" id="mainSaveBtn" class="defaultBtn yelllowGra">Save</button>
+                    <button type="button" class="defaultBtn btn-120w green" style="font-weight:normal;" id="mainSaveBtn">저장</button>
 
                 </div>
             </div>
@@ -125,8 +125,8 @@
                 <li class="active"><a href="#_TAB1" data-toggle="tab" aria-expanded="true">현황관리</a></li>
                 <li><a href="#_TAB2" data-toggle="tab" aria-expanded="false">불출이력</a></li>
                 <div class="right_sort">
-                    <button type="button" id="mainAddBtn" class="defaultBtn radius ">Add</button>
-                    <button type="button" id="mainDeleteBtn" class="defaultBtn radius red ">Delete</button>
+                    <button type="button" id="mainAddBtn" class="defaultBtn radius ">추가</button>
+                    <button type="button" id="mainDeleteBtn" class="defaultBtn radius red ">삭제</button>
                     <button type="button" id="mainLocBtn" class="defaultBtn radius black ">위치정보관리</button>
                 </div>
             </ul>
@@ -160,7 +160,10 @@
         <input type="hidden" id="STOCK_QTY" name="STOCK_QTY" value="">
         <div class="layerPopup consumablePop">
             <h3>자재/소모품 불출</h3>
-            <button type="button" class="pop_close">닫기</button>
+            <button type="button" class="pop_close mg-top10 mg-right8" >닫기</button>
+            <div class="h_area">
+
+            </div>
             <div class="list1">
                 <table class="rowStyle">
                     <caption></caption>
@@ -236,12 +239,17 @@
                 </table>
             </div>
             <div class="btnWrap">
-                <button type="button" class="defaultBtn btn-120w red" id="partsPopSaveBtn">SAVE</button>
-                <button type="button" class="defaultBtn btn-120w green" id="partsCloseBtn">Close</button>
+               <%-- <button type="button" class="defaultBtn btn-120w red" id="partsPopSaveBtn">SAVE</button>
+                <button type="button" class="defaultBtn btn-120w green" id="partsCloseBtn">Close</button>--%>
+                <button type="button" class="defaultBtn greenPopGra" id="partsPopSaveBtn">저장</button>
+                <button type="button" class="defaultBtn grayPopGra" id="partsCloseBtn">닫기</button>
             </div>
         </div>
     </form>
 </div>
+<style>
+
+</style>
 <script type="text/javascript">
     $('#btnPlus').on('click', function(e) {
         calcQty("PLUS");
@@ -403,7 +411,7 @@
             {title: '불출', align: 'center', dataType: 'string', dataIndx: 'POPUP', width: 20, minWidth: 20, editable: false,
                 render: function (ui) {
                     let rowIndx = ui.rowIndx, grid = this;
-                    if (ui.rowData['CONSUMABLE_STOCK_SEQ'] > 0 && ui.rowData['STOCK_QTY'] > 0) return "[불출]";
+                    if (ui.rowData['CONSUMABLE_STOCK_SEQ'] > 0 && ui.rowData['STOCK_QTY'] > 0) return "<button type=\"button\" class=\"miniBtn_h19 black\">불출</button>";
                     return '';
                 }
             },

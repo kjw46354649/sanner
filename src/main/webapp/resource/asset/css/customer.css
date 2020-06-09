@@ -175,7 +175,7 @@
 .wd_180{width:180px !important; }
 .wd_760{width:760px !important; }
 
-.consumablePop  {height: 400px; }
+.consumablePop  {height: 420px; }
 .consumable_container .layerPopup .list1 { -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)";/*IE 8*/ -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0);/*FF 3.5+*/ -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0);/*Saf3-4, Chrome, iOS 4.0.2-4.2, Android 2.3+*/ box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); }
 
 .right_sort_pop{text-align: right; padding: 0px 0 7px;}
@@ -247,12 +247,13 @@
 .g_item_detail_pop .layerPopup .listdiv .conWrapPop40{ float: left; width: 39.0%; padding-right: 1%; height: 100%; }
 .g_item_detail_pop .layerPopup .listdiv .rightName{ float: right; margin-top: 14px;display: inline-block; }
 .g_item_detail_pop .layerPopup .right{ float: right; display: inline-block; }
-.g_item_detail_pop .layerPopup{height: 890px;}
+.g_item_detail_pop .layerPopup{height: 920px;}
 .g_item_detail_pop .layerPopup h4 {display: inline-block;font-size: 14px; font-family: 'NotoKrB'; color: #000; margin: 15px 0 5px; }
 .g_item_detail_pop .layerPopup .worker {display: inline-block; line-height:23px; font-size: 13px; background-color: #73139b;color: #fff; padding-left: 10px; padding-right: 5px; text-align: center; }
 .g_item_detail_pop .layerPopup .work_info {display: inline-block;font-size: 14px; font-family: 'NotoKrB'; color: #000; }
 .g_item_detail_pop .namePlusSlt label { padding: 0 5px; background: #f3f3f3; border: 1px solid #e6e6e6; border-right: 0; border-radius: 3px 0 0 3px; box-sizing: border-box; }
 
+.g_item_detail_pop_cam_pop .layerPopup{height: 490px;}
 
 .wd_405_left_10 {   width: 405px !important; margin-left: 10px;}
 .inspection .layerPopup .t_area table select { border: 1px solid transparent; width: 100%; border-radius: 0; vertical-align: top; }
@@ -360,4 +361,6 @@ button:disabled {
 
 .miniPopup .pop_close { width: 23px; height: 23px; position: absolute; top: 12px; right: 12px; font-size: 0; background: url(../images/common/btn_popup.png)no-repeat 0 0; margin-right: 2px; margin-top: 8px;}
 .miniPopup h3 { font-size: 20px; font-family: 'NotoKrB'; color: #000; display: inline-block; }
+
+.miniBtn_h19 { height: 19px; padding: 0 10px; font-size: 12px; color: #000; background: #fcfcfc; line-height: 18px; font-family: 'NotoKrM'; display: inline-block; text-align: center; border: 1px solid #afafaf; border-radius: 2px; box-sizing: border-box; }
 

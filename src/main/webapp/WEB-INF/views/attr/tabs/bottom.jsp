@@ -268,7 +268,7 @@
 <!-- 제품상세정보 layer popup : E -->
 
 <!-- CAM 상세정보 layer popup : S -->
-<div class="popup_container g_item_detail_pop" id="g_item_detail_pop_cam_pop" style="display: none;">
+<div class="popup_container g_item_detail_pop_cam_pop" id="g_item_detail_pop_cam_pop" style="display: none;">
     <form class="form-inline" id="g_item_detail_pop_cam_pop_form" name="g_item_detail_pop_cam_pop_form" role="form">
         <input type="hidden" id="queryId" name="queryId" value="inspection.selectCommItemDetailGridCamPop"/>
         <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value=""/>
@@ -906,7 +906,7 @@
                 $("#g_item_detail_pop_form").find("#INNER_DUE_DT").html(dataInfo.INNER_DUE_DT);
 
                 $("#g_item_detail_pop_form").find("#ITEM_NM").html(dataInfo.ITEM_NM);
-                $("#g_item_detail_pop_form").find("#MODULE_NM").html(dataInfo.MODULE_NM).trigger('create');
+                $("#g_item_detail_pop_form").find("#MODULE_NM").html(dataInfo.MODULE_NM);
                 $("#g_item_detail_pop_form").find("#ORDER_QTY_INFO").html(dataInfo.ORDER_QTY_INFO);
 
                 $("#g_item_detail_pop_form").find("#SIZE_TXT").html(dataInfo.SIZE_TXT);
@@ -920,8 +920,10 @@
                 $("#g_item_detail_pop_form").find("#PART_STATUS_NM").html(dataInfo.PART_STATUS_NM);
                 $("#g_item_detail_pop_form").find("#DRAWING_VER").html(dataInfo.DRAWING_VER);
 
-                let filedownlod = "<button type='button' class='smallBtn red' onclick=\"javascript:fnSingleFileDownloadFormPageAction('" + dataInfo.DXF_GFILE_SEQ + "');\"><i class='fa fa-trash'></i><span >다운로드</span></button>";
-
+                let filedownlod = "";
+                if(dataInfo.DXF_GFILE_SEQ != "" && dataInfo.DXF_GFILE_SEQ != undefined){
+                    filedownlod = "<button type='button' class='smallBtn red' onclick=\"javascript:fnSingleFileDownloadFormPageAction('" + dataInfo.DXF_GFILE_SEQ + "');\"><i class='fa fa-trash'></i><span >다운로드</span></button>";
+                }
                 $("#g_item_detail_pop_form").find("#DXF_GFILE_SEQ").html(filedownlod);
 
                 $("#g_item_detail_pop_form").find("#ORDER_COMP_NM").html(dataInfo.ORDER_COMP_NM);
@@ -931,8 +933,12 @@
                 $("#g_item_detail_pop_form").find("#CONTROL_CONFIRM_DT").html(dataInfo.CONTROL_CONFIRM_DT);
                 $("#g_item_detail_pop_form").find("#OUT_FINISH_DT").html(dataInfo.OUT_FINISH_DT);
 
-                let camPopHtml = dataInfo.WORK_HISTORY_INFO + "  ";
-                camPopHtml += "<button type='button' class='smallBtn yellow' onclick=\"javascript:g_item_detail_pop_cam_pop('" + dataInfo.CONTROL_SEQ + "','" + dataInfo.CONTROL_DETAIL_SEQ + "');\"><i class='fa fa-trash'></i><span >조회</span></button>";
+                let camPopHtml = "";
+                if(dataInfo.WORK_HISTORY_INFO != "" && dataInfo.WORK_HISTORY_INFO != undefined){
+                    camPopHtml = dataInfo.WORK_HISTORY_INFO + "  ";
+                    camPopHtml += "<button type='button' class='smallBtn yellow' onclick=\"javascript:g_item_detail_pop_cam_pop('" + dataInfo.CONTROL_SEQ + "','" + dataInfo.CONTROL_DETAIL_SEQ + "');\"><i class='fa fa-trash'></i><span >조회</span></button>";
+                }
+
                 $("#g_item_detail_pop_form").find("#WORK_HISTORY_INFO").html(camPopHtml);
 
                 /** CAM 작업 여부에 따른 버튼 표시 **/
@@ -1061,7 +1067,13 @@
             {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden:true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden:true},
             {title: 'CAM_SEQ', dataType: 'string', dataIndx: 'CAM_SEQ', hidden:true},
-            {title: '도면', dataType: 'string', dataIndx: '도면', width: 95, editable: false},
+            {title: '', align: 'center', dataType: 'string', dataIndx: 'DETAIL_INFO', width: 40, minWidth: 40, editable: false,
+                       render: function (ui) {
+                           let rowIndx = ui.rowIndx, grid = this;
+                           if (ui.rowData['CONTROL_SEQ'] > 0) return "<span class=\"ui-icon ui-icon-circle-zoomin\"></span>";
+                           return '';
+                       }
+             },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 95, editable: false},
             {title: 'Parts', dataType: 'string', dataIndx: 'PART_NUM', width: 95, editable: false},
             {title: '눈', dataType: 'string', dataIndx: '눈', width: 95, editable: false},
@@ -1075,14 +1087,26 @@
             {title: '작업내용', dataType: 'string', dataIndx: 'WORK_DESC', width: 95, editable: false},
             {title: '단위수량', dataType: 'string', dataIndx: 'DESIGN_QTY', width: 95, editable: false},
             {title: '계산시간', dataType: 'string', dataIndx: 'WORK_TIME', width: 95, editable: false},
-            {title: 'CAM', dataType: 'string', dataIndx: 'CAM_FILE_SEQ', width: 95, editable: false},
-            {title: 'NC', dataType: 'string', dataIndx: 'NC_FILE_SEQ', width: 95, editable: false},
+            {title: 'CAM', align: 'center', dataType: 'string', dataIndx: 'CAM_FILE_SEQ', width: 40, minWidth: 40, editable: false,
+                       render: function (ui) {
+                           let rowIndx = ui.rowIndx, grid = this;
+                           if (ui.rowData['CAM_FILE_SEQ'] > 0) return "<span id=\"downloadSingleFile\" class=\"ui-icon ui-icon-search\" style=\"cursor: pointer\"></span>";
+                           return '';
+                       }
+             },
+            {title: 'NC', align: 'center', dataType: 'string', dataIndx: 'NC_FILE_SEQ', width: 40, minWidth: 40, editable: false,
+                       render: function (ui) {
+                           let rowIndx = ui.rowIndx, grid = this;
+                           if (ui.rowData['NC_FILE_SEQ'] > 0) return "<span id=\"downloadSingleFile\" class=\"ui-icon ui-icon-search\" style=\"cursor: pointer\"></span>";
+                           return '';
+                       }
+             },
             {title: '작업자', dataType: 'string', dataIndx: 'WORK_USER_NM', width: 95, editable: false},
             {title: '작업일자', dataType: 'string', dataIndx: 'CAM_WORK_DT', width: 95, editable: false},
-            {title: '경험기록사항<BR>(Lessons Learned)', dataType: 'string', dataIndx: 'HISTORY_NOTE', width: 95, editable: false}
+            {title: '경험기록사항<BR>(Lessons Learned)', dataType: 'string', dataIndx: 'HISTORY_NOTE', width: 120, editable: false}
         ];
-        let g_ItemDetailCamPopPopObj01 = {
-        width: "100%", height: 120,
+        let g_ItemDetailPopCamPopObj01 = {
+        width: "100%", height: 320,
         dataModel: {
            location: "remote", dataType: "json", method: "POST", recIndx: 'RNUM',
            url: "/paramQueryGridSelect",
@@ -1094,7 +1118,7 @@
         },
         strNoRows: g_noData,
         columnTemplate: {align: 'center', hvalign: 'center'},
-        scrollModel: {autoFit: true},
+        //scrollModel: {autoFit: true},
         numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
         selectionModel: { type: 'row', mode: 'single'} ,
         swipeModel: {on: false},
@@ -1102,42 +1126,81 @@
         collapsible: false,
         resizable: false,
         trackModel: {on: true},
-        colModel: g_ItemDetailPopCamPopColModel01
+        colModel: g_ItemDetailPopCamPopColModel01,
+        cellClick: function (event, ui) {
+                        let rowIndx = ui.rowIndx, $grid = this;
+                        if (ui.rowData['CONTROL_SEQ'] != undefined && ui.rowData['CONTROL_SEQ'] >0) {
+                            if (ui.dataIndx == 'DETAIL_INFO') {
+                                let CONTROL_SEQ = ui.rowData['CONTROL_SEQ'];
+                                let CONTROL_DETAIL_SEQ = ui.rowData['CONTROL_DETAIL_SEQ'];
+
+                                $('#g_item_detail_pop').modal('hide');
+                                g_item_detail_pop_view(CONTROL_SEQ, CONTROL_DETAIL_SEQ);
+                                $('#g_item_detail_pop_cam_pop').modal('hide');
+
+                            }
+                            if (ui.dataIndx == 'CAM_FILE_SEQ') {
+                                if (ui.rowData['CAM_FILE_SEQ'] > 0){
+                                    fnSingleFileDownloadFormPageAction(ui.rowData['CAM_FILE_SEQ']);
+                                }
+                            }
+                            if (ui.dataIndx == 'NC_FILE_SEQ') {
+                                if (ui.rowData['NC_FILE_SEQ'] > 0){
+                                    fnSingleFileDownloadFormPageAction(ui.rowData['NC_FILE_SEQ']);
+                                }
+
+                            }
+
+                        }
+                    }
         };
     let g_item_detail_pop_cam_pop = function(CONTROL_SEQ,CONTROL_DETAIL_SEQ){
         $("#g_item_detail_pop_cam_pop_form").find("#queryId").val('inspection.selectCommItemDetailGridCamPop');
         $("#g_item_detail_pop_cam_pop_form").find("#CONTROL_SEQ").val(CONTROL_SEQ);
         $("#g_item_detail_pop_cam_pop_form").find("#CONTROL_DETAIL_SEQ").val(CONTROL_DETAIL_SEQ);
         $('#g_item_detail_pop_cam_pop').modal('show');
-    }
-
-    $("#g_item_detail_pop_cam_pop").on('hide.bs.modal', function(){
-        fnResetFrom("g_item_detail_pop_cam_pop_form");
-        g_ItemDetailPopCamPopGridId01.pqGrid('destroy');
-    });
-    $("#g_item_detail_pop_cam_pop").on('show.bs.modal', function(){
-
 
         $("#g_item_detail_pop_cam_pop_form").find("#queryId").val('inspection.selectCommItemDetailGridCamPopBefore');
         let parameters = {
-          'url': '/json-info',
-          'data': fnFormToJsonArrayData('g_item_detail_pop_cam_pop_form')
+         'url': '/json-info',
+         'data': fnFormToJsonArrayData('g_item_detail_pop_cam_pop_form')
         };
         fnPostAjaxAsync(function (data, callFunctionParam) {
-          let dataInfo = data.info;
-          if(dataInfo == null ) {
-              fnResetFrom("g_item_detail_pop_cam_pop_form");
-          }else{
-              fnJsonDataToForm("g_item_detail_pop_cam_pop_form", dataInfo);
-          }
+         let dataInfo = data.info;
+         if(dataInfo == null ) {
+             fnResetFrom("g_item_detail_pop_cam_pop_form");
+         }else{
+             fnJsonDataToForm("g_item_detail_pop_cam_pop_form", dataInfo);
+         }
         }, parameters, '');
 
+        $("#g_item_detail_pop_cam_pop_form").find("#queryId").val('inspection.selectCommItemDetailGridCamPop');
         g_ItemDetailPopCamPopObj01.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_cam_pop_form');
-        g_ItemDetailPopCamPopGridId01.pqGrid(g_ItemDetailCamPopPopObj01);
-    });
+        g_ItemDetailPopCamPopGridId01.pqGrid(g_ItemDetailPopCamPopObj01);
+
+    }
+
+
+    // $("#g_item_detail_pop_cam_pop").on('show.bs.modal', function(){
+    //
+    //
+    //
+    // });
+    $("#g_item_detail_pop_cam_pop_grid_pop_close, #g_item_detail_pop_cam_pop_grid_pop_close2").on('click', function () {
+         //fnResetFrom("g_item_detail_pop_cam_pop_form");
+        //       console.log(g_ItemDetailPopCamPopGridId01);
+        $('#g_item_detail_pop_cam_pop').modal('hide');
+              // g_ItemDetailPopCamPopGridId01.pqGrid('destroy');
+
+     });
+    $("#g_item_detail_pop_cam_pop").on('hide.bs.modal', function(){
+          fnResetFrom("g_item_detail_pop_cam_pop_form");
+          g_ItemDetailPopCamPopGridId01.pqGrid('destroy');
+      });
     /** cam popup */
 
     /**  공통 제품상세 정보  끝 **/
+
 
 
     function estimateListFileUploadCallback(GfileSeq) {
