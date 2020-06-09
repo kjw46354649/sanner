@@ -300,7 +300,7 @@
             {title: '현재위치', dataType: 'string', dataIndx: 'POP_NM', minWidth: 150, width: 150, editable: false},
             {title: '외주가공', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', minWidth: 150, width: 150, editable: false},
             {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', minWidth: 150, width: 150, editable: false},
-            // {title: '카드', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 40, minWidth: 40, editable: false,
+            // {title: '카ㄴㅇㄹ드', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 40, minWidth: 40, editable: false,
             //     render: function (ui) {
             //         let rowIndx = ui.rowIndx, grid = this;
             //         if (ui.rowData['DXF_GFILE_SEQ'] > 0) return "[카]";
