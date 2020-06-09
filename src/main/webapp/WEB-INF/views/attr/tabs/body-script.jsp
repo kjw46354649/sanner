@@ -419,11 +419,6 @@
         let parameters;
         let gridInstance = grid.pqGrid('getInstance').grid;
         //추가 또는 수정된 값이 있으면 true
-
-        console.log('fnModifyPQGrid');
-        console.log(gridInstance);
-        console.log(gridInstance.isDirty());
-
         if (gridInstance.isDirty()) {
             let changes = gridInstance.getChanges({format: 'byVal'});
             let QUERY_ID_ARRAY = {

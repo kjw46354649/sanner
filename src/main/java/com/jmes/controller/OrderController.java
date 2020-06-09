@@ -59,6 +59,18 @@ public class OrderController {
     }
 
     /**
+     * @description 월 마감 취소
+     */
+    @RequestMapping(value = "/removeMonthClose", method = RequestMethod.POST)
+    public String removeMonthClose(HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.orderService.removeMonthClose(map);
+
+        return "jsonView";
+    }
+
+    /**
      * @description 거래명세표 저장
      */
     @RequestMapping(value = "/createInvoice", method = RequestMethod.POST)

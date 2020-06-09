@@ -90,6 +90,22 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public void removeMonthClose(Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayList<HashMap<String, Object>> jsonArray = null;
+
+        if (jsonObject != null)
+            jsonArray = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<HashMap<String, Object>>>() {});
+
+        for (HashMap<String, Object> hashMap : jsonArray) {
+            hashMap.put("CONTROL_STATUS", null);
+            this.orderDao.updateControlStatus(hashMap);
+            this.orderDao.createControlProgress(hashMap);
+        }
+    }
+
+    @Override
     public void createInvoice(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
