@@ -31,9 +31,6 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
 
         if(session.getAttribute("LocalInfo") == null){
             String localeNat = RequestContextUtils.getLocale(request).toString();
-
-            System.out.println("localeNat=[" + localeNat + "]");
-
             if(!"/".equals(requestUrl) && session.getAttribute("LocalInfo") == null){
                 if("en".equals(localeNat) || "en_US".equals(localeNat)){
                     localeNat = "en";
@@ -45,17 +42,27 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
             }else{
                 localeNat = "ko";
             }
-
-            System.out.println("session localeNat=[" + session.getAttribute("LocalInfo") + "]");
-            System.out.println("localeNat=[" + localeNat + "]");
-
-
             LocaleEditor localeEditor = new LocaleEditor();
             localeEditor.setAsText(localeNat);
             localeResolver.setLocale(request, response, (Locale) localeEditor.getValue());
             Locale.setDefault((Locale) localeEditor.getValue());
             session.setAttribute("LocalInfo", localeResolver.resolveLocale(request));
 
+        }
+
+        if(!isPassUrlList(requestUrl) && userInfo == null){
+            if(!isAJAXRequest(request)){
+                if(isAJAXRequestForMobile(request)){ //request from mobile
+                    response.sendRedirect("/");
+                    return false;
+                }else{
+                    response.sendRedirect("/");
+                    return false;
+                }
+            }else{
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                return false;
+            }
         }
         return true;
     }
@@ -69,13 +76,6 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
             hashMap.put("queryId", "systemMapper.selectSessionCodeList");
             session.setAttribute("HighCode", CommonUtility.getCode(innodaleService.getList(hashMap)));
         }
-
-//        if(session.getAttribute("LocalMenu") == null){
-//            hashMap.put("queryId", "systemMapper.selectSessionMenuList");
-//            session.setAttribute("LocalMenu", innodaleService.getList(hashMap));
-//        }
-
-        System.out.println("postHandle session.getId()=[" + session.getId() + "]" );
     }
 
 
@@ -122,6 +122,16 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
         passList.add("/change-locale");
         passList.add("/userLogin");
         passList.add("/userLogout");
+
+        /** pop path **/
+        passList.add("/pop");
+        passList.add("/scanningBarcodePop");
+
+        /** drawing path **/
+        passList.add("/drawing");
+        passList.add("/drawing-worker");
+        passList.add("/drawing-board");
+        passList.add("/drawing-board-save");
 
         return passList.contains(url);
 

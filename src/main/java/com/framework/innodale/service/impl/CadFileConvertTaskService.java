@@ -26,6 +26,7 @@ public class CadFileConvertTaskService {
 
         List<String> CAD_CONVERT_TYPE = new ArrayList<>(Arrays.asList(new String[]{ "pdf", "png"}));
 
+        String sUserId = (String)map.get("LOGIN_USER_ID");
         String jsonObject = (String)map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
@@ -91,6 +92,8 @@ public class CadFileConvertTaskService {
                         fileInfo.put("FILE_SIZE", convertToFile.length());
                         fileInfo.put("DXF_GFILE_SEQ", convertTargetInfo.get("DXF_GFILE_SEQ"));
 
+                        fileInfo.put("LOGIN_USER_ID", sUserId);
+
                         // DB 파일 INSERT (PNG, PDF)
                         fileInfo.put("GFILE_SEQ", "");                      // GFILE 등록
                         fileInfo.put("queryId", "common.insertFileGroup");
@@ -105,6 +108,15 @@ public class CadFileConvertTaskService {
                         // 변환 정보 견적, 주문, 소재에서 각각 UPDATE 한다.
                         fileInfo.put("queryId", queryId.get(0) + "_mapping");     // 데이터 저장 파일 등록
                         innodaleDao.create(fileInfo);
+
+                        // CAD 파일이 확정이후 출고 이전에 CAD 도면 파일을 수정하는 경우 도면 파일의 REV 버젼을 업로드 한다.
+                        if("orderMapper.manageControlCadRevFiles".equals(queryId.get(0))){
+                            fileInfo.put("queryId", queryId.get(0) + "_revDelete");     // 데이터 저장 파일 등록
+                            innodaleDao.create(fileInfo);
+
+                            fileInfo.put("queryId", queryId.get(0) + "_revInsert");     // 데이터 저장 파일 등록
+                            innodaleDao.create(fileInfo);
+                        }
                     }
                 }
             }
