@@ -173,20 +173,20 @@
 
         <div class="layerPopup">
             <h3>장비상세정보</h3>
-            <button type="button" class="pop_close">닫기</button>
+            <button type="button" class="pop_close mg-top10 mg-right8" id="machine_manage_pop-close2">닫기</button>
             <div class="qualityWrap">
                 <div class="h_area">
 					<div class="right_sort ">
 
-                        <button type="button" class="defaultBtn btn-120w red" id="saveBtn">SAVE</button>
-                        <button type="button" class="defaultBtn btn-120w green" id="deleteBtn">Delete</button>
+                        <button type="button" class="defaultBtn btn-120w red" id="saveBtn">저장</button>
+                        <button type="button" class="defaultBtn btn-120w green" id="deleteBtn">삭제</button>
 					</div>
 
                 </div>
                 <div class="resultWrap99 list99">
-                    <div class="leftWrap">
+                    <div class="leftWrap" style="margin-top: 16px;">
                         <input type="hidden" id="PHOTO_GFILE_SEQ" name="PHOTO_GFILE_SEQ" value="">
-                        <img src="/image/999" id="PHOTO_GFILE_SRC" width="400px" alt="장비사진" >
+                        <img src="/image/999" id="PHOTO_GFILE_SRC" width="400px" alt="장비사진" style="border:1px solid #707070">
                         <div class="btnWrap">
                             <button type="button" id="photo_upload" class="defaultBtn">사진변경하기</button>
                         </div>
@@ -319,7 +319,7 @@
                     </div>
                 </div>
 
-                <div class="list98">
+                <div class="list98_280">
                     <div class="tableWrap jmestabs" id="div_tabs_machine_02">
 
                         <ul class="smallTabMenuTabs">
@@ -345,7 +345,9 @@
 
                 </div>
             </div>
-
+            <div class="btnWrap">
+                 <button type="button" class="defaultBtn grayPopGra" id="machine_manage_pop-close">닫기</button>
+             </div>
         </div>
 
 </div>
@@ -550,7 +552,7 @@
         ];
         logObj = {
             width: "100%",
-            height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            height: 250, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'}, editable : false,
             numberCell: {title: 'No.', styleHead: {'vertical-align':'middle'}}, dragColumns: {enabled: false},
             scrollModel: {autoFit: true}, trackModel: {on: true},
@@ -689,8 +691,7 @@
             {title: '정비전', align: 'center', dataType: 'string', dataIndx: 'BEFORE_GFILE_SEQ', width: 20, minWidth: 20, editable: true,
                 render: function (ui) {
                     let rowIndx = ui.rowIndx, grid = this;
-                    console.log(" render BEFORE_GFILE_SEQ")
-                    if (ui.rowData['BEFORE_GFILE_SEQ'] > 0) return "<i id='imageView' class='fa fa-file-image-o fa-2x'>VIEW</i>";
+                    if (ui.rowData['BEFORE_GFILE_SEQ'] > 0) return "<i id='imageView' class='blueFileImageICon'></i>";
                     return '+';
                     //return '<a href="#" id="gridSingleFileUpload">' +
                     //'   <span data-col="GRID_BEFORE_GFILE_SEQ" data-gridInfo="'+grid+'" data-val="'+rowIndx+'" data-type="'+'before'+'">+</span></a>';
@@ -699,7 +700,7 @@
             },
             {title: '정비후', align: 'center', dataType: 'string', dataIndx: 'AFTER_GFILE_SEQ', width: 20, minWidth: 20, editable: true,
                 render: function (ui) {
-                    if (ui.rowData['AFTER_GFILE_SEQ'] > 0) return "<i id='imageView' class='fa fa-file-image-o fa-2x'>VIEW</i>";
+                    if (ui.rowData['AFTER_GFILE_SEQ'] > 0) return "<i id='imageView' class='blueFileImageICon'></i>";
                     return "+";
                 }
                 // postRender: function (ui) {
@@ -712,7 +713,10 @@
             },
             {title: '', dataType: 'string', dataIndx: 'SEQ', minWidth: 80 , editable: true,
                 render: function(ui){
-                    return '<input type="button" value="사진삭제"/>';
+                    if (ui.rowData['BEFORE_GFILE_SEQ'] > 0 || ui.rowData['AFTER_GFILE_SEQ'] > 0) {
+                        return '<button type="button" class="miniBtn blue" >사진삭제</button>';
+                    }else{return '';}
+
                 },
                 postRender: function (ui) {
                     let rowIndx = ui.rowIndx;
@@ -724,7 +728,7 @@
         $("#machine_manage_pop_form").find("#queryId").val("machine.selectMachineHistoryList");
         //$('#' + historyGridId).pqGrid({
         historyObj = {
-            width: "100%", height: 200,
+            width: "100%", height: 250,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
                 url: "/paramQueryGridSelect",
@@ -875,11 +879,9 @@
             };
         });
 
-
-        $('.pop_close').on('click', function(e) {
+        $('#company_master_register_form').find('#machine_manage_pop-close, #machine_manage_pop-close2').on('click', function () {
             $('#CURRENT_POPUP').modal('hide');
         });
-
         $('#SEL_TERM_DT_USE').on('click', function(e) {
             if ($(this).is(':checked')) {
                 $(this).val('Y');
