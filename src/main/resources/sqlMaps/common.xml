@@ -214,4 +214,25 @@
         AND A.BARCODE_NUM = #{BARCODE_NUM}
     </select>
 
+    <select id="selectBarcodePrintControlCheck" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            CASE WHEN X.CONTROL_VER_YN = 'Y' AND X.DRAWING_VER_YN = 'Y' THEN 'Y' ELSE 'N' END AS USE_YN
+        FROM (
+         SELECT
+             CASE WHEN A.CONTROL_VER = (SELECT CONTROL_VER FROM jmes.TBL_CONTROL WHERE CONTROL_SEQ = A.CONTROL_SEQ) THEN 'Y' ELSE 'N' END AS CONTROL_VER_YN
+            ,CASE WHEN A.DRAWING_VER = (SELECT DRAWING_VER FROM jmes.TBL_CONTROL_PART WHERE CONTROL_SEQ = A.CONTROL_SEQ  AND CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ ) THEN 'Y' ELSE 'N' END AS DRAWING_VER_YN
+         FROM jmes.TBL_CONTROL_BARCODE A
+         WHERE A.BARCODE_NUM = #{BARCODE_NUM}
+         AND A.DEL_YN = 'N'
+        ) X
+   </select>
+   <select id="selectBarcodePrintOutCheck" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+       SELECT
+        CASE WHEN A.PACKING_NUM = (SELECT B.PACKING_CNT FROM jmes.TBL_CONTROL_PART_ORDER B WHERE B.CONTROL_SEQ = A.CONTROL_SEQ  AND B.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND B.ORDER_SEQ = A.ORDER_SEQ ) THEN 'Y' ELSE 'N' END AS USE_YN
+       FROM jmes.TBL_OUT_BARCODE A
+       WHERE A.BARCODE_NUM = #{BARCODE_NUM}
+       AND A.DEL_YN = 'N'
+   </select>
+
+
 </mapper>
