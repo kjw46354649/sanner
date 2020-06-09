@@ -417,7 +417,7 @@
             {title: '구입시기', dataType: 'string', dataIndx: 'PURCHASE_DT'},
             {title: '담당(정)', dataType: 'string', dataIndx: 'MAIN_USER_NM'},
             {title: '담당(부)', dataType: 'string', dataIndx: 'SUB_USER_NM'},
-            {title: '작동시작(누적)', dataType: 'string', dataIndx: 'WORKING_TIME'},
+            {title: '작동시간(누적)', dataType: 'string', dataIndx: 'WORKING_TIME'},
             //{title: '최근<br>정비일시', dataType: 'string', dataIndx: ''},
             {title: '최근종료일시', dataType: 'string', dataIndx: 'LAST_REPAIR_DT'},
             {title: '최근수행번호', dataType: 'string', dataIndx: 'LAST_CONTROL_NUM'}
@@ -491,7 +491,7 @@
             {title: '구입시기', dataType: 'string', dataIndx: 'PURCHASE_DT'},
             {title: '담당(정)', dataType: 'string', dataIndx: 'MAIN_USER_NM'},
             {title: '담당(부)', dataType: 'string', dataIndx: 'SUB_USER_NM'},
-            {title: '작동시작(누적)', dataType: 'string', dataIndx: 'WORKING_TIME'},
+            {title: '작동시간(누적)', dataType: 'string', dataIndx: 'WORKING_TIME'},
             //{title: '최근<br>정비일시', dataType: 'string', dataIndx: ''},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'}
         ];

@@ -422,7 +422,9 @@
             //         }
             //     }
             // },
-            {title: '보유수량', dataType: 'string', dataIndx: 'STOCK_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},editable: false},
+            {title: '보유수량', dataType: 'string', dataIndx: 'STOCK_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}
+                ,editable: false, format: '#,###'
+            },
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},editable: true},
             {title: '입고', dataType: 'integer', dataIndx: 'IN_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},editable: true},
             {title: '불출', align: 'center', dataType: 'string', dataIndx: 'POPUP', width: 20, minWidth: 20, editable: false,styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},
@@ -504,8 +506,8 @@
             {title: '자재명', dataType: 'string', dataIndx: 'CONSUMABLE_NM', editable: false},
             {title: '자재종류', dataType: 'string', dataIndx: 'CONSUMABLE_TYPE_NM', editable: false},
             // {title: '자재상세종류', dataType: 'string', dataIndx: 'CONSUMABLE_DETAIL_NM', editable: false},
-            {title: '입고수량', dataType: 'string', dataIndx: 'IN_QTY', editable: false},
-            {title: '불출수량', dataType: 'string', dataIndx: 'OUT_QTY', editable: false},
+            {title: '입고수량', dataType: 'string', dataIndx: 'IN_QTY', editable: false , format: '#,###'},
+            {title: '불출수량', dataType: 'string', dataIndx: 'OUT_QTY', editable: false , format: '#,###'},
             {title: '요청자', dataType: 'string', dataIndx: 'REQUEST_USER_NM', editable: false},
             {title: '입력일시', dataType: 'string', dataIndx: 'IN_OUT_DT', editable: false}
         ];
