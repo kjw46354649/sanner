@@ -364,3 +364,5 @@ button:disabled {
 
 .miniBtn_h19 { height: 19px; padding: 0 10px; font-size: 12px; color: #000; background: #fcfcfc; line-height: 18px; font-family: 'NotoKrM'; display: inline-block; text-align: center; border: 1px solid #afafaf; border-radius: 2px; box-sizing: border-box; }
 
+.th_blue_white { background-color: #aac8ed; color: #fffffF; }
+.th_blue_black { background-color: #aac8ed; color: #000; }
