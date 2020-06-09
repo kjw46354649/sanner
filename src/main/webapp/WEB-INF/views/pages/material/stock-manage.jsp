@@ -970,7 +970,7 @@ console.log("change",JSON.stringify(changes));
         });
         /** 도면 등록 처리 **/
         $('#stock_manage_drawing_new_btn').on('click', function () {
-            setEstiMatePopup('inside', 'material.manageStockCadFiles');
+            callCadDrawingUploadPopup('inside', 'material.manageStockCadFiles');
         });
 
         /** 도면 보기 팝업 호출 */

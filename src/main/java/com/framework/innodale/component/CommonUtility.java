@@ -111,19 +111,8 @@ public class CommonUtility {
         InetAddress local = InetAddress.getLocalHost();
 
         if(userInfo != null && userInfo.containsKey("USER_ID")){
-
             paramMap.put("LOGIN_USER_ID", 				userInfo.get("USER_ID"));
             paramMap.put("LOGIN_USER_NAME", 			userInfo.get("USER_NM"));
-            paramMap.put("LOGIN_USER_DEPT", 			userInfo.get("USER_DEPT"));
-            paramMap.put("LOGIN_USER_VENDOR", 			userInfo.get("VENDOR_CD"));
-            paramMap.put("LOGIN_USER_VENDOR_NM", 		userInfo.get("VENDOR_NM"));
-            paramMap.put("LOGIN_USER_VENDOR_NATION", 	userInfo.get("VENDOR_NATION"));
-            paramMap.put("LOGIN_MPM_TYPE", 				userInfo.get("MPM_TYPE"));
-            paramMap.put("LOGIN_DEVICEE", 				local.getHostAddress());
-            paramMap.put("SHIPPING_INVOICE_YN", 		userInfo.get("SHIPPING_INVOICE_YN"));
-            // paramMap.put("PROGRAMID", 	 			request.getSession().getAttribute("PROGRAMID"));
-
-
         }
 
         paramMap.put("LOGIN_USER_SESSION", 			request.getSession().getId());

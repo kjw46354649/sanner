@@ -1,33 +1,23 @@
 package com.framework.innodale.controller;
 
-import com.framework.innodale.component.CommonUtility;
 import com.framework.innodale.service.InnodaleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 public class StaticUrlController {
 
     @Autowired
     private InnodaleService innodaleService;
-
-    @Autowired
-    private Environment environment;
-
-    @Autowired
-    ServletContext context;
 
     /**
      * 업로드 이미지  <IMG ~ 처리

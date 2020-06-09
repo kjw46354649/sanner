@@ -571,7 +571,7 @@
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 4, 'EQUIP_SEQ')  AS EQUIP_SEQ_4,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 4, 'WORKING_TIME') AS WORKING_TIME_4,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 4, 'STATUS') AS STATUS_4,
-            C.POP_POSITION, <!-- 현재위치 -->
+            SF_GET_CODE_NM(1009, C.POP_POSITION, 'KR') AS POP_POSITION, <!-- 현재위치 -->
             SF_GET_CODE_NM(1013, A.PART_STATUS, 'KR') AS PART_STATUS, <!-- 진행상태 -->
             IFNULL(SUM(CASE WHEN E.PROCESS_TYPE = 'MPR010' THEN 1 ELSE NULL END), SPACE(0)) AS PROCESS_NC,	<!-- 가공진행현황_NC -->
             CASE WHEN E.PROCESS_TYPE = 'MPR010' AND MIN(D.WORK_STATUS) = 'DBS030' THEN 'BLUE'
@@ -605,9 +605,8 @@
             SF_GET_CODE_NM(1080, H.WORK_DIRECTION, 'EN') AS WORK_DIRECTION, <!-- CAM 가공위치 -->
             H.WORK_DESC, <!-- CAM 작업 내용 -->
             H.WORK_USER_ID, <!-- CAM 작업자 -->
-            H.CAM_GFILE_SEQ, <!-- CAM 첨부 파일 -->
-            CASE WHEN H.CAM_GFILE_SEQ IS NOT NULL THEN (SELECT FILE_SEQ FROM TBL_FILE I WHERE H.CAM_GFILE_SEQ = I.GFILE_SEQ AND I.FILE_TYPE = 'CAM') ELSE SPACE(0) END CAM_FILE_SEQ, <!-- CAM FILE -->
-            CASE WHEN H.CAM_GFILE_SEQ IS NOT NULL THEN (SELECT FILE_SEQ FROM TBL_FILE I WHERE H.CAM_GFILE_SEQ = I.GFILE_SEQ AND I.FILE_TYPE = 'NC') ELSE SPACE(0) END NC_FILE_SEQ, <!-- NC FILE -->
+            CASE WHEN H.CAM_GFILE_SEQ IS NOT NULL THEN (SELECT FILE_SEQ FROM TBL_FILE I WHERE H.CAM_GFILE_SEQ = I.GFILE_SEQ AND I.FILE_KIND = 'EXC') ELSE SPACE(0) END CAM_FILE_SEQ, <!-- CAM FILE -->
+            CASE WHEN H.CAM_GFILE_SEQ IS NOT NULL THEN (SELECT FILE_SEQ FROM TBL_FILE I WHERE H.CAM_GFILE_SEQ = I.GFILE_SEQ AND I.FILE_KIND = 'EXN') ELSE SPACE(0) END NC_FILE_SEQ, <!-- NC FILE -->
             G.HISTORY_NOTE,  <!-- CAM 기록사항 -->
             G.NOTE, <!-- CAM 비고 및 공유사항 -->
             CONCAT(IFNULL(G.HISTORY_NOTE, SPACE(0)), IFNULL(G.NOTE, SPACE(0))) AS CAM_WORK_NOTE,    <!-- CAM 작업 기록 및 비고 공유 사항 -->
@@ -657,11 +656,11 @@
     <select id="selectCamDetailInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.CAM_SEQ, A.SEQ, A.WORK_DIRECTION, A.WORK_DESC, A.WORK_USER_ID, A.DESIGN_QTY, A.WORK_TIME,
-            C.FILE_SEQ, C.ORGINAL_FILE_NM, D.FILE_SEQ, D.ORGINAL_FILE_NM
+            A.CAM_GFILE_SEQ, C.FILE_SEQ AS CAM_FILE_SEQ, C.ORGINAL_FILE_NM AS CAM_FILE_NM, D.FILE_SEQ AS NC_FILE_SEQ, D.ORGINAL_FILE_NM AS NC_FILE_NM
         FROM jmes.TBL_CAM_DETAIL A
             INNER JOIN jmes.TBL_CAM B ON A.CAM_SEQ = B.CAM_SEQ
             LEFT OUTER JOIN jmes.TBL_FILE C ON C.GFILE_SEQ = A.CAM_GFILE_SEQ AND C.FILE_KIND = 'EXC'
-            LEFT OUTER JOIN jmes.TBL_FILE D ON D.GFILE_SEQ = A.CAM_GFILE_SEQ AND D.FILE_KIND = 'CAM'
+            LEFT OUTER JOIN jmes.TBL_FILE D ON D.GFILE_SEQ = A.CAM_GFILE_SEQ AND D.FILE_KIND = 'EXN'
         WHERE 1 = 1
           AND A.CAM_SEQ = #{CAM_SEQ}
         GROUP BY A.CAM_SEQ, A.SEQ
@@ -672,13 +671,13 @@
         (CAM_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, START_DT, HISTORY_NOTE, NOTE, INSERT_ID)
         VALUES
         (CASE WHEN #{CAM_SEQ} IS NOT NULL THEN #{CAM_SEQ} ELSE NEXTVAL(SEQ_CAM) END,
-            #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}, NOW(), #{HISTORY_NOTE}, #{NOTE}, #{authUserInfo.USER_ID})
+            #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}, NOW(), #{HISTORY_NOTE}, #{NOTE}, #{LOGIN_USER_ID})
         ON DUPLICATE KEY UPDATE
             HISTORY_NOTE = #{HISTORY_NOTE},
             NOTE = #{NOTE},
             FINISH_DT= NULL,
             UPDATE_DT = NOW(),
-            UPDATE_ID = #{authUserInfo.USER_ID}
+            UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
 
     <delete id="deleteMctCamWork"  parameterType="java.util.HashMap" >
@@ -692,7 +691,7 @@
             HISTORY_NOTE = #{HISTORY_NOTE},
             NOTE = #{NOTE},
             UPDATE_DT = NOW(),
-            UPDATE_ID = #{authUserInfo.USER_ID}
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE CAM_SEQ = #{CAM_SEQ}
     </update>
 
@@ -703,7 +702,7 @@
             NOTE = #{NOTE},
             FINISH_DT = NOW(),
             UPDATE_DT = NOW(),
-            UPDATE_ID = #{authUserInfo.USER_ID}
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE CAM_SEQ = #{CAM_SEQ}
     </update>
 
@@ -712,7 +711,7 @@
         (CAM_SEQ, SEQ, WORK_DIRECTION, WORK_DESC, WORK_USER_ID, DESIGN_QTY, CAM_GFILE_SEQ, INSERT_ID)
         VALUES
         (#{CAM_SEQ}, (SELECT IFNULL(MAX(B.SEQ), 0) + 1 FROM jmes.TBL_CAM_DETAIL B WHERE B.CAM_SEQ = #{CAM_SEQ}),
-            #{WORK_DIRECTION}, #{WORK_DESC}, #{WORK_USER_ID}, #{DESIGN_QTY}, #{CAM_GFILE_SEQ}, #{authUserInfo.USER_ID} )
+            #{WORK_DIRECTION}, #{WORK_DESC}, #{WORK_USER_ID}, #{DESIGN_QTY}, #{CAM_GFILE_SEQ}, #{LOGIN_USER_ID} )
     </insert>
 
     <update id="updateMctCamDetailWork"  parameterType="java.util.HashMap" >
@@ -724,7 +723,18 @@
             DESIGN_QTY = #{DESIGN_QTY},
             CAM_GFILE_SEQ = #{CAM_GFILE_SEQ},
             UPDATE_DT = NOW(),
-            UPDATE_ID = #{authUserInfo.USER_ID}
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE 1 = 1
+            AND CAM_SEQ = #{CAM_SEQ}
+            AND SEQ = #{SEQ}
+    </update>
+
+    <update id="updateMctCamDetailGfile"  parameterType="java.util.HashMap" >
+        UPDATE jmes.TBL_CAM_DETAIL
+        SET
+            CAM_GFILE_SEQ = #{CAM_GFILE_SEQ},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE 1 = 1
             AND CAM_SEQ = #{CAM_SEQ}
             AND SEQ = #{SEQ}

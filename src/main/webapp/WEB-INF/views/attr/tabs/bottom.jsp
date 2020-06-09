@@ -18,7 +18,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                <h2 class="headerTitle_01">도면 등록</h2>
+                <h2 class="headerTitle_01" id="common_cad_file_attach_pop_title">도면 등록</h2>
             </div>
             <div class="modal-body">
                 <form class="" role="form" id="common_cad_file_attach_form" name="common_cad_file_attach_form">
@@ -33,7 +33,7 @@
                         <h4>전체 조회 건수 (Total : <span id="cadFileUploadTotalCount" style="color: #00b3ee">0</span>)</h4>
                     </div>
                     <div class="fileTableWrap">
-                        <table class="colStyle mg-top20" id="attachDragAndDrop" >
+                        <table class="colStyle" id="attachDragAndDrop" >
                             <caption></caption>
                             <thead>
                             <tr>
@@ -173,7 +173,7 @@
                             <th>규격</th>
                             <td id="SIZE_TXT"></td>
                             <th>소재Size</th>
-                            <td id="MATERIAL_SIZE_TXT"></td>
+                            <td id="MATERIAL_SIZE_TXT" style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap;"></td>
                             <th>가공형태</th>
                             <td id="WORK_TYPE_NM"></td>
                         </tr>
@@ -469,11 +469,13 @@
         commonCadFileAttachPopup.on('show.bs.modal',function(e) {
             var actionType = $('#common_cad_file_attach_form').find('#actionType').val();
             $commonCadFileAttachGrid = $('#' + commonCadFileAttachGridId).pqGrid(commonCadFileAttachObj);
+            $('#common_cad_file_attach_pop').find('#common_cad_file_attach_pop_title').html('도면 등록');
             if(actionType == 'estimate') {          // 견적 도면 등록
                 $commonCadFileAttachGrid.pqGrid('option', 'colModel', estimateCadFileColModel);
             }else if(actionType == 'control') {     // 주문 도면 등록
                 $commonCadFileAttachGrid.pqGrid('option', 'colModel', controlCadFileColModel);
             }else if(actionType == 'controlRev') {  // 주문 도면 차수 변경
+                $('#common_cad_file_attach_pop').find('#common_cad_file_attach_pop_title').html('도면 차수 변경');
                 $commonCadFileAttachGrid.pqGrid('option', 'colModel', controlCadRevFileColModel);
             }else if(actionType == 'inside') {      // 자재 도면 등록
                 $commonCadFileAttachGrid.pqGrid('option', 'colModel', insideStockCadFileColModel);
@@ -489,7 +491,7 @@
 
     });
 
-    function setEstiMatePopup(actionType, queryId) {
+    function callCadDrawingUploadPopup(actionType, queryId) {
         $('#common_cad_file_attach_form').find('#actionType').val(actionType);
         $('#common_cad_file_attach_form').find('#queryId').val(queryId);
         clearCadFileAttachPopup(getCadUploadBlankHtml());
@@ -541,8 +543,8 @@
                 let deleteYn = $("#common_file_download_form #deleteYn").val();
                 let returnVal = "";
                 if (ui.cellData) {
+                    console.log(eval(deleteYn));
                     if(eval(deleteYn)) returnVal = '<span id="deleteSingleFile" class="ui-icon ui-icon-close" style="cursor: pointer"></span>';
-
                     return returnVal;
                 }
             },
@@ -597,7 +599,6 @@
     commonFileDownUploadPopup.on('hide.bs.modal', function (e) {
         commonFileDownUploadGrid.pqGrid('destroy');
         $("#common_file_download_form #deleteYn").val(true);
-
         let callElement = $("#common_file_download_form").find("#callElement").val();
         $("#" + callElement ).trigger('click');
     });
@@ -647,7 +648,6 @@
             uploadControlFiles = [];    // 파일 업로드 정보 초기화
             fnFormDataFileUploadAjax(function (data) {
                 let fileUploadList = data.fileUploadList;
-
                 let GFILE_SEQ = fileUploadList[0].GFILE_SEQ;
                 if (fileUploadList.length <= 0) {
                     alert("주문 정보가 없습니다. 주문 정보를 확인 해 주세요.");
@@ -655,7 +655,6 @@
                 }
                 let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GFILE_SEQ };
                 fnRequestGidData(commonFileDownUploadGrid, postData);
-
                 $("#common_file_download_form").find("#GFILE_SEQ").val(GFILE_SEQ);
             }, formData, '');
         }

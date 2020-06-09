@@ -31,19 +31,24 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
 
         if(session.getAttribute("LocalInfo") == null){
             String localeNat = RequestContextUtils.getLocale(request).toString();
+
+            System.out.println("localeNat=[" + localeNat + "]");
+
             if(!"/".equals(requestUrl) && session.getAttribute("LocalInfo") == null){
-                if("vi".equals(localeNat) || "vi_VN".equals(localeNat)){
-                    localeNat = "vn";
-                }else if("zh".equals(localeNat) || "zh_CN".equals(localeNat)){
-                    localeNat = "zh";
-                }else if("ko".equals(localeNat) || "ko_KR".equals(localeNat)){
-                    localeNat = "kr";
-                }else{
+                if("en".equals(localeNat) || "en_US".equals(localeNat)){
                     localeNat = "en";
+                }else if("ko".equals(localeNat) || "kr".equals(localeNat) || "ko_KR".equals(localeNat)){
+                    localeNat = "ko";
+                }else{
+                    localeNat = "ko";
                 }
             }else{
-                localeNat = "kr";
+                localeNat = "ko";
             }
+
+            System.out.println("session localeNat=[" + session.getAttribute("LocalInfo") + "]");
+            System.out.println("localeNat=[" + localeNat + "]");
+
 
             LocaleEditor localeEditor = new LocaleEditor();
             localeEditor.setAsText(localeNat);

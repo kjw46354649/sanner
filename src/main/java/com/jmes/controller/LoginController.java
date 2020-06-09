@@ -5,14 +5,18 @@ import com.jmes.service.LoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.LocaleEditor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Locale;
 import java.util.Map;
@@ -27,6 +31,9 @@ public class LoginController {
 
     @Autowired
     private MessageSource messageSource;
+
+    @Autowired
+    private LocaleResolver localeResolver;
 
     @RequestMapping(value="/")
     public String index(Model model, HttpServletRequest request,  Locale locale) throws Exception {
@@ -87,6 +94,22 @@ public class LoginController {
 
         return result;
 
+    }
+
+    @RequestMapping("/change-locale")
+    public String changeLocale(@RequestParam(value = "lang", defaultValue = "ko_KR")  String newLocale,
+                               HttpSession session, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+
+        /** Begin Locale Setting **/
+        LocaleEditor localeEditor = new LocaleEditor();
+        localeEditor.setAsText(newLocale);
+        localeResolver.setLocale(request, response, (Locale) localeEditor.getValue());
+        locale.setDefault((Locale) localeEditor.getValue());
+        /** End Locale Setting **/
+
+        session.setAttribute("LocalInfo", localeEditor.getValue());
+
+        return "redirect:/";
     }
 
 }

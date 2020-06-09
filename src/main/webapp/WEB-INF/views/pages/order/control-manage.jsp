@@ -2598,11 +2598,11 @@
         });
         /** 도면 등록 팝업 호출 **/
         $('#DRAWING_REGISTRATION').on('click', function () {
-            setEstiMatePopup('control', 'orderMapper.manageControlCadFiles');
+            callCadDrawingUploadPopup('control', 'orderMapper.manageControlCadFiles');
         });
         /** 도면 차수 및 변경 처리 **/
         $('#DRAWING_CHANGE').on('click', function () {
-            setEstiMatePopup('controlRev', 'orderMapper.manageControlCadRevFiles');
+            callCadDrawingUploadPopup('controlRev', 'orderMapper.manageControlCadRevFiles');
         });
         /** 도면 보기 팝업 호출 */
         $('#CONTROL_MANAGE_DRAWING_VIEW').on('click', function () {

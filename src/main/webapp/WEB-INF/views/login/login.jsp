@@ -1,28 +1,38 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="srping" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <section class="contents">
     <div class="logWrap">
         <form action="/main" id="login-form" name="login-form" class="login-form" method="POST">
-<%--        <form action="/jmes" method="POST">--%>
             <ul>
-                <li><label for="userID">Username</label>
+                <li><label for="userID" class="${LocalInfo}"><srping:message key="index.frm.login.idText"/></label>
                     <input type="text" name="userId" id="userId" placeholder="Enter UserID" data-validation-engine="validate[required]"
                            data-errormessage-value-missing="사용자 아이디는 필수 입력 입니다." >
                 </li>
-                <li><label for="userPassword">Password</label>
+                <li><label for="userPassword" class="${LocalInfo}"><srping:message key="index.frm.login.pwdText"/></label>
                     <input type="password" name="userPassword" id="userPassword" placeholder="Enter Password" data-validation-engine="validate[required]"
-                        data-errormessage-value-missing="패스워드는 필수 입력 입니다." ></li>
-                <li><label for="languageSltd">Language</label>
-                    <select id="languageSltd" name="languageSltd" title="언어선택">
-                        <option value="" selected="selected">언어선택</option>
-                        <option value="1">한국어</option>
-                        <option value="2">영어</option>
+                        data-errormessage-value-missing="패스워드는 필수 입력 입니다." >
+                </li>
+                <li>
+                    <label for="locale" class="${LocalInfo}"><srping:message key="index.locale.language"/></label>
+                    <select id="locale" name="locale">
+                        <c:forEach var="vlocale" items="${HighCode.H_1082}">
+                            <option value="${vlocale.CODE_CD}" <c:if test="${LocalInfo eq vlocale.CODE_CD}"> selected="selected"</c:if>>${vlocale.CODE_NM_KR}</option>
+                        </c:forEach>
                     </select>
                 </li>
-                <li><span class="chk_box"><input id="idsave" type="checkbox"><label for="idsave">Remember Me</label></span></li>
+                <li><span class="chk_box"><input id="idsave" type="checkbox"><label for="idsave"><srping:message key="index.frm.login.rememberMe"/></label></span></li>
             </ul>
-            <div class="btn">
-                <button type="text" id="login_chekc_btn" class="defaultBtn radius" >LOGIN</button>
-            </div>
+        </form>
+        <div class="btn">
+            <button type="text" id="login_chekc_btn" class="defaultBtn radius" >LOGIN</button>
+        </div>
+        <form action="/change-locale" id="locale-form" name="locale-form" method="get">
+            <input type="hidden" name="lang" id="lang" value="">
         </form>
     </div>
 </section>
@@ -33,6 +43,7 @@
 
     $(document).ready(function(){
         $("#login-form").validationEngine();
+
         $loginChekcBtn.click(function(e){
             e.preventDefault();
             if($("#login-form").validationEngine('validate') == false){
@@ -65,18 +76,21 @@
 
         $('#userPassword').keydown(function(event) {
             if(event.keyCode == '13') {
-                $("#login-form").validationEngine();
+                // $("#login-form").validationEngine();
+                $loginChekcBtn.trigger("click");
             }
         });
+    });
+
+    $('#locale').change(function(){
+        $("#locale-form").find("#lang").val($(this).val());
+        document.getElementById('locale-form').submit();
     });
 
     function saveStorage() {
         // 태그에서 id를 가진 객체 찾아오기
         var saveId = $("input:checkbox[id='idsave']").is(":checked");
         var userId = $("#userId").val();
-
-        console.log(saveId);
-        console.log(userId);
 
         // saveId에 체크 되어 있으면
         if (saveId) {

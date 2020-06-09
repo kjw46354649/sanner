@@ -41,9 +41,11 @@
         </selectKey>
         INSERT INTO jmes.TBL_FILE
         (FILE_SEQ, FILE_NM, FILE_PATH, TIME_PATH, ORGINAL_FILE_NM, FILE_TYPE, FILE_EXT, FILE_SIZE,
-            GFILE_SEQ, INSERT_ID)
+            FILE_KIND, GFILE_SEQ, INSERT_ID)
         VALUES
         (#{FILE_SEQ}, #{FILE_NM}, #{FILE_PATH}, #{TIME_PATH}, #{ORGINAL_FILE_NM}, #{FILE_TYPE}, #{FILE_EXT}, #{FILE_SIZE},
+            CASE WHEN UPPER(#{FILE_EXT}) IN ('MC7', 'MC9', 'MCAM') THEN 'EXC'
+                 WHEN UPPER(#{FILE_EXT}) = 'NC' THEN 'EXN' ELSE SPACE(0) END,
             #{GFILE_SEQ}, 'admin')
     </insert>
 

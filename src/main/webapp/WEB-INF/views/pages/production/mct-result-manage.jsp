@@ -20,6 +20,9 @@
         <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value=""/>
         <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
         <input type="hidden" id="CAM_SEQ" name="CAM_SEQ" value=""/>
+        <input type="hidden" id="SEQ" name="SEQ" value=""/>
+        <input type="hidden" id="CAM_GFILE_SEQ" name="CAM_GFILE_SEQ" value=""/>
+        <input type="button" id="camWorkStepFileUploadBtn" style="display: none;">
         <div class="layerPopup">
             <div class="h_area">
                 <h3>CAM 작업 관리</h3>
@@ -189,7 +192,6 @@
         </div>
     </div>
 </div>
-
 <script>
 
     let $mctResultManageGrid;
@@ -449,9 +451,33 @@
                 title: 'CAM 작업 실적', align: 'center', colModel: [
                     {title: 'step', datatype: 'integer', dataIndx: 'CAM_STEP', minWidth: 30, width: 35},
                     {title: '가공위치', datatype: 'string', dataIndx: 'WORK_DIRECTION', minWidth: 30, width: 50},
-                    {title: '작업내용', datatype: 'string', dataIndx: 'WORK_DESC', minWidth: 30, width: 100},
-                    {title: '작업자', datatype: 'string', dataIndx: 'WORK_USER_ID', minWidth: 30, width: 50},
-                    {title: '파일', datatype: 'string', dataIndx: '', minWidth: 30, width: 60},
+                    {title: '작업내용', datatype: 'string', dataIndx: 'WORK_DESC', minWidth: 30, width: 80},
+                    {title: '작업자', datatype: 'string', dataIndx: 'WORK_USER_ID', minWidth: 30, width: 100},
+                    {title: '파일', datatype: 'string', dataIndx: '', minWidth: 30, width: 60,
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            let iconFiles = '';
+                            if(rowData.CAM_FILE_SEQ) iconFiles += '<span id="downloadCAMFIle" class="greenFileImageICon" style="cursor: pointer; margin-left:3px;"></span>&nbsp;&nbsp;';
+                            if(rowData.NC_FILE_SEQ) iconFiles += '<span id="downloadNCFile" class="purpleFileImageICon" style="cursor: pointer; margin-left:25px;"></span>';
+                            return iconFiles;
+                        },
+                        postRender: function (ui) {
+                            let grid = this;
+                            let $cell = grid.getCell(ui);
+                            let rowData = ui.rowData;
+
+                            $cell.find('#downloadCAMFIle').bind('click', function(e) {
+                                console.log(rowData.CAM_FILE_SEQ);
+                                e.preventDefault();
+                                fnSingleFileDownloadFormPageAction(rowData.CAM_FILE_SEQ);
+                            });
+                            $cell.find('#downloadNCFile').bind('click', function(e) {
+                                console.log(rowData.NC_FILE_SEQ);
+                                e.preventDefault();
+                                fnSingleFileDownloadFormPageAction(rowData.NC_FILE_SEQ);
+                            });
+                        }
+                    },
                     {title: '비고 및 공유사항', datatype: 'string', dataIndx: 'NOTE', minWidth: 100, width: 150},
                     {title: '업데이트', datatype: 'string', dataIndx: 'CAM_FINISH_DT', minWidth: 75, width: 75}
                 ]
@@ -548,7 +574,19 @@
             },
             {title: '단위수량', dataType: 'string', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: 'DESIGN_QTY', minWidth: 40, width: 60},
             // {title: '계산시간', dataType: 'string', dataIndx: 'WORK_TIME', minWidth: 40, width: 70},
-            {title: '대상파일', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: 'CAM_GFILE_SEQ', minWidth: 250, width: 330},
+            {title: '대상파일', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: 'CAM_GFILE_SEQ', minWidth: 250, width: 330,
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    if(rowData.CAM_FILE_NM && rowData.NC_FILE_NM)
+                        return rowData.CAM_FILE_NM + ', &nbsp;' + rowData.NC_FILE_NM;
+                    else if(rowData.CAM_FILE_NM && !rowData.NC_FILE_NM)
+                        return rowData.CAM_FILE_NM;
+                    else if(!rowData.CAM_FILE_NM && rowData.NC_FILE_NM)
+                        return rowData.NC_FILE_NM;
+                    else
+                        return "";
+                },
+            },
             {title: '', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: '', minWidth: 50, width: 50,
                 render: function (ui) {
                     return '<button type="button" class="miniBtn blue" id="CAM_WORK_FILE_ACTION">파일</button>';
@@ -559,11 +597,31 @@
                     let rowData = ui.rowData;
                     $cell.find('#CAM_WORK_FILE_ACTION').bind('click', function(e) {
                         e.preventDefault();
-                        camWorkManagePop(rowData);
+                        $("#cam_work_manage_pop_form").find("#SEQ").val(rowData.SEQ);
+                        $("#common_file_download_form").find("#deleteYn").val("true");
+                        commonFileDownUploadPopupCall(rowData.CAM_GFILE_SEQ, 'camWorkStepFileUploadBtn');
                     });
                 }
             }
         ];
+
+        $("#camWorkStepFileUploadBtn").on('click', function(){
+            let GfileKey = $("#common_file_download_form").find("#GFILE_SEQ").val();
+            if(GfileKey > 0) {
+                let parameter = {
+                    'queryId': 'machine.updateMctCamDetailGfile',
+                    'CAM_GFILE_SEQ': GfileKey,
+                    'CAM_SEQ': $("#cam_work_manage_pop_form").find("#CAM_SEQ").val(),
+                    'SEQ': $("#cam_work_manage_pop_form").find("#SEQ").val()
+                };
+                let parameters = {'url': '/json-update', 'data': parameter};
+                fnPostAjax(function (data, callFunctionParam) {
+                    popCamWorkReload();
+                }, parameters, '');
+            }else{
+                popCamWorkReload();
+            }
+        });
 
         let camWorkManagePopObj = {
             minHeight: '100%', height: 150, collapsible: false, postRenderInterval: -1, //call postRender synchronously.

@@ -9,7 +9,8 @@
 .login .logWrap li { padding-bottom: 23px }
 .login .logWrap li.no-mg { padding-bottom: 8px }
 .login .logWrap li:last-child { padding-bottom: 0px }
-.login .logWrap li label { color: #464646; font-size: 12px; display: block;padding-bottom: 3px;; }
+.login .logWrap li label.ko{ color: #464646; font-size: 12px; display: block;padding-bottom: 1px;; }
+.login .logWrap li label.en{ color: #464646; font-size: 12px; display: block;padding-bottom: 3px;; }
 .login .logWrap li input { width: 310px; height: 33px; border: 0; transition: none; background: transparent; color: #1f293f; font-size: 12px; }
 .login .logWrap li input::placeholder { color: #d0d8e8; }
 .login .logWrap li input:focus { border: 0; }

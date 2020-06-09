@@ -1226,22 +1226,27 @@
         ) VALUES
         <foreach collection="list" item="item" separator=",">
         (
-            (SELECT CONCAT('C', DATE_FORMAT(CURDATE(), '%y%m'), LPAD(SUBSTR(MAX(A.BARCODE_NUM), 6) + 1, 5, '0'))
-            FROM TBL_CONTROL_BARCODE A
-            WHERE A.BARCODE_NUM LIKE CONCAT('C', DATE_FORMAT(CURDATE(), '%y%m'), '%')),
-            (SELECT B.CONTROL_SEQ
-            FROM TBL_CONTROL B
-            WHERE B.CONTROL_NUM = #{item.CONTROL_NUM}),
-            (SELECT C.CONTROL_DETAIL_SEQ
-            FROM TBL_CONTROL_PART C
-                INNER JOIN TBL_CONTROL D ON C.CONTROL_SEQ = D.CONTROL_SEQ
-            WHERE
-                D.CONTROL_NUM = #{item.CONTROL_NUM}
-                AND C.CONTROL_DETAIL_SEQ NOT IN (SELECT E.CONTROL_DETAIL_SEQ
+            (
+                SELECT CONCAT('C', DATE_FORMAT(CURDATE(), '%y%m'), LPAD(SUBSTR(MAX(A.BARCODE_NUM), 6) + 1, 5, '0'))
+                FROM TBL_CONTROL_BARCODE A
+                WHERE A.BARCODE_NUM LIKE CONCAT('C', DATE_FORMAT(CURDATE(), '%y%m'), '%')
+            ),
+            (
+                SELECT B.CONTROL_SEQ
+                FROM TBL_CONTROL B
+                WHERE B.CONTROL_NUM = #{item.CONTROL_NUM}
+            ),
+            (
+                SELECT C.CONTROL_DETAIL_SEQ
+                FROM TBL_CONTROL_PART C
+                    INNER JOIN TBL_CONTROL D ON C.CONTROL_SEQ = D.CONTROL_SEQ
+                WHERE D.CONTROL_NUM = #{item.CONTROL_NUM}
+                    AND C.CONTROL_DETAIL_SEQ NOT IN (SELECT E.CONTROL_DETAIL_SEQ
                                                 FROM TBL_CONTROL_BARCODE E
                                                 WHERE E.CONTROL_SEQ = C.CONTROL_SEQ)
                                                 ORDER BY C.CONTROL_DETAIL_SEQ
-                                                LIMIT 1),
+                                                LIMIT 1
+            ),
             IFNULL (#{CONTROL_VER}, 0),
             IFNULL (#{DRAWING_VER}, 0)
         )

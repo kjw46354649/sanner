@@ -1047,7 +1047,7 @@
 
         /* 도면 등록 팝업 호출 */
         $btnEstimateRegisterDrawAdd.click(function () {
-            setEstiMatePopup('estimate', 'estimate.manageEstimateCadFiles');
+            callCadDrawingUploadPopup('estimate', 'estimate.manageEstimateCadFiles');
         });
 
         /* 도면 등록 팝업 호출 */

@@ -243,7 +243,7 @@
         });
     });
 
-    function setEstiMatePopup(actionType, queryId) {
+    function callCadDrawingUploadPopup(actionType, queryId) {
         $('#common_cad_file_attach_form').find('#type').val(actionType);
         $('#common_cad_file_attach_form').find('#queryId').val(queryId);
         let fileHtml = '<tr><td colspan="3" style="text-align: center;">마우스로 파일을 Drag & Drop 하세요.</td></tr><tr><td colspan="3"></td></tr><tr><td colspan="3"></td></tr><tr><td colspan="3"></td></tr><tr><td colspan="3"></td></tr>';

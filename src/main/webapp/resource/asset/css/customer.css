@@ -185,8 +185,8 @@
 .cadDrawing .modal-body { position: relative;  padding: 15px 15px 25px 15px;}
 .cadDrawing .modal-body h4{ font-size: 1.5em; }
 .cadDrawing .modal-body .buttonWrap { height: 35px; padding: 0 0px; font-size: 13px; display: block; }
-.cadDrawing .modal-body .fileTableWrap{ padding: 5px 0px 5px 0px; }
-.cadDrawing .modal-body .fileTableInfoWrap{padding: 0px 0px 5px 0px;}
+.cadDrawing .modal-body .fileTableWrap{ padding: 5px 0px 5px 0px;}
+.cadDrawing .modal-body .fileTableInfoWrap{padding: 0px 0px 5px 0px; font-size: 0.8em;}
 .cadDrawing .modal-body .fileTableInfoWrap .errorInfo{ color : #c00000; font-weight: bold; padding: 0px 0px 0px 10px; }
 .cadDrawing .modal-body table.colStyle { border: 1px solid #cecece; }
 .cadDrawing .modal-body table.colStyle tbody { height: 200px; display: inline-block; overflow: auto; }
