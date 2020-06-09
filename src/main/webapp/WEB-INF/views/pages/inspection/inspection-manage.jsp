@@ -246,9 +246,7 @@
                 <div id="inspection_manage_grid_pop_02"></div>
             </div>
         </div>
-        <style>
 
-        </style>
         <div class="btnWrap">
             <button type="button" class="defaultBtn greenPopGra" id="inspection_manage_pop_save">저장</button>
             <button type="button" class="defaultBtn grayPopGra" id="popClose">닫기</button>

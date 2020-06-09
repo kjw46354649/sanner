@@ -15,7 +15,7 @@
         <form class="form-inline" id="machine_manage_search_form" name="machine_manage_search_form" role="form">
             <input type="hidden" id="queryId" name="queryId" value="machine.selectMachineList">
             <input type="hidden" id="SEL_EQUIP_KIND" name="SEL_EQUIP_KIND" value="1">
-            <div class="gubunWrap row2_topWrap">
+            <div class="none_gubunWrap row2_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -52,7 +52,7 @@
                                 </c:forEach>
                             </select>
                         </span>
-                        <span class="ipu_wrap right_float"><button type="button" class="defaultBtn radius blue" id="searchBtn">검색</button></span>
+
                     </li>
                     <li>
                         <span class="ipu_wrap"><label for="SEL_MAIN_USER_ID" class="label_100">담당자</label>
@@ -79,7 +79,7 @@
                             </span>
                         </div>
                         <span class="chk_box mg-left20">&nbsp;&nbsp;<input id="SEL_TERM_DT_USE" name="SEL_TERM_DT_USE" type="checkbox"><label for="SEL_TERM_DT_USE">선택</label></span>
-
+                        <button type="button" class="right_float defaultBtn radius blue" id="searchBtn">검색</button>
                     </li>
                 </ul>
 
@@ -417,7 +417,7 @@
             {title: '구입시기', dataType: 'string', dataIndx: 'PURCHASE_DT'},
             {title: '담당(정)', dataType: 'string', dataIndx: 'MAIN_USER_NM'},
             {title: '담당(부)', dataType: 'string', dataIndx: 'SUB_USER_NM'},
-            {title: '작동시작(누적)', dataType: 'string', dataIndx: 'WORKING_TIME'},
+            {title: '작동시간(누적)', dataType: 'string', dataIndx: 'WORKING_TIME'},
             //{title: '최근<br>정비일시', dataType: 'string', dataIndx: ''},
             {title: '최근종료일시', dataType: 'string', dataIndx: 'LAST_REPAIR_DT'},
             {title: '최근수행번호', dataType: 'string', dataIndx: 'LAST_CONTROL_NUM'}
@@ -491,7 +491,7 @@
             {title: '구입시기', dataType: 'string', dataIndx: 'PURCHASE_DT'},
             {title: '담당(정)', dataType: 'string', dataIndx: 'MAIN_USER_NM'},
             {title: '담당(부)', dataType: 'string', dataIndx: 'SUB_USER_NM'},
-            {title: '작동시작(누적)', dataType: 'string', dataIndx: 'WORKING_TIME'},
+            {title: '작동시간(누적)', dataType: 'string', dataIndx: 'WORKING_TIME'},
             //{title: '최근<br>정비일시', dataType: 'string', dataIndx: ''},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'}
         ];

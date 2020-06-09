@@ -10,7 +10,7 @@
             <input type="hidden" name="queryId" id="queryId" value="material.selectInsideStockList">
             <input type="hidden" name="popType" id="popType" value="">
             <input type="hidden" name="V_INSIDE_STOCK_NUM" id="V_INSIDE_STOCK_NUM" value="">
-            <div class="gubunWrap row3_topWrap" >
+            <div class="none_gubunWrap row3_topWrap" >
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -37,9 +37,7 @@
                             <input type="text" class="wd_200" name="SEL_ITEM_NM" id="SEL_ITEM_NM" title="품명">
                         </span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap right_float">
-                            <button type="button" class="defaultBtn radius blue" id="stock_manage_search_btn">검색</button>
-                        </span>
+
                     </li>
                     <li>
                         <span class="ipu_wrap">
@@ -108,7 +106,7 @@
                                 <span class="nbsp" id="SEL_SIZE_SEARCH_TYPE_R_6_SPAN">~</span>
                             <input type="text" class="wd_50" name="SEL_SIZE_SEARCH_TYPE_R_6" id="SEL_SIZE_SEARCH_TYPE_R_6">
                         </span>
-
+                        <button type="button" class="right_float defaultBtn radius blue" id="stock_manage_search_btn">검색</button>
                         <%--<span class="txt_span pd-right20">조회 Option</span>
                         <span class="chk_box"><input type="checkbox" name="DEADLINE" id="DEADLINE"><label for="DEADLINE">마감</label></span>
                         <span class="chk_box"><input type="checkbox" name="END" id="END"><label for="END">종료</label></span>
@@ -121,7 +119,7 @@
             </div>
         </form>
     </div>
-    <div class="bottomWrap">
+    <div class="bottomWrap row3_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
                 <button type="button" class="defaultBtn" id="stock_manage_new_btn">재고 입고</button>
@@ -161,15 +159,14 @@
         <input type="hidden" name="ITEM_NM" id="ITEM_NM" value="">
         <input type="hidden" name="COMP_CD" id="COMP_CD" value="">
 
-
-
-
     <div class="miniPopup">
-        <div class="headWrap">
+        <%--<div class="headWrap">
             <h4 id="pop_title">재고 입고</h4>
-            <%--<button class="closeBtn">닫기</button>--%>
-        </div>
+            <button class="closeBtn">닫기</button>
+        </div>--%>
         <div class="contentWrap">
+            <h3 id="pop_title">재고 입고</h3>
+            <button type="button" class="pop_close" id="inside_stock_pop_close_btn2">닫기</button>
             <table>
                 <caption></caption>
                 <colgroup>
@@ -233,16 +230,17 @@
         </div>
         <div class="footerWrap">
             <div class="barcode" id="footer_barcode">
-                <span class="barCodeTxt"><input type="text" class="wd_270_barcode" style="height: 50px;" name="BARCODE_NUM" id="BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요"></span>
-                <span class="barCode"><img src="/resource/asset/images/common/img_barcode.png" alt="바코드"></span>
+                <span class="barCodeTxt"><input type="text" class="wd_240_barcode" name="BARCODE_NUM" id="BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요"></span>
+                <span class="barCode"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="stock_manage_pop_form_barcode_img"></span>
             </div>
             <div class="process">
                 <span class="pr_txt" id="footer_msg"></span>
 <%--                <span class="pr_txt">재고를 <b>신규 생성</b>하시겠습니까?</span>--%>
 <%--                <span class="pr_txt"><b class="block">입고가 완료되었습니다.</b>추가 진행하려면 바코드를 스캔해주세요</span>--%>
                 <div class="btnWrap">
-                    <button type="button" class="submit" id="inside_stock_pop_save_btn">submit</button>
-                    <button type="button" class="cancel" id="inside_stock_pop_close_btn">cancel</button>
+                    <button type="button" class="defaultBtn greenPopGra" id="inside_stock_pop_save_btn">저장</button>
+                    <button type="button" class="defaultBtn grayPopGra" id="inside_stock_pop_close_btn">닫기</button>
+
                 </div>
             </div>
         </div>
@@ -274,7 +272,7 @@
         $("#stock_manage_form").find("#queryId").val("material.selectInsideStockList");
         stockManagePostData01 = fnFormToJsonArrayData('#stock_manage_form');
         stockManageColModel01 = [
-            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD_NM', minWidth: 100,
+            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD_NM',  minWidth: 110, width: 110,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "ORDER_COMP_CD_NM", id: "ORDER_COMP_CD" },
@@ -305,20 +303,20 @@
                     { type: 'minLen', value: 1, msg: "Required" }
                 ]
             },
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 102,
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 150, width: 150,
                 editable: function (ui) { return gridCellEditable(ui);},
                 validations: [
                     { type: 'minLen', value: 1, msg: "Required" }
                 ]
             },
-            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', minWidth: 106,
+            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', minWidth: 200, width: 200,
                 editable: function (ui) { return gridCellEditable(ui);},
                 validations: [
                     { type: 'minLen', value: 1, msg: "Required" }
                 ]
             },
-            {title: '재고번호', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', editable: false},
-            {title: '사업자구분', dataType: 'string', dataIndx: 'COMP_CD_NM', minWidth: 100,
+            {title: '재고번호', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 150, width: 150, editable: false},
+            {title: '사업자구분', dataType: 'string', dataIndx: 'COMP_CD_NM', minWidth: 120, width: 120, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
                 editor: {
                     type: 'select',
                     mapIndices: { name: "COMP_CD_NM", id: "COMP_CD" },
@@ -348,8 +346,9 @@
                     { type: 'minLen', value: 1, msg: "Required" }
                 ]
             },
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 95, editable: function (ui) { return gridCellEditable(ui);}},
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 100, width: 100, editable: function (ui) { return gridCellEditable(ui);}},
             {title: '소재Type', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM',editable: function (ui) { return gridCellEditable(ui);},
+                minWidth: 100, width: 100,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "MATERIAL_DETAIL_NM", id: "MATERIAL_DETAIL" },
@@ -367,14 +366,18 @@
                     { type: 'minLen', value: 1, msg: "Required" }
                 ]
             },
-            {title: '재고수량(EA)', dataType: 'integer', dataIndx: 'INSIDE_STOCK_CURR_QTY', editable: function (ui) { return gridCellEditable(ui);}},
+            {title: '재고수량<br>(EA)', dataType: 'integer', dataIndx: 'INSIDE_STOCK_CURR_QTY', editable: function (ui) { return gridCellEditable(ui);}
+                , styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}
+                , format: '#,###'
+            },
             // {
-            //     title: '대칭', datatype: 'integer', align: 'center', colModel: [
-            //         {title: '원칭', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY', editable: true},
-            //         {title: '대칭', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY', editable: true}
+            //     title: '대칭', datatype: 'integer', align: 'center', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, colModel: [
+            //         {title: '원칭', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, editable: true},
+            //         {title: '대칭', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, editable: true}
             //     ]
             // },
-            {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_CD_NM', editable: true,
+            {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_CD_NM', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
+                minWidth: 100, width: 100,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "WAREHOUSE_CD_NM", id: "WAREHOUSE_CD" },
@@ -389,7 +392,8 @@
                     }
                 }
             },
-            {title: '위치', dataType: 'string', dataIndx: 'LOC_SEQ_NM', minWidth: 60,editable: true,
+            {title: '재고위치', dataType: 'string', dataIndx: 'LOC_SEQ_NM', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
+                minWidth: 100, width: 100,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "LOC_SEQ_NM", id: "LOC_SEQ" },
@@ -417,47 +421,84 @@
                     }
                 }
             },
-            {title: 'DXF', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 20, minWidth: 20, editable: false,
+            // {title: 'DXF', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 20, minWidth: 20, editable: false,
+            //     render: function (ui) {
+            //         let rowIndx = ui.rowIndx, grid = this;
+            //         if (ui.rowData['DXF_GFILE_SEQ'] > 0) return "[PDF]";
+            //         return '';
+            //     }
+            // },
+            // {title: 'IMG', align: 'center', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', width: 20, minWidth: 20, editable: false,
+            //     render: function (ui) {
+            //         if (ui.cellData) return '<span id="imageView" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+            //     },
+            //     postRender: function (ui) {
+            //         let rowIndx = ui.rowIndx,
+            //             grid = this,
+            //             $cell = grid.getCell(ui);
+            //         $cell.find("#imageView").bind("click", function () {
+            //             let rowData = ui.rowData;
+            //
+            //             console.log(rowData.IMG_GFILE_SEQ);
+            //             callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+            //         });
+            //     }
+            // },
+            {title: '생성일시', dataType: 'string', dataIndx: 'INSERT_TIME', minWidth: 100, width: 100, editable: false},
+            {title: '수정일시', dataType: 'string', dataIndx: 'UPDATE_TIME', minWidth: 100, width: 100, editable: false},
+            // {title: '입고', align: 'center', dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_IN', width: 20, minWidth: 42, editable: false, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},
+            //     render: function (ui) {
+            //         let rowIndx = ui.rowIndx, grid = this;
+            //         console.log("ui.rowData['INSIDE_STOCK_NUM']", ui.rowData['INSIDE_STOCK_NUM']);
+            //         if (ui.rowData['INSIDE_STOCK_NUM'] != undefined) return "[입고]";
+            //         return '';
+            //     }
+            // },
+            // {title: '출고', align: 'center', dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_OUT', width: 20, minWidth: 42, editable: false, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},
+            //     render: function (ui) {
+            //         let rowIndx = ui.rowIndx, grid = this;
+            //         if (ui.rowData['INSIDE_STOCK_NUM'] != undefined) return "[출고]";
+            //         return '';
+            //     }
+            // },
+            {title: '입고/출고', minWidth: 100, width: 100, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'fffffF'}, dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_IN_OUT',
                 render: function (ui) {
-                    let rowIndx = ui.rowIndx, grid = this;
-                    if (ui.rowData['DXF_GFILE_SEQ'] > 0) return "[PDF]";
-                    return '';
-                }
-            },
-            {title: 'IMG', align: 'center', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', width: 20, minWidth: 20, editable: false,
-                render: function (ui) {
-                    if (ui.cellData) return '<span id="imageView" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+                    let grid = this;
+                    let $cell = grid.getCell(ui);
+                    let rowData = ui.rowData;
+                    let inBtn = '';
+                    if (ui.rowData['INSIDE_STOCK_NUM'] != undefined){
+                        inBtn = '<button type="button" class="miniBtn orange" id="INSIDE_STOCK_QTY_IN_ACTION">입고</button>' + '&nbsp;';
+                    }
+                    let outBtn = '';
+                    if (ui.rowData['INSIDE_STOCK_NUM'] != undefined){
+                        outBtn = '<button type="button" class="miniBtn blue" id="INSIDE_STOCK_QTY_OUT_ACTION">출고</button>';
+                    }
+                    return inBtn + outBtn;
                 },
                 postRender: function (ui) {
-                    let rowIndx = ui.rowIndx,
-                        grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find("#imageView").bind("click", function () {
-                        let rowData = ui.rowData;
-
-                        console.log(rowData.IMG_GFILE_SEQ);
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    let grid = this;
+                    let $cell = grid.getCell(ui);
+                    //let rowData = ui.rowData;
+                    $cell.find('#INSIDE_STOCK_QTY_IN_ACTION').bind('click', function(e) {
+                        e.preventDefault();
+                       $("#stock_manage_form").find("#popType").val("GRID_IN");
+                       $("#stock_manage_form").find("#V_INSIDE_STOCK_NUM").val(ui.rowData['INSIDE_STOCK_NUM']);
+                       $('#stock_manage_pop').modal('show');
+                    });
+                    $cell.find('#INSIDE_STOCK_QTY_OUT_ACTION').bind('click', function(e) {
+                        e.preventDefault();
+                        if (ui.rowData['INSIDE_STOCK_CURR_QTY'] <= 0){
+                            alert("출고할 재고수량이 없습니다.");
+                        }else{
+                            $("#stock_manage_form").find("#popType").val("GRID_OUT");
+                            $("#stock_manage_form").find("#V_INSIDE_STOCK_NUM").val(ui.rowData['INSIDE_STOCK_NUM']);
+                            $('#stock_manage_pop').modal('show');
+                        }
                     });
                 }
             },
-            {title: '생성일시', dataType: 'string', dataIndx: 'INSERT_TIME', minWidth: 92, editable: false},
-            {title: '수정일시', dataType: 'string', dataIndx: 'UPDATE_TIME', minWidth: 92, editable: false},
-            {title: '입고', align: 'center', dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_IN', width: 20, minWidth: 42, editable: false,
-                render: function (ui) {
-                    let rowIndx = ui.rowIndx, grid = this;
-                    console.log("ui.rowData['INSIDE_STOCK_NUM']", ui.rowData['INSIDE_STOCK_NUM']);
-                    if (ui.rowData['INSIDE_STOCK_NUM'] != undefined) return "[입고]";
-                    return '';
-                }
-            },
-            {title: '출고', align: 'center', dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_OUT', width: 20, minWidth: 42, editable: false,
-                render: function (ui) {
-                    let rowIndx = ui.rowIndx, grid = this;
-                    if (ui.rowData['INSIDE_STOCK_NUM'] != undefined) return "[출고]";
-                    return '';
-                }
-            },
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true}
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', minWidth: 250, width: 250, editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}}
         ];
         stockManageGridId01.pqGrid({
             width: "100%", height: 700,
@@ -472,7 +513,7 @@
             },
             strNoRows: g_noData,
             columnTemplate: {align: 'center', hvalign: 'center'},
-            scrollModel: {autoFit: true},
+            //scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
             selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
@@ -492,34 +533,34 @@
                 for (let i = 0; i < selectList.length; i++) {
                     SelectedRowIndex.push(selectList[i].rowIndx);
                 }
-            },
-            cellClick: function (event, ui) {
-                let rowIndx = ui.rowIndx, $grid = this;
-                if (ui.rowData['INSIDE_STOCK_NUM'] != undefined){
-                    if (ui.dataIndx == 'INSIDE_STOCK_QTY_IN') {//입고
-                        $("#stock_manage_form").find("#popType").val("GRID_IN");
-                        $("#stock_manage_form").find("#V_INSIDE_STOCK_NUM").val(ui.rowData['INSIDE_STOCK_NUM']);
-                        $('#stock_manage_pop').modal('show');
-                    }
-                    if (ui.dataIndx == 'INSIDE_STOCK_QTY_OUT') {//출고
-
-                        if (ui.rowData['INSIDE_STOCK_CURR_QTY'] <= 0){
-                            alert("출고할 재고수량이 없습니다.");
-                        }else{
-                            $("#stock_manage_form").find("#popType").val("GRID_OUT");
-                            $("#stock_manage_form").find("#V_INSIDE_STOCK_NUM").val(ui.rowData['INSIDE_STOCK_NUM']);
-                            $('#stock_manage_pop').modal('show');
-                        }
-                    }
-                }
             }
+            // ,cellClick: function (event, ui) {
+            //     let rowIndx = ui.rowIndx, $grid = this;
+            //     if (ui.rowData['INSIDE_STOCK_NUM'] != undefined){
+            //         if (ui.dataIndx == 'INSIDE_STOCK_QTY_IN') {//입고
+            //             $("#stock_manage_form").find("#popType").val("GRID_IN");
+            //             $("#stock_manage_form").find("#V_INSIDE_STOCK_NUM").val(ui.rowData['INSIDE_STOCK_NUM']);
+            //             $('#stock_manage_pop').modal('show');
+            //         }
+            //         if (ui.dataIndx == 'INSIDE_STOCK_QTY_OUT') {//출고
+            //
+            //             if (ui.rowData['INSIDE_STOCK_CURR_QTY'] <= 0){
+            //                 alert("출고할 재고수량이 없습니다.");
+            //             }else{
+            //                 $("#stock_manage_form").find("#popType").val("GRID_OUT");
+            //                 $("#stock_manage_form").find("#V_INSIDE_STOCK_NUM").val(ui.rowData['INSIDE_STOCK_NUM']);
+            //                 $('#stock_manage_pop').modal('show');
+            //             }
+            //         }
+            //     }
+            // }
         });
         /**  현황관리(GRID01) 그리드 선언 끝 **/
 
         let gridCellEditable = function(ui){
             let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
             let INSIDE_STOCK_NUM = rowData["INSIDE_STOCK_NUM"];
-            if (INSIDE_STOCK_NUM == null || INSIDE_STOCK_NUM == "" || INSIDE_STOCK_NUM== "undefined") {
+            if (INSIDE_STOCK_NUM == null || INSIDE_STOCK_NUM == "" || INSIDE_STOCK_NUM== "undefined" || INSIDE_STOCK_NUM== undefined) {
                 return true;
             }else{
                 return false;
@@ -783,6 +824,9 @@ console.log("change",JSON.stringify(changes));
         $('#stock_manage_pop_form').find('#inside_stock_pop_close_btn').on('click', function () {
             $('#stock_manage_pop').modal('hide');
         });
+        $('#stock_manage_pop_form').find('#inside_stock_pop_close_btn2').on('click', function () {
+                    $('#stock_manage_pop').modal('hide');
+        });
         $("#stock_manage_pop_form").find("#WAREHOUSE_CD").change(function(){
             let WAREHOUSE_CD = this.value;
             let paramData = {"url":"/json-list", "data": {"WAREHOUSE_CD": WAREHOUSE_CD, "queryId": 'material.selectWarehouseLocationList'}};
@@ -914,60 +958,68 @@ console.log("change",JSON.stringify(changes));
             console.log("POP_STOCK_QTY_AFTER",POP_STOCK_QTY_AFTER);
 
         }
+        $("#stock_manage_pop_form").find("#BARCODE_NUM").on({
+            focus: function () {
+                $("#stock_manage_pop_form_barcode_img").attr("src", "/resource/asset/images/common/img_barcode_long_on.png");
+            },
+            blur: function () {
+                $("#stock_manage_pop_form_barcode_img").attr("src", "/resource/asset/images/common/img_barcode_long.png");
+            },
+            keyup: function (e) {
+                if (e.keyCode == 13) {
+                    let BARCODE_NUM = $("#stock_manage_pop_form").find("#BARCODE_NUM").val();
+                    let parameters = {
+                        'url': '/json-info',
+                        'data': {"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockPopInfoBarcode"}
+                    };
+                    $("#stock_manage_pop_form").find("#footer_msg").show();
+                    $("#stock_manage_pop_form").find("#inside_stock_pop_save_btn").show();
+                    fnPostAjax(function (data, callFunctionParam) {
+                        let dataInfo = data.info;
+                        if(dataInfo == null ) {
+                            let parameters2 = {
+                                'url': '/json-info',
+                                'data': {"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockPopInfoBarcodeNew"}
+                            };
+                            fnPostAjax(function (data2, callFunctionParam) {
+                                let dataInfo2 = data2.info;
+                                if(dataInfo2 == null ) {
+                                    alert("도면번호가 존재하지 않습니다.");
+                                    fnResetFrom("stock_manage_pop_form");
+                                    $('#stock_manage_pop').modal('hide');
+                                }else{
+                                    fnJsonDataToForm("stock_manage_pop_form", dataInfo2);
+                                    $("#stock_manage_pop_form").find("#footer_msg").html(pop_msg_new);
+                                    $("#stock_manage_pop_form").find("#ORDER_QTY").html(dataInfo2.ORDER_QTY);
+                                    $("#stock_manage_pop_form").find("#ORIGINAL_ORDER_QTY").val(dataInfo2.ORDER_QTY);
+                                    $("#stock_manage_pop_form").find("#ORIGINAL_POP_STOCK_QTY_AFTER").val(dataInfo2.POP_STOCK_QTY_AFTER);
+                                    $("#stock_manage_pop_form").find("#WAREHOUSE_CD").val(dataInfo2.WAREHOUSE_CD);
+                                    $("#stock_manage_pop_form").find("#WAREHOUSE_CD").change();
+                                    setTimeout(function() {
+                                        $("#stock_manage_pop_form").find("#LOC_SEQ").val(dataInfo2.LOC_SEQ);
+                                    }, 1000);
 
-        $("#stock_manage_pop_form").find("#BARCODE_NUM").on('keyup', function(e) {
-            if (e.keyCode == 13) {
-                let BARCODE_NUM = $("#stock_manage_pop_form").find("#BARCODE_NUM").val();
-                let parameters = {
-                    'url': '/json-info',
-                    'data': {"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockPopInfoBarcode"}
-                };
-                $("#stock_manage_pop_form").find("#footer_msg").show();
-                $("#stock_manage_pop_form").find("#inside_stock_pop_save_btn").show();
-                fnPostAjax(function (data, callFunctionParam) {
-                    let dataInfo = data.info;
-                    if(dataInfo == null ) {
-                        let parameters2 = {
-                            'url': '/json-info',
-                            'data': {"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockPopInfoBarcodeNew"}
-                        };
-                        fnPostAjax(function (data2, callFunctionParam) {
-                            let dataInfo2 = data2.info;
-                            if(dataInfo2 == null ) {
-                                alert("도면번호가 존재하지 않습니다.");
-                                fnResetFrom("stock_manage_pop_form");
-                                $('#stock_manage_pop').modal('hide');
-                            }else{
-                                fnJsonDataToForm("stock_manage_pop_form", dataInfo2);
-                                $("#stock_manage_pop_form").find("#footer_msg").html(pop_msg_new);
-                                $("#stock_manage_pop_form").find("#ORDER_QTY").html(dataInfo2.ORDER_QTY);
-                                $("#stock_manage_pop_form").find("#ORIGINAL_ORDER_QTY").val(dataInfo2.ORDER_QTY);
-                                $("#stock_manage_pop_form").find("#ORIGINAL_POP_STOCK_QTY_AFTER").val(dataInfo2.POP_STOCK_QTY_AFTER);
-                                $("#stock_manage_pop_form").find("#WAREHOUSE_CD").val(dataInfo2.WAREHOUSE_CD);
-                                $("#stock_manage_pop_form").find("#WAREHOUSE_CD").change();
-                                setTimeout(function() {
-                                    $("#stock_manage_pop_form").find("#LOC_SEQ").val(dataInfo2.LOC_SEQ);
-                                }, 1000);
+                                }
+                            }, parameters2, '');
 
-                            }
-                        }, parameters2, '');
+                        }else{
+                            fnJsonDataToForm("stock_manage_pop_form", dataInfo);
+                            $("#stock_manage_pop_form").find("#footer_msg").html(pop_msg_in);
+                            $("#stock_manage_pop_form").find("#ORDER_QTY").html(dataInfo.ORDER_QTY);
+                            $("#stock_manage_pop_form").find("#ORIGINAL_ORDER_QTY").val(dataInfo.ORDER_QTY);
+                            $("#stock_manage_pop_form").find("#ORIGINAL_POP_STOCK_QTY_AFTER").val(dataInfo.POP_STOCK_QTY_AFTER);
+                            $("#stock_manage_pop_form").find("#WAREHOUSE_CD").val(dataInfo.WAREHOUSE_CD);
+                            $("#stock_manage_pop_form").find("#WAREHOUSE_CD").change();
+                            setTimeout(function() {
+                                $("#stock_manage_pop_form").find("#LOC_SEQ").val(dataInfo.LOC_SEQ);
+                            }, 1000);
 
-                    }else{
-                        fnJsonDataToForm("stock_manage_pop_form", dataInfo);
-                        $("#stock_manage_pop_form").find("#footer_msg").html(pop_msg_in);
-                        $("#stock_manage_pop_form").find("#ORDER_QTY").html(dataInfo.ORDER_QTY);
-                        $("#stock_manage_pop_form").find("#ORIGINAL_ORDER_QTY").val(dataInfo.ORDER_QTY);
-                        $("#stock_manage_pop_form").find("#ORIGINAL_POP_STOCK_QTY_AFTER").val(dataInfo.POP_STOCK_QTY_AFTER);
-                        $("#stock_manage_pop_form").find("#WAREHOUSE_CD").val(dataInfo.WAREHOUSE_CD);
-                        $("#stock_manage_pop_form").find("#WAREHOUSE_CD").change();
-                        setTimeout(function() {
-                            $("#stock_manage_pop_form").find("#LOC_SEQ").val(dataInfo.LOC_SEQ);
-                        }, 1000);
-
-                    }
-                }, parameters, '');
+                        }
+                    }, parameters, '');
+                }
             }
         });
+
         /** 도면 등록 처리 **/
         $('#stock_manage_drawing_new_btn').on('click', function () {
             callCadDrawingUploadPopup('inside', 'material.manageStockCadFiles');
@@ -977,5 +1029,10 @@ console.log("change",JSON.stringify(changes));
         $('#stock_manage_drawing_view_btn').on('click', function () {
             callWindowImageViewer(999);
         });
+        /** 위치정보관리 팝업 호출 */
+        $('#stock_manage_area_info_btn').on('click', function () {
+            alert("작업중");
+        });
+
     });
 </script>
