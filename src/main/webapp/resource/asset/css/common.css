@@ -424,5 +424,5 @@ table.boardList .txtP{color: #7030a0;}
 .redFileImageICon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/file_icon_red.png)no-repeat 0 0; }
 /** nc file **/
 .purpleFileImageICon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/file_icon_purple.png)no-repeat 0 0; }
-/** cam file **/
+/** cam file TEST **/
 .greenFileImageICon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/file_icon_green.png)no-repeat 0 0; }
