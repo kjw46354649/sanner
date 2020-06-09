@@ -13,7 +13,10 @@ public interface OrderService {
 
     void createMonthFinishClose(Map<String, Object> map) throws Exception;
 
+    void removeMonthClose(Map<String, Object> map) throws Exception;
+
     void createInvoice(Map<String, Object> map) throws Exception;
 
     void removeInvoice(Map<String, Object> map) throws Exception;
+
 }

@@ -23,9 +23,9 @@
                                     <label for="FACTORY_AREA">MCT 센터</label>
                                     <select name="FACTORY_AREA" id="FACTORY_AREA">
                                     <c:forEach var="code" items="${HighCode.H_1005}">
-<%--                                        <c:if test="${code.ETC1 == 'MCT_PROCESS_PLAN'}">--%>
+                                        <c:if test="${code.ETC1 == 'MCT_PROCESS_PLAN'}">
                                             <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-<%--                                        </c:if>--%>
+                                        </c:if>
                                     </c:forEach>
                                     </select>
                                 </span>
@@ -810,157 +810,149 @@
             {title: '주요', dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
             {title: '형태', dataType: 'string', dataIndx: 'WORK_NM'},
             {
-                title: 'MCT Plan/Actual', align: 'center', colModel: [
-                    {
-                        title: 'Seq1', align: 'center', colModel: [
-                            {title: '', datatype: 'integer', dataIndx: 'EQUIP_SEQ_1',
-                                render: function (ui) {
-                                    let cellData = ui.cellData;
-                                    let status = ui.rowData.STATUS_1;
-                                    let backgroundColor = colorClassification(status);
+                title: 'MCT Plan/Actual', align: 'center', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, colModel: [
+                    {title: 'Seq.1', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_1', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let status = ui.rowData.STATUS_1;
+                            let backgroundColor = colorClassification(status);
 
-/*
-                                    if (status) {
-                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                                    }
-*/
+                            /*
+                                                        if (status) {
+                                                            $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                                                        }
+                            */
 
-                                    if (cellData) {
-                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                            if (cellData) {
+                                $processTargetGrid.pqGrid('addClass', {
+                                    rowIndx: ui.rowIndx,
+                                    dataIndx: ui.dataIndx,
+                                    cls: backgroundColor
+                                });
 
-                                        let index = EQUIP_LIST.findIndex(function (element) {
-                                            return element.value === Number(cellData);
-                                        });
-                                        return (index < 0) ? cellData : EQUIP_LIST[index].text;
-                                    }
-                                }
-                            },
-                            {title: '', datatype: 'string', dataIndx: 'WORKING_TIME_1', editable: true,
-                                render: function (ui) {
-                                    let cellData = ui.cellData;
-                                    let status = ui.rowData.STATUS_1;
-                                    let backgroundColor = colorClassification(status);
-
-                                    /*if (status) {
-                                        return $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                                    }*/
-
-                                    if (cellData) {
-                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-
-                                        return cellData + '분';
-                                    }
-                                }
-                            },
-                            {title: '', datatype: 'string', dataIndx: 'STATUS_1', hidden: true},
-                            {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_1', hidden: true}
-                        ]
+                                let index = EQUIP_LIST.findIndex(function (element) {
+                                    return element.value === Number(cellData);
+                                });
+                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
+                            }
+                        }
                     },
-                    {
-                        title: 'Seq2', align: 'center', colModel: [
-                            {title: '', datatype: 'integer', dataIndx: 'EQUIP_SEQ_2',
-                                render: function (ui) {
-                                    let cellData = ui.cellData;
-                                    let status = ui.rowData.STATUS_2;
-                                    let backgroundColor = colorClassification(status);
+                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_1', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let status = ui.rowData.STATUS_1;
+                            let backgroundColor = colorClassification(status);
 
-                                    if (cellData) {
-                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                            /*if (status) {
+                                return $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                            }*/
 
-                                        let index = EQUIP_LIST.findIndex(function (element) {
-                                            return element.value === Number(cellData);
-                                        });
-                                        return (index < 0) ? cellData : EQUIP_LIST[index].text;
-                                    }
-                                }
-                            },
-                            {title: '', datatype: 'string', dataIndx: 'WORKING_TIME_2', editable: true,
-                                render: function (ui) {
-                                    let cellData = ui.cellData;
-                                    let status = ui.rowData.STATUS_2;
-                                    let backgroundColor = colorClassification(status);
+                            if (cellData) {
+                                $processTargetGrid.pqGrid('addClass', {
+                                    rowIndx: ui.rowIndx,
+                                    dataIndx: ui.dataIndx,
+                                    cls: backgroundColor
+                                });
 
-                                    if (cellData) {
-                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-
-                                        return cellData + '분';
-                                    }
-                                }
-                            },
-                            {title: '', datatype: 'string', dataIndx: 'STATUS_2', hidden: true},
-                            {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_2', hidden: true}
-                        ]
+                                return cellData + '분';
+                            }
+                        }
                     },
-                    {
-                        title: 'Seq3', align: 'center', colModel: [
-                            {title: '', datatype: 'integer', dataIndx: 'EQUIP_SEQ_3',
-                                render: function (ui) {
-                                    let cellData = ui.cellData;
-                                    let status = ui.rowData.STATUS_3;
-                                    let backgroundColor = colorClassification(status);
+                    {title: '', datatype: 'string', dataIndx: 'STATUS_1', hidden: true},
+                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_1', hidden: true},
+                    {title: 'Seq.2', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_2', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let status = ui.rowData.STATUS_2;
+                            let backgroundColor = colorClassification(status);
 
-                                    if (cellData) {
-                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                            if (cellData) {
+                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
 
-                                        let index = EQUIP_LIST.findIndex(function (element) {
-                                            return element.value === Number(cellData);
-                                        });
-                                        return (index < 0) ? cellData : EQUIP_LIST[index].text;
-                                    }
-                                }
-                            },
-                            {title: '', datatype: 'string', dataIndx: 'WORKING_TIME_3', editable: true,
-                                render: function (ui) {
-                                    let cellData = ui.cellData;
-                                    let status = ui.rowData.STATUS_3;
-                                    let backgroundColor = colorClassification(status);
-
-                                    if (cellData) {
-                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-
-                                        return cellData + '분';
-                                    }
-                                }
-                            },
-                            {title: '', datatype: 'string', dataIndx: 'STATUS_3', hidden: true},
-                            {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_3', hidden: true}
-                        ]
+                                let index = EQUIP_LIST.findIndex(function (element) {
+                                    return element.value === Number(cellData);
+                                });
+                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
+                            }
+                        }
                     },
-                    {
-                        title: 'Seq4', align: 'center', colModel: [
-                            {title: '', datatype: 'integer', dataIndx: 'EQUIP_SEQ_4',
-                                render: function (ui) {
-                                    let cellData = ui.cellData;
-                                    let status = ui.rowData.STATUS_4;
-                                    let backgroundColor = colorClassification(status);
+                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_2', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let status = ui.rowData.STATUS_2;
+                            let backgroundColor = colorClassification(status);
 
-                                    if (cellData) {
-                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                            if (cellData) {
+                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
 
-                                        let index = EQUIP_LIST.findIndex(function (element) {
-                                            return element.value === Number(cellData);
-                                        });
-                                        return (index < 0) ? cellData : EQUIP_LIST[index].text;
-                                    }
-                                }
-                            },
-                            {title: '', datatype: 'string', dataIndx: 'WORKING_TIME_4', editable: true,
-                                render: function (ui) {
-                                    let cellData = ui.cellData;
-                                    let status = ui.rowData.STATUS_4;
-                                    let backgroundColor = colorClassification(status);
-
-                                    if (cellData) {
-                                        $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-
-                                        return cellData + '분';
-                                    }
-                                }
-                            },
-                            {title: '', datatype: 'string', dataIndx: 'STATUS_4', hidden: true},
-                            {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_4', hidden: true}
-                        ]
+                                return cellData + '분';
+                            }
+                        }
                     },
+                    {title: '', datatype: 'string', dataIndx: 'STATUS_2', hidden: true},
+                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_2', hidden: true},
+                    {title: 'Seq.3', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_3', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let status = ui.rowData.STATUS_3;
+                            let backgroundColor = colorClassification(status);
+
+                            if (cellData) {
+                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+
+                                let index = EQUIP_LIST.findIndex(function (element) {
+                                    return element.value === Number(cellData);
+                                });
+                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
+                            }
+                        }
+                    },
+                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_3', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let status = ui.rowData.STATUS_3;
+                            let backgroundColor = colorClassification(status);
+
+                            if (cellData) {
+                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+
+                                return cellData + '분';
+                            }
+                        }
+                    },
+                    {title: '', datatype: 'string', dataIndx: 'STATUS_3', hidden: true},
+                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_3', hidden: true},
+                    {title: 'Seq.4', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_4', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let status = ui.rowData.STATUS_4;
+                            let backgroundColor = colorClassification(status);
+
+                            if (cellData) {
+                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+
+                                let index = EQUIP_LIST.findIndex(function (element) {
+                                    return element.value === Number(cellData);
+                                });
+                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
+                            }
+                        }
+                    },
+                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_4', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let status = ui.rowData.STATUS_4;
+                            let backgroundColor = colorClassification(status);
+
+                            if (cellData) {
+                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+
+                                return cellData + '분';
+                            }
+                        }
+                    },
+                    {title: '', datatype: 'string', dataIndx: 'STATUS_4', hidden: true},
+                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_4', hidden: true}
                 ]
             },
             {title: '현재위치', dataType: 'string', dataIndx: 'POP_POSITION',
@@ -1025,15 +1017,10 @@
             {title: '소재 Size', width: 120, dataType: 'string', dataIndx: 'MATERIAL_SIZE'},
             {title: '비고 기록사항', dataType: 'string', dataIndx: 'NOTE'},
             {title: '예상가공<br>시간(분)', dataType: 'integer', dataIndx: 'WORKING_TIME_TOTAL'},
-            {title: '가공계획<br>비고', dataType: 'string', dataIndx: 'MCT_NOTE', editable: true},
+            {title: '가공계획<br>비고', dataType: 'string', dataIndx: 'MCT_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
             {
-                title: '작업<br>구분', dataType: 'string', dataIndx: 'MCT_WORK_TYPE', editable: true,
-                editor: {
-                    type: 'select',
-                    valueIndx: 'value',
-                    labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1011')
-                },
+                title: '작업<br>구분', dataType: 'string', dataIndx: 'MCT_WORK_TYPE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1011')},
                 render: function (ui) {
                     let cellData = ui.cellData;
 

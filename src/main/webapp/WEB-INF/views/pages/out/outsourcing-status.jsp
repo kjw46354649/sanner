@@ -56,8 +56,8 @@
                             <label class="label_100">마감년월</label>
                         </span>
                         <span class="chk_box">
-                            <select name="CLOSE_YEAR_LEFT" id="CLOSE_YEAR_LEFT" style="width: 100px; margin-right: 5px;"></select>
-                            <select name="CLOSE_MONTH_LEFT" id="CLOSE_MONTH_LEFT" style="width: 80px; margin-right: 10px;"></select>
+                            <select name="CLOSE_YEAR_LEFT" id="OUTSIDE_CLOSE_YEAR_LEFT" style="width: 100px; margin-right: 5px;"></select>
+                            <select name="CLOSE_MONTH_LEFT" id="OUTSIDE_CLOSE_MONTH_LEFT" style="width: 80px; margin-right: 10px;"></select>
                         </span>
                         <span style="vertical-align: middle; font-size: 1.4rem;">~</span>
                         <span class="chk_box">
@@ -175,7 +175,7 @@
             {title: '부가세<br>합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'VAT_AMOUNT', summary: {type: 'sum', edit: true}}, // 2020-06-07 add
             {title: '업데이트<br>일시', dataType: 'string', dataIndx: 'VAT_AMOUNT'}, // 2020-06-07 add
             // {title: '합계금액', dataType: 'string', dataIndx: 'TOTAL_AMOUNT'},
-            {title: '비고', dataType: 'string', dataIndx: 'CLOSE_NOTE', editable: true}
+            {title: '비고', dataType: 'string', dataIndx: 'CLOSE_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true}
         ];
         const tab1GroupModel = {
             on: true,
@@ -328,14 +328,14 @@
         $outsideCloseStatusGrid = $('#' + tab1GridId).pqGrid(tab1Obj);
         $monthlyOutsideStatusGrid = $('#' + tab2GridId).pqGrid(tab2Obj);
 
-        fnAppendSelectboxYear('CLOSE_YEAR_LEFT', 10);
-        fnAppendSelectboxMonth('CLOSE_MONTH_LEFT');
+        fnAppendSelectboxYear('OUTSIDE_CLOSE_YEAR_LEFT', 10);
+        fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH_LEFT');
         fnAppendSelectboxYear('CLOSE_YEAR_RIGHT', 10);
         fnAppendSelectboxMonth('CLOSE_MONTH_RIGHT');
         fnAppendSelectboxYear('YEAR', 10);
 
-        $('#CLOSE_YEAR_LEFT').on('change', function () {
-            fnAppendSelectboxMonth('CLOSE_MONTH_LEFT', this.value);
+        $('#OUTSIDE_CLOSE_YEAR_LEFT').on('change', function () {
+            fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH_LEFT', this.value);
         });
         $('#CLOSE_YEAR_RIGHT').on('change', function () {
             fnAppendSelectboxMonth('CLOSE_MONTH_RIGHT', this.value);

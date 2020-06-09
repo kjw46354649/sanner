@@ -354,7 +354,7 @@
             {title: 'DEPOSIT_SEQ', dataType: 'integer', dataIndx: 'DEPOSIT_SEQ', hidden: true},
             {title: '사업자 구분', clsHead: 'display_none', width: 70, dataType: 'string', dataIndx: 'COMP_CD', editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: MONEY_BUSINESS_COMPANY},
-                styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
+                styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
                 render: function (ui) {
                     let cellData = ui.cellData;
                     if (cellData === '') {
@@ -373,7 +373,7 @@
                 }
             },
             {title: '발주업체', clsHead: 'display_none', dataType: 'string', dataIndx: 'ORDER_COMP_CD', editable: true,
-                styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
+                styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: MONEY_ORDER_COMPANY},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -392,12 +392,12 @@
                     }
                 }
             },
-            {title: '입금월일', dataType: "string", styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'}, dataIndx: 'DEPOSIT_DATE',
+            {title: '입금월일', dataType: "string", styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, dataIndx: 'DEPOSIT_DATE',
                 editable: true, editor: { type: 'textbox', init: dateEditor }
             },
             {title: '입금액', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: 'DEPOSIT_AMT',
                 align: 'right', dataType: 'integer', format: '#,###'},
-            {title: '종류', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'}, dataIndx: 'DEPOSIT_TYPE', editable: true,
+            {title: '종류', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, dataIndx: 'DEPOSIT_TYPE', editable: true,
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -425,7 +425,7 @@
             {title: '만기', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: 'DUE_DATE', dataType: 'string', editable: true,
                 editor: { type: 'textbox', init: dateEditor }
             },
-            {title: '만기어음/지급여부', dataType: 'checkbox', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'}, dataIndx: 'DUE_PAY_YN',
+            {title: '만기어음/지급여부', dataType: 'checkbox', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, dataIndx: 'DUE_PAY_YN',
                 align: 'center', editable: true,
                 type: 'checkbox',
                 cb: {

@@ -92,9 +92,9 @@
                     <div class="mg-bottom10">
                         <p>가공진행 List</p>
                         <span style="float: right">
-                            <label class="checkbox-inline i-checks" for="PROCESS_CONFIRM_EXCLUDE_STOCK">
-                                <input type="checkbox" name="PROCESS_CONFIRM_EXCLUDE_STOCK"
-                                       id="PROCESS_CONFIRM_EXCLUDE_STOCK"><i></i> Show Only 긴급
+                            <label class="checkbox-inline i-checks" for="EMERGENCY_YN">
+                                <input type="checkbox" name="EMERGENCY_YN"
+                                       id="EMERGENCY_YN"><i></i> Show Only 긴급
                             </label>
                         </span>
                     </div>
@@ -1085,6 +1085,7 @@
         });
         $('#PROCESS_CONFIRM_SEARCH_FORM').on('change', function() {
             topRightPostData = fnFormToJsonArrayData('#PROCESS_CONFIRM_SEARCH_FORM');
+            console.log(topRightPostData);
             $processConfirmGrid.pqGrid('option', 'dataModel.postData', function (ui) {
                 return topRightPostData;
             });

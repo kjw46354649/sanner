@@ -97,7 +97,7 @@
     </div>
     <div class="bottomWrap row3_bottomWrap">
         <div class="hWrap">
-            <button type="button" class="defaultBtn btn-120w" id="OUTSIDE_CLOSE_CANCEL">마감 취소</button>
+            <button type="button" class="defaultBtn btn-120w" data-toggle="modal" data-target="#OUTSIDE_CLOSE_CANCEL_POPUP">마감 취소</button>
             <div class="rightSpan">
                 <button type="button" class="defaultBtn btn-120w" id="DRAWING_VIEW">도면 View</button>
             </div>
@@ -110,26 +110,36 @@
     </div>
 </div>
 
+<%-- modal --%>
 <div class="popup_container" id="OUTSIDE_CLOSE_CANCEL_POPUP" style="display: none;">
     <div class="controlCloseLayerPopup">
-        <h3>월 마감 취소 진행</h3>
+        <h3>월 마감 취소 진행(외주주문)</h3>
         <hr>
-        <button type="button" class="pop_close" name="OUTSIDE_CLOSE_NO">닫기</button>
+        <button type="button" class="pop_close" name="OUTSIDE_CLOSE_CANCEL_NO">닫기</button>
         <div class="d-inline-block">
-            <div style="width: 450px; float:left;">
-                <div id="OUTSIDE_CLOSE_CANCEL_LEFT_GRID"></div>
-            </div>
-            <div style="display: flex; float:left; align-items: center; justify-content: center; width: 70px; height: 250px;">
-                <span class="arrow right_Arrow"></span>
-            </div>
-            <div style="width: 450px; float:left;">
-                <div id="OUTSIDE_CLOSE_CANCEL_RIGHT_GRID"></div>
-            </div>
+            <form class="form-inline" id="OUTSIDE_CLOSE_CANCEL_FORM" role="form">
+                <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectControlCloseLeftList">
+                <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
+                <input type="hidden" name="COMP_CD" id="COMP_CD">
+                <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
+                <input type="hidden" name="OUTSIDE_CLOSE_CANCEL_YEAR" id="OUTSIDE_CLOSE_CANCEL_YEAR">
+                <input type="hidden" name="OUTSIDE_CLOSE_CANCEL_MONTH" id="OUTSIDE_CLOSE_CANCEL_MONTH">
+                <input type="hidden" name="CLOSE_VER" id="CLOSE_VER">
+                <div style="width: 450px; float:left;">
+                    <div id="OUTSIDE_CLOSE_CANCEL_LEFT_GRID"></div>
+                </div>
+                <div style="display: flex; float:left; align-items: center; justify-content: center; width: 70px; height: 250px;">
+                    <span class="arrow right_Arrow"></span>
+                </div>
+                <div style="width: 450px; float:left;">
+                    <div id="OUTSIDE_CLOSE_CANCEL_RIGHT_GRID"></div>
+                </div>
+            </form>
         </div>
 
         <div class="text-center">
-            <button class="defaultBtn" id="OUTSIDE_CLOSE_YES">저장</button>
-            <button class="defaultBtn" name="OUTSIDE_CLOSE_NO">닫기</button>
+            <button class="defaultBtn" id="OUTSIDE_CLOSE_CANCEL_YES">저장</button>
+            <button class="defaultBtn" name="OUTSIDE_CLOSE_CANCEL_NO">닫기</button>
         </div>
     </div>
 </div>
@@ -137,6 +147,9 @@
 <script>
     $(function () {
         'use strict';
+        fnAppendSelectboxYear('OUTSIDE_CLOSE_YEAR', 10);
+        fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH');
+        $('#OUTSIDE_CLOSE_MONTH').val(CURRENT_MONTH < 9 ? '0' + CURRENT_MONTH : CURRENT_MONTH).prop('selected', true);
         /* variable */
         let selectedRowIndex = [];
         let $outsideCloseHistoryGrid;
@@ -285,6 +298,40 @@
                 }
             }
         };
+        let $outsideCloseCancelLeftGrid;
+        const outsideCloseCancelLeftGridId = 'OUTSIDE_CLOSE_CANCEL_LEFT_GRID';
+        const outsideCloseCancelColModel = [
+            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
+            {title: '사업자', width: 70,  dataType: 'string', dataIndx: 'COMP_NM'},
+            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
+            {title: '발주처', width: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
+            {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
+            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
+            {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
+            {title: '발주가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
+            {title: '마감금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CLOSE_CONTROL_AMT'}
+        ];
+        const outsideCloseCancelObj = {
+            height: 300,
+            collapsible: false,
+            resizable: false,
+            showTitle: false,
+            // scrollModel: {autoFit: true},
+            dragColumns: {enabled: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            colModel: outsideCloseCancelColModel,
+            strNoRows: g_noData,
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: {'queryId': 'dataSource.emptyGrid'},
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            }
+        };
+        let $outsideCloseCancelRightGrid;
+        const outsideCloseCancelRightGridId = 'OUTSIDE_CLOSE_CANCEL_RIGHT_GRID';
         /* variable */
 
         /* function */
@@ -295,7 +342,7 @@
             updateControlPartStatus(controlStatus, controlStatusNm);
         };*/
 
-        let updateControlPartStatus = function () {
+        const updateControlPartStatus = function () {
             let selectedRowCount = selectedRowIndex.length;
             let rowListConvert = [];
             let date = new Date().format('MM-dd HH:mm');
@@ -312,64 +359,88 @@
             $outsideCloseHistoryGrid.pqGrid('updateRow', {rowList: rowListConvert, checkEditable: false});
         };
 
-        Date.prototype.format = function (f) {
-            if (!this.valueOf()) {
-                return ' ';
+        const noSelectedRowAlert = function () {
+            if (selectedRowIndex.length > 0) {
+                return false;
+            } else {
+                alert('하나 이상 선택해주세요');
+                return true;
+            }
+        };
+
+        const loadDataOutsideCloseCancel = function () {
+            let list = [];
+            let controlSeqList = [];
+            let compCdList = [];
+            let orderCompCdList = [];
+            let controlSeqStr = '';
+            let compCdStr = '';
+            let orderCompCdStr = '';
+            let controlCloseYear;
+            let controlCloseMonth;
+            let closeVer;
+
+            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
+                let rowData = $outsideCloseHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+
+                list.push(rowData);
+                controlSeqList.push(rowData.CONTROL_SEQ);
+                compCdList.push(rowData.COMP_CD);
+                orderCompCdList.push(rowData.ORDER_COMP_CD);
+            }
+            // 중복제거
+            controlSeqList = controlSeqList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+            compCdList = compCdList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+
+            for (let i = 0, CONTROL_SEQ_LIST_LENGTH = controlSeqList.length; i < CONTROL_SEQ_LIST_LENGTH; i++) {
+                controlSeqStr += controlSeqList[i];
+
+                if (i < CONTROL_SEQ_LIST_LENGTH - 1) {
+                    controlSeqStr += ',';
+                }
+            }
+            for (let i = 0, COMP_CD_LIST_LENGTH = compCdList.length; i < COMP_CD_LIST_LENGTH; i++) {
+                compCdStr += '\'' + compCdList[i] + '\'';
+
+                if (i < COMP_CD_LIST_LENGTH - 1) {
+                    compCdStr += ',';
+                }
+            }
+            for (let i = 0, ORDER_COMP_CD_LIST_LENGTH = orderCompCdList.length; i < ORDER_COMP_CD_LIST_LENGTH; i++) {
+                orderCompCdStr += '\'' + orderCompCdList[i] + '\'';
+
+                if (i < ORDER_COMP_CD_LIST_LENGTH - 1) {
+                    orderCompCdStr += ',';
+                }
             }
 
-            let weekKorName = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
-            let weekKorShortName = ['일', '월', '화', '수', '목', '금', '토'];
-            let weekEngName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            let weekEngShortName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            let d = this;
+            controlCloseYear = list[0].CLOSE_MONTH.substring(0, 4);
+            controlCloseMonth = list[0].CLOSE_MONTH.substring(4);
+            closeVer = list[0].CLOSE_VER;
+            $('#OUTSIDE_CLOSE_CANCEL_FORM > #CONTROL_SEQ').val(controlSeqStr);
+            $('#OUTSIDE_CLOSE_CANCEL_FORM > #COMP_CD').val(compCdStr);
+            $('#OUTSIDE_CLOSE_CANCEL_FORM > #ORDER_COMP_CD').val(orderCompCdStr);
+            $('#OUTSIDE_CLOSE_CANCEL_FORM > #OUTSIDE_CLOSE_CANCEL_YEAR').val(controlCloseYear);
+            $('#OUTSIDE_CLOSE_CANCEL_FORM > #OUTSIDE_CLOSE_CANCEL_MONTH').val(controlCloseMonth);
+            $('#OUTSIDE_CLOSE_CANCEL_FORM > #CLOSE_VER').val(closeVer);
 
-            return f.replace(/(yyyy|yy|MM|dd|KS|KL|ES|EL|HH|hh|mm|ss|a\/p)/gi, function ($1) {
-                switch ($1) {
-                    case 'yyyy':
-                        return d.getFullYear(); // 년 (4자리)
-                    case 'yy':
-                        return (d.getFullYear() % 1000).zf(2); // 년 (2자리)
-                    case 'MM':
-                        return (d.getMonth() + 1).zf(2); // 월 (2자리)
-                    case 'dd':
-                        return d.getDate().zf(2); // 일 (2자리)
-                    case 'KS':
-                        return weekKorShortName[d.getDay()]; // 요일 (짧은 한글)
-                    case 'KL':
-                        return weekKorName[d.getDay()]; // 요일 (긴 한글)
-                    case 'ES':
-                        return weekEngShortName[d.getDay()]; // 요일 (짧은 영어)
-                    case 'EL':
-                        return weekEngName[d.getDay()]; // 요일 (긴 영어)
-                    case 'HH':
-                        return d.getHours().zf(2); // 시간 (24시간 기준, 2자리)
-                    case 'hh':
-                        return ((h = d.getHours() % 12) ? h : 12).zf(2); // 시간 (12시간 기준, 2자리)
-                    case 'mm':
-                        return d.getMinutes().zf(2); // 분 (2자리)
-                    case 'ss':
-                        return d.getSeconds().zf(2); // 초 (2자리)
-                    case 'a/p':
-                        return d.getHours() < 12 ? '오전' : '오후'; // 오전/오후 구분
-                    default:
-                        return $1;
-                }
+            let postData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_CANCEL_FORM');
+            $outsideCloseCancelLeftGrid.pqGrid('option', 'dataModel.postData', function () {
+                return postData;
             });
+            $outsideCloseCancelLeftGrid.pqGrid('refreshDataAndView');
+
+            postData.queryId = 'orderMapper.selectControlCloseCancelRightList';
+            fnRequestGidData($outsideCloseCancelRightGrid, postData);
         };
 
-        String.prototype.string = function (len) {
-            let s = '', i = 0;
-
-            while (i++ < len) s += this;
-
-            return s;
-        };
-        String.prototype.zf = function (len) {
-            return '0'.string(len - this.length) + this;
-        };
-        Number.prototype.zf = function (len) {
-            return this.toString().zf(len);
-        };
         /* function */
 
         /* event */
@@ -389,6 +460,52 @@
             fnModifyPQGrid($outsideCloseHistoryGrid, [], updateQueryList);
             fnDeletePQGrid($outsideCloseHistoryGrid, selectedRowIndex, deleteQuery);
         });
+
+        $('#OUTSIDE_CLOSE_CANCEL_POPUP').on({
+            'show.bs.modal': function () {
+                if (noSelectedRowAlert()) {
+                    return false;
+                }
+
+                // 동일한 발주사, 공급사인지 확인
+                let compCdList = [];
+                let orderCompCdList = [];
+
+                for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
+                    let rowData = $outsideCloseHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+
+                    compCdList.push(rowData.COMP_CD);
+                    orderCompCdList.push(rowData.ORDER_COMP_CD);
+                }
+
+                // 중복제거
+                compCdList = compCdList.filter(function (element, index, array) {
+                    return array.indexOf(element) === index;
+                });
+                orderCompCdList = orderCompCdList.filter(function (element, index, array) {
+                    return array.indexOf(element) === index;
+                });
+                if (compCdList.length > 1) {
+                    alert('선택된 대상들의 발주사는 동일해야 합니다.');
+                    return false;
+                }
+                if (orderCompCdList.length > 1) {
+                    alert('선택된 대상들의 공급사는 동일해야 합니다.');
+                    return false;
+                }
+
+                // 빈 그리드 생성
+                $outsideCloseCancelLeftGrid = $('#' + outsideCloseCancelLeftGridId).pqGrid(outsideCloseCancelObj);
+                $outsideCloseCancelRightGrid = $('#' + outsideCloseCancelRightGridId).pqGrid(outsideCloseCancelObj);
+
+                // 데이터
+                loadDataOutsideCloseCancel();
+            },
+            'hide.bs.modal': function () {
+                $outsideCloseCancelLeftGrid.pqGrid('destroy');
+                $outsideCloseCancelRightGrid.pqGrid('destroy');
+            }
+        });
         /* event */
 
         /* init */
@@ -400,8 +517,7 @@
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
-        fnAppendSelectboxYear('OUTSIDE_CLOSE_YEAR', 10);
-        fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH', CURRENT_YEAR);
+
         $outsideCloseHistoryGrid = $('#' + gridId).pqGrid(obj);
         /* init */
     });

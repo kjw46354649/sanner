@@ -192,7 +192,7 @@
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
-            {title: '년도', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
+            {title: '년도', dataType: 'string', dataIndx: 'ORDER_COMP_CD',},
             {title: '분기', dataType: 'string', dataIndx: 'QUARTER'},
             {title: '마감월', dataType: 'string', dataIndx: 'FINISH_MONTH'},
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
@@ -200,8 +200,6 @@
             {title: '발주사', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '품수', dataType: 'string', dataIndx: 'ITEM_NUMBER', summary: {type: 'sum', edit: true},
                 render: function (ui) {
-                    console.log(ui);
-                    console.log(ui.rowData.pq_grandsummary);
                     if(ui.rowData.pq_grandsummary) {
                         return ui.cellData;
                     } else {
@@ -210,10 +208,11 @@
                     }
                 }
             },
-            {title: '최종 공급가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', summary: {type: 'sum', edit: true}},
-            {title: '부가세액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'VAT_AMOUNT', summary: {type: 'sum', edit: true}},
-            {title: '합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMOUNT', summary: {type: 'sum', edit: true}},
-            {title: '비고', dataType: 'string', dataIndx: 'CLOSE_NOTE', editable: true}
+            {title: '공급가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', summary: {type: 'sum'}},
+            {title: '마감금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, summary: {type: 'sum'}, editable: true},
+            {title: '부가세액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'VAT_AMOUNT', summary: {type: 'sum'}},
+            {title: '합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMOUNT', summary: {type: 'sum'}},
+            {title: '비고', dataType: 'string', dataIndx: 'CLOSE_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true}
         ];
         const tab1GroupModel = {
             on: true,
@@ -283,16 +282,11 @@
             {title: '합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMOUNT', colModel: []}
         ];
         const detailListViewObj = {
-            // height: 600,
+            height: 800,
             collapsible: false,
             resizable: false,
             showTitle: false,
-            columnTemplate: {
-                align: 'center',
-                halign: 'center',
-                hvalign: 'center',
-                editable: false
-            },
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
             colModel: detailListViewColModel,
             strNoRows: g_noData,
             dataModel: {
