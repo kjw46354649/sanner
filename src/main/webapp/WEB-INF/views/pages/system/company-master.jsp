@@ -17,7 +17,7 @@
     <div class="topWrap">
         <form class="form-inline" id="company_master_search_form" name="company_master_search_form" role="form">
             <input type="hidden" id="queryId" name="queryId" value="systemMapper.getCompanyMasterList">
-            <div class="gubunWrap" style="height: 84px;">
+            <div class="none_gubunWrap row2_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -47,9 +47,7 @@
                             <input type="text" class="wd_200 form-control" name="SEL_COMP_NUM" id="SEL_COMP_NUM" title="사업자번호" placeholder="사업자번호">
                         </span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap right_float">
-                            <button type="button" class="defaultBtn radius blue" id="companyMasterMainSearchBtn">검색</button>
-                        </span>
+
                     </li>
                     <li>
                         <span class="ipu_wrap">
@@ -71,13 +69,14 @@
                                     </c:forEach>
                             </select>
                         </span>
+                        <button type="button" class="right_float defaultBtn radius blue" id="companyMasterMainSearchBtn">검색</button>
                     </li>
                 </ul>
             </div>
         </form>
         <%--<button type="button" class="topWrap_btn">펼치기 / 접기</button>--%>
     </div>
-    <div class="bottomWrap">
+    <div class="bottomWrap row2_bottomWrap">
         <div class="hWrap">
             <div class="rightSpan">
                 <button type="button" class="defaultBtn btn-120w" id="companyMasterMainNewBtn">신규등록</button>
@@ -95,7 +94,7 @@
 </div>
 <%--<div class="modal" id="system_company_popup" tabindex="-1" role="dialog" aria-hidden="true">--%>
 <!-- layer popup : S -->
-<div class="popup_container" id="system_company_popup" style="display: none;">
+<div class="popup_container system_company_popup" id="system_company_popup" style="display: none;">
     <form class="form-inline" id="company_master_register_form" name="company_master_register_form" role="form">
         <input type="hidden" id="queryId" name="queryId" value="systemMapper.getCompanyMasterStaffList">
         <input type="hidden" id="staffGrid" name="staffGrid" value="">
@@ -104,27 +103,26 @@
 
         <div class="layerPopup sysCompPopup">
             <h3>업체상세정보</h3>
-            <button type="button" class="pop_close">닫기</button>
+            <button type="button" class="pop_close mg-top10 mg-right8" id="system-company-pop-close2">닫기</button>
             <div class="qualityWrap">
                 <div class="h_area">
                     <div class="right_sort ">
-
-                        <button type="button" class="defaultBtn btn-120w red" id="companyMasterRegisterSaveBtn">SAVE</button>
-                        <button type="button" class="defaultBtn btn-120w green" id="companyMasterRegisterDelBtn">Delete</button>
+                        <button type="button" class="defaultBtn btn-120w red" id="companyMasterRegisterSaveBtn">저장</button>
+                        <button type="button" class="defaultBtn btn-120w green" id="companyMasterRegisterDelBtn">삭제</button>
                     </div>
 
                 </div>
                 <div class="resultWrap99 list99" style="height: 440px;">
-                    <div class="leftWrap">
+                    <div class="leftWrap mg-top15">
                         <input type="hidden" id="LOGO_GFILE_SEQ" name="LOGO_GFILE_SEQ" value="">
-                        <img src="/image/999" id="LOGO_GFILE_SRC" width="388px" height="150px" alt="사진" >
+                        <img src="/image/999" id="LOGO_GFILE_SRC" width="388px" height="150px" alt="사진" style="border:1px solid #707070">
                         <div class="btnWrap">
-                            <button type="button" id="company_logo_upload" class="defaultBtn">사진변경하기</button>
+                            <button type="button" id="company_logo_upload" class="defaultBtn">로고파일 업로드</button>
                         </div><br/>
                         <input type="hidden" id="SIGN_GFILE_SEQ" name="SIGN_GFILE_SEQ" value="">
-                        <img src="/image/999" id="SIGN_GFILE_SRC" width="388px" height="150px" alt="사진" >
+                        <img src="/image/999" id="SIGN_GFILE_SRC" width="388px" height="150px" alt="사진" style="border:1px solid #707070">
                         <div class="btnWrap">
-                            <button type="button" id="company_sign_upload" class="defaultBtn">사진변경하기</button>
+                            <button type="button" id="company_sign_upload" class="defaultBtn">직인파일 업로드</button>
                         </div>
                     </div>
                     <div class="rightWrap">
@@ -136,12 +134,12 @@
                                 <col width="110px">
                                 <col width="171px">
                             </colgroup>
-                            <tr>
+                           <%-- <tr>
                                 <th scope="row">Item ID</th>
                                 <td id="EQUIP_ID_NM"></td>
                                 <th scope="row">구분</th>
                                 <td id="EQUIP_KIND_NM"></td>
-                            </tr>
+                            </tr>--%>
                             <tr>
                                 <th scope="row">활성여부</th>
                                 <td><input type="checkbox" id="ACTIVE_YN" name="ACTIVE_YN" value="Y" class="wd_150"></td>
@@ -161,7 +159,7 @@
                             <tr>
                                 <th scope="row">최근거래일시</th>
                                 <td>
-                                    <input type="text" id="LAST_ORDER_DT" name="LAST_ORDER_DT" value="" class="wd_150" data-notblank="true" class="form-control" placeholder="최근거래일시" readonly>
+                                    <input type="text" id="LAST_BUSINESS_DT" name="LAST_BUSINESS_DT" value="" class="wd_150" data-notblank="true" class="form-control" placeholder="최근거래일시" readonly>
                                 </td>
                                 <th scope="row">영업담당자</th>
                                 <td>
@@ -246,16 +244,18 @@
                         </table>
                     </div>
                 </div>
+                <div class="list98_330">
+                    <h4 style="position: absolute;">담당자정보</h4>
 
-                <div class="list98">
-                    <div class="tableWrap" style="height: 240px; overflow-y: auto;">
-                            <div class="right_sort_pop">
-                                <button type="button" id="addSystemCompRegiBtn" class="defaultBtn radius ">Add</button>
-                                <button type="button" id="deleteSystemCompRegiBtn" class="defaultBtn radius green ">Delete</button>
-                            </div>
-                            <ul class="conWrap">
-                                <div id="system-company-register-popup-grid" class="jqx-refresh"></div>
-                            </ul><br/>
+                    <div class="right_sort_pop">
+                      <button type="button" id="addSystemCompRegiBtn" class="defaultBtn radius ">Add</button>
+                      <button type="button" id="deleteSystemCompRegiBtn" class="defaultBtn radius green ">Delete</button>
+                    </div>
+                    <ul class="conWrap">
+                      <div id="system-company-register-popup-grid" class="jqx-refresh"></div>
+                    </ul><br/>
+                    <div class="tableWrap" style="height: 160px; overflow-y: auto;">
+
                             <ul class="conWrapPop">
                                 <div id="system-company-type1-popup-grid" class="jqx-refresh"></div>
                             </ul>
@@ -273,11 +273,12 @@
                             </ul>
 
                     </div>
-
-
                 </div>
-            </div>
 
+            </div>
+            <div class="btnWrap">
+                 <button type="button" class="defaultBtn grayPopGra" id="system-company-pop-close">닫기</button>
+             </div>
         </div>
 
 </div>
@@ -365,41 +366,41 @@
             {title: '협력업체여부', dataType: 'string', dataIndx: 'CO_COMPANY_INFO', width: 162},
             {title: '사업자등록번호', align: 'center', dataType: 'string', dataIndx: 'COMP_NUM', width: 120},
             {title: '업태', align: 'center', dataType: 'string', dataIndx: 'BUSINESS_TYPE', width: 100},
-            {title: '종목', align: 'center', dataType: 'string', dataIndx: 'BUSINESS_ITEM', width: 100},
+            {title: '종목', align: 'center', dataType: 'string', dataIndx: 'BUSINESS_ITEM', width: 150},
             {title: '전화번호', align: 'center', dataType: 'string', dataIndx: 'COMP_TEL', width: 150},
             {title: '담당자(Email)', align: 'center', dataType: 'string', dataIndx: 'MAIN_STAFF_INFO',  width: 150},
             {title: '대표자', align: 'center', dataType: 'string', dataIndx: 'CEO_NM', width: 70},
-            {title: '주소', align: 'center', dataType: 'string', dataIndx: 'COMP_ADDRESS', width: 300},
+            {title: '주소', align: 'center', dataType: 'string', dataIndx: 'COMP_ADDRESS', width: 350},
             {title: '비고', align: 'center', dataType: 'string', dataIndx: 'NOTE', width: 200},
             {title: '대표이메일', align: 'center', dataType: 'string', dataIndx: 'COMP_EMAIL', width: 150},
             {title: '로고', align: 'center', dataType: 'string', dataIndx: 'LOGO_GFILE_SEQ',
                 render: function (ui) {
                     var rowData = ui.rowData, dataIndx = ui.dataIndx;
-                    if (ui.rowData['LOGO_GFILE_SEQ'] > 0) return "<i id='imageView' class='fa fa-file-image-o fa-2x'>VIEW</i>";
+                    if (ui.rowData['LOGO_GFILE_SEQ'] > 0) return "<i id='imageView' class='blueFileImageICon'></i>";
                     return '';
                 }
             },
             {title: '직인', align: 'center', dataType: 'string', dataIndx: 'SIGN_GFILE_SEQ',
                 render: function (ui) {
                     var rowData = ui.rowData, dataIndx = ui.dataIndx;
-                    if (ui.rowData['SIGN_GFILE_SEQ'] > 0) return "<i id='imageView' class='fa fa-file-image-o fa-2x'>VIEW</i>";
+                    if (ui.rowData['SIGN_GFILE_SEQ'] > 0) return "<i id='imageView' class='blueFileImageICon'></i>";
                     return '';
                 }
             },
-            {title: '', align: 'center', dataType: 'string', dataIndx: 'ETC_GFILE_SEQ', width: 40,
+            {title: '기타', align: 'center', dataType: 'string', dataIndx: 'ETC_GFILE_SEQ', width: 40,
                 render: function (ui) {
                     var rowData = ui.rowData, dataIndx = ui.dataIndx;
                     if(rowData.ETC_FILE_YN  == 'Y'){
-                        return '#';
+                        return "<i id='imageView' class='blueFileImageICon'></i>";
                     }else{
                         return '';
                     }
                 }
             },
-            {title: '최근거래일시', align: 'center', dataType: 'string', dataIndx: 'LAST_BUSINESS_DT', width: 150},
-            {title: '등록일시', align: 'center', ataType: 'string', dataIndx: 'INSERT_DT', width: 150},
-            {title: '수정일시', align: 'center', dataType: 'string', dataIndx: 'UPDATE_DT', width: 150},
-            {title: '활성여부', align: 'center', dataType: 'string', dataIndx: 'ACTIVE_YN', width: 70}
+            {title: '최근거래일시', align: 'center', dataType: 'string', dataIndx: 'LAST_BUSINESS_DT', width: 120},
+            {title: '등록일시', align: 'center', ataType: 'string', dataIndx: 'INSERT_DT', width: 120},
+            {title: '수정일시', align: 'center', dataType: 'string', dataIndx: 'UPDATE_DT', width: 120},
+            {title: '활성여부', align: 'center', dataType: 'string', dataIndx: 'ACTIVE_YN', width: 50}
         ];
         // systemCompanyMasterToolbar = {
         //     cls: 'pq-toolbar-crud',
@@ -420,7 +421,7 @@
 
         systemCompanyMasterObj = {
             width: '100%',
-            height: 650, collapsible: false, resizable: false, showTitle: false, // pageModel: {type: "remote"},
+            height: 750, collapsible: false, resizable: false, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'}, editable : false,
             numberCell: {title: 'No.'}, dragColumns: {enabled: false},
             trackModel: {on: true},
@@ -1030,9 +1031,6 @@
                 }
             }, parameters, '');
         });
-        $('.pop_close').on('click', function(e) {
-            $('#system_company_popup').modal('hide');
-        });
         // 업체상세 모달 hide
         $("#system_company_popup").on('hide.bs.modal', function(){
             fnResetFrom("company_master_register_form");
@@ -1305,7 +1303,9 @@
             });
         });
 
-
+        $('#company_master_register_form').find('#system-company-pop-close, #system-company-pop-close2').on('click', function () {
+            $('#system_company_popup').modal('hide');
+        });
 
 
     });
