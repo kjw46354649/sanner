@@ -123,7 +123,7 @@
         <div class="tableWrap jmestabs" id="div_tabs_part">
             <ul class="smallTabMenuTabs">
                 <li class="active"><a href="#_TAB1" data-toggle="tab" aria-expanded="true">현황관리</a></li>
-                <li><a href="#_TAB2" data-toggle="tab" aria-expanded="false">불출이력</a></li>
+                <li><a href="#_TAB2" data-toggle="tab" aria-expanded="false">수불이력</a></li>
                 <div class="right_sort">
                     <button type="button" id="mainAddBtn" class="defaultBtn radius ">추가</button>
                     <button type="button" id="mainDeleteBtn" class="defaultBtn radius red ">삭제</button>
@@ -204,7 +204,7 @@
                     <tr>
                         <th>보유수량</th>
                         <th>남은수량</th>
-                        <th>불출수량</th>
+                        <th class="th_blue_white">불출수량</th>
                         <th></th>
                         <th>요청자</th>
                     </tr>
@@ -300,7 +300,6 @@
     let mainObj02;
     let $mainGrid02;
 
-
     $(function () {
         'use strict';
 
@@ -311,7 +310,7 @@
         mainPostData01 = fnFormToJsonArrayData('#search_form');
         mainColModel01 = [
             {title: 'CONSUMABLE_STOCK_SEQ', dataType: 'string', dataIndx: 'CONSUMABLE_STOCK_SEQ', hidden:true},
-            {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_CD_NM',
+            {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_CD_NM', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
                 editor: {
                     type: 'select',
                     mapIndices: { name: "WAREHOUSE_CD_NM", id: "WAREHOUSE_CD" },
@@ -325,11 +324,20 @@
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
                 },
+                editable: function (ui) {
+                  let rowData = mainGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                  let CONSUMABLE_STOCK_SEQ = rowData["CONSUMABLE_STOCK_SEQ"];
+                  if (CONSUMABLE_STOCK_SEQ == null || CONSUMABLE_STOCK_SEQ == "" || CONSUMABLE_STOCK_SEQ== undefined) {
+                      return true;
+                  }else{
+                      return false;
+                  }
+                },
                 validations: [
                     { type: 'minLen', value: 1, msg: "Required" }
                 ]
             },
-            {title: '위치', dataType: 'string', dataIndx: 'LOC_SEQ_NM', minWidth: 120,
+            {title: '위치', dataType: 'string', dataIndx: 'LOC_SEQ_NM', minWidth: 120, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
                 editor: {
                     type: 'select',
                     mapIndices: { name: "LOC_SEQ_NM", id: "LOC_SEQ" },
@@ -356,21 +364,30 @@
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
                 },
+                editable: function (ui) {
+                  let rowData = mainGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                  let CONSUMABLE_STOCK_SEQ = rowData["CONSUMABLE_STOCK_SEQ"];
+                  if (CONSUMABLE_STOCK_SEQ == null || CONSUMABLE_STOCK_SEQ == "" || CONSUMABLE_STOCK_SEQ== undefined) {
+                      return true;
+                  }else{
+                      return false;
+                  }
+                },
                 validations: [
                     { type: 'minLen', value: 1, msg: "Required" }
                 ]
             },
-            {title: '자재관리번호', dataType: 'string', dataIndx: 'CONSUMABLE_NUM',
+            {title: '자재관리번호', dataType: 'string', dataIndx: 'CONSUMABLE_NUM',styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},
                 validations: [
                     { type: 'minLen', value: 1, msg: "Required" }
                 ]
             },
-            {title: '자재명', dataType: 'string', dataIndx: 'CONSUMABLE_NM',
+            {title: '자재명', dataType: 'string', dataIndx: 'CONSUMABLE_NM',styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},
                 validations: [
                     { type: 'minLen', value: 1, msg: "Required" }
                 ]
             },
-            {title: '자재종류', dataType: 'string', dataIndx: 'CONSUMABLE_TYPE_NM',
+            {title: '자재종류', dataType: 'string', dataIndx: 'CONSUMABLE_TYPE_NM',styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},
                 editor: {
                     type: 'select',
                     mapIndices: { name: "CONSUMABLE_TYPE_NM", id: "CONSUMABLE_TYPE" },
@@ -405,10 +422,10 @@
             //         }
             //     }
             // },
-            {title: '보유수량', dataType: 'string', dataIndx: 'STOCK_QTY', editable: false},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true},
-            {title: '입고', dataType: 'integer', dataIndx: 'IN_QTY', editable: true},
-            {title: '불출', align: 'center', dataType: 'string', dataIndx: 'POPUP', width: 20, minWidth: 20, editable: false,
+            {title: '보유수량', dataType: 'string', dataIndx: 'STOCK_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},editable: false},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},editable: true},
+            {title: '입고', dataType: 'integer', dataIndx: 'IN_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},editable: true},
+            {title: '불출', align: 'center', dataType: 'string', dataIndx: 'POPUP', width: 20, minWidth: 20, editable: false,styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},
                 render: function (ui) {
                     let rowIndx = ui.rowIndx, grid = this;
                     if (ui.rowData['CONSUMABLE_STOCK_SEQ'] > 0 && ui.rowData['STOCK_QTY'] > 0) return "<button type=\"button\" class=\"miniBtn_h19 black\">불출</button>";
@@ -416,7 +433,7 @@
                 }
             },
             {title: '활성여부', align: 'center', dataIndx: 'ACTIVE_YN', editable: true,
-                styleHead: { 'text-align':'center','vertical-align':'middle'}, type: 'checkbox',
+                styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, type: 'checkbox',
                 cb: {
                     all: false, //header checkbox to affect checkboxes on all pages.
                     header: false, //for header checkbox.
