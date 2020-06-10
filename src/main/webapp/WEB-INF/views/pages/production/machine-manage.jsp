@@ -879,7 +879,7 @@
             };
         });
 
-        $('#company_master_register_form').find('#machine_manage_pop-close, #machine_manage_pop-close2').on('click', function () {
+        $('#machine_manage_pop_form').find('#machine_manage_pop-close, #machine_manage_pop-close2').on('click', function () {
             $('#CURRENT_POPUP').modal('hide');
         });
         $('#SEL_TERM_DT_USE').on('click', function(e) {
