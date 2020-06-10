@@ -209,7 +209,7 @@
                     <span style="width: 194px;">
 							<select id="INSPECT_RESULT" name="INSPECT_RESULT" title="불량코드">
                                  <option value=""><spring:message code="com.form.top.sel.option" /></option>
-                                <c:forEach var="vlocale" items="${HighCode.H_1020}">
+                                <c:forEach var="vlocale" items="${HighCode.H_1021}">
                                     <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                 </c:forEach>
 							</select>
@@ -784,23 +784,24 @@
             change: function (event, ui) {
                 console.log(ui);
                 if(ui.source == 'edit') {
-                    let row = ui.updateList[0].rowData;
-                    let newRow = ui.updateList[0].newRow;
+                    if (ui.dataIndx == 'PACKING_CNT') {
+                        let row = ui.updateList[0].rowData;
+                        let newRow = ui.updateList[0].newRow;
 
-                    let data = {
-                        'queryId': 'inspection.updateControlPartOrderPackingCnt1,inspection.updateControlPartOrderPackingCnt2,inspection.insertControlPartOrderPackingCnt3',
-                        'CONTROL_SEQ': row.CONTROL_SEQ,
-                        'CONTROL_DETAIL_SEQ': row.CONTROL_DETAIL_SEQ,
-                        'ORDER_SEQ': row.ORDER_SEQ,
-                        'PACKING_CNT': newRow.PACKING_CNT
-                    };
-                    let parameters = {'url': '/json-manager', 'data': data};
-                    fnPostAjax(function (data, callFunctionParam) {
-                        alert("등록이 완료되었습니다.");
-                        $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
-                        $("#outgoing_manage_search_btn").trigger("click");
-                    }, parameters, '');
-
+                        let data = {
+                            'queryId': 'inspection.updateControlPartOrderPackingCnt1,inspection.updateControlPartOrderPackingCnt2,inspection.insertControlPartOrderPackingCnt3',
+                            'CONTROL_SEQ': row.CONTROL_SEQ,
+                            'CONTROL_DETAIL_SEQ': row.CONTROL_DETAIL_SEQ,
+                            'ORDER_SEQ': row.ORDER_SEQ,
+                            'PACKING_CNT': newRow.PACKING_CNT
+                        };
+                        let parameters = {'url': '/json-manager', 'data': data};
+                        fnPostAjax(function (data, callFunctionParam) {
+                            alert("등록이 완료되었습니다.");
+                            $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
+                            $("#outgoing_manage_search_btn").trigger("click");
+                        }, parameters, '');
+                    }
 
                     /*let data = {
                         'queryId': 'inspection.updateControlPartOrderPackingCnt',
@@ -1376,7 +1377,7 @@
 
                     if(barcodeType == "L"){//라벨
                         //barcodesql = "common.selectOutBarcodeInfo";//라벨바코드 뒤지 않고 바로 가져오게 수정
-                        barcodesql = "common.selectOutgoingOutType4";
+                        barcodesql = "inspection.selectOutgoingOutType4";
                     }else if(barcodeType == "C"){//도면
                         barcodesql = "common.selectControlBarcodeInfo";
                     }else{
