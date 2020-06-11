@@ -11,10 +11,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 @Controller
 public class PopController {
@@ -39,13 +43,25 @@ public class PopController {
     }
 
     /**
+     * Simply selects the home view to render by returning its name.
+     */
+    @RequestMapping(value = "/popParamQueryGridSelect", method = RequestMethod.POST)
+    public String popParamQueryGridSelect(Model model, HttpServletRequest request, HttpSession session) throws Exception {
+        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+        List<Map<String, Object>> list = this.innodaleService.getList(hashMap);
+        model.addAttribute("data", list);
+        return "jsonView";
+    }
+
+    /**
      * @description Scanning Barcode
      */
-    @RequestMapping(value = "/scanningBarcodePop", method = RequestMethod.POST)
-    public String scanningBarcodePop(HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/popScanningBarcodePop", method = RequestMethod.POST)
+    public String popScanningBarcodePop(Model model, HttpServletRequest request) throws Exception {
+
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
 
-        this.popService.scanningBarcodePop(hashMap);
+        popService.createScanningBarcodePop(model, hashMap);
 
         return "jsonView";
     }

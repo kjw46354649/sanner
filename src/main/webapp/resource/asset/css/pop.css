@@ -3,24 +3,30 @@
 }
 
 .titWrap{
-    font-size: 14px;
+    font-size: 20px;
     color: #634747;
     line-height: 54px;
     padding-left: 15px;
  }
 
-.barCodeTxt{
-    font-size: 11px;
+.tootipWrap{
+    font-size: 20px;
     color: #634747;
-    display: inline-block;
+    line-height: 34px;
+    text-align: center;
+ }
+
+.barCodeTxt{
+    font-size: 20px;
+    color: #634747;
+    /*display: inline-block;*/
     vertical-align: center;
     color: #ff0000;
-    float: right;
-    padding-right: 20px;
+    /*float: right;*/
 }
 
 .rowCodeTxt {
-    font-size: 18px;
+    font-size: 20px;
     margin-top: 5px;
     padding-right: 20px;
 }
@@ -31,14 +37,72 @@
 }
 
 .slt_wrap {
+    font-size: 20px;
     padding-right: 50px;
 }
 
+.slt_wrap label{
+    font-size: 20px;
+}
+
+.titWrap select{
+    outline: none;
+    height: 30px;
+    padding-left: 12px;
+    border: 2px solid #919191;
+    font-size: 15px;
+    background: url(../images/common/r_select_arrow.png) no-repeat 94% 50% #fff;
+    color: #353535;
+    border-radius: 3px;
+    line-height: 29px;
+}
+
+.titWrap input{
+    outline: none;
+    height: 30px;
+    padding-left: 12px;
+    border: 2px solid #919191;
+    font-size: 15px;
+    color: #353535;
+    border-radius: 3px;
+    line-height: 29px;
+    width: 300px;
+}
+
+.titWrap option{
+    font-size: 15px;
+}
+
+.titWrap .barCodeImg{
+    /*padding-bottom: 5px;*/
+    height: 30px;
+}
+
+.titWrap .refresh{
+    padding-right: 10px;
+}
+
 .estimate .bottomWrap .tableWrap .conWrap {
-    margin-top: 50px;
+    margin-top: 10px;
     padding-bottom: 5px;
 }
 
 .topWrap {
     margin-bottom: 0px;
+}
+
+.estimate .popBottomWrap {
+    margin: 0 1%;
+    background: #fff;
+    /* border: 1px solid #e2e2e2; */
+    border-radius: 3px;
+}
+
+.estimate .basicWrap{
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5px 15px;
+    height: 40px;
+    text-align: center;
 }

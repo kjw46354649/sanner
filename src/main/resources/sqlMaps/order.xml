@@ -113,7 +113,8 @@
             B.PART_STATUS, <!-- PART 상태 -->
             SF_GET_CODE_NM(1013, B.PART_STATUS, 'KR') AS PART_STATUS_NM, <!-- 주문관리상태 -->
             D.CLOSE_DETAIL_NOTE, <!-- 마감 비고 -->
-            A.DEL_YN
+            A.DEL_YN,
+            G.BARCODE_NUM
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
@@ -127,6 +128,7 @@
                                                  AND D.CLOSE_VER = E.CLOSE_VER
             LEFT OUTER JOIN TBL_INVOICE_DETAIL F ON B.CONTROL_SEQ = F.CONTROL_SEQ
                                                     AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_CONTROL_BARCODE G ON B.CONTROL_SEQ = G.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ AND G.DEL_YN = 'N'
     </sql>
 
     <select id="selectControlManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">

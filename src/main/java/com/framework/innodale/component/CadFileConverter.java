@@ -25,8 +25,8 @@ public class CadFileConverter {
 
     public static String cadfile_converter(File sourceFile, String convertPath) throws IOException, InterruptedException {
 
-//        License license = new License();
-//        license.setLicense("Aspose.CAD.lic");
+        License license = new License();
+        license.setLicense("Aspose.CAD.lic");
 
         String message = "DXF File Converter Success!.";
 
@@ -98,19 +98,6 @@ public class CadFileConverter {
 
         int cadWidth = cadImage.getSize().getWidth();
         int cadHeight = cadImage.getSize().getHeight();
-
-//        for (Object style : cadImage.getStyles()) {
-//            System.err.println("getStyleName=[" + ((CadStyleTableObject) style).getStyleName());
-//            System.err.println("getBigFontName=[" + ((CadStyleTableObject) style).getBigFontName());
-//            System.err.println("getRoundTripTableStyle=[" + ((CadStyleTableObject) style).getRoundTripTableStyle());
-//            System.err.println(("image styles  " + ((CadStyleTableObject) style).getStyleName() + " -> " + ((CadStyleTableObject) style).getPrimaryFontName()));
-//        }
-
-//        for(Object style : cadImage.getStyles())
-//        {
-//            // Set the font name
-//            ((com.aspose.cad.fileformats.cad.cadtables.CadStyleTableObject)style).setPrimaryFontName("Arial");
-//        }
 
         CadRasterizationOptions rasterizationOptions = new CadRasterizationOptions();
         rasterizationOptions.setLayouts(new String[] {"Model"});

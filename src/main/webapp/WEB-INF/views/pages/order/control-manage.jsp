@@ -2416,7 +2416,7 @@
                     '   <table class="drawingArea" style="table-layout: fixed; word-wrap:break-word;">' +
                     '        <tbody>' +
                     '        <tr class="controlInfo">' +
-                    '           <td scope="col" width="28%" rowspan="2" class="center_sort"><img src="/barcode/code128/1234567890" class="barcode"></td>' +
+                    '           <td scope="col" width="28%" rowspan="2" class="center_sort"><img src="/barcode/code128/' +rowData.BARCODE_NUM+ '" class="barcode"></td>' +
                     '           <td scope="col" width="10%" rowspan="2" class="center_sort">'+rowData.ORDER_COMP_NM+'</td>' +
                     '           <td scope="col" width="3%" class="center_sort">'+rowData.CONTROL_VER+'</td>' +
                     '           <td scope="col" width="10%" rowspan="2" class="center_sort">'+rowData.CONTROL_NUM+'</td>' +

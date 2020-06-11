@@ -115,6 +115,8 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
      */
     private boolean isPassUrlList(String url) throws Exception{
 
+        System.out.println("url=[" + url + "]");
+
         List<String> passList = new ArrayList<String>();
 
         // index.do => home.do
@@ -122,6 +124,8 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
         passList.add("/change-locale");
         passList.add("/userLogin");
         passList.add("/userLogout");
+        passList.add("/popParamQueryGridSelect");
+        passList.add("/popScanningBarcodePop");
 
         /** pop path **/
         passList.add("/pop");
@@ -133,7 +137,25 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
         passList.add("/drawing-board");
         passList.add("/drawing-board-save");
 
-        return passList.contains(url);
+        /** upload **/
+        passList.add("/uploadNormalFile");
+        passList.add("/imageViewer");
+        passList.add("/drawingPrint");
+
+        /** test path  **/
+//        passList.add("/static/test/cadfile_test");
+        passList.add("/paramQueryGridSelect");
+        passList.add("/uploadControlCadFilesTesting");
+
+        String patterns[] = {"/image", "/barcode", "/static", "/downloadGfile", "/downloadfile"};
+
+        if(passList.contains(url)) return true;
+
+        for(String pattern : patterns){
+            int idex = url.indexOf(pattern);
+            if(idex >= 0) return true;
+        }
+        return false;
 
     }
 }

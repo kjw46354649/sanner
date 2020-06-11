@@ -37,9 +37,7 @@ public class LoginController {
 
     @RequestMapping(value="/")
     public String index(Model model, HttpServletRequest request,  Locale locale) throws Exception {
-
         logger.info("logger");
-
         return "login/login.tiles";
     }
 

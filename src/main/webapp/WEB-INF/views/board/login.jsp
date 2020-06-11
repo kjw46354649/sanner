@@ -13,6 +13,9 @@
     <script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
     <script type="text/javascript" src="/resource/asset/js/front.js"></script>
+    <style>
+        *:focus { outline:none; }
+    </style>
 </head>
 <body onresize="parent.resizeTo(1024,600)" onload="parent.resizeTo(1024,600)">
     <div class="bodyWrap login" id="bodyWrap">
@@ -28,11 +31,7 @@
                         </select>
                     </li>
                     <li><label for="menu_2">메뉴선택</label>
-                        <select id="menu_2" name="EQUIP_SEQ" title="메뉴선택">
-                            <option value="" selected="selected">NC-1</option>
-                            <option value="1">NC-1</option>
-                            <option value="2">NC-1</option>
-                        </select>
+                        <select id="menu_2" name="EQUIP_SEQ" title="메뉴선택"></select>
                     </li>
                 </ul>
                 <p class="txt">로그인해 주세요</p>

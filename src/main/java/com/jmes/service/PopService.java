@@ -1,8 +1,10 @@
 package com.jmes.service;
 
+import org.springframework.ui.Model;
+
 import java.util.HashMap;
 
 public interface PopService {
 
-    void scanningBarcodePop(HashMap<String, Object> hashMap) throws Exception;
+    public void createScanningBarcodePop(Model model, HashMap<String, Object> hashMap) throws Exception;
 }
