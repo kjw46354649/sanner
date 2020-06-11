@@ -58,12 +58,12 @@
                         </span>
                         <div class="calendar_wrap">
                             <span class="calendar_span">
-                                <input class="datepicker-input" type="text" name="SEL_ST_DT" id="SEL_ST_DT" placeholder="" value="" title="시작날짜">
+                                <input class="datepicker-input" type="text" name="SEL_ST_DT" id="SEL_ST_DT" placeholder="" value="" title="시작날짜" readonly>
 <%--                                <button type="button">달력선택</button>--%>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input class="datepicker-input" type="text" name="SEL_END_DT" id="SEL_END_DT" placeholder="" value="" title="종료날짜">
+                                <input class="datepicker-input" type="text" name="SEL_END_DT" id="SEL_END_DT" placeholder="" value="" title="종료날짜" readonly>
 <%--                                <button type="button">달력선택</button>--%>
                             </span>
                         </div>
