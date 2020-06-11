@@ -8,7 +8,7 @@
     <div class="topWrap">
         <form class="form-inline" id="inspection_manage_form" name="inspection_manage_form" role="form">
             <input type="hidden" name="queryId" id="queryId" value="inspection.selectInspectionList">
-            <div class="gubunWrap row2_topWrap" >
+            <div class="none_gubunWrap row2_topWrap" >
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -38,9 +38,7 @@
                             </select>
                         </span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap right_float">
-                            <button type="button" class="defaultBtn radius blue" id="inspection_manage_search_btn">검색</button>
-                        </span>
+
                     </li>
                     <li>
                         <span class="slt_wrap">
@@ -53,12 +51,13 @@
                         <span class="txt_span"><label class="label_100" for="SEL_INSPECT_GRADE">Option</label></span>
                         <span class="chk_box"><input id="SEL_INSPECT_GRADE" name="SEL_INSPECT_GRADE" type="checkbox"><label for="SEL_INSPECT_GRADE">검사완료품 제외</label></span>
                         <span class="chk_box"><input id="SEL_OUTSIDE_YN" name="SEL_OUTSIDE_YN" type="checkbox"><label for="SEL_OUTSIDE_YN">외주대상 제외</label></span>
+                        <button type="button" class="right_float defaultBtn radius blue" id="inspection_manage_search_btn">검색</button>
                     </li>
                 </ul>
             </div>
         </form>
     </div>
-    <div class="bottomWrap inspectionBWrap">
+    <div class="bottomWrap inspectionBWrap row2_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
                 <span class="barCode"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="inspectionBarcodeImg"></span>
@@ -96,7 +95,7 @@
         <input type="hidden" name="ORDER_QTY" id="ORDER_QTY" value="">
         <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ" value="">
         <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ" value="">
-        <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ" value="">
+
 
     <div class="layerPopup">
         <h3>품질 실적 등록</h3>
