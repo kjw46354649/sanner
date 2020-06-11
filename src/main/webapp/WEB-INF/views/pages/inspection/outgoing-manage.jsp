@@ -7,8 +7,8 @@
 <div class="page estimate">
     <div class="topWrap">
         <form class="form-inline" id="outgoing_manage_form" name="outgoing_manage_form" role="form">
-            <input type="hidden" name="queryId" id="queryId" value="inspection.selectInspectionList">
-            <div class="gubunWrap row2_topWrap" >
+            <input type="hidden" name="queryId" id="queryId" value="inspection.selectOutgoingList">
+            <div class="none_gubunWrap row2_topWrap" >
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -33,9 +33,7 @@
                             <input type="text" class="wd_200" name="SEL_ORDER_NUM" id="SEL_ORDER_NUM" title="발주번호">
                         </span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap right_float">
-                            <button type="button" class="defaultBtn radius blue" id="outgoing_manage_search_btn">검색</button>
-                        </span>
+
                     </li>
                     <li>
                         <span class="slt_wrap mg-right10">
@@ -71,6 +69,7 @@
                         <span class="txt_span"><label class="label_100" for="SEL_PART_NUM_VIEW_YN">Option</label></span>
 <%--                        <span class="chk_box"><input id="SEL_DELAY_TOP" name="SEL_DELAY_TOP" type="checkbox"><label for="SEL_DELAY_TOP">지연대상 항시 상단표시</label></span>--%>
                         <span class="chk_box"><input id="SEL_PART_NUM_VIEW_YN" name="SEL_PART_NUM_VIEW_YN" type="checkbox"><label for="SEL_PART_NUM_VIEW_YN">Part 단위 표시</label></span>
+                        <button type="button" class="right_float defaultBtn radius blue" id="outgoing_manage_search_btn">검색</button>
                     </li>
                 </ul>
             </div>
