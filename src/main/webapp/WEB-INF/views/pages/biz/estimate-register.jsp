@@ -48,21 +48,25 @@
 </div>
 
 <div class="page estimate">
-    <div class="bottomWrap full_bottomWrap">
-        <div class="hWrap">
-            <div class="d-inline">
-                <div class="right_sort">
-<%--                    <label for="selEstimateListExcel">견적서 추출</label>--%>
-                    <button type="button" class="defaultBtn" id="btnEstimateRegisterEstimateListExcel">견적서 출력</button>
-<%--                    <select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출"></select>--%>
-                    <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawAdd">도면 등록</button>
-                    <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawView">도면 보기</button>
-                    <button type="button" class="defaultBtn radius green authorizedBtn" id="btn_estimate_register_save">저장</button>
-                    <button type="button" class="defaultBtn radius blue authorizedBtn" id="btn_estimate_register_submit">제출</button>
+    <div class="topWrap">
+        <div class="none_gubunWrap">
+            <div class="hWrap">
+                <div class="d-inline">
+                    <div class="right_sort">
+                        <%--                    <label for="selEstimateListExcel">견적서 추출</label>--%>
+                        <button type="button" class="defaultBtn" id="btnEstimateRegisterEstimateListExcel">견적서 출력</button>
+                        <%--                    <select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출"></select>--%>
+                        <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawAdd">도면 등록</button>
+                        <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawView">도면 보기</button>
+                        <button type="button" class="defaultBtn radius green authorizedBtn" id="btn_estimate_register_save">저장</button>
+                        <button type="button" class="defaultBtn radius blue authorizedBtn" id="btn_estimate_register_submit">제출</button>
+                    </div>
                 </div>
+                <%--<span class="chk_box mg-left15"><input id="chkEstimateRegisterDetail" type="checkbox"><label for="chkEstimateRegisterDetail"> 견적상세요건</label></span>--%>
             </div>
-            <%--<span class="chk_box mg-left15"><input id="chkEstimateRegisterDetail" type="checkbox"><label for="chkEstimateRegisterDetail"> 견적상세요건</label></span>--%>
         </div>
+    </div>
+    <div class="bottomWrap row1_bottomWrap">
         <form class="form-inline" id="estimate_register_info_form" name="estimate_register_info_form" role="form">
             <input type="hidden" id="queryId" name="queryId" value="">
             <input type="hidden" id="EST_SEQ" name="EST_SEQ" value="">
@@ -145,7 +149,7 @@
             <div class="conWrap">
                 <div class="popup">
                     <div class="resultWrap">
-                        <div class="float_left col-md-5 col-sm-5" style="width: 46% !important;">
+                        <div class="float_left col-md-5 col-sm-5" style="width: 48% !important; padding: 0px !important; padding-right: 30px !important;">
                             <div class="">
                                 <h3>메일내용
                                     <div class="right_float">
@@ -156,7 +160,7 @@
                                 </textarea>
                             </div>
                         </div>
-                        <div class="float_right col-md-6 col-sm-6">
+                        <div class="float_right col-md-6 col-sm-6" style="padding: 0px !important;">
                             <h3 style="text-align: left;">메일수신처</h3>
                             <div class="conMainWrap">
                                 <div id="estimate_register_bot_grid"></div>
@@ -221,7 +225,45 @@
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 170 } ,
             /*{title: '', dataType: 'string', dataIndx: 'DRAWING_YN', width: 30 } ,*/
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', validations: [{ type: 'minLen', value: 1, msg: "Required"}], width: 100 } ,
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', width: 50 } ,
+            {
+                title: 'Part', clsHead: 'cantChange', dataType: 'integer', dataIndx: 'PART_NUM', editable: false,
+                render: function (ui) {
+                    if (ui.rowData.WORK_TYPE === 'WTP020') {
+                        return '<span class="ui-icon ui-icon-circle-plus" id="estimateListPartNumPlus" style="cursor: pointer"></span>';
+                    }
+                },
+                postRender: function (ui) {
+                    let grid = this;
+                    let $cell = grid.getCell(ui);
+                    let rowIndex = ui.rowIndx;
+
+                    $cell.find("#estimateListPartNumPlus").on('click', function (event) {
+                        let data = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data')
+                        let totalRecords = data.length;
+                        let newPartNum = 0
+                        let newRowIndex = 0;
+
+                        let newRowData = fnCloneObj(data[rowIndex]);
+                        for (let i = 0; i < totalRecords; i++) {
+                            if (data[i].PARENT_SEQ === newRowData.PARENT_SEQ) {
+                                newPartNum++;
+                                newRowIndex = data[i].pq_ri + 1;
+                            }
+                        }
+
+                        newRowData.ROWNUM = totalRecords + 1;
+                        newRowData.SEQ = "";
+                        newRowData.PART_NUM = newPartNum;
+                        newRowData.WORK_TYPE = 'WTP050';
+
+                        estimateRegisterTopGrid.pqGrid('addRow', {
+                            newRow: newRowData,
+                            rowIndx: newRowIndex,
+                            checkEditable: false
+                        });
+                    });
+                }
+            },
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 100 } ,
             {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
             {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: true,
@@ -439,13 +481,13 @@
                     },
                 ]},
             {title: '상세 가공요건', align: "center", colModel:[
-                {title:'선반', dataType: 'string', dataIndx: 'DETAIL_LATHE'},
-                {title:'가공', dataType: 'string', dataIndx: 'DETAIL_SURFACE'},
-                {title:'클램', dataType: 'string', dataIndx: 'DETAIL_CLAMPING'},
-                {title:'포켓', dataType: 'string', dataIndx: 'DETAIL_POCKET'},
-                {title:'드릴', dataType: 'string', dataIndx: 'DETAIL_DRILL'},
-                {title:'난도', dataType: 'string', dataIndx: 'DETAIL_DIFFICULTY'}
-            ], hidden: true},
+                    {title:'선반', dataType: 'string', dataIndx: 'DETAIL_LATHE'},
+                    {title:'가공', dataType: 'string', dataIndx: 'DETAIL_SURFACE'},
+                    {title:'클램', dataType: 'string', dataIndx: 'DETAIL_CLAMPING'},
+                    {title:'포켓', dataType: 'string', dataIndx: 'DETAIL_POCKET'},
+                    {title:'드릴', dataType: 'string', dataIndx: 'DETAIL_DRILL'},
+                    {title:'난도', dataType: 'string', dataIndx: 'DETAIL_DIFFICULTY'}
+                ], hidden: true},
             {title: '소재사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
                 editor: {
                     type: 'select',
@@ -477,12 +519,12 @@
                 }
             },
             {title: '예상소재 Size', align: "center", colModel:[
-                {title:'가로', dataType: 'float', dataIndx: 'SIZE_W_M'},
-                {title:'세로', dataType: 'float', dataIndx: 'SIZE_H_M'},
-                {title:'두께', dataType: 'float', dataIndx: 'SIZE_T_M'},
-                {title:'지름', dataType: 'float', dataIndx: 'SIZE_D_M'},
-                {title:'길이', dataType: 'float', dataIndx: 'SIZE_L_M'}
-            ], hidden: true},
+                    {title:'가로', dataType: 'float', dataIndx: 'SIZE_W_M'},
+                    {title:'세로', dataType: 'float', dataIndx: 'SIZE_H_M'},
+                    {title:'두께', dataType: 'float', dataIndx: 'SIZE_T_M'},
+                    {title:'지름', dataType: 'float', dataIndx: 'SIZE_D_M'},
+                    {title:'길이', dataType: 'float', dataIndx: 'SIZE_L_M'}
+                ], hidden: true},
             {title: '항목별 견적정보', align: "center", colModel: [
                     {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT', format: '#,###'},
                     {title: 'TM각비', datatype: 'string', dataIndx: 'UNIT_TM_AMT', format: '#,###'},
@@ -609,7 +651,7 @@
         ];
 
         let estimateRegisterFileObj = {
-            height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            height: 125, collapsible: false, resizable: false, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'}, numberCell: {title: 'No.'}, dragColumns: {enabled: false},
             editable : false,
             scrollModel: {autoFit: false}, trackModel: {on: true}, showBottom : true, postRenderInterval: -1, //call postRender synchronously.
@@ -635,9 +677,9 @@
         };
 
         estimateRegisterTopGrid.pqGrid({
-            height: 380,
+            height: 414,
             dataModel: {
-                location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
+                location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
                 url: "/paramQueryGridSelect",
                 postData: fnFormToJsonArrayData('#estimate_register_hidden_form'),
                 getData: function (dataJSON) {
@@ -791,7 +833,7 @@
                 estimateRegisterBotGrid.pqGrid('destroy');
             }
             estimateRegisterBotGrid.pqGrid({
-                height: 100,
+                height: 111,
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
                     url: "/paramQueryGridSelect",
@@ -827,7 +869,7 @@
             // 파일 업로드
             estimateRegisterFileGrid.pqGrid(estimateRegisterFileObj);
             estimateRegisterFileGrid.pqGrid('option', 'colModel', estimateRegisterFileModel);
-            estimateRegisterFileGrid.pqGrid('option', 'height', '136').pqGrid('refresh');
+            estimateRegisterFileGrid.pqGrid('option', 'height', '111').pqGrid('refresh');
         };
 
 
@@ -1047,7 +1089,7 @@
 
         /* 도면 등록 팝업 호출 */
         $btnEstimateRegisterDrawAdd.click(function () {
-            callCadDrawingUploadPopup('estimate', 'estimate.manageEstimateCadFiles');
+            setEstiMatePopup('estimate', 'estimate.manageEstimateCadFiles');
         });
 
         /* 도면 등록 팝업 호출 */
@@ -1056,7 +1098,7 @@
         });
 
         /* CKEDITOR 부분 */
-        CKEDITOR.replace( 'EMAIL_CONTENT_TXT', { height: 176 });
+        CKEDITOR.replace( 'EMAIL_CONTENT_TXT', { height: 162 });
         CKEDITOR.instances.EMAIL_CONTENT_TXT.setData(context);
 
         $('#updateFromControl').on('click', function () {

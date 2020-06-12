@@ -51,7 +51,7 @@
     <div class="topWrap">
         <form class="form-inline" id="item_order_register_search_form" name="item_order_register_search_form" role="form">
             <input type="hidden" name="queryId" id="queryId" value="selectItemOrderRegisterList">
-            <div class="gubunWrap row3_topWrap">
+            <div class="none_gubunWrap row3_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -704,40 +704,13 @@
                 complete: function (event, ui) {
                     this.flex();
                     let data = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data');
-                    MATERIAL_ORDER_NUM = data[0].MATERIAL_ORDER_NUM;
+                    MATERIAL_ORDER_NUM = data[0].MATERIAL_ORDER_NUM === undefined ? "" : data[0].MATERIAL_ORDER_NUM;
                     $('#item_order_register_popup_top_grid_records').html(data.length);
                 },
                 cellSave: function (evt, ui) {
                     if (ui.oldVal === undefined && ui.newVal === null) {
                         itemOrderRegisterPopTopGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                     }
-                }
-            });
-
-            itemOrderRegisterPopBotGrid.pqGrid({
-                width: "100%", height: 150,
-                dataModel: {
-                    location: "remote", dataType: "json", method: "POST", recIndx: 'SEQ',
-                    url: "/paramQueryGridSelect",
-                    postData: { 'queryId': 'selectEstimateDetailList'},
-                    getData: function (dataJSON) {
-                        return {data: dataJSON.data};
-                    }
-                },
-                virtualX: true, virtualY: true,
-                scrollModel: {autoFit: false},
-                selectionModel: { type: 'row', mode: 'single', column: true } ,
-                swipeModel: {on: false},
-                collapsible: false,
-                resizable: false,
-                colModel: itemOrderRegisterPopBotColModel,
-                showTitle: false,
-                title: false,
-                complete: function (event, ui) {
-                    this.flex();
-                    let data = itemOrderRegisterPopBotGrid.pqGrid('option', 'dataModel.data');
-
-                    $('#item_order_register_popup_bot_grid_records').html(data.length);
                 }
             });
 
@@ -1119,7 +1092,7 @@
 
                             for(var i=0; i<list.length; i++) {
                                 compCd = list[i].MATERIAL_COMP_CD;
-                                if(i == list.length-1 || compareCd != compCd) {
+                                if(compareCd != compCd) {
                                     innerTable = makeMailInnerTable(tableList);
                                     let parameter = {
                                         'queryId': 'insertItemOrderRegisterPopSubmitMail',
