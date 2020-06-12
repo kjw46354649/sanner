@@ -70,7 +70,7 @@
 
     <select id="selectEstimateDetailList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ROW_NUMBER () OVER () AS ROWNUM,
+            ROW_NUMBER() OVER (ORDER BY SEQ) AS ROWNUM,
             EST_SEQ, SEQ, PROJECT_NM, MODULE_NM, ITEM_NM, DRAWING_NUM, PART_NUM,
             CASE WHEN PARENT_SEQ IS NULL THEN SEQ ELSE PARENT_SEQ END PARENT_SEQ,
             MATERIAL_SUPPLY_YN, ITEM_QTY, SIZE_TXT, SIZE_TYPE,
@@ -102,7 +102,7 @@
         FROM TBL_ESTIMATE_DETAIL
         WHERE 1=1
             AND EST_SEQ = #{EST_SEQ}
-        ORDER BY SEQ
+        ORDER BY CASE WHEN PARENT_SEQ IS NULL THEN SEQ ELSE PARENT_SEQ END, SEQ
     </select>
 
     <select id="selectEstimateReceiverList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -554,7 +554,7 @@
 
     <select id="selectEstimateListFromControl" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ROW_NUMBER () OVER () AS ROWNUM,
+            ROW_NUMBER() OVER() AS ROWNUM,
             A.PROJECT_NM,
             A.MODULE_NM,
             B.ITEM_NM,

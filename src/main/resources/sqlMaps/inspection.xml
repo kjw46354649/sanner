@@ -916,6 +916,10 @@
         -- 3. 출하 이력관리 쿼리
         -- 기능설계서에서 누적칼럼 없애고 반품조치일 추가
         SELECT X.KEY_SEQ
+            , X.CONTROL_SEQ
+            , X.CONTROL_DETAIL_SEQ
+            , X.ORDER_SEQ
+            , X.OUT_RETURN_TYPE
             , CASE WHEN X.OUT_RETURN_TYPE = '1' THEN '출고' ELSE '반품' END AS OUT_RETURN_TYPE_NM
             , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
             , X.ORDER_NUM
@@ -930,6 +934,7 @@
             , X.RETURN_QTY
             , jmes.SF_GET_DATE_F(X.INSERT_DT,'YY','M') AS INSERT_DT
             , jmes.SF_GET_DATE_F(X.RETURN_SETTLEMENT_DT,'YY','M') AS RETURN_SETTLEMENT_DT
+            , jmes.SF_GET_OUT_RETURN_LAST_YN('XXX') AS LAST_YN
         FROM (  SELECT A.OUT_SEQ AS KEY_SEQ
                     , '1' AS OUT_RETURN_TYPE
                     , A.CONTROL_SEQ
@@ -1102,6 +1107,24 @@
                     </if>
                 ORDER BY V.CONTROL_SEQ, V.CONTROL_DETAIL_SEQ, W.INSPECT_SEQ DESC    -- 정렬도 확인필요
     </select>
+    <delete id="deleteOutgoingHistoryInspectionCancelStep1" parameterType="java.util.HashMap">
+        DELETE FROM jmes.TBL_OUT WHERE OUT_SEQ = #{OUT_SEQ}
+    </delete>
+    <update id="updateOutgoingHistoryInspectionCancelStep2" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_CONTROL_PART_ORDER SET OUT_FINISH_DT = NULL
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND ORDER_SEQ = #{ORDER_SEQ}
+    </update>
+    <update id="updateOutgoingHistoryInspectionCancelStep3" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_CONTROL SET OUT_FINISH_DT = NULL
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+    </update>
+    <delete id="deleteOutgoingHistoryReturnCancelStep1" parameterType="java.util.HashMap">
+        DELETE FROM jmes.TBL_INSPECT WHERE INSPECT_SEQ = #{INSPECT_SEQ}
+    </delete>
+
+
 <!--    <update id="updateOutgoingReturnAfter1" parameterType="java.util.HashMap">-->
 <!--        UPDATE jmes.TBL_CONTROL_PART_ORDER-->
 <!--        SET OUT_FINISH_DT = ''-->

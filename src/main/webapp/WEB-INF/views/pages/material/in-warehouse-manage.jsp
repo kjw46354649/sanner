@@ -178,7 +178,7 @@
         <form class="form-inline" id="in_warehouse_manage_search_form" name="in_warehouse_manage_search_form" role="form">
             <div class="topWrap">
                 <input type="hidden" name="queryId" id="queryId" value="material.selectInWarehouseManageList">
-                <div class="gubunWrap row3_topWrap">
+                <div class="none_gubunWrap row3_topWrap">
                     <ul>
                         <li>
                             <span class="slt_wrap">
