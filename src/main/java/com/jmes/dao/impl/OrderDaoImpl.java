@@ -78,7 +78,6 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public void updateControlPartStatus(HashMap<String, Object> hashMap) throws SQLException {
         sqlSessionTemplate.update("updateControlPartStatus", hashMap);
-
     }
 
     @Override
@@ -114,6 +113,11 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public void createControlExcelBatch(Map<String, Object> hashMap) throws SQLException {
         sqlSessionTemplate.insert("procedure.SP_CONTROL_EXCEL_BATCH", hashMap);
+    }
+
+    @Override
+    public void updateMonthCloseFinalNego(HashMap<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.update("updateMonthCloseFinalNego", hashMap);
     }
 
 }

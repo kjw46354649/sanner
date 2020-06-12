@@ -53,4 +53,27 @@ public class OutServiceImpl implements OutService {
             this.outDao.createOutsideCloseHistory(hashMap);
         }
     }
+
+    @Override
+    public void managerRequestOutside(Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<HashMap<String, Object>>() {});
+
+//            jsonArray = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<HashMap<String, Object>>>() {});
+
+//        if (jsonSendObject != null)
+//            jsonMap = objectMapper.readValue(jsonSaveObject, new TypeReference<Map<String, Object>>() {});
+        System.out.println(jsonMap);
+
+//        for (HashMap<String, Object> hashMap : jsonArray) {
+//            hashMap.put("OUTSIDE_STATUS", "OST004");
+//            this.outDao.updateOutsideCloseRequest(hashMap);
+//            this.outDao.createOutsideClose(hashMap);
+//            this.outDao.createOutsideCloseHistory(hashMap);
+//        }
+    }
 }

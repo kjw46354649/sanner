@@ -89,12 +89,12 @@
                     <a href="#money_receive_manage_tab" data-toggle="tab" aria-expanded="false">상세 수금현황</a>
                 </li>
                 <div class="right_float money_year_note_save_id" style="display: block;">
-                    <button type="button" id="moneyYearNoteSaveBtn" style="font-weight:normal;" class="defaultBtn green" >저장</button>
+                    <button type="button" id="moneyYearNoteSaveBtn" style="font-weight:normal;" class="defaultBtn btn-100w green" >저장</button>
                 </div>
                 <div class="right_float money_receive_save_id" style="display: none;">
-                    <button type="button" id="moneyReceiveAddBtn" style="font-weight:normal;" class="defaultBtn">추가</button>
-                    <button type="button" id="moneyReceiveDelBtn" style="font-weight:normal;" class="defaultBtn red">삭제</button>
-                    <button type="button" id="moneyReceiveSaveBtn" style="font-weight:normal;" class="defaultBtn green" >저장</button>
+                    <button type="button" id="moneyReceiveAddBtn" style="font-weight:normal;" class="defaultBtn btn-100w">추가</button>
+                    <button type="button" id="moneyReceiveDelBtn" style="font-weight:normal;" class="defaultBtn btn-100w red">삭제</button>
+                    <button type="button" id="moneyReceiveSaveBtn" style="font-weight:normal;" class="defaultBtn btn-100w green" >저장</button>
                 </div>
             </ul>
             <div class="tab-content">
@@ -234,9 +234,11 @@
         $('#MONEY_RECEIVE_CLOSE_MONTH_ST').val(((money_today.getMonth() + 1) < 10 ? '0' : '') + (money_today.getMonth() + 1)).prop('selected', true);
 
         let moneyManageStatusModel = [
+            {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '조회년도', dataType: 'string', dataIndx: 'CLOSE_YEAR', hidden: true},
+            {title: 'No.', minWidth: 30, width: 30, align: 'right', dataType: 'integer', dataIndx: 'ROW_NUM'},
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD_NM'},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '2020년 <BR>매출현황', dataType: 'string', dataIndx: 'SALE_AMT',
@@ -288,7 +290,7 @@
             header:false,
             headerMenu: false,
             indent: 10,
-            dataIndx: ['COMP_CD_NM'],
+            dataIndx: ['GROUP_KEY'],
             summaryInTitleRow: '',
             summaryEdit: false,
             showSummary: [true], //to display summary at end of every group.
@@ -299,7 +301,7 @@
         };
 
         let moneyManageStatusObj = {
-            height: 770, collapsible: false, resizable: false, selectionModel: { type: 'row', mode: 'single'} , showTitle: false, strNoRows: g_noData, numberCell: {title: 'No.'}, scrollModel: {autoFit: true}, trackModel: {on: true},
+            height: 770, collapsible: false, resizable: false, selectionModel: { type: 'row', mode: 'single'} , showTitle: false, strNoRows: g_noData, numberCell: {show: false}, scrollModel: {autoFit: true}, trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center',  editable: false},
             colModel: moneyManageStatusModel, toolbar: false,
             groupModel: moneyManageStatusGroupModel,

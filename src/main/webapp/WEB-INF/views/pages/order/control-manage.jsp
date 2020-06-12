@@ -137,41 +137,41 @@
     <div class="bottomWrap row1_bottomWrap">
         <div class="hWrap">
             <div>
-                <button type="button" class="defaultBtn btn-120w" data-toggle="modal" data-target="#CONTROL_MANGE_POPUP">신규
+                <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#CONTROL_MANGE_POPUP">신규
                     주문 등록
                 </button>
-                <button type="button" class="defaultBtn btn-120w" id="ESTIMATE_REGISTER_FROM_CONTROL">견적등록</button>
-                <button type="button" class="defaultBtn btn-120w" data-toggle="modal"
+                <button type="button" class="defaultBtn btn-100w" id="ESTIMATE_REGISTER_FROM_CONTROL">견적등록</button>
+                <button type="button" class="defaultBtn btn-100w" id="ESTIMATE_LIST_PRINT">견적List출력</button>
+                <button type="button" class="defaultBtn btn-100w" data-toggle="modal"
                         data-target="#TRANSACTION_STATEMENT_POPUP">거래명세표</button>
-                <%--<button type="button" class="defaultBtn btn-120w" data-toggle="modal"
+                <%--<button type="button" class="defaultBtn btn-100w" data-toggle="modal"
                         data-target="#TRANSACTION_STATEMENT_LIST_POPUP">거래명세표 List</button>--%>
                 <div class="rightSpan">
-                    <button type="button" class="defaultBtn btn-120w" id="ESTIMATE_LIST_PRINT">견적List출력</button>
-                    <button type="button" class="defaultBtn btn-120w" id="DRAWING_PRINT">도면 출력</button>
-                    <button type="button" class="defaultBtn btn-120w" id="BARCODE_DRAWING_PRINT">바코드도면 출력</button>
-                    <button type="button" class="defaultBtn btn-120w" id="BARCODE_PRINT">바코드 출력</button>
-                    <button type="button" class="defaultBtn btn-120w" id="LABEL_PRINT">라벨 출력</button>
+                    <button type="button" class="defaultBtn btn-100w" id="DRAWING_PRINT">도면 출력</button>
+                    <button type="button" class="defaultBtn btn-100w" id="BARCODE_DRAWING_PRINT">바코드도면 출력</button>
+                    <button type="button" class="defaultBtn btn-100w" id="BARCODE_PRINT">바코드 출력</button>
+                    <button type="button" class="defaultBtn btn-100w" id="LABEL_PRINT">라벨 출력</button>
                 </div>
             </div>
             <div class="mg-top10">
-                <button type="button" class="defaultBtn btn-120w" name="CHANGE_STATUS" id="CONFIRMATION"
+                <button type="button" class="defaultBtn btn-100w" name="CHANGE_STATUS" id="CONFIRMATION"
                         data-control_status="ORD001" data-control_status_nm="확정">확정
                 </button>
-                <button type="button" class="defaultBtn btn-120w" name="CHANGE_STATUS" id="CANCEL" data-control_status="ORD002"
+                <button type="button" class="defaultBtn btn-100w" name="CHANGE_STATUS" id="CANCEL" data-control_status="ORD002"
                         data-control_status_nm="취소">취소
                 </button>
-                <button type="button" class="defaultBtn btn-120w" name="CHANGE_STATUS" id="TERMINATION"
+                <button type="button" class="defaultBtn btn-100w" name="CHANGE_STATUS" id="TERMINATION"
                         data-control_status="ORD004" data-control_status_nm="종료">종료
                 </button>
-                <button type="button" class="defaultBtn btn-120w" data-toggle="modal"
+                <button type="button" class="defaultBtn btn-100w" data-toggle="modal"
                         data-target="#CONTROL_CLOSE_POPUP">마감
                 </button>
                 <div class="rightSpan">
-                    <button type="button" class="defaultBtn btn-120w" id="DRAWING_REGISTRATION">도면 등록</button>
-                    <button type="button" class="defaultBtn btn-120w" id="DRAWING_CHANGE">도면변경(Rev. up)</button>
-                    <button type="button" class="defaultBtn btn-120w" id="CONTROL_MANAGE_DRAWING_VIEW">도면 View</button>
-                    <button type="button" class="defaultBtn btn-120w red" id="CONTROL_MANAGE_DELETE">삭제</button>
-                    <button type="button" class="defaultBtn btn-120w green" id="CONTROL_MANAGE_SAVE">저장</button>
+                    <button type="button" class="defaultBtn btn-100w" id="DRAWING_REGISTRATION">도면 등록</button>
+                    <button type="button" class="defaultBtn btn-100w" id="DRAWING_CHANGE">도면변경(Rev. up)</button>
+                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_DRAWING_VIEW">도면 View</button>
+                    <button type="button" class="defaultBtn btn-100w red" id="CONTROL_MANAGE_DELETE">삭제</button>
+                    <button type="button" class="defaultBtn btn-100w green" id="CONTROL_MANAGE_SAVE">저장</button>
                 </div>
             </div>
         </div>
@@ -260,7 +260,7 @@
                 <div id="CONTROL_CLOSE_LEFT_GRID"></div>
             </div>
             <div style="display: flex; float:left; align-items: center; justify-content: center; width: 70px; height: 250px;">
-                <span class="arrow right_Arrow"></span>
+                <img src="/resource/asset/images/common/img_right_arrow.png" alt="오른쪽 화살표">
             </div>
             <div style="width: 450px; float:left;">
                 <div id="CONTROL_CLOSE_RIGHT_GRID"></div>
@@ -278,25 +278,28 @@
     <div class="layerPopup">
         <h3 style="margin-bottom: 10px;">거래 명세표</h3>
         <button type="button" class="pop_close">닫기</button>
-
-        <!-- 버튼 -->
-        <div class="buttonWrap" style="display: block; overflow: hidden;">
-            <div class="right_float">
-                <button class="popupBtn" id="TRANSACTION_STATEMENT_LABEL_PRINT">라벨 출력</button>
-                <button class="popupBtn red" id="TRANSACTION_STATEMENT_DELETE">삭제</button>
-                <button class="popupBtn green" id="TRANSACTION_STATEMENT_SAVE">저장</button>
-                <button class="popupBtn blue" id="TRANSACTION_STATEMENT_EXPORT">엑셀 출력</button>
-            </div>
-        </div>
-
+        <hr>
         <form name="TRANSACTION_STATEMENT_FORM" id="TRANSACTION_STATEMENT_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectControlTransactionStatementList">
             <input type="hidden" name="COMP_CD" id="COMP_CD">
             <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
             <input type="hidden" name="CONTROL_SEQ_STR" id="CONTROL_SEQ_STR">
+            <input type="hidden" name="INVOICE_NUM" id="INVOICE_NUM_INPUT">
             <!-- 기본 정보 -->
             <div style="margin-bottom: 10px;">
-                <h5>기본정보</h5>
+                <div style="overflow: auto;">
+                    <h5 class="d-inline-block">기본정보</h5>
+                    <div class="d-inline-block right_float buttonWrap" style="overflow: hidden;">
+                        <div>
+                            <button class="popupBtn" id="TRANSACTION_STATEMENT_LABEL_PRINT">라벨 출력</button>
+                            <button class="popupBtn red" id="TRANSACTION_STATEMENT_DELETE">삭제</button>
+                            <button class="popupBtn green" id="TRANSACTION_STATEMENT_SAVE">저장</button>
+                            <button class="popupBtn blue" id="TRANSACTION_STATEMENT_EXPORT">엑셀 출력</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 버튼 -->
+
                 <table class="tableL">
                     <tbody>
                     <tr>
@@ -315,9 +318,9 @@
                     </tr>
                     <tr>
                         <td class="headerDisable">INV No.</td>
-                        <td><input type="text" name="INVOICE_NUM" id="INVOICE_NUM" readonly style="width: 100%; border: 0; text-align: center;"></td>
+                        <td ID="INVOICE_NUM"></td>
                         <td class="headerInputChange">제목</td>
-                        <td><input type="text" name="INVOICE_TITLE" id="INVOICE_TITLE" style="width: 100%; border: 0; text-align: center;"></td>
+                        <td><input type="text" name="INVOICE_TITLE" id="INVOICE_TITLE" style="width: 100%; border: 0; text-align: center;" autocomplete="off"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -705,7 +708,7 @@
                 }
             },
             {title: '소재비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-            {title: 'Part<br>단위<br>수량', align: 'right', dataType: 'integer', dataIndx: 'PART_UNIT_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}},
+            {title: 'Part<br>단위<br>수량', align: 'right', dataType: 'integer', dataIndx: 'PART_UNIT_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true},
             {title: '주문<br>수량', align: 'right', dataType: 'integer', dataIndx: 'ORDER_QTY_TOTAL'},
             {
                 title: '대칭', align: 'center', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, colModel: [
@@ -846,7 +849,7 @@
                 ]
             },
             {
-                title: '항목별 계산견적 단가 (10원단위 반올림)', align: 'center', colModel: [
+                title: '항목별 계산견적 단가 (10원단위 반올림)', align: 'center', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, colModel: [
                     {title: '소재비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
                     {title: 'TM각비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_TM_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
                     {title: '연마비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_GRIND_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
@@ -877,8 +880,8 @@
             {title: '최종<br>견적단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
             {title: '견적<br>합계금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'EST_TOTAL_AMOUNT'},
             {title: '최종<br>공급단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-            {title: '합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMT'},
-            {title: '종전가', width: 100, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'WHDWJSRK'},
+            {title: '합계금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMT'},
+            {title: '종전가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'WHDWJSRK'},
             {title: '변경전<br>도면번호', width: 120, dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
             {
                 title: '마감/취소 현황', align: 'center', colModel: [
@@ -893,7 +896,7 @@
             {
                 title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ',
                 render: function (ui) {
-                    if (ui.cellData) return '<span id="downloadView" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+                    if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
                     let grid = this,
@@ -907,7 +910,7 @@
             {
                 title: 'IMG', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ',
                 render: function (ui) {
-                    if (ui.cellData) return '<span id="imageView" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+                    if (ui.cellData) return '<span id="imageView" class="redFileImageICon" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
                     let rowIndx = ui.rowIndx,
@@ -946,7 +949,7 @@
         ];
         const obj = {
             minHeight: '100%',
-            height: 700,
+            height: 730,
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             showTitle: false,
@@ -1016,9 +1019,12 @@
                     let rowIndx = ui.updateList[0].rowIndx;
                     let data = ui.updateList[0].rowData;
                     let newRow = ui.updateList[0].newRow;
-                    let array = ['UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'ORDER_QTY', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT'];
+                    let row;
+
+                    // 항목별 계산견적 단가
+                    const estimateArray = ['UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'ORDER_QTY', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT'];
                     let estimateFlag = false;
-                    for (let value of array) {
+                    for (let value of estimateArray) {
                         if (newRow.hasOwnProperty(value)) {
                             estimateFlag = true;
                         }
@@ -1046,7 +1052,6 @@
                         let estimatedTotalAmount = unitFinalEstimateAmount * ORDER_QTY; // 견적 합계 금액
                         let unitFinalAmount = ui.updateList[0].newRow.UNIT_FINAL_AMT || unitFinalEstimateAmount; // 최종 공급단가
                         let finalAmount = unitFinalAmount * ORDER_QTY;// 합계 금액
-                        let row;
 
                        if (ui.updateList[0].newRow.UNIT_FINAL_AMT) {
                             row = {
@@ -1065,6 +1070,8 @@
                                 'FINAL_AMT': finalAmount // 합계 금액 = 최종 공급단가 * 발주수량
                             };
                         }
+
+
                         $orderManagementGrid.pqGrid('updateRow', {
                             rowIndx: rowIndx,
                             row: row,
@@ -1646,10 +1653,8 @@
             {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
             {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
-            {title: '공급가', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}, // 2020-06-08 modify
-            // {title: '마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
-            {title: '마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT'} // 2020-06-08 modify
-            // {title: '네고금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT'}
+            {title: '공급가', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
+            {title: '마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT'}
         ];
         let controlCloseLeftObj = {
             height: 250,
@@ -1675,12 +1680,11 @@
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
             {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
+            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER', hidden: true},
+            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER_TRAN'},
             {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
-            {title: '공급가', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}, // 2020-06-08 modify
-            {title: '마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CLOSE_CONTROL_AMT'} // 2020-06-08 modify
-            // {title: '변경 후<br>마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
-            // {title: '변경 후<br>네고금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'NEGO_AMT', editable: true}
+            {title: '공급가', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
+            {title: '마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true}
         ];
         let controlCloseRightObj = {
             height: 250,
@@ -1951,6 +1955,7 @@
         });
 
         $('#CONTROL_MANAGE_SAVE').on('click', function () {
+            // if (fnIsGridEditing($orderManagementGrid)) return false;
             const insertQueryList = ['orderMapper.createControlPart', 'orderMapper.createControlPartOrder'];
             const updateQueryList = ['orderMapper.updateControlMaster', 'orderMapper.updateControlPart', 'orderMapper.updateControlPartOrder', 'orderMapper.createControlProgress', 'orderMapper.createControlPartProgress'];
 
@@ -2232,7 +2237,8 @@
                     $('#TRANSACTION_STATEMENT_FORM #COMP_NM').text(obj.COMP_NM);
                     $('#TRANSACTION_STATEMENT_FORM #ORDER_COMP_NM').text(obj.ORDER_COMP_NM);
                     $('#TRANSACTION_STATEMENT_FORM #TOTAL_AMT').text(obj.TOTAL_AMT);
-                    $('#TRANSACTION_STATEMENT_FORM #INVOICE_NUM').val(obj.INVOICE_NUM);
+                    $('#TRANSACTION_STATEMENT_FORM #INVOICE_NUM').text(obj.INVOICE_NUM);
+                    $('#TRANSACTION_STATEMENT_FORM #INVOICE_NUM_INPUT').val(obj.INVOICE_NUM);
 
                     $transactionStatementDetailGrid = $('#' + transactionStatementDetailGridId).pqGrid(transactionStatementDetailObj);
                     // fnRequestGidData($transactionStatementDetailGrid, postData);
@@ -2362,7 +2368,7 @@
             });
 
             if (invoiceNumList[0] === undefined) {
-                alert('엑셀출력할 거래명세표가 없습니다.');
+                alert('저장 후 엑셀 출력해주세요.');
                 return false;
             }
 
@@ -2641,9 +2647,10 @@
 
             for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
-                let supplyUnitPrice = ((rowData.UNIT_FINAL_AMT * rowData.ORDER_QTY) * (rate / 100)).toFixed(0) || null;
+                let supplyUnitPrice = (rowData.UNIT_FINAL_AMT * (rate / 100)).toFixed(0) || null;
+                let finalAmount = (supplyUnitPrice * rowData.ORDER_QTY) || null;
 
-                $orderManagementGrid.pqGrid('updateRow', {'rowIndx': selectedRowIndex[i], row: {'UNIT_FINAL_AMT': supplyUnitPrice}});
+                $orderManagementGrid.pqGrid('updateRow', {'rowIndx': selectedRowIndex[i], row: {'UNIT_FINAL_AMT': supplyUnitPrice, 'FINAL_AMT': finalAmount}, checkEditable: false});
             }
         });
         /* event */
@@ -2683,12 +2690,16 @@
                 rowData.CLOSE_MONTH = $('#CONTROL_CLOSE_YEAR').val() + $('#CONTROL_CLOSE_MONTH').val();
                 list.push(rowData);
             }
+            let firstRowData = $controlCloseRightGrid.pqGrid('getRowData', {rowIndx: 0});
+            let postData = {
+                'info-data': firstRowData,
+                'list-data': list
+            };
+
             // rightGrid
-            let parameters = {'url': '/createMonthFinishClose', 'data': {data: JSON.stringify(list)}};
+            let parameters = {'url': '/createMonthFinishClose', 'data': {data: JSON.stringify(postData)}};
             fnPostAjax(function (data, callFunctionParam) {
                 $orderManagementGrid.pqGrid('refreshDataAndView');
-                // $controlCloseLeftGrid.pqGrid('refreshDataAndView');
-                // $controlCloseRightGrid.pqGrid('refreshDataAndView');
                 $('#CONTROL_CLOSE_POPUP').modal('hide');
             }, parameters, '');
         });

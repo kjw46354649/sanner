@@ -16,7 +16,7 @@
     <div class="topWrap">
         <form class="form-inline" id="CAM_WORK_HISTORY_GRID_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="machine.selectCamWorkHistoryList">
-            <div class="gubunWrap">
+            <div class="none_gubunWrap row3_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -43,10 +43,6 @@
                         <span class="ipu_wrap">
                             <label class="label_100" for="CLOSE_NOTE">후처리</label>
                             <input type="text" class="wd_200" name="CLOSE_NOTE" id="CLOSE_NOTE">
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap right_float">
-                            <button type="button" class="defaultBtn radius blue" id="TAB1_SEARCH">검색</button>
                         </span>
                     </li>
                     <li>
@@ -107,17 +103,17 @@
                                 <option value="">All</option>
                             </select>
                         </span>
+                        <button type="button" class="right_float defaultBtn radius blue" id="CAM_WORK_HISTORY_SEARCH">검색</button>
                     </li>
                 </ul>
             </div>
         </form>
-        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
 
     <div class="topWrap" style="display: none;">
         <form class="form-inline" id="NC_PERFORMANCE_HISTORY_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="machine.selectNcPerformanceHistoryList">
-            <div class="gubunWrap">
+            <div class="none_gubunWrap row3_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -144,10 +140,6 @@
                         <span class="ipu_wrap">
                             <label class="label_100" for="CLOSE_NOTE">후처리</label>
                             <input type="text" class="wd_200" name="CLOSE_NOTE" id="CLOSE_NOTE">
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap right_float">
-                            <button type="button" class="defaultBtn radius blue" id="TAB2_SEARCH">검색</button>
                         </span>
                     </li>
                     <li>
@@ -208,11 +200,11 @@
                                 <option value="">All</option>
                             </select>
                         </span>
+                        <button type="button" class="right_float defaultBtn radius blue" id="NC_PERFORMANCE_HISTORY_SEARCH">검색</button>
                     </li>
                 </ul>
             </div>
         </form>
-        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
 
     <div class="bottomWrap">
@@ -256,13 +248,15 @@
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ'},
             {title: '납기', dataType: 'string', dataIndx: 'INNER_DUE_DT'},
             {title: '출고', dataType: 'string', dataIndx: 'CNFRH'},
-            {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN'},
-            {title: '주요', dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
-            {title: '형태', dataType: 'string', dataIndx: 'WORK_NM'},
+            {title: '긴<br>급', dataType: 'string', dataIndx: 'EMERGENCY_YN'},
+            {title: '주<br>요', dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
+            {title: '형<br>태', dataType: 'string', dataIndx: 'WORK_NM'},
+            {title: '', dataType: 'string', dataIndx: 'CONTROL_NUM_BUTTON'},
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {title: 'Part', dataType: 'integer', dataIndx: 'CONTROL_PART_NUM'},
+            {title: '', dataType: 'string', dataIndx: 'WhatIsThis'},
             {title: '소재종류<br>상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
-            {title: '수량', dataType: 'integer', dataIndx: 'PART_UNIT_QTY'},
+            {title: '수량', dataType: 'integer', dataIndx: 'ORDER_QTY'},
             {title: '규격', dataType: 'string', dataIndx: 'STANDARD_SIZE'},
             {title: '소재 Size', dataType: 'string', dataIndx: 'MATERIAL_SIZE'},
             {
@@ -306,7 +300,7 @@
             {title: '총<br>가공시간', dataType: 'integer', dataIndx: 'PART_STATUS_NM'},
             {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM'},
             {title: '현재위치', dataType: 'string', dataIndx: 'POP_POSITION'},
-            {title: '작업<br>구분', dataType: 'string', dataIndx: 'CONTROL_NUM'},
+            {title: '작업<br>구분', dataType: 'string', dataIndx: 'MCT_WORK_TYPE_NM'},
             {
                 title: 'CAM 작업 실적', align: 'center', colModel: [
                     {title: 'Step', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
@@ -408,21 +402,21 @@
         };
         /* variable */
 
-        $('#TAB1_SEARCH').on('click', function () {
-            tab1PostData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM')
-            $outsideCloseStatusGrid.pqGrid('option', 'dataModel.postData', function (ui) {
-                return tab1PostData;
+        /* event */
+        $('#CAM_WORK_HISTORY_SEARCH').on('click', function () {
+            $camWorkHistoryGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+                return fnFormToJsonArrayData('#CAM_WORK_HISTORY_GRID_SEARCH_FORM');
             });
-            $outsideCloseStatusGrid.pqGrid('refreshDataAndView');
+            $camWorkHistoryGrid.pqGrid('refreshDataAndView');
         });
 
-        $('#TAB2_SEARCH').on('click', function () {
-            tab2PostData = fnFormToJsonArrayData('#MONTH_OUTSIDE_STATUS_SEARCH_FORM')
+        $('#NC_PERFORMANCE_HISTORY_SEARCH').on('click', function () {
             $ncPerformanceHistoryGrid.pqGrid('option', 'dataModel.postData', function (ui) {
-                return tab2PostData;
+                return fnFormToJsonArrayData('#MONTH_OUTSIDE_STATUS_SEARCH_FORM');
             });
             $ncPerformanceHistoryGrid.pqGrid('refreshDataAndView');
         });
+        /* event */
 
         /* init */
         $camWorkHistoryGrid = $('#' + tab1GridId).pqGrid(tab1Obj);

@@ -994,5 +994,41 @@
                 console.log(errorThrown);
             }
         });
+    };
+
+    /**
+     * @param grid
+     * @returns {boolean}
+     */
+    let fnIsGridEditing = function (grid) {
+        let gridInstance = grid.pqGrid('getInstance').grid;
+        //추가 또는 수정된 값이 있으면 true
+        if (gridInstance.isDirty()) {
+            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인';
+
+            bodyHtml =
+                '<h4>\n' +
+                '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                '    <span>현재 수정중인 작업을 완료 후 다시 실행해 주세요.</span>\n' +
+                '</h4>';
+
+            fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    /**
+     * Common alert Box
+     * @param headHtml alert Header Text
+     * @param bodyHtml alert Body Html
+     * @param yesHtml alert Yes button Text
+     */
+    const fnCommonAlertBoxCreate = function(headHtml, bodyHtml, yesHtml){
+        $('#commonAlertHeadHtml').html(headHtml);
+        $('#commonAlertBodyHtml').html(bodyHtml);
+        $('#commonAlertYesBtn').html(yesHtml);
+        commonAlertPopup.show();
     }
 </script>

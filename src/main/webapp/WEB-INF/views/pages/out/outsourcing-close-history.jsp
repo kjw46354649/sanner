@@ -97,9 +97,9 @@
     </div>
     <div class="bottomWrap row3_bottomWrap">
         <div class="hWrap">
-            <button type="button" class="defaultBtn btn-120w" data-toggle="modal" data-target="#OUTSIDE_CLOSE_CANCEL_POPUP">마감 취소</button>
+            <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#OUTSIDE_CLOSE_CANCEL_POPUP">마감 취소</button>
             <div class="rightSpan">
-                <button type="button" class="defaultBtn btn-120w" id="DRAWING_VIEW">도면 View</button>
+                <button type="button" class="defaultBtn btn-100w" id="DRAWING_VIEW">도면 View</button>
             </div>
         </div>
         <div class="tableWrap">
