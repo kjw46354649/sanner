@@ -11,7 +11,7 @@
     <div class="topWrap">
         <form class="form-inline" id="item_order_history_search_form" name="item_order_history_search_form" role="form">
             <input type="hidden" name="queryId" id="queryId" value="selectItemOrderHistoryList">
-            <div class="gubunWrap row3_topWrap">
+            <div class="none_gubunWrap row3_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">

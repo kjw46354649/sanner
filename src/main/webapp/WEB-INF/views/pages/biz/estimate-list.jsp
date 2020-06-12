@@ -107,7 +107,7 @@
                 </div>
             </div>
             <br/>
-            <div class="conWrap" style="height:404px;">
+            <div class="conWrap" style="height:407px;">
                 <div id="estimate_master_bot_grid"></div>
                 <div class="right_sort">
                     전체 조회 건수 (Total : <span id="estimate_master_bot_grid_records" style="color: #00b3ee">0</span>)
@@ -240,42 +240,41 @@
             /*{title: '', dataType: 'string', dataIndx: 'DRAWING_YN', width: 30 } ,*/
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', validations: [{ type: 'minLen', value: 1, msg: "Required"}], width: 100 } ,
             {
-                title: 'Part', clsHead: 'cantChange', dataType: 'integer', dataIndx: 'PART_NUM',
+                title: 'Part', clsHead: 'cantChange', dataType: 'integer', dataIndx: 'PART_NUM', editable: false,
                 render: function (ui) {
                     if (ui.rowData.WORK_TYPE === 'WTP020') {
-                        return '<span class="ui-icon ui-icon-circle-plus" id="estimateListPartNumPlus"></span>';
+                        return '<span class="ui-icon ui-icon-circle-plus" id="estimateListPartNumPlus" style="cursor: pointer"></span>';
                     }
                 },
                 postRender: function (ui) {
                     let grid = this;
                     let $cell = grid.getCell(ui);
+                    let rowIndex = ui.rowIndx;
 
                     $cell.find("#estimateListPartNumPlus").on('click', function (event) {
-                        let rowData = fnCloneObj(ui.rowData);
-                        let data = estimateMasterBotGrid.pqGrid('option', 'dataModel.data'), totalRecords = data.length;
-                        let newPartNum = 0, lastRowIndex = 0, newRowData;
-                        let SEQ = "";
+                        let data = estimateMasterBotGrid.pqGrid('option', 'dataModel.data')
+                        let totalRecords = data.length;
+                        let newPartNum = 0
+                        let newRowIndex = 0;
 
+                        let newRowData = fnCloneObj(data[rowIndex]);
                         for (let i = 0; i < totalRecords; i++) {
-                            if (data[i].SEQ === rowData.SEQ) {
-                                SEQ = data[i].SEQ;
+                            if (data[i].PARENT_SEQ === newRowData.PARENT_SEQ) {
                                 newPartNum++;
-                                lastRowIndex = data[i].pq_ri;
+                                newRowIndex = data[i].pq_ri + 1;
                             }
                         }
 
-                        newRowData = estimateMasterBotGrid.pqGrid('getRowData', {rowIndx: lastRowIndex});
-                        newRowData = fnCloneObj(newRowData);
                         newRowData.ROWNUM = totalRecords + 1;
+                        newRowData.SEQ = "";
                         newRowData.PART_NUM = newPartNum;
-                        newRowData.PARENT_SEQ = SEQ;
+                        newRowData.WORK_TYPE = 'WTP050';
 
                         estimateMasterBotGrid.pqGrid('addRow', {
                             newRow: newRowData,
-                            rowIndx: lastRowIndex + 1,
+                            rowIndx: newRowIndex,
                             checkEditable: false
                         });
-                        event.preventDefault();
                     });
                 }
             } ,
@@ -585,7 +584,7 @@
         ];
 
         estimateMasterTopGrid.pqGrid({
-            width: '100%', height: 330,
+            width: '100%', height: 327,
             postRenderInterval: -1, //call postRender synchronously.
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'EST_SEQ',
@@ -914,30 +913,6 @@
         }, parameters, '');
     });
 
-    $(document).on('click', '#estimatePartPlus', function(event){
-        let rowIndex = event.target.dataset.idx;
-        let data = estimateMasterBotGrid.pqGrid('option', 'dataModel.data'), totalRecords = data.length;
-        let newPartNum = 0, newRowIndex = 0;
-
-        let newRowData = fnCloneObj(data[rowIndex]);
-        for (let i = 0; i < totalRecords; i++) {
-            if (data[i].PARENT_SEQ === newRowData.PARENT_SEQ) {
-                newPartNum++;
-                newRowIndex = data[i].pq_ri + 1;
-            }
-        }
-
-        newRowData.ROWNUM = totalRecords + 1;
-        newRowData.PART_NUM = newPartNum;
-        newRowData.WORK_TYPE = 'WTP010';
-
-        estimateMasterBotGrid.pqGrid('addRow', {
-            newRow: newRowData,
-            rowIndx: newRowIndex,
-            checkEditable: false
-        });
-    });
-
     /** 화면 이동 처리 **/
     $(document).on('click', '#estimateRegisterPage', function(event){
         let seq = event.target.dataset.seq;
@@ -975,7 +950,7 @@
 
         top.stop().animate({height:'37px'},300, 'easeOutCubic');
         bottom.stop().animate({height:'854px'},300, 'easeOutCubic');
-        con.css({height:'404px'});
+        con.css({height:'407px'});
 
         estimateMasterBotGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
     };
