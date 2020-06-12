@@ -110,6 +110,7 @@
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden:true},
             {title: 'ORDER_SEQ', dataType: 'string', dataIndx: 'ORDER_SEQ', hidden:true},
             {title: 'OUT_RETURN_TYPE', dataType: 'string', dataIndx: 'OUT_RETURN_TYPE', hidden:true},
+            {title: 'LAST_YN', dataType: 'string', dataIndx: 'LAST_YN', hidden:true},
             {title: '구분', dataType: 'string', dataIndx: 'OUT_RETURN_TYPE_NM', minWidth: 60, width: 60, editable: false,
                 render: function (ui) {
                    let cellData = ui.cellData;
@@ -146,7 +147,7 @@
             {title: '', align: 'center', dataType: 'string', dataIndx: 'BTN_CANCEL', width: 40, minWidth: 40, editable: false,
                 render: function (ui) {
                     let rowIndx = ui.rowIndx, grid = this;
-                    if (ui.rowData['KEY_SEQ'] > 0) return "<button type=\"button\" class=\"miniBtn black\">취소</button>";
+                    if (ui.rowData['LAST_YN'] == 'Y') return "<button type=\"button\" class=\"miniBtn black\">취소</button>";
                     return '';
                 }
             },
@@ -180,7 +181,7 @@
             cellClick: function (event, ui)
             {
                 let rowIndx = ui.rowIndx, $grid = this;
-                if (ui.rowData['KEY_SEQ'] != undefined && ui.rowData['KEY_SEQ'] > 0)
+                if (ui.rowData['LAST_YN'] == 'Y')
                 {
                     if (ui.dataIndx == 'BTN_CANCEL') {
                         alert("버튼이 언제만 보일지는 대표님이 쿼리 주시기로 함.");
