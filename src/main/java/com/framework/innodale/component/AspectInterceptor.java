@@ -132,10 +132,10 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
         passList.add("/scanningBarcodePop");
 
         /** drawing path **/
-        passList.add("/drawing");
-        passList.add("/drawing-worker");
-        passList.add("/drawing-board");
-        passList.add("/drawing-board-save");
+//        passList.add("/drawing");
+//        passList.add("/drawing-worker");
+//        passList.add("/drawing-board");
+//        passList.add("/drawing-board-save");
 
         /** upload **/
         passList.add("/uploadNormalFile");
@@ -147,7 +147,7 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
         passList.add("/paramQueryGridSelect");
         passList.add("/uploadControlCadFilesTesting");
 
-        String patterns[] = {"/image", "/barcode", "/static", "/downloadGfile", "/downloadfile"};
+        String patterns[] = {"/image", "/barcode", "/static", "/downloadGfile", "/downloadfile", "/drawing"};
 
         if(passList.contains(url)) return true;
 

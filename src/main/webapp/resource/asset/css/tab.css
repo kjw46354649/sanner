@@ -6,8 +6,8 @@
 *:focus { outline:none; }
 .loginWrap ul li{font-size: 0;}
 .loginWrap label{display: none;}
-.loginWrap select#menu_1{background: url(../images/login/bg_menu.png) no-repeat 0 0; border: 0px; outline:none; width:100%; height: 62px; line-height: 62px; background-size: 100% 100%; font-size: 19px; font-weight: bold; color:#406e20; padding-left: 30px;  border: 0;}
-.loginWrap select#menu_2{background: url(../images/login/bg_menu_2.png) no-repeat 0 0; width:100%; height: 62px; line-height: 62px; background-size: 100% 100%; font-size: 19px; font-weight: bold; color:#205067; padding-left: 30px;  border: 0;}
+.loginWrap select#FACTORY_AREA{background: url(../images/login/bg_menu.png) no-repeat 0 0; border: 0px; outline:none; width:100%; height: 62px; line-height: 62px; background-size: 100% 100%; font-size: 19px; font-weight: bold; color:#406e20; padding-left: 30px;  border: 0;}
+.loginWrap select#EQUIP_SEQ{background: url(../images/login/bg_menu_2.png) no-repeat 0 0; width:100%; height: 62px; line-height: 62px; background-size: 100% 100%; font-size: 19px; font-weight: bold; color:#205067; padding-left: 30px;  border: 0;}
 .loginWrap ul li~li{margin-top:5px;}
 .loginWrap p.txt{font-size: 24px; color: #859698; text-align: center; padding: 60px 0 30px;}
 .loginWrap .btn,.loginWrap .langBtn{text-align: center;}
@@ -18,12 +18,13 @@
 .langBtn button~button{margin-left: 10px;}
 
 .bodyWrap.user{padding: 20px 34px 0; box-sizing: border-box;}
-header{overflow:hidden; padding-bottom: 24px;}
+.bodyWrap.user header{overflow:hidden; padding-bottom: 5px;}
 .bodyWrap.user .head{float: left; font-size: 30px; color: #000; font-weight: bold; position: relative; padding-left: 33px;}
-.bodyWrap.user .head span{color: #7f7f7f; font-weight: 500;}
-.bodyWrap.user .head:before{content: ''; position: absolute; top: 0; left: 0; background: url(../images/common/chk.png) no-repeat 0 0; width: 29px; height: 29px;}
+.bodyWrap.user .head span{color: #272727; font-weight: bold;}
+.bodyWrap.user .head:before{content: ''; position: absolute; top: 0; left: 0; width: 29px; height: 29px;}
 .bodyWrap.user .langBtn{float: right; padding-top: 4.5px;}
 .bodyWrap.user .contents{overflow-y: auto; height: 508px;}
+.bodyWrap select#DEPT{background: url(../images/login/bg_menu_2.png) no-repeat 0 0; width:300px; height: 52px; line-height: 52px; background-size: 100% 100%; font-size: 19px; font-weight: bold; color:#205067; padding-left: 30px;  border: 0;}
 .userWrap{overflow:hidden;margin:-10px 0;}
 .userWrap~.userWrap{margin-top: 20px;}
 .userWrap .userBox{float: left; width: calc(33.33% - 17px); height: 244px; border-radius: 10px; border: 1px solid #c3c3c3; border-bottom: 2px solid #979797; padding: 9px; background: linear-gradient(to bottom, #f9f9f9, #eaeaea);}
@@ -57,13 +58,14 @@ header{overflow:hidden; padding-bottom: 24px;}
 .topConts{padding: 19px 28px 17px;}
 .timeWrap{float: left; background: url(../images/work/bg_st_1.png) no-repeat 0 0; width: 299px; height: 48px;line-height: 48px;padding: 0 30px;}
 .timeWrap~.timeWrap{margin-left: 5px;}
-.timeWrap:nth-child(2){background: url(../images/work/bg_st_1_on.png) no-repeat 0 0;}
-.timeWrap:nth-child(3){margin-left: 0;}
+.timeWrap:nth-child(2){}
+.timeWrap:nth-child(3){margin-left: 0; background: url(../images/work/bg_st_1_on.png) no-repeat 0 0;}
 .timeWrap:nth-child(3),.timeWrap:nth-child(4){margin-top:5px;}
 .timeTit{font-size: 22px; position: relative; padding-left: 46px;font-weight: bold;}
 .timeTit:before{content: ''; position: absolute; top: -3px; left: 0; background: url(../images/work/icon_1.png) no-repeat 0 0; width: 29px; height: 29px;}
 .timeWrap:nth-child(2) .timeTit:before{background: url(../images/work/icon_2.png) no-repeat 0 0;}
 .timeWrap:nth-child(3) .timeTit:before{background: url(../images/work/icon_3.png) no-repeat 0 0;}
+.timeWrap:nth-child(4) .timeTit:before{background: url(../images/work/icon_4.png) no-repeat 0 0;}
 .time{font-size: 24px; color: #2d2d2d;margin-left: 25px;}
 .middleConts>div~div{margin-top:2px;}
 .tbl,.share,.qual{padding: 2px; text-align: center; color: #000; overflow: hidden; border: 1px solid #c2c2c2; border-radius: 5px; background: linear-gradient(to bottom, #fff, #f4f4f4);}
