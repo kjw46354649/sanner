@@ -18,37 +18,35 @@
         <span class="barCodeTxt"><input type="text" class="wd_270_barcode" name="CONFIRM_ORDER_BARCODE_NUM" id="CONFIRM_ORDER_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요"></span>
         <div class="right_float">
             <span class="refresh mg-left10"><button type="button" id="PROCESS_CONFIRM_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
-            <button type="button" class="defaultBtn btn-120w" id="PROCESS_CONFIRM_DETAIL">상세정보 조회</button>
-            <button type="button" class="defaultBtn btn-120w" id="PROCESS_CONFIRM_DRAWING_VIEW">도면 보기</button>
+            <button type="button" class="defaultBtn btn-100w" id="PROCESS_CONFIRM_DETAIL">상세정보 조회</button>
+            <button type="button" class="defaultBtn btn-100w" id="PROCESS_CONFIRM_DRAWING_VIEW">도면 보기</button>
         </div>
     </div>
     <div class="topLeftWrap left_float">
         <div>
             <form class="form-inline" id="CONFIRM_ORDER_SEARCH_FORM" role="form" onsubmit="return false;">
                 <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectConfirmOrderList">
-                <div class="mg-bottom10">
-                    <div class="row">
-                        <span>
-                            <label class="label_100" for="CONFIRM_ORDER_CORPORATION">발주처</label>
-                            <select class="wd_200" name="ORDER_COMP_CD" id="CONFIRM_ORDER_CORPORATION">
-                                <option value="">ALL</option>
-                            </select>
-                        </span>
-                        <span>
-                            <label class="label_100" for="CONFIRM_ORDER_MATERIAL">소재</label>
-                            <select class="wd_200" name="MATERIAL_TYPE" id="CONFIRM_ORDER_MATERIAL">
-                                <option value="">ALL</option>
-                                <c:forEach var="code" items="${HighCode.H_1027}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
-                        </span>
-                    </div>
-                </div>
-                <hr style="display: block">
                 <div>
-                    <div class="mg-bottom10">
-                        <p>주문확정 List</p>
+                    <div>
+                        <p class="d-inline-block">주문확정 List</p>
+                        <div class="d-inline-block right_float">
+                            <span>
+                                <label class="label_50" for="CONFIRM_ORDER_CORPORATION">발주처</label>
+                                <select class="wd_100" name="ORDER_COMP_CD" id="CONFIRM_ORDER_CORPORATION">
+                                    <option value="">ALL</option>
+                                </select>
+                            </span>
+                                <span>
+                                <label class="label_50" for="CONFIRM_ORDER_MATERIAL">소재</label>
+                                <select class="wd_100" name="MATERIAL_TYPE" id="CONFIRM_ORDER_MATERIAL">
+                                    <option value="">ALL</option>
+                                    <c:forEach var="code" items="${HighCode.H_1027}">
+                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                    </c:forEach>
+                                </select>
+                            </span>
+                        </div>
+                        <hr>
                     </div>
                     <div id="CONFIRM_ORDER_GRID"></div>
                     <div class="right_sort">
@@ -65,38 +63,34 @@
         <div>
             <form class="form-inline" id="PROCESS_CONFIRM_SEARCH_FORM" role="form">
                 <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectProcessConfirmList">
-                <div class="mg-bottom10">
-                    <div class="row">
-                        <span>
-                            <label class="label_100" for="PROCESS_CONFIRM_CORPORATION">발주처</label>
-                            <select class="wd_200" name="ORDER_COMP_CD" id="PROCESS_CONFIRM_CORPORATION">
-                                <option value="">ALL</option>
-                                <c:forEach var="code" items="${HighCode.H_1007}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
-                        </span>
-                        <span>
-                            <label class="label_100" for="PROCESS_CONFIRM_MATERIAL">소재</label>
-                            <select class="wd_200" name="MATERIAL_TYPE" id="PROCESS_CONFIRM_MATERIAL">
-                                <option value=""> ALL</option>
-                                <c:forEach var="code" items="${HighCode.H_1027}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
-                        </span>
-                    </div>
-                </div>
-                <hr style="display: block">
                 <div>
-                    <div class="mg-bottom10">
-                        <p>가공진행 List</p>
-                        <span style="float: right">
+                    <div>
+                        <p class="d-inline-block">가공진행 List</p>
+                        <div class="d-inline-block right_float">
                             <label class="checkbox-inline i-checks" for="EMERGENCY_YN">
                                 <input type="checkbox" name="EMERGENCY_YN"
                                        id="EMERGENCY_YN"><i></i> Show Only 긴급
                             </label>
-                        </span>
+                            <span>
+                                <label class="label_50" for="PROCESS_CONFIRM_CORPORATION">발주처</label>
+                                <select class="wd_100" name="ORDER_COMP_CD" id="PROCESS_CONFIRM_CORPORATION">
+                                    <option value="">ALL</option>
+                                    <c:forEach var="code" items="${HighCode.H_1007}">
+                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                    </c:forEach>
+                                </select>
+                            </span>
+                                <span>
+                                <label class="label_50" for="PROCESS_CONFIRM_MATERIAL">소재</label>
+                                <select class="wd_100" name="MATERIAL_TYPE" id="PROCESS_CONFIRM_MATERIAL">
+                                    <option value=""> ALL</option>
+                                    <c:forEach var="code" items="${HighCode.H_1027}">
+                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                    </c:forEach>
+                                </select>
+                            </span>
+                        </div>
+                        <hr>
                     </div>
                     <div id="PROCESS_CONFIRM_GRID"></div>
                     <div class="right_sort">
@@ -113,27 +107,25 @@
         <div>
             <form class="form-inline" id="OUTSIDE_SEARCH_FORM" role="form">
                 <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectOutsideProcessingList">
-                <div class="mg-bottom10">
-                    <div class="row">
-                        <span>
-                            <label class="label_100" for="OUTSIDE_CORPORATION">발주처</label>
-                            <select class="wd_200" name="ORDER_COMP_CD" id="OUTSIDE_CORPORATION">
-                                <option value="">ALL</option>
-                            </select>
-                        </span>
-                        <span>
-                            <label class="label_100" for="OUTSIDE_SUBCONTRACTOR">외주업체</label>
-                            <select class="wd_200" name="OUTSIDE_COMP_CD"
-                                    id="OUTSIDE_SUBCONTRACTOR">
-                                <option value="">ALL</option>
-                            </select>
-                        </span>
-                    </div>
-                </div>
-                <hr style="display: block">
                 <div>
-                    <div class="mg-bottom10">
-                        <p>외주가공 List</p>
+                    <div>
+                        <p class="d-inline-block">외주가공 List</p>
+                        <div class="d-inline-block right_float">
+                            <span>
+                                <label class="label_100" for="OUTSIDE_CORPORATION">발주처</label>
+                                <select class="wd_200" name="ORDER_COMP_CD" id="OUTSIDE_CORPORATION">
+                                    <option value="">ALL</option>
+                                </select>
+                            </span>
+                            <span>
+                                <label class="label_100" for="OUTSIDE_SUBCONTRACTOR">외주업체</label>
+                                <select class="wd_200" name="OUTSIDE_COMP_CD"
+                                        id="OUTSIDE_SUBCONTRACTOR">
+                                    <option value="">ALL</option>
+                                </select>
+                            </span>
+                        </div>
+                        <hr>
                     </div>
                     <div id="OUTSIDE_GRID"></div>
                     <div class="right_sort">
@@ -150,26 +142,24 @@
         <div>
             <form class="form-inline" id="PROCESS_COMPLETE_SEARCH_FORM" role="form">
                 <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectProcessCompleteList">
-                <div class="mg-bottom10">
-                    <div class="row">
-                        <span>
-                            <label class="label_100" for="PROCESS_COMPLETE_CORPORATION">발주처</label>
-                            <select class="wd_200" name="ORDER_COMP_CD" id="PROCESS_COMPLETE_CORPORATION">
-                                <option value="">ALL</option>
-                            </select>
-                        </span>
-                        <span>
-                            <label class="label_100" for="PROCESS_COMPLETE_SUBCONTRACTOR">외주업체</label>
-                            <select class="wd_200" name="OUTSIDE_COMP_CD" id="PROCESS_COMPLETE_SUBCONTRACTOR">
-                                <option value="">ALL</option>
-                            </select>
-                        </span>
-                    </div>
-                </div>
-                <hr style="display: block">
                 <div>
-                    <div class="mg-bottom10">
-                        <p>가공완료 List (출하전)</p>
+                    <div>
+                        <p class="d-inline-block">가공완료 List (출하전)</p>
+                        <div class="d-inline-block right_float">
+                            <span>
+                                <label class="label_50" for="PROCESS_COMPLETE_CORPORATION">발주처</label>
+                                <select class="wd_100" name="ORDER_COMP_CD" id="PROCESS_COMPLETE_CORPORATION">
+                                    <option value="">ALL</option>
+                                </select>
+                            </span>
+                            <span>
+                                <label class="label_50" for="PROCESS_COMPLETE_SUBCONTRACTOR">외주업체</label>
+                                <select class="wd_100" name="OUTSIDE_COMP_CD" id="PROCESS_COMPLETE_SUBCONTRACTOR">
+                                    <option value="">ALL</option>
+                                </select>
+                            </span>
+                        </div>
+                        <hr>
                     </div>
                     <div id="PROCESS_COMPLETE_GRID"></div>
                     <div class="right_sort">
@@ -183,8 +173,6 @@
     </div>
 
 </div>
-
-
 
 <script>
     $(function () {
@@ -208,6 +196,21 @@
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_NM'},
                     {title: '변경일시', minWidth: 100, datatype: 'date', dataIndx: 'CONTROL_STATUS_DT'}
                 ]
+            },
+            {
+                title: '', width: 90, dataType: 'string', dataIndx: 'PROCESS_CONFIRM_BUTTON',
+                render: function (ui) {
+                    return '<button class="miniBtn" name="PROCESS_CONFIRM_BUTTON">가공확정</button>';
+                },
+                postRender: function (ui) {
+                    let grid = this;
+                    let $cell = grid.getCell(ui);
+
+                    $cell.find('[name=PROCESS_CONFIRM_BUTTON]').on('click', function (event) {
+                        updatePartStatus(ui.rowData, 'PRO002');
+                        event.preventDefault();
+                    });
+                }
             },
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', width: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
@@ -370,25 +373,10 @@
                 }
             },
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'ORDER_QTY'},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
-            {
-                title: '', width: 90, dataType: 'string', dataIndx: 'PROCESS_CONFIRM_BUTTON',
-                render: function (ui) {
-                    return '<button class="miniBtn" name="PROCESS_CONFIRM_BUTTON">가공확정</button>';
-                },
-                postRender: function (ui) {
-                    let grid = this;
-                    let $cell = grid.getCell(ui);
-
-                    $cell.find('[name=PROCESS_CONFIRM_BUTTON]').on('click', function (event) {
-                        updatePartStatus(ui.rowData, 'PRO002');
-                        event.preventDefault();
-                    });
-                }
-            }
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE'}
         ];
         let topLeftObj = {
-            height: 275,
+            height: 350,
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             resizable: false,
@@ -433,6 +421,23 @@
             {title: 'CONTROL_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'CONTROL_PROGRESS_SEQ', hidden: true},
             {title: 'PART_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true},
             {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true},
+            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STAUS', hidden: true},
+            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STAUS_NM'},
+            {
+                title: '', width: 90, dataType: 'string', dataIndx: 'CONFIRM_CANCEL_BUTTON',
+                render: function (ui) {
+                    return '<button class="miniBtn" name="CONFIRM_CANCEL_BUTTON">확정취소</button>';
+                },
+                postRender: function (ui) {
+                    let grid = this;
+                    let $cell = grid.getCell(ui);
+
+                    $cell.find('[name=CONFIRM_CANCEL_BUTTON]').on('click', function (event) {
+                        updatePartStatus(ui.rowData, null);
+                        event.preventDefault();
+                    });
+                }
+            },
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', width: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '관리번호',width: 120, dataType: 'string', dataIndx: 'CONTROL_NUM'},
@@ -587,27 +592,10 @@
                 }
             },
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'ORDER_QTY'},
-            {title: '가공확정일시', width:90, dataType: 'string', dataIndx: 'STATUS_DT'},
-            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STAUS', hidden: true},
-            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STAUS_NM'},
-            {
-                title: '', width: 90, dataType: 'string', dataIndx: 'CONFIRM_CANCEL_BUTTON',
-                render: function (ui) {
-                    return '<button class="miniBtn" name="CONFIRM_CANCEL_BUTTON">확정취소</button>';
-                },
-                postRender: function (ui) {
-                    let grid = this;
-                    let $cell = grid.getCell(ui);
-
-                    $cell.find('[name=CONFIRM_CANCEL_BUTTON]').on('click', function (event) {
-                        updatePartStatus(ui.rowData, null);
-                        event.preventDefault();
-                    });
-                }
-            }
+            {title: '가공확정일시', width:90, dataType: 'string', dataIndx: 'STATUS_DT'}
         ];
         const topRightObj = {
-            height: 275,
+            height: 350,
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             resizable: false,
@@ -794,7 +782,7 @@
             {title: '발생일시', width:90, dataType: 'string', dataIndx: 'STATUS_DT'}
         ];
         const botLeftObj = {
-            height: 275,
+            height: 350,
             collapsible: false,
             resizable: false,
             showTitle: false,
@@ -997,7 +985,7 @@
             {title: '검사<br>실적', dataType: 'string', dataIndx: ''}
         ];
         const botRightObj = {
-            height: 275,
+            height: 350,
             collapsible: false,
             resizable: false,
             showTitle: false,

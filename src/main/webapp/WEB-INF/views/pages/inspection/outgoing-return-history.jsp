@@ -106,6 +106,11 @@
         $("#outgoing_history_form").find("#queryId").val("inspection.selectOutgoingHistoryList");
         outgoingHistoryColModel01 = [
             {title: 'KEY_SEQ', dataType: 'string', dataIndx: 'KEY_SEQ', hidden:true},
+            {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden:true},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden:true},
+            {title: 'ORDER_SEQ', dataType: 'string', dataIndx: 'ORDER_SEQ', hidden:true},
+            {title: 'OUT_RETURN_TYPE', dataType: 'string', dataIndx: 'OUT_RETURN_TYPE', hidden:true},
+            {title: 'LAST_YN', dataType: 'string', dataIndx: 'LAST_YN', hidden:true},
             {title: '구분', dataType: 'string', dataIndx: 'OUT_RETURN_TYPE_NM', minWidth: 60, width: 60, editable: false,
                 render: function (ui) {
                    let cellData = ui.cellData;
@@ -138,10 +143,11 @@
             },
             {title: '반품', dataType: 'string', dataIndx: 'RETURN_QTY', minWidth: 100, width: 100, editable: false},
             {title: '등록일시', dataType: 'string', dataIndx: 'INSERT_DT', minWidth: 100, width: 100, editable: false},
-            {title: '', align: 'center', dataType: 'string', dataIndx: 'RETURN_SETTLEMENT_DT', width: 40, minWidth: 40, editable: false,
+            {title: '반품조치일', dataType: 'string', dataIndx: 'RETURN_SETTLEMENT_DT', minWidth: 100, width: 100, editable: false},
+            {title: '', align: 'center', dataType: 'string', dataIndx: 'BTN_CANCEL', width: 40, minWidth: 40, editable: false,
                 render: function (ui) {
                     let rowIndx = ui.rowIndx, grid = this;
-                    if (ui.rowData['RETURN_QTY'] > 0) return "<button type=\"button\" class=\"miniBtn black\">취소</button>";
+                    if (ui.rowData['LAST_YN'] == 'Y') return "<button type=\"button\" class=\"miniBtn black\">취소</button>";
                     return '';
                 }
             },
@@ -175,19 +181,46 @@
             cellClick: function (event, ui)
             {
                 let rowIndx = ui.rowIndx, $grid = this;
-                if (ui.rowData['RETURN_QTY'] != undefined && ui.rowData['RETURN_QTY'] > 0)
+                if (ui.rowData['LAST_YN'] == 'Y')
                 {
-                    if (ui.dataIndx == 'RETURN_SETTLEMENT_DT') {
-                        let data = {
-                            'queryId': 'inspection.updateOutgoingReturnHistory',
-                            'KEY_SEQ': ui.rowData['KEY_SEQ']
-                        };
-                        let parameters = {'url': '/json-create', 'data': data };
-                        fnPostAjax(function (data, callFunctionParam) {
-                            alert("취소가 완료되었습니다.");
-                            $("#outgoing_history_form").find("#queryId").val("inspection.selectOutgoingHistoryList");
-                            $("#outgoing_history_search_btn").trigger("click");
-                        }, parameters, '');
+                    if (ui.dataIndx == 'BTN_CANCEL') {
+                        alert("버튼이 언제만 보일지는 대표님이 쿼리 주시기로 함.");
+                        if (ui.rowData['OUT_RETURN_TYPE'] == '1')//출고
+                        {
+                            let data = {
+                                'queryId': 'inspection.deleteOutgoingHistoryInspectionCancelStep1,inspection.updateOutgoingHistoryInspectionCancelStep2,inspection.updateOutgoingHistoryInspectionCancelStep3',
+                                'OUT_SEQ': ui.rowData['KEY_SEQ'],
+                                'CONTROL_SEQ': ui.rowData['CONTROL_SEQ'],
+                                'CONTROL_DETAIL_SEQ': ui.rowData['CONTROL_DETAIL_SEQ'],
+                                'ORDER_SEQ': ui.rowData['ORDER_SEQ']
+                            };
+                            let parameters = {'url': '/json-manager', 'data': data};
+                            fnPostAjax(function (data, callFunctionParam) {
+                                alert("취소가 완료되었습니다.");
+                                $("#outgoing_history_form").find("#queryId").val("inspection.selectOutgoingHistoryList");
+                                $("#outgoing_history_search_btn").trigger("click");
+                            }, parameters, '');
+                        }else if (ui.rowData['OUT_RETURN_TYPE'] == '2'){//반품
+                            let data = {
+                                'queryId': 'inspection.deleteOutgoingHistoryReturnCancelStep1',
+                                'INSPECT_SEQ': ui.rowData['KEY_SEQ']
+                            };
+                            let parameters = {'url': '/json-remove', 'data': data };
+                            fnPostAjax(function (data, callFunctionParam) {
+                                alert("취소가 완료되었습니다.");
+                                $("#outgoing_history_form").find("#queryId").val("inspection.selectOutgoingHistoryList");
+                                $("#outgoing_history_search_btn").trigger("click");
+                            }, parameters, '');
+                        }else{//에러
+                            alert("type error : " + ui.rowData['OUT_RETURN_TYPE']);
+                        }
+                        X.KEY_SEQ
+               , X.CONTROL_SEQ
+               , X.CONTROL_DETAIL_SEQ
+               , X.ORDER_SEQ
+               , X.OUT_RETURN_TYPE
+
+
 
                     }
                 }

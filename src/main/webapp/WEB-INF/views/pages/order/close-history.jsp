@@ -16,7 +16,7 @@
     <div class="topWrap">
         <form class="form-inline" id="CLOSE_HISTORY_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectCloseHistoryList">
-            <div class="gubunWrap row4_topWrap">
+            <div class="none_gubunWrap row4_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -41,10 +41,6 @@
                         <span class="ipu_wrap">
                             <label class="label_100" for="ITEM_NM">품명</label>
                             <input type="text" class="wd_200" name="ITEM_NM" id="ITEM_NM" title="품명">
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap right_float">
-                            <button type="button" class="defaultBtn radius blue" id="CLOSE_HISTORY_SEARCH">검색</button>
                         </span>
                     </li>
                     <li>
@@ -115,6 +111,7 @@
                             <span class="chk_box"><input type="checkbox" name="PART_NUM" id="PART_NUM"><label for="PART_NUM">Part</label></span>
                             <span class="chk_box"><input type="checkbox" name="ORDER_NUM" id="ORDER_NUM"><label for="ORDER_NUM">발주번호</label></span>
                         </span>
+                        <button type="button" class="right_float defaultBtn radius blue" id="CLOSE_HISTORY_SEARCH">검색</button>
                     </li>
                 </ul>
             </div>
@@ -122,10 +119,11 @@
     </div>
     <div class="bottomWrap row4_bottomWrap">
         <div class="hWrap">
-            <button type="button" class="defaultBtn btn-120w" data-toggle="modal" data-target="#CONTROL_CLOSE_CANCEL_POPUP">마감/종료 취소</button>
+            <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#CONTROL_CLOSE_CANCEL_POPUP">마감 취소</button>
+            <button type="button" class="defaultBtn btn-100w" id="CONTROL_FINISH_CANCEL">종료 취소</button>
             <div class="rightSpan">
-                <button type="button" class="defaultBtn btn-120w" id="DRAWING_VIEW">도면 View</button>
-                <button type="button" class="defaultBtn btn-120w green" id="CONTROL_CLOSE_HISTORY_SAVE">저장</button>
+                <button type="button" class="defaultBtn btn-100w" id="DRAWING_VIEW">도면 View</button>
+                <button type="button" class="defaultBtn btn-100w green" id="CONTROL_CLOSE_HISTORY_SAVE">저장</button>
             </div>
         </div>
         <div class="tableWrap" style="padding: 10px 0;">
@@ -195,7 +193,7 @@
             {title: '주문상태', align: 'center', colModel: [
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS', hidden: true},
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_NM'},
-                    {title: '변경일시', minWidth: 100, datatype: 'date', dataIndx: 'CONTROL_STATUS_DT'}
+                    {title: '변경일시', minWidth: 100, datatype: 'string', dataIndx: 'CONTROL_STATUS_DT'}
                 ]
             },
             {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
@@ -206,8 +204,8 @@
             {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM'},
             {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM'},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
-            {title: 'INV No.<br>(거래명세No.)', minWidth: 100, dataType: 'string', dataIndx: 'INVOICE_NUM'},
-            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM'},
+            {title: 'INV No.<br>(거래명세No.)', width: 100, dataType: 'string', dataIndx: 'INVOICE_NUM'},
+            {title: '모듈명', width: 70, dataType: 'string', dataIndx: 'MODULE_NM'},
             {
                 title: '주요<br>검사품', dataType: 'select', dataIndx: 'MAIN_INSPECTION',
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1059')},
@@ -232,31 +230,53 @@
                     }
                 }
             },
-            {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN'},
-            {title: 'CONTROL_VER', dataType: 'string', dataIndx: 'CONTROL_VER', hidden: true},
-            {title: '관리번호', minWidth: 100, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {
-                title: 'Part', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM',
+            {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN',
                 render: function (ui) {
-                    if (ui.rowData.WORK_NM === '가공조립') {
-                        return "<span>플러스버튼</span>";
-                    }
+                    let cellData = ui.cellData;
+
+                    return cellData === 'Y' ? cellData : '';
                 }
+            },
+            {title: 'CONTROL_VER', dataType: 'string', dataIndx: 'CONTROL_VER', hidden: true},
+            {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM'},
+            {title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM',
+                // render: function (ui) {
+                //     if (ui.rowData.WORK_TYPE === 'WTP020') {
+                //         return '<span class="ui-icon ui-icon-circle-plus" name="PART_NUM_PLUS_BUTTON"></span>';
+                //     }
+                // }
             },
             {title: '도면번호버전', dataType: 'string', dataIndx: 'DRAWING_VER', hidden: true},
             {title: '도면번호', minWidth: 120, dataType: 'string', dataIndx: 'DRAWING_NUM'},
             {title: '품명', minWidth: 110, dataType: 'string', dataIndx: 'ITEM_NM'},
             {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true},
             {title: '작업<br>형태', minWidth: 70, dataType: 'string', dataIndx: 'WORK_NM'},
-            {title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN'},
-            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY'},
-            {title: '소재<br>사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN'},
+            {title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN',
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    return cellData === 'Y' ? cellData : '';
+                }
+            },
+            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', hidden: true},
+            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY_NM'},
+            {title: '소재<br>사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    return cellData === 'Y' ? cellData : '';
+                }
+            },
             {title: '가공납기', minWidth: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
             {title: '규격', minWidth: 110, dataType: 'string', dataIndx: 'SIZE_TXT'},
-            {title: '소재<br>종류', minWidth: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
-            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE'},
-            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND'},
-            {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT'},
+            {title: '소재<br>종류', minWidth: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden: true},
+            {title: '소재<br>종류', minWidth: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
+            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE', hidden: true},
+            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM'},
+            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', hidden: true},
+            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM'},
+            {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', hidden: true},
+            {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT_NM'},
             {title: '열<br>처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT'},
             {title: '소재비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE'},
             {title: 'Part<br>단위<br>수량', align: 'right', dataType: 'integer', dataIndx: 'PART_UNIT_QTY'},
@@ -323,12 +343,28 @@
                     {title: '견적비고', datatype: 'string', dataIndx: 'UNIT_AMT_NOTE'}
                 ]
             },
-            {title: '계산<br>견적단가', minWidth: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CALCUL_EST_UNIT_COST'},
-            {title: '최종<br>견적단가', minWidth: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', colModel: []},
-            {title: '견적<br>합계금액', minWidth: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'RUSWJRGKQRpRMADOR'},
-            {title: '최종<br>공급단가', minWidth: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', colModel: []},
-            {title: '합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMOUNT'},
-            {title: '종전가', minWidth: 100, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'WHDWJSRK'},
+            {title: '계산<br>견적단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CALCUL_EST_UNIT_COST',
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let UNIT_MATERIAL_AMT = rowData.UNIT_MATERIAL_AMT || 0;
+                    let UNIT_TM_AMT = rowData.UNIT_TM_AMT || 0;
+                    let UNIT_GRIND_AMT = rowData.UNIT_GRIND_AMT || 0;
+                    let UNIT_HEAT_AMT = rowData.UNIT_HEAT_AMT || 0;
+                    let UNIT_SURFACE_AMT = rowData.UNIT_SURFACE_AMT || 0;
+                    let UNIT_PROCESS_AMT = rowData.UNIT_PROCESS_AMT || 0;
+                    let UNIT_ETC_AMT = rowData.UNIT_ETC_AMT || 0;
+                    let CALCUL_EST_UNIT_COST = UNIT_MATERIAL_AMT + UNIT_TM_AMT + UNIT_GRIND_AMT + UNIT_HEAT_AMT + UNIT_SURFACE_AMT + UNIT_PROCESS_AMT + UNIT_ETC_AMT;
+
+                    if (CALCUL_EST_UNIT_COST > 0) {
+                        return CALCUL_EST_UNIT_COST.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                    }
+                }
+            },
+            {title: '최종<br>견적단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
+            {title: '견적<br>합계금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'EST_TOTAL_AMOUNT'},
+            {title: '최종<br>공급단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
+            {title: '합계금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMT'},
+            {title: '종전가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'WHDWJSRK'},
             {title: '변경전<br>도면번호', minWidth: 120, dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', colModel: []},
             {
                 title: '마감/취소 현황', align: 'center', colModel: [
@@ -347,7 +383,13 @@
                 title: '외주현황', align: 'center', colModel: [
                     {title: '외주업체', datatype: 'string', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
                     {title: '외주업체', datatype: 'string', dataIndx: 'OUTSIDE_COMP_NM'},
-                    {title: '자재사급', datatype: 'string', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN'},
+                    {title: '자재사급', datatype: 'string', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+
+                            return cellData === 'Y' ? cellData : '';
+                        }
+                    },
                     {title: '외주단가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_UNIT_AMT'},
                     {title: '합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_FINAL_AMT'},
                     {title: '요망납기', datatype: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
@@ -501,7 +543,7 @@
         /* variable */
 
         /* function */
-        let updateControlStatus = function () {
+        const updateControlStatus = function () {
             let selectedRowCount = selectedRowIndex.length;
             let rowListConvert = [];
             let date = new Date().yyyymmddhhmm();
@@ -684,6 +726,14 @@
                 $('#CONTROL_CLOSE_CANCEL_POPUP').modal('hide');
                 $closeHistoryGrid.pqGrid('refreshDataAndView');
             }, parameters, '');
+        });
+
+        $('#CONTROL_FINISH_CANCEL').on('click', function () {
+            if (noSelectedRowAlert()) {
+                return false;
+            }
+
+            updateControlStatus();
         });
         /* event */
 

@@ -32,7 +32,7 @@
                 <span class="refresh mg-left10"><button type="button" id="MCT_PLAN_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
                 <span class="buttonWrap">
                     <button type="button" class="defaultBtn black" id="MCT_PLAN_MANAGE_DRAWING_VIEW">도면보기</button>
-                    <button type="button" class="defaultBtn sky">레이아웃관리</button>
+                    <!-- <button type="button" class="defaultBtn sky">레이아웃관리</button> -->
                 </span>
             </div>
         </form>
@@ -42,13 +42,16 @@
                     <li id="layout_1_1" style="min-width: 506px;"></li>
                     <li id="layout_1_2" style="min-width: 506px;"></li>
                     <li id="layout_1_3" style="min-width: 506px;"></li>
-                    <li id="layout_1_4"></li>
+                    <li id="layout_1_4" style="min-width: 506px;"></li>
+                    <li id="layout_1_5" style="min-width: 506px;"></li>
+                    <li id="layout_1_6" style="min-width: 506px;"></li>
                 </ul>
                 <ul>
                     <li id="layout_2_1" style="min-width: 506px;"></li>
                     <li id="layout_2_2" style="min-width: 506px;"></li>
                     <li id="layout_2_3" style="min-width: 506px;"></li>
-                    <li id="layout_2_4"></li>
+                    <li id="layout_2_4" style="min-width: 506px;"></li>
+                    <li id="layout_2_5" style="min-width: 506px;"></li>
                 </ul>
             </div>
         </div>
@@ -69,15 +72,18 @@
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
-                    <label class="label_50" for="LOCATION">위치</label>
-                    <select class="wd_100" id="LOCATION" name="LOCATION" title="위치">
+                    <label class="label_50" for="POP_POSITION">위치</label>
+                    <select class="wd_100" id="POP_POSITION" name="POP_POSITION" title="위치">
                         <option value="">ALL</option>
+                        <c:forEach var="code" items="${HighCode.H_1009}">
+                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                        </c:forEach>
                     </select>
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
-                    <label class="label_50" for="MATERIAL_CLASSIFY">소재분류</label>
-                    <select class="wd_100" name="MATERIAL_CLASSIFY" id="MATERIAL_CLASSIFY" title="소재분류">
+                    <label class="label_50" for="MATERIAL_DETAIL">소재분류</label>
+                    <select class="wd_100" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" title="소재분류">
                         <option value="">All</option>
                         <c:forEach var="code" items="${HighCode.H_1027}">
                             <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -103,13 +109,18 @@
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
-                    <label class="label_50" for="WORK_CLASSIFY">작업구분</label>
-                    <select class="wd_100" name="WORK_CLASSIFY" id="WORK_CLASSIFY" title="작업구분">
+                    <label class="label_50" for="MCT_WORK_TYPE">작업구분</label>
+                    <select class="wd_100" name="MCT_WORK_TYPE" id="MCT_WORK_TYPE" title="작업구분">
                         <option value="">All</option>
                         <c:forEach var="code" items="${HighCode.H_1011}">
                             <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                         </c:forEach>
                     </select>
+                </span>
+                <span class="gubun"></span>
+                <span class="slt_wrap">
+                    <input type="checkbox">
+                    <label class="label_100" for="MCT_WORK_TYPE">계획단계 대상만 조회</label>
                 </span>
                 <span class="gubun"></span>
                 <span class="refresh mg-left10"><button type="button" id="MCT_TARGET_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
@@ -128,10 +139,12 @@
         'use strict';
         /* variable */
         const TWENTY_SECONDS = 20000;
+        let selectedGrid = '';
+        let selectedRowIndex = '';
         const insertQueryList = ['machine.insertMctPlan'];
         const updateQueryList = ['machine.updateMctPlan'];
         const deleteQueryList = ['machine.deleteMctPlan', 'machine.deleteMctWork'];
-        let $processPlanGrid1, $processPlanGrid2, $processPlanGrid3, $processPlanGrid4, $processPlanGrid5, $processPlanGrid6, $processPlanGrid7, $processPlanGrid8;
+        let $processPlanGrid1, $processPlanGrid2, $processPlanGrid3, $processPlanGrid4, $processPlanGrid5, $processPlanGrid6, $processPlanGrid7, $processPlanGrid8, $processPlanGrid9, $processPlanGrid10, $processPlanGrid11;
         const processPlanGrid1Id = 'PROCESS_PLAN_GRID1';
         const processPlanGrid2Id = 'PROCESS_PLAN_GRID2';
         const processPlanGrid3Id = 'PROCESS_PLAN_GRID3';
@@ -140,6 +153,9 @@
         const processPlanGrid6Id = 'PROCESS_PLAN_GRID6';
         const processPlanGrid7Id = 'PROCESS_PLAN_GRID7';
         const processPlanGrid8Id = 'PROCESS_PLAN_GRID8';
+        const processPlanGrid9Id = 'PROCESS_PLAN_GRID9';
+        const processPlanGrid10Id = 'PROCESS_PLAN_GRID10';
+        const processPlanGrid11Id = 'PROCESS_PLAN_GRID11';
 
         let postData = fnFormToJsonArrayData('#MCT_PLAN_MANAGE_SEARCH_FORM');
         let parameters = {'url': '/json-list', 'data': postData};
@@ -215,9 +231,13 @@
         let processPlanPostData6 = fnFormToJsonArrayData('#MCT_NC6_PLAN_FORM');
         let processPlanPostData7 = fnFormToJsonArrayData('#MCT_NC7_PLAN_FORM');
         let processPlanPostData8 = fnFormToJsonArrayData('#MCT_NC8_PLAN_FORM');
+        let processPlanPostData9 = fnFormToJsonArrayData('#MCT_NC9_PLAN_FORM');
+        let processPlanPostData10 = fnFormToJsonArrayData('#MCT_NC10_PLAN_FORM');
+        let processPlanPostData11 = fnFormToJsonArrayData('#MCT_NC11_PLAN_FORM');
 
         const processPlanColModel = [
             {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true},
+            {title: 'IMG_GFILE_SEQ', dataType: 'integer', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
             {title: 'EQUIP_SEQ', dataType: 'string', dataIndx: 'EQUIP_SEQ', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
@@ -225,16 +245,11 @@
             {title: 'WORK_USER_ID', dataType: 'string', dataIndx: 'WORK_USER_ID', hidden: true},
             {title: 'WORK_STATUS', dataType: 'string', dataIndx: 'WORK_STATUS', hidden: true},
             {title: 'SORT_NUM', dataType: 'integer', dataIndx: 'SORT_NUM', hidden: true},
-            {title: '납기', width: 110, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
-            {title: '관리번호', width: 120, dataType: 'string', dataIndx: 'CONTROL_NUM'},
+            {title: '납기', width: 150, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
+            {title: '관리번호', minWidht: 300, width: 300, dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {title: 'Part 수량', dataType: 'string', dataIndx: 'PART_UNIT_QTY'},
-            {title: '소재', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
-                editor: {
-                    type: 'select',
-                    valueIndx: 'value',
-                    labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1027')
-                },
+            {title: '소재', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027')},
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -257,8 +272,8 @@
                     }
                 }
             },
-            {title: '규격', dataType: 'string', dataIndx: 'STANDARD_SIZE'},
-            {title: '현재위치', width: 80, dataType: 'string', dataIndx: 'POP_POSITION',
+            {title: '규격', width: 50, dataType: 'string', dataIndx: 'STANDARD_SIZE'},
+            {title: '현재위치', width: 100, dataType: 'string', dataIndx: 'POP_POSITION',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -283,7 +298,7 @@
             },
             {title: '예상', dataType: 'string', dataIndx: 'WORKING_TIME'},
             {
-                title: '', width: 50, dataType: 'string', dataIndx: 'DELETE_BUTTON', editable: false,
+                title: '', dataType: 'string', dataIndx: 'DELETE_BUTTON', editable: false,
                 render: function (ui) {
                     return '<span class="ui-icon ui-icon-circle-minus" name="MCT_PLAN_DELETE_BUTTON" style="cursor: pointer"></span>'
                 },
@@ -306,6 +321,7 @@
             resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
+            selectionModel: {type: 'row', mode: 'single'},
             // scrollModel: {autoFit: true},
             trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
@@ -325,7 +341,7 @@
             },
             dropModel: {
                 on: true,
-                accept: '.dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .master',
+                accept: '.dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .dnd9, .dnd10,  .dnd11, .master',
                 drop: function (evt, ui) {
                     let Drag = ui.helper.data('Drag');
                     let uiDrag = Drag.getUI();
@@ -349,6 +365,10 @@
                     showTitle(data, tableElement);
                     changeFooter(data, tableElement);
                 }
+            },
+            rowSelect: function (event, ui) {
+                selectedGrid = $(this.element.context);
+                selectedRowIndex = ui.addList[0].rowIndx;
             },
             moveNode: function (event, ui) {
                 changeSortNum(this, $(this.element.context));
@@ -377,6 +397,7 @@
             resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
+            selectionModel: {type: 'row', mode: 'single'},
             scrollModel: {autoFit: true},
             trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
@@ -396,7 +417,7 @@
             },
             dropModel: {
                 on: true,
-                accept: '.dnd1, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .master'
+                accept: '.dnd1, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .dnd9, .dnd10, .dnd11, .master'
             },
             complete: function () {
                 let data = this.options.dataModel.data;
@@ -409,6 +430,10 @@
                     showTitle(data, tableElement);
                     changeFooter(data, tableElement);
                 }
+            },
+            rowSelect: function (event, ui) {
+                selectedGrid = $(this.element.context);
+                selectedRowIndex = ui.addList[0].rowIndx;
             },
             moveNode: function (event, ui) {
                 changeSortNum(this, $(this.element.context));
@@ -437,6 +462,7 @@
             resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
+            selectionModel: {type: 'row', mode: 'single'},
             scrollModel: {autoFit: true},
             trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
@@ -457,7 +483,7 @@
             },
             dropModel: {
                 on: true,
-                accept: '.dnd1, .dnd2, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .master'
+                accept: '.dnd1, .dnd2, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .dnd9, .dnd10, .dnd11, .master'
             },
             complete: function () {
                 let data = this.options.dataModel.data;
@@ -470,6 +496,10 @@
                     showTitle(data, tableElement);
                     changeFooter(data, tableElement);
                 }
+            },
+            rowSelect: function (event, ui) {
+                selectedGrid = $(this.element.context);
+                selectedRowIndex = ui.addList[0].rowIndx;
             },
             moveNode: function (event, ui) {
                 changeSortNum(this, $(this.element.context));
@@ -498,6 +528,7 @@
             resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
+            selectionModel: {type: 'row', mode: 'single'},
             scrollModel: {autoFit: true},
             trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
@@ -518,7 +549,7 @@
             },
             dropModel: {
                 on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .dnd5, .dnd6, .dnd7, .dnd8, .master'
+                accept: '.dnd1, .dnd2, .dnd3, .dnd5, .dnd6, .dnd7, .dnd8, .dnd9, .dnd10, .dnd11, .master'
             },
             complete: function () {
                 let data = this.options.dataModel.data;
@@ -531,6 +562,10 @@
                     showTitle(data, tableElement);
                     changeFooter(data, tableElement);
                 }
+            },
+            rowSelect: function (event, ui) {
+                selectedGrid = $(this.element.context);
+                selectedRowIndex = ui.addList[0].rowIndx;
             },
             moveNode: function (event, ui) {
                 changeSortNum(this, $(this.element.context));
@@ -559,6 +594,7 @@
             resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
+            selectionModel: {type: 'row', mode: 'single'},
             scrollModel: {autoFit: true},
             trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
@@ -579,7 +615,7 @@
             },
             dropModel: {
                 on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd6, .dnd7, .dnd8, .master'
+                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd6, .dnd7, .dnd8, .dnd9, .dnd10, .dnd11, .master'
             },
             complete: function () {
                 let data = this.options.dataModel.data;
@@ -592,6 +628,10 @@
                     showTitle(data, tableElement);
                     changeFooter(data, tableElement);
                 }
+            },
+            rowSelect: function (event, ui) {
+                selectedGrid = $(this.element.context);
+                selectedRowIndex = ui.addList[0].rowIndx;
             },
             moveNode: function (event, ui) {
                 changeSortNum(this, $(this.element.context));
@@ -620,6 +660,7 @@
             resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
+            selectionModel: {type: 'row', mode: 'single'},
             scrollModel: {autoFit: true},
             trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
@@ -640,7 +681,7 @@
             },
             dropModel: {
                 on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd7, .dnd8, .master'
+                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd7, .dnd8, .dnd9, .dnd10, .dnd11, .master'
             },
             complete: function () {
                 let data = this.options.dataModel.data;
@@ -653,6 +694,10 @@
                     showTitle(data, tableElement);
                     changeFooter(data, tableElement);
                 }
+            },
+            rowSelect: function (event, ui) {
+                selectedGrid = $(this.element.context);
+                selectedRowIndex = ui.addList[0].rowIndx;
             },
             moveNode: function (event, ui) {
                 changeSortNum(this, $(this.element.context));
@@ -675,13 +720,15 @@
             }
         };
         const processPlanObj7 = {
+            width: 1000,
             height: '100%',
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
-            scrollModel: {autoFit: true},
+            selectionModel: {type: 'row', mode: 'single'},
+            // scrollModel: {autoFit: true},
             trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
             colModel: processPlanColModel,
@@ -701,7 +748,7 @@
             },
             dropModel: {
                 on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd8, .master'
+                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd8, .dnd9, .dnd10, .dnd11, .master'
             },
             complete: function () {
                 let data = this.options.dataModel.data;
@@ -714,6 +761,10 @@
                     showTitle(data, tableElement);
                     changeFooter(data, tableElement);
                 }
+            },
+            rowSelect: function (event, ui) {
+                selectedGrid = $(this.element.context);
+                selectedRowIndex = ui.addList[0].rowIndx;
             },
             moveNode: function (event, ui) {
                 changeSortNum(this, $(this.element.context));
@@ -742,6 +793,7 @@
             resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
+            selectionModel: {type: 'row', mode: 'single'},
             scrollModel: {autoFit: true},
             trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
@@ -762,7 +814,7 @@
             },
             dropModel: {
                 on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .master'
+                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd9, .dnd10, .master'
             },
             complete: function () {
                 let data = this.options.dataModel.data;
@@ -775,6 +827,208 @@
                     showTitle(data, tableElement);
                     changeFooter(data, tableElement);
                 }
+            },
+            rowSelect: function (event, ui) {
+                selectedGrid = $(this.element.context);
+                selectedRowIndex = ui.addList[0].rowIndx;
+            },
+            moveNode: function (event, ui) {
+                changeSortNum(this, $(this.element.context));
+            },
+            cellSave: function (evt, ui) {
+                if (ui.oldVal === undefined && ui.newVal === null) {
+                    $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                }
+            },
+            change: function (event, ui) {
+
+                if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
+                    modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
+                    refreshTargetGrid();
+                }
+
+                if (ui.source === 'delete' || ui.source === 'deleteNodes') {
+                    changeSortNum(this, $(this.element.context));
+                }
+            }
+        };
+        const processPlanObj9 = {
+            height: '100%',
+            collapsible: false,
+            postRenderInterval: -1, //call postRender synchronously.
+            resizable: false,
+            showTitle: false,
+            numberCell: {title: 'No.'},
+            selectionModel: {type: 'row', mode: 'single'},
+            scrollModel: {autoFit: true},
+            trackModel: {on: true},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
+            colModel: processPlanColModel,
+            strNoRows: g_noData,
+            dataModel: {
+                // location: 'remote', dataType: 'json', method: 'POST', url: '/dataSource.emptyGrid',
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: processPlanPostData9, recIndx: 'ROWNUM',
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            },
+            dragModel: {
+                on: true,
+                clsDnD: 'dnd9',
+                diHelper: ['CONTROL_NUM']
+            },
+            dropModel: {
+                on: true,
+                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .dnd10, .dnd11, .master'
+            },
+            complete: function () {
+                let data = this.options.dataModel.data;
+                let totalRecords = data.length;
+                let tableElement = this.element.closest('.table');
+
+                changeTitleColor(data, tableElement);
+
+                if (totalRecords) {
+                    showTitle(data, tableElement);
+                    changeFooter(data, tableElement);
+                }
+            },
+            rowSelect: function (event, ui) {
+                selectedGrid = $(this.element.context);
+                selectedRowIndex = ui.addList[0].rowIndx;
+            },
+            moveNode: function (event, ui) {
+                changeSortNum(this, $(this.element.context));
+            },
+            cellSave: function (evt, ui) {
+                if (ui.oldVal === undefined && ui.newVal === null) {
+                    $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                }
+            },
+            change: function (event, ui) {
+
+                if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
+                    modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
+                    refreshTargetGrid();
+                }
+
+                if (ui.source === 'delete' || ui.source === 'deleteNodes') {
+                    changeSortNum(this, $(this.element.context));
+                }
+            }
+        };
+        const processPlanObj10 = {
+            height: '100%',
+            collapsible: false,
+            postRenderInterval: -1, //call postRender synchronously.
+            resizable: false,
+            showTitle: false,
+            numberCell: {title: 'No.'},
+            selectionModel: {type: 'row', mode: 'single'},
+            scrollModel: {autoFit: true},
+            trackModel: {on: true},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
+            colModel: processPlanColModel,
+            strNoRows: g_noData,
+            dataModel: {
+                // location: 'remote', dataType: 'json', method: 'POST', url: '/dataSource.emptyGrid',
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: processPlanPostData10, recIndx: 'ROWNUM',
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            },
+            dragModel: {
+                on: true,
+                clsDnD: 'dnd10',
+                diHelper: ['CONTROL_NUM']
+            },
+            dropModel: {
+                on: true,
+                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .dnd9, .dnd11, .master'
+            },
+            complete: function () {
+                let data = this.options.dataModel.data;
+                let totalRecords = data.length;
+                let tableElement = this.element.closest('.table');
+
+                changeTitleColor(data, tableElement);
+
+                if (totalRecords) {
+                    showTitle(data, tableElement);
+                    changeFooter(data, tableElement);
+                }
+            },
+            rowSelect: function (event, ui) {
+                selectedGrid = $(this.element.context);
+                selectedRowIndex = ui.addList[0].rowIndx;
+            },
+            moveNode: function (event, ui) {
+                changeSortNum(this, $(this.element.context));
+            },
+            cellSave: function (evt, ui) {
+                if (ui.oldVal === undefined && ui.newVal === null) {
+                    $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                }
+            },
+            change: function (event, ui) {
+
+                if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
+                    modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
+                    refreshTargetGrid();
+                }
+
+                if (ui.source === 'delete' || ui.source === 'deleteNodes') {
+                    changeSortNum(this, $(this.element.context));
+                }
+            }
+        };
+        const processPlanObj11 = {
+            height: '100%',
+            collapsible: false,
+            postRenderInterval: -1, //call postRender synchronously.
+            resizable: false,
+            showTitle: false,
+            numberCell: {title: 'No.'},
+            selectionModel: {type: 'row', mode: 'single'},
+            scrollModel: {autoFit: true},
+            trackModel: {on: true},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
+            colModel: processPlanColModel,
+            strNoRows: g_noData,
+            dataModel: {
+                // location: 'remote', dataType: 'json', method: 'POST', url: '/dataSource.emptyGrid',
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: processPlanPostData10, recIndx: 'ROWNUM',
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            },
+            dragModel: {
+                on: true,
+                clsDnD: 'dnd11',
+                diHelper: ['CONTROL_NUM']
+            },
+            dropModel: {
+                on: true,
+                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .dnd9, .dnd10, .master'
+            },
+            complete: function () {
+                let data = this.options.dataModel.data;
+                let totalRecords = data.length;
+                let tableElement = this.element.closest('.table');
+
+                changeTitleColor(data, tableElement);
+
+                if (totalRecords) {
+                    showTitle(data, tableElement);
+                    changeFooter(data, tableElement);
+                }
+            },
+            rowSelect: function (event, ui) {
+                selectedGrid = $(this.element.context);
+                selectedRowIndex = ui.addList[0].rowIndx;
             },
             moveNode: function (event, ui) {
                 changeSortNum(this, $(this.element.context));
@@ -817,18 +1071,12 @@
                             let status = ui.rowData.STATUS_1;
                             let backgroundColor = colorClassification(status);
 
-                            /*
-                                                        if (status) {
-                                                            $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                                                        }
-                            */
+                            // if (status) {
+                            //     $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                            // }
 
                             if (cellData) {
-                                $processTargetGrid.pqGrid('addClass', {
-                                    rowIndx: ui.rowIndx,
-                                    dataIndx: ui.dataIndx,
-                                    cls: backgroundColor
-                                });
+                                $processTargetGrid.pqGrid('addClass', { rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
 
                                 let index = EQUIP_LIST.findIndex(function (element) {
                                     return element.value === Number(cellData);
@@ -981,10 +1229,10 @@
             {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS'},
             {
                 title: '가공진행 현황', align: 'center', colModel: [
-                    {title: 'NC', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_NC'},
-                    {title: '밀링', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_MILLING'},
-                    {title: '선반', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_RACK'},
-                    {title: '연마', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_GRINDING'},
+                    {title: 'NC', datatype: 'string', dataIndx: 'PROCESS_PROGRESS_NC'},
+                    {title: '밀링', datatype: 'string', dataIndx: 'PROCESS_PROGRESS_MILLING'},
+                    {title: '선반', datatype: 'string', dataIndx: 'PROCESS_PROGRESS_RACK'},
+                    {title: '연마', datatype: 'string', dataIndx: 'PROCESS_PROGRESS_GRINDING'},
                 ]
             },
             {title: '관리번호', width: 120, dataType: 'string', dataIndx: 'CONTROL_NUM'},
@@ -1016,7 +1264,7 @@
             {title: '규격', width: 120, dataType: 'string', dataIndx: 'STANDARD_SIZE'},
             {title: '소재 Size', width: 120, dataType: 'string', dataIndx: 'MATERIAL_SIZE'},
             {title: '비고 기록사항', dataType: 'string', dataIndx: 'NOTE'},
-            {title: '예상가공<br>시간(분)', dataType: 'integer', dataIndx: 'WORKING_TIME_TOTAL'},
+            {title: '예상가공<br>시간(분)', dataType: 'integer', dataIndx: 'MCT_WORK_TIME'},
             {title: '가공계획<br>비고', dataType: 'string', dataIndx: 'MCT_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
             {
                 title: '작업<br>구분', dataType: 'string', dataIndx: 'MCT_WORK_TYPE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
@@ -1087,6 +1335,7 @@
             resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
+            selectionModel: {type: 'row', mode: 'single'},
             // scrollModel: {autoFit: true},
             trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
@@ -1109,6 +1358,10 @@
             },
             complete: function () {
                 // this.flex();
+            },
+            rowSelect: function (event, ui) {
+                selectedGrid = $(this.element.context);
+                selectedRowIndex = ui.addList[0].rowIndx;
             },
             cellSave: function (event, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {
@@ -1150,6 +1403,9 @@
             $processPlanGrid6.pqGrid('refreshDataAndView');
             $processPlanGrid7.pqGrid('refreshDataAndView');
             $processPlanGrid8.pqGrid('refreshDataAndView');
+            $processPlanGrid9.pqGrid('refreshDataAndView');
+            $processPlanGrid10.pqGrid('refreshDataAndView');
+            $processPlanGrid11.pqGrid('refreshDataAndView');
         };
 
         const refreshTargetGrid = function () {
@@ -1330,6 +1586,7 @@
                 resizable: false,
                 showTitle: false,
                 numberCell: {title: 'No.'},
+                selectionModel: {type: 'row', mode: 'single'},
                 // scrollModel: {autoFit: true},
                 trackModel: {on: true},
                 columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
@@ -1395,7 +1652,16 @@
         });
 
         $('#MCT_PLAN_MANAGE_DRAWING_VIEW').on('click', function () {
-            callWindowImageViewer(999);
+            let rowData = selectedGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex});
+            console.log(selectedGrid);
+            callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+        });
+
+        $('#MCT_PROCESS_TARGET_FORM').on('change', function () {
+            $processTargetGrid.pqGrid('option', 'dataModel.postData', function () {
+                return (fnFormToJsonArrayData('#MCT_PROCESS_TARGET_FORM'));
+            });
+            $processTargetGrid.pqGrid('refreshDataAndView');
         });
         /* event */
 
@@ -1408,6 +1674,9 @@
         $processPlanGrid6 = $('#' + processPlanGrid6Id).pqGrid(processPlanObj6);
         $processPlanGrid7 = $('#' + processPlanGrid7Id).pqGrid(processPlanObj7);
         $processPlanGrid8 = $('#' + processPlanGrid8Id).pqGrid(processPlanObj8);
+        $processPlanGrid9 = $('#' + processPlanGrid9Id).pqGrid(processPlanObj9);
+        $processPlanGrid10 = $('#' + processPlanGrid10Id).pqGrid(processPlanObj10);
+        $processPlanGrid11 = $('#' + processPlanGrid11Id).pqGrid(processPlanObj11);
         $processTargetGrid = $('#' + processTargetGridId).pqGrid(processTargetGridObj);
 
         /*setInterval(function () {

@@ -44,8 +44,6 @@
                             <label class="label_100" for="NOTE">비고</label>
                             <input type="text" class="wd_200" name="NOTE" id="NOTE">
                         </span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap"></span>
                     </li>
                     <li>
                         <span class="ipu_wrap">
@@ -124,7 +122,7 @@
                     <a href="#MONTHLY_SALES_STATUS" data-toggle="tab" aria-expanded="false">월별 매출현황</a>
                 </li>
                 <div class="right_float" id="sales_status_save_id">
-                    <button type="button" class="defaultBtn btn-120w green" style="font-weight:normal;" id="CLOSING_HISTORY_SAVE">저장</button>
+                    <button type="button" class="defaultBtn btn-100w green" style="font-weight:normal;" id="CLOSING_HISTORY_SAVE">저장</button>
                 </div>
             </ul>
             <div class="tab-content">
@@ -189,10 +187,11 @@
         const tab1GridId = 'CLOSING_HISTORY_GRID';
         let tab1PostData = fnFormToJsonArrayData('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM');
         const tab1ColModel = [
-            {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
+            {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
+            {title: 'No.', minWidth: 30, width: 30, align: 'right', dataType: 'integer', dataIndx: 'ROW_NUM'},
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
-            {title: '년도', dataType: 'string', dataIndx: 'ORDER_COMP_CD',},
+            {title: '년도', dataType: 'string', dataIndx: 'YYYY'},
             {title: '분기', dataType: 'string', dataIndx: 'QUARTER'},
             {title: '마감월', dataType: 'string', dataIndx: 'FINISH_MONTH'},
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
@@ -209,7 +208,7 @@
                 }
             },
             {title: '공급가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', summary: {type: 'sum'}},
-            {title: '마감금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, summary: {type: 'sum'}, editable: true},
+            {title: '마감금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'sdfsd1', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, summary: {type: 'sum'}, editable: true},
             {title: '부가세액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'VAT_AMOUNT', summary: {type: 'sum'}},
             {title: '합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMOUNT', summary: {type: 'sum'}},
             {title: '비고', dataType: 'string', dataIndx: 'CLOSE_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true}
@@ -219,7 +218,7 @@
             header:false,
             headerMenu: false,
             indent: 10,
-            dataIndx: ['COMP_CD'],
+            dataIndx: ['GROUP_KEY'],
             summaryInTitleRow: '',
             summaryEdit: false,
             // showSummary: [true], //to display summary at end of every group.
@@ -233,7 +232,7 @@
             collapsible: false,
             resizable: false,
             showTitle: false,
-            numberCell: {title: 'No.'},
+            numberCell: {show: false},
             scrollModel: {autoFit: true},
             trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
@@ -303,7 +302,8 @@
         let tab2PostData = fnFormToJsonArrayData('#MONTH_SALE_STATUS_SEARCH_FORM');
         tab2PostData.MONTH_SALE_YEAR = CURRENT_YEAR;
         const tab2ColModel = [
-            // {title: 'Group', tpHide: true, menuInHide: true, dataIndx: 'grp'},
+            {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
+            {title: 'No.', minWidth: 30, width: 30, align: 'right', dataType: 'integer', dataIndx: 'ROW_NUM'},
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
             // {title: 'CONTROL_TYPE', dataType: 'string', dataIndx: 'CONTROL_TYPE', hidden: true},
             // {title: 'CONTROL_NM', dataType: 'string', dataIndx: 'CONTROL_NM'},
@@ -350,7 +350,7 @@
             on: true, header:false,
             headerMenu: false,
             indent: 10,
-            dataIndx: ['COMP_CD'],
+            dataIndx: ['GROUP_KEY'],
             summaryInTitleRow: '',
             summaryEdit: false,
             // showSummary: [true], //to display summary at end of every group.
@@ -364,7 +364,7 @@
             collapsible: false,
             resizable: false,
             showTitle: false,
-            numberCell: {title: 'No.'},
+            numberCell: {show: false},
             scrollModel: {autoFit: true},
             // trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},

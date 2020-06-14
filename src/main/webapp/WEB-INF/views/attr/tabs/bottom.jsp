@@ -300,11 +300,37 @@
     </form>
 </div>
 <!-- CAM 상세정보 layer popup : E -->
+
+<!-- -->
+<div class="modal" id="common_alert_popup" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 10000;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" name="commonAlertYesBtn" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                <h2 class="modal-title" id="commonAlertHeadHtml">정보</h2>
+            </div>
+            <div class="modal-body">
+                <div id="commonAlertBodyHtml">
+                    <h4>
+                        <img style='width: 32px; height: 32px;' src="/resource/asset/images/work/alert.png">
+                        <span>ㅃㅃㅃㅃ</span>
+                    </h4>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="defaultBtn radius blue" name="commonAlertYesBtn">확인</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- -->
+
 <script type="text/javascript">
 
     let $cadFileConvertUploadCompletedBtn = $("#cadFileConvertUploadCompletedBtn");
     let commonCadFileAttachPopup = $("#common_cad_file_attach_pop");
     let commonConfirmPopup = $("#common_confirm_popup");
+    let commonAlertPopup = $("#common_alert_popup");
     let commonCadFileAttachGridId = "common_cad_file_attach_grid";
     let commonCadFileAttachObj;
     let $commonCadFileAttachGrid;
@@ -1214,4 +1240,9 @@
         }
         $("#btnEstimateListSearch").trigger('click');
     }
+
+    $('[name=commonAlertYesBtn]').unbind().click(function (e) {
+        e.stopPropagation();
+        commonAlertPopup.hide();
+    });
 </script>

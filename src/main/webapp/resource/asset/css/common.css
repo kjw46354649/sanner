@@ -121,6 +121,7 @@ option { font-size: 12px; }
 /* btn */
 .defaultBtn~.defaultBtn { }
 .defaultBtn { height: 27px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; display: inline-block; text-align: center; padding: 0 20px; border: 1px solid #e5e5e5; box-sizing: border-box; }
+.defaultBtn.btn-100w { display: inline-block; overflow: hidden; width: 100px; height: 25px; margin: 0 5px; padding: 0 4px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
 .defaultBtn.btn-120w { display: inline-block; overflow: hidden; width: 120px; height: 27px; margin: 0 5px; padding: 0 10px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
 
 
@@ -329,6 +330,7 @@ table.boardList .txtP{color: #7030a0;}
 
 .mg-top10{margin-top: 10px !important}
 .mg-top15{margin-top: 15px !important}
+.mg-top17{margin-top: 17px !important}
 .mg-top20{margin-top: 20px !important}
 .mg-top25{margin-top: 25px !important}
 .mg-top30{margin-top: 30px !important}
@@ -368,9 +370,9 @@ table.boardList .txtP{color: #7030a0;}
 .popup_container { z-index: 1050; position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 .popup_container:before { content: 'modal_bg'; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; opacity: .5; text-indent: -999em; font-size: 0; }
 .layerPopup { position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; background: #fff; width: 1012px; height: 800px; border: 1px solid #ababab; padding: 20px; box-sizing: border-box; }
-.layerPopup hr { display:block; border: 1px solid #e0e2e6; margin-top: 10px; margin-bottom: 7px; }
+.layerPopup hr { display:block; border: 1px solid #e0e2e6; margin: 7px; }
 .layerPopup h3 { font-size: 20px; font-family: 'NotoKrB'; color: #000; display: inline-block; }
-.layerPopup h5 { font-size: 16px; font-family: 'NotoKrB'; color: #000; margin-bottom: 10px; }
+.layerPopup h5 { font-size: 16px; font-family: 'NotoKrB'; color: #000; margin-bottom: 7px; }
 .layerPopup .pop_close { width: 23px; height: 23px; position: absolute; top: 12px; right: 12px; font-size: 0; background: url(../images/common/btn_popup.png)no-repeat 0 0; }
 .layerPopup .buttonWrap { font-size: 0; display: inline-block; }
 .layerPopup .buttonWrap button.popupBtn { border: 1px solid #808080; padding: 5px 10px; text-align: center; display: inline-block; font-size: 1.2rem; margin: 4px 2px; cursor: pointer; }
@@ -426,3 +428,5 @@ table.boardList .txtP{color: #7030a0;}
 .purpleFileImageICon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/file_icon_purple.png)no-repeat 0 0; }
 /** cam file TEST **/
 .greenFileImageICon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/file_icon_green.png)no-repeat 0 0; }
+.desktopIcon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/ico_desktop.png)no-repeat 0 0; }
+.eyeIcon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/ico_eye.png)no-repeat 0 0; }

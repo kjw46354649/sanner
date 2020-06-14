@@ -187,7 +187,7 @@
             CONCAT(D.CLOSE_VER, '차') AS CLOSE_VER, <!-- 차수 -->
             CONCAT(CAST(SUM(C.ORDER_QTY) AS CHAR), '건') AS ORDER_QTY, <!-- 건수 -->
             SUM(B.UNIT_FINAL_AMT) * SUM(C.ORDER_QTY) AS TOTAL_AMT, <!-- 공급가 -->
-            SUM(E.CLOSE_CONTROL_AMT) AS CLOSE_CONTROL_AMT <!-- 마감 금액 -->
+            SUM(E.FINAL_NEGO_AMT) AS FINAL_NEGO_AMT <!-- 마감 금액 -->
         FROM
             TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
@@ -218,10 +218,11 @@
             SF_GET_COMP_NM(ORDER_COMP_CD) AS ORDER_COMP_NM, <!-- 발주처 -->
             CLOSE_MONTH, <!-- 마감 월 -->
             DATE_FORMAT(STR_TO_DATE(CLOSE_MONTH, '%Y%m'), '%Y.%m월' ) AS CLOSE_MONTH_TRAN, <!-- 마감 월 -->
-            CONCAT(CLOSE_VER, '차') AS CLOSE_VER, <!-- 차수 -->
+            CLOSE_VER, <!-- 차수 -->
+            CONCAT(CLOSE_VER, '차') AS CLOSE_VER_TRAN, <!-- 차수 -->
             CONCAT(CAST(SUM(ORDER_QTY) AS CHAR), '건') AS ORDER_QTY, <!-- 건수 -->
             SUM(TOTAL_AMT) AS TOTAL_AMT, <!-- 공급가 -->
-            SUM(CLOSE_CONTROL_AMT) AS CLOSE_CONTROL_AMT <!-- 마감 금액 -->
+            SUM(FINAL_NEGO_AMT) AS FINAL_NEGO_AMT <!-- 마감 금액 -->
         FROM (
             SELECT
                 A.COMP_CD,
@@ -230,7 +231,7 @@
                 D.CLOSE_VER,
                 SUM(C.ORDER_QTY) AS ORDER_QTY,
                 SUM(B.UNIT_FINAL_AMT) * SUM(C.ORDER_QTY) AS TOTAL_AMT,
-                SUM(E.CLOSE_CONTROL_AMT) AS CLOSE_CONTROL_AMT
+                SUM(E.FINAL_NEGO_AMT) AS FINAL_NEGO_AMT
             FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
@@ -258,7 +259,7 @@
                 #{CLOSE_VER},
                 SUM(C.ORDER_QTY) AS ORDER_QTY,
                 SUM(B.UNIT_FINAL_AMT) * SUM(C.ORDER_QTY) AS TOTAL_AMT,
-                SUM(B.UNIT_FINAL_AMT) * SUM(C.ORDER_QTY) AS CLOSE_CONTROL_AMT
+                SUM(B.UNIT_FINAL_AMT) * SUM(C.ORDER_QTY) AS FINAL_NEGO_AMT
             FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                 INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = B.CONTROL_SEQ
@@ -374,6 +375,17 @@
         FROM DUAL
         WHERE #{WORK_TYPE} <![CDATA[ <> ]]> 'WTP050'
     </insert>
+
+    <update id="updateMonthCloseFinalNego" parameterType="java.util.HashMap">
+        UPDATE TBL_MONTH_CLOSE
+        SET
+            FINAL_NEGO_AMT = #{FINAL_NEGO_AMT}
+        WHERE
+            COMP_CD = #{COMP_CD}
+            AND CLOSE_MONTH = #{CLOSE_MONTH}
+            AND ORDER_COMP_CD = #{ORDER_COMP_CD}
+            AND CLOSE_VER = #{CLOSE_VER}
+    </update>
 
     <insert id="createControlMaster" parameterType="java.util.HashMap" >
         INSERT IGNORE INTO TBL_CONTROL (
@@ -1178,7 +1190,8 @@
 
     <select id="selectSalesClosingHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ROW_NUMBER () OVER () AS ROW_NUM,
+            1 AS GROUP_KEY,
+            ROW_NUMBER () OVER (ORDER BY A.COMP_CD, D.CLOSE_MONTH, D.CLOSE_VER, A.ORDER_COMP_CD) AS ROW_NUM,
             A.COMP_CD,
             SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM,
             SUBSTR(D.CLOSE_MONTH, 1, 4) AS YEAR,
@@ -1235,7 +1248,9 @@
 
     <select id="selectMonthSaleStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-           ROW_NUMBER () OVER () AS ROW_NUM, Z.YYYY, Z.COMP_CD, SF_GET_COMP_NM(Z.COMP_CD) AS COMP_NM, Z.ORDER_COMP_CD, SF_GET_COMP_NM(Z.ORDER_COMP_CD) AS ORDER_COMP_NM,
+            1 AS GROUP_KEY, ROW_NUMBER () OVER (ORDER BY Z.YYYY, Z.COMP_CD, Z.ORDER_COMP_CD, Z.STATUS_TYPE) AS ROW_NUM,
+            Z.YYYY, Z.COMP_CD, SF_GET_COMP_NM(Z.COMP_CD) AS COMP_NM,
+            Z.ORDER_COMP_CD, SF_GET_COMP_NM(Z.ORDER_COMP_CD) AS ORDER_COMP_NM,
            CASE
                WHEN STATUS_TYPE = '1' THEN '입금'
                ELSE '매출'
@@ -1289,6 +1304,7 @@
            WHERE F.YYYY = #{MONTH_SALE_YEAR}
         ) Z
         GROUP BY Z.YYYY, Z.COMP_CD, Z.ORDER_COMP_CD, Z.STATUS_TYPE
+        ORDER BY Z.YYYY, Z.COMP_CD, Z.ORDER_COMP_CD, Z.STATUS_TYPE
     </select>
 
     <insert id="insertControlBarcode" parameterType="java.util.HashMap" >
@@ -1389,7 +1405,7 @@
             AND B.WORK_TYPE NOT IN ('WTP050') <!-- Part 부속은 제외(작업형태 파트가공) -->
             AND NOT EXISTS (SELECT * FROM TBL_INVOICE WHERE INVOICE_NUM = #{INVOICE_NUM})
         UNION ALL
-            SELECT
+        SELECT
             ROW_NUMBER () OVER () AS ROW_NUM,
             A.CONTROL_SEQ,
             B.CONTROL_DETAIL_SEQ,
@@ -1472,6 +1488,7 @@
 
     <select id="moneyReceiveStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
+            1 AS GROUP_KEY,
             ROW_NUMBER() OVER(ORDER BY Z.COMP_CD, Z.ORDER_COMP_CD) AS ROW_NUM,
             Z.COMP_CD, (SELECT A.COMP_NM FORM FROM jmes.TBL_COMPANY A WHERE A.COMP_CD = Z.COMP_CD) AS COMP_CD_NM,
             Z.ORDER_COMP_CD, (SELECT A.COMP_NM FORM FROM jmes.TBL_COMPANY A WHERE A.COMP_CD = Z.ORDER_COMP_CD) AS ORDER_COMP_NM,
@@ -1928,4 +1945,5 @@
           AND B.CONTROL_SEQ = #{CONTROL_SEQ}
           AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </insert>
+
 </mapper>
