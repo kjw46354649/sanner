@@ -345,16 +345,17 @@
                 drop: function (evt, ui) {
                     let Drag = ui.helper.data('Drag');
                     let uiDrag = Drag.getUI();
-                    let equipSeq = $('#MCT_NC1_PLAN_FORM > #EQUIP_SEQ').val();
+                    let $grid = $(this.element.context);
+                    let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
                     uiDrag.rowData.EQUIP_SEQ = equipSeq;
+                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $grid.pqGrid('option', 'dataModel.data').length;
+                    $grid.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
 
-                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $processPlanGrid1.pqGrid('option', 'dataModel.data').length;
-                    $processPlanGrid1.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
-
-                    changeSortNum(this, $processPlanGrid1);
+                    changeSortNum(this, $grid);
                 }
             },
             complete: function () {
+                console.group('complete 1');
                 let data = this.options.dataModel.data;
                 let totalRecords = data.length;
                 let tableElement = this.element.closest('.table');
@@ -365,27 +366,38 @@
                     showTitle(data, tableElement);
                     changeFooter(data, tableElement);
                 }
+                console.groupEnd();
             },
             rowSelect: function (event, ui) {
                 selectedGrid = $(this.element.context);
                 selectedRowIndex = ui.addList[0].rowIndx;
             },
+            // 그리드 내 순서 변경했을 때
             moveNode: function (event, ui) {
+                console.group('move node1');
                 changeSortNum(this, $(this.element.context));
+                console.groupEnd();
             },
+            // 셀 데이터를 변경했을 때
             cellSave: function (evt, ui) {
+                console.group('cellSave');
                 if (ui.oldVal === undefined && ui.newVal === null) {
                     $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                 }
+                console.groupEnd();
             },
             change: function (event, ui) {
-
-                if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
+                console.group('change 1');
+                console.log(ui.source);
+                console.groupEnd();
+                if (ui.source === 'update' || ui.source === 'edit' || ui.source === 'delete' || ui.source === 'deleteNodes') {
                     modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                    refreshTargetGrid();
+                    setTimeout(function () {
+                        refreshTargetGrid();
+                    }, 1000);
                 }
 
-                if (ui.source === 'delete' || ui.source === 'deleteNodes') {
+                if (ui.source === 'add' || ui.source === 'delete' || ui.source === 'deleteNodes') {
                     changeSortNum(this, $(this.element.context));
                 }
             }
@@ -417,9 +429,22 @@
             },
             dropModel: {
                 on: true,
-                accept: '.dnd1, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .dnd9, .dnd10, .dnd11, .master'
+                accept: '.dnd1, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .dnd9, .dnd10, .dnd11, .master',
+                drop: function (evt, ui) {
+                    let Drag = ui.helper.data('Drag');
+                    let uiDrag = Drag.getUI();
+                    let $grid = $(this.element.context);
+                    let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
+                    uiDrag.rowData.EQUIP_SEQ = equipSeq;
+                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $grid.pqGrid('option', 'dataModel.data').length;
+                    $grid.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
+
+                    changeSortNum(this, $grid);
+                }
             },
             complete: function () {
+                console.group('complete 2');
+                console.groupEnd();
                 let data = this.options.dataModel.data;
                 let totalRecords = data.length;
                 let tableElement = this.element.closest('.table');
@@ -436,18 +461,25 @@
                 selectedRowIndex = ui.addList[0].rowIndx;
             },
             moveNode: function (event, ui) {
+                console.group('move node2');
+                console.groupEnd();
                 changeSortNum(this, $(this.element.context));
             },
             cellSave: function (evt, ui) {
+                console.group('cellSave 2');
                 if (ui.oldVal === undefined && ui.newVal === null) {
                     $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                 }
+                console.groupEnd();
             },
             change: function (event, ui) {
-
-                if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
+                console.group('change 2');
+                console.groupEnd();
+                if (ui.source === 'add' || ui.source === 'edit' || ui.source === 'delete' || ui.source === 'deleteNodes') {
                     modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                    refreshTargetGrid();
+                    setTimeout(function () {
+                        refreshTargetGrid();
+                    }, 1000);
                 }
 
                 if (ui.source === 'delete' || ui.source === 'deleteNodes') {
@@ -483,7 +515,18 @@
             },
             dropModel: {
                 on: true,
-                accept: '.dnd1, .dnd2, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .dnd9, .dnd10, .dnd11, .master'
+                accept: '.dnd1, .dnd2, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .dnd9, .dnd10, .dnd11, .master',
+                drop: function (evt, ui) {
+                    let Drag = ui.helper.data('Drag');
+                    let uiDrag = Drag.getUI();
+                    let $grid = $(this.element.context);
+                    let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
+                    uiDrag.rowData.EQUIP_SEQ = equipSeq;
+                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $grid.pqGrid('option', 'dataModel.data').length;
+                    $grid.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
+
+                    changeSortNum(this, $grid);
+                }
             },
             complete: function () {
                 let data = this.options.dataModel.data;
@@ -511,9 +554,11 @@
             },
             change: function (event, ui) {
 
-                if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
+                if (ui.source === 'add' || ui.source === 'edit' || ui.source === 'delete' || ui.source === 'deleteNodes') {
                     modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                    refreshTargetGrid();
+                    setTimeout(function () {
+                        refreshTargetGrid();
+                    }, 1000);
                 }
 
                 if (ui.source === 'delete' || ui.source === 'deleteNodes') {
@@ -549,7 +594,18 @@
             },
             dropModel: {
                 on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .dnd5, .dnd6, .dnd7, .dnd8, .dnd9, .dnd10, .dnd11, .master'
+                accept: '.dnd1, .dnd2, .dnd3, .dnd5, .dnd6, .dnd7, .dnd8, .dnd9, .dnd10, .dnd11, .master',
+                drop: function (evt, ui) {
+                    let Drag = ui.helper.data('Drag');
+                    let uiDrag = Drag.getUI();
+                    let $grid = $(this.element.context);
+                    let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
+                    uiDrag.rowData.EQUIP_SEQ = equipSeq;
+                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $grid.pqGrid('option', 'dataModel.data').length;
+                    $grid.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
+
+                    changeSortNum(this, $grid);
+                }
             },
             complete: function () {
                 let data = this.options.dataModel.data;
@@ -577,9 +633,11 @@
             },
             change: function (event, ui) {
 
-                if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
+                if (ui.source === 'add' || ui.source === 'edit' || ui.source === 'delete' || ui.source === 'deleteNodes') {
                     modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                    refreshTargetGrid();
+                    setTimeout(function () {
+                        refreshTargetGrid();
+                    }, 1000);
                 }
 
                 if (ui.source === 'delete' || ui.source === 'deleteNodes') {
@@ -615,7 +673,18 @@
             },
             dropModel: {
                 on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd6, .dnd7, .dnd8, .dnd9, .dnd10, .dnd11, .master'
+                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd6, .dnd7, .dnd8, .dnd9, .dnd10, .dnd11, .master',
+                drop: function (evt, ui) {
+                    let Drag = ui.helper.data('Drag');
+                    let uiDrag = Drag.getUI();
+                    let $grid = $(this.element.context);
+                    let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
+                    uiDrag.rowData.EQUIP_SEQ = equipSeq;
+                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $grid.pqGrid('option', 'dataModel.data').length;
+                    $grid.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
+
+                    changeSortNum(this, $grid);
+                }
             },
             complete: function () {
                 let data = this.options.dataModel.data;
@@ -643,9 +712,11 @@
             },
             change: function (event, ui) {
 
-                if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
+                if (ui.source === 'add' || ui.source === 'edit' || ui.source === 'delete' || ui.source === 'deleteNodes') {
                     modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                    refreshTargetGrid();
+                    setTimeout(function () {
+                        refreshTargetGrid();
+                    }, 1000);
                 }
 
                 if (ui.source === 'delete' || ui.source === 'deleteNodes') {
@@ -681,7 +752,18 @@
             },
             dropModel: {
                 on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd7, .dnd8, .dnd9, .dnd10, .dnd11, .master'
+                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd7, .dnd8, .dnd9, .dnd10, .dnd11, .master',
+                drop: function (evt, ui) {
+                    let Drag = ui.helper.data('Drag');
+                    let uiDrag = Drag.getUI();
+                    let $grid = $(this.element.context);
+                    let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
+                    uiDrag.rowData.EQUIP_SEQ = equipSeq;
+                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $grid.pqGrid('option', 'dataModel.data').length;
+                    $grid.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
+
+                    changeSortNum(this, $grid);
+                }
             },
             complete: function () {
                 let data = this.options.dataModel.data;
@@ -709,9 +791,11 @@
             },
             change: function (event, ui) {
 
-                if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
+                if (ui.source === 'add' || ui.source === 'edit' || ui.source === 'delete' || ui.source === 'deleteNodes') {
                     modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                    refreshTargetGrid();
+                    setTimeout(function () {
+                        refreshTargetGrid();
+                    }, 1000);
                 }
 
                 if (ui.source === 'delete' || ui.source === 'deleteNodes') {
@@ -720,7 +804,6 @@
             }
         };
         const processPlanObj7 = {
-            width: 1000,
             height: '100%',
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
@@ -748,7 +831,18 @@
             },
             dropModel: {
                 on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd8, .dnd9, .dnd10, .dnd11, .master'
+                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd8, .dnd9, .dnd10, .dnd11, .master',
+                drop: function (evt, ui) {
+                    let Drag = ui.helper.data('Drag');
+                    let uiDrag = Drag.getUI();
+                    let $grid = $(this.element.context);
+                    let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
+                    uiDrag.rowData.EQUIP_SEQ = equipSeq;
+                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $grid.pqGrid('option', 'dataModel.data').length;
+                    $grid.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
+
+                    changeSortNum(this, $grid);
+                }
             },
             complete: function () {
                 let data = this.options.dataModel.data;
@@ -776,9 +870,11 @@
             },
             change: function (event, ui) {
 
-                if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
+                if (ui.source === 'add' || ui.source === 'edit' || ui.source === 'delete' || ui.source === 'deleteNodes') {
                     modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                    refreshTargetGrid();
+                    setTimeout(function () {
+                        refreshTargetGrid();
+                    }, 1000);
                 }
 
                 if (ui.source === 'delete' || ui.source === 'deleteNodes') {
@@ -814,7 +910,18 @@
             },
             dropModel: {
                 on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd9, .dnd10, .master'
+                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd9, .dnd10, .master',
+                drop: function (evt, ui) {
+                    let Drag = ui.helper.data('Drag');
+                    let uiDrag = Drag.getUI();
+                    let $grid = $(this.element.context);
+                    let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
+                    uiDrag.rowData.EQUIP_SEQ = equipSeq;
+                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $grid.pqGrid('option', 'dataModel.data').length;
+                    $grid.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
+
+                    changeSortNum(this, $grid);
+                }
             },
             complete: function () {
                 let data = this.options.dataModel.data;
@@ -842,9 +949,11 @@
             },
             change: function (event, ui) {
 
-                if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
+                if (ui.source === 'add' || ui.source === 'edit' || ui.source === 'delete' || ui.source === 'deleteNodes') {
                     modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                    refreshTargetGrid();
+                    setTimeout(function () {
+                        refreshTargetGrid();
+                    }, 1000);
                 }
 
                 if (ui.source === 'delete' || ui.source === 'deleteNodes') {
@@ -880,7 +989,18 @@
             },
             dropModel: {
                 on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .dnd10, .dnd11, .master'
+                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .dnd10, .dnd11, .master',
+                drop: function (evt, ui) {
+                    let Drag = ui.helper.data('Drag');
+                    let uiDrag = Drag.getUI();
+                    let $grid = $(this.element.context);
+                    let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
+                    uiDrag.rowData.EQUIP_SEQ = equipSeq;
+                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $grid.pqGrid('option', 'dataModel.data').length;
+                    $grid.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
+
+                    changeSortNum(this, $grid);
+                }
             },
             complete: function () {
                 let data = this.options.dataModel.data;
@@ -908,9 +1028,11 @@
             },
             change: function (event, ui) {
 
-                if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
+                if (ui.source === 'add' || ui.source === 'edit' || ui.source === 'delete' || ui.source === 'deleteNodes') {
                     modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                    refreshTargetGrid();
+                    setTimeout(function () {
+                        refreshTargetGrid();
+                    }, 1000);
                 }
 
                 if (ui.source === 'delete' || ui.source === 'deleteNodes') {
@@ -946,7 +1068,18 @@
             },
             dropModel: {
                 on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .dnd9, .dnd11, .master'
+                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .dnd9, .dnd11, .master',
+                drop: function (evt, ui) {
+                    let Drag = ui.helper.data('Drag');
+                    let uiDrag = Drag.getUI();
+                    let $grid = $(this.element.context);
+                    let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
+                    uiDrag.rowData.EQUIP_SEQ = equipSeq;
+                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $grid.pqGrid('option', 'dataModel.data').length;
+                    $grid.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
+
+                    changeSortNum(this, $grid);
+                }
             },
             complete: function () {
                 let data = this.options.dataModel.data;
@@ -974,9 +1107,11 @@
             },
             change: function (event, ui) {
 
-                if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
+                if (ui.source === 'add' || ui.source === 'edit' || ui.source === 'delete' || ui.source === 'deleteNodes') {
                     modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                    refreshTargetGrid();
+                    setTimeout(function () {
+                        refreshTargetGrid();
+                    }, 1000);
                 }
 
                 if (ui.source === 'delete' || ui.source === 'deleteNodes') {
@@ -1012,7 +1147,18 @@
             },
             dropModel: {
                 on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .dnd9, .dnd10, .master'
+                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .dnd9, .dnd10, .master',
+                drop: function (evt, ui) {
+                    let Drag = ui.helper.data('Drag');
+                    let uiDrag = Drag.getUI();
+                    let $grid = $(this.element.context);
+                    let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
+                    uiDrag.rowData.EQUIP_SEQ = equipSeq;
+                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $grid.pqGrid('option', 'dataModel.data').length;
+                    $grid.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
+
+                    changeSortNum(this, $grid);
+                }
             },
             complete: function () {
                 let data = this.options.dataModel.data;
@@ -1039,10 +1185,11 @@
                 }
             },
             change: function (event, ui) {
-
-                if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
+                if (ui.source === 'add' || ui.source === 'edit' || ui.source === 'delete' || ui.source === 'deleteNodes') {
                     modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                    refreshTargetGrid();
+                    setTimeout(function () {
+                        refreshTargetGrid();
+                    }, 1000);
                 }
 
                 if (ui.source === 'delete' || ui.source === 'deleteNodes') {
@@ -1367,8 +1514,13 @@
                 if (ui.oldVal === undefined && ui.newVal === null) {
                     $processTargetGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                 } else {
+                    //TODO: 트랜잭션 하나로
                     changeMctPlanFromTarget(ui);
+                    //updateMctPlanFromTarget
                     fnModifyPQGrid($processTargetGrid, [], ['machine.updateMctTarget']);
+                    setTimeout(function () {
+                        refreshMctPlanGrids();
+                    }, 1000);
                 }
             }
         };
@@ -1377,7 +1529,6 @@
         const modifyPQGrid = function (grid, insertQueryList, updateQueryList, deleteQueryList) {
             let parameters;
             let gridInstance = grid.pqGrid('getInstance').grid;
-            
             //추가 또는 수정된 값이 있으면 true
             if (gridInstance.isDirty()) {
                 let changes = gridInstance.getChanges({format: 'byVal'});
@@ -1576,62 +1727,6 @@
             totalRecordsElement.html(totalRecords);
             totalPartUnitQuantityElement.html(totalPartUnitQuantity);
             totalWorkingTimeElement.html(totalWorkingTime);
-        };
-
-        const createPQGrid = function (gridId, postData) {
-            let obj = {
-                height: '100%',
-                collapsible: false,
-                postRenderInterval: -1, //call postRender synchronously.
-                resizable: false,
-                showTitle: false,
-                numberCell: {title: 'No.'},
-                selectionModel: {type: 'row', mode: 'single'},
-                // scrollModel: {autoFit: true},
-                trackModel: {on: true},
-                columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
-                colModel: processPlanColModel,
-                strNoRows: g_noData,
-                dataModel: {
-                    location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                    postData: postData, recIndx: 'ROWNUM',
-                    getData: function (dataJSON) {
-                        return {data: dataJSON.data};
-                    }
-                },
-                complete: function () {
-                    let data = this.options.dataModel.data;
-                    let totalRecords = data.length;
-                    let tableElement = this.element.closest('.table');
-
-                    changeTitleColor(data, tableElement);
-
-                    if (totalRecords) {
-                        showTitle(data, tableElement);
-                        changeFooter(data, tableElement);
-                    }
-                },
-                moveNode: function (event, ui) {
-                    changeSortNum(this, $(this.element.context));
-                },
-                cellSave: function (evt, ui) {
-                    if (ui.oldVal === undefined && ui.newVal === null) {
-                        $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
-                    }
-                },
-                change: function (event, ui) {
-                    
-                    if (ui.source === 'edit' || ui.source === 'update' || ui.source === 'delete' || ui.source === 'deleteNodes') {
-                        modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                        refreshTargetGrid();
-                    }
-
-                    if (ui.source === 'delete' || ui.source === 'deleteNodes') {
-                        changeSortNum(this, $(this.element.context));
-                    }
-                }
-            };
-            return $('#' + gridId).pqGrid(obj);
         };
         /* 함수 */
 

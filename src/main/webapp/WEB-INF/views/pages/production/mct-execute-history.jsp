@@ -246,11 +246,11 @@
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ'},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ'},
-            {title: '납기', dataType: 'string', dataIndx: 'INNER_DUE_DT'},
+            {title: '납기', minWidth: 15, width: 40, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
             {title: '출고', dataType: 'string', dataIndx: 'CNFRH'},
-            {title: '긴<br>급', dataType: 'string', dataIndx: 'EMERGENCY_YN'},
-            {title: '주<br>요', dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
-            {title: '형<br>태', dataType: 'string', dataIndx: 'WORK_NM'},
+            {title: '긴<br>급', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN'},
+            {title: '주<br>요', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
+            {title: '형<br>태', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'WORK_NM'},
             {title: '', dataType: 'string', dataIndx: 'CONTROL_NUM_BUTTON'},
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {title: 'Part', dataType: 'integer', dataIndx: 'CONTROL_PART_NUM'},
@@ -258,72 +258,209 @@
             {title: '소재종류<br>상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
             {title: '수량', dataType: 'integer', dataIndx: 'ORDER_QTY'},
             {title: '규격', dataType: 'string', dataIndx: 'STANDARD_SIZE'},
-            {title: '소재 Size', dataType: 'string', dataIndx: 'MATERIAL_SIZE'},
+            {title: '소재 Size', dataType: 'string', dataIndx: 'MATERAIL_ORDER_SIZE'},
             {
-                title: 'NC Actual', align: 'center', colModel: [
-                    {
-                        title: 'Seq1', align: 'center', colModel: [
-                            {title: 'Seq1', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
-                            {title: 'Seq1', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
-                        ]
+                title: 'NC Actual', align: 'center', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, colModel: [
+                    {title: 'Seq.1', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_1', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let status = ui.rowData.STATUS_1;
+                            let backgroundColor = colorClassification(status);
+
+                            // if (status) {
+                            //     $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                            // }
+
+                            if (cellData) {
+                                $processTargetGrid.pqGrid('addClass', { rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+
+                                let index = EQUIP_LIST.findIndex(function (element) {
+                                    return element.value === Number(cellData);
+                                });
+                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
+                            }
+                        }
                     },
-                    {
-                        title: 'Seq2', align: 'center', colModel: [
-                            {title: 'Seq2', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
-                            {title: 'Seq2', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
-                        ]
+                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_1', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let status = ui.rowData.STATUS_1;
+                            let backgroundColor = colorClassification(status);
+
+                            /*if (status) {
+                                return $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+                            }*/
+
+                            if (cellData) {
+                                $processTargetGrid.pqGrid('addClass', {
+                                    rowIndx: ui.rowIndx,
+                                    dataIndx: ui.dataIndx,
+                                    cls: backgroundColor
+                                });
+
+                                return cellData + '분';
+                            }
+                        }
                     },
-                    {
-                        title: 'Seq3', align: 'center', colModel: [
-                            {title: 'Seq3', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
-                            {title: 'Seq3', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
-                        ]
+                    {title: '', datatype: 'string', dataIndx: 'STATUS_1', hidden: true},
+                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_1', hidden: true},
+                    {title: 'Seq.2', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_2', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let status = ui.rowData.STATUS_2;
+                            let backgroundColor = colorClassification(status);
+
+                            if (cellData) {
+                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+
+                                let index = EQUIP_LIST.findIndex(function (element) {
+                                    return element.value === Number(cellData);
+                                });
+                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
+                            }
+                        }
                     },
-                    {
-                        title: 'Seq4', align: 'center', colModel: [
-                            {title: 'Seq4', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
-                            {title: 'Seq4', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
-                        ]
+                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_2', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let status = ui.rowData.STATUS_2;
+                            let backgroundColor = colorClassification(status);
+
+                            if (cellData) {
+                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+
+                                return cellData + '분';
+                            }
+                        }
                     },
-                    {title: 'TOTAL', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
-                    {title: '단위소요', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY'}
+                    {title: '', datatype: 'string', dataIndx: 'STATUS_2', hidden: true},
+                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_2', hidden: true},
+                    {title: 'Seq.3', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_3', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let status = ui.rowData.STATUS_3;
+                            let backgroundColor = colorClassification(status);
+
+                            if (cellData) {
+                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+
+                                let index = EQUIP_LIST.findIndex(function (element) {
+                                    return element.value === Number(cellData);
+                                });
+                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
+                            }
+                        }
+                    },
+                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_3', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let status = ui.rowData.STATUS_3;
+                            let backgroundColor = colorClassification(status);
+
+                            if (cellData) {
+                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+
+                                return cellData + '분';
+                            }
+                        }
+                    },
+                    {title: '', datatype: 'string', dataIndx: 'STATUS_3', hidden: true},
+                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_3', hidden: true},
+                    {title: 'Seq.4', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_4', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let status = ui.rowData.STATUS_4;
+                            let backgroundColor = colorClassification(status);
+
+                            if (cellData) {
+                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+
+                                let index = EQUIP_LIST.findIndex(function (element) {
+                                    return element.value === Number(cellData);
+                                });
+                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
+                            }
+                        }
+                    },
+                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_4', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let status = ui.rowData.STATUS_4;
+                            let backgroundColor = colorClassification(status);
+
+                            if (cellData) {
+                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+
+                                return cellData + '분';
+                            }
+                        }
+                    },
+                    {title: '', datatype: 'string', dataIndx: 'STATUS_4', hidden: true},
+                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_4', hidden: true},
+                    {title: 'TOTAL', datatype: 'integer', dataIndx: 'MCT_WORK_TIME'},
+                    {title: '단위소요', datatype: 'integer', dataIndx: 'UNIT_LEAD_TIME'}
                 ]
             },
             {
                 title: '가공진행 현황', align: 'center', colModel: [
-                    {title: 'NC', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY'},
-                    {title: '밀링', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
-                    {title: '선반', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
-                    {title: '연마', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
+                    {title: 'NC', datatype: 'string', dataIndx: 'PROCESS_PROGRESS_NC'},
+                    {title: '밀링', datatype: 'string', dataIndx: 'PROCESS_PROGRESS_MILLING'},
+                    {title: '선반', datatype: 'string', dataIndx: 'PROCESS_PROGRESS_RACK'},
+                    {title: '연마', datatype: 'string', dataIndx: 'PROCESS_PROGRESS_GRINDING'},
                 ]
             },
-            {title: '총<br>가공시간', dataType: 'integer', dataIndx: 'PART_STATUS_NM'},
+            {title: '총<br>가공시간', dataType: 'integer', dataIndx: 'MCT_WORK_TIME'},
             {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM'},
             {title: '현재위치', dataType: 'string', dataIndx: 'POP_POSITION'},
             {title: '작업<br>구분', dataType: 'string', dataIndx: 'MCT_WORK_TYPE_NM'},
             {
                 title: 'CAM 작업 실적', align: 'center', colModel: [
-                    {title: 'Step', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
-                    {title: '가공위치', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY'},
-                    {title: '작업내용', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY'},
-                    {title: '작업자', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY'},
-                    {title: '파일', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY'},
-                    {title: '비고', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY'},
-                    {title: 'Update', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY'},
+                    {title: 'step', minWidth: 30, width: 35, datatype: 'integer', dataIndx: 'CAM_STEP'},
+                    {title: '가공위치', minWidth: 30, width: 50, datatype: 'string', dataIndx: 'WORK_DIRECTION'},
+                    {title: '작업내용', minWidth: 30, width: 80, datatype: 'string', dataIndx: 'WORK_DESC'},
+                    {title: '작업자', minWidth: 30, width: 100, datatype: 'string', dataIndx: 'WORK_USER_ID'},
+                    {title: '파일', minWidth: 30, width: 60, datatype: 'string', dataIndx: '',
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            let iconFiles = '';
+                            if(rowData.CAM_FILE_SEQ) iconFiles += '<span id="downloadCAMFIle" class="greenFileImageICon" style="cursor: pointer; margin-left:3px;"></span>&nbsp;&nbsp;';
+                            if(rowData.NC_FILE_SEQ) iconFiles += '<span id="downloadNCFile" class="purpleFileImageICon" style="cursor: pointer; margin-left:25px;"></span>';
+                            return iconFiles;
+                        },
+                        postRender: function (ui) {
+                            let grid = this;
+                            let $cell = grid.getCell(ui);
+                            let rowData = ui.rowData;
+
+                            $cell.find('#downloadCAMFIle').bind('click', function(e) {
+                                console.log(rowData.CAM_FILE_SEQ);
+                                e.preventDefault();
+                                fnSingleFileDownloadFormPageAction(rowData.CAM_FILE_SEQ);
+                            });
+                            $cell.find('#downloadNCFile').bind('click', function(e) {
+                                console.log(rowData.NC_FILE_SEQ);
+                                e.preventDefault();
+                                fnSingleFileDownloadFormPageAction(rowData.NC_FILE_SEQ);
+                            });
+                        }
+                    },
+                    {title: '비고',  minWidth: 100, width: 150, datatype: 'string', dataIndx: 'NOTE'},
+                    {title: '업데이트', minWidth: 75, width: 75, datatype: 'string', dataIndx: 'CAM_FINISH_DT'}
                 ]
             },
-            {title: '이전위치', dataType: 'string', dataIndx: 'POP_PREV_POSITION'},
-            {title: '가공<br>확정 일시', dataType: 'string', dataIndx: 'SATAUS_DT'},
-            {title: '소재입고<br>일시', dataType: 'string', dataIndx: 'MATERIAL_INNER_DT'},
-            {title: '비고 기록사항', dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
+            {title: '이전<br>위치', minWidth: 70, width: 70, dataType: 'string', dataIndx: 'POP_PREV_POSITION'},
+            {title: '가공<br>확정 일시', minWidth: 75, width: 75, dataType: 'string', dataIndx: 'SATAUS_DT'},
+            {title: '소재입고<br>일시', minWidth: 75, width: 75, dataType: 'string', dataIndx: 'MATERIAL_RECEIPT_DT'},
+            {title: '비고 기록사항', minWidth: 100, width: 150, dataType: 'string', dataIndx: 'MATERIAL_DETAIL'}, //TODO: 확인필요
             {
                 title: '품질현황', align: 'center', colModel: [
-                    {title: 'Seq', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY'},
-                    {title: '판정', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY'},
-                    {title: '불량Code', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY'},
-                    {title: '원인', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY'},
-                    {title: '조치방안', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY'},
-                    {title: '작성일자', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY'}
+                    {title: 'Seq.', minWidth: 30, width: 35, datatype: 'integer', dataIndx: 'INSPECT_STEP'},
+                    {title: '판정', minWidth: 30, width: 35, datatype: 'string', dataIndx: 'INSPECT_GRADE'},
+                    {title: '불량코드', minWidth: 30, width: 70, datatype: 'string', dataIndx: 'INSPECT_RESULT'},
+                    {title: '불량수량', minWidth: 20, width: 55, datatype: 'string', dataIndx: 'ERROR_QTY'},
+                    {title: '불량원인', minWidth: 30, width: 70, datatype: 'string', dataIndx: 'ERROR_REASON'},
+                    {title: '조치방안', minWidth: 30, width: 70, datatype: 'string', dataIndx: 'ERROR_NOTE'},
+                    {title: '작성일자', minWidth: 75, width: 75, datatype: 'string', dataIndx: 'INSPECT_DT'}
                 ]
             }
         ];
@@ -353,10 +490,10 @@
         tab2PostData.YEAR = YEAR;
         const tab2ColModel = [
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
-            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ'},
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ'},
+            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'MCT<br>공장 구분', dataType: 'string', dataIndx: 'FACTORY_AREA'},
-            {title: 'NC명', dataType: 'string', dataIndx: 'NCMONG'},
+            {title: 'NC명', dataType: 'string', dataIndx: 'EQUIP_NM'},
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {title: 'Part', dataType: 'integer', dataIndx: 'CONTROL_PART_NUM'},
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM'},
@@ -402,6 +539,28 @@
         };
         /* variable */
 
+        /* function */
+        const colorClassification = function (status) {
+            let backgroundColor = '';
+            switch (status) {
+                case '가동중':
+                    backgroundColor = 'bg-green';
+                    break;
+                case '완료':
+                    backgroundColor = 'bg-light_blue';
+                    break;
+                case '비가동상태':
+                    backgroundColor = 'bg-yellow';
+                    break;
+                case '일시정지상태':
+                    backgroundColor = 'bg-orange';
+                    break;
+            }
+            return backgroundColor;
+        };
+        /* function */
+
+
         /* event */
         $('#CAM_WORK_HISTORY_SEARCH').on('click', function () {
             $camWorkHistoryGrid.pqGrid('option', 'dataModel.postData', function (ui) {
@@ -412,7 +571,7 @@
 
         $('#NC_PERFORMANCE_HISTORY_SEARCH').on('click', function () {
             $ncPerformanceHistoryGrid.pqGrid('option', 'dataModel.postData', function (ui) {
-                return fnFormToJsonArrayData('#MONTH_OUTSIDE_STATUS_SEARCH_FORM');
+                return fnFormToJsonArrayData('#NC_PERFORMANCE_HISTORY_SEARCH_FORM');
             });
             $ncPerformanceHistoryGrid.pqGrid('refreshDataAndView');
         });

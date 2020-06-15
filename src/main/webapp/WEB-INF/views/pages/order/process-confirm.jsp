@@ -15,7 +15,7 @@
 <div class="page process_confirm">
     <div class="toolWrap">
         <span class="barCode"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="CONFIRM_ORDER_BARCODE_IMG" style="height: 32px;"></span>
-        <span class="barCodeTxt"><input type="text" class="wd_270_barcode" name="CONFIRM_ORDER_BARCODE_NUM" id="CONFIRM_ORDER_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요"></span>
+        <span class="barCodeTxt"><input type="text" class="wd_270_barcode" name="CONFIRM_ORDER_BARCODE_NUM" id="CONFIRM_ORDER_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요" style="ime-mode:disable;"></span>
         <div class="right_float">
             <span class="refresh mg-left10"><button type="button" id="PROCESS_CONFIRM_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
             <button type="button" class="defaultBtn btn-100w" id="PROCESS_CONFIRM_DETAIL">상세정보 조회</button>
@@ -200,7 +200,7 @@
             {
                 title: '', width: 90, dataType: 'string', dataIndx: 'PROCESS_CONFIRM_BUTTON',
                 render: function (ui) {
-                    return '<button class="miniBtn" name="PROCESS_CONFIRM_BUTTON">가공확정</button>';
+                    return '<button class="miniBtn green" name="PROCESS_CONFIRM_BUTTON">가공확정</button>';
                 },
                 postRender: function (ui) {
                     let grid = this;
@@ -214,7 +214,7 @@
             },
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', width: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '관리번호', Width: 120, dataType: 'string', dataIndx: 'CONTROL_NUM'},
+            {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {
                 title: 'Part', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM',
                 render: function (ui) {
@@ -421,12 +421,12 @@
             {title: 'CONTROL_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'CONTROL_PROGRESS_SEQ', hidden: true},
             {title: 'PART_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true},
             {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true},
-            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STAUS', hidden: true},
-            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STAUS_NM'},
+            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', hidden: true},
+            {title: '진행상태', width: 90, dataType: 'string', dataIndx: 'PART_STATUS_NM'},
             {
                 title: '', width: 90, dataType: 'string', dataIndx: 'CONFIRM_CANCEL_BUTTON',
                 render: function (ui) {
-                    return '<button class="miniBtn" name="CONFIRM_CANCEL_BUTTON">확정취소</button>';
+                    return '<button class="miniBtn red" name="CONFIRM_CANCEL_BUTTON">확정취소</button>';
                 },
                 postRender: function (ui) {
                     let grid = this;
@@ -440,7 +440,7 @@
             },
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', width: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '관리번호',width: 120, dataType: 'string', dataIndx: 'CONTROL_NUM'},
+            {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {title: 'Part', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY',
                 render: function (ui) {
@@ -642,13 +642,13 @@
             {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM'},
+            {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {title: 'Part', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM'},
             {
                 title: '외주발송', align: 'center', colModel: [
                     {title: '업체명', datatype: 'string', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
                     {title: '업체명', datatype: 'string', dataIndx: 'OUTSIDE_COMP_NM'},
-                    {title: '일시', datatype: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT', hidden: true},
+                    {title: '일시', datatype: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
                 ]
             },
             {title: '자재<br>사급', width: 20, dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
@@ -828,7 +828,7 @@
             {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', width: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '관리번호', minWidth: 100, dataType: 'string', dataIndx: 'CONTROL_NUM'},
+            {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {title: 'Part', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY',
                 render: function (ui) {
@@ -851,7 +851,7 @@
                         return (index < 0) ? cellData : workFactory[index].text;
                     }
                 }},
-            {title: '자재<br>사급', minWidth: 20, width: 20, dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
+            {title: '자재<br>사급', width: 20, dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -979,7 +979,6 @@
                 }
             },
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'ORDER_QTY'},
-            {title: '가공완료<br>일시', dataType: 'string', dataIndx: ''},
             {title: '가공완료<br>일시', dataType: 'string', dataIndx: ''},
             {title: '진행상태', dataType: 'string', dataIndx: ''},
             {title: '검사<br>실적', dataType: 'string', dataIndx: ''}

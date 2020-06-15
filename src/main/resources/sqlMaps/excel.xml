@@ -184,10 +184,7 @@
         INNER JOIN TBL_INVOICE_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ
                                            AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
         WHERE
-            1 = 1
-            AND A.CONTROL_SEQ IN (${CONTROL_SEQ_STR})
-            AND A.COMP_CD = #{COMP_CD}
-            AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+            D.INVOICE_NUM = #{INVOICE_NUM}
             AND B.WORK_TYPE NOT IN ('WTP050')
     </select>
 

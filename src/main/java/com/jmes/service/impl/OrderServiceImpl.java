@@ -58,20 +58,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Map<String, Object>> selectControlCloseRightList(Map<String, Object> map) throws Exception {
-        String jsonObject = (String) map.get("data");
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, Object> jsonMap = null;
-
-        if (jsonObject != null)
-            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
-
-        ArrayList<HashMap<String, Object>> list = (ArrayList<HashMap<String, Object>>) jsonMap.get("list");
-
-        return this.orderDao.selectControlCloseRightList(jsonMap);
-    }
-
-    @Override
     public void createMonthFinishClose(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
