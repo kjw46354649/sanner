@@ -8,7 +8,7 @@
                   A.EQUIP_SEQ
                 , A.EQUIP_ID
                 , A.PHOTO_GFILE_SEQ
-                , jmes.SF_GET_FILE_ORGINAL_NM(A.PHOTO_GFILE_SEQ, NULL) as PHOTO_GFILE_SEQ_NM
+                , jmes.SF_GET_FILE_ORGINAL_NM(A.PHOTO_GFILE_SEQ, '1') as PHOTO_GFILE_SEQ_NM
                 , A.EQUIP_NM
                 , jmes.SF_GET_CODE_NM('1010', A.PROCESS_TYPE, 'KR') AS PROCESS_TYPE_NM
                 , jmes.SF_GET_CODE_NM('1012', A.EQUIP_TYPE, 'KR') AS EQUIP_TYPE_NM
@@ -83,7 +83,7 @@
             , jmes.SF_GET_DATE_F(A.PURCHASE_DT,'YYYY','') AS PURCHASE_DT
             , A.RESELLER_CD
             , A.ETC_GFILE_SEQ
-            , jmes.SF_GET_FILE_ORGINAL_NM(A.ETC_GFILE_SEQ, NULL) as ETC_GFILE_SEQ_NM
+            , jmes.SF_GET_FILE_ORGINAL_NM(A.ETC_GFILE_SEQ, '1') as ETC_GFILE_SEQ_NM
             , A.NOTE
             , A.MODEL_NUM, A.SERIAL_NUM
         FROM jmes.TBL_EQUIP A

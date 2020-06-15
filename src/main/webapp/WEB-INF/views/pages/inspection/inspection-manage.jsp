@@ -292,11 +292,11 @@
             {title: 'MCT_WORK_SEQ', dataType: 'string', dataIndx: 'MCT_WORK_SEQ', hidden:true},
             {title: 'INSPECT_TYPE', dataType: 'string', dataIndx: 'INSPECT_TYPE', hidden:true},
             {title: 'INSPECT_GRADE', dataType: 'string', dataIndx: 'INSPECT_GRADE', hidden:true},
-            {title: '가공완료 일시', dataType: 'string', dataIndx: 'WORK_FINISH_DT', minWidth: 150, width: 150, editable: false},
+            {title: '가공완료 일시', dataType: 'string', dataIndx: 'WORK_FINISH_DT', minWidth: 80, width: 80, editable: false},
             {title: '납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', minWidth: 95, width: 95, editable: false},
-            {title: '현재위치', dataType: 'string', dataIndx: 'POP_NM', minWidth: 150, width: 150, editable: false},
+            {title: '현재위치', dataType: 'string', dataIndx: 'POP_NM', minWidth: 80, width: 80, editable: false},
             {title: '외주가공', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', minWidth: 150, width: 150, editable: false},
-            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', minWidth: 150, width: 150, editable: false},
+            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', minWidth: 80, width: 80, editable: false},
             // {title: '카ㄴㅇㄹ드', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 40, minWidth: 40, editable: false,
             //     render: function (ui) {
             //         let rowIndx = ui.rowIndx, grid = this;
@@ -304,10 +304,10 @@
             //         return '';
             //     }
             // },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 200, width: 200, editable: false},
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 180, width: 180, editable: false},
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 40, width: 40, editable: false},
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 200, width: 200, editable: false},
-            {title: '', align: 'center', dataType: 'string', dataIndx: 'DETAIL_INFO', width: 40, minWidth: 40, editable: false,
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 180, width: 180, editable: false},
+            {title: '', align: 'center', dataType: 'string', dataIndx: 'DETAIL_INFO', width: 30, minWidth: 30, editable: false,
                 render: function (ui) {
                     let rowIndx = ui.rowIndx, grid = this;
                     if (ui.rowData['CONTROL_SEQ'] > 0) return "<span class=\"ui-icon ui-icon-circle-zoomin\"></span>";
@@ -317,15 +317,15 @@
             // {title: 'MATERIAL_DETAIL', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden:true},
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 120, width: 120, editable: false},
             // {title: 'WORK_TYPE', dataType: 'string', dataIndx: 'WORK_TYPE', hidden:true},
-            {title: '작업형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM', minWidth: 120, width: 120, editable: false},
+            {title: '작업형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM', minWidth: 80, width: 80, editable: false},
             // {title: 'MATERIAL_TYPE', dataType: 'string', dataIndx: 'MATERIAL_TYPE', hidden:true},
             {title: '소재분류', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', minWidth: 120, width: 120, editable: false},
             {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 120, width: 120, editable: false},
             {
                 title: '최근 MCT 실적', datatype: 'string', align: 'center', colModel: [
-                    {title: '날짜', datatype: 'string', dataIndx: 'MCT_WORK_DT', minWidth: 120, width: 120, editable: false},
-                    {title: '작업자', datatype: 'string', dataIndx: 'WORK_USER_NM', minWidth: 100, width: 100, editable: false},
+                    {title: '날짜', datatype: 'string', dataIndx: 'MCT_WORK_DT', minWidth: 80, width: 80, editable: false},
+                    {title: '작업자', datatype: 'string', dataIndx: 'WORK_USER_NM', minWidth: 80, width: 80, editable: false},
                     {title: 'NC No.', datatype: 'string', dataIndx: 'EQUIP_NM', minWidth: 120, width: 120, editable: false},
                     {title: '비고', datatype: 'string', dataIndx: 'CAM_NOTE', minWidth: 300, width: 300, editable: false}
                 ]
@@ -334,11 +334,11 @@
             {
                 title: '최근 품질 실적', datatype: 'string', align: 'center', colModel: [
                     {title: 'seq', datatype: 'string', dataIndx: 'Q_SEQ', minWidth: 40, width: 40, editable: false},
-                    {title: '담당관', datatype: 'string', dataIndx: 'Q_INSPECT_USER_NM', minWidth: 100, width: 100, editable: false},
-                    {title: '측정방법', datatype: 'string', dataIndx: 'Q_INSPECT_METHOD_NM', minWidth: 120, width: 120, editable: false},
-                    {title: '등급', datatype: 'string', dataIndx: 'Q_INSPECT_GRADE_NM', minWidth: 80, width: 80, editable: false},
+                    {title: '담당관', datatype: 'string', dataIndx: 'Q_INSPECT_USER_NM', minWidth: 80, width: 80, editable: false},
+                    {title: '측정방법', datatype: 'string', dataIndx: 'Q_INSPECT_METHOD_NM', minWidth: 100, width: 100, editable: false},
+                    {title: '등급', datatype: 'string', dataIndx: 'Q_INSPECT_GRADE_NM', minWidth: 60, width: 60, editable: false},
                     {title: '합/불', datatype: 'string', dataIndx: 'Q_INSPECT_GRADE_NOTE', minWidth: 80, width: 80, editable: false},
-                    {title: '수량', datatype: 'string', dataIndx: 'Q_ERROR_QTY', minWidth: 80, width: 80, editable: false},
+                    {title: '수량', datatype: 'string', dataIndx: 'Q_ERROR_QTY', minWidth: 60, width: 60, editable: false},
                     {title: '반품일시', datatype: 'string', dataIndx: 'Q_RETURN_DT', minWidth: 120, width: 120, editable: false},
                     {title: '검사코드', datatype: 'string', dataIndx: 'Q_INSPECT_RESULT_NM', minWidth: 120, width: 120, editable: false},
                     {title: '상세내용 및 비고', datatype: 'string', dataIndx: 'Q_INSPECT_DESC', minWidth: 300, width: 300, editable: false},
@@ -346,15 +346,15 @@
                     {title: '원인', datatype: 'string', dataIndx: 'Q_ERROR_REASON_NM', minWidth: 120, width: 120, editable: false},
                     {title: '조치', datatype: 'string', dataIndx: 'Q_ERROR_ACTION_NM', minWidth: 80, width: 80, editable: false},
                     {title: '조치방안', datatype: 'string', dataIndx: 'Q_ERROR_NOTE', minWidth: 120, width: 120, editable: false},
-                    {title: '작성일자', datatype: 'string', dataIndx: 'Q_DT', minWidth: 120, width: 120, editable: false},
-                    {title: '', align: 'center', dataType: 'string', dataIndx: 'CONTROL_SEQ_INSERT', width: 100, minWidth: 100, editable: false,
+                    {title: '작성일자', datatype: 'string', dataIndx: 'Q_DT', minWidth: 80, width: 80, editable: false},
+                    {title: '', align: 'center', dataType: 'string', dataIndx: 'CONTROL_SEQ_INSERT', width: 80, minWidth: 80, editable: false,
                         render: function (ui) {
                             let rowIndx = ui.rowIndx, grid = this;
                             if (ui.rowData['CONTROL_SEQ'] > 0) return "<button type=\"button\" class=\"miniBtn black\">결과등록</button>";
                             return '';
                         }
                     },
-                    {title: '', align: 'center', dataType: 'string', dataIndx: 'CONTROL_SEQ_DELETE', width: 100, minWidth: 100, editable: false,
+                    {title: '', align: 'center', dataType: 'string', dataIndx: 'CONTROL_SEQ_DELETE', width: 80, minWidth: 80, editable: false,
                         render: function (ui) {
                             let rowIndx = ui.rowIndx, grid = this;
                             console.log(ui.rowData['INSPECT_SEQ']);

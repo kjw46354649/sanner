@@ -1488,17 +1488,19 @@
                 //         barcodeList.push(data.list[i].BARCODE_NUM);
                 //     }
                 // }, parameter, '');
+                if (e.keyCode == 13) {
+                  let formData = new Array();
+                  formData[0] = this.value;
+                  fnBarcodePrint(function(data, callFunctionParam){
+                      alert(data.message);
+                     $("#OUTGOING_BARCODE_NUM").val("");
+                  }, formData, '');
+                }
 
-                let formData = new Array();
-                formData[0] = this.value;
-                fnBarcodePrint(function(data, callFunctionParam){
-                    alert(data.message);
-                    $("#OUTGOING_BARCODE_NUM").val("");
-                }, formData, '');
 
             }else{
                 alert("바코드 종류를 선택해주십시오.");
-                $("#OUTGOING_BARCODE_NUM").val("");
+                // $("#OUTGOING_BARCODE_NUM").val("");
             }
 
 

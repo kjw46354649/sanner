@@ -45,8 +45,14 @@ public class FileUploadServiceImpl implements FileUploadService {
         System.out.println(hashMap);
         System.out.println(hashMap.get("GFILE_SEQ"));
         System.out.println("".equals(String.valueOf(hashMap.get("GFILE_SEQ"))));
+        System.out.println(String.valueOf(hashMap.get("GFILE_SEQ")));
         System.out.println("#########################################");
-        String fileSeq = (String) hashMap.get("GFILE_SEQ");
+        //String fileSeq = (String) hashMap.get("GFILE_SEQ");
+        String fileSeq = String.valueOf(hashMap.get("GFILE_SEQ"));
+        if(fileSeq == null || "null".equals(fileSeq)){
+            fileSeq = "";
+        }
+        System.out.println("fileSeq=="+fileSeq);
 
         if(itr.hasNext()) {
 
@@ -69,10 +75,12 @@ public class FileUploadServiceImpl implements FileUploadService {
                 fileMap.put("FILE_EXT", extName);
                 fileMap.put("FILE_SIZE", multipartFile.getSize());
 
-                if(!fileSeq.equals("")) {
+                //if(!fileSeq.equals("")) {
+                if(!"".equals(fileSeq)) {
                     fileMap.put("GFILE_SEQ", fileSeq);
                 }else {
-                    if ("".equals(String.valueOf(hashMap.get("GFILE_SEQ")))) {
+                    //if ("".equals(String.valueOf(hashMap.get("GFILE_SEQ")))) {
+                      if("".equals(fileSeq)) {
                         fileMap.put("GFILE_SEQ", "");                   // GFILE 신규 등록
                         fileMap.put("queryId", "common.insertFileGroup");
                         innodaleDao.update(fileMap);

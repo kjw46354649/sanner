@@ -234,9 +234,10 @@
                                 <th scope="row">첨부파일</th>
                                 <td colspan="3">
                                     <input type="hidden" id="ETC_GFILE_SEQ" name="ETC_GFILE_SEQ" value="">
-                                    <input type="text" id="ETC_GFILE_SEQ_NM" name="ETC_GFILE_SEQ_NM" placeholder="첨부파일" readonly style="width:75%;">
-                                    <input type="button" id="compnay_etc_attach_file" name="compnay_etc_attach_file" value="fileUpload" class="smallBtn blue">
-
+                                    <input type="text" id="ETC_GFILE_SEQ_NM" name="ETC_GFILE_SEQ_NM" placeholder="첨부파일" readonly style="width:71%;">
+<%--                                    <input type="button" id="compnay_etc_attach_file" name="compnay_etc_attach_file" value="fileUpload" class="miniBtn blue">--%>
+                                    <button type="button" class="miniBtn blue" id="compnay_etc_attach_file" name="compnay_etc_attach_file">업로드</button>
+                                    <button type="button" class="miniBtn orange" id="compnay_etc_attach_file_download" name="compnay_etc_attach_file_download">다운로드</button>
                                 </td>
                             </tr>
 
@@ -1272,6 +1273,11 @@
             companyLogoFile.unbind().change(function () {
                 var input = $(this);
                 var files = input.get(0).files;
+                console.log("------------ file ---------------------");
+                console.log(input);
+                console.log(files);
+                console.log(files.length);
+
                 if (files.length > 0) {
                     let formData = new FormData();
                     for (var i = 0; i < files.length; i++) formData.append("file" + i, files[i]);
@@ -1303,6 +1309,14 @@
             });
         });
 
+        $("#company_master_register_form").find("#compnay_etc_attach_file_download").on('click', function () {
+            let ETC_GFILE_SEQ = $("#company_master_register_form").find("#ETC_GFILE_SEQ").val();
+            if(ETC_GFILE_SEQ == ""){
+                alert("저장된 파일이 없습니다.");
+            }else{
+                fnFileDownloadFormPageAction(ETC_GFILE_SEQ);
+            }
+        });
         $('#company_master_register_form').find('#system-company-pop-close, #system-company-pop-close2').on('click', function () {
             $('#system_company_popup').modal('hide');
         });
