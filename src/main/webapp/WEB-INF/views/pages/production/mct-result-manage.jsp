@@ -220,7 +220,6 @@
 
     $(function () {
         'use strict';
-
         const EQUIP_LIST = (function () {
             let list = [];
             let parameters = ({'url':'/json-list', 'data': {'queryId': 'dataSource.getEquipList'}});
@@ -234,8 +233,6 @@
             }, parameters, '');
             return list;
         })();
-
-
         machineResultManagecolModel = [
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
@@ -305,12 +302,13 @@
                             let cellData = ui.cellData;
                             let status = ui.rowData.STATUS_1;
                             let backgroundColor = colorClassification(status);
+
                             if (status) {
                                 $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
                             }
                             if (cellData) {
                                 let index = EQUIP_LIST.findIndex(function (element) {
-                                    return element.value === cellData;
+                                    return element.value === Number(cellData);
                                 });
                                 return (index < 0) ? cellData : EQUIP_LIST[index].text;
                             }
@@ -324,7 +322,6 @@
                             if (status) {
                                 return $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
                             }
-
                             if (ui.cellData) {
                                 return ui.cellData + '분';
                             }
@@ -341,10 +338,9 @@
                             if (status) {
                                 $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
                             }
-
                             if (cellData) {
                                 let index = EQUIP_LIST.findIndex(function (element) {
-                                    return element.value === cellData;
+                                    return element.value === Number(cellData);
                                 });
                                 return (index < 0) ? cellData : EQUIP_LIST[index].text;
                             }
@@ -376,7 +372,7 @@
                             }
                             if (cellData) {
                                 let index = EQUIP_LIST.findIndex(function (element) {
-                                    return element.value === cellData;
+                                    return element.value === Number(cellData);
                                 });
                                 return (index < 0) ? cellData : EQUIP_LIST[index].text;
                             }
@@ -406,7 +402,7 @@
                             }
                             if (cellData) {
                                 let index = EQUIP_LIST.findIndex(function (element) {
-                                    return element.value === cellData;
+                                    return element.value === Number(cellData);
                                 });
                                 return (index < 0) ? cellData : EQUIP_LIST[index].text;
                             }

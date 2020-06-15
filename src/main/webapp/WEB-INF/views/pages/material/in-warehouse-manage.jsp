@@ -7,81 +7,77 @@
 --%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
-<div class="modal popup" id="in_warehouse_manage_warehouse_popup" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header topWrap">
-                <div class="hWrap">
-                    <h2>위치정보 관리</h2>
+<div class="popup_container" id="in_warehouse_manage_warehouse_popup" style="display: none;">
+    <div class="layerPopup" style="height: fit-content; width: 700px;">
+        <h3>위치정보관리</h3>
+        <button type="button" class="pop_close mg-top10 mg-right8" data-dismiss="modal">닫기</button>
+        <form class="form-inline" role="form" id="in_warehouse_manage_warehouse_popup_form" name="in_warehouse_manage_warehouse_popup_form">
+            <input type="hidden" id="queryId" name="queryId" value="material.selectInWarehouseManageWarehouseList">
+            <div class="t_area">
+                <div class="t_h">
+                    <span class="list_t" style="width: 194px;">창고명</span>
+                    <span style="width: 292px;">
+                        <select name="WAREHOUSE_CD" id="WAREHOUSE_CD">
+                            <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                            <c:forEach var="code" items="${HighCode.H_1049}">
+                                <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                            </c:forEach>
+                        </select>
+                    </span>
                 </div>
             </div>
-            <div class="topWrap">
-                <form class="form-inline" role="form" id="in_warehouse_manage_warehouse_popup_form" name="in_warehouse_manage_warehouse_popup_form">
-                    <input type="hidden" id="queryId" name="queryId" value="material.selectInWarehouseManageWarehouseList">
-                    <input type="hidden" id="WAREHOUSE_CD" name="WAREHOUSE_CD" value="">
-                    <div class="panel-body line_tit portlet-body form bg-light">
-                        <!-- grid table -->
-                        <section class="bg-light">
-                            <div class="panel panel-default">
-                                <div class="tableWrap">
-                                    <div class="gridWrap">
-                                        <div class="hWrap">
-                                            <button type="button" class="search_btn" id="btnItemOrderRegisterSearch">검색</button>
-                                        </div>
-                                        <div id="in_warehouse_manage_warehouse_grid" class="jqx-refresh"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                </form>
+            <div class="h_area mg-bottom10">
+
             </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
+            <h2>&nbsp;</h2>
+            <div class="tableWrap">
+                <div id="in_warehouse_manage_warehouse_grid" class="jqx-refresh"></div>
+            </div>
+            <div class="btnWrap">
+                <button type="button" class="defaultBtn greenPopGra" id="btnInWarehouseManageWarehouseSave">저장</button>
+                <button type="button" class="defaultBtn grayPopGra" data-dismiss="modal">닫기</button>
+            </div>
+        </form>
     </div>
 </div>
+
 <div class="popup_container" id="in_warehouse_manage_out_popup" style="display: none;">
     <div class="layerPopup" style="height: fit-content;">
-        <h3 style="margin-bottom: 10px;">소재 불출 진행</h3>
-        <button type="button" class="pop_close">닫기</button>
-        <br/>
+        <h3>소재 주문</h3>
+        <button type="button" class="pop_close mg-top10 mg-right8" data-dismiss="modal">닫기</button>
         <form class="form-inline" role="form" id="in_warehouse_manage_out_popup_form" name="in_warehouse_manage_out_popup_form">
             <input type="hidden" id="queryId" name="queryId" value="insertInWarehouseManageOutPop"/>
             <input type="hidden" id="MY_MAT_STOCK_SEQ" name="MY_MAT_STOCK_SEQ"/>
             <div class="tableWrap">
-                <table>
-                    <tbody>
-                        <tr class="outTopTableStyle">
-                            <th rowspan="2">창고명</th><th rowspan="2">위치</th>
-                            <th rowspan="2">형태</th><th rowspan="2">소재종류</th>
-                            <th colspan="5">소재 Size</th><th rowspan="2">보유수량</th>
+                <div class="h_area mg-bottom10">
+
+                </div>
+                <div class="list1">
+                    <table class="rowStyle">
+                        <tbody>
+                        <tr>
+                            <th>창고명</th><th>위치</th>
+                            <th>형태</th><th>소재종류</th>
+                            <th>소재 Size</th><th>보유수량</th>
                         </tr>
-                        <tr class="outTopTableStyle">
-                            <th>가로</th><th>세로</th><th>두께</th>
-                            <th>파이</th><th>길이(L)</th>
-                        </tr>
-                        <tr class="outTopTableStyle">
+                        <tr>
                             <td><input type="text" id="WAREHOUSE_NM" name="WAREHOUSE_NM" readonly></td>
                             <td><input type="text" id="LOC_NM" name="LOC_NM" readonly></td>
                             <td><input type="text" id="MATERIAL_KIND_NM" name="MATERIAL_KIND_NM" readonly></td>
                             <td><input type="text" id="MATERIAL_DETAIL_NM" name="MATERIAL_DETAIL_NM" readonly></td>
-                            <td><input type="text" id="SIZE_W" name="SIZE_W" readonly></td>
-                            <td><input type="text" id="SIZE_H" name="SIZE_H" readonly></td>
-                            <td><input type="text" id="SIZE_T" name="SIZE_T" readonly></td>
-                            <td><input type="text" id="SIZE_D" name="SIZE_D" readonly></td>
-                            <td><input type="text" id="SIZE_L" name="SIZE_L" readonly></td>
+                            <td><input type="text" id="SIZE_TXT" name="SIZE_TXT" readonly></td>
                             <td><input type="text" id="STOCK_QTY" name="STOCK_QTY" readonly></td>
                         </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <br/>
-            <div class="tableWrap">
-                <table>
+            <h2>&nbsp;</h2>
+            <div class="list1">
+                <table class="rowStyle">
                     <tbody>
-                        <tr class="outMidTableStyle"><th>보유수량</th><th>남은수량</th><th>불출수량</th><th>요청자</th></tr>
-                        <tr class="outMidTableStyle">
+                        <tr><th style="width: 279px;">보유수량</th><th style="width: 280px;">남은수량</th><th style="width: 280px;">불출수량</th><th>요청자</th></tr>
+                        <tr>
                             <td><input type="text" id="STOCK_QTY" name="STOCK_QTY" readonly></td>
                             <td><input type="text" id="REMAIN_QTY" name="REMAIN_QTY" readonly></td>
                             <td><input type="text" id="OUT_QTY" name="OUT_QTY"></td>
@@ -92,18 +88,21 @@
                         </tr>
                     </tbody>
                 </table>
-                </br>
-                <table>
-                    <tr class="outBotTableStyle">
-                        <th>용도</th>
-                        <td><input id="NOTE" name="NOTE" type="text" style='width: 100%;'></td>
-                    </tr>
-                </table>
             </div>
-            <%--<p> 불출 하시겠습니까?</p>--%>
-            <div class="popBtnWrap">
-                <button type="button" class="defaultBtn radius green" id="btnInWarehouseManageOutPopSave">저장</button>
-                <button type="button" class="defaultBtn radius" id="btnInWarehouseManageOutPopCancel">취소</button>
+            <h2>&nbsp;</h2>
+            <div class="list1">
+                <div class="t_area">
+                    <div class="t_h">
+                        <span class="list_t" style="width: 289px;">용도</span>
+                        <span style="width: 580px;">
+                            <input id="NOTE" name="NOTE" type="text">
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="btnWrap">
+                <button type="button" class="defaultBtn greenPopGra" id="btnInWarehouseManageOutPopSave">저장</button>
+                <button type="button" class="defaultBtn grayPopGra" data-dismiss="modal">닫기</button>
             </div>
         </form>
     </div>
@@ -111,49 +110,48 @@
 
 <div class="popup_container" id="in_warehouse_manage_scan_barcode_popup" style="display: none;">
     <div class="layerPopup" style="height: fit-content;">
-        <h3 style="margin-bottom: 10px;">소재 불출 진행</h3>
-        <button type="button" class="pop_close">닫기</button>
-        <br/>
+        <h3>소재 불출 진행</h3>
+        <button type="button" class="pop_close mg-top10 mg-right8" data-dismiss="modal">닫기</button>
         <form class="form-inline" role="form" id="in_warehouse_manage_scan_barcode_popup_form" name="in_warehouse_manage_out_popup_form">
             <input type="hidden" id="queryId" name="queryId" value="material.selectInWarehousePop"/>
             <input type="hidden" id="TYPE" name="TYPE" value=""/>
             <input type="hidden" id="MY_MAT_OUT_SEQ" name="MY_MAT_OUT_SEQ"/>
             <input type="hidden" id="BARCODE_NUM" name="BARCODE_NUM"/>
             <div class="tableWrap">
-                <span class="barCode"><img id="barCodeImg" src="/resource/asset/images/common/img_barcode_long.png" alt="바코드"></span>
-                <span class="barCodeTxt ipu_wrap"><input type="text" name="popBarcode" id="popBarcode" value="" readonly></span>
-                <br/>
-                <table>
-                    <tr class="outBotTableStyle">
-                        <th>관리번호</th>
-                        <td><input id="CONTROL_NUM" name="CONTROL_NUM" type="text" style='width: 100%;'></td>
-                    </tr>
-                </table>
+                <div class="h_area mg-bottom10">
+                    <span class="buttonWrap" id="inspect_method_btn">
+                        <span style="height: 30px;float: left;">&nbsp;</span>
+                    </span>
+                    <ul class="listWrap right_float">
+                        <span class="barCode"><img id="barCodeImg" src="/resource/asset/images/common/img_barcode_long.png" alt="바코드"></span>
+                        <span class="barCodeTxt"><input type="text" class="wd_270_barcode hg_30" name="inWarehouseManageBarcode" id="inWarehouseManageBarcode" value="" placeholder="도면의 바코드를 스캔해 주세요"></span>
+                    </ul>
+                </div>
+                <div class="t_area">
+                    <div class="t_h">
+                        <span class="list_t" style="width: 194px;">관리번호</span>
+                        <span style="width: 292px;">
+                            <input id="CONTROL_NUM" name="CONTROL_NUM" type="text">
+                        </span>
+                    </div>
+                </div>
             </div>
-            </br>
-            <div class="tableWrap">
-                <table id="inWarehouseManageScanPopDynamicTable">
+            <h2>&nbsp;</h2>
+            <div class="list1">
+                <table class="rowStyle" id="inWarehouseManageScanPopDynamicTable">
                     <tbody>
-                    <tr class="outTopTableStyle">
-                        <th rowspan="2">No.</th><th rowspan="2">형태</th>
-                        <th rowspan="2">소재종류</th><th colspan="5">불출대기 목록</th>
-                        <th rowspan="2">보유수량</th><th rowspan="2">요청수량</th>
-                        <th rowspan="2">창고</th><th rowspan="2">위치</th>
-                        <th rowspan="2">주문번호</th><th rowspan="2">요청일시</th>
+                    <tr class="">
+                        <th style="width: 30px;">No.</th><th style="width: 45px;">형태</th>
+                        <th style="width: 70px;">소재종류</th><th style="width: 80px;">규격</th>
+                        <th style="width: 45px">보유수량</th><th style="width: 45px">요청수량</th>
+                        <th style="width: 70px;">창고</th><th style="width: 70px;">위치</th>
+                        <th>주문번호</th><th>요청일시</th>
                     </tr>
-                    <tr class="outTopTableStyle">
-                        <th>가로</th><th>세로</th><th>두께</th>
-                        <th>파이</th><th>길이(L)</th>
-                    </tr>
-                    <tr class="outTopTableStyle" id="dynamicTableTr">
+                    <tr class="" id="dynamicTableTr">
                         <td><input type="text" id="SEQ" name="SEQ" readonly></td>
                         <td><input type="text" id="MATERIAL_KIND_NM" name="MATERIAL_KIND_NM" readonly></td>
                         <td><input type="text" id="MATERIAL_DETAIL_NM" name="MATERIAL_DETAIL_NM" readonly></td>
-                        <td><input type="text" id="SIZE_W" name="SIZE_W" readonly></td>
-                        <td><input type="text" id="SIZE_H" name="SIZE_H" readonly></td>
-                        <td><input type="text" id="SIZE_T" name="SIZE_T" readonly></td>
-                        <td><input type="text" id="SIZE_D" name="SIZE_D" readonly></td>
-                        <td><input type="text" id="SIZE_L" name="SIZE_L" readonly></td>
+                        <td><input type="text" id="SIZE_TXT" name="SIZE_TXT" readonly></td>
                         <td><input type="text" id="STOCK_QTY" name="STOCK_QTY" readonly></td>
                         <td><input type="text" id="OUT_QTY" name="OUT_QTY" readonly></td>
                         <td><input type="text" id="WAREHOUSE_NM" name="WAREHOUSE_NM" readonly></td>
@@ -164,11 +162,10 @@
                     </tbody>
                 </table>
             </div>
-            <br/>
-            <%--<p> 불출 하시겠습니까?</p>--%>
-            <div class="popBtnWrap">
-                <button type="button" class="defaultBtn radius green" id="btnInWarehouseManageScanPopSave">저장</button>
-                <button type="button" class="defaultBtn radius" id="btnInWarehouseManageScanPopCancel">취소</button>
+            <h2>&nbsp;</h2>
+            <div class="btnWrap">
+                <button type="button" class="defaultBtn greenPopGra" id="btnInWarehouseManageScanPopSave">저장</button>
+                <button type="button" class="defaultBtn grayPopGra" data-dismiss="modal">닫기</button>
             </div>
         </form>
     </div>
@@ -431,7 +428,7 @@
             {title: '입고', dataType: 'string', dataIndx: 'IN_QTY', minWidth: "3%" },
             {title: '불출요청', dataType: 'string', dataIndx: '', minWidth: "5%" ,
                 render: function(ui){
-                    return '<input type="button" id="inWarehouseOutPop" value="불출" style="width:70px;"/>';
+                    return '<button type="button" id="inWarehouseOutPop" class="miniBtn blue">불출</button>';
                 },
                 postRender: function (ui) {
                     let grid = this;
@@ -454,13 +451,14 @@
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM' ,},
             {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM' },
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM' },
-            {title: '불출대기 목록', align: "center", colModel: [
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 150 } ,
+            /*{title: '불출대기 목록', align: "center", colModel: [
                     {title: '가로', dataType: 'string', dataIndx: 'SIZE_W'},
                     {title: '세로', dataType: 'string', dataIndx: 'SIZE_H'},
                     {title: '두께(T)', dataType: 'string', dataIndx: 'SIZE_T'},
                     {title: '파이', dataType: 'string', dataIndx: 'SIZE_D'},
                     {title: '길이(L)', dataType: 'string', dataIndx: 'SIZE_L'},
-                ]},
+                ]},*/
             {title: '요청수량', dataType: 'string', dataIndx: 'OUT_QTY', width: 80 , editable: false} ,
             {title: '창고', dataType: 'string', dataIndx: 'WAREHOUSE_NM', width: 120, editable: false},
             {title: '위치', dataType: 'string', dataIndx: 'LOC_NM', width: 120, editable: false},
@@ -469,7 +467,7 @@
             {title: '요청자', dataType: 'string', dataIndx: 'OUT_USER_ID' , editable: false},
             {title: '수동 불출', dataType: 'string', dataIndx: 'MY_MAT_OUT_SEQ', editable: false,
                 render: function (ui) {
-                    return '<button id="inWarehouseManualOut" style="cursor: pointer">불출</button>'
+                    return '<button type="button" id="inWarehouseManualOut" class="miniBtn blue">불출</button>'
                 },
                 postRender: function (ui) {
                     let grid = this;
@@ -523,102 +521,6 @@
             {title: '업데이트 일시', dataType: 'date', dataIndx: 'UPDATE_DT', width: 120, editable: false},
             {title: '작성자', dataType: 'string', dataIndx: 'INSERT_ID', width: 120, editable: false}
         ];
-
-        let inWarehouseManageManageToolbar01 = {
-            items: [
-                {
-                    type: 'button', label: 'Add', icon: 'ui-icon-plus', style: 'float: left;', listener: {
-                        'click': function (evt, ui) {
-                            inWarehouseManageManageGrid01.pqGrid('addNodes', [{}], 0);
-                        }
-                    }
-                },
-                {
-                    type: 'button', label: 'Delete', icon: 'ui-icon-plus', style: 'float: left;', listener: {
-                        'click': function (evt, ui) {
-                            $("#in_warehouse_manage_hidden_form #queryId").val("material.deleteInWarehouseManage");
-                            let parameters = {'url': '/json-list', 'data': fnFormToJsonArrayData('#in_warehouse_manage_hidden_form')};
-
-                            fnPostAjax(function (data, callFunctionParam) {
-                                inWarehouseManageManageGrid01.pqGrid("refreshDataAndView");
-                            }, parameters, '');
-                        }
-                    }
-                },
-                {
-                    type: 'button', label: '소재불출(바코드)', style: 'float: left;', listener: {
-                        'click': function (evt, ui) {
-                        }
-                    }
-                },
-                {
-                    type: 'button', label: '위치 정보 관리', style: 'float: left;', listener: {
-                        'click': function (evt, ui) {
-                            $("#in_warehouse_manage_warehouse_popup").modal("show");
-                        }
-                    }
-                },
-                {
-                    type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {
-                            let inWarehouseManageInsertUpdateQueryList = ['material.insertUpdateInWarehouseManageMaster','material.insertUpdateInWarehouseManageDetail'];
-                            fnModifyPQGrid(inWarehouseManageManageGrid01, inWarehouseManageInsertUpdateQueryList, inWarehouseManageInsertUpdateQueryList);
-                        }
-                    }
-                },
-            ]
-        };
-        let inWarehouseManageManageToolbar02 = {
-            items: []
-        };
-
-        let inWarehouseManageOutToolbar = {
-            items: []
-        };
-        let inWarehouseManageWarehouseToolbar = {
-            items: [
-                {   type: 'select', cls:'inWarehouseManageWarehouseSelectBox', label: '창고명', style: 'float: left;', options: function() {
-                        let options = fnGetCommCodeGridToolbarSelectBox('1049');
-                        return options;
-
-                        let text = $(".inWarehouseManageWarehouseSelectBox option:selected").val();
-                        $("#in_warehouse_manage_warehouse_popup_form #WAREHOUSE_CD").val(text);
-                    },
-                    listener: {
-                        'change': function () {
-                            let text = $(".inWarehouseManageWarehouseSelectBox option:selected").val();
-                            $("#in_warehouse_manage_warehouse_popup_form #WAREHOUSE_CD").val(text);
-
-                            inWarehouseManageWarehousePopupGrid.pqGrid('option', "dataModel.postData", function (ui) {
-                                return (fnFormToJsonArrayData('#in_warehouse_manage_warehouse_popup_form'));
-                            });
-                            inWarehouseManageWarehousePopupGrid.pqGrid('refreshDataAndView');
-                        }
-                    }
-                },
-                {
-                    type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
-                        'click': function (evt, ui) {
-                            let inWarehouseManageInsertUpdateQueryList = ['insertUpdateInWarehouseManageWarehouse'];
-                            fnModifyPQGrid(inWarehouseManageWarehousePopupGrid, inWarehouseManageInsertUpdateQueryList, inWarehouseManageInsertUpdateQueryList);
-                        }
-                    }
-                },
-                {
-                    type: 'button', label: 'Add', icon: 'ui-icon-plus', style: 'float: left;', listener: {
-                        'click': function (evt, ui) {
-                            let WAREHOUSE_CD = $(".inWarehouseManageWarehouseSelectBox option:selected").val();
-                            let WAREHOUSE_NM = $(".inWarehouseManageWarehouseSelectBox option:selected").text();
-                            inWarehouseManageWarehousePopupGrid.pqGrid('addRow', {
-                                newRow: {WAREHOUSE_CD:WAREHOUSE_CD, WAREHOUSE_NM:WAREHOUSE_NM},
-                                rowIndx : 0,
-                                checkEditable: false
-                            });
-                        }
-                    }
-                }
-            ]
-        };
 
         inWarehouseManageManageGrid01.pqGrid({
             width: "100%", height: 438,
@@ -674,6 +576,11 @@
                 $("#in_warehouse_manage_hidden_form #LOC_SEQ").val(LOC_SEQ);
                 selectInWarehouseManageManageGrid02List();
                 //}
+            },
+            cellSave: function (evt, ui) {
+                if (ui.oldVal === undefined && ui.newVal === null) {
+                    inWarehouseManageManageGrid01.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                }
             }
         });
 
@@ -770,7 +677,7 @@
 
         $('#in_warehouse_manage_warehouse_popup').on('show.bs.modal',function() {
             inWarehouseManageWarehousePopupGrid.pqGrid({
-                width: "100%", height: 300,
+                width: "100%", height: 350,
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'LOC_SEQ',
                     url: "/paramQueryGridSelect",
@@ -789,7 +696,7 @@
                 resizable: false,
                 trackModel: {on: true},
                 colModel: inWarehouseManageWarehouseColModel,
-                toolbar: inWarehouseManageWarehouseToolbar,
+                //toolbar: inWarehouseManageWarehouseToolbar,
                 complete: function(event, ui) {
                     this.flex();
                     let data = inWarehouseManageWarehousePopupGrid.pqGrid('option', 'dataModel.data');
@@ -809,6 +716,8 @@
             $("#in_warehouse_manage_scan_barcode_popup_form #TYPE").val('');
             $("#in_warehouse_manage_scan_barcode_popup_form #MY_MAT_OUT_SEQ").val('');
             $("#in_warehouse_manage_scan_barcode_popup_form #BARCODE_NUM").val('');
+            $("#in_warehouse_manage_scan_barcode_popup_form #CONTROL_NUM").val('');
+            $("#in_warehouse_manage_scan_barcode_popup_form #inWarehouseManageBarcode").val('');
 
             $("#in_warehouse_manage_scan_barcode_popup_form").find('#dynamicTableTr').remove();
         });
@@ -836,11 +745,12 @@
                     html += '<td><input type="text" id="SEQ" name="SEQ" value="'+ list[i].SEQ +'" readonly></td>';
                     html += '<td><input type="text" id="MATERIAL_KIND_NM" name="MATERIAL_KIND_NM" value="'+ fnEmptyValReturn(list[i].MATERIAL_KIND_NM) +'" readonly></td>';
                     html += '<td><input type="text" id="MATERIAL_DETAIL_NM" name="MATERIAL_DETAIL_NM" value="'+ fnEmptyValReturn(list[i].MATERIAL_DETAIL_NM) +'" readonly></td>';
-                    html += '<td><input type="text" id="SIZE_W" name="SIZE_W" value="'+ fnEmptyValReturn(list[i].SIZE_W) +'" readonly></td>';
+                    /*html += '<td><input type="text" id="SIZE_W" name="SIZE_W" value="'+ fnEmptyValReturn(list[i].SIZE_W) +'" readonly></td>';
                     html += '<td><input type="text" id="SIZE_H" name="SIZE_H" value="'+ fnEmptyValReturn(list[i].SIZE_H) +'" readonly></td>';
                     html += '<td><input type="text" id="SIZE_T" name="SIZE_T" value="'+ fnEmptyValReturn(list[i].SIZE_T) +'" readonly></td>';
                     html += '<td><input type="text" id="SIZE_D" name="SIZE_D" value="'+ fnEmptyValReturn(list[i].SIZE_D) +'" readonly></td>';
-                    html += '<td><input type="text" id="SIZE_L" name="SIZE_L" value="'+ fnEmptyValReturn(list[i].SIZE_L) +'" readonly></td>';
+                    html += '<td><input type="text" id="SIZE_L" name="SIZE_L" value="'+ fnEmptyValReturn(list[i].SIZE_L) +'" readonly></td>';*/
+                    html += '<td><input type="text" id="SIZE_TXT" name="SIZE_TXT" value="'+ fnEmptyValReturn(list[i].SIZE_TXT) +'" readonly></td>';
                     html += '<td><input type="text" id="STOCK_QTY" name="STOCK_QTY" value="'+ fnEmptyValReturn(list[i].STOCK_QTY) +'" readonly></td>';
                     html += '<td><input type="text" id="OUT_QTY" name="OUT_QTY" value="'+ fnEmptyValReturn(list[i].OUT_QTY) +'"></td>';
                     html += '<td><input type="text" id="WAREHOUSE_NM" name="WAREHOUSE_NM" value="'+ fnEmptyValReturn(list[i].WAREHOUSE_NM) +'" readonly></td>';
@@ -862,10 +772,28 @@
         }
 
         /** Element Event **/
-        $("#popBarcode").on('keyup', function(event){
-            $("#in_warehouse_manage_scan_barcode_popup_form #BARCODE_NUM").val($(this).val());
-            $("#in_warehouse_manage_scan_barcode_popup_form #MY_MAT_OUT_SEQ").val('');
-            fnSearchScanTableOnData();
+        $("#inWarehouseManageBarcode").on('keyup', function(e){
+            if (e.keyCode == 13) {
+                $("#in_warehouse_manage_scan_barcode_popup_form #BARCODE_NUM").val($(this).val());
+                $("#in_warehouse_manage_scan_barcode_popup_form #MY_MAT_OUT_SEQ").val('');
+                fnSearchScanTableOnData();
+            }
+        });
+
+        $("#inWarehouseManageBarcode").on({
+            focus: function () {
+                $("#in_warehouse_manage_scan_barcode_popup #barCodeImg").attr("src","/resource/asset/images/common/img_barcode_long_on.png");
+            },
+            blur: function () {
+                $("#in_warehouse_manage_scan_barcode_popup #barCodeImg").attr("src","/resource/asset/images/common/img_barcode_long.png");
+            }
+        });
+
+        $("#in_warehouse_manage_warehouse_popup_form #WAREHOUSE_CD").on('change', function(){
+            inWarehouseManageWarehousePopupGrid.pqGrid('option', "dataModel.postData", function (ui) {
+                return (fnFormToJsonArrayData('#in_warehouse_manage_warehouse_popup_form'));
+            });
+            inWarehouseManageWarehousePopupGrid.pqGrid('refreshDataAndView');
         });
 
         /** 버튼 처리 **/
@@ -898,6 +826,11 @@
             $("#in_warehouse_manage_warehouse_popup").modal("show");
         });
 
+        $("#btnInWarehouseManageWarehouseSave").on('click', function(){
+            let inWarehouseManageInsertUpdateQueryList = ['insertUpdateInWarehouseManageWarehouse'];
+            fnModifyPQGrid(inWarehouseManageWarehousePopupGrid, inWarehouseManageInsertUpdateQueryList, inWarehouseManageInsertUpdateQueryList);
+        });
+
         $("#btnInWarehouseManageSave").on('click', function(){
             let inWarehouseManageInsertUpdateQueryList = ['material.insertUpdateInWarehouseManageMaster','material.insertUpdateInWarehouseManageDetail'];
             fnModifyPQGrid(inWarehouseManageManageGrid01, inWarehouseManageInsertUpdateQueryList, inWarehouseManageInsertUpdateQueryList);
@@ -922,7 +855,11 @@
             }
             let parameters = {'url': '/json-update', 'data': parameter};
             fnPostAjax(function(data, callFunctionParam){
-                selectInWarehouseManageManageGrid02List();
+                $("#in_warehouse_manage_scan_barcode_popup").modal('hide');
+
+                $("#btnInWarehouseManageManageSearch").trigger('click');
+                $("#btnInWarehouseManageOutSearch").trigger('click');
+                //selectInWarehouseManageManageGrid02List();
             }, parameters, '');
         });
 

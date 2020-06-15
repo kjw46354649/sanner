@@ -38,7 +38,8 @@ public class MachineServiceImpl implements MachineService {
            Map<String, Object> seqMap = innodaleDao.getInfo(map);
 
            //2-2. 마스터 insert
-           EQUIP_SEQ = (String)seqMap.get("SEQ");
+           EQUIP_SEQ = seqMap.get("SEQ").toString();
+
            map.put("EQUIP_SEQ", EQUIP_SEQ);
            map.put("queryId", "machine.insertMachineMaster");
            innodaleDao.create(map);

@@ -52,17 +52,17 @@
             <if test="ORDER_COMP_CD !='' and ORDER_COMP_CD !=null">
                 AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
             </if>
-            <if test="TITLE !='' and TITLE !=null">
-                AND A.TITLE = #{TITLE}
+            <if test="EST_TITLE !='' and EST_TITLE !=null">
+                AND A.EST_TITLE = #{EST_TITLE}
             </if>
             <if test="DRAWING_NUM !='' and DRAWING_NUM !=null">
                 AND A.DRAWING_NUM = #{DRAWING_NUM}
             </if>
-            <if test="MODULE_NM !='' and MODULE_NM !=null">
-                AND A.MODULE_NM = #{MODULE_NM}
+            <if test="EST_NUM !='' and EST_NUM !=null">
+                AND A.EST_NUM = #{EST_NUM}
             </if>
             <if test="ITEM_NM !='' and ITEM_NM !=ITEM_NM">
-                AND A.ITEM_NM = #{ITEM_NM}
+                AND B.ITEM_NM = #{ITEM_NM}
             </if>
         GROUP BY A.EST_SEQ
         ORDER BY A.EST_NUM, A.EST_SEQ, A.EST_VER
@@ -443,7 +443,8 @@
     <select id="selectEstimateOrderControlData" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             EST_SEQ, SEQ, PROJECT_NM, MODULE_NM, ITEM_NM, DRAWING_NUM, PART_NUM,
-            CASE WHEN PARENT_SEQ IS NULL THEN SEQ ELSE PARENT_SEQ END PARENT_SEQ
+            CASE WHEN PARENT_SEQ IS NULL THEN SEQ ELSE PARENT_SEQ END PARENT_SEQ,
+            ITEM_QTY
         FROM TBL_ESTIMATE_DETAIL
         WHERE 1=1
             AND EST_SEQ = #{EST_SEQ}
@@ -498,9 +499,10 @@
 
     <insert id="insertEstimateOrderControlOrder"  parameterType="java.util.HashMap">
         INSERT IGNORE INTO TBL_CONTROL_PART_ORDER
-            (CONTROL_SEQ, CONTROL_DETAIL_SEQ, ORDER_SEQ, INSERT_ID)
+            (CONTROL_SEQ, CONTROL_DETAIL_SEQ, ORDER_SEQ, ORDER_QTY, INSERT_ID)
         SELECT
-            A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, NEXTVAL(SEQ_CONTROL_PART_ORDER), NULL
+            A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, NEXTVAL(SEQ_CONTROL_PART_ORDER),
+            CASE WHEN IFNULL(B.WORK_TYPE, SPACE(0)) != 'WTP050' THEN #{ITEM_QTY} END ,NULL
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
 				AND B.CONTROL_DETAIL_SEQ NOT IN (

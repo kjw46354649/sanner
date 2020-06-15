@@ -230,8 +230,8 @@
         </div>
         <div class="footerWrap">
             <div class="barcode" id="footer_barcode">
-                <span class="barCodeTxt"><input type="text" class="wd_240_barcode" name="BARCODE_NUM" id="BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요"></span>
-                <span class="barCode"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="stock_manage_pop_form_barcode_img"></span>
+                <span class="barCodeTxt"><input type="text" class="wd_240_barcode hg_35" name="BARCODE_NUM" id="BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요" ></span>
+                <span class="barCode" style="margin: 13px 15px 0 0;"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="stock_manage_pop_form_barcode_img" ></span>
             </div>
             <div class="process">
                 <span class="pr_txt" id="footer_msg"></span>
@@ -816,7 +816,12 @@ console.log("change",JSON.stringify(changes));
             //$("#stock_manage_pop_form").find("#WAREHOUSE_CD").val("")
             //$("#pop_form").find("#queryId").val("material.selectConsumableList");
             $("#stock_manage_form").find("#popType").val("BARCODE");
+
             $('#stock_manage_pop').modal('show');
+
+            $("#stock_manage_pop_form").find("#BARCODE_NUM").focus();
+
+
         });
         $('#stock_manage_pop_form').find('.closeBtn').on('click', function () {
             $('#stock_manage_pop').modal('hide');

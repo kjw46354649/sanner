@@ -870,35 +870,37 @@
             {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden:true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden:true},
             {title: 'INSPECT_SEQ', dataType: 'string', dataIndx: 'INSPECT_SEQ', hidden:true},
+            {title: '', align: 'center', dataType: 'string', dataIndx: 'MANUAL_ACTION', width: 80, minWidth: 80, editable: false,
+                render: function (ui) {
+                    let rowIndx = ui.rowIndx, grid = this;
+                    if (ui.rowData['ORDER_SEQ'] > 0) return "<button type=\"button\" class=\"miniBtn black\">조치완료</button>";
+                    return '';
+
+                }
+            },
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', minWidth: 95, width: 95, editable: false},
             {title: '발주번호', dataType: 'string', dataIndx: 'ORDER_NUM', minWidth: 95, width: 95, editable: false},
             {title: '외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', minWidth: 120, width: 120, editable: false},
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 200, width: 200, editable: false},
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 200, width: 200, editable: false},
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 180, width: 180, editable: false},
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 180, width: 180, editable: false},
             {title: '작업형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM', minWidth: 80, width: 80, editable: false},
             {title: '소재', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 100, width: 100, editable: false},
-            {title: '후처리', dataType: 'string', dataIndx: 'SURFACE_TREAT_NM', minWidth: 100, width: 100, editable: false},
+            {title: '후처리', dataType: 'string', dataIndx: 'SURFACE_TREAT_NM', minWidth: 80, width: 80, editable: false},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 120, width: 120, editable: false},
-            {title: '주문수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 60, width: 60, editable: false},
-            {title: '출고', dataType: 'string', dataIndx: 'OUT_QTY', minWidth: 60, width: 60, editable: false},
+            {title: '주문<br/>수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false},
+            {title: '출고', dataType: 'string', dataIndx: 'OUT_QTY', minWidth: 40, width: 40, editable: false},
             {title: '출고일시', dataType: 'string', dataIndx: 'OUT_FINISH_DT', minWidth: 60, width: 60, editable: false},
             {
                 title: '반품정보', datatype: 'string', align: 'center', colModel: [
                     {title: '수량', datatype: 'string', dataIndx: 'ERROR_QTY', minWidth: 60, width: 60, editable: false},
-                    {title: '발생일', datatype: 'string', dataIndx: 'RETURN_DT', minWidth: 80, width: 80, editable: false},
+                    {title: '발생일', datatype: 'string', dataIndx: 'RETURN_DT', minWidth: 60, width: 60, editable: false},
                     {title: '등급', datatype: 'string', dataIndx: 'INSPECT_GRADE_NM', minWidth: 80, width: 80, editable: false},
                     {title: '불량코드', datatype: 'string', dataIndx: 'INSPECT_RESULT_NM', minWidth: 100, width: 100, editable: false},
                     {title: '조치방안', datatype: 'string', dataIndx: 'ERROR_NOTE', minWidth: 100, width: 100, editable: false}
                 ]
             },
-            {title: '현재위치', dataType: 'string', dataIndx: 'POP_NM', minWidth: 80, width: 80, editable: false},
-            {title: '', align: 'center', dataType: 'string', dataIndx: 'MANUAL_ACTION', width: 80, minWidth: 80, editable: false,
-                render: function (ui) {
-                    let rowIndx = ui.rowIndx, grid = this;
-                    if (ui.rowData['ORDER_SEQ'] > 0) return "[조치완료]";
-                    return '';
-                }
-            }
+            {title: '현재위치', dataType: 'string', dataIndx: 'POP_NM', minWidth: 80, width: 80, editable: false}
+
         ];
         //outgoingManageGridId02.pqGrid({
         outgoingReturnCompleteObj ={
@@ -1153,16 +1155,16 @@
             } );
             outgoingManageGridId01.pqGrid("refreshDataAndView");
         });
-
-        $('[name=SEL_OUTGOING_TERM]').change(function () {
+        $("#outgoing_manage_form").find('[name=SEL_OUTGOING_TERM]').change(function () {
             let value = $(this).val(), today = new Date(), newDate = new Date();
 
             newDate.setDate(newDate.getDate() - value);
-            $('#SEL_ST_DT').val(newDate.yyyymmdd());
-            $('#SEL_END_DT').val(today.yyyymmdd());
+            $("#outgoing_manage_form").find('#SEL_ST_DT').val(newDate.yyyymmdd());
+            $("#outgoing_manage_form").find('#SEL_END_DT').val(today.yyyymmdd());
             // outgoingChangeDate(newDate, today);
 
         });
+
 
         $(".datepicker-input").each(function(){ $(this).datepicker();});
 
@@ -1381,6 +1383,7 @@
                         barcodesql = "common.selectControlBarcodeInfo";
                     }else{
                         alert("알수 없는 바코드 타입입니다.[" + barcodeNum +"]");
+                        $("#OUTGOING_BARCODE_NUM").val("");
                         return;
                     }
 
@@ -1391,14 +1394,16 @@
                         let dataInfo = data.info;
                         if(dataInfo == null ) {
                             alert("해당 바코드가 존재하지 않습니다.");
+                            $("#OUTGOING_BARCODE_NUM").val("");
                             return;
                         }else{
 
                             if(barcodeType == "L"){
                                 fnJsonDataToForm("outgoing_manage_pop_type_label_form", dataInfo);
-                                $("#outgoing_manage_pop_type_label_form").find("#outgoing_manage_pop_type_label_form_view_1").html(data.QTY_INFO);
-                                $("#outgoing_manage_pop_type_label_form").find("#outgoing_manage_pop_type_label_form_view_2").html(data.REMAIN_PACKING_CNT);
-                                $("#outgoing_manage_pop_type_label_form").find("#outgoing_manage_pop_type_label_form_view_3").html(data.MY_PACKING_NUM);
+                                console.log(dataInfo);
+                                $("#outgoing_manage_pop_type_label_form").find("#outgoing_manage_pop_type_label_form_view_1").html(dataInfo.QTY_INFO);
+                                $("#outgoing_manage_pop_type_label_form").find("#outgoing_manage_pop_type_label_form_view_2").html(dataInfo.REMAIN_PACKING_CNT);
+                                $("#outgoing_manage_pop_type_label_form").find("#outgoing_manage_pop_type_label_form_view_3").html(dataInfo.MY_PACKING_NUM);
 
                                 //. 저장하기
                                 $("#outgoing_manage_pop_type_label_form").find("#queryId").val("inspection.insertOutgoingOutType4,inspection.updateOutgoingOutType4After1,inspection.updateOutgoingOutType4After2");
@@ -1406,12 +1411,13 @@
                                 let parameters = {'url': '/json-manager', 'data': $('#outgoing_manage_pop_type_label_form').serialize() };
                                 //let data = {'queryId': 'inspection.insertOutgoingOutType4','BARCODE_NUM': barcodeNum};
                                 //let parameters = {'url': '/json-create', 'data': data };
-                                fnPostAjax(function (data, callFunctionParam) {
+                                fnPostAjaxAsync(function (data, callFunctionParam) {
 
                                     //. 모달 띄우기
                                     $('#outgoing_manage_pop_type_label').modal('show');
                                     setTimeout(function() {
                                         $('#outgoing_manage_pop_type_label').modal('hide');
+                                        $("#OUTGOING_BARCODE_NUM").val("");
                                     }, 2000);
 
                                 }, parameters, '');
@@ -1425,10 +1431,11 @@
                                     'url': '/json-info',
                                     'data': $('#outgoing_manage_pop_type_control_form').serialize()
                                 };
-                                fnPostAjax(function (data, callFunctionParam) {
+                                fnPostAjaxAsync(function (data, callFunctionParam) {
                                     let dataInfo = data.info;
                                     if(dataInfo == null ) {
                                         alert("정보가 존재하지 않습니다. "+dataInfo);
+                                        $("#OUTGOING_BARCODE_NUM").val("");
                                         return;
                                     }else{
                                         fnJsonDataToForm("outgoing_manage_pop_type_control_form", dataInfo);
@@ -1447,6 +1454,7 @@
                                             $('#outgoing_manage_pop_type_control').modal('show');
                                             setTimeout(function() {
                                                 $('#outgoing_manage_pop_type_control').modal('hide');
+                                                $("#OUTGOING_BARCODE_NUM").val("");
                                             }, 2000);
 
                                         }, parameters, '');
@@ -1480,16 +1488,21 @@
                 //         barcodeList.push(data.list[i].BARCODE_NUM);
                 //     }
                 // }, parameter, '');
+                if (e.keyCode == 13) {
+                  let formData = new Array();
+                  formData[0] = this.value;
+                  fnBarcodePrint(function(data, callFunctionParam){
+                      alert(data.message);
+                     $("#OUTGOING_BARCODE_NUM").val("");
+                  }, formData, '');
+                }
 
-                let formData = new Array();
-                formData[0] = this.value;
-                fnBarcodePrint(function(data, callFunctionParam){
-                    alert(data.message);
-                }, formData, '');
 
             }else{
                 alert("바코드 종류를 선택해주십시오.");
+                // $("#OUTGOING_BARCODE_NUM").val("");
             }
+
 
         });
 

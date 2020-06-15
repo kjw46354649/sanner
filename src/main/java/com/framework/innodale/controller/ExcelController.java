@@ -104,7 +104,6 @@ public class ExcelController {
     @RequestMapping("/itemOrderRegisterOrderSheetPrint")
     public void itemOrderRegisterOrderSheetPrint(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, Exception {
         HashMap<String, Object> paramMap = new HashMap<String, Object>();
-        HashMap<String, Object> map = new HashMap<String, Object>();
 
         List<HashMap<String, Object>> sheetMaps = new ArrayList<HashMap<String, Object>>();
         List<String> sheetNames = new ArrayList<>();
@@ -147,20 +146,16 @@ public class ExcelController {
             // 정보성 쿼리.
             paramMap.put("queryId", "selectItemOrderRegisterPopTable");
             infoList = innodaleService.getList(paramMap);
-
-            System.out.println("#######################################");
-            System.out.println(infoList);
-            System.out.println(infoList.get(0).get("MATERIAL_COMP_NM"));
-            System.out.println(infoList.get(0).get("MATERIAL_COMP_EMAIL"));
-            System.out.println(infoList.get(0).get("MATERIAL_COMP_CD"));
-            System.out.println("#######################################");
-
             for(int j=0; j < infoList.size(); j++) {
+                HashMap<String, Object> map = new HashMap<String, Object>();
                 sheetNames.add((String) infoList.get(j).get("MATERIAL_COMP_NM"));
 
                 paramMap.put("queryId", "excel.selectItemOrderRegisterOrderSheetListExcel");
                 paramMap.put("MATERIAL_COMP_CD", infoList.get(j).get("MATERIAL_COMP_CD"));
                 dataList = innodaleService.getList(paramMap);
+                map.put("MATERIAL_ORDER_NUM", dataList.get(0).get("MATERIAL_ORDER_NUM"));
+                map.put("ORDER_DT", dataList.get(0).get("ORDER_DT"));
+                map.put("ORDER_COMP_NM", dataList.get(0).get("ORDER_COMP_NM"));
                 map.put("data", dataList);
                 sheetMaps.add(map);
             }
@@ -169,8 +164,8 @@ public class ExcelController {
 
             //Resource resource = new ClassPathResource("classpath:excelTemplate" + File.separator + templateFileName + "data.txt");
             //InputStream inputStream = resource.getInputStream();
-            fos =new FileOutputStream(new File("classpath:excelTemplate" + File.separator + templateFileName + ".xlsx"));
-            workbook.write(fos);
+            //fos =new FileOutputStream(new File(ectDir + File.separator + "excel" + File.separator + templateFileName + ".xlsx"));
+            //workbook.write(fos);
 
             // System.out.println(excelDir + File.separator + templateFileName + date + ".xlsx");
 

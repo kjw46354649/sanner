@@ -184,7 +184,6 @@
                 if (ui.rowData['LAST_YN'] == 'Y')
                 {
                     if (ui.dataIndx == 'BTN_CANCEL') {
-                        alert("버튼이 언제만 보일지는 대표님이 쿼리 주시기로 함.");
                         if (ui.rowData['OUT_RETURN_TYPE'] == '1')//출고
                         {
                             let data = {
@@ -235,12 +234,12 @@
             outgoingHistoryGridId01.pqGrid("refreshDataAndView");
         });
 
-        $('[name=SEL_OUTGOING_TERM]').change(function () {
+        $("#outgoing_history_form").find('[name=SEL_OUTGOING_TERM]').change(function () {
             let value = $(this).val(), today = new Date(), newDate = new Date();
 
             newDate.setDate(newDate.getDate() - value);
-            $('#SEL_ST_DT').val(newDate.yyyymmdd());
-            $('#SEL_END_DT').val(today.yyyymmdd());
+            $("#outgoing_history_form").find('#SEL_ST_DT').val(newDate.yyyymmdd());
+            $("#outgoing_history_form").find('#SEL_END_DT').val(today.yyyymmdd());
             // outgoingChangeDate(newDate, today);
 
         });

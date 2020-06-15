@@ -316,12 +316,12 @@
                 },
                 postRenderInterval: -1,
                 columnTemplate: {align: 'center', hvalign: 'center'},
-                scrollModel: {autoFit: true},
+                scrollModel: {autoFit: false},
                 numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'row', mode: 'single'} ,
                 swipeModel: {on: false},
                 collapsible: false,
-                resizable: true,
+                resizable: false,
                 trackModel: {on: true},
                 //resizable: true,
                 colModel: itemOrderHistoryRightColModel,
@@ -338,7 +338,7 @@
             itemOrderHistoryRightGrid.pqGrid("refreshDataAndView");
         };
 
-        $("#btnItemOrderRegisterSearch").on('click', function(){
+        $("#btnItemOrderHistorySearch").on('click', function(){
             itemOrderHistoryLeftGrid.pqGrid('option', "dataModel.postData", function (ui) {
                 return (fnFormToJsonArrayData('#item_order_history_search_form'));
             });
@@ -346,7 +346,24 @@
         });
 
         $("#btnItemOrderHistorySave").on('click', function(){
-
+            let parameter = {
+                'queryId': 'updateItemOrderHistoryOrderInManual',
+                'MATERIAL_ORDER_SEQ': $("#item_order_history_hidden_form #MATERIAL_ORDER_SEQ").val(),
+            };
+            let parameters = {'url': '/json-update', 'data': parameter};
+            fnPostAjax(function(data, callFunctionParam){
+                parameter = {
+                    'queryId': 'updateItemOrderHistoryPartInManual',
+                    'MATERIAL_ORDER_SEQ': $("#item_order_history_hidden_form #MATERIAL_ORDER_SEQ").val(),
+                };
+                parameters = {'url': '/json-update', 'data': parameter};
+                fnPostAjax(function(data, callFunctionParam){
+                    itemOrderHistoryRightGrid.pqGrid('option', "dataModel.postData", function (ui) {
+                        return (fnFormToJsonArrayData('#item_order_history_hidden_form'));
+                    });
+                    itemOrderHistoryRightGrid.pqGrid('refreshDataAndView');
+                }, parameters, '');
+            }, parameters, '');
         });
 
         $("#btnItemOrderHistoryExcel").on('click', function(){
@@ -366,7 +383,7 @@
                 };
                 parameters = {'url': '/json-remove', 'data': parameter};
                 fnPostAjax(function(data, callFunctionParam){
-                    $("#btnItemOrderRegisterSearch").trigger('click');
+                    $("#btnItemOrderHistorySearch").trigger('click');
                 }, parameters, '');
             }, parameters, '');
         });
@@ -387,7 +404,7 @@
                 parameters = {'url': '/json-update', 'data': parameter};
                 fnPostAjax(function(data, callFunctionParam){
                     parameter = {
-                        'queryId': 'updateItemOrderHistoryOrderIn',
+                        'queryId': 'updateItemOrderHistoryPartIn',
                         'MATERIAL_ORDER_SEQ': MATERIAL_ORDER_SEQ,
                     };
 

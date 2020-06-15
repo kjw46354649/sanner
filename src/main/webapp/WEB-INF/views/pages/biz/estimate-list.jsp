@@ -33,13 +33,13 @@
                         <span class="ipu_wrap right_float"><button type="button" class="defaultBtn radius blue" id="btnEstimateListSearch">검색</button></span>
                     </li>
                     <li>
-                        <span class="ipu_wrap"><label class="label_100" for="MODULE_NM">견적번호</label><input type="text" name="MODULE_NM" id="MODULE_NM" class="wd_200" value="" title="견적번호"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="EST_NUM">견적번호</label><input type="text" name="EST_NUM" id="EST_NUM" class="wd_200" value="" title="견적번호"></span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label class="label_100" for="ITEM_NM">품명</label><input type="text" name="ITEM_NM" id="ITEM_NM" class="wd_200 " value="" title="품명"></span>
                         <span class="gubun"></span>
                     </li>
                     <span class="">
-                        <span class="ipu_wrap"><label class="label_100" for="MODULE_NM">기간 조회</label></span>
+                        <span class="ipu_wrap"><label class="label_100">기간 조회</label></span>
                         <span class="chk_box"><input id="pr_ex1" type="checkbox"><label for="pr_ex1"> 발송완료</label></span>
                         <span class="chk_box"><input id="pr_ex2" type="checkbox"><label for="pr_ex2"> 최신차수</label></span>
                         <span class="gubun"></span>
@@ -83,7 +83,7 @@
                 <%--<span class="chk_box mg-left15"><input id="chkEstimateListDetail" type="checkbox"><label for="chkEstimateListDetail"> 견적상세요건</label></span>--%>
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn radius red" id="btnEstimateListDelete">삭제</button>
-                    <button type="button" class="defaultBtn radius green" id="btnEstimateListSave">저장</button>
+                    <%--<button type="button" class="defaultBtn radius green" id="btnEstimateListSave">저장</button>--%>
                 </div>
             </div>
         </div>
@@ -93,8 +93,8 @@
                     <button type="button" class="smallBtn yellow">견적정보</button>
                     <button type="button" class="smallBtn yellow">금액정보</button>
                     <span class="slt_wrap namePlusSlt right_float">
-                        <label for="selEstimateListExcel">견적서 추출</label>
-                        <select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출"></select>
+                        <label id="selEstimateListExcel">견적List 출력</label>
+                        <%--<select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출"></select>--%>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateListExcel">견적서 출력</button>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateListDrawView">도면 보기</button>
                     </span>
@@ -134,8 +134,19 @@
     $(function () {
         let estimateMasterTopColModel= [
             //{title: 'No.', dataType: 'string', dataIndx: 'EST_SEQ'},
-            {title: 'Status', dataType: 'string', dataIndx: 'EST_STATUS_NM', editable: false, width: 120 },
-            {title: '발주사', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 150 ,
+            {title: '상태', dataType: 'string', dataIndx: 'EST_STATUS_NM', editable: false, width: 80 },
+            {title: '주문접수', dataType: 'date', dataIndx: '', editable: false, width: 60 ,
+                render: function(ui){
+                    let CONTROL_YN = ui.rowData.CONTROL_YN;
+                    let EST_SEQ = ui.rowData.EST_SEQ;
+                    let EST_VER = ui.rowData.EST_VER;
+
+                    if(CONTROL_YN == 'N') {
+                        return '<button type="button" id="estimateOrder" data-seq="'+EST_SEQ+'" data-ver="'+EST_VER+'" class="miniBtn blue">접수</button>'
+                    }
+                }
+            },
+            {title: '발주사', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 100 ,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "ORDER_COMP_NM", id: "ORDER_COMP_CD" },
@@ -150,7 +161,7 @@
                     }
                 }
             },
-            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', editable: false, width: 100 },
+            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', editable: false, width: 70 },
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM', width: 100 ,
                 editor: {
                     type: 'select',
@@ -166,8 +177,8 @@
                     }
                 }
             },
-            {title: '견적번호', dataType: 'string', dataIndx: 'EST_NUM', editable: false, width: 180 },
-            {title: '차수', dataType: 'string', dataIndx: 'EST_VER', editable: false, width: 50 },
+            {title: '견적번호', dataType: 'string', dataIndx: 'EST_NUM', editable: false, width: 150 },
+            {title: '차수', dataType: 'string', dataIndx: 'EST_VER', editable: false},
             {title: '', dataType: 'string', dataIndx: '', editable: false, width: 30 ,
                 render: function(ui){
                     let EST_STATUS = ui.rowData.EST_STATUS;
@@ -178,9 +189,9 @@
                         '</a>';
                 }
             },
-            {title: '제목', dataType: 'string', dataIndx: 'EST_TITLE', width: 180 },
+            {title: '제목', dataType: 'string', dataIndx: 'EST_TITLE', width: 220 },
             {title: '품수', dataType: 'string', dataIndx: 'DTL_CNT', editable: false},
-            {title: '금액 계', dataType: 'string', dataIndx: 'DTL_AMOUNT', format: '#,###'},
+            {title: '금액 계', dataType: 'string', dataIndx: 'DTL_AMOUNT', format: '#,###', width: 80},
             {title: '등록일시', dataType: 'date', dataIndx: 'INSERT_DT', editable: false, width: 120 },
             {title: '견적담당', dataType: 'string', dataIndx: 'EST_USER', width: 120 ,
                 editor: {
@@ -197,7 +208,7 @@
                     }
                 }
             },
-            {title: '첨부파일', dataType: 'string', dataIndx: 'ETC_GFILE_SEQ',
+            {title: '첨부파일', dataType: 'string', dataIndx: 'ETC_GFILE_SEQ', width: 60,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadViewPopup" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
                 },
@@ -216,31 +227,17 @@
                     });
                 }
             },
-            {title: '메일발송일시', dataType: 'string', dataIndx: 'SEND_DT', editable: false},
-            {title: '메일발송여부', dataType: 'string', dataIndx: 'SEND_YN', editable: false},
-            {title: '주문접수', dataType: 'date', dataIndx: '', editable: false, width: 60 ,
-                render: function(ui){
-                    let CONTROL_YN = ui.rowData.CONTROL_YN;
-                    let EST_SEQ = ui.rowData.EST_SEQ;
-                    let EST_VER = ui.rowData.EST_VER;
-
-                    if(CONTROL_YN == 'N') {
-                        return '<a href="#" id="estimateOrder">' +
-                            '<span data-seq="'+EST_SEQ+'" data-ver="'+EST_VER+'" class="ui-icon ui-icon-arrowthick-1-e"></span>' +
-                            '</a>';
-                    }
-                }
-            },
+            {title: '메일발송일시', dataType: 'string', dataIndx: 'SEND_DT', editable: false, width: 120},
+            {title: '메일발송여부', dataType: 'string', dataIndx: 'SEND_YN', editable: false, width: 80}
         ];
 
         let estimateMasterBotColModel= [
             {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', width: 150 } ,
-            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', width: 80 } ,
-            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 170 } ,
-            /*{title: '', dataType: 'string', dataIndx: 'DRAWING_YN', width: 30 } ,*/
+            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', width: 60 } ,
+            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 150 } ,
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', validations: [{ type: 'minLen', value: 1, msg: "Required"}], width: 100 } ,
             {
-                title: 'Part', clsHead: 'cantChange', dataType: 'integer', dataIndx: 'PART_NUM', editable: false,
+                title: 'Part', clsHead: 'cantChange', dataType: 'integer', dataIndx: 'PART_NUM', width: 50, editable: false,
                 render: function (ui) {
                     if (ui.rowData.WORK_TYPE === 'WTP020') {
                         return '<span class="ui-icon ui-icon-circle-plus" id="estimateListPartNumPlus" style="cursor: pointer"></span>';
@@ -278,8 +275,8 @@
                     });
                 }
             } ,
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 100 } ,
-            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 80 } ,
+            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY', width: 50},
             {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: true,
                 editor: {
                     type: 'select',
@@ -514,23 +511,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let yesOrNo = fnGetCommCodeGridSelectBox('1042');
-                        let index = yesOrNo.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = yesOrNo.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-
-                        }
-
-                        return (index < 0) ? cellData : yesOrNo[index].text;
-                    }
+                    return cellData === 'Y' ? cellData : '';
                 }
             },
             {title: '예상소재 Size', align: "center", colModel:[
@@ -595,7 +576,7 @@
                     return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                 }
             },
-            //scrollModel: { autoFit: false },
+            scrollModel: { autoFit: false },
             columnTemplate: {align: 'center', hvalign: 'center'},
             numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'row', mode: 'single'} ,
@@ -606,8 +587,9 @@
             colModel: estimateMasterTopColModel,
             showTitle: false,
             strNoRows: g_noData,
+            editable: false,
             complete: function(event, ui) {
-                this.flex();
+                //this.flex();
                 let data = estimateMasterTopGrid.pqGrid('option', 'dataModel.data');
 
                 $('#estimate_master_top_grid_records').html(data.length);
@@ -616,21 +598,6 @@
                     estimateMasterTopGrid.pqGrid('setSelection', {rowIndx:0} );
                 }else{
                     selectEstimateBotList('');
-                }
-            },
-            selectChange: function (event, ui) {
-                if (ui.selection.iCells.ranges[0] !== undefined) {
-                    estimateMasterSelectedRowIndex = [];
-                    let estimateMasterGridFirstRow = ui.selection.iCells.ranges[0].r1;
-                    let estimateMasterGridLastRow = ui.selection.iCells.ranges[0].r2;
-
-                    if (estimateMasterGridFirstRow === estimateMasterGridLastRow) {
-                        estimateMasterSelectedRowIndex[0] = estimateMasterGridFirstRow;
-                    } else {
-                        for (let i = estimateMasterGridFirstRow; i <= estimateMasterGridLastRow; i++) {
-                            estimateMasterSelectedRowIndex.push(i);
-                        }
-                    }
                 }
             },
             rowSelect: function( event, ui ) {
@@ -683,6 +650,7 @@
                 colModel: estimateMasterBotColModel,
                 showTitle: false,
                 strNoRows: g_noData,
+                editable: false,
                 complete: function (event, ui) {
                     this.flex();
                     let data = estimateMasterBotGrid.pqGrid('option', 'dataModel.data');
@@ -784,12 +752,16 @@
         });
 
         $("#btnEstimateListExcel").on('click', function(){
+            alert("작업 중 입니다.");
+            return false;
+            /*
             $("#common_excel_form #sqlId").val('selectEstimateDetailListExcel');
             $("#common_excel_form #mapInputId").val('data');
             $("#common_excel_form #paramName").val('EST_SEQ');
             $("#common_excel_form #template").val('estimate_list_template');
 
             fnReportFormToHiddenFormPageAction("common_excel_form", "/downloadExcel");
+            */
         });
 
         $("#btnEstimateListDrawView").on('click', function(){
@@ -806,7 +778,7 @@
         });
 
         $("#btnEstimateListNewEstimate").on('click', function(){
-            $("a[pid='100012']").trigger("click");
+            $("a[pid='10000102']").trigger("click");
         });
 
         $("#btnEstimateListNewVersion").on('click', function(){
@@ -840,11 +812,10 @@
                         };
                         parameters = {'url': '/json-create', 'data': parameter};
                         fnPostAjax('',parameters, '');
-
-                        $("a[pid='100012']").trigger("click");
+                        $("a[pid='10000102']").trigger("click");
                         setTimeout(function(){
                             $("#test").trigger('click');
-                        }, 500)
+                        }, 800)
 
                     }, parameters, '');
                 }, parameters, '');

@@ -69,7 +69,7 @@
         SELECT
             #{MAIL_BOX_SEQ}, A.EMAIL_TITLE, A.EMAIL_CONTENT,
             B.COMP_NM, B.COMP_EMAIL, C.COMP_EMAIL,
-            '' AS CC_EMAIL, '' AS HCC_EMAIL, A.ETC_GILE_SEQ,
+            '' AS CC_EMAIL, '' AS HCC_EMAIL, A.ETC_GFILE_SEQ,
             'EMSTS001', 'N', 0,
             A.EST_SEQ, NOW(), #{USER_ID}
         FROM jmes.TBL_ESTIMATE A
