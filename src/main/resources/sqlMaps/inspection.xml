@@ -934,7 +934,7 @@
             , X.RETURN_QTY
             , jmes.SF_GET_DATE_F(X.INSERT_DT,'YY','M') AS INSERT_DT
             , jmes.SF_GET_DATE_F(X.RETURN_SETTLEMENT_DT,'YY','M') AS RETURN_SETTLEMENT_DT
-            , jmes.SF_GET_OUT_RETURN_LAST_YN('XXX') AS LAST_YN
+            , jmes.SF_GET_OUT_RETURN_LAST_YN(X.OUT_RETURN_TYPE, X.KEY_SEQ) AS LAST_YN
         FROM (  SELECT A.OUT_SEQ AS KEY_SEQ
                     , '1' AS OUT_RETURN_TYPE
                     , A.CONTROL_SEQ
