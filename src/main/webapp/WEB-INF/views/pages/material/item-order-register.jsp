@@ -10,20 +10,26 @@
 
 <div class="popup_container" id="item_order_register_popup" style="display: none;">
     <div class="layerPopup">
-            <div id="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                <h3 style="margin-bottom: 10px;">소재 주문</h3>
-            </div>
+            <h3>소재 주문</h3>
+            <button type="button" class="pop_close mg-top10 mg-right8" data-dismiss="modal">닫기</button>
             <div class="modal-body">
-                <span class="d-inline">
-                    <span class="ipu_wrap"><label class="label_80" for="item_order_register_material_order_num">소재주문번호</label><input type="text" name="" id="item_order_register_material_order_num" class="wd_200" value="" title="소재주문업체"></span>
-                </span>
-                <div class="right_float">
-                    <button type="button" class="defaultBtn radius" id="btnItemOrderRegisterPopAdd">추가</button>
-                    <button type="button" class="defaultBtn radius green" id="btnItemOrderRegisterPopSave">저장</button>
-                    <button type="button" class="defaultBtn radius" id="btnItemOrderRegisterPopSubmit">제출</button>
+                <div class="h_area mg-bottom10">
+
                 </div>
-                <br/>
+                <div class="t_area">
+                    <div class="t_h">
+                        <span class="list_t" style="width: 192px;">소재주문번호</span>
+                        <span style="width: 203px;">
+                            <input type="text" name="" id="item_order_register_material_order_num" value="">
+                        </span>
+                        <div style="width: 200px; line-height: 45px;" class="right_float">
+                            <button type="button" class="defaultBtn radius" id="btnItemOrderRegisterPopAdd">추가</button>
+                            <button type="button" class="defaultBtn radius green" id="btnItemOrderRegisterPopSave">저장</button>
+                            <button type="button" class="defaultBtn radius" id="btnItemOrderRegisterPopSubmit">제출</button>
+                        </div>
+                    </div>
+                </div>
+
                 <form class="form-inline" role="form" id="item_order_register_popup_form" name="item_order_register_popup_form">
                     <input type="hidden" id="queryId" name="queryId" value="selectItemOrderRegisterPopList"/>
                     <input type="hidden" id="CONCAT_SEQ" name="CONCAT_SEQ"/>
@@ -36,7 +42,7 @@
                         </div>
                     </div>
                     <br/>
-                    <div class="gridWrap popupTableDiv" style="overflow: scroll">
+                    <div class="gridWrap popupTableDiv list1" style="overflow-x: auto;">
                         <%--<div id="item_order_register_popup_bot_grid"></div>
                         <div class="right_sort">
                             전체 조회 건수 (Total : <span id="item_order_register_popup_bot_grid_records" style="color: #00b3ee">0</span>)
@@ -253,7 +259,7 @@
                 }
             },
             {title: '소재 주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120, editable: false},
-            {title: '주문업체', dataType: 'string', dataIndx: 'M_COMP_NM', width: 80,
+            {title: '주문업체', dataType: 'string', dataIndx: 'M_COMP_NM', width: 80, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
                 editor: {
                     type: 'select',
                     mapIndices: { name: "M_COMP_NM", id: "M_COMP_CD" },
@@ -275,7 +281,7 @@
             {title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ', editable: false},
             {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', editable: false},
             {title: '가공<br>납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', width: 80, editable: false},
-            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND',
+            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -303,7 +309,7 @@
                     }
                 }
             },
-            {title: '소재<br>종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', width: 70,
+            {title: '소재<br>종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', width: 70, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
                 editor: {
                     type: 'select',
                     mapIndices: { name: "MATERIAL_DETAIL_NM", id: "MATERIAL_DETAIL" },
@@ -318,10 +324,10 @@
                     }
                 }
             },
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 120 } ,
-            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', width: 120},
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 120, editable: false } ,
+            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, width: 120},
             {title: '요청 사항', align: "center", colModel: [
-                    {title: '요청<br>사항', dataType: 'string', dataIndx: 'REQUEST_CD', width: 120,
+                    {title: '요청<br>사항', dataType: 'string', dataIndx: 'REQUEST_CD', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, minWidth: 150,
                         editor: {
                             type: 'select',
                             mapIndices: { name: "REQUEST_CD", id: "REQUEST_CD" },
@@ -329,10 +335,9 @@
                             valueIndx: "value",
                             labelIndx: "text",
                             options: fnGetCommCodeGridSelectBox('1026'),
-                            //attr: 'multiple',
+                            attr: 'multiple',
                             init: function(ui) {
-                                ui.$cell.find("select").pqSelect();
-                                ui.$cell.find("select").pqSelect('open');
+                                $('.item_order_register_material_order_note').multiSelect();
                             },
                             getData: function(ui) {
                                 let clave = ui.$cell.find("select").val();
@@ -352,15 +357,15 @@
                             }
                         }
                     },
-                    {title: '비고', dataType: 'string', dataIndx: 'M_ORDER_NOTE', width: 120},
-                ]},
+                    {title: '비고', dataType: 'string', dataIndx: 'M_ORDER_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, minWidth: 120},
+                ], styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}},
             {title: '원<br>발주량', dataType: 'string', dataIndx: 'ORDER_QTY', editable: false},
-            {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY' },
+            {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'} },
             {title: '보유소재 충당수량', align: "center", colModel: [
-                    {title: '소재<br>Size', dataType: 'string', dataIndx: 'OUT_SIZE_TXT'},
-                    {title: '수량', dataType: 'string', dataIndx: 'OUT_QTY'},
-                    {title: '불출완료수량', dataType: 'string', dataIndx: 'COMPLETE_OUT_QTY'},
-                    {title: '', dataType: 'string', dataIndx: '',
+                    {title: '소재<br>Size', dataType: 'string', dataIndx: 'OUT_SIZE_TXT', editable: false},
+                    {title: '수량', dataType: 'string', dataIndx: 'OUT_QTY', editable: false},
+                    {title: '불출완료수량', dataType: 'string', dataIndx: 'COMPLETE_OUT_QTY', editable: false},
+                    {title: '', dataType: 'string', dataIndx: '', editable: false,
                         render: function(ui){
                             return '<input type="button" id="itemOrderRegisterOutReset" value="reset"/>';
                         },
@@ -389,9 +394,9 @@
                             });
                         }
                     },
-                    {title: '불출', dataType: 'string', dataIndx: 'OUT_YN'},
+                    {title: '불출', dataType: 'string', dataIndx: 'OUT_YN', editable: false},
                 ]},
-            {title: '비고', dataType: 'string', dataIndx: 'DTL_AMOUNT'},
+            {title: '비고', dataType: 'string', dataIndx: 'DTL_AMOUNT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, minWidth: 120},
             {title: '주문<br>요청 일시', dataType: 'date', dataIndx: 'M_ORDER_DT',  width: 120, editable: false}
         ];
 
@@ -406,7 +411,7 @@
             {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM' , editable: false} ,
             {title: 'Size(mm)', dataType: 'string', dataIndx: 'SIZE_TXT' , editable: false} ,
             {title: '재고', dataType: 'integer', dataIndx: 'STOCK_QTY' , editable: false} ,
-            {title: '요청', dataType: 'integer', dataIndx: 'OUT_QTY' } ,
+            {title: '요청', dataType: 'integer', dataIndx: 'OUT_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'} } ,
             {title: '', dataType: 'string', dataIndx: 'OUT_YN', editable: false,
                 render: function(ui){
                     let returnVal = "";
@@ -445,7 +450,7 @@
 
                         return (index < 0) ? cellData : data[index].text;
                     }
-                }
+                }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
             },
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL' , validations: [{ type: 'minLen', value: 1, msg: "Required"}],
                 editor: {
@@ -472,7 +477,7 @@
 
                         return (index < 0) ? cellData : data[index].text;
                     }
-                }
+                }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
             },
             {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE' , validations: [{ type: 'minLen', value: 1, msg: "Required"}],
                 editor: {
@@ -499,12 +504,41 @@
 
                         return (index < 0) ? cellData : data[index].text;
                     }
+                }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
+            },
+            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, width: 150, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
+            {title: '요청<br>사항', dataType: 'string', dataIndx: 'REQUEST_CD', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, minWidth: 150,
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "REQUEST_CD", id: "REQUEST_CD" },
+                    cls: 'item_order_register_pop_material_order_note',
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1026'),
+                    attr: 'multiple',
+                    init: function(ui) {
+                        $('.item_order_register_pop_material_order_note').multiSelect();
+                    },
+                    getData: function(ui) {
+                        let clave = ui.$cell.find("select").val();
+                        let concatVal= "", concatCd = "";
+
+                        if(clave == null){
+                            return concatVal;
+                        }
+
+                        for(let iTmp=0; iTmp<clave.length; iTmp++){
+                            concatVal += ui.$cell.find("select option[value='"+clave[iTmp]+"']").text()+",";
+                            concatCd += clave[iTmp]+",";
+                        }
+                        let rowData = itemOrderRegisterLeftGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                        rowData["REQUEST_CD"] = concatCd.substring(0, concatCd.length-1);
+                        return concatVal.substring(0, concatVal.length-1);
+                    }
                 }
             },
-            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', width: 150, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
-            {title: '요청<br>사항', dataType: 'string', dataIndx: 'REQUEST_CD', width: 200},
-            {title: '비고', dataType: 'string', dataIndx: 'M_ORDER_NOTE'},
-            {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY' , validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
+            {title: '비고', dataType: 'string', dataIndx: 'M_ORDER_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, minWidth: 120},
+            {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
             {title: '주문업체', dataType: 'string', dataIndx: 'M_COMP_CD', width: 120, validations: [{ type: 'minLen', value: 1, msg: "Required"}],
                 editor: {
                     type: 'select',
@@ -530,10 +564,10 @@
 
                         return (index < 0) ? cellData : data[index].text;
                     }
-                }
+                }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
             },
             {title: '납기', dataType: 'string', dataIndx: 'HOPE_DUE_DT', width: 150,
-                editable: true, editor: { type: 'textbox', init: dateEditor } },
+                editable: true, editor: { type: 'textbox', init: dateEditor }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'} },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 120, editable: false},
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', editable: false},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 120, editable: false},
@@ -822,7 +856,8 @@
         });
 
         $("#btnItemOrderRegisterCurrentStock").on('click', function(){
-            $("a[pid='100043']").trigger("click");
+            let role_seq = '${authUserInfo.ROLE_SEQ}';
+            $("a[pid='"+ role_seq +"0403']").trigger("click");
         });
 
         $("#chkItemOrderRegisterAutoMatching").on('change', function(evt){
@@ -941,14 +976,14 @@
             var st_center="border:1px solid #d0d0d0; text-align:center; padding:0px 15px 0px 15px;";
 
             table += "<table style='border-spacing:0; min-width:50%;'><tr>";
-            table += "<td style='"+ st_center + font_header +"'>발주업체</td>";
-            table += "<td style='"+ st_center + font_header +"'>공급업체</td>";
-            table += "<td style='"+ st_center + font_header +"'>형태</td>";
-            table += "<td style='"+ st_center + font_header +"'>상세종류</td>";
-            table += "<td style='"+ st_center + font_header +"'>소재Size</td>";
-            table += "<td style='"+ st_center + font_header +"'>주문</td>";
-            table += "<td style='"+ st_center + font_header +"'>비고</td>";
-            table += "<td style='"+ st_center + font_header +"'>납기</td>" + "</tr>";
+            table += "<td>발주업체</td>";
+            table += "<td>공급업체</td>";
+            table += "<td>형태</td>";
+            table += "<td>상세종류</td>";
+            table += "<td>소재Size</td>";
+            table += "<td>주문</td>";
+            table += "<td>비고</td>";
+            table += "<td>납기</td>" + "</tr>";
 
             for(var i=0; i<list.length; i++)
             {
@@ -978,9 +1013,9 @@
             let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num").val();
 
             let table="";
-            var font_header =" background:lightblue; font-weight:500; font-size: 15px;";
-            var font_context ="font-size: 15px;";
-            var st_center="border:1px solid #a8a8a8; text-align:center; padding:0px 15px 0px 15px;";
+            var font_header ="";
+            var font_context ="";
+            var st_center="";
             var row_span ="rowspan='2'";
 
             let parameter = {
@@ -992,38 +1027,38 @@
                 let list = data.list;
 
                 if(list.length > 0 ){
-                    table += "<table style='border-spacing:0; width:100%;'><tr>";
-                    table += "<td style='"+ st_center + font_header +"'>업체</td>";
+                    table += "<table class='rowStyle' style='border-spacing:0; width:100%;'><tr>";
+                    table += "<th>업체</th>";
                     for(var i=0; i<list.length; i++) {
-                        table += "<td style='"+ st_center + font_header +"'>"	+ list[i].MATERIAL_COMP_NM +"</td>";
+                        table += "<th>"	+ list[i].MATERIAL_COMP_NM +"</th>";
                     }
                     table += "</tr>";
                     table += "<tr>";
-                    table += "<td style='"+ st_center + font_header +"'>담당자</td>";
+                    table += "<th>담당자</th>";
                     for(var j=0; j<list.length; j++) {
-                        table += "<td style='"+ st_center + font_header +"'>"	+ list[j].MATERIAL_COMP_EMAIL +"</td>";
+                        table += "<th>"	+ list[j].MATERIAL_COMP_EMAIL +"</th>";
                     }
                     table += "</tr>";
                     table += "<tr>";
-                    table += "<td style='"+ st_center + font_context +"'>내용</td>";
+                    table += "<td>내용</td>";
                     for(var h=0; h<list.length; h++){
-                        table += "<td style='"+ st_center + font_context +"'>" 	+ list[h].CONTENTS +"</td>";
+                        table += "<td>" 	+ list[h].CONTENTS +"</td>";
                     }
                     table += "</tr></table>";
                 }else{
-                    table = "<table style='border-spacing:0; width:100%;'>";
-                    table += "<tr><td style='"+ st_center + font_header +"'>업체</td>";
-                    table += "<td style='"+ st_center + font_header +"'></td>";
-                    table += "<td style='"+ st_center + font_header +"'></td>";
-                    table += "<td style='"+ st_center + font_header +"'></td></tr>";
-                    table += "<tr><td style='"+ st_center + font_header +"'>담당자</td>";
-                    table += "<td style='"+ st_center + font_header +"'></td>";
-                    table += "<td style='"+ st_center + font_header +"'></td>";
-                    table += "<td style='"+ st_center + font_header +"'></td></tr>";
-                    table += "<tr><td style='"+ st_center + font_context +"'>내용</td>";
-                    table += "<td style='"+ st_center + font_context +"'></td>";
-                    table += "<td style='"+ st_center + font_context +"'></td>";
-                    table += "<td style='"+ st_center + font_context +"'></td></tr>";
+                    table = "<table class='rowStyle' style='border-spacing:0; width:100%;'>";
+                    table += "<tr><th>업체</th>";
+                    table += "<th></th>";
+                    table += "<th></th>";
+                    table += "<th></th></tr>";
+                    table += "<tr><th>담당자</th>";
+                    table += "<th></th>";
+                    table += "<th></th>";
+                    table += "<th></th></tr>";
+                    table += "<tr><td>내용</td>";
+                    table += "<td></td>";
+                    table += "<td></td>";
+                    table += "<td></td></tr>";
                     table += "</table>";
                 }
 

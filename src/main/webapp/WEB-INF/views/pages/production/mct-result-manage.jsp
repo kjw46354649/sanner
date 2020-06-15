@@ -220,6 +220,22 @@
 
     $(function () {
         'use strict';
+
+        const EQUIP_LIST = (function () {
+            let list = [];
+            let parameters = ({'url':'/json-list', 'data': {'queryId': 'dataSource.getEquipList'}});
+
+            fnPostAjax(function (data, callFunctionParam) {
+                for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
+                    let thisParameter = data.list[i];
+
+                    list.push({'value': thisParameter.CODE_CD, 'text': thisParameter.CODE_NM});
+                }
+            }, parameters, '');
+            return list;
+        })();
+
+
         machineResultManagecolModel = [
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
@@ -574,7 +590,7 @@
             },
             {title: '단위수량', dataType: 'string', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: 'DESIGN_QTY', minWidth: 40, width: 60},
             // {title: '계산시간', dataType: 'string', dataIndx: 'WORK_TIME', minWidth: 40, width: 70},
-            {title: '대상파일', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: 'CAM_GFILE_SEQ', minWidth: 250, width: 330,
+            {title: '대상파일', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, editor: false, dataIndx: 'CAM_GFILE_SEQ', minWidth: 250, width: 330,
                 render: function (ui) {
                     let rowData = ui.rowData;
                     if(rowData.CAM_FILE_NM && rowData.NC_FILE_NM)
@@ -589,7 +605,12 @@
             },
             {title: '', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: '', minWidth: 50, width: 50,
                 render: function (ui) {
-                    return '<button type="button" class="miniBtn blue" id="CAM_WORK_FILE_ACTION">파일</button>';
+                    let rowData = ui.rowData;
+                    if(rowData.SEQ) {
+                        return '<button type="button" class="miniBtn blue" id="CAM_WORK_FILE_ACTION">파일</button>';
+                    }else{
+                        return '';
+                    }
                 },
                 postRender: function (ui) {
                     let grid = this;
@@ -677,7 +698,7 @@
 
         /** 제품 시작 상세 표시 **/
         let camWorkManagePop = function(rowData) {
-
+            fnResetFrom('cam_work_manage_pop_form');
             $("#cam_work_manage_pop_form").find("#CONTROL_SEQ").val(rowData.CONTROL_SEQ);
             $("#cam_work_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val(rowData.CONTROL_DETAIL_SEQ);
             $("#cam_work_manage_pop_form").find("#CAM_SEQ").val(rowData.CAM_SEQ);
@@ -688,8 +709,8 @@
             $("#cam_work_manage_pop_form").find("#ITEM_NM").html(numberWithCommas(rowData.ITEM_NM));
             $("#cam_work_manage_pop_form").find("#STANDARD_SIZE").html(numberWithCommas(rowData.STANDARD_SIZE));
             $("#cam_work_manage_pop_form").find("#MATERIAL_DETAIL_NM").html(numberWithCommas(rowData.MATERIAL_DETAIL_NM));
-            $("#cam_work_manage_pop_form").find("#HISTORY_NOTE").html(numberWithCommas(rowData.HISTORY_NOTE));
-            $("#cam_work_manage_pop_form").find("#NOTE").html(numberWithCommas(rowData.NOTE));
+            $("#cam_work_manage_pop_form").find("#HISTORY_NOTE").val(numberWithCommas(rowData.HISTORY_NOTE));
+            $("#cam_work_manage_pop_form").find("#NOTE").val(numberWithCommas(rowData.NOTE));
 
             switch (rowData.CAM_STATUS) {
                 case 'CWS010':     // 대기
@@ -753,9 +774,9 @@
                         'url': '/managerCamWork',
                         'data': $('#cam_work_manage_pop_form').serialize()
                     };
-                    $camWorkTempSaveBtn.focus();
                     fnPostAjax(function (data, callFunctionParam) {
-                        popCamWorkReload();
+                        $('#cam_work_manage_detail_pop').modal('hide');
+                        $mctCamManageSearchBtn.trigger("click");
                     }, parameters, '');
                 }
             });

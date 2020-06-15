@@ -570,18 +570,22 @@
             CASE WHEN A.WORK_TYPE = 'WTP030' THEN '수' WHEN A.WORK_TYPE = 'WTP040' THEN '재' END AS WORK_NM, <!-- 형태 -->
             A.ITEM_NM, <!-- 품명 -->
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 1, 'MCT_PLAN_SEQ') AS MCT_PLAN_SEQ_1,
+            SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 1, 'EQUIP_ID') AS EQUIP_ID_1,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 1, 'EQUIP_SEQ') AS EQUIP_SEQ_1,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 1, 'WORKING_TIME') AS WORKING_TIME_1,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 1, 'STATUS') AS STATUS_1,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 2, 'MCT_PLAN_SEQ') AS MCT_PLAN_SEQ_2,
+            SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 2, 'EQUIP_ID') AS EQUIP_ID_2,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 2, 'EQUIP_SEQ')  AS EQUIP_SEQ_2,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 2, 'WORKING_TIME') AS WORKING_TIME_2,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 2, 'STATUS') AS STATUS_2,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 3, 'MCT_PLAN_SEQ') AS MCT_PLAN_SEQ_3,
+            SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 3, 'EQUIP_ID') AS EQUIP_ID_3,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 3, 'EQUIP_SEQ')  AS EQUIP_SEQ_3,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 3, 'WORKING_TIME') AS WORKING_TIME_3,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 3, 'STATUS') AS STATUS_3,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 4, 'MCT_PLAN_SEQ') AS MCT_PLAN_SEQ_4,
+            SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 4, 'EQUIP_ID') AS EQUIP_ID_4,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 4, 'EQUIP_SEQ')  AS EQUIP_SEQ_4,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 4, 'WORKING_TIME') AS WORKING_TIME_4,
             SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 4, 'STATUS') AS STATUS_4,
@@ -681,10 +685,19 @@
     </select>
 
     <insert id="insertMctCamWork"  parameterType="java.util.HashMap" >
+        <selectKey keyProperty="CAM_SEQ" resultType="integer" order="BEFORE">
+            SELECT (CASE WHEN #{CAM_SEQ} IS NOT NULL THEN #{CAM_SEQ} ELSE NEXTVAL(SEQ_CAM) END) AS CAM_SEQ FROM DUAL
+        </selectKey>
         INSERT INTO jmes.TBL_CAM
         (CAM_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, START_DT, HISTORY_NOTE, NOTE, INSERT_ID)
         VALUES
-        (NEXTVAL(SEQ_CAM), #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}, NOW(), #{HISTORY_NOTE}, #{NOTE}, #{LOGIN_USER_ID})
+        (#{CAM_SEQ}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}, NOW(), #{HISTORY_NOTE}, #{NOTE}, #{LOGIN_USER_ID})
+        ON DUPLICATE KEY UPDATE
+            HISTORY_NOTE = #{HISTORY_NOTE},
+            NOTE = #{NOTE},
+            FINISH_DT= NULL,
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
 
     <delete id="deleteMctCamWork"  parameterType="java.util.HashMap" >
@@ -753,6 +766,57 @@
             AND CAM_SEQ = #{CAM_SEQ}
             AND SEQ = #{SEQ}
     </delete>
+
+    <insert id="createCamStartControlPartProgress" parameterType="java.util.HashMap" >
+        INSERT INTO TBL_CONTROL_PART_PROGRESS (
+            CONTROL_SEQ,
+            CONTROL_DETAIL_SEQ,
+            SEQ,
+            PART_STATUS,
+            STATUS_DT,
+            INSERT_ID
+        ) VALUES (
+            #{CONTROL_SEQ},
+            #{CONTROL_DETAIL_SEQ},
+            NEXTVAL(SEQ_CONTROL_PART_PROGRESS),
+            'PRO006',
+            NOW(),
+            #{LOGIN_USER_ID}
+        )
+    </insert>
+
+    <update id="updateCamStartControlPartStatus" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            PART_STATUS = 'PRO006',
+            STATUS_DT = NOW(),
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+              AND CONTROL_DETAIL_SEQ  = #{CONTROL_DETAIL_SEQ}
+    </update>
+
+    <insert id="beforeStatusControlPartProgress" parameterType="java.util.HashMap" >
+        DELETE FROM TBL_CONTROL_PART_PROGRESS A
+        WHERE A.PART_STATUS = 'PRO006'
+            AND A.SEQ = (SELECT MAX(B.SEQ) FROM TBL_CONTROL_PART_PROGRESS B WHERE A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ  = #{CONTROL_DETAIL_SEQ}
+    </insert>
+
+    <insert id="beforeStatusControlPart" parameterType="java.util.HashMap" >
+        UPDATE TBL_CONTROL_PART A
+            INNER JOIN  TBL_CONTROL_PART_PROGRESS B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND A.PART_STATUS != B.PART_STATUS
+                AND B.SEQ = (SELECT MAX(C.SEQ) FROM TBL_CONTROL_PART_PROGRESS C WHERE C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ)
+        SET
+            A.PART_STATUS = B.PART_STATUS,
+            A.STATUS_DT = B.STATUS_DT,
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE A.PART_STATUS = 'PRO006'
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ  = #{CONTROL_DETAIL_SEQ}
+    </insert>
 
 
 </mapper>

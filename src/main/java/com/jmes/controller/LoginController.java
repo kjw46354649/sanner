@@ -110,4 +110,38 @@ public class LoginController {
         return "redirect:/";
     }
 
+    @RequestMapping("/drawing-change-locale")
+    public String drawingChangeMainLocale(@RequestParam(value = "lang", defaultValue = "ko_KR")  String newLocale,
+                               HttpSession session, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+
+        System.out.println("newLocale=[" + newLocale + "]");
+
+        /** Begin Locale Setting **/
+        LocaleEditor localeEditor = new LocaleEditor();
+        localeEditor.setAsText(newLocale);
+        localeResolver.setLocale(request, response, (Locale) localeEditor.getValue());
+        locale.setDefault((Locale) localeEditor.getValue());
+        /** End Locale Setting **/
+
+        session.setAttribute("LocalInfo", localeEditor.getValue());
+
+        return "redirect:/drawing";
+    }
+
+    @RequestMapping("/drawing-change-user-locale")
+    public String drawingChangeMainUserLocale(@RequestParam(value = "lang", defaultValue = "ko_KR")  String newLocale,
+                               HttpSession session, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+
+        /** Begin Locale Setting **/
+        LocaleEditor localeEditor = new LocaleEditor();
+        localeEditor.setAsText(newLocale);
+        localeResolver.setLocale(request, response, (Locale) localeEditor.getValue());
+        locale.setDefault((Locale) localeEditor.getValue());
+        /** End Locale Setting **/
+
+        session.setAttribute("LocalInfo", localeEditor.getValue());
+
+        return "redirect:/drawing-worker";
+    }
+
 }

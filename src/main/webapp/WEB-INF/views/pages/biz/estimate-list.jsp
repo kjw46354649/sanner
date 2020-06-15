@@ -134,8 +134,8 @@
     $(function () {
         let estimateMasterTopColModel= [
             //{title: 'No.', dataType: 'string', dataIndx: 'EST_SEQ'},
-            {title: 'Status', dataType: 'string', dataIndx: 'EST_STATUS_NM', editable: false, width: 120 },
-            {title: '발주사', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 150 ,
+            {title: 'Status', dataType: 'string', dataIndx: 'EST_STATUS_NM', editable: false, width: 80 },
+            {title: '발주사', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 100 ,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "ORDER_COMP_NM", id: "ORDER_COMP_CD" },
@@ -150,7 +150,7 @@
                     }
                 }
             },
-            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', editable: false, width: 100 },
+            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', editable: false, width: 70 },
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM', width: 100 ,
                 editor: {
                     type: 'select',
@@ -166,8 +166,8 @@
                     }
                 }
             },
-            {title: '견적번호', dataType: 'string', dataIndx: 'EST_NUM', editable: false, width: 180 },
-            {title: '차수', dataType: 'string', dataIndx: 'EST_VER', editable: false, width: 50 },
+            {title: '견적번호', dataType: 'string', dataIndx: 'EST_NUM', editable: false, width: 150 },
+            {title: '차수', dataType: 'string', dataIndx: 'EST_VER', editable: false},
             {title: '', dataType: 'string', dataIndx: '', editable: false, width: 30 ,
                 render: function(ui){
                     let EST_STATUS = ui.rowData.EST_STATUS;
@@ -178,9 +178,9 @@
                         '</a>';
                 }
             },
-            {title: '제목', dataType: 'string', dataIndx: 'EST_TITLE', width: 180 },
+            {title: '제목', dataType: 'string', dataIndx: 'EST_TITLE', width: 220 },
             {title: '품수', dataType: 'string', dataIndx: 'DTL_CNT', editable: false},
-            {title: '금액 계', dataType: 'string', dataIndx: 'DTL_AMOUNT', format: '#,###'},
+            {title: '금액 계', dataType: 'string', dataIndx: 'DTL_AMOUNT', format: '#,###', width: 80},
             {title: '등록일시', dataType: 'date', dataIndx: 'INSERT_DT', editable: false, width: 120 },
             {title: '견적담당', dataType: 'string', dataIndx: 'EST_USER', width: 120 ,
                 editor: {
@@ -197,7 +197,7 @@
                     }
                 }
             },
-            {title: '첨부파일', dataType: 'string', dataIndx: 'ETC_GFILE_SEQ',
+            {title: '첨부파일', dataType: 'string', dataIndx: 'ETC_GFILE_SEQ', width: 60,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadViewPopup" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
                 },
@@ -216,8 +216,8 @@
                     });
                 }
             },
-            {title: '메일발송일시', dataType: 'string', dataIndx: 'SEND_DT', editable: false},
-            {title: '메일발송여부', dataType: 'string', dataIndx: 'SEND_YN', editable: false},
+            {title: '메일발송일시', dataType: 'string', dataIndx: 'SEND_DT', editable: false, width: 120},
+            {title: '메일발송여부', dataType: 'string', dataIndx: 'SEND_YN', editable: false, width: 80},
             {title: '주문접수', dataType: 'date', dataIndx: '', editable: false, width: 60 ,
                 render: function(ui){
                     let CONTROL_YN = ui.rowData.CONTROL_YN;
@@ -595,7 +595,7 @@
                     return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                 }
             },
-            //scrollModel: { autoFit: false },
+            scrollModel: { autoFit: false },
             columnTemplate: {align: 'center', hvalign: 'center'},
             numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'row', mode: 'single'} ,
@@ -607,7 +607,7 @@
             showTitle: false,
             strNoRows: g_noData,
             complete: function(event, ui) {
-                this.flex();
+                //this.flex();
                 let data = estimateMasterTopGrid.pqGrid('option', 'dataModel.data');
 
                 $('#estimate_master_top_grid_records').html(data.length);
@@ -616,21 +616,6 @@
                     estimateMasterTopGrid.pqGrid('setSelection', {rowIndx:0} );
                 }else{
                     selectEstimateBotList('');
-                }
-            },
-            selectChange: function (event, ui) {
-                if (ui.selection.iCells.ranges[0] !== undefined) {
-                    estimateMasterSelectedRowIndex = [];
-                    let estimateMasterGridFirstRow = ui.selection.iCells.ranges[0].r1;
-                    let estimateMasterGridLastRow = ui.selection.iCells.ranges[0].r2;
-
-                    if (estimateMasterGridFirstRow === estimateMasterGridLastRow) {
-                        estimateMasterSelectedRowIndex[0] = estimateMasterGridFirstRow;
-                    } else {
-                        for (let i = estimateMasterGridFirstRow; i <= estimateMasterGridLastRow; i++) {
-                            estimateMasterSelectedRowIndex.push(i);
-                        }
-                    }
                 }
             },
             rowSelect: function( event, ui ) {

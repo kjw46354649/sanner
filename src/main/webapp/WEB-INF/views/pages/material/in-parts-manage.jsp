@@ -109,15 +109,15 @@
     </div>
 
     <div class="bottomWrap row3_bottomWrap">
-        <div class="hWrap">
-            <div class="d-inline">
+<%--        <div class="hWrap">--%>
+<%--            <div class="d-inline">--%>
 
-                <div class="rightSpan">
-                    <button type="button" class="defaultBtn btn-120w green" style="font-weight:normal;" id="mainSaveBtn">저장</button>
+<%--                <div class="rightSpan">--%>
 
-                </div>
-            </div>
-        </div>
+
+<%--                </div>--%>
+<%--            </div>--%>
+<%--        </div>--%>
 
 
         <div class="tableWrap jmestabs" id="div_tabs_part">
@@ -127,6 +127,7 @@
                 <div class="right_sort">
                     <button type="button" id="mainAddBtn" class="defaultBtn radius ">추가</button>
                     <button type="button" id="mainDeleteBtn" class="defaultBtn radius red ">삭제</button>
+                    <button type="button" id="mainSaveBtn" class="defaultBtn radius green ">저장</button>
                     <button type="button" id="mainLocBtn" class="defaultBtn radius black ">위치정보관리</button>
                 </div>
             </ul>
@@ -810,12 +811,14 @@
                 $("#mainAddBtn").show();
                 $("#mainDeleteBtn").show();
                 $("#mainLocBtn").show();
+                $("#mainSaveBtn").show();
             }else if(selTab == "#_TAB2"){
                 $("#search_form").find("#SEL_TAB_TYPE").val("2");
                 $("#search_form").find("#queryId").val("material.selectConsumableHistoryList");
                 $("#mainAddBtn").hide();
                 $("#mainDeleteBtn").hide();
                 $("#mainLocBtn").hide();
+                $("#mainSaveBtn").hide();
             }
             $("#searchBtn").trigger('click');
 

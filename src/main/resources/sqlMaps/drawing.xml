@@ -3,35 +3,99 @@
 
 <mapper namespace="drawingMapper">
 
+    <select id="selectDrawingAreaList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+        	A.CODE_CD, B.CODE_NM
+        FROM TBL_CODE A
+        	INNER JOIN TBL_CODE_LANG B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'KO' THEN 'KR' ELSE 'EN' END
+        WHERE 1 = 1
+        	AND A.HIGH_CD = '1005'
+        	AND A.ETC3 = 'D'
+        ORDER BY A.SORT_NUM
+    </select>
+
     <select id="selectDrawingEquipment" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT EQUIP_SEQ, EQUIP_NM, FACTORY_AREA
         FROM TBL_EQUIP
-        WHERE DEL_YN ='N'
+        WHERE 1 = 1
+            AND EQUIP_KIND = '1'
+          	AND PROCESS_TYPE IN ('MPR010', 'MPR020', 'MPR030', 'MPR040')
+            AND DEL_YN ='N'
+            AND FACTORY_AREA = #{FACTORY_AREA}
+    </select>
+
+    <select id="selectDrawingWorkerGroupList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.CODE_CD, B.CODE_NM
+        FROM TBL_CODE A
+            INNER JOIN TBL_CODE_LANG B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'KO' THEN 'KR' ELSE 'EN' END
+        WHERE 1 = 1
+            AND A.HIGH_CD = '1061'
+        ORDER BY A.SORT_NUM
     </select>
 
     <select id="selectDrawingUser" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT A.USER_ID, A.USER_NM, B.FILE_PATH
+        SELECT A.USER_ID, A.USER_NM, IFNULL(A.PHOTO_GFILE_SEQ, SPACE(0)) AS PHOTO_GFILE_SEQ
         FROM TBL_USER A
-            LEFT OUTER JOIN TBL_FILE B ON A.PHOTO_GFILE_SEQ = B.GFILE_SEQ
         WHERE 1=1
+            AND A.DEPARTMENT = #{DEPARTMENT}
     </select>
 
     <select id="selectDrawingBoardLastWork" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        -- 최근 작업 내용
         SELECT
-			Z.USER_ID, Z.USER_NM, Z.POSITION_NM, Z.JOB_TITLE,
-			A.EQUIP_NM, A.EQUIP_SEQ, A.FACTORY_AREA, SF_GET_CODE_NM('1005', A.FACTORY_AREA, 'EN') AS FACTORY_NM,
-            D.CONTROL_NUM, D.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, E.BARCODE_NUM,
-            C.PART_NUM, SUBSTRING_INDEX(C.INNER_DUE_DT, '-' , -2 ) AS INNER_DUE_DT, F.ORDER_QTY,
-            D.EMERGENCY_YN, D.MAIN_INSPECTION
-        FROM TBL_EQUIP A
-			LEFT OUTER JOIN TBL_MCT_WORK B ON A.EQUIP_SEQ = B.EQUIP_SEQ
-            LEFT OUTER JOIN TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-            LEFT OUTER JOIN TBL_CONTROL D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND D.DEL_YN = 'N'
-            LEFT OUTER JOIN TBL_CONTROL_BARCODE E ON E.CONTROL_SEQ = C.CONTROL_SEQ AND E.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND E.DEL_YN = 'N'
-            LEFT OUTER JOIN TBL_MATERIAL_ORDER F ON E.CONTROL_SEQ = F.CONTROL_SEQ AND E.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
-            LEFT OUTER JOIN TBL_USER Z ON Z.USER_ID = #{USER_ID} AND Z.DEL_YN = 'N'
-        WHERE 1=1
-			AND A.FACTORY_AREA = #{FACTORY_AREA}
+        	A.MCT_WORK_SEQ,
+        	SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ) AS WORK_TIME,
+        	SF_GET_DRAWING_WORK_TIME('STOP', A.MCT_WORK_SEQ) AS STOP_TIME,
+        	CASE WHEN D.EMERGENCY_YN = 'Y' THEN D.EMERGENCY_YN ELSE SPACE(0) END AS EMERGENCY_YN, -- 긴급 -->
+        	CASE WHEN D.MAIN_INSPECTION = 'Y' THEN D.MAIN_INSPECTION ELSE SPACE(0) END AS MAIN_INSPECTION, -- 주요 검사품 -->
+        	IFNULL(jmes.SF_GET_DATE_F(A.WORK_START_DT, '', 'M'), SPACE(0)) AS WORK_START_DT,
+        	IFNULL(jmes.SF_GET_DATE_F(A.WORK_FINISH_DT, '', 'M'), SPACE(0)) AS WORK_FINISH_DT,
+        	D.CONTROL_NUM,
+        	IFNULL(C.PART_NUM, SPACE(0)) AS PART_NUM, -- PART 번호 -->
+        	jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS ORDER_QTY, -- 수량 -->
+        	jmes.SF_GET_DATE_F(C.INNER_DUE_DT, '', '') AS INNER_DUE_DT, -- 내부가공납기 -->
+        	E.NOTE
+        FROM TBL_MCT_WORK A
+            INNER JOIN TBL_CONTROL_PART C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_CONTROL D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND D.DEL_YN = 'N'
+            LEFT OUTER JOIN TBL_CAM E ON C.CONTROL_SEQ = E.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
+        WHERE 1 = 1
+        	AND A.MCT_WORK_SEQ = (SELECT MAX(H.MCT_WORK_SEQ) FROM TBL_MCT_WORK H
+        							WHERE A.EQUIP_SEQ = H.EQUIP_SEQ AND H.DEL_YN = 'N' AND H.WORK_FINISH_DT IS NOT NULL
+        								AND H.WORK_START_DT IS NOT NULL)
+        	AND A.DEL_YN = 'N'
+        	AND A.WORK_START_DT IS NOT NULL
+        	AND A.WORK_FINISH_DT IS NOT NULL
+            AND A.EQUIP_SEQ = #{EQUIP_SEQ}
+    </select>
+
+    <select id="selectDrawingBoardCurrentWork" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        -- 현재 작업 진행 중 내용
+        SELECT
+            A.MCT_WORK_SEQ,
+            SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ) AS WORK_TIME,
+            SF_GET_DRAWING_WORK_TIME('STOP', A.MCT_WORK_SEQ) AS STOP_TIME,
+            CASE WHEN D.EMERGENCY_YN = 'Y' THEN D.EMERGENCY_YN ELSE SPACE(0) END AS EMERGENCY_YN, -- 긴급 -->
+            CASE WHEN D.MAIN_INSPECTION = 'Y' THEN D.MAIN_INSPECTION ELSE SPACE(0) END AS MAIN_INSPECTION, -- 주요 검사품 -->
+            IFNULL(jmes.SF_GET_DATE_F(A.WORK_START_DT, '', 'M'), SPACE(0)) AS WORK_START_DT,
+            IFNULL(jmes.SF_GET_DATE_F(A.WORK_FINISH_DT, '', 'M'), SPACE(0)) AS WORK_FINISH_DT,
+            D.CONTROL_NUM,
+            IFNULL(C.PART_NUM, SPACE(0)) AS PART_NUM, -- PART 번호 -->
+            jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS ORDER_QTY, -- 수량 -->
+            jmes.SF_GET_DATE_F(C.INNER_DUE_DT, '', '') AS INNER_DUE_DT, -- 내부가공납기 -->
+            E.NOTE
+        FROM TBL_MCT_WORK A
+            INNER JOIN TBL_CONTROL_PART C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_CONTROL D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND D.DEL_YN = 'N'
+            LEFT OUTER JOIN TBL_CAM E ON C.CONTROL_SEQ = E.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
+        WHERE 1 = 1
+            AND A.MCT_WORK_SEQ = (SELECT MAX(H.MCT_WORK_SEQ) FROM TBL_MCT_WORK H
+                                    WHERE A.EQUIP_SEQ = H.EQUIP_SEQ AND H.DEL_YN = 'N' AND H.WORK_FINISH_DT IS NULL
+                                        AND H.WORK_START_DT IS NOT NULL)
+            AND A.DEL_YN = 'N'
+            AND A.WORK_START_DT IS NOT NULL
+            AND A.WORK_FINISH_DT IS NULL
             AND A.EQUIP_SEQ = #{EQUIP_SEQ}
     </select>
 </mapper>
