@@ -156,7 +156,9 @@ public class BarcodePrintUtil {
         bufWriter.write("^FO485,185^A1N^FD납품일자^FS");
         bufWriter.write("^FO565,185^A1N^FD" + doNull((String)barcodeInfo.get("ORDER_DUE_DT"))+ "^FS");
         bufWriter.write("^FO10,235^A1N^FD관리번호^FS");
+        bufWriter.write("^CFJ,25");
         bufWriter.write("^FO90,235^A1N^FD" + doNull((String)barcodeInfo.get("CONTROL_NUM"))+ "^FS");
+        bufWriter.write("^CFJ,20");
         bufWriter.write("^FO485,235^A1N^FD납 품 처^FS");
         bufWriter.write("^FO565,235^A1N^FD" + doNull((String)barcodeInfo.get("DELIVERY_COMP_NM"))+ "^FS");
 
@@ -171,9 +173,10 @@ public class BarcodePrintUtil {
         if(!"".equals(projectNm_line2)){
             bufWriter.write("^FO90,295^A1N^FD"+projectNm_line2+"^FS");
         }
-
+        bufWriter.write("^CFJ,18");
         bufWriter.write("^FO482,285^A1N^FD규격/수량^FS");
-        bufWriter.write("^FO565,285^A1N^FD" + doNull((String)barcodeInfo.get("SIZE_QTY_INFO"))+ "^FS");
+        bufWriter.write("^CFJ,20");
+        bufWriter.write("^FO568,285^A1N^FD" + doNull((String)barcodeInfo.get("SIZE_QTY_INFO"))+ "^FS");
         bufWriter.write("^FO10,345^A1N^FDRemark^FS");
 
         String remark = (String)barcodeInfo.get("LABEL_NOTE");
