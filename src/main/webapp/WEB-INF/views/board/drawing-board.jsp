@@ -3,11 +3,12 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="srping" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set value="${list[0]}" var="list"/>
 <!DOCTYPE html>
 <html lang="en" class="app">
 <head>
-    <title>J-MES POP</title>
+    <title>J-MES POP 1</title>
     <link href="/resource/asset/css/reset.css" rel="stylesheet" type="text/css" />
     <link href="/resource/asset/css/common.css" rel="stylesheet" type="text/css" />
     <link href="/resource/asset/css/tab.css" rel="stylesheet" type="text/css" />
@@ -22,8 +23,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
-                <div class="slecBox" id="equip_tab"><a href="#">${list.EQUIP_NM} 스케줄</a></div>
-                <div class="slecBox" id="area_tab"><a href="#">${list.FACTORY_NM}</a></div>
+                <div class="slecBox" id="equip_tab"><a href="#">${drawingInfo.machineInfo.EQUIP_NM} 스케줄</a></div>
+                <div class="slecBox" id="area_tab"><a href="#">${drawingInfo.machineInfo.EQUIP_NM}</a></div>
                 <button type="button" class="close" data-dismiss="modal">
                     <span>×</span>
                 </button>
@@ -269,12 +270,12 @@
                 <input id="FACTORY_AREA" name="FACTORY_AREA" type="hidden" value="${list.FACTORY_AREA}">
                 <input id="EQUIP_SEQ" name="EQUIP_SEQ" type="hidden" value="${list.EQUIP_SEQ}">
                 <div class="logInWrap">
-                    <div class="mainTit">${list.EQUIP_NM} </div>
+                    <div class="mainTit">${drawingInfo.machineInfo.EQUIP_NM}</div>
                     <div class="userWrap">
-                        <div class="userImg"><img src="/resource/asset/images/user/user.jpg" alt=""></div>
+                        <div class="userImg"><img src="/image/${drawingInfo.userInfo.USER_GFILE_SEQ}" alt=""></div>
                         <div class="userInfo">
-                            <p class="name">${list.USER_NM}</p>
-                            <p><span class="dept">${list.JOB_TITLE}</span> / <span class="position"></span>${list.POSITION_NM}</p>
+                            <p class="name">${drawingInfo.userInfo.USER_NM}</p>
+                            <p><span class="dept">(${drawingInfo.userInfo.USER_ID})</span></p>
                         </div>
                         <div class="logStatus"><button type="submit">Log off</button></div>
                     </div>
@@ -287,33 +288,41 @@
         </div>
         <div class="rightWorkWrap">
             <div class="workInWrap">
-                <div class="contsTitWrap" id="workMainLastConts">
-                    <div class="contsTit">최근 작업내용</div>
-                    <div class="slecBox"><a href="#">작업대상 선택</a></div>
-                </div>
-                <div class="contsTitWrap" id="workMainProgressConts" style="">
-                    <div class="contsTit">진행중인 작업</div>
-                    <div class="endBox"><a href="#">종료하기</a></div>
-                    <div class="stopBox"><a href="#">일시</br>정지</a></div>
-                    <div class="cancelBox"><a href="#">작업</br>취소</a></div>
-                </div>
+                <c:if test="${empty drawingInfo.currentWork}">
+                    <div class="contsTitWrap" id="workMainLastConts">
+                        <div class="contsTit">최근 작업내용</div>
+                        <div class="slecBox"><a href="#">작업대상 선택</a></div>
+                    </div>
+                </c:if>
+                <c:if test="${not empty drawingInfo.currentWork}">
+                    <div class="contsTitWrap" id="workMainProgressConts" style="">
+                        <div class="contsTit">진행중인 작업</div>
+                        <div class="endBox"><a href="#">종료하기</a></div>
+                        <div class="stopBox"><a href="#">일시</br>정지</a></div>
+                        <div class="cancelBox"><a href="#">작업</br>취소</a></div>
+                    </div>
+                </c:if>
                 <div class="contsWrap">
+                    <c:set var="workInfo" value="${drawingInfo.lastWork}" />
+                    <c:if test="${not empty drawingInfo.currentWork}">
+                        <c:set var="workInfo" value="${drawingInfo.currentWork}" />
+                    </c:if>s
                     <div class="topConts">
                         <div class="timeWrap">
                             <span class="timeTit">시작</span>
-                            <span class="time"><span>10/5 </span><span>16:32</span></span>
+                            <span class="time"><span><c:if test="${not empty workInfo}">${workInfo.WORK_START_DT}</c:if></span></span>
                         </div>
                         <div class="timeWrap">
                             <span class="timeTit">종료</span>
-                            <span class="time"><span>10/5 </span><span>16:32</span></span>
+                            <span class="time"><span><c:if test="${not empty workInfo}">${workInfo.WORK_FINISH_DT}</c:if></span></span>
                         </div>
                         <div class="timeWrap">
                             <span class="timeTit">정지</span>
-                            <span class="time">12분</span>
+                            <span class="time"><c:if test="${not empty workInfo}">${workInfo.WORK_TIME}</c:if>분</span>
                         </div>
                         <div class="timeWrap">
-                            <span class="timeTit"></span>
-                            <span class="time">32분</span>
+                            <span class="timeTit">작업</span>
+                            <span class="time"><c:if test="${not empty workInfo}">${workInfo.STOP_TIME}</c:if>분</span>
                         </div>
                     </div>
                     <div class="middleConts">
@@ -336,30 +345,30 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td><div>${list.CONTROL_NUM}</div></td>
-                                    <td><div>${list.PART_NUM}</div></td>
-                                    <td><div>${list.ORDERT_QTY}</div></td>
-                                    <td><div>${list.INNER_DUE_DT}</div></td>
+                                    <td><div><c:if test="${not empty workInfo}">${workInfo.CONTROL_NUM}</c:if></div></td>
+                                    <td><div><c:if test="${not empty workInfo}">${workInfo.PART_NUM}</c:if></div></td>
+                                    <td><div><c:if test="${not empty workInfo}">${workInfo.ORDERT_QTY}</c:if></div></td>
+                                    <td><div><c:if test="${not empty workInfo}">${workInfo.INNER_DUE_DT}</c:if></div></td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
                         <div class="share">
                             <div class="shareTit">공유</div>
-                            <div class="shareConts">좌측 모서리 파임 현상 발생, 후가공시 보완요망<br>상/하단 연마 필요, 드릴 관통 탭 주의</div>
+                            <div class="shareConts"><c:if test="${not empty workInfo}">${workInfo.NOTE}</c:if></div>
                         </div>
                         <div class="qual">
                             <div class="qualTit">과거<br/>기록</div>
                             <div class="qualConts">
-                                <span>#######</span>
+                                <span></span>
                             </div>
                         </div>
                     </div>
                     <div class="alertConts">
-                        <c:if test="${list.MAIN_INSPECTION == 'Y'}">
+                        <c:if test="${not empty workInfo && workInfo.MAIN_INSPECTION eq 'Y'}">
                             <span class="alertBox">주요검사</span>
                         </c:if>
-                        <c:if test="${list.EMERGENCY_YN == 'Y'}">
+                        <c:if test="${not empty workInfo && workInfo.EMERGENCY_YN eq 'Y'}">
                             <span class="alertBox">긴급</span>
                         </c:if>
                     </div>
@@ -370,6 +379,7 @@
 <script type='text/javascript'>
 
     $(function () {
+
         // 공통 SetTimeOut 변수
         let stopInterval;
 

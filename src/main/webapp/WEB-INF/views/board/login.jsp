@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="srping" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="en" class="app">
 <head>
@@ -14,71 +15,86 @@
     <script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
     <script type="text/javascript" src="/resource/asset/js/front.js"></script>
     <style>
-        *:focus { outline:none; }
+        select:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="tel"]:focus, input[type="number"]:focus, textarea:focus {
+            border: none !important;
+        }
+        select option {
+            font-size: 20px;
+        }
     </style>
 </head>
 <body onresize="parent.resizeTo(1024,600)" onload="parent.resizeTo(1024,600)">
     <div class="bodyWrap login" id="bodyWrap">
         <!-- contents 영역에 각페이지 명에 맞는 class 추가 !! -->
-        <form id="drawing_log_in_form" method="POST" action="/drawing-worker">
+        <form id="drawing_log_in_form" name="drawing_log_in_form" method="POST" action="/drawing-worker">
+            <input type="hidden" name="queryId" id="queryId" value="drawingMapper.selectDrawingEquipment">
+            <input type="hidden" name="EQUIP_NM" id="EQUIP_NM" value="">
             <div class="loginWrap">
                 <ul>
-                    <li><label for="menu_1">메뉴선택</label>
-                        <select id="menu_1" name="FACTORY_AREA" title="메뉴선택">
-                            <c:forEach var="code" items="${HighCode.H_1005}">
-                                <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                    <li>
+                        <select id="FACTORY_AREA" name="FACTORY_AREA" title="메뉴선택">
+                            <c:forEach var="code" items="${areaList}">
+                                <option value="${code.CODE_CD}">${code.CODE_NM}</option>
                             </c:forEach>
                         </select>
                     </li>
-                    <li><label for="menu_2">메뉴선택</label>
-                        <select id="menu_2" name="EQUIP_SEQ" title="메뉴선택"></select>
+                    <li>
+                        <select id="EQUIP_SEQ" name="EQUIP_SEQ" title="메뉴선택"></select>
                     </li>
                 </ul>
-                <p class="txt">로그인해 주세요</p>
-                <div class="btn"><button type="submit">사용자 선택하기</button></div>
-                <%--<div class="langBtn">
-                    <button type="button" class="on">Korean</button>
-                    <button type="button">English</button>
-                </div>--%>
+                <p class="txt"><srping:message key="drawing.login.plz"/></p>
+                <div class="btn">
+                    <button type="button" id="selectUserBtn"><srping:message key="drawing.login.user.sel"/></button>
+                </div>
+                <div class="langBtn">
+                    <button type="button" id="local_ko" name="local_ko" <c:if test="${LocalInfo eq 'ko'}"> class="on" </c:if> >Korean</button>
+                    <button type="button" id="local_en" name="local_en" <c:if test="${LocalInfo ne 'ko'}"> class="on" </c:if> >English</button>
+                </div>
             </div>
+        </form>
+        <form action="/drawing-change-locale" id="locale-form" name="locale-form" method="get">
+            <input type="hidden" name="lang" id="lang" value="">
         </form>
     </div>
 <script type='text/javascript'>
-    let equipmentData;
+
+    let equipment = $("#drawing_log_in_form").find("#EQUIP_SEQ");
     $(function () {
 
-        $.ajax({
-            url: '/json-list',
-            cache: false,
-            type: "POST",
-            data: {'queryId': 'drawingMapper.selectDrawingEquipment'},
-            dataType: "json",
-            async: false,
-            success: function(data) {
-                equipmentData = data.list;
-            },
-            complete: function(){}
+        $('#local_ko').click(function(){
+            $("#locale-form").find("#lang").val("ko");
+            document.getElementById('locale-form').submit();
         });
 
-        fnSelectBoxCreate();
-
-        $("#menu_1").on('change', function(){
-            fnSelectBoxCreate();
+        $('#local_en').click(function(){
+            $("#locale-form").find("#lang").val("en");
+            document.getElementById('locale-form').submit();
         });
 
+        $("#selectUserBtn").click(function () {
+            $("#drawing_log_in_form").find("#EQUIP_NM").val($("#drawing_log_in_form").find("#EQUIP_SEQ option:checked").text());
+            document.getElementById('drawing_log_in_form').submit();
+        })
+
+        $("#FACTORY_AREA").on('change', function(){
+            $.ajax({
+                type: 'POST', url: '/drawing-json-list', dataType: 'json', async: false,
+                data: {"queryId":"drawingMapper.selectDrawingEquipment", "FACTORY_AREA" : $("#drawing_log_in_form").find("#FACTORY_AREA").val()},
+                success: function (data, textStatus, jqXHR) {
+                    if (textStatus === 'success') {
+                        equipment.find('option').remove();
+                        for(let i=0; i < data.list.length; i++){
+                            document.getElementById("EQUIP_SEQ").options.add(new Option(data.list[i].EQUIP_NM, data.list[i].EQUIP_SEQ));
+                        }
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                }
+            });
+        });
+
+        $("#FACTORY_AREA").trigger("change");
     });
 
-    let fnSelectBoxCreate = function () {
-        'use strict';
-        let location = $("#menu_1 option:selected").val();
-        let html = "";
-
-        for(let i=0; i < equipmentData.length; i++) {
-            if(location == equipmentData[i].FACTORY_AREA) {
-                html += '<option value="'+equipmentData[i].EQUIP_SEQ+'">'+equipmentData[i].EQUIP_NM+'</option>';
-            }
-        }
-        $("#menu_2").html(html);
-    };
 </script>
 </body>

@@ -63,6 +63,10 @@
 <%--<script type="text/javascript" src='/resource/plugins/fullcalendar/moment/main.js'></script>--%>
 <script class="cssdesk" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.0/moment.min.js" type="text/javascript"></script>
 
+<!-- Multi Select -->
+<script type="text/javascript" src='/resource/plugins/multi_select/jquery.multi-select.js'></script>
+<script type="text/javascript" src='/resource/plugins/multi_select/jquery.multi-select.min.js'></script>
+
 <script type='text/javascript'>
 
     var g_code;
