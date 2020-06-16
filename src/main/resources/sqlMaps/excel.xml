@@ -153,14 +153,13 @@
                 AND A.COMP_CD = #{COMP_CD}
                 AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
                 AND B.WORK_TYPE NOT IN ('WTP050')
-                AND B.WORK_TYPE NOT IN ('WTP050')
             GROUP BY D.INVOICE_NUM) AS TOTAL_AMT, <!-- 금액 합계 -->
             A.INVOICE_NUM, <!-- INV No. -->
             A.INVOICE_TITLE,
             SF_GET_DATE_F(NOW(),'YYYY','M') AS DATE
         FROM TBL_INVOICE A
             INNER JOIN TBL_COMPANY B ON A.COMP_CD = B.COMP_CD
-        WHERE INVOICE_NUM = (SELECT INVOICE_NUM
+        WHERE INVOICE_NUM IN (SELECT INVOICE_NUM
                              FROM TBL_INVOICE_DETAIL
                              WHERE CONTROL_SEQ IN (${CONTROL_SEQ_STR}));
     </select>
