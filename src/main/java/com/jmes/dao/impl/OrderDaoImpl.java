@@ -115,4 +115,14 @@ public class OrderDaoImpl implements OrderDao {
         sqlSessionTemplate.update("updateMonthCloseFinalNego", hashMap);
     }
 
+    @Override
+    public void deleteMonthCloseDetail(HashMap<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.delete("deleteMonthCloseDetail", hashMap);
+    }
+
+    @Override
+    public void deleteMonthClose(HashMap<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.delete("deleteMonthClose", hashMap);
+    }
+
 }

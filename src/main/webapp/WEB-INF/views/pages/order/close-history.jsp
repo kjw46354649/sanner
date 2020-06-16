@@ -156,7 +156,7 @@
                     <div id="CONTROL_CLOSE_CANCEL_LEFT_GRID"></div>
                 </div>
                 <div style="display: flex; float:left; align-items: center; justify-content: center; width: 70px; height: 250px;">
-                    <span class="arrow right_Arrow"></span>
+                    <img src="/resource/asset/images/common/img_right_arrow.png" alt="오른쪽 화살표">
                 </div>
                 <div style="width: 450px; float:left;">
                     <div id="CONTROL_CLOSE_CANCEL_RIGHT_GRID"></div>
@@ -491,8 +491,8 @@
             {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
             {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
-            {title: '공급가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
-            {title: '마감금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CLOSE_CONTROL_AMT'}
+            {title: '공급가', width: 90, align: 'right', dataType: 'string', dataIndx: 'TOTAL_AMT'},
+            {title: '마감금액', width: 90, align: 'right', dataType: 'string', dataIndx: 'FINAL_NEGO_AMT'}
         ];
         const controlCloseCancelObj = {
             height: 300,
@@ -577,8 +577,6 @@
             let compCdList = [];
             let orderCompCdList = [];
             let controlSeqStr = '';
-            let compCdStr = '';
-            let orderCompCdStr = '';
             let controlCloseYear;
             let controlCloseMonth;
             let closeVer;
@@ -609,36 +607,24 @@
                     controlSeqStr += ',';
                 }
             }
-            for (let i = 0, COMP_CD_LIST_LENGTH = compCdList.length; i < COMP_CD_LIST_LENGTH; i++) {
-                compCdStr += '\'' + compCdList[i] + '\'';
-
-                if (i < COMP_CD_LIST_LENGTH - 1) {
-                    compCdStr += ',';
-                }
-            }
-            for (let i = 0, ORDER_COMP_CD_LIST_LENGTH = orderCompCdList.length; i < ORDER_COMP_CD_LIST_LENGTH; i++) {
-                orderCompCdStr += '\'' + orderCompCdList[i] + '\'';
-
-                if (i < ORDER_COMP_CD_LIST_LENGTH - 1) {
-                    orderCompCdStr += ',';
-                }
-            }
 
             controlCloseYear = list[0].CLOSE_MONTH.substring(0, 4);
             controlCloseMonth = list[0].CLOSE_MONTH.substring(4);
             closeVer = list[0].CLOSE_VER;
             $('#CONTROL_CLOSE_CANCEL_FORM > #CONTROL_SEQ').val(controlSeqStr);
-            $('#CONTROL_CLOSE_CANCEL_FORM > #COMP_CD').val(compCdStr);
-            $('#CONTROL_CLOSE_CANCEL_FORM > #ORDER_COMP_CD').val(orderCompCdStr);
+            $('#CONTROL_CLOSE_CANCEL_FORM > #COMP_CD').val(compCdList[0]);
+            $('#CONTROL_CLOSE_CANCEL_FORM > #ORDER_COMP_CD').val(orderCompCdList[0]);
             $('#CONTROL_CLOSE_CANCEL_FORM > #CONTROL_CLOSE_YEAR').val(controlCloseYear);
             $('#CONTROL_CLOSE_CANCEL_FORM > #CONTROL_CLOSE_MONTH').val(controlCloseMonth);
             $('#CONTROL_CLOSE_CANCEL_FORM > #CLOSE_VER').val(closeVer);
 
             let postData = fnFormToJsonArrayData('#CONTROL_CLOSE_CANCEL_FORM');
-            $controlCloseHistoryLeftGrid.pqGrid('option', 'dataModel.postData', function () {
-                return postData;
-            });
-            $controlCloseHistoryLeftGrid.pqGrid('refreshDataAndView');
+            fnRequestGidData($controlCloseHistoryLeftGrid, postData);
+
+            // $controlCloseHistoryLeftGrid.pqGrid('option', 'dataModel.postData', function () {
+            //     return postData;
+            // });
+            // $controlCloseHistoryLeftGrid.pqGrid('refreshDataAndView');
 
             postData.queryId = 'orderMapper.selectControlCloseCancelRightList';
             fnRequestGidData($controlCloseHistoryRightGrid, postData);
