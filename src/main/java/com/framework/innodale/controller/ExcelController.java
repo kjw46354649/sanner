@@ -144,7 +144,7 @@ public class ExcelController {
                 sheetNames.add((String) infoList.get(j).get("MATERIAL_COMP_NM"));
 
                 paramMap.put("queryId", "excel.selectItemOrderRegisterOrderSheetListExcel");
-                paramMap.put("MATERIAL_COMP_CD", infoList.get(j).get("MATERIAL_COMP_CD"));
+                paramMap.put("CONCAT_SEQ", infoList.get(j).get("CONCAT_SEQ"));
                 dataList = innodaleService.getList(paramMap);
                 map.put("MATERIAL_ORDER_NUM", dataList.get(0).get("MATERIAL_ORDER_NUM"));
                 map.put("ORDER_DT", dataList.get(0).get("ORDER_DT"));
