@@ -66,22 +66,15 @@ public class ExcelController {
             }
 
             for(int j = 0; j < arrayQueryId.length; j++) {
-                System.out.println(arrayQueryId[j]);
                 paramMap.put("queryId", arrayQueryId[j]);
 
                 dataList = innodaleService.getList(paramMap);
-                System.out.println(arrayMapInputIds[j]);
                 map.put(arrayMapInputIds[j], dataList);
             }
 
-
-            //Resource resource = new ClassPathResource("classpath:excelTemplate" + File.separator + templateFileName + "data.txt");
-            //InputStream inputStream = resource.getInputStream();
             is = new BufferedInputStream(new FileInputStream(excelDir + File.separator + templateFileName + ".xlsx"));
             XLSTransformer xls = new XLSTransformer();
             workbook = xls.transformXLS(is, map);
-
-            // System.out.println(excelDir + File.separator + templateFileName + date + ".xlsx");
 
             res.setHeader("Content-Disposition", CommonUtility.getDisposition(templateFileName + date + ".xlsx", CommonUtility.getBrowser(req)));
             res.setHeader("Content-Transfer-Encoding", "binary");

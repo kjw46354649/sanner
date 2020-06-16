@@ -77,16 +77,18 @@ public class DrawingBoardController {
         if(session.getAttribute("drawingInfo") == null && (!hashMap.containsKey("EQUIP_SEQ") || "".equals(hashMap.get("EQUIP_SEQ")))){
             return "redirect:/drawing";
         }
-
         HashMap<String, Object> drawingInfo = new HashMap<String, Object>();
-        /** 장비 선택 정보 **/
-        HashMap<String, Object> machineInfo = new HashMap<String, Object>();
 
-        machineInfo.put("EQUIP_SEQ",    hashMap.get("EQUIP_SEQ"));
-        machineInfo.put("EQUIP_NM",     hashMap.get("EQUIP_NM"));
+        if(hashMap.containsKey("EQUIP_SEQ") && !"".equals(hashMap.get("EQUIP_SEQ"))) {
+            /** 장비 선택 정보 **/
+            HashMap<String, Object> machineInfo = new HashMap<String, Object>();
 
-        /** 최종 Session 에 저장되는 정보 **/
-        drawingInfo.put("machineInfo", machineInfo);
+            machineInfo.put("EQUIP_SEQ", hashMap.get("EQUIP_SEQ"));
+            machineInfo.put("EQUIP_NM", hashMap.get("EQUIP_NM"));
+
+            /** 최종 Session 에 저장되는 정보 **/
+            drawingInfo.put("machineInfo", machineInfo);
+        }
 
         /** Session clear **/
         if(session.getAttribute("drawingInfo") != null){
@@ -103,7 +105,7 @@ public class DrawingBoardController {
     }
 
     @RequestMapping(value="/drawing-board")
-    public String drawingBoard(Model model, HttpSession session, HttpServletRequest request, Locale locale) throws Exception {
+    public String drawingBoard(Model model, HttpSession session, HttpServletRequest request) throws Exception {
 
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
         HashMap<String, Object> drawingInfo = (HashMap<String, Object>)(request.getSession().getAttribute("drawingInfo"));
@@ -126,40 +128,122 @@ public class DrawingBoardController {
             return "redirect:/drawing-worker";
         }
 
-        /** 사용자 조회 화면에서 넘어 온 경우 **/
-        userInfo = new HashMap<String, Object>();
+        if(hashMap.containsKey("USER_ID") && !"".equals(hashMap.get("USER_ID"))) {
+            /** 사용자 조회 화면에서 넘어 온 경우 **/
+            userInfo = new HashMap<String, Object>();
 
-        userInfo.put("USER_ID",         hashMap.get("USER_ID"));
-        userInfo.put("USER_NM",         hashMap.get("USER_NM"));
-        userInfo.put("USER_GFILE_SEQ",  hashMap.get("USER_GFILE_SEQ"));
+            userInfo.put("USER_ID", hashMap.get("USER_ID"));
+            userInfo.put("USER_NM", hashMap.get("USER_NM"));
+            userInfo.put("USER_GFILE_SEQ", hashMap.get("USER_GFILE_SEQ"));
 
-        /** 최종 Session 에 저장되는 정보 **/
-        drawingInfo.put("userInfo", userInfo);
+            /** 최종 Session 에 저장되는 정보 **/
+            drawingInfo.put("userInfo", userInfo);
+        }
 
         /** 장비 정보를 기초로 최근 작업정보 **/
         machineInfo.put("queryId", "drawingMapper.selectDrawingBoardLastWork");
-        drawingInfo.put("lastWork",innodaleService.getList(machineInfo));
+        drawingInfo.put("lastWork",innodaleService.getInfo(machineInfo));
 
         /** 장비 정보를 기초로 진행중인 작업 정보 **/
         machineInfo.put("queryId", "drawingMapper.selectDrawingBoardCurrentWork");
-        drawingInfo.put("currentWork",innodaleService.getList(machineInfo));
+        drawingInfo.put("currentWork",innodaleService.getInfo(machineInfo));
 
         session.setAttribute("drawingInfo", drawingInfo);
+
+        hashMap.put("queryId", "drawingMapper.selectDrawingErrorReasonList");
+        model.addAttribute("errorReasonList", this.innodaleService.getList(hashMap));
 
         return "board/drawing-board";
     }
 
-
-
-
-
-    @RequestMapping(value="/drawing-board-save")
-    public String drawingBoardSave(Model model, HttpServletRequest request, Locale locale) throws Exception {
-        logger.info("pop page submit");
+    /** 신규 작업을 시작한 경우 **/
+    @RequestMapping(value="/drawing-board-start")
+    public String drawingBoardStart(HttpSession session, HttpServletRequest request) throws Exception {
 
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
-        drawingBoardService.drawingBoardSave(hashMap);
+        HashMap<String, Object> drawingInfo = (HashMap<String, Object>)(request.getSession().getAttribute("drawingInfo"));
+
+        HashMap<String, Object> machineInfo = (HashMap<String, Object>)drawingInfo.get("machineInfo");
+        HashMap<String, Object> userInfo = (HashMap<String, Object>)drawingInfo.get("userInfo");
+
+        hashMap.put("machineInfo", machineInfo);
+        hashMap.put("userInfo", userInfo);
+
+        drawingBoardService.managerDrawingBoardStart(hashMap);
 
         return "jsonView";
     }
+
+    /** 신규 작업을 임시 정지 한 경우 **/
+    @RequestMapping(value="/drawing-board-pause")
+    public String managerDrawingBoardPause(HttpSession session, HttpServletRequest request) throws Exception {
+
+        HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
+        HashMap<String, Object> drawingInfo = (HashMap<String, Object>)(request.getSession().getAttribute("drawingInfo"));
+
+        HashMap<String, Object> machineInfo = (HashMap<String, Object>)drawingInfo.get("machineInfo");
+        HashMap<String, Object> userInfo = (HashMap<String, Object>)drawingInfo.get("userInfo");
+
+        hashMap.put("machineInfo", machineInfo);
+        hashMap.put("userInfo", userInfo);
+
+        drawingBoardService.managerDrawingBoardPause(hashMap);
+
+        return "jsonView";
+    }
+
+    /** 신규 작업을 임시 정지 후 재 실행 한 경우 **/
+    @RequestMapping(value="/drawing-board-restart")
+    public String managerDrawingBoardRestart(HttpSession session, HttpServletRequest request) throws Exception {
+
+        HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
+        HashMap<String, Object> drawingInfo = (HashMap<String, Object>)(request.getSession().getAttribute("drawingInfo"));
+
+        HashMap<String, Object> machineInfo = (HashMap<String, Object>)drawingInfo.get("machineInfo");
+        HashMap<String, Object> userInfo = (HashMap<String, Object>)drawingInfo.get("userInfo");
+
+        hashMap.put("machineInfo", machineInfo);
+        hashMap.put("userInfo", userInfo);
+
+        drawingBoardService.managerDrawingBoardRestart(hashMap);
+
+        return "jsonView";
+    }
+
+    /** 작업을 완료한 경우 **/
+    @RequestMapping(value="/drawing-board-complete")
+    public String managerDrawingBoardComplete(HttpSession session, HttpServletRequest request) throws Exception {
+
+        HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
+        HashMap<String, Object> drawingInfo = (HashMap<String, Object>)(request.getSession().getAttribute("drawingInfo"));
+
+        HashMap<String, Object> machineInfo = (HashMap<String, Object>)drawingInfo.get("machineInfo");
+        HashMap<String, Object> userInfo = (HashMap<String, Object>)drawingInfo.get("userInfo");
+
+        hashMap.put("machineInfo", machineInfo);
+        hashMap.put("userInfo", userInfo);
+
+        drawingBoardService.managerDrawingBoardComplete(hashMap);
+
+        return "jsonView";
+    }
+
+    /** 작업 취소 경우 **/
+    @RequestMapping(value="/drawing-board-cancel")
+    public String managerDrawingBoardCancel(HttpSession session, HttpServletRequest request) throws Exception {
+
+        HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
+        HashMap<String, Object> drawingInfo = (HashMap<String, Object>)(request.getSession().getAttribute("drawingInfo"));
+
+        HashMap<String, Object> machineInfo = (HashMap<String, Object>)drawingInfo.get("machineInfo");
+        HashMap<String, Object> userInfo = (HashMap<String, Object>)drawingInfo.get("userInfo");
+
+        hashMap.put("machineInfo", machineInfo);
+        hashMap.put("userInfo", userInfo);
+
+        drawingBoardService.managerDrawingBoardCancel(hashMap);
+
+        return "jsonView";
+    }
+
 }

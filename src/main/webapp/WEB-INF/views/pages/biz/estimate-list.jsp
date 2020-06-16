@@ -93,9 +93,8 @@
                     <button type="button" class="smallBtn yellow">견적정보</button>
                     <button type="button" class="smallBtn yellow">금액정보</button>
                     <span class="slt_wrap namePlusSlt right_float">
-                        <label id="selEstimateListExcel">견적List 출력</label>
-                        <%--<select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출"></select>--%>
-                        <button type="button" class="defaultBtn grayGra" id="btnEstimateListExcel">견적서 출력</button>
+                        <button type="button" class="defaultBtn grayGra" id="btnEstimateListExcel">견적List 출력</button>
+                        <button type="button" class="defaultBtn grayGra" id="btnEstimateExcel">견적서 출력</button>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateListDrawView">도면 보기</button>
                     </span>
                 </div>
@@ -751,28 +750,24 @@
             fnModifyPQGrid(estimateMasterTopGrid, estimateMasterInsertQueryList, estimateMasterUpdateQueryList);
         });
 
-        $("#btnEstimateListExcel").on('click', function(){
-            alert("작업 중 입니다.");
-            return false;
-            /*
-            $("#common_excel_form #sqlId").val('selectEstimateDetailListExcel');
-            $("#common_excel_form #mapInputId").val('data');
+        $("#btnEstimateExcel").on('click', function(){
+            $("#common_excel_form #sqlId").val('selectEstimateDetailListExcel:selectEstimateMasterInfoExcel');
+            $("#common_excel_form #mapInputId").val('data:info');
             $("#common_excel_form #paramName").val('EST_SEQ');
-            $("#common_excel_form #template").val('estimate_list_template');
+            $("#common_excel_form #template").val('estimate_template');
 
             fnReportFormToHiddenFormPageAction("common_excel_form", "/downloadExcel");
-            */
         });
 
         $("#btnEstimateListDrawView").on('click', function(){
             callWindowImageViewer(999);
         });
 
-        $("#selEstimateListExcel").on('click', function(){
-            $("#common_excel_form #sqlId").val('selectEstimateDetailListExcel:selectEstimateMasterInfoExcel');
-            $("#common_excel_form #mapInputId").val('data:info');
+        $("#btnEstimateListExcel").on('click', function(){
+            $("#common_excel_form #sqlId").val('selectEstimateDetailListExcel');
+            $("#common_excel_form #mapInputId").val('data');
             $("#common_excel_form #paramName").val('EST_SEQ');
-            $("#common_excel_form #template").val('estimate_template');
+            $("#common_excel_form #template").val('estimate_list_template');
 
             fnReportFormToHiddenFormPageAction("common_excel_form", "/downloadExcel");
         });
