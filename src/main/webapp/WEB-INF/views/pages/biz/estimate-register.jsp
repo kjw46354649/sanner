@@ -53,9 +53,7 @@
             <div class="hWrap">
                 <div class="d-inline">
                     <div class="right_sort">
-                        <%--                    <label for="selEstimateListExcel">견적서 추출</label>--%>
-                        <button type="button" class="defaultBtn" id="btnEstimateRegisterEstimateListExcel">견적서 출력</button>
-                        <%--                    <select id="selEstimateListExcel" name="selEstimateListExcel" title="견적서 추출"></select>--%>
+                        <button type="button" class="defaultBtn" id="btnEstimateRegisterEstimateExcel">견적서 출력</button>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawAdd">도면 등록</button>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawView">도면 보기</button>
                         <button type="button" class="defaultBtn radius green authorizedBtn" id="btn_estimate_register_save">저장</button>
@@ -909,6 +907,8 @@
                 btnDisabled(list.EST_STATUS);
                 //파일
                 $("#common_file_download_form").find("#GFILE_SEQ").val(list.ETC_GFILE_SEQ);
+                //Excel
+                $("#common_excel_form #paramData").val(EST_SEQ);
 
             }, parameter, '');
         };
@@ -941,7 +941,7 @@
                 $("#estimate_register_info_form #EMAIL_CONTENT").val(mail_data);
 
                 $("#estimate_version_up_sequence_form #hidden_est_seq").val(EST_SEQ);
-
+                $("#common_excel_form #paramData").val(EST_SEQ);
 
                 parameters = {
                     'url': '/registerEstimateSave',
@@ -1030,11 +1030,11 @@
             fnDeletePQGrid(estimateRegisterTopGrid, estimateRegisterSelectedRowIndex, USER_MASTER_QUERY_ID);
         });
 
-        $("#btnEstimateRegisterEstimateListExcel").on('click', function(){
-            $("#common_excel_form #sqlId").val('selectEstimateDetailListExcel');
-            $("#common_excel_form #mapInputId").val('data');
+        $("#btnEstimateRegisterEstimateExcel").on('click', function(){
+            $("#common_excel_form #sqlId").val('selectEstimateDetailListExcel:selectEstimateMasterInfoExcel');
+            $("#common_excel_form #mapInputId").val('data:info');
             $("#common_excel_form #paramName").val('EST_SEQ');
-            $("#common_excel_form #template").val('estimate_list_template');
+            $("#common_excel_form #template").val('estimate_template');
 
             fnReportFormToHiddenFormPageAction("common_excel_form", "/downloadExcel");
         });
