@@ -529,15 +529,15 @@
                     </colgroup>
                     <tr>
                         <th>관리번호</th>
-                        <td colspan="4"><input type="text" name="CONTROL_NUM" id="CONTROL_NUM"  value="" title="관리번호" class="wd_250" readonly></td>
+                        <td colspan="4"><input type="text" name="CONTROL_NUM" id="CONTROL_NUM"  value="" title="관리번호" class="wd_230" readonly></td>
                     </tr>
                     <tr>
                         <th>도면번호</th>
-                        <td colspan="4"><input type="text" name="DRAWING_NUM" id="DRAWING_NUM"  value="" title="도면번호" class="wd_250" readonly></td>
+                        <td colspan="4"><input type="text" name="DRAWING_NUM" id="DRAWING_NUM"  value="" title="도면번호" class="wd_230" readonly></td>
                     </tr>
                     <tr>
                         <th>발주번호</th>
-                        <td colspan="4"><input type="text" name="ORDER_NUM" id="ORDER_NUM"  value="" title="발주번호" class="wd_250" readonly></td>
+                        <td colspan="4"><input type="text" name="ORDER_NUM" id="ORDER_NUM"  value="" title="발주번호" class="wd_230" readonly></td>
                     </tr>
                     <tr>
                         <th>출고대상수량</th>
@@ -740,7 +740,7 @@
             {title: '현재위치(POP/DB)', dataType: 'string', dataIndx: 'POP_NM', minWidth: 100, width: 100, editable: false}
         ];
         outgoingManageGridId01.pqGrid({
-            width: "100%", height: 700,
+            width: "100%", height: 740,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'ORDER_SEQ',
                 url: "/paramQueryGridSelect",
@@ -1234,13 +1234,19 @@
         }
         $('#outgoing_manage_mini_pop_save_btn').on('click', function () {
             // validation
-            $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.insertOutgoingOutType1,inspection.updateOutgoingOutType1After1,inspection.updateOutgoingOutType1After2");
 
-            let parameters = {'url': '/json-manager', 'data': $("#outgoing_manage_pop_type_1_form").serialize() };
-            fnPostAjax(function (data, callFunctionParam) {
-                alert("등록이 완료되었습니다.");
-                $('#outgoing_manage_pop_type_1').modal('hide');
-            }, parameters, '');
+            if($("#outgoing_manage_pop_type_1_form").find("#NEW_OUT_QTY_VIEW").val() == 0){
+                alert("출고수량은 1개 이상이어야 합니다.");
+                return;
+            }else{
+                $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.insertOutgoingOutType1,inspection.updateOutgoingOutType1After1,inspection.updateOutgoingOutType1After2");
+
+                let parameters = {'url': '/json-manager', 'data': $("#outgoing_manage_pop_type_1_form").serialize() };
+                fnPostAjax(function (data, callFunctionParam) {
+                    alert("등록이 완료되었습니다.");
+                    $('#outgoing_manage_pop_type_1').modal('hide');
+                }, parameters, '');
+            }
 
         });
         $('#outgoing_manage_return_complete_btn').on('click', function () {
@@ -1277,30 +1283,38 @@
             };
             let parameters = {'url': '/json-create', 'data': data };
             */
-            let list = new Array() ;
-            for (let i = 0; i < outgoingManageSelectedRowIndex.length; i++) {
-                let rowData = outgoingManageGridId01.pqGrid('getRowData', {rowIndx: outgoingManageSelectedRowIndex[i]});
-                list.push(rowData);
+            if(outgoingManageSelectedRowIndex.length == 0){
+                alert("출고등록할 항목을 선택하여 주십시오.");
+            }else{
+                if(confirm("선택항목을 출고등록 하시겠습니까?")){
+                let list = new Array() ;
+                for (let i = 0; i < outgoingManageSelectedRowIndex.length; i++) {
+                    let rowData = outgoingManageGridId01.pqGrid('getRowData', {rowIndx: outgoingManageSelectedRowIndex[i]});
+                    list.push(rowData);
+                }
+
+                let changes = {
+                    'addList': list,
+                    'updateList': list
+                };
+                let QUERY_ID_ARRAY = {
+                    'insertQueryId': ['inspection.insertOutgoingOutType2'],
+                    'updateQueryId': ['inspection.updateOutgoingOutType1After1', 'inspection.updateOutgoingOutType1After2']
+                };
+                changes.queryIdList = QUERY_ID_ARRAY;
+                let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
+
+
+                fnPostAjax(function (data, callFunctionParam) {
+                    alert("등록이 완료되었습니다.");
+                    fnResetFrom("outgoing_manage_pop_type_1_form");
+                    $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
+                    $("#outgoing_manage_search_btn").trigger("click");
+                }, parameters, '');
+            }
             }
 
-            let changes = {
-                'addList': list,
-                'updateList': list
-            };
-            let QUERY_ID_ARRAY = {
-                'insertQueryId': ['inspection.insertOutgoingOutType2'],
-                'updateQueryId': ['inspection.updateOutgoingOutType1After1', 'inspection.updateOutgoingOutType1After2']
-            };
-            changes.queryIdList = QUERY_ID_ARRAY;
-            let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
 
-
-            fnPostAjax(function (data, callFunctionParam) {
-                alert("등록이 완료되었습니다.");
-                fnResetFrom("outgoing_manage_pop_type_1_form");
-                $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
-                $("#outgoing_manage_search_btn").trigger("click");
-            }, parameters, '');
 
         });
         $('#outgoing_manage_label_print_btn').on('click', function () {

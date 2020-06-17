@@ -153,7 +153,7 @@
             },
         ];
         outgoingHistoryGridId01.pqGrid({
-            width: "100%", height: 700,
+            width: "100%", height: 740,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'ORDER_SEQ',
                 url: "/paramQueryGridSelect",
