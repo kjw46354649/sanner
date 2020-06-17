@@ -740,7 +740,7 @@
             {title: '현재위치(POP/DB)', dataType: 'string', dataIndx: 'POP_NM', minWidth: 100, width: 100, editable: false}
         ];
         outgoingManageGridId01.pqGrid({
-            width: "100%", height: 700,
+            width: "100%", height: 740,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'ORDER_SEQ',
                 url: "/paramQueryGridSelect",

@@ -449,7 +449,7 @@
             }
         ];
         mainGridId01.pqGrid({
-            width: "100%", height: 700,
+            width: "100%", height: 720,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'CONSUMABLE_STOCK_SEQ',
                 url: "/paramQueryGridSelect",
@@ -521,7 +521,7 @@
             {title: '입력일시', dataType: 'string', dataIndx: 'IN_OUT_DT', editable: false}
         ];
         mainGridId02.pqGrid({
-            width: "100%", height: 700,
+            width: "100%", height: 720,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'CONSUMABLE_STOCK_SEQ',
                 url: "/paramQueryGridSelect",

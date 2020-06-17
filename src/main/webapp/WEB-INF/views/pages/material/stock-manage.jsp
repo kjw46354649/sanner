@@ -494,7 +494,7 @@
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', minWidth: 250, width: 250, editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}}
         ];
         stockManageGridId01.pqGrid({
-            width: "100%", height: 700,
+            width: "100%", height: 710,
             postRenderInterval: -1, //call postRender synchronously.
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'INSIDE_STOCK_NUM',
