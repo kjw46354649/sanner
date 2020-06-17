@@ -26,7 +26,7 @@
 <body onresize="parent.resizeTo(1024,600)" onload="parent.resizeTo(1024,600)">
     <div class="bodyWrap login" id="bodyWrap">
         <!-- contents 영역에 각페이지 명에 맞는 class 추가 !! -->
-        <form id="drawing_log_in_form" name="drawing_log_in_form" method="POST" action="/drawing-worker">
+        <form id="drawing_login_form" name="drawing_login_form" method="POST" action="/drawing-worker">
             <input type="hidden" name="queryId" id="queryId" value="drawingMapper.selectDrawingEquipment">
             <input type="hidden" name="EQUIP_NM" id="EQUIP_NM" value="">
             <div class="loginWrap">
@@ -58,7 +58,7 @@
     </div>
 <script type='text/javascript'>
 
-    let equipment = $("#drawing_log_in_form").find("#EQUIP_SEQ");
+    let equipment = $("#drawing_login_form").find("#EQUIP_SEQ");
     $(function () {
 
         $('#local_ko').click(function(){
@@ -72,14 +72,14 @@
         });
 
         $("#selectUserBtn").click(function () {
-            $("#drawing_log_in_form").find("#EQUIP_NM").val($("#drawing_log_in_form").find("#EQUIP_SEQ option:checked").text());
-            document.getElementById('drawing_log_in_form').submit();
+            $("#drawing_login_form").find("#EQUIP_NM").val($("#drawing_login_form").find("#EQUIP_SEQ option:checked").text());
+            document.getElementById('drawing_login_form').submit();
         })
 
         $("#FACTORY_AREA").on('change', function(){
             $.ajax({
                 type: 'POST', url: '/drawing-json-list', dataType: 'json', async: false,
-                data: {"queryId":"drawingMapper.selectDrawingEquipment", "FACTORY_AREA" : $("#drawing_log_in_form").find("#FACTORY_AREA").val()},
+                data: {"queryId":"drawingMapper.selectDrawingEquipment", "FACTORY_AREA" : $("#drawing_login_form").find("#FACTORY_AREA").val()},
                 success: function (data, textStatus, jqXHR) {
                     if (textStatus === 'success') {
                         equipment.find('option').remove();

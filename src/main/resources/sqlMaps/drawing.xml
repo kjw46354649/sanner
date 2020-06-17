@@ -113,7 +113,7 @@
 
     <select id="selectDrawingBoardWorkPlanList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-        	A.MCT_PLAN_SEQ, A.EQUIP_SEQ, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ,
+        	A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ,
         	C.CONTROL_NUM, -- 관리 번호 -->
         	IFNULL(D.PART_NUM, SPACE(0)) AS PART_NUM, -- PART 번호 -->
             jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS ORDER_QTY, -- 수량 -->
@@ -125,7 +125,23 @@
            	INNER JOIN jmes.TBL_CONTROL C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND C.DEL_YN = 'N'
            	INNER JOIN jmes.TBL_CONTROL_PART D ON A.CONTROL_SEQ = D.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
         WHERE A.EQUIP_SEQ = #{EQUIP_SEQ}
-        	<!-- AND A.DEL_YN = 'N'; -->
+        	AND A.DEL_YN = 'N'
+    </select>
+
+    <select id="selectDrawingBoardPopList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ,
+            B.CONTROL_NUM, -- 관리 번호 -->
+            IFNULL(A.PART_NUM, SPACE(0)) AS PART_NUM, -- PART 번호 -->
+            jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS ORDER_QTY, -- 수량 -->
+            jmes.SF_GET_DATE_F(A.INNER_DUE_DT, '', '') AS INNER_DUE_DT -- 내부가공납기 -->
+        FROM TBL_CONTROL_PART A
+            INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            INNER JOIN TBL_POP C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                AND C.POP_SEQ = (SELECT MAX(E.POP_SEQ) FROM TBL_POP E WHERE C.CONTROL_SEQ = E.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ) -- 현재 POP -->
+            INNER JOIN jmes.TBL_CODE D ON D.HIGH_CD = '1009' AND C.POP_POSITION = D.CODE_CD AND D.DEL_YN = 'N'
+            	AND D.REF_CD = #{FACTORY_AREA}
+        WHERE 1=1
     </select>
 
     <insert id="insertMctWorkStart"  parameterType="java.util.HashMap" >
@@ -167,6 +183,19 @@
         UPDATE jmes.TBL_MCT_WORK
         SET
             WORK_RESTART_DT = NOW(),
+            WORK_TEMP_STOP_DT = NULL,
+            WORK_STATUS = #{WORK_STATUS},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{userInfo.USER_ID}
+        WHERE 1 = 1
+            AND DEL_YN = 'N'
+            AND MCT_WORK_SEQ = #{MCT_WORK_SEQ}
+    </update>
+
+    <update id="updateCompleteMctWork"  parameterType="java.util.HashMap" >
+        UPDATE jmes.TBL_MCT_WORK
+        SET
+            WORK_FINISH_DT = NOW(),
             WORK_TEMP_STOP_DT = NULL,
             WORK_STATUS = #{WORK_STATUS},
             UPDATE_DT = NOW(),

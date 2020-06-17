@@ -26,7 +26,7 @@
 }
 
 .rowCodeTxt {
-    font-size: 20px;
+    font-size: 29px;
     margin-top: 5px;
     padding-right: 20px;
 }
@@ -47,10 +47,10 @@
 
 .titWrap select{
     outline: none;
-    height: 30px;
+    height: 50px;
     padding-left: 12px;
     border: 2px solid #919191;
-    font-size: 15px;
+    font-size: 25px;
     background: url(../images/common/r_select_arrow.png) no-repeat 94% 50% #fff;
     color: #353535;
     border-radius: 3px;
@@ -59,14 +59,14 @@
 
 .titWrap input{
     outline: none;
-    height: 30px;
+    height: 50px;
     padding-left: 12px;
     border: 2px solid #919191;
-    font-size: 15px;
+    font-size: 25px;
     color: #353535;
     border-radius: 3px;
     line-height: 29px;
-    width: 300px;
+    width: 250px;
 }
 
 .titWrap option{
@@ -75,7 +75,7 @@
 
 .titWrap .barCodeImg{
     /*padding-bottom: 5px;*/
-    height: 30px;
+    height: 50px;
 }
 
 .titWrap .refresh{

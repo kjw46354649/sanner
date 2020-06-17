@@ -167,26 +167,27 @@
                     <table>
                         <tbody>
                         <tr>
-                            <td class="modal-table-header-end" style="width:25%;">완료수량</td>
-                            <td class="modal-table-header-end" style="width:25%;">불량</td>
-                            <td class="modal-table-header-end" style="width:50%;">불량원인</td>
+                            <td class="modal-table-header-end" style="width:30%;">완료수량</td>
+                            <td class="modal-table-header-end" style="width:30%;">불량</td>
+                            <td class="modal-table-header-end" style="width:40%;">불량원인</td>
                         </tr>
                         <tr>
                             <td class="modal-table-contents-end">
-                                <button type="button" style="padding-right: 15px;" class="btn_plus" id="complete_control_complete_qty_pop_plus_btn">더하기</button>
-                                <span class="text" style="padding-right: 15px;" id="completeControlCompleteQtyHtml">0</span>
-                                <button type="button" class="btn_minus" id="complete_control_complete_qty_pop_minus_btn">빼기</button>
+                                <button type="button" style="padding-right: 0px; position: absolute; right: 525px; top: 142px;" class="btn_plus" id="complete_success_qty_pop_plus_btn">더하기</button>
+                                <span class="text" style="padding-right: 23px; font-size: 31px; position: absolute; right: 460px; top: 148px;" id="completeControlCompleteQtyHtml">0</span>
+                                <button type="button" style="position: absolute; right: 420px; top: 142px;" class="btn_minus" id="complete_success_qty_pop_minus_btn">빼기</button>
                             </td>
                             <td class="modal-table-contents-end">
-                                <button type="button" style="padding-right: 15px;" class="btn_plus" id="complete_control_fail_qty_pop_plus_btn">더하기</button>
-                                <span class="text" style="padding-right: 15px;" id="completeControlFailQtyHtml">0</span>
-                                <button type="button" class="btn_minus" id="complete_control_fail_qty_pop_minus_btn">빼기</button>
+                                <button type="button" style="position: absolute; right: 355px; top: 142px;" class="btn_plus" id="complete_fail_qty_pop_plus_btn">더하기</button>
+                                <span class="text" style="padding-right: 23px; font-size: 31px; position: absolute; right: 286px; top: 148px;" id="completeControlFailQtyHtml">1</span>
+                                <button type="button" class="btn_minus" style="position: absolute; right: 250px; top: 142px;" id="complete_fail_qty_pop_minus_btn">빼기</button>
                             </td>
                             <td class="modal-table-contents-end">
                                 <select id="ERROR_REASON" name="ERROR_REASON">
-                                   <c:forEach var="code" items="${errorReasonList}">
-                                       <option value="${code.CODE_CD}">${code.CODE_NM}</option>
-                                   </c:forEach>
+                                    <option value="" selected><srping:message key="com.frm.select.default.option"/></option>
+                                    <c:forEach var="code" items="${errorReasonList}">
+                                        <option value="${code.CODE_CD}">${code.CODE_NM}</option>
+                                    </c:forEach>
                                 </select>
                             </td>
                         </tr>
@@ -194,8 +195,8 @@
                     </table>
                     <div><p class="end-txt">작업을<span class="red-txt">완료 하시겠습니까?</span> </p></div>
                     <div style="text-align: center;">
-                        <button type="button" id="endBtnSave" class="gradeMidBtn red">완료</button>
-                        <button type="button" id="endBtnCancel" class="gradeMidBtn white">닫기</button>
+                        <button type="button" id="endBtnSave" class="gradeMaxBtn red">완료</button>
+                        <button type="button" id="endBtnCancel" class="gradeMaxBtn white">닫기</button>
                     </div>
 <%--                    <div>--%>
 <%--                        <button id="endBtnSave">Yes</button>--%>
@@ -226,9 +227,12 @@
             <input id="INNER_DUE_DT" name="INNER_DUE_DT" type="hidden" value="${workInfo.INNER_DUE_DT}">
             <input id="FINISH_QTY" name="FINISH_QTY" type="hidden" value="${workInfo.ORDER_QTY}">
             <input id="ERROR_QTY" name="ERROR_QTY" type="hidden" value="">
+            <input id="ERROR_REASON" name="ERROR_REASON" type="hidden" value="">
         </form>
         <form id="drawing_log_out_form" name="drawing_log_out_form" method="POST" action="/drawing-worker">
+            <input id="EQUIP_NM" name="EQUIP_NM" type="hidden" value="${drawingInfo.machineInfo.EQUIP_NM}">
             <input id="EQUIP_SEQ" name="EQUIP_SEQ" type="hidden" value="${drawingInfo.machineInfo.EQUIP_SEQ}">
+            <input id="FACTORY_AREA" name="FACTORY_AREA" type="hidden" value="${drawingInfo.machineInfo.FACTORY_AREA}">
 <%--            <input id="CONTROL_SEQ" name="CONTROL_SEQ" type="hidden" value="<c:if test="${not empty workInfo}">${workInfo.CONTROL_SEQ}</c:if>">--%>
 <%--            <input id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" type="hidden" value="<c:if test="${not empty workInfo}">${workInfo.CONTROL_DETAIL_SEQ}</c:if>">--%>
             <div class="logInWrap">
@@ -357,13 +361,13 @@
         $(".slecBox").on('click', function(){
             /** 대기 리스트와 plan 리스트를 조회한다. **/
             /** 첫번째 plan 리스트를 조회한다.**/
-            getWorkList("plan");
+            // getWorkList("pop");
             $("#drawing_worker_target_list_popup").css("display", "block");
-            $("#equip_tab").trigger("click");
+            $("#area_tab").trigger("click");
             $(".bodyWrap").addClass("modal-open-body");
         });
 
-        /** 완료 처리 **/
+        /** 완료 팝업 오픈 처리 **/
         $("#workCompletelBtn").on('click', function(){
             $("#drawing_worker_end_popup").find("#completeControlNumHtml").html($("#drawing_action_form").find("#CONTROL_NUM").val());
             $("#drawing_worker_end_popup").find("#completeControlPartNumHtml").html($("#drawing_action_form").find("#PART_NUM").val());
@@ -372,13 +376,6 @@
             $("#drawing_worker_end_popup").find("#completeControlFailQtyHtml").html($("#drawing_action_form").find("#ERROR_QTY").val());
             $("#drawing_worker_end_popup").css("display", "block");
             $(".bodyWrap").addClass("modal-open-body");
-        });
-
-        $('#outgoing_manage_return_pop_plus_btn').on('click', function(e) {
-            outgoingManageReturnPopCalcQty("PLUS");
-        });
-        $('#outgoing_manage_return_pop_minus_btn').on('click', function(e) {
-            outgoingManageReturnPopCalcQty("MINUS");
         });
 
         //Stop Popup
@@ -453,8 +450,7 @@
                 innerHtmlObj = $("#drawing_worker_target_list_popup").find("#popBodyListHtml");
                 parameters = {
                     'url': '/drawing-json-list',
-                    // 'data': {"queryId":"drawingMapper.selectDrawingBoardWorkPopList", "EQUIP_SEQ" : $("#drawing_log_out_form").find("#EQUIP_SEQ").val()}
-                    'data': {"queryId":"drawingMapper.selectDrawingBoardWorkPlanList", "EQUIP_SEQ" : $("#drawing_log_out_form").find("#EQUIP_SEQ").val()}
+                    'data': {"queryId":"drawingMapper.selectDrawingBoardPopList", "FACTORY_AREA" : $("#drawing_log_out_form").find("#FACTORY_AREA").val()}
                 };
             }
             fnPostAjax(function (data, callFunctionParam) {
@@ -562,11 +558,10 @@
             }, parameters, '');
         });
 
-        //End Popup
+        /** 종료 하기 팝업창 자동 호출 **/
         $("#drawing_worker_end_popup").bind('style', function(e) {
             let style =  $(this).attr('style');
             let display = style.split(":")[1];
-
             // let seconds = 5;
             let seconds = 50000;
             if( display.indexOf("none") > 0){
@@ -574,7 +569,6 @@
                 stopInterval = setInterval(function() {
                     seconds--;
                     $("#drawing_worker_end_popup .scan-time").html(fnRemainTimeSet(seconds));
-
                     $("#drawing_worker_end_popup").bind('style', function(e) {
                         let style =  $(this).attr('style');
                         let display = style.split(":")[1];
@@ -584,23 +578,87 @@
                     });
                     if(seconds == 0) {
                         clearTimeout(stopInterval);
-                        fnPopupClose("drawing_worker_end_popup");
-                        reloadDrawingBoard();
+                        $("#endBtnSave").trigger('click');
                     }
                 }, 1000);
             }
         });
-
+        /** 작업 완료 취소 처리 **/
         $("#endBtnCancel").on('click', function(){
             fnPopupClose("drawing_worker_end_popup");
         });
 
+        /** 작업 완료 처리 **/
         $("#endBtnSave").on('click', function(){
-
+            let parameters = {
+                'url': '/drawing-board-complete',
+                'data': $("#drawing_action_form").serialize()
+            };
+            fnPostAjax(function (data, callFunctionParam) {
+                fnPopupClose("drawing_worker_end_popup");
+                reloadDrawingBoard();
+            }, parameters, '');
         });
+
+        /** 작업 완료 플러스 처리 **/
+        $("#complete_success_qty_pop_plus_btn").on('click', function(){
+            let orderQty = $("#drawing_action_form").find("#ORDER_QTY").val();
+            let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
+            let afterQty = parseInt(finishQty) + 1;
+            if(afterQty <= orderQty){
+                $("#drawing_action_form").find("#FINISH_QTY").val(afterQty);
+                $("#completeControlCompleteQtyHtml").html(afterQty);
+            }
+            clearTimeout(stopInterval);
+            $("#drawing_worker_end_popup .scan-time").html("");
+        });
+
+        /** 작업 완료 마이너스 처리 **/
+        $("#complete_success_qty_pop_minus_btn").on('click', function(){
+            let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
+            let afterQty = parseInt(finishQty) - 1;
+            if(afterQty >= 0){
+                $("#drawing_action_form").find("#FINISH_QTY").val(afterQty);
+                $("#completeControlCompleteQtyHtml").html(afterQty);
+            }
+            clearTimeout(stopInterval);
+            $("#drawing_worker_end_popup .scan-time").html("");
+        });
+
+        /** 불량 수량 플러스 처리 **/
+        $("#complete_fail_qty_pop_plus_btn").on('click', function(){
+            let orderQty = $("#drawing_action_form").find("#ORDER_QTY").val();
+            let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
+            let afterQty = 1;
+            if(errorQty) afterQty = parseInt(errorQty) + 1
+            if(afterQty <= orderQty){
+                $("#drawing_action_form").find("#ERROR_QTY").val(afterQty);
+                $("#completeControlFailQtyHtml").html(afterQty);
+            }
+            clearTimeout(stopInterval);
+            $("#drawing_worker_end_popup .scan-time").html("");
+        });
+
+        /** 불량 수량 마이너스 처리 **/
+        $("#complete_fail_qty_pop_minus_btn").on('click', function(){
+            let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
+            let afterQty = 0;
+            if(errorQty) afterQty = parseInt(errorQty) - 1;
+            if(afterQty >= 0) {
+                $("#drawing_action_form").find("#ERROR_QTY").val(afterQty);
+                $("#completeControlFailQtyHtml").html(afterQty);
+            }
+            clearTimeout(stopInterval);
+            $("#drawing_worker_end_popup .scan-time").html("");
+        });
+
+        $("#ERROR_REASON").on('change', function(){
+            clearTimeout(stopInterval);
+            $("#drawing_worker_end_popup .scan-time").html("");
+            $("#drawing_action_form").find("#ERROR_REASON").val($(this).val());
+        });
+
         /* POPUP */
-
-
         let reloadDrawingBoard = function(){
             $("#drawing_action_form").submit();
         };
