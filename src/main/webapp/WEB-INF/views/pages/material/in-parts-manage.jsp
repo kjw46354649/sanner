@@ -318,6 +318,11 @@
                     valueIndx: "value",
                     labelIndx: "text",
                     options: fnGetCommCodeGridSelectBox('1049'),
+                    listeners: [{
+                        change: function (evt, ui) {
+                            alert('it worked!');
+                        }
+                    }],
                     getData: function(ui) {
                         let clave = ui.$cell.find("select").val();
                         let rowData = mainGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
@@ -373,10 +378,7 @@
                   }else{
                       return false;
                   }
-                },
-                validations: [
-                    { type: 'minLen', value: 1, msg: "Required" }
-                ]
+                }
             },
             {title: '자재관리번호', dataType: 'string', dataIndx: 'CONSUMABLE_NUM',styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},
                 validations: [
@@ -395,6 +397,7 @@
                     valueIndx: "value",
                     labelIndx: "text",
                     options: fnGetCommCodeGridSelectBox('1053'),
+
                     getData: function(ui) {
                         let clave = ui.$cell.find("select").val();
                         let rowData = mainGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
@@ -469,6 +472,11 @@
             resizable: false,
             trackModel: {on: true},
             colModel: mainColModel01,
+            cellSave: function (evt, ui) {
+                  if (ui.dataIndx == "WAREHOUSE_CD_NM" && ui.newVal !== ui.oldVal) {
+                      mainGridId01.pqGrid("updateRow", { 'rowIndx': ui.rowIndx , row: { 'LOC_SEQ_NM': '' } });
+                  }
+              },
             complete: function () {
                 let data = mainGridId01.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;

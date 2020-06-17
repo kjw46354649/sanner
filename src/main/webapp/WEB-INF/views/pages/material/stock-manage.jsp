@@ -421,29 +421,22 @@
                     }
                 }
             },
-            // {title: 'DXF', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 20, minWidth: 20, editable: false,
-            //     render: function (ui) {
-            //         let rowIndx = ui.rowIndx, grid = this;
-            //         if (ui.rowData['DXF_GFILE_SEQ'] > 0) return "[PDF]";
-            //         return '';
-            //     }
-            // },
-            // {title: 'IMG', align: 'center', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', width: 20, minWidth: 20, editable: false,
-            //     render: function (ui) {
-            //         if (ui.cellData) return '<span id="imageView" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
-            //     },
-            //     postRender: function (ui) {
-            //         let rowIndx = ui.rowIndx,
-            //             grid = this,
-            //             $cell = grid.getCell(ui);
-            //         $cell.find("#imageView").bind("click", function () {
-            //             let rowData = ui.rowData;
-            //
-            //             console.log(rowData.IMG_GFILE_SEQ);
-            //             callWindowImageViewer(rowData.IMG_GFILE_SEQ);
-            //         });
-            //     }
-            // },
+
+            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 40, minWidth: 40, editable: false,
+                render: function (ui) {
+                    let rowIndx = ui.rowIndx, grid = this;
+                    if (ui.rowData['DXF_GFILE_SEQ'] > 0) return "<i id='imageView' class='blueFileImageICon'></i>";
+                    return '+';
+                }
+            },
+            {
+                title: 'IMG', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', width: 40, minWidth: 40, editable: false,
+                render: function (ui) {
+                    let rowIndx = ui.rowIndx, grid = this;
+                    if (ui.rowData['IMG_GFILE_SEQ'] > 0) return "<i id='imageView' class='blueFileImageICon'></i>";
+                    return '+';
+                }
+            },
             {title: '생성일시', dataType: 'string', dataIndx: 'INSERT_TIME', minWidth: 100, width: 100, editable: false},
             {title: '수정일시', dataType: 'string', dataIndx: 'UPDATE_TIME', minWidth: 100, width: 100, editable: false},
             // {title: '입고', align: 'center', dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_IN', width: 20, minWidth: 42, editable: false, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},
@@ -522,6 +515,11 @@
             resizable: false,
             trackModel: {on: true},
             colModel: stockManageColModel01,
+            cellSave: function (evt, ui) {
+                  if (ui.dataIndx == "WAREHOUSE_CD_NM" && ui.newVal !== ui.oldVal) {
+                      stockManageGridId01.pqGrid("updateRow", { 'rowIndx': ui.rowIndx , row: { 'LOC_SEQ_NM': '' } });
+                  }
+              },
             complete: function () {
                 let data = stockManageGridId01.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
@@ -532,6 +530,29 @@
                 let selectList = ui.addList;
                 for (let i = 0; i < selectList.length; i++) {
                     SelectedRowIndex.push(selectList[i].rowIndx);
+                }
+            },
+            cellClick: function (event, ui) {
+                let rowIndx = ui.rowIndx, $grid = this;
+
+                if (ui.dataIndx == 'DXF_GFILE_SEQ') {
+                    if (ui.rowData['DXF_GFILE_SEQ'] > 0) {
+                        callWindowImageViewer(ui.rowData.DXF_GFILE_SEQ);
+                    } else {
+                        callGridSingleFileUpload(stockManageGridId01, rowIndx, 'DXF_GFILE_SEQ');
+                    }
+
+                    return;
+                }
+                if (ui.dataIndx == 'IMG_GFILE_SEQ') {
+
+                    if (ui.rowData['IMG_GFILE_SEQ'] > 0) {
+                        callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);
+                    } else {
+                        callGridSingleFileUpload(stockManageGridId01, rowIndx, 'IMG_GFILE_SEQ');
+                    }
+
+                    return;
                 }
             }
             // ,cellClick: function (event, ui) {
