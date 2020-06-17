@@ -53,6 +53,7 @@
             <div class="hWrap">
                 <div class="d-inline">
                     <div class="right_sort">
+                        <button type="button" class="defaultBtn" id="btnEstimateRegisterNew">신규 등록</button>
                         <button type="button" class="defaultBtn" id="btnEstimateRegisterEstimateExcel">견적서 출력</button>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawAdd">도면 등록</button>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateRegisterDrawView">도면 보기</button>
@@ -121,20 +122,18 @@
             </div>
         </form>
         <div class="tableWrap">
-            <div class="buttonWrap">
-                <div class="d-inline">
-                    <button type="button" class="smallBtn yellow">견적정보</button>
-                    <button type="button" class="smallBtn yellow">금액정보</button>
-                    <span class="slt_wrap namePlusSlt right_float">
-                        <label for="selEstimateRegisterCalculateApply">계산견적적용</label>
-                        <select id="selEstimateRegisterCalculateApply" name="selEstimateRegisterCalculateApply" title="계산견적적용">
-                            <option>Select</option>
-                            <option>10%</option>
-                            <option>20%</option>
-                        </select>
-                        <button type="button" class="defaultBtn radius authorizedBtn" id="btnEstimateRegisterAdd">추가</button>
-                        <button type="button" class="defaultBtn radius red authorizedBtn" id="btnEstimateRegisterDelete">삭제</button>
-                    </span>
+            <div class="buttonWrap d-inline right_sort">
+                <%--<button type="button" class="smallBtn yellow">견적정보</button>
+                <button type="button" class="smallBtn yellow">금액정보</button>--%>
+                <div class="slt_wrap namePlusSlt">
+                    <label for="selEstimateRegisterCalculateApply">계산견적적용</label>
+                    <select id="selEstimateRegisterCalculateApply" name="selEstimateRegisterCalculateApply" title="계산견적적용">
+                        <option>Select</option>
+                        <option>10%</option>
+                        <option>20%</option>
+                    </select>
+                    <button type="button" class="defaultBtn radius authorizedBtn" id="btnEstimateRegisterAdd">추가</button>
+                    <button type="button" class="defaultBtn radius red authorizedBtn" id="btnEstimateRegisterDelete">삭제</button>
                 </div>
             </div>
             <div class="conMainWrap">
@@ -556,7 +555,7 @@
             {title: '전화번호', dataType: 'string', dataIndx: 'RECEIVER_TEL', minWidth: "30%"},
             {title: '', dataType: 'string', dataIndx: 'SEQ', editable: false, width: 30 ,
                 render: function (ui) {
-                    return '<button id="receiverRemove" class="ui-icon ui-icon-close" style="cursor: pointer"></button>'
+                    return '<button id="receiverRemove" class="miniBtn red">삭제</button>'
                 },
                 postRender: function (ui) {
                     let grid = this;
@@ -871,29 +870,33 @@
 
         function estimateRegisterReloadPageData(){
             let EST_SEQ = $("#estimate_version_up_sequence_form #hidden_est_seq").val();
-            let postData = { 'queryId': 'estimate.selectEstimateMasterList', 'EST_SEQ': EST_SEQ };
+            let postData = { 'queryId': 'estimate.selectEstimateRegisterMaster', 'EST_SEQ': EST_SEQ };
 
             let parameter = {'url': '/json-list', 'data': postData};
             fnPostAjax(function (data, callFunctionParam) {
                 let list = data.list[0];
-                $("#estimate_register_info_form #EST_STATUS").val(list.EST_STATUS);
-                $("#estimate_register_info_form #ORDER_COMP_CD").val(list.ORDER_COMP_CD);
-                $("#estimate_register_info_form #EST_TITLE").val(list.EST_TITLE);
-                $("#estimate_register_info_form #ORDER_STAFF_SEQ").val(list.ORDER_STAFF_SEQ);
-                $("#estimate_register_info_form #COMP_CD").val(list.COMP_CD);
-                $("#estimate_register_info_form #EST_USER_ID").val(list.EST_USER_ID);
-                $("#estimate_register_info_form #EST_NUM").val(list.EST_NUM + ' (' + list.EST_VER + ')');
-                $("#estimate_register_info_form #DTL_CNT").val(list.DTL_CNT);
-                $("#estimate_register_info_form #DTL_AMOUNT").val(list.DTL_AMOUNT);
-                $("#estimate_register_info_form #INSERT_DT").val(list.INSERT_DT);
-                $("#estimate_register_info_form #SEND_DT").val(list.SEND_DT);
-                $("#estimate_register_info_form #GFILE_SEQ").val(list.ETC_GFILE_SEQ);
-                //$("#EMAIL_CONTENT_TXT").val(list.EMAIL_CONTENT);
-                context = list.EMAIL_CONTENT;
-                CKEDITOR.instances.EMAIL_CONTENT_TXT.setData(list.EMAIL_CONTENT);
-                $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
+                let contextVal = context;
+                let GfileKey = "";
+                let status = "";
+                fnResetFrom('estimate_register_info_form');
+                if(list){
+                    contextVal = list.EMAIL_CONTENT;
+                    GfileKey = list.ETC_GFILE_SEQ;
 
-                $("#common_excel_form #paramData").val(EST_SEQ);
+                    $("#estimate_register_info_form #EST_STATUS").val(status);
+                    $("#estimate_register_info_form #ORDER_COMP_CD").val(list.ORDER_COMP_CD);
+                    $("#estimate_register_info_form #EST_TITLE").val(list.EST_TITLE);
+                    $("#estimate_register_info_form #ORDER_STAFF_SEQ").val(list.ORDER_STAFF_SEQ);
+                    $("#estimate_register_info_form #COMP_CD").val(list.COMP_CD);
+                    $("#estimate_register_info_form #EST_USER_ID").val(list.EST_USER_ID);
+                    $("#estimate_register_info_form #EST_NUM").val(list.EST_NUM + ' (' + list.EST_VER + ')');
+                    $("#estimate_register_info_form #DTL_CNT").val(list.DTL_CNT);
+                    $("#estimate_register_info_form #DTL_AMOUNT").val(list.DTL_AMOUNT);
+                    $("#estimate_register_info_form #INSERT_DT").val(list.INSERT_DT);
+                    $("#estimate_register_info_form #SEND_DT").val(list.SEND_DT);
+                    $("#estimate_register_info_form #GFILE_SEQ").val(GfileKey);
+                }
+                //$("#EMAIL_CONTENT_TXT").val(list.EMAIL_CONTENT);
 
                 postData = { 'queryId': 'estimate.selectEstimateDetailList', 'EST_SEQ': EST_SEQ };
                 fnRequestGidData(estimateRegisterTopGrid, postData);
@@ -901,15 +904,18 @@
                 postData = { 'queryId': 'estimate.selectEstimateReceiverList', 'EST_SEQ': EST_SEQ };
                 fnRequestGidData(estimateRegisterBotGrid, postData);
 
-                postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': list.ETC_GFILE_SEQ };
+                postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey };
                 fnRequestGidData(estimateRegisterFileGrid, postData);
 
-                btnDisabled(list.EST_STATUS);
+                CKEDITOR.instances.EMAIL_CONTENT_TXT.setData(contextVal);
+                $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
+
                 //파일
-                $("#common_file_download_form").find("#GFILE_SEQ").val(list.ETC_GFILE_SEQ);
+                $("#common_file_download_form").find("#GFILE_SEQ").val(GfileKey);
                 //Excel
                 $("#common_excel_form #paramData").val(EST_SEQ);
 
+                btnDisabled(status);
             }, parameter, '');
         };
 
@@ -953,6 +959,13 @@
         }
 
         /** 버튼 처리 **/
+        $("#btnEstimateRegisterNew").on('click', function(){
+            $("#estimate_version_up_sequence_form #hidden_est_seq").val('');
+            fnResetFrom("estimate_register_info_form");
+            fnResetFrom("estimate_register_hidden_form");
+            estimateRegisterReloadPageData();
+        });
+
         $("#btn_estimate_register_submit").on("click", function(){
             fnEstimateRegisterSave();
 
@@ -990,28 +1003,36 @@
             };
             estimateRegisterSubmitConfirm(function(confirm){
                 if(confirm) {
-                    $("#estimate_register_info_form #queryId").val('estimate.updateEstimateMasterFinish');
-                    let parameters = {
-                        'url': '/json-update',
-                        'data': $("#estimate_register_info_form").serialize()
-                    };
-                    fnPostAjax(function(){
-                        if (autoEmailYn) {
-                            let parameter = { 'queryId': 'selectEstimateMailNextSequence' };
-                            parameters = {'url': '/json-list', 'data': parameter};
-                            fnPostAjaxAsync(function(data, callFunctionParam){
-                                let list = data.list[0];
-                                let MAIL_BOX_SEQ = list.MAIL_BOX_SEQ;
-                                $("#estimate_register_info_form #MAIL_BOX_SEQ").val(MAIL_BOX_SEQ);
-                                $("#estimate_register_info_form #queryId").val('mail.insertEstimateSubmitMail');
+                    if (autoEmailYn) {
+                        let parameter = { 'queryId': 'estimate.selectEstimateMailNextSequence' };
+                        let parameters = {'url': '/json-list', 'data': parameter};
+                        fnPostAjaxAsync(function(data, callFunctionParam){
+                            let list = data.list[0];
+                            let MAIL_BOX_SEQ = list.MAIL_BOX_SEQ;
+                            $("#estimate_register_info_form #MAIL_BOX_SEQ").val(MAIL_BOX_SEQ);
+                            $("#estimate_register_info_form #queryId").val('mail.insertEstimateSubmitMail');
+                            parameters = {
+                                'url': '/json-update',
+                                'data': $("#estimate_register_info_form").serialize()
+                            };
+                            fnPostAjaxAsync(function(){
+                                $("#estimate_register_info_form #queryId").val('estimate.updateEstimateMasterFinishWithMail');
                                 parameters = {
                                     'url': '/json-update',
                                     'data': $("#estimate_register_info_form").serialize()
                                 };
-                                fnPostAjax(estimateRegisterSaveCallBack, parameters, '');
+                                fnPostAjaxAsync(estimateRegisterSaveCallBack, parameters, '');
                             }, parameters, '');
-                        }
-                    }, parameters, '');
+
+                        }, parameters, '');
+                    }else{
+                        $("#estimate_register_info_form #queryId").val('estimate.updateEstimateMasterFinish');
+                        let parameters = {
+                            'url': '/json-update',
+                            'data': $("#estimate_register_info_form").serialize()
+                        };
+                        fnPostAjaxAsync(estimateRegisterSaveCallBack, parameters, '');
+                    }
                 }
             });
         });
@@ -1044,10 +1065,6 @@
         });
 
         $("#selEstimateRegisterCalculateApply").on('click', function(){
-
-        });
-
-        $("#selEstimateListExcel").on('click', function(){
 
         });
 

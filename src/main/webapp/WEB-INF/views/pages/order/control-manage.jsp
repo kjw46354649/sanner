@@ -490,7 +490,7 @@
                 }
             },
             {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
+            {title: '비고', dataType: 'string', dataIndx: 'CONTROL_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
             {title: 'INV No.<br>(거래명세No.)', width: 100, dataType: 'string', dataIndx: 'INVOICE_NUM'},
             {title: '프로젝트', width: 200, dataType: 'string', dataIndx: 'PROJECT_NM', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
             {title: '모듈', width: 70, dataType: 'string', dataIndx: 'MODULE_NM', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
@@ -712,7 +712,7 @@
             },
             {title: '소재비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
             {title: 'Part<br>단위<br>수량', align: 'right', dataType: 'integer', dataIndx: 'PART_UNIT_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true},
-            {title: '주문<br>수량', align: 'right', dataType: 'integer', dataIndx: 'ORDER_QTY_TOTAL'},
+            {title: '주문<br>수량', align: 'right', dataType: 'integer', dataIndx: 'CONTROL_ORDER_QTY'},
             {
                 title: '대칭', align: 'center', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, colModel: [
                     {title: '원칭', align: 'right', dataType: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
@@ -750,8 +750,8 @@
                     {title: '발주번호', width: 90, datatype: 'string', dataIndx: 'ORDER_NUM', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
                     {title: '수량', datatype: 'string', dataIndx: 'ORDER_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
                     {title: '납기', width: 70, datatype: 'string', dataIndx: 'ORDER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-                    {title: '출고', datatype: 'string', dataIndx: 'CNFRH'},
-                    {title: '출고일자', datatype: 'string', dataIndx: 'CNFRH'},
+                    {title: '출고', datatype: 'string', dataIndx: 'OUT_QTY'},
+                    {title: '출고일자', datatype: 'string', dataIndx: 'ORDER_OUT_FINISH_DT'},
                     {title: '납품확인', width: 70, datatype: 'string', dataIndx: 'DELIVERY_DT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
                 ]
             },
@@ -1475,7 +1475,7 @@
                             fnPostAjax(function () {
                                 alert("<spring:message code='com.alert.default.save.success' />");
                                 $('#CONTROL_MANGE_POPUP').modal('hide');
-                                $orderRegisterGrid.pqGrid('refreshDataAndView');
+                                // $orderRegisterGrid.pqGrid('refreshDataAndView');
                                 $orderManagementGrid.pqGrid('refreshDataAndView');
                             }, parameters, '');
                         }
@@ -1493,7 +1493,7 @@
                             fnPostAjax(function () {
                                 alert("<spring:message code='com.alert.default.save.success' />");
                                 $('#CONTROL_MANGE_POPUP').modal('hide');
-                                $orderRegisterGrid.pqGrid('refreshDataAndView');
+                                // $orderRegisterGrid.pqGrid('refreshDataAndView');
                                 $orderManagementGrid.pqGrid('refreshDataAndView');
                             }, parameters, '');
                         }
@@ -1551,8 +1551,10 @@
                             let index = priceConfirmList.findIndex(function (element) {
                                 return element.text === newRowData.PRICE_CONFIRM;
                             });
+                            console.log(index);
                             if (index >= 0) priceConfirm = priceConfirmList[index].value;
                         }
+                        console.log(priceConfirm);
                         // 사업자
                         if (newRowData.COMP_CD !== undefined) {
                             let index = BUSINESS_COMPANY.findIndex(function (element) {
@@ -1658,8 +1660,8 @@
             {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
             {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
-            {title: '공급가', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
-            {title: '마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT'}
+            {title: '공급가', width: 70, align: 'right', dataType: 'string', dataIndx: 'TOTAL_AMT'},
+            {title: '마감금액', width: 70, align: 'right', dataType: 'string', dataIndx: 'FINAL_NEGO_AMT'}
         ];
         let controlCloseLeftObj = {
             height: 250,
@@ -1713,8 +1715,8 @@
         const transactionStatementDetailGridId = 'TRANSACTION_STATEMENT_DETAIL_GRID';
         const transactionStatementDetailColModel = [
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
-            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: false},
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: false},
+            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: '주문상태', dataType: 'string', dataIndx: 'CONTROL_STATUS_NM'},
             {title: '발주번호', dataType: 'string', dataIndx: 'ORDER_NUM'},
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM'},
@@ -2217,7 +2219,7 @@
                 postData.queryId = 'orderMapper.selectControlTransactionStatementInfo';
                 let parameters = {'url': '/json-info', 'data': postData};
 
-                fnPostAjax(function (data) {
+                fnPostAjaxAsync(function (data) {
                     let obj = data.info;
 
                     $('#TRANSACTION_STATEMENT_FORM #COMP_NM').text(obj.COMP_NM);
@@ -2227,7 +2229,8 @@
                     $('#TRANSACTION_STATEMENT_FORM #INVOICE_NUM_INPUT').val(obj.INVOICE_NUM);
 
                     $transactionStatementDetailGrid = $('#' + transactionStatementDetailGridId).pqGrid(transactionStatementDetailObj);
-                    // fnRequestGidData($transactionStatementDetailGrid, postData);
+
+                    postData = fnFormToJsonArrayData('#TRANSACTION_STATEMENT_FORM');
                     postData.queryId = 'orderMapper.selectControlTransactionStatementList';
                     parameters = {'url': '/json-list', 'data': postData};
 
@@ -2247,8 +2250,6 @@
                             }
                         }
                     }, parameters, '');
-
-
                 }, parameters, '');
 
                 /* 구매 담당자 */
@@ -2274,6 +2275,7 @@
         $('#TRANSACTION_STATEMENT_SAVE').on('click', function () {
             let tempList = [];
             let infoPostData = fnFormToJsonArrayData('#TRANSACTION_STATEMENT_FORM');
+            console.log(infoPostData);
             let listPostData = $transactionStatementDetailGrid.pqGrid('option', 'dataModel.data');
             tempList.push(infoPostData);
             let postData = {

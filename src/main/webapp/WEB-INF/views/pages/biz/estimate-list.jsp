@@ -90,8 +90,8 @@
         <div class="tableWrap">
             <div class="buttonWrap">
                 <div class="d-inline">
-                    <button type="button" class="smallBtn yellow">견적정보</button>
-                    <button type="button" class="smallBtn yellow">금액정보</button>
+                    <%--<button type="button" class="smallBtn yellow">견적정보</button>
+                    <button type="button" class="smallBtn yellow">금액정보</button>--%>
                     <span class="slt_wrap namePlusSlt right_float">
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateListExcel">견적List 출력</button>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateExcel">견적서 출력</button>
@@ -133,15 +133,15 @@
     $(function () {
         let estimateMasterTopColModel= [
             //{title: 'No.', dataType: 'string', dataIndx: 'EST_SEQ'},
-            {title: '상태', dataType: 'string', dataIndx: 'EST_STATUS_NM', editable: false, width: 80 },
-            {title: '주문접수', dataType: 'date', dataIndx: '', editable: false, width: 60 ,
+            {title: '상태', dataType: 'string', dataIndx: 'EST_STATUS_NM', width: 60 },
+            {title: '주문접수', dataType: 'date', dataIndx: '', width: 80 ,
                 render: function(ui){
                     let CONTROL_YN = ui.rowData.CONTROL_YN;
                     let EST_SEQ = ui.rowData.EST_SEQ;
                     let EST_VER = ui.rowData.EST_VER;
 
                     if(CONTROL_YN == 'N') {
-                        return '<button type="button" id="estimateOrder" data-seq="'+EST_SEQ+'" data-ver="'+EST_VER+'" class="miniBtn blue">접수</button>'
+                        return '<button type="button" id="estimateOrder" data-seq="'+EST_SEQ+'" data-ver="'+EST_VER+'" class="miniBtn blue">주문접수</button>'
                     }
                 }
             },
@@ -160,7 +160,7 @@
                     }
                 }
             },
-            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', editable: false, width: 70 },
+            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', width: 70 },
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM', width: 100 ,
                 editor: {
                     type: 'select',
@@ -176,23 +176,21 @@
                     }
                 }
             },
-            {title: '견적번호', dataType: 'string', dataIndx: 'EST_NUM', editable: false, width: 150 },
-            {title: '차수', dataType: 'string', dataIndx: 'EST_VER', editable: false},
-            {title: '', dataType: 'string', dataIndx: '', editable: false, width: 30 ,
+            {title: '견적번호', dataType: 'string', dataIndx: 'EST_NUM', width: 120 },
+            {title: '차수', dataType: 'string', dataIndx: 'EST_VER', minWidth: 30},
+            {title: '', dataType: 'string', dataIndx: '', width: 30 ,
                 render: function(ui){
                     let EST_STATUS = ui.rowData.EST_STATUS;
                     let EST_SEQ = ui.rowData.EST_SEQ;
 
-                    return '<a href="#" id="estimateRegisterPage">' +
-                        '<span data-status="'+EST_STATUS+'" data-seq="'+EST_SEQ+'" class="ui-icon ui-icon-circle-zoomin"></span>' +
-                        '</a>';
+                    return '<button type="button" id="estimateRegisterPage" data-status="'+EST_STATUS+'" data-seq="'+EST_SEQ+'" class="miniBtn green">상세</button>'
                 }
             },
-            {title: '제목', dataType: 'string', dataIndx: 'EST_TITLE', width: 220 },
-            {title: '품수', dataType: 'string', dataIndx: 'DTL_CNT', editable: false},
+            {title: '제목', dataType: 'string', dataIndx: 'EST_TITLE', width: 250 },
+            {title: '품수', dataType: 'string', dataIndx: 'DTL_CNT', minWidth: 30},
             {title: '금액 계', dataType: 'string', dataIndx: 'DTL_AMOUNT', format: '#,###', width: 80},
-            {title: '등록일시', dataType: 'date', dataIndx: 'INSERT_DT', editable: false, width: 120 },
-            {title: '견적담당', dataType: 'string', dataIndx: 'EST_USER', width: 120 ,
+            {title: '등록일시', dataType: 'date', dataIndx: 'INSERT_DT', width: 100 },
+            {title: '견적담당', dataType: 'string', dataIndx: 'EST_USER', width: 100 ,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "EST_USER", id: "EST_USER_ID" },
@@ -207,9 +205,9 @@
                     }
                 }
             },
-            {title: '첨부파일', dataType: 'string', dataIndx: 'ETC_GFILE_SEQ', width: 60,
+            {title: '첨부파일', dataType: 'string', dataIndx: 'ETC_GFILE_SEQ', width: 50,
                 render: function (ui) {
-                    if (ui.cellData) return '<span id="downloadViewPopup" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+                    if (ui.cellData) return '<span id="downloadViewPopup" class="ui-icon ui-icon-folder-open" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
                     let grid = this,
@@ -226,8 +224,15 @@
                     });
                 }
             },
-            {title: '메일발송일시', dataType: 'string', dataIndx: 'SEND_DT', editable: false, width: 120},
-            {title: '메일발송여부', dataType: 'string', dataIndx: 'SEND_YN', editable: false, width: 80}
+            {title: '제출일시', dataType: 'string', dataIndx: 'SEND_DT', width: 100},
+            {title: '메일여부', dataType: 'string', dataIndx: 'MAIL_SEND_YN', width: 60,
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    return cellData === 'Y' ? cellData : '';
+                }
+            },
+            {title: '메일발송일시', dataType: 'string', dataIndx: 'MAIL_SEND_DT', width: 120}
         ];
 
         let estimateMasterBotColModel= [
@@ -236,7 +241,7 @@
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 150 } ,
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', validations: [{ type: 'minLen', value: 1, msg: "Required"}], width: 100 } ,
             {
-                title: 'Part', clsHead: 'cantChange', dataType: 'integer', dataIndx: 'PART_NUM', width: 50, editable: false,
+                title: 'Part', clsHead: 'cantChange', dataType: 'integer', dataIndx: 'PART_NUM', width: 50,
                 render: function (ui) {
                     if (ui.rowData.WORK_TYPE === 'WTP020') {
                         return '<span class="ui-icon ui-icon-circle-plus" id="estimateListPartNumPlus" style="cursor: pointer"></span>';
@@ -773,7 +778,12 @@
         });
 
         $("#btnEstimateListNewEstimate").on('click', function(){
+            $("#estimate_version_up_sequence_form #hidden_est_seq").val('');
+
             $("a[pid='10000102']").trigger("click");
+            setTimeout(function(){
+                $("#test").trigger('click');
+            }, 800)
         });
 
         $("#btnEstimateListNewVersion").on('click', function(){
