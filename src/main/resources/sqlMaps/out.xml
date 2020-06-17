@@ -72,16 +72,32 @@
     </sql>
 
     <select id="selectOutsideOrderManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        <include refid="outManage" />
+        SELECT
+            ROW_NUMBER () OVER () AS ROW_NUM,
+            <include refid="orderMapper.control"/>,
+            <include refid="orderMapper.controlPart"/>,
+            E.OUTSIDE_STATUS,
+            SF_GET_CODE_NM(1031, E.OUTSIDE_STATUS, 'KR') AS OUTSIDE_STATUS_NM,
+            SF_GET_DATE_F(E.STATUS_DT, 'YY', 'M') AS OUTSIDE_STATUS_DT,
+            IF(E.OUTSIDE_STATUS = 'OST001', SF_GET_DATE_F(E.STATUS_DT, 'YY', 'M'), '') AS OUTSIDE_INNER_DT
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            LEFT OUTER JOIN TBL_OUTSIDE_REQUEST_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ
+                                                            AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_OUTSIDE_REQUEST E ON D.OUTSIDE_REQUEST_SEQ = E.OUTSIDE_REQUEST_SEQ
+                                                     AND E.DEL_YN = 'N'
+            LEFT OUTER JOIN TBL_OUTSIDE_CLOSE F ON B.CONTROL_SEQ = F.CONTROL_SEQ
+                                                   AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
         WHERE 1 = 1
-            AND A.CONTROL_STATUS = 'ORD001'
+            AND A.CONTROL_STATUS = 'ORD001' <!-- 확정 -->
             AND B.OUTSIDE_YN = 'Y'
-            AND B.WORK_TYPE != 'WTP050' <!-- 파트가공 -->
             AND NOT EXISTS (SELECT *
-                            FROM TBL_OUTSIDE_CLOSE
-                            WHERE
-                                CONTROL_SEQ = B.CONTROL_SEQ
-                                AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
+                            FROM TBL_OUTSIDE_REQUEST AA
+                                INNER JOIN TBL_OUTSIDE_REQUEST_DETAIL BB ON AA.OUTSIDE_REQUEST_SEQ = BB.OUTSIDE_REQUEST_SEQ
+                            WHERE 1 = 1
+                                AND AA.OUTSIDE_STATUS = 'OST004'
+                                AND BB.CONTROL_SEQ = B.CONTROL_SEQ
+                                AND BB.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
         <if test="COMP_CD != null and COMP_CD != ''">
             AND A.COMP_CD = #{COMP_CD}
         </if>
@@ -610,5 +626,60 @@
         INNER JOIN TBL_COMPANY_STAFF B ON A.COMP_CD = B.COMP_CD
         WHERE A.COMP_CD = #{OUTSIDE_COMP_CD}
     </select>
+
+    <insert id="createOutsideRequest" parameterType="java.util.HashMap" >
+        <selectKey keyProperty="OUTSIDE_REQUEST_SEQ" resultType="int" order="BEFORE">
+            SELECT NEXTVAL(SEQ_OUTSIDE_REQUEST)
+        </selectKey>
+        INSERT INTO TBL_OUTSIDE_REQUEST (
+            OUTSIDE_REQUEST_SEQ,
+            OUTSIDE_ORDER_NUM,
+            OUTSIDE_COMP_CD,
+            OUTSIDE_GFILE_SEQ,
+            OUTSIDE_STATUS,
+            STATUS_DT,
+            NOTE,
+            INSERT_ID
+        ) VALUES (
+            #{OUTSIDE_REQUEST_SEQ},
+            #{OUTSIDE_ORDER_NUM},
+            #{OUTSIDE_COMP_CD},
+            #{GFILE_SEQ},
+            #{OUTSIDE_STATUS},
+            NOW(),
+            REPLACE(#{EMAIL_CONTENT_TXT}, 'undefined', SPACE(0)),
+            #{LOGIN_USER_ID}
+        )
+    </insert>
+
+    <insert id="createOutsideRequestDetail" parameterType="java.util.HashMap" >
+        INSERT INTO TBL_OUTSIDE_REQUEST_DETAIL (
+            OUTSIDE_REQUEST_SEQ,
+            CONTROL_SEQ,
+            CONTROL_DETAIL_SEQ,
+            INSERT_ID
+        ) VALUES (
+            #{OUTSIDE_REQUEST_SEQ},
+            #{CONTROL_SEQ},
+            #{CONTROL_DETAIL_SEQ},
+            #{LOGIN_USER_ID}
+        )
+    </insert>
+
+    <insert id="createOutsideRequestReceiver" parameterType="java.util.HashMap" >
+        INSERT INTO TBL_OUTSIDE_REQUEST_RECEIVER (
+            OUTSIDE_REQUEST_SEQ,
+            SEQ,
+            RECEIVER_NM,
+            RECEIVER_EMAIL,
+            INSERT_ID
+        ) VALUES (
+            #{OUTSIDE_REQUEST_SEQ},
+            NEXTVAL(SEQ_DUMMY),
+            #{STAFF_NM},
+            #{STAFF_EMAIL},
+            NOW()
+        )
+    </insert>
 
 </mapper>

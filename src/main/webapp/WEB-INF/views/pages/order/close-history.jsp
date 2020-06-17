@@ -203,7 +203,7 @@
             {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', hidden: true},
             {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM'},
             {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM'},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
+            {title: '비고', dataType: 'string', dataIndx: 'CONTROL_NOTE'},
             {title: 'INV No.<br>(거래명세No.)', width: 100, dataType: 'string', dataIndx: 'INVOICE_NUM'},
             {title: '모듈명', width: 70, dataType: 'string', dataIndx: 'MODULE_NM'},
             {
@@ -250,7 +250,7 @@
             {title: '도면번호', minWidth: 120, dataType: 'string', dataIndx: 'DRAWING_NUM'},
             {title: '품명', minWidth: 110, dataType: 'string', dataIndx: 'ITEM_NM'},
             {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true},
-            {title: '작업<br>형태', minWidth: 70, dataType: 'string', dataIndx: 'WORK_NM'},
+            {title: '작업<br>형태', minWidth: 70, dataType: 'string', dataIndx: 'WORK_TYPE_NM'},
             {title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -560,6 +560,9 @@
                 rowListConvert.push(tempObject);
             }
             $closeHistoryGrid.pqGrid('updateRow', {rowList: rowListConvert, checkEditable: false});
+            const updateQueryList = ['orderMapper.createControlProgress', 'orderMapper.updateControlStatus'];
+
+            fnModifyPQGrid($closeHistoryGrid, [], updateQueryList);
         };
 
         const noSelectedRowAlert = function () {
@@ -629,6 +632,32 @@
             postData.queryId = 'orderMapper.selectControlCloseCancelRightList';
             fnRequestGidData($controlCloseHistoryRightGrid, postData);
         };
+
+        let isDifferentStatus = function (status) {
+            // status ORD003 마감, ORD004 종료
+            let controlStatusList = [];
+
+            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
+                let rowData = $closeHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+
+                controlStatusList.push(rowData.CONTROL_STATUS);
+            }
+            // 중복제거
+            controlStatusList = controlStatusList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+
+            if (controlStatusList.length > 1) {
+                alert('주문 상태가 다릅니다.'); //TODO: 문구 수정
+                return true;
+            }
+            if(controlStatusList[0] !== status) {
+                alert('주문 상태가 다릅니다.'); //TODO: 문구 수정
+                return true;
+            }
+
+            return false;
+        };
         /* function */
 
         /* event */
@@ -644,6 +673,10 @@
             'show.bs.modal': function () {
                 // updateControlStatus();
                 if (noSelectedRowAlert()) {
+                    return false;
+                }
+
+                if (isDifferentStatus('ORD003')) {
                     return false;
                 }
 
@@ -689,7 +722,7 @@
         });
 
         $('#CONTROL_CLOSE_HISTORY_SAVE').on('click', function () {
-            const updateQueryList = ['orderMapper.updateMonthCloseDetailNote'];
+            const updateQueryList = ['orderMapper.updateControlPart', 'orderMapper.updateMonthCloseDetailNote'];
 
             fnModifyPQGrid($closeHistoryGrid, [], updateQueryList);
         });
@@ -716,6 +749,9 @@
 
         $('#CONTROL_FINISH_CANCEL').on('click', function () {
             if (noSelectedRowAlert()) {
+                return false;
+            }
+            if (isDifferentStatus('ORD004')) {
                 return false;
             }
 
