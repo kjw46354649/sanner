@@ -168,7 +168,7 @@
 <div class="popup_container" id="REQUEST_OUTSIDE_POPUP" style="display: none;">
     <div class="layerPopup" style="overflow: scroll;">
         <h3 style="margin-bottom: 10px;">외주 가공 요청</h3>
-        <button type="button" class="pop_close">닫기</button>
+        <button type="button" class="pop_close" name="REQUEST_OUTSIDE_POPUP_CLOSE">닫기</button>
         <hr>
         <form class="form-inline" name="REQUEST_OUTSIDE_MAIL_FORM" id="REQUEST_OUTSIDE_MAIL_FORM" role="form" onsubmit="return false;">
             <input type="hidden" name="queryId" id="queryId">
@@ -223,13 +223,16 @@
             <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ"/>
             <div id="REQUEST_OUTSIDE_GRID"></div>
         </form>
+        <div class="text-center">
+            <button type="button" class="defaultBtn grayPopGra" name="REQUEST_OUTSIDE_POPUP_CLOSE">닫기</button>
+        </div>
     </div>
 </div>
 
 <div class="popup_container" id="CANCEL_REQUEST_OUTSIDE_POPUP" style="display: none;">
     <div class="layerPopup" style="overflow: scroll;">
         <h3 style="margin-bottom: 10px;">외주 가공 취소 요청</h3>
-        <button type="button" class="pop_close">닫기</button>
+        <button type="button" class="pop_close" name="CANCEL_REQUEST_OUTSIDE_POPUP_CLOSE">닫기</button>
         <hr>
         <form class="form-inline" name="CANCEL_REQUEST_OUTSIDE_MAIL_FORM" id="CANCEL_REQUEST_OUTSIDE_MAIL_FORM" role="form">
             <input type="hidden" id="queryId" name="queryId" value="">
@@ -284,6 +287,9 @@
             <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ"/>
             <div id="CANCEL_REQUEST_OUTSIDE_GRID"></div>
         </form>
+        <div class="text-center">
+            <button type="button" class="defaultBtn grayPopGra" name="CANCEL_REQUEST_OUTSIDE_POPUP_CLOSE">닫기</button>
+        </div>
     </div>
 </div>
 
@@ -328,7 +334,7 @@
                 <div id="OUTSIDE_CLOSE_LEFT_GRID"></div>
             </div>
             <div style="display: flex; float:left; align-items: center; justify-content: center; width: 70px; height: 250px;">
-                <span class="arrow right_Arrow"></span>
+                <img src="/resource/asset/images/common/img_right_arrow.png" alt="오른쪽 화살표">
             </div>
             <div style="width: 450px; float:left;">
                 <div id="OUTSIDE_CLOSE_RIGHT_GRID"></div>
@@ -336,8 +342,8 @@
         </div>
 
         <div class="text-center">
-            <button class="defaultBtn" id="OUTSIDE_CLOSE_YES">저장</button>
-            <button class="defaultBtn" name="OUTSIDE_CLOSE_NO">닫기</button>
+            <button class="defaultBtn greenPopGra" id="OUTSIDE_CLOSE_YES">저장</button>
+            <button class="defaultBtn grayPopGra" name="OUTSIDE_CLOSE_NO">닫기</button>
         </div>
     </div>
 </div>
@@ -449,7 +455,7 @@
             {title: '규격', width: 70, dataType: 'string', dataIndx: 'SIZE_TXT'},
             {title: '자재종류', width:70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '표면처리', width:90, dataType: 'string', dataIndx: 'SURFACE_TREAT_NM'},
-            {title: '수량', dataType: 'integer', dataIndx: 'ORDER_QTY'},
+            {title: '수량', dataType: 'integer', dataIndx: 'ITEM_QTY'},
             {title: '사급<br>여부', minWidth: 30, width: 40, dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -591,39 +597,83 @@
             {title: '도면번호', minWidth: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', editable: true},
             {title: 'Part', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '규격', minWidth: 110, dataType: 'string', dataIndx: 'SIZE_TXT', editable: true},
-            {title: '자재<br>종류', minWidth: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
-            {title: '표면<br>처리', minWidth: 70, dataType: 'string', dataIndx: 'SURFACE_TREAT'},
-            // {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'}, // 확인 필요
-            {title: '소재<br>제공', dataType: 'bool', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
+            {title: '자재<br>종류', minWidth: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
                 render: function (ui) {
                     let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let materialDetail = fnGetCommCodeGridSelectBox('1027');
+                        let index = materialDetail.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = materialDetail.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : materialDetail[index].text;
+                    }
+                }
+            },
+            {title: '표면<br>처리', minWidth: 70, dataType: 'string', dataIndx: 'SURFACE_TREAT',
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let surfaceTreat = fnGetCommCodeGridSelectBox('1039');
+                        let index = surfaceTreat.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = surfaceTreat.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : surfaceTreat[index].text;
+                    }
+                }
+            },
+            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
+            {title: '소재<br>제공', dataType: 'bool', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    console.log(cellData);
 
                     return cellData === 'Y' ? cellData : '';
                 }
             },
             {
-                title: '요청가공', align: 'center', colModel: [
+                title: '요청가공', align: 'center', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, colModel: [
                     {
-                        title: '완제품', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN', editable: true,
+                        title: '완제품', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true,
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
                     {
-                        title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN', editable: true,
+                        title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true,
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
                     {
-                        title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN', editable: true,
+                        title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true,
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
                     {
-                        title: '표면<br>처리', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN', editable: true,
+                        title: '표면<br>처리', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true,
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
-                    {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC', editable: true}
+                    {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true}
                 ]
             },
-            {title: '요망<br>납기', datatype: 'date', dataIndx: 'OUTSIDE_HOPE_DUE_DT', editable: true},
-            {title: '비고', datatype: 'string', dataIndx: 'OUTSIDE_NOTE', editable: true},
+            {title: '요망<br>납기', datatype: 'date', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true, editor: {type: 'textbox', init: dateEditor}},
+            {title: '비고', datatype: 'string', dataIndx: 'OUTSIDE_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
         ];
         const outsideProcessRequestObj = {
             height: 200,
@@ -670,6 +720,90 @@
 
         let $cancelRequestOutsideGrid;
         const cancelRequestOutsideGridId = 'CANCEL_REQUEST_OUTSIDE_GRID';
+        const cancelRequestOutsideColModel = [
+            {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
+            {title: '관리번호', minWidth: 100, dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true},
+            {title: '도면번호', minWidth: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', editable: true},
+            {title: 'Part', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: '규격', minWidth: 110, dataType: 'string', dataIndx: 'SIZE_TXT', editable: true},
+            {title: '자재<br>종류', minWidth: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let materialDetail = fnGetCommCodeGridSelectBox('1027');
+                        let index = materialDetail.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = materialDetail.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : materialDetail[index].text;
+                    }
+                }
+            },
+            {title: '표면<br>처리', minWidth: 70, dataType: 'string', dataIndx: 'SURFACE_TREAT',
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let surfaceTreat = fnGetCommCodeGridSelectBox('1039');
+                        let index = surfaceTreat.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = surfaceTreat.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : surfaceTreat[index].text;
+                    }
+                }
+            },
+            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
+            {title: '소재<br>제공', dataType: 'bool', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    console.log(cellData);
+
+                    return cellData === 'Y' ? cellData : '';
+                }
+            },
+            {
+                title: '요청가공', align: 'center', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, colModel: [
+                    {
+                        title: '완제품', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true,
+                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
+                    },
+                    {
+                        title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true,
+                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
+                    },
+                    {
+                        title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true,
+                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
+                    },
+                    {
+                        title: '표면<br>처리', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true,
+                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
+                    },
+                    {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true}
+                ]
+            },
+            {title: '요망<br>납기', datatype: 'date', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true, editor: {type: 'textbox', init: dateEditor}},
+            {title: '비고', datatype: 'string', dataIndx: 'OUTSIDE_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
+        ];
         const cancelRequestOutsideObj = {
             height: 200,
             collapsible: false,
@@ -1257,6 +1391,15 @@
             $(this).parent('.layerPopup').parent('.popup_container').modal('hide');
         });
 
+        $('[name=REQUEST_OUTSIDE_POPUP_CLOSE]').on('click', function () {
+            $('#REQUEST_OUTSIDE_POPUP').modal('hide');
+        });
+
+        $('[name=CANCEL_REQUEST_OUTSIDE_POPUP_CLOSE]').on('click', function () {
+            $('#CANCEL_REQUEST_OUTSIDE_POPUP').modal('hide');
+        });
+        /* event */
+
         /* init */
         $('#OUTSIDE_MANAGE_START_DATE').datepicker();
         $('#OUTSIDE_MANAGE_END_DATE').datepicker();
@@ -1298,7 +1441,7 @@
             let parameters = {'url': '/json-create', 'data': $('#REQUEST_OUTSIDE_MAIL_FORM').serialize()};
             console.log(parameters);
             fnPostAjax(function (data, callFunctionParam) {
-                console.log(data);
+                alert("<spring:message code='com.alert.default.save.success' />");
             }, parameters, '');
         };
 
@@ -1410,7 +1553,7 @@
             $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM #CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT').val(c);
             let parameters = {'url': '/json-create', 'data': $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM').serialize()};
             fnPostAjax(function (data, callFunctionParam) {
-                console.log(data);
+                alert("<spring:message code='com.alert.default.save.success' />");
             }, parameters, '');
         };
 
@@ -1421,8 +1564,6 @@
 
         $('#CANCEL_REQUEST_OUTSIDE_SAVE_SUBMIT').on('click', function (){
             cancelRequestOutsideConfirm();
-            outsideRequestSave();
-            outsideRequestSendEmail();
             $('#REQUEST_OUTSIDE_POPUP').modal('hide');
         });
         /* 가공 취소 요청 */
@@ -1430,7 +1571,8 @@
 
         /* 메일 드래그앤드랍 */
         /** drag & drop file Attach */
-        let uploadFiles = [];
+        // 임시 비활성화
+       /* let uploadFiles = [];
 
         let $attachDragAndDrop = $('[name=attachDragAndDrop]');
         $attachDragAndDrop.on("dragenter", function(e) {  //드래그 요소가 들어왔을떄
@@ -1479,7 +1621,7 @@
                     }
                 }, formData, '');
             }
-        });
+        });*/
         /* 메일 드래그앤드랍 */
 
         /* init */

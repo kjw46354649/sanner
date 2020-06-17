@@ -46,11 +46,6 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public List<Map<String, Object>> selectControlCloseRightList(Map<String, Object> map) throws SQLException {
-        return sqlSessionTemplate.selectList("selectControlCloseRightList", map);
-    }
-
-    @Override
     public void createMonthFinishClose(HashMap<String, Object> hashMap) throws SQLException {
         sqlSessionTemplate.insert("createMonthFinishClose", hashMap);
     }
@@ -118,6 +113,16 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public void updateMonthCloseFinalNego(HashMap<String, Object> hashMap) throws SQLException {
         sqlSessionTemplate.update("updateMonthCloseFinalNego", hashMap);
+    }
+
+    @Override
+    public void deleteMonthCloseDetail(HashMap<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.delete("deleteMonthCloseDetail", hashMap);
+    }
+
+    @Override
+    public void deleteMonthClose(HashMap<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.delete("deleteMonthClose", hashMap);
     }
 
 }

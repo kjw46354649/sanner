@@ -39,7 +39,7 @@
 .userWrap .userBox:nth-child(3n + 1){margin-left: 0;}
 
 .bodyWrap.work{background: #83bfe1;}
-.leftLogWrap{width: 334px; float: left; padding: 34px 34px 0 37px;}
+.leftLogWrap{width: 314px; float: left; padding: 34px 30px 0 30px;}
 .logInWrap{width: 263px; height: 566px; border: 1px solid #81a5b9; border-bottom:0; border-top-left-radius: 10px; border-top-right-radius: 10px; background: linear-gradient(to bottom, #f9f9f9, #ebebeb); position: relative;}
 .logInWrap div{text-align: center;}
 .logInWrap .mainTit{font-size: 36px; font-weight:bold; color: #fff; background: url(../images/work/bg_tit.png) no-repeat 0 0; width: 249px; height: 89px; line-height: 72px; position: absolute; top: 27px; left: -15px;}
@@ -48,12 +48,13 @@
 .userInfo .name{font-size: 30px; font-weight:bold; color: #000;}
 .logStatus button{background: url(../images/work/bg_onoff.png) no-repeat 0 0; width: 160px; height: 47px; line-height: 47px; font-size: 24px; color: #fff; font-weight:bold; margin: 35px 0 28px;}
 .logInWrap .langBtn{padding-top:0;}
-.rightWorkWrap{width: 690px; float: right; padding: 0 30px 30px 0;}
-.workInWrap{background-color: #fff; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; padding: 24px 0 19px 0;}
+.rightWorkWrap{width: 690px; float: right; padding: 37px 30px 30px 0;}
+.workInWrap{background-color: #fff; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; padding: 24px 0 19px 0;}
 .contsTitWrap,.topConts,.middleConts{padding: 0 29px; overflow: hidden;}
 .contsTit{font-size: 24px; color: #000; position: relative; padding-left: 35px; float: left;font-weight: bold;}
 .contsTit:before{content: ''; position: absolute; top: 0; left: 0; width: 25px; height: 25px; background: url(../images/common/chk.png) no-repeat 0 0;background-size: 100% auto;}
 .slecBox{background: url(../images/work/bg_select.png) no-repeat 0 0; width: 193px; height: 42px; float: right;line-height: 42px;color: #fff;text-align: center;font-size: 18px;background-size: 100% 100%;}
+.closeBox{width: 93px; height: 42px; float: right;line-height: 42px;color: #fff;text-align: center;font-size: 18px;background-size: 100% 100%;}
 .slecBox a{display: block;}
 .topConts{padding: 19px 28px 17px;}
 .timeWrap{float: left; background: url(../images/work/bg_st_1.png) no-repeat 0 0; width: 299px; height: 48px;line-height: 48px;padding: 0 30px;}
@@ -73,7 +74,7 @@
 .tbl table th:nth-child(2),.tbl table th:nth-child(3){background: url(../images/work/bg_th_2.png) no-repeat 0 0;}
 .tbl table th:last-child{background: url(../images/work/bg_th_3.png) no-repeat 0 0;}
 .tbl table th~th,.tbl table td~td{border-left: 1px solid #9b9b9b;}
-.tbl table td div{background: url(../images/work/bg_td.png) no-repeat 0 0; background-size: 100% 100% !important; height: 44px; line-height: 44px; margin: 8px 8px 6px; font-size: 32px; font-weight: bold;}
+.tbl table td div{background: url(../images/work/bg_td.png) no-repeat 0 0; background-size: 100% 100% !important; height: 44px; line-height: 44px; margin: 8px 8px 6px; font-size: 21px; font-weight: bold;}
 .tbl table td:first-child div{margin: 8px 8px 6px 6px;}
 .tbl table td:last-child div{margin: 8px 6px 8px 8px;}
 .tbl table td:nth-child(1) div{width: 271px;}
@@ -235,7 +236,6 @@ button.close {
     width: 600px;
     margin: 30px auto;
 }
-
 .modal-open-body {
     opacity: 30%;
 }
@@ -248,7 +248,7 @@ button.close {
 .modal-table-header {
     border: 1px solid #6D90D0;
     padding: 10px;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 600;
     text-align: center;
     color: white;
@@ -257,7 +257,7 @@ button.close {
 .modal-table-header-end {
     border: 1px solid #6D90D0;
     padding: 2px;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 600;
     text-align: center;
     color: white;
@@ -267,15 +267,15 @@ button.close {
 .modal-table-contents {
     border: 1px solid #6D90D0;
     padding: 10px;
-    font-size: 22px;
-    font-weight: 600;
+    font-size: 18px;
+    font-weight: 500;
     text-align: center;
     background: #E9EBF5;
 }
 .modal-table-contents-end {
     border: 1px solid #6D90D0;
     padding: 5px;
-    font-size: 42px;
+    font-size: 18px;
     font-weight: 500;
     text-align: center;
     background: yellow;
@@ -324,15 +324,15 @@ button.close {
     padding-top: 10px;
 }
 
-.modal-dialog button {
-    width: 150px;
-    height: 40px;
-    font-size: 30px;
-    border: 1px solid #9D9D9D;
-    padding: 5px;
-    background: #CCCCCC;
-    color: #000000;
-}
+/*.modal-dialog button {*/
+/*    width: 150px;*/
+/*    height: 40px;*/
+/*    font-size: 30px;*/
+/*    border: 1px solid #9D9D9D;*/
+/*    padding: 5px;*/
+/*    background: #CCCCCC;*/
+/*    color: #000000;*/
+/*}*/
 
 .cancelBox {
     width: 90px;
@@ -370,6 +370,28 @@ button.close {
     border-radius: 6px;
     font-weight: 600;
 }
-.modal-dialog div {
+
+.modal-dialog .buttonWrap {
+    padding-bottom: 5px;
+}
+
+.modal-dialog .buttonCenterWrap {
+    padding-bottom: 5px;
     text-align: center;
 }
+
+.modal-dialog .listGrnBtn { height: 40px; padding: 0 20px 0 40px; color: #fff; font-size: 20px; line-height: 40px; position: relative; border-radius: 3px; background: -webkit-gradient(linear, 90deg, color-stop(5%, 43934B), color-stop(5%, 4EAB57));/* Chrome,Safari4+ */ background: -webkit-linear-gradient(90deg, #43934B 5%, #4EAB57 5%);/* Chrome10+,Safari5.1+ */ }
+.modal-dialog .listBlueBtn { height: 40px; padding: 0 20px 0 40px; color: #fff; font-size: 20px; line-height: 40px; position: relative; border-radius: 3px; background: -webkit-gradient(linear, 90deg, color-stop(5%, 43934B), color-stop(5%, 4EAB57));/* Chrome,Safari4+ */ background: -webkit-linear-gradient(90deg, #333bff 5%, #777aff 5%);/* Chrome10+,Safari5.1+ */ }
+.modal-dialog .add:before { content: ''; width: 14px; height: 14px; position: absolute; top: 13px; left: 18px; display: block; background: url(../images/common/bg_addBtn.png)no-repeat 0 0; }
+.modal-dialog .save:before { content: ''; width: 18px; height: 14px; position: absolute; top: 13px; left: 15px; display: block; background: url(../images/common/ico_saveBtn.png)no-repeat 0 0; }
+.modal-dialog .closeBe:before { content: ''; width: 18px; height: 14px; position: absolute; top: 13px; left: 15px; display: block; background: url(../images/common/btn_tabmenu_close_off.png)no-repeat 0 0; }
+
+.modal-dialog .workList table{border-collapse:collapse; width:100%}
+.modal-dialog .workList table thead{float:left; width:568px;}
+.modal-dialog .workList table tbody{overflow-y:auto; overflow-x:hidden; float:left; width:568px; height: 300px;}
+.modal-dialog .workList table tbody tr{display:table; width:568px; line-height: 18px;}
+/*-.modal-dialog .workList table td{width:100px}*/
+
+
+.btn_plus{ width: 28px; height: 29px; font-size: 0; background: url(../images/common/btn_plus.png)no-repeat 0 0;}
+.btn_minus{width: 28px; height: 29px; font-size: 0; background: url(../images/common/btn_minus.png)no-repeat 0 0;}

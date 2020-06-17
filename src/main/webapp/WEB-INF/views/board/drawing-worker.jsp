@@ -88,9 +88,6 @@
                     if (textStatus === 'success') {
                         let workerHtml = "";
                         $("#drawing_worker_form").find('userWrapHtml').html("");
-
-                        console.log(data);
-
                         for(let i=0; i < data.list.length; i++){
                             workerHtml += '<li class="userBox" >';
                             workerHtml += '    <a href="#" class="userTag" attr="' + data.list[i].USER_ID + '" attrNm="' + data.list[i].USER_NM + '" attrSeq="' + data.list[i].PHOTO_GFILE_SEQ + '">';
@@ -101,7 +98,6 @@
                             workerHtml += '    </a>';
                             workerHtml += '</li>';
                         }
-                        console.log(workerHtml);
                         $("#drawing_worker_form").find('#userWrapHtml').html(workerHtml);
                     }
                 },

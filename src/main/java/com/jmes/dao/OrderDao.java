@@ -18,8 +18,6 @@ public interface OrderDao {
 
     void createControlPartProgressList(Map<String, Object> hashMap) throws SQLException;
 
-    List<Map<String, Object>> selectControlCloseRightList(Map<String, Object> map) throws SQLException;
-
     void createMonthFinishClose(HashMap<String, Object> hashMap) throws SQLException;
 
     void createMonthFinishCloseHistory(HashMap<String, Object> hashMap) throws SQLException;
@@ -47,4 +45,8 @@ public interface OrderDao {
     void createControlExcelBatch(Map<String, Object> hashMap) throws SQLException;
 
     void updateMonthCloseFinalNego(HashMap<String, Object> hashMap) throws SQLException;
+
+    void deleteMonthCloseDetail(HashMap<String, Object> hashMap) throws SQLException;
+
+    void deleteMonthClose(HashMap<String, Object> hashMap) throws SQLException;
 }

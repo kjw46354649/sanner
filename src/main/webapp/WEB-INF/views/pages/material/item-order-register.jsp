@@ -10,46 +10,43 @@
 
 <div class="popup_container" id="item_order_register_popup" style="display: none;">
     <div class="layerPopup">
-            <h3>소재 주문</h3>
-            <button type="button" class="pop_close mg-top10 mg-right8" data-dismiss="modal">닫기</button>
-            <div class="modal-body">
-                <div class="h_area mg-bottom10">
-
+        <h3>소재 주문</h3>
+        <button type="button" class="pop_close mg-top10 mg-right8" data-dismiss="modal">닫기</button>
+        <div class="t_area mg-top10">
+            <div class="t_h">
+                <span class="list_t" style="width: 192px;">소재주문번호</span>
+                <span style="width: 203px;">
+                    <input type="text" name="" id="item_order_register_material_order_num" value="">
+                </span>
+                <div style="width: 200px; line-height: 45px;" class="d-inline right_float">
+                    <button type="button" class="defaultBtn radius" id="btnItemOrderRegisterPopAdd">추가</button>
+                    <button type="button" class="defaultBtn radius green" id="btnItemOrderRegisterPopSave">저장</button>
+                    <button type="button" class="defaultBtn radius" id="btnItemOrderRegisterPopSubmit">제출</button>
                 </div>
-                <div class="t_area">
-                    <div class="t_h">
-                        <span class="list_t" style="width: 192px;">소재주문번호</span>
-                        <span style="width: 203px;">
-                            <input type="text" name="" id="item_order_register_material_order_num" value="">
-                        </span>
-                        <div style="width: 200px; line-height: 45px;" class="right_float">
-                            <button type="button" class="defaultBtn radius" id="btnItemOrderRegisterPopAdd">추가</button>
-                            <button type="button" class="defaultBtn radius green" id="btnItemOrderRegisterPopSave">저장</button>
-                            <button type="button" class="defaultBtn radius" id="btnItemOrderRegisterPopSubmit">제출</button>
-                        </div>
-                    </div>
-                </div>
-
-                <form class="form-inline" role="form" id="item_order_register_popup_form" name="item_order_register_popup_form">
-                    <input type="hidden" id="queryId" name="queryId" value="selectItemOrderRegisterPopList"/>
-                    <input type="hidden" id="CONCAT_SEQ" name="CONCAT_SEQ"/>
-                    <input type="hidden" id="MATERIAL_ORDER_NUM" name="MATERIAL_ORDER_NUM"/>
-                    <input type="hidden" id="MATERIAL_ORDER_SEQ" name="MATERIAL_ORDER_SEQ"/>
-                    <div class="tableWrap">
-                        <div id="item_order_register_popup_top_grid"></div>
-                        <div class="right_sort">
-                            전체 조회 건수 (Total : <span id="item_order_register_popup_top_grid_records" style="color: #00b3ee">0</span>)
-                        </div>
-                    </div>
-                    <br/>
-                    <div class="gridWrap popupTableDiv list1" style="overflow-x: auto;">
-                        <%--<div id="item_order_register_popup_bot_grid"></div>
-                        <div class="right_sort">
-                            전체 조회 건수 (Total : <span id="item_order_register_popup_bot_grid_records" style="color: #00b3ee">0</span>)
-                        </div>--%>
-                    </div>
-                </form>
             </div>
+        </div>
+        <div class="h_area mg-bottom10">
+
+        </div>
+        <form class="form-inline" role="form" id="item_order_register_popup_form" name="item_order_register_popup_form">
+            <input type="hidden" id="queryId" name="queryId" value="selectItemOrderRegisterPopList"/>
+            <input type="hidden" id="CONCAT_SEQ" name="CONCAT_SEQ"/>
+            <input type="hidden" id="MATERIAL_ORDER_NUM" name="MATERIAL_ORDER_NUM"/>
+            <input type="hidden" id="MATERIAL_ORDER_SEQ" name="MATERIAL_ORDER_SEQ"/>
+            <div class="tableWrap">
+                <div id="item_order_register_popup_top_grid"></div>
+                <div class="right_sort">
+                    전체 조회 건수 (Total : <span id="item_order_register_popup_top_grid_records" style="color: #00b3ee">0</span>)
+                </div>
+            </div>
+            <br/>
+            <div class="gridWrap popupTableDiv list1" style="overflow-x: auto;">
+                <%--<div id="item_order_register_popup_bot_grid"></div>
+                <div class="right_sort">
+                    전체 조회 건수 (Total : <span id="item_order_register_popup_bot_grid_records" style="color: #00b3ee">0</span>)
+                </div>--%>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -325,7 +322,7 @@
                 }
             },
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 120, editable: false } ,
-            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, width: 120},
+            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}, width: 120},
             {title: '요청 사항', align: "center", colModel: [
                     {title: '요청<br>사항', dataType: 'string', dataIndx: 'REQUEST_CD', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, minWidth: 150,
                         editor: {
@@ -357,7 +354,7 @@
                             }
                         }
                     },
-                    {title: '비고', dataType: 'string', dataIndx: 'M_ORDER_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, minWidth: 120},
+                    {title: '비고', dataType: 'string', dataIndx: 'M_ORDER_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}, minWidth: 120},
                 ], styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}},
             {title: '원<br>발주량', dataType: 'string', dataIndx: 'ORDER_QTY', editable: false},
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'} },
@@ -367,7 +364,7 @@
                     {title: '불출완료수량', dataType: 'string', dataIndx: 'COMPLETE_OUT_QTY', editable: false},
                     {title: '', dataType: 'string', dataIndx: '', editable: false,
                         render: function(ui){
-                            return '<input type="button" id="itemOrderRegisterOutReset" value="reset"/>';
+                            return '<button type="button" id="itemOrderRegisterOutReset" class="miniBtn gray">Reset</button>';
                         },
                         postRender: function (ui) {
                             let grid = this,
@@ -394,9 +391,15 @@
                             });
                         }
                     },
-                    {title: '불출', dataType: 'string', dataIndx: 'OUT_YN', editable: false},
+                    {title: '불출', dataType: 'string', dataIndx: 'OUT_YN', editable: false,
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+
+                            return cellData === 'Y' ? cellData : '';
+                        }
+                    },
                 ]},
-            {title: '비고', dataType: 'string', dataIndx: 'DTL_AMOUNT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, minWidth: 120},
+            {title: '비고', dataType: 'string', dataIndx: 'DTL_AMOUNT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}, minWidth: 120},
             {title: '주문<br>요청 일시', dataType: 'date', dataIndx: 'M_ORDER_DT',  width: 120, editable: false}
         ];
 
@@ -411,7 +414,7 @@
             {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM' , editable: false} ,
             {title: 'Size(mm)', dataType: 'string', dataIndx: 'SIZE_TXT' , editable: false} ,
             {title: '재고', dataType: 'integer', dataIndx: 'STOCK_QTY' , editable: false} ,
-            {title: '요청', dataType: 'integer', dataIndx: 'OUT_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'} } ,
+            {title: '요청', dataType: 'integer', dataIndx: 'OUT_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'} } ,
             {title: '', dataType: 'string', dataIndx: 'OUT_YN', editable: false,
                 render: function(ui){
                     let returnVal = "";
@@ -577,12 +580,6 @@
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', hidden: true}
         ];
 
-        let itemOrderRegisterPopBotColModel= [
-            {title: '성함', dataType: 'string', dataIndx: 'ITEM_NM' },
-            {title: '메일주소', dataType: 'string', dataIndx: 'DRAWING_NUM' },
-            {title: '전화번호', dataType: 'string', dataIndx: 'ITEM_QTY' }
-        ];
-
         itemOrderRegisterLeftGrid.pqGrid({
             height: '100%',
             dataModel: {
@@ -641,7 +638,7 @@
 
                 let hiddenYn = $("#item_order_register_hidden_form #AUTO_SEARCH").val();
                 if(hiddenYn == 'Y') {
-                    $(".itemOrderRegisterMaterialDetailSelectBox").val(ui.rowData.MATERIAL_DETAIL);
+                    $("#itemOrderRegisterMaterialDetailSelectBox").val(ui.rowData.MATERIAL_DETAIL);
                     $("#item_order_register_hidden_form #MATERIAL_DETAIL").val(ui.rowData.MATERIAL_DETAIL);
                     itemOrderRegisterRightGrid.pqGrid( "destroy" );
                     selectItemOrderRegisterRightList();
@@ -1178,7 +1175,7 @@
             bodyHtml =
                 '<h4>\n' +
                 '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
-                '<span>성공적으로 발송되었습니다.</br>주문서를 출력하시겠습니까?</span>' +
+                '<span>성공적으로 발송되었습니다. 주문서를 출력하시겠습니까?</span>' +
                 '</h4>';
 
             fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);

@@ -9,8 +9,6 @@ public interface OrderService {
 
     void createNewOrderConfirm(Map<String, Object> map) throws Exception;
 
-    List<Map<String, Object>> selectControlCloseRightList(Map<String, Object> map) throws Exception;
-
     void createMonthFinishClose(Map<String, Object> map) throws Exception;
 
     void removeMonthClose(Map<String, Object> map) throws Exception;

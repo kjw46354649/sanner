@@ -162,6 +162,8 @@ option { font-size: 12px; }
 .graBtn { height: 40px; padding: 0 20px 0 40px; color: #fff; font-size: 15px; line-height: 40px; position: relative; border-radius: 3px; background: -webkit-gradient(linear, 90deg, color-stop(5%, 43934B), color-stop(5%, 4EAB57));/* Chrome,Safari4+ */ background: -webkit-linear-gradient(90deg, #43934B 5%, #4EAB57 5%);/* Chrome10+,Safari5.1+ */ }
 .add:before { content: ''; width: 14px; height: 14px; position: absolute; top: 13px; left: 18px; display: block; background: url(../images/common/bg_addBtn.png)no-repeat 0 0; }
 .save:before { content: ''; width: 18px; height: 14px; position: absolute; top: 13px; left: 15px; display: block; background: url(../images/common/ico_saveBtn.png)no-repeat 0 0; }
+.close:before { content: ''; width: 18px; height: 14px; position: absolute; top: 13px; left: 15px; display: block; background: url(../images/common/btn_tabmenu_close_off.png)no-repeat 0 0; }
+
 .gradeBtn { width: 157px;background: #454545; border:1px solid #999; height: 54px; line-height: 52px; text-align: center; font-size: 23px; color: #f3f3f3; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=2, Direction=0, Color=#ECECEC)";/*IE 8*/ -moz-box-shadow: 0 0 2px 4px #eaeaea;/*FF 3.5+*/ -webkit-box-shadow: 0 0 2px 4px #eaeaea;/*Saf3-4, Chrome, iOS 4.0.2-4.2, Android 2.3+*/ box-shadow: 0 0 2px 4px #eaeaea;/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=2, Direction=135, Color=#eaeaea); /*IE 5.5-7*/ }
 .gradeBtn~.gradeBtn { margin-left: 16px; }
 .gradeBtn.green { border: 1px solid #6b8620; background: #95bd2e; }
@@ -170,6 +172,16 @@ option { font-size: 12px; }
 .gradeBtn.red { border: 1px solid #c44938; background: #e4614f; }
 .gradeBtn.white { border: 1px solid #999; background: #fff; color:#000; }
 .gradeBtn.purple { border: 1px solid #76139f; background: #bd67e1 }
+
+.gradeMidBtn { width: 107px;background: #454545; border:1px solid #999; height: 33px; line-height: 35px; text-align: center; font-size: 18px; color: #f3f3f3; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=2, Direction=0, Color=#ECECEC)";/*IE 8*/ -moz-box-shadow: 0 0 2px 4px #eaeaea;/*FF 3.5+*/ -webkit-box-shadow: 0 0 2px 4px #eaeaea;/*Saf3-4, Chrome, iOS 4.0.2-4.2, Android 2.3+*/ box-shadow: 0 0 2px 4px #eaeaea;/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=2, Direction=135, Color=#eaeaea); /*IE 5.5-7*/ }
+.gradeMidBtn~.gradeMidBtn { margin-left: 2px; }
+.gradeMidBtn.green { border: 1px solid #6b8620; background: #95bd2e; }
+.gradeMidBtn.blue { border: 1px solid #3a6a93; background: #5ca3e2; }
+.gradeMidBtn.yellow { border: 1px solid #b99b30; background: #e5c150; }
+.gradeMidBtn.red { border: 1px solid #c44938; background: #e4614f; }
+.gradeMidBtn.white { border: 1px solid #999; background: #fff; color:#000; }
+.gradeMidBtn.purple { border: 1px solid #76139f; background: #bd67e1 }
+
 .submit { width: 120px; height: 32px; font-size: 0; background: url(../images/common/btn_submit.png)no-repeat 0 0; }
 .cancel { width: 110px; height: 32px; font-size: 0; background: url(../images/common/btn_cancel.png)no-repeat 0 0; }
 .icon_btn { height: 28px; border: 1px solid #a3a3a3; font-size: 13px; font-family: 'NotoKrB'; position: relative; color: #010101; box-sizing: border-box; line-height: 26px; padding: 0 12px 0 27px; }
