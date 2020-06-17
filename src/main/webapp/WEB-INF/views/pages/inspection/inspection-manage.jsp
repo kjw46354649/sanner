@@ -65,12 +65,12 @@
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn" id="inspection_manage_detail_btn">상세정보 조회</button>
                     &nbsp;
-                    <input type="checkbox" id="chkInspectionTimer" />
+                   <%-- <input type="checkbox" id="chkInspectionTimer" />
                     <select class="wd_50" name="selectInspectionTimer" id="selectInspectionTimer" title="">
                         <option value="10">10초</option>
                         <option value="30">30초</option>
                         <option value="60">60초</option>
-                    </select>&nbsp;마다 재조회
+                    </select>&nbsp;마다 재조회--%>
                 </div>
             </div>
         </div>
@@ -813,7 +813,7 @@ console.log(dataInfo);
 
     });
 
-
+   /* 10초마다 재조회
     $("#chkInspectionTimer").on('click', function(e){
         inspectionTimer();
     });
@@ -832,7 +832,7 @@ console.log(dataInfo);
         }else{
             clearInterval(inspectionsetIntervalTimer);
         }
-    }
+    }*/
 
 
 

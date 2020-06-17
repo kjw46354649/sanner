@@ -255,7 +255,7 @@
                     <ul class="conWrap">
                       <div id="system-company-register-popup-grid" class="jqx-refresh"></div>
                     </ul><br/>
-                    <div class="tableWrap" style="height: 160px; overflow-y: auto;">
+                    <div class="tableWrap" >
 
                             <ul class="conWrapPop">
                                 <div id="system-company-type1-popup-grid" class="jqx-refresh"></div>
@@ -269,7 +269,7 @@
                             <ul class="conWrapPop">
                                 <div id="system-company-type4-popup-grid" class="jqx-refresh"></div>
                             </ul>
-                            <ul class="conWrapPop">
+                            <ul class="conWrapPop" style="padding-right:0%">
                                 <div id="system-company-type5-popup-grid" class="jqx-refresh"></div>
                             </ul>
 
@@ -278,7 +278,7 @@
 
             </div>
             <div class="btnWrap">
-                 <button type="button" class="defaultBtn grayPopGra" id="system-company-pop-close">닫기</button>
+                 <button type="button" class="defaultBtn btn-120w" id="system-company-pop-close">닫기</button>
              </div>
         </div>
 
@@ -660,7 +660,7 @@
         // };
 
         type1Obj = {
-            height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            height: 180, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'},
             trackModel: {on: true}, scrollModel: {autoFit: true},
             numberCell: {title: 'No.', styleHead: {'vertical-align':'middle'}}, // scrollModel: {autoFit: true},
@@ -714,7 +714,7 @@
         //     ]
         // };
         type2Obj = {
-            height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            height: 180, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'},
             trackModel: {on: true}, scrollModel: {autoFit: true},
             numberCell: {title: 'No.', styleHead: {'vertical-align':'middle'}}, // scrollModel: {autoFit: true},
@@ -756,7 +756,7 @@
         //     ]
         // };
         type3Obj = {
-            height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            height: 180, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'},
             trackModel: {on: true}, scrollModel: {autoFit: true},
             numberCell: {title: 'No.', styleHead: {'vertical-align':'middle'}}, // scrollModel: {autoFit: true},
@@ -798,7 +798,7 @@
         //     ]
         // };
         type4Obj = {
-            height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            height: 180, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'},
             trackModel: {on: true}, scrollModel: {autoFit: true},
             numberCell: {title: 'No.', styleHead: {'vertical-align':'middle'}}, // scrollModel: {autoFit: true},
@@ -840,7 +840,7 @@
         //     ]
         // };
         type5Obj = {
-            height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            height: 180, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'},
             trackModel: {on: true}, scrollModel: {autoFit: true},
             numberCell: {title: 'No.', styleHead: {'vertical-align':'middle'}}, // scrollModel: {autoFit: true},

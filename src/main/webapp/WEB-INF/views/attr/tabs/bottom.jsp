@@ -948,8 +948,7 @@
 
                 let filedownlod = "";
                 if(dataInfo.DXF_GFILE_SEQ != "" && dataInfo.DXF_GFILE_SEQ != undefined){
-                    //filedownlod = "<button type='button' class='smallBtn red' onclick=\"javascript:fnSingleFileDownloadFormPageAction('" + dataInfo.DXF_GFILE_SEQ + "');\"><i class='fa fa-trash'></i><span >다운로드</span></button>";
-                    filedownlod = dataInfo.DXF_GFILE_SEQ;
+                    filedownlod = "<button type='button' class='smallBtn red' onclick=\"javascript:fnSingleFileDownloadFormPageAction('" + dataInfo.DXF_GFILE_SEQ + "');\"><i class='fa fa-trash'></i><span >다운로드</span></button>";
                 }
                 $("#g_item_detail_pop_form").find("#DXF_GFILE_SEQ").html(filedownlod);
 
