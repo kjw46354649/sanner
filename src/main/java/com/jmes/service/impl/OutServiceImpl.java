@@ -2,6 +2,7 @@ package com.jmes.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.framework.innodale.dao.InnodaleDao;
 import com.jmes.dao.OrderDao;
 import com.jmes.dao.OutDao;
 import com.jmes.service.OutService;
@@ -18,6 +19,7 @@ public class OutServiceImpl implements OutService {
     public OrderDao orderDao;
 
     @Autowired
+    private InnodaleDao innodaleDao;
     public OutDao outDao;
 
     @Override
@@ -60,20 +62,56 @@ public class OutServiceImpl implements OutService {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
 
+        ArrayList<HashMap<String, Object>> controlPartList = null;
+        ArrayList<HashMap<String, Object>> mailReceiverList = null;
+        HashMap<String, Object> requestMailForm = null;
+        int outsideRequestSeq;
+
         if (jsonObject != null)
-            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<HashMap<String, Object>>() {});
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {
+            });
 
-//            jsonArray = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<HashMap<String, Object>>>() {});
+        if (jsonMap.containsKey("requestMailForm"))
+            requestMailForm = (HashMap<String, Object>) jsonMap.get("requestMailForm");
 
-//        if (jsonSendObject != null)
-//            jsonMap = objectMapper.readValue(jsonSaveObject, new TypeReference<Map<String, Object>>() {});
-        System.out.println(jsonMap);
+        if (jsonMap.containsKey("controlPartList"))
+            controlPartList = (ArrayList<HashMap<String, Object>>) jsonMap.get("controlPartList");
 
-//        for (HashMap<String, Object> hashMap : jsonArray) {
-//            hashMap.put("OUTSIDE_STATUS", "OST004");
-//            this.outDao.updateOutsideCloseRequest(hashMap);
-//            this.outDao.createOutsideClose(hashMap);
-//            this.outDao.createOutsideCloseHistory(hashMap);
-//        }
+        if (jsonMap.containsKey("mailReceiverList"))
+            mailReceiverList = (ArrayList<HashMap<String, Object>>) jsonMap.get("mailReceiverList");
+
+        // 외주 가공 요청
+        if (requestMailForm != null && requestMailForm.size() > 0) {
+            requestMailForm.put("queryId", "outMapper.createOutsideRequest");
+            this.innodaleDao.create(requestMailForm);
+        }
+        System.out.println(requestMailForm);
+        outsideRequestSeq = (int) requestMailForm.get("OUTSIDE_REQUEST_SEQ");
+
+        // 주문관리 Part 저장 & 외주가공요청 상세 저장
+        if (controlPartList != null && controlPartList.size() > 0) {
+            for (HashMap<String, Object> hashMap : controlPartList) {
+                hashMap.put("OUTSIDE_REQUEST_SEQ", outsideRequestSeq);
+                hashMap.put("queryId", "orderMapper.updateControlPart");
+                this.innodaleDao.update(hashMap);
+                hashMap.put("queryId", "outMapper.createOutsideRequestDetail");
+                this.innodaleDao.create(hashMap);
+            }
+        }
+
+        // 외주가공 요청 수신자 저장
+        if (mailReceiverList != null && mailReceiverList.size() > 0) {
+            for (HashMap<String, Object> hashMap : mailReceiverList) {
+                hashMap.put("OUTSIDE_REQUEST_SEQ", outsideRequestSeq);
+                hashMap.put("queryId", "outMapper.createOutsideRequestReceiver");
+                this.innodaleDao.create(hashMap);
+            }
+        }
+
+        // 메일 발송
+        if (requestMailForm != null && requestMailForm.size() > 0) {
+            requestMailForm.put("queryId", "mail.insertOutsideRequestSubmitMail");
+            this.innodaleDao.create(requestMailForm);
+        }
     }
 }

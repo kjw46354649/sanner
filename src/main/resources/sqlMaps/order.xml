@@ -13,7 +13,7 @@
             A.CONTROL_STATUS AS CONTROL_STATUS_ORIGINAL, <!-- 주문관리상태 -->
             SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR') AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
             A.CONTROL_VER, <!-- 관리번호버전 -->
-            SF_GET_DATE_F(A.STATUS_DT,'YY','M') AS CONTROL_STATUS_DT, <!-- 상태확정일 -->
+            SF_GET_DATE_F(A.STATUS_DT, 'YY', 'M') AS CONTROL_STATUS_DT, <!-- 상태확정일 -->
             A.PRICE_CONFIRM, <!-- 단가확인 -->
             A.COMP_CD, <!-- 사업자구분 -->
             SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM, <!-- 사업자구분 이름 -->
@@ -96,7 +96,7 @@
             D.CLOSE_VER, <!-- 차수 -->
             CONCAT(D.CLOSE_VER, '건') AS CLOSE_VER_TRAN, <!-- 차수 -->
             D.INSERT_ID AS CLOSE_USER_ID, <!-- 작성자 -->
-            SF_GET_DATE_F(E.CLOSE_DT,'YY','M') AS CLOSE_DT, <!-- 마감일시 -->
+            SF_GET_DATE_F(E.CLOSE_DT, 'YY', 'M') AS CLOSE_DT, <!-- 마감일시 -->
             B.DXF_GFILE_SEQ, <!-- DXF -->
             B.IMG_GFILE_SEQ, <!-- IMG(PNG) -->
             B.OUTSIDE_COMP_CD, <!-- 외주업체 -->
@@ -109,7 +109,7 @@
             B.OUTSIDE_NOTE, <!-- 외주비고 -->
             '', <!-- 외주 불량 CODE -->
             '', <!-- 외주 조치방안 -->
-            SF_GET_DATE_F(A.STATUS_DT,'YY','M') AS STATUS_DT, <!-- 등록/업데이트 일시 -->
+            SF_GET_DATE_F(A.STATUS_DT, 'YY', 'M') AS STATUS_DT, <!-- 등록/업데이트 일시 -->
             B.PART_STATUS, <!-- PART 상태 -->
             SF_GET_CODE_NM(1013, B.PART_STATUS, 'KR') AS PART_STATUS_NM, <!-- 주문관리상태 -->
             D.CLOSE_DETAIL_NOTE, <!-- 마감 비고 -->
@@ -133,8 +133,163 @@
             LEFT OUTER JOIN TBL_OUT_BARCODE H ON B.CONTROL_SEQ = H.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = H.CONTROL_DETAIL_SEQ AND H.DEL_YN = 'N'
     </sql>
 
+    <sql id="control">
+        A.CONTROL_SEQ, <!-- 주문관리일련번호 -->
+        A.CONTROL_NUM, <!-- 관리번호 -->
+        A.CONTROL_VER, <!-- 관리번호 버전 -->
+        A.COMP_CD, <!-- 사업자 구분 -->
+        SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM, <!-- 사업자구분 -->
+        A.ORDER_COMP_CD, <!-- 발주업체 -->
+        SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM, <!-- 발주업체 -->
+        A.ORDER_STAFF_SEQ, <!-- 구매담당자 -->
+        SF_GET_STAFF_NM(A.ORDER_STAFF_SEQ) AS ORDER_STAFF_NM, <!-- 구매담당자  -->
+        A.DESIGNER_NM, <!-- 설계자 -->
+        A.NOTE AS CONTROL_NOTE, <!-- 주문관리 비고 -->
+        A.PROJECT_NM, <!-- 프로젝트 -->
+        A.MODULE_NM, <!-- 모듈명 -->
+        A.DELIVERY_COMP_NM, <!-- 납품처 -->
+        A.LABEL_NOTE, <!-- 라벨비고 -->
+        A.MAIN_INSPECTION, <!-- 주요검사품 -->
+        IFNULL(SF_GET_CODE_NM(1042, A.MAIN_INSPECTION, 'EN'), SPACE(0)) AS MAIN_INSPECTION_NM, <!-- 주요검사품 -->
+        A.EMERGENCY_YN, <!-- 긴급 -->
+        IF(A.EMERGENCY_YN IS NULL, SPACE(0), '긴급') AS EMERGENCY_BARCODE_NM, <!-- 바코드 긴급 -->
+        A.CONTROL_STATUS, <!-- 주문관리상태 -->
+        SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR') AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
+        SF_GET_DATE_F(A.STATUS_DT, 'YY', 'M') AS CONTROL_STATUS_DT, <!-- 주문관리 상태확정일 -->
+        A.EST_SEQ, <!-- 견적일련번호 -->
+        A.PRICE_CONFIRM, <!-- 단가확인 -->
+        A.OUT_FINISH_DT AS CONTROL_OUT_FINISH_DT <!-- 주문관리 출고완료일 -->
+    </sql>
+
+    <sql id="controlPart">
+        B.CONTROL_DETAIL_SEQ, <!-- 주문관리상세일련번호 -->
+        IFNULL(B.PART_NUM, SPACE(0)) AS PART_NUM, <!-- Part -->
+        B.DRAWING_NUM, <!-- 도면번호 -->
+        B.DRAWING_VER, <!-- 도면번호 버전 -->
+        SF_GET_DATE_F(B.DRAWING_UP_DT, 'YY', 'M'), <!-- 도면업로드시간 -->
+        B.PREV_DRAWING_NUM, <!-- 변경전 도면번호 -->
+        B.ITEM_NM, <!-- 품명 -->
+        B.WORK_TYPE, <!-- 작업형태 -->
+        IFNULL(SF_GET_CODE_NM(1033, B.WORK_TYPE, 'KR'), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
+        B.OUTSIDE_YN, <!-- 외주 -->
+        B.WORK_FACTORY, <!-- 수행공장 -->
+        SF_GET_CODE_NM(1014, B.WORK_FACTORY, 'KR') AS WORK_FACTORY_NM, <!-- 수행공장 -->
+        B.MATERIAL_SUPPLY_YN, <!-- 소재사급 -->
+        IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'YY', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 가공납기 -->
+        IFNULL(B.SIZE_TXT, SPACE(0)) AS SIZE_TXT, <!-- 규격 문자열 -->
+        B.SIZE_TYPE, <!-- 규격 타입 -->
+        B.SIZE_W, <!-- 규격 가로 -->
+        B.SIZE_H, <!-- 규격 세로 -->
+        B.SIZE_T, <!-- 규격 두께 -->
+        B.SIZE_D, <!-- 규격 지름 -->
+        B.SIZE_L, <!-- 규격 길이 -->
+        B.SIZE_W_M, <!-- 예상규격 가로 -->
+        B.SIZE_H_M, <!-- 예상규격 세로 -->
+        B.SIZE_T_M, <!-- 예상 규격 두께 -->
+        B.SIZE_D_M, <!-- 예상 규격 지름 -->
+        B.SIZE_L_M, <!-- 예상 규격 길이 -->
+        B.MATERIAL_TYPE, <!-- 재질 -->
+        IFNULL(SF_GET_CODE_NM(1002, B.MATERIAL_TYPE, 'KR'), SPACE(0)) AS MATERIAL_TYPE_NM, <!-- 재질 -->
+        B.MATERIAL_DETAIL, <!-- 소재 종류 -->
+        IFNULL(SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, 'KR'), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류 -->
+        B.MATERIAL_KIND, <!-- 소재 형태 -->
+        IFNULL(SF_GET_CODE_NM(1029, B.MATERIAL_KIND, 'KR'), SPACE(0)) AS MATERIAL_KIND_NM, <!-- 소재 형태 -->
+        B.SURFACE_TREAT, <!-- 표면처리 -->
+        IFNULL(B.MATERIAL_FINISH_HEAT, SPACE(0)) AS MATERIAL_FINISH_HEAT, <!-- 열처리 -->
+        B.MATERIAL_NOTE, <!-- 소재비고 -->
+        B.PART_UNIT_QTY, <!-- Part단위수량 -->
+        IFNULL(B.ORIGINAL_SIDE_QTY, SPACE(0)) AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
+        IFNULL(B.OTHER_SIDE_QTY, SPACE(0)) AS OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
+        B.DETAIL_LATHE, <!-- 상세가공요건_선반 -->
+        B.DETAIL_SURFACE, <!-- 상세가공요건_가공면 -->
+        B.DETAIL_CLAMPING, <!-- 상세가공요건_클램핑 -->
+        B.DETAIL_POCKET, <!-- 상세가공요건_포켓 -->
+        B.DETAIL_DRILL, <!-- 상세가공요건_드릴 -->
+        B.DETAIL_DIFFICULTY, <!-- 상세가공요건_난도 -->
+        B.MATERIAL_FINISH_TM, <!-- 소재마감_TM각비 -->
+        B.MATERIAL_FINISH_GRIND, <!-- 소재마감_연마 -->
+        B.MATERIAL_FINISH_HEAT, <!-- 소재마감_열처리 -->
+        B.UNIT_MATERIAL_AMT, <!-- 항목별단가_소재비 -->
+        B.UNIT_TM_AMT, <!-- 항목별단가_TM각비 -->
+        B.UNIT_GRIND_AMT, <!-- 항목별단가_연마비 -->
+        B.UNIT_HEAT_AMT, <!-- 항목별단가_열처리 -->
+        B.UNIT_SURFACE_AMT, <!-- 항목별단가_표면처리 -->
+        B.UNIT_PROCESS_AMT, <!-- 항목별단가_가공비 -->
+        B.UNIT_ETC_AMT, <!-- 항목별단가_기타추가 -->
+        B.UNIT_MATERIAL_AUTO_YN, <!-- 항목별단가 소재비 자동여부 -->
+        B.UNIT_TM_AUTO_YN, <!-- 항목별단가 TM각비 자동여부 -->
+        B.UNIT_GRIND_AUTO_YN, <!-- 항목별단가 연마비 자동여부 -->
+        B.UNIT_HEAT_AUTO_YN, <!-- 항목별단가 열처리 자동여부 -->
+        B.UNIT_SURFACE_AUTO_YN, <!-- 항목별단가 표면처리 자동여부 -->
+        B.UNIT_PROCESS_AUTO_YN, <!-- 항목별단가 가공비 자동여부 -->
+        B.UNIT_AMT_NOTE, <!-- 항목별단가_견적비고 -->
+        B.UNIT_FINAL_EST_AMT, <!-- 최종견적단가 -->
+        B.UNIT_FINAL_AMT, <!-- 최종공급단가 -->
+        <!-- 합계 금액 -->
+        B.DWG_GFILE_SEQ, <!-- DWG 파일그룹번호 -->
+        B.DXF_GFILE_SEQ, <!-- DXF 파일그룹번호 -->
+        B.PDF_GFILE_SEQ, <!-- PDF 파일그룹번호 -->
+        B.IMG_GFILE_SEQ, <!-- IMG 파일그룹번호 -->
+        B.PART_STATUS, <!-- PART 상태 -->
+        SF_GET_CODE_NM(1013, B.PART_STATUS, 'KR') AS PART_STATUS_NM, <!-- PART 상태 -->
+        SF_GET_DATE_F(B.STATUS_DT, 'YY', 'M') AS PART_STATUS_DT, <!-- PART 상태확정일 -->
+        B.MCT_NOTE, <!-- MCT_가공계획비고 -->
+        B.MCT_WORK_TYPE, <!-- MCT_작업구분 -->
+        B.OUTSIDE_COMP_CD, <!-- 외주업체 -->
+        SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM, <!-- 외주업체 -->
+        B.OUTSIDE_ORDER_NUM, <!-- 외주발주번호 -->
+        B.OUTSIDE_NOTE, <!-- 외주 비고 -->
+        B.OUTSIDE_MATERIAL_SUPPLY_YN, <!-- 외주 소재제공 여부 -->
+        B.OUTSIDE_REQUEST_FINISH_YN, <!-- 외주 요청가공 완제품 -->
+        B.OUTSIDE_REQUEST_PROCESS_YN, <!-- 외주 요청가공 가공 -->
+        B.OUTSIDE_REQUEST_GRIND_YN, <!-- 외주 요청가공 연마 -->
+        B.OUTSIDE_REQUEST_SURFACE_YN, <!-- 외주 요청가공 표면처리 -->
+        B.OUTSIDE_REQUEST_ETC, <!-- 외주 요청가공 기타사항 -->
+        SF_GET_DATE_F(B.OUTSIDE_HOPE_DUE_DT, 'YY', 'M') AS OUTSIDE_HOPE_DUE_DT, <!-- 외주 요망납기 -->
+        B.OUTSIDE_UNIT_AMT, <!-- 외주 확정단가 -->
+        SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY
+    </sql>
+
+    <sql id="controlPartOrder">
+        C.ORDER_SEQ,
+        C.ORDER_NUM, <!-- 발주번호 -->
+        SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY, <!-- 주문 수량 -->
+        IFNULL(C.ORDER_QTY, SPACE(0)) AS ORDER_QTY, <!-- 발주수량 -->
+        SF_GET_DATE_F(C.ORDER_DUE_DT, 'YY', '') AS ORDER_DUE_DT, <!-- 발주납기 -->
+        SF_GET_DATE_F(C.DELIVERY_DT, 'YY', '') AS DELIVERY_DT, <!-- 발주정보_납품확인 -->
+        C.PACKING_CNT, <!-- 포장묶음 -->
+        SF_GET_DATE_F(C.OUT_FINISH_DT, 'YY', '') AS ORDER_OUT_FINISH_DT <!-- 출고완료일 -->
+    </sql>
+
+    <sql id="monthClose">
+        E.CLOSE_MONTH, <!-- 마감월 -->
+        DATE_FORMAT(STR_TO_DATE(E.CLOSE_MONTH, '%Y%m'), '%Y-%m') AS CLOSE_MONTH_TRAN, <!-- 마감 월 -->
+        E.CLOSE_VER, <!-- 차수 -->
+        CONCAT(E.CLOSE_VER, '건') AS CLOSE_VER_TRAN, <!-- 차수 -->
+        E.FINAL_NEGO_AMT, <!-- 최종공급금액 -->
+        E.CLOSE_NOTE, <!-- 월마감비고 -->
+        E.CLOSE_CONTROL_AMT, <!-- 월마감금액 -->
+        E.CLOSE_CONTROL_CNT <!-- 월마감품수 -->
+    </sql>
+
     <select id="selectControlManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        <include refid="controlManage" />
+        SELECT
+            ROW_NUMBER () OVER () AS ROW_NUM,
+            <include refid="control"/>,
+            <include refid="controlPart"/>,
+            <include refid="controlPartOrder"/>,
+            F.INVOICE_NUM, <!-- 인보이스번호 -->
+            (IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_TM_AMT, 0) + IFNULL(B.UNIT_GRIND_AMT, 0) + IFNULL(B.UNIT_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0)) * C.ORDER_QTY AS EST_TOTAL_AMOUNT, <!-- 견적 합계 금액 -->
+            (SELECT SUM(OUT_QTY) FROM TBL_OUT WHERE CONTROL_SEQ = C.CONTROL_SEQ AND CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND ORDER_SEQ = C.ORDER_SEQ) AS OUT_QTY <!-- 출고 -->
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                                   AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_CONTROL_BARCODE D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.DEL_YN = 'N'
+            LEFT OUTER JOIN TBL_OUT_BARCODE E ON B.CONTROL_SEQ = E.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ AND E.DEL_YN = 'N'
+            LEFT OUTER JOIN TBL_INVOICE_DETAIL F ON B.CONTROL_SEQ = F.CONTROL_SEQ
+                                                    AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
+
         WHERE
             A.DEL_YN = 'N'
             AND (A.CONTROL_STATUS IS NULL OR A.CONTROL_STATUS IN ('ORD001', 'ORD002'))
@@ -167,7 +322,8 @@
         </if>
         ORDER BY
             A.CONTROL_SEQ,
-            B.PART_NUM
+            B.PART_NUM,
+            C.ORDER_NUM
     </select>
 
     <select id="selectControlCloseVer" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -189,8 +345,8 @@
             DATE_FORMAT(STR_TO_DATE(X.CLOSE_MONTH, '%Y%m'), '%Y.%m월') AS CLOSE_MONTH_TRAN, <!-- 마감 월 -->
             CONCAT(X.CLOSE_VER, '차') AS CLOSE_VER, <!-- 차수 -->
             CONCAT(CAST(SUM(X.ORDER_QTY) AS CHAR), '건') AS ORDER_QTY, <!-- 건수 -->
-            SUM(X.TOTAL_AMT) AS TOTAL_AMT, <!-- 공급가 -->
-            X.FINAL_NEGO_AMT <!-- 마감 금액 -->
+            FORMAT(SUM(X.TOTAL_AMT), 0) AS TOTAL_AMT, <!-- 공급가 -->
+            FORMAT(X.FINAL_NEGO_AMT, 0) AS FINAL_NEGO_AMT <!-- 마감 금액 -->
         FROM (
             SELECT
                 A.COMP_CD,
@@ -286,7 +442,7 @@
                 Q.CLOSE_VER,
                 SUM(Q.ORDER_QTY) AS ORDER_QTY,
                 SUM(Q.TOTAL_AMT) AS TOTAL_AMT,
-                Q.FINAL_NEGO_AMT
+                SUM(Q.FINAL_NEGO_AMT) AS FINAL_NEGO_AMT
             FROM (
                 SELECT
                     A.COMP_CD,
@@ -334,17 +490,34 @@
 
     <select id="selectControlCloseCancelRightList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            A.COMP_CD,
-            SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM,
-            A.ORDER_COMP_CD,
-            SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM,
-            D.CLOSE_MONTH,
-            DATE_FORMAT(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m'), '%Y.%m월') AS CLOSE_MONTH_TRAN,
-            D.CLOSE_VER,
-            SUM(C.ORDER_QTY) AS ORDER_QTY,
-            SUM(B.UNIT_FINAL_AMT) * SUM(C.ORDER_QTY) AS TOTAL_AMT,
-            SUM(E.CLOSE_CONTROL_AMT) AS CLOSE_CONTROL_AMT
-        FROM TBL_CONTROL A
+            IFNULL(X.COMP_CD, #{COMP_CD}) AS COMP_CD,
+            IFNULL(SF_GET_COMP_NM(X.COMP_CD), SF_GET_COMP_NM(#{COMP_CD})) AS COMP_NM,
+            IFNULL(X.ORDER_COMP_CD, #{ORDER_COMP_CD}) AS ORDER_COMP_CD,
+            IFNULL(SF_GET_COMP_NM(X.ORDER_COMP_CD), SF_GET_COMP_NM(#{ORDER_COMP_CD})) AS ORDER_COMP_NM,
+            IFNULL(X.CLOSE_MONTH, CONCAT(#{CONTROL_CLOSE_YEAR}, #{CONTROL_CLOSE_MONTH})) AS CLOSE_MONTH,
+            IFNULL(DATE_FORMAT(STR_TO_DATE(X.CLOSE_MONTH, '%Y%m'), '%Y.%m월'), CONCAT(#{CONTROL_CLOSE_YEAR}, '.', #{CONTROL_CLOSE_MONTH}, '월')) AS CLOSE_MONTH_TRAN,
+            IFNULL(CONCAT(X.CLOSE_VER, '차'), '-') AS CLOSE_VER,
+            IFNULL(CONCAT(CAST(SUM(X.ORDER_QTY) AS CHAR), '건'), '-') AS ORDER_QTY,
+            IFNULL(FORMAT(SUM(X.TOTAL_AMT), 0), '-') AS TOTAL_AMT,
+            IFNULL(FORMAT(X.FINAL_NEGO_AMT, 0), '-') AS FINAL_NEGO_AMT
+        FROM (
+            SELECT
+                A.COMP_CD,
+                A.ORDER_COMP_CD,
+                D.CLOSE_MONTH,
+                D.CLOSE_VER,
+                C.ORDER_QTY,
+                B.UNIT_FINAL_AMT * C.ORDER_QTY AS TOTAL_AMT,
+                E.FINAL_NEGO_AMT - IFNULL((SELECT BB.UNIT_FINAL_AMT
+                                          FROM TBL_CONTROL AA
+                                          INNER JOIN TBL_CONTROL_PART BB ON AA.CONTROL_SEQ = BB.CONTROL_SEQ
+                                          INNER JOIN TBL_CONTROL_PART_ORDER CC ON BB.CONTROL_SEQ = CC.CONTROL_SEQ
+                                                                                  AND BB.CONTROL_DETAIL_SEQ = CC.CONTROL_DETAIL_SEQ
+                                          INNER JOIN TBL_MONTH_CLOSE_DETAIL DD ON AA.COMP_CD = DD.COMP_CD
+                                                                                  AND AA.ORDER_COMP_CD = DD.ORDER_COMP_CD
+                                                                                  AND AA.CONTROL_SEQ  = DD.CONTROL_SEQ
+                                          WHERE AA.CONTROL_SEQ IN (${CONTROL_SEQ}) AND DD.CLOSE_VER = D.CLOSE_VER), 0) AS FINAL_NEGO_AMT
+            FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
                                                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
@@ -355,20 +528,21 @@
                                             AND D.CLOSE_VER = E.CLOSE_VER
                                             AND D.COMP_CD = E.COMP_CD
                                             AND D.ORDER_COMP_CD = E.ORDER_COMP_CD
-        WHERE
-            A.COMP_CD IN (${COMP_CD})
-            AND A.ORDER_COMP_CD IN (${ORDER_COMP_CD})
-            AND E.CLOSE_MONTH = CONCAT(#{CONTROL_CLOSE_YEAR}, #{CONTROL_CLOSE_MONTH})
-            AND A.CONTROL_SEQ NOT IN (${CONTROL_SEQ})
-        <!--         AND CLOSE_VER -->
+            WHERE
+                A.COMP_CD = #{COMP_CD}
+                AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+                AND E.CLOSE_MONTH = CONCAT(#{CONTROL_CLOSE_YEAR}, #{CONTROL_CLOSE_MONTH})
+                AND A.CONTROL_SEQ NOT IN (${CONTROL_SEQ})) X
         GROUP BY
-            A.COMP_CD,
-            A.ORDER_COMP_CD,
-            E.CLOSE_VER
+            X.COMP_CD,
+            X.ORDER_COMP_CD,
+            X.CLOSE_MONTH,
+            X.CLOSE_VER
         ORDER BY
-            A.COMP_CD,
-            A.ORDER_COMP_CD,
-            E.CLOSE_VER DESC
+            X.COMP_CD,
+            X.ORDER_COMP_CD,
+            X.CLOSE_MONTH,
+            X.CLOSE_VER DESC
     </select>
 
     <insert id="createMonthFinishClose" parameterType="java.util.HashMap" >
@@ -907,7 +1081,12 @@
     </update>
 
     <select id="selectConfirmOrderList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        <include refid="controlManage" />
+        SELECT
+            ROW_NUMBER () OVER () AS ROW_NUM,
+            <include refid="control"/>,
+            <include refid="controlPart"/>
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001'
             AND B.OUTSIDE_YN = 'N'
@@ -924,14 +1103,6 @@
         </if>
             A.CONTROL_SEQ,
             B.PART_NUM
-        <choose>
-            <when test="SORT_BY == 'OCM00'">
-                ,C.ORDER_DUE_DT <if test="DESCENDING != null and DESCENDING != ''">DESC</if>
-            </when>
-            <when test="SORT_BY == 'OCM01'">
-                ,B.INNER_DUE_DT <if test="DESCENDING != null and DESCENDING != ''">DESC</if>
-            </when>
-        </choose>
     </select>
 
     <select id="selectIsProcessAssembly" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -972,7 +1143,12 @@
     </update>
 
     <select id="selectProcessConfirmList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        <include refid="controlManage"/>
+        SELECT
+            ROW_NUMBER () OVER () AS ROW_NUM,
+            <include refid="control"/>,
+            <include refid="controlPart"/>
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001'
             AND B.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO010', 'PRO011', 'PRO012', 'PRO013', 'PRO014', 'PRO015')
@@ -995,58 +1171,51 @@
         ORDER BY
             A.CONTROL_SEQ,
             B.PART_NUM
-
     </select>
 
     <select id="selectOutsideProcessingList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        <include refid="controlManage"/>
+        SELECT
+            ROW_NUMBER () OVER () AS ROW_NUM,
+            <include refid="control"/>,
+            <include refid="controlPart"/>
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001'
             <!-- AND B.PART_STATUS = 'PRO001' -->
             AND B.WORK_TYPE NOT IN ('WTP050')
             AND B.OUTSIDE_YN = 'Y'
         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-            AND C.ORDER_COMP_CD = #{ORDER_COMP_CD}
+            AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
         <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
             AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
         </if>
         ORDER BY
-            C.CONTROL_SEQ,
+            A.CONTROL_SEQ,
             B.PART_NUM
-        <choose>
-            <when test="SORT_BY == 'OCM00'">
-                ,C.ORDER_DUE_DT <if test="DESCENDING != null and DESCENDING != ''">DESC</if>
-            </when>
-            <when test="SORT_BY == 'OCM01'">
-                ,B.INNER_DUE_DT <if test="DESCENDING != null and DESCENDING != ''">DESC</if>
-            </when>
-        </choose>
     </select>
 
     <select id="selectProcessCompleteList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        <include refid="controlManage"/>
+        SELECT
+            ROW_NUMBER () OVER () AS ROW_NUM,
+            <include refid="control"/>,
+            <include refid="controlPart"/>
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001'
             AND B.PART_STATUS = 'PRO009'
             AND B.WORK_TYPE NOT IN ('WTP050')
         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-            AND C.ORDER_COMP_CD = #{ORDER_COMP_CD}
+            AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
         <if test="MATERIAL_TYPE != null and MATERIAL_KIND != ''">
             AND B.MATERIAL_TYPE = #{MATERIAL_TYPE}
         </if>
         ORDER BY
-            C.CONTROL_SEQ,
+            A.CONTROL_SEQ,
             B.PART_NUM
-        <choose>
-            <when test="SORT_BY == 'OCM00'">
-                ,C.ORDER_DUE_DT <if test="DESCENDING != null and DESCENDING != ''">DESC</if>
-            </when>
-            <when test="SORT_BY == 'OCM01'">
-                ,B.INNER_DUE_DT <if test="DESCENDING != null and DESCENDING != ''">DESC</if>
-            </when>
-        </choose>
     </select>
 
     <select id="manageControlCadFiles_select" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -1183,7 +1352,12 @@
     </update>
 
     <select id="selectCloseHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        <include refid="controlManage"/>
+        SELECT
+            ROW_NUMBER () OVER () AS ROW_NUM,
+            <include refid="control"/>,
+            <include refid="controlPart"/>
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
         WHERE 1 = 1
             AND A.DEL_YN = 'N'
             AND A.CONTROL_STATUS IN ('ORD003', 'ORD004')
@@ -1218,14 +1392,14 @@
         </if>
         A.CONTROL_SEQ,
         B.PART_NUM
-        <choose>
-            <when test="SORT_BY == 'OCM00'">
-                ,C.ORDER_DUE_DT <if test="DESCENDING != null and DESCENDING != ''">DESC</if>
-            </when>
-            <when test="SORT_BY == 'OCM01'">
-                ,B.INNER_DUE_DT <if test="DESCENDING != null and DESCENDING != ''">DESC</if>
-            </when>
-        </choose>
+<!--        <choose>-->
+<!--            <when test="SORT_BY == 'OCM00'">-->
+<!--                ,C.ORDER_DUE_DT <if test="DESCENDING != null and DESCENDING != ''">DESC</if>-->
+<!--            </when>-->
+<!--            <when test="SORT_BY == 'OCM01'">-->
+<!--                ,B.INNER_DUE_DT <if test="DESCENDING != null and DESCENDING != ''">DESC</if>-->
+<!--            </when>-->
+<!--        </choose>-->
     </select>
 
     <select id="selectSalesClosingHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -1392,7 +1566,7 @@
             SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM, <!-- 공급사 -->
             IFNULL((SELECT MAX(INVOICE_NUM)
                     FROM TBL_INVOICE_DETAIL
-                    WHERE CONTROL_SEQ IN (${CONTROL_SEQ_STR})), CONCAT('IV-', (SELECT LPAD(SUBSTR(MAX(A.INVOICE_NUM), 4) + 1, 6, 0) AS INV_SEQ FROM TBL_INVOICE A))) AS INVOICE_NUM, <!-- 인보이스 넘버 -->
+                    WHERE CONTROL_SEQ IN (${CONTROL_SEQ_STR})), IFNULL(CONCAT('IV-', (SELECT LPAD(SUBSTR(MAX(A.INVOICE_NUM), 4) + 1, 6, 0) AS INV_SEQ FROM TBL_INVOICE A)), 'IV-000001')) AS INVOICE_NUM, <!-- 인보이스 넘버 -->
             (SELECT FORMAT(SUM(B.UNIT_FINAL_AMT * C.ORDER_QTY), 0)
             FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
@@ -1798,7 +1972,8 @@
             UNIT_FINAL_EST_AMT,
             UNIT_FINAL_AMT,
             PREV_DRAWING_NUM,
-            CONTROL_STATUS
+            CONTROL_STATUS,
+            INSERT_ID
         ) VALUES
         <foreach collection="list" item="item" separator=",">
         (
@@ -1840,7 +2015,8 @@
             CAST(REPLACE(#{item.UNIT_FINAL_EST_AMT}, ',' ,SPACE(0)) AS INTEGER),
             CAST(REPLACE(#{item.UNIT_FINAL_AMT}, ',' ,SPACE(0)) AS INTEGER),
             #{item.PREV_DRAWING_NUM},
-            #{item.CONTROL_STATUS}
+            #{item.CONTROL_STATUS},
+            #{LOGIN_USER_ID}
         )
         </foreach>
     </insert>
@@ -1995,5 +2171,31 @@
           AND B.CONTROL_SEQ = #{CONTROL_SEQ}
           AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </insert>
+
+    <delete id="deleteMonthCloseDetail" parameterType="java.util.HashMap">
+        DELETE FROM TBL_MONTH_CLOSE_DETAIL
+        WHERE
+            COMP_CD = #{COMP_CD}
+            AND CLOSE_MONTH = #{CLOSE_MONTH}
+            AND ORDER_COMP_CD = #{ORDER_COMP_CD}
+            AND CLOSE_VER = #{CLOSE_VER}
+            AND CONTROL_SEQ IN (${CONTROL_SEQ})
+    </delete>
+
+    <delete id="deleteMonthClose" parameterType="java.util.HashMap">
+        DELETE FROM TBL_MONTH_CLOSE
+        WHERE
+            COMP_CD = #{COMP_CD}
+            AND CLOSE_MONTH = #{CLOSE_MONTH}
+            AND ORDER_COMP_CD = #{ORDER_COMP_CD}
+            AND CLOSE_VER = #{CLOSE_VER}
+            AND NOT EXISTS (SELECT *
+                            FROM TBL_MONTH_CLOSE_DETAIL
+                            WHERE
+                                COMP_CD = #{COMP_CD}
+                                AND CLOSE_MONTH = #{CLOSE_MONTH}
+                                AND ORDER_COMP_CD = #{ORDER_COMP_CD}
+                                AND CLOSE_VER = #{CLOSE_VER})
+    </delete>
 
 </mapper>

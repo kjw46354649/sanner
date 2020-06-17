@@ -156,7 +156,7 @@
                     <div id="CONTROL_CLOSE_CANCEL_LEFT_GRID"></div>
                 </div>
                 <div style="display: flex; float:left; align-items: center; justify-content: center; width: 70px; height: 250px;">
-                    <span class="arrow right_Arrow"></span>
+                    <img src="/resource/asset/images/common/img_right_arrow.png" alt="오른쪽 화살표">
                 </div>
                 <div style="width: 450px; float:left;">
                     <div id="CONTROL_CLOSE_CANCEL_RIGHT_GRID"></div>
@@ -203,7 +203,7 @@
             {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', hidden: true},
             {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM'},
             {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM'},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
+            {title: '비고', dataType: 'string', dataIndx: 'CONTROL_NOTE'},
             {title: 'INV No.<br>(거래명세No.)', width: 100, dataType: 'string', dataIndx: 'INVOICE_NUM'},
             {title: '모듈명', width: 70, dataType: 'string', dataIndx: 'MODULE_NM'},
             {
@@ -250,7 +250,7 @@
             {title: '도면번호', minWidth: 120, dataType: 'string', dataIndx: 'DRAWING_NUM'},
             {title: '품명', minWidth: 110, dataType: 'string', dataIndx: 'ITEM_NM'},
             {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', hidden: true},
-            {title: '작업<br>형태', minWidth: 70, dataType: 'string', dataIndx: 'WORK_NM'},
+            {title: '작업<br>형태', minWidth: 70, dataType: 'string', dataIndx: 'WORK_TYPE_NM'},
             {title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -491,8 +491,8 @@
             {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
             {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
-            {title: '공급가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
-            {title: '마감금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CLOSE_CONTROL_AMT'}
+            {title: '공급가', width: 90, align: 'right', dataType: 'string', dataIndx: 'TOTAL_AMT'},
+            {title: '마감금액', width: 90, align: 'right', dataType: 'string', dataIndx: 'FINAL_NEGO_AMT'}
         ];
         const controlCloseCancelObj = {
             height: 300,
@@ -560,6 +560,9 @@
                 rowListConvert.push(tempObject);
             }
             $closeHistoryGrid.pqGrid('updateRow', {rowList: rowListConvert, checkEditable: false});
+            const updateQueryList = ['orderMapper.createControlProgress', 'orderMapper.updateControlStatus'];
+
+            fnModifyPQGrid($closeHistoryGrid, [], updateQueryList);
         };
 
         const noSelectedRowAlert = function () {
@@ -577,8 +580,6 @@
             let compCdList = [];
             let orderCompCdList = [];
             let controlSeqStr = '';
-            let compCdStr = '';
-            let orderCompCdStr = '';
             let controlCloseYear;
             let controlCloseMonth;
             let closeVer;
@@ -609,39 +610,53 @@
                     controlSeqStr += ',';
                 }
             }
-            for (let i = 0, COMP_CD_LIST_LENGTH = compCdList.length; i < COMP_CD_LIST_LENGTH; i++) {
-                compCdStr += '\'' + compCdList[i] + '\'';
-
-                if (i < COMP_CD_LIST_LENGTH - 1) {
-                    compCdStr += ',';
-                }
-            }
-            for (let i = 0, ORDER_COMP_CD_LIST_LENGTH = orderCompCdList.length; i < ORDER_COMP_CD_LIST_LENGTH; i++) {
-                orderCompCdStr += '\'' + orderCompCdList[i] + '\'';
-
-                if (i < ORDER_COMP_CD_LIST_LENGTH - 1) {
-                    orderCompCdStr += ',';
-                }
-            }
 
             controlCloseYear = list[0].CLOSE_MONTH.substring(0, 4);
             controlCloseMonth = list[0].CLOSE_MONTH.substring(4);
             closeVer = list[0].CLOSE_VER;
             $('#CONTROL_CLOSE_CANCEL_FORM > #CONTROL_SEQ').val(controlSeqStr);
-            $('#CONTROL_CLOSE_CANCEL_FORM > #COMP_CD').val(compCdStr);
-            $('#CONTROL_CLOSE_CANCEL_FORM > #ORDER_COMP_CD').val(orderCompCdStr);
+            $('#CONTROL_CLOSE_CANCEL_FORM > #COMP_CD').val(compCdList[0]);
+            $('#CONTROL_CLOSE_CANCEL_FORM > #ORDER_COMP_CD').val(orderCompCdList[0]);
             $('#CONTROL_CLOSE_CANCEL_FORM > #CONTROL_CLOSE_YEAR').val(controlCloseYear);
             $('#CONTROL_CLOSE_CANCEL_FORM > #CONTROL_CLOSE_MONTH').val(controlCloseMonth);
             $('#CONTROL_CLOSE_CANCEL_FORM > #CLOSE_VER').val(closeVer);
 
             let postData = fnFormToJsonArrayData('#CONTROL_CLOSE_CANCEL_FORM');
-            $controlCloseHistoryLeftGrid.pqGrid('option', 'dataModel.postData', function () {
-                return postData;
-            });
-            $controlCloseHistoryLeftGrid.pqGrid('refreshDataAndView');
+            fnRequestGidData($controlCloseHistoryLeftGrid, postData);
+
+            // $controlCloseHistoryLeftGrid.pqGrid('option', 'dataModel.postData', function () {
+            //     return postData;
+            // });
+            // $controlCloseHistoryLeftGrid.pqGrid('refreshDataAndView');
 
             postData.queryId = 'orderMapper.selectControlCloseCancelRightList';
             fnRequestGidData($controlCloseHistoryRightGrid, postData);
+        };
+
+        let isDifferentStatus = function (status) {
+            // status ORD003 마감, ORD004 종료
+            let controlStatusList = [];
+
+            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
+                let rowData = $closeHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+
+                controlStatusList.push(rowData.CONTROL_STATUS);
+            }
+            // 중복제거
+            controlStatusList = controlStatusList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+
+            if (controlStatusList.length > 1) {
+                alert('주문 상태가 다릅니다.'); //TODO: 문구 수정
+                return true;
+            }
+            if(controlStatusList[0] !== status) {
+                alert('주문 상태가 다릅니다.'); //TODO: 문구 수정
+                return true;
+            }
+
+            return false;
         };
         /* function */
 
@@ -658,6 +673,10 @@
             'show.bs.modal': function () {
                 // updateControlStatus();
                 if (noSelectedRowAlert()) {
+                    return false;
+                }
+
+                if (isDifferentStatus('ORD003')) {
                     return false;
                 }
 
@@ -703,7 +722,7 @@
         });
 
         $('#CONTROL_CLOSE_HISTORY_SAVE').on('click', function () {
-            const updateQueryList = ['orderMapper.updateMonthCloseDetailNote'];
+            const updateQueryList = ['orderMapper.updateControlPart', 'orderMapper.updateMonthCloseDetailNote'];
 
             fnModifyPQGrid($closeHistoryGrid, [], updateQueryList);
         });
@@ -730,6 +749,9 @@
 
         $('#CONTROL_FINISH_CANCEL').on('click', function () {
             if (noSelectedRowAlert()) {
+                return false;
+            }
+            if (isDifferentStatus('ORD004')) {
                 return false;
             }
 

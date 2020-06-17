@@ -426,7 +426,7 @@
         ];
         currentObj = {
             width: "100%",
-            height: 700, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            height: 720, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             editable : false,
             autoRow: false,
             rowHt: 100,
@@ -499,7 +499,7 @@
         ];
         etcObj = {
             width: "100%",
-            height: 700, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            height: 720, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'}, editable : false,
             numberCell: {title: 'No.'}, dragColumns: {enabled: false},
             scrollModel: {autoFit: true}, trackModel: {on: true},

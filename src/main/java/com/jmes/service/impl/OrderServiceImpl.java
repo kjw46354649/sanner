@@ -100,6 +100,8 @@ public class OrderServiceImpl implements OrderService {
 
         for (HashMap<String, Object> hashMap : jsonArray) {
             hashMap.put("CONTROL_STATUS", null);
+            this.orderDao.deleteMonthCloseDetail(hashMap);
+            this.orderDao.deleteMonthClose(hashMap);
             this.orderDao.updateControlStatus(hashMap);
             this.orderDao.createControlProgress(hashMap);
         }

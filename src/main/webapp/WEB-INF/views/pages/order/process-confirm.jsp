@@ -372,8 +372,8 @@
                     }
                 }
             },
-            {title: '주문<br>수량', dataType: 'string', dataIndx: 'ORDER_QTY'},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE'}
+            {title: '주문<br>수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
+            {title: '비고', dataType: 'string', dataIndx: 'CONTROL_NOTE'}
         ];
         let topLeftObj = {
             height: 350,
@@ -591,8 +591,8 @@
                     }
                 }
             },
-            {title: '주문<br>수량', dataType: 'string', dataIndx: 'ORDER_QTY'},
-            {title: '가공확정일시', width:90, dataType: 'string', dataIndx: 'STATUS_DT'}
+            {title: '주문<br>수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
+            {title: '가공확정일시', width:90, dataType: 'string', dataIndx: 'CONTROL_STATUS_DT'}
         ];
         const topRightObj = {
             height: 350,
@@ -778,7 +778,7 @@
                     }
                 }
             },
-            {title: '주문<br>수량', dataType: 'string', dataIndx: 'ORDER_QTY'},
+            {title: '주문<br>수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
             {title: '발생일시', width:90, dataType: 'string', dataIndx: 'STATUS_DT'}
         ];
         const botLeftObj = {
@@ -978,7 +978,7 @@
                     }
                 }
             },
-            {title: '주문<br>수량', dataType: 'string', dataIndx: 'ORDER_QTY'},
+            {title: '주문<br>수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
             {title: '가공완료<br>일시', dataType: 'string', dataIndx: ''},
             {title: '진행상태', dataType: 'string', dataIndx: ''},
             {title: '검사<br>실적', dataType: 'string', dataIndx: ''}

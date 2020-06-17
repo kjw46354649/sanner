@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="tvMapper">
+
+    <select id="selectTvPopList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        -- POP Info
+        SELECT B.POP_SEQ
+            , B.POP_POSITION
+            , B.CONTROL_SEQ
+            , B.CONTROL_DETAIL_SEQ
+            , CASE WHEN D.PART_NUM IS NULL THEN C.CONTROL_NUM ELSE CONCAT(C.CONTROL_NUM,'#',D.PART_NUM) END AS CONTROL_PART_INFO
+            , COUNT(*) OVER (PARTITION BY B.POP_POSITION) AS TOTAL_CNT
+        FROM (  SELECT M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ, MAX(M.POP_SEQ) AS POP_SEQ
+                FROM jmes.TBL_POP M
+                WHERE NOT EXISTS (SELECT 1 FROM jmes.TBL_CONTROL N WHERE N.CONTROL_SEQ = M.CONTROL_SEQ AND N.OUT_FINISH_DT IS NOT NULL)
+                GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
+             ) A, jmes.TBL_POP B, jmes.TBL_CONTROL C, jmes.TBL_CONTROL_PART D
+        WHERE A.POP_SEQ = B.POP_SEQ
+            AND B.CONTROL_SEQ = C.CONTROL_SEQ
+            AND B.CONTROL_SEQ = D.CONTROL_SEQ
+            AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+            AND C.DEL_YN = 'N'
+        ORDER BY B.POP_SEQ DESC
+    </select>
+
+    <select id="selectTvPopList2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        -- 소재대기
+        SELECT CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM,'#',B.PART_NUM) END AS CONTROL_PART_INFO
+            , COUNT(*) OVER () AS TOTAL_CNT
+        FROM  jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
+        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+            AND A.DEL_YN = 'N'
+            AND B.PART_STATUS = 'PRO004'
+        ORDER BY A.CONTROL_SEQ DESC
+    </select>
+
+    <select id="selectTvPopList3" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        -- 외주진행
+        SELECT CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM,'#',B.PART_NUM) END AS CONTROL_PART_INFO
+            , COUNT(*) OVER () AS TOTAL_CNT
+        FROM  jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
+        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+            AND A.DEL_YN = 'N'
+            AND B.PART_STATUS = 'PRO001'
+        ORDER BY A.CONTROL_SEQ DESC
+    </select>
+
+    <select id="selectTvMachineList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        -- 장비
+        SELECT X.EQUIP_SEQ
+            , X.EQUIP_ID
+            , X.EQUIP_NM
+            , X.PHOTO_GFILE_SEQ AS EQUIP_PHOTO_GFILE_SEQ
+            , X.FACTORY_AREA
+            , X.LAYOUT_ROW
+            , X.LAYOUT_COL
+            , Y.CONTROL_PART_INFO
+            , Y.WORKING_TIME
+            , (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID) AS USER_NM
+            , (SELECT M.PHOTO_GFILE_SEQ FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID) AS USER_PHOTO_GFILE_SEQ
+        FROM jmes.TBL_EQUIP X
+             LEFT OUTER JOIN (  SELECT B.EQUIP_SEQ
+                                    , CONCAT(C.WORKING_TIME,'''') AS WORKING_TIME
+                                    , (SELECT CASE WHEN N.PART_NUM IS NULL THEN M.CONTROL_NUM
+                                                   ELSE CONCAT(M.CONTROL_NUM,'#',N.PART_NUM)
+                                              END
+                                        FROM jmes.TBL_CONTROL M, jmes.TBL_CONTROL_PART N
+                                        WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                            AND N.CONTROL_SEQ = B.CONTROL_SEQ
+                                            AND N.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                       ) AS CONTROL_PART_INFO
+                                FROM jmes.TBL_MCT_WORK B
+                                        LEFT OUTER JOIN jmes.TBL_MCT_PLAN C ON B.EQUIP_SEQ = C.EQUIP_SEQ AND B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                                WHERE B.WORK_STATUS IN ('DBS010', 'DBS020')
+                                    AND B.DEL_YN = 'N') Y
+                    ON X.EQUIP_SEQ = Y.EQUIP_SEQ
+        WHERE X.EQUIP_KIND = '1'
+            AND X.DEL_YN = 'N'
+        ORDER BY X.FACTORY_AREA, X.LAYOUT_ROW, X.LAYOUT_COL
+    </select>
+
+
+
+
+</mapper>

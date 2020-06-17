@@ -18,7 +18,7 @@
                 <span style="width: 203px;">
                     <input type="text" name="" id="item_order_register_material_order_num" value="">
                 </span>
-                <div style="width: 200px; line-height: 45px;" class="right_float">
+                <div style="width: 200px; line-height: 45px;" class="d-inline right_float">
                     <button type="button" class="defaultBtn radius" id="btnItemOrderRegisterPopAdd">추가</button>
                     <button type="button" class="defaultBtn radius green" id="btnItemOrderRegisterPopSave">저장</button>
                     <button type="button" class="defaultBtn radius" id="btnItemOrderRegisterPopSubmit">제출</button>
@@ -322,7 +322,7 @@
                 }
             },
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 120, editable: false } ,
-            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, width: 120},
+            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}, width: 120},
             {title: '요청 사항', align: "center", colModel: [
                     {title: '요청<br>사항', dataType: 'string', dataIndx: 'REQUEST_CD', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, minWidth: 150,
                         editor: {
@@ -354,7 +354,7 @@
                             }
                         }
                     },
-                    {title: '비고', dataType: 'string', dataIndx: 'M_ORDER_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, minWidth: 120},
+                    {title: '비고', dataType: 'string', dataIndx: 'M_ORDER_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}, minWidth: 120},
                 ], styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}},
             {title: '원<br>발주량', dataType: 'string', dataIndx: 'ORDER_QTY', editable: false},
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'} },
@@ -399,7 +399,7 @@
                         }
                     },
                 ]},
-            {title: '비고', dataType: 'string', dataIndx: 'DTL_AMOUNT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, minWidth: 120},
+            {title: '비고', dataType: 'string', dataIndx: 'DTL_AMOUNT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}, minWidth: 120},
             {title: '주문<br>요청 일시', dataType: 'date', dataIndx: 'M_ORDER_DT',  width: 120, editable: false}
         ];
 
@@ -414,7 +414,7 @@
             {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM' , editable: false} ,
             {title: 'Size(mm)', dataType: 'string', dataIndx: 'SIZE_TXT' , editable: false} ,
             {title: '재고', dataType: 'integer', dataIndx: 'STOCK_QTY' , editable: false} ,
-            {title: '요청', dataType: 'integer', dataIndx: 'OUT_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'} } ,
+            {title: '요청', dataType: 'integer', dataIndx: 'OUT_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'} } ,
             {title: '', dataType: 'string', dataIndx: 'OUT_YN', editable: false,
                 render: function(ui){
                     let returnVal = "";
@@ -638,7 +638,7 @@
 
                 let hiddenYn = $("#item_order_register_hidden_form #AUTO_SEARCH").val();
                 if(hiddenYn == 'Y') {
-                    $(".itemOrderRegisterMaterialDetailSelectBox").val(ui.rowData.MATERIAL_DETAIL);
+                    $("#itemOrderRegisterMaterialDetailSelectBox").val(ui.rowData.MATERIAL_DETAIL);
                     $("#item_order_register_hidden_form #MATERIAL_DETAIL").val(ui.rowData.MATERIAL_DETAIL);
                     itemOrderRegisterRightGrid.pqGrid( "destroy" );
                     selectItemOrderRegisterRightList();
