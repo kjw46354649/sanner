@@ -4,7 +4,7 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="srping" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<c:set value="${list[0]}" var="list"/>
+<%--<c:set value="${list[0]}" var="list"/>--%>
 <!DOCTYPE html>
 <html lang="en" class="app">
 <head>
@@ -15,6 +15,8 @@
     <script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
     <script type="text/javascript" src="/resource/asset/js/front.js"></script>
+    <script type="text/javascript" src='/resource/plugins/waitme/waitMe.js'></script>
+    <script type="text/javascript" src="/resource/plugins/scanner/onscan.js" ></script>
 </head>
 <body onresize="parent.resizeTo(1024,600)" onload="parent.resizeTo(1024,600)">
 
@@ -209,7 +211,7 @@
     </div>
 </div>
 <!-- End Modal End -->
-<div class="bodyWrap work" id="bodyWrap">
+<div class="bodyWrap work waitMeContainerDiv" id="bodyWrap">
     <c:set var="workInfo" value="${drawingInfo.lastWork}" />
     <c:if test="${not empty drawingInfo.currentWork}">
         <c:set var="workInfo" value="${drawingInfo.currentWork}" />
@@ -218,10 +220,12 @@
     <div class="leftLogWrap">
         <!-- 팝업에서 신규 작업 선택시 처리 되는 부분 이전 정보나 현재 진행 중인 정보를 보여 준다. -->
         <form id="drawing_action_form" name="drawing_action_form" method="POST" action="/drawing-board">
+            <input id="DATA_TYPE" name="DATA_TYPE" type="hidden" value="${workInfo.DATA_TYPE}">
             <input id="MCT_WORK_SEQ" name="MCT_WORK_SEQ" type="hidden" value="${workInfo.MCT_WORK_SEQ}">
             <input id="CONTROL_SEQ" name="CONTROL_SEQ" type="hidden" value="${workInfo.CONTROL_SEQ}">
             <input id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" type="hidden" value="${workInfo.CONTROL_DETAIL_SEQ}">
             <input id="CONTROL_NUM" name="CONTROL_NUM" type="hidden" value="${workInfo.CONTROL_NUM}">
+            <input id="BARCODE_NUM" name="BARCODE_NUM" type="hidden" value="${workInfo.BARCODE_NUM}">
             <input id="PART_NUM" name="PART_NUM" type="hidden" value="${workInfo.PART_NUM}">
             <input id="ORDER_QTY" name="ORDER_QTY" type="hidden" value="${workInfo.ORDER_QTY}">
             <input id="INNER_DUE_DT" name="INNER_DUE_DT" type="hidden" value="${workInfo.INNER_DUE_DT}">
@@ -345,6 +349,8 @@
 </div>
 <script type='text/javascript'>
 
+    var $waitMeMainContainer;
+
     $(function () {
 
         // 공통 SetTimeOut 변수
@@ -357,6 +363,25 @@
             $(this).trigger(ev);
             return orig.apply(this, arguments);
         }
+
+        $.fn.startWaitMe = function() {
+            $waitMeMainContainer = $('#waitMeContainerDiv').waitMe({});
+        };
+
+        $.fn.stopWaitMe = function() {
+            $waitMeMainContainer.waitMe('hide');
+        };
+
+        onScan.attachTo(document, {
+            onScan: function(barcodeNum, iQty) {
+                // $(this).startWaitMe();
+                /** 메인 창에서 바코드 스캔 된 경우 **/
+                /** 진행중인 작업이 없는 경우는 신규 작업 시작 처리 **/
+                /** 진행중인 작업이 있는 경우 작업중인 바코드인 경우 종료 처리 팝업 호출
+                                            신규 바코드 경우 현재 작업중인 내용 종료 처리 하고 자동으로 신규 작업 시작 처리 **/
+                console.log('bodyWrap' + barcodeNum);
+            }
+        });
 
         $(".slecBox").on('click', function(){
             /** 대기 리스트와 plan 리스트를 조회한다. **/
