@@ -972,11 +972,11 @@
 												<div class="list" style="height: 180px;width: 286px;">
 													<div class="titleWrap">
 														<span class="f_txt">POP</span>
-														<span class="s_txt">2공장(??)</span>
+														<span class="s_txt">2공장(<sapn id="CNT_POP080">0</sapn>)</span>
 													</div>
-													<ul>
-														<li>이건 몇번?????</li>
-														<li>C19-625-0799-001</li>
+													<ul id="POP080" data-cnt="5">
+														<%--<li>이건 몇번?????</li>
+														<li>C19-625-0799-001</li>--%>
 <!--														<li>C19-625-0799-001</li>-->
 <!--														<li>C19-625-0799-001</li>-->
 <!--														<li>C19-625-0799-001</li>-->
@@ -1347,11 +1347,11 @@
 												<div class="list" style="height: 153px;">
 													<div class="titleWrap">
 														<span class="f_txt">POP</span>
-														<span class="s_txt">2층창고(21)</span>
+														<span class="s_txt">2층창고(<sapn id="CNT_POP170">0</sapn>)</span>
 													</div>
-													<ul>
-														<li>이건 몇번?????</li>
-														<li>C19-625-0799-001</li>
+													<ul id="POP170" data-cnt="4">
+													<%--	<li>이건 몇번?????</li>
+														<li>C19-625-0799-001</li>--%>
 <!--														<li>C19-625-0799-0011234</li>-->
 <!--														<li>C19-625-0799-0011234</li>-->
 													</ul>
