@@ -72,6 +72,24 @@
             right: 380px;
             text-align: center;
         }
+        div.pq-grid *
+        {
+            font-size: 20px;
+        }
+        .pq-grid-cell > .pq-td-div{
+        	max-height: 35px;
+        }
+        .pq-grid-number-cell {
+            text-align: center !important;
+        }
+        /*div.pq-header-outer **/
+        /*{*/
+        /*    height: 50px;*/
+        /*}*/
+        /*div.pq-grid-col **/
+        /*{*/
+        /*    height: 50px;*/
+        /*}*/
     </style>
 </head>
 <%--<body>--%>
@@ -94,13 +112,13 @@
                                 </select>
                             </span>
                             <span class="wd_200">&nbsp;</span>
-                            <span class="ipu_wrap"><img id="barCodeImg" class="barCodeImg" src="/resource/asset/images/common/img_barcode_long.png" alt="바코드"></span>
+                            <span class="ipu_wrap"><img id="barCodeImg" class="barCodeImg" src="/resource/asset/images/common/img_barcode_long.png"  style="height: 50px;" alt="바코드"></span>
                             <span class="ipu_wrap" style="padding-left: 10px;"><input type="text" name="popBarcode" id="popBarcode" class="popBarcode" placeholder="읽기 불가능 모드" value="" title="바코드번호"></span>
                         </form>
                     </div>
                     <div class="right_float">
                         <span class="ipu_wrap">
-                            <span class="refresh" id="popRefresh"><a href="#a;"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></a></span>
+                            <span class="refresh" id="popRefresh"><a href="#a;"><img src="/resource/asset/images/common/btn_refresh.png" style="width: 45px;" alt="새로고침"></a></span>
                             <span class="rowCodeTxt">Total :
                                 <span class="rowCodeTxtColor" id="popTotalRows">0</span> Rows
                                 <span class="rowCodeTxtColor" id="popTotalQty">0</span> EA
@@ -149,31 +167,31 @@
             });
 
             var popMasterColModel = [
-                {title: '긴급', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'EMERGENCY_YN'},
-                {title: '요망납기', minWidth: 30, width: 50, datatype: 'string', dataIndx: 'INNER_DUE_DT'},
-                {title: '발주업체', minWidth: 30, width: 120, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-                {title: '관리번호', minWidth: 30, width: 160, dataType: 'string', dataIndx: 'CONTROL_NUM', },
+                {title: '긴급', minWidth: 30, width: 45, dataType: 'string', aligin: 'center', dataIndx: 'EMERGENCY_YN'},
+                {title: '요망납기', minWidth: 30, width: 85, datatype: 'string', dataIndx: 'INNER_DUE_DT'},
+                {title: '발주업체', minWidth: 30, width: 150, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+                {title: '관리번호', minWidth: 30, width: 300, dataType: 'string', dataIndx: 'CONTROL_NUM', },
                 {
-                    title: 'Part', minWidth: 30, width: 30, dataType: 'integer', dataIndx: 'PART_NUM',
+                    title: 'Part', minWidth: 30, width: 50, dataType: 'integer', dataIndx: 'PART_NUM',
                     render: function (ui) {
                         if (ui.rowData.WORK_TYPE === 'WTP020') {
                             return "<span></span>";
                         }
                     }
                 },
-                {title: '도면번호', minWidth: 30, width: 160, dataType: 'string', dataIndx: 'DRAWING_NUM', },
-                {title: '규격', minWidth: 30, width: 80, dataType: 'string', dataIndx: 'SIZE_TXT', },
-                {title: '표면 처리', minWidth: 30, width: 100, dataType: 'string', dataIndx: 'SURFACE_TREAT'},
-                {title: '수량', minWidth: 30, width: 60, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY'},
-                {title: '현재위치', minWidth: 30, width: 120, dataType: 'string', dataIndx: 'POP_POSITION' },
-                {title: '이전위치', minWidth: 30, width: 120, dataType: 'string', dataIndx: 'POP_POSITION'},
-                {title: '위치일시', minWidth: 30, width: 50, dataType: 'string', dataIndx: 'POP_DT'},
+                // {title: '도면번호', minWidth: 30, width: 160, dataType: 'string', dataIndx: 'DRAWING_NUM', },
+                {title: '규격', minWidth: 30, width: 120, dataType: 'string', dataIndx: 'SIZE_TXT', },
+                // {title: '표면 처리', minWidth: 30, width: 100, dataType: 'string', dataIndx: 'SURFACE_TREAT'},
+                {title: '수량', minWidth: 30, width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY'},
+                {title: '현재위치', minWidth: 30, width: 150, dataType: 'string', dataIndx: 'POP_POSITION' },
+                {title: '이전위치', minWidth: 30, width: 150, dataType: 'string', dataIndx: 'POP_PREV_POSITION'},
+                {title: '위치일시', minWidth: 30, width: 150, dataType: 'string', dataIndx: 'POP_DT'},
                 {title: '비고', minWidth: 30, width: 300, dataType: 'string', dataIndx: ''}
             ];
 
             var popMasterObj = {
                 width: "100%", height: 1720, collapsible: false, postRenderInterval: -1, //call postRender synchronously.
-                resizable: false, showTitle: false, strNoRows: g_noData, numberCell: {title: 'No.'}, editable: false, scrollModel: { autoFit: false },
+                resizable: false, showTitle: false, strNoRows: g_noData, numberCell: {width:50, title: 'No.'}, editable: false, scrollModel: { autoFit: false },
                 trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
                 colModel: popMasterColModel,
                 dataModel: {
@@ -214,26 +232,28 @@
                             }else{
                                 message = data.message;
                             }
-                            showMessage(message)
+                            showMessage(message);
                             $("#pop_search_form").find("#popBarcode").val('');
-                            refreshDate();
+                            refreshData();
                         }else{
                             $("#pop_search_form").find("#popBarcode").val('');
                             message = "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.";
-                            showMessage(message)
+                            showMessage(message);
+                            refreshData();
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         if (!($waitMeMainContainer === undefined)) $(this).stopWaitMe();
                         $("#pop_search_form").find("#popBarcode").val('');
                         message = "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.";
-                        showMessage(message)
+                        showMessage(message);
+                        refreshData();
                     }
                 });
             };
 
             $("#popLocation").on('change', function(){
-                refreshDate();
+                refreshData();
             });
 
             $("#popBarcode").on('change', function(){
@@ -247,14 +267,14 @@
                 $(this).attr('placeholder', '');
                 $(".basicWrap").hide();
                 $("#barCodeImg").attr("src", "/resource/asset/images/common/img_barcode_long_on.png");
-                $popMasterGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
+                $popMasterGrid.pqGrid('option', 'height', 1850).pqGrid('refresh');
             });
 
             $("#popBarcode").on('focusout', function(){
                 $(this).attr('placeholder', '읽기 불가능 모드');
                 $(".basicWrap").show();
                 $("#barCodeImg").attr("src", "/resource/asset/images/common/img_barcode_long.png");
-                $popMasterGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
+                $popMasterGrid.pqGrid('option', 'height', 1810).pqGrid('refresh');
             });
 
             $("#barCodeImg").on('click', function(){
@@ -262,10 +282,10 @@
             });
 
             $("#popRefresh").on('click', function(){
-                refreshDate();
+                refreshData();
             });
 
-            var refreshDate = function(){
+            var refreshData = function(){
                 $("#pop_search_form").find("#queryId").val("popMapper.selectPopList");
                 $("#pop_search_form").find("#popBarcode").val('');
                 $("#pop_search_form").find("#popBarcode").focus();
@@ -280,6 +300,11 @@
                    text: message, icon: "dxi-close", "expire": 2000, "position": "top-right", type:"myCss"
                 });
             }
+
+            /** 30초마다 그리드 재조회 **/
+            setInterval(function() {
+                refreshData();
+            }, 1000 * 30);
 
             $("#popBarcode").focus();
 
