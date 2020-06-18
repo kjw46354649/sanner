@@ -131,6 +131,7 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
         passList.add("/pop");
         passList.add("/scanningBarcodePop");
         passList.add("/tv/pop");
+        passList.add("/tv/pop/data");
 
 
         /** drawing path **/
