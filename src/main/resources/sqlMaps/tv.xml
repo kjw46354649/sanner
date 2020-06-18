@@ -79,8 +79,16 @@
             AND X.DEL_YN = 'N'
         ORDER BY X.FACTORY_AREA, X.LAYOUT_ROW, X.LAYOUT_COL
     </select>
-
-
+    <select id="selectTvAlarmList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select
+            X.*
+        from(
+        SELECT '1' AS DATA1, '11' AS DATA2, '111' AS DATA3 FROM DUAL
+        UNION ALL
+        SELECT '2' AS DATA1, '22' AS DATA2, '222' AS DATA3 FROM DUAL
+        )X
+        LIMIT 1
+    </select>
 
 
 </mapper>

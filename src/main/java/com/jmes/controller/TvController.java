@@ -38,27 +38,39 @@ public class TvController {
         return "tv/tv_pop";
     }
 
-//    /**
-//     * Simply selects the home view to render by returning its name.
-//     */
-//    @RequestMapping(value = "/popParamQueryGridSelect", method = RequestMethod.POST)
-//    public String popParamQueryGridSelect(Model model, HttpServletRequest request, HttpSession session) throws Exception {
-//        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
-//        List<Map<String, Object>> list = this.innodaleService.getList(hashMap);
-//        model.addAttribute("data", list);
-//        return "jsonView";
-//    }
-//
-//    /**
-//     * @description Scanning Barcode
-//     */
-//    @RequestMapping(value = "/popScanningBarcodePop", method = RequestMethod.POST)
-//    public String popScanningBarcodePop(Model model, HttpServletRequest request) throws Exception {
-//
-//        HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
-//
-//        popService.createScanningBarcodePop(model, hashMap);
-//
-//        return "jsonView";
-//    }
+    @RequestMapping(value = "/tv/pop/data", method = RequestMethod.POST)
+    public String popData(Model model, HttpServletRequest request, HttpSession session) throws Exception {
+        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+        System.out.println("12312312312 popData");
+        hashMap.put("queryId","tvMapper.selectTvPopList");//POP INFO
+        List<Map<String, Object>> pop_list1 = this.innodaleService.getList(hashMap);
+        model.addAttribute("pop_list1", pop_list1);
+
+        hashMap.put("queryId","tvMapper.selectTvPopList2");//소재대기
+        List<Map<String, Object>> pop_list2 = this.innodaleService.getList(hashMap);
+        model.addAttribute("pop_list2", pop_list2);
+
+        hashMap.put("queryId","tvMapper.selectTvPopList3");//외주진행
+        List<Map<String, Object>> pop_list3 = this.innodaleService.getList(hashMap);
+        model.addAttribute("pop_list3", pop_list3);
+
+        hashMap.put("queryId","tvMapper.selectTvMachineList");//장비
+        List<Map<String, Object>> m_list = this.innodaleService.getList(hashMap);
+        model.addAttribute("m_list", m_list);
+
+
+        return "jsonView";
+    }
+
+    @RequestMapping(value = "/tv/pop/alarm", method = RequestMethod.POST)
+    public String alarmData(Model model, HttpServletRequest request, HttpSession session) throws Exception {
+        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+        System.out.println("12312312312 alarm");
+
+        hashMap.put("queryId","tvMapper.selectTvAlarmList");
+        List<Map<String, Object>> alarm_list = this.innodaleService.getList(hashMap);
+        model.addAttribute("alarm_list", alarm_list);
+
+        return "jsonView";
+    }
 }
