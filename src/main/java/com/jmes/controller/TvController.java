@@ -73,4 +73,20 @@ public class TvController {
 
         return "jsonView";
     }
+
+    @RequestMapping(value="/tv/mct")
+       public String mctAction(Model model, HttpServletRequest request, Locale locale) throws Exception {
+
+           System.out.println("12312312312 mct page submit");
+
+           return "tv/tv_mct";
+       }
+
+   @RequestMapping(value = "/tv/mct/data", method = RequestMethod.POST)
+   public String mctData(Model model, HttpServletRequest request, HttpSession session) throws Exception {
+       Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+       System.out.println("12312312312 mctData");
+
+       return "jsonView";
+   }
 }
