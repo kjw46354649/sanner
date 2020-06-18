@@ -133,6 +133,8 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
         passList.add("/tv/pop");
         passList.add("/tv/pop/data");
         passList.add("/tv/pop/alarm");
+        passList.add("/tv/mct");
+        passList.add("/tv/mct/data");
 
 
 
