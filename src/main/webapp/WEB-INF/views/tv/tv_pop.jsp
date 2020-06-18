@@ -38,7 +38,7 @@
 									</div>
 									<div class="page tab1" style="width: 880px">
 										<ul class="p_row">
-											<li class="p_col" id="ARE02_1_1">
+											<li class="p_col" id="ARE02_1">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -57,7 +57,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE02_1_2">
+											<li class="p_col" id="ARE02_2">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -101,7 +101,7 @@
 											</li>
 										</ul>
 										<ul class="p_row">
-											<li class="p_col" id="ARE02_2_1">
+											<li class="p_col" id="ARE02_3">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -120,7 +120,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE02_2_2">
+											<li class="p_col" id="ARE02_4">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -156,7 +156,7 @@
 									</div>
 									<div class="page tab1">
 										<ul class="p_row">
-											<li class="p_col" id="ARE01_1_1">
+											<li class="p_col" id="ARE01_1">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -175,7 +175,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE01_1_2">
+											<li class="p_col" id="ARE01_2">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -194,7 +194,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE01_1_3">
+											<li class="p_col" id="ARE01_3">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -243,7 +243,7 @@
 												</div>
 											</li>
 
-											<li class="p_col" id="ARE01_1_4">
+											<li class="p_col" id="ARE01_4">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -262,7 +262,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE01_1_5">
+											<li class="p_col" id="ARE01_5">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -281,7 +281,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE01_1_6">
+											<li class="p_col" id="ARE01_6">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -325,7 +325,7 @@
 										</ul>
 
 										<ul class="p_row">
-											<li class="p_col" id="ARE01_2_1">
+											<li class="p_col" id="ARE01_7">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -344,7 +344,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE01_2_2">
+											<li class="p_col" id="ARE01_8">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -363,7 +363,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE01_2_3">
+											<li class="p_col" id="ARE01_9">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -388,7 +388,7 @@
 											<li class="p_col" style="margin-right: 17px;">
 												<div class="nodata"></div>
 											</li>
-											<li class="p_col" id="ARE01_2_4">
+											<li class="p_col" id="ARE01_10">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -407,7 +407,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE01_2_5">
+											<li class="p_col" id="ARE01_11">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -555,7 +555,7 @@
 										</ul>
 									</div>
 									<div class="page tab1" style="width: 880px">
-										<ul class="p_row" id="ARE05_1_1">
+										<ul class="p_row" id="ARE04_1">
 											<li class="p_col">
 												<div class="thumb thb_blue">
 													<div class="topDiv">
@@ -575,7 +575,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE05_1_2">
+											<li class="p_col" id="ARE04_2">
 												<div class="thumb thb_blue">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -625,7 +625,7 @@
 											</li>
 										</ul>
 										<ul class="p_row">
-											<li class="p_col" id="ARE05_2_1">
+											<li class="p_col" id="ARE04_3">
 												<div class="thumb thb_blue">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -644,7 +644,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE05_2_2">
+											<li class="p_col" id="ARE04_4">
 												<div class="thumb thb_blue">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -665,7 +665,7 @@
 											</li>
 										</ul>
 										<ul class="p_row">
-											<li class="p_col" id="ARE05_3_1">
+											<li class="p_col" id="ARE04_5">
 												<div class="thumb thb_blue">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -684,7 +684,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE05_3_2">
+											<li class="p_col" id="ARE04_6">
 												<div class="thumb thb_blue">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -720,7 +720,7 @@
 									</div>
 									<div class="page tab1">
 										<ul class="p_row">
-											<li class="p_col" id="ARE04_1_1">
+											<li class="p_col" id="ARE03_1">
 												<div class="thumb thb_green">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -739,7 +739,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE04_1_2">
+											<li class="p_col" id="ARE03_2">
 												<div class="thumb thb_green">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -758,7 +758,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE04_1_3">
+											<li class="p_col" id="ARE03_3">
 												<div class="thumb thb_green">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -809,7 +809,7 @@
 											</li>
 										</ul>
 										<ul class="p_row">
-											<li class="p_col" id="ARE04_2_1">
+											<li class="p_col" id="ARE03_4">
 												<div class="thumb thb_green">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -828,7 +828,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE04_2_2">
+											<li class="p_col" id="ARE03_5">
 												<div class="thumb thb_green">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -871,7 +871,7 @@
 											</li>
 										</ul>
 										<ul class="p_row">
-											<li class="p_col" id="ARE04_3_1">
+											<li class="p_col" id="ARE03_6">
 												<div class="thumb thb_green">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -890,7 +890,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE04_3_2">
+											<li class="p_col" id="ARE03_7">
 												<div class="thumb thb_green">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -926,7 +926,7 @@
 									</div>
 									<div class="page tab1">
 										<ul class="p_row">
-											<li class="p_col" id="ARE06_1_1">
+											<li class="p_col" id="ARE05_1">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -947,7 +947,7 @@
 											</li>
 										</ul>
 										<ul class="p_row">
-											<li class="p_col" id="ARE06_2_1">
+											<li class="p_col" id="ARE05_2">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -998,7 +998,7 @@
 										</ul>
 									</div>
 									<div class="page tab1">
-										<ul class="p_row" id="ARE07_1_1">
+										<ul class="p_row" id="ARE06_1">
 											<li class="p_col">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
@@ -1018,7 +1018,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE07_1_2">
+											<li class="p_col" id="ARE06_2">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -1068,7 +1068,7 @@
 											</li>
 										</ul>
 										<ul class="p_row">
-											<li class="p_col" id="ARE07_2_1">
+											<li class="p_col" id="ARE06_3">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -1087,7 +1087,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE07_2_2">
+											<li class="p_col" id="ARE06_4">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -1108,7 +1108,7 @@
 											</li>
 										</ul>
 										<ul class="p_row">
-											<li class="p_col" id="ARE07_3_1">
+											<li class="p_col" id="ARE06_5">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -1128,23 +1128,7 @@
 												</div>
 											</li>
 											<li class="p_col">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">3-NC6</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_2.png" alt="선반"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" alt=""></span></div>
-															<div class="nameWrap">-</div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName" style="width: 190px">C19-625-0799-001</span>
-														<span class="proNum" >88988'</span>
-													</div>
-												</div>
+												<div class="nodata"></div>
 											</li>
 										</ul>
 									</div>
@@ -1216,7 +1200,7 @@
 									</div>
 									<div class="page tab1">
 										<ul class="p_row">
-											<li class="p_col"  id="ARE03_1_1" style="height: 250px;">
+											<li class="p_col"  id="ARE11_1" style="height: 250px;">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -1264,7 +1248,7 @@
 											</li>
 										</ul>
 										<ul class="p_row">
-											<li class="p_col"  id="ARE03_2_1" style="height: 250px;">
+											<li class="p_col"  id="ARE11_2" style="height: 250px;">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -1584,8 +1568,7 @@
                     if (m_list != '') {//장비
                         for (let i = 0; i < m_list.length; i++) {
                             let factory_area = m_list[i].FACTORY_AREA;
-                            let layout_row = m_list[i].LAYOUT_ROW;
-                            let layout_col = m_list[i].LAYOUT_COL;
+                            let layout_sort = m_list[i].LAYOUT_SORT;
                             let equip_nm = m_list[i].EQUIP_NM;
 
                             let control_part_info = m_list[i].CONTROL_PART_INFO;
@@ -1593,7 +1576,7 @@
 							let user_nm = m_list[i].USER_NM;
 							let user_photo_gfile_seq = m_list[i].USER_PHOTO_GFILE_SEQ;
 
-							let $target = $("#" + factory_area+"_"+layout_row+"_"+layout_col);
+							let $target = $("#" + factory_area+"_"+layout_sort);
 							if($target.length > 0){
 								if(equip_nm != undefined) {
 									$target.find(".leftWrap").find(".txtWrap").html(equip_nm);
@@ -1634,12 +1617,13 @@
 				$("#CNT_" + popPosition).html(totalCnt);
 			}
 		}
+		let curr_seq = 0;
 		let getAlarm = function () {
 					'use strict';
 
 					$.ajax({
 						type: 'POST', url: "/tv/pop/alarm", dataType: 'json',
-						data: {},
+						data: {"SEQ":curr_seq},
 						success: function (data, textStatus, jqXHR) {
 							if (textStatus !== 'success') {
 								alert("시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.3");
@@ -1652,20 +1636,24 @@
 
 							let alarm_list = data.alarm_list;
 							let maxCnt = 9;
-							$("#alarm_list").empty();
 							if (alarm_list != '') {
 								for (let i = 0; i < alarm_list.length; i++) {
 									let data1 = alarm_list[i].DATA1;
 									let data2 = alarm_list[i].DATA2;
 									let data3 = alarm_list[i].DATA3;
-
+									let SEQ = alarm_list[i].SEQ;
+									curr_seq = SEQ;
 
 								let al = '<li class="alarmList">';
 									al += '<span class="dateTxt">[' + data1 + ']</span>';
 									al += '<span class="progressTxt ellipsis"><b>' + data2 + ' </b> : ' + data3 + '</span>';
 									al += '</li>';
 
-									$("#alarm_list").append(al);
+                                    if($(".alarmList").length >= maxCnt){
+                                        $(".alarmList").last().remove();
+                                    }
+
+									$("#alarm_list").prepend($(al).fadeIn(2000));
 								}
 							}
 
@@ -1690,7 +1678,7 @@
 
 		let setIntervalTimer_alarm;
 		let timer_alarm = function(){
-			let selVal = 3;//1분
+			let selVal = 5;//1분
 			let timesec = 1000;//1초
 			setIntervalTimer_alarm = setInterval(function() {
 				getAlarm();
@@ -1698,7 +1686,7 @@
 		}
 
 		getAllData();
-		timer();
+		// timer();
 		timer_alarm();
 	});
 

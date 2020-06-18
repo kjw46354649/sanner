@@ -53,8 +53,7 @@
             , X.EQUIP_NM
             , X.PHOTO_GFILE_SEQ AS EQUIP_PHOTO_GFILE_SEQ
             , X.FACTORY_AREA
-            , X.LAYOUT_ROW
-            , X.LAYOUT_COL
+            , X.LAYOUT_SORT
             , Y.CONTROL_PART_INFO
             , Y.WORKING_TIME
             , (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID) AS USER_NM
@@ -77,17 +76,14 @@
                     ON X.EQUIP_SEQ = Y.EQUIP_SEQ
         WHERE X.EQUIP_KIND = '1'
             AND X.DEL_YN = 'N'
-        ORDER BY X.FACTORY_AREA, X.LAYOUT_ROW, X.LAYOUT_COL
+            AND X.LAYOUT_SORT IS NOT NULL
+        ORDER BY X.FACTORY_AREA, X.LAYOUT_SORT
     </select>
     <select id="selectTvAlarmList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        select
-            X.*
-        from(
-        SELECT '1' AS DATA1, '11' AS DATA2, '111' AS DATA3 FROM DUAL
-        UNION ALL
-        SELECT '2' AS DATA1, '22' AS DATA2, '222' AS DATA3 FROM DUAL
-        )X
-        LIMIT 1
+        SELECT
+            SEQ, DATA1, DATA2, DATA3
+        FROM jmes.kjw_test
+        WHERE SEQ > cast(#{SEQ} as unsigned)
     </select>
 
 
