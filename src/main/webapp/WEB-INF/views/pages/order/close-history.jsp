@@ -145,7 +145,7 @@
         <button type="button" class="pop_close" name="CONTROL_CLOSE_CANCEL_NO">닫기</button>
         <div class="d-inline-block">
             <form class="form-inline" id="CONTROL_CLOSE_CANCEL_FORM" role="form">
-                <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectControlCloseLeftList">
+                <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectControlCloseCancelLeftList">
                 <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
                 <input type="hidden" name="COMP_CD" id="COMP_CD">
                 <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
@@ -577,29 +577,16 @@
         const loadDataControlCloseCancel = function () {
             let list = [];
             let controlSeqList = [];
-            let compCdList = [];
-            let orderCompCdList = [];
             let controlSeqStr = '';
-            let controlCloseYear;
-            let controlCloseMonth;
-            let closeVer;
 
             for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = $closeHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
 
                 list.push(rowData);
                 controlSeqList.push(rowData.CONTROL_SEQ);
-                compCdList.push(rowData.COMP_CD);
-                orderCompCdList.push(rowData.ORDER_COMP_CD);
             }
             // 중복제거
             controlSeqList = controlSeqList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            compCdList = compCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
             });
 
@@ -611,23 +598,11 @@
                 }
             }
 
-            controlCloseYear = list[0].CLOSE_MONTH.substring(0, 4);
-            controlCloseMonth = list[0].CLOSE_MONTH.substring(4);
-            closeVer = list[0].CLOSE_VER;
             $('#CONTROL_CLOSE_CANCEL_FORM > #CONTROL_SEQ').val(controlSeqStr);
-            $('#CONTROL_CLOSE_CANCEL_FORM > #COMP_CD').val(compCdList[0]);
-            $('#CONTROL_CLOSE_CANCEL_FORM > #ORDER_COMP_CD').val(orderCompCdList[0]);
-            $('#CONTROL_CLOSE_CANCEL_FORM > #CONTROL_CLOSE_YEAR').val(controlCloseYear);
-            $('#CONTROL_CLOSE_CANCEL_FORM > #CONTROL_CLOSE_MONTH').val(controlCloseMonth);
-            $('#CONTROL_CLOSE_CANCEL_FORM > #CLOSE_VER').val(closeVer);
 
             let postData = fnFormToJsonArrayData('#CONTROL_CLOSE_CANCEL_FORM');
+            postData.queryId = 'orderMapper.selectControlCloseCancelLeftList';
             fnRequestGidData($controlCloseHistoryLeftGrid, postData);
-
-            // $controlCloseHistoryLeftGrid.pqGrid('option', 'dataModel.postData', function () {
-            //     return postData;
-            // });
-            // $controlCloseHistoryLeftGrid.pqGrid('refreshDataAndView');
 
             postData.queryId = 'orderMapper.selectControlCloseCancelRightList';
             fnRequestGidData($controlCloseHistoryRightGrid, postData);

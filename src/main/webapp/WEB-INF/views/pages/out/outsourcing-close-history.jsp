@@ -16,7 +16,7 @@
     <div class="topWrap">
         <form class="form-inline" id="OUTSIDE_CLOSE_HISTORY_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="outMapper.selectOutsideCloseHistoryList">
-            <div class="gubunWrap row3_topWrap">
+            <div class="none_gubunWrap row3_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -41,10 +41,6 @@
                         <span class="ipu_wrap">
                             <label class="label_100" for="ITEM_NM">품명</label>
                             <input type="text" class="wd_200" name="ITEM_NM" id="ITEM_NM">
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap right_float">
-                            <button type="button" class="defaultBtn radius blue" id="OUTSIDE_CLOSE_HISTORY_SEARCH">검색</button>
                         </span>
                     </li>
                     <li>
@@ -90,6 +86,9 @@
                             <label class="label_100" for="AMOUNT_SUM">금액합산</label>
                             <input type="text" class="wd_200" name="AMOUNT_SUM" id="AMOUNT_SUM" readonly>
                         </span>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" class="defaultBtn radius blue" id="OUTSIDE_CLOSE_HISTORY_SEARCH">검색</button>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -118,18 +117,19 @@
         <button type="button" class="pop_close" name="OUTSIDE_CLOSE_CANCEL_NO">닫기</button>
         <div class="d-inline-block">
             <form class="form-inline" id="OUTSIDE_CLOSE_CANCEL_FORM" role="form">
-                <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectControlCloseLeftList">
-                <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
+                <input type="hidden" name="queryId" id="queryId" value="outMapper.selectOutsideCloseCancelLeftList">
+                <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ">
                 <input type="hidden" name="COMP_CD" id="COMP_CD">
                 <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                <input type="hidden" name="OUTSIDE_CLOSE_CANCEL_YEAR" id="OUTSIDE_CLOSE_CANCEL_YEAR">
-                <input type="hidden" name="OUTSIDE_CLOSE_CANCEL_MONTH" id="OUTSIDE_CLOSE_CANCEL_MONTH">
-                <input type="hidden" name="CLOSE_VER" id="CLOSE_VER">
+                <input type="hidden" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
+                <input type="hidden" name="OUTSIDE_CLOSE_YEAR" id="OUTSIDE_CLOSE_YEAR">
+                <input type="hidden" name="OUTSIDE_CLOSE_MONTH" id="OUTSIDE_CLOSE_MONTH">
+                <input type="hidden" name="OUTSIDE_CLOSE_VER" id="OUTSIDE_CLOSE_VER">
                 <div style="width: 450px; float:left;">
                     <div id="OUTSIDE_CLOSE_CANCEL_LEFT_GRID"></div>
                 </div>
                 <div style="display: flex; float:left; align-items: center; justify-content: center; width: 70px; height: 250px;">
-                    <span class="arrow right_Arrow"></span>
+                    <img src="/resource/asset/images/common/img_right_arrow.png" alt="오른쪽 화살표">
                 </div>
                 <div style="width: 450px; float:left;">
                     <div id="OUTSIDE_CLOSE_CANCEL_RIGHT_GRID"></div>
@@ -161,44 +161,83 @@
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true},
             {title: 'OUTSIDE_REQUEST_SEQ', dataType: 'integer', dataIndx: 'OUTSIDE_REQUEST_SEQ', hidden: true},
-            {title: 'CLOSE_VER', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CLOSE_VER', hidden: false},
-            {title: 'PART_STATUS', dataType: 'string', dataIndx: 'PART_STATUS', hidden: false},
+            {title: 'CLOSE_VER', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CLOSE_VER', hidden: true},
+            {title: 'PART_STATUS', dataType: 'string', dataIndx: 'PART_STATUS', hidden: true},
+            {title: '마감월', dataType: 'string', dataIndx: 'OUTSIDE_CLOSE_MONTH'},
+            {title: '차수', dataType: 'string', dataIndx: 'OUTSIDE_CLOSE_VER'},
             {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자<br>구분', minWidth: 70, dataType: 'string', dataIndx: 'COMP_NM'},
-            {title: '외주<br>구분', dataType: 'string', dataIndx: 'OUTSIDE_YN', hidden: true},
-            {title: '원발주<br>상태', minWidth: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+            {title: '외주<br>구분', dataType: 'string', dataIndx: 'OUTSIDE_YN'},
+            {title: '원발주<br>상태', minWidth: 70, dataType: 'string', dataIndx: 'CONTROL_PART_STATUS'},
             {title: '외주<br>발주상태', dataType: 'string', dataIndx: 'DHLWNQKFWNTKDXO', hidden: true},
-            {title: '상태변경<br>일시', minWidth: 70, dataType: 'string', dataIndx: 'TKDXOQUSRUDDLFTL'},
+            {title: '상태변경<br>일시', minWidth: 70, dataType: 'string', dataIndx: 'PART_SATUS_DT'},
             {title: '외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
             {title: '외주업체', minWidth: 70, dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM'},
             {title: '입고일자', dataType: 'string', dataIndx: 'DLQRHDLFWK'},
-            {title: '외주<br>발주번호', dataType: 'string', dataIndx: 'OUTSIDE_ORDER_NUM', editable: true},
-            {title: '비고', dataType: 'string', dataIndx: 'OUTSIDE_NOTE', editable: true},
-            {title: '비고(주문)', dataType: 'select', dataIndx: 'NOTE'},
-            {title: '', dataType: 'select', dataIndx: 'RHKSFLQJSGH'},
-            {title: '관리번호', minWidth: 70, dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true},
-            {title: '', dataType: 'string', dataIndx: 'EHAUSQJSGH'},
-            {title: '도면번호', minWidth: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', editable: true},
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', editable: true},
+            {title: '외주<br>발주번호', dataType: 'string', dataIndx: 'OUTSIDE_ORDER_NUM'},
+            {title: '비고', dataType: 'string', dataIndx: 'OUTSIDE_NOTE'},
+            {title: '비고(주문)', dataType: 'select', dataIndx: 'CONTROL_NOTE'},
+            {title: '비고(주문)', width: 90, dataType: 'string', dataIndx: 'CONTROL_NOTE'},
+            {title: '', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'CONTROL_NUM_BUTTON',
+                render: function (ui) {
+                    if (ui.rowData.CONTROL_NUM) return '<span class="desktopIcon" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#downloadView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        fnFileDownloadFormPageAction(rowData.DXF_GFILE_SEQ);
+                    });
+                }
+            },
+            {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM'},
+            {title: '', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'DRAWING_NUM_BUTTON',
+                render: function (ui) {
+                    if (ui.rowData.DRAWING_NUM) return '<span class="eyeIcon" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#downloadView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        fnFileDownloadFormPageAction(rowData.DXF_GFILE_SEQ);
+                    });
+                }
+            },
+            {title: '도면번호', width: 90, dataType: 'string', dataIndx: 'DRAWING_NUM'},
+            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM'},
             {title: '품명', minWidth: 70, dataType: 'string', dataIndx: 'ITEM_NM'},
             {title: '규격', minWidth: 100, dataType: 'string', dataIndx: 'SIZE_TXT'},
-            {title: '자재종류', minWidth: 90, dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
-            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', editable: true},
-            {title: '규격', minWidth: 90, dataType: 'string', dataIndx: 'SIZE_TXT', editable: true},
-            {title: '소재<br>종류', minWidth: 90, dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
+            {title: '자재종류', minWidth: 90, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
+            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT'},
+            {title: '규격', minWidth: 90, dataType: 'string', dataIndx: 'SIZE_TXT'},
+            {title: '소재<br>종류', minWidth: 90, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
             // {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
-            {title: '사급<br>여부', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN'},
-            {title: '소재<br>제공', dataType: 'string', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN'},
+            {title: '사급<br>여부', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    return cellData === 'Y' ? cellData : '';
+                }
+            },
+            {title: '소재<br>제공', dataType: 'string', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    return cellData === 'Y' ? cellData : '';
+                }
+            },
             {
                 title: '요청 가공 사항', align: 'center', colModel: [
-                    {title: '완제품', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN', editable: true},
-                    {title: '가공', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN', editable: true},
-                    {title: '연마', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN', editable: true},
-                    {title: '표면처리', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN', editable: true},
-                    {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC', editable: true}
+                    {title: '완제품', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN'},
+                    {title: '가공', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN'},
+                    {title: '연마', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN'},
+                    {title: '표면처리', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN'},
+                    {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC'}
                 ]
             },
-            {title: '요망납기', dataType: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT', editable: true},
+            {title: '요망납기', dataType: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
             {title: '외주<br>확정단가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_UNIT_AMT'},
             {title: '금액<br>합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
             {title: '외주<br>종전가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DHLWNWHDWJSRK'},
@@ -233,7 +272,8 @@
             numberCell: {title: 'No.'},
             // scrollModel: {autoFit: true},
             trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            editable: false,
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
             colModel: colModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -307,8 +347,9 @@
             {title: '발주처', width: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
             {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
-            {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
+            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER', hidden: true},
+            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER_TRAN'},
+            {title: '건수', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
             {title: '발주가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
             {title: '마감금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CLOSE_CONTROL_AMT'}
         ];
@@ -370,13 +411,13 @@
 
         const loadDataOutsideCloseCancel = function () {
             let list = [];
-            let controlSeqList = [];
+            let controlDetailSeqList = [];
             let compCdList = [];
             let orderCompCdList = [];
-            let controlSeqStr = '';
+            let outsideCompCdList = [];
+            let controlDetailSeqStr = '';
             let compCdStr = '';
             let orderCompCdStr = '';
-            let controlCloseYear;
             let controlCloseMonth;
             let closeVer;
 
@@ -384,52 +425,32 @@
                 let rowData = $outsideCloseHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
 
                 list.push(rowData);
-                controlSeqList.push(rowData.CONTROL_SEQ);
+                controlDetailSeqList.push(rowData.CONTROL_DETAIL_SEQ);
                 compCdList.push(rowData.COMP_CD);
                 orderCompCdList.push(rowData.ORDER_COMP_CD);
+                outsideCompCdList.push(rowData.OUTSIDE_COMP_CD);
             }
             // 중복제거
-            controlSeqList = controlSeqList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            compCdList = compCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
+            controlDetailSeqList = controlDetailSeqList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
             });
 
-            for (let i = 0, CONTROL_SEQ_LIST_LENGTH = controlSeqList.length; i < CONTROL_SEQ_LIST_LENGTH; i++) {
-                controlSeqStr += controlSeqList[i];
+            for (let i = 0, CONTROL_SEQ_LIST_LENGTH = controlDetailSeqList.length; i < CONTROL_SEQ_LIST_LENGTH; i++) {
+                controlDetailSeqStr += controlDetailSeqList[i];
 
                 if (i < CONTROL_SEQ_LIST_LENGTH - 1) {
-                    controlSeqStr += ',';
-                }
-            }
-            for (let i = 0, COMP_CD_LIST_LENGTH = compCdList.length; i < COMP_CD_LIST_LENGTH; i++) {
-                compCdStr += '\'' + compCdList[i] + '\'';
-
-                if (i < COMP_CD_LIST_LENGTH - 1) {
-                    compCdStr += ',';
-                }
-            }
-            for (let i = 0, ORDER_COMP_CD_LIST_LENGTH = orderCompCdList.length; i < ORDER_COMP_CD_LIST_LENGTH; i++) {
-                orderCompCdStr += '\'' + orderCompCdList[i] + '\'';
-
-                if (i < ORDER_COMP_CD_LIST_LENGTH - 1) {
-                    orderCompCdStr += ',';
+                    controlDetailSeqStr += ',';
                 }
             }
 
-            controlCloseYear = list[0].CLOSE_MONTH.substring(0, 4);
-            controlCloseMonth = list[0].CLOSE_MONTH.substring(4);
+            controlCloseMonth = parseInt(list[0].OUTSIDE_CLOSE_MONTH);
             closeVer = list[0].CLOSE_VER;
-            $('#OUTSIDE_CLOSE_CANCEL_FORM > #CONTROL_SEQ').val(controlSeqStr);
+
+            $('#OUTSIDE_CLOSE_CANCEL_FORM > #CONTROL_DETAIL_SEQ').val(controlDetailSeqStr);
             $('#OUTSIDE_CLOSE_CANCEL_FORM > #COMP_CD').val(compCdStr);
             $('#OUTSIDE_CLOSE_CANCEL_FORM > #ORDER_COMP_CD').val(orderCompCdStr);
-            $('#OUTSIDE_CLOSE_CANCEL_FORM > #OUTSIDE_CLOSE_CANCEL_YEAR').val(controlCloseYear);
-            $('#OUTSIDE_CLOSE_CANCEL_FORM > #OUTSIDE_CLOSE_CANCEL_MONTH').val(controlCloseMonth);
-            $('#OUTSIDE_CLOSE_CANCEL_FORM > #CLOSE_VER').val(closeVer);
+            $('#OUTSIDE_CLOSE_CANCEL_FORM > #OUTSIDE_CLOSE_MONTH').val(controlCloseMonth);
+            $('#OUTSIDE_CLOSE_CANCEL_FORM > #OUTSIDE_CLOSE_VER').val(closeVer);
 
             let postData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_CANCEL_FORM');
             $outsideCloseCancelLeftGrid.pqGrid('option', 'dataModel.postData', function () {
@@ -437,7 +458,7 @@
             });
             $outsideCloseCancelLeftGrid.pqGrid('refreshDataAndView');
 
-            postData.queryId = 'orderMapper.selectControlCloseCancelRightList';
+            postData.queryId = 'outMapper.selectOutsideCloseCancelRightList';
             fnRequestGidData($outsideCloseCancelRightGrid, postData);
         };
 
@@ -470,12 +491,14 @@
                 // 동일한 발주사, 공급사인지 확인
                 let compCdList = [];
                 let orderCompCdList = [];
+                let outsideCompCdList = [];
 
                 for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
                     let rowData = $outsideCloseHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
 
                     compCdList.push(rowData.COMP_CD);
                     orderCompCdList.push(rowData.ORDER_COMP_CD);
+                    outsideCompCdList.push(rowData.OUTSIDE_COMP_CD);
                 }
 
                 // 중복제거
@@ -483,6 +506,9 @@
                     return array.indexOf(element) === index;
                 });
                 orderCompCdList = orderCompCdList.filter(function (element, index, array) {
+                    return array.indexOf(element) === index;
+                });
+                outsideCompCdList = outsideCompCdList.filter(function (element, index, array) {
                     return array.indexOf(element) === index;
                 });
                 if (compCdList.length > 1) {
@@ -493,6 +519,14 @@
                     alert('선택된 대상들의 공급사는 동일해야 합니다.');
                     return false;
                 }
+                if (outsideCompCdList.length > 1) {
+                    alert('선택된 대상들의 협력업체는 동일해야 합니다.');
+                    return false;
+                }
+
+                $('#OUTSIDE_CLOSE_CANCEL_FORM > #COMP_CD').val(compCdList[0]);
+                $('#OUTSIDE_CLOSE_CANCEL_FORM > #ORDER_COMP_CD').val(orderCompCdList[0]);
+                $('#OUTSIDE_CLOSE_CANCEL_FORM > #OUTSIDE_COMP_CD').val(outsideCompCdList[0]);
 
                 // 빈 그리드 생성
                 $outsideCloseCancelLeftGrid = $('#' + outsideCloseCancelLeftGridId).pqGrid(outsideCloseCancelObj);

@@ -1,4 +1,4 @@
-` <%--
+<%--
   Created by IntelliJ IDEA.
   User: seongjun-innodale
   Date: 2020-03-18
@@ -215,7 +215,7 @@
         <div>
             <div id="ORDER_REGISTER_GRID"></div>
         </div>
-        <div class="text-center">
+        <div class="btnWrap">
             <button type="button" class="defaultBtn grayPopGra" name="CONTROL_MANGE_CLOSE">닫기</button>
         </div>
     </div>
@@ -1502,7 +1502,7 @@
             ]
         };
         const popupObj = {
-            height: 700,
+            height: 680,
             collapsible: false,
             resizable: false,
             showTitle: false,

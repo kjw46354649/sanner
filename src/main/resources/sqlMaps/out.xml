@@ -71,23 +71,28 @@
                                                    AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
     </sql>
 
+    <sql id="outsideRequest">
+        D.OUTSIDE_REQUEST_SEQ,
+        D.OUTSIDE_STATUS, <!-- 외주가공요청상태 -->
+        SF_GET_CODE_NM(1031, D.OUTSIDE_STATUS, 'KR') AS OUTSIDE_STATUS_NM, <!-- 외주가공요청상태 -->
+        SF_GET_DATE_F(D.STATUS_DT, 'YY', 'M') AS OUTSIDE_STATUS_DT, <!-- 외주가공상태변경일시 -->
+        IF(D.OUTSIDE_STATUS = 'OST001', SF_GET_DATE_F(D.STATUS_DT, 'YY', 'M'), '') AS OUTSIDE_REQUEST_DT, <!-- 외주가공요청일시 -->
+        IF(D.OUTSIDE_STATUS = 'OST003', SF_GET_DATE_F(D.STATUS_DT, 'YY', 'M'), '') AS OUTSIDE_INNER_DT <!-- 외주가공입고일시 -->
+    </sql>
+
     <select id="selectOutsideOrderManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER () OVER () AS ROW_NUM,
             <include refid="orderMapper.control"/>,
             <include refid="orderMapper.controlPart"/>,
-            E.OUTSIDE_STATUS,
-            SF_GET_CODE_NM(1031, E.OUTSIDE_STATUS, 'KR') AS OUTSIDE_STATUS_NM,
-            SF_GET_DATE_F(E.STATUS_DT, 'YY', 'M') AS OUTSIDE_STATUS_DT,
-            IF(E.OUTSIDE_STATUS = 'OST001', SF_GET_DATE_F(E.STATUS_DT, 'YY', 'M'), '') AS OUTSIDE_INNER_DT
+            <include refid="outsideRequest"/>
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-            LEFT OUTER JOIN TBL_OUTSIDE_REQUEST_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ
-                                                            AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-            LEFT OUTER JOIN TBL_OUTSIDE_REQUEST E ON D.OUTSIDE_REQUEST_SEQ = E.OUTSIDE_REQUEST_SEQ
-                                                     AND E.DEL_YN = 'N'
-            LEFT OUTER JOIN TBL_OUTSIDE_CLOSE F ON B.CONTROL_SEQ = F.CONTROL_SEQ
-                                                   AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_OUTSIDE_REQUEST_DETAIL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                                            AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                                                            AND C.OUTSIDE_REQUEST_SEQ IN (SELECT OUTSIDE_REQUEST_SEQ FROM TBL_OUTSIDE_REQUEST WHERE C.OUTSIDE_REQUEST_SEQ = OUTSIDE_REQUEST_SEQ AND DEL_YN = 'N')
+            LEFT OUTER JOIN TBL_OUTSIDE_REQUEST D ON C.OUTSIDE_REQUEST_SEQ = D.OUTSIDE_REQUEST_SEQ
+                                                     AND D.DEL_YN = 'N'
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001' <!-- 확정 -->
             AND B.OUTSIDE_YN = 'Y'
@@ -167,85 +172,140 @@
             AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </update>
 
+    <select id="selectOutSideCloseVer" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT MAX(C.CLOSE_VER) AS MAX_CLOSE_VER
+        FROM TBL_CONTROL A
+        INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+        INNER JOIN TBL_OUTSIDE_CLOSE C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+        WHERE 1 = 1
+            AND A.COMP_CD = #{COMP_CD}
+            AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
+            AND CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
+        GROUP BY
+            A.COMP_CD,
+            B.OUTSIDE_COMP_CD,
+            C.CLOSE_MONTH,
+            C.CLOSE_VER
+    </select>
+
     <select id="selectOutsideCloseLeftList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            A.OUTSIDE_COMP_CD,
-            SF_GET_COMP_NM(A.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM,
-            C.CLOSE_MONTH,
-            DATE_FORMAT(STR_TO_DATE(C.CLOSE_MONTH, '%Y%m'), '%Y.%m월' ) AS CLOSE_MONTH_TRAN,
-            C.CLOSE_VER,
-            SUM(B.ORDER_QTY) AS ORDER_QTY,
-            SUM(A.UNIT_FINAL_AMT) AS TOTAL_AMT
-        FROM TBL_CONTROL_PART A
-        INNER JOIN TBL_CONTROL_PART_ORDER B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                                               AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-        INNER JOIN TBL_OUTSIDE_CLOSE C ON A.CONTROL_SEQ = C.CONTROL_SEQ
-                                          AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                                          AND C.CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
-        WHERE
-            A.OUTSIDE_YN = 'Y'
-            AND A.OUTSIDE_COMP_CD IN (${OUTSIDE_COMP_CD})
+            X.COMP_CD,
+            SF_GET_COMP_NM(X.COMP_CD) AS COMP_NM,
+            X.OUTSIDE_COMP_CD,
+            SF_GET_COMP_NM(X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM,
+            X.CLOSE_MONTH,
+            DATE_FORMAT(STR_TO_DATE(X.CLOSE_MONTH, '%Y%m'), '%Y.%m월') AS CLOSE_MONTH_TRAN,
+            CONCAT(X.CLOSE_VER, '차') AS CLOSE_VER,
+            CONCAT(CAST(SUM(X.ORDER_QTY) AS CHAR), '건') AS ORDER_QTY,
+            FORMAT(SUM(X.TOTAL_AMT), 0) AS TOTAL_AMT
+        <!--     ,FORMAT(X.FINAL_NEGO_AMT, 0) AS FINAL_NEGO_AMT -->
+        FROM (
+            SELECT
+                A.COMP_CD,
+                B.OUTSIDE_COMP_CD,
+                SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM,
+                D.CLOSE_MONTH,
+                DATE_FORMAT(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m'), '%Y.%m월' ) AS CLOSE_MONTH_TRAN,
+                D.CLOSE_VER,
+                B.UNIT_FINAL_AMT,
+                C.ORDER_QTY,
+                B.UNIT_FINAL_AMT * C.ORDER_QTY AS TOTAL_AMT, <!-- 발주가 -->
+                '' <!-- 마감금액 -->
+            FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_OUTSIDE_CLOSE D ON B.CONTROL_SEQ = D.CONTROL_SEQ
+                                            AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+                                            AND D.CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
+            WHERE 1 = 1
+                AND A.COMP_CD = #{COMP_CD}
+                AND B.OUTSIDE_YN = 'Y'
+                AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}) X
         GROUP BY
-            A.OUTSIDE_COMP_CD,
-            C.CLOSE_VER
+            X.COMP_CD,
+            X.OUTSIDE_COMP_CD,
+            X.CLOSE_VER
         ORDER BY
-            A.OUTSIDE_COMP_CD,
-            C.CLOSE_VER DESC
+            X.COMP_CD,
+            X.OUTSIDE_COMP_CD,
+            X.CLOSE_VER DESC
     </select>
 
     <select id="selectOutsideCloseRightList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            OUTSIDE_COMP_CD,
-            OUTSIDE_COMP_NM,
-            CLOSE_MONTH,
-            DATE_FORMAT(STR_TO_DATE(CLOSE_MONTH, '%Y%m'), '%Y.%m월' ) AS CLOSE_MONTH_TRAN,
-            CONCAT(CLOSE_VER, '차') AS CLOSE_VER,
-            CONCAT(CAST(SUM(ORDER_QTY) AS CHAR), '건') AS ORDER_QTY,
-            FORMAT(SUM(UNIT_FINAL_AMT), 0) AS TOTAL_AMT,
-            CONCAT(CAST(SUM(ADD_QTY) AS CHAR), '건') AS ADD_QTY,
-            FORMAT(SUM(ADD_UNIT_FINAL_AMT), 0) AS ADD_UNIT_FINAL_AMT
-        FROM (
+            X.COMP_CD,
+            SF_GET_COMP_NM(X.COMP_CD) AS COMP_NM,
+            X.OUTSIDE_COMP_CD,
+            SF_GET_COMP_NM(X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM,
+            X.CLOSE_MONTH,
+            DATE_FORMAT(STR_TO_DATE(X.CLOSE_MONTH, '%Y%m'), '%Y.%m월') AS CLOSE_MONTH_TRAN,
+            X.CLOSE_VER,
+            CONCAT(X.CLOSE_VER, '차') AS CLOSE_VER_TRAN,
+            CONCAT(CAST(SUM(X.ORDER_QTY) AS CHAR), '건') AS ORDER_QTY,
+            SUM(X.TOTAL_AMT) AS TOTAL_AMT,
+            '' 
+        FROM
+            (
             SELECT
-                A.OUTSIDE_COMP_CD,
-                SF_GET_COMP_NM(A.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM,
-                C.CLOSE_MONTH,
-                C.CLOSE_VER,
-                SUM(B.ORDER_QTY) AS ORDER_QTY,
-                SUM(A.UNIT_FINAL_AMT) AS UNIT_FINAL_AMT,
-                0 AS ADD_QTY,
-                0 AS ADD_UNIT_FINAL_AMT
-            FROM TBL_CONTROL_PART A
-            INNER JOIN TBL_CONTROL_PART_ORDER B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                                                   AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-            INNER JOIN TBL_OUTSIDE_CLOSE C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-                                              AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                                              AND C.CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
-                                              AND C.CLOSE_VER = #{CLOSE_VER}
-            WHERE
-                A.OUTSIDE_YN = 'Y'
-                AND A.OUTSIDE_COMP_CD IN (${OUTSIDE_COMP_CD})
+                P.COMP_CD, P.OUTSIDE_COMP_CD, P.CLOSE_MONTH, P.CLOSE_VER, SUM(P.ORDER_QTY) AS ORDER_QTY, SUM(P.TOTAL_AMT) AS TOTAL_AMT
+            FROM
+                (
+                SELECT
+                    A.COMP_CD, B.OUTSIDE_COMP_CD, D.CLOSE_MONTH, D.CLOSE_VER, B.UNIT_FINAL_AMT, C.ORDER_QTY, B.UNIT_FINAL_AMT * C.ORDER_QTY AS TOTAL_AMT, ''
+                FROM
+                    TBL_CONTROL A
+                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                                       AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                INNER JOIN TBL_OUTSIDE_CLOSE D ON B.CONTROL_SEQ = D.CONTROL_SEQ
+                                                  AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+                                                  AND D.CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
+                WHERE
+                    1 = 1
+                    AND A.COMP_CD = #{COMP_CD}
+                    AND B.OUTSIDE_YN = 'Y'
+                    AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}) P
             GROUP BY
-                A.OUTSIDE_COMP_CD
+                P.COMP_CD, P.OUTSIDE_COMP_CD, P.CLOSE_VER
         UNION ALL
             SELECT
-                A.OUTSIDE_COMP_CD,
-                SF_GET_COMP_NM(A.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM,
-                CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH}) AS CLOSE_MONTH,
-                #{CLOSE_VER},
-                SUM(B.ORDER_QTY) AS ORDER_QTY,
-                SUM(A.UNIT_FINAL_AMT) AS UNIT_FINAL_AMT,
-                SUM(B.ORDER_QTY) AS ADD_QTY,
-                SUM(A.UNIT_FINAL_AMT) AS ADD_UNIT_FINAL_AMT
-            FROM TBL_CONTROL_PART A
-            INNER JOIN TBL_CONTROL_PART_ORDER B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                                                   AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-            WHERE
-                A.OUTSIDE_YN = 'Y'
-                AND A.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})
+                Q.COMP_CD, Q.OUTSIDE_COMP_CD, Q.CLOSE_MONTH, Q.CLOSE_VER, SUM(Q.ORDER_QTY) AS ORDER_QTY, SUM(Q.TOTAL_AMT) AS TOTAL_AMT
+            FROM
+                (
+                SELECT
+                    A.COMP_CD, B.OUTSIDE_COMP_CD, CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH}) AS CLOSE_MONTH, #{CLOSE_VER} AS CLOSE_VER, B.UNIT_FINAL_AMT, C.ORDER_QTY, B.UNIT_FINAL_AMT * C.ORDER_QTY AS TOTAL_AMT, ''
+                FROM
+                    TBL_CONTROL A
+                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                                        AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                WHERE 1 = 1
+                    AND B.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})
+                    AND NOT EXISTS (SELECT *
+                                    FROM TBL_CONTROL AA
+                                        INNER JOIN TBL_CONTROL_PART BB ON AA.CONTROL_SEQ = BB.CONTROL_SEQ 
+                                        INNER JOIN TBL_OUTSIDE_CLOSE CC ON BB.CONTROL_SEQ = CC.CONTROL_SEQ
+                                                                           AND BB.CONTROL_DETAIL_SEQ = CC.CONTROL_DETAIL_SEQ 
+                                    WHERE 1 = 1
+                                        AND AA.COMP_CD = #{COMP_CD}
+                                        AND BB.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})
+                                        AND BB.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
+                                        AND CC.CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
+                                        AND CC.CLOSE_VER = #{CLOSE_VER})) Q
             GROUP BY
-                A.OUTSIDE_COMP_CD) X
+                Q.COMP_CD, Q.OUTSIDE_COMP_CD, Q.CLOSE_VER)X
         GROUP BY
-            OUTSIDE_COMP_CD
+            X.COMP_CD,
+            X.OUTSIDE_COMP_CD,
+            X.CLOSE_MONTH,
+            X.CLOSE_VER
+        ORDER BY
+            X.COMP_CD,
+            X.OUTSIDE_COMP_CD,
+            X.CLOSE_MONTH,
+            X.CLOSE_VER DESC
     </select>
 
     <update id="updateOutsideCloseRequest" parameterType="java.util.HashMap">
@@ -305,11 +365,43 @@
     </insert>
 
     <select id="selectOutsideCloseHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        <include refid="outManage"/>
+        SELECT
+            ROW_NUMBER () OVER () AS ROW_NUM,
+            <include refid="orderMapper.control"/>,
+            <include refid="orderMapper.controlPart"/>,
+            <include refid="outsideRequest"/>,
+            DATE_FORMAT(STR_TO_DATE(E.CLOSE_MONTH, '%Y%m'), '%Y.%m') AS OUTSIDE_CLOSE_MONTH,
+            E.CLOSE_VER,
+            SF_GET_DATE_F(E.CLOSE_DT, 'YY', 'M') AS OUTSIDE_CLOSE_DT
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            LEFT OUTER JOIN TBL_OUTSIDE_REQUEST_DETAIL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                                            AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                                                            AND C.OUTSIDE_REQUEST_SEQ IN (SELECT OUTSIDE_REQUEST_SEQ FROM TBL_OUTSIDE_REQUEST WHERE C.OUTSIDE_REQUEST_SEQ = OUTSIDE_REQUEST_SEQ AND DEL_YN = 'N')
+            LEFT OUTER JOIN TBL_OUTSIDE_REQUEST D ON C.OUTSIDE_REQUEST_SEQ = D.OUTSIDE_REQUEST_SEQ
+                                                     AND D.DEL_YN = 'N'
+            INNER JOIN TBL_OUTSIDE_CLOSE E ON B.CONTROL_SEQ = E.CONTROL_SEQ
+                                              AND B.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
         WHERE 1 = 1
+        <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
+            AND A.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
+        </if>
+        <if test="COMP_CD != null and COMP_CD != ''">
+            AND A.COMP_CD = #{COMP_CD}
+        </if>
+        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+            AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+        </if>
+        <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
+            AND B.DRAWING_NUM = #{DRAWING_NUM}
+        </if>
+        <if test="ITEM_NM != null and ITEM_NM != ''">
+            AND B.ITEM_NM = #{ITEM_NM}
+        </if>
+        <if test="ORDER_NUM != null and ORDER_NUM != ''">
+            AND C.ORDER_NUM = #{ORDER_NUM}
+        </if>
             <!-- AND E.OUTSIDE_STATUS = 'OST004' -->
-            AND B.CONTROL_SEQ = F.CONTROL_SEQ
-            AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
     </select>
 
     <delete id="deleteOutsideClose" parameterType="java.util.HashMap">
@@ -529,83 +621,124 @@
 
     <select id="selectOutsideCloseCancelLeftList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            A.OUTSIDE_COMP_CD,
-            SF_GET_COMP_NM(A.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM,
-            C.CLOSE_MONTH,
-            DATE_FORMAT(STR_TO_DATE(C.CLOSE_MONTH, '%Y%m'), '%Y.%m월' ) AS CLOSE_MONTH_TRAN,
-            C.CLOSE_VER,
-            SUM(B.ORDER_QTY) AS ORDER_QTY,
-            SUM(A.UNIT_FINAL_AMT) AS TOTAL_AMT
-        FROM TBL_CONTROL_PART A
-        INNER JOIN TBL_CONTROL_PART_ORDER B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                                               AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-        INNER JOIN TBL_OUTSIDE_CLOSE C ON A.CONTROL_SEQ = C.CONTROL_SEQ
-                                          AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                                          AND C.CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
-        WHERE
-            A.OUTSIDE_YN = 'Y'
-            AND A.OUTSIDE_COMP_CD IN (${OUTSIDE_COMP_CD})
-        GROUP BY
-            A.OUTSIDE_COMP_CD,
-            C.CLOSE_VER
-        ORDER BY
-            A.OUTSIDE_COMP_CD,
-            C.CLOSE_VER DESC
+            X.COMP_CD,
+            SF_GET_COMP_NM(X.COMP_CD) AS COMP_NM,
+            X.ORDER_COMP_CD,
+            SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM,
+            X.OUTSIDE_COMP_CD,
+            SF_GET_COMP_NM(X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM,
+            X.CLOSE_MONTH,
+            DATE_FORMAT(STR_TO_DATE(X.CLOSE_MONTH, '%Y%m'), '%Y.%m월' ) AS CLOSE_MONTH_TRAN,
+            X.CLOSE_VER,
+            CONCAT(X.CLOSE_VER, '차') AS CLOSE_VER_TRAN,
+            CONCAT(CAST(SUM(X.CONTROL_PART_QTY) AS CHAR), '건') AS CONTROL_PART_QTY,
+            FORMAT(SUM(X.TOTAL_AMT), 0) AS TOTAL_AMT
+        FROM (
+            SELECT
+                C.COMP_CD,
+                C.ORDER_COMP_CD,
+                B.OUTSIDE_COMP_CD,
+                A.CLOSE_MONTH,
+                A.CLOSE_VER,
+                SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY,
+                B.UNIT_FINAL_AMT,
+                SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) * B.UNIT_FINAL_AMT AS TOTAL_AMT
+            FROM TBL_OUTSIDE_CLOSE A
+                LEFT OUTER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                LEFT OUTER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+            WHERE 1 = 1
+                AND (A.CLOSE_MONTH, B.OUTSIDE_COMP_CD, C.COMP_CD, C.ORDER_COMP_CD) IN (SELECT AA.CLOSE_MONTH, BB.OUTSIDE_COMP_CD, CC.COMP_CD, CC.ORDER_COMP_CD
+                                                                                      FROM TBL_OUTSIDE_CLOSE AA
+                                                                                          LEFT OUTER JOIN TBL_CONTROL_PART BB ON AA.CONTROL_SEQ = BB.CONTROL_SEQ AND AA.CONTROL_DETAIL_SEQ = BB.CONTROL_DETAIL_SEQ
+                                                                                          LEFT OUTER JOIN TBL_CONTROL CC ON BB.CONTROL_SEQ = CC.CONTROL_SEQ
+                                                                                      WHERE 1 = 1
+                                                                                          AND AA.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ}))
+                AND B.OUTSIDE_YN = 'Y') X
+        GROUP BY X.COMP_CD, X.OUTSIDE_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER
+        ORDER BY X.COMP_CD, X.OUTSIDE_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER DESC
     </select>
 
     <select id="selectOutsideCloseCancelRightList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT *
+        FROM (
         SELECT
-            OUTSIDE_COMP_CD,
-            OUTSIDE_COMP_NM,
-            CLOSE_MONTH,
-            DATE_FORMAT(STR_TO_DATE(CLOSE_MONTH, '%Y%m'), '%Y.%m월' ) AS CLOSE_MONTH_TRAN,
-            CONCAT(CLOSE_VER, '차') AS CLOSE_VER,
-            CONCAT(CAST(SUM(ORDER_QTY) AS CHAR), '건') AS ORDER_QTY,
-            FORMAT(SUM(UNIT_FINAL_AMT), 0) AS TOTAL_AMT,
-            CONCAT(CAST(SUM(ADD_QTY) AS CHAR), '건') AS ADD_QTY,
-            FORMAT(SUM(ADD_UNIT_FINAL_AMT), 0) AS ADD_UNIT_FINAL_AMT
+            X.COMP_CD,
+            SF_GET_COMP_NM(X.COMP_CD) AS COMP_NM,
+            X.ORDER_COMP_CD,
+            SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM,
+            X.OUTSIDE_COMP_CD,
+            SF_GET_COMP_NM(X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM,
+            X.CLOSE_MONTH,
+            DATE_FORMAT(STR_TO_DATE(X.CLOSE_MONTH, '%Y%m'), '%Y.%m월' ) AS CLOSE_MONTH_TRAN,
+            X.CLOSE_VER,
+            CONCAT(X.CLOSE_VER, '차') AS CLOSE_VER_TRAN,
+            CONCAT(CAST(SUM(X.CONTROL_PART_QTY) AS CHAR), '건') AS CONTROL_PART_QTY,
+            FORMAT(SUM(X.TOTAL_AMT), 0) AS TOTAL_AMT
         FROM (
             SELECT
-                A.OUTSIDE_COMP_CD,
-                SF_GET_COMP_NM(A.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM,
-                C.CLOSE_MONTH,
-                C.CLOSE_VER,
-                SUM(B.ORDER_QTY) AS ORDER_QTY,
-                SUM(A.UNIT_FINAL_AMT) AS UNIT_FINAL_AMT,
-                0 AS ADD_QTY,
-                0 AS ADD_UNIT_FINAL_AMT
-            FROM TBL_CONTROL_PART A
-            INNER JOIN TBL_CONTROL_PART_ORDER B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                                                   AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-            INNER JOIN TBL_OUTSIDE_CLOSE C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-                                              AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                                              AND C.CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
-                                              AND C.CLOSE_VER = #{CLOSE_VER}
-            WHERE
-                A.OUTSIDE_YN = 'Y'
-                AND A.OUTSIDE_COMP_CD IN (${OUTSIDE_COMP_CD})
-            GROUP BY
-                A.OUTSIDE_COMP_CD
+                B.CONTROL_DETAIL_SEQ ,
+                C.COMP_CD,
+                C.ORDER_COMP_CD,
+                B.OUTSIDE_COMP_CD,
+                A.CLOSE_MONTH,
+                A.CLOSE_VER,
+                SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY,
+                B.UNIT_FINAL_AMT,
+                SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) * B.UNIT_FINAL_AMT AS TOTAL_AMT
+            FROM TBL_OUTSIDE_CLOSE A
+            LEFT OUTER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                                            AND B.CONTROL_SEQ = A.CONTROL_SEQ
+                                            AND B.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+                                            AND B.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+            WHERE 1 = 1
+                AND A.CONTROL_DETAIL_SEQ NOT IN (${CONTROL_DETAIL_SEQ})
+                AND (A.CLOSE_MONTH, B.OUTSIDE_COMP_CD, C.COMP_CD, C.ORDER_COMP_CD) IN (SELECT AA.CLOSE_MONTH, BB.OUTSIDE_COMP_CD, CC.COMP_CD, CC.ORDER_COMP_CD
+                                                                                      FROM TBL_OUTSIDE_CLOSE AA
+                                                                                          LEFT OUTER JOIN TBL_CONTROL_PART BB ON AA.CONTROL_SEQ = BB.CONTROL_SEQ AND AA.CONTROL_DETAIL_SEQ = BB.CONTROL_DETAIL_SEQ
+                                                                                          LEFT OUTER JOIN TBL_CONTROL CC ON BB.CONTROL_SEQ = CC.CONTROL_SEQ
+                                                                                      WHERE 1 = 1
+                                                                                          AND AA.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ}))
+                AND B.OUTSIDE_YN = 'Y'
+                ) X
+        GROUP BY X.COMP_CD, X.ORDER_COMP_CD, X.OUTSIDE_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER
         UNION ALL
-            SELECT
-                A.OUTSIDE_COMP_CD,
-                SF_GET_COMP_NM(A.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM,
-                CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH}) AS CLOSE_MONTH,
-                #{CLOSE_VER},
-                SUM(B.ORDER_QTY) AS ORDER_QTY,
-                SUM(A.UNIT_FINAL_AMT) AS UNIT_FINAL_AMT,
-                SUM(B.ORDER_QTY) AS ADD_QTY,
-                SUM(A.UNIT_FINAL_AMT) AS ADD_UNIT_FINAL_AMT
-            FROM TBL_CONTROL_PART A
-            INNER JOIN TBL_CONTROL_PART_ORDER B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                                                   AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-            WHERE
-                A.OUTSIDE_YN = 'Y'
-                AND A.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})
-            GROUP BY
-                A.OUTSIDE_COMP_CD) X
-        GROUP BY
-            OUTSIDE_COMP_CD
+        SELECT
+            C.COMP_CD,
+            SF_GET_COMP_NM(C.COMP_CD) AS COMP_NM,
+            C.ORDER_COMP_CD,
+            SF_GET_COMP_NM(C.ORDER_COMP_CD) AS ORDER_COMP_NM,
+            B.OUTSIDE_COMP_CD,
+            SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM,
+            A.CLOSE_MONTH,
+            DATE_FORMAT(STR_TO_DATE(A.CLOSE_MONTH, '%Y%m'), '%Y.%m월' ) AS CLOSE_MONTH_TRAN,
+            A.CLOSE_VER,
+            CONCAT(A.CLOSE_VER, '차') AS CLOSE_VER_TRAN,
+            '-',
+            '-'
+        FROM TBL_OUTSIDE_CLOSE A
+            LEFT OUTER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ  AND A.CONTROL_DETAIL_SEQ  = B.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+        WHERE 1 = 1
+            AND A.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})
+            AND B.OUTSIDE_YN = 'Y'
+            AND NOT EXISTS (SELECT *
+                            FROM TBL_OUTSIDE_CLOSE A
+                                LEFT OUTER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                                                                      AND B.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+                                LEFT OUTER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                            WHERE 1 = 1
+                                AND A.CONTROL_DETAIL_SEQ NOT IN (${CONTROL_DETAIL_SEQ})
+                                AND (B.OUTSIDE_COMP_CD, C.COMP_CD, C.ORDER_COMP_CD) IN (SELECT BB.OUTSIDE_COMP_CD, CC.COMP_CD, CC.ORDER_COMP_CD
+                                                                                         FROM TBL_OUTSIDE_CLOSE AA
+                                                                                             LEFT OUTER JOIN TBL_CONTROL_PART BB ON AA.CONTROL_SEQ = BB.CONTROL_SEQ AND AA.CONTROL_DETAIL_SEQ = BB.CONTROL_DETAIL_SEQ
+                                                                                             LEFT OUTER JOIN TBL_CONTROL CC ON BB.CONTROL_SEQ = CC.CONTROL_SEQ
+                                                                                         WHERE 1 = 1
+                                                                                             AND AA.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ}) GROUP BY BB.OUTSIDE_COMP_CD, CC.COMP_CD, CC.ORDER_COMP_CD)
+                                AND B.OUTSIDE_YN = 'Y')
+        GROUP BY C.COMP_CD, C.ORDER_COMP_CD, B.OUTSIDE_COMP_CD, A.CLOSE_MONTH, A.CLOSE_VER
+        ) Y
+        ORDER BY Y.COMP_CD, Y.ORDER_COMP_CD, Y.OUTSIDE_COMP_CD, Y.CLOSE_MONTH, Y.CLOSE_VER DESC
     </select>
 
     <select id="selectRequestOutsideMailContent" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -681,5 +814,15 @@
             NOW()
         )
     </insert>
+
+    <update id="updateOutsideRequestDelYN" parameterType="java.util.HashMap">
+        UPDATE TBL_OUTSIDE_REQUEST
+        SET DEL_YN = 'Y'
+        WHERE OUTSIDE_REQUEST_SEQ = (SELECT MAX(OUTSIDE_REQUEST_SEQ)
+                                    FROM TBL_OUTSIDE_REQUEST_DETAIL
+                                    WHERE 1 = 1
+                                        AND CONTROL_SEQ = #{CONTROL_SEQ}
+                                        AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ})
+    </update>
 
 </mapper>
