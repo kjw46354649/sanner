@@ -382,3 +382,6 @@ button:disabled {
 #common_alert_popup .modal-header h2{ font-size: 1.5em; }
 #common_alert_popup .modal-body { position: relative;  padding: 15px 15px 25px 15px;}
 #common_alert_popup .modal-body h4{ font-size: 1.5em; }
+
+.popupTableDiv .rowStyle th { font-family: Verdana,Arial,sans-serif !important; font-weight: 600 !important; }
+.popupTableDiv .rowStyle td { font-family: Verdana,Arial,sans-serif !important; }

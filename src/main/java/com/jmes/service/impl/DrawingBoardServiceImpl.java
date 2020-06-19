@@ -84,7 +84,7 @@ public class DrawingBoardServiceImpl implements DrawingBoardService {
         innodaleDao.create(hashMap);
 
         /** MCT WORK 완료 상태 업데이트 처리 한다. **/
-        hashMap.put("queryId", "drawingMapper.updateMctWork");
+        hashMap.put("queryId", "drawingMapper.updateCompleteMctWork");
         hashMap.put("WORK_STATUS", "DBS030");
         innodaleDao.create(hashMap);
 

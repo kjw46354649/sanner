@@ -153,13 +153,23 @@
             {title: '소재Size', dataType: 'string', dataIndx: 'SIZE_TXT', width: 70, editable: false},
             {title: '주문', dataType: 'string', dataIndx: 'ORDER_QTY', width: 40 , editable: false},
             {title: '비고', dataType: 'string', dataIndx: 'ORDER_NOTE', width: 110, editable: false},
-            {title: '금액.', dataType: 'string', dataIndx: 'ORDER_AMT', width: 60, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}},
+            {title: '금액.', dataType: 'string', dataIndx: 'ORDER_AMT', width: 60, format: '#,###',
+                editable: function(ui){
+                    if(ui.rowData.IN_YN == 'Y'){
+                        return false;
+                    }
+                    return true;
+                }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}
+            },
             {title: '수입검사', dataType: 'string', align: "center", colModel: [
                     {title: '소재', dataType: 'string', dataIndx: 'INSPECT_MATERIAL_YN', editable: false,
                         render: function(ui){
                             let icon = ui.rowData.INSPECT_MATERIAL_YN == 'Y' ? 'ui-icon-check' : 'ui-icon-closethick';
-                            return '<a href="#" id="itemOrderHistoryMaterialInspection">' +
-                                '   <span data-col="INSPECT_MATERIAL_YN" class="ui-icon '+icon+'"></span></a>';
+                            let html = ui.rowData.IN_YN == 'N' ?
+                                '<a href="#" id="itemOrderHistoryMaterialInspection"><span class="ui-icon '+icon+'"></span></a>' :
+                                '<span class="ui-icon '+icon+'"></span>';
+
+                            return html;
                         },
                         postRender: function (ui) {
                             let grid = this,
@@ -186,9 +196,11 @@
                     {title: '외관', dataType: 'string', dataIndx: 'INSPECT_SURFACE_YN', editable: false,
                         render: function(ui){
                             let icon = ui.rowData.INSPECT_SURFACE_YN == 'Y' ? 'ui-icon-check' : 'ui-icon-closethick';
+                            let html = ui.rowData.IN_YN == 'N' ?
+                                '<a href="#" id="itemOrderHistorySurfaceInspection"><span class="ui-icon '+icon+'"></span></a>' :
+                                '<span class="ui-icon '+icon+'"></span>';
 
-                            return '<a href="#" id="itemOrderHistorySurfaceInspection">' +
-                                '   <span data-col="INSPECT_SURFACE_YN" class="ui-icon '+icon+'"></span></a>';
+                            return html;
                         },
                         postRender: function (ui) {
                             let grid = this,
@@ -204,7 +216,7 @@
                                 let parameter = {
                                     'queryId': 'updateItemOrderHistoryInspection',
                                     'MATERIAL_ORDER_SEQ': MATERIAL_ORDER_SEQ,
-                                    'INSPECT_MATERIAL_YN': returnVal,
+                                    'INSPECT_SURFACE_YN': returnVal,
                                     'ORDER_AMT': ORDER_AMT,
                                     'INSPECT_NOTE': INSPECT_NOTE
                                 };
@@ -215,9 +227,11 @@
                     {title: '치수', dataType: 'string', dataIndx: 'INSPECT_SIZE_YN', editable: false,
                         render: function(ui){
                             let icon = ui.rowData.INSPECT_SIZE_YN == 'Y' ? 'ui-icon-check' : 'ui-icon-closethick';
+                            let html = ui.rowData.IN_YN == 'N' ?
+                                '<a href="#" id="itemOrderHistorySizeInspection"><span class="ui-icon '+icon+'"></span></a>' :
+                                '<span class="ui-icon '+icon+'"></span>';
 
-                            return '<a href="#" id="itemOrderHistorySizeInspection">' +
-                                '   <span data-col="INSPECT_SIZE_YN" class="ui-icon '+icon+'"></span></a>';
+                            return html;
                         },
                         postRender: function (ui) {
                             let grid = this,
@@ -233,7 +247,7 @@
                                 let parameter = {
                                     'queryId': 'updateItemOrderHistoryInspection',
                                     'MATERIAL_ORDER_SEQ': MATERIAL_ORDER_SEQ,
-                                    'INSPECT_MATERIAL_YN': returnVal,
+                                    'INSPECT_SIZE_YN': returnVal,
                                     'ORDER_AMT': ORDER_AMT,
                                     'INSPECT_NOTE': INSPECT_NOTE
                                 };
@@ -242,11 +256,18 @@
                         }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
                     },
                 ]},
-            {title: '검사 비고', dataType: 'string', dataIndx: 'INSPECT_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}},
+            {title: '검사 비고', dataType: 'string', dataIndx: 'INSPECT_NOTE',
+                editable: function (ui) {
+                    if (ui.rowData.IN_YN == 'Y') {
+                        return false;
+                    }
+                    return true;
+                }, styleHead: {'font-weight': 'bold', 'background': '#aac8ed', 'color': '#FFFFFF'}
+            },
             {title: '입고', dataType: 'string', dataIndx: 'IN_YN', width: 40, editable: false,
                 render: function(ui){
                     let icon = ui.rowData.IN_YN == 'Y' ? 'ui-icon-check' : 'ui-icon-closethick';
-                    return '<a href="#"><span class="ui-icon '+icon+'"></span></a>';
+                    return '<span class="ui-icon '+icon+'"></span>';
                 }
             },
             {title: '입고 일시', dataType: 'string', dataIndx: 'IN_DT', width: 150, editable: false},
@@ -300,13 +321,16 @@
                 //if(ui.addList.length > 0 ) {
                 let MATERIAL_ORDER_NUM = ui.addList[0].rowData.MATERIAL_ORDER_NUM;
                 let MATERIAL_COMP_CD = ui.addList[0].rowData.MATERIAL_COMP_CD;
-                let MATERIAL_ORDER_SEQ = ui.addList[0].rowData.MATERIAL_ORDER_SEQ;
-                let CONTROL_SEQ = ui.addList[0].rowData.CONTROL_SEQ;
-                let CONTROL_DETAIL_SEQ = ui.addList[0].rowData.CONTROL_DETAIL_SEQ;
+                let IN_YN = ui.addList[0].rowData.IN_YN;
+
                 $("#item_order_history_hidden_form #MATERIAL_ORDER_NUM").val(MATERIAL_ORDER_NUM);
                 $("#item_order_history_hidden_form #MATERIAL_COMP_CD").val(MATERIAL_COMP_CD);
-                $("#item_order_history_hidden_form #CONCAT_SEQ").val(CONTROL_SEQ+""+CONTROL_DETAIL_SEQ);
-                $("#item_order_history_hidden_form #MATERIAL_ORDER_SEQ").val(MATERIAL_ORDER_SEQ);
+
+                if(IN_YN == 'Y'){
+                    $("#btnItemOrderHistoryCancel").attr("disabled", true);
+                }else {
+                    $("#btnItemOrderHistoryCancel").attr("disabled", false);
+                }
                 selectItemOrderHistoryRightList();
                 //}
             }
@@ -345,6 +369,22 @@
 
                     $('#item_order_history_right_grid_records').html(data.length);
                 },
+                rowSelect: function( event, ui ) {
+                    //if(ui.addList.length > 0 ) {
+                    let MATERIAL_ORDER_SEQ = ui.addList[0].rowData.MATERIAL_ORDER_SEQ;
+                    let CONTROL_SEQ = ui.addList[0].rowData.CONTROL_SEQ;
+                    let CONTROL_DETAIL_SEQ = ui.addList[0].rowData.CONTROL_DETAIL_SEQ;
+                    let IN_YN = ui.addList[0].rowData.IN_YN;
+
+                    $("#item_order_history_hidden_form #CONCAT_SEQ").val(CONTROL_SEQ+""+CONTROL_DETAIL_SEQ);
+                    $("#item_order_history_hidden_form #MATERIAL_ORDER_SEQ").val(MATERIAL_ORDER_SEQ);
+
+                    if(IN_YN == 'Y'){
+                        $("#btnItemOrderHistorySave").attr("disabled", true);
+                    }else {
+                        $("#btnItemOrderHistorySave").attr("disabled", false);
+                    }
+                }
             });
 
             itemOrderHistoryRightGrid.pqGrid("refreshDataAndView");

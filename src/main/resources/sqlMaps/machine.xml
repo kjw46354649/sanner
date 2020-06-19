@@ -801,8 +801,8 @@
         DELETE FROM TBL_CONTROL_PART_PROGRESS A
         WHERE A.PART_STATUS = 'PRO006'
             AND A.SEQ = (SELECT MAX(B.SEQ) FROM TBL_CONTROL_PART_PROGRESS B WHERE A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
-            AND CONTROL_SEQ = #{CONTROL_SEQ}
-            AND CONTROL_DETAIL_SEQ  = #{CONTROL_DETAIL_SEQ}
+            AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND A.CONTROL_DETAIL_SEQ  = #{CONTROL_DETAIL_SEQ}
     </insert>
 
     <insert id="beforeStatusControlPart" parameterType="java.util.HashMap" >
@@ -812,11 +812,11 @@
         SET
             A.PART_STATUS = B.PART_STATUS,
             A.STATUS_DT = B.STATUS_DT,
-            UPDATE_DT = NOW(),
-            UPDATE_ID = #{LOGIN_USER_ID}
+            A.UPDATE_DT = NOW(),
+            A.UPDATE_ID = #{LOGIN_USER_ID}
         WHERE A.PART_STATUS = 'PRO006'
-            AND CONTROL_SEQ = #{CONTROL_SEQ}
-            AND CONTROL_DETAIL_SEQ  = #{CONTROL_DETAIL_SEQ}
+            AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND A.CONTROL_DETAIL_SEQ  = #{CONTROL_DETAIL_SEQ}
     </insert>
 
 

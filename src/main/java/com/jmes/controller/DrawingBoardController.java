@@ -85,14 +85,10 @@ public class DrawingBoardController {
 
             machineInfo.put("EQUIP_SEQ", hashMap.get("EQUIP_SEQ"));
             machineInfo.put("EQUIP_NM", hashMap.get("EQUIP_NM"));
+            machineInfo.put("FACTORY_AREA", hashMap.get("FACTORY_AREA"));
 
             /** 최종 Session 에 저장되는 정보 **/
             drawingInfo.put("machineInfo", machineInfo);
-        }
-
-        /** Session clear **/
-        if(session.getAttribute("drawingInfo") != null){
-            session.removeAttribute("drawingInfo");
         }
 
         session.setAttribute("drawingInfo", drawingInfo);
