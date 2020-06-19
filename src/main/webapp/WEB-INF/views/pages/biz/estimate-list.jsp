@@ -88,15 +88,15 @@
             </div>
         </div>
         <div class="tableWrap">
-            <div class="buttonWrap">
+            <div class="buttonWrap right_sort">
                 <div class="d-inline">
                     <%--<button type="button" class="smallBtn yellow">견적정보</button>
                     <button type="button" class="smallBtn yellow">금액정보</button>--%>
-                    <span class="slt_wrap namePlusSlt right_float">
+                    <div class="slt_wrap namePlusSlt">
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateListExcel">견적List 출력</button>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateExcel">견적서 출력</button>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateListDrawView">도면 보기</button>
-                    </span>
+                    </div>
                 </div>
             </div>
             <div class="conMainWrap">
