@@ -8,4 +8,6 @@ public interface OutService {
     void createOutsideClose(Map<String, Object> map) throws Exception;
 
     void managerRequestOutside(Map<String, Object> map) throws Exception;
+
+    void removeOutsideClose(Map<String, Object> map)  throws Exception;
 }

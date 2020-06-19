@@ -1830,7 +1830,7 @@
                 postData.queryId = 'orderMapper.selectControlCloseVer';
                 let parameters = {'url': '/json-list', 'data': postData};
                 fnPostAjaxAsync(function (data) {
-                    let closeVer = data.list[0] === null ? 1 : data.list[0].MAX_CLOSE_VER;
+                    let closeVer = data.list > 0 ? data.list[0].MAX_CLOSE_VER : 1;
                     $('#CONTROL_CLOSE_FORM #CLOSE_VER').val(closeVer).prop('selected', true);
                 }, parameters, '');
 

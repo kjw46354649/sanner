@@ -138,8 +138,8 @@
         </div>
 
         <div class="text-center">
-            <button class="defaultBtn" id="OUTSIDE_CLOSE_CANCEL_YES">저장</button>
-            <button class="defaultBtn" name="OUTSIDE_CLOSE_CANCEL_NO">닫기</button>
+            <button class="defaultBtn greenPopGra"  id="OUTSIDE_CLOSE_CANCEL_YES">저장</button>
+            <button class="defaultBtn grayPopGra" name="OUTSIDE_CLOSE_CANCEL_NO">닫기</button>
         </div>
     </div>
 </div>
@@ -539,6 +539,26 @@
                 $outsideCloseCancelLeftGrid.pqGrid('destroy');
                 $outsideCloseCancelRightGrid.pqGrid('destroy');
             }
+        });
+
+        $('#OUTSIDE_CLOSE_CANCEL_YES').on('click', function () {
+            let list = [];
+
+            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
+                let rowData = $outsideCloseHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+
+                list.push(rowData);
+            }
+
+            let parameters = {'url': '/removeOutsideClose', 'data': {data: JSON.stringify(list)}};
+            fnPostAjax(function (data, callFunctionParam) {
+                $('#OUTSIDE_CLOSE_CANCEL_POPUP').modal('hide');
+                $outsideCloseHistoryGrid.pqGrid('refreshDataAndView');
+            }, parameters, '');
+        });
+
+        $('[name=OUTSIDE_CLOSE_CANCEL_NO]').on('click', function () {
+            $('#OUTSIDE_CLOSE_CANCEL_POPUP').modal('hide');
         });
         /* event */
 
