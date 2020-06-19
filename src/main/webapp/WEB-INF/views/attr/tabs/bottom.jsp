@@ -325,6 +325,50 @@
 </div>
 <!-- -->
 
+<!-- 창고 공통 팝업 : S -->
+<div class="popup_container" id="common_warehouse_manage_popup" style="display: none;">
+    <div class="layerPopup" style="height: fit-content; width: 700px;">
+        <h3>위치정보관리</h3>
+        <button type="button" class="pop_close mg-top10 mg-right8" data-dismiss="modal">닫기</button>
+        <form class="form-inline" role="form" id="common_warehouse_manage_popup_form">
+            <input type="hidden" id="queryId" name="queryId" value="material.selectCommonWarehouseManageList">
+            <input type="hidden" id="LOC_SEQ" name="LOC_SEQ" value="">
+            <div class="t_area mg-top10">
+                <div class="t_h">
+                    <span class="list_t" style="width: 110px;">창고명</span>
+                    <span style="width: 190px;">
+                        <select name="WAREHOUSE_CD" id="WAREHOUSE_CD">
+                            <%--<option value=""><spring:message code="com.form.top.sel.option" /></option>--%>
+                            <c:forEach var="code" items="${HighCode.H_1049}">
+                                <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                            </c:forEach>
+                        </select>
+                    </span>
+                    <div style="width: 140px; line-height: 45px;" class="d-inline right_float">
+                        <button type="button" class="defaultBtn radius" id="btnCommonWarehouseManageAdd">추가</button>
+                        <button type="button" class="defaultBtn radius green" id="btnCommonWarehouseManageRemove">삭제</button>
+                    </div>
+                </div>
+            </div>
+            <div class="h_area mg-bottom10">
+
+            </div>
+            <h2>&nbsp;</h2>
+            <div class="tableWrap">
+                <div id="common_warehouse_manage_grid" class="jqx-refresh"></div>
+                <div class="right_sort">
+                    전체 조회 건수 (Total : <span id="common_warehouse_manage_grid_records" style="color: #00b3ee">0</span>)
+                </div>
+            </div>
+            <div class="btnWrap">
+                <button type="button" class="defaultBtn greenPopGra" id="btnCommonWarehouseManageSave">저장</button>
+                <button type="button" class="defaultBtn grayPopGra" data-dismiss="modal">닫기</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- 창고 공통 팝업 : E -->
+
 <script type="text/javascript">
 
     let $cadFileConvertUploadCompletedBtn = $("#cadFileConvertUploadCompletedBtn");
@@ -1227,8 +1271,96 @@
 
     /**  공통 제품상세 정보  끝 **/
 
+    
+    
+    /** 공통 창고 팝업 Start **/
+    let commonWarehouseManageGrid = $("#common_warehouse_manage_grid");
+    let commonWarehouseManageModel= [
+        {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_NM', minWidth: 80 ,editable: false},
+        {title: '위치명', dataType: 'string', dataIndx: 'LOC_NM', minWidth: 90 },
+        {title: '위치 설명', dataType: 'string', dataIndx: 'LOC_DESC', minWidth: 120 },
+        {title: '용도', dataType: 'string', dataIndx: 'LOC_USE', minWidth: 150} ,
+        {title: '업데이트 일시', dataType: 'date', dataIndx: 'UPDATE_DT', minWidth: 110, editable: false},
+        {title: '작성자', dataType: 'string', dataIndx: 'INSERT_ID', minWidth: 100, editable: false},
+        {title: '', dataType: 'string', dataIndx: 'WAREHOUSE_CD', hidden: true}
+    ];
 
+    let commonWarehouseManageObj = {
+        width: "100%", height: 350,
+        dataModel: {
+            location: "remote", dataType: "json", method: "POST", recIndx: 'LOC_SEQ',
+            url: "/paramQueryGridSelect",
+            postData: fnFormToJsonArrayData('common_warehouse_manage_popup_form'),
+            getData: function (dataJSON) {
+                return {data: dataJSON.data};
+            }
+        },
+        columnTemplate: {align: 'center', hvalign: 'center'},
+        scrollModel: {autoFit: false},
+        numberCell: {width: 30, title: "No", show: true },
+        selectionModel: { type: 'row', mode: 'single'} ,
+        swipeModel: {on: false},
+        collapsible: false,
+        strNoRows: g_noData,
+        resizable: false,
+        trackModel: {on: true},
+        colModel: commonWarehouseManageModel,
+        rowSelect: function (event, ui) {
+            let LOC_SEQ = ui.addList[0].rowData.LOC_SEQ;
 
+            $("#common_warehouse_manage_popup_form #LOC_SEQ").val(LOC_SEQ);
+        },
+        complete: function(event, ui) {
+            this.flex();
+            let data = commonWarehouseManageGrid.pqGrid('option', 'dataModel.data');
+
+            $('#common_warehouse_manage_grid_records').html(data.length);
+        }
+    }
+    function fnCommonWarehouse() {
+        $('#common_warehouse_manage_popup').modal('show');
+
+        $("#common_warehouse_manage_popup_form").find("#queryId").val('material.selectCommonWarehouseManageList');
+
+        commonWarehouseManageObj.dataModel.postData = fnFormToJsonArrayData('common_warehouse_manage_popup_form');
+        commonWarehouseManageGrid.pqGrid(commonWarehouseManageObj);
+
+        commonWarehouseManageGrid.pqGrid('refreshDataAndView');
+    }
+    
+    $("#common_warehouse_manage_popup_form #WAREHOUSE_CD").on('change', function(){
+        commonWarehouseManageGrid.pqGrid('option', "dataModel.postData", function (ui) {
+            return (fnFormToJsonArrayData('#common_warehouse_manage_popup_form'));
+        });
+        commonWarehouseManageGrid.pqGrid('refreshDataAndView');
+    });
+
+    $("#btnCommonWarehouseManageAdd").on('click', function(){
+        let WAREHOUSE_CD = $("#common_warehouse_manage_popup_form #WAREHOUSE_CD option:selected").val();
+        let WAREHOUSE_NM = $("#common_warehouse_manage_popup_form #WAREHOUSE_CD option:selected").text();
+
+        commonWarehouseManageGrid.pqGrid('addRow', {
+            newRow: {WAREHOUSE_CD:WAREHOUSE_CD, WAREHOUSE_NM:WAREHOUSE_NM},
+            rowIndx : 0,
+            checkEditable: false
+        });
+    });
+
+    $("#btnCommonWarehouseManageRemove").on('click', function(){
+        $("#common_warehouse_manage_popup_form #queryId").val('material.deleteCommonWarehouseManage');
+        let parameters = {'url': '/json-list', 'data': fnFormToJsonArrayData('#common_warehouse_manage_popup_form')};
+        fnPostAjaxAsync(function (data, callFunctionParam) {
+            commonWarehouseManageGrid.pqGrid('refreshDataAndView');
+        }, parameters, '');
+    });
+
+    $("#btnCommonWarehouseManageSave").on('click', function(){
+        let inWarehouseManageInsertUpdateQueryList = ['material.insertUpdateCommonWarehouseManage'];
+        fnModifyPQGrid(commonWarehouseManageGrid, inWarehouseManageInsertUpdateQueryList, inWarehouseManageInsertUpdateQueryList);
+    });
+    
+    /** 공통 창고 팝업 end **/
+    
     function estimateListFileUploadCallback(GfileSeq) {
         if(!GfileSeq) {
             let parameter = {

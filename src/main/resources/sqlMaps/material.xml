@@ -774,7 +774,7 @@
         ORDER BY Z.MY_MAT_STOCK_SEQ
     </select>
 
-    <select id="selectInWarehouseManageWarehouseList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    <select id="selectCommonWarehouseManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             WAREHOUSE_CD , SF_GET_CODE_NM('1049', WAREHOUSE_CD, 'EN') AS WAREHOUSE_NM,
             LOC_SEQ, LOC_NM, LOC_DESC, LOC_USE,
@@ -843,7 +843,7 @@
         )
     </insert>
 
-    <insert id="insertUpdateInWarehouseManageWarehouse" parameterType="java.util.HashMap">
+    <insert id="insertUpdateCommonWarehouseManage" parameterType="java.util.HashMap">
         INSERT INTO jmes.TBL_WAREHOUSE_LOCATION
         (
             WAREHOUSE_CD, LOC_SEQ, LOC_NM, LOC_DESC, LOC_USE, DEL_YN, INSERT_ID
@@ -879,7 +879,7 @@
         WHERE MY_MAT_STOCK_SEQ = #{MY_MAT_STOCK_SEQ}
     </delete>
 
-    <delete id="deleteInWarehouseManageWarehouse" parameterType="java.util.HashMap">
+    <delete id="deleteCommonWarehouseManage" parameterType="java.util.HashMap">
         DELETE FROM TBL_WAREHOUSE_LOCATION
         WHERE 1=1
             AND LOC_SEQ = #{LOC_SEQ}
