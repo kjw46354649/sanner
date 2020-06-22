@@ -577,11 +577,19 @@
 
         let estimateRegisterFileModel =  [
             {title: 'GFILE_SEQ', dataType: 'string', dataIndx: 'GFILE_SEQ', hidden: true},
-            {title: '파일명', dataType: 'string', dataIndx: 'ORGINAL_FILE_NM', width: 500, minWidth: 70,
+            {title: '파일명', dataType: 'string', dataIndx: 'ORGINAL_FILE_NM', width: 300, minWidth: 70},
+            {title: '용량', dataType: 'string', dataIndx: 'FILE_SIZE',  width: 100, minWidth: 100,
                 render: function(ui) {
-                    let returnVal = ui.cellData;
-                    if(ui.rowData.FILE_SEQ != undefined){
-                        returnVal += '<span id=\"downloadSingleFile\" class=\"ui-icon ui-icon-search\" style=\"cursor: pointer\"></span>';
+                    return fn_getFileSize(ui.cellData);
+                }
+
+            },
+            {title: '업로드 일시', dataType: 'string', dataIndx: 'INSERT_DT',  width: 110, minWidth: 70},
+            {title: '', align: 'center', dataType: 'string', dataIndx: 'FILE_SEQ', width: 80, minWidth: 80,
+                render: function (ui) {
+                    let returnVal = "";
+                    if (ui.cellData) {
+                        returnVal = '<button id="downloadSingleFile" class="miniBtn green">다운로드</button>'
                     }
                     return returnVal;
                 },
@@ -590,24 +598,16 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#downloadSingleFile").bind("click", function () {
                         let rowData = ui.rowData;
-                        alert(rowData.FILE_SEQ);
                         fnSingleFileDownloadFormPageAction(rowData.FILE_SEQ);
                     });
                 }
             },
-            {title: '용량', dataType: 'string', dataIndx: 'FILE_SIZE',  width: 100, minWidth: 100,
-                render: function(ui) {
-                    return fn_getFileSize(ui.cellData);
-                }
-
-            },
-            {title: '업로드 일시', dataType: 'string', dataIndx: 'INSERT_DT',  width: 110, minWidth: 70},
             {title: '', align: 'center', dataType: 'string', dataIndx: 'FILE_SEQ', width: 40, minWidth: 40,
                 render: function (ui) {
                     let EST_STATUS = $("#estimate_register_info_form #EST_STATUS").val();
                     let returnVal = "";
                     if (ui.cellData) {
-                        if(EST_STATUS != 'EST020') returnVal = '<span id="deleteSingleFile" class="ui-icon ui-icon-close" style="cursor: pointer"></span>';
+                        if(EST_STATUS != 'EST020') returnVal = '<button id="deleteSingleFile" class="miniBtn red">삭제</button>'
 
                         return returnVal;
                     }
@@ -881,6 +881,7 @@
                 fnResetFrom('estimate_register_info_form');
                 if(list){
                     contextVal = list.EMAIL_CONTENT;
+                    status = list.EST_STATUS;
                     GfileKey = list.ETC_GFILE_SEQ;
 
                     $("#estimate_register_info_form #EST_STATUS").val(status);

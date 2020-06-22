@@ -19,7 +19,7 @@
                 <div class="h_area mg-bottom10">
 
                 </div>
-                <div class="list1">
+                <div class="list1">h
                     <table class="rowStyle">
                         <tbody>
                         <tr>
@@ -306,6 +306,9 @@
                         let clave = ui.$cell.find("select").val();
                         let rowData = inWarehouseManageManageGrid01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
                         rowData["WAREHOUSE_CD"]=clave;
+
+                        inWarehouseManageManageGrid01.pqGrid('updateRow', { 'rowIndx': ui.rowIndx , row: { 'LOC_NM': ''} });
+
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
                 }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
@@ -415,9 +418,9 @@
         ];
 
         let inWarehouseManageManageColModel02= [
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM' ,},
-            {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM' },
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM' },
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM' , minWidth: 180},
+            {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM' , minWidth: 60},
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM' , minWidth: 100},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 150 } ,
             /*{title: '불출대기 목록', align: "center", colModel: [
                     {title: '가로', dataType: 'string', dataIndx: 'SIZE_W'},
@@ -429,10 +432,10 @@
             {title: '요청수량', dataType: 'string', dataIndx: 'OUT_QTY', width: 80 , editable: false} ,
             {title: '창고', dataType: 'string', dataIndx: 'WAREHOUSE_NM', width: 120, editable: false},
             {title: '위치', dataType: 'string', dataIndx: 'LOC_NM', width: 120, editable: false},
-            {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120, editable: false},
+            {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 150, editable: false},
             {title: '요청일시', dataType: 'string', dataIndx: 'OUT_DT', width: 120, editable: false},
-            {title: '요청자', dataType: 'string', dataIndx: 'OUT_USER_ID' , editable: false},
-            {title: '수동 불출', dataType: 'string', dataIndx: 'MY_MAT_OUT_SEQ', editable: false,
+            {title: '요청자', dataType: 'string', dataIndx: 'OUT_USER_ID', minWidth: 100 , editable: false},
+            {title: '수동 불출', dataType: 'string', dataIndx: 'MY_MAT_OUT_SEQ', editable: false, minWidth: 80,
                 render: function (ui) {
                     return '<button type="button" id="inWarehouseManualOut" class="miniBtn blue">불출</button>'
                 },
