@@ -137,16 +137,18 @@
     <div class="bottomWrap row1_bottomWrap">
         <div class="hWrap">
             <div>
-                <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#CONTROL_MANGE_POPUP">신규
-                    주문 등록
-                </button>
+                <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#CONTROL_MANGE_POPUP">신규 주문 등록</button>
+                <button type="button" class="defaultBtn btn-100w" id="DRAWING_REGISTRATION">도면 등록</button>
+                <button type="button" class="defaultBtn btn-100w" id="DRAWING_CHANGE">도면변경(Rev. up)</button>
                 <button type="button" class="defaultBtn btn-100w" id="ESTIMATE_REGISTER_FROM_CONTROL">견적등록</button>
                 <button type="button" class="defaultBtn btn-100w" id="ESTIMATE_LIST_PRINT">견적List출력</button>
-                <button type="button" class="defaultBtn btn-100w" data-toggle="modal"
-                        data-target="#TRANSACTION_STATEMENT_POPUP">거래명세표</button>
-                <%--<button type="button" class="defaultBtn btn-100w" data-toggle="modal"
-                        data-target="#TRANSACTION_STATEMENT_LIST_POPUP">거래명세표 List</button>--%>
+                <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#TRANSACTION_STATEMENT_POPUP">거래명세표</button>
+                <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="CONFIRMATION" data-control_status="ORD001" data-control_status_nm="확정" style="color: blue;">확정</button>
+                <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="CANCEL" data-control_status="ORD002" data-control_status_nm="취소" style="color: red;">취소</button>
+                <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="TERMINATION" data-control_status="ORD004" data-control_status_nm="종료">종료</button>
+                <button type="button" class="defaultBtn btn-50w" data-toggle="modal" data-target="#CONTROL_CLOSE_POPUP">마감</button>
                 <div class="rightSpan">
+                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_DRAWING_VIEW">도면 View</button>
                     <button type="button" class="defaultBtn btn-100w" id="DRAWING_PRINT">도면 출력</button>
                     <button type="button" class="defaultBtn btn-100w" id="BARCODE_DRAWING_PRINT">바코드도면 출력</button>
                     <button type="button" class="defaultBtn btn-100w" id="BARCODE_PRINT">바코드 출력</button>
@@ -154,36 +156,12 @@
                 </div>
             </div>
             <div class="mg-top10">
-                <button type="button" class="defaultBtn btn-100w" name="CHANGE_STATUS" id="CONFIRMATION"
-                        data-control_status="ORD001" data-control_status_nm="확정">확정
-                </button>
-                <button type="button" class="defaultBtn btn-100w" name="CHANGE_STATUS" id="CANCEL" data-control_status="ORD002"
-                        data-control_status_nm="취소">취소
-                </button>
-                <button type="button" class="defaultBtn btn-100w" name="CHANGE_STATUS" id="TERMINATION"
-                        data-control_status="ORD004" data-control_status_nm="종료">종료
-                </button>
-                <button type="button" class="defaultBtn btn-100w" data-toggle="modal"
-                        data-target="#CONTROL_CLOSE_POPUP">마감
-                </button>
+                <button type=" button" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_ALL">전체모드</button>
+                <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_ESTIMATE">견적관련</button>
+                <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_QUALITY">품질관련</button>
+                <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_CLOSE">마감관련</button>
                 <div class="rightSpan">
-                    <button type="button" class="defaultBtn btn-100w" id="DRAWING_REGISTRATION">도면 등록</button>
-                    <button type="button" class="defaultBtn btn-100w" id="DRAWING_CHANGE">도면변경(Rev. up)</button>
-                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_DRAWING_VIEW">도면 View</button>
-                    <button type="button" class="defaultBtn btn-100w red" id="CONTROL_MANAGE_DELETE">삭제</button>
-                    <button type="button" class="defaultBtn btn-100w green" id="CONTROL_MANAGE_SAVE">저장</button>
-                </div>
-            </div>
-        </div>
-        <div class="tableWrap">
-            <span class="buttonWrap">
-                <div class="d-inline">
-                    <button type=" button" class="smallBtn yellow" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_ALL">전체모드</button>
-                    <button type="button" class="smallBtn yellow" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_ESTIMATE">견적관련</button>
-                    <button type="button" class="smallBtn yellow" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_QUALITY">품질관련</button>
-                    <button type="button" class="smallBtn yellow" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_CLOSE">마감관련</button>
-                    <div class="right_float">
-                        <span class="slt_wrap namePlusSlt">
+                    <span class="slt_wrap namePlusSlt">
                         <label for="SUPPLY_UNIT_COST_APPLY">공급단가적용</label>
                         <select id="SUPPLY_UNIT_COST_APPLY" title="공급단가적용">
                             <option value="0">-Select-</option>
@@ -194,10 +172,13 @@
                             <option value="15">15%</option>
                             <option value="20">20%</option>
                         </select>
-                        </span>
-                    </div>
+                    </span>
+                    <button type="button" class="defaultBtn btn-100w red" id="CONTROL_MANAGE_DELETE">삭제</button>
+                    <button type="button" class="defaultBtn btn-100w green" id="CONTROL_MANAGE_SAVE">저장</button>
                 </div>
-            </span>
+            </div>
+        </div>
+        <div class="tableWrap">
             <div class="conWrap">
                 <div id="CONTROL_MANAGE_GRID"></div>
                 <div class="right_sort">
@@ -413,7 +394,7 @@
                     {title: '변경일시', width: 95, datatype: 'date', dataIndx: 'CONTROL_STATUS_DT'}
                 ]
             },
-            {title: '단가확인', width: 70, dataType: 'string', dataIndx: 'PRICE_CONFIRM', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+            {title: '단가확인', width: 70, dataType: 'string', dataIndx: 'PRICE_CONFIRM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text',  options: fnGetCommCodeGridSelectBox('1017')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -436,7 +417,7 @@
                     }
                 }
             },
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: ORDER_COMPANY},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -458,7 +439,7 @@
                     }
                 }
             },
-            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text',
                     options: function (ui) {
@@ -489,14 +470,14 @@
                     }
                 }
             },
-            {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-            {title: '비고', dataType: 'string', dataIndx: 'CONTROL_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
+            {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {title: '비고', dataType: 'string', dataIndx: 'CONTROL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {title: 'INV No.<br>(거래명세No.)', width: 100, dataType: 'string', dataIndx: 'INVOICE_NUM'},
-            {title: '프로젝트', width: 200, dataType: 'string', dataIndx: 'PROJECT_NM', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-            {title: '모듈', width: 70, dataType: 'string', dataIndx: 'MODULE_NM', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-            {title: '납품처', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-            {title: '비고(라벨)', width: 100, dataType: 'string', dataIndx: 'LABEL_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-            {title: '주요<br>검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+            {title: '프로젝트', width: 200, dataType: 'string', dataIndx: 'PROJECT_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {title: '모듈', width: 70, dataType: 'string', dataIndx: 'MODULE_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {title: '납품처', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {title: '비고(라벨)', width: 100, dataType: 'string', dataIndx: 'LABEL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {title: '주요<br>검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1059')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -519,7 +500,7 @@
                     }
                 }
             },
-            {title: '긴<br>급', clsHead: ' control_manage_view_quality', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+            {title: '긴<br>급', clsHead: ' control_manage_view_quality', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -528,11 +509,11 @@
                 }
             },
             {title: 'CONTROL_VER', clsHead: 'control_manage_view_close', dataType: 'string', dataIndx: 'CONTROL_VER', hidden: true},
-            {title: '관리번호', clsHead: ' control_manage_view_estimate', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true},
+            {title: '관리번호', clsHead: ' control_manage_view_estimate', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {
-                title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM',
+                title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', editable: true,
                 render: function (ui) {
-                    if (ui.rowData.WORK_TYPE === 'WTP020') {
+                    if (ui.rowData.WORK_TYPE === 'WTP020' && ui.rowData.LAG_WORK_TYPE === undefined) {
                         return '<span class="ui-icon ui-icon-circle-plus" name="PART_NUM_PLUS_BUTTON"></span>';
                     }
                 },
@@ -542,12 +523,12 @@
 
                     $cell.find('[name=PART_NUM_PLUS_BUTTON]').on('click', function (event) {
                         let rowData = fnCloneObj(ui.rowData);
-                        let data = $orderManagementGrid.pqGrid('option', 'dataModel.data'), totalRecords = data.length;
-                        let newPartNum = 0, lastRowIndex = 0, newRowData;
+                        let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
+                        let newPartNum = 1, lastRowIndex = 0, totalRecords = data.length, newRowData;
 
                         for (let i = 0; i < totalRecords; i++) {
                             if (data[i].CONTROL_SEQ === rowData.CONTROL_SEQ) {
-                                newPartNum++;
+                                Number(data[i].PART_NUM) > 0 ? newPartNum++ : newPartNum;
                                 lastRowIndex = data[i].pq_ri;
                             }
                         }
@@ -567,10 +548,10 @@
                 }
             },
             {title: '도면번호버전', dataType: 'string', dataIndx: 'DRAWING_VER', hidden: true},
-            {title: '도면번호', width: 150, dataType: 'string', dataIndx: 'DRAWING_NUM', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-            {title: '품명', width: 150, dataType: 'string', dataIndx: 'ITEM_NM', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-            {title: '규격', width: 110, dataType: 'string', dataIndx: 'SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+            {title: '도면번호', width: 150, dataType: 'string', dataIndx: 'DRAWING_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {title: '품명', width: 150, dataType: 'string', dataIndx: 'ITEM_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {title: '규격', width: 110, dataType: 'string', dataIndx: 'SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1033')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -593,7 +574,7 @@
                     }
                 }
             },
-            {title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+            {title: '외<br>주', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'OUTSIDE_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -601,7 +582,7 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1014')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -624,7 +605,7 @@
                     }
                 }
             },
-            {title: '소재<br>사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+            {title: '소재<br>사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -632,8 +613,8 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-            {title: '소재<br>종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+            {title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {title: '소재<br>종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -658,7 +639,7 @@
             },
             {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE', hidden: true},
             {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM'},
-            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text',options: fnGetCommCodeGridSelectBox('1029')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -682,7 +663,7 @@
                     }
                 }
             },
-            {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+            {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -710,17 +691,17 @@
                     }
                 }
             },
-            {title: '소재비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-            {title: 'Part<br>단위<br>수량', align: 'right', dataType: 'integer', dataIndx: 'PART_UNIT_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true},
+            {title: '소재비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {title: 'Part<br>단위<br>수량', align: 'right', dataType: 'integer', dataIndx: 'PART_UNIT_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true},
             {title: '주문<br>수량', align: 'right', dataType: 'integer', dataIndx: 'CONTROL_ORDER_QTY'},
             {
-                title: '대칭', align: 'center', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, colModel: [
-                    {title: '원칭', align: 'right', dataType: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-                    {title: '대칭', align: 'right', dataType: 'integer', dataIndx: 'OTHER_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true}
+                title: '대칭', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, colModel: [
+                    {title: '원칭', align: 'right', dataType: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+                    {title: '대칭', align: 'right', dataType: 'integer', dataIndx: 'OTHER_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
                 ]
             },
             {
-                title: '발주정보', align: 'center', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, colModel: [
+                title: '발주정보', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, colModel: [
                     {
                         title: '', datatype: 'string', dataIndx: 'ORDER_NUM_PLUS_BUTTON',
                         render: function (ui) {
@@ -747,16 +728,16 @@
                             });
                         }
                     },
-                    {title: '발주번호', width: 90, datatype: 'string', dataIndx: 'ORDER_NUM', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-                    {title: '수량', datatype: 'string', dataIndx: 'ORDER_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-                    {title: '납기', width: 70, datatype: 'string', dataIndx: 'ORDER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
+                    {title: '발주번호', width: 90, datatype: 'string', dataIndx: 'ORDER_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+                    {title: '수량', datatype: 'string', dataIndx: 'ORDER_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+                    {title: '납기', width: 70, datatype: 'string', dataIndx: 'ORDER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
                     {title: '출고', datatype: 'string', dataIndx: 'OUT_QTY'},
                     {title: '출고일자', datatype: 'string', dataIndx: 'ORDER_OUT_FINISH_DT'},
-                    {title: '납품확인', width: 70, datatype: 'string', dataIndx: 'DELIVERY_DT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
+                    {title: '납품확인', width: 70, datatype: 'string', dataIndx: 'DELIVERY_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
                 ]
             },
             {
-                title: '상세가공요건', align: 'center', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, colModel: [
+                title: '상세가공요건', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, colModel: [
                     {title: '선반', datatype: 'string', dataIndx: 'DETAIL_LATHE', },
                     {title: '가공면', datatype: 'string', dataIndx: 'DETAIL_SURFACE'},
                     {title: '클램핑', datatype: 'string', dataIndx: 'DETAIL_CLAMPING'},
@@ -766,9 +747,9 @@
                 ]
             },
             {
-                title: '소재마감', align: 'center',  styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, colModel: [
+                title: '소재마감', align: 'center',  styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, colModel: [
                     {
-                        title: 'TM각비', width: 70, dataType: 'string', dataIndx: 'MATERIAL_FINISH_TM', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                        title: 'TM각비', width: 70, dataType: 'string', dataIndx: 'MATERIAL_FINISH_TM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010')},
                         render: function (ui) {
                             let cellData = ui.cellData;
@@ -792,7 +773,7 @@
                         }
                     },
                     {
-                        title: '연마비', width: 70, dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                        title: '연마비', width: 70, dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020')},
                         render: function (ui) {
                             let cellData = ui.cellData;
@@ -816,7 +797,7 @@
                         }
                     },
                     {
-                        title: '열처리', width: 70, dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                        title: '열처리', width: 70, dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030')},
                         render: function (ui) {
                             let cellData = ui.cellData;
@@ -852,15 +833,15 @@
                 ]
             },
             {
-                title: '항목별 계산견적 단가 (10원단위 반올림)', align: 'center', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, colModel: [
-                    {title: '소재비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-                    {title: 'TM각비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_TM_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-                    {title: '연마비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_GRIND_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-                    {title: '열처리', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_HEAT_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-                    {title: '표면처리', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SURFACE_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-                    {title: '가공비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_PROCESS_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-                    {title: '기타추가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_ETC_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-                    {title: '견적비고', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_AMT_NOTE',styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'},  editable: true}
+                title: '항목별 계산견적 단가 (10원단위 반올림)', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, colModel: [
+                    {title: '소재비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+                    {title: 'TM각비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_TM_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+                    {title: '연마비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_GRIND_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+                    {title: '열처리', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_HEAT_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+                    {title: '표면처리', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SURFACE_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+                    {title: '가공비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_PROCESS_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+                    {title: '기타추가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_ETC_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+                    {title: '견적비고', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_AMT_NOTE',styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},  editable: true}
                 ]
             },
             {title: '계산<br>견적단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CALCUL_EST_UNIT_COST',
@@ -880,12 +861,12 @@
                     }
                 }
             },
-            {title: '최종<br>견적단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
+            {title: '최종<br>견적단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {title: '견적<br>합계금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'EST_TOTAL_AMOUNT'},
-            {title: '최종<br>공급단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
+            {title: '최종<br>공급단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {title: '합계금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMT'},
             {title: '종전가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'WHDWJSRK'},
-            {title: '변경전<br>도면번호', width: 120, dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
+            {title: '변경전<br>도면번호', width: 120, dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {
                 title: '마감/취소 현황', align: 'center', colModel: [
                     {title: '마감월', datatype: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
@@ -954,7 +935,7 @@
         ];
         const obj = {
             minHeight: '100%',
-            height: 730,
+            height: 710,
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             showTitle: false,
@@ -1089,12 +1070,12 @@
                     $orderManagementGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                 }
             }
-        };;
+        };
         let $orderRegisterGrid;
         const popupGridId = 'ORDER_REGISTER_GRID';
         const popupColModel = [
             {
-                title: '단가확인', dataType: 'string', dataIndx: 'PRICE_CONFIRM',
+                title: '단가확인', width: 70, dataType: 'string', dataIndx: 'PRICE_CONFIRM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text',
                     options: fnGetCommCodeGridSelectBox('1017')
@@ -1120,7 +1101,7 @@
                 }
             },
             {
-                title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD',
+                title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD',  styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: BUSINESS_COMPANY},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -1143,7 +1124,7 @@
                 }
             },
             {
-                title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD',
+                title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: ORDER_COMPANY},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -1166,7 +1147,7 @@
                 }
             },
             {
-                title: '구매<br>담당자', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ',
+                title: '구매<br>담당자', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text',
                     options: function (ui) {
@@ -1196,14 +1177,14 @@
                     }
                 }
             },
-            {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM'},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
-            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM'},
-            {title: '모듈', dataType: 'string', dataIndx: 'MODULE_NM'},
-            {title: '납품처', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM'},
-            {title: '비고(라벨)', dataType: 'string', dataIndx: 'LABEL_NOTE'},
+            {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {title: '비고', width: 200, dataType: 'string', dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {title: '프로젝트', width: 200, dataType: 'string', dataIndx: 'PROJECT_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {title: '모듈', width: 70, dataType: 'string', dataIndx: 'MODULE_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {title: '납품처', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {title: '비고(라벨)', width: 100, dataType: 'string', dataIndx: 'LABEL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {
-                title: '주요 검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION',
+                title: '주요 검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text',
                     options: fnGetCommCodeGridSelectBox('1059')
@@ -1230,7 +1211,7 @@
                 }
             },
             {
-                title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN',
+                title: '긴<br>급', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {type: 'select',
                     valueIndx: 'value',
                     labelIndx: 'text',
@@ -1242,12 +1223,12 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM'},
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM'},
-            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM'},
+            {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {title: '도면번호', width: 150, dataType: 'string', dataIndx: 'DRAWING_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {title: '품명',  width: 150, dataType: 'string', dataIndx: 'ITEM_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {
-                title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE',
+                title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -1276,7 +1257,7 @@
                 }
             },
             {
-                title: '외<br>주', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'OUTSIDE_YN', editable: true,
+                title: '외<br>주', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'OUTSIDE_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -1305,7 +1286,7 @@
                 }
             },
             {
-                title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY',
+                title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -1334,7 +1315,7 @@
                 }
             },
             {
-                title: '소재 사급', minWidth: 20, width: 25, dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
+                title: '소재<br>사급', minWidth: 20, width: 25, dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -1347,10 +1328,10 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '가공납기', dataType: 'string', dataIndx: 'INNER_DUE_DT'},
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT'},
+            {title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}},
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {
-                title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
+                title: '소재<br>종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -1379,7 +1360,7 @@
                 }
             },
             {
-                title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND',
+                title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -1409,7 +1390,7 @@
                 }
             },
             {
-                title: '표면처리', width: 50, dataType: 'string', dataIndx: 'SURFACE_TREAT',
+                title: '표면<br>처리', width: 50, dataType: 'string', dataIndx: 'SURFACE_TREAT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1039')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -1432,25 +1413,25 @@
                     }
                 }
             },
-            {title: '소재비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE'},
-            {title: 'Part<br>단위<br>수량', dataType: 'string', dataIndx: 'PART_UNIT_QTY'},
+            {title: '소재비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {title: 'Part<br>단위<br>수량', dataType: 'string', dataIndx: 'PART_UNIT_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {
-                title: '대칭', align: 'center', colModel: [
-                    {title: '원칭', datatype: 'string', dataIndx: 'ORIGINAL_SIDE_QTY'},
-                    {title: '대칭', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY'}
+                title: '대칭', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, colModel: [
+                    {title: '원칭', datatype: 'string', dataIndx: 'ORIGINAL_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+                    {title: '대칭', datatype: 'string', dataIndx: 'OTHER_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
                 ]
             },
             {
-                title: '발주정보', align: 'center', colModel: [
-                    {title: '발주번호', datatype: 'string', dataIndx: 'ORDER_NUM'},
-                    {title: '수량', datatype: 'string', dataIndx: 'ORDER_QTY'},
-                    {title: '납기', datatype: 'string', dataIndx: 'ORDER_DUE_DT'},
-                    {title: '납품확인', datatype: 'string', dataIndx: 'DELIVERY_DT'}
+                title: '발주정보', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, colModel: [
+                    {title: '발주번호', datatype: 'string', dataIndx: 'ORDER_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+                    {title: '수량', datatype: 'string', dataIndx: 'ORDER_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+                    {title: '납기', datatype: 'string', dataIndx: 'ORDER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}},
+                    {title: '납품확인', datatype: 'string', dataIndx: 'DELIVERY_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}}
                 ]
             },
-            {title: '최종<br>견적단가', dataType: 'string', dataIndx: 'UNIT_FINAL_EST_AMT'},
-            {title: '최종<br>공급단가', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT'},
-            {title: '변경전<br>도면번호', dataType: 'string', dataIndx: 'PREV_DRAWING_NUM'}
+            {title: '최종<br>견적단가', dataType: 'string', dataIndx: 'UNIT_FINAL_EST_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {title: '최종<br>공급단가', dataType: 'string', dataIndx: 'UNIT_FINAL_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {title: '변경전<br>도면번호', dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
         ];
         const popupToolbar = {
             cls: 'pq-toolbar-crud',
@@ -1514,7 +1495,7 @@
             strNoRows: g_noData,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'dataSource.emptyGrid'},
+                postData: {queryId: 'dataSource.getRownumEmptyData', 'COUNT': 21},
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -1550,10 +1531,8 @@
                             let index = priceConfirmList.findIndex(function (element) {
                                 return element.text === newRowData.PRICE_CONFIRM;
                             });
-                            console.log(index);
                             if (index >= 0) priceConfirm = priceConfirmList[index].value;
                         }
-                        console.log(priceConfirm);
                         // 사업자
                         if (newRowData.COMP_CD !== undefined) {
                             let index = BUSINESS_COMPANY.findIndex(function (element) {
@@ -1690,7 +1669,7 @@
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER_TRAN'},
             {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
             {title: '공급가', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
-            {title: '마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true}
+            {title: '마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
         ];
         let controlCloseRightObj = {
             height: 250,
@@ -1829,7 +1808,7 @@
                 postData.queryId = 'orderMapper.selectControlCloseVer';
                 let parameters = {'url': '/json-list', 'data': postData};
                 fnPostAjaxAsync(function (data) {
-                    let closeVer = data.list[0] === null ? 1 : data.list[0].MAX_CLOSE_VER;
+                    let closeVer = data.list.length > 0 ? data.list[0].MAX_CLOSE_VER : 1;
                     $('#CONTROL_CLOSE_FORM #CLOSE_VER').val(closeVer).prop('selected', true);
                 }, parameters, '');
 
@@ -2140,6 +2119,9 @@
                     }
                 });
             });
+
+            //css 변경
+            $(this).removeClass('virtual-disable').siblings().addClass('virtual-disable');
         });
         // 거래명세표
         $('#TRANSACTION_STATEMENT_POPUP').on({
@@ -2274,7 +2256,6 @@
         $('#TRANSACTION_STATEMENT_SAVE').on('click', function () {
             let tempList = [];
             let infoPostData = fnFormToJsonArrayData('#TRANSACTION_STATEMENT_FORM');
-            console.log(infoPostData);
             let listPostData = $transactionStatementDetailGrid.pqGrid('option', 'dataModel.data');
             tempList.push(infoPostData);
             let postData = {
@@ -2382,12 +2363,6 @@
                     controlSeqStr += ',';
                 }
             }
-
-
-            console.log(controlSeqStr);
-            console.log(compCdList[0]);
-            console.log(orderCompCdList[0]);
-            console.log(invoiceNumList[0]);
 
             $('#transaction_statement_excel_download #paramData').val(controlSeqStr + ':' + compCdList[0] + ':' + orderCompCdList[0] + ':' + invoiceNumList[0]);
             fnReportFormToHiddenFormPageAction('transaction_statement_excel_download', '/downloadExcel');

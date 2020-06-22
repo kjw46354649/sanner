@@ -339,7 +339,7 @@
 <form id="outsourcing_order_excel_download" method="POST">
     <input type="hidden" id="sqlId" name="sqlId" value="selectOutsourcingOrderExcel:selectOutsourcingOrderInfoExcel"/>
     <input type="hidden" id="mapInputId" name="mapInputId" value="data:info"/>
-    <input type="hidden" id="paramName" name="paramName" value="OUTSIDE_ORDER_NUM:COMP_CD:ORDER_STAFF_SEQ:CONTROL_SEQ:CONTROL_DETAIL_SEQ"/>
+    <input type="hidden" id="paramName" name="paramName" value="OUTSIDE_ORDER_NUM:ORDER_COMP_CD:ORDER_STAFF_SEQ:CONTROL_SEQ:CONTROL_DETAIL_SEQ:COMP_CD"/>
     <input type="hidden" id="paramData" name="paramData" value=""/>
     <input type="hidden" id="template" name="template" value="outsourcing_order_template"/>
 </form>
@@ -1109,7 +1109,7 @@
             $cancelRequestOutsideGrid.pqGrid('refreshDataAndView');
         };
 
-        let loadOutsideCloseData = function () {
+        let loadOutsideCloseData = function (open) {
             let selectedRowCount = selectedRowIndex.length;
             let controlDetailSeqList = [];
             let compCdList = [];
@@ -1149,8 +1149,7 @@
                 postData.queryId = 'outMapper.selectOutSideCloseVer';
                 let parameters = {'url': '/json-list', 'data': postData};
                 fnPostAjaxAsync(function (data) {
-                    let closeVer = data.list[0] === null ? 1 : data.list[0].MAX_CLOSE_VER;
-                    console.log(closeVer);
+                    let closeVer = data.list.length > 0 ? data.list[0].MAX_CLOSE_VER : 1;
                     $('#OUTSIDE_CLOSE_FORM #CLOSE_VER').val(closeVer).prop('selected', true);
                 }, parameters, '');
 
@@ -1163,16 +1162,12 @@
                 $outsideCloseLeftGrid.pqGrid('refreshDataAndView');
             }
 
-
             let outCloseRightPostData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_FORM');
             outCloseRightPostData.queryId = 'outMapper.selectOutsideCloseRightList';
-            let parameters = {'url': '/paramQueryGridSelect', 'data': outCloseRightPostData};
-
-            fnPostAjax(function (data, callFunctionParam) {
-                console.log(data);
-                $outsideCloseRightGrid.pqGrid('option', 'dataModel.data', data.data);
-                $outsideCloseRightGrid.pqGrid('refreshView');
-            }, parameters, '');
+            $outsideCloseRightGrid.pqGrid('option', 'dataModel.postData', function () {
+                return outCloseRightPostData;
+            });
+            $outsideCloseRightGrid.pqGrid('refreshDataAndView');
         };
 
         const noSelectedRowAlert = function () {
@@ -1460,28 +1455,30 @@
             let orderStaffSeqStr = '';
             let controlSeqList = [];
             let controlDetailSeqList = [];
+            let compCdList = [];
             let orderCompCdList = [];
 
             for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = $outsideOrderManageGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
 
-                console.log(rowData)
+                compCdList.push(rowData.COMP_CD);
                 orderCompCdList.push(rowData.OUTSIDE_COMP_CD);
                 controlSeqList.push(rowData.CONTROL_SEQ);
                 controlDetailSeqList.push(rowData.CONTROL_DETAIL_SEQ);
                 outsideOrderNumStr = rowData.OUTSIDE_ORDER_NUM;
                 orderStaffSeqStr = rowData.ORDER_STAFF_SEQ;
             }
-            console.log(controlSeqList);
-            console.log(controlDetailSeqList);
             // 중복제거
             controlSeqList = controlSeqList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
             });
-            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
+            controlDetailSeqList = controlDetailSeqList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
             });
-            controlDetailSeqList = controlDetailSeqList.filter(function (element, index, array) {
+            compCdList = compCdList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
             });
 
@@ -1507,12 +1504,7 @@
             // if(orderCompCdList[0] == undefined) {
             //     console.log('undefined!');
             // }
-            console.log(outsideOrderNumStr);
-            console.log(orderCompCdList[0]);
-            console.log(orderStaffSeqStr);
-            console.log(controlSeqStr);
-            console.log(controlDetailSeqStr);
-            $('#outsourcing_order_excel_download #paramData').val(outsideOrderNumStr + ':' + orderCompCdList[0] + ':' + orderStaffSeqStr + ':' + controlSeqStr + ':' + controlDetailSeqStr);
+            $('#outsourcing_order_excel_download #paramData').val(outsideOrderNumStr + ':' + orderCompCdList[0] + ':' + orderStaffSeqStr + ':' + controlSeqStr + ':' + controlDetailSeqStr  + ':' + compCdList[0]);
 
             fnReportFormToHiddenFormPageAction('outsourcing_order_excel_download', '/downloadExcel');
         });
@@ -1557,7 +1549,7 @@
                 $outsideCloseLeftGrid = $('#' + outsideCloseLeftGridId).pqGrid(outsideCloseLeftObj);
                 $outsideCloseRightGrid = $('#' + outsideCloseRightGridId).pqGrid(outsideCloseRightObj);
 
-                loadOutsideCloseData();
+                loadOutsideCloseData(true);
             },
             'hide.bs.modal': function () {
                 $outsideCloseLeftGrid.pqGrid('destroy');
@@ -1714,6 +1706,7 @@
             fnPostAjax(function (data, callFunctionParam) {
                 alert("<spring:message code='com.alert.default.save.success' />");
                 $('#REQUEST_OUTSIDE_POPUP').modal('hide');
+                $outsideOrderManageGrid.pqGrid('refreshDataAndView');
             }, parameters, '');
 
             // outsideRequestSave();
@@ -1784,6 +1777,7 @@
                     fnPostAjax(function (data, callFunctionParam) {
                         alert("<spring:message code='com.alert.default.save.success' />");
                         $('#CANCEL_REQUEST_OUTSIDE_POPUP').modal('hide');
+                        $outsideOrderManageGrid.pqGrid('refreshDataAndView');
                     }, parameters, '');
                 }
             });

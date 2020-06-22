@@ -41,7 +41,6 @@ public class OutController {
         return "jsonView";
     }
 
-
     /**
      * 외주가공 요청 저장 및 제출 || 가공요청 취소 저장 및 제출
      */
@@ -50,6 +49,18 @@ public class OutController {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
 
         this.outService.managerRequestOutside(map);
+
+        return "jsonView";
+    }
+
+    /**
+     * 외주마감 취소
+     */
+    @RequestMapping(value = "/removeOutsideClose", method = RequestMethod.POST)
+    public String removeOutsideClose(HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.outService.removeOutsideClose(map);
 
         return "jsonView";
     }

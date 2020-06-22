@@ -97,12 +97,15 @@
             AND A.CONTROL_STATUS = 'ORD001' <!-- 확정 -->
             AND B.OUTSIDE_YN = 'Y'
             AND NOT EXISTS (SELECT *
-                            FROM TBL_OUTSIDE_REQUEST AA
-                                INNER JOIN TBL_OUTSIDE_REQUEST_DETAIL BB ON AA.OUTSIDE_REQUEST_SEQ = BB.OUTSIDE_REQUEST_SEQ
-                            WHERE 1 = 1
-                                AND AA.OUTSIDE_STATUS = 'OST004'
-                                AND BB.CONTROL_SEQ = B.CONTROL_SEQ
-                                AND BB.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
+                            FROM TBL_OUTSIDE_CLOSE
+                            WHERE CONTROL_SEQ = B.CONTROL_SEQ AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
+<!--             AND NOT EXISTS (SELECT * -->
+<!--                             FROM TBL_OUTSIDE_REQUEST AA -->
+<!--                                 INNER JOIN TBL_OUTSIDE_REQUEST_DETAIL BB ON AA.OUTSIDE_REQUEST_SEQ = BB.OUTSIDE_REQUEST_SEQ -->
+<!--                             WHERE 1 = 1 -->
+<!--                                 AND AA.OUTSIDE_STATUS = 'OST004' -->
+<!--                                 AND BB.CONTROL_SEQ = B.CONTROL_SEQ -->
+<!--                                 AND BB.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) -->
         <if test="COMP_CD != null and COMP_CD != ''">
             AND A.COMP_CD = #{COMP_CD}
         </if>
@@ -404,14 +407,7 @@
             <!-- AND E.OUTSIDE_STATUS = 'OST004' -->
     </select>
 
-    <delete id="deleteOutsideClose" parameterType="java.util.HashMap">
-        DELETE FROM jmes.TBL_OUTSIDE_CLOSE
-        WHERE
-            CLOSE_MONTH = #{CLOSE_MONTH}
-            AND CLOSE_VER = #{CLOSE_VER}
-            AND CONTROL_SEQ = #{CONTROL_SEQ}
-            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-   </delete>
+
 
     <select id="selectOutsideCloseStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
@@ -824,5 +820,29 @@
                                         AND CONTROL_SEQ = #{CONTROL_SEQ}
                                         AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ})
     </update>
+
+    <update id="updateCancelOutsideRequestStatus" parameterType="java.util.HashMap">
+        UPDATE TBL_OUTSIDE_REQUEST
+        SET
+            OUTSIDE_STATUS = (SELECT A.OUTSIDE_STATUS FROM TBL_OUTSIDE_REQUEST A INNER JOIN TBL_OUTSIDE_REQUEST_DETAIL B ON A.OUTSIDE_REQUEST_SEQ = B.OUTSIDE_REQUEST_SEQ WHERE 1 = 1 AND A.DEL_YN = 'Y' AND B.CONTROL_SEQ = #{CONTROL_SEQ} AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ} ORDER BY A.OUTSIDE_REQUEST_SEQ DESC LIMIT 1),
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE 1 = 1
+            AND OUTSIDE_STATUS = 'OST004' AND DEL_YN = 'N' AND OUTSIDE_REQUEST_SEQ = (SELECT MAX(OUTSIDE_REQUEST_SEQ) FROM TBL_OUTSIDE_REQUEST_DETAIL WHERE CONTROL_SEQ = #{CONTROL_SEQ} AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ})
+    </update>
+
+    <delete id="deleteOutsideClose" parameterType="java.util.HashMap">
+        DELETE FROM TBL_OUTSIDE_CLOSE
+        WHERE 1 = 1
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+   </delete>
+
+    <delete id="deleteOutsideCloseHistory" parameterType="java.util.HashMap">
+        DELETE FROM TBL_OUTSIDE_CLOSE_HISTORY
+        WHERE 1 = 1
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+   </delete>
 
 </mapper>

@@ -482,19 +482,21 @@
         };
         let $controlCloseHistoryLeftGrid;
         const controlCloseHistoryLeftGridId = 'CONTROL_CLOSE_CANCEL_LEFT_GRID';
-        const controlCloseCancelColModel = [
+        const controlCloseCancelLeftColModel = [
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자', width: 70,  dataType: 'string', dataIndx: 'COMP_NM'},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주처', width: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
             {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
-            {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
+            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER', hidden: true},
+            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER_TRAN'},
+            {title: '건수', dataType: 'string', dataIndx: 'CONTROL_ORDER_QTY', hidden: true},
+            {title: '건수', dataType: 'string', dataIndx: 'CONTROL_ORDER_QTY_TRAN'},
             {title: '공급가', width: 90, align: 'right', dataType: 'string', dataIndx: 'TOTAL_AMT'},
             {title: '마감금액', width: 90, align: 'right', dataType: 'string', dataIndx: 'FINAL_NEGO_AMT'}
         ];
-        const controlCloseCancelObj = {
+        const controlCloseCancelLeftObj = {
             height: 300,
             collapsible: false,
             resizable: false,
@@ -502,7 +504,7 @@
             // scrollModel: {autoFit: true},
             dragColumns: {enabled: false},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
-            colModel: controlCloseCancelColModel,
+            colModel: controlCloseCancelLeftColModel,
             strNoRows: g_noData,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -512,33 +514,40 @@
                 }
             }
         };
-        // const controlCloseHistoryLeftColModel = [
-        //     {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP', hidden: true},
-        //     {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-        //     {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
-        //     {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
-        //     {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
-        //     {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
-        //     {title: '마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
-        //     {title: '네고금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT'}
-        // ];
-        // const controlCloseHistoryLeftObj = {
-        //     height: 250,
-        //     collapsible: false,
-        //     resizable: false,
-        //     showTitle: false,
-        //     scrollModel: {autoFit: true},
-        //     dragColumns: {enabled: false},
-        //     columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
-        //     colModel: controlCloseHistoryLeftColModel,
-        //     dataModel: {
-        //         location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-        //         postData: {'queryId': 'dataSource.emptyGrid'},
-        //         getData: function (dataJSON) {return {data: dataJSON.data};}
-        //     }
-        // };
         let $controlCloseHistoryRightGrid;
         const controlCloseHistoryRightGridId = 'CONTROL_CLOSE_CANCEL_RIGHT_GRID';
+        const controlCloseCancelColRightModel = [
+            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
+            {title: '사업자', width: 70,  dataType: 'string', dataIndx: 'COMP_NM'},
+            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
+            {title: '발주처', width: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
+            {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
+            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER', hidden: true},
+            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER_TRAN'},
+            {title: '건수', dataType: 'string', dataIndx: 'CONTROL_ORDER_QTY', hidden: true},
+            {title: '건수', dataType: 'string', dataIndx: 'CONTROL_ORDER_QTY_TRAN'},
+            {title: '공급가', width: 90, align: 'right', dataType: 'string', dataIndx: 'TOTAL_AMT'},
+            {title: '마감금액', width: 90, align: 'right', dataType: 'string', dataIndx: 'FINAL_NEGO_AMT'}
+        ];
+        const controlCloseCancelRightObj = {
+            height: 300,
+            collapsible: false,
+            resizable: false,
+            showTitle: false,
+            // scrollModel: {autoFit: true},
+            dragColumns: {enabled: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            colModel: controlCloseCancelColRightModel,
+            strNoRows: g_noData,
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: {'queryId': 'dataSource.emptyGrid'},
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            }
+        };
 
         /* variable */
 
@@ -681,8 +690,8 @@
                     return false;
                 }
 
-                $controlCloseHistoryLeftGrid = $('#' + controlCloseHistoryLeftGridId).pqGrid(controlCloseCancelObj);
-                $controlCloseHistoryRightGrid = $('#' + controlCloseHistoryRightGridId).pqGrid(controlCloseCancelObj);
+                $controlCloseHistoryLeftGrid = $('#' + controlCloseHistoryLeftGridId).pqGrid(controlCloseCancelLeftObj);
+                $controlCloseHistoryRightGrid = $('#' + controlCloseHistoryRightGridId).pqGrid(controlCloseCancelRightObj);
 
                 loadDataControlCloseCancel();
             },

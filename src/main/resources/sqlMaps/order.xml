@@ -104,7 +104,7 @@
             B.OUTSIDE_MATERIAL_SUPPLY_YN, <!-- 외주 자재사급 -->
             B.OUTSIDE_UNIT_AMT, <!-- 외주단가 -->
             (B.OUTSIDE_UNIT_AMT * B.OUTSIDE_ORDER_NUM) AS OUTSIDE_FINAL_AMT, <!-- 외주합계금액 -->
-            SF_GET_DATE_F(B.OUTSIDE_HOPE_DUE_DT, 'YY', '') AS OUTSIDE_HOPE_DUE_DT, <!-- 외주현황_요망납기 -->
+            SF_GET_DATE_F(B.OUTSIDE_HOPE_DUE_DT, 'YYYY', '') AS OUTSIDE_HOPE_DUE_DT, <!-- 외주현황_요망납기 -->
             '', <!-- 외주입고날짜 -->
             B.OUTSIDE_NOTE, <!-- 외주비고 -->
             '', <!-- 외주 불량 CODE -->
@@ -274,10 +274,11 @@
 
     <select id="selectControlManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ROW_NUMBER () OVER () AS ROW_NUM,
+            ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.PART_NUM, C.ORDER_NUM) AS ROW_NUM,
             <include refid="control"/>,
             <include refid="controlPart"/>,
             <include refid="controlPartOrder"/>,
+            LAG(B.WORK_TYPE, 1) OVER(PARTITION BY A.CONTROL_NUM ORDER BY A.CONTROL_SEQ, B.PART_NUM, C.ORDER_NUM) AS LAG_WORK_TYPE,
             F.INVOICE_NUM, <!-- 인보이스번호 -->
             (IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_TM_AMT, 0) + IFNULL(B.UNIT_GRIND_AMT, 0) + IFNULL(B.UNIT_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0)) * C.ORDER_QTY AS EST_TOTAL_AMOUNT, <!-- 견적 합계 금액 -->
             (SELECT SUM(OUT_QTY) FROM TBL_OUT WHERE CONTROL_SEQ = C.CONTROL_SEQ AND CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND ORDER_SEQ = C.ORDER_SEQ) AS OUT_QTY, <!-- 출고 -->
@@ -285,15 +286,14 @@
             E.BARCODE_NUM AS LABEL_BARCODE_NUM <!-- 라벨바코드번호(박스라벨) -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-                                                   AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                                        AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
             LEFT OUTER JOIN TBL_CONTROL_BARCODE D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.DEL_YN = 'N'
             LEFT OUTER JOIN TBL_OUT_BARCODE E ON B.CONTROL_SEQ = E.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ AND C.ORDER_SEQ = E.ORDER_SEQ AND E.DEL_YN = 'N'
             LEFT OUTER JOIN TBL_INVOICE_DETAIL F ON B.CONTROL_SEQ = F.CONTROL_SEQ
                                                     AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
-
-        WHERE
-            A.DEL_YN = 'N'
+        WHERE 1 = 1
+            AND A.DEL_YN = 'N'
             AND (A.CONTROL_STATUS IS NULL OR A.CONTROL_STATUS IN ('ORD001', 'ORD002'))
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
              AND A.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
@@ -519,16 +519,18 @@
 
     <select id="selectControlCloseCancelLeftList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            X.COMP_CD, -- 사업자 -->
-            SF_GET_COMP_NM(X.COMP_CD) AS COMP_NM, -- 사업자 -->
-            X.ORDER_COMP_CD, -- 발주처 -->
-            SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM, -- 발주처 -->
-            X.CLOSE_MONTH, -- 마감 월 -->
-            DATE_FORMAT(STR_TO_DATE(X.CLOSE_MONTH, '%Y%m'), '%Y.%m월') AS CLOSE_MONTH_TRAN, -- 마감 월 -->
-            CONCAT(X.CLOSE_VER, '차') AS CLOSE_VER, -- 차수 -->
-            CONCAT(CAST(SUM(X.ORDER_QTY) AS CHAR), '건') AS ORDER_QTY, -- 건수 -->
-            FORMAT(SUM(X.TOTAL_AMT), 0) AS TOTAL_AMT, -- 공급가 -->
-            FORMAT(X.FINAL_NEGO_AMT, 0) AS FINAL_NEGO_AMT -- 마감 금액 -->
+            X.COMP_CD, <!-- 사업자 -->
+            SF_GET_COMP_NM(X.COMP_CD) AS COMP_NM, <!-- 사업자 -->
+            X.ORDER_COMP_CD, <!-- 발주처 -->
+            SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM, <!-- 발주처 -->
+            X.CLOSE_MONTH, <!-- 마감 월 -->
+            DATE_FORMAT(STR_TO_DATE(X.CLOSE_MONTH, '%Y%m'), '%Y.%m월') AS CLOSE_MONTH_TRAN, <!-- 마감 월 -->
+            X.CLOSE_VER, <!-- 차수 -->
+            CONCAT(X.CLOSE_VER, '차') AS CLOSE_VER_TRAN, <!-- 차수 -->
+            X.ORDER_QTY AS CONTROL_ORDER_QTY , <!-- 건수 -->
+            CONCAT(CAST(SUM(X.ORDER_QTY) AS CHAR), '건') AS CONTROL_ORDER_QTY_TRAN, <!-- 건수 -->
+            FORMAT(SUM(X.TOTAL_AMT), 0) AS TOTAL_AMT, <!-- 공급가 -->
+            FORMAT(X.FINAL_NEGO_AMT, 0) AS FINAL_NEGO_AMT <!-- 마감 금액 -->
         FROM (
             SELECT
                 A.COMP_CD,
@@ -563,14 +565,14 @@
             Y.ORDER_COMP_CD,
             SF_GET_COMP_NM(Y.ORDER_COMP_CD) AS ORDER_COMP_NM,
             Y.CLOSE_MONTH,
-            DATE_FORMAT(STR_TO_DATE(Y.CLOSE_MONTH, '%Y%m'), '%Y.%m월') AS CLOSE_VER_TRAN,
+            DATE_FORMAT(STR_TO_DATE(Y.CLOSE_MONTH, '%Y%m'), '%Y.%m월') AS CLOSE_MONTH_TRAN,
             Y.CLOSE_VER,
             CONCAT(Y.CLOSE_VER, '차') AS CLOSE_VER_TRAN,
             Y.UNIT_FINAL_AMT,
             Y.CONTROL_ORDER_QTY,
             IF(Y.CONTROL_ORDER_QTY > 0, CONCAT(CAST(Y.CONTROL_ORDER_QTY AS CHAR), '건'), '-') AS CONTROL_ORDER_QTY_TRAN,
-            Y.TOTAL_AMT AS TOTAL_AMT,
-            Y.FINAL_NEGO_AMT AS FINAL_NEGO_AMT
+            FORMAT(Y.TOTAL_AMT , 0) AS TOTAL_AMT,
+            FORMAT(Y.FINAL_NEGO_AMT, 0) AS FINAL_NEGO_AMT
         FROM (
             SELECT
                 X.COMP_CD,

@@ -121,6 +121,7 @@ option { font-size: 12px; }
 /* btn */
 .defaultBtn~.defaultBtn { }
 .defaultBtn { height: 27px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; display: inline-block; text-align: center; padding: 0 20px; border: 1px solid #e5e5e5; box-sizing: border-box; }
+.defaultBtn.btn-50w { display: inline-block; overflow: hidden; width: 50px; height: 25px; margin: 0 5px; padding: 0 4px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
 .defaultBtn.btn-100w { display: inline-block; overflow: hidden; width: 100px; height: 25px; margin: 0 5px; padding: 0 4px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
 .defaultBtn.btn-120w { display: inline-block; overflow: hidden; width: 120px; height: 27px; margin: 0 5px; padding: 0 10px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
 
