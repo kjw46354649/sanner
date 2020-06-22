@@ -316,28 +316,30 @@ table .outBotTableStyle td{ border: 1px solid #acb9b9; color: #616161; text-alig
 /* No 컬럼 */
 .pq-table-left, .pq-table-lt {
     width: 100%;
-    background-color: #bfbfbf;
+    background-color: #d9d9d9;
     font-weight: bold;
-    color: black ;
+    color: black;
 }
 /* 일반 Header */
 .pq-grid-row:first-child>.pq-grid-col {
     border-top-color: transparent;
-    background-color: #bfbfbf;
+    background-color: #d9d9d9;
     font-weight: bold;
     color: black;
 }
-.pq-grid-row:last-child>.pq-grid-col {
+
+.pq-grid-row:last-child > .pq-grid-col {
     border-bottom-width: 0;
-    background-color: #bfbfbf ;
+    background-color: #d9d9d9;
     font-weight: bold;
-    color: black ;
+    color: black;
 }
-.pq-grid-row:not(:last-child)>.pq-grid-col {
+
+.pq-grid-row:not(:last-child) > .pq-grid-col {
     border-bottom-color: transparent;
-    background-color: #bfbfbf ;
-    font-weight: bold ;
-    color: black ;
+    background-color: #d9d9d9;
+    font-weight: bold;
+    color: black;
 }
 
 /* 수금 관리 테이블 아래 매출 현황 합계 */
@@ -385,3 +387,6 @@ button:disabled {
 
 .popupTableDiv .rowStyle th { font-family: Verdana,Arial,sans-serif !important; font-weight: 600 !important; }
 .popupTableDiv .rowStyle td { font-family: Verdana,Arial,sans-serif !important; }
+
+[name="CONTROL_MANAGE_VIEW"] { overflow: hidden; width: 80px; height: 25px; margin: 0 5px; padding: 0 4px; line-height: 25px; background-color: #FFE29B; color: black; font-family: 'NotoKrM'; font-size: 1.2rem; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
+.virtual-disable { background: #dddddd; color: #212121; border: 1px solid #e5e5e5; }
