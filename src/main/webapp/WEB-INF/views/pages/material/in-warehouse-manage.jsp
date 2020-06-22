@@ -406,6 +406,7 @@
                     $cell.find('#inWarehouseOutPop').on('click', function (event) {
                         $("#in_warehouse_manage_out_popup").modal("show");
 
+                        console.log(ui.rowData);
                         fnJsonDataToForm('in_warehouse_manage_out_popup', ui.rowData);
                     });
                 }
@@ -606,6 +607,11 @@
                 return (fnFormToJsonArrayData('#in_warehouse_manage_search_form'));
             });
             inWarehouseManageManageGrid01.pqGrid('refreshDataAndView');
+
+            inWarehouseManageManageGrid02.pqGrid('option', "dataModel.postData", function (ui) {
+                return (fnFormToJsonArrayData('#in_warehouse_manage_hidden_form'));
+            });
+            inWarehouseManageManageGrid02.pqGrid('refreshDataAndView');
         });
 
         $("#btnInWarehouseManageOutSearch").on('click', function(){
@@ -704,6 +710,23 @@
             },
             blur: function () {
                 $("#in_warehouse_manage_scan_barcode_popup #barCodeImg").attr("src","/resource/asset/images/common/img_barcode_long.png");
+            }
+        });
+
+        $('#in_warehouse_manage_out_popup_form #OUT_QTY').keypress(function(event){
+            //alert(event.which);
+            console.log(this.val());
+            console.log($(this).val());
+            console.log(event);
+            console.log(event.which);
+
+            if(!$(this).val().isNaN()) event.preventDefault();
+
+            if (event.which && (event.which  > 47 && event.which  < 58 || event.which == 8)) {
+                //alert('숫자임!');
+            } else {
+                //alert('숫자아님!');
+                event.preventDefault();
             }
         });
 
