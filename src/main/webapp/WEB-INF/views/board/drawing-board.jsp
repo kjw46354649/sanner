@@ -538,7 +538,8 @@
         $("#drawing_worker_scan_popup").bind('style', function(e) {
             let style =  $(this).attr('style');
             let display = style.split(":")[1];
-            let seconds = 5;
+            // let seconds = 5;
+            let seconds = 5000;
             if( display.indexOf("none") > 0){
                 $("#drawing_worker_scan_popup .scan-time").html(fnRemainTimeSet(seconds));
                 stopInterval = setInterval(function() {

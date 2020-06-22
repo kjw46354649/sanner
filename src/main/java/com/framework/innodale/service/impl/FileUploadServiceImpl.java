@@ -41,18 +41,10 @@ public class FileUploadServiceImpl implements FileUploadService {
         ArrayList<HashMap<String, Object>> resultList = new ArrayList<HashMap<String, Object>>();
         Iterator<String> itr = (Iterator<String>)request.getFileNames();
 
-        System.out.println("#########################################");
-        System.out.println(hashMap);
-        System.out.println(hashMap.get("GFILE_SEQ"));
-        System.out.println("".equals(String.valueOf(hashMap.get("GFILE_SEQ"))));
-        System.out.println(String.valueOf(hashMap.get("GFILE_SEQ")));
-        System.out.println("#########################################");
-        //String fileSeq = (String) hashMap.get("GFILE_SEQ");
         String fileSeq = String.valueOf(hashMap.get("GFILE_SEQ"));
         if(fileSeq == null || "null".equals(fileSeq)){
             fileSeq = "";
         }
-        System.out.println("fileSeq=="+fileSeq);
 
         if(itr.hasNext()) {
 
@@ -65,7 +57,8 @@ public class FileUploadServiceImpl implements FileUploadService {
 
                 multipartFile.transferTo(new File(uploadFilePath + File.separator + serverFileName));
 
-                String fileName = new String(multipartFile.getOriginalFilename().getBytes("8859_1"), "utf-8");
+                //String fileName = new String(multipartFile.getOriginalFilename().getBytes("8859_1"), "utf-8");
+                String fileName = multipartFile.getOriginalFilename();
                 String extName = fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase();
 
                 fileMap.put("FILE_NM", serverFileName);
@@ -136,7 +129,8 @@ public class FileUploadServiceImpl implements FileUploadService {
 
                 HashMap<String, Object> fileInfo = new HashMap<String, Object>();
 
-                String originalFullName = new String(multipartFile.getOriginalFilename().getBytes("8859_1"), "utf-8");
+                // String originalFullName = new String(multipartFile.getOriginalFilename().getBytes("8859_1"), "utf-8");
+                String originalFullName = multipartFile.getOriginalFilename();
                 String originalFileName = originalFullName.substring(0, originalFullName.lastIndexOf(".")).toLowerCase();
                 String originalExtName = originalFullName.substring(originalFullName.lastIndexOf(".") + 1).toLowerCase();
 
@@ -214,10 +208,13 @@ public class FileUploadServiceImpl implements FileUploadService {
 
                 HashMap<String, Object> fileInfo = new HashMap<String, Object>();
 
-                String originalFullName = new String(multipartFile.getOriginalFilename().getBytes("8859_1"), "utf-8");
+//                String originalFullName = new String(multipartFile.getOriginalFilename().getBytes("8859_1"), "utf-8");
+                String originalFullName = multipartFile.getOriginalFilename();
                 String originalFileName = originalFullName.substring(0, originalFullName.lastIndexOf(".")).toLowerCase();
                 String originalExtName = originalFullName.substring(originalFullName.lastIndexOf(".") + 1).toLowerCase();
 
+
+                System.out.println("originalFullName=[" + originalFullName + "]");
                 // String convertFilePath = uploadFilePath + File.separator + serverFileName;    // 임시 작업 디렉토리
                 // 업로드 파일 경로
                 String targetFilePath = uploadFilePath + File.separator + serverFullFileName + "." + originalExtName;
@@ -247,13 +244,12 @@ public class FileUploadServiceImpl implements FileUploadService {
                 // String message = CadFileConverter.cadfile_converter(originalFile, serverFileName);    // convert 처리
                 fileInfo.put("MESSAGE", message);
 
-                System.out.println("dxfFileList=[" + uploadFilePath + File.separator + serverFileName + "]");
-
                 File[] dxfFileList = new File(uploadFilePath + File.separator + serverFileName).listFiles();
 
                 for (File convertToFile : dxfFileList) {
                     String mimeType = Files.probeContentType(Paths.get(convertToFile.getAbsolutePath()));
-                    String convertFullName = new String(convertToFile.getName().getBytes("8859_1"), "utf-8");
+                    // String convertFullName = new String(convertToFile.getName().getBytes("8859_1"), "utf-8");
+                    String convertFullName = convertToFile.getName();
                     String convertExtName = convertFullName.substring(convertFullName.lastIndexOf(".") + 1).toLowerCase();
 
                     if (CAD_CONVERT_TYPE.contains(convertExtName)) {

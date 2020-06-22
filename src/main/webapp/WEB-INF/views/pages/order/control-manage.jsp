@@ -978,8 +978,7 @@
             },
             cellClick: function (event, ui) {
                 supplyUnitCostInit(); // 공급단가적용 초기화
-
-                if(ui.rowData.IMG_GFILE_SEQ) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);  // 셀 선택시 도면 View 실행 중인경우 이미지 표시 하기
+                if(ui.rowData.IMG_GFILE_SEQ && (typeof(windowImageViewer)=='undefined' || windowImageViewer.closed )) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);  // 셀 선택시 도면 View 실행 중인경우 이미지 표시 하기
             },
             selectChange: function (event, ui) {
                 supplyUnitCostInit(); // 공급단가적용 초기화
@@ -2433,7 +2432,7 @@
                     '   <table class="drawingArea" style="table-layout: fixed; word-wrap:break-word;">' +
                     '        <tbody>' +
                     '        <tr class="controlInfo">' +
-                    '           <td scope="col" width="28%" rowspan="2" class="center_sort"><img src="/barcode/code128/' +rowData.BARCODE_NUM+ '" class="barcode"></td>' +
+                    '           <td scope="col" width="28%" rowspan="2" class="center_sort"><img src="/barcode/code128/' +rowData.CONTROL_BARCODE_NUM+ '" class="barcode"></td>' +
                     '           <td scope="col" width="10%" rowspan="2" class="center_sort">'+rowData.ORDER_COMP_NM+'</td>' +
                     '           <td scope="col" width="3%" class="center_sort">'+rowData.CONTROL_VER+'</td>' +
                     '           <td scope="col" width="10%" rowspan="2" class="center_sort">'+rowData.CONTROL_NUM+'</td>' +
@@ -2456,8 +2455,8 @@
                     '            <td scope="col" class="center_sort">'+rowData.PART_NUM+'</td>' +
                     '            <td scope="col" class="center_sort">'+rowData.MATERIAL_DETAIL_NM+'</td>' +
                     '            <td scope="col" class="center_sort">'+rowData.SURFACE_TREAT+'</td>' +
-                    '            <td scope="col" class="center_sort">'+rowData.EMERGENCY_YN+'</td>' +
-                    '            <td scope="col" class="center_sort">'+rowData.MAIN_INSPECTION+'</td>' +
+                    '            <td scope="col" class="center_sort">'+rowData.EMERGENCY_BARCODE_NM+'</td>' +
+                    '            <td scope="col" class="center_sort">'+rowData.MAIN_INSPECTION_NM+'</td>' +
                     '            <td scope="col" class="center_sort">'+rowData.ORIGINAL_SIDE_QTY+'</td>' +
                     '            <td scope="col" class="center_sort">'+rowData.OTHER_SIDE_QTY+'</td>' +
                     '            <td scope="col" class="center_sort">'+rowData.INNER_DUE_DT+'</td>' +

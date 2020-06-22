@@ -60,6 +60,7 @@
         });
 
         let userMasterColModel = [
+            {title: 'ROW_NUM', clsHead: 'display_none', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: '아이디', dataType: 'string', dataIndx: 'USER_ID', width: 100,// editable: true,
                 editable: function (ui) {
                     if (ui.rowData.INSERT_DT) {
@@ -142,7 +143,7 @@
             columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
             colModel: userMasterColModel,
             dataModel: {
-                recIndx: 'USER_ID', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                recIndx: 'ROWNUM', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: userMasterPostData,
                 getData: function (response, textStatus, jqXHR) {
                     return {data: response.data};

@@ -32,6 +32,7 @@
 
     <select id="selectUserMasterList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
+            ROW_NUMBER () OVER (ORDER BY USER_ID) AS ROWNUM,
             USER_ID,
             USER_NM,
             USER_TEL,
@@ -55,26 +56,29 @@
             <if test="sel_user_nm != null and sel_user_nm != ''">
                 AND upper(USER_NM) LIKE CONCAT('%', upper(#{sel_user_nm}), '%')
             </if>
+        ORDER BY USER_ID
     </select>
 
     <insert id="insertUser" parameterType="java.util.HashMap">
 		INSERT INTO TBL_USER
-            (USER_ID, USER_NM, USER_PWD, USER_TEL, USER_EMAIL, POSITION_NM, JOB_TITLE, PHOTO_GFILE_SEQ, DEPARTMENT, ROLE_SEQ, DEL_YN, INSERT_DT, INSERT_ID, UPDATE_DT, UPDATE_ID)
-        VALUES(#{USER_ID}, #{USER_NM}, #{USER_PWD}, #{USER_TEL}, #{USER_EMAIL}, #{POSITION_NM}, #{JOB_TITLE}, #{PHOTO_GFILE_SEQ}, #{DEPARTMENT}, #{ROLE_SEQ}, 'N', NULL, NOW(), NULL, NULL, NULL)
+            (USER_ID, USER_NM, USER_PWD, USER_TEL, USER_EMAIL, POSITION_NM, JOB_TITLE, PHOTO_GFILE_SEQ, DEPARTMENT, ROLE_SEQ, DEL_YN, INSERT_ID)
+        VALUES(#{USER_ID}, #{USER_NM}, #{USER_PWD}, #{USER_TEL}, #{USER_EMAIL}, #{POSITION_NM}, #{JOB_TITLE}, #{PHOTO_GFILE_SEQ}, #{DEPARTMENT}, #{ROLE_SEQ}, 'N', #{LOGIN_USER_ID})
 	</insert>
 
     <update id="updateUser" parameterType="java.util.HashMap">
       UPDATE TBL_USER
-      SET USER_NM = #{USER_NM},
-          USER_PWD = #{USER_PWD},
-          USER_TEL = #{USER_TEL},
-          USER_EMAIL = #{USER_EMAIL},
-          POSITION_NM = #{POSITION_NM},
-          JOB_TITLE = #{JOB_TITLE},
-          DEPARTMENT = #{DEPARTMENT},
-          ROLE_SEQ = #{ROLE_SEQ},
-          PHOTO_GFILE_SEQ = #{PHOTO_GFILE_SEQ},
-          DEL_YN = #{DEL_YN}
+        SET USER_NM = #{USER_NM},
+            USER_PWD = #{USER_PWD},
+            USER_TEL = #{USER_TEL},
+            USER_EMAIL = #{USER_EMAIL},
+            POSITION_NM = #{POSITION_NM},
+            JOB_TITLE = #{JOB_TITLE},
+            DEPARTMENT = #{DEPARTMENT},
+            ROLE_SEQ = #{ROLE_SEQ},
+            PHOTO_GFILE_SEQ = #{PHOTO_GFILE_SEQ},
+            DEL_YN = #{DEL_YN},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
       WHERE USER_ID = #{USER_ID}
    </update>
 
