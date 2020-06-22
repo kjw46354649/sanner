@@ -157,8 +157,8 @@
             </div>
             <div class="mg-top10">
                 <button type=" button" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_ALL">전체모드</button>
+                <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_EASY">간편모드</button>
                 <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_ESTIMATE">견적관련</button>
-                <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_QUALITY">품질관련</button>
                 <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_CLOSE">마감관련</button>
                 <div class="rightSpan">
                     <span class="slt_wrap namePlusSlt">
@@ -376,21 +376,21 @@
         const gridId = 'CONTROL_MANAGE_GRID';
         let postData = fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM');
         let colModel = [
-            {title: 'ROW_NUM', clsHead: 'display_none', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
-            {title: 'CONTROL_SEQ', clsHead: 'display_none', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
-            {title: 'CONTROL_PROGRESS_SEQ', clsHead: 'display_none', dataType: 'integer', dataIndx: 'CONTROL_PROGRESS_SEQ', hidden: true},
-            {title: 'ORDER_STATUS', clsHead: 'display_none', dataType: 'integer',dataIndx: 'ORDER_STATUS', hidden: true},
-            {title: 'ORDER_SEQ', clsHead: 'display_none', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true},
-            {title: 'CONTROL_DETAIL_SEQ', clsHead: 'display_none', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-            {title: 'PART_PROGRESS_SEQ', clsHead: 'display_none', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true},
-            {title: 'PART_STATUS', clsHead: 'display_none', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true},
+            {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
+            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
+            {title: 'CONTROL_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'CONTROL_PROGRESS_SEQ', hidden: true},
+            {title: 'ORDER_STATUS', dataType: 'integer',dataIndx: 'ORDER_STATUS', hidden: true},
+            {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+            {title: 'PART_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true},
+            {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true},
 
             {
                 title: '주문상태', align: 'center', colModel: [
-                    {title: '상태', clsHead: 'display_none', datatype: 'string', dataIndx: 'CONTROL_STATUS_ORIGINAL', hidden: true},
-                    {title: '상태', clsHead: 'display_none', dataIndx: 'CONTROL_STATUS', hidden: true},
+                    {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_ORIGINAL', hidden: true},
+                    {title: '상태', dataIndx: 'CONTROL_STATUS', hidden: true},
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_NM'},
-                    {title: '버전', dataType: 'integer', dataIndx: 'CONTROL_VER'},
+                    {title: '', minWidth:15, width:20, dataType: 'integer', dataIndx: 'CONTROL_VER'},
                     {title: '변경일시', width: 95, datatype: 'date', dataIndx: 'CONTROL_STATUS_DT'}
                 ]
             },
@@ -500,7 +500,7 @@
                     }
                 }
             },
-            {title: '긴<br>급', clsHead: ' control_manage_view_quality', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+            {title: '긴<br>급', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -508,8 +508,7 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: 'CONTROL_VER', clsHead: 'control_manage_view_close', dataType: 'string', dataIndx: 'CONTROL_VER', hidden: true},
-            {title: '관리번호', clsHead: ' control_manage_view_estimate', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {
                 title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', editable: true,
                 render: function (ui) {
@@ -637,7 +636,6 @@
                     }
                 }
             },
-            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE', hidden: true},
             {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM'},
             {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text',options: fnGetCommCodeGridSelectBox('1029')},
@@ -929,9 +927,9 @@
                 ]
             },
             {title: '등록/업데이트<br>일시', width: 120, dataType: 'string', dataIndx: 'STATUS_DT'},
-            {title: 'CONTROL_BARCODE_NUM', clsHead: 'display_none', dataType: 'string', dataIndx: 'CONTROL_BARCODE_NUM', hidden: true},
-            {title: 'LABEL_BARCODE_NUM', clsHead: 'display_none', dataType: 'string', dataIndx: 'LABEL_BARCODE_NUM', hidden: true},
-            {title: 'DEL_YN', clsHead: 'display_none', dataType: 'string', dataIndx: 'DEL_YN', hidden: true}
+            {title: 'CONTROL_BARCODE_NUM', dataType: 'string', dataIndx: 'CONTROL_BARCODE_NUM', hidden: true},
+            {title: 'LABEL_BARCODE_NUM', dataType: 'string', dataIndx: 'LABEL_BARCODE_NUM', hidden: true},
+            {title: 'DEL_YN', dataType: 'string', dataIndx: 'DEL_YN', hidden: true}
         ];
         const obj = {
             minHeight: '100%',
@@ -959,7 +957,8 @@
             },
             cellClick: function (event, ui) {
                 supplyUnitCostInit(); // 공급단가적용 초기화
-                if(ui.rowData.IMG_GFILE_SEQ && (typeof(windowImageViewer)=='undefined' || windowImageViewer.closed )) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);  // 셀 선택시 도면 View 실행 중인경우 이미지 표시 하기
+
+                if(ui.rowData.IMG_GFILE_SEQ && (typeof(windowImageViewer) == 'undefined' || windowImageViewer.closed)) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             },
             selectChange: function (event, ui) {
                 supplyUnitCostInit(); // 공급단가적용 초기화

@@ -49,7 +49,7 @@
             B.MATERIAL_DETAIL, <!-- 소재 종류 -->
             IFNULL(SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, 'KR'), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류 -->
             B.MATERIAL_TYPE, <!-- 재질 -->
-            IFNULL(SF_GET_CODE_NM(1002, B.MATERIAL_TYPE, 'KR'), SPACE(0)) AS MATERIAL_TYPE_NM, <!-- 재질 -->
+            IFNULL(SF_GET_CODE_NM(1035, B.MATERIAL_TYPE, 'KR'), SPACE(0)) AS MATERIAL_TYPE_NM, <!-- 재질 -->
             B.MATERIAL_KIND, <!-- 소재 형태 -->
             IFNULL(SF_GET_CODE_NM(1029, B.MATERIAL_KIND, 'KR'), SPACE(0)) AS MATERIAL_KIND_NM, <!-- 소재 형태 -->
             B.SURFACE_TREAT, <!-- 표면처리 -->
