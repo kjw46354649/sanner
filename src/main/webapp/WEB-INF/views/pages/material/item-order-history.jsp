@@ -146,14 +146,14 @@
             {title: '.', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: '.', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
             {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120 , editable: false} ,
-            {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_CD', width: 60 , editable: false} ,
-            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', width: 50, editable: false},
+            {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_NM', width: 60 , editable: false} ,
+            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', width: 40, editable: false},
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', width: 60, editable: false},
             {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM', width: 60, editable: false},
             {title: '소재Size', dataType: 'string', dataIndx: 'SIZE_TXT', width: 70, editable: false},
-            {title: '주문', dataType: 'string', dataIndx: 'ORDER_QTY', width: 40 , editable: false},
+            {title: '주문', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 30 , editable: false},
             {title: '비고', dataType: 'string', dataIndx: 'ORDER_NOTE', width: 110, editable: false},
-            {title: '금액.', dataType: 'string', dataIndx: 'ORDER_AMT', width: 60, format: '#,###',
+            {title: '금액.', dataType: 'string', dataIndx: 'ORDER_AMT', width: 50, format: '#,###',
                 editable: function(ui){
                     if(ui.rowData.IN_YN == 'Y'){
                         return false;
@@ -270,8 +270,8 @@
                     return '<span class="ui-icon '+icon+'"></span>';
                 }
             },
-            {title: '입고 일시', dataType: 'string', dataIndx: 'IN_DT', width: 150, editable: false},
-            {title: '관리번호', dataType: 'string', dataIndx: '', width: 40, editable: false}
+            {title: '입고 일시', dataType: 'string', dataIndx: 'IN_DT', width: 120, editable: false},
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 120, editable: false}
         ];
 
         itemOrderHistoryLeftGrid.pqGrid({
