@@ -509,11 +509,11 @@
                 }
             },
             {title: 'CONTROL_VER', clsHead: 'control_manage_view_close', dataType: 'string', dataIndx: 'CONTROL_VER', hidden: true},
-            {title: '관리번호', clsHead: ' control_manage_view_estimate', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true},
+            {title: '관리번호', clsHead: ' control_manage_view_estimate', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {
-                title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM',
+                title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', editable: true,
                 render: function (ui) {
-                    if (ui.rowData.WORK_TYPE === 'WTP020') {
+                    if (ui.rowData.WORK_TYPE === 'WTP020' && ui.rowData.LAG_WORK_TYPE === undefined) {
                         return '<span class="ui-icon ui-icon-circle-plus" name="PART_NUM_PLUS_BUTTON"></span>';
                     }
                 },
@@ -523,12 +523,12 @@
 
                     $cell.find('[name=PART_NUM_PLUS_BUTTON]').on('click', function (event) {
                         let rowData = fnCloneObj(ui.rowData);
-                        let data = $orderManagementGrid.pqGrid('option', 'dataModel.data'), totalRecords = data.length;
-                        let newPartNum = 0, lastRowIndex = 0, newRowData;
+                        let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
+                        let newPartNum = 1, lastRowIndex = 0, totalRecords = data.length, newRowData;
 
                         for (let i = 0; i < totalRecords; i++) {
                             if (data[i].CONTROL_SEQ === rowData.CONTROL_SEQ) {
-                                newPartNum++;
+                                Number(data[i].PART_NUM) > 0 ? newPartNum++ : newPartNum;
                                 lastRowIndex = data[i].pq_ri;
                             }
                         }
@@ -1496,7 +1496,7 @@
             strNoRows: g_noData,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'dataSource.emptyGrid'},
+                postData: {queryId: 'dataSource.getRownumEmptyData', 'COUNT': 21},
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -1532,10 +1532,8 @@
                             let index = priceConfirmList.findIndex(function (element) {
                                 return element.text === newRowData.PRICE_CONFIRM;
                             });
-                            console.log(index);
                             if (index >= 0) priceConfirm = priceConfirmList[index].value;
                         }
-                        console.log(priceConfirm);
                         // 사업자
                         if (newRowData.COMP_CD !== undefined) {
                             let index = BUSINESS_COMPANY.findIndex(function (element) {
@@ -1811,7 +1809,7 @@
                 postData.queryId = 'orderMapper.selectControlCloseVer';
                 let parameters = {'url': '/json-list', 'data': postData};
                 fnPostAjaxAsync(function (data) {
-                    let closeVer = data.list > 0 ? data.list[0].MAX_CLOSE_VER : 1;
+                    let closeVer = data.list.length > 0 ? data.list[0].MAX_CLOSE_VER : 1;
                     $('#CONTROL_CLOSE_FORM #CLOSE_VER').val(closeVer).prop('selected', true);
                 }, parameters, '');
 
@@ -2123,7 +2121,6 @@
                 });
             });
 
-            console.log(this);
             //css 변경
             $(this).removeClass('virtual-disable').siblings().addClass('virtual-disable');
         });
@@ -2260,7 +2257,6 @@
         $('#TRANSACTION_STATEMENT_SAVE').on('click', function () {
             let tempList = [];
             let infoPostData = fnFormToJsonArrayData('#TRANSACTION_STATEMENT_FORM');
-            console.log(infoPostData);
             let listPostData = $transactionStatementDetailGrid.pqGrid('option', 'dataModel.data');
             tempList.push(infoPostData);
             let postData = {
@@ -2368,12 +2364,6 @@
                     controlSeqStr += ',';
                 }
             }
-
-
-            console.log(controlSeqStr);
-            console.log(compCdList[0]);
-            console.log(orderCompCdList[0]);
-            console.log(invoiceNumList[0]);
 
             $('#transaction_statement_excel_download #paramData').val(controlSeqStr + ':' + compCdList[0] + ':' + orderCompCdList[0] + ':' + invoiceNumList[0]);
             fnReportFormToHiddenFormPageAction('transaction_statement_excel_download', '/downloadExcel');

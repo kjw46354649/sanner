@@ -1468,19 +1468,17 @@
                 outsideOrderNumStr = rowData.OUTSIDE_ORDER_NUM;
                 orderStaffSeqStr = rowData.ORDER_STAFF_SEQ;
             }
-            console.log(controlSeqList);
-            console.log(controlDetailSeqList);
             // 중복제거
             controlSeqList = controlSeqList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+            controlDetailSeqList = controlDetailSeqList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
             });
             compCdList = compCdList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
             });
             orderCompCdList = orderCompCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            controlDetailSeqList = controlDetailSeqList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
             });
 
@@ -1506,12 +1504,7 @@
             // if(orderCompCdList[0] == undefined) {
             //     console.log('undefined!');
             // }
-            console.log(outsideOrderNumStr);
-            console.log(orderCompCdList[0]);
-            console.log(orderStaffSeqStr);
-            console.log(controlSeqStr);
-            console.log(controlDetailSeqStr);
-            $('#outsourcing_order_excel_download #paramData').val(outsideOrderNumStr + ':' + orderCompCdList[0] + ':' + orderStaffSeqStr + ':' + controlSeqStr + ':' + controlDetailSeqStr  + ':' compCdList[0]);
+            $('#outsourcing_order_excel_download #paramData').val(outsideOrderNumStr + ':' + orderCompCdList[0] + ':' + orderStaffSeqStr + ':' + controlSeqStr + ':' + controlDetailSeqStr  + ':' + compCdList[0]);
 
             fnReportFormToHiddenFormPageAction('outsourcing_order_excel_download', '/downloadExcel');
         });
