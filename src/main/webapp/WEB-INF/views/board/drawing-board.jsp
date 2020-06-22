@@ -372,16 +372,26 @@
             $waitMeMainContainer.waitMe('hide');
         };
 
-        onScan.attachTo(document, {
+        console.log("test==============> 2");
+
+        onScan.attachTo(document.getElementById("bodyWrap"), {
             onScan: function(barcodeNum, iQty) {
                 // $(this).startWaitMe();
                 /** 메인 창에서 바코드 스캔 된 경우 **/
                 /** 진행중인 작업이 없는 경우는 신규 작업 시작 처리 **/
                 /** 진행중인 작업이 있는 경우 작업중인 바코드인 경우 종료 처리 팝업 호출
                                             신규 바코드 경우 현재 작업중인 내용 종료 처리 하고 자동으로 신규 작업 시작 처리 **/
-                console.log('bodyWrap' + barcodeNum);
+                console.log('bodyWrap=[' + barcodeNum + ']');
             }
         });
+
+        // onScan.attachTo(document);
+        // // Register event listener
+        // document.addEventListener('scan', function(sScancode, iQuantity) {
+        //     // alert(iQuantity + 'x ' + sScancode);
+        //
+        //     console.log('bodyWrap=[' + barcodeNum + ']');
+        // });
 
         $(".slecBox").on('click', function(){
             /** 대기 리스트와 plan 리스트를 조회한다. **/

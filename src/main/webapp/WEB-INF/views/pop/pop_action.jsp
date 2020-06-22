@@ -94,7 +94,7 @@
 </head>
 <%--<body>--%>
 <body onresize="parent.resizeTo(1620,1080)" onload="parent.resizeTo(1620,1080)" id="scannerbarcodeDiv">
-    <div class="page estimate waitMeContainerDiv" >
+    <div class="page estimate waitMeContainerDiv">
         <div class="topWrap">
             <div class="conWrap">
                 <div class="titWrap">
