@@ -525,8 +525,8 @@
             {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER', hidden: true},
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER_TRAN'},
-            {title: '건수', dataType: 'string', dataIndx: 'CONTROL_ORDER_QTY', hidden: true},
-            {title: '건수', dataType: 'string', dataIndx: 'CONTROL_ORDER_QTY_TRAN'},
+            {title: '건수', dataType: 'string', dataIndx: 'CONTROL_PART_QTY', hidden: true},
+            {title: '건수', dataType: 'string', dataIndx: 'CONTROL_PART_QTY_TRAN'},
             {title: '공급가', width: 90, align: 'right', dataType: 'string', dataIndx: 'TOTAL_AMT'},
             {title: '마감금액', width: 90, align: 'right', dataType: 'string', dataIndx: 'FINAL_NEGO_AMT'}
         ];
@@ -611,10 +611,10 @@
 
             let postData = fnFormToJsonArrayData('#CONTROL_CLOSE_CANCEL_FORM');
             postData.queryId = 'orderMapper.selectControlCloseCancelLeftList';
-            fnRequestGidData($controlCloseHistoryLeftGrid, postData);
+            fnRequestGridData($controlCloseHistoryLeftGrid, postData);
 
             postData.queryId = 'orderMapper.selectControlCloseCancelRightList';
-            fnRequestGidData($controlCloseHistoryRightGrid, postData);
+            fnRequestGridData($controlCloseHistoryRightGrid, postData);
         };
 
         let isDifferentStatus = function (status) {
