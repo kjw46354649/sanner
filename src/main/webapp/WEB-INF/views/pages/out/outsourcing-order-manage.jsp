@@ -425,7 +425,7 @@
                 }
             },
             {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: '', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'DRAWING_NUM_BUTTON',
+            {title: '', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'DRAWING_NUM_BUTTON', hidden: true,
                 render: function (ui) {
                     if (ui.rowData.DRAWING_NUM) return '<span class="eyeIcon" style="cursor: pointer"></span>'
                 },
