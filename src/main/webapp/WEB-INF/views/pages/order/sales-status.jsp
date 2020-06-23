@@ -112,7 +112,7 @@
             </div>
         </form>
     </div>
-    <div class="bottomWrap" style="height: 810px;">
+    <div class="bottomWrap row2_bottomWrap">
         <div class="tableWrap jmestabs" id="CONTROL_SALES_STATUS_TABS" style="padding: 10px 0;">
             <ul class="smallTabMenuTabs">
                 <li class="active">
@@ -208,10 +208,10 @@
                 }
             },
             {title: '공급가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', summary: {type: 'sum'}},
-            {title: '마감금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'sdfsd1', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, summary: {type: 'sum'}, editable: true},
+            {title: '마감금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'sdfsd1', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, summary: {type: 'sum'}, editable: true},
             {title: '부가세액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'VAT_AMOUNT', summary: {type: 'sum'}},
             {title: '합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMOUNT', summary: {type: 'sum'}},
-            {title: '비고', dataType: 'string', dataIndx: 'CLOSE_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true}
+            {title: '비고', dataType: 'string', dataIndx: 'CLOSE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
         ];
         const tab1GroupModel = {
             on: true,
@@ -228,7 +228,7 @@
             nodeClose: false,
         };
         const tab1Obj = {
-            height: 700,
+            height: 745,
             collapsible: false,
             resizable: false,
             showTitle: false,
@@ -360,7 +360,7 @@
             nodeClose: false,
         };
         const tab2Obj = {
-            height: 750,
+            height: 745,
             collapsible: false,
             resizable: false,
             showTitle: false,

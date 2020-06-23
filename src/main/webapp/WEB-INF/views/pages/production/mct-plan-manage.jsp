@@ -1211,8 +1211,8 @@
             {title: '주요', dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
             {title: '형태', dataType: 'string', dataIndx: 'WORK_NM'},
             {
-                title: 'MCT Plan/Actual', align: 'center', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, colModel: [
-                    {title: 'Seq.1', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_1', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                title: 'MCT Plan/Actual', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, colModel: [
+                    {title: 'Seq.1', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_1', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                         render: function (ui) {
                             let cellData = ui.cellData;
                             let status = ui.rowData.STATUS_1;
@@ -1232,7 +1232,7 @@
                             }
                         }
                     },
-                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_1', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_1', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                         render: function (ui) {
                             let cellData = ui.cellData;
                             let status = ui.rowData.STATUS_1;
@@ -1255,7 +1255,7 @@
                     },
                     {title: '', datatype: 'string', dataIndx: 'STATUS_1', hidden: true},
                     {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_1', hidden: true},
-                    {title: 'Seq.2', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_2', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                    {title: 'Seq.2', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_2', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                         render: function (ui) {
                             let cellData = ui.cellData;
                             let status = ui.rowData.STATUS_2;
@@ -1271,7 +1271,7 @@
                             }
                         }
                     },
-                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_2', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_2', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                         render: function (ui) {
                             let cellData = ui.cellData;
                             let status = ui.rowData.STATUS_2;
@@ -1286,7 +1286,7 @@
                     },
                     {title: '', datatype: 'string', dataIndx: 'STATUS_2', hidden: true},
                     {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_2', hidden: true},
-                    {title: 'Seq.3', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_3', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                    {title: 'Seq.3', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_3', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                         render: function (ui) {
                             let cellData = ui.cellData;
                             let status = ui.rowData.STATUS_3;
@@ -1302,7 +1302,7 @@
                             }
                         }
                     },
-                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_3', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_3', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                         render: function (ui) {
                             let cellData = ui.cellData;
                             let status = ui.rowData.STATUS_3;
@@ -1317,7 +1317,7 @@
                     },
                     {title: '', datatype: 'string', dataIndx: 'STATUS_3', hidden: true},
                     {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_3', hidden: true},
-                    {title: 'Seq.4', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_4', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                    {title: 'Seq.4', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_4', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                         render: function (ui) {
                             let cellData = ui.cellData;
                             let status = ui.rowData.STATUS_4;
@@ -1333,7 +1333,7 @@
                             }
                         }
                     },
-                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_4', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_4', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                         render: function (ui) {
                             let cellData = ui.cellData;
                             let status = ui.rowData.STATUS_4;
@@ -1412,9 +1412,9 @@
             {title: '소재 Size', width: 120, dataType: 'string', dataIndx: 'MATERIAL_SIZE'},
             {title: '비고 기록사항', dataType: 'string', dataIndx: 'NOTE'},
             {title: '예상가공<br>시간(분)', dataType: 'integer', dataIndx: 'MCT_WORK_TIME'},
-            {title: '가공계획<br>비고', dataType: 'string', dataIndx: 'MCT_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
+            {title: '가공계획<br>비고', dataType: 'string', dataIndx: 'MCT_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {
-                title: '작업<br>구분', dataType: 'string', dataIndx: 'MCT_WORK_TYPE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+                title: '작업<br>구분', dataType: 'string', dataIndx: 'MCT_WORK_TYPE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1011')},
                 render: function (ui) {
                     let cellData = ui.cellData;

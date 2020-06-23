@@ -595,7 +595,7 @@
             {title: '발주번호', dataType: 'string', dataIndx: 'ORDER_NUM', minWidth: 95, width: 95, editable: false},
             {title: '요망납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', minWidth: 100, width: 100, editable: false},
             {title: '가공납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', minWidth: 100, width: 100, editable: false},
-            {title: '포장묶음', dataType: 'integer', dataIndx: 'PACKING_CNT', minWidth: 60, width: 60, editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}},
+            {title: '포장묶음', dataType: 'integer', dataIndx: 'PACKING_CNT', minWidth: 60, width: 60, editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {title: '', minWidth: 150, width: 150, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'fffffF'}, dataType: 'string', dataIndx: 'BTN', editable: false,
                            render: function (ui) {
                                     let grid = this;

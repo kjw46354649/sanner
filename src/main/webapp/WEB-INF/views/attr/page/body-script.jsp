@@ -125,7 +125,7 @@
      * @param {object | jQuery} grid
      * @param {object} postData
      */
-    var fnRequestGidData = function (grid, postData) {
+    var fnRequestGridData = function (grid, postData) {
         'use strict';
         var parameter = {'url': '/json-list', 'data': postData}
 

@@ -459,7 +459,7 @@
             $outsideCloseCancelLeftGrid.pqGrid('refreshDataAndView');
 
             postData.queryId = 'outMapper.selectOutsideCloseCancelRightList';
-            fnRequestGidData($outsideCloseCancelRightGrid, postData);
+            fnRequestGridData($outsideCloseCancelRightGrid, postData);
         };
 
         /* function */

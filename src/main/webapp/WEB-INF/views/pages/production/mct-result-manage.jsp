@@ -560,7 +560,7 @@
                     }
                 }
             },
-            {title: '작업내용', minWidth: 300, width: 350, editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataType: 'string', dataIndx: 'WORK_DESC'},
+            {title: '작업내용', minWidth: 300, width: 350, editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, dataType: 'string', dataIndx: 'WORK_DESC'},
             {title: '작업자', minWidth: 70, width: 70, editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'}, dataType: 'string', dataIndx: 'WORK_USER_ID',
                 editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}})
@@ -584,9 +584,9 @@
                     }
                 }
             },
-            {title: '단위수량', dataType: 'string', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: 'DESIGN_QTY', minWidth: 40, width: 60},
+            {title: '단위수량', dataType: 'string', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, dataIndx: 'DESIGN_QTY', minWidth: 40, width: 60},
             // {title: '계산시간', dataType: 'string', dataIndx: 'WORK_TIME', minWidth: 40, width: 70},
-            {title: '대상파일', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, editor: false, dataIndx: 'CAM_GFILE_SEQ', minWidth: 250, width: 330,
+            {title: '대상파일', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editor: false, dataIndx: 'CAM_GFILE_SEQ', minWidth: 250, width: 330,
                 render: function (ui) {
                     let rowData = ui.rowData;
                     if(rowData.CAM_FILE_NM && rowData.NC_FILE_NM)
@@ -599,7 +599,7 @@
                         return "";
                 },
             },
-            {title: '', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: '', minWidth: 50, width: 50,
+            {title: '', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, dataIndx: '', minWidth: 50, width: 50,
                 render: function (ui) {
                     let rowData = ui.rowData;
                     if(rowData.SEQ) {

@@ -11,6 +11,8 @@
     <div class="topWrap">
         <form class="form-inline" id="item_order_history_search_form" name="item_order_history_search_form" role="form">
             <input type="hidden" name="queryId" id="queryId" value="selectItemOrderHistoryList">
+            <input type="hidden" name="MATERIAL_ORDER_SEQ" id="MATERIAL_ORDER_SEQ" value="">
+            <input type="hidden" name="CONCAT_SEQ" id="CONCAT_SEQ" value="">
             <div class="none_gubunWrap row3_topWrap">
                 <ul>
                     <li>
@@ -159,7 +161,7 @@
                         return false;
                     }
                     return true;
-                }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}
+                }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}
             },
             {title: '수입검사', dataType: 'string', align: "center", colModel: [
                     {title: '소재', dataType: 'string', dataIndx: 'INSPECT_MATERIAL_YN', editable: false,
@@ -191,7 +193,7 @@
                                 };
                                 fnInspection(parameter, MATERIAL_ORDER_SEQ);
                             });
-                        }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
+                        }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
                     },
                     {title: '외관', dataType: 'string', dataIndx: 'INSPECT_SURFACE_YN', editable: false,
                         render: function(ui){
@@ -222,7 +224,7 @@
                                 };
                                 fnInspection(parameter, MATERIAL_ORDER_SEQ);
                             });
-                        }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
+                        }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
                     },
                     {title: '치수', dataType: 'string', dataIndx: 'INSPECT_SIZE_YN', editable: false,
                         render: function(ui){
@@ -253,7 +255,7 @@
                                 };
                                 fnInspection(parameter, MATERIAL_ORDER_SEQ);
                             });
-                        }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
+                        }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
                     },
                 ]},
             {title: '검사 비고', dataType: 'string', dataIndx: 'INSPECT_NOTE',
@@ -321,10 +323,19 @@
                 //if(ui.addList.length > 0 ) {
                 let MATERIAL_ORDER_NUM = ui.addList[0].rowData.MATERIAL_ORDER_NUM;
                 let MATERIAL_COMP_CD = ui.addList[0].rowData.MATERIAL_COMP_CD;
+
+                let MATERIAL_ORDER_SEQ = ui.addList[0].rowData.MATERIAL_ORDER_SEQ;
+                let CONCAT_SEQ = ui.addList[0].rowData.CONTROL_SEQ;
+                CONCAT_SEQ = CONTROL_SEQ === undefined ? "0" : CONTROL_SEQ;
+
                 let IN_YN = ui.addList[0].rowData.IN_YN;
 
                 $("#item_order_history_hidden_form #MATERIAL_ORDER_NUM").val(MATERIAL_ORDER_NUM);
                 $("#item_order_history_hidden_form #MATERIAL_COMP_CD").val(MATERIAL_COMP_CD);
+
+                $("#item_order_history_search_form #MATERIAL_ORDER_SEQ").val(MATERIAL_ORDER_SEQ);
+                $("#item_order_history_search_form #CONCAT_SEQ").val(CONCAT_SEQ);
+
 
                 if(IN_YN == 'Y'){
                     $("#btnItemOrderHistoryCancel").attr("disabled", true);
@@ -337,7 +348,6 @@
         });
 
         selectItemOrderHistoryRightList();
-
         function selectItemOrderHistoryRightList() {
             itemOrderHistoryRightGrid.pqGrid({
                 height: '100%',
@@ -372,11 +382,8 @@
                 rowSelect: function( event, ui ) {
                     //if(ui.addList.length > 0 ) {
                     let MATERIAL_ORDER_SEQ = ui.addList[0].rowData.MATERIAL_ORDER_SEQ;
-                    let CONTROL_SEQ = ui.addList[0].rowData.CONTROL_SEQ;
-                    let CONTROL_DETAIL_SEQ = ui.addList[0].rowData.CONTROL_DETAIL_SEQ;
                     let IN_YN = ui.addList[0].rowData.IN_YN;
 
-                    $("#item_order_history_hidden_form #CONCAT_SEQ").val(CONTROL_SEQ+""+CONTROL_DETAIL_SEQ);
                     $("#item_order_history_hidden_form #MATERIAL_ORDER_SEQ").val(MATERIAL_ORDER_SEQ);
 
                     if(IN_YN == 'Y'){
@@ -419,25 +426,60 @@
         });
 
         $("#btnItemOrderHistoryExcel").on('click', function(){
-
+            let MATERIAL_ORDER_NUM = $("#item_order_history_hidden_form #MATERIAL_ORDER_NUM").val();
+            $("#common_excel_form #sqlId").val('selectItemOrderRegisterPopTable:selectItemOrderRegisterOrderSheetListExcel');
+            $("#common_excel_form #mapInputId").val('data');
+            $("#common_excel_form #paramName").val('MATERIAL_ORDER_NUM');
+            $("#common_excel_form #paramData").val(MATERIAL_ORDER_NUM);
+            $("#common_excel_form #template").val('item_order_sheet_template');
+            fnReportFormToHiddenFormPageAction("common_excel_form", "/itemOrderRegisterOrderSheetPrint");
         });
 
         $("#btnItemOrderHistoryCancel").on('click', function(){
-            let parameter = {
-                'queryId': 'updateItemOrderRegisterMaterialOrderCancel',
-                'MATERIAL_ORDER_SEQ': $("#item_order_history_hidden_form #MATERIAL_ORDER_SEQ").val(),
+            let headHtml = "Information", bodyHtml ="", yseBtn="예", noBtn="아니오";
+            bodyHtml =
+                '<h4>\n' +
+                '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
+                '<span>주문을 취소하시겠습니까?</span>' +
+                '</h4>';
+
+            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+            let itemOrderRegisterPopSubmitConfirm = function(callback) {
+                commonConfirmPopup.show();
+                commonConfirmPopup.css("z-index", 99999999);
+                $("#commonConfirmYesBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                    callback(true);
+                    return;
+                });
+                $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                });
             };
-            let parameters = {'url': '/json-remove', 'data': parameter};
-            fnPostAjax(function(data, callFunctionParam){
-                parameter = {
-                    'queryId': 'updateItemOrderRegisterControlPartCancel',
-                    'CONCAT_SEQ': $("#item_order_history_hidden_form #CONCAT_SEQ").val(),
-                };
-                parameters = {'url': '/json-remove', 'data': parameter};
-                fnPostAjax(function(data, callFunctionParam){
-                    $("#btnItemOrderHistorySearch").trigger('click');
-                }, parameters, '');
-            }, parameters, '');
+            itemOrderRegisterPopSubmitConfirm(function(confirm) {
+                if (confirm) {
+                    let parameter = {
+                        'queryId': 'updateItemOrderRegisterMaterialOrderCancel',
+                        'MATERIAL_ORDER_SEQ': $("#item_order_history_search_form #MATERIAL_ORDER_SEQ").val(),
+                    };
+                    let parameters = {'url': '/json-remove', 'data': parameter};
+                    fnPostAjax(function (data, callFunctionParam) {
+                        parameter = {
+                            'queryId': 'updateItemOrderRegisterControlPartCancel',
+                            'CONCAT_SEQ': $("#item_order_history_search_form #CONCAT_SEQ").val(),
+                        };
+                        parameters = {'url': '/json-remove', 'data': parameter};
+                        fnPostAjax(function (data, callFunctionParam) {
+                            parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
+                            fnPostAjax(function(data, callFunctionParam){
+                                $("#btnItemOrderHistorySearch").trigger('click');
+                            }, parameters, '');
+                        }, parameters, '');
+                    }, parameters, '');
+                }
+            });
         });
 
 

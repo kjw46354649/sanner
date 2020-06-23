@@ -367,13 +367,13 @@
                 ]
             },
             {title: '재고수량<br>(EA)', dataType: 'integer', dataIndx: 'INSIDE_STOCK_CURR_QTY', editable: function (ui) { return gridCellEditable(ui);}
-                , styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}
+                , styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}
                 , format: '#,###'
             },
             // {
-            //     title: '대칭', datatype: 'integer', align: 'center', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, colModel: [
-            //         {title: '원칭', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, editable: true},
-            //         {title: '대칭', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, editable: true}
+            //     title: '대칭', datatype: 'integer', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, colModel: [
+            //         {title: '원칭', datatype: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            //         {title: '대칭', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
             //     ]
             // },
             {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_CD_NM', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
@@ -439,7 +439,7 @@
             },
             {title: '생성일시', dataType: 'string', dataIndx: 'INSERT_TIME', minWidth: 100, width: 100, editable: false},
             {title: '수정일시', dataType: 'string', dataIndx: 'UPDATE_TIME', minWidth: 100, width: 100, editable: false},
-            // {title: '입고', align: 'center', dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_IN', width: 20, minWidth: 42, editable: false, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},
+            // {title: '입고', align: 'center', dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_IN', width: 20, minWidth: 42, editable: false, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
             //     render: function (ui) {
             //         let rowIndx = ui.rowIndx, grid = this;
             //         console.log("ui.rowData['INSIDE_STOCK_NUM']", ui.rowData['INSIDE_STOCK_NUM']);
@@ -447,7 +447,7 @@
             //         return '';
             //     }
             // },
-            // {title: '출고', align: 'center', dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_OUT', width: 20, minWidth: 42, editable: false, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},
+            // {title: '출고', align: 'center', dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_OUT', width: 20, minWidth: 42, editable: false, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
             //     render: function (ui) {
             //         let rowIndx = ui.rowIndx, grid = this;
             //         if (ui.rowData['INSIDE_STOCK_NUM'] != undefined) return "[출고]";
@@ -491,7 +491,7 @@
                     });
                 }
             },
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', minWidth: 250, width: 250, editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}}
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', minWidth: 250, width: 250, editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
         ];
         stockManageGridId01.pqGrid({
             width: "100%", height: 710,
