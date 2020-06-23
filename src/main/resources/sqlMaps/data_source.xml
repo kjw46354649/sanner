@@ -53,6 +53,17 @@
                     AND DEL_YN = 'N'
     </select>
 
+    <select id="getOutsourceMaterialCompanyList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.COMP_CD AS CODE_CD, A.COMP_NM AS CODE_NM
+            ,A.COMP_NM AS `text`, CAST(A.COMP_CD AS CHAR) AS `value`
+        FROM TBL_COMPANY A
+			INNER JOIN jmes.TBL_COMPANY_TYPE B ON B.COMP_CD = A.COMP_CD AND B.HIGH_TYPE = '1002'
+        WHERE 1 = 1
+                    AND A.CO_COMPANY_YN = 'Y'
+                    AND A.DEL_YN = 'N'
+    </select>
+
     <select id="getRownumEmptyData" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         with recursive empty_tbl as (
         select 1 as ROWNUM

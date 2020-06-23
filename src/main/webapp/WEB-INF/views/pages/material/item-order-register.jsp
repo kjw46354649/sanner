@@ -260,7 +260,7 @@
                     mapIndices: { name: "M_COMP_NM", id: "M_COMP_CD" },
                     valueIndx: "value",
                     labelIndx: "text",
-                    options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceCompanyList'}}),
+                    options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}}),
                     getData: function(ui) {
                         let clave = ui.$cell.find("select").val();
                         let rowData = itemOrderRegisterLeftGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
@@ -342,7 +342,7 @@
                     {title: '비고', dataType: 'string', dataIndx: 'M_ORDER_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}, minWidth: 120},
                 ], styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}},
             {title: '원<br>발주량', dataType: 'string', dataIndx: 'ORDER_QTY', editable: false},
-            {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'} },
+            {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'} },
             {title: '보유소재 충당수량', align: "center", colModel: [
                     {title: '소재<br>Size', dataType: 'string', dataIndx: 'OUT_SIZE_TXT', editable: false},
                     {title: '수량', dataType: 'string', dataIndx: 'OUT_QTY', editable: false},
@@ -494,7 +494,7 @@
                     }
                 }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
             },
-            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, width: 150, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
+            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}, width: 150, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
             {title: '요청<br>사항', dataType: 'string', dataIndx: 'REQUEST_CD', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, minWidth: 150,
                 editor: {
                     type: 'select',
@@ -525,21 +525,21 @@
                     }
                 }
             },
-            {title: '비고', dataType: 'string', dataIndx: 'M_ORDER_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, minWidth: 120},
-            {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
+            {title: '비고', dataType: 'string', dataIndx: 'M_ORDER_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}, minWidth: 120},
+            {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
             {title: '주문업체', dataType: 'string', dataIndx: 'M_COMP_CD', width: 120, validations: [{ type: 'minLen', value: 1, msg: "Required"}],
                 editor: {
                     type: 'select',
                     valueIndx: "value",
                     labelIndx: "text",
-                    options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceCompanyList'}}),
+                    options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}}),
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
                     if (cellData === '') {
                         return '';
                     } else {
-                        let data = fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceCompanyList'}});
+                        let data = fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
                         let index = data.findIndex(function (element) {
                             return element.text === cellData;
                         });
@@ -559,7 +559,7 @@
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 120, editable: false},
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', editable: false},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 120, editable: false},
-            {title: '원<br>발주량', dataType: 'string', dataIndx: 'ORDER_QTY ', editable: false},
+            {title: '원<br>발주량', dataType: 'string', dataIndx: 'ORDER_QTY', editable: false},
             {title: '', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', hidden: true}
@@ -1224,7 +1224,7 @@
 
         /** 공통 코드 이외의 처리 부분 **/
         fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
-        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#M_ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceCompanyList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#M_ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
         fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
     });
 
