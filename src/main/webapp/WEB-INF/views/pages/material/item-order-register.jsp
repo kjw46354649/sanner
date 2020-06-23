@@ -1264,7 +1264,6 @@
 
         let MATERIAL_ORDER_NUM = data[0].MATERIAL_ORDER_NUM === undefined ? "" : data[0].MATERIAL_ORDER_NUM;
         let ORDER_STATUS = data[0].ORDER_STATUS === undefined ? "" : data[0].ORDER_STATUS;
-        console.log(MATERIAL_ORDER_NUM+":"+ORDER_STATUS);
         if(MATERIAL_ORDER_NUM == ""){
             $("#btnItemOrderRegisterPopAdd").attr('disabled', false);
             $("#btnItemOrderRegisterPopSave").attr('disabled', false);

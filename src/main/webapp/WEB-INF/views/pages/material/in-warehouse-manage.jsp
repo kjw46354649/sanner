@@ -13,13 +13,13 @@
         <h3>소재 주문</h3>
         <button type="button" class="pop_close mg-top10 mg-right8" data-dismiss="modal">닫기</button>
         <form class="form-inline" role="form" id="in_warehouse_manage_out_popup_form" name="in_warehouse_manage_out_popup_form">
-            <input type="hidden" id="queryId" name="queryId" value="insertInWarehouseManageOutPop"/>
+            <input type="hidden" id="queryId" name="queryId" value=""/>
             <input type="hidden" id="MY_MAT_STOCK_SEQ" name="MY_MAT_STOCK_SEQ"/>
             <div class="tableWrap">
                 <div class="h_area mg-bottom10">
 
                 </div>
-                <div class="list1">h
+                <div class="list1">
                     <table class="rowStyle">
                         <tbody>
                         <tr>
@@ -713,22 +713,21 @@
             }
         });
 
-        $('#in_warehouse_manage_out_popup_form #OUT_QTY').keypress(function(event){
-            //alert(event.which);
-            console.log(this.val());
-            console.log($(this).val());
-            console.log(event);
-            console.log(event.which);
+        $("#in_warehouse_manage_out_popup_form #OUT_QTY").on("keyup", function(e) {
+            $(this).val($(this).val().replace(/[^0-9]/g,""));
 
-            if(!$(this).val().isNaN()) event.preventDefault();
-
-            if (event.which && (event.which  > 47 && event.which  < 58 || event.which == 8)) {
-                //alert('숫자임!');
-            } else {
-                //alert('숫자아님!');
-                event.preventDefault();
+            let compareQty = $("#in_warehouse_manage_out_popup_form #STOCK_QTY").val();
+            let outQty = $(this).val();
+            if(Number(compareQty) < Number(outQty)){
+                alert("불출 수량을 확인 해 주세요.");
+                $(this).val(outQty.substring(0, outQty.length-1));
+                outQty = $(this).val();
             }
+
+            let stockQty = compareQty - outQty;
+            $("#in_warehouse_manage_out_popup_form #REMAIN_QTY").val(stockQty);
         });
+
 
         /** 버튼 처리 **/
         $("#btnInWarehouseManageAdd").on('click', function(){
@@ -792,6 +791,16 @@
             }, parameters, '');
         });
 
+        $("#btnInWarehouseManageOutPopSave").on('click', function(){
+            $("#in_warehouse_manage_out_popup_form #queryId").val("material.insertInWareHouseManageOutManual");
+            let parameters = {'url': '/json-update', 'data': fnFormToJsonArrayData('#in_warehouse_manage_out_popup_form')};
+            fnPostAjaxAsync(function (data, callFunctionParam) {
+                $("#in_warehouse_manage_out_popup").modal('hide');
+
+                $("#btnInWarehouseManageManageSearch").trigger('click');
+                $("#btnInWarehouseManageOutSearch").trigger('click');
+            }, parameters, '');
+        });
 
         fnCommCodeDatasourceSelectBoxCreate($("#in_warehouse_manage_out_popup_form").find("#OUT_USER_ID"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}});
 

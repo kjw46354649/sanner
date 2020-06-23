@@ -315,7 +315,7 @@
             #{MATERIAL_TYPE}, #{MATERIAL_DETAIL}, #{MATERIAL_KIND},
             #{M_ORDER_NOTE}, #{M_ORDER_QTY}, #{ORDER_AMT},
             #{ORDER_STATUS}, #{ORDER_DT}, #{IN_DT}, #{CANCEL_DT},
-            NOW(), #{INSERT_ID}, #{CANCEL_USER_ID}
+            NOW(), #{LOGIN_USER_ID}, #{CANCEL_USER_ID}
         )
         ON DUPLICATE KEY UPDATE
             MATERIAL_COMP_CD = #{M_COMP_CD},
@@ -334,7 +334,7 @@
             ORDER_NOTE = #{M_ORDER_NOTE},
             ORDER_QTY = #{M_ORDER_QTY},
             UPDATE_DT = NOW(),
-            UPDATE_ID = NULL
+            UPDATE_ID = #{LOGIN_USER_ID}
     </update>
 
     <update id="insertUpdateItemOrderRegisterOut" parameterType="java.util.HashMap">
@@ -350,7 +350,7 @@
                 NEXTVAL(SEQ_MY_MAT_OUT),
             </otherwise>
         </choose>
-        #{OUT_QTY}, NOW(), #{OUT_USER_ID}, #{MY_MAT_STOCK_SEQ}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}, 'OUT001', #{INSERT_ID})
+        #{OUT_QTY}, NOW(), #{OUT_USER_ID}, #{MY_MAT_STOCK_SEQ}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}, 'OUT001', #{LOGIN_USER_ID}
         ON DUPLICATE KEY UPDATE
             OUT_QTY = #{OUT_QTY},
             OUT_DT = NOW(),
@@ -359,7 +359,7 @@
             CONTROL_SEQ = #{CONTROL_SEQ},
             CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ},
             UPDATE_DT = NOW(),
-            UPDATE_ID = NULL
+            UPDATE_ID = #{LOGIN_USER_ID}
     </update>
 
     <delete id="deleteItemOrderRegisterOut" parameterType="java.util.HashMap">
@@ -394,7 +394,7 @@
             SF_GET_SIZE_TXT('SIZE_D', #{M_SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_L', #{M_SIZE_TXT}),
             #{MATERIAL_TYPE}, #{MATERIAL_DETAIL}, #{MATERIAL_KIND},
             #{M_ORDER_NOTE}, #{M_ORDER_QTY}, #{ORDER_AMT},
-            NOW(), #{INSERT_ID}
+            NOW(), #{LOGIN_USER_ID}
         )
         ON DUPLICATE KEY UPDATE
             MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM},
@@ -413,7 +413,7 @@
             ORDER_NOTE = #{M_ORDER_NOTE},
             ORDER_QTY = #{M_ORDER_QTY},
             UPDATE_DT = NOW(),
-            UPDATE_ID = NULL
+            UPDATE_ID = #{LOGIN_USER_ID}
     </update>
 
     <update id="insertUpdateItemOrderRegisterPopStatus" parameterType="java.util.HashMap">
@@ -445,7 +445,7 @@
             #{MATERIAL_TYPE}, #{MATERIAL_DETAIL}, #{MATERIAL_KIND},
             #{M_ORDER_NOTE}, #{M_ORDER_QTY}, #{ORDER_AMT},
             'MST002', NOW(),
-            NOW(), #{INSERT_ID}
+            NOW(), #{LOGIN_USER_ID}
         )
         ON DUPLICATE KEY UPDATE
             MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM},
@@ -466,7 +466,7 @@
             ORDER_DT = NOW(),
             ORDER_STATUS = 'MST002',
             UPDATE_DT = NOW(),
-            UPDATE_ID = NULL
+            UPDATE_ID = #{LOGIN_USER_ID}
     </update>
 
     <update id="updateItemOrderRegisterMaterialOrderCancel" parameterType="java.util.HashMap">
@@ -620,7 +620,7 @@
         <if test="INSPECT_NOTE != '' and INSPECT_NOTE != null">
             INSPECT_NOTE = #{INSPECT_NOTE},
         </if>
-            UPDATE_ID = NULL
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE MATERIAL_ORDER_SEQ = #{MATERIAL_ORDER_SEQ}
     </update>
 
@@ -629,7 +629,7 @@
         SET ORDER_STATUS = 'MST004',
             IN_DT = NOW(),
             UPDATE_DT = NOW(),
-            UPDATE_ID = NULL
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE MATERIAL_ORDER_SEQ = #{MATERIAL_ORDER_SEQ}
             AND INSPECT_MATERIAL_YN = 'Y'
             AND INSPECT_SURFACE_YN = 'Y'
@@ -641,7 +641,7 @@
 			INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
         SET B.PART_STATUS = 'PRO005',
             B.UPDATE_DT = NOW(),
-            B.UPDATE_ID = NULL
+            B.UPDATE_ID = #{LOGIN_USER_ID}
         WHERE A.MATERIAL_ORDER_SEQ = #{MATERIAL_ORDER_SEQ}
             AND A.INSPECT_MATERIAL_YN = 'Y'
             AND A.INSPECT_SURFACE_YN = 'Y'
@@ -656,7 +656,7 @@
             INSPECT_SIZE_YN = 'Y',
             IN_DT = NOW(),
             UPDATE_DT = NOW(),
-            UPDATE_ID = NULL
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE MATERIAL_ORDER_SEQ = #{MATERIAL_ORDER_SEQ}
     </update>
 
@@ -665,15 +665,31 @@
 			INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
         SET B.PART_STATUS = 'PRO005',
             B.UPDATE_DT = NOW(),
-            B.UPDATE_ID = NULL
+            B.UPDATE_ID = #{LOGIN_USER_ID}
         WHERE A.MATERIAL_ORDER_SEQ = #{MATERIAL_ORDER_SEQ}
     </update>
+
+    <insert id="insertInWareHouseManageOutManual" parameterType="java.util.HashMap">
+        INSERT INTO TBL_MY_MATERIAL_OUT
+        (MY_MAT_OUT_SEQ, OUT_QTY, OUT_DT, OUT_USER_ID, MY_MAT_STOCK_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, OUT_STATUS, INSERT_ID)
+        VALUES
+        (
+        <choose>
+            <when test="MY_MAT_OUT_SEQ !='' and MY_MAT_OUT_SEQ != null">
+                #{MY_MAT_OUT_SEQ},
+            </when>
+            <otherwise>
+                NEXTVAL(SEQ_MY_MAT_OUT),
+            </otherwise>
+        </choose>
+        #{OUT_QTY}, NOW(), #{OUT_USER_ID}, #{MY_MAT_STOCK_SEQ}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}, 'OUT002', #{LOGIN_USER_ID}
+    </insert>
 
     <update id="updateItemOrderStatus" parameterType="java.util.HashMap">
         UPDATE TBL_MATERIAL_ORDER
         SET UPDATE_DT = NOW(),
             ORDER_STATUS = #{ORDER_STATUS},
-            UPDATE_ID = NULL
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE MATERIAL_ORDER_SEQ = #{MATERIAL_ORDER_SEQ}
     </update>
 
@@ -820,7 +836,7 @@
             LOC_SEQ = #{LOC_SEQ},
             NOTE = #{NOTE},
             UPDATE_DT = NOW(),
-            UPDATE_ID = NULL
+            UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
 
     <insert id="insertUpdateInWarehouseManageDetail" parameterType="java.util.HashMap">
@@ -874,7 +890,7 @@
             LOC_DESC = #{LOC_DESC},
             LOC_USE = #{LOC_USE},
             UPDATE_DT = NOW(),
-            UPDATE_ID = NULL
+            UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
 
     <delete id="deleteInWarehouseManageMaster" parameterType="java.util.HashMap">
@@ -1362,7 +1378,7 @@
             PDF_GFILE_SEQ = NULL,
             IMG_GFILE_SEQ = NULL,
             UPDATE_DT = NOW()
-            <!-- ,UPDATE_ID = NULL -->
+            <!-- ,UPDATE_ID = #{LOGIN_USER_ID} -->
         WHERE
             INSIDE_STOCK_NUM = #{INSIDE_STOCK_NUM}
     </update>
@@ -1373,7 +1389,7 @@
             PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
             IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
             UPDATE_DT = NOW()
-            <!-- ,UPDATE_ID = NULL -->
+            <!-- ,UPDATE_ID = #{LOGIN_USER_ID} -->
         WHERE
             DXF_GFILE_SEQ = #{DXF_GFILE_SEQ}
     </update>
