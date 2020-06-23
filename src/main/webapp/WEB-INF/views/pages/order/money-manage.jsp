@@ -281,7 +281,7 @@
                     edit: true
                 },
             },
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}}
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
         ];
 
         //calculate sum of 3rd and 4th column.
@@ -356,7 +356,7 @@
             {title: 'DEPOSIT_SEQ', dataType: 'integer', dataIndx: 'DEPOSIT_SEQ', hidden: true},
             {title: '사업자 구분', clsHead: 'display_none', width: 70, dataType: 'string', dataIndx: 'COMP_CD', editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: MONEY_BUSINESS_COMPANY},
-                styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 render: function (ui) {
                     let cellData = ui.cellData;
                     if (cellData === '') {
@@ -375,7 +375,7 @@
                 }
             },
             {title: '발주업체', clsHead: 'display_none', dataType: 'string', dataIndx: 'ORDER_COMP_CD', editable: true,
-                styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: MONEY_ORDER_COMPANY},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -394,12 +394,12 @@
                     }
                 }
             },
-            {title: '입금월일', dataType: "string", styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, dataIndx: 'DEPOSIT_DATE',
+            {title: '입금월일', dataType: "string", styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, dataIndx: 'DEPOSIT_DATE',
                 editable: true, editor: { type: 'textbox', init: dateEditor }
             },
-            {title: '입금액', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: 'DEPOSIT_AMT',
+            {title: '입금액', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, dataIndx: 'DEPOSIT_AMT',
                 align: 'right', dataType: 'integer', format: '#,###'},
-            {title: '종류', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, dataIndx: 'DEPOSIT_TYPE', editable: true,
+            {title: '종류', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, dataIndx: 'DEPOSIT_TYPE', editable: true,
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -424,10 +424,10 @@
                     }
                 }
             },
-            {title: '만기', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: 'DUE_DATE', dataType: 'string', editable: true,
+            {title: '만기', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, dataIndx: 'DUE_DATE', dataType: 'string', editable: true,
                 editor: { type: 'textbox', init: dateEditor }
             },
-            {title: '만기어음/지급여부', dataType: 'checkbox', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, dataIndx: 'DUE_PAY_YN',
+            {title: '만기어음/지급여부', dataType: 'checkbox', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, dataIndx: 'DUE_PAY_YN',
                 align: 'center', editable: true,
                 type: 'checkbox',
                 cb: {
@@ -437,9 +437,9 @@
                     uncheck: "N" //uncheck when "NO".
                 }
             },
-            {title: '어음지급액', dataIndx: 'DUE_PAY_AMT', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},
+            {title: '어음지급액', dataIndx: 'DUE_PAY_AMT', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
                 align: 'right', dataType: 'integer', format: '#,###'},
-            {title: '비고', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, dataIndx: 'NOTE', editable: true}
+            {title: '비고', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, dataIndx: 'NOTE', editable: true}
         ];
 
         /** 상세 수금 현환 **/

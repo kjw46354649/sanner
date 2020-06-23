@@ -175,7 +175,7 @@
             {title: '부가세<br>합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'VAT_AMOUNT', summary: {type: 'sum', edit: true}}, // 2020-06-07 add
             {title: '업데이트<br>일시', dataType: 'string', dataIndx: 'VAT_AMOUNT'}, // 2020-06-07 add
             // {title: '합계금액', dataType: 'string', dataIndx: 'TOTAL_AMOUNT'},
-            {title: '비고', dataType: 'string', dataIndx: 'CLOSE_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true}
+            {title: '비고', dataType: 'string', dataIndx: 'CLOSE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
         ];
         const tab1GroupModel = {
             on: true,

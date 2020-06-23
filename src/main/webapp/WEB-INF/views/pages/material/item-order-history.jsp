@@ -161,7 +161,7 @@
                         return false;
                     }
                     return true;
-                }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}
+                }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}
             },
             {title: '수입검사', dataType: 'string', align: "center", colModel: [
                     {title: '소재', dataType: 'string', dataIndx: 'INSPECT_MATERIAL_YN', editable: false,
@@ -193,7 +193,7 @@
                                 };
                                 fnInspection(parameter, MATERIAL_ORDER_SEQ);
                             });
-                        }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
+                        }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
                     },
                     {title: '외관', dataType: 'string', dataIndx: 'INSPECT_SURFACE_YN', editable: false,
                         render: function(ui){
@@ -224,7 +224,7 @@
                                 };
                                 fnInspection(parameter, MATERIAL_ORDER_SEQ);
                             });
-                        }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
+                        }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
                     },
                     {title: '치수', dataType: 'string', dataIndx: 'INSPECT_SIZE_YN', editable: false,
                         render: function(ui){
@@ -255,7 +255,7 @@
                                 };
                                 fnInspection(parameter, MATERIAL_ORDER_SEQ);
                             });
-                        }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
+                        }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
                     },
                 ]},
             {title: '검사 비고', dataType: 'string', dataIndx: 'INSPECT_NOTE',

@@ -217,10 +217,10 @@
         let $btnEstimateRegisterDrawAdd = $("#btnEstimateRegisterDrawAdd");
 
         let estimateRegisterTopColModel= [
-            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', width: 150, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'} } ,
-            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', width: 80, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'} } ,
-            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 170, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'} } ,
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 100, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'} } ,
+            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', width: 150, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
+            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', width: 80, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
+            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 170, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 100, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
             {
                 title: 'Part', clsHead: 'cantChange', dataType: 'integer', dataIndx: 'PART_NUM', editable: false,
                 render: function (ui) {
@@ -260,8 +260,8 @@
                     });
                 }
             },
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 100, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'} } ,
-            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}},
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 100, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
+            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: true,
                 editor: {
                     type: 'select',
@@ -288,7 +288,7 @@
                         }
                         return (index < 0) ? cellData : workType[index].text;
                     }
-                }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
+                }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
             /*{title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM' ,
                 editor: {
@@ -331,7 +331,7 @@
 
                         return (index < 0) ? cellData : workFactory[index].text;
                     }
-                }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
+                }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
             {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND',
                 editor: {
@@ -359,7 +359,7 @@
 
                         return (index < 0) ? cellData : workFactory[index].text;
                     }
-                }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
+                }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
             {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', width: 80,
                 editor: {
@@ -387,11 +387,11 @@
 
                         return (index < 0) ? cellData : workFactory[index].text;
                     }
-                }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
+                }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
-            {title: '소재 비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'} },
+            {title: '소재 비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
             {title: '소재마감', align: "center", colModel:[
-                    {title: 'TM각비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_TM', width: 70, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                    {title: 'TM각비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_TM', width: 70, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                         editor: {
                             type: 'select',
                             valueIndx: "value",
@@ -419,7 +419,7 @@
                             }
                         }
                     },
-                    {title: '연마비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND', width: 70, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                    {title: '연마비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND', width: 70, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                         editor: {
                             type: 'select',
                             valueIndx: "value",
@@ -447,7 +447,7 @@
                             }
                         }
                     },
-                    {title: '열처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', width: 70, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+                    {title: '열처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', width: 70, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                         editor: {
                             type: 'select',
                             valueIndx: "value",
@@ -475,7 +475,7 @@
                             }
                         }
                     },
-                ], styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
+                ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
             {title: '상세 가공요건', align: "center", colModel:[
                     {title:'선반', dataType: 'string', dataIndx: 'DETAIL_LATHE'},
@@ -497,29 +497,29 @@
                     let cellData = ui.cellData;
 
                     return cellData === 'Y' ? cellData : '';
-                }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
+                }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
             {title: '예상소재 Size', align: "center", colModel:[
-                    {title:'가로', dataType: 'float', dataIndx: 'SIZE_W_M', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'} },
-                    {title:'세로', dataType: 'float', dataIndx: 'SIZE_H_M', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'} },
-                    {title:'두께', dataType: 'float', dataIndx: 'SIZE_T_M', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'} },
-                    {title:'지름', dataType: 'float', dataIndx: 'SIZE_D_M', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'} },
-                    {title:'길이', dataType: 'float', dataIndx: 'SIZE_L_M', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'} }
+                    {title:'가로', dataType: 'float', dataIndx: 'SIZE_W_M', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
+                    {title:'세로', dataType: 'float', dataIndx: 'SIZE_H_M', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
+                    {title:'두께', dataType: 'float', dataIndx: 'SIZE_T_M', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
+                    {title:'지름', dataType: 'float', dataIndx: 'SIZE_D_M', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
+                    {title:'길이', dataType: 'float', dataIndx: 'SIZE_L_M', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} }
                 ], hidden: true},
             {title: '항목별 견적정보', align: "center", colModel: [
-                    {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'} },
-                    {title: 'TM각비', datatype: 'string', dataIndx: 'UNIT_TM_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'} },
-                    {title: '연마비', datatype: 'string', dataIndx: 'UNIT_GRIND_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'} },
-                    {title: '열처리', datatype: 'string', dataIndx: 'UNIT_HEAT_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'} },
-                    {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'} },
-                    {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'} },
-                    {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'} },
-                    {title: '견적비고', dataType: 'integer', dataIndx: 'UNIT_AMT_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'} }
-                ], styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}},
+                    {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
+                    {title: 'TM각비', datatype: 'string', dataIndx: 'UNIT_TM_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
+                    {title: '연마비', datatype: 'string', dataIndx: 'UNIT_GRIND_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
+                    {title: '열처리', datatype: 'string', dataIndx: 'UNIT_HEAT_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
+                    {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
+                    {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
+                    {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
+                    {title: '견적비고', dataType: 'integer', dataIndx: 'UNIT_AMT_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} }
+                ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {title: '계산견적단가', dataType: 'float', dataIndx: 'CALCUL_EST_UNIT_COST', format: '#,###', width: 80, editable: false},
-            {title: '최종견적가', dataType: 'float', dataIndx: 'UNIT_FINAL_EST_AMT', format: '#,###', width: 80, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'} },
+            {title: '최종견적가', dataType: 'float', dataIndx: 'UNIT_FINAL_EST_AMT', format: '#,###', width: 80, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
             {title: '금액 계', dataType: 'float', dataIndx: 'DTL_AMOUNT', format: '#,###', width: 80, editable: false},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'} },
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
             {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ',
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadView" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'

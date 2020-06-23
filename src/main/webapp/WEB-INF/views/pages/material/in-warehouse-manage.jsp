@@ -311,7 +311,7 @@
 
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
-                }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
+                }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
             {title: '상세위치', dataType: 'string', dataIndx: 'LOC_NM', minWidth: 120,
                 editor: {
@@ -345,7 +345,7 @@
                         rowData["LOC_SEQ"]=clave;
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
-                }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}
+                }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}
             },
             {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM', width: "7%" ,
                 editor: {
@@ -374,7 +374,7 @@
                         inWarehouseManageManageGrid01.pqGrid("refresh");
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
-                }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
+                }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             } ,
             {title: '소재종류상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM' , minWidth: "8%",
                 editor: {
@@ -389,13 +389,13 @@
                         rowData["MATERIAL_DETAIL"]=clave;
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
-                }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
+                }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             } ,
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 150, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'} } ,
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 150, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
             {title: '보유수량', dataType: 'string', dataIndx: 'STOCK_QTY', minWidth: 80, editable: false },
             {title: '불출대기수량', dataType: 'string', dataIndx: 'OUT_WAIT_QTY', minWidth: 80, editable: false },
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', minWidth: 600, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'} },
-            {title: '입고', dataType: 'string', dataIndx: 'IN_QTY', minWidth: "3%" ,styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', minWidth: 600, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
+            {title: '입고', dataType: 'string', dataIndx: 'IN_QTY', minWidth: "3%" ,styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {title: '불출요청', dataType: 'string', dataIndx: '', minWidth: "5%" ,
                 render: function(ui){
                     return '<button type="button" id="inWarehouseOutPop" class="miniBtn blue">불출</button>';

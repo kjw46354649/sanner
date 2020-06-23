@@ -147,11 +147,6 @@
             <form class="form-inline" id="CONTROL_CLOSE_CANCEL_FORM" role="form">
                 <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectControlCloseCancelLeftList">
                 <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
-                <input type="hidden" name="COMP_CD" id="COMP_CD">
-                <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                <input type="hidden" name="CONTROL_CLOSE_YEAR" id="CONTROL_CLOSE_YEAR">
-                <input type="hidden" name="CONTROL_CLOSE_MONTH" id="CONTROL_CLOSE_MONTH">
-                <input type="hidden" name="CLOSE_VER" id="CLOSE_VER">
                 <div style="width: 450px; float:left;">
                     <div id="CONTROL_CLOSE_CANCEL_LEFT_GRID"></div>
                 </div>
@@ -360,9 +355,9 @@
                     }
                 }
             },
-            {title: '최종<br>견적단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
+            {title: '최종<br>견적단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {title: '견적<br>합계금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'EST_TOTAL_AMOUNT'},
-            {title: '최종<br>공급단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
+            {title: '최종<br>공급단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {title: '합계금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMT'},
             {title: '종전가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'WHDWJSRK'},
             {title: '변경전<br>도면번호', minWidth: 120, dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', colModel: []},
@@ -400,7 +395,7 @@
                 ]
             },
             {title: '등록/업데이트<br>일시', minWidth: 100, dataType: 'string', dataIndx: 'STATUS_DT'},
-            {title: 'Note', minWidth: 100, dataType: 'string', dataIndx: 'CLOSE_DETAIL_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true}
+            {title: 'Note', minWidth: 100, dataType: 'string', dataIndx: 'CLOSE_DETAIL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
         ];
         const obj = {
             height: 700,
@@ -480,8 +475,8 @@
                 }
             }
         };
-        let $controlCloseHistoryLeftGrid;
-        const controlCloseHistoryLeftGridId = 'CONTROL_CLOSE_CANCEL_LEFT_GRID';
+        let $controlCloseCancelLeftGrid;
+        const controlCloseCancelLeftGridId = 'CONTROL_CLOSE_CANCEL_LEFT_GRID';
         const controlCloseCancelLeftColModel = [
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자', width: 70,  dataType: 'string', dataIndx: 'COMP_NM'},
@@ -514,9 +509,9 @@
                 }
             }
         };
-        let $controlCloseHistoryRightGrid;
-        const controlCloseHistoryRightGridId = 'CONTROL_CLOSE_CANCEL_RIGHT_GRID';
-        const controlCloseCancelColRightModel = [
+        let $controlCloseCancelRightGrid;
+        const controlCloseCancelRightGridId = 'CONTROL_CLOSE_CANCEL_RIGHT_GRID';
+        const controlCloseCancelRightColModel = [
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자', width: 70,  dataType: 'string', dataIndx: 'COMP_NM'},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
@@ -528,7 +523,7 @@
             {title: '건수', dataType: 'string', dataIndx: 'CONTROL_PART_QTY', hidden: true},
             {title: '건수', dataType: 'string', dataIndx: 'CONTROL_PART_QTY_TRAN'},
             {title: '공급가', width: 90, align: 'right', dataType: 'string', dataIndx: 'TOTAL_AMT'},
-            {title: '마감금액', width: 90, align: 'right', dataType: 'string', dataIndx: 'FINAL_NEGO_AMT'}
+            {title: '마감금액', width: 90, align: 'right', dataType: 'string', dataIndx: 'FINAL_NEGO_AMT', editable: true}
         ];
         const controlCloseCancelRightObj = {
             height: 300,
@@ -536,9 +531,10 @@
             resizable: false,
             showTitle: false,
             // scrollModel: {autoFit: true},
-            dragColumns: {enabled: false},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
-            colModel: controlCloseCancelColRightModel,
+            // dragColumns: {enabled: false},
+            editable: false,
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
+            colModel: controlCloseCancelRightColModel,
             strNoRows: g_noData,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -611,10 +607,16 @@
 
             let postData = fnFormToJsonArrayData('#CONTROL_CLOSE_CANCEL_FORM');
             postData.queryId = 'orderMapper.selectControlCloseCancelLeftList';
-            fnRequestGridData($controlCloseHistoryLeftGrid, postData);
+            $controlCloseCancelLeftGrid.pqGrid('option', 'dataModel.postData', function () {
+                return postData;
+            });
+            $controlCloseCancelLeftGrid.pqGrid('refreshDataAndView');
 
             postData.queryId = 'orderMapper.selectControlCloseCancelRightList';
-            fnRequestGridData($controlCloseHistoryRightGrid, postData);
+            $controlCloseCancelRightGrid.pqGrid('option', 'dataModel.postData', function () {
+                return postData;
+            });
+            $controlCloseCancelRightGrid.pqGrid('refreshDataAndView');
         };
 
         let isDifferentStatus = function (status) {
@@ -690,14 +692,14 @@
                     return false;
                 }
 
-                $controlCloseHistoryLeftGrid = $('#' + controlCloseHistoryLeftGridId).pqGrid(controlCloseCancelLeftObj);
-                $controlCloseHistoryRightGrid = $('#' + controlCloseHistoryRightGridId).pqGrid(controlCloseCancelRightObj);
+                $controlCloseCancelLeftGrid = $('#' + controlCloseCancelLeftGridId).pqGrid(controlCloseCancelLeftObj);
+                $controlCloseCancelRightGrid = $('#' + controlCloseCancelRightGridId).pqGrid(controlCloseCancelRightObj);
 
                 loadDataControlCloseCancel();
             },
             'hide.bs.modal': function () {
-                $controlCloseHistoryLeftGrid.pqGrid('destroy');
-                $controlCloseHistoryRightGrid.pqGrid('destroy');
+                $controlCloseCancelLeftGrid.pqGrid('destroy');
+                $controlCloseCancelRightGrid.pqGrid('destroy');
             }
         });
 

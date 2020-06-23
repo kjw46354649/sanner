@@ -380,17 +380,17 @@
                   }
                 }
             },
-            {title: '자재관리번호', dataType: 'string', dataIndx: 'CONSUMABLE_NUM',styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},
+            {title: '자재관리번호', dataType: 'string', dataIndx: 'CONSUMABLE_NUM',styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
                 validations: [
                     { type: 'minLen', value: 1, msg: "Required" }
                 ]
             },
-            {title: '자재명', dataType: 'string', dataIndx: 'CONSUMABLE_NM',styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},
+            {title: '자재명', dataType: 'string', dataIndx: 'CONSUMABLE_NM',styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
                 validations: [
                     { type: 'minLen', value: 1, msg: "Required" }
                 ]
             },
-            {title: '자재종류', dataType: 'string', dataIndx: 'CONSUMABLE_TYPE_NM',styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},
+            {title: '자재종류', dataType: 'string', dataIndx: 'CONSUMABLE_TYPE_NM',styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
                 editor: {
                     type: 'select',
                     mapIndices: { name: "CONSUMABLE_TYPE_NM", id: "CONSUMABLE_TYPE" },
@@ -426,12 +426,12 @@
             //         }
             //     }
             // },
-            {title: '보유수량', dataType: 'string', dataIndx: 'STOCK_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}
+            {title: '보유수량', dataType: 'string', dataIndx: 'STOCK_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}
                 ,editable: false, format: '#,###'
             },
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},editable: true},
-            {title: '입고', dataType: 'integer', dataIndx: 'IN_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},editable: true},
-            {title: '불출', align: 'center', dataType: 'string', dataIndx: 'POPUP', width: 20, minWidth: 20, editable: false,styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},editable: true},
+            {title: '입고', dataType: 'integer', dataIndx: 'IN_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},editable: true},
+            {title: '불출', align: 'center', dataType: 'string', dataIndx: 'POPUP', width: 20, minWidth: 20, editable: false,styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
                 render: function (ui) {
                     let rowIndx = ui.rowIndx, grid = this;
                     if (ui.rowData['CONSUMABLE_STOCK_SEQ'] > 0 && ui.rowData['STOCK_QTY'] > 0) return "<button type=\"button\" class=\"miniBtn_h19 black\">불출</button>";
@@ -439,7 +439,7 @@
                 }
             },
             {title: '활성여부', align: 'center', dataIndx: 'ACTIVE_YN', editable: true,
-                styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#fffffF'}, type: 'checkbox',
+                styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, type: 'checkbox',
                 cb: {
                     all: false, //header checkbox to affect checkboxes on all pages.
                     header: false, //for header checkbox.

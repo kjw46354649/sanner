@@ -254,7 +254,7 @@
                 }
             },
             {title: '소재 주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120, editable: false},
-            {title: '주문업체', dataType: 'string', dataIndx: 'M_COMP_NM', width: 80, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+            {title: '주문업체', dataType: 'string', dataIndx: 'M_COMP_NM', width: 80, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select',
                     mapIndices: { name: "M_COMP_NM", id: "M_COMP_CD" },
@@ -276,7 +276,7 @@
             {title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ', editable: false},
             {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', editable: false},
             {title: '가공<br>납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', width: 80, editable: false},
-            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select',
                     mapIndices: { name: "MATERIAL_KIND_NM", id: "MATERIAL_KIND_CD" },
@@ -291,7 +291,7 @@
                     }
                 }
             },
-            {title: '소재<br>종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', width: 70, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'},
+            {title: '소재<br>종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', width: 70, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select',
                     mapIndices: { name: "MATERIAL_DETAIL_NM", id: "MATERIAL_DETAIL" },
@@ -307,9 +307,9 @@
                 }
             },
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 120, editable: false } ,
-            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}, width: 120},
+            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, width: 120},
             {title: '요청 사항', align: "center", colModel: [
-                    {title: '요청<br>사항', dataType: 'string', dataIndx: 'REQUEST_CD', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, minWidth: 150,
+                    {title: '요청<br>사항', dataType: 'string', dataIndx: 'REQUEST_CD', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, minWidth: 150,
                         editor: {
                             type: 'select',
                             mapIndices: { name: "REQUEST_CD", id: "REQUEST_CD" },
@@ -339,10 +339,10 @@
                             }
                         }
                     },
-                    {title: '비고', dataType: 'string', dataIndx: 'M_ORDER_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}, minWidth: 120},
-                ], styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}},
+                    {title: '비고', dataType: 'string', dataIndx: 'M_ORDER_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, minWidth: 120},
+                ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}},
             {title: '원<br>발주량', dataType: 'string', dataIndx: 'ORDER_QTY', editable: false},
-            {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'} },
+            {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
             {title: '보유소재 충당수량', align: "center", colModel: [
                     {title: '소재<br>Size', dataType: 'string', dataIndx: 'OUT_SIZE_TXT', editable: false},
                     {title: '수량', dataType: 'string', dataIndx: 'OUT_QTY', editable: false},
@@ -384,7 +384,7 @@
                         }
                     },
                 ]},
-            {title: '비고', dataType: 'string', dataIndx: 'DTL_AMOUNT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}, minWidth: 120},
+            {title: '비고', dataType: 'string', dataIndx: 'DTL_AMOUNT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, minWidth: 120},
             {title: '주문<br>요청 일시', dataType: 'date', dataIndx: 'M_ORDER_DT',  width: 120, editable: false}
         ];
 
@@ -399,7 +399,7 @@
             {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM' , editable: false} ,
             {title: 'Size(mm)', dataType: 'string', dataIndx: 'SIZE_TXT' , editable: false} ,
             {title: '재고', dataType: 'integer', dataIndx: 'STOCK_QTY' , editable: false} ,
-            {title: '요청', dataType: 'integer', dataIndx: 'OUT_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'} } ,
+            {title: '요청', dataType: 'integer', dataIndx: 'OUT_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
             /*{title: '', dataType: 'string', dataIndx: 'OUT_YN', editable: false,
                 render: function(ui){
                     let returnVal = "";
@@ -438,7 +438,7 @@
 
                         return (index < 0) ? cellData : data[index].text;
                     }
-                }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
+                }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL' , validations: [{ type: 'minLen', value: 1, msg: "Required"}],
                 editor: {
@@ -465,7 +465,7 @@
 
                         return (index < 0) ? cellData : data[index].text;
                     }
-                }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
+                }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
             {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE' , validations: [{ type: 'minLen', value: 1, msg: "Required"}],
                 editor: {
@@ -492,10 +492,10 @@
 
                         return (index < 0) ? cellData : data[index].text;
                     }
-                }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
+                }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
-            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}, width: 150, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
-            {title: '요청<br>사항', dataType: 'string', dataIndx: 'REQUEST_CD', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, minWidth: 150,
+            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, width: 150, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
+            {title: '요청<br>사항', dataType: 'string', dataIndx: 'REQUEST_CD', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, minWidth: 150,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "REQUEST_CD", id: "REQUEST_CD" },
@@ -525,8 +525,8 @@
                     }
                 }
             },
-            {title: '비고', dataType: 'string', dataIndx: 'M_ORDER_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}, minWidth: 120},
-            {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#FFFFFF'}, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
+            {title: '비고', dataType: 'string', dataIndx: 'M_ORDER_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, minWidth: 120},
+            {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
             {title: '주문업체', dataType: 'string', dataIndx: 'M_COMP_CD', width: 120, validations: [{ type: 'minLen', value: 1, msg: "Required"}],
                 editor: {
                     type: 'select',
@@ -552,10 +552,10 @@
 
                         return (index < 0) ? cellData : data[index].text;
                     }
-                }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}
+                }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
             {title: '납기', dataType: 'string', dataIndx: 'HOPE_DUE_DT', width: 150,
-                editable: true, editor: { type: 'textbox', init: dateEditor }, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'} },
+                editable: true, editor: { type: 'textbox', init: dateEditor }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'} },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 120, editable: false},
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', editable: false},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 120, editable: false},
