@@ -79,7 +79,7 @@
     <div class="layerPopup" style="height: fit-content;">
         <h3>소재 불출 진행</h3>
         <button type="button" class="pop_close mg-top10 mg-right8" data-dismiss="modal">닫기</button>
-        <form class="form-inline" role="form" id="in_warehouse_manage_scan_barcode_popup_form" name="in_warehouse_manage_out_popup_form">
+        <form class="form-inline" role="form" id="in_warehouse_manage_scan_barcode_popup_form" name="in_warehouse_manage_scan_barcode_popup_form">
             <input type="hidden" id="queryId" name="queryId" value="material.selectInWarehousePop"/>
             <input type="hidden" id="TYPE" name="TYPE" value=""/>
             <input type="hidden" id="MY_MAT_OUT_SEQ" name="MY_MAT_OUT_SEQ"/>
@@ -296,6 +296,12 @@
         let inWarehouseManageManageColModel01= [
             {title: '', dataType: 'string', dataIndx: 'MY_MAT_STOCK_SEQ', hidden: true},
             {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_NM', width: "7%" ,
+                editable: function(ui){
+                    if(ui.rowData.MY_MAT_STOCK_SEQ){
+                        return false;
+                    }
+                    return true;
+                },
                 editor: {
                     type: 'select',
                     mapIndices: { name: "WAREHOUSE_NM", id: "WAREHOUSE_CD" },
@@ -314,6 +320,12 @@
                 }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
             {title: '상세위치', dataType: 'string', dataIndx: 'LOC_NM', minWidth: 120,
+                editable: function(ui){
+                    if(ui.rowData.MY_MAT_STOCK_SEQ){
+                        return false;
+                    }
+                    return true;
+                },
                 editor: {
                     type: 'select',
                     mapIndices: { name: "LOC_NM", id: "LOC_SEQ" },
@@ -334,8 +346,7 @@
 
                         fnPostAjaxAsync(function (data, callFunctionParam) {
                             ajaxData = data.list;
-                            console.log(data);
-                        }, warehouseData, '');
+                        }, warehous`eData, '');
 
                         return ajaxData;
                     },
@@ -345,9 +356,15 @@
                         rowData["LOC_SEQ"]=clave;
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
-                }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}
+                }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
             {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM', width: "7%" ,
+                editable: function(ui){
+                    if(ui.rowData.MY_MAT_STOCK_SEQ){
+                        return false;
+                    }
+                    return true;
+                },
                 editor: {
                     type: 'select',
                     mapIndices: { name: "MATERIAL_KIND_NM", id: "MATERIAL_KIND" },
@@ -375,8 +392,14 @@
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
                 }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
-            } ,
+            },
             {title: '소재종류상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM' , minWidth: "8%",
+                editable: function(ui){
+                    if(ui.rowData.MY_MAT_STOCK_SEQ){
+                        return false;
+                    }
+                    return true;
+                },
                 editor: {
                     type: 'select',
                     mapIndices: { name: "MATERIAL_DETAIL_NM", id: "MATERIAL_DETAIL" },
@@ -390,13 +413,20 @@
                         return ui.$cell.find("select option[value='"+clave+"']").text();
                     }
                 }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
-            } ,
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 150, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
+            },
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 150, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} ,
+                editable: function(ui){
+                    if(ui.rowData.MY_MAT_STOCK_SEQ){
+                        return false;
+                    }
+                    return true;
+                },
+            },
             {title: '보유수량', dataType: 'string', dataIndx: 'STOCK_QTY', minWidth: 80, editable: false },
             {title: '불출대기수량', dataType: 'string', dataIndx: 'OUT_WAIT_QTY', minWidth: 80, editable: false },
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', minWidth: 600, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-            {title: '입고', dataType: 'string', dataIndx: 'IN_QTY', minWidth: "3%" ,styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-            {title: '불출요청', dataType: 'string', dataIndx: '', minWidth: "5%" ,
+            {title: '입고', dataType: 'string', dataIndx: 'IN_QTY', minWidth: "3%" ,styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
+            {title: '불출요청', dataType: 'string', dataIndx: '', minWidth: "5%" , editable: false,
                 render: function(ui){
                     return '<button type="button" id="inWarehouseOutPop" class="miniBtn blue">불출</button>';
                 },
@@ -405,8 +435,6 @@
                     let $cell = grid.getCell(ui);
                     $cell.find('#inWarehouseOutPop').on('click', function (event) {
                         $("#in_warehouse_manage_out_popup").modal("show");
-
-                        console.log(ui.rowData);
                         fnJsonDataToForm('in_warehouse_manage_out_popup', ui.rowData);
                     });
                 }
@@ -760,8 +788,29 @@
         });
 
         $("#btnInWarehouseManageSave").on('click', function(){
-            let inWarehouseManageInsertUpdateQueryList = ['material.insertUpdateInWarehouseManageMaster','material.insertUpdateInWarehouseManageDetail'];
-            fnModifyPQGrid(inWarehouseManageManageGrid01, inWarehouseManageInsertUpdateQueryList, inWarehouseManageInsertUpdateQueryList);
+            let gridInstance = inWarehouseManageManageGrid01.pqGrid('getInstance').grid;
+            if (gridInstance.isDirty()) {
+                let changes = gridInstance.getChanges({format: 'byVal'});
+                let QUERY_ID_ARRAY = {
+                    'insertQueryId': ['material.insertUpdateInWarehouseManageMaster','material.insertUpdateInWarehouseManageDetail'],
+                    'updateQueryId': ['material.insertUpdateInWarehouseManageMaster','material.insertUpdateInWarehouseManageDetail'],
+                    'selectQueryId': ['selectInWarehouseManageSaveCheck']
+                };
+                changes.queryIdList = QUERY_ID_ARRAY;
+                let parameters = {'url': '/inWarehouseManageSave', 'data': {data: JSON.stringify(changes)}};
+                fnPostAjax(function (data, callFunctionParam) {
+                    let result = data.result;
+                    if(result == 'success') {
+                        $("#btnInWarehouseManageManageSearch").trigger('click');
+                        $("#btnInWarehouseManageOutSearch").trigger('click');
+                    } else {
+                        alert("중복되는 리스트가 존재합니다.");
+                    }
+                }, parameters, '');
+            }
+
+            //let inWarehouseManageInsertUpdateQueryList = ['material.insertUpdateInWarehouseManageMaster','material.insertUpdateInWarehouseManageDetail'];
+            //fnModifyPQGrid(inWarehouseManageManageGrid01, inWarehouseManageInsertUpdateQueryList, inWarehouseManageInsertUpdateQueryList);
         });
 
         $("#btnInWarehouseManageScanPopSave").on('click', function(){

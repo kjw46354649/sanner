@@ -393,13 +393,13 @@
             {title: 'MY_MAT_OUT_SEQ', dataType: 'string', dataIndx: 'MY_MAT_OUT_SEQ', hidden: true } ,
             {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden: true } ,
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true } ,
-            {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_NM' , editable: false} ,
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM' , editable: false} ,
+            {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_NM' , editable: false, minWidth: 80} ,
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM' , editable: false, minWidth: 80} ,
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden: true } ,
-            {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM' , editable: false} ,
-            {title: 'Size(mm)', dataType: 'string', dataIndx: 'SIZE_TXT' , editable: false} ,
-            {title: '재고', dataType: 'integer', dataIndx: 'STOCK_QTY' , editable: false} ,
-            {title: '요청', dataType: 'integer', dataIndx: 'OUT_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
+            {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM' , editable: false, minWidth: 50} ,
+            {title: 'Size(mm)', dataType: 'string', dataIndx: 'SIZE_TXT' , editable: false, minWidth: 120} ,
+            {title: '재고', dataType: 'integer', dataIndx: 'STOCK_QTY' , editable: false, minWidth: 50} ,
+            {title: '요청', dataType: 'integer', dataIndx: 'OUT_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} , minWidth: 50} ,
             /*{title: '', dataType: 'string', dataIndx: 'OUT_YN', editable: false,
                 render: function(ui){
                     let returnVal = "";
@@ -651,7 +651,7 @@
                     }
                 },
                 columnTemplate: {align: 'center', hvalign: 'center'},
-                scrollModel: {autoFit: true},
+                scrollModel: {autoFit: false},
                 numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'row', mode: 'single'} ,
                 trackModel: {on: true},
@@ -663,7 +663,7 @@
                 title: false,
                 strNoRows: g_noData,
                 complete: function(event, ui) {
-                    this.flex();
+                    //this.flex();
                     let data = itemOrderRegisterRightGrid.pqGrid('option', 'dataModel.data');
 
                     $('#item_order_register_right_grid_records').html(data.length);
@@ -973,7 +973,23 @@
                 itemOrderRegisterPopTopGrid.pqGrid("updateRow", { 'rowIndx': tempI , row: { 'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM } });
             }
             let itemOrderRegisterInsertUpdateQueryList = ['insertUpdateItemOrderRegisterPopSave'];
-            fnModifyPQGrid(itemOrderRegisterPopTopGrid, itemOrderRegisterInsertUpdateQueryList, itemOrderRegisterInsertUpdateQueryList);
+
+            let gridInstance = itemOrderRegisterPopTopGrid.pqGrid('getInstance').grid;
+            if (gridInstance.isDirty()) {
+                let changes = gridInstance.getChanges({format: 'byVal'});
+                let QUERY_ID_ARRAY = {
+                    'insertQueryId': itemOrderRegisterInsertUpdateQueryList,
+                    'updateQueryId': itemOrderRegisterInsertUpdateQueryList,
+                };
+                changes.queryIdList = QUERY_ID_ARRAY;
+                let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
+                fnPostAjaxAsync(function (data, callFunctionParam) {
+                    itemOrderRegisterPopTopGrid.pqGrid('option', "dataModel.postData", function (ui) {
+                        return (fnFormToJsonArrayData('#item_order_register_popup_form'));
+                    });
+                    itemOrderRegisterPopTopGrid.pqGrid('refreshDataAndView');
+                }, parameters, '');
+            }
 
             setTimeout(function(){
                 btnDisabled();
@@ -1080,51 +1096,51 @@
         function itemOrderRegisterPopMail() {
             let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num").val();
 
-            let list = new Array() ;
-            let rowCount = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length;
-            for (let i = 0; i < rowCount; i++) {
-                let rowData = itemOrderRegisterPopTopGrid.pqGrid('getRowData', {rowIndx: i});
-                list.push(rowData);
-            }
+            //Confirm Box
+            let headHtml = "Information", bodyHtml ="", yseBtn="예", noBtn="아니오";
+            bodyHtml =
+                '<h4>\n' +
+                '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
+                '<span>주문서를 발송하시겠습니까?</span>' +
+                '</h4>';
 
-            let changes = {
-                'addList': list,
-                'updateList': list
+            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+            let itemOrderRegisterPopSubmitConfirm = function(callback) {
+                commonConfirmPopup.show();
+                commonConfirmPopup.css("z-index", 99999999);
+                $("#commonConfirmYesBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                    callback(true);
+                    return;
+                });
+                $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                    $("#item_order_register_popup").modal('toggle');
+                    $("#btnItemOrderRegisterSearch").trigger('click');
+                });
             };
-            let QUERY_ID_ARRAY = {
-                'insertQueryId': ['insertUpdateItemOrderRegisterPopStatus'],
-                'updateQueryId': ['updateItemOrderRegisterPartStatus'],
-            };
-            changes.queryIdList = QUERY_ID_ARRAY;
-            let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
-            fnPostAjax(function (data, callFunctionParam) {
-                //Confirm Box
-                let headHtml = "Information", bodyHtml ="", yseBtn="예", noBtn="아니오";
-                bodyHtml =
-                    '<h4>\n' +
-                    '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
-                    '<span>주문서를 발송하시겠습니까?</span>' +
-                    '</h4>';
+            itemOrderRegisterPopSubmitConfirm(function(confirm){
+                if(confirm) {
+                    let list = new Array() ;
+                    let rowCount = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length;
+                    for (let i = 0; i < rowCount; i++) {
+                        let rowData = itemOrderRegisterPopTopGrid.pqGrid('getRowData', {rowIndx: i});
+                        list.push(rowData);
+                    }
 
-                fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-                let itemOrderRegisterPopSubmitConfirm = function(callback) {
-                    commonConfirmPopup.show();
-                    commonConfirmPopup.css("z-index", 99999999);
-                    $("#commonConfirmYesBtn").unbind().click(function (e) {
-                        e.stopPropagation();
-                        commonConfirmPopup.hide();
-                        callback(true);
-                        return;
-                    });
-                    $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                        e.stopPropagation();
-                        commonConfirmPopup.hide();
-                        $("#item_order_register_popup").modal('toggle');
-                        $("#btnItemOrderRegisterSearch").trigger('click');
-                    });
-                };
-                itemOrderRegisterPopSubmitConfirm(function(confirm){
-                    if(confirm) {
+                    let changes = {
+                        'addList': list,
+                        'updateList': list
+                    };
+                    let QUERY_ID_ARRAY = {
+                        'insertQueryId': ['insertUpdateItemOrderRegisterPopStatus'],
+                        'updateQueryId': ['updateItemOrderRegisterPartStatus'],
+                    };
+                    changes.queryIdList = QUERY_ID_ARRAY;
+                    let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
+                    fnPostAjax(function (data, callFunctionParam) {
                         let parameter = {
                             'queryId': 'selectItemOrderRegisterPopMailTable',
                             'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM
@@ -1177,9 +1193,9 @@
                                 }, parameters, '');
                             }, parameters, '');
                         }, parameters, '');
-                    }
-                });
-            }, parameters, '');
+                    }, parameters, '');
+                }
+            });
         }
 
         function itemOrderRegisterPopOrderSheet() {

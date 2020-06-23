@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -153,6 +154,87 @@ public class MaterialServiceImpl implements MaterialService {
         }
 
         model.addAttribute("result",		"success");
+    }
+
+    /**
+     * 보유 소재 관리(I,U)
+     *
+     * @param hashMap
+     * @throws Exception
+     */
+    @Override
+    public void inWarehouseManageSave(Model model, HashMap<String, Object> hashMap) throws Exception {
+        String jsonObject = (String) hashMap.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+
+        ArrayList<HashMap<String, Object>> addList = null;
+        ArrayList<HashMap<String, Object>> updateList = null;
+        HashMap<String, Object> queryIdList = null;
+
+        boolean checkYn = true;
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        if (jsonMap.containsKey("addList"))
+            addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
+
+        if (jsonMap.containsKey("updateList"))
+            updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+
+        if (jsonMap.containsKey("queryIdList"))
+            queryIdList = (HashMap<String, Object>) jsonMap.get("queryIdList");
+
+        ArrayList<String> selectQueryId = (ArrayList<String>) queryIdList.get("selectQueryId");
+
+        for (HashMap<String, Object> dataList : addList) {
+            dataList.put("queryId", selectQueryId.get(0));
+            Map<String, Object> resultMap = this.innodaleDao.getInfo(dataList);
+            Long cnt = (Long) resultMap.get("CNT");
+            if (cnt > 0) {
+                checkYn = false;
+                break;
+            }
+        }
+
+        if(checkYn) {
+            for (HashMap<String, Object> dataList : updateList) {
+                dataList.put("queryId", selectQueryId.get(0));
+                Map<String, Object> resultMap = this.innodaleDao.getInfo(dataList);
+                Long cnt = (Long) resultMap.get("CNT");
+                if (cnt > 1) {
+                    checkYn = false;
+                    break;
+                }
+            }
+        }
+
+        if(checkYn) {
+            if (addList != null && addList.size() > 0) {
+                ArrayList<String> queryId = (ArrayList<String>) queryIdList.get("insertQueryId");
+                for (HashMap<String, Object> dataList : addList) {
+                    for (int i = 0, queryCount = queryId.size(); i < queryCount; i++) {
+                        dataList.put("queryId", queryId.get(i));
+                        this.innodaleDao.insertGrid(dataList);
+                    }
+                }
+            }
+            if (updateList != null && updateList.size() > 0) {
+                ArrayList<String> queryId = (ArrayList<String>) queryIdList.get("updateQueryId");
+                for (HashMap<String, Object> dataList : updateList) {
+                    for (int i = 0, queryCount = queryId.size(); i < queryCount; i++) {
+                        dataList.put("queryId", queryId.get(i));
+                        this.innodaleDao.updateGrid(dataList);
+                    }
+                }
+            }
+
+            model.addAttribute("result",		"success");
+
+        }else{
+            model.addAttribute("result",		"fail");
+        }
     }
 
 }

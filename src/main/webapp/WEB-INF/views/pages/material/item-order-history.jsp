@@ -137,7 +137,7 @@
     $(function () {
         let itemOrderHistoryLeftColModel= [
             {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120 } ,
-            {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_NM', width: 80 } ,
+            {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_NM', width: 100 } ,
             {title: '총수량', dataType: 'string', dataIndx: 'ORDER_QTY' } ,
             {title: '주문일시', dataType: 'date', dataIndx: 'ORDER_DT', width: 120 },
             {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_CD' , hidden: true}
@@ -147,14 +147,14 @@
             {title: '.', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: '.', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: '.', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
-            {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120 , editable: false} ,
-            {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_NM', width: 60 , editable: false} ,
+            {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120 , editable: false, hidden: true} ,
+            {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_NM', width: 100 , editable: false, hidden: true} ,
             {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', width: 40, editable: false},
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', width: 60, editable: false},
             {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM', width: 60, editable: false},
             {title: '소재Size', dataType: 'string', dataIndx: 'SIZE_TXT', width: 70, editable: false},
             {title: '주문', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 30 , editable: false},
-            {title: '비고', dataType: 'string', dataIndx: 'ORDER_NOTE', width: 110, editable: false},
+            {title: '비고', dataType: 'string', dataIndx: 'ORDER_NOTE', width: 100, editable: false},
             {title: '금액.', dataType: 'string', dataIndx: 'ORDER_AMT', width: 50, format: '#,###',
                 editable: function(ui){
                     if(ui.rowData.IN_YN == 'Y'){
@@ -257,14 +257,15 @@
                             });
                         }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
                     },
-                ]},
+                ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
+            },
             {title: '검사 비고', dataType: 'string', dataIndx: 'INSPECT_NOTE',
                 editable: function (ui) {
                     if (ui.rowData.IN_YN == 'Y') {
                         return false;
                     }
                     return true;
-                }, styleHead: {'font-weight': 'bold', 'background': '#aac8ed', 'color': '#FFFFFF'}
+                }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}
             },
             {title: '입고', dataType: 'string', dataIndx: 'IN_YN', width: 40, editable: false,
                 render: function(ui){
@@ -273,7 +274,7 @@
                 }
             },
             {title: '입고 일시', dataType: 'string', dataIndx: 'IN_DT', width: 120, editable: false},
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 120, editable: false}
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 140, editable: false}
         ];
 
         itemOrderHistoryLeftGrid.pqGrid({
@@ -299,7 +300,7 @@
             showTitle: false,
             title: false,
             complete: function(event, ui) {
-                this.flex();
+                //this.flex();
                 let data = itemOrderHistoryLeftGrid.pqGrid('option', 'dataModel.data');
 
                 $('#item_order_history_left_grid_records').html(data.length);
@@ -325,8 +326,7 @@
                 let MATERIAL_COMP_CD = ui.addList[0].rowData.MATERIAL_COMP_CD;
 
                 let MATERIAL_ORDER_SEQ = ui.addList[0].rowData.MATERIAL_ORDER_SEQ;
-                let CONCAT_SEQ = ui.addList[0].rowData.CONTROL_SEQ;
-                CONCAT_SEQ = CONTROL_SEQ === undefined ? "0" : CONTROL_SEQ;
+                let CONCAT_SEQ = ui.addList[0].rowData.CONCAT_SEQ === undefined ? "0" : ui.addList[0].rowData.CONCAT_SEQ;
 
                 let IN_YN = ui.addList[0].rowData.IN_YN;
 
@@ -374,7 +374,7 @@
                 showTitle: false,
                 title: false,
                 complete: function(event, ui) {
-                    this.flex();
+                    //this.flex();
                     let data = itemOrderHistoryRightGrid.pqGrid('option', 'dataModel.data');
 
                     $('#item_order_history_right_grid_records').html(data.length);

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
 
 @Controller
@@ -34,6 +35,16 @@ public class MaterialController {
 
         System.out.println("---managerInsideStockPop-----map-------" + map.toString());
         this.materialService.managerInsideStockPop(model, map);
+
+        return "jsonView";
+    }
+
+    @RequestMapping(value = "/inWarehouseManageSave", method = RequestMethod.POST)
+    public String inWarehouseManageSave(Model model, HttpServletRequest request) throws Exception {
+        HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
+
+        System.out.println("---inWarehouseManageSave-----hashMap-------" + hashMap.toString());
+        this.materialService.inWarehouseManageSave(model, hashMap);
 
         return "jsonView";
     }
