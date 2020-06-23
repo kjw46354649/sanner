@@ -398,7 +398,7 @@
             {title: 'Note', minWidth: 100, dataType: 'string', dataIndx: 'CLOSE_DETAIL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
         ];
         const obj = {
-            height: 700,
+            height: 670,
             collapsible: false,
             resizable: false,
             showTitle: false,
@@ -507,13 +507,17 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            scroll: function (event, ui) {
+                let gridInstance = $controlCloseCancelRightGrid.pqGrid('getInstance').grid;
+                gridInstance.scrollXY(this.scrollX(), this.scrollY());
             }
         };
         let $controlCloseCancelRightGrid;
         const controlCloseCancelRightGridId = 'CONTROL_CLOSE_CANCEL_RIGHT_GRID';
         const controlCloseCancelRightColModel = [
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자', width: 70,  dataType: 'string', dataIndx: 'COMP_NM'},
+            {title: '사업자', width: 70, dataType: 'string', dataIndx: 'COMP_NM'},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주처', width: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
@@ -523,7 +527,7 @@
             {title: '건수', dataType: 'string', dataIndx: 'CONTROL_PART_QTY', hidden: true},
             {title: '건수', dataType: 'string', dataIndx: 'CONTROL_PART_QTY_TRAN'},
             {title: '공급가', width: 90, align: 'right', dataType: 'string', dataIndx: 'TOTAL_AMT'},
-            {title: '마감금액', width: 90, align: 'right', dataType: 'string', dataIndx: 'FINAL_NEGO_AMT', editable: true}
+            {title: '마감금액', width: 90, align: 'right', dataType: 'string', dataIndx: 'FINAL_NEGO_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
         ];
         const controlCloseCancelRightObj = {
             height: 300,
@@ -533,15 +537,20 @@
             // scrollModel: {autoFit: true},
             // dragColumns: {enabled: false},
             editable: false,
+            trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
             colModel: controlCloseCancelRightColModel,
             strNoRows: g_noData,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'dataSource.emptyGrid'},
+                postData: {'queryId': 'dataSource.emptyGrid'}, recIndx: 'ROW_NUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            scroll: function (event, ui) {
+                let gridInstance = $controlCloseCancelLeftGrid.pqGrid('getInstance').grid;
+                gridInstance.scrollXY(this.scrollX(), this.scrollY());
             }
         };
 
@@ -726,7 +735,13 @@
                 list.push(rowData);
             }
 
-            let parameters = {'url': '/removeMonthClose', 'data': {data: JSON.stringify(list)}};
+            let rightData = $controlCloseCancelRightGrid.pqGrid('option', 'dataModel.data');
+            let postData = {
+                'info-data': rightData,
+                'list-data': list
+            };
+
+            let parameters = {'url': '/removeMonthClose', 'data': {data: JSON.stringify(postData)}};
             fnPostAjax(function (data, callFunctionParam) {
                 $('#CONTROL_CLOSE_CANCEL_POPUP').modal('hide');
                 $closeHistoryGrid.pqGrid('refreshDataAndView');

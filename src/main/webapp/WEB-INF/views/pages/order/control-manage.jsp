@@ -1499,6 +1499,7 @@
                     return {data: dataJSON.data};
                 }
             },
+            editModel: {clicksToEdit: 1},
             change: function (evt, ui) {
                 if (ui.source === 'paste') {
                     const addListLength = ui.addList.length;
@@ -1835,7 +1836,7 @@
             let con = $('#view_tab_' + rollSeq + '0201 .bottomWrap .tableWrap .conWrap');
 
             top.stop().animate({'height': '130px'}, 300, 'easeOutCubic');
-            bottom.stop().animate({'height': '770px'}, 300, 'easeOutCubic');
+            bottom.stop().animate({'height': '740px'}, 300, 'easeOutCubic');
             con.css({'height': '640px'});
 
             $orderManagementGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
@@ -1849,7 +1850,7 @@
             let con = $('#view_tab_' + rollSeq + '0201 .bottomWrap .tableWrap .conWrap');
 
             top.stop().animate({'height': '40px'}, 300, 'easeInCubic');
-            bottom.stop().animate({'height': '855px'}, 300, 'easeOutCubic');
+            bottom.stop().animate({'height': '825px'}, 300, 'easeOutCubic');
             con.css({'height': '714px'});
 
             $orderManagementGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
@@ -2644,8 +2645,6 @@
         $('#CONTROL_CLOSE_YES').on('click', function () {
             let selectedRowCount = selectedRowIndex.length;
             let list = [];
-            let controlSeqList = [];
-            let controlSeqStr = '';
 
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
@@ -2653,14 +2652,15 @@
                 rowData.CLOSE_MONTH = $('#CONTROL_CLOSE_YEAR').val() + $('#CONTROL_CLOSE_MONTH').val();
                 list.push(rowData);
             }
-            let firstRowData = $controlCloseRightGrid.pqGrid('getRowData', {rowIndx: 0});
+
+            let rightData = $controlCloseRightGrid.pqGrid('option', 'dataModel.data');
             let postData = {
-                'info-data': firstRowData,
+                'info-data': rightData,
                 'list-data': list
             };
 
             // rightGrid
-            let parameters = {'url': '/createMonthFinishClose', 'data': {data: JSON.stringify(postData)}};
+            let parameters = {'url': '/createMonthClose', 'data': {data: JSON.stringify(postData)}};
             fnPostAjax(function (data, callFunctionParam) {
                 $orderManagementGrid.pqGrid('refreshDataAndView');
                 $('#CONTROL_CLOSE_POPUP').modal('hide');
@@ -2756,11 +2756,4 @@
             event.preventDefault();
         });
     });
-
-
-
-
 </script>
-
-
-

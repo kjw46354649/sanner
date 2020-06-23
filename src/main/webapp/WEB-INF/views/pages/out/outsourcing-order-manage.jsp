@@ -507,7 +507,7 @@
         ];
         const obj = {
             minHeight: '100%',
-            height: 700,
+            height: 680,
             collapsible: false,
             resizable: false,
             showTitle: false,

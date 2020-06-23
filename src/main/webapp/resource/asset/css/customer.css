@@ -34,7 +34,7 @@
 /* Single Grid */
 .onegrid .bottomWrap .tableNotSearchOneGridWrap { margin: 5px 20px; position: relative; }
 .onegrid .bottomWrap .tableNotSearchOneGridWrap .buttonWrap { padding: 5px 0; display: block; }
-.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap { height: 875px; width: 100%; }
+.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap { height: 870px; width: 100%; }
 .onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap img { width: 100%; height: 100%; }
 
 /*# Master & Detail Grid */

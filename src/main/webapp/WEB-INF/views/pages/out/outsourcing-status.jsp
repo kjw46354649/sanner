@@ -192,7 +192,7 @@
             nodeClose: false,
         };
         const tab1Obj = {
-            height: 750,
+            height: 745,
             collapsible: false,
             resizable: false,
             showTitle: false,
@@ -270,7 +270,7 @@
             nodeClose: false,
         };
         const tab2Obj = {
-            height: 750,
+            height: 745,
             collapsible: false,
             resizable: false,
             showTitle: false,

@@ -112,7 +112,7 @@
             </div>
         </form>
     </div>
-    <div class="bottomWrap" style="height: 810px;">
+    <div class="bottomWrap row2_bottomWrap">
         <div class="tableWrap jmestabs" id="CONTROL_SALES_STATUS_TABS" style="padding: 10px 0;">
             <ul class="smallTabMenuTabs">
                 <li class="active">
@@ -228,7 +228,7 @@
             nodeClose: false,
         };
         const tab1Obj = {
-            height: 700,
+            height: 745,
             collapsible: false,
             resizable: false,
             showTitle: false,
@@ -360,7 +360,7 @@
             nodeClose: false,
         };
         const tab2Obj = {
-            height: 750,
+            height: 745,
             collapsible: false,
             resizable: false,
             showTitle: false,
