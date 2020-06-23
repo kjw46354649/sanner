@@ -668,7 +668,7 @@
                     let parameters = {'url': '/json-remove', 'data': parameter};
                     fnPostAjaxAsync(function(data, callFunctionParam){
                         let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': rowData.GFILE_SEQ };
-                        fnRequestGidData(commonFileDownUploadGrid, postData);
+                        fnRequestGridData(commonFileDownUploadGrid, postData);
                     }, parameters, '');
                 });
             }
@@ -701,7 +701,7 @@
         let GfileKey = $("#common_file_download_form").find("#GFILE_SEQ").val();
         commonFileDownUploadGrid.pqGrid(commonFileDownUploadObj);
         let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey };
-        fnRequestGidData(commonFileDownUploadGrid, postData);
+        fnRequestGridData(commonFileDownUploadGrid, postData);
     });
 
     commonFileDownUploadPopup.on('hide.bs.modal', function (e) {
@@ -762,7 +762,7 @@
                     return false;
                 }
                 let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GFILE_SEQ };
-                fnRequestGidData(commonFileDownUploadGrid, postData);
+                fnRequestGridData(commonFileDownUploadGrid, postData);
                 $("#common_file_download_form").find("#GFILE_SEQ").val(GFILE_SEQ);
             }, formData, '');
         }

@@ -84,7 +84,7 @@
         //                 'click': function (evt, ui) {
         //                     authorityGroupPostData.ROLE_NM = $('#' + authorityGroupSearchTextId).val();
         //
-        //                     fnRequestGidData($authorityGroupGrid, authorityGroupPostData);
+        //                     fnRequestGridData($authorityGroupGrid, authorityGroupPostData);
         //                 }
         //             }
         //         },

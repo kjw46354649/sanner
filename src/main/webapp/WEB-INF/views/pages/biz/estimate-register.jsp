@@ -624,7 +624,7 @@
                         let parameters = {'url': '/json-remove', 'data': parameter};
                         fnPostAjaxAsync(function(data, callFunctionParam){
                             let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': rowData.GFILE_SEQ };
-                            fnRequestGidData(estimateRegisterFileGrid, postData);
+                            fnRequestGridData(estimateRegisterFileGrid, postData);
                         }, parameters, '');
                     });
                 }
@@ -900,13 +900,13 @@
                 //$("#EMAIL_CONTENT_TXT").val(list.EMAIL_CONTENT);
 
                 postData = { 'queryId': 'estimate.selectEstimateDetailList', 'EST_SEQ': EST_SEQ };
-                fnRequestGidData(estimateRegisterTopGrid, postData);
+                fnRequestGridData(estimateRegisterTopGrid, postData);
 
                 postData = { 'queryId': 'estimate.selectEstimateReceiverList', 'EST_SEQ': EST_SEQ };
-                fnRequestGidData(estimateRegisterBotGrid, postData);
+                fnRequestGridData(estimateRegisterBotGrid, postData);
 
                 postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey };
-                fnRequestGidData(estimateRegisterFileGrid, postData);
+                fnRequestGridData(estimateRegisterFileGrid, postData);
 
                 CKEDITOR.instances.EMAIL_CONTENT_TXT.setData(contextVal);
                 $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
@@ -1083,7 +1083,7 @@
 
             $("#estimate_register_info_form #GFILE_SEQ").val(GfileKey);
             let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey };
-            fnRequestGidData(estimateRegisterFileGrid, postData);
+            fnRequestGridData(estimateRegisterFileGrid, postData);
         });
 
         $("#btnEstimateRegisterFileUpload").on('click', function(){
@@ -1134,7 +1134,7 @@
 
                 //
                 // postData = { 'queryId': 'estimate.selectEstimateReceiverList', 'EST_SEQ': EST_SEQ };
-                // fnRequestGidData(estimateRegisterBotGrid, postData);
+                // fnRequestGridData(estimateRegisterBotGrid, postData);
 
                 // btnDisabled(list.EST_STATUS);
 
@@ -1142,10 +1142,10 @@
             }, parameter, '');
 
             postData = { 'queryId': 'estimate.selectEstimateListFromControl', 'CONTROL_SEQ': CONTROL_SEQ };
-            fnRequestGidData(estimateRegisterTopGrid, postData);
+            fnRequestGridData(estimateRegisterTopGrid, postData);
 
             postData = { 'queryId': 'estimate.selectEstimateReceiverListFromControl', 'CONTROL_SEQ': CONTROL_SEQ };
-            fnRequestGidData(estimateRegisterBotGrid, postData);
+            fnRequestGridData(estimateRegisterBotGrid, postData);
 
         });
     });

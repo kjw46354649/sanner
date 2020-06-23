@@ -630,7 +630,7 @@
                         let parameters = {'url': '/json-remove', 'data': parameter};
                         fnPostAjaxAsync(function(data, callFunctionParam){
                             let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': rowData.GFILE_SEQ };
-                            fnRequestGidData($requestOutsideFileGrid, postData);
+                            fnRequestGridData($requestOutsideFileGrid, postData);
                         }, parameters, '');
                     });
                 }
@@ -848,7 +848,7 @@
                         let parameters = {'url': '/json-remove', 'data': parameter};
                         fnPostAjaxAsync(function(data, callFunctionParam){
                             let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': rowData.GFILE_SEQ };
-                            fnRequestGidData($cancelRequestOutsideFileGrid, postData);
+                            fnRequestGridData($cancelRequestOutsideFileGrid, postData);
                         }, parameters, '');
                     });
                 }
@@ -1823,7 +1823,7 @@
             let GfileKey = $('#common_file_download_form').find('#GFILE_SEQ').val();
             $('#REQUEST_OUTSIDE_MAIL_FORM #GFILE_SEQ').val(GfileKey);
             let postData = {'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey};
-            fnRequestGidData($requestOutsideFileGrid, postData);
+            fnRequestGridData($requestOutsideFileGrid, postData);
         });
         /* 외주가공요청 파일 업로드 */
 
@@ -1838,7 +1838,7 @@
             let GfileKey = $('#common_file_download_form').find('#GFILE_SEQ').val();
             $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM #GFILE_SEQ').val(GfileKey);
             let postData = {'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey};
-            fnRequestGidData($cancelRequestOutsideFileGrid, postData);
+            fnRequestGridData($cancelRequestOutsideFileGrid, postData);
         });
         /* 가공요청 취소 파일 업로드 */
 
