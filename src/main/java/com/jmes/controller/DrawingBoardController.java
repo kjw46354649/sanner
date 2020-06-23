@@ -149,6 +149,13 @@ public class DrawingBoardController {
         hashMap.put("queryId", "drawingMapper.selectDrawingErrorReasonList");
         model.addAttribute("errorReasonList", this.innodaleService.getList(hashMap));
 
+        if(hashMap.containsKey("RE_BARCODE_NUM") && !"".equals(hashMap.get("RE_BARCODE_NUM"))){
+
+            hashMap.put("BARCODE_NUM", hashMap.get("RE_BARCODE_NUM"));
+            hashMap.put("queryId", "drawingMapper.selectDrawingBarcodeScanInfo");
+            model.addAttribute("reStartWorkinfo", this.innodaleService.getInfo(hashMap));
+        }
+
         return "board/drawing-board";
     }
 

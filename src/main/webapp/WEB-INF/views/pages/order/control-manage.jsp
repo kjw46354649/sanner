@@ -389,7 +389,7 @@
                 title: '주문상태', align: 'center', colModel: [
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_ORIGINAL', hidden: true},
                     {title: '상태', dataIndx: 'CONTROL_STATUS', hidden: true},
-                    {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_NM'},
+                    {title: '상태', datatype: 'string', minWidth:15, width:35, dataIndx: 'CONTROL_STATUS_NM'},
                     {title: '', minWidth:15, width:20, dataType: 'integer', dataIndx: 'CONTROL_VER'},
                     {title: '변경일시', width: 95, datatype: 'date', dataIndx: 'CONTROL_STATUS_DT'}
                 ]

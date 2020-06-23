@@ -267,4 +267,21 @@
             AND A.CONTROL_DETAIL_SEQ  = #{CONTROL_DETAIL_SEQ}
     </update>
 
+    <!-- Barcode 스캔 이후 정보를 이용하여 작업 시작, 및 작업 종료 처리 한다. -->
+    <select id="selectDrawingBarcodeScanInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, B.CONTROL_NUM, -- 관리 번호 -->
+            IFNULL(A.PART_NUM, SPACE(0)) AS PART_NUM, -- PART 번호 -->
+            jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS ORDER_QTY, -- 수량 -->
+            jmes.SF_GET_DATE_F(A.INNER_DUE_DT, '', '') AS INNER_DUE_DT -- 내부가공납기 -->
+        FROM TBL_CONTROL_PART A
+            INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.CONTROL_STATUS = 'ORD001' <!-- 주문확정 -->
+                AND B.OUT_FINISH_DT IS NULL
+            INNER JOIN TBL_CONTROL_BARCODE C ON C.CONTROL_SEQ = A.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND C.CONTROL_VER = B.CONTROL_VER
+            	AND C.DRAWING_VER = A.DRAWING_VER AND C.BARCODE_NUM = #{BARCODE_NUM}
+        WHERE 1 = 1
+            AND IFNULL(A.OUTSIDE_YN, 'N') = 'N'
+            AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009') <!-- 가공확정 ~ 가공완료 상태인경우 -->
+    </select>
+
 </mapper>

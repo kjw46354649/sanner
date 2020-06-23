@@ -320,6 +320,21 @@ button.close {
     color: #FF0000;
 }
 
+.continue-end-txt {
+    text-align: center;
+    padding: 10px;
+    font-size: 30px;
+    font-weight: 600;
+    color: #007AFF;
+}
+.continue-red-txt {
+    text-align: center;
+    padding: 10px;
+    font-size: 30px;
+    font-weight: 600;
+    color: #FF0000;
+}
+
 .scan-time {
     text-align: center;
     font-size: 25px;
