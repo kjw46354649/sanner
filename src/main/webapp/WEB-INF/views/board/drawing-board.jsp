@@ -9,14 +9,34 @@
 <html lang="en" class="app">
 <head>
     <title>J-MES POP 1</title>
-    <link href="/resource/asset/css/reset.css" rel="stylesheet" type="text/css" />
-    <link href="/resource/asset/css/common.css" rel="stylesheet" type="text/css" />
-    <link href="/resource/asset/css/tab.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/resource/plugins/dhtmlx/suite.css" type="text/css" />
+    <link rel="stylesheet" href="/resource/asset/css/reset.css" type="text/css" />
+    <link rel="stylesheet" href="/resource/asset/css/common.css" type="text/css" />
+    <link rel="stylesheet" href="/resource/asset/css/tab.css" type="text/css" />
+
     <script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
     <script type="text/javascript" src="/resource/asset/js/front.js"></script>
+    <script type="text/javascript" src="/resource/plugins/dhtmlx/suite.min.js"></script>
     <script type="text/javascript" src='/resource/plugins/waitme/waitMe.js'></script>
     <script type="text/javascript" src="/resource/plugins/scanner/onscan.js" ></script>
+    <style type="text/css">
+        .dhx_message__icon{
+            color:#ffffff !important;
+        }
+        .dhx_message__text{
+            color: #ffffff !important;
+        }
+        .dhx_message {
+            width: 100%;
+            background-color: #0469fd !important;
+        }
+        .dhx_message-container--top-right {
+            top: 300px;
+            right: 380px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body onresize="parent.resizeTo(1024,600)" onload="parent.resizeTo(1024,600)">
 
@@ -90,8 +110,8 @@
                     </table>
                     <div><p class="work-txt">작업을 시작하겠습니까?</p></div>
                     <div class="buttonCenterWrap">
-                        <button type="button" id="scanBtnSave" class="listBlueBtn save">시작</button>
-                        <button type="button" id="scanBtnCancel" class="listGrnBtn closeBe">취소</button>
+                        <button type="button" id="scanBtnSave" class="listBlueBtn save">예</button>
+                        <button type="button" id="scanBtnCancel" class="listGrnBtn closeBe">아니오</button>
                     </div>
                     <div><p class="scan-time">5초 후 자동 진행됩니다 (5)</p></div>
                 </div>
@@ -134,8 +154,8 @@
                     <div><p class="stop-txt">작업을<span class="red-txt">취소</span>하시겠습니까?</p></div>
                     <br/>
                     <div style="text-align: center;">
-                        <button type="button" id="cancelBtnSave" class="gradeMidBtn red">취소</button>
-                        <button type="button" id="cancelBtnCancel" class="gradeMidBtn white">닫기</button>
+                        <button type="button" id="cancelBtnSave" class="gradeMidBtn red">예</button>
+                        <button type="button" id="cancelBtnCancel" class="gradeMidBtn white">아니오</button>
                     </div>
 <%--                    <div>--%>
 <%--                        <button id="cancelBtnSave">Yes</button>--%>
@@ -195,10 +215,11 @@
                         </tr>
                         </tbody>
                     </table>
-                    <div><p class="end-txt">작업을<span class="red-txt">완료 하시겠습니까?</span> </p></div>
+                    <div id="singleComplete" style="display: block"><p class="end-txt">작업을<span class="red-txt">완료 하시겠습니까?</span> </p></div>
+                    <div id="continueComplete" style="display: none"><p class="continue-end-txt">이전 작업을<span class="continue-red-txt">종료하고<br>새로운 작업을</span><span class="continue-end-txt">진행 하겠습니까?</span></p></div>
                     <div style="text-align: center;">
-                        <button type="button" id="endBtnSave" class="gradeMaxBtn red">완료</button>
-                        <button type="button" id="endBtnCancel" class="gradeMaxBtn white">닫기</button>
+                        <button type="button" id="endBtnSave" class="gradeMaxBtn red">예</button>
+                        <button type="button" id="endBtnCancel" class="gradeMaxBtn white">아니오</button>
                     </div>
 <%--                    <div>--%>
 <%--                        <button id="endBtnSave">Yes</button>--%>
@@ -232,6 +253,15 @@
             <input id="FINISH_QTY" name="FINISH_QTY" type="hidden" value="${workInfo.ORDER_QTY}">
             <input id="ERROR_QTY" name="ERROR_QTY" type="hidden" value="">
             <input id="ERROR_REASON" name="ERROR_REASON" type="hidden" value="">
+            <input id="RE_BARCODE_NUM" name="RE_BARCODE_NUM" type="hidden" value="">
+        </form>
+        <form id="re_start_work_info_form" name="re_start_work_info_form">
+            <input id="CONTROL_SEQ" name="CONTROL_SEQ" type="hidden" value="${reStartWorkinfo.CONTROL_SEQ}">
+            <input id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" type="hidden" value="${reStartWorkinfo.CONTROL_DETAIL_SEQ}">
+            <input id="CONTROL_NUM" name="CONTROL_NUM" type="hidden" value="${reStartWorkinfo.CONTROL_NUM}">
+            <input id="PART_NUM" name="PART_NUM" type="hidden" value="${reStartWorkinfo.PART_NUM}">
+            <input id="ORDER_QTY" name="ORDER_QTY" type="hidden" value="${reStartWorkinfo.ORDER_QTY}">
+            <input id="INNER_DUE_DT" name="INNER_DUE_DT" type="hidden" value="${reStartWorkinfo.INNER_DUE_DT}">
         </form>
         <form id="drawing_log_out_form" name="drawing_log_out_form" method="POST" action="/drawing-worker">
             <input id="EQUIP_NM" name="EQUIP_NM" type="hidden" value="${drawingInfo.machineInfo.EQUIP_NM}">
@@ -259,12 +289,14 @@
     <div class="rightWorkWrap">
         <div class="workInWrap">
             <c:if test="${empty drawingInfo.currentWork}">
+                <input type="hidden" name="curStatus" id="curStatus" value="stop">
                 <div class="contsTitWrap" id="workMainLastConts">
                     <div class="contsTit">최근 작업내용</div>
                     <div class="slecBox"><a href="#">작업대상 선택</a></div>
                 </div>
             </c:if>
             <c:if test="${not empty drawingInfo.currentWork}">
+                <input type="hidden" name="curStatus" id="curStatus" value="work">
                 <div class="contsTitWrap" id="workMainProgressConts" style="">
                     <div class="contsTit">진행중인 작업</div>
                     <div class="right_sort">
@@ -372,14 +404,36 @@
             $waitMeMainContainer.waitMe('hide');
         };
 
+        /** 메인 창에서 바코드 스캔 된 경우 **/
+        /** 진행중인 작업이 없는 경우는 신규 작업 시작 처리 **/
+        /** 진행중인 작업이 있는 경우 작업중인 바코드인 경우 종료 처리 팝업 호출
+                                    신규 바코드 경우 현재 작업중인 내용 종료 처리 하고 자동으로 신규 작업 시작 처리 **/
         onScan.attachTo(document, {
             onScan: function(barcodeNum, iQty) {
-                // $(this).startWaitMe();
-                /** 메인 창에서 바코드 스캔 된 경우 **/
-                /** 진행중인 작업이 없는 경우는 신규 작업 시작 처리 **/
-                /** 진행중인 작업이 있는 경우 작업중인 바코드인 경우 종료 처리 팝업 호출
-                                            신규 바코드 경우 현재 작업중인 내용 종료 처리 하고 자동으로 신규 작업 시작 처리 **/
-                console.log('bodyWrap' + barcodeNum);
+                if(fnBarcodePrintCheck(barcodeNum)){
+                    let curStatus = $("#curStatus").val();
+                    if(curStatus == "stop"){
+                        let parameters = {
+                            'url': '/drawing-json-info',
+                            'data': { 'queryId': 'drawingMapper.selectDrawingBarcodeScanInfo', 'BARCODE_NUM': barcodeNum}
+                        };
+                        fnPostAjax(function (data, callFunctionParam) {
+                            if(data.info != null){
+                                startWork(data.info);
+                            }else{
+                               showMessage("최신 도면이 아닙니다. 사무실에 확인바랍니다.");
+                               return false;
+                            }
+                        }, parameters, '');
+                    }else if(curStatus == "work" && barcodeNum == $("#BARCODE_NUM").val()){
+                        $("#workCompletelBtn").trigger('click');
+                    }else {
+                        $("#singleComplete").hide();
+                        $("#continueComplete").show();
+                        $("#drawing_action_form").find("#RE_BARCODE_NUM").val(barcodeNum);
+                        $("#workCompletelBtn").trigger('click');
+                    }
+                }
             }
         });
 
@@ -389,17 +443,6 @@
             // getWorkList("pop");
             $("#drawing_worker_target_list_popup").css("display", "block");
             $("#area_tab").trigger("click");
-            $(".bodyWrap").addClass("modal-open-body");
-        });
-
-        /** 완료 팝업 오픈 처리 **/
-        $("#workCompletelBtn").on('click', function(){
-            $("#drawing_worker_end_popup").find("#completeControlNumHtml").html($("#drawing_action_form").find("#CONTROL_NUM").val());
-            $("#drawing_worker_end_popup").find("#completeControlPartNumHtml").html($("#drawing_action_form").find("#PART_NUM").val());
-            $("#drawing_worker_end_popup").find("#completeControlOrderQtyHtml").html($("#drawing_action_form").find("#ORDER_QTY").val());
-            $("#drawing_worker_end_popup").find("#completeControlCompleteQtyHtml").html($("#drawing_action_form").find("#FINISH_QTY").val());
-            $("#drawing_worker_end_popup").find("#completeControlFailQtyHtml").html($("#drawing_action_form").find("#ERROR_QTY").val());
-            $("#drawing_worker_end_popup").css("display", "block");
             $(".bodyWrap").addClass("modal-open-body");
         });
 
@@ -501,6 +544,7 @@
 
         $(".targetListClose").on('click', function(){
             fnPopupClose("drawing_worker_target_list_popup");
+            setFocusBody();
         });
 
         $("#equip_tab").on('click', function(){
@@ -539,6 +583,7 @@
             let style =  $(this).attr('style');
             let display = style.split(":")[1];
             let seconds = 5;
+            // let seconds = 5000;
             if( display.indexOf("none") > 0){
                 $("#drawing_worker_scan_popup .scan-time").html(fnRemainTimeSet(seconds));
                 stopInterval = setInterval(function() {
@@ -565,11 +610,13 @@
 
         $("#scanBtnCancel").on('click', function(){
             fnPopupClose("drawing_worker_scan_popup");
+            setFocusBody();
         });
 
         //Cancel Popup
         $("#cancelBtnCancel").on('click', function(){
             fnPopupClose("drawing_worker_cancel_popup");
+            setFocusBody();
         });
 
         $("#cancelBtnSave").on('click', function(){
@@ -583,12 +630,22 @@
             }, parameters, '');
         });
 
-        /** 종료 하기 팝업창 자동 호출 **/
+        /** 종료 즉 완료하기 팝업창 자동 호출 **/
+        $("#workCompletelBtn").on('click', function(){
+            $("#drawing_worker_end_popup").find("#completeControlNumHtml").html($("#drawing_action_form").find("#CONTROL_NUM").val());
+            $("#drawing_worker_end_popup").find("#completeControlPartNumHtml").html($("#drawing_action_form").find("#PART_NUM").val());
+            $("#drawing_worker_end_popup").find("#completeControlOrderQtyHtml").html($("#drawing_action_form").find("#ORDER_QTY").val());
+            $("#drawing_worker_end_popup").find("#completeControlCompleteQtyHtml").html($("#drawing_action_form").find("#FINISH_QTY").val());
+            $("#drawing_worker_end_popup").find("#completeControlFailQtyHtml").html($("#drawing_action_form").find("#ERROR_QTY").val());
+            $("#drawing_worker_end_popup").css("display", "block");
+            $(".bodyWrap").addClass("modal-open-body");
+        });
+
         $("#drawing_worker_end_popup").bind('style', function(e) {
             let style =  $(this).attr('style');
             let display = style.split(":")[1];
-            // let seconds = 5;
-            let seconds = 50000;
+            let seconds = 5;
+            // let seconds = 50000;
             if( display.indexOf("none") > 0){
                 $("#drawing_worker_end_popup .scan-time").html(fnRemainTimeSet(seconds));
                 stopInterval = setInterval(function() {
@@ -610,11 +667,23 @@
         });
         /** 작업 완료 취소 처리 **/
         $("#endBtnCancel").on('click', function(){
+            $("#singleComplete").show();
+            $("#continueComplete").hide();
+            $("#drawing_action_form").find("#RE_BARCODE_NUM").val('');
             fnPopupClose("drawing_worker_end_popup");
+            reloadDrawingBoard();
         });
 
         /** 작업 완료 처리 **/
         $("#endBtnSave").on('click', function(){
+            let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
+            let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
+            let finishParseQty = isNaN(parseInt(finishQty)) ? 0 : parseInt(finishQty);
+            let errorParseQty = isNaN(parseInt(errorQty)) ? 0 : parseInt(errorQty);
+            if(finishParseQty <= 0 && errorParseQty <= 0){
+                showMessage("작업종료는 완료수량이나 불량수량을 등록하여야 합니다. ");
+                return false;
+            }
             let parameters = {
                 'url': '/drawing-board-complete',
                 'data': $("#drawing_action_form").serialize()
@@ -629,8 +698,10 @@
         $("#complete_success_qty_pop_plus_btn").on('click', function(){
             let orderQty = $("#drawing_action_form").find("#ORDER_QTY").val();
             let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
+            let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
             let afterQty = parseInt(finishQty) + 1;
-            if(afterQty <= orderQty){
+            let errorParseQty = isNaN(parseInt(errorQty)) ? 0 : parseInt(errorQty);
+            if((afterQty + errorParseQty) <= orderQty){
                 $("#drawing_action_form").find("#FINISH_QTY").val(afterQty);
                 $("#completeControlCompleteQtyHtml").html(afterQty);
             }
@@ -640,9 +711,12 @@
 
         /** 작업 완료 마이너스 처리 **/
         $("#complete_success_qty_pop_minus_btn").on('click', function(){
+            let orderQty = $("#drawing_action_form").find("#ORDER_QTY").val();
             let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
+            let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
             let afterQty = parseInt(finishQty) - 1;
-            if(afterQty >= 0){
+            let errorParseQty = isNaN(parseInt(errorQty)) ? 0 : parseInt(errorQty);
+            if((afterQty + errorParseQty) <= orderQty && afterQty >= 0 ){
                 $("#drawing_action_form").find("#FINISH_QTY").val(afterQty);
                 $("#completeControlCompleteQtyHtml").html(afterQty);
             }
@@ -654,9 +728,11 @@
         $("#complete_fail_qty_pop_plus_btn").on('click', function(){
             let orderQty = $("#drawing_action_form").find("#ORDER_QTY").val();
             let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
-            let afterQty = 1;
+            let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
+            let afterQty = 0;
+            let finishParseQty = isNaN(parseInt(finishQty)) ? 0 : parseInt(finishQty);
             if(errorQty) afterQty = parseInt(errorQty) + 1
-            if(afterQty <= orderQty){
+            if((afterQty + finishParseQty) <= orderQty){
                 $("#drawing_action_form").find("#ERROR_QTY").val(afterQty);
                 $("#completeControlFailQtyHtml").html(afterQty);
             }
@@ -666,10 +742,13 @@
 
         /** 불량 수량 마이너스 처리 **/
         $("#complete_fail_qty_pop_minus_btn").on('click', function(){
+            let orderQty = $("#drawing_action_form").find("#ORDER_QTY").val();
             let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
+            let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
             let afterQty = 0;
+            let finishParseQty = isNaN(parseInt(finishQty)) ? 0 : parseInt(finishQty);
             if(errorQty) afterQty = parseInt(errorQty) - 1;
-            if(afterQty >= 0) {
+            if((afterQty + finishParseQty) <= orderQty && afterQty >= 0) {
                 $("#drawing_action_form").find("#ERROR_QTY").val(afterQty);
                 $("#completeControlFailQtyHtml").html(afterQty);
             }
@@ -711,8 +790,61 @@
             return html;
         }
 
-        /** 공통 처리 스크립트 **/
-        /**
+        let setFocusBody = function(){
+            $("#bodyWrap").focus();
+        }
+
+        let startWork = function(dataInfo){
+            $("#drawing_worker_scan_popup").find("#scanControlNumHtml").html(dataInfo.CONTROL_NUM);
+            $("#drawing_worker_scan_popup").find("#scanControlPartHtml").html(dataInfo.PART_NUM);
+            $("#drawing_worker_scan_popup").find("#scanControlOrderQtyHtml").html(dataInfo.ORDER_QTY);
+            $("#drawing_worker_scan_popup").find("#scanControlInnerOutDtHtml").html(dataInfo.INNER_DUE_DT);
+
+            $("#drawing_action_form").find("#CONTROL_SEQ").val(dataInfo.CONTROL_SEQ);
+            $("#drawing_action_form").find("#CONTROL_DETAIL_SEQ").val(dataInfo.CONTROL_DETAIL_SEQ);
+
+            $("#drawing_worker_target_list_popup").css("display", "none");
+            $("#drawing_worker_scan_popup").css("display", "block");
+        }
+
+        let showMessage = function(message){
+            dhx.message({
+               text: message, icon: "dxi-close", "expire": 2000, "position": "top-right", type:"myCss"
+            });
+        }
+
+        let fnBarcodePrintCheck = function(barcodeNumber){
+            //메세지
+            let returnVal = false;
+            let barcodeType = barcodeNumber.charAt(0).toUpperCase();
+            if(barcodeType == "L") {//라벨
+                showMessage("라벨 바코드는 사용이 불가능합니다.");
+                return returnVal;
+            }
+            $.ajax({
+                type: 'POST', url: '/drawing-json-info', dataType: 'json', async: false,
+                data: { 'queryId': 'common.selectBarcodePrintControlCheck', 'BARCODE_NUM': barcodeNumber},
+                success: function (data, textStatus, jqXHR) {
+                    if (textStatus === 'success') {
+                       if(data.info != null && data.info.USE_YN == 'Y'){
+                           returnVal = true;
+                       }else {
+                           showMessage("최신 도면이 아닙니다. 사무실에 확인바랍니다.");
+                       }
+                    } else {
+
+                        showMessage("시스템 오류가 발생하였습니다. 관리자에게 문의 바랍니다.");
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    showMessage("시스템 오류가 발생하였습니다. 관리자에게 문의 바랍니다.");
+                    return false;
+                }
+            });
+            return returnVal;
+        };
+
+        /** 공통 처리 스크립트
          * @description Ajax Post
          * @param {function} callFunction - 리텅 Function 처리
          * @param {object} params - 호출 URL에 Parameter 정보
@@ -722,7 +854,6 @@
             'use strict';
             let callback = $.Callbacks();
             let param = $.extend({url: null, data: ''}, params || {});
-
             $.ajax({
                 type: 'POST',
                 url: param.url,
@@ -737,49 +868,11 @@
                         <%--alert('<spring:message code='com.alert.default.failText' />');--%>
                         // }
                     } else {
-                        // alert('fail=[' + json.msg + ']111');
+                        showMessage("시스템 오류가 발생하였습니다. 관리자에게 문의 바랍니다.");
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    // alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
-                    // if (errorThrown == 'Forbidden') {
-                    //     $(this).fnHiddenFormPageAction('/');
-                    // }
-                }
-            });
-        };
-
-        let fnPostAjaxAsync = function (callFunction, params, callFunctionParam) {
-            'use strict';
-            let callback = $.Callbacks();
-            let param = $.extend({url: null, data: ''}, params || {});
-
-            $.ajax({
-                type: 'POST',
-                url: param.url,
-                dataType: 'json',
-                data: param.data,
-                async: false,
-                success: function (data, textStatus, jqXHR) {
-                    if (textStatus === 'success') {
-                        // if (data.exception === null) {
-                        callback.add(callFunction);
-                        callback.fire(data, callFunctionParam);
-                        // } else {
-                        <%--alert('<spring:message code='com.alert.default.failText' />');--%>
-                        // }
-                    } else {
-                        // alert('fail=[' + json.msg + ']111');
-                    }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    //console.log(textStatus);
-                    //console.log(jqXHR);
-                    //console.log(errorThrown);
-                    //console.log('error=[' + jqXHR + ' ' + "status" + ' ' + textStatus + ' ' + "errorThrown" + errorThrown+']');
-                    // if (errorThrown == 'Forbidden') {
-                    //     $(this).fnHiddenFormPageAction('/');
-                    // }
+                    showMessage('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
                 }
             });
         };
@@ -811,6 +904,22 @@
            });
        }
 
+       /** Main 페이지 로딩시 Body 기본으로 Focus 되도록 처리 **/
+       setFocusBody();
+
+       let reStartWorkControlNum = $("#re_start_work_info_form").find("#CONTROL_NUM").val();
+       if(reStartWorkControlNum){
+           $("#drawing_worker_scan_popup").find("#scanControlNumHtml").html($("#re_start_work_info_form").find("#CONTROL_NUM").val());
+           $("#drawing_worker_scan_popup").find("#scanControlPartHtml").html($("#re_start_work_info_form").find("#PART_NUM").val());
+           $("#drawing_worker_scan_popup").find("#scanControlOrderQtyHtml").html($("#re_start_work_info_form").find("#ORDER_QTY").val());
+           $("#drawing_worker_scan_popup").find("#scanControlInnerOutDtHtml").html($("#re_start_work_info_form").find("#INNER_DUE_DT").val());
+
+           $("#drawing_action_form").find("#CONTROL_SEQ").val($("#re_start_work_info_form").find("#CONTROL_SEQ").val());
+           $("#drawing_action_form").find("#CONTROL_DETAIL_SEQ").val($("#re_start_work_info_form").find("#CONTROL_DETAIL_SEQ").val());
+
+           $("#drawing_worker_target_list_popup").css("display", "none");
+           $("#drawing_worker_scan_popup").css("display", "block");
+       };
     });
 
 </script>

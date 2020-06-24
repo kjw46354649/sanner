@@ -52,6 +52,7 @@ public class CommandExecuteUtil {
         String line;
         Integer exitValue = 0;
         List<String> cmdList = new ArrayList<String>(Arrays.asList(cmdLists));
+        // System.out.println("runLinuxCommand=[" + cmdLists.toString() + "]");
         try {
 
             ProcessBuilder builder = new ProcessBuilder(cmdList.toArray(new String[0]));
@@ -90,6 +91,7 @@ public class CommandExecuteUtil {
 
         List<String> cmdList = new ArrayList<String>(Arrays.asList(use));
         cmdList.addAll(Arrays.asList(cmdLists));
+
         ProcessBuilder builder = new ProcessBuilder(cmdList.toArray(new String[0]));
         builder.redirectErrorStream(true);
 

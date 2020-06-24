@@ -72,7 +72,11 @@
                         <h4>전체 조회 건수 (Total : <span id="filedownloadTotalCount" style="color: #00b3ee">0</span>)</h4>
                     </div>
                 </form>
+                <div class="btnWrap" style="text-align: center;">
+                    <button type="button" class="defaultBtn grayPopGra" data-dismiss="modal">닫기</button>
+                </div>
             </div>
+
         </div>
     </div>
 </div>
@@ -618,11 +622,19 @@
     /** 파일 다운로드 시작 스크립트 **/
     let commonFileDownUploadModel =  [
         {title: 'GFILE_SEQ', dataType: 'string', dataIndx: 'GFILE_SEQ', hidden: true},
-        {title: '파일명', dataType: 'string', dataIndx: 'ORGINAL_FILE_NM', width: 400, minWidth: 70,
+        {title: '파일명', dataType: 'string', dataIndx: 'ORGINAL_FILE_NM', width: 400, minWidth: 70},
+        {title: '용량', dataType: 'string', dataIndx: 'FILE_SIZE',  width: 1, minWidth: 70,
             render: function(ui) {
-                let returnVal = ui.cellData;
-                if(ui.rowData.FILE_SEQ != undefined){
-                    returnVal += '<span id=\"downloadSingleFile\" class=\"ui-icon ui-icon-search\" style=\"cursor: pointer\"></span>';
+                return fn_getFileSize(ui.rowData.FILE_SIZE);
+            }
+
+        },
+        {title: '업로드 일시', dataType: 'string', dataIndx: 'INSERT_DT',  width: 120, minWidth: 70},
+        {title: '', align: 'center', dataType: 'string', dataIndx: 'FILE_SEQ', width: 80, minWidth: 80,
+            render: function (ui) {
+                let returnVal = "";
+                if (ui.cellData) {
+                    returnVal = '<button id="downloadSingleFile" class="miniBtn green">다운로드</button>'
                 }
                 return returnVal;
             },
@@ -631,25 +643,16 @@
                     $cell = grid.getCell(ui);
                 $cell.find("#downloadSingleFile").bind("click", function () {
                     let rowData = ui.rowData;
-                    alert(rowData.FILE_SEQ);
                     fnSingleFileDownloadFormPageAction(rowData.FILE_SEQ);
                 });
             }
         },
-        {title: '용량', dataType: 'string', dataIndx: 'FILE_SIZE',  width: 1, minWidth: 70,
-            render: function(ui) {
-                return fn_getFileSize(ui.rowData.FILE_SIZE);
-            }
-
-        },
-        {title: '업로드 일시', dataType: 'string', dataIndx: 'INSERT_DT',  width: 120, minWidth: 70},
         {title: '', align: 'center', dataType: 'string', dataIndx: 'FILE_SEQ', width: 70, minWidth: 100,
             render: function (ui) {
                 let deleteYn = $("#common_file_download_form #deleteYn").val();
                 let returnVal = "";
                 if (ui.cellData) {
-                    console.log(eval(deleteYn));
-                    if(eval(deleteYn)) returnVal = '<span id="deleteSingleFile" class="ui-icon ui-icon-close" style="cursor: pointer"></span>';
+                    if(eval(deleteYn)) returnVal = '<button id="deleteSingleFile" class="miniBtn red">삭제</button>'
                     return returnVal;
                 }
             },
@@ -665,7 +668,7 @@
                     let parameters = {'url': '/json-remove', 'data': parameter};
                     fnPostAjaxAsync(function(data, callFunctionParam){
                         let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': rowData.GFILE_SEQ };
-                        fnRequestGidData(commonFileDownUploadGrid, postData);
+                        fnRequestGridData(commonFileDownUploadGrid, postData);
                     }, parameters, '');
                 });
             }
@@ -698,7 +701,7 @@
         let GfileKey = $("#common_file_download_form").find("#GFILE_SEQ").val();
         commonFileDownUploadGrid.pqGrid(commonFileDownUploadObj);
         let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey };
-        fnRequestGidData(commonFileDownUploadGrid, postData);
+        fnRequestGridData(commonFileDownUploadGrid, postData);
     });
 
     commonFileDownUploadPopup.on('hide.bs.modal', function (e) {
@@ -759,7 +762,7 @@
                     return false;
                 }
                 let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GFILE_SEQ };
-                fnRequestGidData(commonFileDownUploadGrid, postData);
+                fnRequestGridData(commonFileDownUploadGrid, postData);
                 $("#common_file_download_form").find("#GFILE_SEQ").val(GFILE_SEQ);
             }, formData, '');
         }

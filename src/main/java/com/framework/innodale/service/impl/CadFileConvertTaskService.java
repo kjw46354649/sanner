@@ -67,7 +67,8 @@ public class CadFileConvertTaskService {
 
                 // 변환 작업 처리
                 CadFileConverter.convertODAFileDirectoryConvert(originalFile, timePath);    // DXF -> 2013 DWG 버전으로 디렉토리 convert 처리
-                File convertFile = new File(originalFile.getParentFile().toString() + File.separator + timePath + File.separator + serverFileName + ".dwg");
+
+                File convertFile = new File(originalFile.getParentFile().toString() + timePath + File.separator + serverFileName + ".dwg");
                 CadFileConverter.convertAsposeCadTOJava(convertFile);
                 File[] dxfFileList = new File(convertFile.getParent()).listFiles(new FilenameFilter() {
                     @Override
@@ -80,7 +81,8 @@ public class CadFileConvertTaskService {
 
                 for (File convertToFile : dxfFileList) {
                     String mimeType = Files.probeContentType(Paths.get(convertToFile.getAbsolutePath()));
-                    String convertFullName = new String(convertToFile.getName().getBytes("8859_1"), "utf-8");
+//                    String convertFullName = new String(convertToFile.getName().getBytes("8859_1"), "utf-8");
+                    String convertFullName = convertToFile.getName();
                     String convertExtName = convertFullName.substring(convertFullName.lastIndexOf(".") + 1).toLowerCase();
 
                     if (CAD_CONVERT_TYPE.contains(convertExtName)) {

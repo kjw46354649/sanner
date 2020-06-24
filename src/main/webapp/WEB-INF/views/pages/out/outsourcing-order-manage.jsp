@@ -201,20 +201,11 @@
                     <div id="REQUEST_OUTSIDE_MAIL_RECIPIENT_GRID"></div>
                 </div>
                 <div style="grid-column-start: 2; grid-column-end: 3; grid-row-start: 2; grid-row-end: 3;">
-                    <h5>첨부파일</h5>
-                    <div class="fileTableWrap">
-                        <table class="colStyle" name="attachDragAndDrop" id="attachDragAndDrop1">
-                            <caption></caption>
-                            <thead>
-                            <tr>
-                                <th scope="col" class="fileName txt" style="width: 60%;">파일명</th>
-                                <th scope="col" class="etcInfo" style="width: 20%;">용량</th>
-                                <th scope="col" class="etcInfo" style="width: 20%;">&nbsp;</th>
-                            </tr>
-                            </thead>
-                            <tbody class="files"></tbody>
-                        </table>
+                    <div class="d-inline-block"><h5>첨부파일</h5></div>
+                    <div class="d-inline-block right_float">
+                        <button class="defaultBtn green" id="REQUEST_OUTSIDE_FILE_UPLOAD_BUTTON">추가</button>
                     </div>
+                    <div id="REQUEST_OUTSIDE_FILE_GRID"></div>
                 </div>
             </div>
         </form>
@@ -224,7 +215,7 @@
             <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ"/>
             <div id="REQUEST_OUTSIDE_GRID"></div>
         </form>
-        <div class="text-center">
+        <div class="btnWrap">
             <button type="button" class="defaultBtn grayPopGra" name="REQUEST_OUTSIDE_POPUP_CLOSE">닫기</button>
         </div>
     </div>
@@ -266,20 +257,11 @@
                     <div id="CANCEL_REQUEST_OUTSIDE_MAIL_RECIPIENT_GRID"></div>
                 </div>
                 <div style="grid-column-start: 2; grid-column-end: 3; grid-row-start: 2; grid-row-end: 3;">
-                    <h5>첨부파일</h5>
-                    <div class="fileTableWrap">
-                        <table class="colStyle" name="attachDragAndDrop" id="attachDragAndDrop2">
-                            <caption></caption>
-                            <thead>
-                            <tr>
-                                <th scope="col" class="fileName txt">파일명</th>
-                                <th scope="col" class="etcInfo">용량</th>
-                                <th scope="col" class="etcInfo"></th>
-                            </tr>
-                            </thead>
-                            <tbody class="files"></tbody>
-                        </table>
+                    <div class="d-inline-block"><h5>첨부파일</h5></div>
+                    <div class="d-inline-block right_float">
+                        <button class="defaultBtn green" id="CANCEL_REQUEST_OUTSIDE_FILE_UPLOAD_BUTTON">추가</button>
                     </div>
+                    <div id="CANCEL_REQUEST_OUTSIDE_FILE_GRID"></div>
                 </div>
             </div>
         </form>
@@ -289,7 +271,7 @@
             <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ"/>
             <div id="CANCEL_REQUEST_OUTSIDE_GRID"></div>
         </form>
-        <div class="text-center">
+        <div class="btnWrap">
             <button type="button" class="defaultBtn grayPopGra" name="CANCEL_REQUEST_OUTSIDE_POPUP_CLOSE">닫기</button>
         </div>
     </div>
@@ -301,9 +283,10 @@
         <hr>
         <button type="button" class="pop_close" name="OUTSIDE_CLOSE_NO">닫기</button>
         <div class="buttonWrap">
-            <form class="form-inline" id="OUTSIDE_CLOSE_LEFT_FORM" role="form">
+            <form class="form-inline" id="OUTSIDE_CLOSE_FORM" role="form">
                 <input type="hidden" name="queryId" id="queryId" value="outMapper.selectOutsideCloseLeftList">
                 <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ">
+                <input type="hidden" name="COMP_CD" id="COMP_CD">
                 <input type="hidden" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
                 <div class="leftbuttonWrap">
                     <div class="d-inline-block">
@@ -350,10 +333,13 @@
     </div>
 </div>
 
+<input type="button" id="REQUEST_OUTSIDE_FILE_UPLOAD" style="display: none;">
+<input type="button" id="CANCEL_REQUEST_OUTSIDE_FILE_UPLOAD" style="display: none;">
+
 <form id="outsourcing_order_excel_download" method="POST">
     <input type="hidden" id="sqlId" name="sqlId" value="selectOutsourcingOrderExcel:selectOutsourcingOrderInfoExcel"/>
     <input type="hidden" id="mapInputId" name="mapInputId" value="data:info"/>
-    <input type="hidden" id="paramName" name="paramName" value="OUTSIDE_ORDER_NUM:COMP_CD:ORDER_STAFF_SEQ:CONTROL_SEQ:CONTROL_DETAIL_SEQ"/>
+    <input type="hidden" id="paramName" name="paramName" value="OUTSIDE_ORDER_NUM:ORDER_COMP_CD:ORDER_STAFF_SEQ:CONTROL_SEQ:CONTROL_DETAIL_SEQ:COMP_CD"/>
     <input type="hidden" id="paramData" name="paramData" value=""/>
     <input type="hidden" id="template" name="template" value="outsourcing_order_template"/>
 </form>
@@ -399,7 +385,7 @@
             {title: '외주<br>발주상태', dataType: 'string', dataIndx: 'OUTSIDE_STATUS', hidden: true},
             {title: '외주<br>발주상태', dataType: 'string', dataIndx: 'OUTSIDE_STATUS_NM'},
             {title: '상태변경<br>일시', width: 100, dataType: 'string', dataIndx: 'OUTSIDE_STATUS_DT'},
-            {title: '외주업체', width: 70, dataType: 'string', dataIndx: 'OUTSIDE_COMP_CD', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable:true,
+            {title: '외주업체', width: 70, dataType: 'string', dataIndx: 'OUTSIDE_COMP_CD', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable:true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: OUTSOURCE_COMPANY},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -422,8 +408,8 @@
                 }
             },
             {title: '입고일자', width: 100, dataType: 'string', dataIndx: 'OUTSIDE_INNER_DT'},
-            {title: '외주<br>발주번호', dataType: 'string', dataIndx: 'OUTSIDE_ORDER_NUM', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
-            {title: '비고', width: 90, dataType: 'string', dataIndx: 'OUTSIDE_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
+            {title: '외주<br>발주번호', dataType: 'string', dataIndx: 'OUTSIDE_ORDER_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {title: '비고', width: 90, dataType: 'string', dataIndx: 'OUTSIDE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {title: '비고(주문)', width: 90, dataType: 'string', dataIndx: 'CONTROL_NOTE'},
             {title: '', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'CONTROL_NUM_BUTTON',
                 render: function (ui) {
@@ -439,7 +425,7 @@
                 }
             },
             {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: '', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'DRAWING_NUM_BUTTON',
+            {title: '', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'DRAWING_NUM_BUTTON', hidden: true,
                 render: function (ui) {
                     if (ui.rowData.DRAWING_NUM) return '<span class="eyeIcon" style="cursor: pointer"></span>'
                 },
@@ -466,7 +452,7 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '소재<br>제공', minWidth: 30, width: 40, dataType: 'string', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+            {title: '소재<br>제공', minWidth: 30, width: 40, dataType: 'string', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -475,28 +461,28 @@
                 }
             },
             {
-                title: '요청 가공 사항', align: 'center', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, colModel: [
+                title: '요청 가공 사항', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, colModel: [
                     {
-                        title: '완제품', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+                        title: '완제품', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
                     {
-                        title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+                        title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
                     {
-                        title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+                        title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
                     {
-                        title: '표면처리', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+                        title: '표면처리', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
-                    {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true}
+                    {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
                 ]
             },
-            {title: '요망납기', width: 70, dataType: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true, editor: {type: 'textbox', init: dateEditor}},
-            {title: '외주<br>확정단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_UNIT_AMT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
+            {title: '요망납기', width: 70, dataType: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: dateEditor}},
+            {title: '외주<br>확정단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_UNIT_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {title: '금액<br>합계', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
             {title: '외주<br>종전가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DHLWNWHDWJSRK'},
             {
@@ -521,7 +507,7 @@
         ];
         const obj = {
             minHeight: '100%',
-            height: 700,
+            height: 680,
             collapsible: false,
             resizable: false,
             showTitle: false,
@@ -577,9 +563,11 @@
             collapsible: false,
             resizable: false,
             showTitle: false,
+            numberCell: {title: 'No.'},
+            editable: false,
             scrollModel: {autoFit: true},
             dragColumns: {enabled: false},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
             colModel: mailRecipientColModel,
             toolbar: toolbar,
             strNoRows: g_noData,
@@ -591,7 +579,96 @@
                 }
             }
         };
+        let $requestOutsideFileGrid;
+        const requestOutsideFileGridId = 'REQUEST_OUTSIDE_FILE_GRID';
+        const requestOutsideFileColModel =  [
+            {title: 'GFILE_SEQ', dataType: 'string', dataIndx: 'GFILE_SEQ', hidden: true},
+            {title: '파일명', dataType: 'string', dataIndx: 'ORGINAL_FILE_NM', width: 500, minWidth: 70,
+                render: function(ui) {
+                    let returnVal = ui.cellData;
+                    if(ui.rowData.FILE_SEQ != undefined){
+                        returnVal += '<span id=\"downloadSingleFile\" class=\"ui-icon ui-icon-search\" style=\"cursor: pointer\"></span>';
+                    }
+                    return returnVal;
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#downloadSingleFile").bind("click", function () {
+                        let rowData = ui.rowData;
+                        alert(rowData.FILE_SEQ);
+                        fnSingleFileDownloadFormPageAction(rowData.FILE_SEQ);
+                    });
+                }
+            },
+            {title: '용량', dataType: 'string', dataIndx: 'FILE_SIZE',  width: 100, minWidth: 100,
+                render: function(ui) {
+                    return fn_getFileSize(ui.cellData);
+                }
 
+            },
+            {title: '업로드 일시', dataType: 'string', dataIndx: 'INSERT_DT',  width: 110, minWidth: 70},
+            {title: '', align: 'center', dataType: 'string', dataIndx: 'FILE_SEQ', width: 40, minWidth: 40,
+                render: function (ui) {
+                    let EST_STATUS = $("#estimate_register_info_form #EST_STATUS").val();
+                    let returnVal = "";
+                    if (ui.cellData) {
+                        if(EST_STATUS != 'EST020') returnVal = '<span id="deleteSingleFile" class="ui-icon ui-icon-close" style="cursor: pointer"></span>';
+
+                        return returnVal;
+                    }
+                },
+                postRender: function (ui) {
+                    let grid = this;
+                    let $cell = grid.getCell(ui);
+                    $cell.find('#deleteSingleFile').on('click', function (event) {
+                        let rowData = ui.rowData;
+                        let parameter = {
+                            'queryId': 'common.deleteFileKey',
+                            'FILE_SEQ': rowData.FILE_SEQ
+                        };
+                        let parameters = {'url': '/json-remove', 'data': parameter};
+                        fnPostAjaxAsync(function(data, callFunctionParam){
+                            let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': rowData.GFILE_SEQ };
+                            fnRequestGridData($requestOutsideFileGrid, postData);
+                        }, parameters, '');
+                    });
+                }
+            }
+        ];
+        const requestOutsideFileObj = {
+            height: 175,
+            collapsible: false,
+            postRenderInterval: -1,
+            resizable: false,
+            showTitle: false,
+            selectionModel : {type: 'row', mode: 'single'},
+            numberCell: {title: 'No.'},
+            dragColumns: {enabled: false},
+            editable : false,
+            scrollModel: {autoFit: true},
+            dragColumns: {enabled: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
+            colModel: requestOutsideFileColModel,
+            strNoRows: g_noData,
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: {queryId: 'common.selectGfileFileListInfo', 'GFILE_SEQ': $("#estimate_register_info_form").find("#GFILE_SEQ").val()},
+                recIndx: 'FILE_SEQ',
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data || []};
+                }
+            },
+            dataReady: function (event, ui) {
+                if($requestOutsideFileGrid === undefined){
+                    $requestOutsideFileGrid.pqGrid(requestOutsideFileObj);
+                    $requestOutsideFileGrid.pqGrid('refresh');
+                }
+                let data = $requestOutsideFileGrid.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#estimate_register_file_grid_records').html(totalRecords);
+            },
+        };
         let $outsideProcessRequestGrid;
         const outsideProcessRequestGridId = 'REQUEST_OUTSIDE_GRID';
         const outsideProcessRequestColModel = [
@@ -645,7 +722,7 @@
                 }
             },
             {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
-            {title: '소재<br>제공', dataType: 'bool', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+            {title: '소재<br>제공', dataType: 'bool', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -655,28 +732,28 @@
                 }
             },
             {
-                title: '요청가공', align: 'center', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, colModel: [
+                title: '요청가공', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, colModel: [
                     {
-                        title: '완제품', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true,
+                        title: '완제품', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true,
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
                     {
-                        title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true,
+                        title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true,
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
                     {
-                        title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true,
+                        title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true,
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
                     {
-                        title: '표면<br>처리', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true,
+                        title: '표면<br>처리', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true,
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
-                    {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true}
+                    {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
                 ]
             },
-            {title: '요망<br>납기', datatype: 'date', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true, editor: {type: 'textbox', init: dateEditor}},
-            {title: '비고', datatype: 'string', dataIndx: 'OUTSIDE_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
+            {title: '요망<br>납기', datatype: 'date', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: dateEditor}},
+            {title: '비고', datatype: 'string', dataIndx: 'OUTSIDE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
         ];
         const outsideProcessRequestObj = {
             height: 200,
@@ -720,7 +797,97 @@
                 }
             }
         };
+        let $cancelRequestOutsideFileGrid;
+        const cancelRequestOutsideFileGridId = 'CANCEL_REQUEST_OUTSIDE_FILE_GRID';
+        const cancelRequestOutsideFileColModel =  [
+            {title: 'GFILE_SEQ', dataType: 'string', dataIndx: 'GFILE_SEQ', hidden: true},
+            {title: '파일명', dataType: 'string', dataIndx: 'ORGINAL_FILE_NM', width: 500, minWidth: 70,
+                render: function(ui) {
+                    let returnVal = ui.cellData;
+                    if(ui.rowData.FILE_SEQ != undefined){
+                        returnVal += '<span id=\"downloadSingleFile\" class=\"ui-icon ui-icon-search\" style=\"cursor: pointer\"></span>';
+                    }
+                    return returnVal;
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#downloadSingleFile").bind("click", function () {
+                        let rowData = ui.rowData;
+                        alert(rowData.FILE_SEQ);
+                        fnSingleFileDownloadFormPageAction(rowData.FILE_SEQ);
+                    });
+                }
+            },
+            {title: '용량', dataType: 'string', dataIndx: 'FILE_SIZE',  width: 100, minWidth: 100,
+                render: function(ui) {
+                    return fn_getFileSize(ui.cellData);
+                }
 
+            },
+            {title: '업로드 일시', dataType: 'string', dataIndx: 'INSERT_DT',  width: 110, minWidth: 70},
+            {title: '', align: 'center', dataType: 'string', dataIndx: 'FILE_SEQ', width: 40, minWidth: 40,
+                render: function (ui) {
+                    let EST_STATUS = $("#estimate_register_info_form #EST_STATUS").val();
+                    let returnVal = "";
+                    if (ui.cellData) {
+                        if(EST_STATUS != 'EST020') returnVal = '<span id="deleteSingleFile" class="ui-icon ui-icon-close" style="cursor: pointer"></span>';
+
+                        return returnVal;
+                    }
+                },
+                postRender: function (ui) {
+                    let grid = this;
+                    let $cell = grid.getCell(ui);
+                    $cell.find('#deleteSingleFile').on('click', function (event) {
+                        let rowData = ui.rowData;
+                        let parameter = {
+                            'queryId': 'common.deleteFileKey',
+                            'FILE_SEQ': rowData.FILE_SEQ
+                        };
+                        let parameters = {'url': '/json-remove', 'data': parameter};
+                        fnPostAjaxAsync(function(data, callFunctionParam){
+                            let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': rowData.GFILE_SEQ };
+                            fnRequestGridData($cancelRequestOutsideFileGrid, postData);
+                        }, parameters, '');
+                    });
+                }
+            }
+        ];
+        const cancelRequestOutsideFileObj = {
+            height: 175,
+            collapsible: false,
+            postRenderInterval: -1,
+            resizable: false,
+            showTitle: false,
+            selectionModel : {type: 'row', mode: 'single'},
+            numberCell: {title: 'No.'},
+            dragColumns: {enabled: false},
+            editable : false,
+            scrollModel: {autoFit: true},
+            dragColumns: {enabled: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
+            colModel: cancelRequestOutsideFileColModel,
+            toolbar: toolbar,
+            strNoRows: g_noData,
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: {queryId: 'common.selectGfileFileListInfo', 'GFILE_SEQ': $("#estimate_register_info_form").find("#GFILE_SEQ").val()},
+                recIndx: 'FILE_SEQ',
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data || []};
+                }
+            },
+            dataReady: function (event, ui) {
+                if($cancelRequestOutsideFileGrid === undefined){
+                    $cancelRequestOutsideFileGrid.pqGrid(cancelRequestOutsideFileObj);
+                    $cancelRequestOutsideFileGrid.pqGrid('refresh');
+                }
+                let data = $cancelRequestOutsideFileGrid.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#estimate_register_file_grid_records').html(totalRecords);
+            },
+        };
         let $cancelRequestOutsideGrid;
         const cancelRequestOutsideGridId = 'CANCEL_REQUEST_OUTSIDE_GRID';
         const cancelRequestOutsideColModel = [
@@ -774,7 +941,7 @@
                 }
             },
             {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
-            {title: '소재<br>제공', dataType: 'bool', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: true,
+            {title: '소재<br>제공', dataType: 'bool', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -784,28 +951,28 @@
                 }
             },
             {
-                title: '요청가공', align: 'center', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, colModel: [
+                title: '요청가공', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, colModel: [
                     {
-                        title: '완제품', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true,
+                        title: '완제품', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true,
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
                     {
-                        title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true,
+                        title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true,
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
                     {
-                        title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true,
+                        title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true,
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
                     {
-                        title: '표면<br>처리', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true,
+                        title: '표면<br>처리', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true,
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
-                    {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true}
+                    {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
                 ]
             },
-            {title: '요망<br>납기', datatype: 'date', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true, editor: {type: 'textbox', init: dateEditor}},
-            {title: '비고', datatype: 'string', dataIndx: 'OUTSIDE_NOTE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, editable: true},
+            {title: '요망<br>납기', datatype: 'date', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: dateEditor}},
+            {title: '비고', datatype: 'string', dataIndx: 'OUTSIDE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
         ];
         const cancelRequestOutsideObj = {
             height: 200,
@@ -839,10 +1006,11 @@
             {title: '대상업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM'},
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
+            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER', hidden: true},
+            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER_TRAN'},
             {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
             {title: '발주가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}, // 2020-06-08
-            {title: '마감금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}
+            {title: '마감금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT'}
         ];
         const outsideCloseLeftObj = {
             height: 250,
@@ -863,14 +1031,17 @@
         let $outsideCloseRightGrid;
         const outsideCloseRightGridId = 'OUTSIDE_CLOSE_RIGHT_GRID';
         const outsideCloseRightColModel = [
-            {title: '외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
-            {title: '외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM'},
+            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
+            {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
+            {title: '대상업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
+            {title: '대상업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM'},
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
             {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
+            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER', hidden: true},
+            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER_TRAN'},
             {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
-            {title: '발주가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
-            {title: '마감금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}
+            {title: '발주가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}, // 2020-06-08
+            {title: '마감금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
         ];
         const outsideCloseRightObj = {
             height: 250,
@@ -938,20 +1109,24 @@
             $cancelRequestOutsideGrid.pqGrid('refreshDataAndView');
         };
 
-        let loadOutsideCloseData = function () {
+        let loadOutsideCloseData = function (open) {
             let selectedRowCount = selectedRowIndex.length;
             let controlDetailSeqList = [];
+            let compCdList = [];
             let coCompCdList = [];
             let controlDetailSeqStr = '';
-            let coCompCdStr = '';
 
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $outsideOrderManageGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
 
                 controlDetailSeqList.push(rowData.CONTROL_DETAIL_SEQ);
+                compCdList.push(rowData.COMP_CD);
                 coCompCdList.push(rowData.OUTSIDE_COMP_CD);
             }
             // 중복제거
+            compCdList = compCdList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
             coCompCdList = coCompCdList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
             });
@@ -963,30 +1138,36 @@
                     controlDetailSeqStr += ',';
                 }
             }
-            for (let i = 0; i < coCompCdList.length; i++) {
-                coCompCdStr += '\'' + coCompCdList[i] + '\'';
 
-                if (i < coCompCdList.length - 1) {
-                    coCompCdStr += ',';
-                }
+            $('#OUTSIDE_CLOSE_FORM > #CONTROL_DETAIL_SEQ').val(controlDetailSeqStr);
+            $('#OUTSIDE_CLOSE_FORM > #COMP_CD').val(compCdList[0]);
+            $('#OUTSIDE_CLOSE_FORM > #OUTSIDE_COMP_CD').val(coCompCdList[0]);
+
+            if (open) {
+                // 마지막 마감 차수 가져오기
+                let postData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_FORM');
+                postData.queryId = 'outMapper.selectOutSideCloseVer';
+                let parameters = {'url': '/json-list', 'data': postData};
+                fnPostAjaxAsync(function (data) {
+                    let closeVer = data.list.length > 0 ? data.list[0].MAX_CLOSE_VER : 1;
+                    $('#OUTSIDE_CLOSE_FORM #CLOSE_VER').val(closeVer).prop('selected', true);
+                }, parameters, '');
+
+                let outsideCloseLeftPostData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_FORM');
+                outsideCloseLeftPostData.queryId = 'orderMapper.selectControlCloseLeftList';
+
+                $outsideCloseLeftGrid.pqGrid('option', 'dataModel.postData', function () {
+                    return (fnFormToJsonArrayData('#OUTSIDE_CLOSE_FORM'));
+                });
+                $outsideCloseLeftGrid.pqGrid('refreshDataAndView');
             }
 
-            $('#OUTSIDE_CLOSE_LEFT_FORM > #CONTROL_DETAIL_SEQ').val(controlDetailSeqStr);
-            $('#OUTSIDE_CLOSE_LEFT_FORM > #OUTSIDE_COMP_CD').val(coCompCdStr);
-
-            $outsideCloseLeftGrid.pqGrid('option', 'dataModel.postData', function () {
-                return (fnFormToJsonArrayData('#OUTSIDE_CLOSE_LEFT_FORM'));
+            let outCloseRightPostData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_FORM');
+            outCloseRightPostData.queryId = 'outMapper.selectOutsideCloseRightList';
+            $outsideCloseRightGrid.pqGrid('option', 'dataModel.postData', function () {
+                return outCloseRightPostData;
             });
-            $outsideCloseLeftGrid.pqGrid('refreshDataAndView');
-
-            let controlCloseRightPostData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_LEFT_FORM')
-            controlCloseRightPostData.queryId = 'selectOutsideCloseRightList';
-            let parameters = {'url': '/paramQueryGridSelect', 'data': controlCloseRightPostData}
-
-            fnPostAjax(function (data, callFunctionParam) {
-                $outsideCloseRightGrid.pqGrid('option', 'dataModel.data', data.data);
-                $outsideCloseRightGrid.pqGrid('refreshView');
-            }, parameters, '');
+            $outsideCloseRightGrid.pqGrid('refreshDataAndView');
         };
 
         const noSelectedRowAlert = function () {
@@ -1046,6 +1227,11 @@
 
             if (outsideStatusList[0] === 'OST002' && outsideStatusList[0] === status) {
                 alert('이미 발송된 요청입니다.');
+                return true;
+            }
+
+            if (outsideStatusList[0] === undefined && status === 'OST002') {
+                alert('가공요청 취소 할 수 없습니다.');
                 return true;
             }
 
@@ -1205,6 +1391,7 @@
                 // 그리드 생성
                 $mailRecipientGrid = $('#' + mailRecipientGridId).pqGrid(mailRecipientObj);
                 $outsideProcessRequestGrid = $('#' + outsideProcessRequestGridId).pqGrid(outsideProcessRequestObj);
+                $requestOutsideFileGrid = $('#' + requestOutsideFileGridId).pqGrid(requestOutsideFileObj);
                 // 요청 외주 업체 선택
                 selectOutsideCompCd('REQUEST_OUTSIDE_MAIL_FORM');
                 // 메일 수신처 가져오기
@@ -1235,6 +1422,7 @@
                 // 그리드 생성
                 $cancelMailRecipientGrid = $('#' + cancelMailRecipientGridId).pqGrid(cancelMailRecipientObj);
                 $cancelRequestOutsideGrid = $('#' + cancelRequestOutsideGridId).pqGrid(cancelRequestOutsideObj);
+                $cancelRequestOutsideFileGrid = $('#' + cancelRequestOutsideFileGridId).pqGrid(cancelRequestOutsideFileObj);
                 // 요청 외주 업체 선택
                 selectOutsideCompCd('CANCEL_REQUEST_OUTSIDE_MAIL_FORM');
                 // 메일 수신처 가져오기
@@ -1267,33 +1455,35 @@
             let orderStaffSeqStr = '';
             let controlSeqList = [];
             let controlDetailSeqList = [];
+            let compCdList = [];
             let orderCompCdList = [];
 
             for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = $outsideOrderManageGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
 
-                console.log(rowData)
+                compCdList.push(rowData.COMP_CD);
                 orderCompCdList.push(rowData.OUTSIDE_COMP_CD);
                 controlSeqList.push(rowData.CONTROL_SEQ);
                 controlDetailSeqList.push(rowData.CONTROL_DETAIL_SEQ);
                 outsideOrderNumStr = rowData.OUTSIDE_ORDER_NUM;
                 orderStaffSeqStr = rowData.ORDER_STAFF_SEQ;
             }
-            console.log(controlSeqList);
-            console.log(controlDetailSeqList);
             // 중복제거
             controlSeqList = controlSeqList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
             });
             controlDetailSeqList = controlDetailSeqList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
             });
+            compCdList = compCdList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
 
             if (orderCompCdList.length > 1) {
-                alert('선택된 대상들의 외주업체는 반드시 동일해야함');
+                alert('선택된 대상들의 외주업체는 반드시 동일해야합니다');
                 return false;
             }
 
@@ -1314,7 +1504,7 @@
             // if(orderCompCdList[0] == undefined) {
             //     console.log('undefined!');
             // }
-            $('#outsourcing_order_excel_download #paramData').val(outsideOrderNumStr + ':' + orderCompCdList[0] + ':' + orderStaffSeqStr + ':' + controlSeqStr + ':' + controlDetailSeqStr);
+            $('#outsourcing_order_excel_download #paramData').val(outsideOrderNumStr + ':' + orderCompCdList[0] + ':' + orderStaffSeqStr + ':' + controlSeqStr + ':' + controlDetailSeqStr  + ':' + compCdList[0]);
 
             fnReportFormToHiddenFormPageAction('outsourcing_order_excel_download', '/downloadExcel');
         });
@@ -1322,14 +1512,19 @@
         $('#OUTSIDE_CLOSE_POPUP').on({
             'show.bs.modal': function () {
                 let selectedRowCount = selectedRowIndex.length;
+                let compCdList = [];
                 let outsideCompCdList = [];
 
                 for (let i = 0; i < selectedRowCount; i++) {
                     let rowData = $outsideOrderManageGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
 
+                    compCdList.push(rowData.COMP_CD);
                     outsideCompCdList.push(rowData.OUTSIDE_COMP_CD);
                 }
                 // 중복제거
+                compCdList = compCdList.filter(function (element, index, array) {
+                    return array.indexOf(element) === index;
+                });
                 outsideCompCdList = outsideCompCdList.filter(function (element, index, array) {
                     return array.indexOf(element) === index;
                 });
@@ -1339,13 +1534,22 @@
                     return false;
                 }
 
+                if (compCdList.length > 1) {
+                    alert('선택된 대상들의 사업자는 동일해야 합니다.');
+                    return false;
+                }
+                if (outsideCompCdList.length > 1) {
+                    alert('선택된 대상들의 협력업체는 동일해야 합니다.');
+                    return false;
+                }
+
                 fnAppendSelectboxYear('OUTSIDE_CLOSE_POP_YEAR', 3);
                 fnAppendSelectboxMonth('OUTSIDE_CLOSE_POP_MONTH', CURRENT_YEAR);
 
                 $outsideCloseLeftGrid = $('#' + outsideCloseLeftGridId).pqGrid(outsideCloseLeftObj);
                 $outsideCloseRightGrid = $('#' + outsideCloseRightGridId).pqGrid(outsideCloseRightObj);
 
-                loadOutsideCloseData();
+                loadOutsideCloseData(true);
             },
             'hide.bs.modal': function () {
                 $outsideCloseLeftGrid.pqGrid('destroy');
@@ -1353,7 +1557,7 @@
             }
         });
 
-        $('#OUTSIDE_CLOSE_LEFT_FORM').on('change', function () {
+        $('#OUTSIDE_CLOSE_FORM').on('change', function () {
             loadOutsideCloseData();
         });
 
@@ -1502,6 +1706,7 @@
             fnPostAjax(function (data, callFunctionParam) {
                 alert("<spring:message code='com.alert.default.save.success' />");
                 $('#REQUEST_OUTSIDE_POPUP').modal('hide');
+                $outsideOrderManageGrid.pqGrid('refreshDataAndView');
             }, parameters, '');
 
             // outsideRequestSave();
@@ -1572,6 +1777,7 @@
                     fnPostAjax(function (data, callFunctionParam) {
                         alert("<spring:message code='com.alert.default.save.success' />");
                         $('#CANCEL_REQUEST_OUTSIDE_POPUP').modal('hide');
+                        $outsideOrderManageGrid.pqGrid('refreshDataAndView');
                     }, parameters, '');
                 }
             });
@@ -1605,6 +1811,36 @@
             cancelRequestOutsideConfirm();
         });
         /* 가공 취소 요청 */
+
+        /* 외주가공요청 파일 업로드 */
+        $("#REQUEST_OUTSIDE_FILE_UPLOAD_BUTTON").on('click', function(){
+            let GfileKey = $('#REQUEST_OUTSIDE_MAIL_FORM #GFILE_SEQ').val();
+            $('#common_file_download_form').find('#GFILE_SEQ').val(GfileKey);
+            commonFileDownUploadPopupCall(GfileKey, 'REQUEST_OUTSIDE_FILE_UPLOAD');
+        });
+
+        $('#REQUEST_OUTSIDE_FILE_UPLOAD').on('click', function () {
+            let GfileKey = $('#common_file_download_form').find('#GFILE_SEQ').val();
+            $('#REQUEST_OUTSIDE_MAIL_FORM #GFILE_SEQ').val(GfileKey);
+            let postData = {'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey};
+            fnRequestGridData($requestOutsideFileGrid, postData);
+        });
+        /* 외주가공요청 파일 업로드 */
+
+        /* 가공요청 취소 파일 업로드 */
+        $("#CANCEL_REQUEST_OUTSIDE_FILE_UPLOAD_BUTTON").on('click', function(){
+            let GfileKey = $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM #GFILE_SEQ').val();
+            $('#common_file_download_form').find('#GFILE_SEQ').val(GfileKey);
+            commonFileDownUploadPopupCall(GfileKey, 'CANCEL_REQUEST_OUTSIDE_FILE_UPLOAD');
+        });
+
+        $('#CANCEL_REQUEST_OUTSIDE_FILE_UPLOAD').on('click', function () {
+            let GfileKey = $('#common_file_download_form').find('#GFILE_SEQ').val();
+            $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM #GFILE_SEQ').val(GfileKey);
+            let postData = {'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey};
+            fnRequestGridData($cancelRequestOutsideFileGrid, postData);
+        });
+        /* 가공요청 취소 파일 업로드 */
 
 
         /* 메일 드래그앤드랍 */

@@ -642,7 +642,7 @@ console.log(dataInfo);
         $("#INSPECTION_BARCODE_NUM").on('keyup', function(e) {
 
             if (e.keyCode == 13) {
-                fnBarcodePrintCheck(function(confirm,callFunctionParam){
+                fnBarcodePrintCheck(function(confirm, callFunctionParam){
                     let barcodeN = callFunctionParam;
                     if(confirm){
                         fnResetFrom("inspection_manage_pop_form");

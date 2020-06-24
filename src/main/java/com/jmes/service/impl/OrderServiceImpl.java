@@ -58,34 +58,36 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void createMonthFinishClose(Map<String, Object> map) throws Exception {
+    public void createMonthClose(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
-        HashMap<String, Object> infoData = null;
         ArrayList<HashMap<String, Object>> listData = null;
+        ArrayList<HashMap<String, Object>> infoData = null;
 
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<HashMap<String, Object>>() {});
 
-        if (jsonMap.containsKey("info-data"))
-            infoData = (HashMap<String, Object>) jsonMap.get("info-data");
-
         if (jsonMap.containsKey("list-data"))
             listData = (ArrayList<HashMap<String, Object>>) jsonMap.get("list-data");
+
+        if (jsonMap.containsKey("info-data"))
+            infoData = (ArrayList<HashMap<String, Object>>) jsonMap.get("info-data");
 
         if (listData != null && listData.size() > 0) {
             for (HashMap<String, Object> hashMap : listData) {
                 hashMap.put("CONTROL_STATUS", "ORD003");
                 this.orderDao.updateControlStatus(hashMap);
                 this.orderDao.createControlProgress(hashMap);
-                this.orderDao.createMonthFinishClose(hashMap);
-                this.orderDao.createMonthFinishCloseHistory(hashMap);
+                this.orderDao.createMonthClose(hashMap);
+                this.orderDao.createMonthCloseDetail(hashMap);
             }
         }
 
         if (infoData != null && infoData.size() > 0) {
-            this.orderDao.updateMonthCloseFinalNego(infoData);
+            for (HashMap<String, Object> hashMap : infoData) {
+                this.orderDao.updateMonthCloseFinalNego(hashMap);
+            }
         }
     }
 
@@ -93,17 +95,33 @@ public class OrderServiceImpl implements OrderService {
     public void removeMonthClose(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
-        ArrayList<HashMap<String, Object>> jsonArray = null;
+        Map<String, Object> jsonMap = null;
+        ArrayList<HashMap<String, Object>> listData = null;
+        ArrayList<HashMap<String, Object>> infoData = null;
 
         if (jsonObject != null)
-            jsonArray = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<HashMap<String, Object>>>() {});
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<HashMap<String, Object>>() {});
 
-        for (HashMap<String, Object> hashMap : jsonArray) {
-            hashMap.put("CONTROL_STATUS", null);
-            this.orderDao.deleteMonthCloseDetail(hashMap);
-            this.orderDao.deleteMonthClose(hashMap);
-            this.orderDao.updateControlStatus(hashMap);
-            this.orderDao.createControlProgress(hashMap);
+        if (jsonMap.containsKey("list-data"))
+            listData = (ArrayList<HashMap<String, Object>>) jsonMap.get("list-data");
+
+        if (jsonMap.containsKey("info-data"))
+            infoData = (ArrayList<HashMap<String, Object>>) jsonMap.get("info-data");
+
+        if (listData != null && listData.size() > 0) {
+            for (HashMap<String, Object> hashMap : listData) {
+                hashMap.put("CONTROL_STATUS", null);
+                this.orderDao.deleteMonthCloseDetail(hashMap);
+                this.orderDao.deleteMonthClose(hashMap);
+                this.orderDao.updateControlStatus(hashMap);
+                this.orderDao.createControlProgress(hashMap);
+            }
+        }
+
+        if (infoData != null && infoData.size() > 0) {
+            for (HashMap<String, Object> hashMap : infoData) {
+                this.orderDao.updateMonthCloseFinalNego(hashMap);
+            }
         }
     }
 

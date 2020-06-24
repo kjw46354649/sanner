@@ -42,10 +42,10 @@ public class OrderController {
         return "jsonView";
     }
 
-    @RequestMapping(value = "/createMonthFinishClose", method = RequestMethod.POST)
-    public String createMonthFinishClose(HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/createMonthClose", method = RequestMethod.POST)
+    public String createMonthClose(HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
-        this.orderService.createMonthFinishClose(map);
+        this.orderService.createMonthClose(map);
         return "jsonView";
     }
 

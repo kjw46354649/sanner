@@ -46,13 +46,13 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public void createMonthFinishClose(HashMap<String, Object> hashMap) throws SQLException {
-        sqlSessionTemplate.insert("createMonthFinishClose", hashMap);
+    public void createMonthClose(HashMap<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("createMonthClose", hashMap);
     }
 
     @Override
-    public void createMonthFinishCloseHistory(HashMap<String, Object> hashMap) throws SQLException {
-        sqlSessionTemplate.insert("createMonthFinishCloseHistory", hashMap);
+    public void createMonthCloseDetail(HashMap<String, Object> hashMap) throws SQLException {
+        sqlSessionTemplate.insert("createMonthCloseDetail", hashMap);
     }
 
     @Override

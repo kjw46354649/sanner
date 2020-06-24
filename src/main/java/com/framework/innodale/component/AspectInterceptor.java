@@ -115,7 +115,7 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
      */
     private boolean isPassUrlList(String url) throws Exception{
 
-        System.out.println("url=[" + url + "]");
+        // System.out.println("url=[" + url + "]");
 
         List<String> passList = new ArrayList<String>();
 

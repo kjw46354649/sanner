@@ -25,8 +25,8 @@ public class CadFileConverter {
 
     public static String cadfile_converter(File sourceFile, String convertPath) throws IOException, InterruptedException {
 
-        License license = new License();
-        license.setLicense("Aspose.CAD.lic");
+//        License license = new License();
+//        license.setLicense("Aspose.CAD.lic");
 
         String message = "DXF File Converter Success!.";
 
@@ -45,6 +45,7 @@ public class CadFileConverter {
             convertAsposeCadTOJava(convertFile);
 
         }catch(Exception exception){
+            exception.printStackTrace();
             message = exception.getMessage();
         }
 
@@ -57,9 +58,10 @@ public class CadFileConverter {
      * @throws IOException
      * @throws InterruptedException
      */
-    public static void convertODAFileConvert(File sourceFile, String convertPath) throws IOException, InterruptedException {
+    public static void convertODAFileConvert(File sourceFile, String convertPath) throws Exception {
         String sourceFileName = new String(sourceFile.getName().getBytes("x-windows-949"), "ksc5601");
         String targetFilePath = sourceFile.getParentFile().toString() + File.separator + convertPath;
+        CommonUtility.createFileDirectory(new File(targetFilePath));
         if ("window".equals(CommonUtility.getServerType())){
             CommandExecuteUtil.execCommand(CMD_TO_NORMAL_DFX2010_WIN_EXE, sourceFile.getParentFile().toString(), targetFilePath, "ACAD2013", "DWG", "0", "1", sourceFileName);
         }else{
@@ -73,8 +75,16 @@ public class CadFileConverter {
      * @throws IOException
      * @throws InterruptedException
      */
-    public static void convertODAFileDirectoryConvert(File sourceFile, String convertPath) throws IOException, InterruptedException {
+    public static void convertODAFileDirectoryConvert(File sourceFile, String convertPath) throws Exception {
         String targetFilePath = sourceFile.getParentFile().toString() + File.separator + convertPath;
+        CommonUtility.createFileDirectory(new File(targetFilePath));
+
+
+        System.out.println("convertODAFileDirectoryConvert CommonUtility.getServerType() =[" + CommonUtility.getServerType() + "]");
+        System.out.println("convertODAFileDirectoryConvert CMD_TO_NORMAL_DFX2010_LINUX_EXE =[" + CMD_TO_NORMAL_DFX2010_LINUX_EXE + "]");
+        System.out.println("convertODAFileDirectoryConvert sourceFile.getParentFile().toString() =[" + sourceFile.getParentFile().toString() + "]");
+        System.out.println("convertODAFileDirectoryConvert targetFilePath =[" + targetFilePath + "]");
+
         if ("window".equals(CommonUtility.getServerType())){
             CommandExecuteUtil.execCommand(CMD_TO_NORMAL_DFX2010_WIN_EXE, sourceFile.getParentFile().toString(), targetFilePath, "ACAD2013", "DWG", "0", "1");
         }else{

@@ -33,9 +33,9 @@
 /*.gnbWrap .depth2 ul li a { display: block; width: 100%; height: 36px; box-sizing: border-box; color: #afbcd6; font-size: 15px; font-family: 'NotoKrR'; line-height: 34px; }*/
 .gnbWrap .depth2 ul li a { display: block; width: 100%; height: 36px; box-sizing: border-box; color: #afbcd6; font-size: 14px; font-family: 'NotoKrR'; line-height: 34px; }
 .gnbWrap .depth2 ul li a:hover { color: #fff }
-.sidebarWrap .sideWrap { width: 27px; height: 52px; font-size: 0; background: url(../images/common/btn_sidebar_close.png) no-repeat 0 0; position: absolute; right: -27px; top: 50%; transform: translateY(-50%); }
+.sidebarWrap .sideWrap { width: 27px; height: 52px; font-size: 0; background: url(../images/common/btn_sidebar_open.png) no-repeat 0 0; position: absolute; right: -27px; top: 50%; transform: translateY(-50%); }
 .sidebarWrap .sideWrap a { display: block; width: 100%; height: 100%; }
-.sidebarWrap.on .sideWrap{background:url(../images/common/btn_sidebar_open.png);}
+.sidebarWrap.on .sideWrap{background:url(../images/common/btn_sidebar_close.png);}
 /*/////////////////////////////////////////////////////////////////////////// /////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// BODY WRAP /////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
@@ -65,11 +65,11 @@
 .tabMenuWrap ul li.on a{}
 .tabMenuWrap ul li.on .closeBtn{}
 
-.full_bottomWrap { height: 891px; }
-.row1_bottomWrap { height: 854px; }
-.row2_bottomWrap { height: 829px; }
-.row3_bottomWrap { height: 794px; }
-.row4_bottomWrap { height: 769px; }
+.full_bottomWrap { height: 860px; }
+.row1_bottomWrap { height: 825px; }
+.row2_bottomWrap { height: 800px; }
+.row3_bottomWrap { height: 765px; }
+.row4_bottomWrap { height: 740px; }
 
 .estimate .topWrap .row1_topWrap { height: 50px !important; }
 /*.estimate .topWrap .row2_topWrap { height: 84.5px !important; }*/

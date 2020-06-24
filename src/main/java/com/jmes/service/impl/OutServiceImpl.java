@@ -15,11 +15,12 @@ import java.util.Map;
 
 @Service
 public class OutServiceImpl implements OutService {
-    @Autowired
-    public OrderDao orderDao;
 
     @Autowired
     private InnodaleDao innodaleDao;
+    @Autowired
+    public OrderDao orderDao;
+    @Autowired
     public OutDao outDao;
 
     @Override
@@ -80,20 +81,27 @@ public class OutServiceImpl implements OutService {
         if (jsonMap.containsKey("mailReceiverList"))
             mailReceiverList = (ArrayList<HashMap<String, Object>>) jsonMap.get("mailReceiverList");
 
+        // 주문관리 Part 저장,  외주가공 요청상태 삭제
+        if (controlPartList != null && controlPartList.size() > 0) {
+            for (HashMap<String, Object> hashMap : controlPartList) {
+                hashMap.put("queryId", "orderMapper.updateControlPart");
+                this.innodaleDao.update(hashMap);
+                hashMap.put("queryId", "outMapper.updateOutsideRequestDelYN");
+                this.innodaleDao.update(hashMap);
+            }
+        }
+
         // 외주 가공 요청
         if (requestMailForm != null && requestMailForm.size() > 0) {
             requestMailForm.put("queryId", "outMapper.createOutsideRequest");
             this.innodaleDao.create(requestMailForm);
         }
-        System.out.println(requestMailForm);
         outsideRequestSeq = (int) requestMailForm.get("OUTSIDE_REQUEST_SEQ");
 
-        // 주문관리 Part 저장 & 외주가공요청 상세 저장
+        // 외주가공요청 상세 저장
         if (controlPartList != null && controlPartList.size() > 0) {
             for (HashMap<String, Object> hashMap : controlPartList) {
                 hashMap.put("OUTSIDE_REQUEST_SEQ", outsideRequestSeq);
-                hashMap.put("queryId", "orderMapper.updateControlPart");
-                this.innodaleDao.update(hashMap);
                 hashMap.put("queryId", "outMapper.createOutsideRequestDetail");
                 this.innodaleDao.create(hashMap);
             }
@@ -112,6 +120,26 @@ public class OutServiceImpl implements OutService {
         if (requestMailForm != null && requestMailForm.size() > 0) {
             requestMailForm.put("queryId", "mail.insertOutsideRequestSubmitMail");
             this.innodaleDao.create(requestMailForm);
+        }
+    }
+
+    @Override
+    public void removeOutsideClose(Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayList<HashMap<String, Object>> jsonArray = null;
+
+        if (jsonObject != null)
+            jsonArray = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<HashMap<String, Object>>>() {});
+
+        for (HashMap<String, Object> hashMap : jsonArray) {
+            hashMap.put("queryId", "outMapper.updateCancelOutsideRequestStatus");
+            this.innodaleDao.update(hashMap);
+            hashMap.put("queryId", "outMapper.deleteOutsideClose");
+            this.innodaleDao.remove(hashMap);
+            hashMap.put("queryId", "outMapper.deleteOutsideCloseHistory");
+            this.innodaleDao.remove(hashMap);
+            //TODO: CLOSSE NOTE 삭제
         }
     }
 }
