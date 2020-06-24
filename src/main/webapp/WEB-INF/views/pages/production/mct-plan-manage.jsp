@@ -52,6 +52,7 @@
                     <li id="layout_2_3" style="min-width: 506px;"></li>
                     <li id="layout_2_4" style="min-width: 506px;"></li>
                     <li id="layout_2_5" style="min-width: 506px;"></li>
+                    <li id="layout_2_6" style="min-width: 506px;"></li>
                 </ul>
             </div>
         </div>
@@ -143,7 +144,7 @@
         let selectedRowIndex = '';
         const insertQueryList = ['machine.insertMctPlan'];
         const updateQueryList = ['machine.updateMctPlan'];
-        const deleteQueryList = ['machine.deleteMctPlan', 'machine.deleteMctWork'];
+        const deleteQueryList = ['machine.deleteMctPlan'];
         let $processPlanGrid1, $processPlanGrid2, $processPlanGrid3, $processPlanGrid4, $processPlanGrid5, $processPlanGrid6, $processPlanGrid7, $processPlanGrid8, $processPlanGrid9, $processPlanGrid10, $processPlanGrid11;
         const processPlanGrid1Id = 'PROCESS_PLAN_GRID1';
         const processPlanGrid2Id = 'PROCESS_PLAN_GRID2';
@@ -183,7 +184,7 @@
             str += '                    <div id="PROCESS_PLAN_GRID' + order + '"></div>';
             str += '                </div>';
             str += '                <div class="footerWrap">';
-            str += '                    <span>Total <span id="NC' + order + '_TOTAL_RECORDS">0</span>rows <span id="NC' + order + '_TOTAL_PART_UNIT_QUANTITY">0</span>ea <span id="NC' + order + '_TOTAL_WORKING_TIME">0</span>min</span>';
+            str += '                    <span>Total: <span id="NC' + order + '_TOTAL_RECORDS">0</span>rows <span id="NC' + order + '_TOTAL_WORKING_TIME">0</span>min</span>';
             str += '                </div>';
             str += '            </div>';
             str += '        </div>';
@@ -223,17 +224,17 @@
             return list;
         })();
 
-        let processPlanPostData1 = fnFormToJsonArrayData('#MCT_NC1_PLAN_FORM');
-        let processPlanPostData2 = fnFormToJsonArrayData('#MCT_NC2_PLAN_FORM');
-        let processPlanPostData3 = fnFormToJsonArrayData('#MCT_NC3_PLAN_FORM');
-        let processPlanPostData4 = fnFormToJsonArrayData('#MCT_NC4_PLAN_FORM');
-        let processPlanPostData5 = fnFormToJsonArrayData('#MCT_NC5_PLAN_FORM');
-        let processPlanPostData6 = fnFormToJsonArrayData('#MCT_NC6_PLAN_FORM');
-        let processPlanPostData7 = fnFormToJsonArrayData('#MCT_NC7_PLAN_FORM');
-        let processPlanPostData8 = fnFormToJsonArrayData('#MCT_NC8_PLAN_FORM');
-        let processPlanPostData9 = fnFormToJsonArrayData('#MCT_NC9_PLAN_FORM');
-        let processPlanPostData10 = fnFormToJsonArrayData('#MCT_NC10_PLAN_FORM');
-        let processPlanPostData11 = fnFormToJsonArrayData('#MCT_NC11_PLAN_FORM');
+        let processPlanPostData1 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC1_PLAN_FORM')}};
+        let processPlanPostData2 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC2_PLAN_FORM')}};
+        let processPlanPostData3 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC3_PLAN_FORM')}};
+        let processPlanPostData4 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC4_PLAN_FORM')}};
+        let processPlanPostData5 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC5_PLAN_FORM')}};
+        let processPlanPostData6 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC6_PLAN_FORM')}};
+        let processPlanPostData7 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC7_PLAN_FORM')}};
+        let processPlanPostData8 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC8_PLAN_FORM')}};
+        let processPlanPostData9 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC9_PLAN_FORM')}};
+        let processPlanPostData10 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC10_PLAN_FORM')}};
+        let processPlanPostData11 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC11_PLAN_FORM')}};
 
         const processPlanColModel = [
             {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true},
@@ -242,60 +243,18 @@
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'MCT_PLAN_SEQ', dataType: 'integer', dataIndx: 'MCT_PLAN_SEQ', hidden: true},
-            {title: 'WORK_USER_ID', dataType: 'string', dataIndx: 'WORK_USER_ID', hidden: true},
-            {title: 'WORK_STATUS', dataType: 'string', dataIndx: 'WORK_STATUS', hidden: true},
+            // {title: 'WORK_USER_ID', dataType: 'string', dataIndx: 'WORK_USER_ID', hidden: true},
+            // {title: 'WORK_STATUS', dataType: 'string', dataIndx: 'WORK_STATUS', hidden: true},
             {title: 'SORT_NUM', dataType: 'integer', dataIndx: 'SORT_NUM', hidden: true},
             {title: '납기', width: 150, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
             {title: '관리번호', minWidht: 300, width: 300, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: 'Part 수량', dataType: 'string', dataIndx: 'PART_UNIT_QTY'},
-            {title: '소재', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027')},
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let workType = fnGetCommCodeGridSelectBox('1027');
-                        let index = workType.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = workType.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-
-                        }
-
-                        return (index < 0) ? cellData : workType[index].text;
-                    }
-                }
-            },
-            {title: '규격', width: 50, dataType: 'string', dataIndx: 'STANDARD_SIZE'},
-            {title: '현재위치', width: 100, dataType: 'string', dataIndx: 'POP_POSITION',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let position = fnGetCommCodeGridSelectBox('1009');
-                        let index = position.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = position.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-
-                        }
-
-                        return (index < 0) ? cellData : position[index].text;
-                    }
-                }
-            },
+            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM'},
+            {title: '수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
+            {title: '소재', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden: true},
+            {title: '소재', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
+            {title: '규격', width: 50, dataType: 'string', dataIndx: 'SIZE_TXT'},
+            {title: '현재위치', width: 100, dataType: 'string', dataIndx: 'POP_POSITION', hidden: true},
+            {title: '현재위치', width: 100, dataType: 'string', dataIndx: 'POP_POSITION_NM'},
             {title: '예상', dataType: 'string', dataIndx: 'WORKING_TIME'},
             {
                 title: '', dataType: 'string', dataIndx: 'DELETE_BUTTON', editable: false,
@@ -314,231 +273,67 @@
                 }
             },
         ];
-        const processPlanObj1 = {
+
+        const planObj = {
             height: '100%',
             collapsible: false,
-            postRenderInterval: -1, //call postRender synchronously.
+            postRenderInterval: -1,
             resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
             selectionModel: {type: 'row', mode: 'single'},
-            // scrollModel: {autoFit: true},
+            scrollModel: {autoFit: true},
             trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
+            editable: true,
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
             colModel: processPlanColModel,
             strNoRows: g_noData,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: processPlanPostData1, recIndx: 'ROWNUM',
+                postData: {'queryId': 'dataSource.emptyGrid'}, recIndx: 'ROWNUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
-                }
+                },
             },
             dragModel: {
                 on: true,
-                clsDnD: 'dnd1',
                 diHelper: ['CONTROL_NUM'],
             },
             dropModel: {
                 on: true,
-                accept: '.dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .dnd9, .dnd10,  .dnd11, .master',
-                drop: function (evt, ui) {
-                    let Drag = ui.helper.data('Drag');
-                    let uiDrag = Drag.getUI();
-                    let $grid = $(this.element.context);
-                    let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
-                    uiDrag.rowData.EQUIP_SEQ = equipSeq;
-                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $grid.pqGrid('option', 'dataModel.data').length;
-                    $grid.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
-
-                    changeSortNum(this, $grid);
-                }
-            },
-            complete: function () {
-                console.group('complete 1');
-                let data = this.options.dataModel.data;
-                let totalRecords = data.length;
-                let tableElement = this.element.closest('.table');
-
-                changeTitleColor(data, tableElement);
-
-                if (totalRecords) {
-                    showTitle(data, tableElement);
-                    changeFooter(data, tableElement);
-                }
-                console.groupEnd();
-            },
-            rowSelect: function (event, ui) {
-                selectedGrid = $(this.element.context);
-                selectedRowIndex = ui.addList[0].rowIndx;
-            },
-            // 그리드 내 순서 변경했을 때
-            moveNode: function (event, ui) {
-                console.group('move node1');
-                changeSortNum(this, $(this.element.context));
-                console.groupEnd();
-            },
-            // 셀 데이터를 변경했을 때
-            cellSave: function (evt, ui) {
-                console.group('cellSave');
-                if (ui.oldVal === undefined && ui.newVal === null) {
-                    $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
-                }
-                console.groupEnd();
-            },
-            change: function (event, ui) {
-                console.group('change 1');
-                console.log(ui.source);
-                console.groupEnd();
-                if (ui.source === 'update' || ui.source === 'edit' || ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                    setTimeout(function () {
-                        refreshTargetGrid();
-                    }, 1000);
-                }
-
-                if (ui.source === 'add' || ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    changeSortNum(this, $(this.element.context));
-                }
-            }
-        };
-        const processPlanObj2 = {
-            height: '100%',
-            collapsible: false,
-            postRenderInterval: -1, //call postRender synchronously.
-            resizable: false,
-            showTitle: false,
-            numberCell: {title: 'No.'},
-            selectionModel: {type: 'row', mode: 'single'},
-            scrollModel: {autoFit: true},
-            trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
-            colModel: processPlanColModel,
-            strNoRows: g_noData,
-            dataModel: {
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: processPlanPostData2, recIndx: 'ROWNUM',
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                }
-            },
-            dragModel: {
-                on: true,
-                clsDnD: 'dnd2',
-                diHelper: ['CONTROL_NUM']
-            },
-            dropModel: {
-                on: true,
-                accept: '.dnd1, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .dnd9, .dnd10, .dnd11, .master',
-                drop: function (evt, ui) {
-                    let Drag = ui.helper.data('Drag');
-                    let uiDrag = Drag.getUI();
-                    let $grid = $(this.element.context);
-                    let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
-                    uiDrag.rowData.EQUIP_SEQ = equipSeq;
-                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $grid.pqGrid('option', 'dataModel.data').length;
-                    $grid.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
-
-                    changeSortNum(this, $grid);
-                }
-            },
-            complete: function () {
-                console.group('complete 2');
-                console.groupEnd();
-                let data = this.options.dataModel.data;
-                let totalRecords = data.length;
-                let tableElement = this.element.closest('.table');
-
-                changeTitleColor(data, tableElement);
-
-                if (totalRecords) {
-                    showTitle(data, tableElement);
-                    changeFooter(data, tableElement);
-                }
-            },
-            rowSelect: function (event, ui) {
-                selectedGrid = $(this.element.context);
-                selectedRowIndex = ui.addList[0].rowIndx;
-            },
-            moveNode: function (event, ui) {
-                console.group('move node2');
-                console.groupEnd();
-                changeSortNum(this, $(this.element.context));
-            },
-            cellSave: function (evt, ui) {
-                console.group('cellSave 2');
-                if (ui.oldVal === undefined && ui.newVal === null) {
-                    $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
-                }
-                console.groupEnd();
-            },
-            change: function (event, ui) {
-                console.group('change 2');
-                console.groupEnd();
-                if (ui.source === 'add' || ui.source === 'edit' || ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                    setTimeout(function () {
-                        refreshTargetGrid();
-                    }, 1000);
-                }
-
-                if (ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    changeSortNum(this, $(this.element.context));
-                }
-            }
-        };
-        const processPlanObj3 = {
-            height: '100%',
-            collapsible: false,
-            postRenderInterval: -1, //call postRender synchronously.
-            resizable: false,
-            showTitle: false,
-            numberCell: {title: 'No.'},
-            selectionModel: {type: 'row', mode: 'single'},
-            scrollModel: {autoFit: true},
-            trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
-            colModel: processPlanColModel,
-            strNoRows: g_noData,
-            dataModel: {
-                // location: 'remote', dataType: 'json', method: 'POST', url: '/dataSource.emptyGrid',
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: processPlanPostData3, recIndx: 'ROWNUM',
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                }
-            },
-            dragModel: {
-                on: true,
-                clsDnD: 'dnd3',
-                diHelper: ['CONTROL_NUM']
-            },
-            dropModel: {
-                on: true,
-                accept: '.dnd1, .dnd2, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .dnd9, .dnd10, .dnd11, .master',
-                drop: function (evt, ui) {
-                    let Drag = ui.helper.data('Drag');
-                    let uiDrag = Drag.getUI();
-                    let $grid = $(this.element.context);
-                    let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
-                    uiDrag.rowData.EQUIP_SEQ = equipSeq;
-                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $grid.pqGrid('option', 'dataModel.data').length;
-                    $grid.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
-
-                    changeSortNum(this, $grid);
-                }
             },
             complete: function () {
                 let data = this.options.dataModel.data;
                 let totalRecords = data.length;
                 let tableElement = this.element.closest('.table');
+                let equipSeq = tableElement.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
+                let parameters = {'url': '/json-list', 'data': {'queryId': 'machine.selectProcessPlanGridInfo', 'EQUIP_SEQ': equipSeq}};
 
-                changeTitleColor(data, tableElement);
+                fnPostAjax(function (data, callFunctionParam) {
+                    if (data.list.length > 0) {
+                        let rowData = data.list[0];
+                        changeTitleColor(data.list[0].EQUIP_STATUS, tableElement);
+                        showTitle(rowData, tableElement);
+                    } else {
+                        changeTitleColor(null, tableElement);
+                        showTitle(null, tableElement);
+                    }
 
-                if (totalRecords) {
-                    showTitle(data, tableElement);
-                    changeFooter(data, tableElement);
-                }
+                    // data.list[0].CONTROL_NUM
+                    // CONTROL_NUM: "B20-278AN0319-0331-38"
+                    // CONTROL_PART_QTY: 32
+                    // EQUIP_SEQ: 147
+                    // EQUIP_STATUS: "완료"
+                    // MATERIAL_DETAIL: "MAL020"
+                    // MATERIAL_DETAIL_NM: "AL60"
+                    // MCT_WORK_SEQ: 14
+                    // WORK_FINISH_DT: 1592981221000
+                    // WORK_START_DT: 1592901007000
+                    // WORK_USER_ID: "manager1"
+                    // WORK_USER_NM: "관리자 1"
+                }, parameters, '');
+
+                changeFooter(data, tableElement);
             },
             rowSelect: function (event, ui) {
                 selectedGrid = $(this.element.context);
@@ -546,6 +341,7 @@
             },
             moveNode: function (event, ui) {
                 changeSortNum(this, $(this.element.context));
+                modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
             },
             cellSave: function (evt, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {
@@ -553,650 +349,24 @@
                 }
             },
             change: function (event, ui) {
+                gridChange(this, ui);
 
-                if (ui.source === 'add' || ui.source === 'edit' || ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                    setTimeout(function () {
-                        refreshTargetGrid();
-                    }, 1000);
-                }
-
-                if (ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    changeSortNum(this, $(this.element.context));
-                }
-            }
+                setTimeout(function () {
+                    refreshTargetGrid();
+                }, 1000);
+            },
         };
-        const processPlanObj4 = {
-            height: '100%',
-            collapsible: false,
-            postRenderInterval: -1, //call postRender synchronously.
-            resizable: false,
-            showTitle: false,
-            numberCell: {title: 'No.'},
-            selectionModel: {type: 'row', mode: 'single'},
-            scrollModel: {autoFit: true},
-            trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
-            colModel: processPlanColModel,
-            strNoRows: g_noData,
-            dataModel: {
-                // location: 'remote', dataType: 'json', method: 'POST', url: '/dataSource.emptyGrid',
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: processPlanPostData4, recIndx: 'ROWNUM',
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                }
-            },
-            dragModel: {
-                on: true,
-                clsDnD: 'dnd4',
-                diHelper: ['CONTROL_NUM']
-            },
-            dropModel: {
-                on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .dnd5, .dnd6, .dnd7, .dnd8, .dnd9, .dnd10, .dnd11, .master',
-                drop: function (evt, ui) {
-                    let Drag = ui.helper.data('Drag');
-                    let uiDrag = Drag.getUI();
-                    let $grid = $(this.element.context);
-                    let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
-                    uiDrag.rowData.EQUIP_SEQ = equipSeq;
-                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $grid.pqGrid('option', 'dataModel.data').length;
-                    $grid.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
-
-                    changeSortNum(this, $grid);
-                }
-            },
-            complete: function () {
-                let data = this.options.dataModel.data;
-                let totalRecords = data.length;
-                let tableElement = this.element.closest('.table');
-
-                changeTitleColor(data, tableElement);
-
-                if (totalRecords) {
-                    showTitle(data, tableElement);
-                    changeFooter(data, tableElement);
-                }
-            },
-            rowSelect: function (event, ui) {
-                selectedGrid = $(this.element.context);
-                selectedRowIndex = ui.addList[0].rowIndx;
-            },
-            moveNode: function (event, ui) {
-                changeSortNum(this, $(this.element.context));
-            },
-            cellSave: function (evt, ui) {
-                if (ui.oldVal === undefined && ui.newVal === null) {
-                    $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
-                }
-            },
-            change: function (event, ui) {
-
-                if (ui.source === 'add' || ui.source === 'edit' || ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                    setTimeout(function () {
-                        refreshTargetGrid();
-                    }, 1000);
-                }
-
-                if (ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    changeSortNum(this, $(this.element.context));
-                }
-            }
-        };
-        const processPlanObj5 = {
-            height: '100%',
-            collapsible: false,
-            postRenderInterval: -1, //call postRender synchronously.
-            resizable: false,
-            showTitle: false,
-            numberCell: {title: 'No.'},
-            selectionModel: {type: 'row', mode: 'single'},
-            scrollModel: {autoFit: true},
-            trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
-            colModel: processPlanColModel,
-            strNoRows: g_noData,
-            dataModel: {
-                // location: 'remote', dataType: 'json', method: 'POST', url: '/dataSource.emptyGrid',
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: processPlanPostData5, recIndx: 'ROWNUM',
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                }
-            },
-            dragModel: {
-                on: true,
-                clsDnD: 'dnd5',
-                diHelper: ['CONTROL_NUM']
-            },
-            dropModel: {
-                on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd6, .dnd7, .dnd8, .dnd9, .dnd10, .dnd11, .master',
-                drop: function (evt, ui) {
-                    let Drag = ui.helper.data('Drag');
-                    let uiDrag = Drag.getUI();
-                    let $grid = $(this.element.context);
-                    let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
-                    uiDrag.rowData.EQUIP_SEQ = equipSeq;
-                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $grid.pqGrid('option', 'dataModel.data').length;
-                    $grid.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
-
-                    changeSortNum(this, $grid);
-                }
-            },
-            complete: function () {
-                let data = this.options.dataModel.data;
-                let totalRecords = data.length;
-                let tableElement = this.element.closest('.table');
-
-                changeTitleColor(data, tableElement);
-
-                if (totalRecords) {
-                    showTitle(data, tableElement);
-                    changeFooter(data, tableElement);
-                }
-            },
-            rowSelect: function (event, ui) {
-                selectedGrid = $(this.element.context);
-                selectedRowIndex = ui.addList[0].rowIndx;
-            },
-            moveNode: function (event, ui) {
-                changeSortNum(this, $(this.element.context));
-            },
-            cellSave: function (evt, ui) {
-                if (ui.oldVal === undefined && ui.newVal === null) {
-                    $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
-                }
-            },
-            change: function (event, ui) {
-
-                if (ui.source === 'add' || ui.source === 'edit' || ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                    setTimeout(function () {
-                        refreshTargetGrid();
-                    }, 1000);
-                }
-
-                if (ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    changeSortNum(this, $(this.element.context));
-                }
-            }
-        };
-        const processPlanObj6 = {
-            height: '100%',
-            collapsible: false,
-            postRenderInterval: -1, //call postRender synchronously.
-            resizable: false,
-            showTitle: false,
-            numberCell: {title: 'No.'},
-            selectionModel: {type: 'row', mode: 'single'},
-            scrollModel: {autoFit: true},
-            trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
-            colModel: processPlanColModel,
-            strNoRows: g_noData,
-            dataModel: {
-                // location: 'remote', dataType: 'json', method: 'POST', url: '/dataSource.emptyGrid',
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: processPlanPostData6, recIndx: 'ROWNUM',
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                }
-            },
-            dragModel: {
-                on: true,
-                clsDnD: 'dnd6',
-                diHelper: ['CONTROL_NUM']
-            },
-            dropModel: {
-                on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd7, .dnd8, .dnd9, .dnd10, .dnd11, .master',
-                drop: function (evt, ui) {
-                    let Drag = ui.helper.data('Drag');
-                    let uiDrag = Drag.getUI();
-                    let $grid = $(this.element.context);
-                    let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
-                    uiDrag.rowData.EQUIP_SEQ = equipSeq;
-                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $grid.pqGrid('option', 'dataModel.data').length;
-                    $grid.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
-
-                    changeSortNum(this, $grid);
-                }
-            },
-            complete: function () {
-                let data = this.options.dataModel.data;
-                let totalRecords = data.length;
-                let tableElement = this.element.closest('.table');
-
-                changeTitleColor(data, tableElement);
-
-                if (totalRecords) {
-                    showTitle(data, tableElement);
-                    changeFooter(data, tableElement);
-                }
-            },
-            rowSelect: function (event, ui) {
-                selectedGrid = $(this.element.context);
-                selectedRowIndex = ui.addList[0].rowIndx;
-            },
-            moveNode: function (event, ui) {
-                changeSortNum(this, $(this.element.context));
-            },
-            cellSave: function (evt, ui) {
-                if (ui.oldVal === undefined && ui.newVal === null) {
-                    $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
-                }
-            },
-            change: function (event, ui) {
-
-                if (ui.source === 'add' || ui.source === 'edit' || ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                    setTimeout(function () {
-                        refreshTargetGrid();
-                    }, 1000);
-                }
-
-                if (ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    changeSortNum(this, $(this.element.context));
-                }
-            }
-        };
-        const processPlanObj7 = {
-            height: '100%',
-            collapsible: false,
-            postRenderInterval: -1, //call postRender synchronously.
-            resizable: false,
-            showTitle: false,
-            numberCell: {title: 'No.'},
-            selectionModel: {type: 'row', mode: 'single'},
-            // scrollModel: {autoFit: true},
-            trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
-            colModel: processPlanColModel,
-            strNoRows: g_noData,
-            dataModel: {
-                // location: 'remote', dataType: 'json', method: 'POST', url: '/dataSource.emptyGrid',
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: processPlanPostData7, recIndx: 'ROWNUM',
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                }
-            },
-            dragModel: {
-                on: true,
-                clsDnD: 'dnd7',
-                diHelper: ['CONTROL_NUM']
-            },
-            dropModel: {
-                on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd8, .dnd9, .dnd10, .dnd11, .master',
-                drop: function (evt, ui) {
-                    let Drag = ui.helper.data('Drag');
-                    let uiDrag = Drag.getUI();
-                    let $grid = $(this.element.context);
-                    let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
-                    uiDrag.rowData.EQUIP_SEQ = equipSeq;
-                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $grid.pqGrid('option', 'dataModel.data').length;
-                    $grid.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
-
-                    changeSortNum(this, $grid);
-                }
-            },
-            complete: function () {
-                let data = this.options.dataModel.data;
-                let totalRecords = data.length;
-                let tableElement = this.element.closest('.table');
-
-                changeTitleColor(data, tableElement);
-
-                if (totalRecords) {
-                    showTitle(data, tableElement);
-                    changeFooter(data, tableElement);
-                }
-            },
-            rowSelect: function (event, ui) {
-                selectedGrid = $(this.element.context);
-                selectedRowIndex = ui.addList[0].rowIndx;
-            },
-            moveNode: function (event, ui) {
-                changeSortNum(this, $(this.element.context));
-            },
-            cellSave: function (evt, ui) {
-                if (ui.oldVal === undefined && ui.newVal === null) {
-                    $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
-                }
-            },
-            change: function (event, ui) {
-
-                if (ui.source === 'add' || ui.source === 'edit' || ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                    setTimeout(function () {
-                        refreshTargetGrid();
-                    }, 1000);
-                }
-
-                if (ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    changeSortNum(this, $(this.element.context));
-                }
-            }
-        };
-        const processPlanObj8 = {
-            height: '100%',
-            collapsible: false,
-            postRenderInterval: -1, //call postRender synchronously.
-            resizable: false,
-            showTitle: false,
-            numberCell: {title: 'No.'},
-            selectionModel: {type: 'row', mode: 'single'},
-            scrollModel: {autoFit: true},
-            trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
-            colModel: processPlanColModel,
-            strNoRows: g_noData,
-            dataModel: {
-                // location: 'remote', dataType: 'json', method: 'POST', url: '/dataSource.emptyGrid',
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: processPlanPostData8, recIndx: 'ROWNUM',
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                }
-            },
-            dragModel: {
-                on: true,
-                clsDnD: 'dnd8',
-                diHelper: ['CONTROL_NUM']
-            },
-            dropModel: {
-                on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd9, .dnd10, .master',
-                drop: function (evt, ui) {
-                    let Drag = ui.helper.data('Drag');
-                    let uiDrag = Drag.getUI();
-                    let $grid = $(this.element.context);
-                    let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
-                    uiDrag.rowData.EQUIP_SEQ = equipSeq;
-                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $grid.pqGrid('option', 'dataModel.data').length;
-                    $grid.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
-
-                    changeSortNum(this, $grid);
-                }
-            },
-            complete: function () {
-                let data = this.options.dataModel.data;
-                let totalRecords = data.length;
-                let tableElement = this.element.closest('.table');
-
-                changeTitleColor(data, tableElement);
-
-                if (totalRecords) {
-                    showTitle(data, tableElement);
-                    changeFooter(data, tableElement);
-                }
-            },
-            rowSelect: function (event, ui) {
-                selectedGrid = $(this.element.context);
-                selectedRowIndex = ui.addList[0].rowIndx;
-            },
-            moveNode: function (event, ui) {
-                changeSortNum(this, $(this.element.context));
-            },
-            cellSave: function (evt, ui) {
-                if (ui.oldVal === undefined && ui.newVal === null) {
-                    $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
-                }
-            },
-            change: function (event, ui) {
-
-                if (ui.source === 'add' || ui.source === 'edit' || ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                    setTimeout(function () {
-                        refreshTargetGrid();
-                    }, 1000);
-                }
-
-                if (ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    changeSortNum(this, $(this.element.context));
-                }
-            }
-        };
-        const processPlanObj9 = {
-            height: '100%',
-            collapsible: false,
-            postRenderInterval: -1, //call postRender synchronously.
-            resizable: false,
-            showTitle: false,
-            numberCell: {title: 'No.'},
-            selectionModel: {type: 'row', mode: 'single'},
-            scrollModel: {autoFit: true},
-            trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
-            colModel: processPlanColModel,
-            strNoRows: g_noData,
-            dataModel: {
-                // location: 'remote', dataType: 'json', method: 'POST', url: '/dataSource.emptyGrid',
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: processPlanPostData9, recIndx: 'ROWNUM',
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                }
-            },
-            dragModel: {
-                on: true,
-                clsDnD: 'dnd9',
-                diHelper: ['CONTROL_NUM']
-            },
-            dropModel: {
-                on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .dnd10, .dnd11, .master',
-                drop: function (evt, ui) {
-                    let Drag = ui.helper.data('Drag');
-                    let uiDrag = Drag.getUI();
-                    let $grid = $(this.element.context);
-                    let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
-                    uiDrag.rowData.EQUIP_SEQ = equipSeq;
-                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $grid.pqGrid('option', 'dataModel.data').length;
-                    $grid.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
-
-                    changeSortNum(this, $grid);
-                }
-            },
-            complete: function () {
-                let data = this.options.dataModel.data;
-                let totalRecords = data.length;
-                let tableElement = this.element.closest('.table');
-
-                changeTitleColor(data, tableElement);
-
-                if (totalRecords) {
-                    showTitle(data, tableElement);
-                    changeFooter(data, tableElement);
-                }
-            },
-            rowSelect: function (event, ui) {
-                selectedGrid = $(this.element.context);
-                selectedRowIndex = ui.addList[0].rowIndx;
-            },
-            moveNode: function (event, ui) {
-                changeSortNum(this, $(this.element.context));
-            },
-            cellSave: function (evt, ui) {
-                if (ui.oldVal === undefined && ui.newVal === null) {
-                    $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
-                }
-            },
-            change: function (event, ui) {
-
-                if (ui.source === 'add' || ui.source === 'edit' || ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                    setTimeout(function () {
-                        refreshTargetGrid();
-                    }, 1000);
-                }
-
-                if (ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    changeSortNum(this, $(this.element.context));
-                }
-            }
-        };
-        const processPlanObj10 = {
-            height: '100%',
-            collapsible: false,
-            postRenderInterval: -1, //call postRender synchronously.
-            resizable: false,
-            showTitle: false,
-            numberCell: {title: 'No.'},
-            selectionModel: {type: 'row', mode: 'single'},
-            scrollModel: {autoFit: true},
-            trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
-            colModel: processPlanColModel,
-            strNoRows: g_noData,
-            dataModel: {
-                // location: 'remote', dataType: 'json', method: 'POST', url: '/dataSource.emptyGrid',
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: processPlanPostData10, recIndx: 'ROWNUM',
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                }
-            },
-            dragModel: {
-                on: true,
-                clsDnD: 'dnd10',
-                diHelper: ['CONTROL_NUM']
-            },
-            dropModel: {
-                on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .dnd9, .dnd11, .master',
-                drop: function (evt, ui) {
-                    let Drag = ui.helper.data('Drag');
-                    let uiDrag = Drag.getUI();
-                    let $grid = $(this.element.context);
-                    let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
-                    uiDrag.rowData.EQUIP_SEQ = equipSeq;
-                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $grid.pqGrid('option', 'dataModel.data').length;
-                    $grid.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
-
-                    changeSortNum(this, $grid);
-                }
-            },
-            complete: function () {
-                let data = this.options.dataModel.data;
-                let totalRecords = data.length;
-                let tableElement = this.element.closest('.table');
-
-                changeTitleColor(data, tableElement);
-
-                if (totalRecords) {
-                    showTitle(data, tableElement);
-                    changeFooter(data, tableElement);
-                }
-            },
-            rowSelect: function (event, ui) {
-                selectedGrid = $(this.element.context);
-                selectedRowIndex = ui.addList[0].rowIndx;
-            },
-            moveNode: function (event, ui) {
-                changeSortNum(this, $(this.element.context));
-            },
-            cellSave: function (evt, ui) {
-                if (ui.oldVal === undefined && ui.newVal === null) {
-                    $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
-                }
-            },
-            change: function (event, ui) {
-
-                if (ui.source === 'add' || ui.source === 'edit' || ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                    setTimeout(function () {
-                        refreshTargetGrid();
-                    }, 1000);
-                }
-
-                if (ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    changeSortNum(this, $(this.element.context));
-                }
-            }
-        };
-        const processPlanObj11 = {
-            height: '100%',
-            collapsible: false,
-            postRenderInterval: -1, //call postRender synchronously.
-            resizable: false,
-            showTitle: false,
-            numberCell: {title: 'No.'},
-            selectionModel: {type: 'row', mode: 'single'},
-            scrollModel: {autoFit: true},
-            trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
-            colModel: processPlanColModel,
-            strNoRows: g_noData,
-            dataModel: {
-                // location: 'remote', dataType: 'json', method: 'POST', url: '/dataSource.emptyGrid',
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: processPlanPostData10, recIndx: 'ROWNUM',
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                }
-            },
-            dragModel: {
-                on: true,
-                clsDnD: 'dnd11',
-                diHelper: ['CONTROL_NUM']
-            },
-            dropModel: {
-                on: true,
-                accept: '.dnd1, .dnd2, .dnd3, .dnd4, .dnd5, .dnd6, .dnd7, .dnd8, .dnd9, .dnd10, .master',
-                drop: function (evt, ui) {
-                    let Drag = ui.helper.data('Drag');
-                    let uiDrag = Drag.getUI();
-                    let $grid = $(this.element.context);
-                    let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
-                    uiDrag.rowData.EQUIP_SEQ = equipSeq;
-                    let rowIndx = uiDrag.rowIndx > 0 ? uiDrag.rowIndx : $grid.pqGrid('option', 'dataModel.data').length;
-                    $grid.pqGrid('addRow', {newRow: uiDrag.rowData, rowIndx: rowIndx, checkEditable: false});
-
-                    changeSortNum(this, $grid);
-                }
-            },
-            complete: function () {
-                let data = this.options.dataModel.data;
-                let totalRecords = data.length;
-                let tableElement = this.element.closest('.table');
-
-                changeTitleColor(data, tableElement);
-
-                if (totalRecords) {
-                    showTitle(data, tableElement);
-                    changeFooter(data, tableElement);
-                }
-            },
-            rowSelect: function (event, ui) {
-                selectedGrid = $(this.element.context);
-                selectedRowIndex = ui.addList[0].rowIndx;
-            },
-            moveNode: function (event, ui) {
-                changeSortNum(this, $(this.element.context));
-            },
-            cellSave: function (evt, ui) {
-                if (ui.oldVal === undefined && ui.newVal === null) {
-                    $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
-                }
-            },
-            change: function (event, ui) {
-                if (ui.source === 'add' || ui.source === 'edit' || ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-                    setTimeout(function () {
-                        refreshTargetGrid();
-                    }, 1000);
-                }
-
-                if (ui.source === 'delete' || ui.source === 'deleteNodes') {
-                    changeSortNum(this, $(this.element.context));
-                }
-            }
-        };
+        const processPlanObj1 = $.extend(true, {}, planObj, processPlanPostData1);
+        const processPlanObj2 = $.extend(true, {}, planObj, processPlanPostData2);
+        const processPlanObj3 = $.extend(true, {}, planObj, processPlanPostData3);
+        const processPlanObj4 = $.extend(true, {}, planObj, processPlanPostData4);
+        const processPlanObj5 = $.extend(true, {}, planObj, processPlanPostData5);
+        const processPlanObj6 = $.extend(true, {}, planObj, processPlanPostData6);
+        const processPlanObj7 = $.extend(true, {}, planObj, processPlanPostData7);
+        const processPlanObj8 = $.extend(true, {}, planObj, processPlanPostData8);
+        const processPlanObj9 = $.extend(true, {}, planObj, processPlanPostData9);
+        const processPlanObj10 = $.extend(true, {}, planObj, processPlanPostData10);
+        const processPlanObj11 = $.extend(true, {}, planObj, processPlanPostData11);
 
         let $processTargetGrid;
         const processTargetGridId = 'PROCESS_TARGET_GRID';
@@ -1497,11 +667,8 @@
             },
             dragModel: {
                 on: true,
-                clsDnD: 'master',
                 diHelper: ['CONTROL_NUM'],
-                beforeDrop: function () {
-
-                }
+                beforeDrop: function () {}
             },
             complete: function () {
                 // this.flex();
@@ -1525,7 +692,7 @@
             }
         };
 
-        /* 함수 */
+        /* function */
         const modifyPQGrid = function (grid, insertQueryList, updateQueryList, deleteQueryList) {
             let parameters;
             let gridInstance = grid.pqGrid('getInstance').grid;
@@ -1628,12 +795,11 @@
          * @description
          * @param {object | jQuery} grid
          */
-        const changeSortNum = function (kk, grid) {
+        const changeSortNum = function (thisObject, grid) {
             let rowListConvert = [];
-            let ids = kk.pageData().map(function (rd) {
+            let ids = thisObject.pageData().map(function (rd) {
                 return rd.MCT_PLAN_SEQ;
             });
-            
 
             for (let i = 0, length = ids.length; i < length; i++) {
                 let tempObject = {rowIndx: i, newRow: {'SORT_NUM': (i + 1)}};
@@ -1668,42 +834,45 @@
         };
 
         const showTitle = function (data, tableElement) {
-            let firstData = data[0];
             let controlNumElement = $(tableElement).find('.data_ipt');
             let listTxtElement = $(tableElement).find('.listTxt');
-            let materialDetailElement = listTxtElement.children('[id$=MATERIAL_DETAIL]');
-            let partUnitQtyElement = listTxtElement.children('[id$=PART_UNIT_QTY]');
-            let workUserIdElement = listTxtElement.children('[id$=WORK_USER_ID]');
 
-            controlNumElement.show();
-            listTxtElement.show();
+            if(data === null) {
+                controlNumElement.hide();
+                listTxtElement.hide();
+            } else {
+                let materialDetailElement = listTxtElement.children('[id$=MATERIAL_DETAIL]');
+                let partUnitQtyElement = listTxtElement.children('[id$=PART_UNIT_QTY]');
+                let workUserIdElement = listTxtElement.children('[id$=WORK_USER_ID]');
 
-            controlNumElement.html(firstData.CONTROL_NUM);
-            materialDetailElement.html(firstData.MATERIAL_DETAIL);
-            partUnitQtyElement.html(firstData.PART_UNIT_QTY);
-            workUserIdElement.html(firstData.WORK_USER_ID);
+                controlNumElement.html(data.CONTROL_NUM);
+                materialDetailElement.html(data.MATERIAL_DETAIL_NM);
+                partUnitQtyElement.html(data.CONTROL_PART_QTY);
+                workUserIdElement.html(data.WORK_USER_NM);
+
+                controlNumElement.show();
+                listTxtElement.show();
+            }
         };
 
-        const changeTitleColor = function (data, tableElement) {
-            let firstData = data[0];
+        const changeTitleColor = function (equipStatus, tableElement) {
             let tableLabelElement = $(tableElement).find('.tableLabel');
             let labelColorId = 'bg-yellow';
 
-            if (firstData !== undefined && firstData.hasOwnProperty('WORK_STATUS')) {
-                switch (firstData.WORK_STATUS) {
-                    case '가동중':
-                        labelColorId = 'bg-green';
-                        break;
-                    case '완료':
-                        labelColorId = 'bg-light_blue';
-                        break;
-                    case '비가동상태':
-                        labelColorId = 'bg-yellow';
-                        break;
-                    case '일시정지상태':
-                        labelColorId = 'bg-orange';
-                        break;
-                }
+            //TODO: default 색상 및 상태 필요
+            switch (equipStatus) {
+                case '진행중':
+                    labelColorId = 'bg-green';
+                    break;
+                case '완료':
+                    labelColorId = 'bg-light_blue';
+                    break;
+                case '취소':
+                    labelColorId = 'bg-yellow';
+                    break;
+                case '임시중지':
+                    labelColorId = 'bg-orange';
+                    break;
             }
 
             tableLabelElement.removeClass();
@@ -1712,23 +881,41 @@
         };
 
         const changeFooter = function (data, tableElement) {
-            let totalPartUnitQuantity = 0;
+            // let totalPartUnitQuantity = 0;
             let totalWorkingTime = 0;
             let totalRecords = data.length;
             let totalRecordsElement = $(tableElement).find('[id$=TOTAL_RECORDS]');
-            let totalPartUnitQuantityElement = $(tableElement).find('[id$=TOTAL_PART_UNIT_QUANTITY]');
+            // let totalPartUnitQuantityElement = $(tableElement).find('[id$=TOTAL_PART_UNIT_QUANTITY]');
             let totalWorkingTimeElement = $(tableElement).find('[id$=TOTAL_WORKING_TIME]');
 
             for (let i = 0; i < totalRecords; i++) {
-                totalPartUnitQuantity += data[i].PART_UNIT_QTY ? parseInt(data[i].PART_UNIT_QTY) : 0;
+                // totalPartUnitQuantity += data[i].PART_UNIT_QTY ? parseInt(data[i].PART_UNIT_QTY) : 0;
                 totalWorkingTime += data[i].WORKING_TIME ? parseInt(data[i].WORKING_TIME) : 0;
             }
 
             totalRecordsElement.html(totalRecords);
-            totalPartUnitQuantityElement.html(totalPartUnitQuantity);
+            // totalPartUnitQuantityElement.html(totalPartUnitQuantity);
             totalWorkingTimeElement.html(totalWorkingTime);
         };
-        /* 함수 */
+
+        const gridChange = function (thisObject, ui) {
+            console.count();
+            console.log(ui);
+            if(ui.source === 'addNodes') {
+                let $grid = $(thisObject.element.context);
+                let ROWNUM = $grid.pqGrid('option', 'dataModel.data').length;
+                let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
+                ui.addList[0].newRow.EQUIP_SEQ = equipSeq;
+                ui.addList[0].newRow.ROWNUM = ROWNUM;
+                changeSortNum(thisObject, $grid);
+            } else if (ui.source === 'edit' || ui.source === 'update') {
+                modifyPQGrid($(thisObject.element.context), insertQueryList, updateQueryList, deleteQueryList);
+            } else if (ui.source === 'delete' || ui.source === 'deleteNodes') {
+                modifyPQGrid($(thisObject.element.context), insertQueryList, updateQueryList, deleteQueryList);
+                changeSortNum(thisObject, $(thisObject.element.context));
+            }
+        };
+        /* function */
 
         /* event */
         $('#MCT_PLAN_MANAGE_SEARCH_FORM').on('change', function () {
@@ -1748,7 +935,6 @@
 
         $('#MCT_PLAN_MANAGE_DRAWING_VIEW').on('click', function () {
             let rowData = selectedGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex});
-            console.log(selectedGrid);
             callWindowImageViewer(rowData.IMG_GFILE_SEQ);
         });
 
