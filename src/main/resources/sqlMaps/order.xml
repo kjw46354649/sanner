@@ -1363,9 +1363,10 @@
             B.PART_NUM, <!-- Part -->
             B.DRAWING_NUM,
             B.DRAWING_VER,
-            #{NEW_DRAWING_NUM} AS NEW_DRAWING_NUM,
             #{FILE_NM} AS FILE_NM,
             #{DXF_GFILE_SEQ} AS DXF_GFILE_SEQ,
+            #{PDF_GFILE_SEQ} AS PDF_GFILE_SEQ,
+            #{IMG_GFILE_SEQ} AS IMG_GFILE_SEQ,
             #{TIME_PATH} AS TIME_PATH,
             #{FILE_PATH} AS FILE_PATH,
             CASE WHEN IMG_GFILE_SEQ IS NOT NULL THEN '이미 등록됨, Save 후 교체됨'  <!-- 이미 등록된 Save시 교체 진행  메시지 처리 -->
@@ -1382,7 +1383,21 @@
     <update id="manageControlCadFiles" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART
         SET
-            /* DRAWING_NUM = upper(#{NEW_DRAWING_NUM}), */
+            DRAWING_UP_DT = NOW(),
+            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
+            PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
+            IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
+            PDF_GFILE_SEQ = NULL,
+            IMG_GFILE_SEQ = NULL,
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE
+        CONTROL_SEQ = #{CONTROL_SEQ}
+    </update>
+
+    <!--<update id="manageControlCadFiles" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
             DRAWING_UP_DT = NOW(),
             PREV_DRAWING_NUM = DRAWING_NUM,
             DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
@@ -1403,7 +1418,7 @@
             UPDATE_ID = #{LOGIN_USER_ID}
         WHERE
             DXF_GFILE_SEQ = #{DXF_GFILE_SEQ}
-    </update>
+    </update>-->
 
     <!-- 캐드 도면 교체 -->
     <select id="manageControlCadRevFiles_select" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -1423,6 +1438,8 @@
             #{NEW_DRAWING_NUM} AS NEW_DRAWING_NUM,
             #{FILE_NM} AS FILE_NM,
             #{DXF_GFILE_SEQ} AS DXF_GFILE_SEQ,
+            #{PDF_GFILE_SEQ} AS PDF_GFILE_SEQ,
+            #{IMG_GFILE_SEQ} AS IMG_GFILE_SEQ,
             #{TIME_PATH} AS TIME_PATH,
             #{FILE_PATH} AS FILE_PATH,
             CASE WHEN IFNULL(#{DXF_GFILE_SEQ}, 0) <![CDATA[ <= ]]> 0 THEN  '파일 업로드 오류' <!-- 파일 업로드 오류 및 CONVERT 사이즈 오류 -->
@@ -1440,10 +1457,23 @@
     <update id="manageControlCadRevFiles" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART
         SET
-            DRAWING_NUM = UPPER(#{NEW_DRAWING_NUM}),
             DRAWING_VER = IFNULL(DRAWING_VER, 0) + 1,
             DRAWING_UP_DT = NOW(),
-            PREV_DRAWING_NUM = UPPER(DRAWING_NUM),
+            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
+            PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
+            IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE 1 = 1
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </update>
+
+    <!--<update id="manageControlCadRevFiles" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            DRAWING_VER = IFNULL(DRAWING_VER, 0) + 1,
+            DRAWING_UP_DT = NOW(),
             DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
             PDF_GFILE_SEQ = NULL,
             IMG_GFILE_SEQ = NULL,
@@ -1463,7 +1493,7 @@
             UPDATE_ID = #{LOGIN_USER_ID}
         WHERE
             DXF_GFILE_SEQ = #{DXF_GFILE_SEQ}
-    </update>
+    </update>-->
 
     <update id="manageControlCadRevFiles_revDelete" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_BARCODE A

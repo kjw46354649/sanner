@@ -1354,6 +1354,8 @@
             #{NEW_DRAWING_NUM} AS NEW_DRAWING_NUM,
             #{FILE_NM} AS FILE_NM,
             #{DXF_GFILE_SEQ} AS DXF_GFILE_SEQ,
+            #{PDF_GFILE_SEQ} AS PDF_GFILE_SEQ,
+            #{IMG_GFILE_SEQ} AS IMG_GFILE_SEQ,
             #{TIME_PATH} AS TIME_PATH,
             #{FILE_PATH} AS FILE_PATH,
             CASE WHEN IMG_GFILE_SEQ IS NOT NULL THEN '이미 등록됨, Save 후 교체됨'  <!-- 이미 등록된 Save시 교체 진행  메시지 처리 -->
@@ -1369,12 +1371,24 @@
     <update id="manageStockCadFiles" parameterType="java.util.HashMap">
         UPDATE TBL_INSIDE_STOCK
         SET
-            DRAWING_NUM = #{NEW_DRAWING_NUM},
+            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
+            PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
+            IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE
+            INSIDE_STOCK_NUM = #{INSIDE_STOCK_NUM}
+    </update>
+
+    <!--<update id="manageStockCadFiles" parameterType="java.util.HashMap">
+        UPDATE TBL_INSIDE_STOCK
+        SET
+            /*DRAWING_NUM = #{NEW_DRAWING_NUM},*/
             DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
             PDF_GFILE_SEQ = NULL,
             IMG_GFILE_SEQ = NULL,
             UPDATE_DT = NOW()
-            <!-- ,UPDATE_ID = #{LOGIN_USER_ID} -->
+            &lt;!&ndash; ,UPDATE_ID = #{LOGIN_USER_ID} &ndash;&gt;
         WHERE
             INSIDE_STOCK_NUM = #{INSIDE_STOCK_NUM}
     </update>
@@ -1385,10 +1399,10 @@
             PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
             IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
             UPDATE_DT = NOW()
-            <!-- ,UPDATE_ID = #{LOGIN_USER_ID} -->
+            &lt;!&ndash; ,UPDATE_ID = #{LOGIN_USER_ID} &ndash;&gt;
         WHERE
             DXF_GFILE_SEQ = #{DXF_GFILE_SEQ}
-    </update>
+    </update>-->
 
 
 

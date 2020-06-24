@@ -174,6 +174,8 @@
             #{NEW_DRAWING_NUM} AS NEW_DRAWING_NUM,
             #{FILE_NM} AS FILE_NM,
             #{DXF_GFILE_SEQ} AS DXF_GFILE_SEQ,
+            #{PDF_GFILE_SEQ} AS PDF_GFILE_SEQ,
+            #{IMG_GFILE_SEQ} AS IMG_GFILE_SEQ,
             #{TIME_PATH} AS TIME_PATH,
             #{FILE_PATH} AS FILE_PATH,
             CASE WHEN IMG_GFILE_SEQ IS NOT NULL THEN '이미 등록됨, Save 후 교체됨'  <!-- 이미 등록된 Save시 교체 진행  메시지 처리 -->
@@ -191,26 +193,38 @@
     <update id="manageEstimateCadFiles" parameterType="java.util.HashMap">
         UPDATE TBL_ESTIMATE_DETAIL
         SET
-            DRAWING_NUM = #{NEW_DRAWING_NUM},
             DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
-            PDF_GFILE_SEQ = NULL,
-            IMG_GFILE_SEQ = NULL,
-            UPDATE_DT = NOW()
-            <!-- ,UPDATE_ID = NULL -->
+            PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
+            IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE EST_SEQ = #{EST_SEQ}
             AND SEQ = #{SEQ}
     </update>
 
-    <update id="manageEstimateCadFiles_mapping" parameterType="java.util.HashMap">
-        UPDATE TBL_ESTIMATE_DETAIL
-        SET
-            PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
-            IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
-            UPDATE_DT = NOW()
-            <!-- ,UPDATE_ID = NULL -->
-        WHERE
-            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ}
-    </update>
+<!--    <update id="manageEstimateCadFiles" parameterType="java.util.HashMap">-->
+<!--        UPDATE TBL_ESTIMATE_DETAIL-->
+<!--        SET-->
+<!--            /* DRAWING_NUM = #{NEW_DRAWING_NUM}, */-->
+<!--            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},-->
+<!--            PDF_GFILE_SEQ = NULL,-->
+<!--            IMG_GFILE_SEQ = NULL,-->
+<!--            UPDATE_DT = NOW(),-->
+<!--            UPDATE_ID = #{LOGIN_USER_ID}-->
+<!--        WHERE EST_SEQ = #{EST_SEQ}-->
+<!--            AND SEQ = #{SEQ}-->
+<!--    </update>-->
+
+<!--    <update id="manageEstimateCadFiles_mapping" parameterType="java.util.HashMap">-->
+<!--        UPDATE TBL_ESTIMATE_DETAIL-->
+<!--        SET-->
+<!--            PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},-->
+<!--            IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},-->
+<!--            UPDATE_DT = NOW(),-->
+<!--            UPDATE_ID = #{LOGIN_USER_ID}-->
+<!--        WHERE-->
+<!--            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ}-->
+<!--    </update>-->
 
     <insert id="insertEstimateMaster" parameterType="java.util.HashMap">
         INSERT INTO TBL_ESTIMATE

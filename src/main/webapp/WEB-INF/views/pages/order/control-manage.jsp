@@ -966,6 +966,8 @@
         const obj = {
             minHeight: '100%',
             height: 710,
+            // virtualX: true,
+            // virtualY: true,
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             showTitle: false,
@@ -990,7 +992,7 @@
             cellClick: function (event, ui) {
                 supplyUnitCostInit(); // 공급단가적용 초기화
 
-                if(ui.rowData.IMG_GFILE_SEQ && (typeof(windowImageViewer) == 'undefined' || windowImageViewer.closed)) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                if(ui.rowData.IMG_GFILE_SEQ && typeof(windowImageViewer) != 'undefined' && !windowImageViewer.closed) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             },
             selectChange: function (event, ui) {
                 supplyUnitCostInit(); // 공급단가적용 초기화
