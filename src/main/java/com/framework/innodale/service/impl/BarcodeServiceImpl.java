@@ -50,38 +50,45 @@ public class BarcodeServiceImpl implements BarcodeService {
             list = objectMapper.readValue(jsonObject, ArrayList.class);
 
         int cnt = 0;
+        int failCnt = 0;
 
         if (list != null && list.size() > 0) {
             for (String number : list) {
-                System.out.println("number+"+number);
-                char barcodeTypeC = number.charAt(0);
-                String barcodeType = String.valueOf(barcodeTypeC);
 
-                Map<String, Object> barcodeMap = new HashMap<String, Object>();
+                System.out.println("Barcode=["+number+"]");
+                if(!"".equals(number) && number != null) {
 
-                barcodeMap.put("BARCODE_NUM",number);
-                barcodeMap.put("BARCODE_TYPE",barcodeType);
-                if("L".equals(barcodeType)){//라벨
-                    barcodeMap.put("queryId","common.selectBarcodePrintInfoOut");
-                    barcodeMap = this.innodaleDao.getInfo(barcodeMap);
-                }else if("C".equals(barcodeType)) {//도면
-                    barcodeMap.put("queryId","common.selectBarcodePrintInfoControl");
-                    barcodeMap = this.innodaleDao.getInfo(barcodeMap);
-                }else{
-                    barcodeMap = null;
-                }
+                    char barcodeTypeC = number.charAt(0);
+                    String barcodeType = String.valueOf(barcodeTypeC);
 
-                if(barcodeMap != null){
-                    String rtn = barcodePrintUtil.barcodePrint(barcodeMap, barcodeIp, barcodePort, barcodeType);
-                    if("OK".equals(rtn)){
-                        cnt++;
+                    Map<String, Object> barcodeMap = new HashMap<String, Object>();
+
+                    barcodeMap.put("BARCODE_NUM", number);
+                    barcodeMap.put("BARCODE_TYPE", barcodeType);
+                    if ("L".equals(barcodeType)) {//라벨
+                        barcodeMap.put("queryId", "common.selectBarcodePrintInfoOut");
+                        barcodeMap = this.innodaleDao.getInfo(barcodeMap);
+                    } else if ("C".equals(barcodeType)) {//도면
+                        barcodeMap.put("queryId", "common.selectBarcodePrintInfoControl");
+                        barcodeMap = this.innodaleDao.getInfo(barcodeMap);
+                    } else {
+                        barcodeMap = null;
                     }
+
+                    if (barcodeMap != null) {
+                        String rtn = barcodePrintUtil.barcodePrint(barcodeMap, barcodeIp, barcodePort, barcodeType);
+                        if ("OK".equals(rtn)) {
+                            cnt++;
+                        }
+                    }
+                }else{
+                    failCnt++;
                 }
             }
         }
 
         model.addAttribute("result",       "success");
-        model.addAttribute("message",      "프린트를 완료 하였습니다.[" + cnt +"건]");
+        model.addAttribute("message",      "프린트를 전송을 완료 하였습니다.[성공 : " + cnt +"건, 실패 : " + failCnt + "건]");
 
     }
 

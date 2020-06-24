@@ -2478,7 +2478,7 @@
                     '   <table class="drawingArea" style="table-layout: fixed; word-wrap:break-word;">' +
                     '        <tbody>' +
                     '        <tr class="controlInfo">' +
-                    '           <td scope="col" width="28%" rowspan="2" class="center_sort"><img src="/barcode/code128/' +rowData.BARCODE_NUM+ '" class="barcode"></td>' +
+                    '           <td scope="col" width="28%" rowspan="2" class="center_sort"><img src="/barcode/code128/' +rowData.CONTROL_BARCODE_NUM+ '" class="barcode"></td>' +
                     '           <td scope="col" width="10%" rowspan="2" class="center_sort">'+rowData.ORDER_COMP_NM+'</td>' +
                     '           <td scope="col" width="3%" class="center_sort">'+rowData.CONTROL_VER+'</td>' +
                     '           <td scope="col" width="10%" rowspan="2" class="center_sort">'+rowData.CONTROL_NUM+'</td>' +
@@ -2501,17 +2501,17 @@
                     '            <td scope="col" class="center_sort">'+rowData.PART_NUM+'</td>' +
                     '            <td scope="col" class="center_sort">'+rowData.MATERIAL_DETAIL_NM+'</td>' +
                     '            <td scope="col" class="center_sort">'+rowData.SURFACE_TREAT+'</td>' +
-                    '            <td scope="col" class="center_sort">'+rowData.EMERGENCY_YN+'</td>' +
-                    '            <td scope="col" class="center_sort">'+rowData.MAIN_INSPECTION+'</td>' +
+                    '            <td scope="col" class="center_sort">'+rowData.EMERGENCY_BARCODE_NM+'</td>' +
+                    '            <td scope="col" class="center_sort">'+rowData.MAIN_INSPECTION_NM+'</td>' +
                     '            <td scope="col" class="center_sort">'+rowData.ORIGINAL_SIDE_QTY+'</td>' +
                     '            <td scope="col" class="center_sort">'+rowData.OTHER_SIDE_QTY+'</td>' +
-                    '            <td scope="col" class="center_sort">'+rowData.INNER_DUE_DT+'</td>' +
+                    '            <td scope="col" class="center_sort">'+rowData.INNER_DUE_DT+'</td>'+
                     '        </tr>' +
                     '        <tr class="imageInfo">' +
                     '            <td scope="col" colspan="14"><img src="/image/'+rowData.IMG_GFILE_SEQ+'" class="drawingImage"></td>' +
                     '        </tr>' +
-                    '        </tbody>' +
-                    '    </table>' +
+                    '        </tbody>'+
+                    '    </table>'+
                     '</div>';
             }
             let drawingBarcodePrintModalConfirm = function(callback){

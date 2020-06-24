@@ -160,7 +160,7 @@
         , B.CONTROL_VER
         , C.DRAWING_NUM
         , C.DRAWING_VER
-        , CONCAT(jmes.SF_GET_CONTROL_ORDER_QTY(A.CONTROL_SEQ,0),'') AS ORDER_QTY
+        , CONCAT(IFNULL(jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ), 0), ' EA') AS ORDER_QTY
         , IFNULL(C.ORIGINAL_SIDE_QTY, SPACE(0)) AS ORIGINAL_SIDE_QTY
         , IFNULL(C.OTHER_SIDE_QTY, SPACE(0)) AS OTHER_SIDE_QTY
         , jmes.SF_GET_DATE_F(C.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT
@@ -174,44 +174,40 @@
         , jmes.SF_GET_CODE_NM('1059', B.MAIN_INSPECTION, 'KR') AS  MAIN_INSPECTION_NM
         , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = B.COMP_CD) AS COMP_NM
         , A.BARCODE_NUM
-        FROM jmes.TBL_CONTROL_BARCODE A
-        , jmes.TBL_CONTROL B
-        , jmes.TBL_CONTROL_PART C
+        FROM jmes.TBL_CONTROL_BARCODE A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-        AND A.CONTROL_SEQ = C.CONTROL_SEQ
-        AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-        AND A.DEL_YN = 'N'
-        AND A.BARCODE_NUM = #{BARCODE_NUM}
+            AND A.CONTROL_SEQ = C.CONTROL_SEQ
+            AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            AND A.DEL_YN = 'N'
+            AND A.BARCODE_NUM = #{BARCODE_NUM}
     </select>
+
     <select id="selectBarcodePrintInfoOut" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         -- 출고라벨
         SELECT A.BARCODE_NUM
-        , A.PACKING_NUM
-        , D.PACKING_CNT
-        , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = B.COMP_CD) AS COMP_NM
-        , C.ITEM_NM
-        , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = B.ORDER_COMP_CD) AS ORDER_COMP_NM
-        , C.DRAWING_NUM
-        , D.ORDER_NUM
-        , B.MODULE_NM
-        , jmes.SF_GET_DATE_F(D.ORDER_DUE_DT,'YYYY','') AS ORDER_DUE_DT
-        , B.CONTROL_NUM
-        , B.DELIVERY_COMP_NM
-        , B.PROJECT_NM
-        , CONCAT(C.SIZE_TXT, ' / ', D.ORDER_QTY,'EA') AS SIZE_QTY_INFO
-        , B.LABEL_NOTE
-        FROM jmes.TBL_OUT_BARCODE A
-        , jmes.TBL_CONTROL B
-        , jmes.TBL_CONTROL_PART C
-        , jmes.TBL_CONTROL_PART_ORDER D
+            , A.PACKING_NUM
+            , D.PACKING_CNT
+            , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = B.COMP_CD) AS COMP_NM
+            , C.ITEM_NM
+            , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = B.ORDER_COMP_CD) AS ORDER_COMP_NM
+            , C.DRAWING_NUM
+            , D.ORDER_NUM
+            , B.MODULE_NM
+            , jmes.SF_GET_DATE_F(D.ORDER_DUE_DT,'YYYY','') AS ORDER_DUE_DT
+            , B.CONTROL_NUM
+            , B.DELIVERY_COMP_NM
+            , B.PROJECT_NM
+            , CONCAT(C.SIZE_TXT, ' / ', IFNULL(D.ORDER_QTY, 0), 'EA') AS SIZE_QTY_INFO
+            , B.LABEL_NOTE
+        FROM jmes.TBL_OUT_BARCODE A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C, jmes.TBL_CONTROL_PART_ORDER D
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-        AND A.CONTROL_SEQ = C.CONTROL_SEQ
-        AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-        AND A.CONTROL_SEQ = D.CONTROL_SEQ
-        AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-        AND A.ORDER_SEQ = D.ORDER_SEQ
-        AND A.DEL_YN = 'N'
-        AND A.BARCODE_NUM = #{BARCODE_NUM}
+            AND A.CONTROL_SEQ = C.CONTROL_SEQ
+            AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            AND A.CONTROL_SEQ = D.CONTROL_SEQ
+            AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+            AND A.ORDER_SEQ = D.ORDER_SEQ
+            AND A.DEL_YN = 'N'
+            AND A.BARCODE_NUM = #{BARCODE_NUM}
     </select>
 
     <select id="selectBarcodePrintControlCheck" parameterType="java.util.HashMap" resultType="java.util.HashMap">

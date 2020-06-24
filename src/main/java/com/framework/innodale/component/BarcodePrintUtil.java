@@ -78,7 +78,7 @@ public class BarcodePrintUtil {
             bufWriter.write("^FO10,148^A1N^FD수        량^FS");
             bufWriter.write("^CFJ,35");
             bufWriter.write("^FO200,148^A1N^FD" + barcodeInfo.get("ORDER_QTY")+ "^FS");
-            bufWriter.write("^FO280,148^A1N^FDEA^FS");
+//            bufWriter.write("^FO280,148^A1N^FDEA^FS");
             bufWriter.write("^CFJ,20");
             bufWriter.write("^FO350,118^A1N^FD원칭^FS");
             bufWriter.write("^FO430,118^A1N^FD대칭^FS");

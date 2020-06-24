@@ -465,3 +465,21 @@ div.drawingTit,span.drawingTit{background-color: #e8f0f0; font-family: 'NotoKrB'
 .arrow:after {content:''; position:absolute; width:0; height:0; border-style:solid;}
 .arrow.right_Arrow:after {border-width:15px 20px;}
 .arrow.right_Arrow:after {border-color:transparent transparent transparent #7d1919; top:-10px; left:20px;}
+
+/** grid color setting **/
+/*.pq-grid-row > .pq-grid-number-cell, .pq-grid-number-col {*/
+/*    border-width: thin;*/
+/*    border-right-color: #a8a8a8 !important;*/
+/*}*/
+/*.pq-grid-col, .pq-grid-col.pq-merge-cell {*/
+/*    border-width: thin;*/
+/*    border-right-color: #a8a8a8 !important;*/
+/*}*/
+/*.pq-grid-col, .pq-grid-col.pq-merge-cell {*/
+/*    border-width: thin;*/
+/*    border-right-color: #a8a8a8 !important;*/
+/*}*/
+
+.pq-grid-col, .pq-grid-row > .pq-grid-number-cell{
+    border-color: #ececec;
+}

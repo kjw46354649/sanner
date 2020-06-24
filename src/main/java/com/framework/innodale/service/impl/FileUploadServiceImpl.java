@@ -153,6 +153,7 @@ public class FileUploadServiceImpl implements FileUploadService {
 
                 // 원본 파일 DB 저장 처리
                 managerFileInformationInsert(fileInfo);
+
                 // 확장자에 따른 컬럼 정의
                 settingFileInfoColumn(fileInfo, multipartFile.getSize(), originalExtName);
                 // 파일 업로드 원본 파일
@@ -311,7 +312,7 @@ public class FileUploadServiceImpl implements FileUploadService {
      */
     private void managerFileInformationInsert(HashMap<String, Object> fileConvertMap) throws UnsupportedEncodingException, SQLException {
 
-        fileConvertMap.put("GFILE_SEQ",     "");                   // GFILE 신규 등록
+        fileConvertMap.put("GFILE_SEQ",     "");                            // GFILE 신규 등록
         fileConvertMap.put("queryId",       "common.insertFileGroup");
         innodaleDao.update(fileConvertMap);
 
