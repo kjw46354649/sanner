@@ -1010,10 +1010,10 @@
             NOTE = #{NOTE},
         </if>
         <if test="PROJECT_NM != null and PROJECT_NM != ''">
-            PROJECT_NM = #{PROJECT_NM},
+            PROJECT_NM = UPPER(#{PROJECT_NM}),
         </if>
         <if test="MODULE_NM != null and MODULE_NM != ''">
-            MODULE_NM = #{MODULE_NM},
+            MODULE_NM = UPPER(#{MODULE_NM}),
         </if>
         <if test="DELIVERY_COMP_NM != null and DELIVERY_COMP_NM != ''">
             DELIVERY_COMP_NM = #{DELIVERY_COMP_NM},
@@ -1050,16 +1050,16 @@
             PART_NUM = #{PART_NUM},
         </if>
         <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
-            DRAWING_NUM = #{DRAWING_NUM},
+            DRAWING_NUM = UPPER(#{DRAWING_NUM}),
         </if>
         <if test="DRAWING_VER != null and DRAWING_VER != ''">
             DRAWING_VER = #{DRAWING_VER},
         </if>
         <if test="PREV_DRAWING_NUM != null and PREV_DRAWING_NUM != ''">
-            PREV_DRAWING_NUM = #{PREV_DRAWING_NUM},
+            PREV_DRAWING_NUM = UPPER(#{PREV_DRAWING_NUM}),
         </if>
         <if test="ITEM_NM != null and ITEM_NM != ''">
-            ITEM_NM = #{ITEM_NM},
+            ITEM_NM = UPPER(#{ITEM_NM}),
         </if>
         <if test="WORK_TYPE != null and WORK_TYPE != ''">
             WORK_TYPE = #{WORK_TYPE},
