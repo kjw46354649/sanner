@@ -53,10 +53,78 @@
 									</div>
 									<div class="page tab1">
 										<ul class="p_row">
-											<li class="p_col">
+											<li class="p_col" id="ARE01_1_1">
 												<div class="statusWrap">
 													<div class="statusBar">
 														<div class="inBox">소형-1</div>
+														<div class="inBox">지광성</div>
+														<div class="inBox">
+															<div>12품 85EA</div>
+															<div class="txtY">22H 36M</div>
+														</div>
+													</div>
+													<div class="statusConts">
+														<div class="inWrap on">
+															<a href="#a;">
+																<span>10/19<br>가2공</span>
+																<span><span class="txtB ellipsis">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
+																<span>35ea</span>
+																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+															</a>
+														</div>
+														<div class="inWrap">
+															<a href="#a;">
+																<span>10/19<br>가공</span>
+																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
+																<span>35ea</span>
+																<span class="txtB ty2">15'</span>
+															</a>
+														</div>
+														<div class="inWrap">
+															<a href="#a;">
+																<span>10/19<br>가공</span>
+																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
+																<span>35ea</span>
+																<span class="txtB ty2">15'</span>
+															</a>
+														</div>
+														<div class="inWrap">
+																<a href="#a;">
+																<span>10/19<br>가공</span>
+																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
+																<span>35ea</span>
+																<span class="txtB ty2">15'</span>
+															</a>
+														</div>
+													</div>
+												</div>
+											</li>
+											<li class="p_col" id="ARE01_1_2">
+												<div class="statusWrap">
+													<div class="statusBar">
+														<div class="inBox">소형-2</div>
+														<div class="inBox">지광성</div>
+														<div class="inBox">
+															<div>12품 85EA</div>
+															<div class="txtY">22H 36M</div>
+														</div>
+													</div>
+													<div class="statusConts">
+														<div class="inWrap on">
+															<a href="#a;">
+																<span>10/19<br>가공</span>
+																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
+																<span>35ea</span>
+																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+															</a>
+														</div>
+													</div>
+												</div>
+											</li>
+											<li class="p_col" id="ARE01_1_3">
+												<div class="statusWrap">
+													<div class="statusBar">
+														<div class="inBox">소형-3</div>
 														<div class="inBox">지광성</div>
 														<div class="inBox">
 															<div>12품 85EA</div>
@@ -99,78 +167,10 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col">
+											<li class="p_col" id="ARE01_1_4">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
-														<div class="inBox">지광성</div>
-														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap on">
-															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="p_col">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox">소형-1</div>
-														<div class="inBox">지광성</div>
-														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap on">
-															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
-															</a>
-														</div>
-														<div class="inWrap">
-																<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="p_col">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox">소형-1</div>
+														<div class="inBox">소형4</div>
 														<div class="inBox">지광성</div>
 														<div class="inBox">
 															<div>12품 85EA</div>
@@ -210,10 +210,10 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col">
+											<li class="p_col" id="ARE01_1_5">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
+														<div class="inBox">소형-5</div>
 														<div class="inBox">지광성</div>
 														<div class="inBox">
 															<div>12품 85EA</div>
@@ -248,10 +248,10 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col">
+											<li class="p_col" id="ARE01_1_6">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
+														<div class="inBox">소형-6</div>
 														<div class="inBox">지광성</div>
 														<div class="inBox">
 															<div>12품 85EA</div>
@@ -294,10 +294,10 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col">
+											<li class="p_col" id="ARE01_1_7">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
+														<div class="inBox">소형-7</div>
 														<div class="inBox">지광성</div>
 														<div class="inBox">
 															<div>12품 85EA</div>
@@ -342,10 +342,10 @@
 											</li>
 										</ul>
 										<ul class="p_row">
-											<li class="p_col">
+											<li class="p_col" id="ARE01_2_1">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
+														<div class="inBox">소형-21</div>
 														<div class="inBox">지광성</div>
 														<div class="inBox">
 															<div>12품 85EA</div>
@@ -361,7 +361,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col">
+											<li class="p_col" id="ARE01_2_2">
 												<div class="statusWrap">
 													<div class="statusBar">
 														<div class="inBox">소형-1</div>
@@ -404,7 +404,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col">
+											<li class="p_col" id="ARE01_2_3">
 												<div class="statusWrap">
 													<div class="statusBar">
 														<div class="inBox">소형-1</div>
@@ -442,12 +442,132 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col"></li>
-											<li class="p_col"></li>
-											<li class="p_col">
+											<li class="p_col" id="ARE01_2_4">
 												<div class="statusWrap">
 													<div class="statusBar">
 														<div class="inBox">소형-1</div>
+														<div class="inBox">지광성</div>
+														<div class="inBox">
+															<div>12품 85EA</div>
+															<div class="txtY">22H 36M</div>
+														</div>
+													</div>
+													<div class="statusConts">
+														<div class="inWrap on">
+															<a href="#a;">
+																<span>10/19<br>가공</span>
+																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
+																<span>35ea</span>
+																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+															</a>
+														</div>
+														<div class="inWrap">
+															<a href="#a;">
+																<span>10/19<br>가공</span>
+																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
+																<span>35ea</span>
+																<span class="txtB ty2">15'</span>
+															</a>
+														</div>
+														<div class="inWrap">
+															<a href="#a;">
+																<span>10/19<br>가공</span>
+																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
+																<span>35ea</span>
+																<span class="txtB ty2">15'</span>
+															</a>
+														</div>
+													</div>
+												</div>
+											</li>
+											<li class="p_col" id="ARE01_2_5">
+												<div class="statusWrap">
+													<div class="statusBar">
+														<div class="inBox">소형-11</div>
+														<div class="inBox">지광성</div>
+														<div class="inBox">
+															<div>12품 85EA</div>
+															<div class="txtY">22H 36M</div>
+														</div>
+													</div>
+													<div class="statusConts">
+														<div class="inWrap on">
+															<a href="#a;">
+																<span>10/19<br>가공</span>
+																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
+																<span>35ea</span>
+																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+															</a>
+														</div>
+														<div class="inWrap">
+															<a href="#a;">
+																<span>10/19<br>가공</span>
+																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
+																<span>35ea</span>
+																<span class="txtB ty2">15'</span>
+															</a>
+														</div>
+														<div class="inWrap">
+															<a href="#a;">
+																<span>10/19<br>가공</span>
+																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
+																<span>35ea</span>
+																<span class="txtB ty2">15'</span>
+															</a>
+														</div>
+													</div>
+												</div>
+											</li>
+											<li class="p_col" id="ARE01_2_6">
+												<div class="statusWrap">
+													<div class="statusBar">
+														<div class="inBox">소형-41</div>
+														<div class="inBox">지광성</div>
+														<div class="inBox">
+															<div>12품 85EA</div>
+															<div class="txtY">22H 36M</div>
+														</div>
+													</div>
+													<div class="statusConts">
+														<div class="inWrap on">
+															<a href="#a;">
+																<span>10/19<br>가공</span>
+																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
+																<span>35ea</span>
+																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+															</a>
+														</div>
+														<div class="inWrap">
+															<a href="#a;">
+																<span>10/19<br>가공</span>
+																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
+																<span>35ea</span>
+																<span class="txtB ty2">15'</span>
+															</a>
+														</div>
+														<div class="inWrap">
+															<a href="#a;">
+																<span>10/19<br>가공</span>
+																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
+																<span>35ea</span>
+																<span class="txtB ty2">15'</span>
+															</a>
+														</div>
+														<div class="inWrap">
+															<a href="#a;">
+																<span>10/19<br>가공</span>
+																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
+																<span>35ea</span>
+																<span class="txtB ty2">15'</span>
+															</a>
+														</div>
+													</div>
+												</div>
+											</li>
+											<li class="p_col" id="ARE01_2_7">
+												<div class="statusWrap">
+													<div class="statusBar">
+														<div class="inBox">소형-41</div>
 														<div class="inBox">지광성</div>
 														<div class="inBox">
 															<div>12품 85EA</div>
@@ -513,7 +633,7 @@
 									</div>
 									<div class="page tab1">
 										<ul class="p_row" style="padding:21px 20px 0;">
-											<li class="p_col">
+											<li class="p_col" id="ARE02_1_1">
 												<div class="statusWrap">
 													<div class="statusBar">
 														<div class="inBox">소형-1</div>
@@ -559,7 +679,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" style="margin-left:11px;">
+											<li class="p_col"  id="ARE02_1_2" style="margin-left:11px;">
 												<div class="statusWrap">
 													<div class="statusBar">
 														<div class="inBox">소형-1</div>
@@ -582,7 +702,7 @@
 												</div>
 											</li>
 										</ul>
-										<ul class="p_row" style="padding:21px 20px 0;">
+										<ul class="p_row"  id="ARE02_2_1" style="padding:21px 20px 0;">
 											<li class="p_col">
 												<div class="statusWrap">
 													<div class="statusBar">
@@ -602,7 +722,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" style="margin-left:11px;">
+											<li class="p_col"  id="ARE02_2_2" style="margin-left:11px;">
 												<div class="statusWrap">
 													<div class="statusBar">
 														<div class="inBox">소형-1</div>
@@ -663,7 +783,7 @@
 									</div>
 									<div class="page tab1">
 										<ul class="p_row" style="padding:21px 20px 0;">
-											<li class="p_col">
+											<li class="p_col" id="ARE11_1_1">
 												<div class="statusWrap">
 													<div class="statusBar">
 														<div class="inBox">소형-1</div>
@@ -711,7 +831,7 @@
 											</li>
 										</ul>
 										<ul class="p_row" style="padding:21px 20px 0;">
-											<li class="p_col">
+											<li class="p_col" id="ARE11_2_1">
 												<div class="statusWrap">
 													<div class="statusBar">
 														<div class="inBox">소형-1</div>
@@ -748,7 +868,7 @@
 									</div>
 									<div class="page tab1">
 										<ul class="p_row" style="padding:21px 20px 0;">
-											<li class="p_col">
+											<li class="p_col" id="ARE05_1_1">
 												<div class="statusWrap">
 													<div class="statusBar">
 														<div class="inBox">소형-1</div>
@@ -796,7 +916,7 @@
 											</li>
 										</ul>
 										<ul class="p_row" style="padding:21px 20px 0;">
-											<li class="p_col">
+											<li class="p_col" id="ARE05_2_1">
 												<div class="statusWrap">
 													<div class="statusBar">
 														<div class="inBox">소형-1</div>
@@ -833,7 +953,7 @@
 									</div>
 									<div class="page tab1">
 										<ul class="p_row" style="padding:21px 20px 0;">
-											<li class="p_col">
+											<li class="p_col" id="ARE06_1_1">
 												<div class="statusWrap">
 													<div class="statusBar">
 														<div class="inBox">소형-1</div>
@@ -879,7 +999,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" style="margin-left:11px;">
+											<li class="p_col"  id="ARE06_1_2" style="margin-left:11px;">
 												<div class="statusWrap">
 													<div class="statusBar">
 														<div class="inBox">소형-1</div>
@@ -901,7 +1021,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" style="margin-left:11px;">
+											<li class="p_col"  id="ARE06_1_3" style="margin-left:11px;">
 												<div class="statusWrap">
 													<div class="statusBar">
 														<div class="inBox">소형-1</div>
@@ -925,7 +1045,7 @@
 											</li>
 										</ul>
 										<ul class="p_row" style="padding:21px 20px 0;">
-											<li class="p_col">
+											<li class="p_col" id="ARE06_2_1">
 												<div class="statusWrap">
 													<div class="statusBar">
 														<div class="inBox">소형-1</div>
@@ -944,7 +1064,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" style="margin-left:11px;">
+											<li class="p_col"  id="ARE06_2_2" style="margin-left:11px;">
 												<div class="statusWrap">
 													<div class="statusBar">
 														<div class="inBox">소형-1</div>
@@ -987,7 +1107,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" style="margin-left:11px;">
+											<li class="p_col"  id="ARE06_2_3" style="margin-left:11px;">
 												<div class="statusWrap">
 													<div class="statusBar">
 														<div class="inBox">소형-1</div>
@@ -1056,7 +1176,7 @@
 														<th>조치</th>
 													</tr>
 												</thead>
-												<tbody>
+												<tbody id="grid1">
 													<tr>
 														<td>1</td>
 														<td>4/16</td>
@@ -1135,7 +1255,7 @@
 														<th>진행상태</th>
 													</tr>
 												</thead>
-												<tbody>
+												<tbody id="grid2">
 													<tr>
 														<td>1</td>
 														<td class="txtR bold">4/16</td>
@@ -1215,7 +1335,7 @@
 														<th>담당영업</th>
 													</tr>
 												</thead>
-												<tbody>
+												<tbody id="grid3">
 													<tr>
 														<td>1</td>
 														<td class="txtR bold">4/16</td>
@@ -1345,8 +1465,251 @@
 	</div>
 <script>
 	$(function () {
+			let getData = function () {
+				'use strict';
 
-	});
+				$.ajax({
+					type: 'POST', url: "/tv/mct/data", dataType: 'json',
+					data: {},
+					success: function (data, textStatus, jqXHR) {
+						if (textStatus !== 'success') {
+							alert("시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.3");
+							return;
+						}
+						if (data == null) {
+							alert("시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.2");
+							return;
+						}
+
+						let mct_info_list = data.mct_info_list;//mct info
+						let mct_list = data.mct_list;//mct
+						let grid_list1 = data.grid_list1;//불량/반품
+						let grid_list2 = data.grid_list2;//긴급주문
+						let grid_list3 = data.grid_list3;//납기지연목록
+						let grid_list4 = data.grid_list4;//납기지연위협
+						let mct_info = data.mct_info;//mct 가동률 및 기타
+
+						//init
+						$('[id^=ARE]').each(function () {
+							$(this).find(".inBox:nth-child(1)").html('&nbsp;');
+							$(this).find(".inBox:nth-child(2)").html('&nbsp;');
+							$(this).find(".inBox:nth-child(3)").find('div:nth-child(1)').html('&nbsp;');
+							$(this).find(".inBox:nth-child(3)").find('div:nth-child(2)').html('&nbsp;');
+
+							$(this).find(".statusWrap").hide();
+							//$(this).find(".statusConts").find('.inWrap').empty();
+							$(this).find(".statusConts").empty();
+
+						});
+						$("#grid1").empty();
+						$("#grid2").empty();
+						$("#grid3").empty();
+						$("#grid4").empty();
+
+						//mct info
+						if (mct_info_list != '') {
+							for (let i = 0; i < mct_info_list.length; i++) {
+								//let equip_seq = mct_info_list[i].EQUIP_SEQ;
+								let equip_nm = mct_info_list[i].EQUIP_NM;
+								let factory_area = mct_info_list[i].FACTORY_AREA;
+								let layout_row = mct_info_list[i].LAYOUT_ROW;
+								let layout_col = mct_info_list[i].LAYOUT_COL;
+
+								//$("#" + factory_area + "_" + layout_row + "_" + layout_col).attr("data-target",equip_seq);
+								$("#" + factory_area + "_" + layout_row + "_" + layout_col).find(".statusWrap").show();
+								$("#" + factory_area + "_" + layout_row + "_" + layout_col).find(".inBox:nth-child(1)").html(equip_nm);
+
+							}
+						}
+						if (mct_list != '') {
+							for (let i = 0; i < mct_list.length; i++) {
+								//let EQUIP_SEQ = mct_list[i].EQUIP_SEQ;
+								let factory_area = mct_list[i].FACTORY_AREA;
+								let layout_row = mct_list[i].LAYOUT_ROW;
+								let layout_col = mct_list[i].LAYOUT_COL;
+								let user_nm = mct_list[i].USER_NM;
+								let total_cnt_info = mct_list[i].TOTAL_CNT_INFO;
+								let total_part_qty_info = mct_list[i].TOTAL_PART_QTY_INFO;
+								let total_plan_working_time_info = mct_list[i].TOTAL_PLAN_WORKING_TIME_INFO;//여기까지 상단
+
+								let work_plan_type = ( mct_list[i].WORK_PLAN_TYPE != undefined ) ? mct_list[i].WORK_PLAN_TYPE : '' ;//1:작동중, 나머지:계획
+								let inner_due_dt = ( mct_list[i].INNER_DUE_DT != undefined ) ? mct_list[i].INNER_DUE_DT : '' ;
+								let work_type_nm = ( mct_list[i].WORK_TYPE_NM != undefined ) ? mct_list[i].WORK_TYPE_NM : '' ;
+								let control_part_info = ( mct_list[i].CONTROL_PART_INFO != undefined ) ? mct_list[i].CONTROL_PART_INFO : '' ;
+								let size_txt = ( mct_list[i].SIZE_TXT != undefined ) ? mct_list[i].SIZE_TXT : '' ;
+								let material_detail_nm =( mct_list[i].MATERIAL_DETAIL_NM != undefined ) ? mct_list[i].MATERIAL_DETAIL_NM : '' ;
+								let part_qty = ( mct_list[i].PART_QTY != undefined ) ? mct_list[i].PART_QTY : '' ;
+								let working_time_info = ( mct_list[i].WORKING_TIME_INFO != undefined ) ? mct_list[i].WORKING_TIME_INFO : '' ;
+								let plan_working_time_info =( mct_list[i].PLAN_WORKING_TIME_INFO != undefined ) ? mct_list[i].PLAN_WORKING_TIME_INFO : '' ;
+
+								let $target = $("#" + factory_area + "_" + layout_row + "_" + layout_col);
+
+								$target.find(".inBox:nth-child(2)").html(user_nm);
+								$target.find(".inBox:nth-child(3)").find('div:nth-child(1)').html(total_cnt_info + '&nbsp;' + total_part_qty_info);
+								$target.find(".inBox:nth-child(3)").find('div:nth-child(2)').html(total_plan_working_time_info);
+
+							let divHtml = '<div class="inWrap">';
+								divHtml += '<a href="#a;">';
+								divHtml += '	<span>'+inner_due_dt+'<br>'+work_type_nm+'</span>';
+								divHtml += '	<span><span class="txtB ellipsis" style="font-size: 17px;">'+control_part_info+'</span><br>'+size_txt+'&nbsp;&nbsp;'+material_detail_nm+'</span>';
+								divHtml += '	<span>'+part_qty+'</span>';
+								divHtml += '	<span><span class="txtR">'+working_time_info+'</span><br><span class="txtB ty2">'+plan_working_time_info+'</span></span>';
+								divHtml += '</a>';
+								divHtml += '</div>';
+
+								if($target.find(".statusConts").find('.inWrap').length >= 4){
+								}else{
+									if(work_plan_type == 1){
+										$target.find(".statusConts").prepend(divHtml);
+										$target.find(".statusConts").find('.inWrap:nth-child(1)').addClass("on");
+									}else{
+										$target.find(".statusConts").append(divHtml);
+									}
+								}
+
+							}
+
+							//현재 가동중인게 없을경우 넣어준다 공간. 색 다르게
+							$('.statusConts').each(function () {
+								if($(this).find(".statusConts").find('.inWrap').length >= 4){
+								}else{
+									if($(this).find(".on").length == 0){
+										let emptyHtml = '<div class="inWrap ty2 on"><a href="#a;"><span class="nodata"></span></a></div>';
+										$(this).prepend(emptyHtml);
+									}
+								}
+							});
+						}
+
+						if (grid_list1 != '')
+						{
+							for (let i = 0; i < grid_list1.length; i++) {
+								let inspect_dt = grid_list1[i].INSPECT_DT;
+								let order_comp_nm = grid_list1[i].ORDER_COMP_NM;
+								let control_part_info = grid_list1[i].CONTROL_PART_INFO;
+								let error_type = grid_list1[i].ERROR_TYPE;
+								let error_qty_info = grid_list1[i].ERROR_QTY_INFO;
+								let inner_due_dt = grid_list1[i].INNER_DUE_DT;
+								let inspect_result_nm = grid_list1[i].INSPECT_RESULT_NM;
+								let error_action_nm = grid_list1[i].ERROR_ACTION_NM;
+
+								let grid1Html = '<tr>';
+									grid1Html += '<td>' + (i+1) +'</td>';
+									grid1Html += '<td>'+ inspect_dt + '</td>';
+									grid1Html += '<td>'+ order_comp_nm + '</td>';
+									grid1Html += '<td class="alignLeft ellipsis">'+ control_part_info + '</td>';
+									grid1Html += '<td class="txtR">'+ error_type + '</td>';
+									grid1Html += '<td class="txtR">'+ error_qty_info + '</td>';
+									grid1Html += '<td>'+ inner_due_dt + '</td>';
+									grid1Html += '<td>'+ inspect_result_nm + '</td>';
+									grid1Html += '<td class="ellipsis">'+ error_action_nm + '</td>';
+									grid1Html += '</tr>';
+
+								$("#grid1").append(grid1Html);
+								if((i+1) == 5){
+									break;
+								}
+
+							}
+						}
+
+						if (grid_list2 != '')
+						{
+							for (let i = 0; i < grid_list2.length; i++) {
+								let inner_due_dt = grid_list2[i].INNER_DUE_DT;
+								let out_finish_dt = grid_list2[i].OUT_FINISH_DT;
+								let order_comp_nm = grid_list2[i].ORDER_COMP_NM;
+								let control_part_info = grid_list2[i].CONTROL_PART_INFO;
+								let control_part_qty = grid_list2[i].CONTROL_PART_QTY;
+								let control_part_qty_info = grid_list2[i].CONTROL_PART_QTY_INFO;
+								let part_status_nm = grid_list2[i].PART_STATUS_NM;
+
+								let grid2Html = '<tr>';
+									grid2Html += '<td>' + (i+1) +'</td>';
+									grid2Html += '<td class="txtR bold">'+ inner_due_dt + '</td>';
+									grid2Html += '<td>'+ out_finish_dt + '</td>';
+									grid2Html += '<td class="alignLeft ellipsis">'+ order_comp_nm + '</td>';
+									grid2Html += '<td class="alignLeft ellipsis">'+ control_part_info + '</td>';
+									grid2Html += '<td>'+ control_part_qty_info + '</td>';
+									grid2Html += '<td class="ellipsis">'+ part_status_nm + '</td>';
+									grid2Html += '</tr>';
+
+								$("#grid2").append(grid2Html);
+								if((i+1) == 5){
+									break;
+								}
+
+							}
+						}
+
+						if (grid_list3 != '')
+						{
+							for (let i = 0; i < grid_list3.length; i++) {
+								let inner_due_dt = grid_list3[i].INNER_DUE_DT;
+								let out_finish_dt = grid_list3[i].OUT_FINISH_DT;
+								let order_comp_nm = grid_list3[i].ORDER_COMP_NM;
+								let control_part_info = grid_list3[i].CONTROL_PART_INFO;
+								let control_part_qty_info = grid_list3[i].CONTROL_PART_QTY_INFO;
+								let part_status_nm = grid_list3[i].PART_STATUS_NM;
+								let charge_user_nm = grid_list3[i].CHARGE_USER_NM;
+
+
+								let grid3Html = '<tr>';
+									grid3Html += '<td>' + (i+1) +'</td>';
+									grid3Html += '<td class="txtR bold">'+ inner_due_dt + '</td>';
+									grid3Html += '<td>'+ out_finish_dt + '</td>';
+									grid3Html += '<td class="alignLeft ellipsis">'+ order_comp_nm + '</td>';
+									grid3Html += '<td class="alignLeft ellipsis">'+ control_part_info + '</td>';
+									grid3Html += '<td>'+ control_part_qty_info + '</td>';
+									grid3Html += '<td>'+ part_status_nm + '</td>';
+									grid3Html += '<td>'+ charge_user_nm + '</td>';
+									grid3Html += '</tr>';
+
+								$("#grid3").append(grid3Html);
+								if((i+1) == 5){
+									break;
+								}
+
+							}
+						}
+
+
+
+					},
+					error: function (jqXHR, textStatus, errorThrown) {
+						alert("시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.");
+					}
+				});
+			};
+
+			let setPopData = function (popPosition, liInfo, totalCnt) {
+				if (popPosition != "") {
+					let maxCnt = $("#" + popPosition).attr("data-cnt");
+					let targetCnt = $("#" + popPosition).find("li").length;
+					if (maxCnt > targetCnt) {
+						$("#" + popPosition).append("<li class=\"ellipsis\">" + liInfo + "</li>jung67");
+					}
+					$("#CNT_" + popPosition).html(totalCnt);
+				}
+			}
+
+
+			let setIntervalTimer;
+			let timer = function(){
+				let selVal = 60;//1분
+				let timesec = 1000;//1초
+				setIntervalTimer = setInterval(function() {
+					getData();
+				}, timesec*selVal);
+			}
+
+			getData();
+			// timer();
+
+			$(document).on('click', 'a[href="#a;"]', function(e){
+				e.preventDefault();
+			});
+		});
 </script>
 </body>
 </html>
