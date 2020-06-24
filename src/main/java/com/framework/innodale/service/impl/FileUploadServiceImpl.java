@@ -101,6 +101,93 @@ public class FileUploadServiceImpl implements FileUploadService {
         model.addAttribute("GFILE_SEQ", fileSeq);
     }
 
+    /** 임시로 PDF 파일 업로드 하여 이미지 처리 하는 부분 적용 **/
+    @Override
+    public void uploadDxfAndPdfCadFiles(MultipartHttpServletRequest request, Model model) throws Exception {
+
+        HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss", new Locale("ko", "KR"));
+        String uploadDatePath = formatter.format(new Date()).substring(0, 8) + File.separator + formatter.format(new Date());
+        String uploadTimePath = File.separator + formatter.format(new Date());
+        String uploadFilePath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.upload.cad.path") + File.separator + uploadDatePath;
+
+        ArrayList<HashMap<String, Object>> fileUploadList = new ArrayList<HashMap<String, Object>>();
+        ArrayList<HashMap<String, Object>> fileUploadDataList = new ArrayList<HashMap<String, Object>>();
+        Iterator<String> itr = (Iterator<String>)request.getFileNames();
+
+        if(itr.hasNext()) {
+
+            int iSuccessCount = 0;
+            int iErrorCount = 0;
+            String paramQueryId = (String)hashMap.get("queryId");
+            List<MultipartFile> fileList = request.getFiles(itr.next());
+
+            for(MultipartFile multipartFile:fileList) {
+
+                String serverFileName = CommonUtility.getUUIDString();
+                String serverFullFileName = "file-" + serverFileName;
+
+                HashMap<String, Object> fileInfo = new HashMap<String, Object>();
+
+                // String originalFullName = new String(multipartFile.getOriginalFilename().getBytes("8859_1"), "utf-8");
+                String originalFullName = multipartFile.getOriginalFilename();
+                String originalFileName = originalFullName.substring(0, originalFullName.lastIndexOf(".")).toLowerCase();
+                String originalExtName = originalFullName.substring(originalFullName.lastIndexOf(".") + 1).toLowerCase();
+
+                // String convertFilePath = uploadFilePath + File.separator + serverFileName;    // 임시 작업 디렉토리
+                // 업로드 파일 경로
+                String targetFilePath = uploadFilePath + File.separator + serverFullFileName + "." + originalExtName;
+
+                CommonUtility.createFileDirectory(new File(uploadFilePath));
+
+                fileInfo.put("FILE_NM", serverFullFileName + "." + originalExtName);
+                fileInfo.put("NEW_DRAWING_NUM", originalFileName);
+                fileInfo.put("FILE_PATH", targetFilePath);
+                fileInfo.put("TIME_PATH", uploadTimePath);
+                fileInfo.put("UPLOAD_FILE_NM", originalFullName);
+                fileInfo.put("ORGINAL_FILE_NM", originalFullName);
+                fileInfo.put("FILE_TYPE", multipartFile.getContentType());
+                fileInfo.put("FILE_EXT", originalExtName);
+                fileInfo.put("FILE_SIZE", multipartFile.getSize());
+                fileInfo.put("ROWNUM", iSuccessCount++);
+
+                // 원본 파일 DB 저장 처리
+                managerFileInformationInsert(fileInfo);
+
+                // 확장자에 따른 컬럼 정의
+                settingFileInfoColumn(fileInfo, multipartFile.getSize(), originalExtName);
+                // 파일 업로드 원본 파일
+                multipartFile.transferTo(new File(targetFilePath));   // 원본 파일 저장
+
+                // 파일 명으로 주문 번호의 파일 번호가 있는지 확인하여 처리 한다.
+                fileInfo.put("queryId", paramQueryId);    // 연결 주문 정보 조회
+                List<Map<String, Object>> controlList = innodaleDao.getList(fileInfo);
+
+                // 파일 번호 정보가 있는 경우 Map에 파일 정보를 추가 한다.
+                Iterator controlIterator = controlList.iterator();
+                if(controlIterator.hasNext()) {
+                    while (controlIterator.hasNext()) {
+                        HashMap<String, Object> map = (HashMap<String, Object>) controlIterator.next();
+                        fileUploadDataList.add(map);
+                    }
+                    fileUploadList.add(fileInfo);
+                }else{
+                    iErrorCount++;
+                }
+            }
+
+            model.addAttribute("successCount",  iSuccessCount);
+            model.addAttribute("errorCount",    iErrorCount);
+
+        }
+        model.addAttribute("result",       "success");
+        model.addAttribute("message",      "업로드를 완료 하였습니다.");
+        model.addAttribute("fileUploadList", fileUploadList);
+        model.addAttribute("fileUploadDataList", fileUploadDataList);
+    }
+
+    /** CAD 파일(DXF) 업로드 이후 처리 **/
     @Override
     public void uploadDxfCadFiles(MultipartHttpServletRequest request, Model model) throws Exception {
 

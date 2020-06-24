@@ -1382,7 +1382,7 @@
     <update id="manageControlCadFiles" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART
         SET
-            DRAWING_NUM = upper(#{NEW_DRAWING_NUM}),
+            /* DRAWING_NUM = upper(#{NEW_DRAWING_NUM}), */
             DRAWING_UP_DT = NOW(),
             PREV_DRAWING_NUM = DRAWING_NUM,
             DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
