@@ -87,6 +87,36 @@ public class TvController {
        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
        System.out.println("12312312312 mctData");
 
+       hashMap.put("queryId","tvMapper.selectMctAreInfoList");//mct info
+       List<Map<String, Object>> mct_info_list = this.innodaleService.getList(hashMap);
+       model.addAttribute("mct_info_list", mct_info_list);
+
+       hashMap.put("queryId","tvMapper.selectMctAreList");//mct info
+       List<Map<String, Object>> mct_list = this.innodaleService.getList(hashMap);
+       model.addAttribute("mct_list", mct_list);
+
+        hashMap.put("queryId","tvMapper.selectMctGrid1List");//불량/반품
+        List<Map<String, Object>> grid_list1 = this.innodaleService.getList(hashMap);
+        model.addAttribute("grid_list1", grid_list1);
+
+       hashMap.put("queryId","tvMapper.selectMctGrid2List");//긴급주문
+       List<Map<String, Object>> grid_list2 = this.innodaleService.getList(hashMap);
+       model.addAttribute("grid_list2", grid_list2);
+
+       hashMap.put("queryId","tvMapper.selectMctGrid3List");//납기지연 목록
+       List<Map<String, Object>> grid_list3 = this.innodaleService.getList(hashMap);
+       model.addAttribute("grid_list3", grid_list3);
+
+       hashMap.put("queryId","tvMapper.selectMctGrid4List");//납기지연 위협
+       List<Map<String, Object>> grid_list4 = this.innodaleService.getList(hashMap);
+       model.addAttribute("grid_list4", grid_list4);
+
+       hashMap.put("queryId","tvMapper.selectMctInfo");//mct가동률 및 기타.
+       Map<String, Object> mct_info = this.innodaleService.getInfo(hashMap);
+       model.addAttribute("mct_info", mct_info);
+
        return "jsonView";
    }
+
+
 }
