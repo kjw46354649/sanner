@@ -346,7 +346,7 @@
 
                         fnPostAjaxAsync(function (data, callFunctionParam) {
                             ajaxData = data.list;
-                        }, warehous`eData, '');
+                        }, warehouseData, '');
 
                         return ajaxData;
                     },
