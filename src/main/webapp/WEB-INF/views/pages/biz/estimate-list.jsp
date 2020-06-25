@@ -88,11 +88,18 @@
             </div>
         </div>
         <div class="tableWrap">
-            <div class="buttonWrap right_sort">
+            <div class="buttonWrap">
                 <div class="d-inline">
                     <%--<button type="button" class="smallBtn yellow">견적정보</button>
                     <button type="button" class="smallBtn yellow">금액정보</button>--%>
-                    <div class="slt_wrap namePlusSlt">
+                    <input type="text" id="estimateListFilterKeyword" placeholder="Enter your keyword">
+                    <select id="estimateListFilterColumn"></select>
+                    <select id="estimateListFilterCondition">
+                    <c:forEach var="code" items="${HighCode.H_1083}">
+                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                    </c:forEach>
+                    </select>
+                    <div class="slt_wrap namePlusSlt right_float">
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateListExcel">견적List 출력</button>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateExcel">견적서 출력</button>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateListDrawView">도면 보기</button>
@@ -581,7 +588,7 @@
                 }
             },
             scrollModel: { autoFit: false },
-            columnTemplate: {align: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', hvalign: 'center', render: estimateListFilterRender}, filterModel: { mode: 'OR' },
             numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
@@ -592,6 +599,17 @@
             showTitle: false,
             strNoRows: g_noData,
             editable: false,
+            load: function( event, ui ) {
+                var opts = '<option value=\"\">All Fields</option>';
+                this.getColModel().forEach(function(column){
+                    let hiddenYn = column.hidden == undefined ? true : false;
+                    if(hiddenYn){
+                        opts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                    }
+                });
+                $("#estimateListFilterColumn").empty();
+                $("#estimateListFilterColumn").html(opts);
+            },
             complete: function(event, ui) {
                 //this.flex();
                 let data = estimateMasterTopGrid.pqGrid('option', 'dataModel.data');
@@ -854,6 +872,10 @@
             estimateMasterBotGrid.pqGrid("refresh");
         });
 
+        $("#estimateListFilterKeyword").on("keyup", function(e){
+            filterhandler(estimateMasterTopGrid, 'estimateListFilterKeyword', 'estimateListFilterCondition', 'estimateListFilterColumn');
+        });
+
         /** 공통 코드 이외의 처리 부분 **/
         fnCommCodeDatasourceSelectBoxCreate($("#estimate_master_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
         fnCommCodeDatasourceSelectBoxCreate($("#estimate_master_search_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
@@ -941,5 +963,47 @@
             $("#btnEstimateListSave").attr('disabled', false);
         }
     };
+
+    function estimateListFilterRender(ui) {
+        var val = ui.cellData == undefined ? "" : ui.cellData,
+            filter = ui.column.filter,
+            crules = (filter || {}).crules;
+
+        if (filter && filter.on && crules && crules[0].value) {
+            var condition = $("#estimateListFilterCondition :selected").val(),
+                valUpper = val.toString().toUpperCase(),
+                txt = $("#estimateListFilterKeyword").val(),
+                txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                indx = -1;
+
+            if (condition == "end") {
+                indx = valUpper.lastIndexOf(txtUpper);
+                if (indx + txtUpper.length != valUpper.length) {
+                    indx = -1;
+                }
+            }
+            else if (condition == "contain") {
+                indx = valUpper.indexOf(txtUpper);
+            }
+            else if (condition == "begin") {
+                indx = valUpper.indexOf(txtUpper);
+                if (indx > 0) {
+                    indx = -1;
+                }
+            }
+            if (indx >= 0) {
+                var txt1 = val.toString().substring(0, indx);
+                var txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                var txt3 = val.toString().substring(indx + txtUpper.length);
+                return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+            }
+            else {
+                return val;
+            }
+        }
+        else {
+            return val;
+        }
+    }
 
 </script>
