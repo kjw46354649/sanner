@@ -3,6 +3,7 @@ package com.jmes.service.impl;
 import java.util.UUID;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.framework.innodale.dao.InnodaleDao;
 import com.jmes.dao.OrderDao;
 import com.jmes.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
+    @Autowired
+    private InnodaleDao innodaleDao;
     @Autowired
     public OrderDao orderDao;
 
@@ -55,6 +58,44 @@ public class OrderServiceImpl implements OrderService {
 
         this.orderDao.createControlExcel(hashMap);
         this.orderDao.createControlExcelBatch(hashMap);
+    }
+
+    @Override
+    public void removeControl(Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayList<HashMap<String, Object>> jsonArray = null;
+
+        if (jsonObject != null)
+            jsonArray = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<HashMap<String, Object>>>() {});
+
+        for (HashMap<String, Object> hashMap : jsonArray) {
+            hashMap.put("queryId", "orderMapper.removeControl");
+            this.innodaleDao.remove(hashMap);
+        }
+    }
+
+    @Override
+    public void managerControlStatus(Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayList<HashMap<String, Object>> jsonArray = null;
+
+        if (jsonObject != null)
+            jsonArray = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<HashMap<String, Object>>>() {});
+
+        for (HashMap<String, Object> hashMap : jsonArray) {
+            hashMap.put("queryId", "orderMapper.updateControlRevision");
+            this.innodaleDao.update(hashMap);
+            hashMap.put("queryId", "orderMapper.updateControlBarcodeRevision");
+            this.innodaleDao.update(hashMap);
+            hashMap.put("queryId", "orderMapper.insertControlBarcodeRevision");
+            this.innodaleDao.create(hashMap);
+            hashMap.put("queryId", "orderMapper.updateControlStatus");
+            this.innodaleDao.update(hashMap);
+            hashMap.put("queryId", "orderMapper.createControlProgress");
+            this.innodaleDao.create(hashMap);
+        }
     }
 
     @Override
