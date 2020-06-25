@@ -1045,13 +1045,13 @@
             changes.updateList.push(newRowData);
             let parameters;
 
-            console.count();
-            if (isProcessAssembly(rowData)) {
+            /*if (isProcessAssembly(rowData)) {
                 QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateControlPartStatusAll', 'orderMapper.createControlPartProgressAll']};
             } else {
                 QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateControlPartStatus', 'orderMapper.createControlPartProgress', 'orderMapper.updateControlPartAssembly']};
-            }
+            }*/
 
+            QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateControlPartStatus', 'orderMapper.createControlPartProgress']};
             changes.queryIdList = QUERY_ID_ARRAY;
             parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
 

@@ -1290,7 +1290,7 @@
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001'
             AND B.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO010', 'PRO011', 'PRO012', 'PRO013', 'PRO014', 'PRO015')
-            AND B.WORK_TYPE != 'WTP020'
+            <!-- AND B.WORK_TYPE != 'WTP020' -->
             AND B.OUTSIDE_YN = 'N'
         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
@@ -1319,7 +1319,7 @@
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001'
             <!-- AND B.PART_STATUS = 'PRO001' -->
-            AND B.WORK_TYPE != 'WTP020'
+            <!-- AND B.WORK_TYPE != 'WTP020' -->
             AND B.OUTSIDE_YN = 'Y'
         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
@@ -2183,11 +2183,12 @@
         SELECT
             DATE_FORMAT(STR_TO_DATE(C.ORDER_DUE_DT, '%Y%m%d'), '%Y-%m-%d') as `start`,
             CONCAT(F.COMP_NM, ' (', SUM(IFNULL(D.FINISH_QTY, 0)), '/',
-                IFNULL(CASE WHEN MAX(E.PACKING_NUM) IS NULL THEN SUM(E.OUT_QTY)
-                           WHEN MAX(E.PACKING_NUM) IS NOT NULL AND C.OUT_FINISH_DT IS NOT NULL THEN C.ORDER_QTY
-                           ELSE 0
-                          END, 0), '/',
-               IFNULL(C.ORDER_QTY, 0), ')'
+                IFNULL( CASE
+                            WHEN MAX(E.PACKING_NUM) IS NULL THEN SUM(E.OUT_QTY)
+                            WHEN MAX(E.PACKING_NUM) IS NOT NULL AND C.OUT_FINISH_DT IS NOT NULL THEN SUM(C.ORDER_QTY)
+                            ELSE 0
+                        END, 0), '/',
+               IFNULL(SUM(C.ORDER_QTY), 0), ')'
             ) AS `title`
         FROM TBL_CONTROL A
             INNER JOIN TBL_COMPANY F ON A.ORDER_COMP_CD = F.COMP_CD
@@ -2197,7 +2198,7 @@
             LEFT OUTER JOIN TBL_MCT_WORK D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.DEL_YN = 'N'
             LEFT OUTER JOIN TBL_OUT E ON C.CONTROL_SEQ = E.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ AND C.ORDER_SEQ = E.ORDER_SEQ
         WHERE 1 = 1
-        GROUP BY A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, C.ORDER_SEQ
+        GROUP BY C.ORDER_DUE_DT, F.COMP_CD
     </select>
 
     <select id="businessEmergencyList" parameterType="java.util.HashMap" resultType="java.util.HashMap">

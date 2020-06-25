@@ -113,19 +113,16 @@
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
         <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
-            AND B.DRAWING_NUM = #{DRAWING_NUM}
+            AND B.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
         </if>
         <if test="ITEM_NM != null and ITEM_NM != ''">
-            AND B.ITEM_NM = #{ITEM_NM}
+            AND B.ITEM_NM LIKE CONCAT('%', UPPER(#{ITEM_NM}), '%')
         </if>
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
-            AND A.CONTROL_NUM = #{CONTROL_NUM}
+            AND A.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
         </if>
         <if test="MODULE_NM != null and MODULE_NM != ''">
-            AND A.MODULE_NM = #{MODULE_NM}
-        </if>
-        <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
-            AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
+            AND A.MODULE_NM LIKE CONCAT('%', #{MODULE_NM}, '%')
         </if>
         <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
             AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
@@ -396,18 +393,16 @@
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
         <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
-            AND B.DRAWING_NUM = #{DRAWING_NUM}
+            AND B.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
         </if>
         <if test="ITEM_NM != null and ITEM_NM != ''">
-            AND B.ITEM_NM = #{ITEM_NM}
+            AND B.ITEM_NM LIKE CONCAT('%', UPPER(#{ITEM_NM}), '%')
         </if>
         <if test="ORDER_NUM != null and ORDER_NUM != ''">
-            AND C.ORDER_NUM = #{ORDER_NUM}
+            AND C.ORDER_NUM LIKE CONCAT('%', #{ORDER_NUM}, '%')
         </if>
             <!-- AND E.OUTSIDE_STATUS = 'OST004' -->
     </select>
-
-
 
     <select id="selectOutsideCloseStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT

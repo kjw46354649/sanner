@@ -1008,7 +1008,7 @@
         let gridInstance = grid.pqGrid('getInstance').grid;
         //추가 또는 수정된 값이 있으면 true
         if (gridInstance.isDirty()) {
-            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인';
+            let headHtml = 'messsage', bodyHtml = '', yseBtn = '예';
 
             bodyHtml =
                 '<h4>\n' +

@@ -66,10 +66,10 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="THWOGUDXO">소재형태</label>
-                            <select class="label_200" name="THWOGUDXO" id="THWOGUDXO" title="소재형태">
+                            <label class="label_100" for="MATERIAL_KIND">소재형태</label>
+                            <select class="label_200" name="MATERIAL_KIND" id="MATERIAL_KIND" title="소재형태">
                                 <option value="">All</option>
-                                <c:forEach var="code" items="${HighCode.H_1004}">
+                                <c:forEach var="code" items="${HighCode.H_1029}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
@@ -103,8 +103,8 @@
                             <span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>
                         </div>
                         <span class="slt_wrap">
-                            <label class="label_100" for="ORDER_COMP_CD">단가</label>
-                            <select class="label_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="단가">
+                            <label class="label_100" for="UNIT_FINAL_AMT">단가</label>
+                            <select class="label_200" name="UNIT_FINAL_AMT" id="UNIT_FINAL_AMT" title="단가">
                                 <option value="" selected="selected">ALL</option>
                             </select>
                         </span>
@@ -122,11 +122,11 @@
                     <li>
                         <span>
                             <span class="ipu_wrap"><label class="label_100">Option</label></span>
-                            <span class="chk_box"><input id="option1" type="checkbox"><label for="option1"> 자재사급</label></span>
-                            <span class="chk_box"><input id="option2" type="checkbox"><label for="option2"> 외주</label></span>
-                            <span class="chk_box"><input id="option3" type="checkbox"><label for="option3"> 未단가</label></span>
-                            <span class="chk_box"><input id="option4" type="checkbox"><label for="option4"> 긴급</label></span>
-                            <span class="chk_box"><input id="option5" type="checkbox"><label for="option5"> part 숨기기</label></span>
+                            <span class="chk_box"><input name="MATERIAL_SUPPLY_YN" id="MATERIAL_SUPPLY_YN" type="checkbox"><label for="MATERIAL_SUPPLY_YN"> 자재사급</label></span>
+                            <span class="chk_box"><input name="OUTSIDE_YN" id="OUTSIDE_YN" type="checkbox"><label for="OUTSIDE_YN"> 외주</label></span>
+                            <span class="chk_box"><input name="NO_UNIT_FINAL_AMT" id="NO_UNIT_FINAL_AMT" type="checkbox"><label for="NO_UNIT_FINAL_AMT"> 未단가</label></span>
+                            <span class="chk_box"><input name="EMERGENCY_YN" id="EMERGENCY_YN" type="checkbox"><label for="EMERGENCY_YN"> 긴급</label></span>
+                            <span class="chk_box"><input name="HIDE_PART" id="HIDE_PART" type="checkbox"><label for="HIDE_PART"> part 숨기기</label></span>
                         </span>
                     </li>
                 </ul>
@@ -143,9 +143,9 @@
                 <button type="button" class="defaultBtn btn-100w" id="ESTIMATE_REGISTER_FROM_CONTROL">견적등록</button>
                 <button type="button" class="defaultBtn btn-100w" id="ESTIMATE_LIST_PRINT">견적List출력</button>
                 <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#TRANSACTION_STATEMENT_POPUP">거래명세표</button>
-                <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="CONFIRMATION" data-control_status="ORD001" data-control_status_nm="확정" style="color: blue;">확정</button>
-                <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="CANCEL" data-control_status="ORD002" data-control_status_nm="취소" style="color: red;">취소</button>
-                <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="TERMINATION" data-control_status="ORD004" data-control_status_nm="종료">종료</button>
+                <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="CONFIRMATION" data-control_status="ORD001" style="color: blue;">확정</button>
+                <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="CANCEL" data-control_status="ORD002" style="color: red;">취소</button>
+                <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="TERMINATION" data-control_status="ORD004">종료</button>
                 <button type="button" class="defaultBtn btn-50w" data-toggle="modal" data-target="#CONTROL_CLOSE_POPUP">마감</button>
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_DRAWING_VIEW">도면 View</button>
@@ -383,11 +383,8 @@
             {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'PART_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true},
-            {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true},
-
             {
                 title: '주문상태', align: 'center', colModel: [
-                    {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_ORIGINAL', hidden: true},
                     {title: '상태', dataIndx: 'CONTROL_STATUS', hidden: true},
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_NM'},
                     {title: '', minWidth:15, width:20, dataType: 'integer', dataIndx: 'CONTROL_VER'},
@@ -523,10 +520,10 @@
             },
             {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {
-                title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', editable: true,
+                title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', editable: true,
                 render: function (ui) {
-                    if (ui.rowData.WORK_TYPE === 'WTP020' && ui.rowData.LAG_WORK_TYPE === undefined) {
-                        return '<span class="ui-icon ui-icon-circle-plus" name="PART_NUM_PLUS_BUTTON"></span>';
+                    if (ui.rowData.WORK_TYPE === 'WTP020' && ui.rowData.LAG_WORK_TYPE === undefined && ui.rowData.CONTROL_STATUS !== 'ORD001') {
+                        return '<span class="ui-icon ui-icon-circle-plus" name="PART_NUM_PLUS_BUTTON" style="cursor: pointer"></span>';
                     }
                 },
                 postRender: function (ui) {
@@ -717,7 +714,7 @@
                         title: '', datatype: 'string', dataIndx: 'ORDER_NUM_PLUS_BUTTON',
                         render: function (ui) {
                             if (ui.rowData.WORK_TYPE === 'WTP010' || ui.rowData.WORK_TYPE === 'WTP020' || ui.rowData.WORK_TYPE === 'WTP030') {
-                                return '<span class="ui-icon ui-icon-circle-plus" name="ORDER_NUM_PLUS_BUTTON"></span>';
+                                return '<span class="ui-icon ui-icon-circle-plus" name="ORDER_NUM_PLUS_BUTTON" style="cursor: pointer"></span>';
                             }
                         },
                         postRender: function (ui) {
@@ -1255,7 +1252,7 @@
                 }
             },
             {title: '관리번호', width: 200, dataType: 'string', dataIndx: 'CONTROL_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {title: '도면번호', width: 200, dataType: 'string', dataIndx: 'DRAWING_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {title: '품명',  width: 200, dataType: 'string', dataIndx: 'ITEM_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {
@@ -1763,38 +1760,31 @@
         /* variable */
 
         /* function */
-        let changeDate = function (newDate = new Date(), today = new Date()) {
+        const changeDate = function (newDate = new Date(), today = new Date()) {
             $('#CONTROL_MANAGE_START_DATE').val(newDate.yyyymmdd());
             $('#CONTROL_MANAGE_END_DATE').val(today.yyyymmdd());
         };
 
-        let getOrderStatusButton = function (event) {
+        const getOrderStatusButton = function (event) {
             let controlStatus = event.target.dataset.control_status;
-            let controlStatusNm = event.target.dataset.control_status_nm;
 
-            updateOrderStatus(controlStatus, controlStatusNm);
+            updateOrderStatus(controlStatus);
         };
 
-        let updateOrderStatus = function (controlStatus, controlStatusNm) {
-            let selectedRowCount = selectedRowIndex.length;
-            let rowListConvert = [];
-            let date = new Date().yyyymmddhhmm();
+        const updateOrderStatus = function (controlStatus) {
+            let list = [];
 
-            for (let i = 0; i < selectedRowCount; i++) {
-                let tempObject = {
-                    rowIndx: selectedRowIndex[i],
-                    newRow: {
-                        'CONTROL_STATUS': controlStatus,
-                        'PART_STATUS': controlStatus,
-                        'ORDER_STATUS': controlStatus,
-                        'CONTROL_STATUS_NM': controlStatusNm,
-                        'CONTROL_STATUS_DT': date
-                    },
-                    checkEditable: false
-                };
-                rowListConvert.push(tempObject);
+            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
+                list[i] = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                list[i].CONTROL_STATUS = controlStatus;
             }
-            $orderManagementGrid.pqGrid('updateRow', {rowList: rowListConvert});
+
+            let parameters = {'url': '/managerControlStatus', 'data': {data: JSON.stringify(list)}};
+
+            fnPostAjax(function () {
+                alert("<spring:message code='com.alert.default.save.success' />");
+                $orderManagementGrid.pqGrid('refreshDataAndView');
+            }, parameters, '');
         };
 
         let loadDataControlClose = function (open) {
@@ -1955,7 +1945,6 @@
         });
 
         $('#CONTROL_MANAGE_SAVE').on('click', function () {
-            // if (fnIsGridEditing($orderManagementGrid)) return false;
             const insertQueryList = ['orderMapper.createControlPart', 'orderMapper.createControlPartOrder'];
             const updateQueryList = ['orderMapper.updateControlMaster', 'orderMapper.updateControlPart', 'orderMapper.updateControlPartOrder', 'orderMapper.createControlProgress', 'orderMapper.createControlPartProgress'];
 
@@ -1963,30 +1952,56 @@
         });
 
         $('#CONTROL_MANAGE_DELETE').on('click', function () {
-            let rowListConvert = [];
-            let selectedRowCount = selectedRowIndex.length;
-            const controlUpdateQueryList = ['orderMapper.DeleteControl'];
+            let list = [];
+            let controlNumList = [];
+            let headHtml = 'messsage', bodyHtml = '', yseBtn = '예', noBtn = '아니오';
 
-            for (let i = 0; i < selectedRowCount; i++) {
+
+            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
                 let thisRowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                list[i] = thisRowData;
+                controlNumList[i] = thisRowData.CONTROL_NUM;
 
-                if (!(thisRowData.CONTROL_STATUS_ORIGINAL === undefined || thisRowData.CONTROL_STATUS_ORIGINAL === 'ORD002')) {
-                    alert('확정상태가 빈칸(임시저장)이나 확정취소인 경우에만 가능');
+                if (!(thisRowData.CONTROL_STATUS === undefined || thisRowData.CONTROL_STATUS === null || thisRowData.CONTROL_STATUS === 'ORD002')) {
+                    bodyHtml =
+                        '<h4>\n' +
+                        '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                        '    <span>확정상태가 빈칸(임시저장)이나 확정취소인 경우에만 가능합니다</span>\n' +
+                        '</h4>';
+                    fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
                     return false;
                 }
-
-                let tempObject = {
-                    rowIndx: selectedRowIndex[i],
-                    newRow: {
-                        'DEL_YN': 'Y'
-                    }
-                };
-                rowListConvert.push(tempObject);
             }
 
-            $orderManagementGrid.pqGrid('updateRow', {rowList: rowListConvert, checkEditable: false});
-
-            fnModifyPQGrid($orderManagementGrid, [], controlUpdateQueryList);
+            //TODO: list.lenth 건수
+            bodyHtml =
+                '<h4>\n' +
+                '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                '    <span>' + list.length + ' 건이 삭제됩니다. 진행하시겠습니까?</span>\n' +
+                '</h4>';
+            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+            let estimateRegisterSubmitConfirm = function (callback) {
+                commonConfirmPopup.show();
+                $("#commonConfirmYesBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                    callback(true);
+                    return;
+                });
+                $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                });
+            };
+            estimateRegisterSubmitConfirm(function (confirm) {
+                if (confirm) {
+                    let parameters = {'url': '/removeControl', 'data': {data: JSON.stringify(list)}};
+                    fnPostAjax(function (data) {
+                        alert("<spring:message code='com.alert.default.remove.success' />");
+                        $orderManagementGrid.pqGrid('refreshDataAndView');
+                    }, parameters, '');
+                }
+            });
         });
 
         $('#CONTROL_MANGE_POPUP').on({
@@ -2001,6 +2016,10 @@
         $('#CONTROL_CLOSE_POPUP').on({
             'show.bs.modal': function () {
                 if (noSelectedRowAlert()) {
+                    return false;
+                }
+
+                if (fnIsGridEditing($orderManagementGrid)) {
                     return false;
                 }
 
@@ -2643,8 +2662,8 @@
 
             for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
-                let supplyUnitPrice = (rowData.UNIT_FINAL_AMT * (rate / 100)).toFixed(0) || null;
-                let finalAmount = (supplyUnitPrice * rowData.ORDER_QTY) || null;
+                let supplyUnitPrice = (Math.ceil(rowData.UNIT_FINAL_AMT * (rate / 100) / 100) * 100).toFixed(0) || null;
+                let finalAmount = (supplyUnitPrice * rowData.ORDER_QTY) || null; // 10의 자리 올림
 
                 $orderManagementGrid.pqGrid('updateRow', {'rowIndx': selectedRowIndex[i], row: {'UNIT_FINAL_AMT': supplyUnitPrice, 'FINAL_AMT': finalAmount}, checkEditable: false});
             }
