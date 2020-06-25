@@ -200,6 +200,7 @@
 <form id="item_order_register_hidden_form" name="item_order_register_hidden_form">
     <input type="hidden" id="queryId" name="queryId" value="selectItemOrderRegisterDetail"/>
     <input type="hidden" id="AUTO_SEARCH" name="AUTO_SEARCH" value="N"/>
+    <input type="hidden" id="MATERIAL_ORDER_SEQ" name="MATERIAL_ORDER_SEQ"/>
     <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ"/>
     <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ"/>
     <input type="hidden" id="WAREHOUSE_CD" name="WAREHOUSE_CD"/>
@@ -389,17 +390,14 @@
         ];
 
         let itemOrderRegisterRightColModel= [
-            {title: 'MY_MAT_STOCK_SEQ', dataType: 'string', dataIndx: 'MY_MAT_STOCK_SEQ', hidden: true } ,
-            {title: 'MY_MAT_OUT_SEQ', dataType: 'string', dataIndx: 'MY_MAT_OUT_SEQ', hidden: true } ,
-            {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden: true } ,
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true } ,
             {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_NM' , editable: false, minWidth: 80} ,
+            {title: '상세위치', dataType: 'string', dataIndx: 'LOC_NM', minWidth: 80},
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM' , editable: false, minWidth: 80} ,
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden: true } ,
             {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM' , editable: false, minWidth: 50} ,
-            {title: 'Size(mm)', dataType: 'string', dataIndx: 'SIZE_TXT' , editable: false, minWidth: 120} ,
-            {title: '재고', dataType: 'integer', dataIndx: 'STOCK_QTY' , editable: false, minWidth: 50} ,
-            {title: '요청', dataType: 'integer', dataIndx: 'OUT_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} , minWidth: 50} ,
+            {title: 'Size(mm)', dataType: 'string', dataIndx: 'SIZE_TXT' , editable: false, minWidth: 100} ,
+            {title: '재고', dataType: 'integer', dataIndx: 'STOCK_QTY' , editable: false, minWidth: 40} ,
+            {title: '요청', dataType: 'integer', dataIndx: 'OUT_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} , minWidth: 40} ,
             /*{title: '', dataType: 'string', dataIndx: 'OUT_YN', editable: false,
                 render: function(ui){
                     let returnVal = "";
@@ -409,6 +407,11 @@
                     return returnVal;
                 }
             }*/
+            {title: 'MY_MAT_STOCK_SEQ', dataType: 'string', dataIndx: 'MY_MAT_STOCK_SEQ', hidden: true } ,
+            {title: 'MY_MAT_OUT_SEQ', dataType: 'string', dataIndx: 'MY_MAT_OUT_SEQ', hidden: true } ,
+            {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden: true } ,
+            {title: 'MATERIAL_ORDER_SEQ', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true } ,
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true }
         ];
 
         let itemOrderRegisterPopTopColModel= [
@@ -610,14 +613,18 @@
                     }
                 }
             },
-            rowSelect: function( event, ui) {
-                $("#item_order_register_hidden_form #CONTROL_SEQ").val(ui.addList[0].rowData.CONTROL_SEQ);
-                $("#item_order_register_hidden_form #CONTROL_DETAIL_SEQ").val(ui.addList[0].rowData.CONTROL_DETAIL_SEQ);
-            },
             cellClick: function( event, ui) {
                 itemOrderRegisterSelectedRowIndex = [];
                 itemOrderRegisterSelectedRowIndex.push(ui.rowIndx);
+                let MATERIAL_ORDER_SEQ = ui.rowData.MATERIAL_ORDER_SEQ == undefined ? '' : ui.rowData.MATERIAL_ORDER_SEQ;
 
+                if(MATERIAL_ORDER_SEQ == '') {
+                    $("#btnItemOrderRegisterOutSave").attr('disabled', true);
+                } else {
+                    $("#btnItemOrderRegisterOutSave").attr('disabled', false);
+                }
+
+                $("#item_order_register_hidden_form #MATERIAL_ORDER_SEQ").val(MATERIAL_ORDER_SEQ);
                 $("#item_order_register_hidden_form #CONTROL_SEQ").val(ui.rowData.CONTROL_SEQ);
                 $("#item_order_register_hidden_form #CONTROL_DETAIL_SEQ").val(ui.rowData.CONTROL_DETAIL_SEQ);
 
@@ -677,11 +684,14 @@
                     }
                 },
                 change: function (evt, ui) {
+                    let MATERIAL_ORDER_SEQ = $("#item_order_register_hidden_form #MATERIAL_ORDER_SEQ").val();
                     let CONTROL_SEQ = $("#item_order_register_hidden_form #CONTROL_SEQ").val();
                     let CONTROL_DETAIL_SEQ = $("#item_order_register_hidden_form #CONTROL_DETAIL_SEQ").val();
-                    if(CONTROL_SEQ != '' && CONTROL_DETAIL_SEQ !='') {
-                        itemOrderRegisterRightGrid.pqGrid("updateRow", {'rowIndx': ui.updateList[0].rowIndx, row: {'CONTROL_SEQ': CONTROL_SEQ, 'CONTROL_DETAIL_SEQ': CONTROL_DETAIL_SEQ} });
+                    if( (CONTROL_SEQ != '' && CONTROL_DETAIL_SEQ !='') || MATERIAL_ORDER_SEQ != '' ) {
+                        itemOrderRegisterRightGrid.pqGrid("updateRow", {'rowIndx': ui.updateList[0].rowIndx,
+                            row: {'CONTROL_SEQ': CONTROL_SEQ, 'CONTROL_DETAIL_SEQ': CONTROL_DETAIL_SEQ, 'MATERIAL_ORDER_SEQ': MATERIAL_ORDER_SEQ} });
                     }
+
                 }
             });
 
@@ -896,10 +906,11 @@
         });
 
         $("#btnItemOrderRegisterOutSave").on('click', function(){
+            let MATERIAL_ORDER_SEQ = $("#item_order_register_hidden_form #MATERIAL_ORDER_SEQ").val();
             let CONTROL_SEQ = $("#item_order_register_hidden_form #CONTROL_SEQ").val();
             let CONTROL_DETAIL_SEQ = $("#item_order_register_hidden_form #CONTROL_DETAIL_SEQ").val();
-            if(CONTROL_SEQ != '' && CONTROL_DETAIL_SEQ !=''){
-                let itemOrderRegisterOutInsertUpdateQueryList = ['insertUpdateItemOrderRegisterOut'];
+            if( (CONTROL_SEQ != '' && CONTROL_DETAIL_SEQ !='') || MATERIAL_ORDER_SEQ != '' ){
+                let itemOrderRegisterOutInsertUpdateQueryList = ['insertItemOrderRegisterOut'];
                 fnModifyPQGrid(itemOrderRegisterRightGrid, itemOrderRegisterOutInsertUpdateQueryList, itemOrderRegisterOutInsertUpdateQueryList);
 
                 setTimeout(function(){
@@ -961,6 +972,8 @@
             let date = new Date();
             date = date.getFullYear() +"-"+ ("0"+(date.getMonth()+1)).slice(-2) +"-"+ ("0"+(date.getDate()+1)).slice(-2);
             itemOrderRegisterPopTopGrid.pqGrid('addNodes', [{ "HOPE_DUE_DT": date}], 0);
+
+            $("#btnItemOrderRegisterPopSubmit").attr("disabled", true);
         });
 
         $("#btnItemOrderRegisterPopSave").on('click', function(){
@@ -1048,7 +1061,8 @@
             let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num").val();
 
             let table="";
-            var row_span ="rowspan='2'";
+            var row_span1 ="rowspan='1'";
+            var row_span2 ="rowspan='2'";
 
             let parameter = {
                 'queryId': 'selectItemOrderRegisterPopTable',
@@ -1057,18 +1071,27 @@
             let parameters = {'url': '/json-list', 'data': parameter};
             fnPostAjaxAsync(function (data, callFunctionParam) {
                 let list = data.list;
+                console.log(list);
 
                 if(list.length > 0 ){
                     table += "<table class='rowStyle' style='border-spacing:0; width:100%;'><tr>";
                     table += "<th>업체</th>";
                     for(var i=0; i<list.length; i++) {
-                        table += "<th>"	+ list[i].MATERIAL_COMP_NM +"</th>";
+                        if(list[i].MATERIAL_COMP_CD == 'CMP0076'){
+                            table += "<th "+row_span2+">"	+ list[i].MATERIAL_COMP_NM +"</th>";
+                        }else{
+                            table += "<th>"	+ list[i].MATERIAL_COMP_NM +"</th>";
+                        }
                     }
                     table += "</tr>";
                     table += "<tr>";
                     table += "<th>담당자</th>";
                     for(var j=0; j<list.length; j++) {
-                        table += "<th>"	+ list[j].MATERIAL_COMP_EMAIL +"</th>";
+                        if(list[j].MATERIAL_COMP_CD == 'CMP0076'){
+                            table += "";
+                        }else{
+                            table += "<th>"	+ list[j].MATERIAL_COMP_EMAIL +"</th>";
+                        }
                     }
                     table += "</tr>";
                     table += "<tr>";
