@@ -280,7 +280,8 @@
             <include refid="controlPartOrder"/>,
             LAG(B.WORK_TYPE, 1) OVER(PARTITION BY A.CONTROL_NUM ORDER BY A.CONTROL_SEQ, B.PART_NUM, C.ORDER_NUM) AS LAG_WORK_TYPE,
             F.INVOICE_NUM, <!-- 인보이스번호 -->
-            (IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_TM_AMT, 0) + IFNULL(B.UNIT_GRIND_AMT, 0) + IFNULL(B.UNIT_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0)) * C.ORDER_QTY AS EST_TOTAL_AMOUNT, <!-- 견적 합계 금액 -->
+            B.UNIT_FINAL_EST_AMT * SF_GET_CONTROL_ORDER_QTY(B.CONTROL_SEQ, C.ORDER_SEQ) AS EST_TOTAL_AMOUNT, <!-- 견적 합계 금액 -->
+            B.UNIT_FINAL_AMT * SF_GET_CONTROL_ORDER_QTY(B.CONTROL_SEQ, C.ORDER_SEQ) AS FINAL_AMT, <!-- 합계 금액 -->
             (SELECT SUM(OUT_QTY) FROM TBL_OUT WHERE CONTROL_SEQ = C.CONTROL_SEQ AND CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND ORDER_SEQ = C.ORDER_SEQ) AS OUT_QTY, <!-- 출고 -->
             <!-- 출고일자 -->
             G.POP_POSITION, <!-- 현재 위치 -->
@@ -334,54 +335,39 @@
              AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
         <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
-             AND B.DRAWING_NUM = #{DRAWING_NUM}
+             AND B.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
         </if>
         <if test="ITEM_NM != null and ITEM_NM != ''">
-             AND B.ITEM_NM = #{ITEM_NM}
+             AND B.ITEM_NM LIKE CONCAT('%', UPPER(#{ITEM_NM}), '%')
         </if>
         <if test="WORK_TYPE != null and WORK_TYPE != ''">
              AND B.WORK_TYPE = #{WORK_TYPE}
         </if>
         <if test="ORDER_NUM != null and ORDER_NUM != ''">
-             AND C.ORDER_NUM = #{ORDER_NUM}
+             AND C.ORDER_NUM LIKE CONCAT('%', #{ORDER_NUM}, '%')
         </if>
         <if test="ORDER_STATUS != null and ORDER_STATUS != ''">
              AND A.ORDER_STATUS = #{ORDER_STATUS}
         </if>
-        <if test="OUTSIDE_YN != null and OUTSIDE_YN != ''">
-            AND B.OUTSIDE_YN NOT IN ('Y')
+        <if test="MATERIAL_KIND != null and MATERIAL_KIND != ''">
+            AND B.MATERIAL_KIND = #{MATERIAL_KIND}
         </if>
-        <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
-             AND A.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
-        </if>
-        <if test="COMP_CD != null and COMP_CD != ''">
-             AND A.COMP_CD = #{COMP_CD}
-        </if>
-        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-        </if>
-        <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
-             AND B.DRAWING_NUM = #{DRAWING_NUM}
-        </if>
-        <if test="ITEM_NM != null and ITEM_NM != ''">
-             AND B.ITEM_NM = #{ITEM_NM}
-        </if>
-        <if test="WORK_TYPE != null and WORK_TYPE != ''">
-             AND B.WORK_TYPE = #{WORK_TYPE}
-        </if>
-        <if test="ORDER_NUM != null and ORDER_NUM != ''">
-             AND C.ORDER_NUM = #{ORDER_NUM}
-        </if>
-        <if test="ORDER_STATUS != null and ORDER_STATUS != ''">
-             AND A.ORDER_STATUS = #{ORDER_STATUS}
+        <if test="MATERIAL_SUPPLY_YN != null and MATERIAL_SUPPLY_YN != ''">
+            AND B.MATERIAL_SUPPLY_YN = 'Y'
         </if>
         <if test="OUTSIDE_YN != null and OUTSIDE_YN != ''">
-            AND B.OUTSIDE_YN NOT IN ('Y')
+            AND B.OUTSIDE_YN = 'Y'
         </if>
-        ORDER BY
-            A.CONTROL_SEQ,
-            B.PART_NUM,
-            C.ORDER_NUM
+        <if test="NO_UNIT_FINAL_AMT != null and NO_UNIT_FINAL_AMT != ''">
+            AND B.UNIT_FINAL_AMT IS NULL
+        </if>
+        <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
+            AND A.EMERGENCY_YN = 'Y'
+        </if>
+        <if test="HIDE_PART != null and HIDE_PART != ''">
+            AND B.PART_NUM
+        </if>
+        ORDER BY A.CONTROL_SEQ, B.PART_NUM, C.ORDER_NUM
     </select>
 
     <select id="selectControlCloseVer" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -879,12 +865,14 @@
             CONTROL_SEQ,
             SEQ,
             ORDER_STATUS,
-            STATUS_DT
+            STATUS_DT,
+            INSERT_ID
         ) VALUES (
             #{CONTROL_SEQ},
             NEXTVAL(SEQ_CONTROL_PROGRESS),
             #{CONTROL_STATUS},
-            NOW()
+            NOW(),
+            #{LOGIN_USER_ID}
         )
     </insert>
 
@@ -932,15 +920,16 @@
             CONTROL_DETAIL_SEQ,
             SEQ,
             PART_STATUS,
-            STATUS_DT
-            <!-- ,INSERT_ID, -->
+            STATUS_DT,
+            INSERT_ID
         )
         SELECT
             CONTROL_SEQ,
             CONTROL_DETAIL_SEQ,
             NEXTVAL(SEQ_CONTROL_PART_PROGRESS),
             #{PART_STATUS},
-            NOW()
+            NOW(),
+            #{LOGIN_USER_ID}
         FROM TBL_CONTROL_PART
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
     </insert>
@@ -975,12 +964,12 @@
         </foreach>
     </insert>
 
-    <update id="DeleteControl" parameterType="java.util.HashMap">
+    <update id="removeControl" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL
         SET
-            DEL_YN = #{DEL_YN},
-            UPDATE_DT = NOW()
-        <!-- ,UPDATE_ID = NULL -->
+            DEL_YN = 'Y',
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE
             CONTROL_SEQ = #{CONTROL_SEQ}
     </update>
@@ -1245,7 +1234,7 @@
                WHERE 1 = 1
                    AND CONTROL_SEQ = #{CONTROL_SEQ}
                    AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-                   AND WORK_TYPE = 'WTP050') AS FLAG
+                   AND WORK_TYPE = 'WTP020') AS FLAG
     </select>
 
     <update id="updateControlStatus" parameterType="java.util.HashMap">
@@ -1253,7 +1242,8 @@
         SET
             CONTROL_STATUS = #{CONTROL_STATUS},
             STATUS_DT = NOW(),
-            UPDATE_DT = NOW()
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
     </update>
 
@@ -1267,7 +1257,7 @@
               AND CONTROL_DETAIL_SEQ  = #{CONTROL_DETAIL_SEQ}
     </update>
 
-    <update id="updateControlPartStatusALL" parameterType="java.util.HashMap">
+    <update id="updateControlPartStatusAll" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART
         SET
             PART_STATUS = #{PART_STATUS},
@@ -1276,9 +1266,23 @@
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
     </update>
 
+    <update id="updateControlPartAssembly" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+            SET PART_STATUS = NULL
+        WHERE 1 = 1
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND PART_STATUS = 'WTP050'
+            AND NOT EXISTS (SELECT *
+                            FROM TBL_CONTROL_PART
+                            WHERE 1 = 1
+                                AND CONTROL_SEQ = #{CONTROL_SEQ}
+                                AND WORK_TYPE = 'WTP050'
+                                AND PART_STATUS = 'PRO002')
+    </update>
+
     <select id="selectProcessConfirmList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ROW_NUMBER () OVER () AS ROW_NUM,
+            ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.PART_NUM) AS ROW_NUM,
             <include refid="control"/>,
             <include refid="controlPart"/>
         FROM TBL_CONTROL A
@@ -1286,7 +1290,7 @@
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001'
             AND B.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO010', 'PRO011', 'PRO012', 'PRO013', 'PRO014', 'PRO015')
-            AND B.WORK_TYPE NOT IN ('WTP050')
+            AND B.WORK_TYPE != 'WTP020'
             AND B.OUTSIDE_YN = 'N'
         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
@@ -1302,14 +1306,12 @@
                 AND EMERGENCY_YN = 'N'
             </otherwise>
         </choose>
-        ORDER BY
-            A.CONTROL_SEQ,
-            B.PART_NUM
+        ORDER BY A.CONTROL_SEQ, B.PART_NUM
     </select>
 
     <select id="selectOutsideProcessingList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ROW_NUMBER () OVER () AS ROW_NUM,
+            ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.PART_NUM) AS ROW_NUM,
             <include refid="control"/>,
             <include refid="controlPart"/>
         FROM TBL_CONTROL A
@@ -1317,7 +1319,7 @@
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001'
             <!-- AND B.PART_STATUS = 'PRO001' -->
-            AND B.WORK_TYPE NOT IN ('WTP050')
+            AND B.WORK_TYPE != 'WTP020'
             AND B.OUTSIDE_YN = 'Y'
         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
@@ -1325,14 +1327,12 @@
         <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
             AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
         </if>
-        ORDER BY
-            A.CONTROL_SEQ,
-            B.PART_NUM
+        ORDER BY A.CONTROL_SEQ, B.PART_NUM
     </select>
 
     <select id="selectProcessCompleteList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ROW_NUMBER () OVER () AS ROW_NUM,
+            ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.PART_NUM) AS ROW_NUM,
             <include refid="control"/>,
             <include refid="controlPart"/>
         FROM TBL_CONTROL A
@@ -1340,16 +1340,14 @@
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001'
             AND B.PART_STATUS = 'PRO009'
-            AND B.WORK_TYPE NOT IN ('WTP050')
+            AND B.WORK_TYPE != 'WTP020'
         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
         <if test="MATERIAL_TYPE != null and MATERIAL_KIND != ''">
             AND B.MATERIAL_TYPE = #{MATERIAL_TYPE}
         </if>
-        ORDER BY
-            A.CONTROL_SEQ,
-            B.PART_NUM
+        ORDER BY A.CONTROL_SEQ, B.PART_NUM
     </select>
 
     <select id="manageControlCadFiles_select" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -1506,10 +1504,10 @@
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
         <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
-            AND B.DRAWING_NUM = #{DRAWING_NUM}
+            AND B.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
         </if>
         <if test="ITEM_NM != null and ITEM_NM != ''">
-            AND B.ITEM_NM = #{ITEM_NM}
+            AND B.ITEM_NM LIKE CONCAT('%', UPPER(#{ITEM_NM}), '%')
         </if>
         <if test="MATERIAL_KIND != null and MATERIAL_KIND != ''">
             AND B.MATERIAL_KIND = #{MATERIAL_KIND}
@@ -1518,22 +1516,14 @@
             AND A.CONTROL_SEQ = #{CONTROL_SEQ}
         </if>
         <if test="MODULE_NM != null and MODULE_NM != ''">
-            AND A.MODULE_NM = #{MODULE_NM}
+            AND A.MODULE_NM LIKE CONCAT('%', #{MODULE_NM}, '%')
         </if>
         ORDER BY
         <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
             A.EMERGENCY_YN DESC,
         </if>
-        A.CONTROL_SEQ,
-        B.PART_NUM
-<!--        <choose>-->
-<!--            <when test="SORT_BY == 'OCM00'">-->
-<!--                ,C.ORDER_DUE_DT <if test="DESCENDING != null and DESCENDING != ''">DESC</if>-->
-<!--            </when>-->
-<!--            <when test="SORT_BY == 'OCM01'">-->
-<!--                ,B.INNER_DUE_DT <if test="DESCENDING != null and DESCENDING != ''">DESC</if>-->
-<!--            </when>-->
-<!--        </choose>-->
+            A.CONTROL_SEQ,
+            B.PART_NUM
     </select>
 
     <select id="selectSalesClosingHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -1572,7 +1562,7 @@
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
         <if test="NOTE != null and NOTE != ''">
-            AND A.NOTE LIKE CONCAT('%', #{ORDER_COMP_CD}, '%')
+            AND A.NOTE LIKE CONCAT('%', #{NOTE}, '%')
         </if>
         <choose>
             <when test="RANGE_SEARCH != null and RANGE_SEARCH != ''">
@@ -2013,7 +2003,7 @@
                 DUE_PAY_AMT = #{DUE_PAY_AMT},
                 NOTE = #{NOTE},
                 UPDATE_DT = NOW(),
-                UPDATE_ID = 'test'
+                UPDATE_ID = #{LOGIN_USER_ID}
         WHERE DEPOSIT_SEQ = ${DEPOSIT_SEQ}
     </update>
 
@@ -2180,6 +2170,12 @@
             LEFT OUTER JOIN TBL_INSPECT G ON C.CONTROL_SEQ = G.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ  AND G.INSPECT_TYPE =  '1'
                AND G.INSPECT_SEQ = (SELECT MAX(X.INSPECT_SEQ) FROM TBL_INSPECT X WHERE G.CONTROL_SEQ = X.CONTROL_SEQ AND G.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ  AND G.INSPECT_TYPE =  '1')
         WHERE 1 = 1
+        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+            AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+        </if>
+        <if test="ORDER_COMP_CHARGE != null and ORDER_COMP_CHARGE != ''">
+            AND F.ORDER_COMP_CHARGE = #{ORDER_COMP_CHARGE}
+        </if>
         ORDER BY C.ORDER_DUE_DT, A.ORDER_COMP_CD
     </select>
 
@@ -2276,35 +2272,7 @@
             AND CONTROL_SEQ = #{CONTROL_SEQ}
     </update>
 
-    <update id="deleteControlBarcode" parameterType="java.util.HashMap">
-        UPDATE jmes.TBL_CONTROL_BARCODE SET DEL_YN = 'Y'
-        WHERE CONTROL_SEQ = (SELECT CONTROL_SEQ FROM  jmes.TBL_CONTROL WHERE CONTROL_SEQ = #{CONTROL_SEQ} AND CONTROL_VER >= 1)
-    </update>
 
-    <insert id="insertRevisionControlBarcode" parameterType="java.util.HashMap">
-        INSERT INTO jmes.TBL_CONTROL_BARCODE (BARCODE_NUM, CONTROL_SEQ, CONTROL_DETAIL_SEQ, CONTROL_VER, DRAWING_VER)
-        SELECT CONCAT('C', LPAD(NEXTVAL(SEQ_BARCODE), 9, '0')) AS BARCODE_NUM
-          , B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.CONTROL_VER, B.DRAWING_VER
-        FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
-        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-          AND A.CONTROL_SEQ = (SELECT CONTROL_SEQ FROM  jmes.TBL_CONTROL WHERE CONTROL_SEQ = #{CONTROL_SEQ} AND CONTROL_VER >= 1)
-    </insert>
-
-    <update id="deleteControlPartBarcode" parameterType="java.util.HashMap">
-        UPDATE jmes.TBL_CONTROL_BARCODE SET DEL_YN = 'Y'
-        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
-          AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-    </update>
-
-    <insert id="insertRevisionControlPartBarcode" parameterType="java.util.HashMap">
-        INSERT INTO jmes.TBL_CONTROL_BARCODE (BARCODE_NUM, CONTROL_SEQ, CONTROL_DETAIL_SEQ, CONTROL_VER, DRAWING_VER)
-        SELECT CONCAT('C', LPAD(NEXTVAL(SEQ_BARCODE), 9, '0')) AS BARCODE_NUM
-          , B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.CONTROL_VER, B.DRAWING_VER
-        FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
-        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-          AND B.CONTROL_SEQ = #{CONTROL_SEQ}
-          AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-    </insert>
 
     <delete id="deleteMonthCloseDetail" parameterType="java.util.HashMap">
         DELETE FROM TBL_MONTH_CLOSE_DETAIL
@@ -2331,5 +2299,28 @@
                                 AND ORDER_COMP_CD = #{ORDER_COMP_CD}
                                 AND CLOSE_VER = #{CLOSE_VER})
     </delete>
+
+    <update id="updateControlRevision" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL
+            SET CONTROL_VER = CONTROL_VER + 1
+        WHERE 1 = 1
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND #{CONTROL_STATUS} = 'ORD001'
+            AND EXISTS (SELECT * FROM TBL_CONTROL WHERE CONTROL_SEQ = #{CONTROL_SEQ} AND CONTROL_STATUS = 'ORD002')
+    </update>
+
+    <update id="updateControlBarcodeRevision" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_CONTROL_BARCODE SET DEL_YN = 'Y'
+        WHERE CONTROL_SEQ = (SELECT CONTROL_SEQ FROM  jmes.TBL_CONTROL WHERE CONTROL_SEQ = #{CONTROL_SEQ} AND CONTROL_VER >= 1)
+    </update>
+
+    <insert id="insertControlBarcodeRevision" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_CONTROL_BARCODE (BARCODE_NUM, CONTROL_SEQ, CONTROL_DETAIL_SEQ, CONTROL_VER, DRAWING_VER)
+        SELECT CONCAT('C', LPAD(NEXTVAL(SEQ_BARCODE), 9, '0')) AS BARCODE_NUM
+          , B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.CONTROL_VER, B.DRAWING_VER
+        FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
+        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+          AND A.CONTROL_SEQ = (SELECT CONTROL_SEQ FROM  jmes.TBL_CONTROL WHERE CONTROL_SEQ = #{CONTROL_SEQ} AND CONTROL_VER >= 1)
+    </insert>
 
 </mapper>

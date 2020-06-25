@@ -42,6 +42,33 @@ public class OrderController {
         return "jsonView";
     }
 
+    /**
+     * @description 주문 삭제
+     */
+    @RequestMapping(value = "/removeControl", method = RequestMethod.POST)
+    public String removeControl(HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.orderService.removeControl(map);
+
+        return "jsonView";
+    }
+
+    /**
+     * @description 주문 상태 변경
+     */
+    @RequestMapping(value = "/managerControlStatus", method = RequestMethod.POST)
+    public String managerControlStatus(HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.orderService.managerControlStatus(map);
+
+        return "jsonView";
+    }
+
+    /**
+     * @description 월 마감
+     */
     @RequestMapping(value = "/createMonthClose", method = RequestMethod.POST)
     public String createMonthClose(HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
