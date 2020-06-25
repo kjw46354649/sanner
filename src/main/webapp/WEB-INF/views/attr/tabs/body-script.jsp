@@ -1035,4 +1035,26 @@
         $('#commonAlertYesBtn').html(yesHtml);
         commonAlertPopup.show();
     }
+
+    function filterhandler(gridId, filterKeywordId, filterConditionId, filterColumnId) {
+        var value = $("#"+filterKeywordId).val(),
+            condition = $("#"+filterConditionId).val(),
+            dataIndx = $("#"+filterColumnId).val(),
+            filterRules;
+
+        if (dataIndx == "") {//search through all fields when no field selected.
+            filterRules = gridId.pqGrid('getInstance').grid.getColModel().map(function(column){
+                return { dataIndx: column.dataIndx, condition: condition, value: value };
+            })
+        }
+        else {//search through selected field.
+            filterRules = [{ dataIndx: dataIndx, condition: condition, value: value}];
+        }
+
+        gridId.pqGrid('getInstance').grid.filter({
+            oper: 'replace',
+            rules: filterRules
+        });
+    }
+
 </script>

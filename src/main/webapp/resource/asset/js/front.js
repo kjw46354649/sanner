@@ -57,10 +57,11 @@ $(document).ready(function(){
 
 	$(document).on('click', '.gnbWrap .depth2 li > a', function (e) {
 		let pid = $(this).attr('pid');
-		if ($('.addTapPage').length == 10) { // 최종 7개의 탭 메뉴만 열림
-			alert("동시에 10개의 탭만 열수 있습니다. 작업완료 탭을 닫고 메뉴를 다시 클릭해 주세요.")
-		}else if ($('.contentsWrap').find('#view_tab_' + pid).length > 0) {	// 같은 tab 이 열린 경우
+		if ($('.contentsWrap').find('#view_tab_' + pid).length > 0) {	// 같은 tab 이 열린 경우
 			$("#tab_" + pid).trigger("click");
+		}
+		else if ($('.addTapPage').length == 10) { // 최종 7개의 탭 메뉴만 열림
+			alert("동시에 10개의 탭만 열수 있습니다. 작업완료 탭을 닫고 메뉴를 다시 클릭해 주세요.")
 		} else {
 			$('.contentsWrap .addTapPage').hide();
 			$('.tabMenuWrap ul li').removeClass('on');
@@ -109,7 +110,7 @@ function tabMenuFn() {
 			$('#view_' + idx).remove();
 			$(this).parent('li').remove();
 		}
-		noPage();
+		//noPage();
 	});
 
 	$(document).on('click', '.tabMenuWrap ul li > a', function (e) {

@@ -135,7 +135,15 @@
             <div class="conWrap">
                 <div class="left_60Wrap" id="dynamic_left_div"  style="width: 100%;">
                     <div class="buttonWrap">
-                        <span class="d-inline">
+                        <div class="d-inline">
+                            <input type="text" id="itemOrderRegisterFilterKeyword" placeholder="Enter your keyword">
+                            <select id="itemOrderRegisterFilterColumn"></select>
+                            <select id="itemOrderRegisterFilterCondition">
+                                <c:forEach var="code" items="${HighCode.H_1083}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+
                             <button type="button" class="defaultBtn " id="btnItemOrderRegisterOrder">소재주문</button>
                             <button type="button" class="defaultBtn radius red" id="btnItemOrderRegisterCancel">주문취소</button>
                             <button type="button" class="defaultBtn btn-120w" id="btnItemOrderRegisterCurrentStock">보유소재 전체현황</button>
@@ -144,7 +152,7 @@
                                 <button type="button" class="defaultBtn radius" id="btnItemOrderRegisterDrawView">도면 보기</button>
                                 <button type="button" class="defaultBtn radius green" id="btnItemOrderRegisterSave">저장</button>
                             </span>
-                        </span>
+                        </div>
                     </div>
                     <div class="conMainWrap">
                         <div id="item_order_register_left_grid" class="jqx-refresh"></div>
@@ -580,7 +588,7 @@
                 }
             },
             postRenderInterval: -1,
-            columnTemplate: {align: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', hvalign: 'center', render: itemOrderRegisterFilterRender}, filterModel: { mode: 'OR' },
             scrollModel: {autoFit: false},
             numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'cell', mode: 'multiple'} ,
@@ -592,6 +600,17 @@
             showTitle: false,
             title: false,
             strNoRows: g_noData,
+            load: function( event, ui ) {
+                var opts = '<option value=\"\">All Fields</option>';
+                this.getColModel().forEach(function(column){
+                    let hiddenYn = column.hidden == undefined ? true : false;
+                    if(hiddenYn){
+                        opts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                    }
+                });
+                $("#itemOrderRegisterFilterColumn").empty();
+                $("#itemOrderRegisterFilterColumn").html(opts);
+            },
             complete: function(event, ui) {
                 this.flex();
                 let data = itemOrderRegisterLeftGrid.pqGrid('option', 'dataModel.data');
@@ -927,6 +946,14 @@
 
         });
 
+        /**
+         * filterhandler
+         * @Parameter
+         * */
+        $("#itemOrderRegisterFilterKeyword").on("keyup", function(e){
+            filterhandler(itemOrderRegisterLeftGrid, 'itemOrderRegisterFilterKeyword', 'itemOrderRegisterFilterCondition', 'itemOrderRegisterFilterColumn');
+        });
+
         $("#itemOrderRegisterWarehouseSelectBox").on('change', function(){
             let text = $(this).val();
             $("#item_order_register_hidden_form #WAREHOUSE_CD").val(text);
@@ -1260,7 +1287,6 @@
             });
         }
 
-
         /** 공통 코드 이외의 처리 부분 **/
         fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
         fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#M_ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
@@ -1320,4 +1346,49 @@
         }
     }
 
+    /**
+     * filterhandler
+     * @Parameter
+     * */
+    function itemOrderRegisterFilterRender(ui) {
+        var val = ui.cellData == undefined ? "" : ui.cellData,
+            filter = ui.column.filter,
+            crules = (filter || {}).crules;
+
+        if (filter && filter.on && crules && crules[0].value) {
+            var condition = $("#itemOrderRegisterFilterCondition :selected").val(),
+                valUpper = val.toString().toUpperCase(),
+                txt = $("#itemOrderRegisterFilterKeyword").val(),
+                txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                indx = -1;
+
+            if (condition == "end") {
+                indx = valUpper.lastIndexOf(txtUpper);
+                if (indx + txtUpper.length != valUpper.length) {
+                    indx = -1;
+                }
+            }
+            else if (condition == "contain") {
+                indx = valUpper.indexOf(txtUpper);
+            }
+            else if (condition == "begin") {
+                indx = valUpper.indexOf(txtUpper);
+                if (indx > 0) {
+                    indx = -1;
+                }
+            }
+            if (indx >= 0) {
+                var txt1 = val.toString().substring(0, indx);
+                var txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                var txt3 = val.toString().substring(indx + txtUpper.length);
+                return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+            }
+            else {
+                return val;
+            }
+        }
+        else {
+            return val;
+        }
+    }
 </script>
