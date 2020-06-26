@@ -350,7 +350,7 @@
         /* variable */
         const OUTSOURCE_COMPANY = fnCommCodeDatasourceGridSelectBoxCreate({
             'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
+            'data': {'queryId': 'dataSource.getOutsourceProcessCompanyList'}
         });
         const dateEditor = function (ui) {
             let $inp = ui.$cell.find('input'), $grid = $(this);
@@ -1205,6 +1205,9 @@
             outsideCompCdList = outsideCompCdList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
             });
+            outsideStatusList = outsideStatusList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
 
             if (compCdList.length > 1) {
                 alert('선택된 대상들의 발주사는 동일해야 합니다.');
@@ -1214,7 +1217,6 @@
                 alert('선택된 대상들의 협력업체는 동일해야 합니다.');
                 return true;
             }
-            console.log(outsideStatusList);
             if (outsideStatusList.length > 1) {
                 alert('상태가 일치 하지 않음');
                 return true;
@@ -1642,7 +1644,7 @@
         });
         fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM').find('#OUTSIDE_COMP_CD'), 'all', {
             'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
+            'data': {'queryId': 'dataSource.getOutsourceProcessCompanyList'}
         });
 
         $outsideOrderManageGrid = $('#' + gridId).pqGrid(obj);
@@ -1673,11 +1675,11 @@
 
         fnCommCodeDatasourceSelectBoxCreate($('#REQUEST_OUTSIDE_POPUP').find('#OUTSIDE_COMP_CD'), 'select', {
             'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
+            'data': {'queryId': 'dataSource.getOutsourceProcessCompanyList'}
         });
         fnCommCodeDatasourceSelectBoxCreate($('#CANCEL_REQUEST_OUTSIDE_POPUP').find('#OUTSIDE_COMP_CD'), 'select', {
             'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
+            'data': {'queryId': 'dataSource.getOutsourceProcessCompanyList'}
         });
 
         $('#REQUEST_OUTSIDE_SAVE_SUBMIT').on('click', function (){
@@ -1692,6 +1694,7 @@
             let outsideCompCd = $('#REQUEST_OUTSIDE_MAIL_FORM').find('#OUTSIDE_COMP_CD').val();
             for (let i = 0, STEP1LIST_LENGTH = step1List.length; i < STEP1LIST_LENGTH; i++) {
                 step1List[i].OUTSIDE_COMP_CD = outsideCompCd;
+                step1List[i].PART_STATUS = 'PRO001';
             }
             let step4List = $mailRecipientGrid.pqGrid('option', 'dataModel.data');
             // REQUEST_OUTSIDE_MAIL_FORM
@@ -1763,6 +1766,7 @@
                     let outsideCompCd = $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM').find('#OUTSIDE_COMP_CD').val();
                     for (let i = 0, STEP1LIST_LENGTH = step1List.length; i < STEP1LIST_LENGTH; i++) {
                         step1List[i].OUTSIDE_COMP_CD = outsideCompCd;
+                        step1List[i].PART_STATUS = null;
                     }
                     let step4List = $cancelMailRecipientGrid.pqGrid('option', 'dataModel.data');
                     // CANCEL_REQUEST_OUTSIDE_MAIL_FORM
@@ -1804,7 +1808,7 @@
 
         fnCommCodeDatasourceSelectBoxCreate($('#REQUEST_OUTSIDE_POPUP').find('#OUTSIDE_COMP_CD'), 'select', {
             'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
+            'data': {'queryId': 'dataSource.getOutsourceProcessCompanyList'}
         });
 
         $('#CANCEL_REQUEST_OUTSIDE_SAVE_SUBMIT').on('click', function (){

@@ -28,7 +28,11 @@
                 <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectConfirmOrderList">
                 <div>
                     <div>
-                        <p class="d-inline-block">주문확정 List</p>
+                        <p class="d-inline-block">
+                            주문확정 List ( Total :&nbsp;&nbsp;&nbsp;
+                            <span id="CONFIRM_ORDER_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows&nbsp;&nbsp;&nbsp;
+                            <span id="CONFIRM_ORDER_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA )
+                        </p>
                         <div class="d-inline-block right_float">
                             <span>
                                 <label class="label_50" for="CONFIRM_ORDER_CORPORATION">발주처</label>
@@ -36,7 +40,7 @@
                                     <option value="">ALL</option>
                                 </select>
                             </span>
-                                <span>
+                            <span>
                                 <label class="label_50" for="CONFIRM_ORDER_MATERIAL">소재</label>
                                 <select class="wd_100" name="MATERIAL_TYPE" id="CONFIRM_ORDER_MATERIAL">
                                     <option value="">ALL</option>
@@ -49,11 +53,6 @@
                         <hr>
                     </div>
                     <div id="CONFIRM_ORDER_GRID"></div>
-                    <div class="right_sort">
-                        (Total :
-                            <span id="CONFIRM_ORDER_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows
-                            <span id="CONFIRM_ORDER_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA)
-                    </div>
                 </div>
             </form>
         </div>
@@ -65,7 +64,11 @@
                 <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectProcessConfirmList">
                 <div>
                     <div>
-                        <p class="d-inline-block">가공진행 List</p>
+                        <p class="d-inline-block">
+                            가공진행 List ( Total :&nbsp;&nbsp;&nbsp;
+                            <span id="PROCESS_CONFIRM_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows&nbsp;&nbsp;&nbsp;
+                            <span id="PROCESS_CONFIRM_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span>EA )
+                        </p>
                         <div class="d-inline-block right_float">
                             <label class="checkbox-inline i-checks" for="EMERGENCY_YN">
                                 <input type="checkbox" name="EMERGENCY_YN"
@@ -93,11 +96,6 @@
                         <hr>
                     </div>
                     <div id="PROCESS_CONFIRM_GRID"></div>
-                    <div class="right_sort">
-                        (Total :
-                        <span id="PROCESS_CONFIRM_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows
-                        <span id="PROCESS_CONFIRM_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span>EA )
-                    </div>
                 </div>
             </form>
         </div>
@@ -109,18 +107,21 @@
                 <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectOutsideProcessingList">
                 <div>
                     <div>
-                        <p class="d-inline-block">외주가공 List</p>
+                        <p class="d-inline-block">
+                            외주가공 List ( Total :&nbsp;&nbsp;&nbsp;
+                            <span id="OUTSIDE_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows&nbsp;&nbsp;&nbsp;
+                            <span id="OUTSIDE_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA )
+                        </p>
                         <div class="d-inline-block right_float">
                             <span>
-                                <label class="label_100" for="OUTSIDE_CORPORATION">발주처</label>
-                                <select class="wd_200" name="ORDER_COMP_CD" id="OUTSIDE_CORPORATION">
+                                <label class="label_50" for="OUTSIDE_CORPORATION">발주처</label>
+                                <select class="wd_100" name="ORDER_COMP_CD" id="OUTSIDE_CORPORATION">
                                     <option value="">ALL</option>
                                 </select>
                             </span>
                             <span>
-                                <label class="label_100" for="OUTSIDE_SUBCONTRACTOR">외주업체</label>
-                                <select class="wd_200" name="OUTSIDE_COMP_CD"
-                                        id="OUTSIDE_SUBCONTRACTOR">
+                                <label class="label_50" for="OUTSIDE_SUBCONTRACTOR">외주업체</label>
+                                <select class="wd_100" name="OUTSIDE_COMP_CD" id="OUTSIDE_SUBCONTRACTOR">
                                     <option value="">ALL</option>
                                 </select>
                             </span>
@@ -128,11 +129,6 @@
                         <hr>
                     </div>
                     <div id="OUTSIDE_GRID"></div>
-                    <div class="right_sort">
-                        (Total :
-                            <span id="OUTSIDE_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows
-                            <span id="OUTSIDE_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA )
-                    </div>
                 </div>
             </form>
         </div>
@@ -144,7 +140,11 @@
                 <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectProcessCompleteList">
                 <div>
                     <div>
-                        <p class="d-inline-block">가공완료 List (출하전)</p>
+                        <p class="d-inline-block">
+                            가공완료 List (출하전) ( Total :&nbsp;&nbsp;&nbsp;
+                            <span id="PROCESS_COMPLETE_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows&nbsp;&nbsp;&nbsp;
+                            <span id="PROCESS_COMPLETE_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA )
+                        </p>
                         <div class="d-inline-block right_float">
                             <span>
                                 <label class="label_50" for="PROCESS_COMPLETE_CORPORATION">발주처</label>
@@ -162,11 +162,6 @@
                         <hr>
                     </div>
                     <div id="PROCESS_COMPLETE_GRID"></div>
-                    <div class="right_sort">
-                        (Total :
-                        <span id="PROCESS_COMPLETE_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows
-                        <span id="PROCESS_COMPLETE_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA )
-                    </div>
                 </div>
             </form>
         </div>
@@ -1029,14 +1024,16 @@
         // setInterval(reloadData, tenSeconds);
 
         const isProcessAssembly = function (rowData) {
+            let flag = false;
             let postData = {queryId: 'orderMapper.selectIsProcessAssembly'};
             postData = $.extend(postData, rowData);
             let parameters = {'url': '/json-list', 'data': postData};
 
             fnPostAjaxAsync(function (data) {
-                console.log(data.list);
-                return data.list[0];
+                flag = data.list[0].FLAG;
             }, parameters, '');
+
+            return flag;
         };
 
         const updatePartStatus = function (rowData, partStatus) {
@@ -1047,15 +1044,16 @@
             let QUERY_ID_ARRAY;
             changes.updateList.push(newRowData);
             let parameters;
-            if (isProcessAssembly(rowData)) {
+
+            /*if (isProcessAssembly(rowData)) {
                 QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateControlPartStatusAll', 'orderMapper.createControlPartProgressAll']};
-                changes.queryIdList = QUERY_ID_ARRAY;
-                parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
             } else {
-                QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateControlPartStatus', 'orderMapper.createControlPartProgress']};
-                changes.queryIdList = QUERY_ID_ARRAY;
-                parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
-            }
+                QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateControlPartStatus', 'orderMapper.createControlPartProgress', 'orderMapper.updateControlPartAssembly']};
+            }*/
+
+            QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateControlPartStatus', 'orderMapper.createControlPartProgress']};
+            changes.queryIdList = QUERY_ID_ARRAY;
+            parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
 
             fnPostAjax(function (data, callFunctionParam) {
                 $confirmOrderGrid.pqGrid('refreshDataAndView');
@@ -1072,7 +1070,6 @@
         });
         $('#PROCESS_CONFIRM_SEARCH_FORM').on('change', function() {
             topRightPostData = fnFormToJsonArrayData('#PROCESS_CONFIRM_SEARCH_FORM');
-            console.log(topRightPostData);
             $processConfirmGrid.pqGrid('option', 'dataModel.postData', function (ui) {
                 return topRightPostData;
             });
@@ -1163,11 +1160,7 @@
         });
 
         $('#PROCESS_CONFIRM_DETAIL').on('click', function () {
-           console.log(selectedRowIndex);
-           console.log(selectedGrid);
             let rowData = selectedGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[0]});
-            console.log(rowData);
-            console.log()
             g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ);
         });
         

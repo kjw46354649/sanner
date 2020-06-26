@@ -62,9 +62,9 @@
 
 /* control business status three grid */
 .onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap h2 { font-size: 1.5em; padding: 5px;}
-.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap .left-Warp{ width: 333.3px; height: 150px;}
-.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap .center-Warp { width: 333.3px; height: 150px; }
-.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap .right-Warp { width: 333.3px; height: 150px }
+.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap .left-Warp { width: 500px; height: 150px; }
+/*.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap .center-Warp { width: 333.3px; height: 150px; }*/
+.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap .right-Warp { width: 500px; height: 150px }
 
 .form-group1 .group-item { display: inline-block; width: 24.5%; padding: 0.5vh 0.5vw; }
 .form-group1 .group-item-option { display: inline-block; width: 5%; padding: 0.5vh 0.5vw; }

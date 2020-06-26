@@ -135,7 +135,15 @@
             <div class="conWrap">
                 <div class="left_60Wrap" id="dynamic_left_div"  style="width: 100%;">
                     <div class="buttonWrap">
-                        <span class="d-inline">
+                        <div class="d-inline">
+                            <input type="text" id="itemOrderRegisterFilterKeyword" placeholder="Enter your keyword">
+                            <select id="itemOrderRegisterFilterColumn"></select>
+                            <select id="itemOrderRegisterFilterCondition">
+                                <c:forEach var="code" items="${HighCode.H_1083}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+
                             <button type="button" class="defaultBtn " id="btnItemOrderRegisterOrder">소재주문</button>
                             <button type="button" class="defaultBtn radius red" id="btnItemOrderRegisterCancel">주문취소</button>
                             <button type="button" class="defaultBtn btn-120w" id="btnItemOrderRegisterCurrentStock">보유소재 전체현황</button>
@@ -144,7 +152,7 @@
                                 <button type="button" class="defaultBtn radius" id="btnItemOrderRegisterDrawView">도면 보기</button>
                                 <button type="button" class="defaultBtn radius green" id="btnItemOrderRegisterSave">저장</button>
                             </span>
-                        </span>
+                        </div>
                     </div>
                     <div class="conMainWrap">
                         <div id="item_order_register_left_grid" class="jqx-refresh"></div>
@@ -200,6 +208,7 @@
 <form id="item_order_register_hidden_form" name="item_order_register_hidden_form">
     <input type="hidden" id="queryId" name="queryId" value="selectItemOrderRegisterDetail"/>
     <input type="hidden" id="AUTO_SEARCH" name="AUTO_SEARCH" value="N"/>
+    <input type="hidden" id="MATERIAL_ORDER_SEQ" name="MATERIAL_ORDER_SEQ"/>
     <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ"/>
     <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ"/>
     <input type="hidden" id="WAREHOUSE_CD" name="WAREHOUSE_CD"/>
@@ -389,17 +398,14 @@
         ];
 
         let itemOrderRegisterRightColModel= [
-            {title: 'MY_MAT_STOCK_SEQ', dataType: 'string', dataIndx: 'MY_MAT_STOCK_SEQ', hidden: true } ,
-            {title: 'MY_MAT_OUT_SEQ', dataType: 'string', dataIndx: 'MY_MAT_OUT_SEQ', hidden: true } ,
-            {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden: true } ,
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true } ,
             {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_NM' , editable: false, minWidth: 80} ,
+            {title: '상세위치', dataType: 'string', dataIndx: 'LOC_NM', minWidth: 80},
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM' , editable: false, minWidth: 80} ,
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden: true } ,
             {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM' , editable: false, minWidth: 50} ,
-            {title: 'Size(mm)', dataType: 'string', dataIndx: 'SIZE_TXT' , editable: false, minWidth: 120} ,
-            {title: '재고', dataType: 'integer', dataIndx: 'STOCK_QTY' , editable: false, minWidth: 50} ,
-            {title: '요청', dataType: 'integer', dataIndx: 'OUT_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} , minWidth: 50} ,
+            {title: 'Size(mm)', dataType: 'string', dataIndx: 'SIZE_TXT' , editable: false, minWidth: 100} ,
+            {title: '재고', dataType: 'integer', dataIndx: 'STOCK_QTY' , editable: false, minWidth: 40} ,
+            {title: '요청', dataType: 'integer', dataIndx: 'OUT_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} , minWidth: 40} ,
             /*{title: '', dataType: 'string', dataIndx: 'OUT_YN', editable: false,
                 render: function(ui){
                     let returnVal = "";
@@ -409,6 +415,11 @@
                     return returnVal;
                 }
             }*/
+            {title: 'MY_MAT_STOCK_SEQ', dataType: 'string', dataIndx: 'MY_MAT_STOCK_SEQ', hidden: true } ,
+            {title: 'MY_MAT_OUT_SEQ', dataType: 'string', dataIndx: 'MY_MAT_OUT_SEQ', hidden: true } ,
+            {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden: true } ,
+            {title: 'MATERIAL_ORDER_SEQ', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true } ,
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true }
         ];
 
         let itemOrderRegisterPopTopColModel= [
@@ -577,7 +588,7 @@
                 }
             },
             postRenderInterval: -1,
-            columnTemplate: {align: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', hvalign: 'center', render: itemOrderRegisterFilterRender}, filterModel: { mode: 'OR' },
             scrollModel: {autoFit: false},
             numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'cell', mode: 'multiple'} ,
@@ -589,6 +600,17 @@
             showTitle: false,
             title: false,
             strNoRows: g_noData,
+            load: function( event, ui ) {
+                var opts = '<option value=\"\">All Fields</option>';
+                this.getColModel().forEach(function(column){
+                    let hiddenYn = column.hidden == undefined ? true : false;
+                    if(hiddenYn){
+                        opts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                    }
+                });
+                $("#itemOrderRegisterFilterColumn").empty();
+                $("#itemOrderRegisterFilterColumn").html(opts);
+            },
             complete: function(event, ui) {
                 this.flex();
                 let data = itemOrderRegisterLeftGrid.pqGrid('option', 'dataModel.data');
@@ -610,14 +632,18 @@
                     }
                 }
             },
-            rowSelect: function( event, ui) {
-                $("#item_order_register_hidden_form #CONTROL_SEQ").val(ui.addList[0].rowData.CONTROL_SEQ);
-                $("#item_order_register_hidden_form #CONTROL_DETAIL_SEQ").val(ui.addList[0].rowData.CONTROL_DETAIL_SEQ);
-            },
             cellClick: function( event, ui) {
                 itemOrderRegisterSelectedRowIndex = [];
                 itemOrderRegisterSelectedRowIndex.push(ui.rowIndx);
+                let MATERIAL_ORDER_SEQ = ui.rowData.MATERIAL_ORDER_SEQ == undefined ? '' : ui.rowData.MATERIAL_ORDER_SEQ;
 
+                if(MATERIAL_ORDER_SEQ == '') {
+                    $("#btnItemOrderRegisterOutSave").attr('disabled', true);
+                } else {
+                    $("#btnItemOrderRegisterOutSave").attr('disabled', false);
+                }
+
+                $("#item_order_register_hidden_form #MATERIAL_ORDER_SEQ").val(MATERIAL_ORDER_SEQ);
                 $("#item_order_register_hidden_form #CONTROL_SEQ").val(ui.rowData.CONTROL_SEQ);
                 $("#item_order_register_hidden_form #CONTROL_DETAIL_SEQ").val(ui.rowData.CONTROL_DETAIL_SEQ);
 
@@ -677,11 +703,14 @@
                     }
                 },
                 change: function (evt, ui) {
+                    let MATERIAL_ORDER_SEQ = $("#item_order_register_hidden_form #MATERIAL_ORDER_SEQ").val();
                     let CONTROL_SEQ = $("#item_order_register_hidden_form #CONTROL_SEQ").val();
                     let CONTROL_DETAIL_SEQ = $("#item_order_register_hidden_form #CONTROL_DETAIL_SEQ").val();
-                    if(CONTROL_SEQ != '' && CONTROL_DETAIL_SEQ !='') {
-                        itemOrderRegisterRightGrid.pqGrid("updateRow", {'rowIndx': ui.updateList[0].rowIndx, row: {'CONTROL_SEQ': CONTROL_SEQ, 'CONTROL_DETAIL_SEQ': CONTROL_DETAIL_SEQ} });
+                    if( (CONTROL_SEQ != '' && CONTROL_DETAIL_SEQ !='') || MATERIAL_ORDER_SEQ != '' ) {
+                        itemOrderRegisterRightGrid.pqGrid("updateRow", {'rowIndx': ui.updateList[0].rowIndx,
+                            row: {'CONTROL_SEQ': CONTROL_SEQ, 'CONTROL_DETAIL_SEQ': CONTROL_DETAIL_SEQ, 'MATERIAL_ORDER_SEQ': MATERIAL_ORDER_SEQ} });
                     }
+
                 }
             });
 
@@ -896,10 +925,11 @@
         });
 
         $("#btnItemOrderRegisterOutSave").on('click', function(){
+            let MATERIAL_ORDER_SEQ = $("#item_order_register_hidden_form #MATERIAL_ORDER_SEQ").val();
             let CONTROL_SEQ = $("#item_order_register_hidden_form #CONTROL_SEQ").val();
             let CONTROL_DETAIL_SEQ = $("#item_order_register_hidden_form #CONTROL_DETAIL_SEQ").val();
-            if(CONTROL_SEQ != '' && CONTROL_DETAIL_SEQ !=''){
-                let itemOrderRegisterOutInsertUpdateQueryList = ['insertUpdateItemOrderRegisterOut'];
+            if( (CONTROL_SEQ != '' && CONTROL_DETAIL_SEQ !='') || MATERIAL_ORDER_SEQ != '' ){
+                let itemOrderRegisterOutInsertUpdateQueryList = ['insertItemOrderRegisterOut'];
                 fnModifyPQGrid(itemOrderRegisterRightGrid, itemOrderRegisterOutInsertUpdateQueryList, itemOrderRegisterOutInsertUpdateQueryList);
 
                 setTimeout(function(){
@@ -914,6 +944,14 @@
                 return;
             }
 
+        });
+
+        /**
+         * filterhandler
+         * @Parameter
+         * */
+        $("#itemOrderRegisterFilterKeyword").on("keyup", function(e){
+            filterhandler(itemOrderRegisterLeftGrid, 'itemOrderRegisterFilterKeyword', 'itemOrderRegisterFilterCondition', 'itemOrderRegisterFilterColumn');
         });
 
         $("#itemOrderRegisterWarehouseSelectBox").on('change', function(){
@@ -961,6 +999,8 @@
             let date = new Date();
             date = date.getFullYear() +"-"+ ("0"+(date.getMonth()+1)).slice(-2) +"-"+ ("0"+(date.getDate()+1)).slice(-2);
             itemOrderRegisterPopTopGrid.pqGrid('addNodes', [{ "HOPE_DUE_DT": date}], 0);
+
+            $("#btnItemOrderRegisterPopSubmit").attr("disabled", true);
         });
 
         $("#btnItemOrderRegisterPopSave").on('click', function(){
@@ -1048,7 +1088,8 @@
             let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num").val();
 
             let table="";
-            var row_span ="rowspan='2'";
+            var row_span1 ="rowspan='1'";
+            var row_span2 ="rowspan='2'";
 
             let parameter = {
                 'queryId': 'selectItemOrderRegisterPopTable',
@@ -1057,18 +1098,27 @@
             let parameters = {'url': '/json-list', 'data': parameter};
             fnPostAjaxAsync(function (data, callFunctionParam) {
                 let list = data.list;
+                console.log(list);
 
                 if(list.length > 0 ){
                     table += "<table class='rowStyle' style='border-spacing:0; width:100%;'><tr>";
                     table += "<th>업체</th>";
                     for(var i=0; i<list.length; i++) {
-                        table += "<th>"	+ list[i].MATERIAL_COMP_NM +"</th>";
+                        if(list[i].MATERIAL_COMP_CD == 'CMP0076'){
+                            table += "<th "+row_span2+">"	+ list[i].MATERIAL_COMP_NM +"</th>";
+                        }else{
+                            table += "<th>"	+ list[i].MATERIAL_COMP_NM +"</th>";
+                        }
                     }
                     table += "</tr>";
                     table += "<tr>";
                     table += "<th>담당자</th>";
                     for(var j=0; j<list.length; j++) {
-                        table += "<th>"	+ list[j].MATERIAL_COMP_EMAIL +"</th>";
+                        if(list[j].MATERIAL_COMP_CD == 'CMP0076'){
+                            table += "";
+                        }else{
+                            table += "<th>"	+ list[j].MATERIAL_COMP_EMAIL +"</th>";
+                        }
                     }
                     table += "</tr>";
                     table += "<tr>";
@@ -1237,7 +1287,6 @@
             });
         }
 
-
         /** 공통 코드 이외의 처리 부분 **/
         fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
         fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#M_ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
@@ -1297,4 +1346,49 @@
         }
     }
 
+    /**
+     * filterhandler
+     * @Parameter
+     * */
+    function itemOrderRegisterFilterRender(ui) {
+        var val = ui.cellData == undefined ? "" : ui.cellData,
+            filter = ui.column.filter,
+            crules = (filter || {}).crules;
+
+        if (filter && filter.on && crules && crules[0].value) {
+            var condition = $("#itemOrderRegisterFilterCondition :selected").val(),
+                valUpper = val.toString().toUpperCase(),
+                txt = $("#itemOrderRegisterFilterKeyword").val(),
+                txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                indx = -1;
+
+            if (condition == "end") {
+                indx = valUpper.lastIndexOf(txtUpper);
+                if (indx + txtUpper.length != valUpper.length) {
+                    indx = -1;
+                }
+            }
+            else if (condition == "contain") {
+                indx = valUpper.indexOf(txtUpper);
+            }
+            else if (condition == "begin") {
+                indx = valUpper.indexOf(txtUpper);
+                if (indx > 0) {
+                    indx = -1;
+                }
+            }
+            if (indx >= 0) {
+                var txt1 = val.toString().substring(0, indx);
+                var txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                var txt3 = val.toString().substring(indx + txtUpper.length);
+                return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+            }
+            else {
+                return val;
+            }
+        }
+        else {
+            return val;
+        }
+    }
 </script>

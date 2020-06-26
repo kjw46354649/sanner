@@ -334,8 +334,8 @@
 .miniPopup .contentWrap table .nopadding{padding:0;}
 .miniPopup .contentWrap table .bg_green{background: #e8f9ea;}
 .miniPopup .contentWrap table span select{ border: 1px solid transparent; background-color: transparent; width: 100%; height: 46px;}
-.miniPopup .contentWrap .btn_plus{ width: 28px; height: 29px; font-size: 0; background: url(../images/common/btn_plus.png)no-repeat 0 0;}
-.miniPopup .contentWrap .btn_minus{width: 28px; height: 29px; font-size: 0; background: url(../images/common/btn_minus.png)no-repeat 0 0;}
+.miniPopup .contentWrap .btn_plus{ width: 34px; height: 34px; font-size: 0; background: url(../images/common/btn_plus.png)no-repeat 0 0; background-size: cover;}
+.miniPopup .contentWrap .btn_minus{width: 34px; height: 34px; font-size: 0; background: url(../images/common/btn_minus.png)no-repeat 0 0; background-size: cover;}
 .miniPopup .contentWrap .text{ font-size: 14px; font-family: 'NotoKrB'; display: inline-block; width: 70px; text-align: center;}
 .miniPopup .contentWrap .btn_allPlus{ width: 60px; height: 30px; line-height: 25px; background: #880000; color: #fff; border-radius: 5px; border: 1px solid #b10000; box-sizing: border-box; font-size: 14px; float: right;-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#000000)";/*IE 8*/
 text-shadow: 1px 1px 3px rgba(0,0,0,0.5);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */

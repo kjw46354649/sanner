@@ -1008,7 +1008,7 @@
         let gridInstance = grid.pqGrid('getInstance').grid;
         //추가 또는 수정된 값이 있으면 true
         if (gridInstance.isDirty()) {
-            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인';
+            let headHtml = 'messsage', bodyHtml = '', yseBtn = '예';
 
             bodyHtml =
                 '<h4>\n' +
@@ -1035,4 +1035,26 @@
         $('#commonAlertYesBtn').html(yesHtml);
         commonAlertPopup.show();
     }
+
+    function filterhandler(gridId, filterKeywordId, filterConditionId, filterColumnId) {
+        var value = $("#"+filterKeywordId).val(),
+            condition = $("#"+filterConditionId).val(),
+            dataIndx = $("#"+filterColumnId).val(),
+            filterRules;
+
+        if (dataIndx == "") {//search through all fields when no field selected.
+            filterRules = gridId.pqGrid('getInstance').grid.getColModel().map(function(column){
+                return { dataIndx: column.dataIndx, condition: condition, value: value };
+            })
+        }
+        else {//search through selected field.
+            filterRules = [{ dataIndx: dataIndx, condition: condition, value: value}];
+        }
+
+        gridId.pqGrid('getInstance').grid.filter({
+            oper: 'replace',
+            rules: filterRules
+        });
+    }
+
 </script>

@@ -350,8 +350,8 @@
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER', hidden: true},
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER_TRAN'},
             {title: '건수', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
-            {title: '발주가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
-            {title: '마감금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CLOSE_CONTROL_AMT'}
+            {title: '발주가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}
+            // {title: '마감금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CLOSE_CONTROL_AMT'}
         ];
         const outsideCloseCancelObj = {
             height: 300,

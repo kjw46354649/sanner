@@ -44,20 +44,20 @@
                                 전체 조회 건수 (Total : <span id="business_emergency_records" style="color: #00b3ee">0</span>)
                             </div>
                         </div>
-                        <div class="left_float center-Warp" style="padding-left:5px;">
+                        <div class="left_float right-Warp" style="padding-left:5px;">
                             <div class="left_float"><h2>납기지연 목록</h2></div>
                             <div class="left_float" id="business_over_order_grid"></div>
                             <div class="right_float">
                                 전체 조회 건수 (Total : <span id="business_over_total_records" style="color: #00b3ee">0</span>)
                             </div>
                         </div>
-                        <div class="right_float right-Warp">
-                            <div class="left_float"><h2>납기지연 위험 목록</h2></div>
-                            <div class="left_float" id="business_over_danger_grid"></div>
-                            <div class="right_float">
-                                전체 조회 건수 (Total : <span id="business_over_danger_total_records" style="color: #00b3ee">0</span>)
-                            </div>
-                        </div>
+<%--                        <div class="right_float right-Warp">--%>
+<%--                            <div class="left_float"><h2>납기지연 위험 목록</h2></div>--%>
+<%--                            <div class="left_float" id="business_over_danger_grid"></div>--%>
+<%--                            <div class="right_float">--%>
+<%--                                전체 조회 건수 (Total : <span id="business_over_danger_total_records" style="color: #00b3ee">0</span>)--%>
+<%--                            </div>--%>
+<%--                        </div>--%>
                     </div>
 <%--                    <div class="right_sort">--%>
 <%--                        전체 조회 건수 (Total : <span id="authority_access_menu_total_records" style="color: #00b3ee">0</span>)--%>
@@ -81,8 +81,8 @@
     let businessOverOrderListGridId = 'business_over_order_grid';
 
     /** business Will Over Order Danger grid */
-    let $businessOverDangerListGrid;
-    let businessOverDangerListGridId = 'business_over_danger_grid';
+    /*let $businessOverDangerListGrid;
+    let businessOverDangerListGridId = 'business_over_danger_grid';*/
     let businessCalendar;
 
     $(function () {
@@ -255,7 +255,7 @@
         ];
 
         let businessEmergencyObj = {
-            height: 228, width: 330, minHeight: "auto", numberCell: {title: 'No.'},
+            height: 228, width: 500, minHeight: "auto", numberCell: {title: 'No.'},
             selectionModel: { type: 'row', mode: 'single'}, swipeModel: {on: false}, trackModel: {on: true},
             collapsible: false, resizable: false, flexWidth: false, showTitle: false,
             columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
@@ -287,7 +287,7 @@
         ];
 
         let businessOverOrderObj = {
-            height: 228, width: 330, minHeight: "auto", numberCell: {title: 'No.'},
+            height: 228, width: 500, minHeight: "auto", numberCell: {title: 'No.'},
             selectionModel: { type: 'row', mode: 'single'}, swipeModel: {on: false}, trackModel: {on: true},
             collapsible: false, resizable: false, flexWidth: false, showTitle: false,
             columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
@@ -308,7 +308,7 @@
         };
         $businessOverOrderListGrid = $('#' + businessOverOrderListGridId).pqGrid(businessOverOrderObj);
 
-        let businessOverDangerColModel = [
+        /*let businessOverDangerColModel = [
             {title: '납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', width: 50},
             {title: '출고', dataType: 'string', dataIndx: 'DELIVERY_DT', width: 50},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 80},
@@ -316,9 +316,9 @@
             {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', width: 50},
             {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', width: 80},
             {title: '담당자', dataType: 'string', dataIndx: 'USER_NM', width: 80}
-        ];
+        ];*/
 
-        let businessOverDangerObj = {
+        /*let businessOverDangerObj = {
             height: 228, width: 330, minHeight: "auto", numberCell: {title: 'No.'},
             selectionModel: { type: 'row', mode: 'single'}, swipeModel: {on: false}, trackModel: {on: true},
             collapsible: false, resizable: false, flexWidth: false, showTitle: false,
@@ -337,11 +337,11 @@
                 $('#business_over_danger_total_records').html(totalRecords);
             },
             toolbar: false,
-        };
-        $businessOverDangerListGrid = $('#' + businessOverDangerListGridId).pqGrid(businessOverDangerObj);
+        };*/
+        // $businessOverDangerListGrid = $('#' + businessOverDangerListGridId).pqGrid(businessOverDangerObj);
 
 
-        $('#BUSINESS_STATUS_INNER_DUE_DT').on('change', function () {
+        $('#business_status_search_form').on('change', function () {
             $businessOutgoingListGrid.pqGrid('option', 'dataModel.postData', function () {
                 return (fnFormToJsonArrayData('#business_status_search_form'));
             });
