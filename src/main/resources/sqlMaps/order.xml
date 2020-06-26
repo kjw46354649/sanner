@@ -44,7 +44,7 @@
             B.WORK_FACTORY, <!-- 수행공장 -->
             SF_GET_CODE_NM(1014, B.WORK_FACTORY, 'KR') AS WORK_FACTORY_NM, <!-- 수행공장 -->
             B.MATERIAL_SUPPLY_YN, <!-- 소재사급 -->
-            IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'YY', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 납기(가공납기) -->
+            IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'YYYY', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 납기(가공납기) -->
             IFNULL(B.SIZE_TXT, SPACE(0)) AS SIZE_TXT, <!-- 규격 -->
             B.MATERIAL_DETAIL, <!-- 소재 종류 -->
             IFNULL(SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, 'KR'), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류 -->
@@ -166,7 +166,7 @@
         IFNULL(B.PART_NUM, SPACE(0)) AS PART_NUM, <!-- Part -->
         B.DRAWING_NUM, <!-- 도면번호 -->
         B.DRAWING_VER, <!-- 도면번호 버전 -->
-        SF_GET_DATE_F(B.DRAWING_UP_DT, 'YY', 'M'), <!-- 도면업로드시간 -->
+        SF_GET_DATE_F(B.DRAWING_UP_DT, 'YY', 'M') AS DRAWING_UP_DT, <!-- 도면업로드시간 -->
         B.PREV_DRAWING_NUM, <!-- 변경전 도면번호 -->
         B.ITEM_NM, <!-- 품명 -->
         B.WORK_TYPE, <!-- 작업형태 -->
@@ -175,7 +175,7 @@
         B.WORK_FACTORY, <!-- 수행공장 -->
         SF_GET_CODE_NM(1014, B.WORK_FACTORY, 'KR') AS WORK_FACTORY_NM, <!-- 수행공장 -->
         B.MATERIAL_SUPPLY_YN, <!-- 소재사급 -->
-        IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'YY', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 가공납기 -->
+        IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'YYYY', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 가공납기 -->
         IFNULL(B.SIZE_TXT, SPACE(0)) AS SIZE_TXT, <!-- 규격 문자열 -->
         B.SIZE_TYPE, <!-- 규격 타입 -->
         B.SIZE_W, <!-- 규격 가로 -->
@@ -255,8 +255,8 @@
         C.ORDER_NUM, <!-- 발주번호 -->
         SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY, <!-- 주문 수량 -->
         IFNULL(C.ORDER_QTY, SPACE(0)) AS ORDER_QTY, <!-- 발주수량 -->
-        SF_GET_DATE_F(C.ORDER_DUE_DT, 'YY', '') AS ORDER_DUE_DT, <!-- 발주납기 -->
-        SF_GET_DATE_F(C.DELIVERY_DT, 'YY', '') AS DELIVERY_DT, <!-- 발주정보_납품확인 -->
+        SF_GET_DATE_F(C.ORDER_DUE_DT, 'YYYY', '') AS ORDER_DUE_DT, <!-- 발주납기 -->
+        SF_GET_DATE_F(C.DELIVERY_DT, 'YYYY', '') AS DELIVERY_DT, <!-- 발주정보_납품확인 -->
         C.PACKING_CNT, <!-- 포장묶음 -->
         SF_GET_DATE_F(C.OUT_FINISH_DT, 'YY', '') AS ORDER_OUT_FINISH_DT <!-- 출고완료일 -->
     </sql>

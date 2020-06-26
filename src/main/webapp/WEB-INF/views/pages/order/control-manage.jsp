@@ -384,6 +384,15 @@
             }, parameters, '');
             return list;
         })();
+        const dateEditor = function (ui) {
+            let $inp = ui.$cell.find('input'), $grid = $(this);
+            $inp.datepicker({
+                changeMonth: true, changeYear: true, showAnim: '', dateFormat: 'yy-mm-dd',
+                onSelect: function () { this.firstOpen = true; },
+                beforeShow: function (input, inst) {return !this.firstOpen; },
+                onClose: function () { this.focus(); }
+            });
+        };
         let selectedRowIndex = [];
         let $orderManagementGrid;
         let newOrderRegistrationPopup;
@@ -636,7 +645,7 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: dateEditor}},
             {title: '소재<br>종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027')},
                 render: function (ui) {
@@ -1964,6 +1973,7 @@
                 return val;
             }
         }
+
         /* function */
 
         /* event */
