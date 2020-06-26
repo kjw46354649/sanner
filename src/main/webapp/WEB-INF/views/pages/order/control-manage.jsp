@@ -520,7 +520,7 @@
             },
             {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {
-                title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', editable: true,
+                title: '파<br>트', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'PART_NUM', editable: true,
                 render: function (ui) {
                     if (ui.rowData.WORK_TYPE === 'WTP020' && ui.rowData.LAG_WORK_TYPE === undefined && ui.rowData.CONTROL_STATUS !== 'ORD001') {
                         return '<span class="ui-icon ui-icon-circle-plus" name="PART_NUM_PLUS_BUTTON" style="cursor: pointer"></span>';
