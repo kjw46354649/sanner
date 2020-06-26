@@ -149,4 +149,17 @@ public class StaticUrlController {
 
         return modelAndView;
     }
+
+    /**
+     * 신규 주문등록
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/newOrderRegistration")
+    public String newOrderRegistrationController(Model model, HttpServletRequest request, HttpServletResponse response)  throws Exception{
+        return "/common/register_control";
+    }
 }

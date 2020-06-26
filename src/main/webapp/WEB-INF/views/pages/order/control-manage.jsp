@@ -137,7 +137,8 @@
     <div class="bottomWrap row1_bottomWrap">
         <div class="hWrap">
             <div>
-                <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#CONTROL_MANGE_POPUP">신규 주문 등록</button>
+                <button type="button" class="defaultBtn btn-100w" id="NEW_ORDER_REGISTRATION">신규 주문 등록</button>
+<%--                <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#CONTROL_MANGE_POPUP">신규 주문 등록</button>--%>
                 <button type="button" class="defaultBtn btn-100w" id="DRAWING_REGISTRATION">도면 등록</button>
                 <button type="button" class="defaultBtn btn-100w" id="DRAWING_CHANGE">도면변경(Rev. up)</button>
                 <button type="button" class="defaultBtn btn-100w" id="ESTIMATE_REGISTER_FROM_CONTROL">견적등록</button>
@@ -385,6 +386,7 @@
         })();
         let selectedRowIndex = [];
         let $orderManagementGrid;
+        let newOrderRegistrationPopup;
         const gridId = 'CONTROL_MANAGE_GRID';
         let postData = fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM');
         const colModel = [
@@ -723,7 +725,7 @@
             {
                 title: '발주정보', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, colModel: [
                     {
-                        title: '', datatype: 'string', dataIndx: 'ORDER_NUM_PLUS_BUTTON',
+                        title: '', datatype: 'string', dataIndx: 'ORDER_NUM_PLUS_BUTTON', styleHead: {'background':'#a9d3f5'},
                         render: function (ui) {
                             if (ui.rowData.WORK_TYPE === 'WTP010' || ui.rowData.WORK_TYPE === 'WTP020' || ui.rowData.WORK_TYPE === 'WTP030') {
                                 return '<span class="ui-icon ui-icon-circle-plus" name="ORDER_NUM_PLUS_BUTTON" style="cursor: pointer"></span>';
@@ -903,10 +905,10 @@
             },
             {title: '현재 위치', dataType: 'string', dataIndx: 'POP_POSITION', hidden: true},
             {title: '현재 위치', dataType: 'string', dataIndx: 'POP_POSITION_NM', hidden: true},
-            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', hidden: true},            {title: '현재 위치', dataType: 'string', dataIndx: 'POP_POSITION_NM', hidden: true},
+            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', hidden: true},
             {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', hidden: true},
             {
-                title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ',
+                title: 'DXF', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ',
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'
                 },
@@ -920,7 +922,7 @@
                 }
             },
             {
-                title: 'IMG', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ',
+                title: 'IMG', align: 'center', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ',
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="redFileImageICon" style="cursor: pointer"></span>'
                 },
@@ -2076,6 +2078,34 @@
             });
         });
 
+        $('#NEW_ORDER_REGISTRATION').on('click', function () {
+            let url = '/newOrderRegistration';
+            // 팝업 사이즈
+            let nWidth = 1400;
+            let nHeight = 770;
+            let winWidth = document.body.clientWidth;
+            let winHeight = document.body.clientHeight;
+            let winX = window.screenX || window.screenLeft || 0;
+            let winY = window.screenY || window.screenTop || 0;
+            let nLeft = winX + (winWidth - nWidth) / 2;
+            let nTop = winY + (winHeight - nHeight) / 2;
+
+            let strOption = '';
+            strOption += 'left=' + nLeft + 'px,';
+            strOption += 'top=' + nTop + 'px,';
+            strOption += 'width=' + nWidth + 'px,';
+            strOption += 'height=' + nHeight + 'px,';
+            strOption += 'toolbar=no,menubar=no,location=no,resizable=yes,status=yes';
+
+            // 최초 클릭이면 팝업을 띄운다.
+            if (newOrderRegistrationPopup === undefined || newOrderRegistrationPopup.closed) {
+                newOrderRegistrationPopup = window.open(url, '', strOption);
+            } else {
+                newOrderRegistrationPopup.focus();
+            }
+
+        });
+
         $('#CONTROL_MANGE_POPUP').on({
             'show.bs.modal': function () {
                 $orderRegisterGrid = $('#' + popupGridId).pqGrid(popupObj);
@@ -2219,8 +2249,7 @@
                 'CLOSE_VER', 'CLOSE_VER_TRAN', 'CLOSE_USER_ID', 'CLOSE_DT', 'POP_POSITION_NM', 'PART_STATUS_NM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'REVD',
                 'REVDLFTL.', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM', 'INSPECT_DESC',
                 'ERROR_ACTION_NM','ERROR_NOTE', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT',
-                'OUTSIDE_HOPE_DUE_DT', 'dhlwndlqrhskfWk', 'OUTSIDE_NOTE', 'dhlwnqnffidcode', 'dhlwnwhclqkddks', 'STATUS_DT',
-                'CONTROL_BARCODE_NUM', 'LABEL_BARCODE_NUM', 'DEL_YN'
+                'OUTSIDE_HOPE_DUE_DT', 'dhlwndlqrhskfWk', 'OUTSIDE_NOTE', 'dhlwnqnffidcode', 'dhlwnwhclqkddks', 'STATUS_DT'
             ];
             const easyArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'PRICE_CONFIRM', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'MAIN_INSPECTION',
