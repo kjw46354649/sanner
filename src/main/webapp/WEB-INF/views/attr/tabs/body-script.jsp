@@ -1036,7 +1036,7 @@
         commonAlertPopup.show();
     }
 
-    function filterhandler(gridId, filterKeywordId, filterConditionId, filterColumnId) {
+    function fnFilterHandler(gridId, filterKeywordId, filterConditionId, filterColumnId) {
         var value = $("#"+filterKeywordId).val(),
             condition = $("#"+filterConditionId).val(),
             dataIndx = $("#"+filterColumnId).val(),
@@ -1055,6 +1055,11 @@
             oper: 'replace',
             rules: filterRules
         });
+    }
+
+    function fnFrozenHandler(gridId, value){
+        gridId.pqGrid('getInstance').grid.option("freezeCols", value);
+        gridId.pqGrid('getInstance').grid.refresh();
     }
 
 </script>

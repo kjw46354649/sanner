@@ -156,6 +156,18 @@
                 </div>
             </div>
             <div class="mg-top10">
+                <div class="d-inline">
+                    <input type="text" id="controlManageFilterKeyword" placeholder="Enter your keyword">
+                    <select id="controlManageFilterColumn"></select>
+                    <select id="controlManageFilterCondition">
+                        <c:forEach var="code" items="${HighCode.H_1083}">
+                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                        </c:forEach>
+                    </select>
+                    <label for="controlManageFrozen" class="label_50" style="font-size: 15px;">Fix</label>
+                    <select id="controlManageFrozen" name="controlManageFrozen">
+                    </select>
+                </div>
                 <button type=" button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_ALL">전체모드</button>
                 <button type="button" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_EASY">간편모드</button>
                 <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_ESTIMATE">견적모드</button>
@@ -970,7 +982,7 @@
             showTitle: false,
             numberCell: {title: 'No.'},
             trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false ,render: controlManageFilterRender}, filterModel: { mode: 'OR' },
             colModel: colModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -978,6 +990,22 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            load: function( event, ui ) {
+                var filterOpts = '<option value=\"\">All Fields</option>';
+                var frozenOts = '<option value="0">Selected</option>';
+                this.getColModel().forEach(function(column){
+                    console.log(column);
+                    let hiddenYn = column.hidden == undefined ? true : false;
+                    if(hiddenYn){
+                        filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                        frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
+                    }
+                });
+                $("#controlManageFilterColumn").empty();
+                $("#controlManageFilterColumn").html(filterOpts);
+                $("#controlManageFrozen").empty();
+                $("#controlManageFrozen").html(frozenOts);
             },
             // editModel: {clicksToEdit: 1},
             complete: function (event, ui) {
@@ -1892,6 +1920,48 @@
         const supplyUnitCostInit = function () {
             $('#SUPPLY_UNIT_COST_APPLY option:eq(0)').prop('selected', true); // 공급단가적용 초기화?
         };
+
+        function controlManageFilterRender(ui) {
+            var val = ui.cellData == undefined ? "" : ui.cellData,
+                filter = ui.column.filter,
+                crules = (filter || {}).crules;
+
+            if (filter && filter.on && crules && crules[0].value) {
+                var condition = $("#controlManageFilterCondition :selected").val(),
+                    valUpper = val.toString().toUpperCase(),
+                    txt = $("#controlManageFilterKeyword").val(),
+                    txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                    indx = -1;
+
+                if (condition == "end") {
+                    indx = valUpper.lastIndexOf(txtUpper);
+                    if (indx + txtUpper.length != valUpper.length) {
+                        indx = -1;
+                    }
+                }
+                else if (condition == "contain") {
+                    indx = valUpper.indexOf(txtUpper);
+                }
+                else if (condition == "begin") {
+                    indx = valUpper.indexOf(txtUpper);
+                    if (indx > 0) {
+                        indx = -1;
+                    }
+                }
+                if (indx >= 0) {
+                    var txt1 = val.toString().substring(0, indx);
+                    var txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                    var txt3 = val.toString().substring(indx + txtUpper.length);
+                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                }
+                else {
+                    return val;
+                }
+            }
+            else {
+                return val;
+            }
+        }
         /* function */
 
         /* event */
@@ -2812,5 +2882,14 @@
             }, 800);
             event.preventDefault();
         });
+
+        $("#controlManageFilterKeyword").on("keyup", function(e){
+            fnFilterHandler($orderManagementGrid, 'controlManageFilterKeyword', 'controlManageFilterCondition', 'controlManageFilterColumn');
+        });
+
+        $("#controlManageFrozen").on('change', function(e){
+            fnFrozenHandler($orderManagementGrid, $(this).val());
+        });
     });
+
 </script>
