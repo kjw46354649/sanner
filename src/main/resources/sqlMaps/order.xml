@@ -1368,16 +1368,12 @@
             #{PDF_GFILE_SEQ} AS PDF_GFILE_SEQ,
             #{IMG_GFILE_SEQ} AS IMG_GFILE_SEQ,
             #{TIME_PATH} AS TIME_PATH,
-            #{FILE_PATH} AS FILE_PATH,
-            CASE WHEN IMG_GFILE_SEQ IS NOT NULL THEN '이미 등록됨, Save 후 교체됨'  <!-- 이미 등록된 Save시 교체 진행  메시지 처리 -->
-                 WHEN IFNULL(#{DXF_GFILE_SEQ}, 0) <![CDATA[ <= ]]> 0 THEN  '파일 업로드 오류' <!-- 파일 업로드 오류 및 CONVERT 사이즈 오류 -->
-                 ELSE ''
-            END AS UPLOAD_MESSAGE
+            #{FILE_PATH} AS FILE_PATH
         FROM TBL_CONTROL C
             INNER JOIN TBL_CONTROL_PART B ON C.CONTROL_SEQ = B.CONTROL_SEQ
         WHERE 1 = 1
             AND IFNULL(C.CONTROL_STATUS, 'ORD002') IN ('ORD002')    <!-- 확정/종료/마감 완료된 대상은 업로드 불가 추소 & 대기만 업로드 가능 -->
-            AND #{ORGINAL_FILE_NM} LIKE CONCAT(B.DRAWING_NUM, '%')
+            AND UPPER(B.DRAWING_NUM) = #{MAPPING_STR}
     </select>
 
     <update id="manageControlCadFiles" parameterType="java.util.HashMap">
@@ -1387,12 +1383,11 @@
             DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
             PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
             IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
-            PDF_GFILE_SEQ = NULL,
-            IMG_GFILE_SEQ = NULL,
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}
-        WHERE
-        CONTROL_SEQ = #{CONTROL_SEQ}
+        WHERE 1 = 1
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </update>
 
     <!--<update id="manageControlCadFiles" parameterType="java.util.HashMap">
@@ -1441,17 +1436,14 @@
             #{PDF_GFILE_SEQ} AS PDF_GFILE_SEQ,
             #{IMG_GFILE_SEQ} AS IMG_GFILE_SEQ,
             #{TIME_PATH} AS TIME_PATH,
-            #{FILE_PATH} AS FILE_PATH,
-            CASE WHEN IFNULL(#{DXF_GFILE_SEQ}, 0) <![CDATA[ <= ]]> 0 THEN  '파일 업로드 오류' <!-- 파일 업로드 오류 및 CONVERT 사이즈 오류 -->
-                 ELSE ''
-            END AS UPLOAD_MESSAGE
+            #{FILE_PATH} AS FILE_PATH
         FROM TBL_CONTROL C
             INNER JOIN TBL_CONTROL_PART B ON C.CONTROL_SEQ = B.CONTROL_SEQ
         WHERE 1 = 1
             AND C.DEL_YN = 'N'
             AND IFNULL(C.CONTROL_STATUS, 'ORD002') IN ('ORD001', 'ORD003') <!-- 확정/마감 대상이며  -->
             AND C.OUT_FINISH_DT IS NULL <!-- 확정 마감상태의 출고 완료 이전에 변경 가능 -->
-            AND #{ORGINAL_FILE_NM} LIKE CONCAT(B.DRAWING_NUM, '%')
+            AND UPPER(B.DRAWING_NUM) = #{MAPPING_STR}
     </select>
 
     <update id="manageControlCadRevFiles" parameterType="java.util.HashMap">

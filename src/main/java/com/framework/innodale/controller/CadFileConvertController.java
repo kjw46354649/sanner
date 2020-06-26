@@ -39,7 +39,7 @@ public class CadFileConvertController {
 
         // background 방식으로 처리 된다.
         // CONVERT 작업과 DXF 키로 이미지 KEY를 업로드 한다.
-        try {
+        /*try {
             //Task 실행가능 여부 확
             if(asyncConfig.checkSampleTaskExecute()) {
                 cadeFileConvertTaskService.jobRunningInBackground(map);
@@ -48,7 +48,7 @@ public class CadFileConvertController {
             }
         } catch (Exception e) {
             logger.error("Thread Err :: " + e.getMessage());
-        }
+        }*/
 
         return "jsonView";
     }

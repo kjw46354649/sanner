@@ -63,7 +63,8 @@ public class FileUploadController {
         model.addAttribute("message", "처리 할수 없는 파일 형식 입니다.");
         model.addAttribute("queryId", "estimate.selectEstimateCadFiles");
 
-        fileUploadService.uploadDxfCadFiles(request, model);
+//        fileUploadService.uploadDxfCadFiles(request, model);
+        fileUploadService.uploadDxfAndPdfCadFiles(request, model);
 
         return "jsonView";
     }
@@ -81,7 +82,8 @@ public class FileUploadController {
         model.addAttribute("result", "false");
         model.addAttribute("message", "처리 할수 없는 파일 형식 입니다.");
 
-        fileUploadService.uploadDxfCadFiles(request, model);
+//        fileUploadService.uploadDxfCadFiles(request, model);
+        fileUploadService.uploadDxfAndPdfCadFiles(request, model);
 
         return "jsonView";
     }
@@ -99,7 +101,8 @@ public class FileUploadController {
         model.addAttribute("result", "false");
         model.addAttribute("message", "처리 할수 없는 파일 형식 입니다.");
 
-        fileUploadService.uploadDxfCadFiles(request, model);
+//        fileUploadService.uploadDxfCadFiles(request, model);
+        fileUploadService.uploadDxfAndPdfCadFiles(request, model);
 
         return "jsonView";
     }

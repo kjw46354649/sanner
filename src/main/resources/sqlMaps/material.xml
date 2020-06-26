@@ -1357,15 +1357,11 @@
             #{PDF_GFILE_SEQ} AS PDF_GFILE_SEQ,
             #{IMG_GFILE_SEQ} AS IMG_GFILE_SEQ,
             #{TIME_PATH} AS TIME_PATH,
-            #{FILE_PATH} AS FILE_PATH,
-            CASE WHEN IMG_GFILE_SEQ IS NOT NULL THEN '이미 등록됨, Save 후 교체됨'  <!-- 이미 등록된 Save시 교체 진행  메시지 처리 -->
-            WHEN IFNULL(#{DXF_GFILE_SEQ}, 0) <![CDATA[ <= ]]> 0 THEN  '파일 업로드 오류' <!-- 파일 업로드 오류 및 CONVERT 사이즈 오류 -->
-            ELSE ''
-            END AS UPLOAD_MESSAGE
+            #{FILE_PATH} AS FILE_PATH
         FROM TBL_INSIDE_STOCK A
         WHERE 1 = 1
             /*AND IFNULL(C.CONTROL_STATUS, 'ORD002') IN ('ORD002')*/
-            AND #{ORGINAL_FILE_NM} LIKE CONCAT(A.DRAWING_NUM, '%')
+            AND UPPER(A.DRAWING_NUM) = #{MAPPING_STR}
     </select>
 
     <update id="manageStockCadFiles" parameterType="java.util.HashMap">
