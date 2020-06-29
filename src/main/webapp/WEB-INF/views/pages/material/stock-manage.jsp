@@ -122,6 +122,16 @@
     <div class="bottomWrap row3_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
+                <input type="text" id="stockManageFilterKeyword" placeholder="Enter your keyword">
+                <select id="stockManageFilterColumn"></select>
+                <select id="stockManageFilterCondition">
+                    <c:forEach var="code" items="${HighCode.H_1083}">
+                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                    </c:forEach>
+                </select>
+                <label for="stockManageFrozen" class="label_50" style="font-size: 15px;">Fix</label>
+                <select id="stockManageFrozen" name="stockManageFrozen">
+                </select>
                 <button type="button" class="defaultBtn" id="stock_manage_new_btn">재고 입고</button>
                 <button type="button" class="defaultBtn" id="stock_manage_area_info_btn">위치정보관리</button>
                 <div class="rightSpan">
@@ -505,7 +515,7 @@
                 }
             },
             strNoRows: g_noData,
-            columnTemplate: {align: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', hvalign: 'center', render: stockManageFilterRender}, filterModel: { mode: 'OR' },
             //scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
             selectionModel: { type: 'row', mode: 'single'} ,
@@ -515,6 +525,21 @@
             resizable: false,
             trackModel: {on: true},
             colModel: stockManageColModel01,
+            load: function( event, ui ) {
+                var filterOpts = '<option value=\"\">All Fields</option>';
+                var frozenOts = '<option value="0">Selected</option>';
+                this.getColModel().forEach(function(column){
+                    let hiddenYn = column.hidden == undefined ? true : false;
+                    if(hiddenYn){
+                        filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                        frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
+                    }
+                });
+                $("#stockManageFilterColumn").empty();
+                $("#stockManageFilterColumn").html(filterOpts);
+                $("#stockManageFrozen").empty();
+                $("#stockManageFrozen").html(frozenOts);
+            },
             cellSave: function (evt, ui) {
                   if (ui.dataIndx == "WAREHOUSE_CD_NM" && ui.newVal !== ui.oldVal) {
                       stockManageGridId01.pqGrid("updateRow", { 'rowIndx': ui.rowIndx , row: { 'LOC_SEQ_NM': '' } });
@@ -1060,5 +1085,55 @@ console.log("change",JSON.stringify(changes));
             alert("작업중");
         });
 
+        /** 그리드 필터 **/
+        $("#stockManageFilterKeyword").on("keyup", function(e){
+            fnFilterHandler(stockManageGridId01, 'stockManageFilterKeyword', 'stockManageFilterCondition', 'stockManageFilterColumn');
+        });
+
+        $("#stockManageFrozen").on('change', function(e){
+            fnFrozenHandler(stockManageGridId01, $(this).val());
+        });
+
+        function stockManageFilterRender(ui) {
+            var val = ui.cellData == undefined ? "" : ui.cellData,
+                filter = ui.column.filter,
+                crules = (filter || {}).crules;
+
+            if (filter && filter.on && crules && crules[0].value) {
+                var condition = $("#stockManageFilterCondition :selected").val(),
+                    valUpper = val.toString().toUpperCase(),
+                    txt = $("#stockManageFilterKeyword").val(),
+                    txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                    indx = -1;
+
+                if (condition == "end") {
+                    indx = valUpper.lastIndexOf(txtUpper);
+                    if (indx + txtUpper.length != valUpper.length) {
+                        indx = -1;
+                    }
+                }
+                else if (condition == "contain") {
+                    indx = valUpper.indexOf(txtUpper);
+                }
+                else if (condition == "begin") {
+                    indx = valUpper.indexOf(txtUpper);
+                    if (indx > 0) {
+                        indx = -1;
+                    }
+                }
+                if (indx >= 0) {
+                    var txt1 = val.toString().substring(0, indx);
+                    var txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                    var txt3 = val.toString().substring(indx + txtUpper.length);
+                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                }
+                else {
+                    return val;
+                }
+            }
+            else {
+                return val;
+            }
+        }
     });
 </script>

@@ -99,6 +99,9 @@
                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                     </c:forEach>
                     </select>
+                    <label for="estimateListFrozen" class="label_50" style="font-size: 15px;">Fix</label>
+                    <select id="estimateListFrozen" name="estimateListFrozen">
+                    </select>
                     <div class="slt_wrap namePlusSlt right_float">
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateListExcel">견적List 출력</button>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateExcel">견적서 출력</button>
@@ -600,15 +603,19 @@
             strNoRows: g_noData,
             editable: false,
             load: function( event, ui ) {
-                var opts = '<option value=\"\">All Fields</option>';
+                var filterOpts = '<option value=\"\">All Fields</option>';
+                var frozenOts = '<option value="0">Selected</option>';
                 this.getColModel().forEach(function(column){
                     let hiddenYn = column.hidden == undefined ? true : false;
                     if(hiddenYn){
-                        opts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                        filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                        frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
                     }
                 });
                 $("#estimateListFilterColumn").empty();
-                $("#estimateListFilterColumn").html(opts);
+                $("#estimateListFilterColumn").html(filterOpts);
+                $("#estimateListFrozen").empty();
+                $("#estimateListFrozen").html(frozenOts);
             },
             complete: function(event, ui) {
                 //this.flex();
@@ -873,7 +880,11 @@
         });
 
         $("#estimateListFilterKeyword").on("keyup", function(e){
-            filterhandler(estimateMasterTopGrid, 'estimateListFilterKeyword', 'estimateListFilterCondition', 'estimateListFilterColumn');
+            fnFilterHandler(estimateMasterTopGrid, 'estimateListFilterKeyword', 'estimateListFilterCondition', 'estimateListFilterColumn');
+        });
+
+        $("#estimateListFrozen").on('change', function(e){
+            fnFrozenHandler(estimateMasterTopGrid, $(this).val());
         });
 
         /** 공통 코드 이외의 처리 부분 **/

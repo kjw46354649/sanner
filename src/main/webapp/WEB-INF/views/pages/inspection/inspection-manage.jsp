@@ -60,6 +60,16 @@
     <div class="bottomWrap inspectionBWrap row2_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
+                <input type="text" id="inspectionManageFilterKeyword" placeholder="Enter your keyword">
+                <select id="inspectionManageFilterColumn"></select>
+                <select id="inspectionManageFilterCondition">
+                    <c:forEach var="code" items="${HighCode.H_1083}">
+                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                    </c:forEach>
+                </select>
+                <label for="inspectionManageFrozen" class="label_50" style="font-size: 15px;">Fix</label>
+                <select id="inspectionManageFrozen" name="inspectionManageFrozen">
+                </select>
                 <span class="barCode"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="inspectionBarcodeImg"></span>
                 <span class="barCodeTxt">&nbsp;<input type="text" class="wd_270_barcode" name="INSPECTION_BARCODE_NUM" id="INSPECTION_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요"></span>
                 <div class="rightSpan">
@@ -378,7 +388,7 @@
                 }
             },
             strNoRows: g_noData,
-            columnTemplate: {align: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', hvalign: 'center', render: inspectionManageFilterRender}, filterModel: { mode: 'OR' },
             //scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
             selectionModel: { type: 'row', mode: 'single'} ,
@@ -388,6 +398,21 @@
             resizable: false,
             trackModel: {on: true},
             colModel: inspectionManageColModel01,
+            load: function( event, ui ) {
+                var filterOpts = '<option value=\"\">All Fields</option>';
+                var frozenOts = '<option value="0">Selected</option>';
+                this.getColModel().forEach(function(column){
+                    let hiddenYn = column.hidden == undefined ? true : false;
+                    if(hiddenYn){
+                        filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                        frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
+                    }
+                });
+                $("#inspectionManageFilterColumn").empty();
+                $("#inspectionManageFilterColumn").html(filterOpts);
+                $("#inspectionManageFrozen").empty();
+                $("#inspectionManageFrozen").html(frozenOts);
+            },
             complete: function () {
                 let data = inspectionManageGridId01.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
@@ -810,7 +835,55 @@ console.log(dataInfo);
             g_item_detail_pop_view('','');
         });
 
+        $("#inspectionManageFilterKeyword").on("keyup", function(e){
+            fnFilterHandler(inspectionManageGridId01, 'inspectionManageFilterKeyword', 'inspectionManageFilterCondition', 'inspectionManageFilterColumn');
+        });
 
+        $("#inspectionManageFrozen").on('change', function(e){
+            fnFrozenHandler(inspectionManageGridId01, $(this).val());
+        });
+        
+        function inspectionManageFilterRender(ui) {
+            var val = ui.cellData == undefined ? "" : ui.cellData,
+                filter = ui.column.filter,
+                crules = (filter || {}).crules;
+
+            if (filter && filter.on && crules && crules[0].value) {
+                var condition = $("#inspectionManageFilterCondition :selected").val(),
+                    valUpper = val.toString().toUpperCase(),
+                    txt = $("#inspectionManageFilterKeyword").val(),
+                    txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                    indx = -1;
+
+                if (condition == "end") {
+                    indx = valUpper.lastIndexOf(txtUpper);
+                    if (indx + txtUpper.length != valUpper.length) {
+                        indx = -1;
+                    }
+                }
+                else if (condition == "contain") {
+                    indx = valUpper.indexOf(txtUpper);
+                }
+                else if (condition == "begin") {
+                    indx = valUpper.indexOf(txtUpper);
+                    if (indx > 0) {
+                        indx = -1;
+                    }
+                }
+                if (indx >= 0) {
+                    var txt1 = val.toString().substring(0, indx);
+                    var txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                    var txt3 = val.toString().substring(indx + txtUpper.length);
+                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                }
+                else {
+                    return val;
+                }
+            }
+            else {
+                return val;
+            }
+        }
     });
 
    /* 10초마다 재조회
