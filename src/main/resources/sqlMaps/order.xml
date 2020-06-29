@@ -2245,6 +2245,9 @@
         <if test="ORDER_COMP_CHARGE != null and ORDER_COMP_CHARGE != ''">
             AND F.ORDER_COMP_CHARGE = #{ORDER_COMP_CHARGE}
         </if>
+        <if test="ORDER_STAFF_SEQ != null and ORDER_STAFF_SEQ != ''">
+            AND A.ORDER_STAFF_SEQ = #{ORDER_STAFF_SEQ}
+        </if>
         ORDER BY C.ORDER_DUE_DT, A.ORDER_COMP_CD
     </select>
 

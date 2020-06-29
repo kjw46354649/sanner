@@ -38,7 +38,7 @@
                         <span class="ipu_wrap"><label class="label_100" for="ITEM_NM">품명</label><input type="text" name="ITEM_NM" id="ITEM_NM" class="wd_200 " value="" title="품명"></span>
                         <span class="gubun"></span>
                     </li>
-                    <span class="">
+                    <li class="">
                         <span class="ipu_wrap"><label class="label_100">기간 조회</label></span>
                         <span class="chk_box"><input id="pr_ex1" type="checkbox"><label for="pr_ex1"> 발송완료</label></span>
                         <span class="chk_box"><input id="pr_ex2" type="checkbox"><label for="pr_ex2"> 최신차수</label></span>
@@ -116,7 +116,7 @@
                 </div>
             </div>
             <br/>
-            <div class="conWrap" style="height:407px;">
+            <div class="conWrap" style="height:384px;">
                 <div id="estimate_master_bot_grid"></div>
                 <div class="right_sort">
                     전체 조회 건수 (Total : <span id="estimate_master_bot_grid_records" style="color: #00b3ee">0</span>)
@@ -249,6 +249,19 @@
             {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', width: 150 } ,
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', width: 60 } ,
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 150 } ,
+            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30,
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', validations: [{ type: 'minLen', value: 1, msg: "Required"}], width: 100 } ,
             {
                 title: 'Part', clsHead: 'cantChange', dataType: 'integer', dataIndx: 'PART_NUM', width: 50,
@@ -551,7 +564,7 @@
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
             {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ',
                 render: function (ui) {
-                    if (ui.cellData) return '<span id="downloadView" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+                    if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
                     let grid = this,
@@ -563,16 +576,16 @@
                 }
             },
             {
-                title: 'IMG', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ',
+                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ',
                 render: function (ui) {
-                    if (ui.cellData) return '<span id="imageView" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
+                    if (ui.cellData) return '<span id="imageView" class="redFileImageICon" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
                     let grid = this,
                         $cell = grid.getCell(ui);
                     $cell.find("#imageView").bind("click", function () {
                         let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                        callWindowImageViewer(rowData.PDF_GFILE_SEQ);
                     });
                 }
             }
@@ -944,9 +957,9 @@
         var bottom = $('#view_tab_'+ role_seq +'0101 .bottomWrap');
         var con = $('#view_tab_'+ role_seq +'0101 .bottomWrap .tableWrap .conWrap');
 
-        top.stop().animate({height:'95px'},300, 'easeOutCubic');
-        bottom.stop().animate({height:'796px'},300, 'easeOutCubic');
-        con.css({height:'346px'});
+        top.stop().animate({height:'100px'},300, 'easeOutCubic');
+        bottom.stop().animate({height:'766px'},300, 'easeOutCubic');
+        con.css({height:'321px'});
 
         estimateMasterBotGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
     };
@@ -958,8 +971,8 @@
         var con = $('#view_tab_'+ role_seq +'0101 .bottomWrap .tableWrap .conWrap');
 
         top.stop().animate({height:'37px'},300, 'easeOutCubic');
-        bottom.stop().animate({height:'854px'},300, 'easeOutCubic');
-        con.css({height:'407px'});
+        bottom.stop().animate({height:'829px'},300, 'easeOutCubic');
+        con.css({height:'384px'});
 
         estimateMasterBotGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
     };

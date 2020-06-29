@@ -22,8 +22,8 @@
 <!--Bootstrap dependencies-->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
 <!--add pqgrid.bootstrap.css for bootstrap related classes-->
-<%--<link rel="stylesheet" href="/resource/plugins/paramquery/themes/bootstrap/pqgrid.css" />--%>
-<link rel="stylesheet" href="/resource/plugins/paramquery/themes/gray/pqgrid.css" />
+<link rel="stylesheet" href="/resource/plugins/paramquery/themes/bootstrap/pqgrid.css" />
+<%--<link rel="stylesheet" href="/resource/plugins/paramquery/themes/gray/pqgrid.css" />--%>
 
 <link rel="stylesheet" href="/resource/plugins/dhtmlx/suite.css" />
 <!-- print -->

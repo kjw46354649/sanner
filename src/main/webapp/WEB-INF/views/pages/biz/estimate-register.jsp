@@ -658,7 +658,7 @@
         };
 
         estimateRegisterTopGrid.pqGrid({
-            height: 414,
+            height: 383,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
                 url: "/paramQueryGridSelect",

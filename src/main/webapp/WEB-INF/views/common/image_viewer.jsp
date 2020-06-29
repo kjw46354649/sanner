@@ -61,7 +61,7 @@
                 backdrop: false,
                 navbar: false,
                 viewed: function () {
-                    this.viewer.zoomTo(0.39).rotateTo(-90);
+                    // this.viewer.zoomTo(0.39).rotateTo(-90);
                 },
                 toolbar: {
                     zoomIn: 4,

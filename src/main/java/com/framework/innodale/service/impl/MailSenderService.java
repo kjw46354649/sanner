@@ -6,6 +6,8 @@ import com.framework.innodale.dao.InnodaleDao;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -23,8 +25,8 @@ public class MailSenderService {
     @Autowired
     MailSenderAgent mailSenderAgent;
 
-    //	@Async
-//	@Scheduled(fixedRate=60000)  // 30 secound,	1000 = 1sec
+   	@Async
+	@Scheduled(fixedRate=1000)  // 30 secound,	1000 = 1sec
     public void manageMailSenderActionService(){
 
         log.info("manageMailSenderActionService start");

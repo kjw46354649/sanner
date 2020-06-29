@@ -118,7 +118,7 @@
                                             </tr>
                                             <tr>
                                                 <td style="width:50%; background-color: #bfbfbf; text-align: center; font-weight: bold;">VAT 포함합계</td>
-                                                <td style="width:50%; padding-right:20px; text-align: right; font-weight: bold;""><span id="slaeTotalAmount">0</span></td>
+                                                <td style="width:50%; padding-right:20px; text-align: right; font-weight: bold;"><span id="slaeTotalAmount">0</span></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -239,9 +239,9 @@
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '조회년도', dataType: 'string', dataIndx: 'CLOSE_YEAR', hidden: true},
             {title: 'No.', minWidth: 30, width: 30, align: 'right', dataType: 'integer', dataIndx: 'ROW_NUM'},
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD_NM'},
-            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '2020년 <BR>매출현황', dataType: 'string', dataIndx: 'SALE_AMT',
+            {title: '사업자', minWidth: 30, width: 120, dataType: 'string', dataIndx: 'COMP_CD_NM'},
+            {title: '발주처', minWidth: 30, width: 200, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+            {title: '2020년 <BR>매출현황', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'SALE_AMT',
                 summary: {
                     type: "sum",
                     edit: true
@@ -249,19 +249,19 @@
             },
             {
                 title: '2020년 수금현황', clsHead: 'cantChange', align: 'center', colModel: [
-                    {title: '현금', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CASH_AMT',
+                    {title: '현금', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CASH_AMT',
                         summary: {
                             type: "sum",
                             edit: true
                         },
                     },
-                    {title: '어음', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PAPER_AMT',
+                    {title: '어음', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PAPER_AMT',
                         summary: {
                             type: "sum",
                             edit: true
                         },
                     },
-                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DEPOSIT_TOTAL_AMT',
+                    {title: '합계', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DEPOSIT_TOTAL_AMT',
                         summary: {
                             type: "sum",
                             edit: true
@@ -269,19 +269,19 @@
                     },
                 ]
             },
-            {title: '전년도 총 <BR>미수금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'NOT_DEPOSIT_AMT',
+            {title: '전년도 총 <BR>미수금액', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'NOT_DEPOSIT_AMT',
                 summary: {
                     type: "sum",
                     edit: true
                 },
             },
-            {title: '총미수금 현황<BR>2020년', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'NOT_DEPOSIT_TOTAL_AMT',
+            {title: '총미수금 현황<BR>2020년', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'NOT_DEPOSIT_TOTAL_AMT',
                 summary: {
                     type: "sum",
                     edit: true
                 },
             },
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
+            {title: '비고', dataType: 'string', align: 'left', minWidth: 30, width: 350, dataIndx: 'NOTE', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
         ];
 
         //calculate sum of 3rd and 4th column.
@@ -302,8 +302,8 @@
 
         let moneyManageStatusObj = {
             height: 770, collapsible: false, resizable: false, selectionModel: { type: 'row', mode: 'single'} ,
-            showTitle: false, strNoRows: g_noData, rowHtHead: 15, numberCell: {show: false}, scrollModel: {autoFit: true},
-            trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center',  editable: false},
+            showTitle: false, rowHtHead: 15, strNoRows: g_noData, numberCell: {show: false}, scrollModel: {autoFit: false}, trackModel: {on: true},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center',  editable: false},
             colModel: moneyManageStatusModel, toolbar: false,
             groupModel: moneyManageStatusGroupModel,
             dataModel: {
@@ -321,9 +321,10 @@
                 $moneyManageStatusGrid.pqGrid({
                     refresh: function( event, ui ) {
                         let searchYear = $("#money_manage_status_search_form").find("#MONEY_MANAGE_STATUS_YEAR").val();
-                        $("#moneyManageStatusGrid .pq-grid-header-table .pq-grid-row").find("div[pq-col-indx=5] span.pq-title-span").html(searchYear + "년<br>매출현황");
-                        $("#moneyManageStatusGrid .pq-grid-header-table .pq-grid-row").find("div[pq-col-indx=6] span.pq-title-span").html(searchYear + "년 수금현황");
-                        $("#moneyManageStatusGrid .pq-grid-header-table .pq-grid-row").find("div[pq-col-indx=10] span.pq-title-span").html("총미수금 현황<br>" + searchYear + "년");
+                        $("#moneyManageStatusGrid .pq-grid-header-table .pq-grid-row").find("div[pq-col-indx=7] span.pq-title-span").html(searchYear + "년<br>매출현황");
+                        $("#moneyManageStatusGrid .pq-grid-header-table .pq-grid-row").find("div[pq-row-indx=0][pq-col-indx=8] span.pq-title-span").html(searchYear + "년 수금현황");
+                        $("#moneyManageStatusGrid .pq-grid-header-table .pq-grid-row").find("div[pq-col-indx=11] span.pq-title-span").html("전년도(" + (searchYear - 1) + "년)<br>" + "이월 미수금액");
+                        $("#moneyManageStatusGrid .pq-grid-header-table .pq-grid-row").find("div[pq-col-indx=12] span.pq-title-span").html("총 미수금 현황<br>" + searchYear + "년");
                         $("span.pq-group-icon").hide();
                         $("span.pq-group-toggle").hide();
                     }
@@ -463,7 +464,10 @@
                 let totalSalesAmount = 0;
                 for (let i = 0; i < totalRecords; i++) {
                     let rowData = data[i];
-                    totalSalesAmount += parseInt(rowData.ORDER_AMT);
+                    if(rowData.ORDER_AMT)
+                        totalSalesAmount += parseInt(rowData.ORDER_AMT);
+                    else
+                        totalSalesAmount += 0;
                 }
                 let vatAmount = parseInt((totalSalesAmount * 10) / 100) + totalSalesAmount;
                 $('#slaeAmount').html(numberWithCommas(totalSalesAmount));
@@ -498,14 +502,14 @@
                 let moneySales01=0, moneySales02=0, moneySales03=0, moneySales04=0, moneySales05=0, duePayPer=0;
                 for (let i = 0; i < totalRecords; i++) {
                     let rowData = data[i];
-                    moneySales01 += parseInt(rowData.DEPOSIT_AMT);
+                    moneySales01 += parseInt(rowData.DEPOSIT_AMT?rowData.DEPOSIT_AMT:0);
                     if(rowData.DEPOSIT_TYPE == 2 || rowData.DEPOSIT_TYPE == 3) moneySales02 += parseInt(rowData.DEPOSIT_AMT);
                     if(rowData.DUE_PAY_YN == 'Y'){
-                        moneySales03 += parseInt(rowData.DEPOSIT_AMT);
-                        moneySales04 += parseInt(rowData.DUE_PAY_AMT);
+                        moneySales03 += parseInt(rowData.DEPOSIT_AMT?rowData.DEPOSIT_AMT:0);
+                        moneySales04 += parseInt(rowData.DUE_PAY_AMT?rowData.DUE_PAY_AMT:0);
                     }
-                    if(rowData.OVER_DATE_YN == 'Y'){
-                        moneySales05 += parseInt(rowData.DEPOSIT_AMT);
+                    if(rowData.DUE_PAY_YN != 'Y' && (rowData.DEPOSIT_TYPE == 2 || rowData.DEPOSIT_TYPE == 3)){
+                        moneySales05 += parseInt(rowData.DEPOSIT_AMT?rowData.DEPOSIT_AMT:0);
                     }
                 }
                 if(moneySales04 > 0) duePayPer = (((moneySales03 - moneySales04) / moneySales03) * 100).toFixed(1);

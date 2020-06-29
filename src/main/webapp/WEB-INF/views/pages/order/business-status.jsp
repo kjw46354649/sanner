@@ -16,14 +16,16 @@
                         <form class="form-inline" id="business_status_search_form" name="business_status_search_form" role="form">
                             <input type="hidden" name="queryId" id="queryId" value="orderMapper.businessOutgoingList">
                             <span class="ipu_wrap left_float">
-                                <label for="BUSINESS_STATUS_INNER_DUE_DT">조회일자</label>
+                                <label for="BUSINESS_STATUS_INNER_DUE_DT">조회납기일자</label>
                                 <input type="text" class="wd_100" name="INNER_DUE_DT" id="BUSINESS_STATUS_INNER_DUE_DT">
                             </span>
                             <span class="slt_wrap mg-left10">
-                                <select class="wd_150" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
+                                <label class="label_50" for="ORDER_COMP_CHARGE">발주처</label>
+                                <select class="wd_100" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
                                     <option value="">All</option>
                                 </select>
-                                <select class="wd_150 mg-left10" name="ORDER_COMP_CHARGE" id="ORDER_COMP_CHARGE">
+                                <label class="label_50" for="ORDER_STAFF_SEQ">담당자</label>
+                                <select class="wd_100 mg-left10" name="ORDER_STAFF_SEQ" id="ORDER_STAFF_SEQ">
                                     <option value="">All</option>
                                 </select>
                             </span>
@@ -34,7 +36,7 @@
                         전체 조회 건수 (Total : <span id="business_status_total_records" style="color: #00b3ee">0</span>)
                     </div>
                 </div>
-                <div class="right-60Warp">
+                <div class="right-60Warp" id="controlBusinessStatus">
                     <div id="business_status_calendar"></div>
                     <div class="">
                         <div class="left_float left-Warp">
@@ -112,13 +114,15 @@
             , datesRender: function(info) {
                 businessCalendar.getEventSources();
             }
-            ,dateClick: function(info) {
+            , dateClick: function(info) {
                 $('#business_status_search_form').find('#BUSINESS_STATUS_INNER_DUE_DT').datepicker('setDate', info.dateStr);
                 $businessOutgoingListGrid.pqGrid('option', 'dataModel.postData', function () {
                     return (fnFormToJsonArrayData('#business_status_search_form'));
                 });
                 $businessOutgoingListGrid.pqGrid('refreshDataAndView');
+                // info.dayEl.style.backgroundColor = 'red';
             }
+            , selectable: true
             , defaultDate : TODAY // 기준일자
             , editable : false
             , eventLimit : true // allow "more" link when too many events
@@ -201,9 +205,16 @@
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
 
-        fnCommCodeDatasourceSelectBoxCreate($('#business_status_search_form').find('#ORDER_COMP_CHARGE'), 'all', {
+        fnCommCodeDatasourceSelectBoxCreate($('#business_status_search_form').find('#ORDER_STAFF_SEQ'), 'all', {
             'url': '/json-list',
-            'data': {'queryId': 'dataSource.selectOrderCompChargeList'}
+            'data': {'queryId': 'dataSource.getCompanyStaffList'}
+        });
+
+        $('#business_status_search_form').find('#ORDER_COMP_CD').change(function() {
+            fnCommCodeDatasourceSelectBoxCreate($('#business_status_search_form').find('#ORDER_STAFF_SEQ'), 'all', {
+                'url': '/json-list',
+                'data': {'queryId': 'dataSource.getCompanyStaffList', 'COMP_CD': $(this).val()}
+            });
         });
 
         let businessStatusColModel = [

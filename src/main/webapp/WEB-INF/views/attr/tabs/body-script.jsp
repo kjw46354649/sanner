@@ -737,19 +737,19 @@
         let windowMessageHtml = '<spring:message code="com.alert.default.save.success" javaScriptEscape="true"/>';
         if(messageType == 'del') windowMessageHtml = '<spring:message code="com.alert.default.remove.success" javaScriptEscape="true"/>';
         if(messageType == 'camstart') windowMessageHtml = '<spring:message code="com.alert.default.remove.success" javaScriptEscape="true"/>';
-        dhx.message({
-            text: windowMessageHtml,
-            expire: 3000,
-            "icon": "dxi dxi-close",
-            "position": "bottom-left"
-        });
-
-        // dhx.alert({
-        //     header: "Message Box",
+        // dhx.message({
         //     text: windowMessageHtml,
-        //     buttonsAlignment: "center",
-        //     buttons: ["ok"],
+        //     expire: 3000,
+        //     "icon": "dxi dxi-close",
+        //     "position": "bottom-left"
         // });
+
+        dhx.alert({
+            header: "Message Box",
+            text: windowMessageHtml,
+            buttonsAlignment: "center",
+            buttons: ["ok"],
+        });
     };
 
     /**
