@@ -110,7 +110,7 @@
         </div>
     </div>
 </div>
-<div class="cadDrawingPrint" style="display: none; height: 1px;"></div>
+<div class="cadDrawingPrint page" style="display: none; height: 1px;"></div>
 <!-- 인쇄 div end -->
 <form id="barcode_form">
     <input type="hidden" id="queryId" name="queryId" value="popMapper.selectBarcodeInfo">
@@ -691,9 +691,9 @@
             let parameters = { 'url': '/cadFileConvert', 'data': {data: JSON.stringify(changes)}};
             fnPostAjax(function (data, callFunctionParam) {
                 fnAlertMessageAutoClose('save');
+                commonCadFileAttachPopup.modal('hide');
                 $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
                 $commonCadUploadFileGrid.pqGrid('refreshDataAndView');
-                // clearCadFileAttachPopup(getCadUploadBlankHtml());
             }, parameters, '');
         });
 
@@ -718,12 +718,20 @@
         });
 
         commonCadFileAttachPopup.on('hide.bs.modal',function(e) {
+            var actionType = $('#common_cad_file_attach_form').find('#actionType').val();
+            if(actionType == 'estimate') {          // 견적 도면 등록
+                $("#reloadEstimateTopgrid").trigger("click");
+            }else if(actionType == 'control') {     // 주문 도면 등록
+                $("#CONTROL_MANAGE_SEARCH").trigger("click");
+            }else if(actionType == 'controlRev') {  // 주문 도면 차수 변경
+                $("#CONTROL_MANAGE_SEARCH").trigger("click");
+            }else if(actionType == 'inside') {      // 자재 도면 등록
+                $("#stock_manage_search_btn").trigger("click");
+            }
             uploadControlFiles = [];
             $commonCadFileAttachGrid.pqGrid('destroy');
             $commonCadUploadFileGrid.pqGrid('destroy');
-
         });
-
     });
 
     function callCadDrawingUploadPopup(actionType, queryId) {

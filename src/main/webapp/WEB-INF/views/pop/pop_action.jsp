@@ -34,16 +34,16 @@
     <link href="/resource/asset/css/pop.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
     <!-- Bootstrap -->
-    <script src='/resource/main/js/bootstrap.js'></script>
+    <script type="text/javascript" src='/resource/main/js/bootstrap.js'></script>
     <script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
     <script type="text/javascript" src="/resource/asset/js/front.js"></script>
     <!--jQuery dependencies-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <!--ParamQuery Grid js files-->
     <script type="text/javascript" src="/resource/plugins/paramquery/pqgrid.min.js" ></script>
 
     <!--ParamQuery Grid localization file (necessary since v5.2.0)-->
-    <script src="/resource/plugins/paramquery/localize/pq-localize-en.js"></script>
+    <script type="text/javascript" src="/resource/plugins/paramquery/localize/pq-localize-en.js"></script>
     <!--Include jsZip file to support xlsx and zip export (optional)-->
     <script type="text/javascript" src="/resource/plugins/paramquery/jsZip-2.5.0/jszip.min.js" ></script>
     <!--Include jquery.resize to support auto height of detail views in hierarchy (optional)-->

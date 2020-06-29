@@ -186,6 +186,7 @@
 
 <input type="button" id="test" style="display: none;">
 <input type="button" id="updateFromControl" style="display: none;">
+<input type="button" id="reloadEstimateTopgrid" style="display: none;">
 <input type="button" id="estimateRegisterFileUpload" style="display: none;">
 <form id="estimate_register_hidden_form" method="POST">
     <input type="hidden" id="queryId" name="queryId" value="selectEstimateDetailList"/>
@@ -1148,6 +1149,13 @@
             fnRequestGridData(estimateRegisterBotGrid, postData);
 
         });
+
+        $("#reloadEstimateTopgrid").click(function() {
+            $("#estimate_register_info_form #queryId").val('estimate.selectEstimateDetailList');
+            let postData = $("#estimate_register_info_form").serialize();
+            fnRequestGridData(estimateRegisterTopGrid, postData);
+        });
+
     });
 
     function btnDisabled(status) {

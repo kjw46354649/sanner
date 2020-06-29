@@ -209,32 +209,19 @@
 .estimate .popup #estimateAttachDragAndDrop td.etcInfo { width: 154px; text-align: right; }
 .estimate .popup #estimateAttachDragAndDrop th { background: #fbfbfb; border-bottom: 1px solid #f3f3f3; }
 
-.cadDrawingPrint { /*width: 21cm; min-height: 29.7cm;*/ /*margin: 0 auto;*/ max-height: 29.7cm; background: #ee212b;}
-/*.cadDrawingPrint .print { border: 1px #0b0b0b solid; padding: 0.5cm; background:#fff; height: 290mm; page-break-after: always;}*/
-.cadDrawingPrint .print { background:#fff; /*height: 297mm;*/ page-break-after: always; }
-.cadDrawingPrint .print table.drawingArea { width: 100%; height: 100%; border-left: 1px solid #616161; border-right: 1px solid #616161; border-top: 1px solid #616161; border-bottom: 1px solid #616161; }
-.cadDrawingPrint .print table.drawingArea tbody .controlInfo{ height: 20px; width: 100%;}
-.cadDrawingPrint .print table.drawingArea tbody .controlInfo td{ border-left: 1px solid #616161; border-right: 1px solid #616161; border-top: 1px solid #616161; border-bottom: 1px solid #616161;}
-.cadDrawingPrint .print table.drawingArea tbody .controlInfo .barcode{width:95%; height:50px; padding: 3px;}
-.cadDrawingPrint .print table.drawingArea tbody .imageInfo{ /*height:1040px;*/ /*width:100%;*/}
-.cadDrawingPrint .print table.drawingArea tbody .drawingImage{ /*height:1040px;*/ width:98%; text-align: center; padding: 2px;}
-/*.cadDrawingPrint .print table.drawingArea tbody .barcode { background-color: #E8E8E8; }*/
-.print table.drawingArea.barcodeLabel { width: 90mm; height: 50mm; margin: 2mm; border: 1px solid black; border-collapse: collapse; }
-.print table.drawingArea.barcodeLabel td { border: 1px solid black; text-align: center; vertical-align: middle; font-size: 10px; }
-.print table.drawingArea.barcodeLabel td.header { background-color: #E8E8E8; }
-
-@page cadDrawingPrintPage {
-    /*size: 8.27in 11.69in;*/
-    /*margin: .5in .5in .5in .5in;*/
-    margin: 0;  /* this affects the margin in the printer settings */
-    mso-header-margin: .5in;
-    mso-footer-margin: .5in;
-    mso-paper-source: 0;
-}
-
-/*div.cadDrawingPrint {*/
-/*    page: cadDrawingPrintPage;*/
-/*}*/
+.page {width: 100%;min-height: 100%; padding: 0;margin: 0 auto;}
+.page .print table { width: 100%; max-width: 820px; height: 40px; border: 1px solid #000000; font-size: 1.1em; }
+.page .print table td {background-color: #ffffff; }
+.page .print table td.first {border-right: 1px solid #000000; border-bottom: 1px solid #000000;}
+.page .print table td.first_col_end {border-bottom: 1px solid #000000;}
+.page .print table td.span_first {border-right: 1px solid #000000;}
+.page .print table td.last {border-right: 1px solid #000000;}
+.page .print table td.last_col_end {border-right: none;}
+.page .print table td .barcode{width:100%; height:100%; padding: 4px 0px;}
+.page .print table td.last {border-right: 1px solid #000000;}
+.page .center_sort{text-align: center;}
+.page .page-break{ display: block; page-break-before: always; }
+.page img { max-width:820px; max-height:1000px; width: auto; height: auto; }
 
 .wd_270_barcode {width:270px !important;}
 .wd_240_barcode {width:240px !important;}
