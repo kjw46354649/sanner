@@ -1813,7 +1813,7 @@
         CKEDITOR.replace('CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT', {height: 285});
 
         const cancelRequestOutsideConfirm = function () {
-            let headHtml = 'messsage', bodyHtml = '', yseBtn = '예', noBtn = '아니오';
+            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
 
             bodyHtml =
                 '<h4>\n' +

@@ -19,11 +19,9 @@
             <div class="gubunWrap">
                 <ul>
                     <li>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="COMP_CD">사업자구분</label>
-                            <select class="label_200" name="COMP_CD" id="COMP_CD" title="사업자구분">
-                                <option value="">ALL</option>
-                            </select>
+                        <span class="ipu_wrap">
+                            <label class="label_100" for="CONTROL_NUM">관리번호</label>
+                            <input type="text" class="label_200"name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -34,13 +32,13 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
-                            <label class="label_100" for="DRAWING_NUM">도면번호</label>
-                            <input type="text" class="label_200"name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
+                            <label class="label_100" for="ORDER_NUM">발주번호</label>
+                            <input type="text" class="label_200"name="ORDER_NUM" id="ORDER_NUM" title="발주번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
-                            <label class="label_100" for="ITEM_NM">품명</label>
-                            <input type="text" class="label_200"name="ITEM_NM" id="ITEM_NM" title="품명">
+                            <label class="label_100" for="DRAWING_NUM">도면번호</label>
+                            <input type="text" class="label_200"name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap right_float">
@@ -48,14 +46,16 @@
                         </span>
                     </li>
                     <li>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="CONTROL_NUM">관리번호</label>
-                            <input type="text" class="label_200"name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
+                        <span class="slt_wrap">
+                            <label class="label_100" for="COMP_CD">사업자구분</label>
+                            <select class="label_200" name="COMP_CD" id="COMP_CD" title="사업자구분">
+                                <option value="">ALL</option>
+                            </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
-                            <label class="label_100" for="ORDER_NUM">발주번호</label>
-                            <input type="text" class="label_200"name="ORDER_NUM" id="ORDER_NUM" title="발주번호">
+                            <label class="label_100" for="ITEM_NM">품명</label>
+                            <input type="text" class="label_200"name="ITEM_NM" id="ITEM_NM" title="품명">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -77,10 +77,10 @@
                     </li>
                     <li>
                         <span class="slt_wrap trans_slt mg-right10">
-                            <select id="daySltd" name="daySltd" title="등록일시">
-                                <option value="" selected="selected">등록일시</option>
-                                <option value="1">-ALL-</option>
-                                <option value="2">-ALL-</option>
+                            <select name="SEARCH_CONDITION" id="SEARCH_CONDITION">
+                                <c:forEach var="code" items="${HighCode.H_1047}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
                             </select>
                         </span>
                         <span class="radio_box">
@@ -100,7 +100,7 @@
                             <span class="calendar_span">
                                 <input type="text" title="달력정보" name="CONTROL_MANAGE_END_DATE" id="CONTROL_MANAGE_END_DATE" readonly><button type="button">달력선택</button>
                             </span>
-                            <span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>
+                            <span class="chk_box"><input name="CONTROL_MANAGE_RANGE_SEARCH" id="CONTROL_MANAGE_RANGE_SEARCH" type="checkbox"><label for="CONTROL_MANAGE_RANGE_SEARCH">선택</label></span>
                         </div>
                         <span class="slt_wrap">
                             <label class="label_100" for="UNIT_FINAL_AMT">단가</label>
@@ -351,7 +351,7 @@
 </form>
 
 <form id="control_estimate_list_excel_download" method="POST">
-    <input type="hidden" id="sqlId" name="sqlId" value="selectControlEstimateDetailListExcel"/>
+    <input type="hidden" id="sqlId" name="sqlId" value="excel.selectControlEstimateDetailListExcel"/>
     <input type="hidden" id="mapInputId" name="mapInputId" value="data"/>
     <input type="hidden" id="paramName" name="paramName" value="CONTROL_SEQ"/>
     <input type="hidden" id="paramData" name="paramData" value=""/>
@@ -482,10 +482,10 @@
             {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, hidden: true},
             {title: '비고', dataType: 'string', dataIndx: 'CONTROL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {title: 'INV No.<br>(거래명세No.)', width: 100, dataType: 'string', dataIndx: 'INVOICE_NUM', hidden: true},
-            {title: '프로젝트', width: 200, dataType: 'string', dataIndx: 'PROJECT_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, hidden: true},
-            {title: '모듈', width: 70, dataType: 'string', dataIndx: 'MODULE_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, hidden: true},
+            {title: '프로젝트', width: 200, align: 'left', dataType: 'string', dataIndx: 'PROJECT_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, hidden: true},
+            {title: '모듈', width: 70, align: 'left', dataType: 'string', dataIndx: 'MODULE_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, hidden: true},
             {title: '납품처', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, hidden: true},
-            {title: '비고(라벨)', width: 100, dataType: 'string', dataIndx: 'LABEL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, hidden: true},
+            {title: '비고(라벨)', width: 100, align: 'left', dataType: 'string', dataIndx: 'LABEL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, hidden: true},
             {title: '주요<br>검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1059')},
                 render: function (ui) {
@@ -517,7 +517,7 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'CONTROL_NUM_BUTTON', hidden: true,
+            {title: '', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'CONTROL_NUM_BUTTON', styleHead: {'background':'#a9d3f5'}, hidden: true,
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM) return '<span class="desktopIcon" style="cursor: pointer"></span>'
                 },
@@ -530,7 +530,7 @@
                     });
                 }
             },
-            {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'red'}, style: {'font-weight': 'bold', 'color': 'black'}, editable: true},
             {
                 title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', editable: true,
                 render: function (ui) {
@@ -569,8 +569,21 @@
                 }
             },
             {title: '도면번호버전', dataType: 'string', dataIndx: 'DRAWING_VER', hidden: true},
+            {title: '', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'DRAWING_NUM_BUTTON', styleHead: {'background':'#a9d3f5'},
+                render: function (ui) {
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" id="imageView" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
             {title: '도면번호', width: 150, dataType: 'string', dataIndx: 'DRAWING_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-            {title: '품명', width: 150, dataType: 'string', dataIndx: 'ITEM_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {title: '품명', width: 150, align: 'left', dataType: 'string', dataIndx: 'ITEM_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {title: '규격', width: 110, dataType: 'string', dataIndx: 'SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1033')},
@@ -634,7 +647,7 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor}},
             {title: '소재<br>종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027')},
                 render: function (ui) {
@@ -750,10 +763,10 @@
                     },
                     {title: '발주번호', width: 90, datatype: 'string', dataIndx: 'ORDER_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
                     {title: '수량', datatype: 'string', dataIndx: 'ORDER_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-                    {title: '납기', width: 70, datatype: 'string', dataIndx: 'ORDER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+                    {title: '납기', width: 70, datatype: 'string', dataIndx: 'ORDER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor}},
                     {title: '출고', datatype: 'string', dataIndx: 'OUT_QTY'},
                     {title: '출고일자', datatype: 'string', dataIndx: 'ORDER_OUT_FINISH_DT'},
-                    {title: '납품확인', width: 70, datatype: 'string', dataIndx: 'DELIVERY_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+                    {title: '납품확인', width: 70, datatype: 'string', dataIndx: 'DELIVERY_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor}},
                 ]
             },
             {
@@ -920,17 +933,16 @@
                 }
             },
             {
-                title: 'IMG', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ',
+                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ',
                 render: function (ui) {
-                    if (ui.cellData) return '<span id="imageView" class="redFileImageICon" style="cursor: pointer"></span>'
+                    if (ui.cellData) return '<span id="downloadView" class="redFileImageICon" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
-                    let rowIndx = ui.rowIndx,
-                        grid = this,
+                    let grid = this,
                         $cell = grid.getCell(ui);
-                    $cell.find("#imageView").bind("click", function () {
+                    $cell.find("#downloadView").bind("click", function () {
                         let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                        fnFileDownloadFormPageAction(rowData.PDF_GFILE_SEQ);
                     });
                 }
             },
@@ -967,7 +979,7 @@
                     {title: '조치방안', datatype: 'string', dataIndx: 'dhlwnwhclqkddks'}
                 ]
             },
-            {title: '등록/업데이트<br>일시', width: 120, dataType: 'string', dataIndx: 'STATUS_DT'},
+            {title: '등록/업데이트<br>일시', width: 120, dataType: 'string', dataIndx: 'CONTROL_PART_INSERT_UPDATE_DT'},
             {title: 'CONTROL_BARCODE_NUM', dataType: 'string', dataIndx: 'CONTROL_BARCODE_NUM', hidden: true},
             {title: 'LABEL_BARCODE_NUM', dataType: 'string', dataIndx: 'LABEL_BARCODE_NUM', hidden: true},
             {title: 'DEL_YN', dataType: 'string', dataIndx: 'DEL_YN', hidden: true}
@@ -1386,7 +1398,7 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}},
+            {title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editor: {type: 'textbox', init: fnDateEditor}},
             {title: '규격', width: 100, dataType: 'string', dataIndx: 'SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {
                 title: '소재<br>종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
@@ -1483,7 +1495,7 @@
                 title: '발주정보', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, colModel: [
                     {title: '발주번호', width: 200, datatype: 'string', dataIndx: 'ORDER_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
                     {title: '수량', datatype: 'string', dataIndx: 'ORDER_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-                    {title: '납기', width: 70, datatype: 'string', dataIndx: 'ORDER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}},
+                    {title: '납기', width: 70, datatype: 'string', dataIndx: 'ORDER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editor: {type: 'textbox', init: fnDateEditor}},
                     {title: '납품확인', width: 70, datatype: 'string', dataIndx: 'DELIVERY_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}}
                 ]
             },
@@ -1801,21 +1813,103 @@
         const getOrderStatusButton = function (event) {
             let controlStatus = event.target.dataset.control_status;
 
-            updateOrderStatus(controlStatus);
+            confrimOrderStatus(controlStatus);
+        };
+
+        const confrimOrderStatus = function (controlStatus) {
+            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
+            let controlStatusNm = '';
+            let list = [];
+
+            switch (controlStatus) {
+                case 'ORD001':
+                    controlStatusNm = '확정';
+                    break;
+                case 'ORD002':
+                    controlStatusNm = '확정취소';
+                    break;
+                case 'ORD004':
+                    controlStatusNm = '종료';
+                    break;
+            }
+
+            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
+                list[i] = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+            }
+            //
+            // // 중복 제거
+            // list = list.filter(function (element, index, array) {
+            //     return array.indexOf(element) === index;
+            // });
+
+            bodyHtml =
+                '<h4>\n' +
+                '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                '    <span>선택하신 ' + list.length + ' 건을 ' + controlStatusNm + '처리합니다. \n진행하시겠습니까?</span>\n' +
+                '</h4>';
+            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+            let estimateRegisterSubmitConfirm = function (callback) {
+                commonConfirmPopup.show();
+                $("#commonConfirmYesBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                    callback(true);
+                    return;
+                });
+                $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                });
+            };
+            estimateRegisterSubmitConfirm(function (confirm) {
+                if (confirm) {
+                    updateOrderStatus(controlStatus);
+                }
+            });
         };
 
         const updateOrderStatus = function (controlStatus) {
             let list = [];
+            let controlStatusList = [];
+            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인';
 
             for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
                 list[i] = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                // 값 변경 전 이상 case 확인하기 위해 배열에 담는다.
+                controlStatusList[i] = list[i].CONTROL_STATUS || undefined;
                 list[i].CONTROL_STATUS = controlStatus;
+            }
+
+            // 중복제거
+            controlStatusList = controlStatusList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+
+            /**
+             * 상태값이 다를 때
+             * 이미 처리된 대상에 대해서 동일한 상태처리를 진행할 경우
+             * 빈칸인 상태에서 취소를 진행하는 경우
+             */
+            // TODO:
+            if(controlStatusList.length > 1 || controlStatusList[0] === controlStatus || (controlStatusList[0] === undefined && controlStatus === 'ORD004')) {
+                bodyHtml =
+                    '<h4>\n' +
+                    '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                    '    <span>상태변경이 불가한 대상이 있습니다.\n선택목록을 확인해주세요</span>\n' +
+                    '</h4>';
+                fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
+                return false;
             }
 
             let parameters = {'url': '/managerControlStatus', 'data': {data: JSON.stringify(list)}};
 
             fnPostAjax(function () {
-                alert("<spring:message code='com.alert.default.save.success' />");
+                bodyHtml =
+                    '<h4>\n' +
+                    '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                    '    <span>' + "<spring:message code='com.alert.default.save.success' />" + '</span>\n' +
+                    '</h4>';
+                fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
                 $orderManagementGrid.pqGrid('refreshDataAndView');
             }, parameters, '');
         };
@@ -1932,7 +2026,7 @@
                 val = ui.cellData == undefined ? "" : ui.cellData;
             }
 
-            console.log(ui);
+            // console.log(ui);
             if (filter && filter.on && crules && crules[0].value) {
                 var condition = $("#controlManageFilterCondition :selected").val(),
                     valUpper = val.toString().toUpperCase(),
@@ -2033,8 +2127,7 @@
         $('#CONTROL_MANAGE_DELETE').on('click', function () {
             let list = [];
             let controlNumList = [];
-            let headHtml = 'messsage', bodyHtml = '', yseBtn = '예', noBtn = '아니오';
-
+            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
 
             for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
                 let thisRowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
@@ -2213,7 +2306,7 @@
             const allArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'ORDER_COMP_CD', 'ORDER_STAFF_SEQ',
                 'DESIGNER_NM', 'CONTROL_NOTE', 'INVOICE_NUM', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE',
-                'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT',
+                'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT',
                 'WORK_TYPE', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'MATERIAL_DETAIL',
                 'MATERIAL_TYPE_NM', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_ORDER_QTY',
                 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
@@ -2223,34 +2316,35 @@
                 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
                 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'CALCUL_EST_UNIT_COST', 'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMOUNT',
                 'UNIT_FINAL_AMT', 'FINAL_AMT', 'WHDWJSRK', 'PREV_DRAWING_NUM', 'CLOSE_MONTH', 'CLOSE_MONTH_TRAN',
-                'CLOSE_VER', 'CLOSE_VER_TRAN', 'CLOSE_USER_ID', 'CLOSE_DT', 'POP_POSITION_NM', 'PART_STATUS_NM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'REVD',
+                'CLOSE_VER', 'CLOSE_VER_TRAN', 'CLOSE_USER_ID', 'CLOSE_DT', 'POP_POSITION_NM', 'PART_STATUS_NM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'REVD.',
                 'REVDLFTL.', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM', 'INSPECT_DESC',
                 'ERROR_ACTION_NM','ERROR_NOTE', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT',
-                'OUTSIDE_HOPE_DUE_DT', 'dhlwndlqrhskfWk', 'OUTSIDE_NOTE', 'dhlwnqnffidcode', 'dhlwnwhclqkddks', 'STATUS_DT',
-                'CONTROL_BARCODE_NUM', 'LABEL_BARCODE_NUM', 'DEL_YN'
+                'OUTSIDE_HOPE_DUE_DT', 'dhlwndlqrhskfWk', 'OUTSIDE_NOTE', 'dhlwnqnffidcode', 'dhlwnwhclqkddks',
+                'CONTROL_PART_INSERT_UPDATE_DT'
             ];
             const easyArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'PRICE_CONFIRM', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'MAIN_INSPECTION',
-                'EMERGENCY_YN', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'OUTSIDE_YN',
+                'EMERGENCY_YN', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'OUTSIDE_YN',
                 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'MATERIAL_DETAIL', 'MATERIAL_KIND',
                 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_ORDER_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
                 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'OUT_QTY', 'ORDER_OUT_FINISH_DT',
-                'DELIVERY_DT', 'PREV_DRAWING_NUM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'STATUS_DT'
+                'DELIVERY_DT', 'PREV_DRAWING_NUM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'CONTROL_PART_INSERT_UPDATE_DT'
             ];
             const estimateArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'PRICE_CONFIRM', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'INVOICE_NUM',
-                'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT',
+                'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT',
                 'WORK_TYPE', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'MATERIAL_DETAIL',
                 'MATERIAL_TYPE_NM', 'MATERIAL_KIND','SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_ORDER_QTY',
                 'DETAIL_MACHINE_REQUIREMENT', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
                 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
                 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'CALCUL_EST_UNIT_COST', 'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMOUNT',
-                'UNIT_FINAL_AMT', 'FINAL_AMT', 'WHDWJSRK', 'PREV_DRAWING_NUM','DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'STATUS_DT'
+                'UNIT_FINAL_AMT', 'FINAL_AMT', 'WHDWJSRK', 'PREV_DRAWING_NUM','DXF_GFILE_SEQ', 'IMG_GFILE_SEQ',
+                'CONTROL_PART_INSERT_UPDATE_DT'
             ];
             const outsideQualityArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'PRICE_CONFIRM', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'INVOICE_NUM',
                 'MAIN_INSPECTION',
-                'EMERGENCY_YN', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'OUTSIDE_YN',
+                'EMERGENCY_YN', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'OUTSIDE_YN',
                 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'MATERIAL_DETAIL', 'MATERIAL_TYPE_NM', 'MATERIAL_KIND',
                 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_ORDER_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
                 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'OUT_QTY', 'ORDER_OUT_FINISH_DT',
@@ -2259,7 +2353,7 @@
                 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM',
                 'INSPECT_DESC', 'ERROR_ACTION_NM', 'ERROR_NOTE', 'OUTSIDE_COMP_CD', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN',
                 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT', 'OUTSIDE_HOPE_DUE_DT', 'dhlwndlqrhskfWk', 'OUTSIDE_NOTE',
-                'dhlwnqnffidcode', 'dhlwnwhclqkddks', 'STATUS_DT'
+                'dhlwnqnffidcode', 'dhlwnwhclqkddks', 'CONTROL_PART_INSERT_UPDATE_DT'
             ];
 
             switch (elementId) {
@@ -2755,8 +2849,8 @@
 
         /* init */
         // changeDate();
-        $('#CONTROL_MANAGE_START_DATE').datepicker();
-        $('#CONTROL_MANAGE_END_DATE').datepicker();
+        $('#CONTROL_MANAGE_START_DATE').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#CONTROL_MANAGE_END_DATE').datepicker({dateFormat: 'yy/mm/dd'});
         $('#CONTROL_MANAGE_START_DATE').datepicker('setDate', 'today');
         $('#CONTROL_MANAGE_END_DATE').datepicker('setDate', 'today');
         // setDatePickerToday();
