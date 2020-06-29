@@ -263,18 +263,30 @@
                 }
             },
             {title: '소재 주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120, editable: false},
-            {title: '주문업체', dataType: 'string', dataIndx: 'M_COMP_NM', width: 80, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+            {title: '주문업체', dataType: 'string', dataIndx: 'M_COMP_CD', width: 80, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "M_COMP_NM", id: "M_COMP_CD" },
                     valueIndx: "value",
                     labelIndx: "text",
                     options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}}),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = itemOrderRegisterLeftGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["M_COMP_CD"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let data = fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
+                        let index = data.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = data.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : data[index].text;
                     }
                 }
             },
@@ -947,11 +959,11 @@
         });
 
         /**
-         * filterhandler
+         * fnFilterHandler
          * @Parameter
          * */
         $("#itemOrderRegisterFilterKeyword").on("keyup", function(e){
-            filterhandler(itemOrderRegisterLeftGrid, 'itemOrderRegisterFilterKeyword', 'itemOrderRegisterFilterCondition', 'itemOrderRegisterFilterColumn');
+            fnFilterHandler(itemOrderRegisterLeftGrid, 'itemOrderRegisterFilterKeyword', 'itemOrderRegisterFilterCondition', 'itemOrderRegisterFilterColumn');
         });
 
         $("#itemOrderRegisterWarehouseSelectBox").on('change', function(){
@@ -1347,7 +1359,7 @@
     }
 
     /**
-     * filterhandler
+     * fnFilterHandler
      * @Parameter
      * */
     function itemOrderRegisterFilterRender(ui) {

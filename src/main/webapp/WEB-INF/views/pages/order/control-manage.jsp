@@ -137,8 +137,7 @@
     <div class="bottomWrap row1_bottomWrap">
         <div class="hWrap">
             <div>
-                <button type="button" class="defaultBtn btn-100w" id="NEW_ORDER_REGISTRATION">신규 주문 등록</button>
-<%--                <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#CONTROL_MANGE_POPUP">신규 주문 등록</button>--%>
+                <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#CONTROL_MANGE_POPUP">신규 주문 등록</button>
                 <button type="button" class="defaultBtn btn-100w" id="DRAWING_REGISTRATION">도면 등록</button>
                 <button type="button" class="defaultBtn btn-100w" id="DRAWING_CHANGE">도면변경(Rev. up)</button>
                 <button type="button" class="defaultBtn btn-100w" id="ESTIMATE_REGISTER_FROM_CONTROL">견적등록</button>
@@ -384,18 +383,8 @@
             }, parameters, '');
             return list;
         })();
-        const dateEditor = function (ui) {
-            let $inp = ui.$cell.find('input'), $grid = $(this);
-            $inp.datepicker({
-                changeMonth: true, changeYear: true, showAnim: '', dateFormat: 'yy-mm-dd',
-                onSelect: function () { this.firstOpen = true; },
-                beforeShow: function (input, inst) {return !this.firstOpen; },
-                onClose: function () { this.focus(); }
-            });
-        };
         let selectedRowIndex = [];
         let $orderManagementGrid;
-        let newOrderRegistrationPopup;
         const gridId = 'CONTROL_MANAGE_GRID';
         let postData = fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM');
         const colModel = [
@@ -645,7 +634,7 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: dateEditor}},
+            {title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {title: '소재<br>종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027')},
                 render: function (ui) {
@@ -734,7 +723,7 @@
             {
                 title: '발주정보', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, colModel: [
                     {
-                        title: '', datatype: 'string', dataIndx: 'ORDER_NUM_PLUS_BUTTON', styleHead: {'background':'#a9d3f5'},
+                        title: '', datatype: 'string', dataIndx: 'ORDER_NUM_PLUS_BUTTON',
                         render: function (ui) {
                             if (ui.rowData.WORK_TYPE === 'WTP010' || ui.rowData.WORK_TYPE === 'WTP020' || ui.rowData.WORK_TYPE === 'WTP030') {
                                 return '<span class="ui-icon ui-icon-circle-plus" name="ORDER_NUM_PLUS_BUTTON" style="cursor: pointer"></span>';
@@ -914,10 +903,10 @@
             },
             {title: '현재 위치', dataType: 'string', dataIndx: 'POP_POSITION', hidden: true},
             {title: '현재 위치', dataType: 'string', dataIndx: 'POP_POSITION_NM', hidden: true},
-            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', hidden: true},
+            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', hidden: true},            {title: '현재 위치', dataType: 'string', dataIndx: 'POP_POSITION_NM', hidden: true},
             {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', hidden: true},
             {
-                title: 'DXF', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ',
+                title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ',
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'
                 },
@@ -931,7 +920,7 @@
                 }
             },
             {
-                title: 'IMG', align: 'center', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ',
+                title: 'IMG', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ',
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="redFileImageICon" style="cursor: pointer"></span>'
                 },
@@ -993,7 +982,7 @@
             showTitle: false,
             numberCell: {title: 'No.'},
             trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false ,render: controlManageFilterRender}, filterModel: { mode: 'OR' },
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false, render: controlManageFilterRender}, filterModel: { mode: 'OR' },
             colModel: colModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -1006,7 +995,6 @@
                 var filterOpts = '<option value=\"\">All Fields</option>';
                 var frozenOts = '<option value="0">Selected</option>';
                 this.getColModel().forEach(function(column){
-                    console.log(column);
                     let hiddenYn = column.hidden == undefined ? true : false;
                     if(hiddenYn){
                         filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
@@ -1107,7 +1095,7 @@
                         let unitFinalAmount = ui.updateList[0].newRow.UNIT_FINAL_AMT || unitFinalEstimateAmount; // 최종 공급단가
                         let finalAmount = unitFinalAmount * ORDER_QTY;// 합계 금액
 
-                       if (ui.updateList[0].newRow.UNIT_FINAL_AMT) {
+                        if (ui.updateList[0].newRow.UNIT_FINAL_AMT) {
                             row = {
                                 // 'CALCUL_EST_UNIT_COST': calculateEstimateAmount, // 계산 견적단가
                                 // 'UNIT_FINAL_EST_AMT': unitFinalEstimateAmount, // 최종 견적단가
@@ -1933,10 +1921,14 @@
         };
 
         function controlManageFilterRender(ui) {
-            var val = ui.cellData == undefined ? "" : ui.cellData,
+            var val = ui.column.formatVal == undefined ? "" : ui.column.formatVal,
                 filter = ui.column.filter,
                 crules = (filter || {}).crules;
+            if(val == ""){
+                val = ui.cellData == undefined ? "" : ui.cellData;
+            }
 
+            console.log(ui);
             if (filter && filter.on && crules && crules[0].value) {
                 var condition = $("#controlManageFilterCondition :selected").val(),
                     valUpper = val.toString().toUpperCase(),
@@ -1973,7 +1965,6 @@
                 return val;
             }
         }
-
         /* function */
 
         /* event */
@@ -2086,34 +2077,6 @@
                     }, parameters, '');
                 }
             });
-        });
-
-        $('#NEW_ORDER_REGISTRATION').on('click', function () {
-            let url = '/newOrderRegistration';
-            // 팝업 사이즈
-            let nWidth = 1400;
-            let nHeight = 770;
-            let winWidth = document.body.clientWidth;
-            let winHeight = document.body.clientHeight;
-            let winX = window.screenX || window.screenLeft || 0;
-            let winY = window.screenY || window.screenTop || 0;
-            let nLeft = winX + (winWidth - nWidth) / 2;
-            let nTop = winY + (winHeight - nHeight) / 2;
-
-            let strOption = '';
-            strOption += 'left=' + nLeft + 'px,';
-            strOption += 'top=' + nTop + 'px,';
-            strOption += 'width=' + nWidth + 'px,';
-            strOption += 'height=' + nHeight + 'px,';
-            strOption += 'toolbar=no,menubar=no,location=no,resizable=yes,status=yes';
-
-            // 최초 클릭이면 팝업을 띄운다.
-            if (newOrderRegistrationPopup === undefined || newOrderRegistrationPopup.closed) {
-                newOrderRegistrationPopup = window.open(url, '', strOption);
-            } else {
-                newOrderRegistrationPopup.focus();
-            }
-
         });
 
         $('#CONTROL_MANGE_POPUP').on({
@@ -2259,7 +2222,8 @@
                 'CLOSE_VER', 'CLOSE_VER_TRAN', 'CLOSE_USER_ID', 'CLOSE_DT', 'POP_POSITION_NM', 'PART_STATUS_NM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'REVD',
                 'REVDLFTL.', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM', 'INSPECT_DESC',
                 'ERROR_ACTION_NM','ERROR_NOTE', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT',
-                'OUTSIDE_HOPE_DUE_DT', 'dhlwndlqrhskfWk', 'OUTSIDE_NOTE', 'dhlwnqnffidcode', 'dhlwnwhclqkddks', 'STATUS_DT'
+                'OUTSIDE_HOPE_DUE_DT', 'dhlwndlqrhskfWk', 'OUTSIDE_NOTE', 'dhlwnqnffidcode', 'dhlwnwhclqkddks', 'STATUS_DT',
+                'CONTROL_BARCODE_NUM', 'LABEL_BARCODE_NUM', 'DEL_YN'
             ];
             const easyArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'PRICE_CONFIRM', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'MAIN_INSPECTION',

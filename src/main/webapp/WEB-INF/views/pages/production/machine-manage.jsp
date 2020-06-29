@@ -114,6 +114,30 @@
             <ul class="smallTabMenuTabs">
                 <li class="active"><a href="#_TAB1" data-toggle="tab" aria-expanded="true">가공장비</a></li>
                 <li><a href="#_TAB2" data-toggle="tab" aria-expanded="false">기타장비</a></li>
+                <div class="d-inline right_float" id="MACHINE_MANAGE_CURRENT_BOX" style="font-weight: normal;">
+                    <input type="text" id="machineManageCurrentFilterKeyword" placeholder="Enter your keyword">
+                    <select id="machineManageCurrentFilterColumn"></select>
+                    <select id="machineManageCurrentFilterCondition">
+                        <c:forEach var="code" items="${HighCode.H_1083}">
+                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                        </c:forEach>
+                    </select>
+                    <label for="machineManageCurrentFrozen" class="label_50" style="font-size: 15px;">Fix</label>
+                    <select id="machineManageCurrentFrozen" name="machineManageCurrentFrozen">
+                    </select>
+                </div>
+                <div class="d-inline right_float" id="MACHINE_MANAGE_ETC_BOX" style="display: none; font-weight: normal;">
+                    <input type="text" id="machineManageEtcFilterKeyword" placeholder="Enter your keyword">
+                    <select id="machineManageEtcFilterColumn"></select>
+                    <select id="machineManageEtcFilterCondition">
+                        <c:forEach var="code" items="${HighCode.H_1083}">
+                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                        </c:forEach>
+                    </select>
+                    <label for="machineManageEtcFrozen" class="label_50" style="font-size: 15px;">Fix</label>
+                    <select id="machineManageEtcFrozen" name="machineManageEtcFrozen">
+                    </select>
+                </div>
             </ul>
              <div class="tab-content">
                  <ul class="active conWrap" id="_TAB1">
@@ -435,8 +459,10 @@
             columnTemplate: {
                 align: 'center',
                 valign: 'center', //to vertically center align the header cells.
-                editable: false
+                editable: false,
+                render: machineManageCurrentFilterRender
             },
+            filterModel: { mode: 'OR' },
             colModel: currentColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -444,6 +470,21 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            load: function( event, ui ) {
+                var filterOpts = '<option value=\"\">All Fields</option>';
+                var frozenOts = '<option value="0">Selected</option>';
+                this.getColModel().forEach(function(column){
+                    let hiddenYn = column.hidden == undefined ? true : false;
+                    if(hiddenYn){
+                        filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                        frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
+                    }
+                });
+                $("#machineManageCurrentFilterColumn").empty();
+                $("#machineManageCurrentFilterColumn").html(filterOpts);
+                $("#machineManageCurrentFrozen").empty();
+                $("#machineManageCurrentFrozen").html(frozenOts);
             },
             complete: function () {
                 let data = $currentGrid.pqGrid('option', 'dataModel.data');
@@ -508,8 +549,10 @@
             columnTemplate: {
                 align: 'center',
                 valign: 'center', //to vertically center align the header cells.
-                editable: false
+                editable: false,
+                render: machineManageEtcFilterRender
             },
+            filterModel: { mode: 'OR' },
             colModel: etcColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -517,6 +560,22 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            load: function( event, ui ) {
+                var filterOpts = '<option value=\"\">All Fields</option>';
+                var frozenOts = '<option value="0">Selected</option>';
+                this.getColModel().forEach(function(column){
+                    console.log(column);
+                    let hiddenYn = column.hidden == undefined ? true : false;
+                    if(hiddenYn){
+                        filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                        frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
+                    }
+                });
+                $("#machineManageEtcFilterColumn").empty();
+                $("#machineManageEtcFilterColumn").html(filterOpts);
+                $("#machineManageEtcFrozen").empty();
+                $("#machineManageEtcFrozen").html(frozenOts);
             },
             complete: function () {
                 let data = $etcGrid.pqGrid('option', 'dataModel.data');
@@ -904,13 +963,13 @@
             }
 
             if(targetTab == "1"){
-                $currentGrid = $('#' + currentGridId).pqGrid(currentObj);
+                //$currentGrid = $('#' + currentGridId).pqGrid(currentObj);
                 $currentGrid.pqGrid("option", "dataModel.postData", function(ui){
                     return fnFormToJsonArrayData('#machine_manage_search_form');
                 } );
                 $currentGrid.pqGrid("refreshDataAndView");
             }else if(targetTab == "2"){
-                $etcGrid = $('#' + etcGridId).pqGrid(etcObj);
+                //$etcGrid = $('#' + etcGridId).pqGrid(etcObj);
                 $etcGrid.pqGrid("option", "dataModel.postData", function(ui){
                     return fnFormToJsonArrayData('#machine_manage_search_form');
                 } );
@@ -919,6 +978,22 @@
                 alert("탭 선택이 잘못되었습니다.");
             }
 
+        });
+
+        $("#machineManageCurrentFilterKeyword").on("keyup", function(e){
+            fnFilterHandler($currentGrid, 'machineManageCurrentFilterKeyword', 'machineManageCurrentFilterCondition', 'machineManageCurrentFilterColumn');
+        });
+
+        $("#machineManageCurrentFrozen").on('change', function(e){
+            fnFrozenHandler($currentGrid, $(this).val());
+        });
+
+        $("#machineManageEtcFilterKeyword").on("keyup", function(e){
+            fnFilterHandler($etcGrid, 'machineManageEtcFilterKeyword', 'machineManageEtcFilterCondition', 'machineManageEtcFilterColumn');
+        });
+
+        $("#machineManageEtcFrozen").on('change', function(e){
+            fnFrozenHandler($etcGrid, $(this).val());
         });
 
         $(".datepicker-input").each(function(){ $(this).datepicker();});
@@ -948,6 +1023,10 @@
     $("#div_tabs_machine_01").tabs({
         activate: function(event, ui) {
             ui.newPanel.find('.pq-grid').pqGrid('refresh');
+
+            $("#MACHINE_MANAGE_CURRENT_BOX").toggle();
+            $("#MACHINE_MANAGE_ETC_BOX").toggle();
+
             let selTab = ui.newPanel.selector;
             if(selTab == "#_TAB1"){
                 $("#machine_manage_search_form").find("#SEL_EQUIP_KIND").val("1");
@@ -1093,6 +1172,92 @@
             }
         });
     };
+
+    function machineManageCurrentFilterRender(ui) {
+        var val = ui.cellData == undefined ? "" : ui.cellData,
+            filter = ui.column.filter,
+            crules = (filter || {}).crules;
+
+        if (filter && filter.on && crules && crules[0].value) {
+            var condition = $("#machineManageCurrentFilterCondition :selected").val(),
+                valUpper = val.toString().toUpperCase(),
+                txt = $("#machineManageCurrentFilterKeyword").val(),
+                txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                indx = -1;
+
+            if (condition == "end") {
+                indx = valUpper.lastIndexOf(txtUpper);
+                if (indx + txtUpper.length != valUpper.length) {
+                    indx = -1;
+                }
+            }
+            else if (condition == "contain") {
+                indx = valUpper.indexOf(txtUpper);
+            }
+            else if (condition == "begin") {
+                indx = valUpper.indexOf(txtUpper);
+                if (indx > 0) {
+                    indx = -1;
+                }
+            }
+            if (indx >= 0) {
+                var txt1 = val.toString().substring(0, indx);
+                var txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                var txt3 = val.toString().substring(indx + txtUpper.length);
+                return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+            }
+            else {
+                return val;
+            }
+        }
+        else {
+            return val;
+        }
+    }
+
+    function machineManageEtcFilterRender(ui) {
+        var val = ui.cellData == undefined ? "" : ui.cellData,
+            filter = ui.column.filter,
+            crules = (filter || {}).crules;
+
+        console.log(val);
+
+        if (filter && filter.on && crules && crules[0].value) {
+            var condition = $("#machineManageEtcFilterCondition :selected").val(),
+                valUpper = val.toString().toUpperCase(),
+                txt = $("#machineManageEtcFilterKeyword").val(),
+                txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                indx = -1;
+
+            if (condition == "end") {
+                indx = valUpper.lastIndexOf(txtUpper);
+                if (indx + txtUpper.length != valUpper.length) {
+                    indx = -1;
+                }
+            }
+            else if (condition == "contain") {
+                indx = valUpper.indexOf(txtUpper);
+            }
+            else if (condition == "begin") {
+                indx = valUpper.indexOf(txtUpper);
+                if (indx > 0) {
+                    indx = -1;
+                }
+            }
+            if (indx >= 0) {
+                var txt1 = val.toString().substring(0, indx);
+                var txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                var txt3 = val.toString().substring(indx + txtUpper.length);
+                return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+            }
+            else {
+                return val;
+            }
+        }
+        else {
+            return val;
+        }
+    }
 
     /** 업체 기타 파일 업로드 */
     $("#machine_manage_pop_form").find("#etc_attach_file").click(function (e) {

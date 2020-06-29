@@ -139,6 +139,18 @@
     </div>
     <div class="bottomWrap row4_bottomWrap">
         <div class="hWrap">
+            <div class="d-inline">
+                <input type="text" id="outsourcingOrderManageFilterKeyword" placeholder="Enter your keyword">
+                <select id="outsourcingOrderManageFilterColumn"></select>
+                <select id="outsourcingOrderManageFilterCondition">
+                    <c:forEach var="code" items="${HighCode.H_1083}">
+                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                    </c:forEach>
+                </select>
+                <label for="outsourcingOrderManageFrozen" class="label_50" style="font-size: 15px;">Fix</label>
+                <select id="outsourcingOrderManageFrozen" name="outsourcingOrderManageFrozen">
+                </select>
+            </div>
             <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#REQUEST_OUTSIDE_POPUP">
                 외주가공 요청
             </button>
@@ -517,8 +529,10 @@
                 align: 'center',
                 halign: 'center',
                 hvalign: 'center',
-                editable: false
+                editable: false,
+                render: outsourcingOrderManageFilterRender
             },
+            filterModel: { mode: 'OR' },
             colModel: colModel,
             strNoRows: g_noData,
             dataModel: {
@@ -528,6 +542,21 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            load: function( event, ui ) {
+                var filterOpts = '<option value=\"\">All Fields</option>';
+                var frozenOts = '<option value="0">Selected</option>';
+                this.getColModel().forEach(function(column){
+                    let hiddenYn = column.hidden == undefined ? true : false;
+                    if(hiddenYn){
+                        filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                        frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
+                    }
+                });
+                $("#outsourcingOrderManageFilterColumn").empty();
+                $("#outsourcingOrderManageFilterColumn").html(filterOpts);
+                $("#outsourcingOrderManageFrozen").empty();
+                $("#outsourcingOrderManageFrozen").html(frozenOts);
             },
             complete: function () {
                 let data = $outsideOrderManageGrid.pqGrid('option', 'dataModel.data');
@@ -1356,6 +1385,48 @@
             $(popupElement).find('queryId').val('');
             $(popupElement).find('GFILE_SEQ').val('');
         };
+
+        function outsourcingOrderManageFilterRender(ui) {
+            var val = ui.cellData == undefined ? "" : ui.cellData,
+                filter = ui.column.filter,
+                crules = (filter || {}).crules;
+
+            if (filter && filter.on && crules && crules[0].value) {
+                var condition = $("#outsourcingOrderManageFilterCondition :selected").val(),
+                    valUpper = val.toString().toUpperCase(),
+                    txt = $("#outsourcingOrderManageFilterKeyword").val(),
+                    txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                    indx = -1;
+
+                if (condition == "end") {
+                    indx = valUpper.lastIndexOf(txtUpper);
+                    if (indx + txtUpper.length != valUpper.length) {
+                        indx = -1;
+                    }
+                }
+                else if (condition == "contain") {
+                    indx = valUpper.indexOf(txtUpper);
+                }
+                else if (condition == "begin") {
+                    indx = valUpper.indexOf(txtUpper);
+                    if (indx > 0) {
+                        indx = -1;
+                    }
+                }
+                if (indx >= 0) {
+                    var txt1 = val.toString().substring(0, indx);
+                    var txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                    var txt3 = val.toString().substring(indx + txtUpper.length);
+                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                }
+                else {
+                    return val;
+                }
+            }
+            else {
+                return val;
+            }
+        }
         /* function */
 
         /* event */
@@ -1846,7 +1917,14 @@
         });
         /* 가공요청 취소 파일 업로드 */
 
+        $("#outsourcingOrderManageFilterKeyword").on("keyup", function(e){
+            fnFilterHandler($outsideOrderManageGrid, 'outsourcingOrderManageFilterKeyword', 'outsourcingOrderManageFilterCondition', 'outsourcingOrderManageFilterColumn');
+        });
 
+        $("#outsourcingOrderManageFrozen").on('change', function(e){
+            fnFrozenHandler($outsideOrderManageGrid, $(this).val());
+        });
+        
         /* 메일 드래그앤드랍 */
         /** drag & drop file Attach */
         // 임시 비활성화

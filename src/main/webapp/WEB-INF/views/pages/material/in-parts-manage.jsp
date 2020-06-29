@@ -124,11 +124,33 @@
             <ul class="smallTabMenuTabs">
                 <li class="active"><a href="#_TAB1" data-toggle="tab" aria-expanded="true">현황관리</a></li>
                 <li><a href="#_TAB2" data-toggle="tab" aria-expanded="false">수불이력</a></li>
-                <div class="right_sort">
+                <div class="inline right_sort" id="IN_PARTS_MANAGE_BOX" style="font-weight: normal;">
+                    <input type="text" id="inPartsManageFilterKeyword" placeholder="Enter your keyword">
+                    <select id="inPartsManageFilterColumn"></select>
+                    <select id="inPartsManageFilterCondition">
+                        <c:forEach var="code" items="${HighCode.H_1083}">
+                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                        </c:forEach>
+                    </select>
+                    <label for="inPartsManageFrozen" class="label_50" style="font-size: 15px;">Fix</label>
+                    <select id="inPartsManageFrozen" name="inPartsManageFrozen">
+                    </select>
                     <button type="button" id="mainAddBtn" class="defaultBtn radius ">추가</button>
                     <button type="button" id="mainDeleteBtn" class="defaultBtn radius red ">삭제</button>
                     <button type="button" id="mainSaveBtn" class="defaultBtn radius green ">저장</button>
                     <button type="button" id="mainLocBtn" class="defaultBtn radius black ">위치정보관리</button>
+                </div>
+                <div class="inline right_sort" id="IN_PARTS_MANAGE_IN_OUT_BOX" style="display: none; font-weight: normal;">
+                    <input type="text" id="inPartsManageInOutFilterKeyword" placeholder="Enter your keyword">
+                    <select id="inPartsManageInOutFilterColumn"></select>
+                    <select id="inPartsManageInOutFilterCondition">
+                        <c:forEach var="code" items="${HighCode.H_1083}">
+                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                        </c:forEach>
+                    </select>
+                    <label for="inPartsManageInOutFrozen" class="label_50" style="font-size: 15px;">Fix</label>
+                    <select id="inPartsManageInOutFrozen" name="inPartsManageInOutFrozen">
+                    </select>
                 </div>
             </ul>
             <div class="tab-content">
@@ -461,8 +483,10 @@
             columnTemplate: {
                 align: 'center',
                 halign: 'center',
-                hvalign: 'center'
+                hvalign: 'center',
+                render: inPartsManageFilterRender
             },
+            filterModel: { mode: 'OR' },
             scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
             selectionModel: { type: 'row', mode: 'single'} ,
@@ -472,6 +496,21 @@
             resizable: false,
             trackModel: {on: true},
             colModel: mainColModel01,
+            load: function( event, ui ) {
+                var filterOpts = '<option value=\"\">All Fields</option>';
+                var frozenOts = '<option value="0">Selected</option>';
+                this.getColModel().forEach(function(column){
+                    let hiddenYn = column.hidden == undefined ? true : false;
+                    if(hiddenYn){
+                        filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                        frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
+                    }
+                });
+                $("#inPartsManageFilterColumn").empty();
+                $("#inPartsManageFilterColumn").html(filterOpts);
+                $("#inPartsManageFrozen").empty();
+                $("#inPartsManageFrozen").html(frozenOts);
+            },
             cellSave: function (evt, ui) {
                   if (ui.dataIndx == "WAREHOUSE_CD_NM" && ui.newVal !== ui.oldVal) {
                       mainGridId01.pqGrid("updateRow", { 'rowIndx': ui.rowIndx , row: { 'LOC_SEQ_NM': '' } });
@@ -533,8 +572,10 @@
             columnTemplate: {
                 align: 'center',
                 halign: 'center',
-                hvalign: 'center'
+                hvalign: 'center',
+                render: inPartsManageInOutFilterRender
             },
+            filterModel: { mode: 'OR' },
             scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
             selectionModel: { type: 'row', mode: 'single'} ,
@@ -544,6 +585,22 @@
             resizable: false,
             trackModel: {on: true},
             colModel: mainColModel02,
+            load: function( event, ui ) {
+                var filterOpts = '<option value=\"\">All Fields</option>';
+                var frozenOts = '<option value="0">Selected</option>';
+                this.getColModel().forEach(function(column){
+                    console.log(column);
+                    let hiddenYn = column.hidden == undefined ? true : false;
+                    if(hiddenYn){
+                        filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                        frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
+                    }
+                });
+                $("#inPartsManageInOutFilterColumn").empty();
+                $("#inPartsManageInOutFilterColumn").html(filterOpts);
+                $("#inPartsManageInOutFrozen").empty();
+                $("#inPartsManageInOutFrozen").html(frozenOts);
+            },
             complete: function () {
                 let data = mainGridId02.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
@@ -802,6 +859,22 @@
             };
         });
 
+        $("#inPartsManageFilterKeyword").on("keyup", function(e){
+            fnFilterHandler(mainGridId01, 'inPartsManageFilterKeyword', 'inPartsManageFilterCondition', 'inPartsManageFilterColumn');
+        });
+
+        $("#inPartsManageFrozen").on('change', function(e){
+            fnFrozenHandler(mainGridId01, $(this).val());
+        });
+
+        $("#inPartsManageInOutFilterKeyword").on("keyup", function(e){
+            fnFilterHandler(mainGridId02, 'inPartsManageInOutFilterKeyword', 'inPartsManageInOutFilterCondition', 'inPartsManageInOutFilterColumn');
+        });
+
+        $("#inPartsManageInOutFrozen").on('change', function(e){
+            fnFrozenHandler(mainGridId02, $(this).val());
+        });
+
         let paramData = {"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}};
         fnCommCodeDatasourceSelectBoxCreate($("#pop_form").find("#REQUEST_USER_ID"), '', paramData);
     });
@@ -812,21 +885,23 @@
         activate: function(event, ui) {
             ui.newPanel.find('.pq-grid').pqGrid('refresh');
             let selTab = ui.newPanel.selector;
+
+            $("#IN_PARTS_MANAGE_BOX").toggle();
+            $("#IN_PARTS_MANAGE_IN_OUT_BOX").toggle();
             if(selTab == "#_TAB1"){
                 $("#search_form").find("#SEL_TAB_TYPE").val("1");
                 $("#search_form").find("#queryId").val("material.selectConsumableList");
-
-                $("#mainAddBtn").show();
+                /*$("#mainAddBtn").show();
                 $("#mainDeleteBtn").show();
                 $("#mainLocBtn").show();
-                $("#mainSaveBtn").show();
+                $("#mainSaveBtn").show();*/
             }else if(selTab == "#_TAB2"){
                 $("#search_form").find("#SEL_TAB_TYPE").val("2");
                 $("#search_form").find("#queryId").val("material.selectConsumableHistoryList");
-                $("#mainAddBtn").hide();
+                /*$("#mainAddBtn").hide();
                 $("#mainDeleteBtn").hide();
                 $("#mainLocBtn").hide();
-                $("#mainSaveBtn").hide();
+                $("#mainSaveBtn").hide();*/
             }
             $("#searchBtn").trigger('click');
 
@@ -893,6 +968,90 @@
         top.stop().animate({height:"36px"}, 300, 'easeInCubic');
         con.stop().animate({height: _h},300, 'easeInCubic');
         con2.stop().animate({height: _h2},300, 'easeInCubic');
+    }
+
+    function inPartsManageFilterRender(ui) {
+        var val = ui.cellData == undefined ? "" : ui.cellData,
+            filter = ui.column.filter,
+            crules = (filter || {}).crules;
+
+        if (filter && filter.on && crules && crules[0].value) {
+            var condition = $("#inPartsManageFilterCondition :selected").val(),
+                valUpper = val.toString().toUpperCase(),
+                txt = $("#inPartsManageFilterKeyword").val(),
+                txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                indx = -1;
+
+            if (condition == "end") {
+                indx = valUpper.lastIndexOf(txtUpper);
+                if (indx + txtUpper.length != valUpper.length) {
+                    indx = -1;
+                }
+            }
+            else if (condition == "contain") {
+                indx = valUpper.indexOf(txtUpper);
+            }
+            else if (condition == "begin") {
+                indx = valUpper.indexOf(txtUpper);
+                if (indx > 0) {
+                    indx = -1;
+                }
+            }
+            if (indx >= 0) {
+                var txt1 = val.toString().substring(0, indx);
+                var txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                var txt3 = val.toString().substring(indx + txtUpper.length);
+                return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+            }
+            else {
+                return val;
+            }
+        }
+        else {
+            return val;
+        }
+    }
+
+    function inPartsManageInOutFilterRender(ui) {
+        var val = ui.cellData == undefined ? "" : ui.cellData,
+            filter = ui.column.filter,
+            crules = (filter || {}).crules;
+
+        if (filter && filter.on && crules && crules[0].value) {
+            var condition = $("#inPartsManageInOutFilterCondition :selected").val(),
+                valUpper = val.toString().toUpperCase(),
+                txt = $("#inPartsManageInOutFilterKeyword").val(),
+                txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                indx = -1;
+
+            if (condition == "end") {
+                indx = valUpper.lastIndexOf(txtUpper);
+                if (indx + txtUpper.length != valUpper.length) {
+                    indx = -1;
+                }
+            }
+            else if (condition == "contain") {
+                indx = valUpper.indexOf(txtUpper);
+            }
+            else if (condition == "begin") {
+                indx = valUpper.indexOf(txtUpper);
+                if (indx > 0) {
+                    indx = -1;
+                }
+            }
+            if (indx >= 0) {
+                var txt1 = val.toString().substring(0, indx);
+                var txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                var txt3 = val.toString().substring(indx + txtUpper.length);
+                return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+            }
+            else {
+                return val;
+            }
+        }
+        else {
+            return val;
+        }
     }
 
 </script>
