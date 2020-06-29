@@ -291,6 +291,19 @@
                 }
             },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 120, editable: false},
+            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30,
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 120, editable: false},
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', editable: false},
             {title: '도면Rev.', dataType: 'string', dataIndx: 'DRAWING_VER ', editable: false},

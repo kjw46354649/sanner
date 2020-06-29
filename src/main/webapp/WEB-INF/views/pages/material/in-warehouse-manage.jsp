@@ -284,7 +284,7 @@
                     </div>
                 </ul>
                 <ul class="" id="IN_WAREHOUSE_MANAGE_TAB2">
-                    <div class="conMainWrap" style="height: 740px">
+                    <div class="conMainWrap" style="height: 712px">
                         <div id="in_warehouse_manage_out_grid01"></div>
                         <div class="right_sort">
                             전체 조회 건수 (Total : <span id="in_warehouse_manage_out_grid01_records" style="color: #00b3ee">0</span>)
@@ -599,7 +599,7 @@
         function selectInWarehouseManageManageGrid02List(){
             $("#in_warehouse_manage_hidden_form #queryId").val("material.selectInWarehouseManageListDetail");
             inWarehouseManageManageGrid02.pqGrid({
-                width: "100%", height: 272,
+                width: "100%", height: 245,
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
                     url: "/paramQueryGridSelect",
