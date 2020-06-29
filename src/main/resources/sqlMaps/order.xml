@@ -44,7 +44,7 @@
             B.WORK_FACTORY, <!-- 수행공장 -->
             SF_GET_CODE_NM(1014, B.WORK_FACTORY, 'KR') AS WORK_FACTORY_NM, <!-- 수행공장 -->
             B.MATERIAL_SUPPLY_YN, <!-- 소재사급 -->
-            IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'YY', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 납기(가공납기) -->
+            IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'YYYY', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 납기(가공납기) -->
             IFNULL(B.SIZE_TXT, SPACE(0)) AS SIZE_TXT, <!-- 규격 -->
             B.MATERIAL_DETAIL, <!-- 소재 종류 -->
             IFNULL(SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, 'KR'), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류 -->
@@ -166,7 +166,7 @@
         IFNULL(B.PART_NUM, SPACE(0)) AS PART_NUM, <!-- Part -->
         B.DRAWING_NUM, <!-- 도면번호 -->
         B.DRAWING_VER, <!-- 도면번호 버전 -->
-        SF_GET_DATE_F(B.DRAWING_UP_DT, 'YY', 'M'), <!-- 도면업로드시간 -->
+        SF_GET_DATE_F(B.DRAWING_UP_DT, 'YY', 'M') AS DRAWING_UP_DT, <!-- 도면업로드시간 -->
         B.PREV_DRAWING_NUM, <!-- 변경전 도면번호 -->
         B.ITEM_NM, <!-- 품명 -->
         B.WORK_TYPE, <!-- 작업형태 -->
@@ -175,7 +175,7 @@
         B.WORK_FACTORY, <!-- 수행공장 -->
         SF_GET_CODE_NM(1014, B.WORK_FACTORY, 'KR') AS WORK_FACTORY_NM, <!-- 수행공장 -->
         B.MATERIAL_SUPPLY_YN, <!-- 소재사급 -->
-        IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'YY', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 가공납기 -->
+        IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'YYYY', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 가공납기 -->
         IFNULL(B.SIZE_TXT, SPACE(0)) AS SIZE_TXT, <!-- 규격 문자열 -->
         B.SIZE_TYPE, <!-- 규격 타입 -->
         B.SIZE_W, <!-- 규격 가로 -->
@@ -255,8 +255,8 @@
         C.ORDER_NUM, <!-- 발주번호 -->
         SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY, <!-- 주문 수량 -->
         IFNULL(C.ORDER_QTY, SPACE(0)) AS ORDER_QTY, <!-- 발주수량 -->
-        SF_GET_DATE_F(C.ORDER_DUE_DT, 'YY', '') AS ORDER_DUE_DT, <!-- 발주납기 -->
-        SF_GET_DATE_F(C.DELIVERY_DT, 'YY', '') AS DELIVERY_DT, <!-- 발주정보_납품확인 -->
+        SF_GET_DATE_F(C.ORDER_DUE_DT, 'YYYY', '') AS ORDER_DUE_DT, <!-- 발주납기 -->
+        SF_GET_DATE_F(C.DELIVERY_DT, 'YYYY', '') AS DELIVERY_DT, <!-- 발주정보_납품확인 -->
         C.PACKING_CNT, <!-- 포장묶음 -->
         SF_GET_DATE_F(C.OUT_FINISH_DT, 'YY', '') AS ORDER_OUT_FINISH_DT <!-- 출고완료일 -->
     </sql>
@@ -304,7 +304,8 @@
             SF_GET_CODE_NM('1025', H.ERROR_ACTION, 'KR') AS ERROR_ACTION_NM, <!-- 조치 -->
             H.ERROR_NOTE, <!-- 조치방안 -->
             D.BARCODE_NUM AS CONTROL_BARCODE_NUM, <!-- 주문관리바코드번호(도면라벨) -->
-            E.BARCODE_NUM AS LABEL_BARCODE_NUM <!-- 라벨바코드번호(박스라벨) -->
+            E.BARCODE_NUM AS LABEL_BARCODE_NUM, <!-- 라벨바코드번호(박스라벨) -->
+            SF_GET_DATE_F(IF(TIMESTAMPDIFF(SECOND, B.INSERT_DT, B.UPDATE_DT) <![CDATA[ < ]]> 0, B.INSERT_DT, B.UPDATE_DT), 'YY', 'M') AS CONTROL_PART_INSERT_UPDATE_DT <!-- 등록/업데이트 일시 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
@@ -365,8 +366,54 @@
             AND A.EMERGENCY_YN = 'Y'
         </if>
         <if test="HIDE_PART != null and HIDE_PART != ''">
-            AND B.PART_NUM
+            AND B.PART_NUM IS NULL
         </if>
+        <choose>
+            <!-- 주문 상태 -->
+            <when test="SEARCH_CONDITION == 'OCM00'">
+                AND DATE_FORMAT(A.STATUS_DT, '%Y/%m/%d') BETWEEN STR_TO_DATE(#{CONTROL_MANAGE_START_DATE}, '%Y/%m/%d') AND <choose>
+                                                                                                                            <when test="CONTROL_MANAGE_RANGE_SEARCH != null and CONTROL_MANAGE_RANGE_SEARCH != ''">
+                                                                                                                                STR_TO_DATE(#{CONTROL_MANAGE_END_DATE}, '%Y/%m/%d')
+                                                                                                                            </when>
+                                                                                                                            <otherwise>
+                                                                                                                                DATE_FORMAT(NOW(), '%Y/%m/%d')
+                                                                                                                            </otherwise>
+                                                                                                                        </choose>
+            </when>
+            <!-- 납기 -->
+            <when test="SEARCH_CONDITION == 'OCM01'">
+                AND DATE_FORMAT(C.ORDER_DUE_DT, '%Y/%m/%d') BETWEEN STR_TO_DATE(#{CONTROL_MANAGE_START_DATE}, '%Y/%m/%d') AND <choose>
+                                                                                                                                <when test="CONTROL_MANAGE_RANGE_SEARCH != null and CONTROL_MANAGE_RANGE_SEARCH != ''">
+                                                                                                                                    STR_TO_DATE(#{CONTROL_MANAGE_END_DATE}, '%Y/%m/%d')
+                                                                                                                                </when>
+                                                                                                                                <otherwise>
+                                                                                                                                    DATE_FORMAT(NOW(), '%Y/%m/%d')
+                                                                                                                                </otherwise>
+                                                                                                                            </choose>
+            </when>
+            <!-- 가공 납기 -->
+            <when test="SEARCH_CONDITION == 'OCM02'">
+                AND DATE_FORMAT(B.INNER_DUE_DT, '%Y%m%d') BETWEEN STR_TO_DATE(#{CONTROL_MANAGE_START_DATE}, '%Y-%m-%d') AND <choose>
+                                                                                                                                <when test="CONTROL_MANAGE_RANGE_SEARCH != null and CONTROL_MANAGE_RANGE_SEARCH != ''">
+                                                                                                                                    STR_TO_DATE(#{CONTROL_MANAGE_END_DATE}, '%Y-%m-%d')
+                                                                                                                                </when>
+                                                                                                                                <otherwise>
+                                                                                                                                    DATE_FORMAT(NOW(), '%Y%m%d')
+                                                                                                                                </otherwise>
+                                                                                                                            </choose>
+            </when>
+            <!-- Update일시 -->
+            <when test="SEARCH_CONDITION == 'OCM03'">
+                AND DATE_FORMAT(B.UPDATE_DT, '%Y/%m/%d') BETWEEN STR_TO_DATE(#{CONTROL_MANAGE_START_DATE}, '%Y/%m/%d') AND <choose>
+                                                                                                                                <when test="CONTROL_MANAGE_RANGE_SEARCH != null and CONTROL_MANAGE_RANGE_SEARCH != ''">
+                                                                                                                                    STR_TO_DATE(#{CONTROL_MANAGE_END_DATE}, '%Y/%m/%d')
+                                                                                                                                </when>
+                                                                                                                                <otherwise>
+                                                                                                                                    DATE_FORMAT(NOW(), '%Y/%m/%d')
+                                                                                                                                </otherwise>
+                                                                                                                            </choose>
+            </when>
+        </choose>
         ORDER BY A.CONTROL_SEQ, B.PART_NUM, C.ORDER_NUM
     </select>
 
@@ -1013,7 +1060,7 @@
         <if test="MAIN_INSPECTION != null and MAIN_INSPECTION != ''">
             MAIN_INSPECTION = #{MAIN_INSPECTION},
         </if>
-        <if test="MAIN_INSPECTION != null and MAIN_INSPECTION != ''">
+        <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
             EMERGENCY_YN = IFNULL(#{EMERGENCY_YN}, 'N'),
         </if>
         <if test="CONTROL_STATUS != null and CONTROL_STATUS != ''">

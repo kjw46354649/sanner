@@ -216,6 +216,30 @@
                 <li>
                     <a href="#NC_PERFORMANCE_HISTORY" data-toggle="tab" aria-expanded="false">NC수행 이력</a>
                 </li>
+                <div class="d-inline right_float" id="CAM_WORK_HISTORY_BOX" style="font-weight: normal;">
+                    <input type="text" id="camWorkHistoryFilterKeyword" placeholder="Enter your keyword">
+                    <select id="camWorkHistoryFilterColumn"></select>
+                    <select id="camWorkHistoryFilterCondition">
+                        <c:forEach var="code" items="${HighCode.H_1083}">
+                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                        </c:forEach>
+                    </select>
+                    <label for="camWorkHistoryFrozen" class="label_50" style="font-size: 15px;">Fix</label>
+                    <select id="camWorkHistoryFrozen" name="camWorkHistoryFrozen">
+                    </select>
+                </div>
+                <div class="d-inline right_float" id="NC_PERFORMANCE_HISTORY_BOX" style="display: none; font-weight: normal;">
+                    <input type="text" id="ncPerformanceHistoryFilterKeyword" placeholder="Enter your keyword">
+                    <select id="ncPerformanceHistoryFilterColumn"></select>
+                    <select id="ncPerformanceHistoryFilterCondition">
+                        <c:forEach var="code" items="${HighCode.H_1083}">
+                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                        </c:forEach>
+                    </select>
+                    <label for="ncPerformanceHistoryFrozen" class="label_50" style="font-size: 15px;">Fix</label>
+                    <select id="ncPerformanceHistoryFrozen" name="ncPerformanceHistoryFrozen">
+                    </select>
+                </div>
             </ul>
             <div class="tab-content">
                 <ul class="active conWrap" id="CAM_WORK_HISTORY">
@@ -469,9 +493,10 @@
             collapsible: false,
             resizable: false,
             showTitle: false,
+            rowHtHead: 15,
             numberCell: {title: 'No.'},
             trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center',  editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center',  editable: false, render: camWorkHistoryFilterRender}, filterModel: { mode: 'OR' },
             colModel: tab1ColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -479,6 +504,21 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            load: function( event, ui ) {
+                var filterOpts = '<option value=\"\">All Fields</option>';
+                var frozenOts = '<option value="0">Selected</option>';
+                this.getColModel().forEach(function(column){
+                    let hiddenYn = column.hidden == undefined ? true : false;
+                    if(hiddenYn){
+                        filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                        frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
+                    }
+                });
+                $("#camWorkHistoryFilterColumn").empty();
+                $("#camWorkHistoryFilterColumn").html(filterOpts);
+                $("#camWorkHistoryFrozen").empty();
+                $("#camWorkHistoryFrozen").html(frozenOts);
             },
             complete: function () {
                 this.flex();
@@ -523,10 +563,11 @@
             collapsible: false,
             resizable: false,
             showTitle: false,
+            rowHtHead: 15,
             numberCell: {title: 'No.'},
             scrollModel: {autoFit: true},
             // trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false, render: ncPerformanceHistoryFilterRender}, filterModel: { mode: 'OR' },
             colModel: tab2ColModel,
             toolPanel: {show: false},
             dataModel: {
@@ -535,6 +576,21 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            load: function( event, ui ) {
+                var filterOpts = '<option value=\"\">All Fields</option>';
+                var frozenOts = '<option value="0">Selected</option>';
+                this.getColModel().forEach(function(column){
+                    let hiddenYn = column.hidden == undefined ? true : false;
+                    if(hiddenYn){
+                        filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                        frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
+                    }
+                });
+                $("#ncPerformanceHistoryFilterColumn").empty();
+                $("#ncPerformanceHistoryFilterColumn").html(filterOpts);
+                $("#ncPerformanceHistoryFrozen").empty();
+                $("#ncPerformanceHistoryFrozen").html(frozenOts);
             }
         };
         /* variable */
@@ -558,6 +614,90 @@
             }
             return backgroundColor;
         };
+
+        function camWorkHistoryFilterRender(ui) {
+            var val = ui.cellData == undefined ? "" : ui.cellData,
+                filter = ui.column.filter,
+                crules = (filter || {}).crules;
+
+            if (filter && filter.on && crules && crules[0].value) {
+                var condition = $("#camWorkHistoryFilterCondition :selected").val(),
+                    valUpper = val.toString().toUpperCase(),
+                    txt = $("#camWorkHistoryFilterKeyword").val(),
+                    txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                    indx = -1;
+
+                if (condition == "end") {
+                    indx = valUpper.lastIndexOf(txtUpper);
+                    if (indx + txtUpper.length != valUpper.length) {
+                        indx = -1;
+                    }
+                }
+                else if (condition == "contain") {
+                    indx = valUpper.indexOf(txtUpper);
+                }
+                else if (condition == "begin") {
+                    indx = valUpper.indexOf(txtUpper);
+                    if (indx > 0) {
+                        indx = -1;
+                    }
+                }
+                if (indx >= 0) {
+                    var txt1 = val.toString().substring(0, indx);
+                    var txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                    var txt3 = val.toString().substring(indx + txtUpper.length);
+                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                }
+                else {
+                    return val;
+                }
+            }
+            else {
+                return val;
+            }
+        }
+
+        function ncPerformanceHistoryFilterRender(ui) {
+            var val = ui.cellData == undefined ? "" : ui.cellData,
+                filter = ui.column.filter,
+                crules = (filter || {}).crules;
+
+            if (filter && filter.on && crules && crules[0].value) {
+                var condition = $("#ncPerformanceHistoryFilterCondition :selected").val(),
+                    valUpper = val.toString().toUpperCase(),
+                    txt = $("#ncPerformanceHistoryFilterKeyword").val(),
+                    txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                    indx = -1;
+
+                if (condition == "end") {
+                    indx = valUpper.lastIndexOf(txtUpper);
+                    if (indx + txtUpper.length != valUpper.length) {
+                        indx = -1;
+                    }
+                }
+                else if (condition == "contain") {
+                    indx = valUpper.indexOf(txtUpper);
+                }
+                else if (condition == "begin") {
+                    indx = valUpper.indexOf(txtUpper);
+                    if (indx > 0) {
+                        indx = -1;
+                    }
+                }
+                if (indx >= 0) {
+                    var txt1 = val.toString().substring(0, indx);
+                    var txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                    var txt3 = val.toString().substring(indx + txtUpper.length);
+                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                }
+                else {
+                    return val;
+                }
+            }
+            else {
+                return val;
+            }
+        }
         /* function */
 
 
@@ -603,11 +743,29 @@
             }
         });
 
+        $("#camWorkHistoryFilterKeyword").on("keyup", function(e){
+            fnFilterHandler($camWorkHistoryGrid, 'camWorkHistoryFilterKeyword', 'camWorkHistoryFilterCondition', 'camWorkHistoryFilterColumn');
+        });
 
+        $("#camWorkHistoryFrozen").on('change', function(e){
+            fnFrozenHandler($camWorkHistoryGrid, $(this).val());
+        });
+
+        $("#ncPerformanceHistoryFilterKeyword").on("keyup", function(e){
+            fnFilterHandler($ncPerformanceHistoryGrid, 'ncPerformanceHistoryFilterKeyword', 'ncPerformanceHistoryFilterCondition', 'ncPerformanceHistoryFilterColumn');
+        });
+
+        $("#ncPerformanceHistoryFrozen").on('change', function(e){
+            fnFrozenHandler($ncPerformanceHistoryGrid, $(this).val());
+        });
+        
         $('#MCT_EXECUTE_HISTORY_TAB').tabs({
             activate: function (event, ui) {
                 ui.newPanel.find('.pq-grid').pqGrid('refresh');
                 $('.topWrap').toggle(); // show -> hide , hide -> show
+                $("#CAM_WORK_HISTORY_BOX").toggle();
+                $("#NC_PERFORMANCE_HISTORY_BOX").toggle();
+
                 // $('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM').toggle(); // show -> hide , hide -> show
                 // $('#MONTH_OUTSIDE_STATUS_SEARCH_FORM').toggle(); // show -> hide , hide -> show
             }

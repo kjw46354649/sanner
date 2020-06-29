@@ -23,148 +23,140 @@
         </div>
     </div>
     <div class="topLeftWrap left_float">
-        <div>
-            <form class="form-inline" id="CONFIRM_ORDER_SEARCH_FORM" role="form" onsubmit="return false;">
-                <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectConfirmOrderList">
+        <form class="form-inline" id="CONFIRM_ORDER_SEARCH_FORM" role="form" onsubmit="return false;" style="height: inherit;">
+            <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectConfirmOrderList">
+            <div style="height: inherit;">
                 <div>
-                    <div>
-                        <p class="d-inline-block">
-                            주문확정 List ( Total :&nbsp;&nbsp;&nbsp;
-                            <span id="CONFIRM_ORDER_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows&nbsp;&nbsp;&nbsp;
-                            <span id="CONFIRM_ORDER_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA )
-                        </p>
-                        <div class="d-inline-block right_float">
-                            <span>
-                                <label class="label_50" for="CONFIRM_ORDER_CORPORATION">발주처</label>
-                                <select class="wd_100" name="ORDER_COMP_CD" id="CONFIRM_ORDER_CORPORATION">
-                                    <option value="">ALL</option>
-                                </select>
-                            </span>
-                            <span>
-                                <label class="label_50" for="CONFIRM_ORDER_MATERIAL">소재</label>
-                                <select class="wd_100" name="MATERIAL_TYPE" id="CONFIRM_ORDER_MATERIAL">
-                                    <option value="">ALL</option>
-                                    <c:forEach var="code" items="${HighCode.H_1027}">
-                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:forEach>
-                                </select>
-                            </span>
-                        </div>
-                        <hr>
+                    <p class="d-inline-block">
+                        주문확정 List ( Total :&nbsp;&nbsp;&nbsp;
+                        <span id="CONFIRM_ORDER_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows&nbsp;&nbsp;&nbsp;
+                        <span id="CONFIRM_ORDER_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA )
+                    </p>
+                    <div class="d-inline-block right_float">
+                        <span>
+                            <label class="label_50" for="CONFIRM_ORDER_CORPORATION">발주처</label>
+                            <select class="wd_100" name="ORDER_COMP_CD" id="CONFIRM_ORDER_CORPORATION">
+                                <option value="">ALL</option>
+                            </select>
+                        </span>
+                        <span>
+                            <label class="label_50" for="CONFIRM_ORDER_MATERIAL">소재</label>
+                            <select class="wd_100" name="MATERIAL_TYPE" id="CONFIRM_ORDER_MATERIAL">
+                                <option value="">ALL</option>
+                                <c:forEach var="code" items="${HighCode.H_1027}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </span>
                     </div>
-                    <div id="CONFIRM_ORDER_GRID"></div>
+                    <hr>
                 </div>
-            </form>
-        </div>
+                <div id="CONFIRM_ORDER_GRID"></div>
+            </div>
+        </form>
     </div>
 
     <div class="topRightWrap left_float">
-        <div>
-            <form class="form-inline" id="PROCESS_CONFIRM_SEARCH_FORM" role="form">
-                <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectProcessConfirmList">
+        <form class="form-inline" id="PROCESS_CONFIRM_SEARCH_FORM" role="form" onsubmit="return false;" style="height: inherit;">
+            <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectProcessConfirmList">
+            <div style="height: inherit;">
                 <div>
-                    <div>
-                        <p class="d-inline-block">
-                            가공진행 List ( Total :&nbsp;&nbsp;&nbsp;
-                            <span id="PROCESS_CONFIRM_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows&nbsp;&nbsp;&nbsp;
-                            <span id="PROCESS_CONFIRM_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span>EA )
-                        </p>
-                        <div class="d-inline-block right_float">
-                            <label class="checkbox-inline i-checks" for="EMERGENCY_YN">
-                                <input type="checkbox" name="EMERGENCY_YN"
-                                       id="EMERGENCY_YN"><i></i> Show Only 긴급
-                            </label>
+                    <p class="d-inline-block">
+                        가공진행 List ( Total :&nbsp;&nbsp;&nbsp;
+                        <span id="PROCESS_CONFIRM_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows&nbsp;&nbsp;&nbsp;
+                        <span id="PROCESS_CONFIRM_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span>EA )
+                    </p>
+                    <div class="d-inline-block right_float">
+                        <label class="checkbox-inline i-checks" for="EMERGENCY_YN">
+                            <input type="checkbox" name="EMERGENCY_YN"
+                                   id="EMERGENCY_YN"><i></i> Show Only 긴급
+                        </label>
+                        <span>
+                            <label class="label_50" for="PROCESS_CONFIRM_CORPORATION">발주처</label>
+                            <select class="wd_100" name="ORDER_COMP_CD" id="PROCESS_CONFIRM_CORPORATION">
+                                <option value="">ALL</option>
+                                <c:forEach var="code" items="${HighCode.H_1007}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </span>
                             <span>
-                                <label class="label_50" for="PROCESS_CONFIRM_CORPORATION">발주처</label>
-                                <select class="wd_100" name="ORDER_COMP_CD" id="PROCESS_CONFIRM_CORPORATION">
-                                    <option value="">ALL</option>
-                                    <c:forEach var="code" items="${HighCode.H_1007}">
-                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:forEach>
-                                </select>
-                            </span>
-                                <span>
-                                <label class="label_50" for="PROCESS_CONFIRM_MATERIAL">소재</label>
-                                <select class="wd_100" name="MATERIAL_TYPE" id="PROCESS_CONFIRM_MATERIAL">
-                                    <option value=""> ALL</option>
-                                    <c:forEach var="code" items="${HighCode.H_1027}">
-                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:forEach>
-                                </select>
-                            </span>
-                        </div>
-                        <hr>
+                            <label class="label_50" for="PROCESS_CONFIRM_MATERIAL">소재</label>
+                            <select class="wd_100" name="MATERIAL_TYPE" id="PROCESS_CONFIRM_MATERIAL">
+                                <option value=""> ALL</option>
+                                <c:forEach var="code" items="${HighCode.H_1027}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </span>
                     </div>
-                    <div id="PROCESS_CONFIRM_GRID"></div>
+                    <hr>
                 </div>
-            </form>
-        </div>
+                <div id="PROCESS_CONFIRM_GRID"></div>
+            </div>
+        </form>
     </div>
 
     <div class="botLeftWrap left_float">
-        <div>
-            <form class="form-inline" id="OUTSIDE_SEARCH_FORM" role="form">
-                <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectOutsideProcessingList">
+        <form class="form-inline" id="OUTSIDE_SEARCH_FORM" role="form" onsubmit="return false;" style="height: inherit;">
+            <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectOutsideProcessingList">
+            <div style="height: inherit;">
                 <div>
-                    <div>
-                        <p class="d-inline-block">
-                            외주가공 List ( Total :&nbsp;&nbsp;&nbsp;
-                            <span id="OUTSIDE_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows&nbsp;&nbsp;&nbsp;
-                            <span id="OUTSIDE_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA )
-                        </p>
-                        <div class="d-inline-block right_float">
-                            <span>
-                                <label class="label_50" for="OUTSIDE_CORPORATION">발주처</label>
-                                <select class="wd_100" name="ORDER_COMP_CD" id="OUTSIDE_CORPORATION">
-                                    <option value="">ALL</option>
-                                </select>
-                            </span>
-                            <span>
-                                <label class="label_50" for="OUTSIDE_SUBCONTRACTOR">외주업체</label>
-                                <select class="wd_100" name="OUTSIDE_COMP_CD" id="OUTSIDE_SUBCONTRACTOR">
-                                    <option value="">ALL</option>
-                                </select>
-                            </span>
-                        </div>
-                        <hr>
+                    <p class="d-inline-block">
+                        외주가공 List ( Total :&nbsp;&nbsp;&nbsp;
+                        <span id="OUTSIDE_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows&nbsp;&nbsp;&nbsp;
+                        <span id="OUTSIDE_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA )
+                    </p>
+                    <div class="d-inline-block right_float">
+                        <span>
+                            <label class="label_50" for="OUTSIDE_CORPORATION">발주처</label>
+                            <select class="wd_100" name="ORDER_COMP_CD" id="OUTSIDE_CORPORATION">
+                                <option value="">ALL</option>
+                            </select>
+                        </span>
+                        <span>
+                            <label class="label_50" for="OUTSIDE_SUBCONTRACTOR">외주업체</label>
+                            <select class="wd_100" name="OUTSIDE_COMP_CD" id="OUTSIDE_SUBCONTRACTOR">
+                                <option value="">ALL</option>
+                            </select>
+                        </span>
                     </div>
-                    <div id="OUTSIDE_GRID"></div>
+                    <hr>
                 </div>
-            </form>
-        </div>
+                <div id="OUTSIDE_GRID"></div>
+            </div>
+        </form>
     </div>
 
     <div class="botRightWrap left_float">
-        <div>
-            <form class="form-inline" id="PROCESS_COMPLETE_SEARCH_FORM" role="form">
-                <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectProcessCompleteList">
+        <form class="form-inline" id="PROCESS_COMPLETE_SEARCH_FORM" role="form" onsubmit="return false;" style="height: inherit;">
+            <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectProcessCompleteList">
+            <div style="height: inherit;">
                 <div>
-                    <div>
-                        <p class="d-inline-block">
-                            가공완료 List (출하전) ( Total :&nbsp;&nbsp;&nbsp;
-                            <span id="PROCESS_COMPLETE_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows&nbsp;&nbsp;&nbsp;
-                            <span id="PROCESS_COMPLETE_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA )
-                        </p>
-                        <div class="d-inline-block right_float">
-                            <span>
-                                <label class="label_50" for="PROCESS_COMPLETE_CORPORATION">발주처</label>
-                                <select class="wd_100" name="ORDER_COMP_CD" id="PROCESS_COMPLETE_CORPORATION">
-                                    <option value="">ALL</option>
-                                </select>
-                            </span>
-                            <span>
-                                <label class="label_50" for="PROCESS_COMPLETE_SUBCONTRACTOR">외주업체</label>
-                                <select class="wd_100" name="OUTSIDE_COMP_CD" id="PROCESS_COMPLETE_SUBCONTRACTOR">
-                                    <option value="">ALL</option>
-                                </select>
-                            </span>
-                        </div>
-                        <hr>
+                    <p class="d-inline-block">
+                        가공완료 List (출하전) ( Total :&nbsp;&nbsp;&nbsp;
+                        <span id="PROCESS_COMPLETE_TOTAL_RECORDS" style="color: #00b3ee">0</span> Rows&nbsp;&nbsp;&nbsp;
+                        <span id="PROCESS_COMPLETE_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA )
+                    </p>
+                    <div class="d-inline-block right_float">
+                        <span>
+                            <label class="label_50" for="PROCESS_COMPLETE_CORPORATION">발주처</label>
+                            <select class="wd_100" name="ORDER_COMP_CD" id="PROCESS_COMPLETE_CORPORATION">
+                                <option value="">ALL</option>
+                            </select>
+                        </span>
+                        <span>
+                            <label class="label_50" for="PROCESS_COMPLETE_SUBCONTRACTOR">외주업체</label>
+                            <select class="wd_100" name="OUTSIDE_COMP_CD" id="PROCESS_COMPLETE_SUBCONTRACTOR">
+                                <option value="">ALL</option>
+                            </select>
+                        </span>
                     </div>
-                    <div id="PROCESS_COMPLETE_GRID"></div>
+                    <hr>
                 </div>
-            </form>
-        </div>
+                <div id="PROCESS_COMPLETE_GRID"></div>
+            </div>
+        </form>
     </div>
 
 </div>
@@ -189,11 +181,11 @@
                 title: '주문상태', align: 'center', colModel: [
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS', hidden: true},
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_NM'},
-                    {title: '변경일시', minWidth: 100, datatype: 'date', dataIndx: 'CONTROL_STATUS_DT'}
+                    {title: '변경일시', width: '15%', datatype: 'date', dataIndx: 'CONTROL_STATUS_DT'}
                 ]
             },
             {
-                title: '', width: 90, dataType: 'string', dataIndx: 'PROCESS_CONFIRM_BUTTON',
+                title: '', width: '10%', dataType: 'string', dataIndx: 'PROCESS_CONFIRM_BUTTON',
                 render: function (ui) {
                     return '<button class="miniBtn green" name="PROCESS_CONFIRM_BUTTON">가공확정</button>';
                 },
@@ -208,47 +200,19 @@
                 }
             },
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '발주업체', width: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {
-                title: 'Part', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM',
-                render: function (ui) {
-                    if (ui.rowData.WORK_NM === '가공조립') {
-                        return "<span>플러스버튼</span>";
-                    }
-                }
-            },
-            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let workFactory = fnGetCommCodeGridSelectBox('1014');
-                        let index = workFactory.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = workFactory.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : workFactory[index].text;
-                    }
-                }
-            },
-            {title: '자재<br>사급', width: 20, dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
+            {title: '발주업체', width: '15%', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+            {title: '관리번호', width: '20%', dataType: 'string', dataIndx: 'CONTROL_NUM'},
+            {title: '파<br>트', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: '수행<br>공장', width: '5%', dataType: 'string', dataIndx: 'WORK_FACTORY_NM'},
+            {title: '자재<br>사급', width: '5%', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '요망<br>납기', width: 70, dataType: 'string', dataIndx: 'ORDER_DUE_DT'},
-            {title: '가공<br>납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
+            {title: '요망<br>납기', width: '10%', dataType: 'string', dataIndx: 'ORDER_DUE_DT'},
+            {title: '가공<br>납기', width: '10%', dataType: 'string', dataIndx: 'INNER_DUE_DT'},
             {title: '긴<br>급', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -256,126 +220,22 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '주<br>요', dataType: 'string', dataIndx: 'MAIN_INSPECTION',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let mainInspection = fnGetCommCodeGridSelectBox('1059');
-                        let index = mainInspection.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = mainInspection.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : mainInspection[index].text;
-                    }
-                }
-            },
-            {title: '형<br>태', width: 70, dataType: 'string', dataIndx: 'WORK_TYPE',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let workType = fnGetCommCodeGridSelectBox('1033');
-                        let index = workType.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = workType.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-
-                        }
-                        return (index < 0) ? cellData : workType[index].text;
-                    }
-                }
-            },
-            {title: '규격', width: 90, dataType: 'string', dataIndx: 'SIZE_TXT'},
-            {title: '소재<br>종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let materialDetail = fnGetCommCodeGridSelectBox('1027');
-                        let index = materialDetail.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = materialDetail.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : materialDetail[index].text;
-                    }
-                }
-            },
-            {title: '표면<br>처리', width: 70, dataType: 'string', dataIndx: 'SURFACE_TREAT',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let surfaceTreat = fnGetCommCodeGridSelectBox('1039');
-                        let index = surfaceTreat.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = surfaceTreat.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : surfaceTreat[index].text;
-                    }
-                }
-            },
-            {title: '열<br>처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
-                        let index = workFactory.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = workFactory.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : workFactory[index].text;
-                    }
-                }
-            },
+            {title: '주<br>요', width: '10%', dataType: 'select', dataIndx: 'MAIN_INSPECTION_NM'},
+            {title: '형<br>태', width: '10%', dataType: 'string', dataIndx: 'WORK_TYPE_NM'},
+            {title: '규격', width: '15%', dataType: 'string', dataIndx: 'SIZE_TXT'},
+            {title: '소재<br>종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
+            {title: '표면<br>처리', width: '10%',  dataType: 'string', dataIndx: 'SURFACE_TREAT_NM'},
+            {title: '열<br>처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT_NM'},
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
-            {title: '비고', dataType: 'string', dataIndx: 'CONTROL_NOTE'}
+            {title: '비고', width: '20%', dataType: 'string', dataIndx: 'CONTROL_NOTE'}
         ];
         let topLeftObj = {
-            height: 350,
+            height: '90%',
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             resizable: false,
             showTitle: false,
+            rowHtHead: 15,
             numberCell: {title: 'No.'},
             trackModel: {on: true},
             selectionModel: {type: 'row', mode: 'single'},
@@ -394,7 +254,7 @@
                 let totalOrderQuantity = 0;
 
                 for (let i = 0; i < totalRecords; i++) {
-                    totalOrderQuantity += data[i].ORDER_QTY ? parseInt(data[i].ORDER_QTY) : 0;
+                    totalOrderQuantity += data[i].CONTROL_PART_QTY ? parseInt(data[i].CONTROL_PART_QTY) : 0;
                 }
 
                 $('#CONFIRM_ORDER_TOTAL_RECORDS').html(totalRecords);
@@ -417,9 +277,9 @@
             {title: 'PART_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true},
             {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true},
             {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', hidden: true},
-            {title: '진행상태', width: 90, dataType: 'string', dataIndx: 'PART_STATUS_NM'},
+            {title: '진행상태', width: '10%', dataType: 'string', dataIndx: 'PART_STATUS_NM'},
             {
-                title: '', width: 90, dataType: 'string', dataIndx: 'CONFIRM_CANCEL_BUTTON',
+                title: '', width: '10%', dataType: 'string', dataIndx: 'CONFIRM_CANCEL_BUTTON',
                 render: function (ui) {
                     return '<button class="miniBtn red" name="CONFIRM_CANCEL_BUTTON">확정취소</button>';
                 },
@@ -434,9 +294,9 @@
                 }
             },
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '발주업체', width: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: 'Part', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: '발주업체', width: '15%', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+            {title: '관리번호', width: '20%', dataType: 'string', dataIndx: 'CONTROL_NUM'},
+            {title: '파<br>트', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY',
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -459,15 +319,15 @@
                     }
                 }
             },
-            {title: '자재<br>사급', width: 20, dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
+            {title: '자재<br>사급', width: '5%', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '요망<br>납기', width: 70, dataType: 'string', dataIndx: 'ORDER_DUE_DT'},
-            {title: '가공<br>납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
+            {title: '요망<br>납기', width: '10%', dataType: 'string', dataIndx: 'ORDER_DUE_DT'},
+            {title: '가공<br>납기', width: '10%', dataType: 'string', dataIndx: 'INNER_DUE_DT'},
             {title: '긴<br>급', minWidth: 15, minWidth: 15, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -475,126 +335,22 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '주<br>요', dataType: 'select', dataIndx: 'MAIN_INSPECTION',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let mainInspection = fnGetCommCodeGridSelectBox('1059');
-                        let index = mainInspection.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = mainInspection.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : mainInspection[index].text;
-                    }
-                }
-            },
-            {title: '형<br>태', width: 70, dataType: 'string', dataIndx: 'WORK_TYPE',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let workType = fnGetCommCodeGridSelectBox('1033');
-                        let index = workType.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = workType.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-
-                        }
-                        return (index < 0) ? cellData : workType[index].text;
-                    }
-                }
-            },
-            {title: '규격', width: 90, dataType: 'string', dataIndx: 'SIZE_TXT'},
-            {title: '소재<br>종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let materialDetail = fnGetCommCodeGridSelectBox('1027');
-                        let index = materialDetail.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = materialDetail.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : materialDetail[index].text;
-                    }
-                }
-            },
-            {title: '표면<br>처리', width: 70, dataType: 'string', dataIndx: 'SURFACE_TREAT',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let surfaceTreat = fnGetCommCodeGridSelectBox('1039');
-                        let index = surfaceTreat.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = surfaceTreat.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : surfaceTreat[index].text;
-                    }
-                }
-            },
-            {title: '열<br>처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
-                        let index = workFactory.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = workFactory.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : workFactory[index].text;
-                    }
-                }
-            },
+            {title: '주<br>요', dataType: 'select', dataIndx: 'MAIN_INSPECTION_NM'},
+            {title: '형<br>태', width: '10%', dataType: 'string', dataIndx: 'WORK_TYPE_NM'},
+            {title: '규격', width: '15%', dataType: 'string', dataIndx: 'SIZE_TXT'},
+            {title: '소재<br>종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
+            {title: '표면<br>처리', width: '10%',  dataType: 'string', dataIndx: 'SURFACE_TREAT_NM'},
+            {title: '열<br>처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT_NM'},
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
-            {title: '가공확정일시', width:90, dataType: 'string', dataIndx: 'CONTROL_STATUS_DT'}
+            {title: '가공확정일시', width: '10%', dataType: 'string', dataIndx: 'CONTROL_STATUS_DT'}
         ];
         const topRightObj = {
-            height: 350,
+            height: '90%',
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             resizable: false,
             showTitle: false,
+            rowHtHead: 15,
             numberCell: {title: 'No.'},
             trackModel: {on: true},
             selectionModel: {type: 'row', mode: 'single'},
@@ -613,7 +369,7 @@
                 let totalOrderQuantity = 0;
 
                 for (let i = 0; i < totalRecords; i++) {
-                    totalOrderQuantity += data[i].ORDER_QTY ? parseInt(data[i].ORDER_QTY) : 0;
+                    totalOrderQuantity += data[i].CONTROL_PART_QTY ? parseInt(data[i].CONTROL_PART_QTY) : 0;
                 }
 
                 $('#PROCESS_CONFIRM_TOTAL_RECORDS').html(totalRecords);
@@ -636,25 +392,25 @@
             {title: 'PART_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true},
             {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: 'Part', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: '발주업체', width: '15%', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+            {title: '관리번호', width: '20%', dataType: 'string', dataIndx: 'CONTROL_NUM'},
+            {title: '파<br>트', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM'},
             {
                 title: '외주발송', align: 'center', colModel: [
                     {title: '업체명', datatype: 'string', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
-                    {title: '업체명', datatype: 'string', dataIndx: 'OUTSIDE_COMP_NM'},
-                    {title: '일시', datatype: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
+                    {title: '업체명', width: '15%', datatype: 'string', dataIndx: 'OUTSIDE_COMP_NM'},
+                    {title: '일시', width: '10%', datatype: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
                 ]
             },
-            {title: '자재<br>사급', width: 20, dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
+            {title: '자재<br>사급', width: '5%', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '납기', width: 70, dataType: 'string', dataIndx: 'ORDER_DUE_DT'},
-            {title: '가공<br>납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
+            {title: '납기', width: '10%', dataType: 'string', dataIndx: 'ORDER_DUE_DT'},
+            {title: '가공<br>납기', width: '10%', dataType: 'string', dataIndx: 'INNER_DUE_DT'},
             {title: '긴<br>급', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -662,125 +418,21 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '주<br>요', dataType: 'select', dataIndx: 'MAIN_INSPECTION',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let mainInspection = fnGetCommCodeGridSelectBox('1059');
-                        let index = mainInspection.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = mainInspection.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : mainInspection[index].text;
-                    }
-                }
-            },
-            {title: '형<br>태', dataType: 'string', dataIndx: 'WORK_TYPE',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let workType = fnGetCommCodeGridSelectBox('1033');
-                        let index = workType.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = workType.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-
-                        }
-                        return (index < 0) ? cellData : workType[index].text;
-                    }
-                }
-            },
-            {title: '규<br>격', dataType: 'string', dataIndx: 'SIZE_TXT'},
-            {title: '소재<br>종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let materialDetail = fnGetCommCodeGridSelectBox('1027');
-                        let index = materialDetail.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = materialDetail.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : materialDetail[index].text;
-                    }
-                }
-            },
-            {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let surfaceTreat = fnGetCommCodeGridSelectBox('1039');
-                        let index = surfaceTreat.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = surfaceTreat.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : surfaceTreat[index].text;
-                    }
-                }
-            },
-            {title: '열<br>처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
-                        let index = workFactory.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = workFactory.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : workFactory[index].text;
-                    }
-                }
-            },
+            {title: '주<br>요', width: '10%', dataType: 'select', dataIndx: 'MAIN_INSPECTION_NM'},
+            {title: '형<br>태', width: '10%', dataType: 'string', dataIndx: 'WORK_TYPE_NM'},
+            {title: '규격', width: '15%', dataType: 'string', dataIndx: 'SIZE_TXT'},
+            {title: '소재<br>종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
+            {title: '표면<br>처리', width: '10%',  dataType: 'string', dataIndx: 'SURFACE_TREAT_NM'},
+            {title: '열<br>처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT_NM'},
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
             {title: '발생일시', width:90, dataType: 'string', dataIndx: 'STATUS_DT'}
         ];
         const botLeftObj = {
-            height: 350,
+            height: '85%',
             collapsible: false,
             resizable: false,
             showTitle: false,
+            rowHtHead: 15,
             numberCell: {title: 'No.'},
             // scrollModel: {autoFit: true},
             trackModel: {on: true},
@@ -799,7 +451,7 @@
                 let totalOrderQuantity = 0;
 
                 for (let i = 0; i < totalRecords; i++) {
-                    totalOrderQuantity += data[i].ORDER_QTY ? parseInt(data[i].ORDER_QTY) : 0;
+                    totalOrderQuantity += data[i].CONTROL_PART_QTY ? parseInt(data[i].CONTROL_PART_QTY) : 0;
                 }
 
                 $('#OUTSIDE_TOTAL_RECORDS').html(totalRecords);
@@ -822,39 +474,19 @@
             {title: 'PART_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true},
             {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '발주업체', width: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: 'Part', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM'},
-            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let workFactory = fnGetCommCodeGridSelectBox('1014');
-                        let index = workFactory.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = workFactory.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : workFactory[index].text;
-                    }
-                }},
-            {title: '자재<br>사급', width: 20, dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
+            {title: '발주업체', width: '15%', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+            {title: '관리번호', width: '20%', dataType: 'string', dataIndx: 'CONTROL_NUM'},
+            {title: '파<br>트', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: '수행<br>공장', width: '5%', dataType: 'string', dataIndx: 'WORK_FACTORY_NM'},
+            {title: '자재<br>사급', width: '5%', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '요망<br>납기', width: 70, dataType: 'string', dataIndx: 'ORDER_DUE_DT'},
-            {title: '가공<br>납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
+            {title: '요망<br>납기', width: '10%', dataType: 'string', dataIndx: 'ORDER_DUE_DT'},
+            {title: '가공<br>납기', width: '10%', dataType: 'string', dataIndx: 'INNER_DUE_DT'},
             {title: '긴<br>급', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -862,127 +494,23 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '주<br>요', dataType: 'select', dataIndx: 'MAIN_INSPECTION',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let mainInspection = fnGetCommCodeGridSelectBox('1059');
-                        let index = mainInspection.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = mainInspection.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : mainInspection[index].text;
-                    }
-                }
-            },
-            {title: '형<br>태', width: 70, dataType: 'string', dataIndx: 'WORK_TYPE',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let workType = fnGetCommCodeGridSelectBox('1033');
-                        let index = workType.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = workType.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-
-                        }
-                        return (index < 0) ? cellData : workType[index].text;
-                    }
-                }
-            },
-            {title: '규<br>격', minWidth: 100, dataType: 'string', dataIndx: 'SIZE_TXT'},
-            {title: '소재<br>종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let materialDetail = fnGetCommCodeGridSelectBox('1027');
-                        let index = materialDetail.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = materialDetail.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : materialDetail[index].text;
-                    }
-                }
-            },
-            {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let surfaceTreat = fnGetCommCodeGridSelectBox('1039');
-                        let index = surfaceTreat.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = surfaceTreat.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : surfaceTreat[index].text;
-                    }
-                }
-            },
-            {title: '열<br>처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
-                        let index = workFactory.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = workFactory.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : workFactory[index].text;
-                    }
-                }
-            },
+            {title: '주<br>요', width: '10%', dataType: 'select', dataIndx: 'MAIN_INSPECTION_NM'},
+            {title: '형<br>태', width: '10%', dataType: 'string', dataIndx: 'WORK_TYPE_NM'},
+            {title: '규격', width: '15%', dataType: 'string', dataIndx: 'SIZE_TXT'},
+            {title: '소재<br>종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
+            {title: '표면<br>처리', width: '10%',  dataType: 'string', dataIndx: 'SURFACE_TREAT_NM'},
+            {title: '열<br>처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT_NM'},
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
             {title: '가공완료<br>일시', dataType: 'string', dataIndx: ''},
             {title: '진행상태', dataType: 'string', dataIndx: ''},
             {title: '검사<br>실적', dataType: 'string', dataIndx: ''}
         ];
         const botRightObj = {
-            height: 350,
+            height: '85%',
             collapsible: false,
             resizable: false,
             showTitle: false,
+            rowHtHead: 15,
             numberCell: {title: 'No.'},
             // scrollModel: {autoFit: true},
             trackModel: {on: true},
@@ -1001,7 +529,7 @@
                 let totalOrderQuantity = 0;
 
                 for (let i = 0; i < totalRecords; i++) {
-                    totalOrderQuantity += data[i].ORDER_QTY ? parseInt(data[i].ORDER_QTY) : 0;
+                    totalOrderQuantity += data[i].CONTROL_PART_QTY ? parseInt(data[i].CONTROL_PART_QTY) : 0;
                 }
 
                 $('#PROCESS_COMPLETE_TOTAL_RECORDS').html(totalRecords);

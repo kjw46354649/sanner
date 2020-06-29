@@ -743,9 +743,9 @@
         }, 200);
     }
 
-    // function getCadUploadBlankHtml(){
-    //     return'<tr><td colspan="6" class="spanArea" >마우스로 파일을 Drag & Drop 하세요.</td></tr><tr><td colspan="6"></td></tr><tr><td colspan="6"></td></tr><tr><td colspan="6"></td></tr><tr><td colspan="6"></td></tr>';
-    // }
+    function getCadUploadBlankHtml(){
+        return'<tr><td colspan="6" class="spanArea" >마우스로 파일을 Drag & Drop 하세요.</td></tr><tr><td colspan="6"></td></tr><tr><td colspan="6"></td></tr><tr><td colspan="6"></td></tr><tr><td colspan="6"></td></tr>';
+    }
 
     // function clearCadFileAttachPopup(fileHtml){
     //     $('#attachDragAndDrop > tbody').html('');

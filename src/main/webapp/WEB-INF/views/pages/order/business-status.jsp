@@ -234,7 +234,7 @@
 
         let businessStatusObj = {
             height: 825, width: 555, minHeight: "auto",
-            selectionModel: { type: 'row', mode: 'single'}, numberCell: {title: 'No.'},
+            selectionModel: { type: 'row', mode: 'single'}, rowHtHead: 15, numberCell: {title: 'No.'},
             swipeModel: {on: false}, trackModel: {on: true},
             collapsible: false, resizable: false, flexWidth: false, showTitle: false,
             // scrollModel: { autoFit: true },
@@ -266,7 +266,7 @@
         ];
 
         let businessEmergencyObj = {
-            height: 228, width: 500, minHeight: "auto", numberCell: {title: 'No.'},
+            height: 228, width: 500, minHeight: "auto", rowHtHead: 15, numberCell: {title: 'No.'},
             selectionModel: { type: 'row', mode: 'single'}, swipeModel: {on: false}, trackModel: {on: true},
             collapsible: false, resizable: false, flexWidth: false, showTitle: false,
             columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
@@ -298,7 +298,7 @@
         ];
 
         let businessOverOrderObj = {
-            height: 228, width: 500, minHeight: "auto", numberCell: {title: 'No.'},
+            height: 228, width: 500, minHeight: "auto", rowHtHead: 15, numberCell: {title: 'No.'},
             selectionModel: { type: 'row', mode: 'single'}, swipeModel: {on: false}, trackModel: {on: true},
             collapsible: false, resizable: false, flexWidth: false, showTitle: false,
             columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.

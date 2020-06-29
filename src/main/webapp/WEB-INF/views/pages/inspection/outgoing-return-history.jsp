@@ -72,6 +72,16 @@
     <div class="bottomWrap inspectionBWrap row2_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
+                <input type="text" id="outgoingReturnHistoryFilterKeyword" placeholder="Enter your keyword">
+                <select id="outgoingReturnHistoryFilterColumn"></select>
+                <select id="outgoingReturnHistoryFilterCondition">
+                    <c:forEach var="code" items="${HighCode.H_1083}">
+                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                    </c:forEach>
+                </select>
+                <label for="outgoingReturnHistoryFrozen" class="label_50" style="font-size: 15px;">Fix</label>
+                <select id="outgoingReturnHistoryFrozen" name="outgoingReturnHistoryFrozen">
+                </select>
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn" id="outgoing_history_detail_btn">상세정보 조회</button>
                 </div>
@@ -163,7 +173,7 @@
                 }
             },
             strNoRows: g_noData,
-            columnTemplate: {align: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', hvalign: 'center', render: outgoingReturnHistoryFilterRender}, filterModel: { mode: 'OR' },
             scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
             //selectionModel: { type: 'row', mode: 'multiple'} ,
@@ -173,6 +183,21 @@
             resizable: false,
             trackModel: {on: true},
             colModel: outgoingHistoryColModel01,
+            load: function( event, ui ) {
+                var filterOpts = '<option value=\"\">All Fields</option>';
+                var frozenOts = '<option value="0">Selected</option>';
+                this.getColModel().forEach(function(column){
+                    let hiddenYn = column.hidden == undefined ? true : false;
+                    if(hiddenYn){
+                        filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                        frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
+                    }
+                });
+                $("#outgoingReturnHistoryFilterColumn").empty();
+                $("#outgoingReturnHistoryFilterColumn").html(filterOpts);
+                $("#outgoingReturnHistoryFrozen").empty();
+                $("#outgoingReturnHistoryFrozen").html(frozenOts);
+            },
             complete: function () {
                 let data = outgoingHistoryGridId01.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
@@ -244,7 +269,55 @@
 
         });
 
+        $("#outgoingReturnHistoryFilterKeyword").on("keyup", function(e){
+            fnFilterHandler(outgoingHistoryGridId01, 'outgoingReturnHistoryFilterKeyword', 'outgoingReturnHistoryFilterCondition', 'outgoingReturnHistoryFilterColumn');
+        });
 
+        $("#outgoingReturnHistoryFrozen").on('change', function(e){
+            fnFrozenHandler(outgoingHistoryGridId01, $(this).val());
+        });
+
+        function outgoingReturnHistoryFilterRender(ui) {
+            var val = ui.cellData == undefined ? "" : ui.cellData,
+                filter = ui.column.filter,
+                crules = (filter || {}).crules;
+
+            if (filter && filter.on && crules && crules[0].value) {
+                var condition = $("#outgoingReturnHistoryFilterCondition :selected").val(),
+                    valUpper = val.toString().toUpperCase(),
+                    txt = $("#outgoingReturnHistoryFilterKeyword").val(),
+                    txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                    indx = -1;
+
+                if (condition == "end") {
+                    indx = valUpper.lastIndexOf(txtUpper);
+                    if (indx + txtUpper.length != valUpper.length) {
+                        indx = -1;
+                    }
+                }
+                else if (condition == "contain") {
+                    indx = valUpper.indexOf(txtUpper);
+                }
+                else if (condition == "begin") {
+                    indx = valUpper.indexOf(txtUpper);
+                    if (indx > 0) {
+                        indx = -1;
+                    }
+                }
+                if (indx >= 0) {
+                    var txt1 = val.toString().substring(0, indx);
+                    var txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                    var txt3 = val.toString().substring(indx + txtUpper.length);
+                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                }
+                else {
+                    return val;
+                }
+            }
+            else {
+                return val;
+            }
+        }
 
 
         fnCommCodeDatasourceSelectBoxCreate($('#outgoing_history_form').find('#SEL_ORDER_COMP_CD'), 'all', {

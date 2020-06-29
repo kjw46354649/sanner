@@ -838,7 +838,7 @@
         let yyyy = this.getFullYear().toString();
         let mm = (this.getMonth() + 1).toString();
         let dd = this.getDate().toString();
-        return  yyyy + "-" + (mm[1] ? mm : "0" + mm[0]) + "-" + (dd[1] ? dd : "0" + dd[0]);
+        return  yyyy + "/" + (mm[1] ? mm : "0" + mm[0]) + "/" + (dd[1] ? dd : "0" + dd[0]);
     }
 
     Date.prototype.yyyymmddhhmm = function () {
@@ -852,7 +852,7 @@
         let minute = this.getMinutes();
         minute = minute < 10 ? '0' + minute : minute;
 
-        return year + '-' + month + '-' + date + ' ' + hour + ':' + minute;
+        return year + '/' + month + '/' + date + ' ' + hour + ':' + minute;
     }
 
     let fnGridValidation = function(targetGrid){
@@ -1008,7 +1008,7 @@
         let gridInstance = grid.pqGrid('getInstance').grid;
         //추가 또는 수정된 값이 있으면 true
         if (gridInstance.isDirty()) {
-            let headHtml = 'messsage', bodyHtml = '', yseBtn = '예';
+            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인';
 
             bodyHtml =
                 '<h4>\n' +
@@ -1036,7 +1036,7 @@
         commonAlertPopup.show();
     }
 
-    function filterhandler(gridId, filterKeywordId, filterConditionId, filterColumnId) {
+    function fnFilterHandler(gridId, filterKeywordId, filterConditionId, filterColumnId) {
         var value = $("#"+filterKeywordId).val(),
             condition = $("#"+filterConditionId).val(),
             dataIndx = $("#"+filterColumnId).val(),
@@ -1056,5 +1056,20 @@
             rules: filterRules
         });
     }
+
+    function fnFrozenHandler(gridId, value){
+        gridId.pqGrid('getInstance').grid.option("freezeCols", value);
+        gridId.pqGrid('getInstance').grid.refresh();
+    }
+
+    const fnDateEditor = function (ui) {
+        let $inp = ui.$cell.find("input"), $grid = $(this);
+        $inp.datepicker({
+            changeMonth: true, changeYear: true, showAnim: '', dateFormat: 'yy/mm/dd',
+            onSelect: function () { this.firstOpen = true; },
+            beforeShow: function (input, inst) {return !this.firstOpen; },
+            onClose: function () { this.focus(); }
+        });
+    };
 
 </script>

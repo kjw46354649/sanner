@@ -237,12 +237,34 @@
             <ul class="smallTabMenuTabs">
                 <li class="active"><a href="#IN_WAREHOUSE_MANAGE_TAB1" data-toggle="tab" aria-expanded="true">현황관리</a></li>
                 <li><a href="#IN_WAREHOUSE_MANAGE_TAB2" data-toggle="tab" aria-expanded="false">불출이력</a></li>
-                <div class="right_sort" id="IN_WAREHOUSE_MANAGE_BUTTON">
+                <div class="d-inline right_float" id="IN_WAREHOUSE_MANAGE_BUTTON" style="font-weight: normal;">
+                    <input type="text" id="inWarehouseManageFilterKeyword" placeholder="Enter your keyword">
+                    <select id="inWarehouseManageFilterColumn"></select>
+                    <select id="inWarehouseManageFilterCondition">
+                        <c:forEach var="code" items="${HighCode.H_1083}">
+                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                        </c:forEach>
+                    </select>
+                    <label for="inWarehouseManageFrozen" class="label_50" style="font-size: 15px;">Fix</label>
+                    <select id="inWarehouseManageFrozen" name="inWarehouseManageFrozen">
+                    </select>
                     <button type="button" class="defaultBtn btn-120w" id="btnInWarehouseManageOutBarcode">소재불출(바코드)</button>
                     <button type="button" class="defaultBtn btn-120w" id="btnInWarehouseManageLocation">위치정보관리</button>
                     <button type="button" class="defaultBtn radius" id="btnInWarehouseManageAdd">추가</button>
                     <button type="button" class="defaultBtn radius red" id="btnInWarehouseManageRemove">삭제</button>
                     <button type="button" class="defaultBtn radius green" id="btnInWarehouseManageSave">저장</button>
+                </div>
+                <div class="d-inline right_float" id="IN_WAREHOUSE_MANAGE_OUT_BUTTON" style="display: none; font-weight: normal;">
+                    <input type="text" id="inWarehouseManageOutFilterKeyword" placeholder="Enter your keyword">
+                    <select id="inWarehouseManageOutFilterColumn"></select>
+                    <select id="inWarehouseManageOutFilterCondition">
+                        <c:forEach var="code" items="${HighCode.H_1083}">
+                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                        </c:forEach>
+                    </select>
+                    <label for="inWarehouseManageOutFrozen" class="label_50" style="font-size: 15px;">Fix</label>
+                    <select id="inWarehouseManageOutFrozen" name="inWarehouseManageOutFrozen">
+                    </select>
                 </div>
             </ul>
             <div class="tab-content">
@@ -509,7 +531,7 @@
                 }
             },
             postRenderInterval: -1,
-            columnTemplate: {align: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', hvalign: 'center', render: inWarehouseManageFilterRender}, filterModel: { mode: 'OR' },
             scrollModel: {autoFit: false},
             numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'row', mode: 'single'} ,
@@ -520,6 +542,21 @@
             trackModel: {on: true},
             colModel: inWarehouseManageManageColModel01,
             showTitle: false,
+            load: function( event, ui ) {
+                var filterOpts = '<option value=\"\">All Fields</option>';
+                var frozenOts = '<option value="0">Selected</option>';
+                this.getColModel().forEach(function(column){
+                    let hiddenYn = column.hidden == undefined ? true : false;
+                    if(hiddenYn){
+                        filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                        frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
+                    }
+                });
+                $("#inWarehouseManageFilterColumn").empty();
+                $("#inWarehouseManageFilterColumn").html(filterOpts);
+                $("#inWarehouseManageFrozen").empty();
+                $("#inWarehouseManageFrozen").html(frozenOts);
+            },
             complete: function(event, ui) {
                 this.flex();
                 let data = inWarehouseManageManageGrid01.pqGrid('option', 'dataModel.data');
@@ -609,7 +646,7 @@
                         return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                     }
                 },
-                columnTemplate: {align: 'center', hvalign: 'center'},
+                columnTemplate: {align: 'center', hvalign: 'center', render: inWarehouseManageOutFilterRender}, filterModel: { mode: 'OR' },
                 scrollModel: {autoFit: false},
                 numberCell: {width: 30, title: "No", show: true},
                 selectionModel: {type: 'row', mode: 'single'},
@@ -621,6 +658,21 @@
                 colModel: inWarehouseManageOutColModel,
                 showTitle: false,
                 editable: false,
+                load: function( event, ui ) {
+                    var filterOpts = '<option value=\"\">All Fields</option>';
+                    var frozenOts = '<option value="0">Selected</option>';
+                    this.getColModel().forEach(function(column){
+                        let hiddenYn = column.hidden == undefined ? true : false;
+                        if(hiddenYn){
+                            filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                            frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
+                        }
+                    });
+                    $("#inWarehouseManageOutFilterColumn").empty();
+                    $("#inWarehouseManageOutFilterColumn").html(filterOpts);
+                    $("#inWarehouseManageOutFrozen").empty();
+                    $("#inWarehouseManageOutFrozen").html(frozenOts);
+                },
                 complete: function (event, ui) {
                     this.flex();
                     let data = inWarehouseManageOutGrid.pqGrid('option', 'dataModel.data');
@@ -655,6 +707,7 @@
                 $('#in_warehouse_manage_out_search_form').toggle(); // show -> hide , hide -> show
                 $('#in_warehouse_manage_search_form').toggle(); // show -> hide , hide -> show
                 $("#IN_WAREHOUSE_MANAGE_BUTTON").toggle();
+                $("#IN_WAREHOUSE_MANAGE_OUT_BUTTON").toggle();
             }
         });
 
@@ -851,7 +904,108 @@
             }, parameters, '');
         });
 
+        $("#inWarehouseManageFilterKeyword").on("keyup", function(e){
+            fnFilterHandler(inWarehouseManageManageGrid01, 'inWarehouseManageFilterKeyword', 'inWarehouseManageFilterCondition', 'inWarehouseManageFilterColumn');
+        });
+
+        $("#inWarehouseManageFrozen").on('change', function(e){
+            fnFrozenHandler(inWarehouseManageManageGrid01, $(this).val());
+        });
+
+        $("#inWarehouseManageOutFilterKeyword").on("keyup", function(e){
+            fnFilterHandler(inWarehouseManageOutGrid, 'inWarehouseManageOutFilterKeyword', 'inWarehouseManageOutFilterCondition', 'inWarehouseManageOutFilterColumn');
+        });
+
+        $("#inWarehouseManageOutFrozen").on('change', function(e){
+            fnFrozenHandler(inWarehouseManageOutGrid, $(this).val());
+        });
+
         fnCommCodeDatasourceSelectBoxCreate($("#in_warehouse_manage_out_popup_form").find("#OUT_USER_ID"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}});
+
+        function inWarehouseManageFilterRender(ui) {
+            var val = ui.cellData == undefined ? "" : ui.cellData,
+                filter = ui.column.filter,
+                crules = (filter || {}).crules;
+
+            if (filter && filter.on && crules && crules[0].value) {
+                var condition = $("#inWarehouseManageFilterCondition :selected").val(),
+                    valUpper = val.toString().toUpperCase(),
+                    txt = $("#inWarehouseManageFilterKeyword").val(),
+                    txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                    indx = -1;
+
+                if (condition == "end") {
+                    indx = valUpper.lastIndexOf(txtUpper);
+                    if (indx + txtUpper.length != valUpper.length) {
+                        indx = -1;
+                    }
+                }
+                else if (condition == "contain") {
+                    indx = valUpper.indexOf(txtUpper);
+                }
+                else if (condition == "begin") {
+                    indx = valUpper.indexOf(txtUpper);
+                    if (indx > 0) {
+                        indx = -1;
+                    }
+                }
+                if (indx >= 0) {
+                    var txt1 = val.toString().substring(0, indx);
+                    var txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                    var txt3 = val.toString().substring(indx + txtUpper.length);
+                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                }
+                else {
+                    return val;
+                }
+            }
+            else {
+                return val;
+            }
+        }
+
+        function inWarehouseManageOutFilterRender(ui) {
+            var val = ui.cellData == undefined ? "" : ui.cellData,
+                filter = ui.column.filter,
+                crules = (filter || {}).crules;
+
+            if (filter && filter.on && crules && crules[0].value) {
+                var condition = $("#inWarehouseManageOutFilterCondition :selected").val(),
+                    valUpper = val.toString().toUpperCase(),
+                    txt = $("#inWarehouseManageOutFilterKeyword").val(),
+                    txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                    indx = -1;
+
+                if (condition == "end") {
+                    indx = valUpper.lastIndexOf(txtUpper);
+                    if (indx + txtUpper.length != valUpper.length) {
+                        indx = -1;
+                    }
+                }
+                else if (condition == "contain") {
+                    indx = valUpper.indexOf(txtUpper);
+                }
+                else if (condition == "begin") {
+                    indx = valUpper.indexOf(txtUpper);
+                    if (indx > 0) {
+                        indx = -1;
+                    }
+                }
+                if (indx >= 0) {
+                    var txt1 = val.toString().substring(0, indx);
+                    var txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                    var txt3 = val.toString().substring(indx + txtUpper.length);
+                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                }
+                else {
+                    return val;
+                }
+            }
+            else {
+                return val;
+            }
+        }
+
 
     });
 

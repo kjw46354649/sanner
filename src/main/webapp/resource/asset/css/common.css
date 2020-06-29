@@ -435,12 +435,12 @@ table.boardList .txtP{color: #7030a0;}
 }
 
 /** etc file **/
-.blueFileImageICon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/file_icon_blue.png)no-repeat 0 0; }
-/** png file **/
-.redFileImageICon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/file_icon_red.png)no-repeat 0 0; }
+.blueFileImageICon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/file_icon_blue.png) no-repeat 0 0; }
+/** png, pdf file **/
+.redFileImageICon { content: ''; text-align: center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/file_icon_red.png) no-repeat 0 0; }
 /** nc file **/
-.purpleFileImageICon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/file_icon_purple.png)no-repeat 0 0; }
+.purpleFileImageICon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/file_icon_purple.png) no-repeat 0 0; }
 /** cam file TEST **/
-.greenFileImageICon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/file_icon_green.png)no-repeat 0 0; }
-.desktopIcon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/ico_desktop.png)no-repeat 0 0; }
-.eyeIcon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/ico_eye.png)no-repeat 0 0; }
+.greenFileImageICon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/file_icon_green.png) no-repeat 0 0; }
+.desktopIcon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/ico_desktop.png) no-repeat 0 0; }
+.magnifyingGlassIcon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/ico_magnifying_glass.png); background-size: 20px; no-repeat 0 0; }

@@ -123,6 +123,16 @@
     <div class="bottomWrap row3_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
+                <input type="text" id="inspectionHistoryFilterKeyword" placeholder="Enter your keyword">
+                <select id="inspectionHistoryFilterColumn"></select>
+                <select id="inspectionHistoryFilterCondition">
+                    <c:forEach var="code" items="${HighCode.H_1083}">
+                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                    </c:forEach>
+                </select>
+                <label for="inspectionHistoryFrozen" class="label_50" style="font-size: 15px;">Fix</label>
+                <select id="inspectionHistoryFrozen" name="inspectionHistoryFrozen">
+                </select>
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn" id="inspection_history_detail_btn">상세정보 조회</button>
                 </div>
@@ -149,15 +159,15 @@
 
         let SelectedRowIndex = [];
 
-        let inspectionManageGridId01 = $("#inspection_history_grid");
-        let inspectionManageColModel01;
-        let inspectionManagePostData01;
+        let inspectionHistoryGridId01 = $("#inspection_history_grid");
+        let inspectionHistoryColModel01;
+        let inspectionHistoryPostData01;
 
 
         /**  리스트 그리드 선언 시작 **/
         $("#inspection_manage_form").find("#queryId").val("inspection.selectInspectionHistoryList");
-        inspectionManagePostData01 = fnFormToJsonArrayData('#inspection_history_form');
-        inspectionManageColModel01 = [
+        inspectionHistoryPostData01 = fnFormToJsonArrayData('#inspection_history_form');
+        inspectionHistoryColModel01 = [
             {title: 'INSPECT_SEQ', dataType: 'string', dataIndx: 'INSPECT_SEQ', hidden:true},
             {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden:true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden:true},
@@ -224,7 +234,7 @@
 
 
         ];
-        inspectionManageGridId01.pqGrid({
+        inspectionHistoryGridId01.pqGrid({
             width: "100%", height: 710,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'INSPECT_SEQ',
@@ -235,7 +245,7 @@
                 }
             },
             strNoRows: g_noData,
-            columnTemplate: {align: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', hvalign: 'center', render: inspectionHistoryFilterRender}, filterModel: { mode: 'OR' },
             //scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
             selectionModel: { type: 'row', mode: 'single'} ,
@@ -244,9 +254,24 @@
             collapsible: false,
             resizable: false,
             trackModel: {on: true},
-            colModel: inspectionManageColModel01,
+            colModel: inspectionHistoryColModel01,
+            load: function( event, ui ) {
+                var filterOpts = '<option value=\"\">All Fields</option>';
+                var frozenOts = '<option value="0">Selected</option>';
+                this.getColModel().forEach(function(column){
+                    let hiddenYn = column.hidden == undefined ? true : false;
+                    if(hiddenYn){
+                        filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                        frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
+                    }
+                });
+                $("#inspectionHistoryFilterColumn").empty();
+                $("#inspectionHistoryFilterColumn").html(filterOpts);
+                $("#inspectionHistoryFrozen").empty();
+                $("#inspectionHistoryFrozen").html(frozenOts);
+            },
             complete: function () {
-                let data = inspectionManageGridId01.pqGrid('option', 'dataModel.data');
+                let data = inspectionHistoryGridId01.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
                 $('#inspection_history_grid_records').html(totalRecords);
             },
@@ -274,15 +299,65 @@
             }
             $("#inspection_history_form").find("#SEL_INSPECT_GRADE").val(rtn);
 
-            inspectionManageGridId01.pqGrid("option", "dataModel.postData", function(ui){
+            inspectionHistoryGridId01.pqGrid("option", "dataModel.postData", function(ui){
                 return fnFormToJsonArrayData('#inspection_history_form');
             } );
-            inspectionManageGridId01.pqGrid("refreshDataAndView");
+            inspectionHistoryGridId01.pqGrid("refreshDataAndView");
 
         });
         $("#inspection_history_detail_btn").on('click', function(e){
                g_item_detail_pop_view('','');
         });
+
+        $("#inspectionHistoryFilterKeyword").on("keyup", function(e){
+            fnFilterHandler(inspectionHistoryGridId01, 'inspectionHistoryFilterKeyword', 'inspectionHistoryFilterCondition', 'inspectionHistoryFilterColumn');
+        });
+
+        $("#inspectionHistoryFrozen").on('change', function(e){
+            fnFrozenHandler(inspectionHistoryGridId01, $(this).val());
+        });
+
+        function inspectionHistoryFilterRender(ui) {
+            var val = ui.cellData == undefined ? "" : ui.cellData,
+                filter = ui.column.filter,
+                crules = (filter || {}).crules;
+
+            if (filter && filter.on && crules && crules[0].value) {
+                var condition = $("#inspectionHistoryFilterCondition :selected").val(),
+                    valUpper = val.toString().toUpperCase(),
+                    txt = $("#inspectionHistoryFilterKeyword").val(),
+                    txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                    indx = -1;
+
+                if (condition == "end") {
+                    indx = valUpper.lastIndexOf(txtUpper);
+                    if (indx + txtUpper.length != valUpper.length) {
+                        indx = -1;
+                    }
+                }
+                else if (condition == "contain") {
+                    indx = valUpper.indexOf(txtUpper);
+                }
+                else if (condition == "begin") {
+                    indx = valUpper.indexOf(txtUpper);
+                    if (indx > 0) {
+                        indx = -1;
+                    }
+                }
+                if (indx >= 0) {
+                    var txt1 = val.toString().substring(0, indx);
+                    var txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                    var txt3 = val.toString().substring(indx + txtUpper.length);
+                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                }
+                else {
+                    return val;
+                }
+            }
+            else {
+                return val;
+            }
+        }
     });
 
 

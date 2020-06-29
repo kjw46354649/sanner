@@ -302,7 +302,7 @@
 
         let moneyManageStatusObj = {
             height: 770, collapsible: false, resizable: false, selectionModel: { type: 'row', mode: 'single'} ,
-            showTitle: false, strNoRows: g_noData, numberCell: {show: false}, scrollModel: {autoFit: false}, trackModel: {on: true},
+            showTitle: false, rowHtHead: 15, strNoRows: g_noData, numberCell: {show: false}, scrollModel: {autoFit: false}, trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center',  editable: false},
             colModel: moneyManageStatusModel, toolbar: false,
             groupModel: moneyManageStatusGroupModel,
@@ -447,8 +447,8 @@
         /** 상세 수금 현환 **/
         let moneySalesMonthObj = {
             height: 700, width: 472, selectionModel: { type: 'row', mode: 'single'} , swipeModel: {on: false}, collapsible: false,
-            trackModel: {on: true}, resizable: false, flexWidth: false, scrollModel: { autoFit: true }, showTitle: false, numberCell: {title: 'No.'},
-            toolbar: false, columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
+            trackModel: {on: true}, resizable: false, flexWidth: false, scrollModel: { autoFit: true }, showTitle: false,
+            rowHtHead: 15,numberCell: {title: 'No.'}, toolbar: false, columnTemplate: { align: 'center', hvalign: 'center' },
             colModel: moneySalesMonthModel,
             dataModel: {
                 recIndx: 'ROW_NUM', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -485,8 +485,8 @@
 
         let moneyReceiveStatusObj = {
             height: 700, width: "100%", selectionModel: { type: 'row', mode: 'single'} , swipeModel: {on: false}, collapsible: false,
-            trackModel: {on: true}, resizable: false, flexWidth: false, scrollModel: { autoFit: true }, showTitle: false, numberCell: {title: 'No.'},
-            toolbar: false, columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
+            trackModel: {on: true}, resizable: false, flexWidth: false, scrollModel: { autoFit: true }, showTitle: false, rowHtHead: 15,
+            numberCell: {title: 'No.'}, toolbar: false, columnTemplate: { align: 'center', hvalign: 'center' },
             colModel: moneyReceiveStatusModel,
             dataModel: {
                 recIndx: "DEPOSIT_SEQ", location: "remote", dataType: "json", method: "POST", url: "/paramQueryGridSelect",

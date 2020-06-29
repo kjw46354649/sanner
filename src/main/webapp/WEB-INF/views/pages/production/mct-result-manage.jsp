@@ -177,9 +177,21 @@
     </div>
     <div class="bottomWrap row2_bottomWrap">
         <div class="hWrap">
-            <div class="rightSpan">
-                <button type="button" class="defaultBtn btn-120w" id="mctResultDetailViewBtn" >상세정보 조회</button>
-                <button type="button" class="defaultBtn btn-120w" id="mctResultDrawingViewBtn" >도면보기</button>
+            <div class="d-inline">
+                <input type="text" id="mctResultManageFilterKeyword" placeholder="Enter your keyword">
+                <select id="mctResultManageFilterColumn"></select>
+                <select id="mctResultManageFilterCondition">
+                    <c:forEach var="code" items="${HighCode.H_1083}">
+                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                    </c:forEach>
+                </select>
+                <label for="mctResultManageFrozen" class="label_50" style="font-size: 15px;">Fix</label>
+                <select id="mctResultManageFrozen" name="mctResultManageFrozen">
+                </select>
+                <span class="rightSpan">
+                    <button type="button" class="defaultBtn btn-120w" id="mctResultDetailViewBtn" >상세정보 조회</button>
+                    <button type="button" class="defaultBtn btn-120w" id="mctResultDrawingViewBtn" >도면보기</button>
+                </span>
             </div>
         </div>
         <div class="tableWrap" style="padding: 10px 0;">
@@ -519,8 +531,8 @@
 
         let machineResultManageObj = {
             minHeight: '100%', height: 750, collapsible: false, postRenderInterval: -1, //call postRender synchronously.
-            resizable: false, showTitle: false, strNoRows: g_noData, numberCell: {title: 'No.'},
-            trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            resizable: false, showTitle: false, strNoRows: g_noData, rowHtHead: 15, numberCell: {title: 'No.'},
+            trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false, render: mctResultManageFilterRender}, filterModel: { mode: 'OR' },
             colModel: machineResultManagecolModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -528,6 +540,21 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            load: function( event, ui ) {
+                var filterOpts = '<option value=\"\">All Fields</option>';
+                var frozenOts = '<option value="0">Selected</option>';
+                this.getColModel().forEach(function(column){
+                    let hiddenYn = column.hidden == undefined ? true : false;
+                    if(hiddenYn){
+                        filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                        frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
+                    }
+                });
+                $("#mctResultManageFilterColumn").empty();
+                $("#mctResultManageFilterColumn").html(filterOpts);
+                $("#mctResultManageFrozen").empty();
+                $("#mctResultManageFrozen").html(frozenOts);
             }
         };
 
@@ -642,7 +669,7 @@
 
         let camWorkManagePopObj = {
             minHeight: '100%', height: 150, collapsible: false, postRenderInterval: -1, //call postRender synchronously.
-            resizable: false, showTitle: false, strNoRows: g_noData, trackModel: {on: true}, numberCell: {show: false }, // numberCell: {title: 'No.'}, trackModel: {on: true},
+            resizable: false, showTitle: false, strNoRows: g_noData, rowHtHead: 15, trackModel: {on: true}, numberCell: {show: false }, // numberCell: {title: 'No.'}, trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
             colModel: camWorkManagePopColModel,
             dataModel: {
@@ -724,6 +751,48 @@
             $camWorkManagePopGrid = $('#' + camWorkManagePopGridId).pqGrid(camWorkManagePopObj);
             popCamWorkReload();
         };
+
+        function mctResultManageFilterRender(ui) {
+            var val = ui.cellData == undefined ? "" : ui.cellData,
+                filter = ui.column.filter,
+                crules = (filter || {}).crules;
+
+            if (filter && filter.on && crules && crules[0].value) {
+                var condition = $("#mctResultManageFilterCondition :selected").val(),
+                    valUpper = val.toString().toUpperCase(),
+                    txt = $("#mctResultManageFilterKeyword").val(),
+                    txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                    indx = -1;
+
+                if (condition == "end") {
+                    indx = valUpper.lastIndexOf(txtUpper);
+                    if (indx + txtUpper.length != valUpper.length) {
+                        indx = -1;
+                    }
+                }
+                else if (condition == "contain") {
+                    indx = valUpper.indexOf(txtUpper);
+                }
+                else if (condition == "begin") {
+                    indx = valUpper.indexOf(txtUpper);
+                    if (indx > 0) {
+                        indx = -1;
+                    }
+                }
+                if (indx >= 0) {
+                    var txt1 = val.toString().substring(0, indx);
+                    var txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                    var txt3 = val.toString().substring(indx + txtUpper.length);
+                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                }
+                else {
+                    return val;
+                }
+            }
+            else {
+                return val;
+            }
+        }
 
         $("#cam_work_manage_detail_pop").find('.cam_work_manage_detail_pop_close').on('click', function () {
             $camWorkManagePopGrid.pqGrid('destroy');
@@ -832,6 +901,14 @@
             $mctResultManageGrid.pqGrid('refreshDataAndView');
         });
 
+        $("#mctResultManageFilterKeyword").on("keyup", function(e){
+            fnFilterHandler($mctResultManageGrid, 'mctResultManageFilterKeyword', 'mctResultManageFilterCondition', 'mctResultManageFilterColumn');
+        });
+
+        $("#mctResultManageFrozen").on('change', function(e){
+            fnFrozenHandler($mctResultManageGrid, $(this).val());
+        });
+
         /** 제품 상세 보기 */
         $mctResultDetailViewBtn.click(function(event) {
             g_item_detail_pop_view("", "");
@@ -847,7 +924,7 @@
                 return fnFormToJsonArrayData('#cam_work_manage_pop_form');
             } );
             $camWorkManagePopGrid.pqGrid("refreshDataAndView");
-        }
+        };
 
         /* function */
 

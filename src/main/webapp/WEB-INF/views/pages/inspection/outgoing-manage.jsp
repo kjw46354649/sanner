@@ -78,6 +78,16 @@
     <div class="bottomWrap inspectionBWrap row2_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
+                <input type="text" id="outgoingManageFilterKeyword" placeholder="Enter your keyword">
+                <select id="outgoingManageFilterColumn"></select>
+                <select id="outgoingManageFilterCondition">
+                    <c:forEach var="code" items="${HighCode.H_1083}">
+                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                    </c:forEach>
+                </select>
+                <label for="outgoingManageFrozen" class="label_50" style="font-size: 15px;">Fix</label>
+                <select id="outgoingManageFrozen" name="outgoingManageFrozen">
+                </select>
                 <span class="barCode"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="outgoingBarcodeImg"></span>
                 <span class="barCodeTxt">&nbsp;<input type="text" class="wd_270_barcode" name="OUTGOING_BARCODE_NUM" id="OUTGOING_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요"></span>
                 <span class="radio_box">
@@ -750,7 +760,7 @@
                 }
             },
             strNoRows: g_noData,
-            columnTemplate: {align: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', hvalign: 'center', render: outgoingManageFilterRender}, filterModel: { mode: 'OR' },
             //scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
             //selectionModel: { type: 'row', mode: 'multiple'} ,
@@ -760,6 +770,21 @@
             resizable: false,
             trackModel: {on: true},
             colModel: outgoingManageColModel01,
+            load: function( event, ui ) {
+                var filterOpts = '<option value=\"\">All Fields</option>';
+                var frozenOts = '<option value="0">Selected</option>';
+                this.getColModel().forEach(function(column){
+                    let hiddenYn = column.hidden == undefined ? true : false;
+                    if(hiddenYn){
+                        filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                        frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
+                    }
+                });
+                $("#outgoingManageFilterColumn").empty();
+                $("#outgoingManageFilterColumn").html(filterOpts);
+                $("#outgoingManageFrozen").empty();
+                $("#outgoingManageFrozen").html(frozenOts);
+            },
             complete: function () {
                 let data = outgoingManageGridId01.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
@@ -1577,7 +1602,55 @@
               $('#outgoing_manage_pop_label_type_1').modal('show');
         });
 
+        $("#outgoingManageFilterKeyword").on("keyup", function(e){
+            fnFilterHandler(outgoingManageGridId01, 'outgoingManageFilterKeyword', 'outgoingManageFilterCondition', 'outgoingManageFilterColumn');
+        });
 
+        $("#outgoingManageFrozen").on('change', function(e){
+            fnFrozenHandler(outgoingManageGridId01, $(this).val());
+        });
+        
+        function outgoingManageFilterRender(ui) {
+            var val = ui.cellData == undefined ? "" : ui.cellData,
+                filter = ui.column.filter,
+                crules = (filter || {}).crules;
+
+            if (filter && filter.on && crules && crules[0].value) {
+                var condition = $("#outgoingManageFilterCondition :selected").val(),
+                    valUpper = val.toString().toUpperCase(),
+                    txt = $("#outgoingManageFilterKeyword").val(),
+                    txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                    indx = -1;
+
+                if (condition == "end") {
+                    indx = valUpper.lastIndexOf(txtUpper);
+                    if (indx + txtUpper.length != valUpper.length) {
+                        indx = -1;
+                    }
+                }
+                else if (condition == "contain") {
+                    indx = valUpper.indexOf(txtUpper);
+                }
+                else if (condition == "begin") {
+                    indx = valUpper.indexOf(txtUpper);
+                    if (indx > 0) {
+                        indx = -1;
+                    }
+                }
+                if (indx >= 0) {
+                    var txt1 = val.toString().substring(0, indx);
+                    var txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                    var txt3 = val.toString().substring(indx + txtUpper.length);
+                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                }
+                else {
+                    return val;
+                }
+            }
+            else {
+                return val;
+            }
+        }
     });
 
 

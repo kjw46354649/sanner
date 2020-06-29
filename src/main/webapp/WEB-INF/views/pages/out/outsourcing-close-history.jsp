@@ -96,6 +96,18 @@
     </div>
     <div class="bottomWrap row3_bottomWrap">
         <div class="hWrap">
+            <div class="d-inline">
+                <input type="text" id="outsourcingCloseHistoryFilterKeyword" placeholder="Enter your keyword">
+                <select id="outsourcingCloseHistoryFilterColumn"></select>
+                <select id="outsourcingCloseHistoryFilterCondition">
+                    <c:forEach var="code" items="${HighCode.H_1083}">
+                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                    </c:forEach>
+                </select>
+                <label for="outsourcingCloseHistoryFrozen" class="label_50" style="font-size: 15px;">Fix</label>
+                <select id="outsourcingCloseHistoryFrozen" name="outsourcingCloseHistoryFrozen">
+                </select>
+            </div>
             <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#OUTSIDE_CLOSE_CANCEL_POPUP">마감 취소</button>
             <div class="rightSpan">
                 <button type="button" class="defaultBtn btn-100w" id="DRAWING_VIEW">도면 View</button>
@@ -269,11 +281,12 @@
             resizable: false,
             showTitle: false,
             strNoRows: g_noData,
+            rowHtHead: 15,
             numberCell: {title: 'No.'},
             // scrollModel: {autoFit: true},
             trackModel: {on: true},
             editable: false,
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', render: outsourcingCloseHistoryFilterRender}, filterModel: { mode: 'OR' },
             colModel: colModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -281,6 +294,21 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            load: function( event, ui ) {
+                var filterOpts = '<option value=\"\">All Fields</option>';
+                var frozenOts = '<option value="0">Selected</option>';
+                this.getColModel().forEach(function(column){
+                    let hiddenYn = column.hidden == undefined ? true : false;
+                    if(hiddenYn){
+                        filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                        frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
+                    }
+                });
+                $("#outsourcingCloseHistoryFilterColumn").empty();
+                $("#outsourcingCloseHistoryFilterColumn").html(filterOpts);
+                $("#outsourcingCloseHistoryFrozen").empty();
+                $("#outsourcingCloseHistoryFrozen").html(frozenOts);
             },
             cellClick: function (event, ui) {
                 if (ui.dataIndx === 'PART_NUM' && ui.rowData.WORK_NM === '가공조립') {
@@ -359,6 +387,7 @@
             resizable: false,
             showTitle: false,
             // scrollModel: {autoFit: true},
+            rowHtHead: 15,
             dragColumns: {enabled: false},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
             colModel: outsideCloseCancelColModel,
@@ -462,6 +491,47 @@
             fnRequestGridData($outsideCloseCancelRightGrid, postData);
         };
 
+        function outsourcingCloseHistoryFilterRender(ui) {
+            var val = ui.cellData == undefined ? "" : ui.cellData,
+                filter = ui.column.filter,
+                crules = (filter || {}).crules;
+
+            if (filter && filter.on && crules && crules[0].value) {
+                var condition = $("#outsourcingCloseHistoryFilterCondition :selected").val(),
+                    valUpper = val.toString().toUpperCase(),
+                    txt = $("#outsourcingCloseHistoryFilterKeyword").val(),
+                    txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                    indx = -1;
+
+                if (condition == "end") {
+                    indx = valUpper.lastIndexOf(txtUpper);
+                    if (indx + txtUpper.length != valUpper.length) {
+                        indx = -1;
+                    }
+                }
+                else if (condition == "contain") {
+                    indx = valUpper.indexOf(txtUpper);
+                }
+                else if (condition == "begin") {
+                    indx = valUpper.indexOf(txtUpper);
+                    if (indx > 0) {
+                        indx = -1;
+                    }
+                }
+                if (indx >= 0) {
+                    var txt1 = val.toString().substring(0, indx);
+                    var txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                    var txt3 = val.toString().substring(indx + txtUpper.length);
+                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                }
+                else {
+                    return val;
+                }
+            }
+            else {
+                return val;
+            }
+        }
         /* function */
 
         /* event */
@@ -559,6 +629,14 @@
 
         $('[name=OUTSIDE_CLOSE_CANCEL_NO]').on('click', function () {
             $('#OUTSIDE_CLOSE_CANCEL_POPUP').modal('hide');
+        });
+
+        $("#outsourcingCloseHistoryFilterKeyword").on("keyup", function(e){
+            fnFilterHandler($outsideCloseHistoryGrid, 'outsourcingCloseHistoryFilterKeyword', 'outsourcingCloseHistoryFilterCondition', 'outsourcingCloseHistoryFilterColumn');
+        });
+
+        $("#outsourcingCloseHistoryFrozen").on('change', function(e){
+            fnFrozenHandler($outsideCloseHistoryGrid, $(this).val());
         });
         /* event */
 
