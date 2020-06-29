@@ -137,7 +137,7 @@
     <div class="bottomWrap row1_bottomWrap">
         <div class="hWrap">
             <div>
-                <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#CONTROL_MANGE_POPUP">신규 주문 등록</button>
+                <button type="button" class="defaultBtn btn-100w" id="NEW_ORDER_REGISTRATION">신규 주문 등록</button>
                 <button type="button" class="defaultBtn btn-100w" id="DRAWING_REGISTRATION">도면 등록</button>
                 <button type="button" class="defaultBtn btn-100w" id="DRAWING_CHANGE">도면변경(Rev. up)</button>
                 <button type="button" class="defaultBtn btn-100w" id="ESTIMATE_REGISTER_FROM_CONTROL">견적등록</button>
@@ -146,6 +146,7 @@
                 <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="CONFIRMATION" data-control_status="ORD001" style="color: blue;">확정</button>
                 <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="CANCEL" data-control_status="ORD002" style="color: red;">취소</button>
                 <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="TERMINATION" data-control_status="ORD004">종료</button>
+                <button type="button" class="defaultBtn btn-50w" id="CONTROL_MONTH_CLOSE">마감</button>
                 <button type="button" class="defaultBtn btn-50w" data-toggle="modal" data-target="#CONTROL_CLOSE_POPUP">마감</button>
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_DRAWING_VIEW">도면 View</button>
@@ -359,6 +360,8 @@
 </form>
 
 <script>
+    var $orderManagementGrid;
+    var selectedOrderManagementRowIndex = [];
     $(function () {
         'use strict';
         /* variable */
@@ -383,8 +386,7 @@
             }, parameters, '');
             return list;
         })();
-        let selectedRowIndex = [];
-        let $orderManagementGrid;
+        
         const gridId = 'CONTROL_MANAGE_GRID';
         let postData = fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM');
         const colModel = [
@@ -736,7 +738,7 @@
             {
                 title: '발주정보', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, colModel: [
                     {
-                        title: '', datatype: 'string', dataIndx: 'ORDER_NUM_PLUS_BUTTON',
+                        title: '', datatype: 'string', dataIndx: 'ORDER_NUM_PLUS_BUTTON', styleHead: {'background':'#a9d3f5'},
                         render: function (ui) {
                             if (ui.rowData.WORK_TYPE === 'WTP010' || ui.rowData.WORK_TYPE === 'WTP020' || ui.rowData.WORK_TYPE === 'WTP030') {
                                 return '<span class="ui-icon ui-icon-circle-plus" name="ORDER_NUM_PLUS_BUTTON" style="cursor: pointer"></span>';
@@ -786,7 +788,8 @@
             {
                 title: '소재마감', align: 'center',  styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, hidden: true, colModel: [
                     {
-                        title: 'TM각비', width: 70, dataType: 'string', dataIndx: 'MATERIAL_FINISH_TM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, hidden: true,
+                        title: 'TM각비', width: 70, dataType: 'string', dataIndx: 'MATERIAL_FINISH_TM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                        editable: true, hidden: true,
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010')},
                         render: function (ui) {
                             let cellData = ui.cellData;
@@ -810,7 +813,8 @@
                         }
                     },
                     {
-                        title: '연마비', width: 70, dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, hidden: true,
+                        title: '연마비', width: 70, dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                        editable: true, hidden: true,
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020')},
                         render: function (ui) {
                             let cellData = ui.cellData;
@@ -834,7 +838,8 @@
                         }
                     },
                     {
-                        title: '열처리', width: 70, dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, hidden: true,
+                        title: '열처리', width: 70, dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                        editable: true, hidden: true,
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030')},
                         render: function (ui) {
                             let cellData = ui.cellData;
@@ -881,7 +886,7 @@
                     {title: '견적비고', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_AMT_NOTE',styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},  editable: true}
                 ]
             },
-            {title: '계산<br>견적단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CALCUL_EST_UNIT_COST', hidden: true,
+            {title: '계산<br>견적단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CALC_EST_UNIT_COST', hidden: true,
                 render: function (ui) {
                     let rowData = ui.rowData;
                     let UNIT_MATERIAL_AMT = rowData.UNIT_MATERIAL_AMT || 0;
@@ -891,10 +896,10 @@
                     let UNIT_SURFACE_AMT = rowData.UNIT_SURFACE_AMT || 0;
                     let UNIT_PROCESS_AMT = rowData.UNIT_PROCESS_AMT || 0;
                     let UNIT_ETC_AMT = rowData.UNIT_ETC_AMT || 0;
-                    let CALCUL_EST_UNIT_COST = UNIT_MATERIAL_AMT + UNIT_TM_AMT + UNIT_GRIND_AMT + UNIT_HEAT_AMT + UNIT_SURFACE_AMT + UNIT_PROCESS_AMT + UNIT_ETC_AMT;
+                    let CALC_EST_UNIT_COST = UNIT_MATERIAL_AMT + UNIT_TM_AMT + UNIT_GRIND_AMT + UNIT_HEAT_AMT + UNIT_SURFACE_AMT + UNIT_PROCESS_AMT + UNIT_ETC_AMT;
 
-                    if (CALCUL_EST_UNIT_COST > 0) {
-                        return CALCUL_EST_UNIT_COST.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                    if (CALC_EST_UNIT_COST > 0) {
+                        return CALC_EST_UNIT_COST.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
                     }
                 }
             },
@@ -1035,12 +1040,12 @@
                 supplyUnitCostInit(); // 공급단가적용 초기화
 
                 if (ui.selection.iCells.ranges[0] !== undefined) {
-                    selectedRowIndex = [];
+                    selectedOrderManagementRowIndex = [];
                     let firstRow = ui.selection.iCells.ranges[0].r1;
                     let lastRow = ui.selection.iCells.ranges[0].r2;
 
-                    if (firstRow === lastRow) selectedRowIndex[0] = firstRow;
-                    else for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
+                    if (firstRow === lastRow) selectedOrderManagementRowIndex[0] = firstRow;
+                    else for (let i = firstRow; i <= lastRow; i++) selectedOrderManagementRowIndex.push(i);
                 }
             },
             change: function (evt, ui) {
@@ -1110,7 +1115,7 @@
 
                         if (ui.updateList[0].newRow.UNIT_FINAL_AMT) {
                             row = {
-                                // 'CALCUL_EST_UNIT_COST': calculateEstimateAmount, // 계산 견적단가
+                                // 'CALC_EST_UNIT_COST': calculateEstimateAmount, // 계산 견적단가
                                 // 'UNIT_FINAL_EST_AMT': unitFinalEstimateAmount, // 최종 견적단가
                                 // 'EST_TOTAL_AMOUNT': estimatedTotalAmount, // 견적 합계금액 = 최종 견적단가 * 발주수량
                                 'UNIT_FINAL_AMT': unitFinalAmount, // 최종 공급단가
@@ -1118,7 +1123,7 @@
                             };
                         } else {
                             row = {
-                                'CALCUL_EST_UNIT_COST': calculateEstimateAmount, // 계산 견적단가
+                                'CALC_EST_UNIT_COST': calculateEstimateAmount, // 계산 견적단가
                                 'UNIT_FINAL_EST_AMT': unitFinalEstimateAmount, // 최종 견적단가
                                 'EST_TOTAL_AMOUNT': estimatedTotalAmount, // 견적 합계금액 = 최종 견적단가 * 발주수량
                                 'UNIT_FINAL_AMT': unitFinalAmount, // 최종 공급단가
@@ -1141,6 +1146,7 @@
                 }
             }
         };
+        let newOrderRegistrationPopup;
         let $orderRegisterGrid;
         const popupGridId = 'ORDER_REGISTER_GRID';
         const popupColModel = [
@@ -1698,6 +1704,7 @@
                 }
             }
         };
+        let controlMonthClosePopup;
         let $controlCloseLeftGrid;
         const controlCloseLeftGridId = 'CONTROL_CLOSE_LEFT_GRID';
         let controlCloseLeftColModel = [
@@ -1833,8 +1840,8 @@
                     break;
             }
 
-            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
-                list[i] = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                list[i] = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
             }
             //
             // // 중복 제거
@@ -1873,8 +1880,8 @@
             let controlStatusList = [];
             let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인';
 
-            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
-                list[i] = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                list[i] = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
                 // 값 변경 전 이상 case 확인하기 위해 배열에 담는다.
                 controlStatusList[i] = list[i].CONTROL_STATUS || undefined;
                 list[i].CONTROL_STATUS = controlStatus;
@@ -1915,14 +1922,14 @@
         };
 
         let loadDataControlClose = function (open) {
-            let selectedRowCount = selectedRowIndex.length;
+            let selectedRowCount = selectedOrderManagementRowIndex.length;
             let controlSeqList = [];
             let compCdList = [];
             let orderCompCdList = [];
             let controlSeqStr = '';
 
             for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
 
                 controlSeqList.push(rowData.CONTROL_SEQ);
                 compCdList.push(rowData.COMP_CD);
@@ -2006,7 +2013,7 @@
         };
 
         const noSelectedRowAlert = function () {
-            if (selectedRowIndex.length > 0) {
+            if (selectedOrderManagementRowIndex.length > 0) {
                 return false;
             } else {
                 alert('하나 이상 선택해주세요');
@@ -2129,8 +2136,8 @@
             let controlNumList = [];
             let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
 
-            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
-                let thisRowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                let thisRowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
                 list[i] = thisRowData;
                 controlNumList[i] = thisRowData.CONTROL_NUM;
 
@@ -2176,6 +2183,33 @@
             });
         });
 
+        $('#NEW_ORDER_REGISTRATION').on('click', function () {
+            let url = '/newOrderRegistration';
+            // 팝업 사이즈
+            let nWidth = 1400;
+            let nHeight = 770;
+            let winWidth = document.body.clientWidth;
+            let winHeight = document.body.clientHeight;
+            let winX = window.screenX || window.screenLeft || 0;
+            let winY = window.screenY || window.screenTop || 0;
+            let nLeft = winX + (winWidth - nWidth) / 2;
+            let nTop = winY + (winHeight - nHeight) / 2;
+
+            let strOption = '';
+            strOption += 'left=' + nLeft + 'px,';
+            strOption += 'top=' + nTop + 'px,';
+            strOption += 'width=' + nWidth + 'px,';
+            strOption += 'height=' + nHeight + 'px,';
+            strOption += 'toolbar=no,menubar=no,location=no,resizable=yes,status=yes';
+
+            // 최초 클릭이면 팝업을 띄운다.
+            if (newOrderRegistrationPopup === undefined || newOrderRegistrationPopup.closed) {
+                newOrderRegistrationPopup = window.open(url, '', strOption);
+            } else {
+                newOrderRegistrationPopup.focus();
+            }
+        });
+
         $('#CONTROL_MANGE_POPUP').on({
             'show.bs.modal': function () {
                 $orderRegisterGrid = $('#' + popupGridId).pqGrid(popupObj);
@@ -2185,21 +2219,50 @@
             }
         });
 
+        $('#CONTROL_MONTH_CLOSE').on('click', function () {
+            if (noSelectedRowAlert()) {
+                return false;
+            }
+
+            if (fnIsGridEditing($orderManagementGrid)) {
+                return false;
+            }
+
+            let url = '/controlMonthClose';
+            // 팝업 사이즈
+            let nWidth = 1080;
+            let nHeight = 480;
+            let winWidth = document.body.clientWidth;
+            let winHeight = document.body.clientHeight;
+            let winX = window.screenX || window.screenLeft || 0;
+            let winY = window.screenY || window.screenTop || 0;
+            let nLeft = winX + (winWidth - nWidth) / 2;
+            let nTop = winY + (winHeight - nHeight) / 2;
+
+            let strOption = '';
+            strOption += 'left=' + nLeft + 'px,';
+            strOption += 'top=' + nTop + 'px,';
+            strOption += 'width=' + nWidth + 'px,';
+            strOption += 'height=' + nHeight + 'px,';
+            strOption += 'toolbar=no,menubar=no,location=no,resizable=yes,status=yes';
+
+            // 최초 클릭이면 팝업을 띄운다.
+            if (controlMonthClosePopup === undefined || controlMonthClosePopup.closed) {
+                controlMonthClosePopup = window.open(url, '', strOption);
+            } else {
+                controlMonthClosePopup.focus();
+            }
+        });
+
         $('#CONTROL_CLOSE_POPUP').on({
             'show.bs.modal': function () {
-                if (noSelectedRowAlert()) {
-                    return false;
-                }
 
-                if (fnIsGridEditing($orderManagementGrid)) {
-                    return false;
-                }
 
                 let compCdList = [];
                 let orderCompCdList = [];
 
-                for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
-                    let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                    let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
 
                     compCdList.push(rowData.COMP_CD);
                     orderCompCdList.push(rowData.ORDER_COMP_CD);
@@ -2253,10 +2316,10 @@
          * @description 확정버튼 클릭
          */
         $('#CONFIRMATION').on('click', function (event) {
-            let selectedRowCount = selectedRowIndex.length;
+            let selectedRowCount = selectedOrderManagementRowIndex.length;
 
             for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
 
                 // TODO: 필수데이터가 입력되어 있어야만 확정 가능
                 // if (rowData.OUTSIDE_YN === 'Y') {
@@ -2272,11 +2335,11 @@
          * @description 취소버튼 클릭
          */
         $('#CANCEL').on('click', function (event) {
-            let selectedRowCount = selectedRowIndex.length;
+            let selectedRowCount = selectedOrderManagementRowIndex.length;
 
             //TODO: 외주가 ‘Y’ 인 상태에서는 외주관리화면에서 대상을 먼저 삭제해야만 확정취소가 가능
             /* for (let i = 0; i < selectedRowCount; i++) {
-                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
 
                  if (rowData.OUTSIDE_YN === 'Y') {
                      alert('외주가 ‘Y’ 인 상태에서는 외주관리화면에서 대상을 먼저 삭제해야만 확정취소가 가능');
@@ -2314,7 +2377,7 @@
                 'DETAIL_POCKET', 'DETAIL_DRILL', 'DETAIL_DIFFICULTY', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND',
                 'MATERIAL_FINISH_HEAT', 'RKFH', 'SIZE_W_M', 'SIZE_H_M', 'SIZE_T_M', 'SIZE_D_M', 'SIZE_L_M',
                 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
-                'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'CALCUL_EST_UNIT_COST', 'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMOUNT',
+                'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'CALC_EST_UNIT_COST', 'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMOUNT',
                 'UNIT_FINAL_AMT', 'FINAL_AMT', 'WHDWJSRK', 'PREV_DRAWING_NUM', 'CLOSE_MONTH', 'CLOSE_MONTH_TRAN',
                 'CLOSE_VER', 'CLOSE_VER_TRAN', 'CLOSE_USER_ID', 'CLOSE_DT', 'POP_POSITION_NM', 'PART_STATUS_NM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'REVD.',
                 'REVDLFTL.', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM', 'INSPECT_DESC',
@@ -2324,7 +2387,7 @@
             ];
             const easyArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'PRICE_CONFIRM', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'MAIN_INSPECTION',
-                'EMERGENCY_YN', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'OUTSIDE_YN',
+                'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'OUTSIDE_YN',
                 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'MATERIAL_DETAIL', 'MATERIAL_KIND',
                 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_ORDER_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
                 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'OUT_QTY', 'ORDER_OUT_FINISH_DT',
@@ -2332,19 +2395,20 @@
             ];
             const estimateArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'PRICE_CONFIRM', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'INVOICE_NUM',
-                'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT',
+                'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT',
                 'WORK_TYPE', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'MATERIAL_DETAIL',
                 'MATERIAL_TYPE_NM', 'MATERIAL_KIND','SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_ORDER_QTY',
                 'DETAIL_MACHINE_REQUIREMENT', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
                 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
-                'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'CALCUL_EST_UNIT_COST', 'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMOUNT',
+                'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'CALC_EST_UNIT_COST', 'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMOUNT',
                 'UNIT_FINAL_AMT', 'FINAL_AMT', 'WHDWJSRK', 'PREV_DRAWING_NUM','DXF_GFILE_SEQ', 'IMG_GFILE_SEQ',
                 'CONTROL_PART_INSERT_UPDATE_DT'
             ];
             const outsideQualityArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'PRICE_CONFIRM', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'INVOICE_NUM',
                 'MAIN_INSPECTION',
-                'EMERGENCY_YN', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'OUTSIDE_YN',
+                'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM',
+                'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'OUTSIDE_YN',
                 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'MATERIAL_DETAIL', 'MATERIAL_TYPE_NM', 'MATERIAL_KIND',
                 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_ORDER_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
                 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'OUT_QTY', 'ORDER_OUT_FINISH_DT',
@@ -2393,7 +2457,7 @@
                     return false;
                 }
 
-                let selectedRowCount = selectedRowIndex.length;
+                let selectedRowCount = selectedOrderManagementRowIndex.length;
                 let controlSeqList = [];
                 let compCdList = [];
                 let orderCompCdList = [];
@@ -2401,7 +2465,7 @@
                 let controlSeqStr = '';
 
                 for (let i = 0; i < selectedRowCount; i++) {
-                    let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                    let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
 
                     controlSeqList.push(rowData.CONTROL_SEQ);
                     compCdList.push(rowData.COMP_CD);
@@ -2548,11 +2612,11 @@
         });
         $('#TRANSACTION_STATEMENT_DELETE').on('click', function () {
             let parameters;
-            let selectedRowCount = selectedRowIndex.length;
+            let selectedRowCount = selectedOrderManagementRowIndex.length;
             let invoiceNumList = [];
 
             for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
 
                 invoiceNumList.push(rowData.INVOICE_NUM);
             }
@@ -2587,8 +2651,8 @@
             let controlSeqStr = '';
             let data = $transactionStatementDetailGrid.pqGrid('option', 'dataModel.data');
 
-            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
 
                 invoiceNumList.push(rowData.INVOICE_NUM);
             }
@@ -2636,8 +2700,8 @@
             let controlSeqList = [];
             let controlSeqStr = '';
 
-            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
 
                 controlSeqList.push(rowData.CONTROL_SEQ);
             }
@@ -2659,9 +2723,9 @@
         // 바코드도면출력
         $('#BARCODE_DRAWING_PRINT').on('click', function () {
             let printHtml  = "";
-            let selectedRowCount = selectedRowIndex.length;
+            let selectedRowCount = selectedOrderManagementRowIndex.length;
             for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
                 if(!rowData.IMG_GFILE_SEQ){
                     alert("이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.");
                     return;
@@ -2741,8 +2805,8 @@
             if (noSelectedRowAlert()) return false;
             let formData = [];
 
-            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
                 formData.push(rowData.CONTROL_BARCODE_NUM);
             }
 
@@ -2755,8 +2819,8 @@
             if (noSelectedRowAlert()) return false;
             let formData = [];
 
-            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
                 formData.push(rowData.LABEL_BARCODE_NUM);
             }
 
@@ -2779,9 +2843,9 @@
         // 도면출력
         $('#DRAWING_PRINT').on('click', function () {
             let printHtml  = "";
-            let selectedRowCount = selectedRowIndex.length;
+            let selectedRowCount = selectedOrderManagementRowIndex.length;
             for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
                 if(!rowData.IMG_GFILE_SEQ){
                     alert("이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.");
                     return;
@@ -2833,12 +2897,12 @@
             let number = $('#SUPPLY_UNIT_COST_APPLY option:selected').val();
             let rate = 100 - number;
 
-            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
                 let supplyUnitPrice = (Math.ceil(rowData.UNIT_FINAL_AMT * (rate / 100) / 100) * 100).toFixed(0) || null;
                 let finalAmount = (supplyUnitPrice * rowData.ORDER_QTY) || null; // 10의 자리 올림
 
-                $orderManagementGrid.pqGrid('updateRow', {'rowIndx': selectedRowIndex[i], row: {'UNIT_FINAL_AMT': supplyUnitPrice, 'FINAL_AMT': finalAmount}, checkEditable: false});
+                $orderManagementGrid.pqGrid('updateRow', {'rowIndx': selectedOrderManagementRowIndex[i], row: {'UNIT_FINAL_AMT': supplyUnitPrice, 'FINAL_AMT': finalAmount}, checkEditable: false});
             }
         });
 
@@ -2871,11 +2935,11 @@
         });
 
         $('#CONTROL_CLOSE_YES').on('click', function () {
-            let selectedRowCount = selectedRowIndex.length;
+            let selectedRowCount = selectedOrderManagementRowIndex.length;
             let list = [];
 
             for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
                 rowData.CLOSE_VER = $('#CLOSE_VER').val();
                 rowData.CLOSE_MONTH = $('#CONTROL_CLOSE_YEAR').val() + $('#CONTROL_CLOSE_MONTH').val();
                 list.push(rowData);
@@ -2919,8 +2983,8 @@
             let orderStaffSeqList = [];
             let controlSeqStr = '';
 
-            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
 
                 list.push(rowData);
                 controlSeqList.push(rowData.CONTROL_SEQ);
