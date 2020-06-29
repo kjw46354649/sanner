@@ -426,7 +426,7 @@
         ];
         currentObj = {
             width: "100%",
-            height: 720, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            height: 720, collapsible: false, resizable: true, showTitle: false, rowHtHead: 15,// pageModel: {type: "remote"},
             editable : false,
             autoRow: false,
             rowHt: 100,
@@ -501,7 +501,7 @@
             width: "100%",
             height: 720, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'}, editable : false,
-            numberCell: {title: 'No.'}, dragColumns: {enabled: false},
+            rowHtHead: 15, numberCell: {title: 'No.'}, dragColumns: {enabled: false},
             scrollModel: {autoFit: true}, trackModel: {on: true},
             autoRow: false,
             rowHt: 100,
@@ -553,7 +553,7 @@
         logObj = {
             width: "100%",
             height: 250, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
-            selectionModel : {type: 'row', mode: 'single'}, editable : false,
+            selectionModel : {type: 'row', mode: 'single'}, editable : false, rowHtHead: 15,
             numberCell: {title: 'No.', styleHead: {'vertical-align':'middle'}}, dragColumns: {enabled: false},
             scrollModel: {autoFit: true}, trackModel: {on: true},
             columnTemplate: {
@@ -743,6 +743,7 @@
                 hvalign: 'center'
             },
             scrollModel: {autoFit: true},
+            rowHtHead: 15,
             numberCell: {width: 30, title: "No", show: true, styleHead: {'vertical-align': 'middle'}},
             selectionModel: {type: 'row', mode: 'single'},
             swipeModel: {on: false},

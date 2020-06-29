@@ -519,7 +519,7 @@
 
         let machineResultManageObj = {
             minHeight: '100%', height: 750, collapsible: false, postRenderInterval: -1, //call postRender synchronously.
-            resizable: false, showTitle: false, strNoRows: g_noData, numberCell: {title: 'No.'},
+            resizable: false, showTitle: false, strNoRows: g_noData, rowHtHead: 15, numberCell: {title: 'No.'},
             trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
             colModel: machineResultManagecolModel,
             dataModel: {
@@ -642,7 +642,7 @@
 
         let camWorkManagePopObj = {
             minHeight: '100%', height: 150, collapsible: false, postRenderInterval: -1, //call postRender synchronously.
-            resizable: false, showTitle: false, strNoRows: g_noData, trackModel: {on: true}, numberCell: {show: false }, // numberCell: {title: 'No.'}, trackModel: {on: true},
+            resizable: false, showTitle: false, strNoRows: g_noData, rowHtHead: 15, trackModel: {on: true}, numberCell: {show: false }, // numberCell: {title: 'No.'}, trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: true},
             colModel: camWorkManagePopColModel,
             dataModel: {
@@ -847,7 +847,7 @@
                 return fnFormToJsonArrayData('#cam_work_manage_pop_form');
             } );
             $camWorkManagePopGrid.pqGrid("refreshDataAndView");
-        }
+        };
 
         /* function */
 

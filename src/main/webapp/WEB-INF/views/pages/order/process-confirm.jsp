@@ -235,6 +235,7 @@
             postRenderInterval: -1, //call postRender synchronously.
             resizable: false,
             showTitle: false,
+            rowHtHead: 15,
             numberCell: {title: 'No.'},
             trackModel: {on: true},
             selectionModel: {type: 'row', mode: 'single'},
@@ -349,6 +350,7 @@
             postRenderInterval: -1, //call postRender synchronously.
             resizable: false,
             showTitle: false,
+            rowHtHead: 15,
             numberCell: {title: 'No.'},
             trackModel: {on: true},
             selectionModel: {type: 'row', mode: 'single'},
@@ -430,6 +432,7 @@
             collapsible: false,
             resizable: false,
             showTitle: false,
+            rowHtHead: 15,
             numberCell: {title: 'No.'},
             // scrollModel: {autoFit: true},
             trackModel: {on: true},
@@ -507,6 +510,7 @@
             collapsible: false,
             resizable: false,
             showTitle: false,
+            rowHtHead: 15,
             numberCell: {title: 'No.'},
             // scrollModel: {autoFit: true},
             trackModel: {on: true},
