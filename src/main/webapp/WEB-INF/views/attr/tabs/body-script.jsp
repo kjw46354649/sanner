@@ -44,6 +44,9 @@
 
 <!-- print -->
 <script type="text/javascript" src="/resource/plugins/printThis/printThis.js"></script>
+
+<script type="text/javascript" src="/resource/plugins/print.js/print.min.js"></script>
+
 <script type="text/javascript" src='/resource/plugins/waitme/waitMe.js'></script>
 <script type="text/javascript" src="/resource/plugins/dhtmlx/suite.min.js"></script>
 

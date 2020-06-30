@@ -14,4 +14,6 @@
 
     <beans:bean name="fileDownloadView" class="com.framework.innodale.controller.FileDownloadView" p:contentType="text/html" />
 
+<!--    <beans:bean name="pdfPrintView" class="com.framework.innodale.controller.PdfPrintView" p:contentType="text/html" />-->
+
 </beans>

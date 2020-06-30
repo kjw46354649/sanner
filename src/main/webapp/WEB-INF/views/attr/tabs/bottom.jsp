@@ -110,7 +110,7 @@
         </div>
     </div>
 </div>
-<div class="cadDrawingPrint page" style="display: none; height: 1px;"></div>
+<%--<div class="cadDrawingPrint page" style="display: none; height: 1px;"></div>--%>
 <!-- 인쇄 div end -->
 <form id="barcode_form">
     <input type="hidden" id="queryId" name="queryId" value="popMapper.selectBarcodeInfo">
@@ -276,7 +276,6 @@
     </form>
 </div>
 <!-- 제품상세정보 layer popup : E -->
-
 <!-- CAM 상세정보 layer popup : S -->
 <div class="popup_container g_item_detail_pop_cam_pop" id="g_item_detail_pop_cam_pop" style="display: none;">
     <form class="form-inline" id="g_item_detail_pop_cam_pop_form" name="g_item_detail_pop_cam_pop_form" role="form">

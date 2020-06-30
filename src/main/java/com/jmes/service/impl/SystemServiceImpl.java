@@ -41,8 +41,7 @@ public class SystemServiceImpl implements SystemService {
         Map<String, Object> jsonMap = null;
 
         if (jsonObject != null)
-            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {
-            });
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
 
         ArrayList<HashMap<String, Object>> addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
         ArrayList<HashMap<String, Object>> updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");

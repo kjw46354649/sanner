@@ -2724,92 +2724,17 @@
         $('#BARCODE_DRAWING_PRINT').on('click', function () {
             let printHtml  = "";
             let selectedRowCount = selectedOrderManagementRowIndex.length;
+            let selectControlList = "";
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
                 if(!rowData.IMG_GFILE_SEQ){
                     alert("이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.");
                     return;
+                }else{
+                    console.log(rowData.CONTROL_SEQ);
+                    console.log(rowData.CONTROL_DETAIL_SEQ);
+                    selectControlList += rowData.CONTROL_SEQ+''+rowData.CONTROL_DETAIL_SEQ+"^";
                 }
-
-                printHtml += '<div class="print">' +
-                '               <div>' +
-                '                   <table class="drawingArea">' +
-                '                     <tbody>' +
-                '                     <tr class="controlInfo">' +
-                '                         <td scope="col" width="26%" rowspan="2" class="center_sort span_first">' +
-                '                             <img src="http://106.240.243.250/barcode/code128/C000002476" class="barcode"></td>' +
-                '                         <td scope="col" width="2%" class="center_sort first">0</td>' +
-                '                         <td scope="col" width="17%" class="center_sort first">AeereffffffreffffreNI</td>' +
-                '                         <td scope="col" width="10%" class="center_sort first">50*40*10</td>' +
-                '                          <td scope="col" width="3%" class="center_sort first">Part</td>' +
-                '                         <td scope="col" width="8%" class="center_sort first">AL</td>' +
-                '                         <td scope="col" width="8%" class="center_sort first">현품수정</td>' +
-                '                         <td scope="col" width="8%" class="center_sort first">열처리</td>' +
-                '                         <td scope="col" width="4%" rowspan="2" class="center_sort span_first">32</td>' +
-                '                         <td scope="col" width="4%" class="center_sort first">원칭</td>' +
-                '                         <td scope="col" width="4%" class="center_sort first">대칭</td>' +
-                '                         <td scope="col" width="5%" class="center_sort first_col_end">납기</td>' +
-                '                     </tr>' +
-                '                 <tr class="controlInfo">' +
-                '                     <td scope="col" class="center_sort last">2</td>' +
-                '                     <td scope="col" colspan="2" class="center_sort last">B20-278AN0319-0331-34</td>' +
-                '                     <td scope="col" class="center_sort last">1</td>' +
-                '                     <td scope="col" class="center_sort last">ANO(경질)</td>' +
-                '                     <td scope="col" class="center_sort last">긴급</td>' +
-                '                     <td scope="col" class="center_sort last">COC</td>' +
-                '                     <td scope="col" class="center_sort last">3</td>' +
-                '                     <td scope="col" class="center_sort last">3</td>' +
-                '                     <td scope="col" class="center_sort last_col_end">03-31</td>' +
-                '                 </tr>' +
-                '               </tbody>' +
-                '           </table>' +
-                '       </div>' +
-                '       <div>' +
-                '           <img src="http://106.240.243.250/image/6190" style="width:820px;height:2010px;">' +
-                '       </div>' +
-                '   </div>' +
-                '   <div class="page-break"></div>';
-
-
-                // printHtml += '<div class="print">' +
-                //     '   <table class="drawingArea" style="table-layout: fixed; word-wrap:break-word;">' +
-                //     '        <tbody>' +
-                //     '        <tr class="controlInfo">' +
-                //     '           <td scope="col" width="28%" rowspan="2" class="center_sort"><img src="/barcode/code128/' +rowData.CONTROL_BARCODE_NUM+ '" class="barcode"></td>' +
-                //     '           <td scope="col" width="10%" rowspan="2" class="center_sort">'+rowData.ORDER_COMP_NM+'</td>' +
-                //     '           <td scope="col" width="3%" class="center_sort">'+rowData.CONTROL_VER+'</td>' +
-                //     '           <td scope="col" width="10%" rowspan="2" class="center_sort">'+rowData.CONTROL_NUM+'</td>' +
-                //     '           <td scope="col" width="3%" class="center_sort">Part</td>' +
-                //     '           <td scope="col" width="10%" colspan="2" class="center_sort">'+rowData.SIZE_TXT+'</td>' +
-                //     '           <td scope="col" width="10%" class="center_sort">'+rowData.WORK_TYPE_NM+'</td>' +
-                //     '           <td scope="col" width="10%" class="center_sort">'+rowData.MATERIAL_FINISH_HEAT+'</td>';
-                // if(rowData.PART_NUM){
-                //     printHtml += '           <td scope="col" width="3%" rowspan="2" class="center_sort">'+rowData.PART_UNIT_QTY+'</td>';
-                // }else{
-                //     printHtml += '           <td scope="col" width="3%" rowspan="2" class="center_sort">'+rowData.ORDER_QTY+'</td>';
-                // }
-                // printHtml = printHtml + '' +
-                //     '           <td scope="col" width="5%" class="center_sort">원칭</td>' +
-                //     '           <td scope="col" width="5%" class="center_sort">대칭</td>' +
-                //     '           <td scope="col" width="5%" class="center_sort">납기</td>' +
-                //     '        </tr>' +
-                //     '        <tr class="controlInfo">' +
-                //     '            <td scope="col" class="center_sort">'+rowData.DRAWING_VER+'</td>' +
-                //     '            <td scope="col" class="center_sort">'+rowData.PART_NUM+'</td>' +
-                //     '            <td scope="col" class="center_sort">'+rowData.MATERIAL_DETAIL_NM+'</td>' +
-                //     '            <td scope="col" class="center_sort">'+rowData.SURFACE_TREAT+'</td>' +
-                //     '            <td scope="col" class="center_sort">'+rowData.EMERGENCY_BARCODE_NM+'</td>' +
-                //     '            <td scope="col" class="center_sort">'+rowData.MAIN_INSPECTION_NM+'</td>' +
-                //     '            <td scope="col" class="center_sort">'+rowData.ORIGINAL_SIDE_QTY+'</td>' +
-                //     '            <td scope="col" class="center_sort">'+rowData.OTHER_SIDE_QTY+'</td>' +
-                //     '            <td scope="col" class="center_sort">'+rowData.INNER_DUE_DT+'</td>'+
-                //     '        </tr>' +
-                //     '        <tr class="imageInfo">' +
-                //     '            <td scope="col" colspan="14"><img src="/image/'+rowData.IMG_GFILE_SEQ+'" class="drawingImage"></td>' +
-                //     '        </tr>' +
-                //     '        </tbody>'+
-                //     '    </table>'+
-                //     '</div>';
             }
             let drawingBarcodePrintModalConfirm = function(callback){
                 let text = '<h4>' +
@@ -2821,8 +2746,8 @@
                 $("#commonConfirmYesBtn").unbind().click(function (e) {
                     e.stopPropagation();
                     commonConfirmPopup.hide();
-                    $(this).startWaitMe();
-                    $(".cadDrawingPrint").html(printHtml).trigger('create');
+                    // $(this).startWaitMe();
+                    // $(".cadDrawingPrint").html(printHtml).trigger('create');
                     callback(true);
                     return;
                 });
@@ -2833,11 +2758,18 @@
             };
             drawingBarcodePrintModalConfirm(function(confirm){
                 if(confirm){
-                    setTimeout(function() {
-                        $(this).stopWaitMe();
-                        $(".cadDrawingPrint").css("display","");
-                        callWindowModalDrawingPopup();
-                    }, 3000);
+
+                    console.log(selectControlList);
+
+                    printJS({printable:'/makeCadBarcodePrint?selectControlList='+encodeURI(selectControlList), type:'pdf', showModal:true});
+                    // let postData = {
+                    //     'list-data': selectCadBarcodeList
+                    // };
+                    // let parameters = {'url': '/makeCadBarcodePrint', 'data': {data: JSON.stringify(postData)}};
+                    // fnPostAjax(function (data, callFunctionParam) {
+                    //     $(this).stopWaitMe();
+                    //     printJS({printable:'/image/'+data.GFILE_SEQ, type:'pdf', showModal:true});
+                    // }, parameters, '');
                 }
             });
         });
@@ -2850,7 +2782,6 @@
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
                 formData.push(rowData.CONTROL_BARCODE_NUM);
             }
-
             fnBarcodePrint(function(data, callFunctionParam){
                 alert(data.message);
             }, formData, '');
@@ -2864,7 +2795,6 @@
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
                 formData.push(rowData.LABEL_BARCODE_NUM);
             }
-
             fnBarcodePrint(function(data, callFunctionParam){
                 alert(data.message);
             }, formData, '');
@@ -2883,23 +2813,16 @@
         });
         // 도면출력
         $('#DRAWING_PRINT').on('click', function () {
-            let printHtml  = "";
             let selectedRowCount = selectedOrderManagementRowIndex.length;
+            let imgGfileSeq = "";
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
                 if(!rowData.IMG_GFILE_SEQ){
                     alert("이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.");
                     return;
+                }else{
+                    imgGfileSeq += rowData.IMG_GFILE_SEQ + "^";
                 }
-                printHtml += '<div class="print">' +
-                    '   <table class="drawingArea" style="table-layout: fixed; word-wrap:break-word;">' +
-                    '        <tbody>' +
-                    '           <tr class="imageInfo">' +
-                    '               <td scope="col" colspan="14"><img src="/image/'+rowData.IMG_GFILE_SEQ+'" class="drawingImage"></td>' +
-                    '           </tr>' +
-                    '        </tbody>' +
-                    '    </table>' +
-                    '</div>';
             }
             let drawingPrintModalConfirm = function(callback){
                 let text = '<h4>' +
@@ -2911,8 +2834,8 @@
                 $("#commonConfirmYesBtn").unbind().click(function (e) {
                     e.stopPropagation();
                     commonConfirmPopup.hide();
-                    $(this).startWaitMe();
-                    $(".cadDrawingPrint").html(printHtml).trigger('create');
+                    // $(this).startWaitMe();
+                    // $(".cadDrawingPrint").html(printHtml).trigger('create');
                     callback(true);
                     return;
                 });
@@ -2923,11 +2846,13 @@
             };
             drawingPrintModalConfirm(function(confirm){
                 if(confirm){
-                    setTimeout(function() {
-                        $(this).stopWaitMe();
-                        $(".cadDrawingPrint").css("display","");
-                        callWindowModalDrawingPopup();
-                    }, 2000);
+                    // $(this).stopWaitMe();
+                    printJS({printable:'/makeCadPrint?imgGfileSeq='+encodeURI(imgGfileSeq), type:'pdf', showModal:true});
+                    // let postData = { 'imgGfileSeq': imgGfileSeq};
+                    // let parameters = {'url': '/make_cad_print', 'data': postData};
+                    // fnPostAjax(function (data, callFunctionParam) {
+                    //     printJS('/image/' + data.GFILE_SEQ);
+                    // }, parameters, '');
                 }
             });
         });

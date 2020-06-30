@@ -2396,4 +2396,37 @@
           AND A.CONTROL_SEQ = (SELECT CONTROL_SEQ FROM  jmes.TBL_CONTROL WHERE CONTROL_SEQ = #{CONTROL_SEQ} AND CONTROL_VER >= 1)
     </insert>
 
+
+    <select id="selectControlCadBarcodeListList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            (SELECT MAX(G.BARCODE_NUM) FROM TBL_CONTROL_BARCODE G WHERE B.CONTROL_SEQ = G.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ AND G.DEL_YN = 'N') AS BARCODE_NUM,
+            IFNULL(A.CONTROL_VER, SPACE(0)) AS CONTROL_VER, <!-- 관리번호 버전 -->
+            IFNULL(B.DRAWING_VER, SPACE(0)) AS DRAWING_VER, <!-- 도면번호 버전 -->
+            IFNULL(SF_GET_COMP_NM(A.ORDER_COMP_CD), SPACE(0)) AS ORDER_COMP_NM, <!-- 발주업체 -->
+            IFNULL(A.CONTROL_NUM, SPACE(0)) AS CONTROL_NUM, <!-- 관리번호 -->
+            IFNULL(B.SIZE_TXT, SPACE(0)) AS SIZE_TXT, <!-- 규격 문자열 -->
+            IFNULL(B.PART_NUM, SPACE(0)) AS PART_NUM, <!-- Part -->
+            IFNULL(SF_GET_CODE_NM(1002, B.MATERIAL_TYPE, 'KR'), SPACE(0)) AS MATERIAL_TYPE_NM, <!-- 재질 -->
+            IFNULL(SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, 'KR'), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류 -->
+            IFNULL(SF_GET_CODE_NM(1033, B.WORK_TYPE, 'KR'), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
+            IF(A.EMERGENCY_YN IS NULL, SPACE(0), '긴급') AS EMERGENCY_BARCODE_NM, <!-- 바코드 긴급 -->
+            IFNULL(B.MATERIAL_FINISH_HEAT, SPACE(0)) AS MATERIAL_FINISH_HEAT, <!-- 열처리 -->
+            IFNULL(SF_GET_CODE_NM(1042, A.MAIN_INSPECTION, 'EN'), SPACE(0)) AS MAIN_INSPECTION_NM, <!-- 주요검사품 -->
+            CONCAT(IFNULL(SF_GET_CONTROL_ORDER_QTY(A.CONTROL_SEQ, NULL), 0), " EA") AS CONTROL_ORDER_QTY, <!-- 주문 수량 -->
+            IFNULL(B.ORIGINAL_SIDE_QTY, SPACE(0)) AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
+            IFNULL(B.OTHER_SIDE_QTY, SPACE(0)) AS OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
+            IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'YYYY', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 가공납기 -->
+            C.FILE_PATH AS IMAGE_PATH
+        FROM TBL_CONTROL A, TBL_CONTROL_PART B
+            LEFT OUTER JOIN TBL_FILE C ON B.IMG_GFILE_SEQ = C.GFILE_SEQ
+        WHERE 1 = 1
+            AND A.DEL_YN = 'N'
+            AND A.CONTROL_SEQ = B.CONTROL_SEQ
+            AND CONCAT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) IN
+            <foreach collection="selectControlLists" item="bean" index="index"  open="(" close=")" separator=",">
+                #{bean}
+            </foreach>
+        ORDER BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+    </select>
+
 </mapper>

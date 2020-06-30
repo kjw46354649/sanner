@@ -32,6 +32,8 @@
 <!-- calendar -->
 <link rel="stylesheet" type="text/css" href='/resource/plugins/fullcalendar/core/main.css' />
 <link rel="stylesheet" type="text/css" href='/resource/plugins/fullcalendar/daygrid/main.css' />
+<!-- print -->
+<link rel="stylesheet" type="text/css" href='/resource/plugins/print.js/print.min.css' />
 
 <link rel="stylesheet" type="text/css" href="/resource/asset/css/reset.css" />
 <link rel="stylesheet" type="text/css" href="/resource/asset/css/webFont.css" />
