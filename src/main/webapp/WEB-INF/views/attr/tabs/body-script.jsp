@@ -12,19 +12,19 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/fmt' prefix='fmt' %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/functions' prefix='fn' %>
 
-<script src="/resource/plugins/jspPrint/zip.js"></script>
-<script src="/resource/plugins/jspPrint/zip-ext.js"></script>
-<script src="/resource/plugins/jspPrint/deflate.js"></script>
-<script src="/resource/plugins/jspPrint/JSPrintManager.js"></script>
+<script type="text/javascript" src="/resource/plugins/jspPrint/zip.js"></script>
+<script type="text/javascript" src="/resource/plugins/jspPrint/zip-ext.js"></script>
+<script type="text/javascript" src="/resource/plugins/jspPrint/deflate.js"></script>
+<script type="text/javascript" src="/resource/plugins/jspPrint/JSPrintManager.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.5/bluebird.min.js"></script>
+<script type="text/javascript" src="/resource/plugins/bluebird.min.js"></script>
 <script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
 <!-- Bootstrap -->
-<script src='/resource/main/js/bootstrap.js'></script>
+<script type="text/javascript" src='/resource/main/js/bootstrap.js'></script>
 <script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
 <script type="text/javascript" src="/resource/asset/js/front.js"></script>
 <!--jQuery dependencies-->
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/resource/plugins/jquery-ui-1.11.4/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/resource/main/js/jquery-ui-timepicker-addon.js" ></script>
 <script type="text/javascript" src="/resource/main/js/jquery.ui.datepicker-ko.js" ></script>
 
@@ -32,7 +32,7 @@
 <script type="text/javascript" src="/resource/plugins/paramquery/pqgrid.min.js" ></script>
 
 <!--ParamQuery Grid localization file (necessary since v5.2.0)-->
-<script src="/resource/plugins/paramquery/localize/pq-localize-en.js"></script>
+<script type="text/javascript" src="/resource/plugins/paramquery/localize/pq-localize-en.js"></script>
 
 <!--Include jsZip file to support xlsx and zip export (optional)-->
 <script type="text/javascript" src="/resource/plugins/paramquery/jsZip-2.5.0/jszip.min.js" ></script>
@@ -61,7 +61,7 @@
 <script type="text/javascript" src='/resource/plugins/fullcalendar/interaction/main.js'></script>
 <script type="text/javascript" src='/resource/plugins/fullcalendar/daygrid/main.js'></script>
 <%--<script type="text/javascript" src='/resource/plugins/fullcalendar/moment/main.js'></script>--%>
-<script class="cssdesk" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.0/moment.min.js" type="text/javascript"></script>
+<script type="text/javascript" class="cssdesk" src="/resource/plugins/moment-2.11.0/min/moment.min.js"></script>
 
 <!-- Multi Select -->
 <script type="text/javascript" src='/resource/plugins/multi_select/jquery.multi-select.js'></script>

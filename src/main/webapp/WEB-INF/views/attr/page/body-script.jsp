@@ -11,35 +11,35 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-
-
-<link rel="stylesheet"
-      href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css"/>
-<script src="/resource/main/js/jquery.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+<!--[if lt IE 9]>
+<script type="text/javascript" src="/resource/main/js/ie/html5shiv.js"></script>
+<script type="text/javascript" src="/resource/main/js/ie/respond.min.js"></script>
+<script type="text/javascript" src="/resource/main/js/ie/excanvas.js"></script>
+<![endif]-->
+<script type="text/javascript" src="/resource/main/js/jquery.min.js"></script>
 <!-- Bootstrap -->
-<script src="/resource/main/js/bootstrap.js"></script>
+<script type="text/javascript" src="/resource/main/js/bootstrap.js"></script>
 <!-- App -->
-<script src="/resource/main/js/app.js"></script>
-<script src="/resource/main/js/slimscroll/jquery.slimscroll.min.js"></script>
-<script src="/resource/main/js/charts/easypiechart/jquery.easy-pie-chart.js"></script>
-<script src="/resource/main/js/charts/sparkline/jquery.sparkline.min.js"></script>
-<script src="/resource/main/js/charts/flot/jquery.flot.min.js"></script>
-<script src="/resource/main/js/charts/flot/jquery.flot.tooltip.min.js"></script>
-<script src="/resource/main/js/charts/flot/jquery.flot.spline.js"></script>
-<script src="/resource/main/js/charts/flot/jquery.flot.pie.min.js"></script>
-<script src="/resource/main/js/charts/flot/jquery.flot.resize.js"></script>
-<script src="/resource/main/js/charts/flot/jquery.flot.grow.js"></script>
-<script src="/resource/main/js/charts/flot/demo.js"></script>
+<script type="text/javascript" src="/resource/main/js/app.js"></script>
+<script type="text/javascript" src="/resource/main/js/slimscroll/jquery.slimscroll.min.js"></script>
+<script type="text/javascript" src="/resource/main/js/charts/easypiechart/jquery.easy-pie-chart.js"></script>
+<script type="text/javascript" src="/resource/main/js/charts/sparkline/jquery.sparkline.min.js"></script>
+<script type="text/javascript" src="/resource/main/js/charts/flot/jquery.flot.min.js"></script>
+<script type="text/javascript" src="/resource/main/js/charts/flot/jquery.flot.tooltip.min.js"></script>
+<script type="text/javascript" src="/resource/main/js/charts/flot/jquery.flot.spline.js"></script>
+<script type="text/javascript" src="/resource/main/js/charts/flot/jquery.flot.pie.min.js"></script>
+<script type="text/javascript" src="/resource/main/js/charts/flot/jquery.flot.resize.js"></script>
+<script type="text/javascript" src="/resource/main/js/charts/flot/jquery.flot.grow.js"></script>
+<script type="text/javascript" src="/resource/main/js/charts/flot/demo.js"></script>
 
-<script src="/resource/main/js/calendar/bootstrap_calendar.js"></script>
-<script src="/resource/main/js/calendar/demo.js"></script>
+<script type="text/javascript" src="/resource/main/js/calendar/bootstrap_calendar.js"></script>
+<script type="text/javascript" src="/resource/main/js/calendar/demo.js"></script>
 
-<script src="/resource/main/js/sortable/jquery.sortable.js"></script>
-<script src="/resource/main/js/app.plugin.js"></script>
+<script type="text/javascript" src="/resource/main/js/sortable/jquery.sortable.js"></script>
+<script type="text/javascript" src="/resource/main/js/app.plugin.js"></script>
 <!-- paramQuery Grid -->
-<script src="/resource/plugins/paramquery/pqgrid.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/resource/plugins/paramquery/pqgrid.min.js"></script>
+<script type="text/javascript" src="/resource/plugins/jquery-ui-1.11.4/jquery-ui.min.js"></script>
 
 
 <script type="text/javascript">
