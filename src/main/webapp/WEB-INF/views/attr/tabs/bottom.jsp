@@ -327,7 +327,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="defaultBtn radius blue" name="commonAlertYesBtn">확인</button>
+                <button type="button" class="defaultBtn radius blue" name="commonAlertYesBtn" id="commonAlertYesBtn">확인</button>
             </div>
         </div>
     </div>

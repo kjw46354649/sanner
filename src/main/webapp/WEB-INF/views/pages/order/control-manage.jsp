@@ -142,12 +142,13 @@
                 <button type="button" class="defaultBtn btn-100w" id="DRAWING_CHANGE">도면변경(Rev. up)</button>
                 <button type="button" class="defaultBtn btn-100w" id="ESTIMATE_REGISTER_FROM_CONTROL">견적등록</button>
                 <button type="button" class="defaultBtn btn-100w" id="ESTIMATE_LIST_PRINT">견적List출력</button>
+                <button type="button" class="defaultBtn btn-100w" id="TRANSACTION_STATEMENT">거래명세표</button>
                 <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#TRANSACTION_STATEMENT_POPUP">거래명세표</button>
                 <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="CONFIRMATION" data-control_status="ORD001" style="color: blue;">확정</button>
                 <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="CANCEL" data-control_status="ORD002" style="color: red;">취소</button>
                 <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="TERMINATION" data-control_status="ORD004">종료</button>
                 <button type="button" class="defaultBtn btn-50w" id="CONTROL_MONTH_CLOSE">마감</button>
-                <button type="button" class="defaultBtn btn-50w" data-toggle="modal" data-target="#CONTROL_CLOSE_POPUP">마감</button>
+<%--                <button type="button" class="defaultBtn btn-50w" data-toggle="modal" data-target="#CONTROL_CLOSE_POPUP">마감</button>--%>
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_DRAWING_VIEW">도면 View</button>
                     <button type="button" class="defaultBtn btn-100w" id="DRAWING_PRINT">도면 출력</button>
@@ -335,13 +336,7 @@
     </div>
 </div>
 
-<form id="transaction_statement_excel_download" method="POST">
-    <input type="hidden" id="sqlId" name="sqlId" value="selectTransactionStatementInfoExcel:selectTransactionStatementListExcel"/>
-    <input type="hidden" id="mapInputId" name="mapInputId" value="info:data"/>
-    <input type="hidden" id="paramName" name="paramName" value="CONTROL_SEQ_STR:COMP_CD:ORDER_COMP_CD:INVOICE_NUM"/>
-    <input type="hidden" id="paramData" name="paramData" value=""/>
-    <input type="hidden" id="template" name="template" value="transaction_statement_template"/>
-</form>
+
 
 <form id="transaction_statement_list_excel_download" method="POST">
     <input type="hidden" id="sqlId" name="sqlId" value="selectTransactionStatementListDataExcel"/>
@@ -571,7 +566,7 @@
                 }
             },
             {title: '도면번호버전', dataType: 'string', dataIndx: 'DRAWING_VER', hidden: true},
-            {title: '', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'DRAWING_NUM_BUTTON', styleHead: {'background':'#a9d3f5'},
+            {title: '', minWidth: 25, width: 25, dataType: 'string', dataIndx: 'DRAWING_NUM_BUTTON', styleHead: {'background':'#a9d3f5'},
                 render: function (ui) {
                     if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" id="imageView" style="cursor: pointer"></span>'
                 },
@@ -909,16 +904,6 @@
             {title: '합계금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMT', hidden: true},
             {title: '종전가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'WHDWJSRK', hidden: true},
             {title: '변경전<br>도면번호', width: 120, dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-            {
-                title: '마감/취소 현황', align: 'center', hidden: true, colModel: [
-                    {title: '마감월', datatype: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
-                    {title: '마감월', datatype: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
-                    {title: '차수', datatype: 'string', dataIndx: 'CLOSE_VER', hidden: true},
-                    {title: '차수', datatype: 'string', dataIndx: 'CLOSE_VER_TRAN'},
-                    {title: '작성자', datatype: 'string', dataIndx: 'CLOSE_USER_ID'},
-                    {title: '일시', width: 120, datatype: 'string', dataIndx: 'CLOSE_DT'}
-                ]
-            },
             {title: '현재 위치', dataType: 'string', dataIndx: 'POP_POSITION', hidden: true},
             {title: '현재 위치', dataType: 'string', dataIndx: 'POP_POSITION_NM', hidden: true},
             {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', hidden: true},            {title: '현재 위치', dataType: 'string', dataIndx: 'POP_POSITION_NM', hidden: true},
@@ -997,6 +982,7 @@
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             showTitle: false,
+            strNoRows: g_noData,
             rowHtHead: 15,
             numberCell: {title: 'No.'},
             trackModel: {on: true},
@@ -1735,78 +1721,8 @@
                 getData: function (dataJSON) {return {data: dataJSON.data};}
             }
         };
-        let $controlCloseRightGrid;
-        const controlCloseRightGridId = 'CONTROL_CLOSE_RIGHT_GRID';
-        let controlCloseRightColModel = [
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
-            {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER', hidden: true},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER_TRAN'},
-            {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
-            {title: '공급가', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
-            {title: '마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
-        ];
-        let controlCloseRightObj = {
-            height: 250,
-            collapsible: false,
-            resizable: false,
-            showTitle: false,
-            // scrollModel: {autoFit: true},
-            rowHtHead: 15,
-            // dragColumns: {enabled: false},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
-            colModel: controlCloseRightColModel,
-            dataModel: {
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'dataSource.emptyGrid'},
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                }
-            }
-        };
 
-        let $transactionStatementDetailGrid;
-        const transactionStatementDetailGridId = 'TRANSACTION_STATEMENT_DETAIL_GRID';
-        const transactionStatementDetailColModel = [
-            {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
-            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-            {title: '주문상태', dataType: 'string', dataIndx: 'CONTROL_STATUS_NM'},
-            {title: '발주번호', dataType: 'string', dataIndx: 'ORDER_NUM'},
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM'},
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT'},
-            {title: '단위', dataType: 'string', dataIndx: 'CLOSE_VER'},
-            {title: '수량', align: 'right', dataType: 'integer', dataIndx: 'ORDER_QTY'},
-            {title: '공급단가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
-            {title: '금액 계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
-            {title: '포장수량', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PACKING_CNT', editable: true},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true},
-            {title: 'LABEL_BARCODE_NUM', dataType: 'string', dataIndx: 'LABEL_BARCODE_NUM', hidden: true},
-        ];
-        const transactionStatementDetailObj = {
-            height: 470,
-            collapsible: false,
-            resizable: false,
-            showTitle: false,
-            strNoRows: g_noData,
-            scrollModel: {autoFit: true},
-            rowHtHead: 15,
-            // dragColumns: {enabled: false},
-            trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
-            colModel: transactionStatementDetailColModel,
-            dataModel: {
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'dataSource.emptyGrid'}, recIndx: 'ROW_NUM',
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                }
-            }
-        };
+        let transactionStatementPopup;
 
         let $transactionStatementListGrid; // 거래 명세표 List Grid
         /* variable */
@@ -1921,68 +1837,6 @@
             }, parameters, '');
         };
 
-        let loadDataControlClose = function (open) {
-            let selectedRowCount = selectedOrderManagementRowIndex.length;
-            let controlSeqList = [];
-            let compCdList = [];
-            let orderCompCdList = [];
-            let controlSeqStr = '';
-
-            for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-
-                controlSeqList.push(rowData.CONTROL_SEQ);
-                compCdList.push(rowData.COMP_CD);
-                orderCompCdList.push(rowData.ORDER_COMP_CD);
-            }
-            // 중복제거
-            controlSeqList = controlSeqList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            compCdList = compCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-
-            for (let i = 0, CONTROL_SEQ_LIST_LENGTH = controlSeqList.length; i < CONTROL_SEQ_LIST_LENGTH; i++) {
-                controlSeqStr += controlSeqList[i];
-
-                if (i < CONTROL_SEQ_LIST_LENGTH - 1) {
-                    controlSeqStr += ',';
-                }
-            }
-
-            $('#CONTROL_CLOSE_FORM > #CONTROL_SEQ').val(controlSeqStr);
-            $('#CONTROL_CLOSE_FORM > #COMP_CD').val(compCdList[0]);
-            $('#CONTROL_CLOSE_FORM > #ORDER_COMP_CD').val(orderCompCdList[0]);
-
-            if (open) {
-                // 마지막 마감 차수 가져오기
-                let postData = fnFormToJsonArrayData('#CONTROL_CLOSE_FORM');
-                postData.queryId = 'orderMapper.selectControlCloseVer';
-                let parameters = {'url': '/json-list', 'data': postData};
-                fnPostAjaxAsync(function (data) {
-                    let closeVer = data.list.length > 0 ? data.list[0].MAX_CLOSE_VER : 1;
-                    $('#CONTROL_CLOSE_FORM #CLOSE_VER').val(closeVer).prop('selected', true);
-                }, parameters, '');
-
-                let controlCloseLeftPostData = fnFormToJsonArrayData('#CONTROL_CLOSE_FORM');
-                controlCloseLeftPostData.queryId = 'orderMapper.selectControlCloseLeftList';
-                $controlCloseLeftGrid.pqGrid('option', 'dataModel.postData', function () {
-                    return controlCloseLeftPostData;
-                });
-                $controlCloseLeftGrid.pqGrid('refreshDataAndView');
-            }
-
-            let controlCloseRightPostData = fnFormToJsonArrayData('#CONTROL_CLOSE_FORM');
-            controlCloseRightPostData.queryId = 'orderMapper.selectControlCloseRightList';
-            $controlCloseRightGrid.pqGrid('option', 'dataModel.postData', function () {
-                return controlCloseRightPostData;
-            });
-            $controlCloseRightGrid.pqGrid('refreshDataAndView');
-        };
 
         // topWrap 확장 함수
         const topMenuOpen = function () {
@@ -2223,8 +2077,34 @@
             if (noSelectedRowAlert()) {
                 return false;
             }
-
             if (fnIsGridEditing($orderManagementGrid)) {
+                return false;
+            }
+
+            let compCdList = [];
+            let orderCompCdList = [];
+
+            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+
+                compCdList.push(rowData.COMP_CD);
+                orderCompCdList.push(rowData.ORDER_COMP_CD);
+            }
+
+            // 중복제거
+            compCdList = compCdList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+
+            if (compCdList.length > 1) {
+                alert('선택된 대상들의 발주사와 공급사는 동일해야 합니다.');
+                return false;
+            }
+            if (orderCompCdList.length > 1) {
+                alert('선택된 대상들의 발주사와 공급사는 동일해야 합니다.');
                 return false;
             }
 
@@ -2256,44 +2136,13 @@
 
         $('#CONTROL_CLOSE_POPUP').on({
             'show.bs.modal': function () {
+/*
 
 
-                let compCdList = [];
-                let orderCompCdList = [];
 
-                for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
-                    let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+                */
 
-                    compCdList.push(rowData.COMP_CD);
-                    orderCompCdList.push(rowData.ORDER_COMP_CD);
-                }
 
-                // 중복제거
-                compCdList = compCdList.filter(function (element, index, array) {
-                    return array.indexOf(element) === index;
-                });
-                orderCompCdList = orderCompCdList.filter(function (element, index, array) {
-                    return array.indexOf(element) === index;
-                });
-                if (compCdList.length > 1) {
-                    alert('선택된 대상들의 발주사와 공급사는 동일해야 합니다.');
-                    return false;
-                }
-                if (orderCompCdList.length > 1) {
-                    alert('선택된 대상들의 발주사와 공급사는 동일해야 합니다.');
-                    return false;
-                }
-
-                fnAppendSelectboxYear('CONTROL_CLOSE_YEAR', 3);
-                fnAppendSelectboxMonth('CONTROL_CLOSE_MONTH');
-                $('#CONTROL_CLOSE_MONTH').val(CURRENT_MONTH < 9 ? '0' + CURRENT_MONTH : CURRENT_MONTH).prop('selected', true);
-
-                $('#CONTROL_CLOSE_POPUP #CLOSE_VER');
-
-                $controlCloseLeftGrid = $('#' + controlCloseLeftGridId).pqGrid(controlCloseLeftObj);
-                $controlCloseRightGrid = $('#' + controlCloseRightGridId).pqGrid(controlCloseRightObj);
-
-                loadDataControlClose(true);
             },
             'hide.bs.modal': function () {
                 $controlCloseLeftGrid.pqGrid('destroy');
@@ -2301,9 +2150,7 @@
             }
         });
 
-        $('#CONTROL_CLOSE_FORM').on('change', function () {
-            loadDataControlClose();
-        });
+
 
         $('#CONTROL_MANAGE_SEARCH').on('click', function () {
             $orderManagementGrid.pqGrid('option', 'dataModel.postData', function () {
@@ -2378,8 +2225,7 @@
                 'MATERIAL_FINISH_HEAT', 'RKFH', 'SIZE_W_M', 'SIZE_H_M', 'SIZE_T_M', 'SIZE_D_M', 'SIZE_L_M',
                 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
                 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'CALC_EST_UNIT_COST', 'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMOUNT',
-                'UNIT_FINAL_AMT', 'FINAL_AMT', 'WHDWJSRK', 'PREV_DRAWING_NUM', 'CLOSE_MONTH', 'CLOSE_MONTH_TRAN',
-                'CLOSE_VER', 'CLOSE_VER_TRAN', 'CLOSE_USER_ID', 'CLOSE_DT', 'POP_POSITION_NM', 'PART_STATUS_NM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'REVD.',
+                'UNIT_FINAL_AMT', 'FINAL_AMT', 'WHDWJSRK', 'PREV_DRAWING_NUM', 'POP_POSITION_NM', 'PART_STATUS_NM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'REVD.',
                 'REVDLFTL.', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM', 'INSPECT_DESC',
                 'ERROR_ACTION_NM','ERROR_NOTE', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT',
                 'OUTSIDE_HOPE_DUE_DT', 'dhlwndlqrhskfWk', 'OUTSIDE_NOTE', 'dhlwnqnffidcode', 'dhlwnwhclqkddks',
@@ -2451,227 +2297,30 @@
             $(this).removeClass('virtual-disable').siblings().addClass('virtual-disable');
         });
         // 거래명세표
-        $('#TRANSACTION_STATEMENT_POPUP').on({
-            'show.bs.modal': function () {
-                if (noSelectedRowAlert()) {
-                    return false;
-                }
-
-                let selectedRowCount = selectedOrderManagementRowIndex.length;
-                let controlSeqList = [];
-                let compCdList = [];
-                let orderCompCdList = [];
-                let invoiceNumList = [];
-                let controlSeqStr = '';
-
-                for (let i = 0; i < selectedRowCount; i++) {
-                    let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-
-                    controlSeqList.push(rowData.CONTROL_SEQ);
-                    compCdList.push(rowData.COMP_CD);
-                    orderCompCdList.push(rowData.ORDER_COMP_CD);
-                    invoiceNumList.push(rowData.INVOICE_NUM);
-                }
-                // 중복제거
-                controlSeqList = controlSeqList.filter(function (element, index, array) {
-                    return array.indexOf(element) === index;
-                });
-                compCdList = compCdList.filter(function (element, index, array) {
-                    return array.indexOf(element) === index;
-                });
-                orderCompCdList = orderCompCdList.filter(function (element, index, array) {
-                    return array.indexOf(element) === index;
-                });
-                invoiceNumList = invoiceNumList.filter(function (element, index, array) {
-                    return array.indexOf(element) === index;
-                });
-
-                if (controlSeqList.length === 0) {
-                    alert('에러!');
-                    return false;
-                }
-                if (compCdList.length === 0) {
-                    alert('공급사가 없습니다!');
-                    return false;
-                }
-                if (orderCompCdList.length === 0) {
-                    alert('발주사가 없습니다!');
-                    return false;
-                }
-                if (compCdList.length > 1) {
-                    alert('선택된 대상들의 발주사와 공급사는 동일해야 합니다.');
-                    return false;
-                }
-                if (orderCompCdList.length > 1) {
-                    alert('선택된 대상들의 발주사와 공급사는 동일해야 합니다.');
-                    return false;
-                }
-                if (invoiceNumList.length > 1) {
-                    alert('선택된 대상들의 거래명세 번호는 동일해야 합니다.');
-                    return false;
-                }
-
-                for (let i = 0; i < controlSeqList.length; i++) {
-                    controlSeqStr += controlSeqList[i];
-
-                    if (i < controlSeqList.length - 1) {
-                        controlSeqStr += ',';
-                    }
-                }
-
-                $('#TRANSACTION_STATEMENT_FORM > #COMP_CD').val(compCdList[0]);
-                $('#TRANSACTION_STATEMENT_FORM > #ORDER_COMP_CD').val(orderCompCdList[0]);
-                $('#TRANSACTION_STATEMENT_FORM > #CONTROL_SEQ_STR').val(controlSeqStr);
-
-                let postData = fnFormToJsonArrayData('#TRANSACTION_STATEMENT_FORM');
-                postData.queryId = 'orderMapper.selectControlTransactionStatementInfo';
-                let parameters = {'url': '/json-info', 'data': postData};
-
-                fnPostAjaxAsync(function (data) {
-                    let obj = data.info;
-
-                    $('#TRANSACTION_STATEMENT_FORM #COMP_NM').text(obj.COMP_NM);
-                    $('#TRANSACTION_STATEMENT_FORM #ORDER_COMP_NM').text(obj.ORDER_COMP_NM);
-                    $('#TRANSACTION_STATEMENT_FORM #TOTAL_AMT').text(obj.TOTAL_AMT);
-                    $('#TRANSACTION_STATEMENT_FORM #INVOICE_NUM').text(obj.INVOICE_NUM);
-                    $('#TRANSACTION_STATEMENT_FORM #INVOICE_NUM_INPUT').val(obj.INVOICE_NUM);
-
-                    $transactionStatementDetailGrid = $('#' + transactionStatementDetailGridId).pqGrid(transactionStatementDetailObj);
-
-                    postData = fnFormToJsonArrayData('#TRANSACTION_STATEMENT_FORM');
-                    postData.queryId = 'orderMapper.selectControlTransactionStatementList';
-                    parameters = {'url': '/json-list', 'data': postData};
-
-                    fnPostAjax(function (data) {
-                        $transactionStatementDetailGrid.pqGrid('option', 'dataModel.data', data.list);
-                        $transactionStatementDetailGrid.pqGrid('refreshView');
-                        controlSeqList = [];
-                        controlSeqStr = '';
-                        for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
-                            let obj = data.list[i];
-
-                            controlSeqList.push(obj.CONTROL_SEQ);
-                            controlSeqStr += controlSeqList[i];
-
-                            if (i < controlSeqList.length - 1) {
-                                controlSeqStr += ',';
-                            }
-                        }
-                    }, parameters, '');
-                }, parameters, '');
-
-                /* 구매 담당자 */
-                postData.queryId = 'dataSource.getCompanyStaffList';
-                parameters = {'url': '/json-list', 'data': postData};
-
-                fnPostAjax(function (data) {
-                    $('#TRANSACTION_STATEMENT_FORM #ORDER_STAFF_SEQ').empty();
-
-                    for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
-                        let obj = data.list[i];
-
-                        $('#TRANSACTION_STATEMENT_FORM #ORDER_STAFF_SEQ').append(new Option(obj.ORDER_STAFF_NM, obj.ORDER_STAFF_SEQ));
-                    }
-                }, parameters, '');
-
-            },
-            'hide.bs.modal': function () {
-                $transactionStatementDetailGrid.pqGrid('destroy');
-            }
-        });
-
-        $('#TRANSACTION_STATEMENT_SAVE').on('click', function () {
-            let tempList = [];
-            let infoPostData = fnFormToJsonArrayData('#TRANSACTION_STATEMENT_FORM');
-            let listPostData = $transactionStatementDetailGrid.pqGrid('option', 'dataModel.data');
-            tempList.push(infoPostData);
-            let postData = {
-                'info-data': tempList,
-                'list-data': listPostData
-                // 'INVOICE_NUM':
-            };
-
-            let parameters = {'url': '/createInvoice', 'data': {data: JSON.stringify(postData)}}
-            fnPostAjax(function (data) {
-                alert("<spring:message code='com.alert.default.save.success' />");
-                $orderManagementGrid.pqGrid('refreshDataAndView');
-            }, parameters, '');
-        });
-        $('#TRANSACTION_STATEMENT_LABEL_PRINT').on('click', function () {
-            if (noSelectedRowAlert()) return false;
-            let formData = [];
-            let data = $transactionStatementDetailGrid.pqGrid('option', 'dataModel.data');
-
-            for (let i = 0, DATA_LENGTH = data.length; i < DATA_LENGTH; i++) {
-                formData.push(data[i].LABEL_BARCODE_NUM);
+        $('#TRANSACTION_STATEMENT').on('click', function () {
+            // if (noSelectedRowAlert()) {
+            //     return false;
+            // }
+            if (fnIsGridEditing($orderManagementGrid)) {
+                return false;
             }
 
-            fnBarcodePrint(function(data, callFunctionParam){
-                alert(data.message);
-            }, formData, '');
-        });
-        $('#TRANSACTION_STATEMENT_DELETE').on('click', function () {
-            let parameters;
             let selectedRowCount = selectedOrderManagementRowIndex.length;
-            let invoiceNumList = [];
-
-            for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-
-                invoiceNumList.push(rowData.INVOICE_NUM);
-            }
-            // 중복제거
-            invoiceNumList = invoiceNumList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-
-            if (invoiceNumList[0] === undefined) {
-                alert('삭제할 거래명세표가 없습니다.');
-                return false;
-            }
-            if (invoiceNumList.length > 1) {
-                alert('선택된 대상들의 거래명세 번호는 동일해야 합니다.');
-                return false;
-            }
-
-            parameters = {'url': '/removeInvoice', 'data': {INVOICE_NUM: invoiceNumList[0]}};
-
-            fnPostAjax(function (data, callFunctionParam) {
-                alert("<spring:message code='com.alert.default.remove.success' />");
-                $('#TRANSACTION_STATEMENT_POPUP').modal('hide');
-                $orderManagementGrid.pqGrid('refreshDataAndView');
-            }, parameters, '');
-        });
-
-        $('#TRANSACTION_STATEMENT_EXPORT').on('click', function () {
             let controlSeqList = [];
             let compCdList = [];
             let orderCompCdList = [];
             let invoiceNumList = [];
             let controlSeqStr = '';
-            let data = $transactionStatementDetailGrid.pqGrid('option', 'dataModel.data');
+            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인';
 
-            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+            for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
 
+                controlSeqList.push(rowData.CONTROL_SEQ);
+                compCdList.push(rowData.COMP_CD);
+                orderCompCdList.push(rowData.ORDER_COMP_CD);
                 invoiceNumList.push(rowData.INVOICE_NUM);
             }
-
-            invoiceNumList = invoiceNumList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-
-            if (invoiceNumList[0] === undefined) {
-                alert('저장 후 엑셀 출력해주세요.');
-                return false;
-            }
-
-            for (let i = 0, DATA_LENGTH = data.length; i < DATA_LENGTH; i++) {
-                controlSeqList.push(data[i].CONTROL_SEQ);
-                compCdList.push(data[i].COMP_CD);
-                orderCompCdList.push(data[i].ORDER_COMP_CD);
-            }
-
             // 중복제거
             controlSeqList = controlSeqList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
@@ -2682,18 +2331,91 @@
             orderCompCdList = orderCompCdList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
             });
+            invoiceNumList = invoiceNumList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
 
-            for (let i = 0; i < controlSeqList.length; i++) {
-                controlSeqStr += controlSeqList[i];
-
-                if (i < controlSeqList.length - 1) {
-                    controlSeqStr += ',';
-                }
+            if (controlSeqList.length === 0) {
+                alert('에러!');
+                return false;
+            }
+            if (compCdList.length === 0) {
+                alert('공급사가 없습니다!');
+                return false;
+            }
+            if (orderCompCdList.length === 0) {
+                alert('발주사가 없습니다!');
+                return false;
+            }
+            if (compCdList.length > 1) {
+                bodyHtml =
+                    '<h4>\n' +
+                    '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                    '    <span>선택된 대상들의 발주사와 공급사는 동일해야 합니다.</span>\n' +
+                    '</h4>';
+                fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
+                return false;
+            }
+            if (orderCompCdList.length > 1) {
+                bodyHtml =
+                    '<h4>\n' +
+                    '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                    '    <span>선택된 대상들의 발주사와 공급사는 동일해야 합니다.</span>\n' +
+                    '</h4>';
+                fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
+                return false;
+            }
+            if (invoiceNumList.length > 1) {
+                bodyHtml =
+                    '<h4>\n' +
+                    '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                    '    <span>선택된 대상들의 거래명세 번호는 동일해야 합니다.</span>\n' +
+                    '</h4>';
+                fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
+                return false;
             }
 
-            $('#transaction_statement_excel_download #paramData').val(controlSeqStr + ':' + compCdList[0] + ':' + orderCompCdList[0] + ':' + invoiceNumList[0]);
-            fnReportFormToHiddenFormPageAction('transaction_statement_excel_download', '/downloadExcel');
+            let url = '/transactionStatement';
+            // 팝업 사이즈
+            let nWidth = 1012;
+            let nHeight = 800;
+            let winWidth = document.body.clientWidth;
+            let winHeight = document.body.clientHeight;
+            let winX = window.screenX || window.screenLeft || 0;
+            let winY = window.screenY || window.screenTop || 0;
+            let nLeft = winX + (winWidth - nWidth) / 2;
+            let nTop = winY + (winHeight - nHeight) / 2;
+
+            let strOption = '';
+            strOption += 'left=' + nLeft + 'px,';
+            strOption += 'top=' + nTop + 'px,';
+            strOption += 'width=' + nWidth + 'px,';
+            strOption += 'height=' + nHeight + 'px,';
+            strOption += 'toolbar=no,menubar=no,location=no,resizable=yes,status=yes';
+
+            // 최초 클릭이면 팝업을 띄운다.
+            if (transactionStatementPopup === undefined || transactionStatementPopup.closed) {
+                transactionStatementPopup = window.open(url, '', strOption);
+            } else {
+                transactionStatementPopup.focus();
+            }
         });
+
+        $('#TRANSACTION_STATEMENT_POPUP').on({
+            'show.bs.modal': function () {
+
+
+
+
+
+
+            },
+            'hide.bs.modal': function () {
+                $transactionStatementDetailGrid.pqGrid('destroy');
+            }
+        });
+
+
 
         // 견적List출력
         $('#ESTIMATE_LIST_PRINT').on('click', function () {
@@ -2898,35 +2620,6 @@
 
         $('#MONTH_FINISH_YES').on('click', function () {
 
-        });
-
-        $('#CONTROL_CLOSE_YES').on('click', function () {
-            let selectedRowCount = selectedOrderManagementRowIndex.length;
-            let list = [];
-
-            for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-                rowData.CLOSE_VER = $('#CLOSE_VER').val();
-                rowData.CLOSE_MONTH = $('#CONTROL_CLOSE_YEAR').val() + $('#CONTROL_CLOSE_MONTH').val();
-                list.push(rowData);
-            }
-
-            let rightData = $controlCloseRightGrid.pqGrid('option', 'dataModel.data');
-            let postData = {
-                'info-data': rightData,
-                'list-data': list
-            };
-
-            // rightGrid
-            let parameters = {'url': '/createMonthClose', 'data': {data: JSON.stringify(postData)}};
-            fnPostAjax(function (data, callFunctionParam) {
-                $orderManagementGrid.pqGrid('refreshDataAndView');
-                $('#CONTROL_CLOSE_POPUP').modal('hide');
-            }, parameters, '');
-        });
-
-        $('[name=CONTROL_CLOSE_NO]').on('click', function () {
-            $('#CONTROL_CLOSE_POPUP').modal('hide');
         });
 
         $('.pop_close').on('click', function () {

@@ -19,11 +19,9 @@
             <div class="none_gubunWrap row4_topWrap">
                 <ul>
                     <li>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="COMP_CD">사업자구분</label>
-                            <select class="wd_200" name="COMP_CD" id="COMP_CD" title="사업자구분">
-                                <option value="">ALL</option>
-                            </select>
+                        <span class="ipu_wrap">
+                            <label class="label_100" for="CONTROL_NUM">관리번호</label>
+                            <input type="text" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -34,24 +32,26 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
+                            <label class="label_100" for="ORDER_NUM">발주번호</label>
+                            <input type="text" class="wd_200" name="ORDER_NUM" id="ORDER_NUM" title="발주번호">
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap">
                             <label class="label_100" for="DRAWING_NUM">도면번호</label>
                             <input type="text" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
+                        </span>
+                    </li>
+                    <li>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="COMP_CD">사업자구분</label>
+                            <select class="wd_200" name="COMP_CD" id="COMP_CD" title="사업자구분">
+                                <option value="">ALL</option>
+                            </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="ITEM_NM">품명</label>
                             <input type="text" class="wd_200" name="ITEM_NM" id="ITEM_NM" title="품명">
-                        </span>
-                    </li>
-                    <li>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="CONTROL_NUM">관리번호</label>
-                            <input type="text" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="ORDER_NUM">발주번호</label>
-                            <input type="text" class="wd_200" name="ORDER_NUM" id="ORDER_NUM" title="발주번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -197,6 +197,15 @@
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'PART_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true},
             {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true},
+            {
+                title: '마감 현황', align: 'center', colModel: [
+                    {title: '마감월', datatype: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
+                    {title: '마감월', datatype: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
+                    {title: '차수', datatype: 'string', dataIndx: 'CLOSE_VER', hidden: true},
+                    {title: '차수', datatype: 'string', dataIndx: 'CLOSE_VER_TRAN'},
+                    {title: '작성자', datatype: 'string', dataIndx: 'CLOSE_USER_ID'},
+                ]
+            },
             {title: '주문상태', align: 'center', colModel: [
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS', hidden: true},
                     {title: '상태', datatype: 'string', dataIndx: 'CONTROL_STATUS_NM'},
@@ -374,16 +383,19 @@
             {title: '종전가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'WHDWJSRK'},
             {title: '변경전<br>도면번호', minWidth: 120, dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', colModel: []},
             {
-                title: '마감/취소 현황', align: 'center', colModel: [
-                    {title: '마감월', datatype: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
-                    {title: '마감월', datatype: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
-                    {title: '차수', datatype: 'string', dataIndx: 'CLOSE_VER', hidden: true},
-                    {title: '차수', datatype: 'string', dataIndx: 'CLOSE_VER_TRAN'},
-                    {title: '작성자', datatype: 'string', dataIndx: 'CLOSE_USER_ID'},
-                    {title: '일시', datatype: 'string', dataIndx: 'CLOSE_DT'}
-                ]
+                title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ',
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#downloadView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        fnFileDownloadFormPageAction(rowData.DXF_GFILE_SEQ);
+                    });
+                }
             },
-            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ'},
             {title: 'Rev.', dataType: 'string', dataIndx: 'REVD.'},
             {title: 'Rev. 일시', minWidth: 70, dataType: 'string', dataIndx: 'REVDLFTL.'},
             {

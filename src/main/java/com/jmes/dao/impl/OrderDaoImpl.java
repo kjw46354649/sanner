@@ -125,4 +125,9 @@ public class OrderDaoImpl implements OrderDao {
         sqlSessionTemplate.delete("deleteMonthClose", hashMap);
     }
 
+    @Override
+    public String createInvoiceNum(HashMap<String, Object> hashMap) throws SQLException {
+        return sqlSessionTemplate.selectOne("createInvoiceNum", hashMap);
+    }
+
 }

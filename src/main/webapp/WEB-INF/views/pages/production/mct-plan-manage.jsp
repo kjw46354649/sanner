@@ -39,20 +39,20 @@
         <div class="conWrap">
             <div class="tableWrap">
                 <ul>
-                    <li id="layout_1_1" style="min-width: 506px;"></li>
-                    <li id="layout_1_2" style="min-width: 506px;"></li>
-                    <li id="layout_1_3" style="min-width: 506px;"></li>
-                    <li id="layout_1_4" style="min-width: 506px;"></li>
-                    <li id="layout_1_5" style="min-width: 506px;"></li>
-                    <li id="layout_1_6" style="min-width: 506px;"></li>
+                    <li id="layout_1_1" style="min-width: 500px;"></li>
+                    <li id="layout_1_2" style="min-width: 500px;"></li>
+                    <li id="layout_1_3" style="min-width: 500px;"></li>
+                    <li id="layout_1_4" style="min-width: 500px;"></li>
+                    <li id="layout_1_5" style="min-width: 500px;"></li>
+                    <li id="layout_1_6" style="min-width: 500px;"></li>
                 </ul>
                 <ul>
-                    <li id="layout_2_1" style="min-width: 506px;"></li>
-                    <li id="layout_2_2" style="min-width: 506px;"></li>
-                    <li id="layout_2_3" style="min-width: 506px;"></li>
-                    <li id="layout_2_4" style="min-width: 506px;"></li>
-                    <li id="layout_2_5" style="min-width: 506px;"></li>
-                    <li id="layout_2_6" style="min-width: 506px;"></li>
+                    <li id="layout_2_1" style="min-width: 500px;"></li>
+                    <li id="layout_2_2" style="min-width: 500px;"></li>
+                    <li id="layout_2_3" style="min-width: 500px;"></li>
+                    <li id="layout_2_4" style="min-width: 500px;"></li>
+                    <li id="layout_2_5" style="min-width: 500px;"></li>
+                    <li id="layout_2_6" style="min-width: 500px;"></li>
                 </ul>
             </div>
         </div>
@@ -125,6 +125,8 @@
                 </span>
                 <span class="gubun"></span>
                 <span class="refresh mg-left10"><button type="button" id="MCT_TARGET_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
+                <span class="gubun"></span>
+                <button type="button" class="defaultBtn btn-100w green" id="">저장</button>
             </div>
             <div class="conWrap">
                 <div class="tableWrap" style="background: #e1e1e1;">
@@ -169,12 +171,11 @@
             str += '    <input type="hidden" name="EQUIP_SEQ" id="EQUIP_SEQ" value="' + equipSeq + '">';
             str += '    <div class="table">';
             str += '        <div class="titleWrap">';
-            str += '            <span class="tableLabel">' + equipNm +'</span>';
-            str += '            <span class="data_ipt" id="NC' + order + '_CONTROL_NUM" style="display: none;"></span>';
+            str += '            <span class="equipLabel">' + equipNm +'<span id="NC' + order + '_WORK_USER_ID"></span></span>';
             str += '            <p class="listTxt" style="display: none;">';
+            str += '                <span id="NC' + order + '_CONTRO_NUM"></span>';
             str += '                <span id="NC' + order + '_MATERIAL_DETAIL"></span>';
             str += '                <span id="NC' + order + '_PART_UNIT_QTY"></span>';
-            str += '                <span id="NC' + order + '_WORK_USER_ID"></span>';
             str += '            </p>';
             str += '        </div>';
             str += '        <div class="listWrap">';
@@ -237,7 +238,7 @@
         let processPlanPostData11 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC11_PLAN_FORM')}};
 
         const processPlanColModel = [
-            {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true},
+            {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: 'IMG_GFILE_SEQ', dataType: 'integer', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
             {title: 'EQUIP_SEQ', dataType: 'string', dataIndx: 'EQUIP_SEQ', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
@@ -250,11 +251,9 @@
             {title: '관리번호', minWidht: 300, width: 300, dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM'},
             {title: '수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
-            {title: '소재', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden: true},
-            {title: '소재', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
+            {title: '재질', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden: true},
+            {title: '재질', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '규격', width: 50, dataType: 'string', dataIndx: 'SIZE_TXT'},
-            {title: '현재위치', width: 100, dataType: 'string', dataIndx: 'POP_POSITION', hidden: true},
-            {title: '현재위치', width: 100, dataType: 'string', dataIndx: 'POP_POSITION_NM'},
             {title: '예상', dataType: 'string', dataIndx: 'WORKING_TIME'},
             {
                 title: '', dataType: 'string', dataIndx: 'DELETE_BUTTON', editable: false,
@@ -279,6 +278,7 @@
             collapsible: false,
             postRenderInterval: -1,
             resizable: false,
+            showHeader: false,
             showTitle: false,
             rowHtHead: 15,
             numberCell: {title: 'No.'},
@@ -291,7 +291,7 @@
             strNoRows: g_noData,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'dataSource.emptyGrid'}, recIndx: 'ROWNUM',
+                postData: {'queryId': 'dataSource.emptyGrid'}, recIndx: 'ROW_NUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 },
@@ -374,15 +374,21 @@
         let processTargetGridPostData = fnFormToJsonArrayData('#MCT_PROCESS_TARGET_FORM');
         const processTargetGridColModel = [
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
-            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: false},
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: false},
-            {title: 'IMG_GFILE_SEQ', dataType: 'integer', dataIndx: 'IMG_GFILE_SEQ', hidden: false},
+            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+            {title: 'IMG_GFILE_SEQ', dataType: 'integer', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
             {title: '납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
             {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN'},
             {title: '주요', dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
             {title: '형태', dataType: 'string', dataIndx: 'WORK_NM'},
             {
-                title: 'MCT Plan/Actual', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, colModel: [
+                title: 'NC Plan', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, colModel: [
+                    {title: 'NC No.', datatype: 'string', dataIndx: '', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}},
+                    {title: 'W/T(분)', datatype: 'integer', dataIndx: '', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
+                ]
+            },
+            {
+                title: 'MCT Actual', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, colModel: [
                     {title: 'Seq.1', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_1', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                         render: function (ui) {
                             let cellData = ui.cellData;
@@ -858,7 +864,7 @@
         };
 
         const changeTitleColor = function (equipStatus, tableElement) {
-            let tableLabelElement = $(tableElement).find('.tableLabel');
+            let equipLabelElement = $(tableElement).find('.equipLabel');
             let labelColorId = 'bg-yellow';
 
             //TODO: default 색상 및 상태 필요
@@ -877,9 +883,9 @@
                     break;
             }
 
-            tableLabelElement.removeClass();
-            tableLabelElement.addClass('tableLabel');
-            tableLabelElement.addClass(labelColorId);
+            equipLabelElement.removeClass();
+            equipLabelElement.addClass('equipLabel');
+            equipLabelElement.addClass(labelColorId);
         };
 
         const changeFooter = function (data, tableElement) {

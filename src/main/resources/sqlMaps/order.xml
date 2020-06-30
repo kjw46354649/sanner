@@ -189,7 +189,7 @@
         B.SIZE_D_M, <!-- 예상 규격 지름 -->
         B.SIZE_L_M, <!-- 예상 규격 길이 -->
         B.MATERIAL_TYPE, <!-- 재질 -->
-        IFNULL(SF_GET_CODE_NM(1002, B.MATERIAL_TYPE, 'KR'), SPACE(0)) AS MATERIAL_TYPE_NM, <!-- 재질 -->
+        IFNULL(SF_GET_CODE_NM(1035, B.MATERIAL_TYPE, 'KR'), SPACE(0)) AS MATERIAL_TYPE_NM, <!-- 재질 -->
         B.MATERIAL_DETAIL, <!-- 소재 종류 -->
         IFNULL(SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, 'KR'), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류 -->
         B.MATERIAL_KIND, <!-- 소재 형태 -->
@@ -435,7 +435,8 @@
             X.CLOSE_MONTH, <!-- 마감 월 -->
             DATE_FORMAT(STR_TO_DATE(X.CLOSE_MONTH, '%Y%m'), '%Y.%m월') AS CLOSE_MONTH_TRAN, <!-- 마감 월 -->
             CONCAT(X.CLOSE_VER, '차') AS CLOSE_VER, <!-- 차수 -->
-            CONCAT(CAST(SUM(X.ORDER_QTY) AS CHAR), '건') AS ORDER_QTY, <!-- 건수 -->
+            COUNT(*) AS CNT, <!-- 품수 -->
+            SUM(X.CONTROL_PART_QTY) AS CONTROL_PART_QTY, <!-- 수량 -->
             FORMAT(SUM(X.TOTAL_AMT), 0) AS TOTAL_AMT, <!-- 공급가 -->
             FORMAT(X.FINAL_NEGO_AMT, 0) AS FINAL_NEGO_AMT <!-- 마감 금액 -->
         FROM (
@@ -444,8 +445,8 @@
                 A.ORDER_COMP_CD,
                 D.CLOSE_MONTH,
                 D.CLOSE_VER,
-                C.ORDER_QTY,
-                B.UNIT_FINAL_AMT * C.ORDER_QTY AS TOTAL_AMT,
+                SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY,
+                B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT,
                 E.FINAL_NEGO_AMT
             FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
@@ -454,16 +455,13 @@
             INNER JOIN TBL_MONTH_CLOSE_DETAIL D ON A.CONTROL_SEQ = D.CONTROL_SEQ
                                                     AND A.COMP_CD = D.COMP_CD
                                                     AND A.ORDER_COMP_CD = D.ORDER_COMP_CD
+                                                    AND D.COMP_CD = #{COMP_CD}
+                                                    AND D.ORDER_COMP_CD = #{ORDER_COMP_CD}
+                                                    AND D.CLOSE_MONTH = CONCAT(#{CONTROL_CLOSE_YEAR}, #{CONTROL_CLOSE_MONTH})
             INNER JOIN TBL_MONTH_CLOSE E ON D.CLOSE_MONTH = E.CLOSE_MONTH
                                             AND D.CLOSE_VER = E.CLOSE_VER
                                             AND D.COMP_CD = E.COMP_CD
-                                            AND D.ORDER_COMP_CD = E.ORDER_COMP_CD
-            WHERE A.CONTROL_SEQ IN (SELECT CONTROL_SEQ
-                                   FROM TBL_MONTH_CLOSE_DETAIL
-                                   WHERE 1 = 1
-                                        AND COMP_CD = #{COMP_CD}
-                                        AND ORDER_COMP_CD = #{ORDER_COMP_CD}
-                                        AND CLOSE_MONTH = CONCAT(#{CONTROL_CLOSE_YEAR}, #{CONTROL_CLOSE_MONTH}))) X
+                                            AND D.ORDER_COMP_CD = E.ORDER_COMP_CD) X
         GROUP BY
             X.COMP_CD,
             X.ORDER_COMP_CD,
@@ -1124,11 +1122,9 @@
         <if test="MATERIAL_KIND != null and MATERIAL_KIND != ''">
             MATERIAL_KIND = #{MATERIAL_KIND},
         </if>
-        <if test="MATERIAL_TYPE != null and MATERIAL_TYPE != ''">
-            MATERIAL_TYPE = #{MATERIAL_TYPE},
-        </if>
         <if test="MATERIAL_DETAIL != null and MATERIAL_DETAIL != ''">
             MATERIAL_DETAIL = #{MATERIAL_DETAIL},
+            MATERIAL_TYPE = SF_GET_ETC_CD(1027, #{MATERIAL_DETAIL}),
         </if>
         <if test="SURFACE_TREAT != null and SURFACE_TREAT != ''">
             SURFACE_TREAT = #{SURFACE_TREAT},
@@ -1757,19 +1753,8 @@
             SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM , <!-- 발주사 -->
             A.COMP_CD, <!-- 공급사 -->
             SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM, <!-- 공급사 -->
-            IFNULL((SELECT MAX(INVOICE_NUM)
-                    FROM TBL_INVOICE_DETAIL
-                    WHERE CONTROL_SEQ IN (${CONTROL_SEQ_STR})), IFNULL(CONCAT('IV-', (SELECT LPAD(SUBSTR(MAX(A.INVOICE_NUM), 4) + 1, 6, 0) AS INV_SEQ FROM TBL_INVOICE A)), 'IV-000001')) AS INVOICE_NUM, <!-- 인보이스 넘버 -->
-            (SELECT FORMAT(SUM(B.UNIT_FINAL_AMT * C.ORDER_QTY), 0)
-            FROM TBL_CONTROL A
-                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-                                                       AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-            WHERE 1 = 1
-                AND A.CONTROL_SEQ IN (${CONTROL_SEQ_STR})
-                AND A.COMP_CD = #{COMP_CD}
-                AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-                AND B.WORK_TYPE NOT IN ('WTP050')) AS TOTAL_AMT <!-- 금액 합계 -->
+            E.INVOICE_NUM, <!-- 인보이스 넘버 -->
+            FORMAT(SUM(B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ)), 0)  AS TOTAL_AMT <!-- 금액 합계 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
@@ -1781,7 +1766,7 @@
             AND A.CONTROL_SEQ IN (${CONTROL_SEQ_STR})
             AND A.COMP_CD = #{COMP_CD}
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-            AND B.WORK_TYPE NOT IN ('WTP050') <!-- Part 부속은 제외(작업형태 파트가공) -->
+            AND B.WORK_TYPE != 'WTP050' <!-- Part 부속은 제외(작업형태 파트가공) -->
         GROUP BY
             A.COMP_CD,
             A.ORDER_COMP_CD
@@ -1796,12 +1781,12 @@
             C.ORDER_NUM, <!-- 발주번호 -->
             B.DRAWING_NUM, <!-- 도면번호 -->
             B.SIZE_TXT, <!-- 규격 -->
-            '', <!-- 단위 -->
+            IFNULL(SF_GET_CODE_NM(1033, B.WORK_TYPE, 'KR'), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
             B.UNIT_FINAL_AMT, <!-- 최종공급단가 -->
-            C.ORDER_QTY, <!-- 발주정보_수량 -->
-            B.UNIT_FINAL_AMT * C.ORDER_QTY AS TOTAL_AMT, <!-- 금액 계 -->
+            SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY, <!-- 수량 -->
+            B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT, <!-- 금액 계 -->
             C.PACKING_CNT, <!-- 포장수량 -->
-            '', <!-- 비고 -->
+            '' AS NOTE, <!-- 비고 -->
             D.BARCODE_NUM AS LABEL_BARCODE_NUM
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
@@ -1825,10 +1810,10 @@
             C.ORDER_NUM,
             B.DRAWING_NUM,
             B.SIZE_TXT,
-            '',
+            IFNULL(SF_GET_CODE_NM(1033, B.WORK_TYPE, 'KR'), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
             B.UNIT_FINAL_AMT,
-            C.ORDER_QTY,
-            B.UNIT_FINAL_AMT * C.ORDER_QTY AS TOTAL_AMT,
+            SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY, <!-- 수량 -->
+            B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT, <!-- 금액 계 -->
             C.PACKING_CNT,
             D.NOTE,
             F.BARCODE_NUM

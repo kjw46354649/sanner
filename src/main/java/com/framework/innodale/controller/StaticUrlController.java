@@ -164,6 +164,19 @@ public class StaticUrlController {
     }
 
     /**
+     * 거래 명세표
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/transactionStatement")
+    public String transactionStatementController(Model model, HttpServletRequest request, HttpServletResponse response)  throws Exception{
+        return "/common/transaction_statement";
+    }
+
+    /**
      * 월 마감 진행
      * @param model
      * @param request

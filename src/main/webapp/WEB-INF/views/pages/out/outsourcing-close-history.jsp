@@ -188,8 +188,7 @@
             {title: '입고일자', dataType: 'string', dataIndx: 'DLQRHDLFWK'},
             {title: '외주<br>발주번호', dataType: 'string', dataIndx: 'OUTSIDE_ORDER_NUM'},
             {title: '비고', dataType: 'string', dataIndx: 'OUTSIDE_NOTE'},
-            {title: '비고(주문)', dataType: 'select', dataIndx: 'CONTROL_NOTE'},
-            {title: '비고(주문)', width: 90, dataType: 'string', dataIndx: 'CONTROL_NOTE'},
+            {title: '비고(주문)', width: 150, dataType: 'string', dataIndx: 'CONTROL_NOTE'},
             {title: '', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'CONTROL_NUM_BUTTON',
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM) return '<span class="desktopIcon" style="cursor: pointer"></span>'
@@ -221,8 +220,7 @@
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM'},
             {title: '품명', minWidth: 70, dataType: 'string', dataIndx: 'ITEM_NM'},
             {title: '규격', minWidth: 100, dataType: 'string', dataIndx: 'SIZE_TXT'},
-            {title: '자재종류', minWidth: 90, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
-            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT'},
+            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT_NM'},
             {title: '규격', minWidth: 90, dataType: 'string', dataIndx: 'SIZE_TXT'},
             {title: '소재<br>종류', minWidth: 90, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
             // {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
@@ -368,7 +366,7 @@
         };
         let $outsideCloseCancelLeftGrid;
         const outsideCloseCancelLeftGridId = 'OUTSIDE_CLOSE_CANCEL_LEFT_GRID';
-        const outsideCloseCancelColModel = [
+        const outsideCloseCancelLeftColModel = [
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자', width: 70,  dataType: 'string', dataIndx: 'COMP_NM'},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
@@ -381,7 +379,7 @@
             {title: '발주가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}
             // {title: '마감금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CLOSE_CONTROL_AMT'}
         ];
-        const outsideCloseCancelObj = {
+        const outsideCloseCancelLeftObj = {
             height: 300,
             collapsible: false,
             resizable: false,
@@ -390,7 +388,7 @@
             rowHtHead: 15,
             dragColumns: {enabled: false},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
-            colModel: outsideCloseCancelColModel,
+            colModel: outsideCloseCancelLeftColModel,
             strNoRows: g_noData,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -402,6 +400,38 @@
         };
         let $outsideCloseCancelRightGrid;
         const outsideCloseCancelRightGridId = 'OUTSIDE_CLOSE_CANCEL_RIGHT_GRID';
+        const outsideCloseCancelRightColModel = [
+            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
+            {title: '사업자', width: 70,  dataType: 'string', dataIndx: 'COMP_NM'},
+            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
+            {title: '발주처', width: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
+            {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
+            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER', hidden: true},
+            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER_TRAN', style: {'font-weight': 'bold', 'color': 'red'}},
+            {title: '건수', dataType: 'string', dataIndx: 'CONTROL_PART_QTY', style: {'font-weight': 'bold', 'color': 'red'}},
+            {title: '발주가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT', style: {'font-weight': 'bold', 'color': 'red'}}
+            // {title: '마감금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CLOSE_CONTROL_AMT'}
+        ];
+        const outsideCloseCancelRightObj = {
+            height: 300,
+            collapsible: false,
+            resizable: false,
+            showTitle: false,
+            // scrollModel: {autoFit: true},
+            rowHtHead: 15,
+            dragColumns: {enabled: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            colModel: outsideCloseCancelLeftColModel,
+            strNoRows: g_noData,
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: {'queryId': 'dataSource.emptyGrid'},
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            }
+        };
         /* variable */
 
         /* function */
@@ -599,8 +629,8 @@
                 $('#OUTSIDE_CLOSE_CANCEL_FORM > #OUTSIDE_COMP_CD').val(outsideCompCdList[0]);
 
                 // 빈 그리드 생성
-                $outsideCloseCancelLeftGrid = $('#' + outsideCloseCancelLeftGridId).pqGrid(outsideCloseCancelObj);
-                $outsideCloseCancelRightGrid = $('#' + outsideCloseCancelRightGridId).pqGrid(outsideCloseCancelObj);
+                $outsideCloseCancelLeftGrid = $('#' + outsideCloseCancelLeftGridId).pqGrid(outsideCloseCancelLeftObj);
+                $outsideCloseCancelRightGrid = $('#' + outsideCloseCancelRightGridId).pqGrid(outsideCloseCancelRightObj);
 
                 // 데이터
                 loadDataOutsideCloseCancel();

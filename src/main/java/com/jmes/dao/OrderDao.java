@@ -49,4 +49,6 @@ public interface OrderDao {
     void deleteMonthCloseDetail(HashMap<String, Object> hashMap) throws SQLException;
 
     void deleteMonthClose(HashMap<String, Object> hashMap) throws SQLException;
+
+    String createInvoiceNum(HashMap<String, Object> hashMap) throws SQLException;
 }
