@@ -17,25 +17,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <!-- External CSS libraries -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="/resource/plugins/bootstrap-4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
     <link type="text/css" rel="stylesheet" href="/resource/plugins/viewerjs/dist/viewer.css">
     <!-- Custom Stylesheet -->
     <link type="text/css" rel="stylesheet" href="/resource/login/css/style.css">
     <link type="text/css" rel="stylesheet" href="/resource/login/css/skins/default.css">
+    <!-- External JS libraries -->
+    <script type="text/javascript" src="/resource/plugins/jquery-3.4.1.slim.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/resource/plugins/bootstrap-4.3.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <!-- A jQuery plugin that adds cross-browser mouse wheel support. (Optional) -->
+    <script type="text/javascript" src="/resource/plugins/jquery-mousewheel-3.1.13/jquery.mousewheel.min.js"></script>
+    <!-- lightgallery js -->
+    <script type="text/javascript" src="/resource/plugins/viewerjs/dist/viewer.js"></script>
 </head>
 <body class="home" style="background-color: #797979">
 <div class="demo-gallery">
     <input type="hidden" id="image_seq" name="image_seq" value="">
     <input type="button" id="dynamic" name="dynamic" style="display: none">
 </div>
-<!-- External JS libraries -->
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-<!-- A jQuery plugin that adds cross-browser mouse wheel support. (Optional) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"></script>
-
-<!-- lightgallery js -->
-<script src="/resource/plugins/viewerjs/dist/viewer.js"></script>
 <script type="text/javascript">
 
     // window.addEventListener('DOMContentLoaded', function () {
