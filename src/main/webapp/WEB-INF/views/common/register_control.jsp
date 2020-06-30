@@ -83,6 +83,9 @@
             {
                 title: '사업자<br>구분', width: 100, dataType: 'string', dataIndx: 'COMP_CD',  styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: BUSINESS_COMPANY},
+                validations: [
+                    { type: 'minLen', value: '1', msg: 'Required' },
+                ],
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -106,6 +109,9 @@
             {
                 title: '발주업체', width: 100, dataType: 'string', dataIndx: 'ORDER_COMP_CD', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: ORDER_COMPANY},
+                validations: [
+                    { type: 'minLen', value: '1', msg: 'Required' },
+                ],
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -203,10 +209,28 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '관리번호', width: 200, dataType: 'string', dataIndx: 'CONTROL_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {
+                title: '관리번호', width: 200, dataType: 'string', dataIndx: 'CONTROL_NUM',
+                validations: [
+                    {type: 'minLen', value: '1', msg: 'Required'},
+                ],
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+            },
             {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-            {title: '도면번호', width: 200, dataType: 'string', dataIndx: 'DRAWING_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-            {title: '품명',  width: 200, dataType: 'string', dataIndx: 'ITEM_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {
+                title: '도면번호', width: 200, dataType: 'string', dataIndx: 'DRAWING_NUM',
+                validations: [
+                    {type: 'minLen', value: '1', msg: 'Required'},
+                ],
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+            },
+            {
+                title: '품명', width: 200, dataType: 'string', dataIndx: 'ITEM_NM',
+                validations: [
+                    {type: 'minLen', value: '1', msg: 'Required'},
+                ],
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+            },
             {
                 title: '작업<br>형태', width: 70, dataType: 'string', dataIndx: 'WORK_TYPE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
@@ -215,6 +239,9 @@
                     labelIndx: 'text',
                     options: fnGetCommCodeGridSelectBox('1033')
                 },
+                validations: [
+                    {type: 'minLen', value: '1', msg: 'Required'},
+                ],
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -308,8 +335,20 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}},
-            {title: '규격', width: 100, dataType: 'string', dataIndx: 'SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {
+                title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT',
+                validations: [
+                    {type: 'minLen', value: '1', msg: 'Required'},
+                ],
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'}
+            },
+            {
+                title: '규격', width: 100, dataType: 'string', dataIndx: 'SIZE_TXT',
+                validations: [
+                    {type: 'minLen', value: '1', msg: 'Required'},
+                ],
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+            },
             {
                 title: '소재<br>종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
@@ -341,12 +380,10 @@
             },
             {
                 title: '소재<br>형태', width: 100, dataType: 'string', dataIndx: 'MATERIAL_KIND', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                editor: {
-                    type: 'select',
-                    valueIndx: 'value',
-                    labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1029')
-                },
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029')},
+                validations: [
+                    {type: 'minLen', value: '1', msg: 'Required'},
+                ],
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -372,6 +409,9 @@
             {
                 title: '표면<br>처리', width: 100, dataType: 'string', dataIndx: 'SURFACE_TREAT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1039')},
+                validations: [
+                    {type: 'minLen', value: '1', msg: 'Required'},
+                ],
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -394,7 +434,13 @@
                 }
             },
             {title: '소재비고', width: 200, dataType: 'string', dataIndx: 'MATERIAL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-            {title: 'Part<br>단위<br>수량', dataType: 'string', dataIndx: 'PART_UNIT_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {
+                title: 'Part<br>단위<br>수량', dataType: 'string', dataIndx: 'PART_UNIT_QTY',
+                validations: [
+                    {type: 'minLen', value: '1', msg: 'Required'},
+                ],
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+            },
             {
                 title: '대칭', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, colModel: [
                     {title: '원칭', datatype: 'string', dataIndx: 'ORIGINAL_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
@@ -404,7 +450,13 @@
             {
                 title: '발주정보', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, colModel: [
                     {title: '발주번호', width: 200, datatype: 'string', dataIndx: 'ORDER_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-                    {title: '수량', datatype: 'string', dataIndx: 'ORDER_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+                    {
+                        title: '수량', datatype: 'string', dataIndx: 'ORDER_QTY',
+                        validations: [
+                            {type: 'minLen', value: '1', msg: 'Required'},
+                        ],
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+                    },
                     {title: '납기', width: 70, datatype: 'string', dataIndx: 'ORDER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}},
                     {title: '납품확인', width: 70, datatype: 'string', dataIndx: 'DELIVERY_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}}
                 ]
@@ -482,6 +534,7 @@
             },
             editModel: {clicksToEdit: 1},
             change: function (evt, ui) {
+                console.count();
                 if (ui.source === 'paste') {
                     const addListLength = ui.addList.length;
                     const priceConfirmList = fnGetCommCodeGridSelectBox('1017');
@@ -523,21 +576,29 @@
                             if (index >= 0) compCd = BUSINESS_COMPANY[index].value;
                         }
                         // 발주업체
+                        console.log(newRowData.ORDER_COMP_CD);
+                        console.log(ORDER_COMPANY);
                         if (newRowData.ORDER_COMP_CD !== undefined) {
                             let index = ORDER_COMPANY.findIndex(function (element) {
                                 return element.text === newRowData.ORDER_COMP_CD;
                             });
-
+                            console.log(index);
                             if (index >= 0) orderCompCd = ORDER_COMPANY[index].value;
                         }
+                        console.log(orderCompCd);
+
                         // 구매 담당자
+                        console.log(newRowData.ORDER_STAFF_SEQ);
+                        console.log(COMPANY_STAFF);
                         if (newRowData.ORDER_STAFF_SEQ !== undefined) {
                             let index = COMPANY_STAFF.findIndex(function (element) {
                                 return element.text === newRowData.ORDER_STAFF_SEQ;
                             });
-
+                            console.log(index);
                             if (index >= 0) orderStaffSeq = COMPANY_STAFF[index].value;
                         }
+                        console.log(orderStaffSeq);
+
                         // 주요검사품
                         if (newRowData.MAIN_INSPECTION !== undefined) {
                             let index = mainInspectionList.findIndex(function (element) {

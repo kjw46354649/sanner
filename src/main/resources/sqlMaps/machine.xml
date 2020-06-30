@@ -236,7 +236,7 @@
     </select>
     <select id="selectProcessPlanGridList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ROW_NUMBER () OVER(ORDER BY A.SORT_NUM) AS ROWNUM,
+            ROW_NUMBER () OVER(ORDER BY A.SORT_NUM) AS ROW_NUM,
             A.MCT_PLAN_SEQ,
             A.SORT_NUM,
             B.IMG_GFILE_SEQ,
@@ -246,16 +246,13 @@
             C.CONTROL_NUM, <!-- 관리번호 -->
             B.PART_NUM, <!-- Part -->
             SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY, <!-- 수량 -->
-            B.MATERIAL_DETAIL, <!-- 소재 -->
-            SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, 'KR') AS MATERIAL_DETAIL_NM, <!-- 소재 -->
+            B.MATERIAL_TYPE, <!-- 재질 -->
+            SUBSTRING(SF_GET_CODE_NM(1035, B.MATERIAL_TYPE, 'EN'), 1, 2) AS MATERIAL_TYPE_NM_SUBSTR, <!-- 재질 -->
             B.SIZE_TXT, <!-- 규격 -->
-            D.POP_POSITION, <!-- 현재위치 -->
-            SF_GET_CODE_NM(1009, D.POP_POSITION, 'KR') AS POP_POSITION_NM,  <!-- 현재위치 -->
-            A.WORKING_TIME  <!-- 예상 시간(분) -->
+            CONCAT(A.WORKING_TIME, '\'') AS WORKING_TIME  <!-- 예상 시간(분) -->
         FROM TBL_MCT_PLAN A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
             INNER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-            LEFT OUTER JOIN TBL_POP D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
             LEFT OUTER JOIN TBL_EQUIP E ON A.EQUIP_SEQ = E.EQUIP_SEQ
         WHERE 1 = 1
             AND E.EQUIP_SEQ = #{EQUIP_SEQ}

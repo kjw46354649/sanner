@@ -419,9 +419,6 @@
                     }
                 }
             },
-            {title: '입고일자', width: 100, dataType: 'string', dataIndx: 'OUTSIDE_INNER_DT'},
-            {title: '외주<br>발주번호', dataType: 'string', dataIndx: 'OUTSIDE_ORDER_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-            {title: '비고', width: 90, dataType: 'string', dataIndx: 'OUTSIDE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {title: '비고(주문)', width: 90, dataType: 'string', dataIndx: 'CONTROL_NOTE'},
             {title: '', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'CONTROL_NUM_BUTTON',
                 render: function (ui) {
@@ -452,9 +449,9 @@
             },
             {title: '도면번호', width: 90, dataType: 'string', dataIndx: 'DRAWING_NUM'},
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', editable: true},
-            {title: '품명', width: 150, dataType: 'string', dataIndx: 'ITEM_NM'},
+            {title: '작업<br>형태', width: 70, dataType: 'string', dataIndx: 'WORK_TYPE_NM'},
             {title: '규격', width: 70, dataType: 'string', dataIndx: 'SIZE_TXT'},
-            {title: '자재종류', width:70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
+            {title: '소재종류', width:70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '표면처리', width:90, dataType: 'string', dataIndx: 'SURFACE_TREAT_NM'},
             {title: '수량', dataType: 'integer', dataIndx: 'ITEM_QTY'},
             {title: '사급<br>여부', minWidth: 30, width: 40, dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
@@ -494,6 +491,9 @@
                 ]
             },
             {title: '요망납기', width: 70, dataType: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: dateEditor}},
+            {title: '입고일자', width: 100, dataType: 'string', dataIndx: 'OUTSIDE_INNER_DT'},
+            {title: '외주<br>발주번호', dataType: 'string', dataIndx: 'OUTSIDE_ORDER_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {title: '비고', width: 90, dataType: 'string', dataIndx: 'OUTSIDE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {title: '외주<br>확정단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_UNIT_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {title: '금액<br>합계', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
             {title: '외주<br>종전가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DHLWNWHDWJSRK'},

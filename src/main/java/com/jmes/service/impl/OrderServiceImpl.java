@@ -187,6 +187,12 @@ public class OrderServiceImpl implements OrderService {
         if (infoData != null && infoData.size() > 0) {
             for (HashMap<String, Object> hashMap : infoData) {
                 invoiceNum = (String) hashMap.get("INVOICE_NUM");
+                System.out.println(invoiceNum);
+                if (invoiceNum == "") {
+                    hashMap.put("queryId", "outMapper.createInvoiceNum");
+                    invoiceNum = this.orderDao.createInvoiceNum(hashMap);
+                    hashMap.put("INVOICE_NUM", invoiceNum);
+                }
                 this.orderDao.createInvoice(hashMap);
             }
         }

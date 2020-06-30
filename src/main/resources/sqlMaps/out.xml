@@ -32,8 +32,8 @@
             B.PART_NUM, <!-- Part -->
             B.ITEM_NM, <!-- 품명 -->
             B.SIZE_TXT, <!-- 규격 -->
-            B.MATERIAL_DETAIL, <!-- 자재종류 -->
-            IFNULL(SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, 'KR'), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 자재종류 -->
+            B.MATERIAL_DETAIL, <!-- 소재종류 -->
+            IFNULL(SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, 'KR'), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재종류 -->
             B.SURFACE_TREAT, <!-- 표면처리 -->
             SF_GET_CODE_NM(1039, B.SURFACE_TREAT, 'KR') AS SURFACE_TREAT_NM, <!-- 표면처리 -->
             SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS ITEM_QTY, <!-- 수량 -->
@@ -127,6 +127,7 @@
         <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
             AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
         </if>
+        ORDER BY A.CONTROL_SEQ, B.PART_NUM
     </select>
     
     <select id="selectOutsideProcessRequestList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -138,8 +139,8 @@
             B.DRAWING_NUM, <!-- 도면번호 -->
             B.PART_NUM, <!-- Part -->
             B.SIZE_TXT, <!-- 규격 -->
-            B.MATERIAL_DETAIL, <!-- 자재종류 -->
-            SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, 'KR') AS MATERIAL_DETAIL_NM, <!-- 자재종류 -->
+            B.MATERIAL_DETAIL, <!-- 소재종류 -->
+            SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, 'KR') AS MATERIAL_DETAIL_NM, <!-- 소재종류 -->
             B.SURFACE_TREAT, <!-- 표면 처리 -->
             SF_GET_CODE_NM('1039', B.SURFACE_TREAT, 'KR') AS SURFACE_TREAT_NM,  <!-- 표면 처리 -->
             B.OUTSIDE_MATERIAL_SUPPLY_YN, <!-- 소재 제공 -->
@@ -839,5 +840,9 @@
             AND CONTROL_SEQ = #{CONTROL_SEQ}
             AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
    </delete>
+
+    <select id="createInvoiceNum" parameterType="java.util.HashMap" resultType="string">
+        SELECT CONCAT('IV-', LPAD(NEXTVAL(SEQ_INVOICE), 6, 0))
+    </select>
 
 </mapper>
