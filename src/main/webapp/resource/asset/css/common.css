@@ -443,4 +443,4 @@ table.boardList .txtP{color: #7030a0;}
 /** cam file TEST **/
 .greenFileImageICon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/file_icon_green.png) no-repeat 0 0; }
 .desktopIcon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/ico_desktop.png) no-repeat 0 0; }
-.magnifyingGlassIcon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/ico_magnifying_glass.png); background-size: 20px; no-repeat 0 0; }
+.magnifyingGlassIcon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/ico_magnifying_glass.png) no-repeat; background-size: 16px; }

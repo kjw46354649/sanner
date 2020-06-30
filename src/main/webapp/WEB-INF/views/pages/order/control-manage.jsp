@@ -147,7 +147,7 @@
                 <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="CANCEL" data-control_status="ORD002" style="color: red;">취소</button>
                 <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="TERMINATION" data-control_status="ORD004">종료</button>
                 <button type="button" class="defaultBtn btn-50w" id="CONTROL_MONTH_CLOSE">마감</button>
-                <button type="button" class="defaultBtn btn-50w" data-toggle="modal" data-target="#CONTROL_CLOSE_POPUP">마감</button>
+<%--                <button type="button" class="defaultBtn btn-50w" data-toggle="modal" data-target="#CONTROL_CLOSE_POPUP">마감</button>--%>
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_DRAWING_VIEW">도면 View</button>
                     <button type="button" class="defaultBtn btn-100w" id="DRAWING_PRINT">도면 출력</button>
@@ -571,7 +571,7 @@
                 }
             },
             {title: '도면번호버전', dataType: 'string', dataIndx: 'DRAWING_VER', hidden: true},
-            {title: '', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'DRAWING_NUM_BUTTON', styleHead: {'background':'#a9d3f5'},
+            {title: '', minWidth: 25, width: 25, dataType: 'string', dataIndx: 'DRAWING_NUM_BUTTON', styleHead: {'background':'#a9d3f5'},
                 render: function (ui) {
                     if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" id="imageView" style="cursor: pointer"></span>'
                 },
@@ -997,6 +997,7 @@
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             showTitle: false,
+            strNoRows: g_noData,
             rowHtHead: 15,
             numberCell: {title: 'No.'},
             trackModel: {on: true},
@@ -1735,39 +1736,7 @@
                 getData: function (dataJSON) {return {data: dataJSON.data};}
             }
         };
-        let $controlCloseRightGrid;
-        const controlCloseRightGridId = 'CONTROL_CLOSE_RIGHT_GRID';
-        let controlCloseRightColModel = [
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
-            {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER', hidden: true},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER_TRAN'},
-            {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
-            {title: '공급가', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
-            {title: '마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
-        ];
-        let controlCloseRightObj = {
-            height: 250,
-            collapsible: false,
-            resizable: false,
-            showTitle: false,
-            // scrollModel: {autoFit: true},
-            rowHtHead: 15,
-            // dragColumns: {enabled: false},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
-            colModel: controlCloseRightColModel,
-            dataModel: {
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'dataSource.emptyGrid'},
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                }
-            }
-        };
+
 
         let $transactionStatementDetailGrid;
         const transactionStatementDetailGridId = 'TRANSACTION_STATEMENT_DETAIL_GRID';
@@ -1921,68 +1890,6 @@
             }, parameters, '');
         };
 
-        let loadDataControlClose = function (open) {
-            let selectedRowCount = selectedOrderManagementRowIndex.length;
-            let controlSeqList = [];
-            let compCdList = [];
-            let orderCompCdList = [];
-            let controlSeqStr = '';
-
-            for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-
-                controlSeqList.push(rowData.CONTROL_SEQ);
-                compCdList.push(rowData.COMP_CD);
-                orderCompCdList.push(rowData.ORDER_COMP_CD);
-            }
-            // 중복제거
-            controlSeqList = controlSeqList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            compCdList = compCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-
-            for (let i = 0, CONTROL_SEQ_LIST_LENGTH = controlSeqList.length; i < CONTROL_SEQ_LIST_LENGTH; i++) {
-                controlSeqStr += controlSeqList[i];
-
-                if (i < CONTROL_SEQ_LIST_LENGTH - 1) {
-                    controlSeqStr += ',';
-                }
-            }
-
-            $('#CONTROL_CLOSE_FORM > #CONTROL_SEQ').val(controlSeqStr);
-            $('#CONTROL_CLOSE_FORM > #COMP_CD').val(compCdList[0]);
-            $('#CONTROL_CLOSE_FORM > #ORDER_COMP_CD').val(orderCompCdList[0]);
-
-            if (open) {
-                // 마지막 마감 차수 가져오기
-                let postData = fnFormToJsonArrayData('#CONTROL_CLOSE_FORM');
-                postData.queryId = 'orderMapper.selectControlCloseVer';
-                let parameters = {'url': '/json-list', 'data': postData};
-                fnPostAjaxAsync(function (data) {
-                    let closeVer = data.list.length > 0 ? data.list[0].MAX_CLOSE_VER : 1;
-                    $('#CONTROL_CLOSE_FORM #CLOSE_VER').val(closeVer).prop('selected', true);
-                }, parameters, '');
-
-                let controlCloseLeftPostData = fnFormToJsonArrayData('#CONTROL_CLOSE_FORM');
-                controlCloseLeftPostData.queryId = 'orderMapper.selectControlCloseLeftList';
-                $controlCloseLeftGrid.pqGrid('option', 'dataModel.postData', function () {
-                    return controlCloseLeftPostData;
-                });
-                $controlCloseLeftGrid.pqGrid('refreshDataAndView');
-            }
-
-            let controlCloseRightPostData = fnFormToJsonArrayData('#CONTROL_CLOSE_FORM');
-            controlCloseRightPostData.queryId = 'orderMapper.selectControlCloseRightList';
-            $controlCloseRightGrid.pqGrid('option', 'dataModel.postData', function () {
-                return controlCloseRightPostData;
-            });
-            $controlCloseRightGrid.pqGrid('refreshDataAndView');
-        };
 
         // topWrap 확장 함수
         const topMenuOpen = function () {
@@ -2223,8 +2130,34 @@
             if (noSelectedRowAlert()) {
                 return false;
             }
-
             if (fnIsGridEditing($orderManagementGrid)) {
+                return false;
+            }
+
+            let compCdList = [];
+            let orderCompCdList = [];
+
+            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+
+                compCdList.push(rowData.COMP_CD);
+                orderCompCdList.push(rowData.ORDER_COMP_CD);
+            }
+
+            // 중복제거
+            compCdList = compCdList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+
+            if (compCdList.length > 1) {
+                alert('선택된 대상들의 발주사와 공급사는 동일해야 합니다.');
+                return false;
+            }
+            if (orderCompCdList.length > 1) {
+                alert('선택된 대상들의 발주사와 공급사는 동일해야 합니다.');
                 return false;
             }
 
@@ -2256,44 +2189,13 @@
 
         $('#CONTROL_CLOSE_POPUP').on({
             'show.bs.modal': function () {
+/*
 
 
-                let compCdList = [];
-                let orderCompCdList = [];
 
-                for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
-                    let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+                */
 
-                    compCdList.push(rowData.COMP_CD);
-                    orderCompCdList.push(rowData.ORDER_COMP_CD);
-                }
 
-                // 중복제거
-                compCdList = compCdList.filter(function (element, index, array) {
-                    return array.indexOf(element) === index;
-                });
-                orderCompCdList = orderCompCdList.filter(function (element, index, array) {
-                    return array.indexOf(element) === index;
-                });
-                if (compCdList.length > 1) {
-                    alert('선택된 대상들의 발주사와 공급사는 동일해야 합니다.');
-                    return false;
-                }
-                if (orderCompCdList.length > 1) {
-                    alert('선택된 대상들의 발주사와 공급사는 동일해야 합니다.');
-                    return false;
-                }
-
-                fnAppendSelectboxYear('CONTROL_CLOSE_YEAR', 3);
-                fnAppendSelectboxMonth('CONTROL_CLOSE_MONTH');
-                $('#CONTROL_CLOSE_MONTH').val(CURRENT_MONTH < 9 ? '0' + CURRENT_MONTH : CURRENT_MONTH).prop('selected', true);
-
-                $('#CONTROL_CLOSE_POPUP #CLOSE_VER');
-
-                $controlCloseLeftGrid = $('#' + controlCloseLeftGridId).pqGrid(controlCloseLeftObj);
-                $controlCloseRightGrid = $('#' + controlCloseRightGridId).pqGrid(controlCloseRightObj);
-
-                loadDataControlClose(true);
             },
             'hide.bs.modal': function () {
                 $controlCloseLeftGrid.pqGrid('destroy');
@@ -2301,9 +2203,7 @@
             }
         });
 
-        $('#CONTROL_CLOSE_FORM').on('change', function () {
-            loadDataControlClose();
-        });
+
 
         $('#CONTROL_MANAGE_SEARCH').on('click', function () {
             $orderManagementGrid.pqGrid('option', 'dataModel.postData', function () {
@@ -2973,35 +2873,6 @@
 
         $('#MONTH_FINISH_YES').on('click', function () {
 
-        });
-
-        $('#CONTROL_CLOSE_YES').on('click', function () {
-            let selectedRowCount = selectedOrderManagementRowIndex.length;
-            let list = [];
-
-            for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-                rowData.CLOSE_VER = $('#CLOSE_VER').val();
-                rowData.CLOSE_MONTH = $('#CONTROL_CLOSE_YEAR').val() + $('#CONTROL_CLOSE_MONTH').val();
-                list.push(rowData);
-            }
-
-            let rightData = $controlCloseRightGrid.pqGrid('option', 'dataModel.data');
-            let postData = {
-                'info-data': rightData,
-                'list-data': list
-            };
-
-            // rightGrid
-            let parameters = {'url': '/createMonthClose', 'data': {data: JSON.stringify(postData)}};
-            fnPostAjax(function (data, callFunctionParam) {
-                $orderManagementGrid.pqGrid('refreshDataAndView');
-                $('#CONTROL_CLOSE_POPUP').modal('hide');
-            }, parameters, '');
-        });
-
-        $('[name=CONTROL_CLOSE_NO]').on('click', function () {
-            $('#CONTROL_CLOSE_POPUP').modal('hide');
         });
 
         $('.pop_close').on('click', function () {
