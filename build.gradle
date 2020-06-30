@@ -134,6 +134,6 @@ dependencies {
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8' //인코딩을 UTF-8로 통일
 
 war {
-    archiveName 'ROOT.war'
+    archiveName 'jmes.war'
     from 'webapp' // adds a file-set to the root of the archive
 }
