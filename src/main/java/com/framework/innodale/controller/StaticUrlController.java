@@ -162,4 +162,17 @@ public class StaticUrlController {
     public String newOrderRegistrationController(Model model, HttpServletRequest request, HttpServletResponse response)  throws Exception{
         return "/common/register_control";
     }
+
+    /**
+     * 월 마감 진행
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/controlMonthClose")
+    public String controlMonthCloseController(Model model, HttpServletRequest request, HttpServletResponse response)  throws Exception{
+        return "/common/control_month_close";
+    }
 }

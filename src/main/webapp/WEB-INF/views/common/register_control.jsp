@@ -14,7 +14,7 @@
 <jsp:include page="/WEB-INF/views/attr/tabs/header.jsp"></jsp:include>
 <jsp:include page="/WEB-INF/views/attr/tabs/body-script.jsp"></jsp:include>
 <!DOCTYPE html>
-<html lang=ko>
+<html lang="ko">
 <head>
     <title>신규 주문 등록</title>
 </head>
