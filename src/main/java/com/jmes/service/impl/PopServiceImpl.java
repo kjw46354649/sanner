@@ -77,11 +77,12 @@ public class PopServiceImpl implements PopService {
 
         if(controlPartInfo == null){
             model.addAttribute("returnCode", "RET98");
-            model.addAttribute("message", "최신 도면이 아닙니다. 사무실에 확인바랍니다.."); // 현재와 같은 Location 스캔 처리
+            model.addAttribute("message", "도면에 문제가 있습니다. 도면 확인 바랍니다."); // 현재와 같은 Location 스캔 처리
         }else {
             /** 추가 되어야 할 데이터 **/
             String currentPopLocation = (String) controlPartInfo.get("POP_PREV_POSITION"); // 현재 위치
             String createPro005 = (String) controlPartInfo.get("CREATE_PRO_005"); // 소재 입고 처리
+            String createPro019 = (String) controlPartInfo.get("CREATE_PRO_019");  // 외주 입고 처리
             String createPro018 = (String) controlPartInfo.get("CREATE_PRO_018");  // 모도면 처리
 
             if (currentPopLocation.equals(popLocation)) {
@@ -98,6 +99,18 @@ public class PopServiceImpl implements PopService {
                     // 소재 주문의 정보 상태 변경
                     controlPartInfo.put("ORDER_STATUS", "MST004");
                     controlPartInfo.put("queryId", "popMapper.updatePopMaterialOrderStatus");
+                    innodaleDao.update(controlPartInfo);
+                }
+
+                // 외주 가공 요청 이후에 POP 스캔시에 외주 입고 처리
+                if (createPro019 != null && "PRO018".equals(createPro019)) {
+                    // PART 소재 입고 처리
+                    controlPartInfo.put("PART_STATUS", createPro019);
+                    controlPartInfo.put("queryId", "popMapper.insertControlPartProgressStatus");
+                    innodaleDao.create(controlPartInfo);
+
+                    // Part 외주 입고, 상태 업데이트
+                    controlPartInfo.put("queryId", "popMapper.updateControlPartOutsideInDate");
                     innodaleDao.update(controlPartInfo);
                 }
 
