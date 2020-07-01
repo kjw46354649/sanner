@@ -1551,15 +1551,24 @@
 
     <select id="selectCloseHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ROW_NUMBER () OVER () AS ROW_NUM,
+            ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.PART_NUM) AS ROW_NUM,
             <include refid="control"/>,
-            <include refid="controlPart"/>
+            <include refid="controlPart"/>,
+            C.CLOSE_MONTH, <!-- 마감월 -->
+            DATE_FORMAT(STR_TO_DATE(C.CLOSE_MONTH, '%Y%m'), '%Y.%m') AS CLOSE_MONTH_TRAN, <!-- 마감 월 -->
+            C.CLOSE_VER, <!-- 차수 -->
+            CONCAT(C.CLOSE_VER, '건') AS CLOSE_VER_TRAN, <!-- 차수 -->
+            C.INSERT_ID AS CLOSE_USER_ID,
+            SF_GET_USER_NM(C.INSERT_ID) AS CLOSE_USER_NM,
+            C.CLOSE_DETAIL_NOTE
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            LEFT OUTER JOIN TBL_MONTH_CLOSE_DETAIL C ON A.COMP_CD = C.COMP_CD
+                                                        AND A.ORDER_COMP_CD = C.ORDER_COMP_CD
+                                                        AND A.CONTROL_SEQ = C.CONTROL_SEQ
         WHERE 1 = 1
             AND A.DEL_YN = 'N'
             AND A.CONTROL_STATUS IN ('ORD003', 'ORD004')
-            <!-- AND DATE_FORMAT(A.STATUS_DT, '%Y%m') = CONCAT(#{CLOSE_YEAR}, #{CLOSE_MONTH}) -->
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
             AND A.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
         </if>
@@ -1779,6 +1788,7 @@
             A.CONTROL_SEQ,
             B.CONTROL_DETAIL_SEQ,
             SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR') AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
+            A.CONTROL_NUM, <!-- 관리번호 -->
             C.ORDER_NUM, <!-- 발주번호 -->
             B.DRAWING_NUM, <!-- 도면번호 -->
             B.SIZE_TXT, <!-- 규격 -->
@@ -1808,6 +1818,7 @@
             A.CONTROL_SEQ,
             B.CONTROL_DETAIL_SEQ,
             SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR') AS CONTROL_STATUS_NM,
+            A.CONTROL_NUM, <!-- 관리번호 -->
             C.ORDER_NUM,
             B.DRAWING_NUM,
             B.SIZE_TXT,

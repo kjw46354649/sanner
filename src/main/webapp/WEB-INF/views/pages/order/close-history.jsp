@@ -203,7 +203,8 @@
                     {title: '마감월', datatype: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
                     {title: '차수', datatype: 'string', dataIndx: 'CLOSE_VER', hidden: true},
                     {title: '차수', datatype: 'string', dataIndx: 'CLOSE_VER_TRAN'},
-                    {title: '작성자', datatype: 'string', dataIndx: 'CLOSE_USER_ID'},
+                    {title: '작성자', datatype: 'string', dataIndx: 'CLOSE_USER_ID', hidden: true},
+                    {title: '작성자', datatype: 'string', dataIndx: 'CLOSE_USER_NM'}
                 ]
             },
             {title: '주문상태', align: 'center', colModel: [
