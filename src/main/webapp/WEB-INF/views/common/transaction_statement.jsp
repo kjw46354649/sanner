@@ -54,9 +54,11 @@
                     </tr>
                     <tr>
                         <td class="headerSelectChange">구매 담당자</td>
-                        <td><select name="ORDER_STAFF_SEQ" id="ORDER_STAFF_SEQ" style="width: 100%; border: 0; text-align: center;">
-                            <option></option>
-                        </select></td>
+                        <td>
+                            <select name="ORDER_STAFF_SEQ" id="ORDER_STAFF_SEQ" style="width: 100%; border: 0; text-align: center;">
+                                <option></option>
+                            </select>
+                        </td>
                         <td class="headerDisable">금액 합계</td>
                         <td name="TOTAL_AMT" id="TOTAL_AMT"></td>
                     </tr>
@@ -64,7 +66,9 @@
                         <td class="headerDisable">INV No.</td>
                         <td ID="INVOICE_NUM"></td>
                         <td class="headerInputChange">제목</td>
-                        <td><input type="text" name="INVOICE_TITLE" id="INVOICE_TITLE" style="width: 100%; border: 0; text-align: center;" autocomplete="off"></td>
+                        <td>
+                            <input type="text" name="INVOICE_TITLE" id="INVOICE_TITLE" style="width: 100%; border: 0; text-align: center;" autocomplete="off">
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -94,13 +98,14 @@
 <script>
     $(function () {
         'use strict';
-        let $transactionStatementDetailGrid;
-        const transactionStatementDetailGridId = 'TRANSACTION_STATEMENT_DETAIL_GRID';
-        const transactionStatementDetailColModel = [
+        let $transactionStatementGrid;
+        const transactionStatementGridId = 'TRANSACTION_STATEMENT_DETAIL_GRID';
+        const transactionStatementColModel = [
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: '주문상태', dataType: 'string', dataIndx: 'CONTROL_STATUS_NM'},
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {title: '발주번호', dataType: 'string', dataIndx: 'ORDER_NUM'},
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM'},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT'},
@@ -108,11 +113,25 @@
             {title: '수량', align: 'right', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY'},
             {title: '공급단가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
             {title: '금액 계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
-            {title: '포장수량', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PACKING_CNT', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {
+                title: '포장수량',
+                align: 'right',
+                dataType: 'integer',
+                format: '#,###',
+                dataIndx: 'PACKING_CNT',
+                editable: true,
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+            },
+            {
+                title: '비고',
+                dataType: 'string',
+                dataIndx: 'NOTE',
+                editable: true,
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+            },
             {title: 'LABEL_BARCODE_NUM', dataType: 'string', dataIndx: 'LABEL_BARCODE_NUM', hidden: true},
         ];
-        const transactionStatementDetailObj = {
+        const transactionStatementObj = {
             height: 470,
             collapsible: false,
             resizable: false,
@@ -124,7 +143,7 @@
             trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
             editModel: {clicksToEdit: 1},
-            colModel: transactionStatementDetailColModel,
+            colModel: transactionStatementColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: {'queryId': 'dataSource.emptyGrid'}, recIndx: 'ROW_NUM',
@@ -188,29 +207,12 @@
             $('#TRANSACTION_STATEMENT_FORM #INVOICE_NUM').text(obj.INVOICE_NUM);
             $('#TRANSACTION_STATEMENT_FORM #INVOICE_NUM_INPUT').val(obj.INVOICE_NUM);
 
-            $transactionStatementDetailGrid = $('#' + transactionStatementDetailGridId).pqGrid(transactionStatementDetailObj);
-
-            postData = fnFormToJsonArrayData('#TRANSACTION_STATEMENT_FORM');
-            postData.queryId = 'orderMapper.selectControlTransactionStatementList';
-            parameters = {'url': '/json-list', 'data': postData};
-
-            fnPostAjax(function (data) {
-                $transactionStatementDetailGrid.pqGrid('option', 'dataModel.data', data.list);
-                $transactionStatementDetailGrid.pqGrid('refreshView');
-                controlSeqList = [];
-                controlSeqStr = '';
-
-                for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
-                    let obj = data.list[i];
-
-                    controlSeqList.push(obj.CONTROL_SEQ);
-                    controlSeqStr += controlSeqList[i];
-
-                    if (i < controlSeqList.length - 1) {
-                        controlSeqStr += ',';
-                    }
-                }
-            }, parameters, '');
+            $transactionStatementGrid = $('#' + transactionStatementGridId).pqGrid(transactionStatementObj);
+            $('#TRANSACTION_STATEMENT_FORM #queryId').val('orderMapper.selectControlTransactionStatementList');
+            $transactionStatementGrid.pqGrid('option', 'dataModel.postData', function () {
+                return (fnFormToJsonArrayData('#TRANSACTION_STATEMENT_FORM'));
+            });
+            $transactionStatementGrid.pqGrid('refreshDataAndView');
         }, parameters, '');
 
         /* 구매 담당자 */
@@ -233,13 +235,13 @@
         $('#TRANSACTION_STATEMENT_LABEL_PRINT').on('click', function () {
             // if (noSelectedRowAlert()) return false;
             let formData = [];
-            let data = $transactionStatementDetailGrid.pqGrid('option', 'dataModel.data');
+            let data = $transactionStatementGrid.pqGrid('option', 'dataModel.data');
 
             for (let i = 0, DATA_LENGTH = data.length; i < DATA_LENGTH; i++) {
                 formData.push(data[i].LABEL_BARCODE_NUM);
             }
 
-            fnBarcodePrint(function(data, callFunctionParam){
+            fnBarcodePrint(function (data, callFunctionParam) {
                 alert(data.message);
             }, formData, '');
         });
@@ -248,6 +250,8 @@
             let parameters;
             let selectedRowCount = opener.selectedOrderManagementRowIndex.length;
             let invoiceNumList = [];
+            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
+
 
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = opener.$orderManagementGrid.pqGrid('getRowData', {rowIndx: opener.selectedOrderManagementRowIndex[i]});
@@ -260,27 +264,61 @@
             });
 
             if (invoiceNumList[0] === undefined) {
-                alert('삭제할 거래명세표가 없습니다.');
+                bodyHtml =
+                    '<h4>\n' +
+                    '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                    '    <span>삭제할 거래명세표가 없습니다</span>\n' +
+                    '</h4>';
+                fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
                 return false;
             }
             if (invoiceNumList.length > 1) {
-                alert('선택된 대상들의 거래명세 번호는 동일해야 합니다.');
+                bodyHtml =
+                    '<h4>\n' +
+                    '    <img src="/resource/asset/images/work/alert.png" style="width: 32px; height: 32px;" >\n' +
+                    '    <span>선택된 대상들의 거래명세 번호는 동일해야 합니다.</span>\n' +
+                    '</h4>';
+                fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
                 return false;
             }
 
-            parameters = {'url': '/removeInvoice', 'data': {INVOICE_NUM: invoiceNumList[0]}};
+            bodyHtml =
+                '<h4>\n' +
+                '    <img src="/resource/asset/images/work/alert.png" style="width: 32px; height: 32px;" >\n' +
+                '    <span>발주번호 ' + invoiceNumList[0] + ' 이 삭제됩니다. 진행하시겠습니까?</span>\n' +
+                '</h4>';
+            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+            let transactionStatementSubmitConfirm = function (callback) {
+                commonConfirmPopup.show();
+                $("#commonConfirmYesBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                    callback(true);
+                    return;
+                });
+                $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                });
+            };
+            transactionStatementSubmitConfirm(function (confirm) {
+                if (confirm) {
+                    let parameters = {'url': '/removeInvoice', 'data': {INVOICE_NUM: invoiceNumList[0]}};
+                    fnPostAjax(function (data, callFunctionParam) {
+                        alert("<spring:message code='com.alert.default.remove.success' />");
+                        window.close();
+                        opener.$orderManagementGrid.pqGrid('refreshDataAndView');
+                    }, parameters, '');
+                }
+            });
 
-            fnPostAjax(function (data, callFunctionParam) {
-                alert("<spring:message code='com.alert.default.remove.success' />");
-                $('#TRANSACTION_STATEMENT_POPUP').modal('hide');
-                opener.$orderManagementGrid.pqGrid('refreshDataAndView');
-            }, parameters, '');
+
         });
         // 저장
         $('#TRANSACTION_STATEMENT_SAVE').on('click', function () {
             let tempList = [];
             let infoPostData = fnFormToJsonArrayData('#TRANSACTION_STATEMENT_FORM');
-            let listPostData = $transactionStatementDetailGrid.pqGrid('option', 'dataModel.data');
+            let listPostData = $transactionStatementGrid.pqGrid('option', 'dataModel.data');
             tempList.push(infoPostData);
             let postData = {
                 'info-data': tempList,
@@ -290,6 +328,7 @@
             let parameters = {'url': '/createInvoice', 'data': {data: JSON.stringify(postData)}};
             fnPostAjax(function (data) {
                 alert("<spring:message code='com.alert.default.save.success' />");
+                $transactionStatementGrid.pqGrid('refreshDataAndView');
                 opener.$orderManagementGrid.pqGrid('refreshDataAndView');
             }, parameters, '');
         });
@@ -300,7 +339,7 @@
             let orderCompCdList = [];
             let invoiceNumList = [];
             let controlSeqStr = '';
-            let data = $transactionStatementDetailGrid.pqGrid('option', 'dataModel.data');
+            let data = $transactionStatementGrid.pqGrid('option', 'dataModel.data');
 
             for (let i = 0, selectedRowCount = opener.selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = opener.$orderManagementGrid.pqGrid('getRowData', {rowIndx: opener.selectedOrderManagementRowIndex[i]});
