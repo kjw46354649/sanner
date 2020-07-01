@@ -336,8 +336,6 @@
     </div>
 </div>
 
-
-
 <form id="transaction_statement_list_excel_download" method="POST">
     <input type="hidden" id="sqlId" name="sqlId" value="selectTransactionStatementListDataExcel"/>
     <input type="hidden" id="mapInputId" name="mapInputId" value="data"/>
@@ -906,7 +904,7 @@
             {title: '변경전<br>도면번호', width: 120, dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {title: '현재 위치', dataType: 'string', dataIndx: 'POP_POSITION', hidden: true},
             {title: '현재 위치', dataType: 'string', dataIndx: 'POP_POSITION_NM', hidden: true},
-            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', hidden: true},            {title: '현재 위치', dataType: 'string', dataIndx: 'POP_POSITION_NM', hidden: true},
+            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', hidden: true},
             {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', hidden: true},
             {
                 title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ',
@@ -2298,9 +2296,9 @@
         });
         // 거래명세표
         $('#TRANSACTION_STATEMENT').on('click', function () {
-            // if (noSelectedRowAlert()) {
-            //     return false;
-            // }
+            if (noSelectedRowAlert()) {
+                return false;
+            }
             if (fnIsGridEditing($orderManagementGrid)) {
                 return false;
             }
