@@ -1778,6 +1778,7 @@
             A.CONTROL_SEQ,
             B.CONTROL_DETAIL_SEQ,
             SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR') AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
+            A.CONTROL_NUM, <!-- 관리번호 -->
             C.ORDER_NUM, <!-- 발주번호 -->
             B.DRAWING_NUM, <!-- 도면번호 -->
             B.SIZE_TXT, <!-- 규격 -->
@@ -1807,6 +1808,7 @@
             A.CONTROL_SEQ,
             B.CONTROL_DETAIL_SEQ,
             SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR') AS CONTROL_STATUS_NM,
+            A.CONTROL_NUM, <!-- 관리번호 -->
             C.ORDER_NUM,
             B.DRAWING_NUM,
             B.SIZE_TXT,

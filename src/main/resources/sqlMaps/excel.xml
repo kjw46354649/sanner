@@ -180,8 +180,8 @@
             '', <!-- 소재 형태 -->
             SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY, <!-- 수량 -->
             IFNULL(SF_GET_CODE_NM(1033, B.WORK_TYPE, 'KR'), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 이름 -->
-            IFNULL(SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, 'KR'), SPACE(0)) AS MATERIAL_DETAIL_NM, -- 소재 종류  -->
-            '', -- 소재 종류 -->
+            IFNULL(SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, 'KR'), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류  -->
+            '', <!-- 소재 종류 -->
             IFNULL(SF_GET_CODE_NM(1039, B.SURFACE_TREAT, 'KR'), SPACE(0)) AS SURFACE_TREAT_NM, <!-- 표면처리 -->
             '', <!-- 표면 처리 -->
             IFNULL(SF_GET_CODE_NM(1058, B.MATERIAL_FINISH_GRIND, 'KR'), SPACE(0)) AS MATERIAL_FINISH_GRIND_NM, <!-- 연마 -->
@@ -196,7 +196,18 @@
                 ELSE IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_TM_AMT, 0) + IFNULL(B.UNIT_GRIND_AMT, 0) + IFNULL(B.UNIT_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0)
             END AS CALC_EST_UNIT_COST, <!-- 계산 견적가 -->
             B.UNIT_FINAL_EST_AMT, <!-- 최종 견적가 -->
-            '' <!-- 종전가 -->
+            (SELECT BB.UNIT_FINAL_AMT
+            FROM TBL_CONTROL AA
+            INNER JOIN TBL_CONTROL_PART BB ON AA.CONTROL_SEQ = BB.CONTROL_SEQ
+            WHERE 1 = 1
+                AND AA.OUT_FINISH_DT IS NOT NULL
+                AND A.ORDER_COMP_CD = AA.COMP_CD AND B.SIZE_TXT = BB.SIZE_TXT
+                AND AA.OUT_FINISH_DT = (SELECT MAX(Q.OUT_FINISH_DT)
+                                        FROM TBL_CONTROL Q, TBL_CONTROL_PART R
+                                        WHERE 1 = 1
+                                        AND Q.CONTROL_SEQ = R.CONTROL_SEQ
+                                        AND AA.COMP_CD = Q.COMP_CD AND AA.ORDER_COMP_CD = Q.ORDER_COMP_CD AND BB.SIZE_TXT = B.SIZE_TXT
+                                        )) AS PREVIOUS_PRICE <!-- 종전가 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
         WHERE A.CONTROL_SEQ IN (${CONTROL_SEQ})
