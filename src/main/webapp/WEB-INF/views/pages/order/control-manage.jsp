@@ -77,7 +77,7 @@
                     </li>
                     <li>
                         <span class="slt_wrap trans_slt mg-right10">
-                            <select name="SEARCH_CONDITION" id="SEARCH_CONDITION">
+                            <select name="CONTROL_SEARCH_CONDITION" id="CONTROL_SEARCH_CONDITION">
                                 <c:forEach var="code" items="${HighCode.H_1047}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -2052,7 +2052,7 @@
             strOption += 'top=' + nTop + 'px,';
             strOption += 'width=' + nWidth + 'px,';
             strOption += 'height=' + nHeight + 'px,';
-            strOption += 'toolbar=no,menubar=no,location=no,resizable=yes,status=yes';
+            strOption += 'toolbar=no,menubar=no,location=no,resizable=no,status=yes';
 
             // 최초 클릭이면 팝업을 띄운다.
             if (newOrderRegistrationPopup === undefined || newOrderRegistrationPopup.closed) {
@@ -2122,7 +2122,7 @@
             strOption += 'top=' + nTop + 'px,';
             strOption += 'width=' + nWidth + 'px,';
             strOption += 'height=' + nHeight + 'px,';
-            strOption += 'toolbar=no,menubar=no,location=no,resizable=yes,status=yes';
+            strOption += 'toolbar=no,menubar=no,location=no,resizable=no,status=yes';
 
             // 최초 클릭이면 팝업을 띄운다.
             if (controlMonthClosePopup === undefined || controlMonthClosePopup.closed) {
@@ -2387,7 +2387,7 @@
             strOption += 'top=' + nTop + 'px,';
             strOption += 'width=' + nWidth + 'px,';
             strOption += 'height=' + nHeight + 'px,';
-            strOption += 'toolbar=no,menubar=no,location=no,resizable=yes,status=yes';
+            strOption += 'toolbar=no,menubar=no,location=no,resizable=no,status=yes';
 
             // 최초 클릭이면 팝업을 띄운다.
             if (transactionStatementPopup === undefined || transactionStatementPopup.closed) {

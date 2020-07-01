@@ -371,7 +371,7 @@
         </if>
         <choose>
             <!-- 주문 상태 -->
-            <when test="SEARCH_CONDITION == 'OCM00'">
+            <when test="CONTROL_SEARCH_CONDITION == 'OCM00'">
                 AND DATE_FORMAT(A.STATUS_DT, '%Y/%m/%d') BETWEEN STR_TO_DATE(#{CONTROL_MANAGE_START_DATE}, '%Y/%m/%d') AND <choose>
                                                                                                                             <when test="CONTROL_MANAGE_RANGE_SEARCH != null and CONTROL_MANAGE_RANGE_SEARCH != ''">
                                                                                                                                 STR_TO_DATE(#{CONTROL_MANAGE_END_DATE}, '%Y/%m/%d')
@@ -382,7 +382,7 @@
                                                                                                                         </choose>
             </when>
             <!-- 납기 -->
-            <when test="SEARCH_CONDITION == 'OCM01'">
+            <when test="CONTROL_SEARCH_CONDITION == 'OCM01'">
                 AND DATE_FORMAT(C.ORDER_DUE_DT, '%Y/%m/%d') BETWEEN STR_TO_DATE(#{CONTROL_MANAGE_START_DATE}, '%Y/%m/%d') AND <choose>
                                                                                                                                 <when test="CONTROL_MANAGE_RANGE_SEARCH != null and CONTROL_MANAGE_RANGE_SEARCH != ''">
                                                                                                                                     STR_TO_DATE(#{CONTROL_MANAGE_END_DATE}, '%Y/%m/%d')
@@ -393,7 +393,7 @@
                                                                                                                             </choose>
             </when>
             <!-- 가공 납기 -->
-            <when test="SEARCH_CONDITION == 'OCM02'">
+            <when test="CONTROL_SEARCH_CONDITION == 'OCM02'">
                 AND DATE_FORMAT(B.INNER_DUE_DT, '%Y%m%d') BETWEEN STR_TO_DATE(#{CONTROL_MANAGE_START_DATE}, '%Y-%m-%d') AND <choose>
                                                                                                                                 <when test="CONTROL_MANAGE_RANGE_SEARCH != null and CONTROL_MANAGE_RANGE_SEARCH != ''">
                                                                                                                                     STR_TO_DATE(#{CONTROL_MANAGE_END_DATE}, '%Y-%m-%d')
@@ -404,7 +404,7 @@
                                                                                                                             </choose>
             </when>
             <!-- Update일시 -->
-            <when test="SEARCH_CONDITION == 'OCM03'">
+            <when test="CONTROL_SEARCH_CONDITION == 'OCM03'">
                 AND DATE_FORMAT(B.UPDATE_DT, '%Y/%m/%d') BETWEEN STR_TO_DATE(#{CONTROL_MANAGE_START_DATE}, '%Y/%m/%d') AND <choose>
                                                                                                                                 <when test="CONTROL_MANAGE_RANGE_SEARCH != null and CONTROL_MANAGE_RANGE_SEARCH != ''">
                                                                                                                                     STR_TO_DATE(#{CONTROL_MANAGE_END_DATE}, '%Y/%m/%d')
@@ -1607,17 +1607,20 @@
             ROW_NUMBER () OVER (ORDER BY A.COMP_CD, D.CLOSE_MONTH, D.CLOSE_VER, A.ORDER_COMP_CD) AS ROW_NUM,
             A.COMP_CD,
             SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM,
+            D.CLOSE_MONTH,
             SUBSTR(D.CLOSE_MONTH, 1, 4) AS YEAR,
             CONCAT(QUARTER(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m')), '분기') AS QUARTER,
             CONCAT(SUBSTR(D.CLOSE_MONTH, 5), '월') AS FINISH_MONTH,
-            CONCAT(D.CLOSE_VER, '차') AS CLOSE_VER, <!-- 차수 -->
+            D.CLOSE_VER, <!-- 차수 -->
+            CONCAT(D.CLOSE_VER, '차') AS CLOSE_VER_TRAN, <!-- 차수 -->
             A.ORDER_COMP_CD,
             SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM,
-            SUM(C.ORDER_QTY) AS ITEM_NUMBER,
-            SUM(B.UNIT_FINAL_AMT) AS UNIT_FINAL_AMT,
-            SUM(B.UNIT_FINAL_AMT) * 0.1 AS VAT_AMOUNT,
-            SUM(B.UNIT_FINAL_AMT) + SUM(B.UNIT_FINAL_AMT) * 0.1 AS TOTAL_AMOUNT,
-            E.CLOSE_NOTE
+            COUNT(*) AS ITEM_NUMBER, <!-- 품수 -->
+            SUM(B.UNIT_FINAL_AMT) AS UNIT_FINAL_AMT, <!-- 공급가 -->
+            E.FINAL_NEGO_AMT,
+            SUM(B.UNIT_FINAL_AMT) * 0.1 AS VAT_AMOUNT, <!-- 부가세액 -->
+            SUM(B.UNIT_FINAL_AMT) + SUM(B.UNIT_FINAL_AMT) * 0.1 AS TOTAL_AMOUNT, <!-- 합계금액 -->
+            E.CLOSE_NOTE <!-- 비고 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
@@ -2342,8 +2345,6 @@
             AND CONTROL_SEQ = #{CONTROL_SEQ}
     </update>
 
-
-
     <delete id="deleteMonthCloseDetail" parameterType="java.util.HashMap">
         DELETE FROM TBL_MONTH_CLOSE_DETAIL
         WHERE
@@ -2424,6 +2425,44 @@
                 #{bean}
             </foreach>
         ORDER BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+    </select>
+
+    <update id="updateMonthCloseNegoAndNote" parameterType="java.util.HashMap">
+        UPDATE TBL_MONTH_CLOSE
+        SET
+            FINAL_NEGO_AMT = #{FINAL_NEGO_AMT},
+            CLOSE_NOTE = #{CLOSE_NOTE},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE
+            COMP_CD = #{COMP_CD}
+            AND CLOSE_MONTH = #{CLOSE_MONTH}
+            AND ORDER_COMP_CD = #{ORDER_COMP_CD}
+            AND CLOSE_VER = #{CLOSE_VER}
+    </update>
+
+    <select id="selectControlDetailList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.PART_NUM, C.ORDER_NUM) AS ROW_NUM,
+            <include refid="control"/>,
+            <include refid="controlPart"/>,
+            <include refid="controlPartOrder"/>
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                                   AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_MONTH_CLOSE_DETAIL D ON A.CONTROL_SEQ = D.CONTROL_SEQ
+                                                   AND A.COMP_CD = D.COMP_CD
+                                                   AND A.ORDER_COMP_CD = D.ORDER_COMP_CD
+            INNER JOIN TBL_MONTH_CLOSE E ON D.CLOSE_MONTH = E.CLOSE_MONTH
+                                            AND D.CLOSE_VER = E.CLOSE_VER
+                                            AND D.COMP_CD = E.COMP_CD
+                                            AND D.ORDER_COMP_CD = E.ORDER_COMP_CD
+        WHERE 1 = 1
+            AND D.COMP_CD = #{COMP_CD}
+            AND D.CLOSE_MONTH = #{CLOSE_MONTH}
+            AND D.ORDER_COMP_CD = #{ORDER_COMP_CD}
+            AND D.CLOSE_VER = #{CLOSE_VER}
     </select>
 
 </mapper>
