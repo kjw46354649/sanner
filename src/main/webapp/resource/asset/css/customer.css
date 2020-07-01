@@ -150,7 +150,7 @@
 
 
 /*  소재 주문 이력 */
-.estimate .left_30Wrap { float: left; width: 32.5%; padding-right: 1%; height: 100%; }
+.estimate .left_30Wrap { float: left; width: 27%; padding-right: 1%; height: 100%; }
 .estimate .left_30Wrap .tableWrap { background: #fff; border: 1px solid #e2e2e2; border-radius: 3px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)";/*IE 8*/ -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*FF 3.5+*/ -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*Saf3-4, Chrome, iOS 4.0.2-4.2, Android 2.3+*/ box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); /*IE 5.5-7*/ }
 .estimate .left_30Wrap .tableWrap .hWrap { border-bottom: 1px solid #e2e2e2; font-size: 0; position: relative; }
 .estimate .left_30Wrap .tableWrap .hWrap *{vertical-align: middle;}
@@ -161,7 +161,7 @@
 .estimate .left_30Wrap .tableWrap .hWrap .ipu_wrap { display: inline-block; }
 .estimate .left_30Wrap .tableWrap .hWrap .ipu_wrap label { }
 .estimate .left_30Wrap .conMainWrap { padding: 0px; box-sizing: border-box; height: 712px; }
-.estimate .right_60Wrap { float: right; width: 64.5%; padding-right: 1%; height: 100%; }
+.estimate .right_60Wrap { float: right; width: 71%; height: 100%; }
 .estimate .right_60Wrap .tableWrap { background: #fff; border: 1px solid #e2e2e2; border-radius: 3px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)";/*IE 8*/ -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*FF 3.5+*/ -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*Saf3-4, Chrome, iOS 4.0.2-4.2, Android 2.3+*/ box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); /*IE 5.5-7*/ }
 .estimate .right_60Wrap .tableWrap .hWrap { border-bottom: 1px solid #e2e2e2; font-size: 0; position: relative; }
 .estimate .right_60Wrap .tableWrap .hWrap *{vertical-align: middle;}
@@ -376,5 +376,4 @@ button:disabled {
 .popupTableDiv .rowStyle td { font-family: Verdana,Arial,sans-serif !important; }
 
 [name="CONTROL_MANAGE_VIEW"] { overflow: hidden; width: 80px; height: 25px; margin: 0 5px; padding: 0 4px; line-height: 25px; background-color: #FFE29B; color: black; font-family: 'NotoKrM'; font-size: 1.2rem; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
-/*.virtual-disable { background: #dddddd; color: #212121; border: 1px solid #e5e5e5; }*/
-.virtual-disable { background: #dddddd; color: #212121; }
+.virtual-disable { background: #dddddd; color: #212121; border: 1px solid #e5e5e5; }
