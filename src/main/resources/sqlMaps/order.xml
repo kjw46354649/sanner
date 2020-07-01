@@ -195,6 +195,7 @@
         B.MATERIAL_KIND, <!-- 소재 형태 -->
         IFNULL(SF_GET_CODE_NM(1029, B.MATERIAL_KIND, 'KR'), SPACE(0)) AS MATERIAL_KIND_NM, <!-- 소재 형태 -->
         B.SURFACE_TREAT, <!-- 표면처리 -->
+        SF_GET_CODE_NM('1039', B.SURFACE_TREAT, 'KR') AS SURFACE_TREAT_NM,  <!-- 표면 처리 -->
         IFNULL(B.MATERIAL_FINISH_HEAT, SPACE(0)) AS MATERIAL_FINISH_HEAT, <!-- 열처리 -->
         B.MATERIAL_NOTE, <!-- 소재비고 -->
         B.PART_UNIT_QTY, <!-- Part단위수량 -->

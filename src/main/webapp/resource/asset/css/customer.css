@@ -376,4 +376,5 @@ button:disabled {
 .popupTableDiv .rowStyle td { font-family: Verdana,Arial,sans-serif !important; }
 
 [name="CONTROL_MANAGE_VIEW"] { overflow: hidden; width: 80px; height: 25px; margin: 0 5px; padding: 0 4px; line-height: 25px; background-color: #FFE29B; color: black; font-family: 'NotoKrM'; font-size: 1.2rem; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
-.virtual-disable { background: #dddddd; color: #212121; border: 1px solid #e5e5e5; }
+/*.virtual-disable { background: #dddddd; color: #212121; border: 1px solid #e5e5e5; }*/
+.virtual-disable { background: #dddddd; color: #212121; }

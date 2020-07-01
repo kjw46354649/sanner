@@ -180,10 +180,12 @@ public class PDFPringMakeController {
 
             document.add(barcodeImage);
 
+            System.out.println("test 1");
+
             if(controlInfo.get("IMAGE_PATH") != null && !"".equals(controlInfo.get("IMAGE_PATH"))) {
                 Image pngImage = Image.getInstance((String) controlInfo.get("IMAGE_PATH"));
                 pngImage.setAbsolutePosition(0, 0);
-                pngImage.scaleAbsolute(PageSize.A4.getWidth(), PageSize.A4.getHeight() - 200);
+                pngImage.scaleAbsolute(PageSize.A4.getWidth(), PageSize.A4.getHeight() - 50);
 
                 document.add(pngImage);
             }

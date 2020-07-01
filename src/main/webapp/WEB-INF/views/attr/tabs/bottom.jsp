@@ -690,9 +690,9 @@
             let parameters = { 'url': '/cadFileConvert', 'data': {data: JSON.stringify(changes)}};
             fnPostAjax(function (data, callFunctionParam) {
                 fnAlertMessageAutoClose('save');
-                commonCadFileAttachPopup.modal('hide');
                 $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
                 $commonCadUploadFileGrid.pqGrid('refreshDataAndView');
+                commonCadFileAttachPopup.modal('hide');
             }, parameters, '');
         });
 
@@ -720,9 +720,7 @@
             var actionType = $('#common_cad_file_attach_form').find('#actionType').val();
             if(actionType == 'estimate') {          // 견적 도면 등록
                 $("#reloadEstimateTopgrid").trigger("click");
-            }else if(actionType == 'control') {     // 주문 도면 등록
-                $("#CONTROL_MANAGE_SEARCH").trigger("click");
-            }else if(actionType == 'controlRev') {  // 주문 도면 차수 변경
+            }else if(actionType == 'control' || actionType == 'controlRev') {     // 주문 도면 등록 || 주문 도면 차수 변경
                 $("#CONTROL_MANAGE_SEARCH").trigger("click");
             }else if(actionType == 'inside') {      // 자재 도면 등록
                 $("#stock_manage_search_btn").trigger("click");

@@ -563,7 +563,7 @@
                     });
                 }
             },
-            {title: '도면번호버전', dataType: 'string', dataIndx: 'DRAWING_VER', hidden: true},
+            // {title: '도면번호버전', dataType: 'string', dataIndx: 'DRAWING_VER', hidden: true},
             {title: '', minWidth: 25, width: 25, dataType: 'string', dataIndx: 'DRAWING_NUM_BUTTON', styleHead: {'background':'#a9d3f5'},
                 render: function (ui) {
                     if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" id="imageView" style="cursor: pointer"></span>'
@@ -934,8 +934,8 @@
                     });
                 }
             },
-            {title: 'Rev.', dataType: 'string', dataIndx: 'REVD.'},
-            {title: 'Rev. 일시', width: 120, dataType: 'string', dataIndx: 'REVDLFTL.', hidden: true},
+            {title: 'Rev.', dataType: 'string', dataIndx: 'DRAWING_VER'},
+            {title: 'Rev. 일시', width: 120, dataType: 'string', dataIndx: 'DRAWING_UP_DT', hidden: true},
             {
                 title: '품질현황', align: 'center', colModel: [
                     {title: 'Seq.', minWidth: 30, width: 35, datatype: 'integer', dataIndx: 'INSPECT_SEQ'},
@@ -2148,8 +2148,6 @@
             }
         });
 
-
-
         $('#CONTROL_MANAGE_SEARCH').on('click', function () {
             $orderManagementGrid.pqGrid('option', 'dataModel.postData', function () {
                 return (fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM'));
@@ -2227,7 +2225,7 @@
                 'REVDLFTL.', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM', 'INSPECT_DESC',
                 'ERROR_ACTION_NM','ERROR_NOTE', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT',
                 'OUTSIDE_HOPE_DUE_DT', 'dhlwndlqrhskfWk', 'OUTSIDE_NOTE', 'dhlwnqnffidcode', 'dhlwnwhclqkddks',
-                'CONTROL_PART_INSERT_UPDATE_DT'
+                'CONTROL_PART_INSERT_UPDATE_DT', 'DRAWING_VER', 'DRAWING_UP_DT'
             ];
             const easyArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'PRICE_CONFIRM', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'MAIN_INSPECTION',
