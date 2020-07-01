@@ -412,19 +412,25 @@
                     { type: 'minLen', value: 1, msg: "Required" }
                 ]
             },
-            {title: '자재종류', dataType: 'string', dataIndx: 'CONSUMABLE_TYPE_NM',styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
-                editor: {
-                    type: 'select',
-                    mapIndices: { name: "CONSUMABLE_TYPE_NM", id: "CONSUMABLE_TYPE" },
-                    valueIndx: "value",
-                    labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1053'),
+            {title: '자재종류', dataType: 'string', dataIndx: 'CONSUMABLE_TYPE',styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1053') },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let data = fnGetCommCodeGridSelectBox('1053');
+                        let index = data.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
 
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = mainGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["CONSUMABLE_TYPE"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                        if (index < 0) {
+                            index = data.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : data[index].text;
                     }
                 }
             },
@@ -501,7 +507,7 @@
                 var frozenOts = '<option value="0">Selected</option>';
                 this.getColModel().forEach(function(column){
                     let hiddenYn = column.hidden == undefined ? true : false;
-                    if(hiddenYn){
+                    if(hiddenYn && column.title){
                         filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
                         frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
                     }
@@ -589,9 +595,8 @@
                 var filterOpts = '<option value=\"\">All Fields</option>';
                 var frozenOts = '<option value="0">Selected</option>';
                 this.getColModel().forEach(function(column){
-                    console.log(column);
                     let hiddenYn = column.hidden == undefined ? true : false;
-                    if(hiddenYn){
+                    if(hiddenYn && column.title){
                         filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
                         frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
                     }

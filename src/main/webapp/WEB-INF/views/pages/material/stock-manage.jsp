@@ -313,11 +313,21 @@
                     { type: 'minLen', value: 1, msg: "Required" }
                 ]
             },
+            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25,
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 150, width: 150,
-                editable: function (ui) { return gridCellEditable(ui);},
-                validations: [
-                    { type: 'minLen', value: 1, msg: "Required" }
-                ]
+                editable: function (ui) { return gridCellEditable(ui);}
             },
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', minWidth: 200, width: 200,
                 editable: function (ui) { return gridCellEditable(ui);},
@@ -386,19 +396,27 @@
             //         {title: '대칭', datatype: 'integer', dataIndx: 'OTHER_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
             //     ]
             // },
-            {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_CD_NM', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
+            {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_CD', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
                 minWidth: 100, width: 100,
-                editor: {
-                    type: 'select',
-                    mapIndices: { name: "WAREHOUSE_CD_NM", id: "WAREHOUSE_CD" },
-                    valueIndx: "value",
-                    labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1049'),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["WAREHOUSE_CD"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1049') },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let data = fnGetCommCodeGridSelectBox('1049');
+
+                        let index = data.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = data.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : data[index].text;
                     }
                 }
             },
@@ -432,7 +450,7 @@
                 }
             },
 
-            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 40, minWidth: 40, editable: false,
+            /*{title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 40, minWidth: 40, editable: false,
                 render: function (ui) {
                     let rowIndx = ui.rowIndx, grid = this;
                     if (ui.rowData['DXF_GFILE_SEQ'] > 0) return "<i id='imageView' class='blueFileImageICon'></i>";
@@ -445,6 +463,33 @@
                     let rowIndx = ui.rowIndx, grid = this;
                     if (ui.rowData['IMG_GFILE_SEQ'] > 0) return "<i id='imageView' class='blueFileImageICon'></i>";
                     return '+';
+                }
+            },*/
+            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ',
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#downloadView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        fnFileDownloadFormPageAction(rowData.DXF_GFILE_SEQ);
+                    });
+                }
+            },
+            {
+                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ',
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="imageView" class="redFileImageICon" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.PDF_GFILE_SEQ);
+                    });
                 }
             },
             {title: '생성일시', dataType: 'string', dataIndx: 'INSERT_TIME', minWidth: 100, width: 100, editable: false},
@@ -530,7 +575,7 @@
                 var frozenOts = '<option value="0">Selected</option>';
                 this.getColModel().forEach(function(column){
                     let hiddenYn = column.hidden == undefined ? true : false;
-                    if(hiddenYn){
+                    if(hiddenYn && column.title){
                         filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
                         frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
                     }
@@ -560,7 +605,7 @@
             cellClick: function (event, ui) {
                 let rowIndx = ui.rowIndx, $grid = this;
 
-                if (ui.dataIndx == 'DXF_GFILE_SEQ') {
+                /*if (ui.dataIndx == 'DXF_GFILE_SEQ') {
                     if (ui.rowData['DXF_GFILE_SEQ'] > 0) {
                         callWindowImageViewer(ui.rowData.DXF_GFILE_SEQ);
                     } else {
@@ -578,7 +623,7 @@
                     }
 
                     return;
-                }
+                }*/
             }
             // ,cellClick: function (event, ui) {
             //     let rowIndx = ui.rowIndx, $grid = this;
@@ -643,6 +688,8 @@
                 pop_data = {"V_INSIDE_STOCK_NUM":V_INSIDE_STOCK_NUM,"queryId":"material.selectInsideStockPopInfo"};
                 $("#stock_manage_pop_form").find("#footer_msg").show();
                 footer_msg = pop_msg_in;
+                $("#stock_manage_pop_form").find("#inside_stock_qty_all_btn").prop('disabled', true);
+
             }else if(popType == "GRID_OUT"){
                 pop_data = {"V_INSIDE_STOCK_NUM":V_INSIDE_STOCK_NUM,"queryId":"material.selectInsideStockPopInfo"};
                 footer_msg = pop_msg_out;
@@ -650,6 +697,7 @@
                 $("#stock_manage_pop_form").find("#footer_msg").show();
                 $("#stock_manage_pop_form").find("#WAREHOUSE_CD").attr("disabled", true);
                 $("#stock_manage_pop_form").find("#LOC_SEQ").attr("disabled", true);
+                $("#stock_manage_pop_form").find("#inside_stock_qty_all_btn").prop('disabled', false);
             }else{
                 alert("error type");
                 return;
@@ -961,10 +1009,10 @@ console.log("change",JSON.stringify(changes));
         });
         $('#inside_stock_qty_all_btn').on('click', function(e) {
             let ORIGINAL_POP_STOCK_QTY_AFTER = $('#stock_manage_pop_form').find('#ORIGINAL_POP_STOCK_QTY_AFTER').val();
-            let ORIGINAL_ORDER_QTY =  $('#stock_manage_pop_form').find('#ORIGINAL_ORDER_QTY').val();
+            //let ORIGINAL_ORDER_QTY =  $('#stock_manage_pop_form').find('#ORIGINAL_ORDER_QTY').val();
 
-            $('#stock_manage_pop_form').find('#ORDER_QTY').html(ORIGINAL_ORDER_QTY);
-            $('#stock_manage_pop_form').find('#POP_STOCK_QTY_AFTER').val(ORIGINAL_POP_STOCK_QTY_AFTER);
+            $('#stock_manage_pop_form').find('#ORDER_QTY').val(ORIGINAL_POP_STOCK_QTY_AFTER);
+            $('#stock_manage_pop_form').find('#POP_STOCK_QTY_AFTER').val(0);
 
         });
         let calcQty = function(type){
@@ -992,7 +1040,7 @@ console.log("change",JSON.stringify(changes));
                         POP_STOCK_QTY_AFTER = parseInt(POP_STOCK_QTY_AFTER)-1;
                     }
                 }else if(type == "MINUS"){
-                    console.log("MINUS POP_ORDER_QTY",parseInt(POP_ORDER_QTY));
+                    //console.log("MINUS POP_ORDER_QTY",parseInt(POP_ORDER_QTY));
                     if(parseInt(POP_ORDER_QTY) >  0) {
                         if(parseInt(POP_STOCK_QTY) >= parseInt(POP_ORDER_QTY)) {
                             POP_ORDER_QTY = parseInt(POP_ORDER_QTY) - 1;
@@ -1082,7 +1130,7 @@ console.log("change",JSON.stringify(changes));
         });
         /** 위치정보관리 팝업 호출 */
         $('#stock_manage_area_info_btn').on('click', function () {
-            alert("작업중");
+            fnCommonWarehouse();
         });
 
         /** 그리드 필터 **/
