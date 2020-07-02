@@ -89,7 +89,7 @@
    </delete>
 
     <select id="selectSessionCodeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT A.HIGH_CD, A.CODE_CD, B.CODE_NM AS CODE_NM_KR, C.CODE_NM AS CODE_NM_EN, A.REF_CD, A.ETC1, A.NOTE
+        SELECT A.HIGH_CD, A.CODE_CD, B.CODE_NM AS CODE_NM_KR, C.CODE_NM AS CODE_NM_EN, A.REF_CD, A.ETC1, A.ETC2, A.NOTE
         FROM TBL_CODE A
             INNER JOIN TBL_CODE_LANG B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = 'KR'
             INNER JOIN TBL_CODE_LANG C ON A.HIGH_CD = C.HIGH_CD AND A.CODE_CD = C.CODE_CD AND C.LANG_CD = 'EN'

@@ -73,19 +73,18 @@
                     <li>
                         <span class="slt_wrap trans_slt mg-right10">
                             <select id="daySltd" name="daySltd" title="등록일시">
-                                <option value="" selected="selected">등록일시</option>
-                                <option value="1">-ALL-</option>
-                                <option value="2">-ALL-</option>
+                                <option value="1" selected="selected">수정일시</option>
+                                <option value="2">가공확정일시</option>
                             </select>
                         </span>
                         <span class="radio_box">
-                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_1" value="today" checked><label for="fr_1001_1">오늘</label>
+                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_1" value="today" checked><label for="fr_1001_1">최근 3일</label>
                         </span>
                         <span class="radio_box">
                             <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_2" value="current_month"><label for="fr_1001_2">현재월</label>
                         </span>
                         <span class="radio_box">
-                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_3" value="three_months"><label for="fr_1001_3">3개월</label>
+                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_3" value="three_months"><label for="fr_1001_3">이전 3개월</label>
                         </span>
                         <div class="calendar_wrap">
                             <span class="calendar_span">
@@ -95,7 +94,7 @@
                             <span class="calendar_span">
                                 <input type="text" title="달력정보" name="CONTROL_MANAGE_END_DATE" id="CONTROL_MANAGE_END_DATE" readonly><button type="button">달력선택</button>
                             </span>
-                            <span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>
+                            <%--<span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>--%>
                         </div>
                         <span class="slt_wrap">
                             <label class="label_100" for="CLOSE_VER">작업자</label>
@@ -118,8 +117,13 @@
                     <li>
                         <span class="slt_wrap">
                             <label class="label_100" for="COMP_CD">MCT 공장 구분</label>
-                            <select class="wd_200" name="COMP_CD" id="COMP_CD">
+                            <select class="wd_200" name="FACTORY_AREA" id="FACTORY_AREA" title="공장구분">
                                 <option value="">All</option>
+                                <c:forEach var="code" items="${HighCode.H_1005}">
+                                    <c:if test="${code.ETC2 == 'W'}">
+                                       <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                    </c:if>
+                                </c:forEach>
                             </select>
                         </span>
                         <span class="gubun"></span>
@@ -134,12 +138,20 @@
                             <label class="label_100" for="CLOSE_VER">자재종류</label>
                             <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
                                 <option value="">All</option>
+                                <c:forEach var="code" items="${HighCode.H_1027}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
                             </select>
                         </span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="CLOSE_NOTE">후처리</label>
-                            <input type="text" class="wd_200" name="CLOSE_NOTE" id="CLOSE_NOTE">
+                        <span class="slt_wrap">
+                            <label class="label_100" for="CLOSE_VER">형태</label>
+                            <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
+                                <option value="">All</option>
+                                <c:forEach var="code" items="${HighCode.H_1033}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
                         </span>
                     </li>
                     <li>
@@ -154,14 +166,7 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="CLOSE_VER">자재종류</label>
-                            <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
-                                <option value="">All</option>
-                            </select>
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="CLOSE_VER">형태</label>
+                            <label class="label_100" for="CLOSE_VER">작업자</label>
                             <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
                                 <option value="">All</option>
                             </select>
@@ -169,11 +174,12 @@
                     </li>
                     <li>
                         <span class="slt_wrap trans_slt mg-right10">
-                            <select id="daySltd" name="daySltd" title="등록일시">
+                            <label class="label_100" for="CLOSE_VER">작업일시</label>
+                            <%--<select id="daySltd" name="daySltd" title="등록일시">
                                 <option value="" selected="selected">등록일시</option>
                                 <option value="1">-ALL-</option>
                                 <option value="2">-ALL-</option>
-                            </select>
+                            </select>--%>
                         </span>
                         <span class="radio_box">
                             <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_1" value="today" checked><label for="fr_1001_1">3개월</label>
@@ -182,7 +188,7 @@
                             <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_2" value="current_month"><label for="fr_1001_2">1개월</label>
                         </span>
                         <span class="radio_box">
-                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_3" value="three_months"><label for="fr_1001_3">오늘</label>
+                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_3" value="three_months"><label for="fr_1001_3">현재월</label>
                         </span>
                         <div class="calendar_wrap">
                             <span class="calendar_span">
@@ -192,21 +198,14 @@
                             <span class="calendar_span">
                                 <input type="text" title="달력정보" name="CONTROL_MANAGE_END_DATE" id="CONTROL_MANAGE_END_DATE" readonly><button type="button">달력선택</button>
                             </span>
-                            <span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>
+<%--                            <span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>--%>
                         </div>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="CLOSE_VER">작업자</label>
-                            <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
-                                <option value="">All</option>
-                            </select>
-                        </span>
                         <button type="button" class="right_float defaultBtn radius blue" id="NC_PERFORMANCE_HISTORY_SEARCH">검색</button>
                     </li>
                 </ul>
             </div>
         </form>
     </div>
-
     <div class="bottomWrap">
         <div class="tableWrap jmestabs" id="MCT_EXECUTE_HISTORY_TAB" style="padding: 10px 0;">
             <ul class="smallTabMenuTabs">
@@ -545,31 +544,23 @@
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-            {title: 'MCT<br>공장 구분', dataType: 'string', dataIndx: 'FACTORY_AREA'},
-            {title: 'NC명', dataType: 'string', dataIndx: 'EQUIP_NM'},
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: '파<br>트', dataType: 'integer', dataIndx: 'CONTROL_PART_NUM'},
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM'},
-            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM'},
-            {title: '형태', dataType: 'string', dataIndx: 'WORK_TYPE'},
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
-            {title: '소재분류', dataType: 'string', dataIndx: 'MATERIAL_KIND'},
-            {title: '수량', dataType: 'string', dataIndx: 'PART_UNIT_QTY'},
-            {title: '규격', dataType: 'string', dataIndx: 'STANDARD_SIZE'},
-            {title: '소재 Size', dataType: 'string', dataIndx: 'MATERIAL_SIZE'},
-            {
-                title: '소재마감', align: 'center', colModel: [
-                    {title: 'TM각비', datatype: 'string', dataIndx: 'MATERIAL_FINISH_TM'},
-                    {title: '연마', datatype: 'string', dataIndx: 'MATERIAL_FINISH_GRIND'},
-                    {title: '열처리', datatype: 'string', dataIndx: 'MATERIAL_FINISH_HEAT'}
-                ]
-            },
-            {title: '착수일시', dataType: 'string', dataIndx: 'WORK_START_DT'},
-            {title: '완료일시', dataType: 'string', dataIndx: 'WORK_FINISH_DT'},
-            {title: '정지<br>시간', dataType: 'string', dataIndx: 'WORK_STOP_DT'},
-            {title: '소요<br>시간', dataType: 'string', dataIndx: 'LEAD_TIME'},
-            {title: '단위<br>소요', dataType: 'string', dataIndx: 'UNIT_LEAD_TIME'},
-            {title: '작업자', dataType: 'string', dataIndx: 'WORK_USER_ID'}
+            {title: 'MCT<br>공장 구분', minWidth: 20, width: 80, dataType: 'string', dataIndx: 'FACTORY_NM'},
+            {title: 'NC명', minWidth: 20, width: 80, dataType: 'string', dataIndx: 'EQUIP_NM'},
+            {title: '관리번호', minWidth: 20, width: 180, dataType: 'string', dataIndx: 'CONTROL_NUM'},
+            {title: '파<br>트', minWidth: 20, width: 20, dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: '도면번호', minWidth: 20, width: 170, dataType: 'string', dataIndx: 'DRAWING_NUM'},
+            {title: '품명', minWidth: 20, width: 170, dataType: 'string', dataIndx: 'ITEM_NM'},
+            {title: '형태', minWidth: 20, width: 50, dataType: 'string', dataIndx: 'WORK_TYPE_NM'},
+            {title: '소재종류', minWidth: 20, width: 60, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
+            {title: '수량', minWidth: 20, width: 50, align: 'right', dataType: 'string', dataIndx: 'ORDER_QTY'},
+            {title: '규격', minWidth: 20, width: 120, dataType: 'string', dataIndx: 'STANDARD_SIZE'},
+            {title: '소재 Size', minWidth: 20, width: 120, dataType: 'string', dataIndx: 'MATERAIL_ORDER_SIZE'},
+            {title: '착수일시', minWidth: 20, width: 120, dataType: 'string', dataIndx: 'WORK_START_DT'},
+            {title: '완료일시', minWidth: 20, width: 120, dataType: 'string', dataIndx: 'WORK_FINISH_DT'},
+            {title: '정지<br>시간', minWidth: 20, width: 70, align: 'right', dataType: 'string', dataIndx: 'WORK_STOP_MINUTE'},
+            {title: '소요<br>시간', minWidth: 20, width: 70, align: 'right', dataType: 'string', dataIndx: 'WORK_WORK_MINUTE'},
+            {title: '단위<br>소요', minWidth: 20, width: 70, align: 'right', dataType: 'string', dataIndx: 'LEAD_TIME'},
+            {title: '작업자', minWidth: 20, width: 80, dataType: 'string', dataIndx: 'WORK_USER_ID'}
         ];
         let tab2Obj = {
             height: 750,
