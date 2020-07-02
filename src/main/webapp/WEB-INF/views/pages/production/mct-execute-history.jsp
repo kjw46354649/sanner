@@ -156,7 +156,7 @@
                     </li>
                     <li>
                         <span class="ipu_wrap">
-                            <label class="label_100" for="CONTROL_NUM">관리번호 </label>
+                            <label class="label_100" for="CONTROL_NUM">관리번호</label>
                             <input type="text" class="label_200"name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
                         </span>
                         <span class="gubun"></span>

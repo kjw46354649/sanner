@@ -50,7 +50,6 @@ cmake-build-*/
 *.iws
 
 # IntelliJ
-out/
 src/test/
 
 
@@ -144,3 +143,8 @@ gradle-app.setting
 /.idea/workspace.xml
 /.idea/jsLinters/jshint.xml
 /.idea/modules/
+/upload/
+/out/
+/TEST_PDF/
+/TEST_DXF/
+/gradle/
