@@ -403,7 +403,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let priceConfirm = fnGetCommCodeGridSelectBox('1017');
@@ -426,7 +426,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let index = ORDER_COMPANY.findIndex(function (element) {
@@ -457,7 +457,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let index = COMPANY_STAFF.findIndex(function (element) {
@@ -486,7 +486,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let mainInspection = fnGetCommCodeGridSelectBox('1059');
@@ -586,7 +586,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let workType = fnGetCommCodeGridSelectBox('1033');
@@ -617,7 +617,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let workFactory = fnGetCommCodeGridSelectBox('1014');
@@ -649,7 +649,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let materialDetail = fnGetCommCodeGridSelectBox('1027');
@@ -673,7 +673,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let materialKind = fnGetCommCodeGridSelectBox('1029');
@@ -702,7 +702,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let surfaceTreat = fnGetCommCodeGridSelectBox('1039');
@@ -721,7 +721,7 @@
                 }
             },
             {title: '소재비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-            {title: 'Part<br>단위<br>수량', align: 'right', dataType: 'integer', dataIndx: 'PART_UNIT_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true},
+            {title: '파트<br>단위<br>수량', align: 'right', dataType: 'integer', dataIndx: 'PART_UNIT_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true},
             {title: '주문<br>수량', align: 'right', dataType: 'integer', dataIndx: 'CONTROL_ORDER_QTY'},
             {
                 title: '대칭', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, colModel: [
@@ -788,7 +788,7 @@
                         render: function (ui) {
                             let cellData = ui.cellData;
 
-                            if (cellData === '') {
+                            if (cellData === '' || cellData === undefined) {
                                 return '';
                             } else {
                                 let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
@@ -813,7 +813,7 @@
                         render: function (ui) {
                             let cellData = ui.cellData;
 
-                            if (cellData === '') {
+                            if (cellData === '' || cellData === undefined) {
                                 return '';
                             } else {
                                 let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
@@ -838,7 +838,7 @@
                         render: function (ui) {
                             let cellData = ui.cellData;
 
-                            if (cellData === '') {
+                            if (cellData === '' || cellData === undefined) {
                                 return '';
                             } else {
                                 let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
@@ -1144,7 +1144,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let priceConfirm = fnGetCommCodeGridSelectBox('1017');
@@ -1167,7 +1167,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let index = BUSINESS_COMPANY.findIndex(function (element) {
@@ -1190,7 +1190,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let index = ORDER_COMPANY.findIndex(function (element) {
@@ -1221,7 +1221,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let index = COMPANY_STAFF.findIndex(function (element) {
@@ -1253,7 +1253,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let mainInspection = fnGetCommCodeGridSelectBox('1059');
@@ -1299,7 +1299,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let workType = fnGetCommCodeGridSelectBox('1033');
@@ -1328,7 +1328,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let yesOrNo = fnGetCommCodeGridSelectBox('1042');
@@ -1357,7 +1357,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let workFactory = fnGetCommCodeGridSelectBox('1014');
@@ -1402,7 +1402,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let materialDetail = fnGetCommCodeGridSelectBox('1027');
@@ -1431,7 +1431,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let materialKind = fnGetCommCodeGridSelectBox('1029');
@@ -1456,7 +1456,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let surfaceTreat = fnGetCommCodeGridSelectBox('1039');
@@ -1475,7 +1475,7 @@
                 }
             },
             {title: '소재비고', width: 200, dataType: 'string', dataIndx: 'MATERIAL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-            {title: 'Part<br>단위<br>수량', dataType: 'string', dataIndx: 'PART_UNIT_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {title: '파트<br>단위<br>수량', dataType: 'string', dataIndx: 'PART_UNIT_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {
                 title: '대칭', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, colModel: [
                     {title: '원칭', datatype: 'string', dataIndx: 'ORIGINAL_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
@@ -1979,7 +1979,7 @@
 
         $('#CONTROL_MANAGE_SAVE').on('click', function () {
             const insertQueryList = ['orderMapper.createControlPart', 'orderMapper.createControlPartOrder'];
-            const updateQueryList = ['orderMapper.updateControlMaster', 'orderMapper.updateControlPart', 'orderMapper.updateControlPartOrder', 'orderMapper.createControlProgress', 'orderMapper.createControlPartProgress'];
+            const updateQueryList = ['orderMapper.updateControlMaster', 'orderMapper.updateControlPart', 'orderMapper.updateControlPartOrder'];
 
             fnModifyPQGrid($orderManagementGrid, insertQueryList, updateQueryList);
         });

@@ -571,7 +571,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
                     let departmentOption = fnGetCommCodeGridSelectBox('1080');
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let index = departmentOption.findIndex(function (element) {
@@ -595,7 +595,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
                     let departmentOption = fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}});
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let index = departmentOption.findIndex(function (element) {

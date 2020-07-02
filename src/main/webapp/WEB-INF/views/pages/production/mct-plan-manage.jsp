@@ -13,7 +13,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <div class="page mct">
-    <div id="ahah_test"></div>
     <div class="topWrap">
         <form id="MCT_PLAN_MANAGE_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="machine.selectEquipId">
@@ -138,13 +137,15 @@
 </div>
 
 <script>
-
-    alert("test");
-
     $(function () {
         'use strict';
         /* variable */
         const TWENTY_SECONDS = 20000;
+        const NC_MACHINE = fnCommCodeDatasourceGridSelectBoxCreate({
+            'url': '/json-list',
+            'data': {'queryId': 'machine.selectNCMachineList'}
+        });
+        console.log(NC_MACHINE);
         let selectedGrid = '';
         let selectedRowIndex = '';
         const insertQueryList = ['machine.insertMctPlan'];
@@ -385,7 +386,28 @@
             {title: '형<br>태', minWidth: 20, width: 20, dataType: 'string', dataIndx: 'WORK_NM'},
             {title: 'NC Plan', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 colModel: [
-                    {title: 'NC No.', minWidth: 40, width: 60, datatype: 'string', dataIndx: 'MCT_PLAN_EQUIP_NM', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}},
+                    {title: 'NC No.', minWidth: 40, width: 60, datatype: 'string', dataIndx: 'MCT_PLAN_EQUIP_NM', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: NC_MACHINE},
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+
+                            if (cellData === '' || cellData === undefined) {
+                                return '';
+                            } else {
+                                let index = NC_MACHINE.findIndex(function (element) {
+                                    return element.text === Number(cellData);
+                                });
+
+                                if (index < 0) {
+                                    index = NC_MACHINE.findIndex(function (element) {
+                                        return element.value === Number(cellData);
+                                    });
+                                }
+
+                                return (index < 0) ? cellData : NC_MACHINE[index].text;
+                            }
+                        }
+                    },
                     {title: 'W/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'MCT_PLAN_WORKING_TIME', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
                 ]
             },
@@ -412,13 +434,26 @@
                     {title: '연마', datatype: 'integer', align: 'right', dataIndx: 'PROCESS_PROGRESS_GRINDING'},
                 ]
             },
+            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+                render: function (ui) {
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                    });
+                }
+            },
             {title: '관리번호', width: 120, dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM'},
             {title: '소재종류<br>상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let materialDetail = fnGetCommCodeGridSelectBox('1027');
@@ -443,44 +478,62 @@
             {title: '비고<br>기록사항', minWidth: 20, width: 100, dataType: 'string', dataIndx: 'NOTE'},
             {title: '가공계획<br>비고', minWidth: 20, width: 150, dataType: 'string', dataIndx: 'MCT_NOTE',
                 styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-            {title: '작업구분', dataType: 'string', dataIndx: 'MCT_WORK_TYPE_NM', hidden : true},
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1033')},
+            {title: '작업구분', dataType: 'string', dataIndx: 'MCT_WORK_TYPE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1011')},
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
-                        let workType = fnGetCommCodeGridSelectBox('1033');
-                        let index = workType.findIndex(function (element) {
+                        let mctWorkType = fnGetCommCodeGridSelectBox('1011');
+                        let index = mctWorkType.findIndex(function (element) {
                             return element.text === cellData;
                         });
 
                         if (index < 0) {
-                            index = workType.findIndex(function (element) {
+                            index = mctWorkType.findIndex(function (element) {
                                 return element.value === cellData;
                             });
 
                         }
-                        return (index < 0) ? cellData : workType[index].text;
+                        return (index < 0) ? cellData : mctWorkType[index].text;
                     }
                 }
             },
+            // {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+            //     editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1033')},
+            //     render: function (ui) {
+            //         let cellData = ui.cellData;
+            //
+            //         if (cellData === '' || cellData === undefined) {
+            //             return '';
+            //         } else {
+            //             let workType = fnGetCommCodeGridSelectBox('1033');
+            //             let index = workType.findIndex(function (element) {
+            //                 return element.text === cellData;
+            //             });
+            //
+            //             if (index < 0) {
+            //                 index = workType.findIndex(function (element) {
+            //                     return element.value === cellData;
+            //                 });
+            //
+            //             }
+            //             return (index < 0) ? cellData : workType[index].text;
+            //         }
+            //     }
+            // },
             {title: '이전위치', dataType: 'string', minWidth: 40, width: 100, dataIndx: 'POP_PREV_POSITION'},
-            {title: '과거 경험', align: 'center', colModel: [
-                    {title: '', datatype: 'string', minWidth: 20, width: 20, dataIndx: '',
-                        render: function (ui) {
-                            if (ui.cellData) {
-                                return '<span>○</span>';
-                            }
-                        }
-                    },
-                    {title: '', datatype: 'string', minWidth: 40, width: 100, dataIndx: 'LAST_CAM_WORK_USER'},
+            {
+                title: '과거 경험', align: 'center', colModel: [
+                    {title: '단위<br>소요', dataType: 'string', minWidth: 40, width: 100, dataIndx: 'LAST_UNIT_LEAD_TIME'},
+                    {title: '실행일자', dataType: 'string', minWidth: 40, width: 100, dataIndx: 'LAST_MCT_START_DT'},
+                    {title: '작업자', dataType: 'string', minWidth: 40, width: 100, dataIndx: 'LAST_MCT_WORK_USER'}
                 ]
             },
-            {title: '확정<br>일시', minWidth: 40, width: 50, dataType: 'string', dataIndx: 'SATAUS_DT'},
-            {title: '소재<br>입고일시', minWidth: 40, width: 50, dataType: 'string', dataIndx: 'MATERIAL_INNER_DT'}
+            {title: '확정<br>일시', minWidth: 40, width: 50, dataType: 'string', dataIndx: 'CONTROL_STATUS_DT'},
+            {title: '소재<br>입고일시', minWidth: 40, width: 50, dataType: 'string', dataIndx: 'MATERIAL_RECEIPT_DT'}
         ];
         const processTargetGridObj = {
             height: '100%',
@@ -514,6 +567,11 @@
             rowSelect: function (event, ui) {
                 selectedGrid = $(this.element.context);
                 selectedRowIndex = ui.addList[0].rowIndx;
+            },
+            cellSave: function (evt, ui) {
+                if (ui.oldVal === undefined && ui.newVal === null) {
+                    estimateMasterBotGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                }
             }
         };
 
@@ -781,6 +839,11 @@
         $processPlanGrid10 = $('#' + processPlanGrid10Id).pqGrid(processPlanObj10);
         $processPlanGrid11 = $('#' + processPlanGrid11Id).pqGrid(processPlanObj11);
         $processTargetGrid = $('#' + processTargetGridId).pqGrid(processTargetGridObj);
+
+        fnCommCodeDatasourceSelectBoxCreate($('#MCT_PROCESS_TARGET_FORM').find('#MCT_NO'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'machine.selectNCMachineList'}
+        });
 
         /*setInterval(function () {
             refreshMctPlanGrids();

@@ -278,6 +278,19 @@
                 }
             },
             {title: '입고 일시', dataType: 'string', dataIndx: 'IN_DT', width: 120, editable: false},
+            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+                render: function (ui) {
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                    });
+                }
+            },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 140, editable: false},
             {title: '파트', dataType: 'string', dataIndx: 'PART_NUM', width: 30, editable: false},
         ];
@@ -300,6 +313,7 @@
             swipeModel: {on: false},
             collapsible: false,
             resizable: false,
+            sortable: false,
             trackModel: {on: true},
             colModel: itemOrderHistoryLeftColModel,
             showTitle: false,

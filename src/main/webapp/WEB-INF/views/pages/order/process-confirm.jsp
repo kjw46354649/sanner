@@ -201,6 +201,19 @@
             },
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', width: '15%', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+                render: function (ui) {
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                    });
+                }
+            },
             {title: '관리번호', width: '20%', dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '수행<br>공장', width: '5%', dataType: 'string', dataIndx: 'WORK_FACTORY_NM'},
@@ -295,13 +308,26 @@
             },
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', width: '15%', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+                render: function (ui) {
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                    });
+                }
+            },
             {title: '관리번호', width: '20%', dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let workFactory = fnGetCommCodeGridSelectBox('1014');
@@ -393,6 +419,19 @@
             {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', width: '15%', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+                render: function (ui) {
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                    });
+                }
+            },
             {title: '관리번호', width: '20%', dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM'},
             {
@@ -430,6 +469,7 @@
         const botLeftObj = {
             height: '85%',
             collapsible: false,
+            postRenderInterval: -1, //call postRender synchronously.
             resizable: false,
             showTitle: false,
             rowHtHead: 15,
@@ -475,6 +515,19 @@
             {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true},
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', width: '15%', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+                render: function (ui) {
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                    });
+                }
+            },
             {title: '관리번호', width: '20%', dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '수행<br>공장', width: '5%', dataType: 'string', dataIndx: 'WORK_FACTORY_NM'},
@@ -508,6 +561,7 @@
         const botRightObj = {
             height: '85%',
             collapsible: false,
+            postRenderInterval: -1, //call postRender synchronously.
             resizable: false,
             showTitle: false,
             rowHtHead: 15,

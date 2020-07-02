@@ -272,7 +272,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let workType = fnGetCommCodeGridSelectBox('1033');
@@ -315,7 +315,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let workFactory = fnGetCommCodeGridSelectBox('1027');
@@ -343,7 +343,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let workFactory = fnGetCommCodeGridSelectBox('1029');
@@ -371,7 +371,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let workFactory = fnGetCommCodeGridSelectBox('1039');
@@ -401,7 +401,7 @@
                         render: function (ui) {
                             let cellData = ui.cellData;
 
-                            if (cellData === '') {
+                            if (cellData === '' || cellData === undefined) {
                                 return '';
                             } else {
                                 let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
@@ -429,7 +429,7 @@
                         render: function (ui) {
                             let cellData = ui.cellData;
 
-                            if (cellData === '') {
+                            if (cellData === '' || cellData === undefined) {
                                 return '';
                             } else {
                                 let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
@@ -457,7 +457,7 @@
                         render: function (ui) {
                             let cellData = ui.cellData;
 
-                            if (cellData === '') {
+                            if (cellData === '' || cellData === undefined) {
                                 return '';
                             } else {
                                 let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
@@ -520,7 +520,7 @@
             {title: '최종견적가', dataType: 'float', dataIndx: 'UNIT_FINAL_EST_AMT', format: '#,###', width: 80, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
             {title: '금액 계', dataType: 'float', dataIndx: 'DTL_AMOUNT', format: '#,###', width: 80, editable: false},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ',
+            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadView" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
                 },
@@ -534,7 +534,7 @@
                 }
             },
             {
-                title: 'IMG', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ',
+                title: 'IMG', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 35, width: 35,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="ui-icon ui-icon-search" style="cursor: pointer"></span>'
                 },

@@ -1348,11 +1348,17 @@
             </if>
         </if>
     </select>
-    <select id="selectInsideStockIn" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    <select id="selectInsideStockIn_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT COUNT(*) AS CNT FROM jmes.TBL_INSIDE_IN WHERE INSIDE_STOCK_NUM = #{INSIDE_STOCK_NUM}
     </select>
-    <delete id="deleteInsideStock" parameterType="java.util.HashMap">
+    <select id="selectInsideStockIn" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT COUNT(*) AS CNT FROM jmes.TBL_INSIDE_IN WHERE INSIDE_STOCK_NUM IN(${INSIDE_STOCK_NUM})
+    </select>
+    <delete id="deleteInsideStock_old" parameterType="java.util.HashMap">
         DELETE FROM jmes.TBL_INSIDE_STOCK WHERE INSIDE_STOCK_NUM = #{INSIDE_STOCK_NUM}
+    </delete>
+    <delete id="deleteInsideStock" parameterType="java.util.HashMap">
+        DELETE FROM jmes.TBL_INSIDE_STOCK WHERE INSIDE_STOCK_NUM IN(${INSIDE_STOCK_NUM})
     </delete>
     <select id="selectInsideStockAbbrNm" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.ABBR_NM

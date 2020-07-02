@@ -271,20 +271,25 @@ table.templateStyle td input { width: 100% !important;}
 .layerPopup .btn_allPlus{ width: 60px; height: 30px; line-height: 25px; background: #880000; color: #fff; border-radius: 5px; border: 1px solid #b10000; box-sizing: border-box; font-size: 14px; float: right;-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#000000)";} /*IE 8*/
 
 /* In Warehouse Manage Popup*/
-#in_warehouse_manage_out_popup input { width: 100%; text-align: center; outline: none; border: none; font-size: 12px;}
+#in_warehouse_manage_out_popup p { text-align: center; font-size: 48px; color: #616161; }
+#in_warehouse_manage_out_popup input { width: 100%; text-align: center; outline: none; border: none; font-size: 16px;}
 #in_warehouse_manage_out_popup input:focus{ outline: none; border: none !important; }
-#in_warehouse_manage_out_popup select { width: 100%; text-align: center; outline: none; border: none; font-size: 12px;}
+#in_warehouse_manage_out_popup select { width: 100%; text-align: center; outline: none; border: none; font-size: 16px;}
 #in_warehouse_manage_out_popup .popBtnWrap { text-align: center; padding: 10px;}
+#in_warehouse_manage_out_popup .btnSave { width: 170px; height: 50px; font-size: 30px; text-align: center; border: 1px solid #9D9D9D; padding: 5px; background: #4d8d1a; color: #ffffff; margin-right: 10px; }
+#in_warehouse_manage_out_popup .btnCancel { width: 170px; height: 50px; font-size: 30px; text-align: center; border: 1px solid #9D9D9D; padding: 5px; background: #cccccc; color: #000000; }
+
 table .outTopTableStyle th{ border: 1px solid #acb9b9; background: #e8f0f0; color: #162f2f; text-align: center; font-size: 12PX;}
-table .outTopTableStyle td{ border: 1px solid #acb9b9; color: #616161; text-align: center; font-weight: 600; font-size: 12PX;}
+table .outTopTableStyle td{ border: 1px solid #acb9b9; color: #616161; text-align: center; font-weight: 600; font-size: 12PX; height: 40px;}
 table .outMidTableStyle th{ border: 1px solid #acb9b9; background: #e8f0f0; color: #162f2f; text-align: center; font-size: 12PX;}
-table .outMidTableStyle td{ border: 1px solid #acb9b9; color: #616161; text-align: center; font-weight: 600; font-size: 12PX;}
+table .outMidTableStyle td{ border: 1px solid #acb9b9; color: #616161; text-align: center; font-weight: 600; font-size: 12PX; height: 40px;}
 table .outBotTableStyle th{ border: 1px solid #acb9b9; background: #e8f0f0; color: #162f2f; text-align: center; font-size: 12PX;}
-table .outBotTableStyle td{ border: 1px solid #acb9b9; color: #616161; text-align: center; font-weight: 600; font-size: 12PX;}
+table .outBotTableStyle td{ border: 1px solid #acb9b9; color: #616161; text-align: center; font-weight: 600; font-size: 12PX; height: 40px;}
 #in_warehouse_manage_scan_barcode_popup input { width: 100%; text-align: center; outline: none; border: none; font-size: 12px;}
 #in_warehouse_manage_scan_barcode_popup input:focus{ outline: none; border: none !important; }
 #in_warehouse_manage_scan_barcode_popup select { width: 100%; text-align: center; outline: none; border: none; font-size: 12px;}
 #in_warehouse_manage_scan_barcode_popup .popBtnWrap { text-align: center; }
+
 
 .ui-datepicker { z-index: 9999999 !important; }
 .common_confirm_popup { z-index: 1060 !important;}

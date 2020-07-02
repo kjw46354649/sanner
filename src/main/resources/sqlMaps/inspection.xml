@@ -15,6 +15,7 @@
                 , X.CONTROL_NUM
                 , X.PART_NUM
                 , X.DRAWING_NUM
+                , X.IMG_GFILE_SEQ
                 , jmes.SF_GET_CODE_NM('1027', X.MATERIAL_DETAIL, 'KR') AS MATERIAL_DETAIL_NM
                 , jmes.SF_GET_CODE_NM('1033', X.WORK_TYPE, 'KR') AS WORK_TYPE_NM
                 , jmes.SF_GET_CODE_NM('1035', X.MATERIAL_TYPE, 'KR') AS MATERIAL_TYPE_NM
@@ -27,7 +28,7 @@
                 , X.NOTE
                 , (SELECT COUNT(*) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ) AS Q_SEQ
                 , (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = Z.INSPECT_USER_ID) AS Q_INSPECT_USER_NM
-                , jmes.SF_GET_CODE_NM('1060', Z.INSPECT_METHOD, 'KR') AS Q_INSPECT_METHOD_NM
+                , jmes.SF_GET_CODE_NM('1060', Z.INSPECT_METHOD, 'KR') AS Q_INSPECT_METHOD_NMS
                 , jmes.SF_GET_CODE_NM('1040', Z.INSPECT_GRADE, 'KR') AS Q_INSPECT_GRADE_NM
                 , (SELECT NOTE FROM jmes.TBL_CODE WHERE HIGH_CD = '1040' AND CODE_CD = Z.INSPECT_GRADE) AS Q_INSPECT_GRADE_NOTE
                 , Z.ERROR_QTY AS Q_ERROR_QTY
@@ -49,6 +50,7 @@
                         , A.CONTROL_NUM, B.PART_NUM, B.DRAWING_NUM
                         , B.MATERIAL_DETAIL, B.WORK_TYPE, B.MATERIAL_TYPE
                         , B.PART_UNIT_QTY, B.SIZE_TXT, A.NOTE
+                        , B.IMG_GFILE_SEQ
                         , (SELECT MAX(M.MCT_WORK_SEQ) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N') AS MCT_WORK_SEQ
                         , (SELECT MAX(M.INSPECT_SEQ) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS INSPECT_SEQ
                         , (SELECT MAX(M.POP_SEQ) FROM jmes.TBL_POP M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS POP_SEQ
@@ -110,6 +112,7 @@
               WHERE M.COMP_CD = B.OUTSIDE_COMP_CD
             ) AS OUTSIDE_COMP_NM
           , (SELECT COUNT(*) + 1 FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS Q_SEQ
+          , B.IMG_GFILE_SEQ
         FROM jmes.TBL_CONTROL A
           , jmes.TBL_CONTROL_PART B
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
@@ -197,7 +200,7 @@
             END AS MATERIAL_ORDER_STATUS_NM
           , jmes.SF_GET_CODE_NM('1013', B.PART_STATUS, 'KR') AS PART_STATUS_NM
           , B.DRAWING_VER
-          , B.DXF_GFILE_SEQ       -- 확인필요
+          , B.DXF_GFILE_SEQ, B.PDF_GFILE_SEQ, B.IMG_GFILE_SEQ       -- 확인필요
           , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
           , A.DESIGNER_NM
           , CASE WHEN B.OUTSIDE_YN = 'Y' THEN (SELECT CONCAT('Y / ', IFNULL(MAX(M.COMP_NM),SPACE(0))) FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = B.OUTSIDE_COMP_CD)
@@ -222,6 +225,7 @@
                 WHEN C.START_DT IS NOT NULL AND C.FINISH_DT IS NULL THEN 'CWS020'   <!-- 진행중 상태 -->
                 ELSE 'CWS010'   <!-- 대기 상태 -->
             END CAM_STATUS <!-- CAM 작업 상태 -->
+        , B.IMG_GFILE_SEQ
         FROM jmes.TBL_CONTROL A , jmes.TBL_CONTROL_PART B
             LEFT OUTER JOIN jmes.TBL_CAM C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
@@ -360,6 +364,7 @@
                     , T.Q_ERROR_NOTE
                     , T.PART_STATUS_NM
                     , T.POP_NM
+                    , T.IMG_GFILE_SEQ
                 FROM (
                     SELECT
                           X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.ORDER_SEQ, X.INSPECT_SEQ
@@ -413,6 +418,7 @@
                             AND M.INSPECT_TYPE = '2'
                             AND M.RETURN_SETTLEMENT_DT IS NULL
                             ) AS  RETURN_ING_CNT
+                        , X.IMG_GFILE_SEQ
                     FROM (
                         SELECT
                             C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, C.ORDER_SEQ
@@ -435,6 +441,7 @@
                             , C.PACKING_CNT
                             , B.PART_STATUS
                             , C.OUT_FINISH_DT
+                            , B.IMG_GFILE_SEQ
                             , (SELECT COUNT(M.PACKING_NUM) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = C.ORDER_SEQ) AS ORDER_PACKING_NUM_CNT
                             , (SELECT SUM(M.OUT_QTY) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = C.ORDER_SEQ) AS ORDER_OUT_QTY
                             , (SELECT MAX(M.OUT_DT) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = C.ORDER_SEQ) AS ORDER_OUT_DT
@@ -489,6 +496,7 @@
             SELECT C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, C.ORDER_SEQ
             , A.CONTROL_NUM
             , B.DRAWING_NUM
+            , B.IMG_GFILE_SEQ
             , C.ORDER_NUM
             , IFNULL(C.ORDER_QTY,0) AS ORDER_QTY
             , (SELECT IFNULL(SUM(M.OUT_QTY),0) FROM TBL_OUT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = C.ORDER_SEQ) AS OUT_QTY
@@ -577,11 +585,13 @@
               X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
             , X.CONTROL_NUM
             , X.DRAWING_NUM
+            , X.IMG_GFILE_SEQ
             , CONCAT(X.ORDER_QTY - X.OUT_QTY, '/', X.ORDER_QTY) AS QTY_INFO
             , X.ORDER_QTY - X.OUT_QTY AS PLAN_QTY
         FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
                     , A.CONTROL_NUM
                     , B.DRAWING_NUM
+                    , B.IMG_GFILE_SEQ
                     , jmes.SF_GET_CONTROL_ORDER_QTY(A.CONTROL_SEQ, 0) AS ORDER_QTY
                     , (SELECT IFNULL(SUM(M.OUT_QTY),0) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS OUT_QTY
                 FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
@@ -620,6 +630,7 @@
         SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.ORDER_SEQ
           , X.CONTROL_NUM
           , X.DRAWING_NUM
+          , X.IMG_GFILE_SEQ
           , X.ORDER_NUM
           , CONCAT(X.ORDER_QTY,'(',X.PACKING_CNT,')') AS QTY_INFO
           , X.PACKING_CNT - X.OUT_PACKING_CNT - 1 AS REMAIN_PACKING_CNT
@@ -627,13 +638,14 @@
         FROM (  SELECT T.CONTROL_SEQ, T.CONTROL_DETAIL_SEQ, T.ORDER_SEQ
                   , A.CONTROL_NUM
                   , B.DRAWING_NUM
+                  , B.IMG_GFILE_SEQ
                   , C.ORDER_NUM
                   , jmes.SF_GET_CONTROL_ORDER_QTY(T.CONTROL_SEQ, T.ORDER_SEQ) AS ORDER_QTY
                   , C.PACKING_CNT
                   , T.PACKING_NUM
                   , (SELECT IFNULL(COUNT(PACKING_NUM),0) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = T.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = T.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = T.ORDER_SEQ) AS OUT_PACKING_CNT
                 FROM jmes.TBL_OUT_BARCODE T
-                  , jmes.TBL_CONTROL A
+                  , jmes.TBLIMG_GFILE_SEQ_CONTROL A
                   , jmes.TBL_CONTROL_PART B
                   , jmes.TBL_CONTROL_PART_ORDER C
                 WHERE T.CONTROL_SEQ = A.CONTROL_SEQ
@@ -697,6 +709,7 @@
         SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
           , A.CONTROL_NUM
           , B.DRAWING_NUM
+          , B.IMG_GFILE_SEQ
           , CONCAT(jmes.SF_GET_DATE_F(B.INNER_DUE_DT,'YYYY',''), CASE WHEN A.EMERGENCY_YN = 'Y' THEN ' (긴급)' ELSE ' ' END) AS INNER_DUE_DT
           , B.ITEM_NM
           , jmes.SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, 'KR') AS MATERIAL_DETAIL_NM
@@ -747,6 +760,7 @@
             , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = Y.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
             , X.CONTROL_NUM
             , Y.DRAWING_NUM
+            , Y.IMG_GFILE_SEQ
             , jmes.SF_GET_CODE_NM('1033', Y.WORK_TYPE, 'KR') AS WORK_TYPE_NM
             , jmes.SF_GET_CODE_NM('1027', Y.MATERIAL_DETAIL, 'KR') AS MATERIAL_DETAIL_NM
             , jmes.SF_GET_CODE_NM('1039', Y.SURFACE_TREAT, 'KR') AS SURFACE_TREAT_NM
@@ -792,6 +806,7 @@
     <select id="selectOutgoingLabelType1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.CONTROL_NUM
         , B.DRAWING_NUM
+        , B.IMG_GFILE_SEQ
         , C.ORDER_NUM
         , C.ORDER_QTY
         , C.PACKING_CNT
