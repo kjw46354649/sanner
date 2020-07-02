@@ -172,7 +172,7 @@
                 {title: '발주업체', minWidth: 30, width: 150, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
                 {title: '관리번호', minWidth: 30, width: 300, dataType: 'string', dataIndx: 'CONTROL_NUM', },
                 {
-                    title: 'Part', minWidth: 30, width: 50, dataType: 'integer', dataIndx: 'PART_NUM',
+                    title: '파<br>트', minWidth: 30, width: 50, dataType: 'integer', dataIndx: 'PART_NUM',
                     render: function (ui) {
                         if (ui.rowData.WORK_TYPE === 'WTP020') {
                             return "<span></span>";

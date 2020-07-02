@@ -256,7 +256,7 @@
             },
             {title: 'CONTROL_VER', dataType: 'string', dataIndx: 'CONTROL_VER', hidden: true},
             {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: 'Part', dataType: 'integer', dataIndx: 'PART_NUM',
+            {title: '파<br>트', dataType: 'integer', dataIndx: 'PART_NUM',
                 // render: function (ui) {
                 //     if (ui.rowData.WORK_TYPE === 'WTP020') {
                 //         return '<span class="ui-icon ui-icon-circle-plus" name="PART_NUM_PLUS_BUTTON"></span>';

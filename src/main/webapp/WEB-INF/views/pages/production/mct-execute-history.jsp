@@ -275,9 +275,22 @@
             {title: '긴<br>급', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN'},
             {title: '주<br>요', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
             {title: '형<br>태', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'WORK_NM'},
-            {title: '', dataType: 'string', dataIndx: 'CONTROL_NUM_BUTTON'},
+            {title: '', dataType: 'string', dataIndx: 'CONTROL_NUM_BUTTON',
+                render: function (ui) {
+                    if (ui.rowData.CONTROL_NUM)
+                        return '<span  class="doubleFilesIcon" name="detailView" style="cursor: pointer"></span>';
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('[name=detailView]').bind("click", function () {
+                        let rowData = ui.rowData;
+                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ);
+                    });
+                }
+            },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: 'Part', dataType: 'integer', dataIndx: 'CONTROL_PART_NUM'},
+            {title: '파<br>트', dataType: 'integer', dataIndx: 'CONTROL_PART_NUM'},
             {title: '', dataType: 'string', dataIndx: 'WhatIsThis'},
             {title: '소재종류<br>상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
             {title: '수량', dataType: 'integer', dataIndx: 'ORDER_QTY'},
@@ -535,7 +548,7 @@
             {title: 'MCT<br>공장 구분', dataType: 'string', dataIndx: 'FACTORY_AREA'},
             {title: 'NC명', dataType: 'string', dataIndx: 'EQUIP_NM'},
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: 'Part', dataType: 'integer', dataIndx: 'CONTROL_PART_NUM'},
+            {title: '파<br>트', dataType: 'integer', dataIndx: 'CONTROL_PART_NUM'},
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM'},
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM'},
             {title: '형태', dataType: 'string', dataIndx: 'WORK_TYPE'},

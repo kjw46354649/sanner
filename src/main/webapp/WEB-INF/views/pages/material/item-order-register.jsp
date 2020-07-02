@@ -334,7 +334,7 @@
                 }
             },
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 120, editable: false},
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', editable: false},
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', editable: false},
             {title: '도면Rev.', dataType: 'string', dataIndx: 'DRAWING_VER ', editable: false},
             {title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ', editable: false},
             {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', editable: false},

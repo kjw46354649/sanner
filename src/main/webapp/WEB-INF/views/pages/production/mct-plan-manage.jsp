@@ -249,7 +249,7 @@
             {title: 'SORT_NUM', dataType: 'integer', dataIndx: 'SORT_NUM', hidden: true},
             {title: '납기', width: 150, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
             {title: '관리번호', minWidht: 300, width: 300, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM'},
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM'},
             {title: '수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
             {title: '재질', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden: true},
             {title: '재질', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
@@ -560,7 +560,7 @@
                 ]
             },
             {title: '관리번호', width: 120, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM'},
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM'},
             {title: '소재종류<br>상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
                 render: function (ui) {
                     let cellData = ui.cellData;

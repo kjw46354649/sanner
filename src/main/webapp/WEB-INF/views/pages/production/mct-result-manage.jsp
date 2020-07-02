@@ -463,7 +463,7 @@
                 }
             },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 50, width: 160},
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 10, width: 30},
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 10, width: 30},
             {title: '소재종류상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 40, width: 80},
             {title: '수량', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40},
             {title: '규격', dataType: 'string', dataIndx: 'STANDARD_SIZE', minWidth: 40, width: 80},

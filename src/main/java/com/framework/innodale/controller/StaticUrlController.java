@@ -198,8 +198,8 @@ public class StaticUrlController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/controlDetail", method = RequestMethod.GET)
+    @RequestMapping(value = "/controlDetail")
     public String controlDetailController(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return "/common/control_month_close";
+        return "/common/control_detail";
     }
 }

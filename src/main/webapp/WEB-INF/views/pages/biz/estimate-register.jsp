@@ -222,7 +222,7 @@
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 170, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 100, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
             {
-                title: 'Part', clsHead: 'cantChange', dataType: 'integer', dataIndx: 'PART_NUM', editable: false,
+                title: '파<br>트', clsHead: 'cantChange', dataType: 'integer', dataIndx: 'PART_NUM', editable: false,
                 render: function (ui) {
                     if (ui.rowData.WORK_TYPE === 'WTP020') {
                         return '<span class="ui-icon ui-icon-circle-plus" id="estimateListPartNumPlus" style="cursor: pointer"></span>';
