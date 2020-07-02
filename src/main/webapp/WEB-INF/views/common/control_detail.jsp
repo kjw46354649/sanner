@@ -57,7 +57,7 @@
             {title: 'INV No.<br>(거래명세No.)', minWidth: 100, dataType: 'string', dataIndx: 'CHARGE_USER_ID', colModel: []},
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', colModel: []},
             {title: '관리번호', minWidth: 100, dataType: 'string', dataIndx: 'CONTROL_NUM', colModel: []},
-            {title: 'Part', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM', colModel: []},
+            {title: '파<br>트', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM', colModel: []},
             {title: '도면번호', minWidth: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', colModel: []},
             {title: '품명', minWidth: 110, dataType: 'string', dataIndx: 'ITEM_NM', colModel: []},
             {title: '작업<br>형태', minWidth: 110, dataType: 'string', dataIndx: 'WORK_NM', colModel: []},

@@ -180,7 +180,7 @@
             {title: 'NC계획', dataType: 'string', dataIndx: 'LAST_MCT_PLAN', width: 120},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 150},
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 200},
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', width: 70},
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', width: 70},
             {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', width: 150},
             {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', width: 150},
             {title: '가공완료', dataType: 'string', dataIndx: 'LAST_PRODUCT_COMPLETE_DT', width: 150},

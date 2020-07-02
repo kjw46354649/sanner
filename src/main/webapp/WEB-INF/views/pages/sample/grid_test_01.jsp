@@ -74,7 +74,7 @@
             {title: '긴<br>급', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, },
             {title: '', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'CONTROL_NUM_BUTTON'},
             {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, },
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', },
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', },
             {title: '도면번호버전', dataType: 'string', dataIndx: 'DRAWING_VER'},
             {title: '도면번호', width: 150, dataType: 'string', dataIndx: 'DRAWING_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, },
             {title: '품명', width: 150, dataType: 'string', dataIndx: 'ITEM_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, },

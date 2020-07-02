@@ -512,16 +512,17 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'CONTROL_NUM_BUTTON', styleHead: {'background':'#a9d3f5'}, hidden: true,
+            {title: '', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'CONTROL_NUM_BUTTON', styleHead: {'background':'#a9d3f5'},
                 render: function (ui) {
-                    if (ui.rowData.CONTROL_NUM) return '<span class="desktopIcon" style="cursor: pointer"></span>'
+                    if (ui.rowData.CONTROL_NUM)
+                        return '<span  class="doubleFilesIcon" name="detailView" style="cursor: pointer"></span>';
                 },
                 postRender: function (ui) {
                     let grid = this,
                         $cell = grid.getCell(ui);
-                    $cell.find("#downloadView").bind("click", function () {
+                    $cell.find('[name=detailView]').bind("click", function () {
                         let rowData = ui.rowData;
-                        fnFileDownloadFormPageAction(rowData.DXF_GFILE_SEQ);
+                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ);
                     });
                 }
             },

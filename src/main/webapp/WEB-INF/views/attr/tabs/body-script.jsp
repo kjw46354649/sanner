@@ -837,12 +837,19 @@
         });
     }
 
+    Date.prototype.yymmdd = function() {
+        let yy = this.getFullYear().toString().substring(2);
+        let mm = (this.getMonth() + 1).toString();
+        let dd = this.getDate().toString();
+        return  yy + "/" + (mm[1] ? mm : "0" + mm[0]) + "/" + (dd[1] ? dd : "0" + dd[0]);
+    };
+
     Date.prototype.yyyymmdd = function() {
         let yyyy = this.getFullYear().toString();
         let mm = (this.getMonth() + 1).toString();
         let dd = this.getDate().toString();
         return  yyyy + "/" + (mm[1] ? mm : "0" + mm[0]) + "/" + (dd[1] ? dd : "0" + dd[0]);
-    }
+    };
 
     Date.prototype.yyyymmddhhmm = function () {
         let year = this.getFullYear();
@@ -856,7 +863,7 @@
         minute = minute < 10 ? '0' + minute : minute;
 
         return year + '/' + month + '/' + date + ' ' + hour + ':' + minute;
-    }
+    };
 
     let fnGridValidation = function(targetGrid){
         var gridInstance = $("#" + targetGrid).pqGrid('getInstance').grid;
@@ -885,7 +892,7 @@
             return true;
         }
 
-    }
+    };
 
     /**
      * Common Comfirm Box

@@ -252,7 +252,7 @@
             {title: 'SORT_NUM', dataType: 'integer', dataIndx: 'SORT_NUM', hidden: true},
             {title: '납기', width: 150, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
             {title: '관리번호', minWidht: 300, width: 300, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM'},
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM'},
             {title: '수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
             {title: '재질', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden: true},
             {title: '재질', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
@@ -412,9 +412,31 @@
                     {title: '연마', datatype: 'integer', align: 'right', dataIndx: 'PROCESS_PROGRESS_GRINDING'},
                 ]
             },
-            {title: '관리번호', minWidth: 40, width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: '파<br>트', minWidth: 20, width: 20, dataType: 'string', dataIndx: 'PART_NUM'},
-            {title: '소재종류<br>상세', minWidth: 20, width: 80, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
+            {title: '관리번호', width: 120, dataType: 'string', dataIndx: 'CONTROL_NUM'},
+            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM'},
+            {title: '소재종류<br>상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '') {
+                        return '';
+                    } else {
+                        let materialDetail = fnGetCommCodeGridSelectBox('1027');
+                        let index = materialDetail.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = materialDetail.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+
+                        }
+
+                        return (index < 0) ? cellData : materialDetail[index].text;
+                    }
+                }
+            },
             {title: '수량', dataType: 'integer', dataIndx: 'ORDER_QTY'},
             {title: '규격', width: 100, dataType: 'string', dataIndx: 'STANDARD_SIZE'},
             {title: '소재 Size', width: 100, dataType: 'string', dataIndx: 'MATERIAL_SIZE'},

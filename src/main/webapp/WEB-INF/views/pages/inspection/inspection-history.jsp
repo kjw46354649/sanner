@@ -187,7 +187,7 @@
             //     }
             // },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 200, width: 200, editable: false},
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 40, width: 40, editable: false},
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 40, width: 40, editable: false},
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 200, width: 200, editable: false},
             {title: '', align: 'center', dataType: 'string', dataIndx: 'DETAIL_INFO', width: 40, minWidth: 40, editable: false,
                 render: function (ui) {

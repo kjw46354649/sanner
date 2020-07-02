@@ -191,14 +191,15 @@
             {title: '비고(주문)', width: 150, dataType: 'string', dataIndx: 'CONTROL_NOTE'},
             {title: '', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'CONTROL_NUM_BUTTON',
                 render: function (ui) {
-                    if (ui.rowData.CONTROL_NUM) return '<span class="desktopIcon" style="cursor: pointer"></span>'
+                    if (ui.rowData.CONTROL_NUM)
+                        return '<span  class="doubleFilesIcon" name="detailView" style="cursor: pointer"></span>';
                 },
                 postRender: function (ui) {
                     let grid = this,
                         $cell = grid.getCell(ui);
-                    $cell.find("#downloadView").bind("click", function () {
+                    $cell.find('[name=detailView]').bind("click", function () {
                         let rowData = ui.rowData;
-                        fnFileDownloadFormPageAction(rowData.DXF_GFILE_SEQ);
+                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ);
                     });
                 }
             },
@@ -217,7 +218,7 @@
                 }
             },
             {title: '도면번호', width: 90, dataType: 'string', dataIndx: 'DRAWING_NUM'},
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM'},
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM'},
             {title: '품명', minWidth: 70, dataType: 'string', dataIndx: 'ITEM_NM'},
             {title: '규격', minWidth: 100, dataType: 'string', dataIndx: 'SIZE_TXT'},
             {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT_NM'},

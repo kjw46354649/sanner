@@ -248,6 +248,10 @@
         B.OUTSIDE_REQUEST_ETC, <!-- 외주 요청가공 기타사항 -->
         SF_GET_DATE_F(B.OUTSIDE_HOPE_DUE_DT, 'YY', '') AS OUTSIDE_HOPE_DUE_DT, <!-- 외주 요망납기 -->
         B.OUTSIDE_UNIT_AMT, <!-- 외주 확정단가 -->
+        B.OUTSIDE_STATUS, <!-- 외주 가공요청상태 -->
+        SF_GET_CODE_NM(1031, B.OUTSIDE_STATUS, 'KR') AS OUTSIDE_STATUS_NM, <!-- 외주 가공요청상태 -->
+        SF_GET_DATE_F(B.OUTSIDE_STATUS_DT, '', 'M') AS OUTSIDE_STATUS_DT, <!-- 외주 상태변경일시 -->
+        SF_GET_DATE_F(B.OUTSIDE_IN_DT, 'YY', '') AS OUTSIDE_IN_DT, <!-- 외주 입고일시 -->
         SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY
     </sql>
 
@@ -1225,6 +1229,13 @@
         </if>
         <if test="OUTSIDE_UNIT_AMT != null and OUTSIDE_UNIT_AMT != ''">
             OUTSIDE_UNIT_AMT = #{OUTSIDE_UNIT_AMT},
+        </if>
+        <if test="OUTSIDE_STATUS != null and OUTSIDE_STATUS != ''">
+            OUTSIDE_STATUS = #{OUTSIDE_STATUS},
+            OUTSIDE_STATUS_DT = NOW(),
+        </if>
+        <if test="OUTSIDE_IN_DT != null and OUTSIDE_IN_DT != ''">
+            OUTSIDE_IN_DT = #{OUTSIDE_IN_DT},
         </if>
             STATUS_DT = NOW(),
             UPDATE_DT = NOW()

@@ -354,8 +354,7 @@
 
         /* function */
         const openNewWindowControlDetail = function (rowData) {
-            //URL?변수명1=값1&변수명2=값2&변수명3=값3&…
-            let url = '/controlDetail?COMP_CD=' + rowData.COMP_CD + '&CLOSE_MONTH=' + rowData.CLOSE_MONTH + '&ORDER_COMP_CD=' + rowData.ORDER_COMP_CD + '&CLOSE_VER=' + rowData.CLOSE_VER;
+            let url = '/controlDetail';
             // 팝업 사이즈
             let nWidth = 1012;
             let nHeight = 800;

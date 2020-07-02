@@ -63,14 +63,17 @@ public class OutServiceImpl implements OutService {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
 
+        int outsideRequestSeq;
+        String status = null;
         ArrayList<HashMap<String, Object>> controlPartList = null;
         ArrayList<HashMap<String, Object>> mailReceiverList = null;
         HashMap<String, Object> requestMailForm = null;
-        int outsideRequestSeq;
 
         if (jsonObject != null)
-            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {
-            });
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        if (jsonMap.containsKey("status"))
+            status = (String) jsonMap.get("status");
 
         if (jsonMap.containsKey("requestMailForm"))
             requestMailForm = (HashMap<String, Object>) jsonMap.get("requestMailForm");
@@ -81,12 +84,21 @@ public class OutServiceImpl implements OutService {
         if (jsonMap.containsKey("mailReceiverList"))
             mailReceiverList = (ArrayList<HashMap<String, Object>>) jsonMap.get("mailReceiverList");
 
-        // 주문관리 Part 저장,  외주가공 요청상태 삭제
+        // 주문관리 Part 저장
         if (controlPartList != null && controlPartList.size() > 0) {
             for (HashMap<String, Object> hashMap : controlPartList) {
-                hashMap.put("queryId", "orderMapper.updateControlPart");
+                hashMap.put("queryId", "outMapper.updateOutsideRequestDetailDelete");
                 this.innodaleDao.update(hashMap);
-                hashMap.put("queryId", "outMapper.updateOutsideRequestDelYN");
+
+                if (status.equals("request")) {
+                    hashMap.put("PART_STATUS", "PRO001");
+                    hashMap.put("OUTSIDE_STATUS", "OST001");
+                } else {
+                    hashMap.put("PART_STATUS", null);
+                    hashMap.put("OUTSIDE_STATUS", "OST002");
+                }
+
+                hashMap.put("queryId", "orderMapper.updateControlPart");
                 this.innodaleDao.update(hashMap);
             }
         }
