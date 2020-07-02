@@ -18,19 +18,19 @@
         <form id="MCT_PLAN_MANAGE_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="machine.selectEquipId">
             <div class="hWrap">
-                <h2>MCT 가공 계획 현황</h2>
+                <h2 style="height: 42px; line-height: 42px;">MCT 가공 계획 현황</h2>
                 <span class="slt_wrap namePlusSlt mg-left20">
-                                    <label for="FACTORY_AREA">MCT 센터</label>
-                                    <select name="FACTORY_AREA" id="FACTORY_AREA">
-                                    <c:forEach var="code" items="${HighCode.H_1005}">
-                                        <c:if test="${code.ETC1 == 'MCT_PROCESS_PLAN'}">
-                                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                        </c:if>
-                                    </c:forEach>
-                                    </select>
-                                </span>
+                        <label for="FACTORY_AREA">MCT 센터</label>
+                        <select name="FACTORY_AREA" id="FACTORY_AREA">
+                        <c:forEach var="code" items="${HighCode.H_1005}">
+                            <c:if test="${code.ETC1 == 'MCT_PROCESS_PLAN'}">
+                                <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                            </c:if>
+                        </c:forEach>
+                        </select>
+                </span>
                 <span class="refresh mg-left10"><button type="button" id="MCT_PLAN_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
-                <span class="buttonWrap">
+                <span class="buttonWrap" style="padding: 8px 0px 0px 0px;">
                     <button type="button" class="defaultBtn black" id="MCT_PLAN_MANAGE_DRAWING_VIEW">도면보기</button>
                     <!-- <button type="button" class="defaultBtn sky">레이아웃관리</button> -->
                 </span>
@@ -59,12 +59,12 @@
     </div>
     <div class="bottomWrap">
         <form id="MCT_PROCESS_TARGET_FORM" role="form">
-            <input type="hidden" name="queryId" id="queryId" value="machine.selectProcessTargetList">
-            <div class="hWrap">
-                <h2>가공 대상 List</h2>
+            <input type="hidden" name="queryId" id="queryId" value="machine.selectWorkPlanGridList">
+            <div class="hWrap" style="padding: 0px;">
+                <h2 style="height: 42px; line-height: 42px;">가공 대상 List</h2>
                 <span class="slt_wrap mg-left20">
                     <label class="label_50" for="FACTORY_CLASSIFY">공장구분</label>
-                    <select class="wd_100" name="FACTORY_CLASSIFY" id="FACTORY_CLASSIFY" title="공장구분">
+                    <select class="wd_70" name="FACTORY_CLASSIFY" id="FACTORY_CLASSIFY" title="공장구분">
                         <option value="">All</option>
                         <c:forEach var="code" items="${HighCode.H_1014}">
                             <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -128,16 +128,19 @@
                 <span class="gubun"></span>
                 <button type="button" class="defaultBtn btn-100w green" id="">저장</button>
             </div>
+        </form>
             <div class="conWrap">
                 <div class="tableWrap" style="background: #e1e1e1;">
                     <div id="PROCESS_TARGET_GRID"></div>
                 </div>
             </div>
-        </form>
     </div>
 </div>
 
 <script>
+
+    alert("test");
+
     $(function () {
         'use strict';
         /* variable */
@@ -171,7 +174,7 @@
             str += '    <input type="hidden" name="EQUIP_SEQ" id="EQUIP_SEQ" value="' + equipSeq + '">';
             str += '    <div class="table">';
             str += '        <div class="titleWrap">';
-            str += '            <span class="equipLabel">' + equipNm +'<span id="NC' + order + '_WORK_USER_ID"></span></span>';
+            str += '            <span class="equipLabel" style="line-height: 27px;">' + equipNm +'<span id="NC' + order + '_WORK_USER_ID"></span></span>';
             str += '            <p class="listTxt" style="display: none;">';
             str += '                <span id="NC' + order + '_CONTRO_NUM"></span>';
             str += '                <span id="NC' + order + '_MATERIAL_DETAIL"></span>';
@@ -351,7 +354,6 @@
             },
             change: function (event, ui) {
                 gridChange(this, ui);
-
                 setTimeout(function () {
                     refreshTargetGrid();
                 }, 1000);
@@ -377,229 +379,58 @@
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'IMG_GFILE_SEQ', dataType: 'integer', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
-            {title: '납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
-            {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN'},
-            {title: '주요', dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
-            {title: '형태', dataType: 'string', dataIndx: 'WORK_NM'},
-            {
-                title: 'NC Plan', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, colModel: [
-                    {title: 'NC No.', datatype: 'string', dataIndx: '', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}},
-                    {title: 'W/T(분)', datatype: 'integer', dataIndx: '', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
+            {title: '납기', minWidth: 50, width: 50, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
+            {title: '긴<br>급', minWidth: 20, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN'},
+            {title: '주<br>요', minWidth: 20, width: 20, dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
+            {title: '형<br>태', minWidth: 20, width: 20, dataType: 'string', dataIndx: 'WORK_NM'},
+            {title: 'NC Plan', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                colModel: [
+                    {title: 'NC No.', minWidth: 40, width: 60, datatype: 'string', dataIndx: 'MCT_PLAN_EQUIP_NM', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}},
+                    {title: 'W/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'MCT_PLAN_WORKING_TIME', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
                 ]
             },
-            {
-                title: 'MCT Actual', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, colModel: [
-                    {title: 'Seq.1', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_1', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-                            let status = ui.rowData.STATUS_1;
-                            let backgroundColor = colorClassification(status);
-
-                            // if (status) {
-                            //     $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                            // }
-
-                            if (cellData) {
-                                $processTargetGrid.pqGrid('addClass', { rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-
-                                let index = EQUIP_LIST.findIndex(function (element) {
-                                    return element.value === Number(cellData);
-                                });
-                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
-                            }
-                        }
-                    },
-                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_1', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-                            let status = ui.rowData.STATUS_1;
-                            let backgroundColor = colorClassification(status);
-
-                            /*if (status) {
-                                return $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                            }*/
-
-                            if (cellData) {
-                                $processTargetGrid.pqGrid('addClass', {
-                                    rowIndx: ui.rowIndx,
-                                    dataIndx: ui.dataIndx,
-                                    cls: backgroundColor
-                                });
-
-                                return cellData + '분';
-                            }
-                        }
-                    },
-                    {title: '', datatype: 'string', dataIndx: 'STATUS_1', hidden: true},
-                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_1', hidden: true},
-                    {title: 'Seq.2', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_2', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-                            let status = ui.rowData.STATUS_2;
-                            let backgroundColor = colorClassification(status);
-
-                            if (cellData) {
-                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-
-                                let index = EQUIP_LIST.findIndex(function (element) {
-                                    return element.value === Number(cellData);
-                                });
-                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
-                            }
-                        }
-                    },
-                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_2', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-                            let status = ui.rowData.STATUS_2;
-                            let backgroundColor = colorClassification(status);
-
-                            if (cellData) {
-                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-
-                                return cellData + '분';
-                            }
-                        }
-                    },
-                    {title: '', datatype: 'string', dataIndx: 'STATUS_2', hidden: true},
-                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_2', hidden: true},
-                    {title: 'Seq.3', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_3', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-                            let status = ui.rowData.STATUS_3;
-                            let backgroundColor = colorClassification(status);
-
-                            if (cellData) {
-                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-
-                                let index = EQUIP_LIST.findIndex(function (element) {
-                                    return element.value === Number(cellData);
-                                });
-                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
-                            }
-                        }
-                    },
-                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_3', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-                            let status = ui.rowData.STATUS_3;
-                            let backgroundColor = colorClassification(status);
-
-                            if (cellData) {
-                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-
-                                return cellData + '분';
-                            }
-                        }
-                    },
-                    {title: '', datatype: 'string', dataIndx: 'STATUS_3', hidden: true},
-                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_3', hidden: true},
-                    {title: 'Seq.4', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_4', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-                            let status = ui.rowData.STATUS_4;
-                            let backgroundColor = colorClassification(status);
-
-                            if (cellData) {
-                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-
-                                let index = EQUIP_LIST.findIndex(function (element) {
-                                    return element.value === Number(cellData);
-                                });
-                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
-                            }
-                        }
-                    },
-                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_4', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-                            let status = ui.rowData.STATUS_4;
-                            let backgroundColor = colorClassification(status);
-
-                            if (cellData) {
-                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-
-                                return cellData + '분';
-                            }
-                        }
-                    },
-                    {title: '', datatype: 'string', dataIndx: 'STATUS_4', hidden: true},
-                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_4', hidden: true}
+            {title: 'MCT Actual', align: 'center',
+                colModel: [
+                    {title: 'Seq.1', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_ID_1'},
+                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_1'},
+                    {title: 'Seq.2', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_ID_2'},
+                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_2'},
+                    {title: 'Seq.3', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_ID_3'},
+                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_3'},
+                    {title: 'Seq.4', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_ID_4'},
+                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_4'},
                 ]
             },
-            {title: '현재위치', dataType: 'string', dataIndx: 'POP_POSITION',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let position = fnGetCommCodeGridSelectBox('1009');
-                        let index = position.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = position.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-
-                        }
-
-                        return (index < 0) ? cellData : position[index].text;
-                    }
-                }
-            },
-            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS'},
-            {
-                title: '가공진행 현황', align: 'center', colModel: [
-                    {title: 'NC', datatype: 'string', dataIndx: 'PROCESS_PROGRESS_NC'},
-                    {title: '밀링', datatype: 'string', dataIndx: 'PROCESS_PROGRESS_MILLING'},
-                    {title: '선반', datatype: 'string', dataIndx: 'PROCESS_PROGRESS_RACK'},
-                    {title: '연마', datatype: 'string', dataIndx: 'PROCESS_PROGRESS_GRINDING'},
+            {title: '총 가공<br>시간(분)', dataType: 'integer', align: 'right', dataIndx: 'MCT_WORK_TIME'},
+            {title: '현재위치', minWidth: 40, width: 100, dataType: 'string', dataIndx: 'POP_POSITION'},
+            {title: '진행상태', minWidth: 40, width: 100, dataType: 'string', dataIndx: 'PART_STATUS'},
+            {title: '가공진행 현황', align: 'center',
+                colModel: [
+                    {title: 'NC', datatype: 'integer', align: 'right', dataIndx: 'PROCESS_PROGRESS_NC'},
+                    {title: '밀링', datatype: 'integer', align: 'right', dataIndx: 'PROCESS_PROGRESS_MILLING'},
+                    {title: '선반', datatype: 'integer', align: 'right', dataIndx: 'PROCESS_PROGRESS_RACK'},
+                    {title: '연마', datatype: 'integer', align: 'right', dataIndx: 'PROCESS_PROGRESS_GRINDING'},
                 ]
             },
-            {title: '관리번호', width: 120, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM'},
-            {title: '소재종류<br>상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let materialDetail = fnGetCommCodeGridSelectBox('1027');
-                        let index = materialDetail.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = materialDetail.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-
-                        }
-
-                        return (index < 0) ? cellData : materialDetail[index].text;
-                    }
-                }
-            },
+            {title: '관리번호', minWidth: 40, width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM'},
+            {title: '파<br>트', minWidth: 20, width: 20, dataType: 'string', dataIndx: 'PART_NUM'},
+            {title: '소재종류<br>상세', minWidth: 20, width: 80, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '수량', dataType: 'integer', dataIndx: 'ORDER_QTY'},
-            {title: '규격', width: 120, dataType: 'string', dataIndx: 'STANDARD_SIZE'},
-            {title: '소재 Size', width: 120, dataType: 'string', dataIndx: 'MATERIAL_SIZE'},
-            {title: '비고 기록사항', dataType: 'string', dataIndx: 'NOTE'},
-            {title: '예상가공<br>시간(분)', dataType: 'integer', dataIndx: 'MCT_WORK_TIME'},
-            {title: '가공계획<br>비고', dataType: 'string', dataIndx: 'MCT_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-            {
-                title: '작업<br>구분', dataType: 'string', dataIndx: 'MCT_WORK_TYPE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1011')},
+            {title: '규격', width: 100, dataType: 'string', dataIndx: 'STANDARD_SIZE'},
+            {title: '소재 Size', width: 100, dataType: 'string', dataIndx: 'MATERIAL_SIZE'},
+            {title: '비고<br>기록사항', minWidth: 20, width: 100, dataType: 'string', dataIndx: 'NOTE'},
+            {title: '가공계획<br>비고', minWidth: 20, width: 150, dataType: 'string', dataIndx: 'MCT_NOTE',
+                styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {title: '작업구분', dataType: 'string', dataIndx: 'MCT_WORK_TYPE_NM', hidden : true},
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1033')},
                 render: function (ui) {
                     let cellData = ui.cellData;
 
                     if (cellData === '') {
                         return '';
                     } else {
-                        let workType = fnGetCommCodeGridSelectBox('1011');
+                        let workType = fnGetCommCodeGridSelectBox('1033');
                         let index = workType.findIndex(function (element) {
                             return element.text === cellData;
                         });
@@ -610,48 +441,24 @@
                             });
 
                         }
-
                         return (index < 0) ? cellData : workType[index].text;
                     }
                 }
             },
-            {title: '이전위치', dataType: 'string', dataIndx: 'POP_PREV_POSITION',
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '') {
-                        return '';
-                    } else {
-                        let position = fnGetCommCodeGridSelectBox('1009');
-                        let index = position.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = position.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-
-                        }
-
-                        return (index < 0) ? cellData : position[index].text;
-                    }
-                }
-            },
-            {
-                title: '과거 경험<br>(NC설계기준)', align: 'center', colModel: [
-                    {title: '', datatype: 'string', dataIndx: 'PAST_WORKER_BOOL',
+            {title: '이전위치', dataType: 'string', minWidth: 40, width: 100, dataIndx: 'POP_PREV_POSITION'},
+            {title: '과거 경험', align: 'center', colModel: [
+                    {title: '', datatype: 'string', minWidth: 20, width: 20, dataIndx: '',
                         render: function (ui) {
                             if (ui.cellData) {
                                 return '<span>○</span>';
                             }
                         }
                     },
-                    {title: '', datatype: 'string', dataIndx: 'PAST_WORKER'},
+                    {title: '', datatype: 'string', minWidth: 40, width: 100, dataIndx: 'LAST_CAM_WORK_USER'},
                 ]
             },
-            {title: '확정 일시', width: 110, dataType: 'string', dataIndx: 'SATAUS_DT'},
-            {title: '소재입고<br>일시', width: 110, dataType: 'string', dataIndx: 'MATERIAL_INNER_DT'}
+            {title: '확정<br>일시', minWidth: 40, width: 50, dataType: 'string', dataIndx: 'SATAUS_DT'},
+            {title: '소재<br>입고일시', minWidth: 40, width: 50, dataType: 'string', dataIndx: 'MATERIAL_INNER_DT'}
         ];
         const processTargetGridObj = {
             height: '100%',
@@ -662,6 +469,7 @@
             numberCell: {title: 'No.'},
             selectionModel: {type: 'row', mode: 'single'},
             // scrollModel: {autoFit: true},
+            editModel: {clicksToEdit: 1},
             trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
             colModel: processTargetGridColModel,
@@ -678,25 +486,12 @@
                 diHelper: ['CONTROL_NUM'],
                 beforeDrop: function () {}
             },
-            complete: function () {
-                // this.flex();
-            },
+            // complete: function () {
+            //     // this.flex();
+            // },
             rowSelect: function (event, ui) {
                 selectedGrid = $(this.element.context);
                 selectedRowIndex = ui.addList[0].rowIndx;
-            },
-            cellSave: function (event, ui) {
-                if (ui.oldVal === undefined && ui.newVal === null) {
-                    $processTargetGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
-                } else {
-                    //TODO: 트랜잭션 하나로
-                    changeMctPlanFromTarget(ui);
-                    //updateMctPlanFromTarget
-                    fnModifyPQGrid($processTargetGrid, [], ['machine.updateMctTarget']);
-                    setTimeout(function () {
-                        refreshMctPlanGrids();
-                    }, 1000);
-                }
             }
         };
 
@@ -818,7 +613,6 @@
 
         const colorClassification = function (status) {
             let backgroundColor = '';
-
             switch (status) {
                 // 가동중
                 case 'PRO007':
@@ -866,7 +660,6 @@
         const changeTitleColor = function (equipStatus, tableElement) {
             let equipLabelElement = $(tableElement).find('.equipLabel');
             let labelColorId = 'bg-yellow';
-
             //TODO: default 색상 및 상태 필요
             switch (equipStatus) {
                 case '진행중':
@@ -882,7 +675,6 @@
                     labelColorId = 'bg-orange';
                     break;
             }
-
             equipLabelElement.removeClass();
             equipLabelElement.addClass('equipLabel');
             equipLabelElement.addClass(labelColorId);

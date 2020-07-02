@@ -94,6 +94,7 @@
             INNER JOIN TBL_CODE_LANG B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = 'KR'
             INNER JOIN TBL_CODE_LANG C ON A.HIGH_CD = C.HIGH_CD AND A.CODE_CD = C.CODE_CD AND C.LANG_CD = 'EN'
         WHERE A.DEL_YN = 'N'
+        ORDER BY A.HIGH_CD, A.SORT_NUM
     </select>
 
     <select id="selectSessionMenuList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
