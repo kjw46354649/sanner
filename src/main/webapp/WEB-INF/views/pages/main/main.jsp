@@ -209,6 +209,7 @@
             selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
             collapsible: false,
+            postRenderInterval: -1, //call postRender synchronously.
             trackModel: {on: true},
             resizable: false,
             flexWidth: false,
