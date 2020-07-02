@@ -1979,7 +1979,7 @@
 
         $('#CONTROL_MANAGE_SAVE').on('click', function () {
             const insertQueryList = ['orderMapper.createControlPart', 'orderMapper.createControlPartOrder'];
-            const updateQueryList = ['orderMapper.updateControlMaster', 'orderMapper.updateControlPart', 'orderMapper.updateControlPartOrder', 'orderMapper.createControlProgress', 'orderMapper.createControlPartProgress'];
+            const updateQueryList = ['orderMapper.updateControlMaster', 'orderMapper.updateControlPart', 'orderMapper.updateControlPartOrder'];
 
             fnModifyPQGrid($orderManagementGrid, insertQueryList, updateQueryList);
         });
