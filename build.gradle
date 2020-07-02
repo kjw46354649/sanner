@@ -92,6 +92,8 @@ dependencies {
     compile group: 'com.itextpdf', name: 'html2pdf', version: '3.0.0'
     // https://mvnrepository.com/artifact/com.itextpdf.tool/xmlworker
     compile group: 'com.itextpdf.tool', name: 'xmlworker', version: '5.5.13'
+    // https://mvnrepository.com/artifact/com.itextpdf/itext-asian
+    compile group: 'com.itextpdf', name: 'itext-asian', version: '5.2.0'
 
 
     // DBMS logger trace
@@ -134,6 +136,6 @@ dependencies {
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8' //인코딩을 UTF-8로 통일
 
 war {
-    archiveName 'jmes.war'
+    archiveName 'ROOT.war'
     from 'webapp' // adds a file-set to the root of the archive
 }
