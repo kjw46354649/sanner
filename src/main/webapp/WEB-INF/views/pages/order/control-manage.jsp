@@ -1939,7 +1939,7 @@
         /**
          * @description 날짜 라디오 변경
          */
-        $('[name=CONTROL_MANAGE_TERM]').change(function () {
+        $('#CONTROL_MANAGE_SEARCH_FORM').find('[name=CONTROL_MANAGE_TERM]').change(function () {
             let value = $(this).val(), today = new Date(), newDate = new Date();
 
             switch (value) {
@@ -1961,10 +1961,8 @@
             $('#CONTROL_MANAGE_DATEPICKER_READ_ONLY').prop('checked', true);
             createOrDestroyDatepicker();
         });
-
         let createOrDestroyDatepicker = function () {
             let checked = $('#CONTROL_MANAGE_DATEPICKER_READ_ONLY').prop('checked');
-
             if (checked) $('[id^=CONTROL_MANAGE][id$=DATE]').datepicker('destroy');
             else $('[id^=CONTROL_MANAGE][id$=DATE]').datepicker();
         };

@@ -11,6 +11,16 @@
           AND DEL_YN = 'N'
     </select>
 
+    <select id="getMCTWorkerList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            USER_ID AS CODE_CD, USER_NM AS CODE_NM
+        FROM jmes.TBL_USER
+        WHERE 1 = 1
+            AND DEL_YN = 'N'
+            AND ROLE_SEQ IN ('3000')
+    </select>
+
+
     <select id="getCompanyStaffList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             A.COMP_CD, B.STAFF_SEQ AS CODE_CD, B.STAFF_NM AS CODE_NM
@@ -114,6 +124,16 @@
         FROM TBL_EQUIP
         WHERE 1 = 1
             AND DEL_YN = 'N'
+    </select>
+
+    <select id="getMctEquipList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+        	EQUIP_SEQ AS CODE_CD, EQUIP_NM AS CODE_NM
+        FROM jmes.TBL_EQUIP
+        WHERE 1 = 1
+        	AND DEL_YN = 'N'
+        	AND PROCESS_TYPE = 'MPR010'
+        ORDER BY FACTORY_AREA, CAST(IFNULL(SUBSTRING_INDEX(EQUIP_ID, '-', -1), 0) AS UNSIGNED)
     </select>
 
     <select id="selectRoleCommonCode" parameterType="java.util.HashMap" resultType="java.util.HashMap">

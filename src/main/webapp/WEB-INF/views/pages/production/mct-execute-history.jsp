@@ -118,7 +118,7 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="COMP_CD">MCT 공장 구분</label>
                             <select class="wd_200" name="FACTORY_AREA" id="FACTORY_AREA" title="공장구분">
-                                <option value="">All</option>
+                                <option value="">전체</option>
                                 <c:forEach var="code" items="${HighCode.H_1005}">
                                     <c:if test="${code.ETC2 == 'W'}">
                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -128,16 +128,16 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="OUTSIDE_COMP_CD">NC NO.</label>
-                            <select class="wd_200" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
-                                <option value="">All</option>
+                            <label class="label_100" for="EQUIP_SEQ">NC NO.</label>
+                            <select class="wd_200" name="EQUIP_SEQ" id="EQUIP_SEQ">
+                                <option value="">전체</option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="CLOSE_VER">자재종류</label>
                             <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
-                                <option value="">All</option>
+                                <option value="">전체</option>
                                 <c:forEach var="code" items="${HighCode.H_1027}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -147,7 +147,7 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="CLOSE_VER">형태</label>
                             <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
-                                <option value="">All</option>
+                                <option value="">전체</option>
                                 <c:forEach var="code" items="${HighCode.H_1033}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -167,8 +167,8 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="CLOSE_VER">작업자</label>
-                            <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
-                                <option value="">All</option>
+                            <select class="wd_200" name="WORK_USER_ID" id="WORK_USER_ID">
+                                <option value="">전체</option>
                             </select>
                         </span>
                     </li>
@@ -255,6 +255,14 @@
 <script>
     $(function () {
         'use strict';
+        /** function **/
+        fnCommCodeDatasourceSelectBoxCreate($('#NC_PERFORMANCE_HISTORY_SEARCH_FORM').find('#EQUIP_SEQ'), 'all', {
+            'url': '/json-list', 'data': {'queryId': 'dataSource.getMctEquipList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#NC_PERFORMANCE_HISTORY_SEARCH_FORM').find('#WORK_USER_ID'), 'all', {
+            'url': '/json-list', 'data': {'queryId': 'dataSource.getMCTWorkerList'}
+        });
+
         /* variable */
         const YEAR = TODAY.getFullYear();
         const MONTH = TODAY.getMonth() + 1;
