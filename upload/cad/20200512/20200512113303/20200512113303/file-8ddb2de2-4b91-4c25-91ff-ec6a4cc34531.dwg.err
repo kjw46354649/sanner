@@ -1,0 +1,4 @@
+OdError thrown during writeFile to "D:/Project/workspace-jmes/upload/cad/20200512/20200512113303/20200512113303/file-8ddb2de2-4b91-4c25-91ff-ec6a4cc34531.dwg" :
+  File sharing violation: "D:/Project/workspace-jmes/upload/cad/20200512/20200512113303/20200512113303/file-8ddb2de2-4b91-4c25-91ff-ec6a4cc34531.dwg". 다른 프로세스가 파일을 사용 중이기 때문에 프로세스가 액세스 할 수 없습니다.
+
+
