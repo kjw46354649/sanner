@@ -399,7 +399,7 @@
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1049') },
                 render: function (ui) {
                     let cellData = ui.cellData;
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let data = fnGetCommCodeGridSelectBox('1049');
@@ -463,7 +463,7 @@
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029') },
                 render: function (ui) {
                     let cellData = ui.cellData;
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let data = fnGetCommCodeGridSelectBox('1029');
@@ -492,7 +492,7 @@
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027') },
                 render: function (ui) {
                     let cellData = ui.cellData;
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let data = fnGetCommCodeGridSelectBox('1027');

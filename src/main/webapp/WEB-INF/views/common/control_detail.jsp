@@ -79,7 +79,7 @@
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', colModel: []},
             {title: '소재<br>종류', minWidth: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', colModel: []},
             {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', colModel: []},
-            {title: 'Part<br>단위<br>수량', align: 'right', dataType: 'integer', dataIndx: 'PART_UNIT_QTY', colModel: []},
+            {title: '파트<br>단위<br>수량', align: 'right', dataType: 'integer', dataIndx: 'PART_UNIT_QTY', colModel: []},
             {title: '발주번호', minWidth: 90, datatype: 'string', dataIndx: 'ORDER_NUM', colModel: []},
             // {title: '주문<br>수량', dataType: 'string', dataIndx: 'ITEM_QTY', colModel: []},
             {

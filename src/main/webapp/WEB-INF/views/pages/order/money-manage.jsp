@@ -361,7 +361,7 @@
                 styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 render: function (ui) {
                     let cellData = ui.cellData;
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let index = MONEY_BUSINESS_COMPANY.findIndex(function (element) {
@@ -381,7 +381,7 @@
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: MONEY_ORDER_COMPANY},
                 render: function (ui) {
                     let cellData = ui.cellData;
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let index = MONEY_ORDER_COMPANY.findIndex(function (element) {
@@ -410,7 +410,7 @@
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let materialKind = fnGetCommCodeGridSelectBox('1074');

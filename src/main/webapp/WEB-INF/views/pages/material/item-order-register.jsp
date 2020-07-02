@@ -279,7 +279,7 @@
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let data = fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
@@ -343,7 +343,7 @@
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029') },
                 render: function (ui) {
                     let cellData = ui.cellData;
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let data = fnGetCommCodeGridSelectBox('1029');
@@ -366,7 +366,7 @@
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027') },
                 render: function (ui) {
                     let cellData = ui.cellData;
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let data = fnGetCommCodeGridSelectBox('1027');
@@ -494,7 +494,7 @@
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029') },
                 render: function (ui) {
                     let cellData = ui.cellData;
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let data = fnGetCommCodeGridSelectBox('1029');
@@ -517,7 +517,7 @@
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027') },
                 render: function (ui) {
                     let cellData = ui.cellData;
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let data = fnGetCommCodeGridSelectBox('1027');
@@ -541,7 +541,7 @@
                 editor: { type: 'select', valueIndx: "value", labelIndx: "text", options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}}), },
                 render: function (ui) {
                     let cellData = ui.cellData;
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let data = fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
@@ -678,7 +678,7 @@
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let data = fnGetCommCodeGridSelectBox('1029');
@@ -701,7 +701,7 @@
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027') },
                 render: function (ui) {
                     let cellData = ui.cellData;
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let data = fnGetCommCodeGridSelectBox('1027');
@@ -730,7 +730,7 @@
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let data = fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});

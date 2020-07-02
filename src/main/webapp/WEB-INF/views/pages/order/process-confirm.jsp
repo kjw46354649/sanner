@@ -327,7 +327,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let workFactory = fnGetCommCodeGridSelectBox('1014');

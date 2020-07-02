@@ -314,7 +314,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let workType = fnGetCommCodeGridSelectBox('1033');
@@ -357,7 +357,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let workFactory = fnGetCommCodeGridSelectBox('1027');
@@ -385,7 +385,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let workFactory = fnGetCommCodeGridSelectBox('1029');
@@ -413,7 +413,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let workFactory = fnGetCommCodeGridSelectBox('1039');
@@ -444,7 +444,7 @@
                         render: function (ui) {
                             let cellData = ui.cellData;
 
-                            if (cellData === '') {
+                            if (cellData === '' || cellData === undefined) {
                                 return '';
                             } else {
                                 let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
@@ -472,7 +472,7 @@
                         render: function (ui) {
                             let cellData = ui.cellData;
 
-                            if (cellData === '') {
+                            if (cellData === '' || cellData === undefined) {
                                 return '';
                             } else {
                                 let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
@@ -500,7 +500,7 @@
                         render: function (ui) {
                             let cellData = ui.cellData;
 
-                            if (cellData === '') {
+                            if (cellData === '' || cellData === undefined) {
                                 return '';
                             } else {
                                 let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');

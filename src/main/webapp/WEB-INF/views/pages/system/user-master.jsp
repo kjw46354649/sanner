@@ -83,7 +83,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
                     let departmentOption = fnGetCommCodeGridSelectBox('1061');
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let index = departmentOption.findIndex(function (element) {
@@ -103,7 +103,7 @@
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: ROLE_SEQ_OPTION},
                 render: function (ui) {
                     let cellData = ui.cellData;
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let index = ROLE_SEQ_OPTION.findIndex(function (element) {

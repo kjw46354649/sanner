@@ -393,7 +393,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let index = OUTSOURCE_COMPANY.findIndex(function (element) {
@@ -783,7 +783,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let materialDetail = fnGetCommCodeGridSelectBox('1027');
@@ -805,7 +805,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let surfaceTreat = fnGetCommCodeGridSelectBox('1039');
@@ -1040,7 +1040,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let materialDetail = fnGetCommCodeGridSelectBox('1027');
@@ -1062,7 +1062,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '') {
+                    if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
                         let surfaceTreat = fnGetCommCodeGridSelectBox('1039');
