@@ -448,17 +448,16 @@
                     {title: '연마', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_GRINDING', minWidth: 20, width: 30},
                 ]
             },
-            {title: '', dataType: 'string', minWidth: 20, width: 30,
+            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
-                    return '<span class="ui-icon ui-icon-newwin" name="MCT_RESULT_DETAIL_VIEW" style="cursor: pointer;"></span>';
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    return '';
                 },
-                postRender: function (ui) {
-                    // let rowIndx = ui.rowIndx;
-                    let grid = this;
-                    let $cell = grid.getCell(ui);
-                    $cell.find('[name=MCT_RESULT_DETAIL_VIEW]').on('click', function () {
-                        let rowData = ui.rowData;
-                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ);
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
                     });
                 }
             },
