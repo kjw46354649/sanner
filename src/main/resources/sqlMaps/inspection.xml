@@ -40,7 +40,7 @@
                 , jmes.SF_GET_CODE_NM('1032', Z.ERROR_REASON, 'KR') AS Q_ERROR_REASON_NM
                 , jmes.SF_GET_CODE_NM('1025', Z.ERROR_ACTION, 'KR') AS Q_ERROR_ACTION_NM
                 , Z.ERROR_NOTE AS Q_ERROR_NOTE
-                , jmes.WWWWSF_GET_DATE_F(Z.INSERT_DT,'YY','M') AS Q_DT
+                , jmes.SF_GET_DATE_F(Z.INSERT_DT,'YY','M') AS Q_DT
                 , X.OUT_FINISH_DT
                 , X.NOT_RETURN_SETTLEMENT_CNT
             FROM (

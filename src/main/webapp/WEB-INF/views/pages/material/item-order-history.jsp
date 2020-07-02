@@ -313,6 +313,7 @@
             swipeModel: {on: false},
             collapsible: false,
             resizable: false,
+            sortable: false,
             trackModel: {on: true},
             colModel: itemOrderHistoryLeftColModel,
             showTitle: false,
