@@ -139,7 +139,33 @@
             },
             {title: '외주가공', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', minWidth: 80, width: 80, editable: false},
             {title: '발주번호', dataType: 'string', dataIndx: 'ORDER_NUM', minWidth: 120, width: 120, editable: false},
+            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+                render: function (ui) {
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                    });
+                }
+            },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 200, width: 200, editable: false},
+            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30,
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
             {title: '도면번호', dataType: 'integer', dataIndx: 'DRAWING_NUM', minWidth: 120, width: 120, editable: true},
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 120, width: 120, editable: false},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 120, width: 120, editable: false},
@@ -180,6 +206,7 @@
             swipeModel: {on: false},
             showTitle: false,
             collapsible: false,
+            postRenderInterval: -1, //call postRender synchronously.
             resizable: false,
             trackModel: {on: true},
             colModel: outgoingHistoryColModel01,

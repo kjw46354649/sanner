@@ -8,7 +8,7 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 
-<div class="popup_container" id="in_warehouse_manage_out_popup" style="display: none;">
+<%--<div class="popup_container" id="in_warehouse_manage_out_popup" style="display: none;">
     <div class="layerPopup" style="height: fit-content;">
         <h3>소재 주문</h3>
         <button type="button" class="pop_close mg-top10 mg-right8" data-dismiss="modal">닫기</button>
@@ -70,6 +70,78 @@
             <div class="btnWrap">
                 <button type="button" class="defaultBtn greenPopGra" id="btnInWarehouseManageOutPopSave">저장</button>
                 <button type="button" class="defaultBtn grayPopGra" data-dismiss="modal">닫기</button>
+            </div>
+        </form>
+    </div>
+</div>--%>
+
+<div class="popup_container" id="in_warehouse_manage_out_popup" style="display: none;">
+    <div class="layerPopup" style="height: fit-content;">
+        <h3 style="margin-bottom: 10px;">소재 불출 진행</h3>
+        <button type="button" class="pop_close mg-top10 mg-right8" data-dismiss="modal">닫기</button>
+        <br/>
+        <form class="form-inline" role="form" id="in_warehouse_manage_out_popup_form" name="in_warehouse_manage_out_popup_form">
+            <input type="hidden" id="queryId" name="queryId" value="insertInWarehouseManageOutPop"/>
+            <input type="hidden" id="MY_MAT_STOCK_SEQ" name="MY_MAT_STOCK_SEQ"/>
+            <div class="tableWrap">
+                <table>
+                    <tbody>
+                    <tr class="outTopTableStyle">
+                        <th rowspan="2">창고명</th><th rowspan="2">위치</th>
+                        <th rowspan="2">형태</th><th rowspan="2">소재종류</th>
+                        <th colspan="5">소재 Size</th><th rowspan="2">보유수량</th>
+                    </tr>
+                    <tr class="outTopTableStyle">
+                        <th>가로</th><th>세로</th><th>두께</th>
+                        <th>파이</th><th>길이(L)</th>
+                    </tr>
+                    <tr class="outTopTableStyle">
+                        <td><input type="text" id="WAREHOUSE_NM" name="WAREHOUSE_NM" readonly></td>
+                        <td><input type="text" id="LOC_NM" name="LOC_NM" readonly></td>
+                        <td><input type="text" id="MATERIAL_KIND_NM" name="MATERIAL_KIND_NM" readonly></td>
+                        <td><input type="text" id="MATERIAL_DETAIL_NM" name="MATERIAL_DETAIL_NM" readonly></td>
+                        <td><input type="text" id="SIZE_W" name="SIZE_W" readonly></td>
+                        <td><input type="text" id="SIZE_H" name="SIZE_H" readonly></td>
+                        <td><input type="text" id="SIZE_T" name="SIZE_T" readonly></td>
+                        <td><input type="text" id="SIZE_D" name="SIZE_D" readonly></td>
+                        <td><input type="text" id="SIZE_L" name="SIZE_L" readonly></td>
+                        <td><input type="text" id="STOCK_QTY" name="STOCK_QTY" readonly></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br/>
+            <div class="tableWrap">
+                <table id="inWarehouseOutPopTable">
+                    <tbody>
+                    <tr class="outMidTableStyle"><th>보유수량</th><th>남은수량</th><th>불출수량</th><th> </th><th>요청자</th></tr>
+                    <tr class="outMidTableStyle">
+                        <td><input type="text" id="STOCK_QTY" name="STOCK_QTY" readonly></td>
+                        <td><input type="text" id="REMAIN_QTY" name="REMAIN_QTY" readonly></td>
+                        <td><input type="text" id="OUT_QTY" name="OUT_QTY"></td>
+                        <td>
+                            <button type="button" id="btnInWarehouseManageOutPopPlus" class="btn_plus">더하기</button>
+                            <button type="button" id="btnInWarehouseManageOutPopMinus" class="btn_minus">빼기</button>
+                        </td>
+                        <td>
+                            <select id="OUT_USER_ID" name="OUT_USER_ID">
+                            </select>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                </br>
+                <table>
+                    <tr class="outBotTableStyle">
+                        <th>용도</th>
+                        <td><input id="NOTE" name="NOTE" type="text" style='width: 100%;'></td>
+                    </tr>
+                </table>
+            </div>
+            <p> 불출 하시겠습니까?</p>
+            <div class="popBtnWrap">
+                <button class="btnSave" id="btnInWarehouseManageOutPopSave">저장</button>
+                <button class="btnCancel" id="btnInWarehouseManageOutPopCancel" data-dismiss="modal">닫기</button>
             </div>
         </form>
     </div>
@@ -471,6 +543,19 @@
         ];
 
         let inWarehouseManageManageColModel02= [
+            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+                render: function (ui) {
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                    });
+                }
+            },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM' , minWidth: 180},
             {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM' , minWidth: 60},
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM' , minWidth: 100},
@@ -518,6 +603,19 @@
             {title: '불출수량', dataType: 'string', dataIndx: 'OUT_QTY', minWidth: '5%'},
             {title: '요청자', dataType: 'string', dataIndx: 'REGISTED_USER', minWidth: '6%' },
             {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', minWidth: '10%'},
+            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+                render: function (ui) {
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                    });
+                }
+            },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: '10%'},
             {title: '수행일시', dataType: 'string', dataIndx: 'REGISTED_DT', minWidth: '14%'}
         ];
@@ -809,10 +907,38 @@
                 outQty = $(this).val();
             }
 
-            let stockQty = compareQty - outQty;
+            let stockQty = Number(compareQty) - Number(outQty);
             $("#in_warehouse_manage_out_popup_form #REMAIN_QTY").val(stockQty);
         });
+        $('#btnInWarehouseManageOutPopPlus').on('click', function(e) {
+            calcQty("PLUS");
+        });
+        $('#btnInWarehouseManageOutPopMinus').on('click', function(e) {
+            calcQty("MINUS");
+        });
+        let calcQty = function(type) {
 
+            let POP_STOCK_QTY = $('#inWarehouseOutPopTable #STOCK_QTY').val();
+            let POP_REMAIN_QTY = $('#inWarehouseOutPopTable #REMAIN_QTY').val() == '' ? $('#inWarehouseOutPopTable #STOCK_QTY').val() : $('#inWarehouseOutPopTable #REMAIN_QTY').val();
+            let POP_OUT_QTY = $("#inWarehouseOutPopTable #OUT_QTY").val() == '' ? '0' : $("#inWarehouseOutPopTable #OUT_QTY").val();
+            if (POP_STOCK_QTY == "" || POP_STOCK_QTY == "0") {
+                alert("수량이 없습니다.");
+                return;
+            }
+            if (type == "PLUS") {
+                if (Number(POP_REMAIN_QTY) > 0) {
+                    POP_OUT_QTY = Number(POP_OUT_QTY) + 1;
+                    POP_REMAIN_QTY = Number(POP_STOCK_QTY) - POP_OUT_QTY;
+                }
+            } else if (type == "MINUS") {
+                if (Number(POP_OUT_QTY) > 0) {
+                    POP_OUT_QTY = Number(POP_OUT_QTY) - 1;
+                    POP_REMAIN_QTY = Number(POP_STOCK_QTY) - POP_OUT_QTY;
+                }
+            }
+            $('#inWarehouseOutPopTable #REMAIN_QTY').val(POP_REMAIN_QTY);
+            $("#inWarehouseOutPopTable #OUT_QTY").val(POP_OUT_QTY);
+        }
 
         /** 버튼 처리 **/
         $("#btnInWarehouseManageAdd").on('click', function(){

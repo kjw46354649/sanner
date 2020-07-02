@@ -142,6 +142,7 @@
             C.OUTSIDE_REQUEST_SEQ,
             A.CONTROL_NUM, <!-- 관리번호 -->
             B.DRAWING_NUM, <!-- 도면번호 -->
+            B.IMG_GFILE_SEQ,
             B.PART_NUM, <!-- Part -->
             B.SIZE_TXT, <!-- 규격 -->
             B.MATERIAL_DETAIL, <!-- 소재종류 -->

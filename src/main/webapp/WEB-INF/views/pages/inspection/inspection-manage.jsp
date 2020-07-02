@@ -75,12 +75,12 @@
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn" id="inspection_manage_detail_btn">상세정보 조회</button>
                     &nbsp;
-                   <%-- <input type="checkbox" id="chkInspectionTimer" />
-                    <select class="wd_50" name="selectInspectionTimer" id="selectInspectionTimer" title="">
-                        <option value="10">10초</option>
-                        <option value="30">30초</option>
-                        <option value="60">60초</option>
-                    </select>&nbsp;마다 재조회--%>
+                    <%-- <input type="checkbox" id="chkInspectionTimer" />
+                     <select class="wd_50" name="selectInspectionTimer" id="selectInspectionTimer" title="">
+                         <option value="10">10초</option>
+                         <option value="30">30초</option>
+                         <option value="60">60초</option>
+                     </select>&nbsp;마다 재조회--%>
                 </div>
             </div>
         </div>
@@ -107,160 +107,160 @@
         <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ" value="">
 
 
-    <div class="layerPopup">
-        <h3>품질 실적 등록</h3>
-        <button type="button" class="pop_close mg-top10 mg-right8" id="popClose2">닫기</button>
-        <div class="qualityWrap">
-            <div class="h_area">
+        <div class="layerPopup">
+            <h3>품질 실적 등록</h3>
+            <button type="button" class="pop_close mg-top10 mg-right8" id="popClose2">닫기</button>
+            <div class="qualityWrap">
+                <div class="h_area">
 					<span class="buttonWrap" id="inspect_method_btn">
 						<button type="button" class="onoff left on" id="inspect_method_1">Sampling</button>
 						<button type="button" class="onoff right" id="inspect_method_2">전수검사</button>
 					</span>
-                <ul class="listWrap">
-                    <li class="tit blue">Seq.</li>
-                    <li id="Q_SEQ">01</li>
-                    <li class="tit bagic">작성자</li>
-                    <li class="slt">
-                        <select id="INSPECT_USER_ID" name="INSPECT_USER_ID" data-required="true">
-                            <option value=""><spring:message code="com.form.top.sel.option" /></option>
-                        </select>
-                    </li>
-                </ul>
-            </div>
-            <div class="m_area">
-                <div class="numWrap">
-                    <span><b>&#9900; 수량 :</b><i id="ORDER_QTY_VIEW">0</i></span>
-                    <span><b>&#9900; 불량수량 :</b><i id="ERROR_QTY_VIEW">0</i>
+                    <ul class="listWrap">
+                        <li class="tit blue">Seq.</li>
+                        <li id="Q_SEQ">01</li>
+                        <li class="tit bagic">작성자</li>
+                        <li class="slt">
+                            <select id="INSPECT_USER_ID" name="INSPECT_USER_ID" data-required="true">
+                                <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                            </select>
+                        </li>
+                    </ul>
+                </div>
+                <div class="m_area">
+                    <div class="numWrap">
+                        <span><b>&#9900; 수량 :</b><i id="ORDER_QTY_VIEW">0</i></span>
+                        <span><b>&#9900; 불량수량 :</b><i id="ERROR_QTY_VIEW">0</i>
                         <button type="button" id="inspection_manage_pop_plus_btn" class="btn_plus" style="display: none">더하기</button>
                         <button type="button" id="inspection_manage_pop_plus_minus" class="btn_minus" style="display: none">빼기</button>
                     </span>
+                    </div>
+                    <div class="buttonWrap" id="inspect_grade_btn">
+                        <button type="button" class="gradeBtn green" id="inspect_grade_GRD010"><span>A</span></button>
+                        <button type="button" class="gradeBtn " id="inspect_grade_GRD020"><span>B</span></button>
+                        <button type="button" class="gradeBtn " id="inspect_grade_GRD030"><span>C</span></button>
+                        <button type="button" class="gradeBtn " id="inspect_grade_GRD040"><span>D</span></button>
+                    </div>
                 </div>
-                <div class="buttonWrap" id="inspect_grade_btn">
-                    <button type="button" class="gradeBtn green" id="inspect_grade_GRD010"><span>A</span></button>
-                    <button type="button" class="gradeBtn " id="inspect_grade_GRD020"><span>B</span></button>
-                    <button type="button" class="gradeBtn " id="inspect_grade_GRD030"><span>C</span></button>
-                    <button type="button" class="gradeBtn " id="inspect_grade_GRD040"><span>D</span></button>
-                </div>
-            </div>
-            <div class="t_area">
-                <div class="t_h">
-                    <span class="list_t">검사코드</span>
-                    <span>
+                <div class="t_area">
+                    <div class="t_h">
+                        <span class="list_t">검사코드</span>
+                        <span>
 							<select id="INSPECT_RESULT" name="INSPECT_RESULT" title="검사코드">
                                 <c:forEach var="vlocale" items="${HighCode.H_1019}">
                                     <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                 </c:forEach>
 							</select>
 						</span>
-                    <span class="list_t">상세내용</span>
-                    <span class="wide"><input type="text" class="wd_405_left_10" name="INSPECT_DESC" id="INSPECT_DESC" title="상세내용"></span>
+                        <span class="list_t">상세내용</span>
+                        <span class="wide"><input type="text" class="wd_405_left_10" name="INSPECT_DESC" id="INSPECT_DESC" title="상세내용"></span>
+                    </div>
+
+                    <table class="colStyle">
+                        <%--<caption></caption>--%>
+                        <colgroup>
+                            <col width="5%">
+                            <col width="5%">
+                            <col width="50%">
+                            <col width="5%">
+                        </colgroup>
+                        <tr>
+                            <th scope="col">발생공정</th>
+                            <th scope="col">원인</th>
+                            <th scope="col">조치방안 및 비고</th>
+                            <th scope="col">조치</th>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                <select id="ERROR_PROCESS" name="ERROR_PROCESS" title="발생공정" disabled>
+                                    <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                    <c:forEach var="vlocale" items="${HighCode.H_1010}">
+                                        <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                                    </c:forEach>
+                                </select>
+                            </td>
+                            <td>
+                                <select id="ERROR_REASON" name="ERROR_REASON" title="원인" disabled>
+                                    <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                    <c:forEach var="vlocale" items="${HighCode.H_1032}">
+                                        <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                                    </c:forEach>
+                                </select>
+                            </td>
+                            <td><input type="text" class="wd_405_left_10" name="ERROR_NOTE" id="ERROR_NOTE" title="조치방안비고" readonly></td>
+                            <td>
+                                <select id="ERROR_ACTION" name="ERROR_ACTION" title="조치" disabled>
+                                    <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                    <c:forEach var="vlocale" items="${HighCode.H_1025}">
+                                        <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                                    </c:forEach>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
+                <h4>기본정보</h4>
+                <div class="list1">
+                    <table class="rowStyle">
+                        <%--   <caption></caption>--%>
+                        <colgroup>
+                            <col width="10%">
+                            <col width="*">
+                            <col width="10%">
+                            <col width="*%">
+                            <col width="15%">
+                            <col width="15%">
+                        </colgroup>
+                        <tr>
+                            <th>관리번호</th>
+                            <td id="CONTROL_NUM_VIEW_T" class="red"></td>
+                            <th>도면번호</th>
+                            <td id="DRAWING_NUM_VIEW_T" class="red"></td>
+                            <th>납기</th>
+                            <td id="INNER_DUE_DT_VIEW_T" ></td>
+                        </tr>
+                        <tr>
+                            <th>품명</th>
+                            <td id="ITEM_NM_VIEW_T"></td>
+                            <th>소재종류</th>
+                            <td id="MATERIAL_DETAIL_NM_VIEW_T"></td>
+                            <th>수량(원칭,대칭)</th>
+                            <td id="ORDER_QTY_INFO_VIEW_T"></td>
+                        </tr>
+                        <tr>
+                            <th>규격</th>
+                            <td id="SIZE_TXT_VIEW_T"></td>
+                            <th>후처리</th>
+                            <td id="SURFACE_TREAT_NM_VIEW_T"></td>
+                            <th>가공형태</th>
+                            <td id="WORK_TYPE_NM_VIEW_T"></td>
+                        </tr>
+                        <tr>
+                            <th>진행상태</th>
+                            <td id="PART_STATUS_NM_VIEW_T"></td>
+                            <th>발주업체</th>
+                            <td id="ORDER_COMP_NM_VIEW_T"></td>
+                            <th>외주업체</th>
+                            <td id="OUTSIDE_COMP_NM_VIEW_T"></td>
+                        </tr>
+                    </table>
+                </div>
+                <h4>공유사항</h4>
+                <div class="list4">
+                    <div id="inspection_manage_grid_pop_01"></div>
+                </div>
+                <h4>품질사항</h4>
+                <div class="list3">
+                    <div id="inspection_manage_grid_pop_02"></div>
+                </div>
+            </div>
 
-                <table class="colStyle">
-                    <%--<caption></caption>--%>
-                    <colgroup>
-                        <col width="5%">
-                        <col width="5%">
-                        <col width="50%">
-                        <col width="5%">
-                    </colgroup>
-                    <tr>
-                        <th scope="col">발생공정</th>
-                        <th scope="col">원인</th>
-                        <th scope="col">조치방안 및 비고</th>
-                        <th scope="col">조치</th>
-
-                    </tr>
-                    <tr>
-                        <td>
-                            <select id="ERROR_PROCESS" name="ERROR_PROCESS" title="발생공정" disabled>
-                                <option value=""><spring:message code="com.form.top.sel.option" /></option>
-                                <c:forEach var="vlocale" items="${HighCode.H_1010}">
-                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
-                        </td>
-                        <td>
-                            <select id="ERROR_REASON" name="ERROR_REASON" title="원인" disabled>
-                                <option value=""><spring:message code="com.form.top.sel.option" /></option>
-                                <c:forEach var="vlocale" items="${HighCode.H_1032}">
-                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
-                        </td>
-                        <td><input type="text" class="wd_405_left_10" name="ERROR_NOTE" id="ERROR_NOTE" title="조치방안비고" readonly></td>
-                        <td>
-                        <select id="ERROR_ACTION" name="ERROR_ACTION" title="조치" disabled>
-                            <option value=""><spring:message code="com.form.top.sel.option" /></option>
-                            <c:forEach var="vlocale" items="${HighCode.H_1025}">
-                                <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
-                            </c:forEach>
-                        </select>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <h4>기본정보</h4>
-            <div class="list1">
-                <table class="rowStyle">
-                 <%--   <caption></caption>--%>
-                    <colgroup>
-                        <col width="10%">
-                        <col width="*">
-                        <col width="10%">
-                        <col width="*%">
-                        <col width="15%">
-                        <col width="15%">
-                    </colgroup>
-                    <tr>
-                        <th>관리번호</th>
-                        <td id="CONTROL_NUM_VIEW_T" class="red"></td>
-                        <th>도면번호</th>
-                        <td id="DRAWING_NUM_VIEW_T" class="red"></td>
-                        <th>납기</th>
-                        <td id="INNER_DUE_DT_VIEW_T" ></td>
-                    </tr>
-                    <tr>
-                        <th>품명</th>
-                        <td id="ITEM_NM_VIEW_T"></td>
-                        <th>소재종류</th>
-                        <td id="MATERIAL_DETAIL_NM_VIEW_T"></td>
-                        <th>수량(원칭,대칭)</th>
-                        <td id="ORDER_QTY_INFO_VIEW_T"></td>
-                    </tr>
-                    <tr>
-                        <th>규격</th>
-                        <td id="SIZE_TXT_VIEW_T"></td>
-                        <th>후처리</th>
-                        <td id="SURFACE_TREAT_NM_VIEW_T"></td>
-                        <th>가공형태</th>
-                        <td id="WORK_TYPE_NM_VIEW_T"></td>
-                    </tr>
-                    <tr>
-                        <th>진행상태</th>
-                        <td id="PART_STATUS_NM_VIEW_T"></td>
-                        <th>발주업체</th>
-                        <td id="ORDER_COMP_NM_VIEW_T"></td>
-                        <th>외주업체</th>
-                        <td id="OUTSIDE_COMP_NM_VIEW_T"></td>
-                    </tr>
-                </table>
-            </div>
-            <h4>공유사항</h4>
-            <div class="list4">
-                <div id="inspection_manage_grid_pop_01"></div>
-            </div>
-            <h4>품질사항</h4>
-            <div class="list3">
-                <div id="inspection_manage_grid_pop_02"></div>
+            <div class="btnWrap">
+                <button type="button" class="defaultBtn greenPopGra" id="inspection_manage_pop_save">저장</button>
+                <button type="button" class="defaultBtn grayPopGra" id="popClose">닫기</button>
             </div>
         </div>
-
-        <div class="btnWrap">
-            <button type="button" class="defaultBtn greenPopGra" id="inspection_manage_pop_save">저장</button>
-            <button type="button" class="defaultBtn grayPopGra" id="popClose">닫기</button>
-        </div>
-    </div>
     </form>
 </div>
 <!-- 품질실적 layer popup : E -->
@@ -310,20 +310,20 @@
             // {title: '카ㄴㅇㄹ드', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 40, minWidth: 40, editable: false,
             //     render: function (ui) {
             //         let rowIndx = ui.rowIndx, grid = this;
-            //         if (ui.rowData['DXF_GFILE_SEQ'] > 0) return "[카]";
+            //         if (ui.rowData.DXF_GFILE_SEQ > 0) return "[카]";
             //         return '';
             //     }
             // },
             {title: '', align: 'center', dataType: 'string', dataIndx: 'DETAIL_INFO', width: 30, minWidth: 30, editable: false,
                 render: function (ui) {
-                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon"></span>';
+                    if (ui.rowData.CONTROL_SEQ > 0) return '<span id="detailView" class="doubleFilesIcon"></span>';
                     return '';
                 },
                 postRender: function(ui) {
                     let grid = this,
                         $cell = grid.getCell(ui);
                     $cell.find("#detailView").bind("click", function () {
-                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                        g_item_detail_pop_view(ui.rowData.CONTROL_SEQ, ui.rowData.CONTROL_DETAIL_SEQ);
                     });
                 }
             },
@@ -342,7 +342,7 @@
                 }
             },
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 180, width: 180, editable: false},
-            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 40, width: 40, editable: false},
+            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 40, width: 40, editable: false},
             // {title: 'MATERIAL_DETAIL', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden:true},
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 120, width: 120, editable: false},
             // {title: 'WORK_TYPE', dataType: 'string', dataIndx: 'WORK_TYPE', hidden:true},
@@ -378,16 +378,13 @@
                     {title: '작성일자', datatype: 'string', dataIndx: 'Q_DT', minWidth: 80, width: 80, editable: false},
                     {title: '', align: 'center', dataType: 'string', dataIndx: 'CONTROL_SEQ_INSERT', width: 80, minWidth: 80, editable: false,
                         render: function (ui) {
-                            let rowIndx = ui.rowIndx, grid = this;
-                            if (ui.rowData['CONTROL_SEQ'] > 0) return "<button type=\"button\" class=\"miniBtn black\">결과등록</button>";
+                            if (ui.rowData.CONTROL_SEQ > 0) return "<button type=\"button\" class=\"miniBtn black\">결과등록</button>";
                             return '';
                         }
                     },
                     {title: '', align: 'center', dataType: 'string', dataIndx: 'CONTROL_SEQ_DELETE', width: 80, minWidth: 80, editable: false,
                         render: function (ui) {
-                            let rowIndx = ui.rowIndx, grid = this;
-                            console.log(ui.rowData['INSPECT_SEQ']);
-                            if (ui.rowData['INSPECT_SEQ'] > 0) return "<button type=\"button\" class=\"miniBtn black\">실적삭제</button>";
+                            if (ui.rowData.INSPECT_SEQ > 0) return "<button type=\"button\" class=\"miniBtn black\">실적삭제</button>";
                             return '';
                         }
                     }
@@ -414,6 +411,7 @@
             swipeModel: {on: false},
             showTitle: false,
             collapsible: false,
+            postRenderInterval: -1, //call postRender synchronously.
             resizable: false,
             trackModel: {on: true},
             colModel: inspectionManageColModel01,
@@ -447,17 +445,17 @@
             },
             cellClick: function (event, ui) {
                 let rowIndx = ui.rowIndx, $grid = this;
-                if (ui.rowData['CONTROL_SEQ'] != undefined && ui.rowData['CONTROL_SEQ'] >0) {
+                if (ui.rowData.CONTROL_SEQ != undefined && ui.rowData.CONTROL_SEQ >0) {
                     if (ui.dataIndx == 'CONTROL_SEQ_INSERT') {
 
                         fnResetFrom("inspection_manage_pop_form");
-                        $("#inspection_manage_pop_form").find("#CONTROL_SEQ").val(ui.rowData['CONTROL_SEQ']);
-                        $("#inspection_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val(ui.rowData['CONTROL_DETAIL_SEQ']);
+                        $("#inspection_manage_pop_form").find("#CONTROL_SEQ").val(ui.rowData.CONTROL_SEQ);
+                        $("#inspection_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val(ui.rowData.CONTROL_DETAIL_SEQ);
                         $('#inspection_manage_pop').modal('show');
 
                     }
                 }
-                if (ui.rowData['INSPECT_SEQ'] != undefined && ui.rowData['INSPECT_SEQ'] >0) {
+                if (ui.rowData.INSPECT_SEQ != undefined && ui.rowData.INSPECT_SEQ >0) {
                     if (ui.dataIndx == 'CONTROL_SEQ_DELETE') {
                         if(confirm("검사실적이 바로 삭제됩니다.\n삭제 하시겠습니까?")){
                             fnDeletePQGrid(inspectionManageGridId01, [rowIndx], "inspection.deleteInspectionMaster");
@@ -549,20 +547,20 @@
 
 
         $("#inspection_manage_pop").on('hide.bs.modal', function(){
-           fnResetFrom("inspection_manage_pop_form");
-           $("#inspection_manage_form").find("#queryId").val("inspection.selectInspectionList");
-           $("#inspection_manage_search_btn").trigger("click");
+            fnResetFrom("inspection_manage_pop_form");
+            $("#inspection_manage_form").find("#queryId").val("inspection.selectInspectionList");
+            $("#inspection_manage_search_btn").trigger("click");
         });
         $("#inspection_manage_pop").on('show.bs.modal', function(){
             //popType : 그리드입출고 GRID_IN, GRID_OUT, 바코드 BARCODE
-        //     let popType = $("#inspection_manage_form").find("#popType").val();
-        //     let V_INSIDE_inspection_NUM = $("#stock_manage_form").find("#V_INSIDE_STOCK_NUM").val();
-        //
-        //     $("#inspection_manage_pop_form").find("#inside_stock_pop_save_btn").show();
-        //     $("#inspection_manage_pop_form").find("#footer_msg").hide();
-        //     $("#stock_manage_pop_form").find("#footer_msg").html("");
-        //     //$("#stock_manage_pop_form").find("#DRAWING_NUM").attr("readonly", true);
-        //$("#stock_manage_pop_form").find("#WAREHOUSE_CD").attr("disabled", true);
+            //     let popType = $("#inspection_manage_form").find("#popType").val();
+            //     let V_INSIDE_inspection_NUM = $("#stock_manage_form").find("#V_INSIDE_STOCK_NUM").val();
+            //
+            //     $("#inspection_manage_pop_form").find("#inside_stock_pop_save_btn").show();
+            //     $("#inspection_manage_pop_form").find("#footer_msg").hide();
+            //     $("#stock_manage_pop_form").find("#footer_msg").html("");
+            //     //$("#stock_manage_pop_form").find("#DRAWING_NUM").attr("readonly", true);
+            //$("#stock_manage_pop_form").find("#WAREHOUSE_CD").attr("disabled", true);
 
             //fnResetFrom("inspection_manage_pop_form");
 
@@ -578,7 +576,7 @@
                     $('#inspection_manage_pop').modal('hide');
                 }else{
                     fnJsonDataToForm("inspection_manage_pop_form", dataInfo);
-console.log(dataInfo);
+                    console.log(dataInfo);
                     $("#inspection_manage_pop_form").find("#Q_SEQ").html(dataInfo.Q_SEQ);
                     $("#inspection_manage_pop_form").find("#CONTROL_NUM" + "_VIEW_T").html(dataInfo.CONTROL_NUM);
                     $("#inspection_manage_pop_form").find("#DRAWING_NUM" + "_VIEW_T").html(dataInfo.DRAWING_NUM);
@@ -617,9 +615,9 @@ console.log(dataInfo);
             } );
             inspectionManageGridIdPop02.pqGrid("refreshDataAndView");
 
-         })
-         $("#inspection_manage_search_btn").on('click', function () {
-             console.log(fnFormToJsonArrayData('#inspection_manage_form'));
+        })
+        $("#inspection_manage_search_btn").on('click', function () {
+            console.log(fnFormToJsonArrayData('#inspection_manage_form'));
             inspectionManageGridId01.pqGrid("option", "dataModel.postData", function(ui){
                 return fnFormToJsonArrayData('#inspection_manage_form');
             } );
@@ -788,7 +786,7 @@ console.log(dataInfo);
                 $("#inspection_manage_pop_form").find("#ERROR_NOTE").attr("readonly", true);
 
                 <c:forEach var="vlocale" items="${HighCode.H_1019}">
-                    $comboId[0].add(new Option("${vlocale.CODE_NM_KR}", "${vlocale.CODE_CD}"));
+                $comboId[0].add(new Option("${vlocale.CODE_NM_KR}", "${vlocale.CODE_CD}"));
                 </c:forEach>
 
             }
@@ -838,16 +836,16 @@ console.log(dataInfo);
         }
 
         $("#inspection_manage_detail_btn").on('click', function(e){
-          /*  if(SelectedRowIndex.length >0){
-                let rowDataArray = inspectionManageGridId01.pqGrid('getRowData', {rowIndx: SelectedRowIndex[0]});
-                console.log(rowDataArray);
-                let CONTROL_DETAIL_SEQ = rowDataArray.CONTROL_DETAIL_SEQ;
-                let CONTROL_SEQ = rowDataArray.CONTROL_SEQ;
+            /*  if(SelectedRowIndex.length >0){
+                  let rowDataArray = inspectionManageGridId01.pqGrid('getRowData', {rowIndx: SelectedRowIndex[0]});
+                  console.log(rowDataArray);
+                  let CONTROL_DETAIL_SEQ = rowDataArray.CONTROL_DETAIL_SEQ;
+                  let CONTROL_SEQ = rowDataArray.CONTROL_SEQ;
 
-                g_item_detail_pop_view(CONTROL_SEQ,CONTROL_DETAIL_SEQ);
-            }else{
-                alert("그리드를 선택해 주십시오.");
-            }*/
+                  g_item_detail_pop_view(CONTROL_SEQ,CONTROL_DETAIL_SEQ);
+              }else{
+                  alert("그리드를 선택해 주십시오.");
+              }*/
             g_item_detail_pop_view('','');
         });
 
@@ -858,7 +856,7 @@ console.log(dataInfo);
         $("#inspectionManageFrozen").on('change', function(e){
             fnFrozenHandler(inspectionManageGridId01, $(this).val());
         });
-        
+
         function inspectionManageFilterRender(ui) {
             var val = ui.cellData == undefined ? "" : ui.cellData,
                 filter = ui.column.filter,
@@ -902,26 +900,26 @@ console.log(dataInfo);
         }
     });
 
-   /* 10초마다 재조회
-    $("#chkInspectionTimer").on('click', function(e){
-        inspectionTimer();
-    });
-    $("#selectInspectionTimer").on('change', function(e){
-        inspectionTimer();
-    });
-    let inspectionsetIntervalTimer;
-    let inspectionTimer = function(){
-        let isinspectonChk = $("#chkInspectionTimer").is(":checked");
-        let selVal = $("#selectInspectionTimer").val();
-        let timesec = 1000;
-        if(isinspectonChk){
-            inspectionsetIntervalTimer = setInterval(function() {
-                $("#inspection_manage_search_btn").trigger('click');
-            }, timesec*selVal);
-        }else{
-            clearInterval(inspectionsetIntervalTimer);
-        }
-    }*/
+    /* 10초마다 재조회
+     $("#chkInspectionTimer").on('click', function(e){
+         inspectionTimer();
+     });
+     $("#selectInspectionTimer").on('change', function(e){
+         inspectionTimer();
+     });
+     let inspectionsetIntervalTimer;
+     let inspectionTimer = function(){
+         let isinspectonChk = $("#chkInspectionTimer").is(":checked");
+         let selVal = $("#selectInspectionTimer").val();
+         let timesec = 1000;
+         if(isinspectonChk){
+             inspectionsetIntervalTimer = setInterval(function() {
+                 $("#inspection_manage_search_btn").trigger('click');
+             }, timesec*selVal);
+         }else{
+             clearInterval(inspectionsetIntervalTimer);
+         }
+     }*/
 
 
 

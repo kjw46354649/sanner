@@ -427,7 +427,7 @@
     <select id="selectWorkPlanGridList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER () OVER () AS ROWNUM,
-            A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, B.CONTROL_NUM, A.DRAWING_NUM, A.IMG_GFILE_SEQ, A.DXF_GFILE_SEQ,
+            A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, B.CONTROL_NUM, A.DRAWING_NUM, A.DXF_GFILE_SEQ, A.PDF_GFILE_SEQ, A.IMG_GFILE_SEQ,
             jmes.SF_GET_DATE_F(A.INNER_DUE_DT, '', '') AS INNER_DUE_DT, <!-- 내부가공납기 -->
             CASE WHEN B.EMERGENCY_YN = 'Y' THEN '긴' ELSE SPACE(0) END AS EMERGENCY_YN, <!-- 긴급 -->
             CASE WHEN B.MAIN_INSPECTION = 'Y' THEN '주' ELSE SPACE(0) END AS MAIN_INSPECTION, <!-- 주요 검사품 -->
@@ -643,6 +643,7 @@
             B.CONTROL_NUM, <!-- 관리번호 -->
             A.PART_NUM, <!-- Part -->
             A.DRAWING_NUM, <!-- 도면번호 -->
+            A.IMG_GFILE_SEQ,
             A.ITEM_NM, <!-- 품명 -->
             SF_GET_CODE_NM(1033, A.WORK_TYPE, 'KR') AS WORK_TYPE, <!-- 형태 -->
             SF_GET_CODE_NM(1027, A.MATERIAL_DETAIL, 'KR') AS MATERIAL_DETAIL, <!-- 소재종류 -->
@@ -671,7 +672,7 @@
     <select id="selectResultManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER () OVER () AS ROWNUM,
-            A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.DRAWING_NUM, A.IMG_GFILE_SEQ, A.DXF_GFILE_SEQ,
+            A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.DRAWING_NUM, A.DXF_GFILE_SEQ, A.PDF_GFILE_SEQ, A.IMG_GFILE_SEQ,
             jmes.SF_GET_DATE_F(A.INNER_DUE_DT, '', '') AS INNER_DUE_DT, <!-- 내부가공납기 -->
             CASE WHEN B.EMERGENCY_YN = 'Y' THEN '긴' END AS EMERGENCY_YN, <!-- 긴급 -->
             CASE WHEN B.MAIN_INSPECTION = 'Y' THEN '주' END AS MAIN_INSPECTION, <!-- 주요 검사품 -->

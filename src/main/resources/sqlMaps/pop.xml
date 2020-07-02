@@ -13,12 +13,14 @@
             SF_GET_COMP_NM(B.ORDER_COMP_CD) AS ORDER_COMP_NM, -- 발주업체 이름 -->
             IFNULL(A.PART_NUM, SPACE(0)) AS PART_NUM, -- Part -->
             A.DRAWING_NUM, -- 도면 -->
+            A.IMG_GFILE_SEQ,
             IFNULL(A.SIZE_TXT, SPACE(0)) AS SIZE_TXT, -- 규격 -->
             SF_GET_CODE_NM(1030, A.SURFACE_TREAT, 'KR') AS SURFACE_TREAT, -- 표면 처리 -->
             jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS ORDER_QTY, -- 수량 -->
             SF_GET_CODE_NM(1009, C.POP_POSITION, 'KR') AS POP_POSITION, -- 현재위치 -->
             SF_GET_CODE_NM(1009, C.POP_PREV_POSITION, 'KR') AS POP_PREV_POSITION, -- 현재위치 -->
             jmes.SF_GET_DATE_F(C.POP_DT, 'YY', 'M') AS POP_DT -- 외치 일시 -->
+            A.IMG_GFILE_SEQ,
         FROM jmes.TBL_CONTROL_PART A
              INNER JOIN jmes.TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.CONTROL_STATUS = 'ORD001' <!-- 주문확정 -->
              INNER JOIN jmes.TBL_POP C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ

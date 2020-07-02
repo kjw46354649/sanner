@@ -223,6 +223,19 @@
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 80},
             {title: '납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', width: 50},
             {title: '출고', dataType: 'string', dataIndx: 'DELIVERY_DT', width: 50},
+            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+                render: function (ui) {
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                    });
+                }
+            },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 150},
             {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', width: 50},
             {title: '발주번호', dataType: 'string', dataIndx: 'ORDER_NUM', width: 120},
@@ -237,6 +250,7 @@
             selectionModel: { type: 'row', mode: 'single'}, rowHtHead: 15, numberCell: {title: 'No.'},
             swipeModel: {on: false}, trackModel: {on: true},
             collapsible: false, resizable: false, flexWidth: false, showTitle: false,
+            postRenderInterval: -1, //call postRender synchronously.
             // scrollModel: { autoFit: true },
             columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
             colModel: businessStatusColModel,
@@ -260,6 +274,19 @@
             {title: '납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', width: 50},
             {title: '출고', dataType: 'string', dataIndx: 'DELIVERY_DT', width: 50},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 80},
+            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+                render: function (ui) {
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                    });
+                }
+            },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 150},
             {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', width: 50},
             {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', width: 80}
@@ -291,6 +318,19 @@
             {title: '납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', width: 50},
             {title: '출고', dataType: 'string', dataIndx: 'DELIVERY_DT', width: 50},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 80},
+            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+                render: function (ui) {
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                    });
+                }
+            },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 150},
             {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', width: 50},
             {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', width: 80},
@@ -301,6 +341,7 @@
             height: 228, width: 500, minHeight: "auto", rowHtHead: 15, numberCell: {title: 'No.'},
             selectionModel: { type: 'row', mode: 'single'}, swipeModel: {on: false}, trackModel: {on: true},
             collapsible: false, resizable: false, flexWidth: false, showTitle: false,
+            postRenderInterval: -1, //call postRender synchronously.
             columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
             colModel: businessOverOrderColModel,
             dataModel: {

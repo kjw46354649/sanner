@@ -504,10 +504,12 @@
         const tab1Obj = {
             height: 750,
             collapsible: false,
+            postRenderInterval: -1, //call postRender synchronously.
             resizable: false,
             showTitle: false,
             rowHtHead: 15,
             numberCell: {title: 'No.'},
+            scrollModel: {autoFit: false},
             trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center',  editable: false, render: camWorkHistoryFilterRender}, filterModel: { mode: 'OR' },
             colModel: tab1ColModel,
@@ -547,8 +549,34 @@
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'MCT<br>공장 구분', dataType: 'string', dataIndx: 'FACTORY_AREA'},
             {title: 'NC명', dataType: 'string', dataIndx: 'EQUIP_NM'},
+            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+                render: function (ui) {
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                    });
+                }
+            },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', dataType: 'integer', dataIndx: 'CONTROL_PART_NUM'},
+            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30,
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM'},
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM'},
             {title: '형태', dataType: 'string', dataIndx: 'WORK_TYPE'},
@@ -574,11 +602,12 @@
         let tab2Obj = {
             height: 750,
             collapsible: false,
+            postRenderInterval: -1, //call postRender synchronously.
             resizable: false,
             showTitle: false,
             rowHtHead: 15,
             numberCell: {title: 'No.'},
-            scrollModel: {autoFit: true},
+            scrollModel: {autoFit: false},
             // trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false, render: ncPerformanceHistoryFilterRender}, filterModel: { mode: 'OR' },
             colModel: tab2ColModel,
