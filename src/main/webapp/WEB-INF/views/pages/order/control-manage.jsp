@@ -77,7 +77,7 @@
                     </li>
                     <li>
                         <span class="slt_wrap trans_slt mg-right10">
-                            <select name="SEARCH_CONDITION" id="SEARCH_CONDITION">
+                            <select name="CONTROL_SEARCH_CONDITION" id="CONTROL_SEARCH_CONDITION">
                                 <c:forEach var="code" items="${HighCode.H_1047}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -143,12 +143,12 @@
                 <button type="button" class="defaultBtn btn-100w" id="ESTIMATE_REGISTER_FROM_CONTROL">견적등록</button>
                 <button type="button" class="defaultBtn btn-100w" id="ESTIMATE_LIST_PRINT">견적List출력</button>
                 <button type="button" class="defaultBtn btn-100w" id="TRANSACTION_STATEMENT">거래명세표</button>
-<%--                <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#TRANSACTION_STATEMENT_POPUP">거래명세표</button>--%>
+                <%--                <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#TRANSACTION_STATEMENT_POPUP">거래명세표</button>--%>
                 <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="CONFIRMATION" data-control_status="ORD001" style="color: blue;">확정</button>
                 <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="CANCEL" data-control_status="ORD002" style="color: red;">취소</button>
                 <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="TERMINATION" data-control_status="ORD004">종료</button>
                 <button type="button" class="defaultBtn btn-50w" id="CONTROL_MONTH_CLOSE">마감</button>
-<%--                <button type="button" class="defaultBtn btn-50w" data-toggle="modal" data-target="#CONTROL_CLOSE_POPUP">마감</button>--%>
+                <%--                <button type="button" class="defaultBtn btn-50w" data-toggle="modal" data-target="#CONTROL_CLOSE_POPUP">마감</button>--%>
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_DRAWING_VIEW">도면 View</button>
                     <button type="button" class="defaultBtn btn-100w" id="DRAWING_PRINT">도면 출력</button>
@@ -379,7 +379,7 @@
             }, parameters, '');
             return list;
         })();
-        
+
         const gridId = 'CONTROL_MANAGE_GRID';
         let postData = fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM');
         const colModel = [
@@ -563,7 +563,7 @@
                     });
                 }
             },
-            // {title: '도면번호버전', dataType: 'string', dataIndx: 'DRAWING_VER', hidden: true},
+            {title: '도면번호버전', dataType: 'string', dataIndx: 'DRAWING_VER', hidden: true},
             {title: '', minWidth: 25, width: 25, dataType: 'string', dataIndx: 'DRAWING_NUM_BUTTON', styleHead: {'background':'#a9d3f5'},
                 render: function (ui) {
                     if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" id="imageView" style="cursor: pointer"></span>'
@@ -934,8 +934,8 @@
                     });
                 }
             },
-            {title: 'Rev.', dataType: 'string', dataIndx: 'DRAWING_VER'},
-            {title: 'Rev. 일시', width: 120, dataType: 'string', dataIndx: 'DRAWING_UP_DT', hidden: true},
+            {title: 'Rev.', dataType: 'string', dataIndx: 'REVD.'},
+            {title: 'Rev. 일시', width: 120, dataType: 'string', dataIndx: 'REVDLFTL.', hidden: true},
             {
                 title: '품질현황', align: 'center', colModel: [
                     {title: 'Seq.', minWidth: 30, width: 35, datatype: 'integer', dataIndx: 'INSPECT_SEQ'},
@@ -998,7 +998,7 @@
                 var frozenOts = '<option value="0">Selected</option>';
                 this.getColModel().forEach(function(column){
                     let hiddenYn = column.hidden == undefined ? true : false;
-                    if(hiddenYn){
+                    if(hiddenYn && column.title){
                         filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
                         frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
                     }
@@ -2052,7 +2052,7 @@
             strOption += 'top=' + nTop + 'px,';
             strOption += 'width=' + nWidth + 'px,';
             strOption += 'height=' + nHeight + 'px,';
-            strOption += 'toolbar=no,menubar=no,location=no,resizable=yes,status=yes';
+            strOption += 'toolbar=no,menubar=no,location=no,resizable=no,status=yes';
 
             // 최초 클릭이면 팝업을 띄운다.
             if (newOrderRegistrationPopup === undefined || newOrderRegistrationPopup.closed) {
@@ -2122,7 +2122,7 @@
             strOption += 'top=' + nTop + 'px,';
             strOption += 'width=' + nWidth + 'px,';
             strOption += 'height=' + nHeight + 'px,';
-            strOption += 'toolbar=no,menubar=no,location=no,resizable=yes,status=yes';
+            strOption += 'toolbar=no,menubar=no,location=no,resizable=no,status=yes';
 
             // 최초 클릭이면 팝업을 띄운다.
             if (controlMonthClosePopup === undefined || controlMonthClosePopup.closed) {
@@ -2134,11 +2134,11 @@
 
         $('#CONTROL_CLOSE_POPUP').on({
             'show.bs.modal': function () {
-/*
+                /*
 
 
 
-                */
+                                */
 
 
             },
@@ -2147,6 +2147,8 @@
                 $controlCloseRightGrid.pqGrid('destroy');
             }
         });
+
+
 
         $('#CONTROL_MANAGE_SEARCH').on('click', function () {
             $orderManagementGrid.pqGrid('option', 'dataModel.postData', function () {
@@ -2225,7 +2227,7 @@
                 'REVDLFTL.', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM', 'INSPECT_DESC',
                 'ERROR_ACTION_NM','ERROR_NOTE', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT',
                 'OUTSIDE_HOPE_DUE_DT', 'dhlwndlqrhskfWk', 'OUTSIDE_NOTE', 'dhlwnqnffidcode', 'dhlwnwhclqkddks',
-                'CONTROL_PART_INSERT_UPDATE_DT', 'DRAWING_VER', 'DRAWING_UP_DT'
+                'CONTROL_PART_INSERT_UPDATE_DT'
             ];
             const easyArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'PRICE_CONFIRM', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'MAIN_INSPECTION',
@@ -2387,7 +2389,7 @@
             strOption += 'top=' + nTop + 'px,';
             strOption += 'width=' + nWidth + 'px,';
             strOption += 'height=' + nHeight + 'px,';
-            strOption += 'toolbar=no,menubar=no,location=no,resizable=yes,status=yes';
+            strOption += 'toolbar=no,menubar=no,location=no,resizable=no,status=yes';
 
             // 최초 클릭이면 팝업을 띄운다.
             if (transactionStatementPopup === undefined || transactionStatementPopup.closed) {

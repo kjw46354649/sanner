@@ -19,10 +19,15 @@
                     <input type="text" name="" id="item_order_register_material_order_num" value="">
                     <input type="hidden" name="" id="item_order_register_material_order_num_temp" value="">
                 </span>
-                <div style="width: 200px; line-height: 45px;" class="d-inline right_float">
+                <div style="line-height: 45px; display: none; padding-right: 5px;" class="d-inline right_float" id="orderNotCompleteBtnBox">
                     <button type="button" class="defaultBtn radius" id="btnItemOrderRegisterPopAdd">추가</button>
                     <button type="button" class="defaultBtn radius green" id="btnItemOrderRegisterPopSave">저장</button>
-                    <button type="button" class="defaultBtn radius" id="btnItemOrderRegisterPopSubmit">제출</button>
+                    <button type="button" class="defaultBtn radius blue" id="btnItemOrderRegisterPopSubmit">제출</button>
+                    <button type="button" class="defaultBtn radius red" id="btnItemOrderRegisterPopDelete">삭제</button>
+                </div>
+                <div style="line-height: 45px; display: none; padding-right: 5px;" class="d-inline right_float" id="orderCompleteBtnBox">
+                    <button type="button" class="defaultBtn radius" id="btnItemOrderRegisterPopPrint">Print</button>
+                    <button type="button" class="defaultBtn radius red" id="btnItemOrderRegisterPopCancel">제출 취소</button>
                 </div>
             </div>
         </div>
@@ -294,7 +299,7 @@
             },
             {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
-                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon"></span>';
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
                     return '';
                 },
                 postRender: function(ui) {
@@ -412,7 +417,8 @@
                         }
                     },
                     {title: '비고', dataType: 'string', dataIndx: 'M_ORDER_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, minWidth: 120},
-                ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}},
+                ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
+            },
             {title: '원<br>발주량', dataType: 'string', dataIndx: 'ORDER_QTY', editable: false},
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
             {title: '보유소재 충당수량', align: "center", colModel: [
@@ -679,12 +685,7 @@
                 }
             },
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL' , editable: false,
-                editor: {
-                    type: 'select',
-                    valueIndx: 'value',
-                    labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1027')
-                },
+                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027') },
                 render: function (ui) {
                     let cellData = ui.cellData;
                     if (cellData === '') {
@@ -793,7 +794,7 @@
             },
             {title: '', dataType: 'string', dataIndx: '', minWidth: 25, width: 25,
                 render: function (ui) {
-                    if (ui.cellData) return '<span id="deleteItem" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
+                    return '<span id="deleteItem" class="circleMinusIcon" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
                     let grid = this,
@@ -848,7 +849,7 @@
                 var opts = '<option value=\"\">All Fields</option>';
                 this.getColModel().forEach(function(column){
                     let hiddenYn = column.hidden == undefined ? true : false;
-                    if(hiddenYn){
+                    if(hiddenYn && column.title){
                         opts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
                     }
                 });
@@ -1001,8 +1002,6 @@
                     let data = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data');
                     $('#item_order_register_popup_top_grid_records').html(data.length);
 
-                    btnDisabled();
-
                     let MATERIAL_ORDER_NUM = data[0].MATERIAL_ORDER_NUM === undefined ? "" : data[0].MATERIAL_ORDER_NUM;
                     setTimeout(function(){
                         let parameters = {'url': '/json-list', 'data': {'queryId': 'selectItemOrderRegisterNextMaterialOrderNum'}};
@@ -1019,6 +1018,8 @@
                             makeInnerTable();
                         }, parameters, '');
                     }, 900);
+
+                    btnDisabled();
                 },
                 cellSave: function (evt, ui) {
                     if (ui.oldVal === undefined && ui.newVal === null) {
@@ -1029,8 +1030,6 @@
                     $("#btnItemOrderRegisterPopSubmit").attr("disabled", true);
                 },
             });
-
-            if(1 == 2) itemOrderRegisterPopTopGrid.pqGrid('option', 'colModel', itemOrderRegisterPopTopColModel_enabled);
         });
 
         /** 버튼 처리 **/
@@ -1080,100 +1079,7 @@
         });
 
         $("#btnItemOrderRegisterCancel").on('click', function(){
-            let concatSeqDataArray = "";
-            let orderSeqDataArray = "";
-            let selectedRowCount = itemOrderRegisterSelectedRowIndex.length;
-            let availableCancel = true;
-            let includeOrder = true;
-
-            for (let i = 0; i < selectedRowCount; i++) {
-                let CONTROL_SEQ = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).CONTROL_SEQ;
-                let CONTROL_DETAIL_SEQ = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).CONTROL_DETAIL_SEQ;
-                let MATERIAL_ORDER_SEQ = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).MATERIAL_ORDER_SEQ;
-                let ORDER_STATUS = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).M_STATUS;
-                CONTROL_SEQ = CONTROL_SEQ === undefined ? "0" : CONTROL_SEQ;
-                CONTROL_DETAIL_SEQ = CONTROL_DETAIL_SEQ === undefined ? "0" : CONTROL_DETAIL_SEQ;
-
-                concatSeqDataArray += "'"+CONTROL_SEQ+""+CONTROL_DETAIL_SEQ+"',";
-                orderSeqDataArray += "'"+MATERIAL_ORDER_SEQ+"',";
-
-                // 소재 입고 상태
-                if(ORDER_STATUS == 'MST003' || ORDER_STATUS == 'MST004') {
-                    availableCancel = false;
-                    break;
-                }
-
-                // 소재 주문 상태
-                if(ORDER_STATUS == 'MST002') {
-                    includeOrder = false;
-                    break;
-                }
-            }
-
-            if( !availableCancel ) {
-                alert("소재주문상태를 확인 해 주세요.");
-                return false;
-            }
-
-            let headHtml = "Information", bodyHtml ="", yseBtn="예", noBtn="아니오";
-            if(!includeOrder){
-                bodyHtml =
-                    '<h4>\n' +
-                    '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
-                    '<span>이미 주문서가 발송된 대상도 포함되어 있습니다. 업체에 반드시 확인바랍니다. 취소를 진행하시겠습니까?</span>' +
-                    '</h4>';
-            }else{
-                bodyHtml =
-                    '<h4>\n' +
-                    '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
-                    '<span>주문을 취소하시겠습니까?</span>' +
-                    '</h4>';
-            }
-
-            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-            let itemOrderRegisterPopSubmitConfirm = function(callback) {
-                commonConfirmPopup.show();
-                commonConfirmPopup.css("z-index", 99999999);
-                $("#commonConfirmYesBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                    callback(true);
-                    return;
-                });
-                $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                });
-            };
-            itemOrderRegisterPopSubmitConfirm(function(confirm) {
-                if (confirm) {
-                    let CONCAT_SEQ = concatSeqDataArray.substr(0 , concatSeqDataArray.length-1);
-                    let ORDER_SEQ = orderSeqDataArray.substr(0 , orderSeqDataArray.length-1);
-
-                    $("#item_order_register_popup_form #CONCAT_SEQ").val(CONCAT_SEQ);
-                    $("#item_order_register_popup_form #MATERIAL_ORDER_SEQ").val(ORDER_SEQ);
-
-                    let parameter = {
-                        'queryId': 'updateItemOrderRegisterMaterialOrderCancel',
-                        'MATERIAL_ORDER_SEQ': $("#item_order_register_popup_form #MATERIAL_ORDER_SEQ").val(),
-                    };
-                    let parameters = {'url': '/json-remove', 'data': parameter};
-                    fnPostAjax(function(data, callFunctionParam){
-                        parameter = {
-                            'queryId': 'updateItemOrderRegisterControlPartCancel',
-                            'CONCAT_SEQ': $("#item_order_register_popup_form #CONCAT_SEQ").val(),
-                        };
-                        parameters = {'url': '/json-remove', 'data': parameter};
-                        fnPostAjax(function(data, callFunctionParam){
-                            parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
-                            fnPostAjax(function(data, callFunctionParam){
-                                $("#btnItemOrderRegisterSearch").trigger('click');
-                            }, parameters, '');
-                        }, parameters, '');
-                    }, parameters, '');
-                }
-            });
-
+            orderCancel();
         });
 
         $("#btnItemOrderRegisterCurrentStock").on('click', function(){
@@ -1278,8 +1184,9 @@
         /** 팝업 버튼 처리 **/
         $("#btnItemOrderRegisterPopAdd").on('click', function(){
             let date = new Date();
+            let rowCount = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length;
             date = date.getFullYear() +"-"+ ("0"+(date.getMonth()+1)).slice(-2) +"-"+ ("0"+(date.getDate()+1)).slice(-2);
-            itemOrderRegisterPopTopGrid.pqGrid('addNodes', [{ "HOPE_DUE_DT": date}], 0);
+            itemOrderRegisterPopTopGrid.pqGrid('addNodes', [{ "HOPE_DUE_DT": date}], rowCount+1);
 
             $("#btnItemOrderRegisterPopSubmit").attr("disabled", true);
         });
@@ -1306,6 +1213,7 @@
                 let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
                 fnPostAjaxAsync(function (data, callFunctionParam) {
                     $("#item_order_register_material_order_num").val(MATERIAL_ORDER_NUM);
+                    $("#item_order_register_popup_form #MATERIAL_ORDER_NUM").val(MATERIAL_ORDER_NUM);
                     itemOrderRegisterPopTopGrid.pqGrid('option', "dataModel.postData", function (ui) {
                         return (fnFormToJsonArrayData('#item_order_register_popup_form'));
                     });
@@ -1325,8 +1233,154 @@
             itemOrderRegisterPopMail();
         });
 
-        function makeMailInnerTable(list)
-        {
+        $("#btnItemOrderRegisterPopDelete").on('click', function() {
+            let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num").val();
+
+            //Confirm Box
+            let headHtml = "Information", bodyHtml = "", yseBtn = "예", noBtn = "아니오";
+            bodyHtml =
+                '<h4>\n' +
+                '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
+                '<span>주문서를 삭제하시겠습니까?</span>' +
+                '</h4>';
+
+            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+            let itemOrderRegisterPopDeleteConfirm = function (callback) {
+                commonConfirmPopup.show();
+                commonConfirmPopup.css("z-index", 99999999);
+                $("#commonConfirmYesBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                    callback(true);
+                    return;
+                });
+                $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                });
+            };
+            itemOrderRegisterPopDeleteConfirm(function (confirm) {
+                if (confirm) {
+                    let parameter = {
+                        'queryId': 'deleteItemOrderRegisterDeleteOrderManual',
+                        'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
+                    };
+                    let parameters = {'url': '/json-remove', 'data': parameter};
+                    fnPostAjax(function(data, callFunctionParam){
+                        $("#btnItemOrderRegisterSearch").trigger('click');
+                        $("#item_order_register_popup").modal('hide');
+                    }, parameters, '');
+                }
+            });
+        });
+
+        $("#btnItemOrderRegisterPopPrint").on('click', function(){
+            itemOrderRegisterPopOrderSheet();
+        });
+
+        $("#btnItemOrderRegisterPopCancel").on('click', function(){
+            orderCancel();
+        });
+
+
+        function orderCancel() {
+            let concatSeqDataArray = "";
+            let orderSeqDataArray = "";
+            let selectedRowCount = itemOrderRegisterSelectedRowIndex.length;
+            let availableCancel = true;
+            let includeOrder = true;
+
+            for (let i = 0; i < selectedRowCount; i++) {
+                let CONTROL_SEQ = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).CONTROL_SEQ;
+                let CONTROL_DETAIL_SEQ = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).CONTROL_DETAIL_SEQ;
+                let MATERIAL_ORDER_SEQ = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).MATERIAL_ORDER_SEQ;
+                let ORDER_STATUS = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).M_STATUS;
+                CONTROL_SEQ = CONTROL_SEQ === undefined ? "0" : CONTROL_SEQ;
+                CONTROL_DETAIL_SEQ = CONTROL_DETAIL_SEQ === undefined ? "0" : CONTROL_DETAIL_SEQ;
+
+                concatSeqDataArray += "'"+CONTROL_SEQ+""+CONTROL_DETAIL_SEQ+"',";
+                orderSeqDataArray += "'"+MATERIAL_ORDER_SEQ+"',";
+
+                // 소재 입고 상태
+                if(ORDER_STATUS == 'MST003' || ORDER_STATUS == 'MST004') {
+                    availableCancel = false;
+                    break;
+                }
+
+                // 소재 주문 상태
+                if(ORDER_STATUS == 'MST002') {
+                    includeOrder = false;
+                    break;
+                }
+            }
+
+            if( !availableCancel ) {
+                alert("소재주문상태를 확인 해 주세요.");
+                return false;
+            }
+
+            let headHtml = "Information", bodyHtml ="", yseBtn="예", noBtn="아니오";
+            if(!includeOrder){
+                bodyHtml =
+                    '<h4>\n' +
+                    '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
+                    '<span>이미 주문서가 발송된 대상도 포함되어 있습니다. 업체에 반드시 확인바랍니다. 취소를 진행하시겠습니까?</span>' +
+                    '</h4>';
+            }else{
+                bodyHtml =
+                    '<h4>\n' +
+                    '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
+                    '<span>주문을 취소하시겠습니까?</span>' +
+                    '</h4>';
+            }
+
+            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+            let itemOrderRegisterPopSubmitConfirm = function(callback) {
+                commonConfirmPopup.show();
+                commonConfirmPopup.css("z-index", 99999999);
+                $("#commonConfirmYesBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                    callback(true);
+                    return;
+                });
+                $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                });
+            };
+            itemOrderRegisterPopSubmitConfirm(function(confirm) {
+                if (confirm) {
+                    let CONCAT_SEQ = concatSeqDataArray.substr(0 , concatSeqDataArray.length-1);
+                    let ORDER_SEQ = orderSeqDataArray.substr(0 , orderSeqDataArray.length-1);
+
+                    $("#item_order_register_popup_form #CONCAT_SEQ").val(CONCAT_SEQ);
+                    $("#item_order_register_popup_form #MATERIAL_ORDER_SEQ").val(ORDER_SEQ);
+
+                    let parameter = {
+                        'queryId': 'updateItemOrderRegisterMaterialOrderCancel',
+                        'MATERIAL_ORDER_SEQ': $("#item_order_register_popup_form #MATERIAL_ORDER_SEQ").val(),
+                    };
+                    let parameters = {'url': '/json-remove', 'data': parameter};
+                    fnPostAjax(function(data, callFunctionParam){
+                        parameter = {
+                            'queryId': 'updateItemOrderRegisterControlPartCancel',
+                            'CONCAT_SEQ': $("#item_order_register_popup_form #CONCAT_SEQ").val(),
+                        };
+                        parameters = {'url': '/json-remove', 'data': parameter};
+                        fnPostAjax(function(data, callFunctionParam){
+                            parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
+                            fnPostAjax(function(data, callFunctionParam){
+                                $("#btnItemOrderRegisterSearch").trigger('click');
+                                $("#item_order_register_popup").modal('hide');
+                            }, parameters, '');
+                        }, parameters, '');
+                    }, parameters, '');
+                }
+            });
+        }
+
+        function makeMailInnerTable(list) {
             var ref_key="";
             var table="";
 
@@ -1447,8 +1501,6 @@
                 $(".commonConfirmCloseBtn").unbind().click(function (e) {
                     e.stopPropagation();
                     commonConfirmPopup.hide();
-                    $("#item_order_register_popup").modal('toggle');
-                    $("#btnItemOrderRegisterSearch").trigger('click');
                 });
             };
             itemOrderRegisterPopSubmitConfirm(function(confirm){
@@ -1564,10 +1616,97 @@
                     $("#common_excel_form #template").val('item_order_sheet_template');
                     fnReportFormToHiddenFormPageAction("common_excel_form", "/itemOrderRegisterOrderSheetPrint");
 
-                    itemOrderRegisterPopTopGrid.pqGrid('option', 'colModel', itemOrderRegisterPopTopColModel_enabled);
-                    itemOrderRegisterPopTopGrid.pqGrid('refresh');
+                    btnDisabled();
                 }
             });
+        }
+
+        function btnDisabled() {
+            let data = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data');
+            $('#item_order_register_popup_top_grid_records').html(data.length);
+
+            let MATERIAL_ORDER_NUM = data[0].MATERIAL_ORDER_NUM === undefined ? "" : data[0].MATERIAL_ORDER_NUM;
+            let ORDER_STATUS = data[0].ORDER_STATUS === undefined ? "" : data[0].ORDER_STATUS;
+
+            $("#orderNotCompleteBtnBox").css('display', 'none');
+            $("#orderCompleteBtnBox").css('display', 'none');
+
+            if(MATERIAL_ORDER_NUM == ""){
+                $("#btnItemOrderRegisterPopAdd").attr('disabled', false);
+                $("#btnItemOrderRegisterPopSave").attr('disabled', false);
+                $("#btnItemOrderRegisterPopSubmit").attr('disabled', true);
+
+                $("#btnItemOrderRegisterPopDelete").css('display', 'none');
+                $("#orderNotCompleteBtnBox").css('display', 'block');
+            }else{
+                if(ORDER_STATUS == 'MST002' || ORDER_STATUS == 'MST004') {
+                    $("#btnItemOrderRegisterPopAdd").attr('disabled', true);
+                    $("#btnItemOrderRegisterPopSave").attr('disabled', true);
+                    $("#btnItemOrderRegisterPopSubmit").attr('disabled', true);
+
+                    $("#orderCompleteBtnBox").css('display', 'block');
+                }else{
+                    $("#btnItemOrderRegisterPopAdd").attr('disabled', false);
+                    $("#btnItemOrderRegisterPopSave").attr('disabled', false);
+                    $("#btnItemOrderRegisterPopSubmit").attr('disabled', false);
+
+                    $("#orderNotCompleteBtnBox").css('display', 'block');
+                }
+                $("#btnItemOrderRegisterPopDelete").css('display', 'inline');
+            }
+
+            if(ORDER_STATUS == 'MST002' || ORDER_STATUS == 'MST004'){
+                itemOrderRegisterPopTopGrid.pqGrid('option', 'colModel', itemOrderRegisterPopTopColModel_enabled);
+            }else{
+                itemOrderRegisterPopTopGrid.pqGrid('option', 'colModel', itemOrderRegisterPopTopColModel);
+            }
+            itemOrderRegisterPopTopGrid.pqGrid('refresh');
+        }
+
+        /**
+         * fnFilterHandler
+         * @Parameter
+         * */
+        function itemOrderRegisterFilterRender(ui) {
+            var val = ui.cellData == undefined ? "" : ui.cellData,
+                filter = ui.column.filter,
+                crules = (filter || {}).crules;
+
+            if (filter && filter.on && crules && crules[0].value) {
+                var condition = $("#itemOrderRegisterFilterCondition :selected").val(),
+                    valUpper = val.toString().toUpperCase(),
+                    txt = $("#itemOrderRegisterFilterKeyword").val(),
+                    txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                    indx = -1;
+
+                if (condition == "end") {
+                    indx = valUpper.lastIndexOf(txtUpper);
+                    if (indx + txtUpper.length != valUpper.length) {
+                        indx = -1;
+                    }
+                }
+                else if (condition == "contain") {
+                    indx = valUpper.indexOf(txtUpper);
+                }
+                else if (condition == "begin") {
+                    indx = valUpper.indexOf(txtUpper);
+                    if (indx > 0) {
+                        indx = -1;
+                    }
+                }
+                if (indx >= 0) {
+                    var txt1 = val.toString().substring(0, indx);
+                    var txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                    var txt3 = val.toString().substring(indx + txtUpper.length);
+                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                }
+                else {
+                    return val;
+                }
+            }
+            else {
+                return val;
+            }
         }
 
         /** 공통 코드 이외의 처리 부분 **/
@@ -1606,72 +1745,4 @@
         }, 100);
     }
 
-    function btnDisabled() {
-        let data = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data');
-        $('#item_order_register_popup_top_grid_records').html(data.length);
-
-        let MATERIAL_ORDER_NUM = data[0].MATERIAL_ORDER_NUM === undefined ? "" : data[0].MATERIAL_ORDER_NUM;
-        let ORDER_STATUS = data[0].ORDER_STATUS === undefined ? "" : data[0].ORDER_STATUS;
-        if(MATERIAL_ORDER_NUM == ""){
-            $("#btnItemOrderRegisterPopAdd").attr('disabled', false);
-            $("#btnItemOrderRegisterPopSave").attr('disabled', false);
-            $("#btnItemOrderRegisterPopSubmit").attr('disabled', true);
-        }else{
-            if(ORDER_STATUS == 'MST002' || ORDER_STATUS == 'MST004') {
-                $("#btnItemOrderRegisterPopAdd").attr('disabled', true);
-                $("#btnItemOrderRegisterPopSave").attr('disabled', true);
-                $("#btnItemOrderRegisterPopSubmit").attr('disabled', true);
-            }else{
-                $("#btnItemOrderRegisterPopAdd").attr('disabled', false);
-                $("#btnItemOrderRegisterPopSave").attr('disabled', false);
-                $("#btnItemOrderRegisterPopSubmit").attr('disabled', false);
-            }
-        }
-    }
-
-    /**
-     * fnFilterHandler
-     * @Parameter
-     * */
-    function itemOrderRegisterFilterRender(ui) {
-        var val = ui.cellData == undefined ? "" : ui.cellData,
-            filter = ui.column.filter,
-            crules = (filter || {}).crules;
-
-        if (filter && filter.on && crules && crules[0].value) {
-            var condition = $("#itemOrderRegisterFilterCondition :selected").val(),
-                valUpper = val.toString().toUpperCase(),
-                txt = $("#itemOrderRegisterFilterKeyword").val(),
-                txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
-                indx = -1;
-
-            if (condition == "end") {
-                indx = valUpper.lastIndexOf(txtUpper);
-                if (indx + txtUpper.length != valUpper.length) {
-                    indx = -1;
-                }
-            }
-            else if (condition == "contain") {
-                indx = valUpper.indexOf(txtUpper);
-            }
-            else if (condition == "begin") {
-                indx = valUpper.indexOf(txtUpper);
-                if (indx > 0) {
-                    indx = -1;
-                }
-            }
-            if (indx >= 0) {
-                var txt1 = val.toString().substring(0, indx);
-                var txt2 = val.toString().substring(indx, indx + txtUpper.length);
-                var txt3 = val.toString().substring(indx + txtUpper.length);
-                return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
-            }
-            else {
-                return val;
-            }
-        }
-        else {
-            return val;
-        }
-    }
 </script>

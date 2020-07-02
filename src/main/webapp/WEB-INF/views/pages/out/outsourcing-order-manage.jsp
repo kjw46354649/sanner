@@ -74,10 +74,10 @@
                     </li>
                     <li>
                         <span class="slt_wrap trans_slt mg-right10">
-                            <select id="daySltd" name="daySltd" title="등록일시">
-                                <option value="" selected="selected">등록일시</option>
-                                <option value="1">-ALL-</option>
-                                <option value="2">-ALL-</option>
+                            <select name="OUTSIDE_SEARCH_CONDITION" id="OUTSIDE_SEARCH_CONDITION">
+                                <c:forEach var="code" items="${HighCode.H_1084}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
                             </select>
                         </span>
                         <span class="radio_box">
@@ -97,7 +97,7 @@
                             <span class="calendar_span">
                                 <input type="text" title="달력정보" name="OUTSIDE_MANAGE_END_DATE" id="OUTSIDE_MANAGE_END_DATE" readonly><button type="button">달력선택</button>
                             </span>
-                            <span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>
+                            <span class="chk_box"><input id="OUTSIDE_MANAGE_DATE" type="checkbox"><label for="OUTSIDE_MANAGE_DATE">선택</label></span>
                         </div>
                         <span class="slt_wrap">
                             <label class="label_100" for="WORK_TYPE">작업구분</label>
@@ -549,7 +549,7 @@
                 var frozenOts = '<option value="0">Selected</option>';
                 this.getColModel().forEach(function(column){
                     let hiddenYn = column.hidden == undefined ? true : false;
-                    if(hiddenYn){
+                    if(hiddenYn && column.title){
                         filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
                         frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
                     }

@@ -157,6 +157,8 @@
 </div>
 
 <script>
+    var $closingHistoryGrid;
+    var salesClosingHistoryRowIndex = [];
     $(function () {
         'use strict';
         fnCommCodeDatasourceSelectBoxCreate($('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {
@@ -183,7 +185,7 @@
         fnAppendSelectboxYear('MONTH_SALE_YEAR', 10);
 
         /* variable */
-        let $closingHistoryGrid;
+        // let $closingHistoryGrid;
         const tab1GridId = 'CLOSING_HISTORY_GRID';
         let tab1PostData = fnFormToJsonArrayData('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM');
         const tab1ColModel = [
@@ -194,7 +196,8 @@
             {title: '년도', dataType: 'string', dataIndx: 'YYYY'},
             {title: '분기', dataType: 'string', dataIndx: 'QUARTER'},
             {title: '마감월', dataType: 'string', dataIndx: 'FINISH_MONTH'},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
+            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER', hidden: true},
+            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER_TRAN'},
             {title: '발주사', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주사', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '품수', dataType: 'string', dataIndx: 'ITEM_NUMBER', summary: {type: 'sum', edit: true},
@@ -202,13 +205,20 @@
                     if(ui.rowData.pq_grandsummary) {
                         return ui.cellData;
                     } else {
-                        return ("<a href='#SALES_STATUS_DETAIL_LIST_VIEW_POPUP' data-target='' data-toggle='modal' " +
-                            "data-refform='SALES_STATUS_DETAIL_LIST_VIEW_POPUP'><u>" + ui.cellData + "</u></a>");
+                        return ('<button name="SALES_STATUS_CONTROL_DETAIL_VIEW"><u>' + ui.cellData + '</u></button>');
                     }
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('[name=SALES_STATUS_CONTROL_DETAIL_VIEW]').bind('click', function () {
+                        let rowData = ui.rowData;
+                        openNewWindowControlDetail(rowData);
+                    });
                 }
             },
             {title: '공급가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', summary: {type: 'sum'}},
-            {title: '마감금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'sdfsd1', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, summary: {type: 'sum'}, editable: true},
+            {title: '마감금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, summary: {type: 'sum'}, editable: true},
             {title: '부가세액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'VAT_AMOUNT', summary: {type: 'sum'}},
             {title: '합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMOUNT', summary: {type: 'sum'}},
             {title: '비고', dataType: 'string', dataIndx: 'CLOSE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
@@ -231,9 +241,11 @@
             height: 745,
             collapsible: false,
             resizable: false,
+            postRenderInterval: -1,
             showTitle: false,
             rowHtHead: 15,
             numberCell: {show: false},
+            selectionModel: {type: 'row', mode: 'single'},
             scrollModel: {autoFit: true},
             trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
@@ -245,58 +257,10 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
-            }
-        };
-        $closingHistoryGrid = $('#' + tab1GridId).pqGrid(tab1Obj);
-
-        let $detailListViewGrid;
-        const detailListViewGridId = 'DETAIL_LIST_VIEW_GRID';
-        let detailListViewPostData = fnFormToJsonArrayData('#MONTH_SALE_STATUS_SEARCH_FORM');
-        const detailListViewColModel = [
-            {title: '사업자<br>구분', minWidth: 70, dataType: 'string', dataIndx: 'COMP_NM', colModel: []},
-            {title: '발주업체', minWidth: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM', colModel: []},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', colModel: []},
-            {title: 'INV No.<br>(거래명세No.)', minWidth: 100, dataType: 'string', dataIndx: 'CHARGE_USER_ID', colModel: []},
-            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', colModel: []},
-            {title: '관리번호', minWidth: 100, dataType: 'string', dataIndx: 'CONTROL_NUM', colModel: []},
-            {title: 'Part', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM', colModel: []},
-            {title: '도면번호', minWidth: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', colModel: []},
-            {title: '품명', minWidth: 110, dataType: 'string', dataIndx: 'ITEM_NM', colModel: []},
-            {title: '작업<br>형태', minWidth: 110, dataType: 'string', dataIndx: 'WORK_NM', colModel: []},
-            {title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN', colModel: []},
-            {title: '자재<br>사급', dataType: 'string', dataIndx: 'OUTSIDE_YN', colModel: []},
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', colModel: []},
-            {title: '소재<br>종류', minWidth: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', colModel: []},
-            {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', colModel: []},
-            {title: 'Part<br>단위<br>수량', align: 'right', dataType: 'integer', dataIndx: 'PART_UNIT_QTY', colModel: []},
-            {title: '발주번호', minWidth: 90, datatype: 'string', dataIndx: 'ORDER_NUM', colModel: []},
-            // {title: '주문<br>수량', dataType: 'string', dataIndx: 'ITEM_QTY', colModel: []},
-            {
-                title: '대칭', align: 'center', colModel: [
-                    {title: '원칭', align: 'right', dataType: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY'},
-                    {title: '대칭', align: 'right', dataType: 'integer', dataIndx: 'OTHER_SIDE_QTY'}
-                ]
             },
-            {title: '견적단가', minWidth: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', colModel: []},
-            {title: '공급단가', minWidth: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', colModel: []},
-            {title: '합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMOUNT', colModel: []}
-        ];
-        const detailListViewObj = {
-            height: 800,
-            collapsible: false,
-            resizable: false,
-            showTitle: false,
-            rowHtHead: 15,
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
-            colModel: detailListViewColModel,
-            strNoRows: g_noData,
-            dataModel: {
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'dataSource.emptyGrid'},
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                }
-            }
+            rowSelect: function (event, ui) {
+                salesClosingHistoryRowIndex = ui.addList[0].rowIndx;
+            },
         };
 
         let $monthlySalesStatusGrid;
@@ -384,20 +348,39 @@
                 }
             }
         };
+        
+        let controlDetailPopup;
         /* variable */
 
-        const loadDetailListViewData = function () {
+        /* function */
+        const openNewWindowControlDetail = function (rowData) {
+            //URL?변수명1=값1&변수명2=값2&변수명3=값3&…
+            let url = '/controlDetail?COMP_CD=' + rowData.COMP_CD + '&CLOSE_MONTH=' + rowData.CLOSE_MONTH + '&ORDER_COMP_CD=' + rowData.ORDER_COMP_CD + '&CLOSE_VER=' + rowData.CLOSE_VER;
+            // 팝업 사이즈
+            let nWidth = 1012;
+            let nHeight = 800;
+            let winWidth = document.body.clientWidth;
+            let winHeight = document.body.clientHeight;
+            let winX = window.screenX || window.screenLeft || 0;
+            let winY = window.screenY || window.screenTop || 0;
+            let nLeft = winX + (winWidth - nWidth) / 2;
+            let nTop = winY + (winHeight - nHeight) / 2;
 
-        };
+            let strOption = '';
+            strOption += 'left=' + nLeft + 'px,';
+            strOption += 'top=' + nTop + 'px,';
+            strOption += 'width=' + nWidth + 'px,';
+            strOption += 'height=' + nHeight + 'px,';
+            strOption += 'toolbar=no,menubar=no,location=no,resizable=no,status=yes';
 
-        $('#SALES_STATUS_DETAIL_LIST_VIEW_POPUP').on({
-            'show.bs.modal': function () {
-                $detailListViewGrid = $('#' + detailListViewGridId).pqGrid(detailListViewObj);
-            },
-            'hide.bs.modal': function () {
-                $detailListViewGrid.pqGrid('destroy');
+            // 최초 클릭이면 팝업을 띄운다.
+            if (controlDetailPopup === undefined || controlDetailPopup.closed) {
+                controlDetailPopup = window.open(url, '', strOption);
+            } else {
+                controlDetailPopup.focus();
             }
-        });
+        };
+        /* function */
 
         $('#CLOSE_YEAR_LEFT').on('change', function () {
             fnAppendSelectboxMonth('CLOSE_MONTH_LEFT', this.value);
@@ -416,7 +399,7 @@
         });
 
         $('#CLOSING_HISTORY_SAVE').on('click', function (event) {
-            const updateQueryList = ['orderMapper.updateControlMaster', 'orderMapper.updateControlPart'];
+            const updateQueryList = ['orderMapper.updateMonthCloseNegoAndNote'];
 
             fnModifyPQGrid($closingHistoryGrid, [], updateQueryList);
         });
@@ -451,6 +434,8 @@
         //     return (fnFormToJsonArrayData('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM'));
         // });
         // $closingHistoryGrid.pqGrid('refreshDataAndView');
+
+        $closingHistoryGrid = $('#' + tab1GridId).pqGrid(tab1Obj);
         $monthlySalesStatusGrid = $('#' + tab2GridId).pqGrid(tab2Obj);
         /* init */
     });

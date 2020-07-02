@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -185,7 +186,20 @@ public class StaticUrlController {
      * @throws Exception
      */
     @RequestMapping(value = "/controlMonthClose")
-    public String controlMonthCloseController(Model model, HttpServletRequest request, HttpServletResponse response)  throws Exception{
+    public String controlMonthCloseController(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return "/common/control_month_close";
+    }
+
+    /**
+     * 주문상세 List
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/controlDetail", method = RequestMethod.GET)
+    public String controlDetailController(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
         return "/common/control_month_close";
     }
 }
