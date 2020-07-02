@@ -8,7 +8,7 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 
-<div class="popup_container" id="item_order_register_popup" style="display: none;">
+<div class="popup_container" id="item_order_register_popup" style="display: none;" data-backdrop="static">
     <div class="layerPopup" style="height: fit-content;">
         <h3>소재 주문</h3>
         <button type="button" class="pop_close mg-top10 mg-right8" data-dismiss="modal">닫기</button>
@@ -1629,7 +1629,13 @@
                     $("#common_excel_form #template").val('item_order_sheet_template');
                     fnReportFormToHiddenFormPageAction("common_excel_form", "/itemOrderRegisterOrderSheetPrint");
 
+                    itemOrderRegisterPopTopGrid.pqGrid('option', "dataModel.postData", function (ui) {
+                        return (fnFormToJsonArrayData('#item_order_register_popup_form'));
+                    });
+                    itemOrderRegisterPopTopGrid.pqGrid('refreshDataAndView');
+
                     btnDisabled();
+                    $("#btnItemOrderRegisterSearch").trigger('click');
                 }
             });
         }

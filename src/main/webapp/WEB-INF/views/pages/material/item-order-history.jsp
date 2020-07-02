@@ -136,11 +136,11 @@
 
     $(function () {
         let itemOrderHistoryLeftColModel= [
-            {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120 } ,
-            {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_NM', width: 100 } ,
-            {title: '총수량', dataType: 'string', dataIndx: 'ORDER_QTY' } ,
-            {title: '주문일시', dataType: 'date', dataIndx: 'ORDER_DT', width: 120 },
-            {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_CD' , hidden: true}
+            {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120, sortable: false } ,
+            {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_NM', width: 100, sortable: false } ,
+            {title: '총수량', dataType: 'string', dataIndx: 'ORDER_QTY', sortable: false } ,
+            {title: '주문일시', dataType: 'date', dataIndx: 'ORDER_DT', width: 120, sortable: false },
+            {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_CD' , hidden: true, sortable: false }
         ];
 
         let itemOrderHistoryRightColModel= [
@@ -313,7 +313,6 @@
             swipeModel: {on: false},
             collapsible: false,
             resizable: false,
-            sortable: false,
             trackModel: {on: true},
             colModel: itemOrderHistoryLeftColModel,
             showTitle: false,
