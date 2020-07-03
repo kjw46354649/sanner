@@ -129,9 +129,9 @@
                 </div>
                 <div class="m_area">
                     <div class="numWrap">
-                        <span><b>&#9900; 수량 :</b><i id="ORDER_QTY_VIEW">0</i></span>
-                        <span><b>&#9900; 불량수량 :</b><i id="ERROR_QTY_VIEW">0</i>
-                        <button type="button" id="inspection_manage_pop_plus_btn" class="btn_plus" style="display: none">더하기</button>
+                        <span><b>&#9900; 수량 :</b><i id="ORDER_QTY_VIEW" style="padding-left: 0px;width: 100px;" class="center_sort">0</i></span>
+                        <span><b>&#9900; 불량수량 :</b><i id="ERROR_QTY_VIEW" style="padding-left: 0px;width: 100px;margin-right: 10px;" class="center_sort">0</i>
+                        <button type="button" id="inspection_manage_pop_plus_btn" class="btn_plus" style="display: none;margin-right: 10px;">더하기</button>
                         <button type="button" id="inspection_manage_pop_plus_minus" class="btn_minus" style="display: none">빼기</button>
                     </span>
                     </div>
@@ -144,9 +144,10 @@
                 </div>
                 <div class="t_area">
                     <div class="t_h">
-                        <span class="list_t">검사코드</span>
+                        <span class="list_t" id="inspection_manage_inspection_code_style">검사코드</span>
                         <span>
 							<select id="INSPECT_RESULT" name="INSPECT_RESULT" title="검사코드">
+                                <option value=""><spring:message code="com.form.top.all.option" /></option>
                                 <c:forEach var="vlocale" items="${HighCode.H_1019}">
                                     <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -164,7 +165,7 @@
                             <col width="50%">
                             <col width="5%">
                         </colgroup>
-                        <tr>
+                        <tr id="inspection_manage_grade_style">
                             <th scope="col">발생공정</th>
                             <th scope="col">원인</th>
                             <th scope="col">조치방안 및 비고</th>
@@ -250,7 +251,7 @@
                 <div class="list4">
                     <div id="inspection_manage_grid_pop_01"></div>
                 </div>
-                <h4>품질사항</h4>
+                <h4>검사/반품이력</h4>
                 <div class="list3">
                     <div id="inspection_manage_grid_pop_02"></div>
                 </div>
@@ -595,7 +596,7 @@
                     $("#inspection_manage_pop_form").find("#ERROR_QTY_VIEW").html("0");
                     $("#inspection_manage_pop_form").find("#INSPECT_METHOD").val("1");
                     $("#inspection_manage_pop_form").find("#INSPECT_GRADE").val("GRD010");
-
+                    $("#inspect_grade_GRD010").trigger("click");
 
                 }
             }, parameters, '');
@@ -634,6 +635,7 @@
             $("#inspection_manage_pop_form").find("#ERROR_PROCESS").attr("disabled", false);
             $("#inspection_manage_pop_form").find("#ERROR_REASON").attr("disabled", false);
             $("#inspection_manage_pop_form").find("#ERROR_ACTION").attr("disabled", false);
+            $("#inspection_manage_pop_form").find("#INSPECT_RESULT").attr("disabled", false);
             $("#inspection_manage_pop_form").find("#ERROR_NOTE").attr("readonly", false);
 
             // $("#stock_manage_pop_form").find("#POP_TYPE").val($("#stock_manage_form").find("#popType").val());
@@ -751,6 +753,8 @@
             $comboId[0].options.length = 0;
 
             if(targetId == "GRD040"){
+
+
                 $("#inspection_manage_pop_plus_btn").show();
                 $("#inspection_manage_pop_plus_minus").show();
 
@@ -768,11 +772,14 @@
                 $("#inspection_manage_pop_form").find("#ERROR_ACTION").attr("disabled", false);
                 $("#inspection_manage_pop_form").find("#ERROR_NOTE").attr("readonly", false);
 
+
+                $comboId[0].add(new Option("<spring:message code="com.form.top.sel.option" />", ""));
                 <c:forEach var="vlocale" items="${HighCode.H_1020}">
                 $comboId[0].add(new Option("${vlocale.CODE_NM_KR}", "${vlocale.CODE_CD}"));
                 </c:forEach>
 
             }else{
+
                 $("#inspection_manage_pop_plus_btn").hide();
                 $("#inspection_manage_pop_plus_minus").hide();
 
@@ -785,6 +792,7 @@
                 $("#inspection_manage_pop_form").find("#ERROR_ACTION").attr("disabled", true);
                 $("#inspection_manage_pop_form").find("#ERROR_NOTE").attr("readonly", true);
 
+                $comboId[0].add(new Option("<spring:message code="com.form.top.sel.option" />", ""));
                 <c:forEach var="vlocale" items="${HighCode.H_1019}">
                 $comboId[0].add(new Option("${vlocale.CODE_NM_KR}", "${vlocale.CODE_CD}"));
                 </c:forEach>
@@ -795,12 +803,24 @@
             $(this).siblings().addClass("gradeBtn");
             if(targetId == "GRD010"){
                 $(this).addClass("green");
+                $("#inspection_manage_grade_style").find("th").removeAttr("style","background: #e7eef7;color: #444;");
+                $("#inspection_manage_inspection_code_style").attr("style","background: #e6e6e6;");
+                $("#inspection_manage_pop_form").find("#INSPECT_RESULT").attr("disabled", true);
             }else if(targetId == "GRD020"){
                 $(this).addClass("blue");
+                $("#inspection_manage_grade_style").find("th").removeAttr("style","background: #e7eef7;color: #444;");
+                $("#inspection_manage_inspection_code_style").attr("style","background: #e6e6e6;");
+                $("#inspection_manage_pop_form").find("#INSPECT_RESULT").attr("disabled", true);
             }else if(targetId == "GRD030"){
                 $(this).addClass("yellow");
+                $("#inspection_manage_grade_style").find("th").removeAttr("style","background: #e7eef7;color: #444;");
+                $("#inspection_manage_inspection_code_style").removeAttr("style","background: #e6e6e6;");
+                $("#inspection_manage_pop_form").find("#INSPECT_RESULT").attr("disabled", false);
             }else if(targetId == "GRD040"){
                 $(this).addClass("red");
+                $("#inspection_manage_grade_style").find("th").attr("style","background: #e7eef7;color: #444;");
+                $("#inspection_manage_inspection_code_style").removeAttr("style","background: #e6e6e6;");
+                $("#inspection_manage_pop_form").find("#INSPECT_RESULT").attr("disabled", false);
             }
         });
         $('#inspection_manage_pop_plus_btn').on('click', function(e) {
