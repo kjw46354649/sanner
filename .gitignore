@@ -50,8 +50,8 @@ cmake-build-*/
 *.iws
 
 # IntelliJ
-out/
 src/test/
+
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
@@ -114,3 +114,37 @@ gradle-app.setting
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
+/.idea/artifacts/Gradle___org_jems___jmes_1_0_SNAPSHOT_war__exploded_.xml
+/.idea/inspectionProfiles/
+/src/main/resources/log4j2.xml
+/src/main/resources/logback.xml
+/src/main/resources/log4jdbc.log4j2.properties
+/.idea/modules/jmes.test.iml
+/.idea/artifacts/Gradle___org_jems___jmes_1_0_SNAPSHOT_war__exploded_.xml
+!/.idea/encodings.xml
+!/.idea/encodings.xml
+!/.idea/artifacts/Gradle___org_jems___jmes_war.xml
+!/.idea/artifacts/Gradle___org_jems___jmes_war__exploded_.xml
+.idea/artifacts/
+
+!/.idea/encodings.xml
+
+/src/main/webapp/html1/
+/src/main/webapp/html2/
+/.idea/.name
+/.idea/compiler.xml
+/.idea/encodings.xml
+/.idea/gradle.xml
+/.idea/jarRepositories.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/uiDesigner.xml
+/.idea/vcs.xml
+/.idea/workspace.xml
+/.idea/jsLinters/jshint.xml
+/.idea/modules/
+/upload/
+/out/
+/TEST_PDF/
+/TEST_DXF/
+/gradle/
