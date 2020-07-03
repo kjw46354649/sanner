@@ -22,13 +22,18 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="COMP_CD">MCT 공장 구분</label>
                             <select class="wd_200" name="COMP_CD" id="COMP_CD">
-                                <option value="">All</option>
+                                <option value="">전체</option>
+                                <c:forEach var="code" items="${HighCode.H_1005}">
+                                    <c:if test="${code.ETC2 == 'W'}">
+                                       <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                    </c:if>
+                                </c:forEach>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="OUTSIDE_COMP_CD">NC NO.</label>
-                            <select class="wd_200" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
+                            <label class="label_100" for="EQUIP_SEQ">NC NO.</label>
+                            <select class="wd_200" name="EQUIP_SEQ" id="EQUIP_SEQ">
                                 <option value="">All</option>
                             </select>
                         </span>
@@ -36,7 +41,10 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="CLOSE_VER">자재종류</label>
                             <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
-                                <option value="">All</option>
+                                <option value="">전체</option>
+                                <c:forEach var="code" items="${HighCode.H_1027}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
                             </select>
                         </span>
                         <span class="gubun"></span>
@@ -57,7 +65,7 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="CLOSE_VER">자재종류</label>
+                            <label class="label_100" for="CLOSE_VER">규격</label>
                             <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
                                 <option value="">All</option>
                             </select>
@@ -77,28 +85,19 @@
                                 <option value="2">가공확정일시</option>
                             </select>
                         </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_1" value="today" checked><label for="fr_1001_1">최근 3일</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_2" value="current_month"><label for="fr_1001_2">현재월</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_3" value="three_months"><label for="fr_1001_3">이전 3개월</label>
-                        </span>
                         <div class="calendar_wrap">
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="CONTROL_MANAGE_START_DATE" id="CONTROL_MANAGE_START_DATE"><button type="button">달력선택</button>
+                                <input type="text" title="달력정보" name="mct_nc_execute_history_start_dt" id="mct_nc_execute_history_start_dt"><button type="button">달력선택</button>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="CONTROL_MANAGE_END_DATE" id="CONTROL_MANAGE_END_DATE" readonly><button type="button">달력선택</button>
+                                <input type="text" title="달력정보" name="mct_nc_execute_history_end_dt" id="mct_nc_execute_history_end_dt" readonly><button type="button">달력선택</button>
                             </span>
                             <%--<span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>--%>
                         </div>
                         <span class="slt_wrap">
-                            <label class="label_100" for="CLOSE_VER">작업자</label>
-                            <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
+                            <label class="label_100" for="WORK_USER_ID">작업자</label>
+                            <select class="wd_200" name="WORK_USER_ID" id="WORK_USER_ID">
                                 <option value="">All</option>
                             </select>
                         </span>
@@ -181,22 +180,13 @@
                                 <option value="2">-ALL-</option>
                             </select>--%>
                         </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_1" value="today" checked><label for="fr_1001_1">3개월</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_2" value="current_month"><label for="fr_1001_2">1개월</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_3" value="three_months"><label for="fr_1001_3">현재월</label>
-                        </span>
                         <div class="calendar_wrap">
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="CONTROL_MANAGE_START_DATE" id="CONTROL_MANAGE_START_DATE"><button type="button">달력선택</button>
+                                <input type="text" title="달력정보" name="mct_dw_execute_history_start_dt" id="mct_dw_execute_history_start_dt"><button type="button">달력선택</button>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="CONTROL_MANAGE_END_DATE" id="CONTROL_MANAGE_END_DATE" readonly><button type="button">달력선택</button>
+                                <input type="text" title="달력정보" name="mct_dw_execute_history_end_dt" id="mct_dw_execute_history_end_dt" readonly><button type="button">달력선택</button>
                             </span>
 <%--                            <span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>--%>
                         </div>
@@ -262,6 +252,14 @@
         fnCommCodeDatasourceSelectBoxCreate($('#NC_PERFORMANCE_HISTORY_SEARCH_FORM').find('#WORK_USER_ID'), 'all', {
             'url': '/json-list', 'data': {'queryId': 'dataSource.getMCTWorkerList'}
         });
+        fnCommCodeDatasourceSelectBoxCreate($('#CAM_WORK_HISTORY_GRID_SEARCH_FORM').find('#EQUIP_SEQ'), 'all', {
+            'url': '/json-list', 'data': {'queryId': 'dataSource.getMctEquipList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#CAM_WORK_HISTORY_GRID_SEARCH_FORM').find('#WORK_USER_ID'), 'all', {
+            'url': '/json-list', 'data': {'queryId': 'dataSource.getMCTWorkerList'}
+        });
+
+
 
         /* variable */
         const YEAR = TODAY.getFullYear();
@@ -509,7 +507,7 @@
             }
         ];
         const tab1Obj = {
-            height: 750,
+            height: 720,
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             resizable: false,
@@ -599,7 +597,7 @@
             {title: '작업자', minWidth: 20, width: 80, dataType: 'string', dataIndx: 'WORK_USER_ID'}
         ];
         let tab2Obj = {
-            height: 750,
+            height: 720,
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             resizable: false,
