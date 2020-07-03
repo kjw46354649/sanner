@@ -372,7 +372,8 @@
             {title: '형<br>태', minWidth: 20, width: 20, dataType: 'string', dataIndx: 'WORK_NM'},
             {title: 'NC Plan', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 colModel: [
-                    {title: 'NC No.', minWidth: 40, width: 60, datatype: 'string', dataIndx: 'MCT_PLAN_EQUIP_NM', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                    {title: 'MCT_PLAN_SEQ', dataType: 'string', dataIndx: 'MCT_PLAN_SEQ', hidden: false},
+                    {title: 'NC No.', minWidth: 40, width: 60, datatype: 'string', dataIndx: 'EQUIP_SEQ', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: NC_MACHINE},
                         render: function (ui) {
                             let cellData = ui.cellData;
@@ -771,11 +772,11 @@
                 let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
                 ui.addList[0].newRow.EQUIP_SEQ = equipSeq;
                 ui.addList[0].newRow.ROWNUM = ROWNUM;
-                changeSortNum(thisObject, $grid);
+                // changeSortNum(thisObject, $grid);
                 modifyPQGrid($(thisObject.element.context), insertQueryList, [], []);
             } else if (ui.source === 'edit' || ui.source === 'update') {
                 modifyPQGrid($(thisObject.element.context), [], updateQueryList, []);
-            } else if (ui.source === 'delete' || ui.source === 'deleteNodes') {
+            } else if (ui.source === 'delete') {
                 modifyPQGrid($(thisObject.element.context), [], [], deleteQueryList);
                 changeSortNum(thisObject, $(thisObject.element.context));
             }
@@ -831,7 +832,7 @@
         });
 
         $('#MCT_TARGET_SAVE').on('click', function () {
-            fnModifyPQGrid($processTargetGrid, [], ['machine.updateMctTarget']);
+            fnModifyPQGrid($processTargetGrid, [], ['orderMapper.updateControlPart', 'machine.insertMctPlan']);
             setTimeout(function () {
                 refreshMctPlanGrids();
             }, 1000);
