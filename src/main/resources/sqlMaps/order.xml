@@ -3,136 +3,6 @@
 
 <mapper namespace="orderMapper">
 
-    <sql id="controlManage">
-        SELECT
-            ROW_NUMBER () OVER () AS ROW_NUM,
-            A.CONTROL_SEQ, <!-- 관리번호 -->
-            A.CONTROL_STATUS, <!-- 주문관리상태 -->
-            B.CONTROL_DETAIL_SEQ, <!-- 주문관리상세일련번호 -->
-            C.ORDER_SEQ, <!-- 발주번호일련번호 -->
-            A.CONTROL_STATUS AS CONTROL_STATUS_ORIGINAL, <!-- 주문관리상태 -->
-            SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR') AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
-            A.CONTROL_VER, <!-- 관리번호버전 -->
-            SF_GET_DATE_F(A.STATUS_DT, 'YY', 'M') AS CONTROL_STATUS_DT, <!-- 상태확정일 -->
-            A.PRICE_CONFIRM, <!-- 단가확인 -->
-            A.COMP_CD, <!-- 사업자구분 -->
-            SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM, <!-- 사업자구분 이름 -->
-            A.ORDER_COMP_CD, <!-- 발주업체 -->
-            SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM, <!-- 발주업체 이름 -->
-            A.ORDER_STAFF_SEQ, <!-- 구매담당 -->
-            SF_GET_STAFF_NM(A.ORDER_STAFF_SEQ) AS ORDER_STAFF_NM, <!-- 구매담당자 이름 -->
-            A.DESIGNER_NM, <!-- 설계자 -->
-            A.NOTE, <!-- 비고 -->
-            F.INVOICE_NUM, <!-- 거래명세서 no -->
-            A.PROJECT_NM, <!-- 프로젝트 -->
-            A.MODULE_NM, <!-- 모듈명 -->
-            A.DELIVERY_COMP_NM, <!-- 납품처명 -->
-            A.LABEL_NOTE, <!-- 비고(라벨) -->
-            A.MAIN_INSPECTION, <!-- 주요 검사품 -->
-            IFNULL(SF_GET_CODE_NM(1042, A.MAIN_INSPECTION, 'EN'), SPACE(0)) AS MAIN_INSPECTION_NM, <!-- 주요 검사품 -->
-            A.EMERGENCY_YN, <!-- 긴급 -->
-            SF_GET_CODE_NM(1042, A.EMERGENCY_YN, 'EN') AS EMERGENCY_YN_NM, <!-- 긴급 -->
-            IF(A.EMERGENCY_YN IS NULL, SPACE(0), '긴급') AS EMERGENCY_BARCODE_NM, <!-- 바코드 긴급 -->
-            A.CONTROL_NUM, <!-- 관리번호 -->
-            IFNULL(B.PART_NUM, SPACE(0)) AS PART_NUM, <!-- Part -->
-            B.DRAWING_VER, <!-- 도면번호버전 -->
-            B.DRAWING_NUM, <!-- 도면번호 -->
-            B.ITEM_NM, <!-- 품명 -->
-            B.WORK_TYPE, <!-- 작업형태 -->
-            IFNULL(SF_GET_CODE_NM(1033, B.WORK_TYPE, 'KR'), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 이름 -->
-            B.OUTSIDE_YN, <!-- 외주 -->
-            B.WORK_FACTORY, <!-- 수행공장 -->
-            SF_GET_CODE_NM(1014, B.WORK_FACTORY, 'KR') AS WORK_FACTORY_NM, <!-- 수행공장 -->
-            B.MATERIAL_SUPPLY_YN, <!-- 소재사급 -->
-            IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'YYYY', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 납기(가공납기) -->
-            IFNULL(B.SIZE_TXT, SPACE(0)) AS SIZE_TXT, <!-- 규격 -->
-            B.MATERIAL_DETAIL, <!-- 소재 종류 -->
-            IFNULL(SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, 'KR'), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류 -->
-            B.MATERIAL_TYPE, <!-- 재질 -->
-            IFNULL(SF_GET_CODE_NM(1035, B.MATERIAL_TYPE, 'KR'), SPACE(0)) AS MATERIAL_TYPE_NM, <!-- 재질 -->
-            B.MATERIAL_KIND, <!-- 소재 형태 -->
-            IFNULL(SF_GET_CODE_NM(1029, B.MATERIAL_KIND, 'KR'), SPACE(0)) AS MATERIAL_KIND_NM, <!-- 소재 형태 -->
-            B.SURFACE_TREAT, <!-- 표면처리 -->
-            IFNULL(B.MATERIAL_FINISH_HEAT, SPACE(0)) AS MATERIAL_FINISH_HEAT, <!-- 열처리 -->
-            B.MATERIAL_NOTE, <!-- 소재비고 -->
-            B.PART_UNIT_QTY, <!-- Part단위수량 -->
-            SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS ORDER_QTY_TOTAL, <!-- 주문 수량 -->
-            C.ORDER_NUM, <!-- 발주번호 -->
-            IFNULL(C.ORDER_QTY, SPACE(0)) AS ORDER_QTY, <!-- 발주정보_수량 -->
-            IFNULL(B.ORIGINAL_SIDE_QTY, SPACE(0)) AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
-            IFNULL(B.OTHER_SIDE_QTY, SPACE(0)) AS OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
-            SF_GET_DATE_F(C.ORDER_DUE_DT, 'YY', '') AS ORDER_DUE_DT, <!-- 발주정보_납기 -->
-            SF_GET_DATE_F(C.DELIVERY_DT, 'YY', '') AS DELIVERY_DT, <!-- 발주정보_납품확인 -->
-            B.DETAIL_LATHE, <!-- 상세가공요건_선반 -->
-            B.DETAIL_SURFACE, <!-- 상세가공요건_가공면 -->
-            B.DETAIL_CLAMPING, <!-- 상세가공요건_클램핑 -->
-            B.DETAIL_POCKET, <!-- 상세가공요건_포켓 -->
-            B.DETAIL_DRILL, <!-- 상세가공요건_드릴 -->
-            B.DETAIL_DIFFICULTY, <!-- 상세가공요건_난도 -->
-            B.MATERIAL_FINISH_TM, <!-- 소재마감_TM각비 -->
-            B.MATERIAL_FINISH_GRIND, <!-- 소재마감_연마 -->
-            B.MATERIAL_FINISH_HEAT, <!-- 소재마감_열처리 -->
-            B.SIZE_W_M, <!-- 예상규격_가로 -->
-            B.SIZE_H_M, <!-- 예상규격_세로 -->
-            B.SIZE_T_M, <!-- 예상규격_두께 -->
-            B.SIZE_D_M, <!-- 예상규격_지름 -->
-            B.SIZE_L_M, <!-- 예상규격_길이 -->
-            B.UNIT_MATERIAL_AMT, <!-- 항목별단가_소재비 -->
-            B.UNIT_TM_AMT, <!-- 항목별단가_TM각비 -->
-            B.UNIT_GRIND_AMT, <!-- 항목별단가_연마비 -->
-            B.UNIT_HEAT_AMT, <!-- 항목별단가_열처리 -->
-            B.UNIT_SURFACE_AMT, <!-- 항목별단가_표면처리 -->
-            B.UNIT_PROCESS_AMT, <!-- 항목별단가_가공비 -->
-            B.UNIT_ETC_AMT, <!-- 항목별단가_기타추가 -->
-            B.UNIT_AMT_NOTE, <!-- 항목별단가_견적비고 -->
-            B.UNIT_FINAL_EST_AMT, <!-- 최종견적단가 -->
-            (IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_TM_AMT, 0) + IFNULL(B.UNIT_GRIND_AMT, 0) + IFNULL(B.UNIT_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0)) * C.ORDER_QTY AS EST_TOTAL_AMOUNT, <!-- 견적 합계 금액 -->
-            B.UNIT_FINAL_AMT, <!-- 최종공급단가 -->
-            B.UNIT_FINAL_AMT AS UNIT_FINAL_AMT_ORIGINAL, <!-- 최종공급단가 -->
-            B.UNIT_FINAL_AMT * C.ORDER_QTY AS FINAL_AMT, <!-- 합계 금액 -->
-            B.PREV_DRAWING_NUM, <!-- 변경전도면번호 -->
-            D.CLOSE_MONTH, <!-- 마감 월 -->
-            DATE_FORMAT(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m'), '%Y-%m') AS CLOSE_MONTH_TRAN, <!-- 마감 월 -->
-            D.CLOSE_VER, <!-- 차수 -->
-            CONCAT(D.CLOSE_VER, '건') AS CLOSE_VER_TRAN, <!-- 차수 -->
-            D.INSERT_ID AS CLOSE_USER_ID, <!-- 작성자 -->
-            SF_GET_DATE_F(E.CLOSE_DT, 'YY', 'M') AS CLOSE_DT, <!-- 마감일시 -->
-            B.DXF_GFILE_SEQ, <!-- DXF -->
-            B.IMG_GFILE_SEQ, <!-- IMG(PNG) -->
-            B.OUTSIDE_COMP_CD, <!-- 외주업체 -->
-            SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM, <!-- 외주업체 -->
-            B.OUTSIDE_MATERIAL_SUPPLY_YN, <!-- 외주 자재사급 -->
-            B.OUTSIDE_UNIT_AMT, <!-- 외주단가 -->
-            (B.OUTSIDE_UNIT_AMT * B.OUTSIDE_ORDER_NUM) AS OUTSIDE_FINAL_AMT, <!-- 외주합계금액 -->
-            SF_GET_DATE_F(B.OUTSIDE_HOPE_DUE_DT, 'YYYY', '') AS OUTSIDE_HOPE_DUE_DT, <!-- 외주현황_요망납기 -->
-            '', <!-- 외주입고날짜 -->
-            B.OUTSIDE_NOTE, <!-- 외주비고 -->
-            '', <!-- 외주 불량 CODE -->
-            '', <!-- 외주 조치방안 -->
-            SF_GET_DATE_F(A.STATUS_DT, 'YY', 'M') AS STATUS_DT, <!-- 등록/업데이트 일시 -->
-            B.PART_STATUS, <!-- PART 상태 -->
-            SF_GET_CODE_NM(1013, B.PART_STATUS, 'KR') AS PART_STATUS_NM, <!-- 주문관리상태 -->
-            D.CLOSE_DETAIL_NOTE, <!-- 마감 비고 -->
-            G.BARCODE_NUM AS CONTROL_BARCODE_NUM, <!-- 주문관리바코드번호(도면라벨) -->
-            H.BARCODE_NUM AS LABEL_BARCODE_NUM, <!-- 라벨바코드번호(박스라벨) -->
-            A.DEL_YN
-        FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-            LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-                                                   AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-            LEFT OUTER JOIN TBL_MONTH_CLOSE_DETAIL D ON A.CONTROL_SEQ = D.CONTROL_SEQ
-                                                        AND A.COMP_CD = D.COMP_CD
-                                                        AND A.ORDER_COMP_CD = D.ORDER_COMP_CD
-            LEFT OUTER JOIN TBL_MONTH_CLOSE E ON D.COMP_CD = E.COMP_CD
-                                                 AND D.CLOSE_MONTH = E.CLOSE_MONTH
-                                                 AND D.ORDER_COMP_CD = E.ORDER_COMP_CD
-                                                 AND D.CLOSE_VER = E.CLOSE_VER
-            LEFT OUTER JOIN TBL_INVOICE_DETAIL F ON B.CONTROL_SEQ = F.CONTROL_SEQ
-                                                    AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
-            LEFT OUTER JOIN TBL_CONTROL_BARCODE G ON B.CONTROL_SEQ = G.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ AND G.DEL_YN = 'N'
-            LEFT OUTER JOIN TBL_OUT_BARCODE H ON B.CONTROL_SEQ = H.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = H.CONTROL_DETAIL_SEQ AND H.DEL_YN = 'N'
-    </sql>
-
     <sql id="control">
         A.CONTROL_SEQ, <!-- 주문관리일련번호 -->
         A.CONTROL_NUM, <!-- 관리번호 -->
@@ -320,7 +190,12 @@
             LEFT OUTER JOIN TBL_INVOICE_DETAIL F ON B.CONTROL_SEQ = F.CONTROL_SEQ
                                                     AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
             LEFT OUTER JOIN TBL_POP G ON B.CONTROL_SEQ = G.CONTROL_SEQ
-                                         AND B.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ
+                                        AND B.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ
+                                        AND G.POP_SEQ = (SELECT MAX(POP_SEQ)
+                                                        FROM TBL_POP
+                                                        WHERE 1 = 1
+                                                            AND CONTROL_SEQ = G.CONTROL_SEQ
+                                                            AND CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ)
             LEFT OUTER JOIN TBL_INSPECT H ON B.CONTROL_SEQ = H.CONTROL_SEQ
                                              AND B.CONTROL_DETAIL_SEQ = H.CONTROL_DETAIL_SEQ
                                              AND H.INSPECT_SEQ = (SELECT MAX(INSPECT_SEQ)
