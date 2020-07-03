@@ -637,6 +637,15 @@
             $("#inspection_manage_pop_form").find("#ERROR_ACTION").attr("disabled", false);
             $("#inspection_manage_pop_form").find("#INSPECT_RESULT").attr("disabled", false);
             $("#inspection_manage_pop_form").find("#ERROR_NOTE").attr("readonly", false);
+            let selINSPECT_RESULT = $("#inspection_manage_pop_form").find("#INSPECT_RESULT option:selected").val();
+            let selINSPECT_GRADE = $("#inspection_manage_pop_form").find("#INSPECT_GRADE").val();
+
+            if(selINSPECT_GRADE == "GRD030" || selINSPECT_GRADE == "GRD040"){
+                if(selINSPECT_RESULT == ""){
+                    alert("검사코드는 필수 입력 값입니다.");
+                    return;
+                }
+            }
 
             // $("#stock_manage_pop_form").find("#POP_TYPE").val($("#stock_manage_form").find("#popType").val());
             // $("#stock_manage_pop_form").find("#IN_OUT_QTY").val($("#stock_manage_pop_form").find("#ORDER_QTY").html());
