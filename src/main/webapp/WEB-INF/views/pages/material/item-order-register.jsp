@@ -984,6 +984,10 @@
         $('#item_order_register_popup').on('hide.bs.modal', function() {
             itemOrderRegisterPopTopGrid.pqGrid( "destroy" );
             itemOrderRegisterPopBotGrid.pqGrid( "destroy" );
+
+            $("#item_order_register_material_order_num").val('');
+            $("#item_order_register_material_order_num_temp").val('');
+
             $(".popupTableDiv").html('');
         });
 
@@ -1530,8 +1534,8 @@
                         'updateList': list
                     };
                     let QUERY_ID_ARRAY = {
-                        'insertQueryId': ['insertUpdateItemOrderRegisterPopStatus'],
-                        'updateQueryId': ['updateItemOrderRegisterPartStatus'],
+                        'insertQueryId': ['material.insertUpdateItemOrderRegisterPopStatus','material.insertItemOrderRegisterControlPartProgress'],
+                        'updateQueryId': ['material.updateItemOrderRegisterPartStatus','material.insertItemOrderRegisterControlPartProgress'],
                     };
                     changes.queryIdList = QUERY_ID_ARRAY;
                     let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
