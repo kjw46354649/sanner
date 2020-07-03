@@ -197,8 +197,7 @@
 
         // loadMonthSalesList();
 
-
-        $('#business_status_search_form').find('#BUSINESS_STATUS_INNER_DUE_DT').datepicker();
+        $('#business_status_search_form').find('#BUSINESS_STATUS_INNER_DUE_DT').datepicker({dateFormat: 'yy/mm/dd'});
         $('#business_status_search_form').find('#BUSINESS_STATUS_INNER_DUE_DT').datepicker('setDate', 'today');
         fnCommCodeDatasourceSelectBoxCreate($('#business_status_search_form').find('#ORDER_COMP_CD'), 'all', {
             'url': '/json-list',
