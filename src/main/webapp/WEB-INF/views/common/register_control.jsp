@@ -536,7 +536,6 @@
             change: function (evt, ui) {
                 console.count();
                 if (ui.source === 'paste') {
-                    const addListLength = ui.addList.length;
                     const priceConfirmList = fnGetCommCodeGridSelectBox('1017');
                     const mainInspectionList = fnGetCommCodeGridSelectBox('1059');
                     const workTypeList = fnGetCommCodeGridSelectBox('1033');
@@ -545,8 +544,8 @@
                     const materialKindList = fnGetCommCodeGridSelectBox('1029');
                     const surfaceTreatList = fnGetCommCodeGridSelectBox('1039');
                     let rowListConvert = [];
-
-                    for (let i = 0; i < addListLength; i++) {
+                    console.log(ui);
+                    for (let i = 0, addListLength = ui.addList.length; i < addListLength; i++) {
                         const newRowData = ui.addList[i].newRow;
                         const rowIndx = ui.addList[i].rowIndx;
                         let priceConfirm = null;
@@ -576,28 +575,138 @@
                             if (index >= 0) compCd = BUSINESS_COMPANY[index].value;
                         }
                         // 발주업체
-                        console.log(newRowData.ORDER_COMP_CD);
-                        console.log(ORDER_COMPANY);
                         if (newRowData.ORDER_COMP_CD !== undefined) {
                             let index = ORDER_COMPANY.findIndex(function (element) {
                                 return element.text === newRowData.ORDER_COMP_CD;
                             });
-                            console.log(index);
+
                             if (index >= 0) orderCompCd = ORDER_COMPANY[index].value;
                         }
-                        console.log(orderCompCd);
 
                         // 구매 담당자
-                        console.log(newRowData.ORDER_STAFF_SEQ);
-                        console.log(COMPANY_STAFF);
                         if (newRowData.ORDER_STAFF_SEQ !== undefined) {
                             let index = COMPANY_STAFF.findIndex(function (element) {
                                 return element.text === newRowData.ORDER_STAFF_SEQ;
                             });
-                            console.log(index);
+
                             if (index >= 0) orderStaffSeq = COMPANY_STAFF[index].value;
                         }
-                        console.log(orderStaffSeq);
+
+                        // 주요검사품
+                        if (newRowData.MAIN_INSPECTION !== undefined) {
+                            let index = mainInspectionList.findIndex(function (element) {
+                                return element.text === newRowData.MAIN_INSPECTION;
+                            });
+
+                            if (index >= 0) mainInspection = mainInspectionList[index].value;
+                        }
+                        // 작업형태
+                        if (newRowData.WORK_TYPE !== undefined) {
+                            let index = workTypeList.findIndex(function (element) {
+                                return element.text === newRowData.WORK_TYPE;
+                            });
+
+                            if (index >= 0) workType = workTypeList[index].value;
+                        }
+                        // 수행공장
+                        if (newRowData.WORK_FACTORY !== undefined) {
+                            let index = workFactoryList.findIndex(function (element) {
+                                return element.text === newRowData.WORK_FACTORY;
+                            });
+
+                            if (index >= 0) workFactory = workFactoryList[index].value;
+                        }
+                        //소재 상세
+                        if (newRowData.MATERIAL_DETAIL !== undefined) {
+                            let index = materialDetailList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_DETAIL;
+                            });
+
+                            if (index >= 0) materialDetail = materialDetailList[index].value;
+                        }
+                        // 소재형태
+                        if (newRowData.MATERIAL_KIND !== undefined) {
+                            let index = materialKindList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_KIND;
+                            });
+
+                            if (index >= 0) materialKind = materialKindList[index].value;
+                        }
+                        // 표면처리
+                        if (newRowData.SURFACE_TREAT !== undefined) {
+                            let index = surfaceTreatList.findIndex(function (element) {
+                                return element.text === newRowData.SURFACE_TREAT;
+                            });
+
+                            if (index >= 0) surfaceTreat = surfaceTreatList[index].value;
+                        }
+
+                        let tempObject = {
+                            rowIndx: rowIndx,
+                            newRow: {
+                                'PRICE_CONFIRM': priceConfirm,
+                                'COMP_CD': compCd,
+                                'ORDER_COMP_CD': orderCompCd,
+                                'ORDER_STAFF_SEQ': orderStaffSeq,
+                                'MAIN_INSPECTION': mainInspection,
+                                'WORK_TYPE': workType,
+                                'WORK_FACTORY': workFactory,
+                                'MATERIAL_DETAIL': materialDetail,
+                                'MATERIAL_KIND': materialKind,
+                                'SURFACE_TREAT': surfaceTreat
+                            }
+                        };
+                        rowListConvert.push(tempObject);
+                        // $orderRegisterGrid.pqGrid('updateRow', {rowList: rowListConvert});
+                    }
+
+                    for (let i = 0, updateLength = ui.updateList.length; i < updateLength; i++) {
+                        console.log(ui);
+                        const newRowData = ui.updateList[i].newRow;
+                        const rowIndx = ui.updateList[i].rowIndx;
+                        let priceConfirm = null;
+                        let compCd = null;
+                        let orderCompCd = null;
+                        let orderStaffSeq = null;
+                        let mainInspection = null;
+                        let workType = null;
+                        let workFactory = null;
+                        let materialDetail = null;
+                        let materialKind = null;
+                        let surfaceTreat = null;
+
+                        // 단가확인
+                        if (newRowData.PRICE_CONFIRM !== undefined) {
+                            let index = priceConfirmList.findIndex(function (element) {
+                                return element.text === newRowData.PRICE_CONFIRM;
+                            });
+                            if (index >= 0) priceConfirm = priceConfirmList[index].value;
+                        }
+                        // 사업자
+                        if (newRowData.COMP_CD !== undefined) {
+                            let index = BUSINESS_COMPANY.findIndex(function (element) {
+                                return element.text === newRowData.COMP_CD;
+                            });
+
+                            if (index >= 0) compCd = BUSINESS_COMPANY[index].value;
+                        }
+                        // 발주업체
+                        if (newRowData.ORDER_COMP_CD !== undefined) {
+                            let index = ORDER_COMPANY.findIndex(function (element) {
+                                return element.text === newRowData.ORDER_COMP_CD;
+                            });
+
+                            if (index >= 0) orderCompCd = ORDER_COMPANY[index].value;
+                        }
+
+                        // 구매 담당자
+                        if (newRowData.ORDER_STAFF_SEQ !== undefined) {
+                            let index = COMPANY_STAFF.findIndex(function (element) {
+                                return element.text === newRowData.ORDER_STAFF_SEQ;
+                            });
+
+                            if (index >= 0) orderStaffSeq = COMPANY_STAFF[index].value;
+                        }
 
                         // 주요검사품
                         if (newRowData.MAIN_INSPECTION !== undefined) {
@@ -665,6 +774,7 @@
                         };
                         rowListConvert.push(tempObject);
                     }
+
                     $orderRegisterGrid.pqGrid('updateRow', {rowList: rowListConvert});
                 }
             }
