@@ -304,7 +304,7 @@
             /** 30초마다 그리드 재조회 **/
             setInterval(function() {
                 refreshData();
-            }, 1000 * 30);
+            }, 1000 * 10);
 
             $("#popBarcode").focus();
 
