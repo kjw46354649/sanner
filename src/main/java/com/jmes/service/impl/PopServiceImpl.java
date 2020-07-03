@@ -122,14 +122,14 @@ public class PopServiceImpl implements PopService {
                 }
 
                 // 검사실 스캔, 후가공 스캔, 표면 처리 스캔시 PART 상태도 변경 처리 한다.
-                if ("POP100".equals(popLocation) || "POP100".equals(popLocation) || "POP100".equals(popLocation)) {
-                    if (popLocation == "POP100") {
-                        // 검사실 스캔시 검사대기
+                if ("POP100".equals(popLocation) || "POP150".equals(popLocation) || "POP160".equals(popLocation)) {
+                    if ("POP100".equals(popLocation)) {
+                        // 검사실 스캔시 작업 완료대기
                         controlPartInfo.put("PART_STATUS", "PRO009");
-                    } else if (popLocation == "POP150") {
+                    } else if ("POP150".equals(popLocation)) {
                         // 후가공 스캔시 후가공 입고
                         controlPartInfo.put("PART_STATUS", "PRO012");
-                    } else if (popLocation == "POP160") {
+                    } else if ("POP160".equals(popLocation)) {
                         // 표면 처리 스캔시 표면처리 입고
                         controlPartInfo.put("PART_STATUS", "PRO014");
                     }
