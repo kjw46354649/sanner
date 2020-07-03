@@ -125,7 +125,7 @@
                 <span class="gubun"></span>
                 <span class="refresh mg-left10"><button type="button" id="MCT_TARGET_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
                 <span class="gubun"></span>
-                <button type="button" class="defaultBtn btn-100w green" id="">저장</button>
+                <button type="button" class="defaultBtn btn-100w green" id="MCT_TARGET_SAVE">저장</button>
             </div>
         </form>
             <div class="conWrap">
@@ -145,7 +145,6 @@
             'url': '/json-list',
             'data': {'queryId': 'machine.selectNCMachineList'}
         });
-        console.log(NC_MACHINE);
         let selectedGrid = '';
         let selectedRowIndex = '';
         const insertQueryList = ['machine.insertMctPlan'];
@@ -323,19 +322,6 @@
                         changeTitleColor(null, tableElement);
                         showTitle(null, tableElement);
                     }
-
-                    // data.list[0].CONTROL_NUM
-                    // CONTROL_NUM: "B20-278AN0319-0331-38"
-                    // CONTROL_PART_QTY: 32
-                    // EQUIP_SEQ: 147
-                    // EQUIP_STATUS: "완료"
-                    // MATERIAL_DETAIL: "MAL020"
-                    // MATERIAL_DETAIL_NM: "AL60"
-                    // MCT_WORK_SEQ: 14
-                    // WORK_FINISH_DT: 1592981221000
-                    // WORK_START_DT: 1592901007000
-                    // WORK_USER_ID: "manager1"
-                    // WORK_USER_NM: "관리자 1"
                 }, parameters, '');
 
                 changeFooter(data, tableElement);
@@ -779,8 +765,6 @@
         };
 
         const gridChange = function (thisObject, ui) {
-            console.count();
-            console.log(ui);
             if(ui.source === 'addNodes') {
                 let $grid = $(thisObject.element.context);
                 let ROWNUM = $grid.pqGrid('option', 'dataModel.data').length;
@@ -788,10 +772,11 @@
                 ui.addList[0].newRow.EQUIP_SEQ = equipSeq;
                 ui.addList[0].newRow.ROWNUM = ROWNUM;
                 changeSortNum(thisObject, $grid);
+                modifyPQGrid($(thisObject.element.context), insertQueryList, [], []);
             } else if (ui.source === 'edit' || ui.source === 'update') {
-                modifyPQGrid($(thisObject.element.context), insertQueryList, updateQueryList, deleteQueryList);
+                modifyPQGrid($(thisObject.element.context), [], updateQueryList, []);
             } else if (ui.source === 'delete' || ui.source === 'deleteNodes') {
-                modifyPQGrid($(thisObject.element.context), insertQueryList, updateQueryList, deleteQueryList);
+                modifyPQGrid($(thisObject.element.context), [], [], deleteQueryList);
                 changeSortNum(thisObject, $(thisObject.element.context));
             }
         };
@@ -843,6 +828,13 @@
         fnCommCodeDatasourceSelectBoxCreate($('#MCT_PROCESS_TARGET_FORM').find('#MCT_NO'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'machine.selectNCMachineList'}
+        });
+
+        $('#MCT_TARGET_SAVE').on('click', function () {
+            fnModifyPQGrid($processTargetGrid, [], ['machine.updateMctTarget']);
+            setTimeout(function () {
+                refreshMctPlanGrids();
+            }, 1000);
         });
 
         /*setInterval(function () {

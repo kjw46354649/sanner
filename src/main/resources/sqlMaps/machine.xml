@@ -238,6 +238,7 @@
         SELECT
             ROW_NUMBER () OVER(ORDER BY A.SORT_NUM) AS ROW_NUM,
             A.MCT_PLAN_SEQ,
+            E.EQUIP_SEQ,
             A.SORT_NUM,
             B.IMG_GFILE_SEQ,
             B.CONTROL_SEQ,
@@ -249,7 +250,7 @@
             B.MATERIAL_TYPE, <!-- 재질 -->
             SUBSTRING(SF_GET_CODE_NM(1035, B.MATERIAL_TYPE, 'EN'), 1, 2) AS MATERIAL_TYPE_NM_SUBSTR, <!-- 재질 -->
             B.SIZE_TXT, <!-- 규격 -->
-            CONCAT(A.WORKING_TIME, '\'') AS WORKING_TIME  <!-- 예상 시간(분) -->
+            A.WORKING_TIME <!-- 예상 시간(분) -->
         FROM TBL_MCT_PLAN A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
             INNER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
@@ -464,9 +465,10 @@
             jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS ORDER_QTY, <!-- 수량 -->
             A.SIZE_TXT AS STANDARD_SIZE, <!-- 규격 -->
             jmes.SF_GET_MATERIAL_SIZE_TXT(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MATERAIL_ORDER_SIZE, <!-- 소재 주문 규격 -->
-            B.NOTE AS CONTROL_NOTE, <!-- 주문 확정 비고 -->
+            B.NOTE AS CONTROL_NOTE, <!-- 비고 기록사항(주문 확정 비고) -->
+            A.MCT_NOTE, <!-- 가공계획 비고 -->
             jmes.SF_GET_MCT_WORK_TIME(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MCT_WORK_TIME, <!-- 작업 시간 (계획 + 실행) -->
-            A.WORK_TYPE, <!-- MCT 작업 구분 -->
+            A.MCT_WORK_TYPE, <!-- MCT 작업 구분 -->
             IFNULL(SF_GET_CODE_NM(1011, A.MCT_WORK_TYPE, 'KR'), SPACE(0)) AS MCT_WORK_TYPE_NM, <!-- MCT 작업 구분 이름 -->
             C.POP_PREV_POSITION, <!-- 이전 위치 -->
             (
