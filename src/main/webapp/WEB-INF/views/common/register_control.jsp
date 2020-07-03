@@ -486,9 +486,8 @@
 
                             fnPostAjax(function () {
                                 alert("<spring:message code='com.alert.default.save.success' />");
-                                $('#CONTROL_MANGE_POPUP').modal('hide');
-                                // $orderRegisterGrid.pqGrid('refreshDataAndView');
-                                $orderManagementGrid.pqGrid('refreshDataAndView');
+                                window.close();
+                                opener.$orderManagementGrid.pqGrid('refreshDataAndView');
                             }, parameters, '');
                         }
                     }
@@ -504,9 +503,8 @@
 
                             fnPostAjax(function () {
                                 alert("<spring:message code='com.alert.default.save.success' />");
-                                $('#CONTROL_MANGE_POPUP').modal('hide');
-                                // $orderRegisterGrid.pqGrid('refreshDataAndView');
-                                $orderManagementGrid.pqGrid('refreshDataAndView');
+                                window.close();
+                                opener.$orderManagementGrid.pqGrid('refreshDataAndView');
                             }, parameters, '');
                         }
                     }

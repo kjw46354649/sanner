@@ -267,15 +267,24 @@
             CONTROL_SEQ,
             CONTROL_DETAIL_SEQ,
             WORKING_TIME,
-            SORT_NUM
+            SORT_NUM,
+            INSERT_DT,
+            INSERT_ID
         ) VALUES(
-            NEXTVAL(SEQ_MCT_PLAN),
+            IFNULL(#{MCT_PLAN_SEQ}, NEXTVAL(SEQ_MCT_PLAN)),
             #{EQUIP_SEQ},
             #{CONTROL_SEQ},
             #{CONTROL_DETAIL_SEQ},
             #{WORKING_TIME},
-            #{SORT_NUM}
-        )
+            (SELECT IFNULL(MAX(SORT_NUM), 0) + 1 FROM TBL_MCT_PLAN AS A WHERE 1 = 1 AND EQUIP_SEQ = #{EQUIP_SEQ} AND DEL_YN = 'N'),
+            NOW(),
+            #{LOGIN_USER_ID}
+        ) ON DUPLICATE KEY
+            UPDATE
+                EQUIP_SEQ = #{EQUIP_SEQ},
+                WORKING_TIME = #{WORKING_TIME},
+                UPDATE_DT = NOW(),
+                UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
     <update id="updateMctPlan"  parameterType="java.util.HashMap" >
         UPDATE TBL_MCT_PLAN
@@ -433,6 +442,7 @@
             CASE WHEN B.EMERGENCY_YN = 'Y' THEN '긴' ELSE SPACE(0) END AS EMERGENCY_YN, <!-- 긴급 -->
             CASE WHEN B.MAIN_INSPECTION = 'Y' THEN '주' ELSE SPACE(0) END AS MAIN_INSPECTION, <!-- 주요 검사품 -->
             CASE WHEN A.WORK_TYPE = 'WTP030' THEN '수' WHEN A.WORK_TYPE = 'WTP040' THEN '재' ELSE SPACE(0) END AS WORK_NM, <!-- 형태 -->
+            F.MCT_PLAN_SEQ,
             G.EQUIP_SEQ, <!-- 계획 장비 번호 -->
             G.EQUIP_NM AS MCT_PLAN_EQUIP_NM, <!-- 계획 장비 -->
             F.WORKING_TIME AS MCT_PLAN_WORKING_TIME, <!-- MCT 계획 시간 -->
@@ -545,15 +555,6 @@
         ORDER BY B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), A.INNER_DUE_DT
     </select>
 
-    <update id="updateMctTarget"  parameterType="java.util.HashMap" >
-        UPDATE TBL_CONTROL_PART
-        SET
-            MCT_NOTE = #{MCT_NOTE},
-            MCT_WORK_TYPE = #{MCT_WORK_TYPE}
-        WHERE
-            CONTROL_SEQ = #{CONTROL_SEQ}
-            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-    </update>
     <update id="updateMctPlanFromTarget"  parameterType="java.util.HashMap" >
         UPDATE TBL_MCT_PLAN
         SET

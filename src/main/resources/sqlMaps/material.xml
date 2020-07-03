@@ -399,6 +399,21 @@
             AND MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
     </update>
 
+    <insert id="insertItemOrderRegisterControlPartProgress" parameterType="java.util.HashMap" >
+        INSERT INTO TBL_CONTROL_PART_PROGRESS (
+        CONTROL_SEQ,
+        CONTROL_DETAIL_SEQ,
+        SEQ,
+        PART_STATUS,
+        STATUS_DT
+        )
+        SELECT CONTROL_SEQ, CONTROL_DETAIL_SEQ, NEXTVAL(SEQ_CONTROL_PART_PROGRESS), PART_STATUS, NOW()
+        FROM TBL_CONTROL_PART
+        WHERE 1=1
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </insert>
+
     <update id="insertUpdateItemOrderRegister" parameterType="java.util.HashMap">
         INSERT INTO TBL_MATERIAL_ORDER
         (
