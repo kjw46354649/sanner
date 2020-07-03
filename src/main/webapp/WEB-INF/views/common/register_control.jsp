@@ -641,23 +641,16 @@
                             if (index >= 0) surfaceTreat = surfaceTreatList[index].value;
                         }
 
-                        let tempObject = {
-                            rowIndx: rowIndx,
-                            newRow: {
-                                'PRICE_CONFIRM': priceConfirm,
-                                'COMP_CD': compCd,
-                                'ORDER_COMP_CD': orderCompCd,
-                                'ORDER_STAFF_SEQ': orderStaffSeq,
-                                'MAIN_INSPECTION': mainInspection,
-                                'WORK_TYPE': workType,
-                                'WORK_FACTORY': workFactory,
-                                'MATERIAL_DETAIL': materialDetail,
-                                'MATERIAL_KIND': materialKind,
-                                'SURFACE_TREAT': surfaceTreat
-                            }
-                        };
-                        rowListConvert.push(tempObject);
-                        // $orderRegisterGrid.pqGrid('updateRow', {rowList: rowListConvert});
+                        ui.addList[i].newRow.PRICE_CONFIRM = priceConfirm ;
+                        ui.addList[i].newRow.COMP_CD = compCd ;
+                        ui.addList[i].newRow.ORDER_COMP_CD = orderCompCd ;
+                        ui.addList[i].newRow.ORDER_STAFF_SEQ = orderStaffSeq ;
+                        ui.addList[i].newRow.MAIN_INSPECTION = mainInspection ;
+                        ui.addList[i].newRow.WORK_TYPE = workType ;
+                        ui.addList[i].newRow.WORK_FACTORY = workFactory ;
+                        ui.addList[i].newRow.MATERIAL_DETAIL = materialDetail ;
+                        ui.addList[i].newRow.MATERIAL_KIND = materialKind ;
+                        ui.addList[i].newRow.SURFACE_TREAT = surfaceTreat ;
                     }
 
                     for (let i = 0, updateLength = ui.updateList.length; i < updateLength; i++) {
