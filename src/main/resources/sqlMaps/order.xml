@@ -434,10 +434,10 @@
                                                                            AND AA.ORDER_COMP_CD = BB.ORDER_COMP_CD
                                    INNER JOIN TBL_MONTH_CLOSE CC ON BB.CLOSE_MONTH = CC.CLOSE_MONTH
                                                                     AND BB.CLOSE_VER = CC.CLOSE_VER
-                                    WHERE
+                                   WHERE
                                         AA.COMP_CD = #{COMP_CD}
+                                        AND AA.ORDER_COMP_CD = #{ORDER_COMP_CD}
                                         AND AA.CONTROL_SEQ IN (${CONTROL_SEQ})
-                                        AND CC.ORDER_COMP_CD = #{ORDER_COMP_CD}
                                         AND CC.CLOSE_MONTH = CONCAT(#{CONTROL_CLOSE_YEAR}, #{CONTROL_CLOSE_MONTH})
                                         AND CC.CLOSE_VER = #{CLOSE_VER})) Q
             GROUP BY
@@ -691,7 +691,7 @@
         </foreach>
     </insert>
 
-    <insert id="createControlPart" parameterType="java.util.HashMap" >
+    <!-- <insert id="createControlPart" parameterType="java.util.HashMap" >
         INSERT INTO TBL_CONTROL_PART (
             CONTROL_SEQ,
             CONTROL_DETAIL_SEQ,
@@ -724,9 +724,7 @@
             UNIT_FINAL_AMT,
             STATUS_DT
         ) VALUES (
-            (SELECT CONTROL_SEQ
-            FROM TBL_CONTROL
-            WHERE CONTROL_NUM = #{CONTROL_NUM}),
+            #{CONTROL_SEQ},
             NEXTVAL(SEQ_CONTROL_PART),
             #{PART_NUM},
             #{DRAWING_NUM},
@@ -737,7 +735,7 @@
             IFNULL(#{OUTSIDE_YN}, 'N'),
             #{WORK_FACTORY},
             IFNULL(#{MATERIAL_SUPPLY_YN}, 'N'),
-            REPLACE(#{INNER_DUE_DT}, '-', SPACE(0)),
+            REPLACE(#{INNER_DUE_DT}, '/', SPACE(0)),
             #{SIZE_TXT},
             SF_GET_SIZE_TXT('SIZE_TYPE', #{SIZE_TXT}),
             SF_GET_SIZE_TXT('SIZE_W', #{SIZE_TXT}),
@@ -757,6 +755,189 @@
             REPLACE(#{UNIT_FINAL_AMT}, ',', SPACE(0)),
             NOW()
         )
+    </insert> -->
+
+    <insert id="createControlPart" parameterType="java.util.HashMap" >
+        INSERT INTO TBL_CONTROL_PART (
+            CONTROL_SEQ,
+            CONTROL_DETAIL_SEQ,
+            PART_NUM,
+            DRAWING_NUM,
+            DRAWING_VER,
+            DRAWING_UP_DT,
+            PREV_DRAWING_NUM,
+            ITEM_NM,
+            WORK_TYPE,
+            OUTSIDE_YN,
+            WORK_FACTORY,
+            MATERIAL_SUPPLY_YN,
+            INNER_DUE_DT,
+            SIZE_TXT,
+            SIZE_TYPE,
+            SIZE_W,
+            SIZE_H,
+            SIZE_T,
+            SIZE_D,
+            SIZE_L,
+            SIZE_W_M,
+            SIZE_H_M,
+            SIZE_T_M,
+            SIZE_D_M,
+            SIZE_L_M,
+            MATERIAL_TYPE,
+            MATERIAL_DETAIL,
+            MATERIAL_KIND,
+            SURFACE_TREAT,
+            MATERIAL_NOTE,
+            PART_UNIT_QTY,
+            ORIGINAL_SIDE_QTY,
+            OTHER_SIDE_QTY,
+            DETAIL_LATHE,
+            DETAIL_SURFACE,
+            DETAIL_CLAMPING,
+            DETAIL_POCKET,
+            DETAIL_DRILL,
+            DETAIL_DIFFICULTY,
+            MATERIAL_FINISH_TM,
+            MATERIAL_FINISH_GRIND,
+            MATERIAL_FINISH_HEAT,
+            UNIT_MATERIAL_AMT,
+            UNIT_TM_AMT,
+            UNIT_GRIND_AMT,
+            UNIT_HEAT_AMT,
+            UNIT_SURFACE_AMT,
+            UNIT_PROCESS_AMT,
+            UNIT_ETC_AMT,
+            UNIT_MATERIAL_AUTO_YN,
+            UNIT_TM_AUTO_YN,
+            UNIT_GRIND_AUTO_YN,
+            UNIT_HEAT_AUTO_YN,
+            UNIT_SURFACE_AUTO_YN,
+            UNIT_PROCESS_AUTO_YN,
+            UNIT_AMT_NOTE,
+            UNIT_FINAL_EST_AMT,
+            UNIT_FINAL_AMT,
+            DWG_GFILE_SEQ,
+            DXF_GFILE_SEQ,
+            PDF_GFILE_SEQ,
+            IMG_GFILE_SEQ,
+            PART_STATUS,
+            STATUS_DT,
+            MCT_NOTE,
+            MCT_WORK_TYPE,
+            OUTSIDE_COMP_CD,
+            OUTSIDE_ORDER_NUM,
+            OUTSIDE_NOTE,
+            OUTSIDE_MATERIAL_SUPPLY_YN,
+            OUTSIDE_REQUEST_FINISH_YN,
+            OUTSIDE_REQUEST_PROCESS_YN,
+            OUTSIDE_REQUEST_GRIND_YN,
+            OUTSIDE_REQUEST_SURFACE_YN,
+            OUTSIDE_REQUEST_ETC,
+            OUTSIDE_HOPE_DUE_DT,
+            OUTSIDE_UNIT_AMT,
+            OUTSIDE_IN_DT,
+            OUTSIDE_STATUS,
+            OUTSIDE_STATUS_DT,
+            INSERT_ID
+        )
+        SELECT
+            #{CONTROL_SEQ},
+            NEXTVAL(SEQ_CONTROL_PART),
+            #{PART_NUM},
+            #{DRAWING_NUM},
+            #{DRAWING_VER},
+            #{DRAWING_UP_DT},
+            #{PREV_DRAWING_NUM},
+            #{ITEM_NM},
+            #{WORK_TYPE},
+            #{OUTSIDE_YN},
+            #{WORK_FACTORY},
+            #{MATERIAL_SUPPLY_YN},
+            REPLACE(#{INNER_DUE_DT}, '/', SPACE(0)),
+            #{SIZE_TXT},
+            SF_GET_SIZE_TXT('SIZE_TYPE', #{SIZE_TXT}),
+            SF_GET_SIZE_TXT('SIZE_W', #{SIZE_TXT}),
+            SF_GET_SIZE_TXT('SIZE_H', #{SIZE_TXT}),
+            SF_GET_SIZE_TXT('SIZE_T', #{SIZE_TXT}),
+            SF_GET_SIZE_TXT('SIZE_D', #{SIZE_TXT}),
+            SF_GET_SIZE_TXT('SIZE_L', #{SIZE_TXT}),
+            #{SIZE_W_M},
+            #{SIZE_H_M},
+            #{SIZE_T_M},
+            #{SIZE_D_M},
+            #{SIZE_L_M},
+            SF_GET_ETC_CD(1027, #{MATERIAL_DETAIL}), <!-- MATERIAL_TYPE -->
+            #{MATERIAL_DETAIL},
+            #{MATERIAL_KIND},
+            #{SURFACE_TREAT},
+            #{MATERIAL_NOTE},
+            #{PART_UNIT_QTY},
+            #{ORIGINAL_SIDE_QTY},
+            #{OTHER_SIDE_QTY},
+            #{DETAIL_LATHE},
+            #{DETAIL_SURFACE},
+            #{DETAIL_CLAMPING},
+            #{DETAIL_POCKET},
+            #{DETAIL_DRILL},
+            #{DETAIL_DIFFICULTY},
+            #{MATERIAL_FINISH_TM},
+            #{MATERIAL_FINISH_GRIND},
+            #{MATERIAL_FINISH_HEAT},
+            REPLACE(#{UNIT_MATERIAL_AMT}, ',', SPACE(0)),
+            REPLACE(#{UNIT_TM_AMT}, ',', SPACE(0)),
+            REPLACE(#{UNIT_GRIND_AMT}, ',', SPACE(0)),
+            REPLACE(#{UNIT_HEAT_AMT}, ',', SPACE(0)),
+            REPLACE(#{UNIT_SURFACE_AMT}, ',', SPACE(0)),
+            REPLACE(#{UNIT_PROCESS_AMT}, ',', SPACE(0)),
+            REPLACE(#{UNIT_ETC_AMT}, ',', SPACE(0)),
+            #{UNIT_MATERIAL_AUTO_YN},
+            #{UNIT_TM_AUTO_YN},
+            #{UNIT_GRIND_AUTO_YN},
+            #{UNIT_HEAT_AUTO_YN},
+            #{UNIT_SURFACE_AUTO_YN},
+            #{UNIT_PROCESS_AUTO_YN},
+            #{UNIT_AMT_NOTE},
+            REPLACE(#{UNIT_FINAL_EST_AMT}, ',', SPACE(0)),
+            REPLACE(#{UNIT_FINAL_AMT}, ',', SPACE(0)),
+            #{DWG_GFILE_SEQ},
+            #{DXF_GFILE_SEQ},
+            #{PDF_GFILE_SEQ},
+            #{IMG_GFILE_SEQ},
+            #{PART_STATUS},
+            NOW(),
+            #{MCT_NOTE},
+            #{MCT_WORK_TYPE},
+            #{OUTSIDE_COMP_CD},
+            #{OUTSIDE_ORDER_NUM},
+            #{OUTSIDE_NOTE},
+            #{OUTSIDE_MATERIAL_SUPPLY_YN},
+            #{OUTSIDE_REQUEST_FINISH_YN},
+            #{OUTSIDE_REQUEST_PROCESS_YN},
+            #{OUTSIDE_REQUEST_GRIND_YN},
+            #{OUTSIDE_REQUEST_SURFACE_YN},
+            #{OUTSIDE_REQUEST_ETC},
+            #{OUTSIDE_HOPE_DUE_DT},
+            #{OUTSIDE_UNIT_AMT},
+            #{OUTSIDE_IN_DT},
+            #{OUTSIDE_STATUS},
+            #{OUTSIDE_STATUS_DT},
+            #{LOGIN_USER_ID}
+        FROM DUAL
+        WHERE 1 = 1
+            AND NOT EXISTS (SELECT *
+                            FROM TBL_CONTROL_PART Z
+                            WHERE 1 = 1
+                                AND Z.CONTROL_SEQ = #{CONTROL_SEQ}
+                                AND Z.WORK_TYPE = #{WORK_TYPE}
+                                <choose>
+                                    <when test="PART_NUM != null and PART_NUM != ''">
+                                        AND Z.PART_NUM = #{PART_NUM})
+                                    </when>
+                                    <otherwise>
+                                        AND Z.PART_NUM IS NULL)
+                                    </otherwise>
+                                </choose>
     </insert>
 
     <insert id="createControlPartOrder" parameterType="java.util.HashMap" >
@@ -767,8 +948,8 @@
             ORDER_NUM,
             ORDER_QTY,
             ORDER_DUE_DT,
-            DELIVERY_DT
-            <!-- ,INSERT_ID -->
+            DELIVERY_DT,
+            INSERT_ID
         )
         SELECT
             #{CONTROL_SEQ},
@@ -776,9 +957,9 @@
             NEXTVAL(SEQ_CONTROL_PART_ORDER),
             #{ORDER_NUM},
             #{ORDER_QTY},
-            REPLACE(#{ORDER_DUE_DT}, '-', SPACE(0)),
-            REPLACE(#{DELIVERY_DT}, '-', SPACE(0))
-            <!-- ,NULL -->
+            REPLACE(#{ORDER_DUE_DT}, '/', SPACE(0)),
+            REPLACE(#{DELIVERY_DT}, '/', SPACE(0)),
+            #{LOGIN_USER_ID}
         FROM DUAL
         WHERE
             #{ORDER_QTY} IS NOT NULL
@@ -828,14 +1009,15 @@
             CONTROL_DETAIL_SEQ,
             SEQ,
             PART_STATUS,
-            STATUS_DT
-        <!-- ,INSERT_ID, -->
+            STATUS_DT,
+            INSERT_ID
         ) VALUES (
             #{CONTROL_SEQ},
             #{CONTROL_DETAIL_SEQ},
             NEXTVAL(SEQ_CONTROL_PART_PROGRESS),
             #{PART_STATUS},
-            NOW()
+            NOW(),
+            #{LOGIN_USER_ID}
         )
     </insert>
 
@@ -920,8 +1102,8 @@
         <if test="DESIGNER_NM != null and DESIGNER_NM != ''">
             DESIGNER_NM = #{DESIGNER_NM},
         </if>
-        <if test="NOTE != null and NOTE != ''">
-            NOTE = #{NOTE},
+        <if test="CONTROL_NOTE != null and CONTROL_NOTE != ''">
+            NOTE = #{CONTROL_NOTE},
         </if>
         <if test="PROJECT_NM != null and PROJECT_NM != ''">
             PROJECT_NM = UPPER(#{PROJECT_NM}),
@@ -988,7 +1170,7 @@
             MATERIAL_SUPPLY_YN = IFNULL(#{MATERIAL_SUPPLY_YN}, 'N'),
         </if>
         <if test="INNER_DUE_DT != null and INNER_DUE_DT != ''">
-            INNER_DUE_DT = DATE_FORMAT(REPLACE(#{INNER_DUE_DT}, '-', SPACE(0)), '%Y%m%d'),
+            INNER_DUE_DT = DATE_FORMAT(REPLACE(#{INNER_DUE_DT}, '/', SPACE(0)), '%Y%m%d'),
         </if>
         <if test="SIZE_TXT != null and SIZE_TXT != ''">
             SIZE_TXT = #{SIZE_TXT},
@@ -1008,6 +1190,9 @@
         </if>
         <if test="SURFACE_TREAT != null and SURFACE_TREAT != ''">
             SURFACE_TREAT = #{SURFACE_TREAT},
+        </if>
+        <if test="MATERIAL_NOTE != null and MATERIAL_NOTE != ''">
+            MATERIAL_NOTE = #{MATERIAL_NOTE},
         </if>
         <if test="MATERIAL_FINISH_HEAT != null and MATERIAL_FINISH_HEAT != ''">
             MATERIAL_FINISH_HEAT = #{MATERIAL_FINISH_HEAT},
@@ -1072,6 +1257,12 @@
         <if test="PART_STATUS != null and PART_STATUS != ''">
             PART_STATUS = #{PART_STATUS},
         </if>
+        <if test="MCT_NOTE != null and MCT_NOTE != ''">
+            MCT_NOTE = #{MCT_NOTE},
+        </if>
+        <if test="MCT_WORK_TYPE != null and MCT_WORK_TYPE != ''">
+            MCT_WORK_TYPE = #{MCT_WORK_TYPE},
+        </if>
         <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
             OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD},
         </if>
@@ -1100,7 +1291,7 @@
             OUTSIDE_REQUEST_ETC = #{OUTSIDE_REQUEST_ETC},
         </if>
         <if test="OUTSIDE_HOPE_DUE_DT != null and OUTSIDE_HOPE_DUE_DT != ''">
-            OUTSIDE_HOPE_DUE_DT = DATE_FORMAT(REPLACE(#{OUTSIDE_HOPE_DUE_DT}, '-', SPACE(0)), '%Y%m%d'),
+            OUTSIDE_HOPE_DUE_DT = DATE_FORMAT(REPLACE(#{OUTSIDE_HOPE_DUE_DT}, '/', SPACE(0)), '%Y%m%d'),
         </if>
         <if test="OUTSIDE_UNIT_AMT != null and OUTSIDE_UNIT_AMT != ''">
             OUTSIDE_UNIT_AMT = #{OUTSIDE_UNIT_AMT},
@@ -1124,8 +1315,8 @@
         SET
             ORDER_NUM = #{ORDER_NUM},
             ORDER_QTY = #{ORDER_QTY},
-            ORDER_DUE_DT = DATE_FORMAT(REPLACE(#{ORDER_DUE_DT}, '-', SPACE(0)), '%Y%m%d'),
-            DELIVERY_DT = DATE_FORMAT(REPLACE(#{DELIVERY_DT}, '-', SPACE(0)), '%Y%m%d'),
+            ORDER_DUE_DT = DATE_FORMAT(REPLACE(#{ORDER_DUE_DT}, '/', SPACE(0)), '%Y%m%d'),
+            DELIVERY_DT = DATE_FORMAT(REPLACE(#{DELIVERY_DT}, '/', SPACE(0)), '%Y%m%d'),
             UPDATE_DT = NOW()
             <!-- ,UPDATE_ID = NULL -->
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
@@ -1182,7 +1373,8 @@
         SET
             PART_STATUS = #{PART_STATUS},
             STATUS_DT = NOW(),
-            UPDATE_DT = NOW()
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
               AND CONTROL_DETAIL_SEQ  = #{CONTROL_DETAIL_SEQ}
     </update>
