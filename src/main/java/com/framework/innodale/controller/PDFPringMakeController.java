@@ -105,15 +105,11 @@ public class PDFPringMakeController {
         OutputStream out = response.getOutputStream();
 
         Document document = new Document();
-        document.setMargins(0,0,0,0);
+        document.setMargins(10,10,15,7);
 
         // 한글 처리를 위한 글꼴 설정 추가
         String fontPath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.font.path") + "/malgun/malgun.ttf";
         BaseFont bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-
-        PdfPTable table = new PdfPTable(12);
-        table.setWidthPercentage(100);
-        table.setWidths(new int[] {20, 2, 15, 15, 4, 10, 10, 10, 7, 4, 4, 6});
 
         Font headFont = new Font(bf, 8, Font.NORMAL);
         Font titleFont = new Font(bf, 6, Font.NORMAL);
@@ -129,9 +125,17 @@ public class PDFPringMakeController {
 
         int iCount = 0;
 
+        document.open();
+
         for(Map<String, Object> controlInfo : controlImageList) {
 
             if(iCount > 0) document.newPage();
+
+            PdfPTable table = new PdfPTable(12);
+            table.init();
+
+            table.setWidthPercentage(100);
+            table.setWidths(new int[] {20, 2, 15, 15, 4, 10, 10, 10, 7, 4, 4, 6});
 
             table.addCell(createCell("", 1, 2, headFont));
             table.addCell(createCell((String)controlInfo.get("CONTROL_VER"), 1, 1, headFont));
@@ -156,8 +160,9 @@ public class PDFPringMakeController {
             table.addCell(createCell((String)controlInfo.get("OTHER_SIDE_QTY"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("INNER_DUE_DT"), 1, 1, headFont));
 
-            document.open();
             document.add(table);
+
+            table.flushContent();
 
             BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String)controlInfo.get("BARCODE_NUM"));
             int width = bitMatrix.getWidth();
@@ -175,12 +180,10 @@ public class PDFPringMakeController {
             byte[] imageInByte = baos.toByteArray();
             baos.close();
             Image barcodeImage = Image.getInstance(imageInByte);
-            barcodeImage.setAbsolutePosition(-10, 807);
+            barcodeImage.setAbsolutePosition(0, 795);
             barcodeImage.scaleAbsolute(130, 30);
 
             document.add(barcodeImage);
-
-            System.out.println("test 1");
 
             if(controlInfo.get("IMAGE_PATH") != null && !"".equals(controlInfo.get("IMAGE_PATH"))) {
                 Image pngImage = Image.getInstance((String) controlInfo.get("IMAGE_PATH"));
