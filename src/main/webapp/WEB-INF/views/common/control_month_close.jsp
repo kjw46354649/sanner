@@ -130,7 +130,7 @@
             {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
             {title: '품수', dataType: 'string', dataIndx: 'CNT'},
             {title: '수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
-            {title: '공급가', width: 70, align: 'right', dataType: 'string', dataIndx: 'TOTAL_AMT'},
+            {title: '공급가', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
             {
                 title: '마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###',
                 dataIndx: 'FINAL_NEGO_AMT', editable: true,
