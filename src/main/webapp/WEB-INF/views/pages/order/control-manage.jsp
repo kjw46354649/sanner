@@ -600,8 +600,9 @@
                                 let newRowData = fnCloneObj(ui.rowData);
                                 let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
                                 let totalRecords = data.length;
-
                                 newRowData.ROW_NUM = totalRecords + 1;
+                                newRowData.ORDER_SEQ = null;
+
                                 $orderManagementGrid.pqGrid('addRow', {
                                     newRow: newRowData,
                                     rowIndx: ui.rowIndx + 1,
@@ -843,7 +844,7 @@
             colModel: colModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: postData, recIndx: 'ROW_NUM',
+                postData: {'queryId': 'dataSource.emptyGrid'}, recIndx: 'ROW_NUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -1832,15 +1833,11 @@
         });
 
         $orderManagementGrid = $('#' + gridId).pqGrid(obj);
+        $orderManagementGrid.pqGrid('option', 'dataModel.postData', function () {
+            return (fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM'));
+        });
+        $orderManagementGrid.pqGrid('refreshDataAndView');
         /* init */
-
-        $('.pop_close').on('click', function () {
-            $(this).parent('.layerPopup').parent('.popup_container').modal('hide');
-        });
-
-        $('#TRANSACTION_STATEMENT_POPUP_CLOSE_BUTTON').on('click', function () {
-            $('#TRANSACTION_STATEMENT_POPUP').modal('hide');
-        });
 
         $('#ESTIMATE_REGISTER_FROM_CONTROL').on('click', function (event) {
             if (noSelectedRowAlert()) {

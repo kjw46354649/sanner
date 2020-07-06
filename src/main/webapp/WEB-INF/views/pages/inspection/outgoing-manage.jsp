@@ -619,7 +619,17 @@
                                         // console.log("ui.rowData['OUT_FINISH_DT']",ui.rowData['OUT_FINISH_DT']);
                                         // console.log("ui.rowData['ORDER_SEQ']",ui.rowData['ORDER_SEQ']);
                                         // console.log("ui.rowData['ORDER_QTY']",ui.rowData['ORDER_QTY']);
-                                        if (ui.rowData['OUT_FINISH_DT'] != undefined){
+                                        if (ui.rowData['ORDER_SEQ'] != undefined){
+                                            if (ui.rowData['OUT_FINISH_DT'] != undefined){// 출고완료
+                                                outBtn = '<button type=\"button\" class=\"miniBtn gray\" style=\"color: #777 !important;\">출고</button>' + '&nbsp;';
+                                                returnBtn = '<button type=\"button\" class=\"miniBtn blue\" id=\"returnBtn\"  data-control_seq=\"'+ rowData.CONTROL_SEQ +'\" data-control_detail_seq=\"'+ rowData.CONTROL_DETAIL_SEQ +'\" data-order_seq=\"'+ rowData.ORDER_SEQ +'\">반품</button>' + '&nbsp;';
+                                            }else{
+                                                outBtn = '<button type=\"button\" class=\"miniBtn black\" id=\"outBtn\"  data-control_seq=\"'+ rowData.CONTROL_SEQ +'\" data-control_detail_seq=\"'+ rowData.CONTROL_DETAIL_SEQ +'\" data-order_seq=\"'+ rowData.ORDER_SEQ +'\">출고</button>' + '&nbsp;';
+                                                returnBtn = '<button type=\"button\" class=\"miniBtn gray\" style=\"color: #777 !important;\">반품</button>' + '&nbsp;';
+                                            }
+                                        }
+
+                                        /*if (ui.rowData['OUT_FINISH_DT'] != undefined){
                                             if (ui.rowData['ORDER_SEQ'] != undefined){
                                                 outBtn = '<button type=\"button\" class=\"miniBtn gray\">출고</button>' + '&nbsp;';
                                             }
@@ -636,7 +646,7 @@
                                             }else{
                                                 returnBtn = '<button type=\"button\" class=\"miniBtn gray\">반품</button>' + '&nbsp;';
                                             }
-                                        }
+                                        }*/
 
                                         if (ui.rowData['ORDER_SEQ'] != undefined){
                                             labelBtn = '<button type=\"button\" class=\"miniBtn orange\" id=\"labelBtn\"  data-control_seq=\"'+ rowData.CONTROL_SEQ +'\" data-control_detail_seq=\"'+ rowData.CONTROL_DETAIL_SEQ +'\" data-order_seq=\"'+ rowData.ORDER_SEQ +'\">라벨</button>';
@@ -834,8 +844,9 @@
             },
             change: function (event, ui) {
                 console.log(ui);
+                console.log(event);
                 if(ui.source == 'edit') {
-                    if (ui.dataIndx == 'PACKING_CNT') {
+
                         let row = ui.updateList[0].rowData;
                         let newRow = ui.updateList[0].newRow;
 
@@ -852,7 +863,7 @@
                             $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
                             $("#outgoing_manage_search_btn").trigger("click");
                         }, parameters, '');
-                    }
+
 
                     /*let data = {
                         'queryId': 'inspection.updateControlPartOrderPackingCnt',
@@ -946,7 +957,7 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 180, width: 180, editable: false},
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 140, width: 140, editable: false},
             {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
@@ -960,11 +971,11 @@
                     });
                 }
             },
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 180, width: 180, editable: false},
-            {title: '작업형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM', minWidth: 80, width: 80, editable: false},
-            {title: '소재', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 100, width: 100, editable: false},
-            {title: '후처리', dataType: 'string', dataIndx: 'SURFACE_TREAT_NM', minWidth: 80, width: 80, editable: false},
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 120, width: 120, editable: false},
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 140, width: 140, editable: false},
+            {title: '작업형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM', minWidth: 60, width: 60, editable: false},
+            {title: '소재', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 60, width: 60, editable: false},
+            {title: '후처리', dataType: 'string', dataIndx: 'SURFACE_TREAT_NM', minWidth: 60, width: 60, editable: false},
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 100, width: 100, editable: false},
             {title: '주문<br/>수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false},
             {title: '출고', dataType: 'string', dataIndx: 'OUT_QTY', minWidth: 40, width: 40, editable: false},
             {title: '출고일시', dataType: 'string', dataIndx: 'OUT_FINISH_DT', minWidth: 60, width: 60, editable: false},
@@ -1314,7 +1325,7 @@
         $('#outgoing_manage_mini_pop_save_btn').on('click', function () {
             // validation
 
-            if($("#outgoing_manage_pop_type_1_form").find("#NEW_OUT_QTY_VIEW").val() == 0){
+            if($("#outgoing_manage_pop_type_1_form").find("#NEW_OUT_QTY_VIEW").html() == 0){
                 alert("출고수량은 1개 이상이어야 합니다.");
                 return;
             }else{
@@ -1413,11 +1424,14 @@
                         }
                     }, parameter, '');
                 }
+                let bCodePrintLen = barcodeList.length;
+                if(bCodePrintLen >0) {
+                    if(confirm(bCodePrintLen + "건에 대해서 라벨을 출력합니다.\n진행하시겠습니까?")){
+                        fnBarcodePrint(function(data, callFunctionParam){
+                            alert(data.message);
+                        }, barcodeList, '');
+                    }
 
-                if(barcodeList.length >0) {
-                    fnBarcodePrint(function(data, callFunctionParam){
-                        alert(data.message);
-                    }, barcodeList, '');
                 }else{
                     alert("출력할 바코드가 존재 하지 않습니다.");
                 }

@@ -367,7 +367,6 @@
         let selectedRowIndex = [];
         let $outsideOrderManageGrid;
         const gridId = 'OUTSIDE_ORDER_MANAGE_GRID';
-        let postData = fnFormToJsonArrayData('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM');
         const colModel = [
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
@@ -581,8 +580,7 @@
             strNoRows: g_noData,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: postData,
-                recIndx: 'ROW_NUM',
+                postData: {'queryId': 'dataSource.emptyGrid'}, recIndx: 'ROW_NUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -1833,6 +1831,11 @@
         });
 
         $outsideOrderManageGrid = $('#' + gridId).pqGrid(obj);
+        $outsideOrderManageGrid.pqGrid('option', 'dataModel.postData', function () {
+            return (fnFormToJsonArrayData('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM'));
+        });
+        $outsideOrderManageGrid.pqGrid('refreshDataAndView');
+
 
         /* 견적 요청*/
         // CKEDITOR 부분
