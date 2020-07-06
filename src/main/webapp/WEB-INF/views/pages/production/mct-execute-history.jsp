@@ -273,13 +273,13 @@
 
         const tab1ColModel = [
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
-            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ'},
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ'},
-            {title: '납기', minWidth: 15, width: 40, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
-            {title: '출고', dataType: 'string', dataIndx: 'CNFRH'},
+            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+            {title: '가공<br>납기', minWidth: 15, width: 40, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
+            {title: '가공<br>완료', dataType: 'string', dataIndx: 'CNFRH'},
             {title: '긴<br>급', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN'},
-            {title: '주<br>요', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
-            {title: '형<br>태', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'WORK_NM'},
+            {title: '주요<br>검사', dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_NM'},
             {title: '', dataType: 'string', dataIndx: 'CONTROL_NUM_BUTTON', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
@@ -294,8 +294,8 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: '파<br>트', dataType: 'integer', dataIndx: 'CONTROL_PART_NUM'},
+            {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM', styleHead: {'color': 'red'}},
+            {title: '파<br>트', dataType: 'integer', dataIndx: 'CONTROL_PART_NUM', styleHead: {'color': 'red'}},
             {title: '', dataType: 'string', dataIndx: 'WhatIsThis'},
             {title: '소재종류<br>상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
             {title: '수량', dataType: 'integer', dataIndx: 'ORDER_QTY'},
@@ -303,7 +303,7 @@
             {title: '소재 Size', dataType: 'string', dataIndx: 'MATERAIL_ORDER_SIZE'},
             {
                 title: 'NC Actual', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, colModel: [
-                    {title: 'Seq.1', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_1', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                    {title: '1', datatype: 'integer', dataIndx: 'EQUIP_SEQ_1', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                         render: function (ui) {
                             let cellData = ui.cellData;
                             let status = ui.rowData.STATUS_1;
@@ -323,7 +323,7 @@
                             }
                         }
                     },
-                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_1', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+                    {title: 'R/T', minWidth: 20, datatype: 'string', dataIndx: 'WORKING_TIME_1', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                         render: function (ui) {
                             let cellData = ui.cellData;
                             let status = ui.rowData.STATUS_1;
@@ -346,7 +346,7 @@
                     },
                     {title: '', datatype: 'string', dataIndx: 'STATUS_1', hidden: true},
                     {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_1', hidden: true},
-                    {title: 'Seq.2', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_2', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                    {title: '2', datatype: 'integer', dataIndx: 'EQUIP_SEQ_2', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                         render: function (ui) {
                             let cellData = ui.cellData;
                             let status = ui.rowData.STATUS_2;
@@ -362,7 +362,7 @@
                             }
                         }
                     },
-                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_2', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+                    {title: 'R/T', minWidth: 20, datatype: 'string', dataIndx: 'WORKING_TIME_2', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                         render: function (ui) {
                             let cellData = ui.cellData;
                             let status = ui.rowData.STATUS_2;
@@ -377,7 +377,7 @@
                     },
                     {title: '', datatype: 'string', dataIndx: 'STATUS_2', hidden: true},
                     {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_2', hidden: true},
-                    {title: 'Seq.3', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_3', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                    {title: '3', datatype: 'integer', dataIndx: 'EQUIP_SEQ_3', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                         render: function (ui) {
                             let cellData = ui.cellData;
                             let status = ui.rowData.STATUS_3;
@@ -393,7 +393,7 @@
                             }
                         }
                     },
-                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_3', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+                    {title: 'R/T', minWidth: 20, datatype: 'string', dataIndx: 'WORKING_TIME_3', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                         render: function (ui) {
                             let cellData = ui.cellData;
                             let status = ui.rowData.STATUS_3;
@@ -408,7 +408,7 @@
                     },
                     {title: '', datatype: 'string', dataIndx: 'STATUS_3', hidden: true},
                     {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_3', hidden: true},
-                    {title: 'Seq.4', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_4', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                    {title: '4', datatype: 'integer', dataIndx: 'EQUIP_SEQ_4', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                         render: function (ui) {
                             let cellData = ui.cellData;
                             let status = ui.rowData.STATUS_4;
@@ -424,7 +424,7 @@
                             }
                         }
                     },
-                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_4', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                    {title: 'R/T', minWidth: 20, datatype: 'string', dataIndx: 'WORKING_TIME_4', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                         render: function (ui) {
                             let cellData = ui.cellData;
                             let status = ui.rowData.STATUS_4;
@@ -458,7 +458,7 @@
             {
                 title: 'CAM 작업 실적', align: 'center', colModel: [
                     {title: 'step', minWidth: 30, width: 35, datatype: 'integer', dataIndx: 'CAM_STEP'},
-                    {title: '가공위치', minWidth: 30, width: 50, datatype: 'string', dataIndx: 'WORK_DIRECTION'},
+                    {title: '위치', datatype: 'string', dataIndx: 'WORK_DIRECTION'},
                     {title: '작업내용', minWidth: 30, width: 80, datatype: 'string', dataIndx: 'WORK_DESC'},
                     {title: '작업자', minWidth: 30, width: 100, datatype: 'string', dataIndx: 'WORK_USER_ID'},
                     {title: '파일', minWidth: 30, width: 60, datatype: 'string', dataIndx: '',
@@ -486,8 +486,8 @@
                             });
                         }
                     },
-                    {title: '비고',  minWidth: 100, width: 150, datatype: 'string', dataIndx: 'NOTE'},
-                    {title: '업데이트', minWidth: 75, width: 75, datatype: 'string', dataIndx: 'CAM_FINISH_DT'}
+                    {title: '비고 및 공유사항',  minWidth: 100, width: 150, datatype: 'string', dataIndx: 'NOTE'},
+                    {title: 'Update', minWidth: 75, width: 75, datatype: 'string', dataIndx: 'CAM_FINISH_DT'}
                 ]
             },
             {title: '이전<br>위치', minWidth: 70, width: 70, dataType: 'string', dataIndx: 'POP_PREV_POSITION'},
@@ -642,7 +642,7 @@
                     backgroundColor = 'bg-green';
                     break;
                 case '완료':
-                    backgroundColor = 'bg-light_blue';
+                    backgroundColor = 'bg-skyblue';
                     break;
                 case '비가동상태':
                     backgroundColor = 'bg-yellow';

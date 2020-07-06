@@ -57,10 +57,22 @@
         </div>
     </div>
     <div class="bottomWrap">
-        <form id="MCT_PROCESS_TARGET_FORM" role="form">
-            <input type="hidden" name="queryId" id="queryId" value="machine.selectWorkPlanGridList">
-            <div class="hWrap" style="padding: 0px;">
-                <h2 style="height: 42px; line-height: 42px;">가공 대상 List</h2>
+        <div class="hWrap" style="padding: 0px;">
+            <div class="d-inline">
+                <input type="text" id="mctPlanManageFilterKeyword" placeholder="Enter your keyword">
+                <select id="mctPlanManageFilterColumn"></select>
+                <select id="mctPlanManageFilterCondition">
+                    <c:forEach var="code" items="${HighCode.H_1083}">
+                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                    </c:forEach>
+                </select>
+                <label for="mctPlanManageFrozen" class="label_50" style="font-size: 15px;">Fix</label>
+                <select id="mctPlanManageFrozen" name="mctPlanManageFrozen">
+                </select>
+            </div>
+            <h2 style="height: 42px; line-height: 42px;">가공 대상 List</h2>
+            <form id="MCT_PROCESS_TARGET_FORM" role="form">
+                <input type="hidden" name="queryId" id="queryId" value="machine.selectWorkPlanGridList">
                 <span class="slt_wrap mg-left20">
                     <label class="label_50" for="FACTORY_CLASSIFY">공장구분</label>
                     <select class="wd_70" name="FACTORY_CLASSIFY" id="FACTORY_CLASSIFY" title="공장구분">
@@ -126,13 +138,13 @@
                 <span class="refresh mg-left10"><button type="button" id="MCT_TARGET_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
                 <span class="gubun"></span>
                 <button type="button" class="defaultBtn btn-100w green" id="MCT_TARGET_SAVE">저장</button>
-            </div>
+        </div>
         </form>
-            <div class="conWrap">
-                <div class="tableWrap" style="background: #e1e1e1;">
-                    <div id="PROCESS_TARGET_GRID"></div>
-                </div>
+        <div class="conWrap">
+            <div class="tableWrap" style="background: #e1e1e1;">
+                <div id="PROCESS_TARGET_GRID"></div>
             </div>
+        </div>
     </div>
 </div>
 
@@ -174,7 +186,7 @@
             str += '    <input type="hidden" name="EQUIP_SEQ" id="EQUIP_SEQ" value="' + equipSeq + '">';
             str += '    <div class="table">';
             str += '        <div class="titleWrap">';
-            str += '            <span class="equipLabel" style="line-height: 27px;">' + equipNm +'<span id="NC' + order + '_WORK_USER_ID"></span></span>';
+            str += '            <span class="equipLabel">' + equipNm +'&nbsp;&nbsp;&nbsp;<span id="NC' + order + '_WORK_USER_ID"></span></span>';
             str += '            <p class="listTxt" style="display: none;">';
             str += '                <span id="NC' + order + '_CONTRO_NUM"></span>';
             str += '                <span id="NC' + order + '_MATERIAL_DETAIL"></span>';
@@ -283,7 +295,6 @@
             resizable: false,
             showHeader: false,
             showTitle: false,
-            rowHtHead: 15,
             numberCell: {title: 'No.'},
             selectionModel: {type: 'row', mode: 'single'},
             scrollModel: {autoFit: true},
@@ -372,7 +383,7 @@
             {title: '형<br>태', minWidth: 20, width: 20, dataType: 'string', dataIndx: 'WORK_NM'},
             {title: 'NC Plan', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 colModel: [
-                    {title: 'MCT_PLAN_SEQ', dataType: 'string', dataIndx: 'MCT_PLAN_SEQ', hidden: false},
+                    {title: 'MCT_PLAN_SEQ', dataType: 'string', dataIndx: 'MCT_PLAN_SEQ', hidden: true},
                     {title: 'NC No.', minWidth: 40, width: 60, datatype: 'string', dataIndx: 'EQUIP_SEQ', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: NC_MACHINE},
                         render: function (ui) {
@@ -400,14 +411,14 @@
             },
             {title: 'MCT Actual', align: 'center',
                 colModel: [
-                    {title: 'Seq.1', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_ID_1'},
-                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_1'},
-                    {title: 'Seq.2', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_ID_2'},
-                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_2'},
-                    {title: 'Seq.3', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_ID_3'},
-                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_3'},
-                    {title: 'Seq.4', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_ID_4'},
-                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_4'},
+                    {title: '1', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_ID_1'},
+                    {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_1'},
+                    {title: '2', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_ID_2'},
+                    {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_2'},
+                    {title: '3', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_ID_3'},
+                    {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_3'},
+                    {title: '4', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_ID_4'},
+                    {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_4'},
                 ]
             },
             {title: '총 가공<br>시간(분)', dataType: 'integer', align: 'right', dataIndx: 'MCT_WORK_TIME'},
@@ -533,7 +544,8 @@
             // scrollModel: {autoFit: true},
             editModel: {clicksToEdit: 1},
             trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false, render: mctPlanManageFilterRender},
+            filterModel: {mode: 'OR'},
             colModel: processTargetGridColModel,
             strNoRows: g_noData,
             dataModel: {
@@ -547,6 +559,21 @@
                 on: true,
                 diHelper: ['CONTROL_NUM'],
                 beforeDrop: function () {}
+            },
+            load: function (event, ui) {
+                let filterOpts = '<option value=\"\">All Fields</option>';
+                let frozenOts = '<option value="0">Selected</option>';
+                this.getColModel().forEach(function (column) {
+                    let hiddenYn = column.hidden === undefined ? true : false;
+                    if (hiddenYn && column.title) {
+                        filterOpts += '<option value="' + column.dataIndx + '">' + column.title + '</option>';
+                        frozenOts += '<option value="' + (column.leftPos + 1) + '">' + column.title + '</option>';
+                    }
+                });
+                $("#mctPlanManageFilterColumn").empty();
+                $("#mctPlanManageFilterColumn").html(filterOpts);
+                $("#mctPlanManageFrozen").empty();
+                $("#mctPlanManageFrozen").html(frozenOts);
             },
             // complete: function () {
             //     // this.flex();
@@ -563,6 +590,49 @@
         };
 
         /* function */
+        function mctPlanManageFilterRender(ui) {
+            let val = ui.column.formatVal === undefined ? '' : ui.column.formatVal,
+                filter = ui.column.filter,
+                crules = (filter || {}).crules;
+
+            if (val === '') {
+                val = ui.cellData === undefined ? '' : ui.cellData;
+            }
+
+            // console.log(ui);
+            if (filter && filter.on && crules && crules[0].value) {
+                let condition = $('#mctPlanManageFilterCondition :selected').val(),
+                    valUpper = val.toString().toUpperCase(),
+                    txt = $('#mctPlanManageFilterKeyword').val(),
+                    txtUpper = (txt === null) ? '' : txt.toString().toUpperCase(),
+                    indx = -1;
+
+                if (condition === 'end') {
+                    indx = valUpper.lastIndexOf(txtUpper);
+                    if (indx + txtUpper.length != valUpper.length) {
+                        indx = -1;
+                    }
+                } else if (condition === 'contain') {
+                    indx = valUpper.indexOf(txtUpper);
+                } else if (condition === 'begin') {
+                    indx = valUpper.indexOf(txtUpper);
+                    if (indx > 0) {
+                        indx = -1;
+                    }
+                }
+                if (indx >= 0) {
+                    let txt1 = val.toString().substring(0, indx);
+                    let txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                    let txt3 = val.toString().substring(indx + txtUpper.length);
+                    return txt1 + '<span style="background:yellow;color:#333;">' + txt2 + '</span>' + txt3;
+                } else {
+                    return val;
+                }
+            } else {
+                return val;
+            }
+        }
+
         const modifyPQGrid = function (grid, insertQueryList, updateQueryList, deleteQueryList) {
             let parameters;
             let gridInstance = grid.pqGrid('getInstance').grid;
@@ -687,7 +757,7 @@
                     break;
                 // 완료
                 case 'PRO008':
-                    backgroundColor = 'bg-light_blue';
+                    backgroundColor = 'bg-skyblue';
                     break;
                 // 비가동상태
                 case '비가동상태':
@@ -733,7 +803,7 @@
                     labelColorId = 'bg-green';
                     break;
                 case '완료':
-                    labelColorId = 'bg-light_blue';
+                    labelColorId = 'bg-skyblue';
                     break;
                 case '취소':
                     labelColorId = 'bg-yellow';
@@ -836,6 +906,14 @@
             setTimeout(function () {
                 refreshMctPlanGrids();
             }, 1000);
+        });
+
+        $('#mctPlanManageFilterKeyword').on('keyup', function(e){
+            fnFilterHandler($processTargetGrid, 'mctPlanManageFilterKeyword', 'mctPlanManageFilterCondition', 'mctPlanManageFilterColumn');
+        });
+
+        $('#mctPlanManageFrozen').on('change', function(e){
+            fnFrozenHandler($processTargetGrid, $(this).val());
         });
 
         /*setInterval(function () {

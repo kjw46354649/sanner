@@ -424,8 +424,8 @@ table.boardList .txtP{color: #7030a0;}
 .label_500{width:500px !important; padding:0px 10px !important; text-align: right; }
 
 /* background color*/
-.bg-light_blue {  background-color: #ccffff; }
-.bg-green {  background-color: #ffd966; }
+.bg-skyblue { background-color: skyblue; }
+.bg-green { background-color: #ffd966; }
 .bg-yellow { background-color: #ffff00; }
 .bg-orange { background-color: #ffc000; }
 
@@ -448,3 +448,18 @@ table.boardList .txtP{color: #7030a0;}
 .doubleFilesIcon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/ico_documents_files.png) no-repeat; background-size: 20px; }
 .textFileIcon { content: ''; text-align:center; width: 16px; height: 16px; position: absolute; top: 3px; display: block; background: url(../images/common/ico_text_file_.png) no-repeat; background-size: 16px; }
 .circleMinusIcon { content: ''; text-align:center; width: 16px; height: 16px; position: absolute; top: 3px; display: block; background: url(../images/common/minuscirclelinear.png) no-repeat; background-size: 16px; }
+
+.blink {
+  -webkit-animation: blink 1s linear infinite alternate;
+  animation: blink 1s linear infinite alternate;
+}
+
+@-webkit-keyframes blink {
+  0% { color: black; }
+  100% { color: red; font-weight: bold; }
+}
+
+@keyframes blink {
+  0% { color: black; }
+  100% { color: red; font-weight: bold; }
+}
