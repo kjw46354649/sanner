@@ -268,19 +268,18 @@
         let $camWorkHistoryGrid;
         const tab1GridId = 'CAM_WORK_HISTORY_GRID';
         let tab1PostData = fnFormToJsonArrayData('#CAM_WORK_HISTORY_GRID_SEARCH_FORM');
-
         tab1PostData.CLOSE_YEAR_LEFT = YEAR;
         tab1PostData.CLOSE_MONTH_LEFT = MONTH;
 
         const tab1ColModel = [
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
-            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ'},
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ'},
-            {title: '납기', minWidth: 15, width: 40, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
-            {title: '출고', dataType: 'string', dataIndx: 'CNFRH'},
+            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+            {title: '가공<br>납기', minWidth: 15, width: 40, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
+            {title: '가공<br>완료', dataType: 'string', dataIndx: 'CNFRH'},
             {title: '긴<br>급', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN'},
-            {title: '주<br>요', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
-            {title: '형<br>태', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'WORK_NM'},
+            {title: '주요<br>검사', dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_NM'},
             {title: '', dataType: 'string', dataIndx: 'CONTROL_NUM_BUTTON', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
@@ -295,8 +294,8 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: '파<br>트', dataType: 'integer', dataIndx: 'CONTROL_PART_NUM'},
+            {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM', styleHead: {'color': 'red'}},
+            {title: '파<br>트', dataType: 'integer', dataIndx: 'CONTROL_PART_NUM', styleHead: {'color': 'red'}},
             {title: '', dataType: 'string', dataIndx: 'WhatIsThis'},
             {title: '소재종류<br>상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL'},
             {title: '수량', dataType: 'integer', dataIndx: 'ORDER_QTY'},
@@ -331,7 +330,7 @@
             {
                 title: 'CAM 작업 실적', align: 'center', colModel: [
                     {title: 'step', minWidth: 30, width: 35, datatype: 'integer', dataIndx: 'CAM_STEP'},
-                    {title: '가공위치', minWidth: 30, width: 50, datatype: 'string', dataIndx: 'WORK_DIRECTION'},
+                    {title: '위치', datatype: 'string', dataIndx: 'WORK_DIRECTION'},
                     {title: '작업내용', minWidth: 30, width: 80, datatype: 'string', dataIndx: 'WORK_DESC'},
                     {title: '작업자', minWidth: 30, width: 100, datatype: 'string', dataIndx: 'WORK_USER_ID'},
                     {title: '파일', minWidth: 30, width: 60, datatype: 'string', dataIndx: '',
@@ -359,8 +358,8 @@
                             });
                         }
                     },
-                    {title: '비고',  minWidth: 100, width: 150, datatype: 'string', dataIndx: 'NOTE'},
-                    {title: '업데이트', minWidth: 75, width: 75, datatype: 'string', dataIndx: 'CAM_FINISH_DT'}
+                    {title: '비고 및 공유사항',  minWidth: 100, width: 150, datatype: 'string', dataIndx: 'NOTE'},
+                    {title: 'Update', minWidth: 75, width: 75, datatype: 'string', dataIndx: 'CAM_FINISH_DT'}
                 ]
             },
             {title: '이전<br>위치', minWidth: 70, width: 70, dataType: 'string', dataIndx: 'POP_PREV_POSITION'},
@@ -515,7 +514,7 @@
                     backgroundColor = 'bg-green';
                     break;
                 case '완료':
-                    backgroundColor = 'bg-light_blue';
+                    backgroundColor = 'bg-skyblue';
                     break;
                 case '비가동상태':
                     backgroundColor = 'bg-yellow';
@@ -674,9 +673,9 @@
         $('#MCT_EXECUTE_HISTORY_TAB').tabs({
             activate: function (event, ui) {
                 ui.newPanel.find('.pq-grid').pqGrid('refresh');
-                $(".mct_execute_history").find(".topWrap").toggle(); // show -> hide , hide -> show
-                $(".mct_execute_history").find("#CAM_WORK_HISTORY_BOX").toggle();
-                $(".mct_execute_history").find("#NC_PERFORMANCE_HISTORY_BOX").toggle();
+                $('.topWrap').toggle(); // show -> hide , hide -> show
+                $("#CAM_WORK_HISTORY_BOX").toggle();
+                $("#NC_PERFORMANCE_HISTORY_BOX").toggle();
 
                 // $('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM').toggle(); // show -> hide , hide -> show
                 // $('#MONTH_OUTSIDE_STATUS_SEARCH_FORM').toggle(); // show -> hide , hide -> show

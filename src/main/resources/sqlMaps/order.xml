@@ -252,7 +252,7 @@
             <!-- 주문 상태 -->
             <when test="CONTROL_SEARCH_CONDITION == 'OCM00'">
                 AND DATE_FORMAT(A.STATUS_DT, '%Y/%m/%d') BETWEEN STR_TO_DATE(#{CONTROL_MANAGE_START_DATE}, '%Y/%m/%d') AND <choose>
-                                                                                                                            <when test="CONTROL_MANAGE_RANGE_SEARCH != null and CONTROL_MANAGE_RANGE_SEARCH != ''">
+                                                                                                                            <when test="CHECK_BOX != null and CHECK_BOX != ''">
                                                                                                                                 STR_TO_DATE(#{CONTROL_MANAGE_END_DATE}, '%Y/%m/%d')
                                                                                                                             </when>
                                                                                                                             <otherwise>
@@ -263,7 +263,7 @@
             <!-- 납기 -->
             <when test="CONTROL_SEARCH_CONDITION == 'OCM01'">
                 AND DATE_FORMAT(C.ORDER_DUE_DT, '%Y/%m/%d') BETWEEN STR_TO_DATE(#{CONTROL_MANAGE_START_DATE}, '%Y/%m/%d') AND <choose>
-                                                                                                                                <when test="CONTROL_MANAGE_RANGE_SEARCH != null and CONTROL_MANAGE_RANGE_SEARCH != ''">
+                                                                                                                                <when test="CHECK_BOX != null and CHECK_BOX != ''">
                                                                                                                                     STR_TO_DATE(#{CONTROL_MANAGE_END_DATE}, '%Y/%m/%d')
                                                                                                                                 </when>
                                                                                                                                 <otherwise>
@@ -274,7 +274,7 @@
             <!-- 가공 납기 -->
             <when test="CONTROL_SEARCH_CONDITION == 'OCM02'">
                 AND DATE_FORMAT(B.INNER_DUE_DT, '%Y%m%d') BETWEEN STR_TO_DATE(#{CONTROL_MANAGE_START_DATE}, '%Y-%m-%d') AND <choose>
-                                                                                                                                <when test="CONTROL_MANAGE_RANGE_SEARCH != null and CONTROL_MANAGE_RANGE_SEARCH != ''">
+                                                                                                                                <when test="CHECK_BOX != null and CHECK_BOX != ''">
                                                                                                                                     STR_TO_DATE(#{CONTROL_MANAGE_END_DATE}, '%Y-%m-%d')
                                                                                                                                 </when>
                                                                                                                                 <otherwise>
@@ -285,7 +285,7 @@
             <!-- Update일시 -->
             <when test="CONTROL_SEARCH_CONDITION == 'OCM03'">
                 AND DATE_FORMAT(B.UPDATE_DT, '%Y/%m/%d') BETWEEN STR_TO_DATE(#{CONTROL_MANAGE_START_DATE}, '%Y/%m/%d') AND <choose>
-                                                                                                                                <when test="CONTROL_MANAGE_RANGE_SEARCH != null and CONTROL_MANAGE_RANGE_SEARCH != ''">
+                                                                                                                                <when test="CHECK_BOX != null and CHECK_BOX != ''">
                                                                                                                                     STR_TO_DATE(#{CONTROL_MANAGE_END_DATE}, '%Y/%m/%d')
                                                                                                                                 </when>
                                                                                                                                 <otherwise>
@@ -362,16 +362,16 @@
             DATE_FORMAT(STR_TO_DATE(X.CLOSE_MONTH, '%Y%m'), '%Y.%m월') AS CLOSE_MONTH_TRAN, <!-- 마감월 -->
             X.CLOSE_VER, <!-- 차수 -->
             CONCAT(X.CLOSE_VER, '차') AS CLOSE_VER_TRAN, <!-- 차수 -->
-            CONCAT(CAST(SUM(X.ORDER_QTY) AS CHAR), '건') AS ORDER_QTY, <!-- 건수 -->
-            SUM(X.TOTAL_AMT) AS TOTAL_AMT, <!-- 공급가 -->
-            SUM(X.FINAL_NEGO_AMT) AS FINAL_NEGO_AMT <!-- 마감 금액 -->
+            SUM(X.CONTROL_PART_QTY) AS CONTROL_PART_QTY, <!-- 수량 -->
+            FORMAT(SUM(X.TOTAL_AMT), 0) AS TOTAL_AMT, <!-- 공급가 -->
+            FORMAT(SUM(X.FINAL_NEGO_AMT), 0) AS FINAL_NEGO_AMT <!-- 마감 금액 -->
         FROM (
             SELECT
                 P.COMP_CD,
                 P.ORDER_COMP_CD,
                 P.CLOSE_MONTH,
                 P.CLOSE_VER,
-                SUM(P.ORDER_QTY) AS ORDER_QTY,
+                SUM(P.CONTROL_PART_QTY) AS CONTROL_PART_QTY,
                 SUM(P.TOTAL_AMT) AS TOTAL_AMT,
                 P.FINAL_NEGO_AMT
             FROM (
@@ -380,24 +380,23 @@
                     A.ORDER_COMP_CD,
                     D.CLOSE_MONTH,
                     D.CLOSE_VER,
-                    C.ORDER_QTY,
-                    B.UNIT_FINAL_AMT * C.ORDER_QTY AS TOTAL_AMT,
+                    SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY,
+                    B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT,
                     E.FINAL_NEGO_AMT
                 FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                 INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-                                                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                                                        AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                 INNER JOIN TBL_MONTH_CLOSE_DETAIL D ON A.CONTROL_SEQ = D.CONTROL_SEQ
                                                         AND A.COMP_CD = D.COMP_CD
                                                         AND A.ORDER_COMP_CD = D.ORDER_COMP_CD
+                                                        AND D.COMP_CD = #{COMP_CD}
+                                                        AND D.ORDER_COMP_CD = #{ORDER_COMP_CD}
+                                                        AND D.CLOSE_MONTH = CONCAT(#{CONTROL_CLOSE_YEAR}, #{CONTROL_CLOSE_MONTH})
                 INNER JOIN TBL_MONTH_CLOSE E ON D.CLOSE_MONTH = E.CLOSE_MONTH
                                                 AND D.CLOSE_VER = E.CLOSE_VER
                                                 AND D.COMP_CD = E.COMP_CD
-                                                AND D.ORDER_COMP_CD = E.ORDER_COMP_CD
-                WHERE
-                    A.COMP_CD = #{COMP_CD}
-                    AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-                    AND E.CLOSE_MONTH = CONCAT(#{CONTROL_CLOSE_YEAR}, #{CONTROL_CLOSE_MONTH})) AS P
+                                                AND D.ORDER_COMP_CD = E.ORDER_COMP_CD) AS P
             GROUP BY
                 P.COMP_CD,
                 P.ORDER_COMP_CD,
@@ -418,9 +417,9 @@
                     A.ORDER_COMP_CD,
                     CONCAT(#{CONTROL_CLOSE_YEAR}, #{CONTROL_CLOSE_MONTH}) AS CLOSE_MONTH,
                     #{CLOSE_VER} AS CLOSE_VER,
-                    C.ORDER_QTY,
-                    B.UNIT_FINAL_AMT * C.ORDER_QTY AS TOTAL_AMT,
-                    B.UNIT_FINAL_AMT * C.ORDER_QTY AS FINAL_NEGO_AMT
+                    SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY,
+                    B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT,
+                    B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS FINAL_NEGO_AMT
                 FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                 INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = B.CONTROL_SEQ
@@ -2133,8 +2132,8 @@
             (DEPOSIT_SEQ, COMP_CD, ORDER_COMP_CD, DEPOSIT_DT,
              DEPOSIT_AMT, DEPOSIT_TYPE, DUE_DT, DUE_PAY_YN, DUE_PAY_AMT, NOTE, INSERT_ID)
         VALUES
-            (NEXTVAL(SEQ_MONEY_DEPOSIT), #{COMP_CD}, #{ORDER_COMP_CD}, REPLACE(#{DEPOSIT_DATE}, '-', SPACE(0)),
-             #{DEPOSIT_AMT}, #{DEPOSIT_TYPE}, REPLACE(#{DUE_DATE}, '-', SPACE(0)), IFNULL(#{DUE_PAY_YN}, 'N'), #{DUE_PAY_AMT}, #{NOTE}, 'system');
+            (NEXTVAL(SEQ_MONEY_DEPOSIT), #{COMP_CD}, #{ORDER_COMP_CD}, REPLACE(#{DEPOSIT_DATE}, '/', SPACE(0)),
+             #{DEPOSIT_AMT}, #{DEPOSIT_TYPE}, REPLACE(#{DUE_DATE}, '/', SPACE(0)), IFNULL(#{DUE_PAY_YN}, 'N'), #{DUE_PAY_AMT}, #{NOTE}, 'system');
     </insert>
 
     <update id="updateMoneyManageReceive" parameterType="java.util.HashMap">
@@ -2142,10 +2141,10 @@
             SET
                 COMP_CD = #{COMP_CD},
                 ORDER_COMP_CD = #{ORDER_COMP_CD},
-                DEPOSIT_DT = REPLACE(#{DEPOSIT_DATE}, '-', SPACE(0)),
+                DEPOSIT_DT = REPLACE(#{DEPOSIT_DATE}, '/', SPACE(0)),
                 DEPOSIT_AMT = #{DEPOSIT_AMT},
                 DEPOSIT_TYPE = #{DEPOSIT_TYPE},
-                DUE_DT = REPLACE(#{DUE_DATE}, '-', SPACE(0)),
+                DUE_DT = REPLACE(#{DUE_DATE}, '/', SPACE(0)),
                 DUE_PAY_YN = IFNULL(#{DUE_PAY_YN}, 'N'),
                 DUE_PAY_AMT = #{DUE_PAY_AMT},
                 NOTE = #{NOTE},
@@ -2308,7 +2307,7 @@
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_NUM IS NULL
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                 <if test="INNER_DUE_DT != null and INNER_DUE_DT != ''">
-                    AND C.ORDER_DUE_DT = REPLACE(#{INNER_DUE_DT}, '-', SPACE(0))
+                    AND C.ORDER_DUE_DT = REPLACE(#{INNER_DUE_DT}, '/', SPACE(0))
                 </if>
             LEFT OUTER JOIN TBL_POP D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
                AND D.POP_SEQ = (SELECT MAX(X.POP_SEQ) FROM TBL_POP X WHERE D.POP_SEQ = X.POP_SEQ)

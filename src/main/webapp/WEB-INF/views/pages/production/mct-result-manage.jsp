@@ -245,34 +245,43 @@
             }, parameters, '');
             return list;
         })();
+        const NC_MACHINE = fnCommCodeDatasourceGridSelectBoxCreate({
+            'url': '/json-list',
+            'data': {'queryId': 'machine.selectNCMachineList'}
+        });
         machineResultManagecolModel = [
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'CAM<br>진행', dataType: 'string', dataIndx: 'CAM_STATUS',
                 render: function (ui) {
-                    let grid = this;
-                    let $cell = grid.getCell(ui);
                     let rowData = ui.rowData;
+                    let cls, text;
+
                     switch (rowData.CAM_STATUS) {
                         case 'CWS030':  // 완료
-                            return '완료';
+                            cls = 'bg-skyblue';
+                            text = '완료';
                             break;
                         case 'CWS020':  // 진행중
-                            return '진행중';
+                            cls = 'bg-green blink';
+                            text = '진행중';
                             break;
-                        case 'CWS010':     // 대기
-                            return '대기';
+                        case 'CWS010':  // 대기
+                            cls = '';
+                            text = '대기';
                             break;
                     }
-                },
+
+                    return { cls: cls, text: text };
+                }
             },
             {title: 'CAM 작업 수행', minWidth: 100, width: 100, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'}, dataType: 'string', dataIndx: 'CAM_STATUS',
                 render: function (ui) {
                     let grid = this;
                     let $cell = grid.getCell(ui);
                     let rowData = ui.rowData;
-                    const startBtn = '<button type="button" class="miniBtn orange" id="CAM_WORK_START_ACTION">시작</button>';
+                    const startBtn = '<button type="button" class="miniBtn orange " id="CAM_WORK_START_ACTION">시작</button>';
                     const startDisableBtn = '<button type="button" class="miniBtn gray">시작</button>';
                     const finishBtn = '<button type="button" class="miniBtn blue" id="CAM_WORK_COMPLETE_ACTION">완료</button>';
                     const finishDisableBtn = '<button type="button" class="miniBtn gray" >완료</button>';
@@ -307,137 +316,178 @@
             {title: '긴<br>급', dataType: 'string', dataIndx: 'EMERGENCY_YN', minWidth: 15, width: 20},
             {title: '주<br>요', dataType: 'string', dataIndx: 'MAIN_INSPECTION', minWidth: 15, width: 20},
             {title: '형<br>태', dataType: 'string', dataIndx: 'WORK_NM', minWidth: 15, width: 20},
-            {
-                title: 'MCT Plan/Actual', align: 'center', colModel: [
-                    {title: 'Seq.1', datatype: 'string', dataIndx: 'EQUIP_SEQ_1', minWidth: 15, width: 40,
+            {title: 'NC Plan', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                colModel: [
+                    {title: 'MCT_PLAN_SEQ', dataType: 'string', dataIndx: 'MCT_PLAN_SEQ', hidden: true},
+                    {title: 'NC No.', minWidth: 40, width: 60, datatype: 'string', dataIndx: 'EQUIP_SEQ', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: NC_MACHINE},
                         render: function (ui) {
+                            console.log(ui.cellData);
                             let cellData = ui.cellData;
-                            let status = ui.rowData.STATUS_1;
-                            let backgroundColor = colorClassification(status);
 
-                            if (status) {
-                                $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                            }
-                            if (cellData) {
-                                let index = EQUIP_LIST.findIndex(function (element) {
-                                    return element.value === Number(cellData);
+                            if (cellData === '' || cellData === undefined) {
+                                return '';
+                            } else {
+                                let index = NC_MACHINE.findIndex(function (element) {
+                                    return element.text === Number(cellData);
                                 });
-                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
-                            }
-                        }
-                    },
-                    {title: 'W/T', datatype: 'string', dataIndx: 'WORKING_TIME_1', editable: true, minWidth: 15, width: 40,
-                        render: function (ui) {
-                            let status = ui.rowData.STATUS_1;
-                            let backgroundColor = colorClassification(status);
 
-                            if (status) {
-                                return $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                            }
-                            if (ui.cellData) {
-                                return ui.cellData + '분';
-                            }
-                        }
-                    },
-                    {title: '', datatype: 'string', dataIndx: 'STATUS_1', hidden: true},
-                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_1', hidden: true},
-                    {title: 'Seq.2', datatype: 'string', dataIndx: 'EQUIP_ID_2', minWidth: 15, width: 40,
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-                            let status = ui.rowData.STATUS_2;
-                            let backgroundColor = colorClassification(status);
+                                if (index < 0) {
+                                    index = NC_MACHINE.findIndex(function (element) {
+                                        return element.value === Number(cellData);
+                                    });
+                                }
 
-                            if (status) {
-                                $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                            }
-                            if (cellData) {
-                                let index = EQUIP_LIST.findIndex(function (element) {
-                                    return element.value === Number(cellData);
-                                });
-                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
+                                return (index < 0) ? cellData : NC_MACHINE[index].text;
                             }
                         }
                     },
-                    {title: 'W/T', datatype: 'string', dataIndx: 'WORKING_TIME_2', editable: true, minWidth: 15, width: 40,
-                        render: function (ui) {
-                            let status = ui.rowData.STATUS_2;
-                            let backgroundColor = colorClassification(status);
-
-                            if (status) {
-                                return $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                            }
-
-                            if (ui.cellData) {
-                                return ui.cellData + '분';
-                            }
-                        }
-                    },
-                    {title: '', datatype: 'string', dataIndx: 'STATUS_2', hidden: true},
-                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_2', hidden: true},
-                    {title: 'Seq.3', datatype: 'string', dataIndx: 'EQUIP_ID_3', minWidth: 15, width: 40,
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-                            let status = ui.rowData.STATUS_3;
-                            let backgroundColor = colorClassification(status);
-                            if (status) {
-                                $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                            }
-                            if (cellData) {
-                                let index = EQUIP_LIST.findIndex(function (element) {
-                                    return element.value === Number(cellData);
-                                });
-                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
-                            }
-                        }
-                    },
-                    {title: 'W/T', datatype: 'string', dataIndx: 'WORKING_TIME_3', editable: true, minWidth: 15, width: 40,
-                        render: function (ui) {
-                            let status = ui.rowData.STATUS_3;
-                            let backgroundColor = colorClassification(status);
-                            if (status) {
-                                return $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                            }
-                            if (ui.cellData) {
-                                return ui.cellData + '분';
-                            }
-                        }
-                    },
-                    {title: '', datatype: 'string', dataIndx: 'STATUS_3', hidden: true},
-                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_3', hidden: true},
-                    {title: 'Seq.4', datatype: 'string', dataIndx: 'EQUIP_ID_4', minWidth: 15, width: 40,
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-                            let status = ui.rowData.STATUS_4;
-                            let backgroundColor = colorClassification(status);
-                            if (status) {
-                                $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                            }
-                            if (cellData) {
-                                let index = EQUIP_LIST.findIndex(function (element) {
-                                    return element.value === Number(cellData);
-                                });
-                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
-                            }
-                        }
-                    },
-                    {title: 'W/T', datatype: 'string', dataIndx: 'WORKING_TIME_4', editable: true, minWidth: 15, width: 40,
-                        render: function (ui) {
-                            let status = ui.rowData.STATUS_4;
-                            let backgroundColor = colorClassification(status);
-
-                            if (status) {
-                                return $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                            }
-
-                            if (ui.cellData) {
-                                return ui.cellData + '분';
-                            }
-                        }
-                    },
-                    {title: '', datatype: 'string', dataIndx: 'STATUS_4', hidden: true},
-                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_4', hidden: true},
+                    {title: 'W/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'MCT_PLAN_WORKING_TIME', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
                 ]
             },
+            {title: 'MCT Actual', align: 'center',
+                colModel: [
+                    {title: '1', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_ID_1'},
+                    {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_1'},
+                    {title: '2', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_ID_2'},
+                    {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_2'},
+                    {title: '3', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_ID_3'},
+                    {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_3'},
+                    {title: '4', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_ID_4'},
+                    {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_4'},
+                ]
+            },
+            // {
+            //     title: 'MCT Actual', align: 'center', colModel: [
+            //         {title: 'Seq.1', datatype: 'string', dataIndx: 'EQUIP_SEQ_1', minWidth: 15, width: 40,
+            //             render: function (ui) {
+            //                 let cellData = ui.cellData;
+            //                 let status = ui.rowData.STATUS_1;
+            //                 let backgroundColor = colorClassification(status);
+            //
+            //                 if (status) {
+            //                     $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+            //                 }
+            //                 if (cellData) {
+            //                     let index = EQUIP_LIST.findIndex(function (element) {
+            //                         return element.value === Number(cellData);
+            //                     });
+            //                     return (index < 0) ? cellData : EQUIP_LIST[index].text;
+            //                 }
+            //             }
+            //         },
+            //         {title: 'W/T', datatype: 'string', dataIndx: 'WORKING_TIME_1', editable: true, minWidth: 15, width: 40,
+            //             render: function (ui) {
+            //                 let status = ui.rowData.STATUS_1;
+            //                 let backgroundColor = colorClassification(status);
+            //
+            //                 if (status) {
+            //                     return $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+            //                 }
+            //                 if (ui.cellData) {
+            //                     return ui.cellData + '분';
+            //                 }
+            //             }
+            //         },
+            //         {title: '', datatype: 'string', dataIndx: 'STATUS_1', hidden: true},
+            //         {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_1', hidden: true},
+            //         {title: 'Seq.2', datatype: 'string', dataIndx: 'EQUIP_ID_2', minWidth: 15, width: 40,
+            //             render: function (ui) {
+            //                 let cellData = ui.cellData;
+            //                 let status = ui.rowData.STATUS_2;
+            //                 let backgroundColor = colorClassification(status);
+            //
+            //                 if (status) {
+            //                     $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+            //                 }
+            //                 if (cellData) {
+            //                     let index = EQUIP_LIST.findIndex(function (element) {
+            //                         return element.value === Number(cellData);
+            //                     });
+            //                     return (index < 0) ? cellData : EQUIP_LIST[index].text;
+            //                 }
+            //             }
+            //         },
+            //         {title: 'W/T', datatype: 'string', dataIndx: 'WORKING_TIME_2', editable: true, minWidth: 15, width: 40,
+            //             render: function (ui) {
+            //                 let status = ui.rowData.STATUS_2;
+            //                 let backgroundColor = colorClassification(status);
+            //
+            //                 if (status) {
+            //                     return $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+            //                 }
+            //
+            //                 if (ui.cellData) {
+            //                     return ui.cellData + '분';
+            //                 }
+            //             }
+            //         },
+            //         {title: '', datatype: 'string', dataIndx: 'STATUS_2', hidden: true},
+            //         {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_2', hidden: true},
+            //         {title: 'Seq.3', datatype: 'string', dataIndx: 'EQUIP_ID_3', minWidth: 15, width: 40,
+            //             render: function (ui) {
+            //                 let cellData = ui.cellData;
+            //                 let status = ui.rowData.STATUS_3;
+            //                 let backgroundColor = colorClassification(status);
+            //                 if (status) {
+            //                     $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+            //                 }
+            //                 if (cellData) {
+            //                     let index = EQUIP_LIST.findIndex(function (element) {
+            //                         return element.value === Number(cellData);
+            //                     });
+            //                     return (index < 0) ? cellData : EQUIP_LIST[index].text;
+            //                 }
+            //             }
+            //         },
+            //         {title: 'W/T', datatype: 'string', dataIndx: 'WORKING_TIME_3', editable: true, minWidth: 15, width: 40,
+            //             render: function (ui) {
+            //                 let status = ui.rowData.STATUS_3;
+            //                 let backgroundColor = colorClassification(status);
+            //                 if (status) {
+            //                     return $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+            //                 }
+            //                 if (ui.cellData) {
+            //                     return ui.cellData + '분';
+            //                 }
+            //             }
+            //         },
+            //         {title: '', datatype: 'string', dataIndx: 'STATUS_3', hidden: true},
+            //         {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_3', hidden: true},
+            //         {title: 'Seq.4', datatype: 'string', dataIndx: 'EQUIP_ID_4', minWidth: 15, width: 40,
+            //             render: function (ui) {
+            //                 let cellData = ui.cellData;
+            //                 let status = ui.rowData.STATUS_4;
+            //                 let backgroundColor = colorClassification(status);
+            //                 if (status) {
+            //                     $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+            //                 }
+            //                 if (cellData) {
+            //                     let index = EQUIP_LIST.findIndex(function (element) {
+            //                         return element.value === Number(cellData);
+            //                     });
+            //                     return (index < 0) ? cellData : EQUIP_LIST[index].text;
+            //                 }
+            //             }
+            //         },
+            //         {title: 'W/T', datatype: 'string', dataIndx: 'WORKING_TIME_4', editable: true, minWidth: 15, width: 40,
+            //             render: function (ui) {
+            //                 let status = ui.rowData.STATUS_4;
+            //                 let backgroundColor = colorClassification(status);
+            //
+            //                 if (status) {
+            //                     return $mctResultManageGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
+            //                 }
+            //
+            //                 if (ui.cellData) {
+            //                     return ui.cellData + '분';
+            //                 }
+            //             }
+            //         },
+            //         {title: '', datatype: 'string', dataIndx: 'STATUS_4', hidden: true},
+            //         {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_4', hidden: true},
+            //     ]
+            // },
             {title: '현재위치', dataType: 'string', dataIndx: 'POP_POSITION', minWidth: 20, width: 80},
             {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', minWidth: 20, width: 80},
             {
@@ -706,7 +756,7 @@
                     backgroundColor = 'bg-green';
                     break;
                 case '완료':
-                    backgroundColor = 'bg-light_blue';
+                    backgroundColor = 'bg-skyblue';
                     break;
                 case '비가동상태':
                     backgroundColor = 'bg-yellow';

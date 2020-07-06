@@ -76,23 +76,14 @@
                         </span>
                     </li>
                     <li>
-                        <span class="slt_wrap trans_slt mg-right10">
-                            <select name="CONTROL_SEARCH_CONDITION" id="CONTROL_SEARCH_CONDITION">
+                        <span class="slt_wrap trans_slt" style="width: 120px;">
+                            <select name="CONTROL_SEARCH_CONDITION" id="CONTROL_SEARCH_CONDITION" style="width: inherit; text-align-last: center;">
                                 <c:forEach var="code" items="${HighCode.H_1047}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
                         </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_1" value="today" checked><label for="fr_1001_1">오늘</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_2" value="current_month"><label for="fr_1001_2">현재월</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_3" value="three_months"><label for="fr_1001_3">3개월</label>
-                        </span>
-                        <div class="calendar_wrap">
+                        <div class="calendar_wrap" style="width:542px; padding-left: 0">
                             <span class="calendar_span">
                                 <input type="text" title="달력정보" name="CONTROL_MANAGE_START_DATE" id="CONTROL_MANAGE_START_DATE"><button type="button">달력선택</button>
                             </span>
@@ -100,8 +91,9 @@
                             <span class="calendar_span">
                                 <input type="text" title="달력정보" name="CONTROL_MANAGE_END_DATE" id="CONTROL_MANAGE_END_DATE" readonly><button type="button">달력선택</button>
                             </span>
-                            <span class="chk_box"><input name="CONTROL_MANAGE_RANGE_SEARCH" id="CONTROL_MANAGE_RANGE_SEARCH" type="checkbox"><label for="CONTROL_MANAGE_RANGE_SEARCH">선택</label></span>
+                            <span class="chk_box" style="margin-left: 10px;"><input name="CHECK_BOX" id="CHECK_BOX" type="checkbox"><label for="CHECK_BOX">선택</label></span>
                         </div>
+                        <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="UNIT_FINAL_AMT">단가</label>
                             <select class="label_200" name="UNIT_FINAL_AMT" id="UNIT_FINAL_AMT" title="단가">
@@ -992,11 +984,6 @@
         /* variable */
 
         /* function */
-        const changeDate = function (newDate = new Date(), today = new Date()) {
-            $('#CONTROL_MANAGE_START_DATE').val(newDate.yyyymmdd());
-            $('#CONTROL_MANAGE_END_DATE').val(today.yyyymmdd());
-        };
-
         const getOrderStatusButton = function (event) {
             let controlStatus = event.target.dataset.control_status;
 
@@ -1198,44 +1185,6 @@
                 topMenuOpen();
                 $(this).addClass('on');
             }
-        });
-
-        /**
-         * @description 날짜 라디오 변경
-         */
-        $('#CONTROL_MANAGE_SEARCH_FORM').find('[name=CONTROL_MANAGE_TERM]').change(function () {
-            let value = $(this).val(), today = new Date(), newDate = new Date();
-
-            switch (value) {
-                case 'today':
-                    changeDate(newDate, today);
-                    break;
-                case 'current_month':
-                    newDate.setDate(1);
-
-                    changeDate(newDate, today);
-                    break;
-                case 'three_months':
-                    newDate.setMonth(newDate.getMonth() - 3);
-
-                    changeDate(newDate, today);
-                    break;
-            }
-
-            $('#CONTROL_MANAGE_DATEPICKER_READ_ONLY').prop('checked', true);
-            createOrDestroyDatepicker();
-        });
-        let createOrDestroyDatepicker = function () {
-            let checked = $('#CONTROL_MANAGE_DATEPICKER_READ_ONLY').prop('checked');
-            if (checked) $('[id^=CONTROL_MANAGE][id$=DATE]').datepicker('destroy');
-            else $('[id^=CONTROL_MANAGE][id$=DATE]').datepicker({dateFormat: 'yy/mm/dd'});
-        };
-
-        /**
-         * @description 날짜 라디오 변경
-         */
-        $('#CONTROL_MANAGE_DATEPICKER_READ_ONLY').on('change', function () {
-            createOrDestroyDatepicker();
         });
 
         $('#CONTROL_MANAGE_SAVE').on('click', function () {
@@ -1728,15 +1677,41 @@
         // 라벨 출력
         $('#LABEL_PRINT').on('click', function () {
             if (noSelectedRowAlert()) return false;
-            let formData = [];
 
-            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-                formData.push(rowData.LABEL_BARCODE_NUM);
-            }
-            fnBarcodePrint(function(data, callFunctionParam){
-                alert(data.message);
-            }, formData, '');
+            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
+            let selectedRowCount = selectedOrderManagementRowIndex.length;
+            bodyHtml =
+                '<h4>\n' +
+                '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                '    <span>선택하신 ' + selectedRowCount + '건을 ' + controlStatusNm + '처리합니다. \n진행하시겠습니까?</span>\n' +
+                '</h4>';
+            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+            let labelPrintConfirm = function (callback) {
+                commonConfirmPopup.show();
+                $("#commonConfirmYesBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                    callback(true);
+                    return;
+                });
+                $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                });
+            };
+            labelPrintConfirm(function (confirm) {
+                if (confirm) {
+                    let formData = [];
+
+                    for (let i = 0; i < selectedRowCount; i++) {
+                        let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+                        formData.push(rowData.LABEL_BARCODE_NUM);
+                    }
+                    fnBarcodePrint(function(data, callFunctionParam){
+                        alert(data.message);
+                    }, formData, '');
+                }
+            });
         });
         /** 도면 등록 팝업 호출 **/
         $('#DRAWING_REGISTRATION').on('click', function () {
