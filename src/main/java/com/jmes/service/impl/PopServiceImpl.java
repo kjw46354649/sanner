@@ -103,7 +103,7 @@ public class PopServiceImpl implements PopService {
                 }
 
                 // 외주 가공 요청 이후에 POP 스캔시에 외주 입고 처리
-                if (createPro019 != null && "PRO018".equals(createPro019)) {
+                if (createPro019 != null && "PRO019".equals(createPro019)) {
                     // PART 소재 입고 처리
                     controlPartInfo.put("PART_STATUS", createPro019);
                     controlPartInfo.put("queryId", "popMapper.insertControlPartProgressStatus");

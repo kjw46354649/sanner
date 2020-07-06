@@ -105,7 +105,7 @@ public class PDFPringMakeController {
         OutputStream out = response.getOutputStream();
 
         Document document = new Document();
-        document.setMargins(10,10,15,7);
+        document.setMargins(13,13,15,7);
 
         // 한글 처리를 위한 글꼴 설정 추가
         String fontPath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.font.path") + "/malgun/malgun.ttf";
@@ -180,7 +180,7 @@ public class PDFPringMakeController {
             byte[] imageInByte = baos.toByteArray();
             baos.close();
             Image barcodeImage = Image.getInstance(imageInByte);
-            barcodeImage.setAbsolutePosition(0, 795);
+            barcodeImage.setAbsolutePosition(0, 792);
             barcodeImage.scaleAbsolute(130, 30);
 
             document.add(barcodeImage);
