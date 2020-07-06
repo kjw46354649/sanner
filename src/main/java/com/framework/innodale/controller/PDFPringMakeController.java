@@ -3,7 +3,6 @@ package com.framework.innodale.controller;
 import com.framework.innodale.component.CommonUtility;
 import com.framework.innodale.component.CreateBarcodeStream;
 import com.framework.innodale.service.InnodaleService;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
@@ -105,7 +104,7 @@ public class PDFPringMakeController {
         OutputStream out = response.getOutputStream();
 
         Document document = new Document();
-        document.setMargins(13,13,15,7);
+        document.setMargins(15,15,15,15);
 
         // 한글 처리를 위한 글꼴 설정 추가
         String fontPath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.font.path") + "/malgun/malgun.ttf";
@@ -137,7 +136,26 @@ public class PDFPringMakeController {
             table.setWidthPercentage(100);
             table.setWidths(new int[] {20, 2, 15, 15, 4, 10, 10, 10, 7, 4, 4, 6});
 
-            table.addCell(createCell("", 1, 2, headFont));
+            BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String)controlInfo.get("BARCODE_NUM"), 110, 35);
+            int width = bitMatrix.getWidth();
+            int height = bitMatrix.getHeight();
+            // Converting BitMatrix to Buffered Image
+            BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    image.setRGB(x, y, bitMatrix.get(x, y) ? BLACK : WHITE);
+                }
+            }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", baos);
+            baos.flush();
+            byte[] imageInByte = baos.toByteArray();
+            baos.close();
+            Image barcodeImage = Image.getInstance(imageInByte);
+            //barcodeImage.setAbsolutePosition(2, 700);
+            //barcodeImage.scaleAbsolute(120, 70);
+            //document.add(barcodeImage);
+            table.addCell(createImageCell(barcodeImage, 1, 2, headFont));
             table.addCell(createCell((String)controlInfo.get("CONTROL_VER"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("ORDER_COMP_NM"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("SIZE_TXT"), 1, 1, headFont));
@@ -164,30 +182,9 @@ public class PDFPringMakeController {
 
             table.flushContent();
 
-            BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String)controlInfo.get("BARCODE_NUM"));
-            int width = bitMatrix.getWidth();
-            int height = bitMatrix.getHeight();
-            // Converting BitMatrix to Buffered Image
-            BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
-                    image.setRGB(x, y, bitMatrix.get(x, y) ? BLACK : WHITE);
-                }
-            }
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(image, "png", baos);
-            baos.flush();
-            byte[] imageInByte = baos.toByteArray();
-            baos.close();
-            Image barcodeImage = Image.getInstance(imageInByte);
-            barcodeImage.setAbsolutePosition(0, 792);
-            barcodeImage.scaleAbsolute(130, 30);
-
-            document.add(barcodeImage);
-
             if(controlInfo.get("IMAGE_PATH") != null && !"".equals(controlInfo.get("IMAGE_PATH"))) {
                 Image pngImage = Image.getInstance((String) controlInfo.get("IMAGE_PATH"));
-                pngImage.setAbsolutePosition(0, 0);
+                pngImage.setAbsolutePosition(0, 17);
                 pngImage.scaleAbsolute(PageSize.A4.getWidth(), PageSize.A4.getHeight() - 50);
 
                 document.add(pngImage);
@@ -207,6 +204,17 @@ public class PDFPringMakeController {
     	cell.setRowspan(rowspan);
     	cell.setFixedHeight(20f);
     	return cell;
+    }
+
+    private static PdfPCell createImageCell(Image image, int colspan, int rowspan, Font font) {
+        PdfPCell cell = new PdfPCell(image, true);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setColspan(colspan);
+        cell.setRowspan(rowspan);
+        cell.setFixedHeight(40f);
+        cell.setPadding(0);
+        return cell;
     }
 
 }

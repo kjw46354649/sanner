@@ -26,7 +26,7 @@ public class FileDownloadView extends AbstractView {
         java.io.File file = new java.io.File((String)fileInfo.get("FILE_PATH"));
 
         res.setContentType(getContentType());
-        res.setContentLength(100);
+//        res.setContentLength(100);
 
         String userAgent = req.getHeader("User-Agent");
         String fileName = null;

@@ -202,6 +202,9 @@
             WORK_FINISH_DT = NOW(),
             WORK_TEMP_STOP_DT = NULL,
             WORK_STATUS = #{WORK_STATUS},
+            FINISH_QTY = #{FINISH_QTY},
+            ERROR_QTY = #{ERROR_QTY},
+            ERROR_REASON = #{ERROR_REASON},
             UPDATE_DT = NOW(),
             UPDATE_ID = #{userInfo.USER_ID}
         WHERE 1 = 1

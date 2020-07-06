@@ -40,9 +40,9 @@ public class CreateBarcodeStream {
      * @return
      * @throws Exception
      */
-    public static BitMatrix generateCode128BarcodeImage(String barcodeText) throws Exception {
+    public static BitMatrix generateCode128BarcodeImage(String barcodeText, int iWidth, int iHeight) throws Exception {
         Code128Writer barcodeWriter = new Code128Writer();
-        BitMatrix bitMatrix = barcodeWriter.encode(barcodeText, BarcodeFormat.CODE_128, 300, 50);
+        BitMatrix bitMatrix = barcodeWriter.encode(barcodeText, BarcodeFormat.CODE_128, iWidth, iHeight);
 
         return bitMatrix;
     }

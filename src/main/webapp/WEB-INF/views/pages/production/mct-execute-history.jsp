@@ -12,7 +12,7 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<div class="page estimate">
+<div class="page estimate mct_execute_history">
     <div class="topWrap">
         <form class="form-inline" id="CAM_WORK_HISTORY_GRID_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="machine.selectCamWorkHistoryList">
@@ -268,6 +268,7 @@
         let $camWorkHistoryGrid;
         const tab1GridId = 'CAM_WORK_HISTORY_GRID';
         let tab1PostData = fnFormToJsonArrayData('#CAM_WORK_HISTORY_GRID_SEARCH_FORM');
+
         tab1PostData.CLOSE_YEAR_LEFT = YEAR;
         tab1PostData.CLOSE_MONTH_LEFT = MONTH;
 
@@ -302,143 +303,15 @@
             {title: '규격', dataType: 'string', dataIndx: 'STANDARD_SIZE'},
             {title: '소재 Size', dataType: 'string', dataIndx: 'MATERAIL_ORDER_SIZE'},
             {
-                title: 'NC Actual', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, colModel: [
-                    {title: 'Seq.1', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_1', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-                            let status = ui.rowData.STATUS_1;
-                            let backgroundColor = colorClassification(status);
-
-                            // if (status) {
-                            //     $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                            // }
-
-                            if (cellData) {
-                                $processTargetGrid.pqGrid('addClass', { rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-
-                                let index = EQUIP_LIST.findIndex(function (element) {
-                                    return element.value === Number(cellData);
-                                });
-                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
-                            }
-                        }
-                    },
-                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_1', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-                            let status = ui.rowData.STATUS_1;
-                            let backgroundColor = colorClassification(status);
-
-                            /*if (status) {
-                                return $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-                            }*/
-
-                            if (cellData) {
-                                $processTargetGrid.pqGrid('addClass', {
-                                    rowIndx: ui.rowIndx,
-                                    dataIndx: ui.dataIndx,
-                                    cls: backgroundColor
-                                });
-
-                                return cellData + '분';
-                            }
-                        }
-                    },
-                    {title: '', datatype: 'string', dataIndx: 'STATUS_1', hidden: true},
-                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_1', hidden: true},
-                    {title: 'Seq.2', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_2', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-                            let status = ui.rowData.STATUS_2;
-                            let backgroundColor = colorClassification(status);
-
-                            if (cellData) {
-                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-
-                                let index = EQUIP_LIST.findIndex(function (element) {
-                                    return element.value === Number(cellData);
-                                });
-                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
-                            }
-                        }
-                    },
-                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_2', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-                            let status = ui.rowData.STATUS_2;
-                            let backgroundColor = colorClassification(status);
-
-                            if (cellData) {
-                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-
-                                return cellData + '분';
-                            }
-                        }
-                    },
-                    {title: '', datatype: 'string', dataIndx: 'STATUS_2', hidden: true},
-                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_2', hidden: true},
-                    {title: 'Seq.3', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_3', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-                            let status = ui.rowData.STATUS_3;
-                            let backgroundColor = colorClassification(status);
-
-                            if (cellData) {
-                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-
-                                let index = EQUIP_LIST.findIndex(function (element) {
-                                    return element.value === Number(cellData);
-                                });
-                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
-                            }
-                        }
-                    },
-                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_3', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-                            let status = ui.rowData.STATUS_3;
-                            let backgroundColor = colorClassification(status);
-
-                            if (cellData) {
-                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-
-                                return cellData + '분';
-                            }
-                        }
-                    },
-                    {title: '', datatype: 'string', dataIndx: 'STATUS_3', hidden: true},
-                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_3', hidden: true},
-                    {title: 'Seq.4', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_4', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-                            let status = ui.rowData.STATUS_4;
-                            let backgroundColor = colorClassification(status);
-
-                            if (cellData) {
-                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-
-                                let index = EQUIP_LIST.findIndex(function (element) {
-                                    return element.value === Number(cellData);
-                                });
-                                return (index < 0) ? cellData : EQUIP_LIST[index].text;
-                            }
-                        }
-                    },
-                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_4', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-                            let status = ui.rowData.STATUS_4;
-                            let backgroundColor = colorClassification(status);
-
-                            if (cellData) {
-                                $processTargetGrid.pqGrid('addClass', {rowIndx: ui.rowIndx, dataIndx: ui.dataIndx, cls: backgroundColor});
-
-                                return cellData + '분';
-                            }
-                        }
-                    },
-                    {title: '', datatype: 'string', dataIndx: 'STATUS_4', hidden: true},
-                    {title: '', datatype: 'integer', dataIndx: 'MCT_PLAN_SEQ_4', hidden: true},
+                title: 'NC Actual', align: 'center', colModel: [
+                    {title: 'Seq.1', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_1'},
+                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_1'},
+                    {title: 'Seq.2', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_2'},
+                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_2'},
+                    {title: 'Seq.3', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_3'},
+                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_3'},
+                    {title: 'Seq.4', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_SEQ_4'},
+                    {title: 'W/T', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'WORKING_TIME_4'},
                     {title: 'TOTAL', datatype: 'integer', dataIndx: 'MCT_WORK_TIME'},
                     {title: '단위소요', datatype: 'integer', dataIndx: 'UNIT_LEAD_TIME'}
                 ]
@@ -801,9 +674,9 @@
         $('#MCT_EXECUTE_HISTORY_TAB').tabs({
             activate: function (event, ui) {
                 ui.newPanel.find('.pq-grid').pqGrid('refresh');
-                $('.topWrap').toggle(); // show -> hide , hide -> show
-                $("#CAM_WORK_HISTORY_BOX").toggle();
-                $("#NC_PERFORMANCE_HISTORY_BOX").toggle();
+                $(".mct_execute_history").find(".topWrap").toggle(); // show -> hide , hide -> show
+                $(".mct_execute_history").find("#CAM_WORK_HISTORY_BOX").toggle();
+                $(".mct_execute_history").find("#NC_PERFORMANCE_HISTORY_BOX").toggle();
 
                 // $('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM').toggle(); // show -> hide , hide -> show
                 // $('#MONTH_OUTSIDE_STATUS_SEARCH_FORM').toggle(); // show -> hide , hide -> show

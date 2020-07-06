@@ -625,6 +625,7 @@
             e.preventDefault();
         }).on('drop', function(e) {  //드래그한 항목을 떨어뜨렸을때
             e.preventDefault();
+            $(this).startWaitMe();
             $(this).removeClass('drag-over');
             let cadFiles = e.originalEvent.dataTransfer.files; //드래그&드랍 항목
             for(let i = 0; i < cadFiles.length; i++) {
@@ -675,6 +676,7 @@
                         $commonCadUploadFileGrid.pqGrid('addNodes', data.fileUploadList, 0);
                         $commonCadUploadFileGrid.pqGrid('option', {editable: false});   // 수정 여부를 false 처리 한다.
                         $commonCadUploadFileGrid.pqGrid('refresh');
+                        $(this).stopWaitMe();
                     }
                 }, formData, '/uploadControlCadFiles');
             }
