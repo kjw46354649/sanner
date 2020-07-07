@@ -24,7 +24,19 @@ public class ProductionController {
     @RequestMapping(value = "/managerCamWork", method = RequestMethod.POST)
     public String managerCamWork(Model model, HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
-        this.productionService.managerCamWork(model, map);
+        String actionType = (String)map.get("actionType");
+        switch(actionType){
+            case "start":
+                this.productionService.managerStartCamWork(model, map);
+                break;
+            case "cancel":
+                this.productionService.managerCancelCamWork(model, map);
+                break;
+            case "complete":
+            case "temp":
+                this.productionService.managerCamWork(model, map);
+                break;
+        }
         return "jsonView";
     }
 

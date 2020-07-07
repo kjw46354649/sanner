@@ -6,5 +6,9 @@ import java.util.Map;
 
 public interface ProductionService {
 
+    public void managerStartCamWork(Model model, Map<String, Object> map) throws Exception;
+
+    public void managerCancelCamWork(Model model, Map<String, Object> map) throws Exception;
+
     public void managerCamWork(Model model, Map<String, Object> map) throws Exception;
 }

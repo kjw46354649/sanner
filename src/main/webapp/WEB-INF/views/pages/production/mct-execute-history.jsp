@@ -39,7 +39,7 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="CLOSE_VER">자재종류</label>
+                            <label class="label_100" for="CLOSE_VER">소재종류</label>
                             <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
                                 <option value="">전체</option>
                                 <c:forEach var="code" items="${HighCode.H_1027}">
@@ -134,7 +134,7 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="CLOSE_VER">자재종류</label>
+                            <label class="label_100" for="CLOSE_VER">소재종류</label>
                             <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
                                 <option value="">전체</option>
                                 <c:forEach var="code" items="${HighCode.H_1027}">
@@ -258,8 +258,6 @@
         fnCommCodeDatasourceSelectBoxCreate($('#CAM_WORK_HISTORY_GRID_SEARCH_FORM').find('#WORK_USER_ID'), 'all', {
             'url': '/json-list', 'data': {'queryId': 'dataSource.getMCTWorkerList'}
         });
-
-
 
         /* variable */
         const YEAR = TODAY.getFullYear();
@@ -514,7 +512,7 @@
                     backgroundColor = 'bg-green';
                     break;
                 case '완료':
-                    backgroundColor = 'bg-skyblue';
+                    backgroundColor = 'bg-light_blue';
                     break;
                 case '비가동상태':
                     backgroundColor = 'bg-yellow';

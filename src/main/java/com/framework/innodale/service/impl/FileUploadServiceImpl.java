@@ -83,7 +83,7 @@ public class FileUploadServiceImpl implements FileUploadService {
                     fileMap.put("GFILE_SEQ", fileSeq);
                 }else {
                     //if ("".equals(String.valueOf(hashMap.get("GFILE_SEQ")))) {
-                      if("".equals(fileSeq)) {
+                    if("".equals(fileSeq)) {
                         fileMap.put("GFILE_SEQ", "");                   // GFILE 신규 등록
                         fileMap.put("queryId", "common.insertFileGroup");
                         innodaleDao.update(fileMap);

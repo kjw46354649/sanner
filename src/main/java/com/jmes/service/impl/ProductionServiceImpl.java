@@ -19,35 +19,39 @@ public class ProductionServiceImpl implements ProductionService {
     public InnodaleDao innodaleDao;
 
     @Override
+    public void managerStartCamWork(Model model, Map<String, Object> map) throws Exception {
+        map.put("queryId", "machine.insertMctCamWork");
+        innodaleDao.update(map);
+
+        // parts 상태 업데이트 처리
+        map.put("queryId", "machine.createCamStartControlPartProgress");
+        innodaleDao.update(map);
+        map.put("queryId", "machine.updateCamStartControlPartStatus");
+        innodaleDao.update(map);
+    }
+
+    @Override
+    public void managerCancelCamWork(Model model, Map<String, Object> map) throws Exception {
+        // actionType : temp: 임시저장, complete: 완료, cancel: 취소
+        map.put("queryId", "machine.deleteMctCamDetailWork");
+        innodaleDao.update(map);
+        map.put("queryId", "machine.deleteMctCamWork");
+        innodaleDao.update(map);
+        // 현재 상태가 PRO006 이면 CONTROL PARTS 이전 상태로 변경
+        // parts 상태 업데이트 처리
+        map.put("queryId", "machine.beforeStatusControlPartProgress");
+        innodaleDao.update(map);
+        map.put("queryId", "machine.beforeStatusControlPart");
+        innodaleDao.update(map);
+    }
+
+    @Override
     public void managerCamWork(Model model, Map<String, Object> map) throws Exception {
 
         // actionType : temp: 임시저장, complete: 완료, cancel: 취소
         String actionType = (String)map.get("actionType");
 
         switch(actionType){
-            case "cancel":
-                map.put("queryId", "machine.deleteMctCamDetailWork");
-                innodaleDao.update(map);
-                map.put("queryId", "machine.deleteMctCamWork");
-                innodaleDao.update(map);
-                // 현재 상태가 PRO006 이면 CONTROL PARTS 이전 상태로 변경
-                // parts 상태 업데이트 처리
-                map.put("queryId", "machine.beforeStatusControlPartProgress");
-                innodaleDao.update(map);
-                map.put("queryId", "machine.beforeStatusControlPart");
-                innodaleDao.update(map);
-
-                break;
-            case "start":
-                map.put("queryId", "machine.insertMctCamWork");
-                innodaleDao.update(map);
-
-                // parts 상태 업데이트 처리
-                map.put("queryId", "machine.createCamStartControlPartProgress");
-                innodaleDao.update(map);
-                map.put("queryId", "machine.updateCamStartControlPartStatus");
-                innodaleDao.update(map);
-                break;
             case "complete":
                 map.put("queryId", "machine.updateMctCamWorkComplete");
                 innodaleDao.update(map);
@@ -58,36 +62,26 @@ public class ProductionServiceImpl implements ProductionService {
                 break;
         }
 
-        // 작업 리스트 업데이트 및 생성
-        String camWorkGrid = (String) map.get("camWorkGrid");
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, Object> jsonMap1 = null;
-
-        if (camWorkGrid != null){
-            jsonMap1 = objectMapper.readValue(camWorkGrid, new TypeReference<Map<String, Object>>() {});
-
-            ArrayList<HashMap<String, Object>> addList = (ArrayList<HashMap<String, Object>>) jsonMap1.get("addList");
-            ArrayList<HashMap<String, Object>> updateList = (ArrayList<HashMap<String, Object>>) jsonMap1.get("updateList");
-            ArrayList<HashMap<String, Object>> deleteList = (ArrayList<HashMap<String, Object>>) jsonMap1.get("deleteList");
-
-            if (addList.size() > 0) {
-                for (HashMap<String, Object> hashMap : addList) {
-                    hashMap.put("CAM_SEQ", map.get("CAM_SEQ"));
-                    hashMap.put("queryId", "machine.insertMctCamDetailWork");
-                    this.innodaleDao.insertGrid(hashMap);
-                }
-            }
-            if (updateList.size() > 0) {
-                for (HashMap<String, Object> hashMap : updateList) {
-                    hashMap.put("queryId", "machine.updateMctCamDetailWork");
-                    this.innodaleDao.updateGrid(hashMap);
-                }
-            }
-            if (deleteList.size() > 0) {
-                for (HashMap<String, Object> hashMap : deleteList) {
-                    hashMap.put("queryId", "machine.deleteMctCamDetailWork");
-                    this.innodaleDao.deleteGrid(hashMap);
-                }
+        /** 최신 정보로 업데이트 하고 5건 전체를 처리 한다. **/
+        for(int i=1;i<=5;i++){
+            HashMap<String, Object> camWorkInfo = new HashMap<String, Object>();
+            String sIndexNum = "0" + i;
+            if(map.containsKey("CAM_WORK_CHK_" + sIndexNum)){
+                camWorkInfo.put("queryId", "machine.insertMctCamDetailWork");
+                camWorkInfo.put("SEQ", i);
+                camWorkInfo.put("CAM_SEQ", map.get("CAM_SEQ"));
+                camWorkInfo.put("WORK_DIRECTION", map.get("CAM_WORK_DIRECTION_" + sIndexNum));
+                camWorkInfo.put("WORK_DESC", map.get("CAM_WORK_DESC_" + sIndexNum));
+                camWorkInfo.put("WORK_USER_ID", map.get("CAM_WORK_USER_ID_" + sIndexNum));
+                camWorkInfo.put("DESIGN_QTY", map.get("CAM_WORK_DESIGN_QTY_" + sIndexNum));
+                camWorkInfo.put("CAM_GFILE_SEQ", map.get("CAM_WORK_GFILE_SEQ_" + sIndexNum));
+                camWorkInfo.put("LOGIN_USER_ID", map.get("LOGIN_USER_ID"));
+                innodaleDao.update(camWorkInfo);
+            }else{
+                camWorkInfo.put("queryId", "machine.deleteMctCamDetailWork");
+                camWorkInfo.put("CAM_SEQ", map.get("CAM_SEQ"));
+                camWorkInfo.put("SEQ", i);
+                innodaleDao.update(camWorkInfo);
             }
         }
     }

@@ -180,7 +180,13 @@
 .wd_760{width:760px !important; }
 
 .consumablePop  {height: 420px; }
-.consumable_container .layerPopup .list1 { -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)";/*IE 8*/ -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0);/*FF 3.5+*/ -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0);/*Saf3-4, Chrome, iOS 4.0.2-4.2, Android 2.3+*/ box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); }
+.consumable_container .layerPopup .list1 {
+    -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)";/*IE 8*/
+    -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0);/*FF 3.5+*/
+    -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0);/*Saf3-4, Chrome, iOS 4.0.2-4.2, Android 2.3+*/
+    box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */
+    filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000);
+}
 
 .right_sort_pop{text-align: right; padding: 0px 0 7px;}
 
@@ -349,17 +355,30 @@ button:disabled {
 .miniPopup .contentWrap .btn_one{ width: 60px; height: 30px; line-height: 25px; background: #098804; color: #fff; border-radius: 5px; border: 1px solid #098804; box-sizing: border-box; font-size: 14px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#000000)";/*IE 8*/}
 
 /** cam 작업 관리 팝업 **/
+.cam_work_manage_detail_pop .layerPopup {height: 770px; width: 1200px;}
 .cam_work_manage_detail_pop .layerPopup .griddiv { height: 200px; }
-.cam_work_manage_detail_pop .layerPopup .listdiv { height: 140px; }
+.cam_work_manage_detail_pop .layerPopup .listdiv { height: 140px; width: 100%; }
 .cam_work_manage_detail_pop .layerPopup .listdiv textarea { outline: none; padding: 0px 0px; border: none; font-size: 14px; }
 .cam_work_manage_detail_pop .layerPopup .listdiv .conWrapLeftPop50{ float: left; width: 48.0%; height: 45px; }
 .cam_work_manage_detail_pop .layerPopup .listdiv .conWrapRightPop50{ float: right; width: 48.0%; height: 45px; }
 .cam_work_manage_detail_pop .layerPopup .listdiv .rightName{ float: right; margin-top: 14px;display: inline-block; }
 .cam_work_manage_detail_pop .layerPopup .right{ float: right; display: inline-block; }
-.cam_work_manage_detail_pop .layerPopup {height: 640px;}
 .cam_work_manage_detail_pop .layerPopup h4 {display: inline-block;font-size: 14px; font-family: 'NotoKrB'; color: #000; margin: 15px 0 5px; }
 .cam_work_manage_detail_pop .layerPopup .work_info {display: inline-block;font-size: 14px; font-family: 'NotoKrB'; color: #000; }
 .cam_work_manage_detail_pop .namePlusSlt label { padding: 0 5px; background: #f3f3f3; border: 1px solid #e6e6e6; border-right: 0; border-radius: 3px 0 0 3px; box-sizing: border-box; }
+
+.cam_work_manage_detail_pop .layerPopup .list1 { box-shadow: none; }
+.cam_work_manage_detail_pop .layerPopup .list1 .rowStyle tr th { border: 1px solid #acb9b9; background: #e8f0f0; color: #162f2f; text-align: center; padding: 5px; }
+.cam_work_manage_detail_pop .layerPopup .list1 .rowStyle tr td { border: 1px solid #cecece; color: #444; padding: 5px; text-align: center; font-family: 'NotoKrR'; }
+.cam_work_manage_detail_pop .layerPopup .list1 .rowStyle tr td.red { color: #e71b1b; }
+
+.cam_work_manage_detail_pop .layerPopup .mctWorkDiv {padding-top: 5px;}
+.cam_work_manage_detail_pop .layerPopup .mctWorkStyle {width: 227px; font-size: 14px;}
+.cam_work_manage_detail_pop .layerPopup .mctWorkStyle table {font-size: 14px;}
+.cam_work_manage_detail_pop .layerPopup .mctWorkStyle tr th { border: 1px solid #cecece; background: #d8edf0; color: #162f2f; text-align: center; padding: 5px; }
+.cam_work_manage_detail_pop .layerPopup .mctWorkStyle tr td { border: 1px solid #cecece; color: #444; padding: 5px; text-align: center; font-family: 'NotoKrR'; }
+.cam_work_manage_detail_pop .layerPopup .mctWorkStyle tr td.red { color: #e71b1b; }
+
 
 .miniPopup .pop_close { width: 23px; height: 23px; position: absolute; top: 12px; right: 12px; font-size: 0; background: url(../images/common/btn_popup.png)no-repeat 0 0; margin-right: 2px; margin-top: 8px;}
 .miniPopup h3 { font-size: 20px; font-family: 'NotoKrB'; color: #000; display: inline-block; }
