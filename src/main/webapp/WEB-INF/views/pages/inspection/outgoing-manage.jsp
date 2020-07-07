@@ -32,27 +32,34 @@
                             <label class="label_100" for="SEL_ORDER_NUM">발주번호</label>
                             <input type="text" class="wd_200" name="SEL_ORDER_NUM" id="SEL_ORDER_NUM" title="발주번호">
                         </span>
-                        <span class="gubun"></span>
-
                     </li>
                     <li>
                         <span class="slt_wrap mg-right10">
                             <label class="label_100" for="SEL_OUTGOING_DATE_TYPE">구분</label>
-                            <select class="wd_200" name="SEL_OUTGOING_DATE_TYPE" id="SEL_OUTGOING_DATE_TYPE">
-                               <option value=""><spring:message code="com.form.top.all.option" /></option>
+                            <select class="wd_100" name="SEL_OUTGOING_DATE_TYPE" id="SEL_OUTGOING_DATE_TYPE">
+<%--                               <option value=""><spring:message code="com.form.top.all.option" /></option>--%>
                                 <c:forEach var="vlocale" items="${HighCode.H_1066}">
                                     <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
                         </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="SEL_OUTGOING_TERM" id="SEL_OUTGOING_TERM_1" value="0" ><label for="SEL_OUTGOING_TERM_1">오늘</label>
+                        <span class="slt_wrap mg-right10">
+                            <label class="label_25" for="SEL_OUTGOING_DATE_TYPE">To</label>
+                            <select class="wd_100" name="" id="">
+<%--                               <option value=""><spring:message code="com.form.top.all.option" /></option>--%>
+                                <c:forEach var="vlocale" items="${HighCode.H_1066}">
+                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
                         </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="SEL_OUTGOING_TERM" id="SEL_OUTGOING_TERM_2" value="3"><label for="SEL_OUTGOING_TERM_2">~3일</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="SEL_OUTGOING_TERM" id="SEL_OUTGOING_TERM_3" value="7"><label for="SEL_OUTGOING_TERM_3">~1주일</label>
+                        <span class="slt_wrap mg-right10">
+                            <label class="label_25" for="SEL_OUTGOING_DATE_TYPE">From</label>
+                            <select class="wd_100" name="" id="">
+<%--                               <option value=""><spring:message code="com.form.top.all.option" /></option>--%>
+                                <c:forEach var="vlocale" items="${HighCode.H_1066}">
+                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
                         </span>
                         <div class="calendar_wrap">
                             <span class="calendar_span">
@@ -69,6 +76,7 @@
                         <span class="txt_span"><label class="label_100" for="SEL_PART_NUM_VIEW_YN">Option</label></span>
 <%--                        <span class="chk_box"><input id="SEL_DELAY_TOP" name="SEL_DELAY_TOP" type="checkbox"><label for="SEL_DELAY_TOP">지연대상 항시 상단표시</label></span>--%>
                         <span class="chk_box"><input id="SEL_PART_NUM_VIEW_YN" name="SEL_PART_NUM_VIEW_YN" type="checkbox"><label for="SEL_PART_NUM_VIEW_YN">Part 단위 표시</label></span>
+                        <span class="chk_box"><input id="" name="" type="checkbox"><label for="">출고 완료 제외</label></span>
                         <button type="button" class="right_float defaultBtn radius blue" id="outgoing_manage_search_btn">검색</button>
                     </li>
                 </ul>
@@ -88,7 +96,7 @@
                 <label for="outgoingManageFrozen" class="label_50" style="font-size: 15px;">Fix</label>
                 <select id="outgoingManageFrozen" name="outgoingManageFrozen">
                 </select>
-                <span class="barCode"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="outgoingBarcodeImg"></span>
+                <span class="barCode" id="outgoingBarcodeSpan"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="outgoingBarcodeImg"></span>
                 <span class="barCodeTxt">&nbsp;<input type="text" class="wd_270_barcode" name="OUTGOING_BARCODE_NUM" id="OUTGOING_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요"></span>
                 <span class="radio_box">
                     <input reqcd="R" type="radio" name="OUTGOING_BARCODE_PRINT_TYPE" id="OUTGOING_BARCODE_PRINT_TYPE_1" value="1" checked><label for="OUTGOING_BARCODE_PRINT_TYPE_1">출고</label>
@@ -601,12 +609,61 @@
             {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden:true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden:true},
             {title: 'INSPECT_SEQ', dataType: 'string', dataIndx: 'INSPECT_SEQ', hidden:true},
-            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', minWidth: 95, width: 95, editable: false},
-            {title: '발주번호', dataType: 'string', dataIndx: 'ORDER_NUM', minWidth: 95, width: 95, editable: false},
-            {title: '요망납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', minWidth: 100, width: 100, editable: false},
-            {title: '가공납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', minWidth: 100, width: 100, editable: false},
-            {title: '포장묶음', dataType: 'integer', dataIndx: 'PACKING_CNT', minWidth: 60, width: 60, editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-            {title: '', minWidth: 150, width: 150, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'fffffF'}, dataType: 'string', dataIndx: 'BTN', editable: false,
+            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', minWidth: 80, width: 80},
+            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 30, minWidth: 30,
+                render: function (ui) {
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                    });
+                }
+            },
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 170, width: 170},
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 30, width: 30},
+            // {title: '', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 40, minWidth: 40,
+            //     render: function (ui) {
+            //         let rowIndx = ui.rowIndx, grid = this;
+            //         if (ui.rowData['DXF_GFILE_SEQ'] > 0) return "[눈]";
+            //         return '';
+            //     }
+            // },
+            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30,
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 170, width: 170},
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM', minWidth: 40, width: 40},
+            // {title: 'MATERIAL_DETAIL', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden:true},
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 80, width: 80},
+            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT_NM', minWidth: 80, width: 80},
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 100, width: 100},
+            {title: '발주번호', dataType: 'string', dataIndx: 'ORDER_NUM', minWidth: 90, width: 90},
+            {title: '발주<br>납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', minWidth: 60, width: 60},
+            {
+                title: '대칭', align: 'center', colModel: [
+                    {title: '원칭', dataType: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY', minWidth: 40, width: 40},
+                    {title: '대칭', dataType: 'integer', dataIndx: 'OTHER_SIDE_QTY', minWidth: 40, width: 40}
+                ]
+            },
+            {title: '주문<br>수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40},
+            {title: '출고<br>수량', dataType: 'integer', dataIndx: 'OUT_QTY', minWidth: 40, width: 40, format: '#,###'},
+            {title: '출고<br>일시', dataType: 'string', dataIndx: 'OUT_FINISH_DT', minWidth: 60, width: 60},
+            {title: '포장<br>묶음', dataType: 'integer', dataIndx: 'PACKING_CNT', minWidth: 40, width: 40, editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {title: '수동 입력 버튼', minWidth: 150, width: 150, dataType: 'string', dataIndx: 'BTN',
                            render: function (ui) {
                                     let grid = this;
                                     let $cell = grid.getCell(ui);
@@ -622,7 +679,7 @@
                                         if (ui.rowData['ORDER_SEQ'] != undefined){
                                             if (ui.rowData['OUT_FINISH_DT'] != undefined){// 출고완료
                                                 outBtn = '<button type=\"button\" class=\"miniBtn gray\" style=\"color: #777 !important;\">출고</button>' + '&nbsp;';
-                                                returnBtn = '<button type=\"button\" class=\"miniBtn blue\" id=\"returnBtn\"  data-control_seq=\"'+ rowData.CONTROL_SEQ +'\" data-control_detail_seq=\"'+ rowData.CONTROL_DETAIL_SEQ +'\" data-order_seq=\"'+ rowData.ORDER_SEQ +'\">반품</button>' + '&nbsp;';
+                                                returnBtn = '<button type=\"button\" class=\"miniBtn orange\" id=\"returnBtn\"  data-control_seq=\"'+ rowData.CONTROL_SEQ +'\" data-control_detail_seq=\"'+ rowData.CONTROL_DETAIL_SEQ +'\" data-order_seq=\"'+ rowData.ORDER_SEQ +'\">반품</button>' + '&nbsp;';
                                             }else{
                                                 outBtn = '<button type=\"button\" class=\"miniBtn black\" id=\"outBtn\"  data-control_seq=\"'+ rowData.CONTROL_SEQ +'\" data-control_detail_seq=\"'+ rowData.CONTROL_DETAIL_SEQ +'\" data-order_seq=\"'+ rowData.ORDER_SEQ +'\">출고</button>' + '&nbsp;';
                                                 returnBtn = '<button type=\"button\" class=\"miniBtn gray\" style=\"color: #777 !important;\">반품</button>' + '&nbsp;';
@@ -649,7 +706,7 @@
                                         }*/
 
                                         if (ui.rowData['ORDER_SEQ'] != undefined){
-                                            labelBtn = '<button type=\"button\" class=\"miniBtn orange\" id=\"labelBtn\"  data-control_seq=\"'+ rowData.CONTROL_SEQ +'\" data-control_detail_seq=\"'+ rowData.CONTROL_DETAIL_SEQ +'\" data-order_seq=\"'+ rowData.ORDER_SEQ +'\">라벨</button>';
+                                            labelBtn = '<button type=\"button\" class=\"miniBtn blue\" id=\"labelBtn\"  data-control_seq=\"'+ rowData.CONTROL_SEQ +'\" data-control_detail_seq=\"'+ rowData.CONTROL_DETAIL_SEQ +'\" data-order_seq=\"'+ rowData.ORDER_SEQ +'\">라벨</button>';
                                         }
                                     }
 
@@ -695,95 +752,57 @@
                                             }
                                       }*/
                        },
-            {title: '외주가공', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', minWidth: 100, width: 100, editable: false},
-            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
-                render: function (ui) {
-                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
-                    return '';
-                },
-                postRender: function(ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find("#detailView").bind("click", function () {
-                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
-                    });
-                }
-            },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 180, width: 180, editable: false},
-            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 40, width: 40, editable: false},
-            // {title: '', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 40, minWidth: 40, editable: false,
-            //     render: function (ui) {
-            //         let rowIndx = ui.rowIndx, grid = this;
-            //         if (ui.rowData['DXF_GFILE_SEQ'] > 0) return "[눈]";
-            //         return '';
-            //     }
-            // },
-            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
-                render: function (ui) {
-                    if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
-                },
-                postRender: function (ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find("#imageView").bind("click", function () {
-                        let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
-                    });
-                }
-            },
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 200, width: 200, editable: false},
-            {title: '형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM', minWidth: 120, width: 120, editable: false},
-            // {title: 'MATERIAL_DETAIL', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden:true},
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 120, width: 120, editable: false},
-            {title: '후처리', dataType: 'string', dataIndx: 'SURFACE_TREAT_NM', minWidth: 120, width: 120, editable: false},
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 120, width: 120, editable: false},
-            {title: '주문수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 60, width: 60, editable: false},
-            {title: '출고수량', dataType: 'integer', dataIndx: 'OUT_QTY', minWidth: 60, width: 60, editable: false, format: '#,###'},
-            {title: '출고일시', dataType: 'string', dataIndx: 'OUT_FINISH_DT', minWidth: 60, width: 60, editable: false},
+            {title: '가공<br>납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', minWidth: 60, width: 60},
+            {title: '가공<br>완료', dataType: 'string', dataIndx: 'WORK_FINISH_DT', minWidth: 60, width: 60},
+            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY_NM', minWidth: 50, width: 50},
+            {title: '외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', minWidth: 80, width: 80},
+            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', minWidth: 100, width: 100},
+            {title: '현재위치', dataType: 'string', dataIndx: 'POP_NM', minWidth: 100, width: 100},
             {
-                title: '반품정보', datatype: 'string', align: 'center', colModel: [
-                    {title: '수량', datatype: 'integer', dataIndx: 'RETURN_QTY', minWidth: 80, width: 80, editable: false, format: '#,###'},
-                    {title: '발생일', datatype: 'string', dataIndx: 'RETURN_LAST_DT', minWidth: 60, width: 60, editable: false},
-                    {title: '조치일', datatype: 'string', dataIndx: 'RETURN_FINISH_DT', minWidth: 100, width: 100, editable: false}
+                title: '반품정보', datatype: 'string', align: 'center', styleHead: {'color': 'red'}, colModel: [
+                    {title: '수량', datatype: 'integer', dataIndx: 'RETURN_QTY', minWidth: 40, width: 40, format: '#,###', styleHead: {'color': 'red'}},
+                    {title: '발생일', datatype: 'string', dataIndx: 'RETURN_LAST_DT', minWidth: 60, width: 60, styleHead: {'color': 'red'}},
+                    {title: '조치일', datatype: 'string', dataIndx: 'RETURN_FINISH_DT', minWidth: 60, width: 60, styleHead: {'color': 'red'}}
                 ]
             },
-            // {title: '반품일시', dataType: 'string', dataIndx: 'OUT_RETURN_DT', minWidth: 60, width: 60, editable: false},
+            {title: '소재입고<br>일시', datatype: 'string', dataIndx: 'MATERIAL_RECEIPT_DT', minWidth: 60, width: 60},
+            {title: '외주입고<br>일시', datatype: 'string', dataIndx: 'OUTSIDE_IN_DT', minWidth: 60, width: 60},
+            // {title: '반품일시', dataType: 'string', dataIndx: 'OUT_RETURN_DT', minWidth: 60, width: 60},
 
-            // {title: '', align: 'center', dataType: 'string', dataIndx: 'MANUAL_OUT', width: 70, minWidth: 70, editable: false,
+            // {title: '', align: 'center', dataType: 'string', dataIndx: 'MANUAL_OUT', width: 70, minWidth: 70,
             //     render: function (ui) {
             //         let rowIndx = ui.rowIndx, grid = this;
             //         if (ui.rowData['ORDER_SEQ'] > 0) return "<button type=\"button\" class=\"miniBtn black\">출고</button>";
             //         return '';
             //     }
             // },
-            // {title: '', align: 'center', dataType: 'string', dataIndx: 'MANUAL_RETURN', width: 70, minWidth: 70, editable: false,
+            // {title: '', align: 'center', dataType: 'string', dataIndx: 'MANUAL_RETURN', width: 70, minWidth: 70,
             //     render: function (ui) {
             //         let rowIndx = ui.rowIndx, grid = this;
             //         if (ui.rowData['ORDER_SEQ'] > 0) return "<button type=\"button\" class=\"miniBtn blue\">반품</button>";
             //         return '';
             //     }
             // },
-            // {title: '', align: 'center', dataType: 'string', dataIndx: 'MANUAL_LABEL', width: 70, minWidth: 70, editable: false,
+            // {title: '', align: 'center', dataType: 'string', dataIndx: 'MANUAL_LABEL', width: 70, minWidth: 70,
             //     render: function (ui) {
             //         let rowIndx = ui.rowIndx, grid = this;
             //         if (ui.rowData['ORDER_SEQ'] > 0) return "<button type=\"button\" class=\"miniBtn orange\">라벨</button>";
             //         return '';
             //     }
             // },
-
-           {
+            {
                 title: '최근 품질 실적', datatype: 'string', align: 'center', colModel: [
-                    {title: 'Seq.', datatype: 'string', dataIndx: 'Q_SEQ', minWidth: 40, width: 40, editable: false},
-                    {title: '검사결과', datatype: 'string', dataIndx: 'Q_INSPECT_GRADE_NOTE', minWidth: 80, width: 80, editable: false},
-                    {title: '', datatype: 'string', dataIndx: 'Q_ERROR_QTY', minWidth: 20, width: 20, editable: false},
-                    {title: '불량코드', datatype: 'string', dataIndx: 'Q_INSPECT_RESULT_NM', minWidth: 100, width: 100, editable: false},
-                   {title: '비고', datatype: 'string', dataIndx: 'Q_INSPECT_DESC', minWidth: 100, width: 100, editable: false},
-                   {title: '조치', datatype: 'string', dataIndx: 'Q_ERROR_ACTION_NM', minWidth: 100, width: 100, editable: false},
-                   {title: '조치방안', datatype: 'string', dataIndx: 'Q_ERROR_NOTE', minWidth: 100, width: 100, editable: false}
+                    {title: 'Seq.', datatype: 'string', dataIndx: 'Q_SEQ', minWidth: 40, width: 40},
+                    {title: '등급', datatype: 'string', dataIndx: 'Q_INSPECT_GRADE_NM', minWidth: 40, width: 40},
+                    {title: '수량', datatype: 'string', dataIndx: 'Q_ERROR_QTY', minWidth: 40, width: 40},
+                    // {title: '검사결과', datatype: 'string', dataIndx: 'Q_INSPECT_GRADE_NOTE', minWidth: 80, width: 80},
+                    {title: '검사코드', datatype: 'string', dataIndx: 'Q_INSPECT_RESULT_NM', minWidth: 100, width: 100},
+                    // {title: '비고', datatype: 'string', dataIndx: 'Q_INSPECT_DESC', minWidth: 100, width: 100},
+                    {title: '조치', datatype: 'string', dataIndx: 'Q_ERROR_ACTION_NM', minWidth: 100, width: 100},
+                    // {title: '조치방안', datatype: 'string', dataIndx: 'Q_ERROR_NOTE', minWidth: 100, width: 100}
+                    {title: '작성일시', dataType: 'string', dataIndx: 'Q_DT', minWidth: 90, width: 90}
                 ]
-            },
-            {title: '가공진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', minWidth: 100, width: 100, editable: false},
-            {title: '현재위치(POP/DB)', dataType: 'string', dataIndx: 'POP_NM', minWidth: 100, width: 100, editable: false}
+            }
         ];
         outgoingManageGridId01.pqGrid({
             width: "100%", height: 740,
@@ -796,7 +815,8 @@
                 }
             },
             strNoRows: g_noData,
-            columnTemplate: {align: 'center', hvalign: 'center', render: outgoingManageFilterRender}, filterModel: { mode: 'OR' },
+            columnTemplate: {align: 'center', hvalign: 'center', editable: false, render: outgoingManageFilterRender},
+            filterModel: { mode: 'OR' },
             //scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
             //selectionModel: { type: 'row', mode: 'multiple'} ,
@@ -1611,6 +1631,10 @@
             }
 
 
+        });
+
+        $("#outgoingBarcodeSpan").on('click', function (e) {
+            $("#OUTGOING_BARCODE_NUM").focus();
         });
 
         $("#OUTGOING_BARCODE_NUM").on({

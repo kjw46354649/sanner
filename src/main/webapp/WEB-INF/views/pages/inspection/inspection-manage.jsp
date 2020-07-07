@@ -538,19 +538,21 @@
         $("#inspection_manage_pop_form").find("#queryId").val("inspection.selectInspectionPopInfoList2");
         inspectionManagePostDataPop02 = fnFormToJsonArrayData('#inspection_manage_pop_form');
         inspectionManageColModelPop02 = [
-            {title: 'Seq.', dataType: 'string', dataIndx: 'Q_SEQ', width: 40, editable: false},
-            {title: '작성자', dataType: 'string', dataIndx: 'Q_INSPECT_USER_NM', width: 120, editable: false},
-            // {title: '측정방법', dataType: 'string', dataIndx: 'Q_INSPECT_METHOD_NM',  width: 95, editable: false},
-            // {title: '반품일', dataType: 'string', dataIndx: 'Q_RETURN_DT',  width: 95, editable: false},
-            {title: '합/불', dataType: 'string', dataIndx: 'Q_INSPECT_GRADE_NOTE',  width: 95, editable: false},
-            // {title: '양품', dataType: 'string', dataIndx: 'Q_OK_QTY',  width: 95, editable: false},
-            {title: '수량', dataType: 'string', dataIndx: 'Q_ERROR_QTY',  width: 95, editable: false},
-            {title: '불량코드', dataType: 'string', dataIndx: 'Q_INSPECT_RESULT_NM',  width: 95, editable: false},
-            {title: '상세및비고', dataType: 'string', dataIndx: 'Q_INSPECT_DESC',  width: 95, editable: false},
-            // {title: '원인', dataType: 'string', dataIndx: 'Q_ERROR_REASON_NM',  width: 95, editable: false},
-            {title: '조치', dataType: 'string', dataIndx: 'Q_ERROR_ACTION_NM',  width: 95, editable: false},
-            {title: '조치방안', dataType: 'string', dataIndx: 'Q_ERROR_NOTE',  width: 95, editable: false},
-            {title: '작성일자', dataType: 'string', dataIndx: 'Q_DT',  width: 95, editable: false}
+            {title: 'Seq.', dataType: 'string', dataIndx: 'Q_SEQ', width: 40},
+            {title: '담당관', dataType: 'string', dataIndx: 'Q_INSPECT_USER_NM', width: 120},
+            // {title: '측정방법', dataType: 'string', dataIndx: 'Q_INSPECT_METHOD_NM',  width: 95},
+            // {title: '반품일', dataType: 'string', dataIndx: 'Q_RETURN_DT',  width: 95},
+            {title: '등급', dataType: 'string', dataIndx: 'Q_INSPECT_GRADE_NM',  width: 95},
+            {title: '합/불', dataType: 'string', dataIndx: 'Q_INSPECT_GRADE_NOTE',  width: 95},
+            // {title: '양품', dataType: 'string', dataIndx: 'Q_OK_QTY',  width: 95},
+            {title: '수량', dataType: 'string', dataIndx: 'Q_ERROR_QTY',  width: 95},
+            {title: '검사코드', dataType: 'string', dataIndx: 'Q_INSPECT_RESULT_NM',  width: 95},
+            {title: '상세 내용', dataType: 'string', dataIndx: 'Q_INSPECT_DESC',  width: 95},
+            // {title: '원인', dataType: 'string', dataIndx: 'Q_ERROR_REASON_NM',  width: 95},
+            {title: '발생공정', dataType: 'string', dataIndx: 'Q_ERROR_PROCESS_NM',  width: 95},
+            {title: '조치', dataType: 'string', dataIndx: 'Q_ERROR_ACTION_NM',  width: 95},
+            {title: '조치방안 및 비고', dataType: 'string', dataIndx: 'Q_ERROR_NOTE',  width: 95},
+            {title: '작성일시', dataType: 'string', dataIndx: 'Q_DT',  width: 95}
         ];
         inspectionManageGridIdPop02.pqGrid({
             width: "100%", height: 115,
@@ -563,7 +565,7 @@
                 }
             },
             strNoRows: g_noData,
-            columnTemplate: {align: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', hvalign: 'center', editable: false},
             scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: false , styleHead: {'vertical-align':'middle'}},
             selectionModel: { type: 'row', mode: 'single'} ,
@@ -753,14 +755,8 @@
             }
         });
 
-        $('#inspectionBarcodeSpan').on('click', function (e) {
-            let barcodeImg = '/resource/asset/images/common/img_barcode_long.png';
-
-            if(e.target.attributes[0].value === barcodeImg) {
-                $("#inspectionBarcodeImg").attr("src","/resource/asset/images/common/img_barcode_long_on.png");
-            } else {
-                $("#inspectionBarcodeImg").attr("src","/resource/asset/images/common/img_barcode_long.png");
-            }
+        $("#inspectionBarcodeSpan").on('click', function (e) {
+            $("#INSPECTION_BARCODE_NUM").focus();
         });
 
         $("#INSPECTION_BARCODE_NUM").on({

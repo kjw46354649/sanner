@@ -511,7 +511,7 @@
             //         return '';
             //     }
             // },
-            {title: '입고/출고', minWidth: 100, width: 100, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'fffffF'}, dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_IN_OUT',
+            {title: '입고/출고', minWidth: 100, width: 100, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_IN_OUT',
                 render: function (ui) {
                     let grid = this;
                     let $cell = grid.getCell(ui);
