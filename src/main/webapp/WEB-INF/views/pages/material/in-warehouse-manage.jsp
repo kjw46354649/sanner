@@ -601,7 +601,7 @@
             {title: '창고', dataType: 'string', dataIndx: 'WAREHOUSE_NM', width: 120, editable: false},
             {title: '위치', dataType: 'string', dataIndx: 'LOC_NM', width: 120, editable: false},
             {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 150, editable: false},
-            {title: '파트', dataType: 'string', dataIndx: 'PART_NUM', width: 30, editable: false},
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', width: 30, editable: false},
             {title: '요청일시', dataType: 'string', dataIndx: 'OUT_DT', width: 120, editable: false},
             {title: '요청자', dataType: 'string', dataIndx: 'OUT_USER_ID', minWidth: 100 , editable: false},
             {title: '수동 불출', dataType: 'string', dataIndx: 'MY_MAT_OUT_SEQ', editable: false, minWidth: 80,

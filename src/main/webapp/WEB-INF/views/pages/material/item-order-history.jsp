@@ -292,7 +292,7 @@
                 }
             },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 140, editable: false},
-            {title: '파트', dataType: 'string', dataIndx: 'PART_NUM', width: 30, editable: false},
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', width: 30, editable: false},
         ];
 
         itemOrderHistoryLeftGrid.pqGrid({
