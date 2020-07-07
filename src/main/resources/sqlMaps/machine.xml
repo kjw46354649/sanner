@@ -61,8 +61,8 @@
             </if>
             <if test="SEL_TERM_DT_USE or SEL_TERM_DT_USE ==true">
                 <if test='SEL_DAY_TYPE == "1"'>
-                    AND A.PURCHASE_DT >= REPLACE(#{SEL_ST_DT},'-',space(0))
-                    AND A.PURCHASE_DT <![CDATA[ <= ]]> REPLACE(#{SEL_END_DT},'-',space(0))
+                    AND A.PURCHASE_DT >= REPLACE(#{SEL_ST_DT},'/',space(0))
+                    AND A.PURCHASE_DT <![CDATA[ <= ]]> REPLACE(#{SEL_END_DT},'/',space(0))
                 </if>
             </if>
             ORDER BY A.EQUIP_ID
@@ -102,7 +102,7 @@
         VALUES (  #{EQUIP_SEQ}, #{EQUIP_ID}, #{EQUIP_KIND}, #{EQUIP_NM}
                 , #{PROCESS_TYPE, jdbcType=VARCHAR}, #{EQUIP_TYPE}, #{EQUIP_SIZE}
                 , #{EQUIP_COMP_CD}, #{FACTORY_AREA}
-                , #{MAIN_USER_ID}, #{SUB_USER_ID}, REPLACE(#{PURCHASE_DT},'-',space(0)), #{RESELLER_CD}, #{NOTE}
+                , #{MAIN_USER_ID}, #{SUB_USER_ID}, REPLACE(#{PURCHASE_DT},'/',space(0)), #{RESELLER_CD}, #{NOTE}
                 , #{PHOTO_GFILE_SEQ}, #{ETC_GFILE_SEQ}, #{LOGIN_USER_ID}, #{MODEL_NUM}, #{SERIAL_NUM} )
     </insert>
     <update id="updateMachineMaster" parameterType="java.util.HashMap">
@@ -116,7 +116,7 @@
               , FACTORY_AREA = #{FACTORY_AREA}
               , MAIN_USER_ID = #{MAIN_USER_ID}
               , SUB_USER_ID = #{SUB_USER_ID}
-              , PURCHASE_DT = REPLACE(#{PURCHASE_DT},'-',space(0))
+              , PURCHASE_DT = REPLACE(#{PURCHASE_DT},'/',space(0))
               , RESELLER_CD = #{RESELLER_CD}
               , NOTE = #{NOTE}
               , MODEL_NUM = #{MODEL_NUM}
@@ -442,10 +442,10 @@
             CASE WHEN B.EMERGENCY_YN = 'Y' THEN '긴' ELSE SPACE(0) END AS EMERGENCY_YN, <!-- 긴급 -->
             CASE WHEN B.MAIN_INSPECTION = 'Y' THEN '주' ELSE SPACE(0) END AS MAIN_INSPECTION, <!-- 주요 검사품 -->
             CASE WHEN A.WORK_TYPE = 'WTP030' THEN '수' WHEN A.WORK_TYPE = 'WTP040' THEN '재' ELSE SPACE(0) END AS WORK_NM, <!-- 형태 -->
-            F.MCT_PLAN_SEQ,
-            E.EQUIP_SEQ, <!-- 계획 장비 번호 -->
-            E.EQUIP_NM AS MCT_PLAN_EQUIP_NM, <!-- 계획 장비 -->
-            F.WORKING_TIME AS MCT_PLAN_WORKING_TIME, <!-- MCT 계획 시간 -->
+            SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 'MCT_PLAN_SEQ') AS MCT_PLAN_SEQ,
+            SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 'EQUIP_SEQ') AS EQUIP_SEQ,
+            SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 'EQUIP_ID') AS EQUIP_NM,
+            SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 'WORKING_TIME') AS WORKING_TIME,  <!-- MCT 계획 시간 -->
             SF_GET_MCT_WORK(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 1, 'EQUIP_ID') AS EQUIP_ID_1,
             SF_GET_MCT_WORK(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 1, 'WORKING_TIME') AS WORKING_TIME_1,
             SF_GET_MCT_WORK(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 2, 'EQUIP_ID') AS EQUIP_ID_2,
@@ -533,7 +533,6 @@
                 )
              LEFT OUTER JOIN jmes.TBL_MCT_WORK D ON A.CONTROL_SEQ = D.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.DEL_YN = 'N'
              LEFT OUTER JOIN jmes.TBL_EQUIP E ON E.EQUIP_SEQ = D.EQUIP_SEQ
-             LEFT OUTER JOIN jmes.TBL_MCT_PLAN F ON A.CONTROL_SEQ = F.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ AND F.DEL_YN = 'N'
         WHERE 1 = 1
             AND IFNULL(A.OUTSIDE_YN, 'N') = 'N' <!-- 외주 요청이 아닌경우 -->
             AND A.WORK_TYPE NOT IN ('WTP020') <!-- 조립이 아닌경우 -->
@@ -553,6 +552,16 @@
         GROUP BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
         ORDER BY B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), A.INNER_DUE_DT
     </select>
+
+    <update id="updateMctTarget"  parameterType="java.util.HashMap" >
+        UPDATE TBL_CONTROL_PART
+        SET
+            MCT_NOTE = #{MCT_NOTE},
+            MCT_WORK_TYPE = #{MCT_WORK_TYPE}
+        WHERE
+            CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </update>
 
     <update id="updateMctPlanFromTarget"  parameterType="java.util.HashMap" >
         UPDATE TBL_MCT_PLAN

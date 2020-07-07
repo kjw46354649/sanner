@@ -120,7 +120,7 @@
             },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {title: '발주번호', dataType: 'string', dataIndx: 'ORDER_NUM'},
-            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30,
+            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
                 },

@@ -450,7 +450,7 @@
         ];
         currentObj = {
             width: "100%",
-            height: 720, collapsible: false, resizable: true, showTitle: false, rowHtHead: 25,// pageModel: {type: "remote"},
+            height: 700, collapsible: false, resizable: true, showTitle: false, rowHtHead: 25,// pageModel: {type: "remote"},
             editable : false,
             autoRow: false,
             rowHt: 100,
@@ -540,7 +540,7 @@
         ];
         etcObj = {
             width: "100%",
-            height: 720, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
+            height: 700, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'}, editable : false,
             rowHtHead: 25, numberCell: {title: 'No.'}, dragColumns: {enabled: false},
             scrollModel: {autoFit: true}, trackModel: {on: true},
@@ -643,7 +643,7 @@
         let dateEditor = function (ui) {
             let $inp = ui.$cell.find("input"),
                 grid = this,
-                format = ui.column.format || "yy-mm-dd",
+                format = ui.column.format || "yy/mm/dd",
                 //val = $.datepicker.formatDate("yy-mm-dd HH:mm", new Date($inp.val()));
                 //val = $.datepicker.formatTime("YYYY-MM-DD HH:mm", new Date($inp.val()));
                 val = $inp.val();
@@ -996,7 +996,7 @@
             fnFrozenHandler($etcGrid, $(this).val());
         });
 
-        $(".datepicker-input").each(function(){ $(this).datepicker();});
+        $(".datepicker-input").each(function(){ $(this).datepicker({dateFormat: 'yy/mm/dd'});});
         // $('.dateTimePicker').each(function() {
         //     // var id = $(this).attr('id');
         //     let _this = $(this);
@@ -1303,37 +1303,5 @@
                 }, formData, '');
             }
         });
-    });
-    // topWrap 확장 함수
-    function topMenuOpen(){
-        var top = $('.gubunWrap');
-        var con = $('.bottomWrap .tableWrap .conWrap');
-        var con2 = $('.bottomWrap .tableWrap .conSubWrap');
-        var _h = con.height() - 100;
-        var _h2 = con2.height() - 100;
-
-        top.stop().animate({height:'136px'},300, 'easeOutCubic');
-        con.stop().animate({height: _h },300, 'easeOutCubic');
-        con2.stop().animate({height: _h2 },300, 'easeOutCubic');
-    }
-
-    // topWrap 축소 함수
-    function topMenuClose(){
-        var top = $('.gubunWrap');
-        var con = $('.bottomWrap .tableWrap .conWrap');
-        var con2 = $('.bottomWrap .tableWrap .conSubWrap');
-        var _h = con.height() + 100;
-        var _h2 = con2.height() + 100;
-
-        top.stop().animate({height:"36px"}, 300, 'easeInCubic');
-        con.stop().animate({height: _h},300, 'easeInCubic');
-        con2.stop().animate({height: _h2},300, 'easeInCubic');
-    }
-
-</script>
-<script>
-    $(function(){
-        //$("#div_tabs").removeClass('ui-widget-content');
-        // $("#div_tabs2").removeClass('ui-widget-content');
     });
 </script>

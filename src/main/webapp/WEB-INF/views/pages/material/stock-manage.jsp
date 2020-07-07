@@ -315,7 +315,7 @@
                     { type: 'minLen', value: 1, msg: "Required" }
                 ]
             },
-            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25,
+            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
                 },
@@ -467,7 +467,7 @@
                     return '+';
                 }
             },*/
-            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35,
+            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'
                 },
@@ -481,7 +481,7 @@
                 }
             },
             {
-                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35,
+                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="redFileImageICon" style="cursor: pointer"></span>'
                 },
@@ -490,7 +490,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#imageView").bind("click", function () {
                         let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.PDF_GFILE_SEQ);
+                        fnFileDownloadFormPageAction(rowData.PDF_GFILE_SEQ);
                     });
                 }
             },
@@ -511,7 +511,7 @@
             //         return '';
             //     }
             // },
-            {title: '입고/출고', minWidth: 100, width: 100, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'fffffF'}, dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_IN_OUT',
+            {title: '입고/출고', minWidth: 100, width: 100, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_IN_OUT',
                 render: function (ui) {
                     let grid = this;
                     let $cell = grid.getCell(ui);

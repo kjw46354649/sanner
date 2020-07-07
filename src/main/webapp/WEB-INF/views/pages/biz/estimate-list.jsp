@@ -249,7 +249,7 @@
             {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', width: 150 } ,
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', width: 60 } ,
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 150 } ,
-            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30,
+            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
                 },
@@ -562,7 +562,7 @@
             {title: '최종견적가', dataType: 'float', dataIndx: 'UNIT_FINAL_EST_AMT', format: '#,###', width: 80},
             {title: '금액 계', dataType: 'float', dataIndx: 'DTL_AMOUNT', format: '#,###', width: 80},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
-            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35,
+            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'
                 },
@@ -576,7 +576,7 @@
                 }
             },
             {
-                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35,
+                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="redFileImageICon" style="cursor: pointer"></span>'
                 },
@@ -585,7 +585,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#imageView").bind("click", function () {
                         let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.PDF_GFILE_SEQ);
+                        fnFileDownloadFormPageAction(rowData.PDF_GFILE_SEQ);
                     });
                 }
             }

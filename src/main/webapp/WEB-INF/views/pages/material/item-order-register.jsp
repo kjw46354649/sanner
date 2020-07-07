@@ -73,64 +73,59 @@
                             </select>
                         </span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label class="label_100" for="MODULE_NM">견적번호</label><input type="text" name="MODULE_NM" id="MODULE_NM" class="wd_200" value="" title="견적번호"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="DRAWING_NUM">도면번호</label><input type="text" name="DRAWING_NUM" id="DRAWING_NUM" class="wd_200" value="" title="도면번호"></span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label class="label_100" for="ITEM_NM">품명</label><input type="text" name="ITEM_NM" id="ITEM_NM" class="wd_200" value="" title="품명"></span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap right_float"><button type="button" class="defaultBtn radius blue" id="btnItemOrderRegisterSearch">검색</button></span>
                     </li>
                     <li>
-                        <span class="ipu_wrap"><label class="label_100" for="MANAGE_NUM">관리번호</label><input type="text" name="MANAGE_NUM" id="MANAGE_NUM" class="wd_200" value="" title="관리번호"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="CONTROL_NUM">관리번호</label><input type="text" name="CONTROL_NUM" id="CONTROL_NUM" class="wd_200" value="" title="관리번호"></span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label class="label_100" for="DRAWING_NUM">소재주문번호</label><input type="text" name="DRAWING_NUM" id="DRAWING_NUM" class="wd_200" value="" title="소재주문번호"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="MATERIAL_ORDER_NUM">소재주문번호</label><input type="text" name="MATERIAL_ORDER_NUM" id="MATERIAL_ORDER_NUM" class="wd_200" value="" title="소재주문번호"></span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="M_ORDER_COMP_CD">소재주문업체</label>
-                            <select type="text" name="M_ORDER_COMP_CD" id="M_ORDER_COMP_CD" class="wd_200">
+                            <label class="label_100" for="M_COMP_CD">소재주문업체</label>
+                            <select name="M_COMP_CD" id="M_COMP_CD" class="wd_200">
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="MATERIAL_DETAIL">소재종류</label>
-                            <select type="text" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200">
-                                <option value="">Select</option>
+                            <select name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200">
+                                <option value="">선택</option>
                                 <c:forEach var="code" items="${HighCode.H_1027}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
                         </span>
+                        <span class="gubun"></span>
                     </li>
                     <li class="">
-                        <span class="txt_span pd-right20"><label class="label_100" for="MODULE_NM">기간 조회</label></span>
-                        <span class="chk_box"><input id="pr_ex1" type="checkbox"><label for="pr_ex1"> 발송완료</label></span>
-                        <span class="chk_box"><input id="pr_ex2" type="checkbox"><label for="pr_ex2"> 최신차수</label></span>
-                        <span class="gubun"></span>
-                        <span class="slt_wrap trans_slt mg-right10">
-                            <select id="daySltd" name="daySltd" title="등록일시">
-                                <option value="" selected="selected">등록일시</option>
-                                <option value="1">-ALL-</option>
-                                <option value="2">-ALL-</option>
+                        <span class="slt_wrap trans_slt" style="width: 120px;">
+                            <select name="ITEM_ORDER_REGISTER_CONDITION" id="ITEM_ORDER_REGISTER_CONDITION" style="width: inherit; text-align-last: center;">
+                                <c:forEach var="code" items="${HighCode.H_1047}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
                             </select>
                         </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" id="fr_1001_1" name=""><label for="fr_1001_1">오늘</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" id="fr_1001_2" name=""><label for="fr_1001_2">현재월</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" id="fr_1001_3" name=""><label for="fr_1001_3">3개월</label>
-                        </span>
-                        <div class="calendar_wrap">
+                        <div class="calendar_wrap" style="width:542px; padding-left: 0">
                             <span class="calendar_span">
-                                <input type="text" name="dateOneIp" id="dateOneIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
+                                <input type="text" title="달력정보" name="ITEM_ORDER_REGISTER_START_DATE" id="ITEM_ORDER_REGISTER_START_DATE"><button type="button">달력선택</button>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input type="text" name="dateTwoIp" id="dateTwoIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
+                                <input type="text" title="달력정보" name="ITEM_ORDER_REGISTER_END_DATE" id="ITEM_ORDER_REGISTER_END_DATE" readonly><button type="button">달력선택</button>
                             </span>
+                            <span class="chk_box" style="margin-left: 10px;"><input name="ITEM_ORDER_REGISTER_CHK_BOX" id="ITEM_ORDER_REGISTER_CHK_BOX" type="checkbox"><label for="ITEM_ORDER_REGISTER_CHK_BOX">선택</label></span>
                         </div>
-                        <span class="chk_box"><input id="pr_ex" type="checkbox"><label for="pr_ex">선택</label></span>
+                        <span class="gubun"></span>
+                        <span>
+                            <span class="ipu_wrap"><label class="label_100">Option</label></span>
+                            <span class="chk_box"><input name="ORDER_WAIT_YN" id="ORDER_WAIT_YN" type="checkbox"><label for="ORDER_WAIT_YN"> 소재주문대기</label></span>
+                            <span class="chk_box"><input name="ORDER_YN" id="ORDER_YN" type="checkbox"><label for="ORDER_YN"> 주문완료</label></span>
+                            <span class="chk_box"><input name="IN_YN" id="IN_YN" type="checkbox"><label for="IN_YN"> 입고</label></span>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -320,7 +315,7 @@
                     return returnVal;
                 }
             },
-            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25,
+            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
                 },
@@ -336,8 +331,33 @@
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 120, editable: false},
             {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', editable: false},
             {title: '도면Rev.', dataType: 'string', dataIndx: 'DRAWING_VER ', editable: false},
-            {title: 'DWG', dataType: 'string', dataIndx: 'DWG_GFILE_SEQ', editable: false},
-            {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', editable: false},
+            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#downloadView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        fnFileDownloadFormPageAction(rowData.DXF_GFILE_SEQ);
+                    });
+                }
+            },
+            {
+                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="imageView" class="redFileImageICon" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        fnFileDownloadFormPageAction(rowData.PDF_GFILE_SEQ);
+                    });
+                }
+            },
             {title: '가공<br>납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', width: 80, editable: false},
             {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029') },
@@ -609,7 +629,7 @@
                 }
             },
             {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', editable: false, styleHead: {'font-weight': 'bold','color': 'red'} },
-            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25,
+            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
                 },
@@ -622,9 +642,9 @@
                     });
                 }
             },
-            {title: '', dataType: 'string', dataIndx: '', minWidth: 25, width: 25,
+            {title: '', dataType: 'string', dataIndx: '', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {
-                    if (ui.cellData) return '<span id="deleteItem" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
+                    return '<span id="deleteItem" class="circleMinusIcon" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
                     let grid = this,
@@ -792,7 +812,7 @@
                 }
             },
             {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', editable: false },
-            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25,
+            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
                 },
@@ -805,7 +825,7 @@
                     });
                 }
             },
-            {title: '', dataType: 'string', dataIndx: '', minWidth: 25, width: 25,
+            {title: '', dataType: 'string', dataIndx: '', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {
                     return '<span id="deleteItem" class="circleMinusIcon" style="cursor: pointer"></span>'
                 },
@@ -1008,6 +1028,7 @@
                 selectionModel: { type: 'row', mode: 'single'} ,
                 swipeModel: {on: false},
                 collapsible: false,
+                postRenderInterval: -1,
                 resizable: false,
                 trackModel: {on: true},
                 colModel: itemOrderRegisterPopTopColModel,
@@ -1292,7 +1313,7 @@
         });
 
         $("#btnItemOrderRegisterPopPrint").on('click', function(){
-            itemOrderRegisterPopOrderSheet();
+            itemOrderRegisterPopOrderSheet('N');
         });
 
         $("#btnItemOrderRegisterPopCancel").on('click', function(){
@@ -1588,7 +1609,7 @@
                                 };
                                 let parameters = {'url': '/json-update', 'data': parameter};
                                 fnPostAjaxAsync(function (data, callFunctionParam) {
-                                    itemOrderRegisterPopOrderSheet();
+                                    itemOrderRegisterPopOrderSheet('Y');
                                 }, parameters, '');
                             }, parameters, '');
                         }, parameters, '');
@@ -1597,16 +1618,26 @@
             });
         }
 
-        function itemOrderRegisterPopOrderSheet() {
+        function itemOrderRegisterPopOrderSheet(mailYn) {
             let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num").val();
 
             //Confirm Box
             let headHtml = "Information", bodyHtml ="", yseBtn="예", noBtn="아니오";
-            bodyHtml =
-                '<h4>\n' +
-                '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
-                '<span>성공적으로 발송되었습니다. 주문서를 출력하시겠습니까?</span>' +
-                '</h4>';
+
+            if(mailYn == 'Y') {
+                bodyHtml =
+                    '<h4>\n' +
+                    '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
+                    '<span>성공적으로 발송되었습니다. 주문서를 출력하시겠습니까?</span>' +
+                    '</h4>';
+            } else {
+                bodyHtml =
+                    '<h4>\n' +
+                    '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
+                    '<span>주문서를 출력하시겠습니까?</span>' +
+                    '</h4>';
+            }
+
 
             fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
             let itemOrderRegisterPopSubmitConfirm = function(callback) {
@@ -1626,12 +1657,7 @@
             };
             itemOrderRegisterPopSubmitConfirm(function(confirm){
                 if(confirm) {
-                    $("#common_excel_form #sqlId").val('selectItemOrderRegisterPopTable:selectItemOrderRegisterOrderSheetListExcel');
-                    $("#common_excel_form #mapInputId").val('data');
-                    $("#common_excel_form #paramName").val('MATERIAL_ORDER_NUM');
-                    $("#common_excel_form #paramData").val(MATERIAL_ORDER_NUM);
-                    $("#common_excel_form #template").val('item_order_sheet_template');
-                    fnReportFormToHiddenFormPageAction("common_excel_form", "/itemOrderRegisterOrderSheetPrint");
+                    printJS({printable:'/makeItemOrderSheetPrint?MATERIAL_ORDER_NUM='+encodeURI(MATERIAL_ORDER_NUM), type:'pdf', showModal:true});
 
                     itemOrderRegisterPopTopGrid.pqGrid('option', "dataModel.postData", function (ui) {
                         return (fnFormToJsonArrayData('#item_order_register_popup_form'));
@@ -1732,9 +1758,14 @@
             }
         }
 
+        $('#ITEM_ORDER_REGISTER_START_DATE').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#ITEM_ORDER_REGISTER_END_DATE').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#ITEM_ORDER_REGISTER_START_DATE').datepicker('setDate', 'today');
+        $('#ITEM_ORDER_REGISTER_END_DATE').datepicker('setDate', 'today');
+        
         /** 공통 코드 이외의 처리 부분 **/
         fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
-        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#M_ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#M_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
         fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
     });
 

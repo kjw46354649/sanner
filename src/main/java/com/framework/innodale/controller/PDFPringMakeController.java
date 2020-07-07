@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -196,6 +197,96 @@ public class PDFPringMakeController {
         document.close();
     }
 
+    /**
+     * 클라이언트에서 출력 리스트를 받아서 PDF 작성이후 파일 URL 을 넘긴다.
+     * @param model
+     * @param session
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value="/makeItemOrderSheetPrint", method = RequestMethod.GET)
+    public void makeItemOrderSheetPrint(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+
+        String MATERIAL_ORDER_NUM = ((String) hashMap.get("MATERIAL_ORDER_NUM"));
+        hashMap.put("MATERIAL_ORDER_NUM", MATERIAL_ORDER_NUM);
+
+        response.setContentType("application/pdf");
+        OutputStream out = response.getOutputStream();
+
+        Document document = new Document(PageSize.A4.rotate(), 15, 15, 15, 15);
+
+        // 한글 처리를 위한 글꼴 설정 추가
+        String fontPath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.font.path") + "/malgun/malgun.ttf";
+        BaseFont bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+
+        Font headFont = new Font(bf, 10, Font.BOLD);
+        Font contentsFont = new Font(bf, 8, Font.NORMAL);
+        BaseColor headBackground = new BaseColor(217, 217, 217);
+        PdfWriter.getInstance(document, out);
+
+        hashMap.put("queryId", "material.selectItemOrderRegisterPopTable");
+        List<Map<String, Object>> infoList = innodaleService.getList(hashMap);
+        List<Map<String, Object>> dataList = null;
+
+        int iCount = 0;
+
+        document.open();
+
+        for(int j=0; j < infoList.size(); j++) {
+            HashMap<String, Object> map = new HashMap<String, Object>();
+
+            hashMap.put("queryId", "material.selectItemOrderRegisterOrderSheetListPdf");
+            hashMap.put("CONCAT_SEQ", infoList.get(j).get("CONCAT_SEQ"));
+            dataList = innodaleService.getList(hashMap);
+            if(iCount > 0) document.newPage();
+
+            PdfPTable table = new PdfPTable(10);
+            table.init();
+            table.setWidthPercentage(100);
+            table.setWidths(new int[] {5, 10, 15, 15, 30, 30, 5, 5, 20, 5});
+
+            table.addCell(createCellBackground("주문번호", 2, 1, headFont, headBackground));
+            table.addCell(createCell((String)infoList.get(j).get("MATERIAL_ORDER_NUM"), 2, 1, contentsFont));
+            table.addCell(createCellBackground("주문일자", 1, 1, headFont, headBackground));
+            table.addCell(createCell((String)infoList.get(j).get("ORDER_DT"), 1, 1, contentsFont));
+            table.addCell(createCellBackground("주문업체", 2, 1, headFont, headBackground));
+            table.addCell(createCell((String)infoList.get(j).get("MATERIAL_COMP_NM"), 2, 1, contentsFont));
+
+            table.addCell(createCellBackground("No", 1, 1, headFont, headBackground));
+            table.addCell(createCellBackground("형태", 1, 1, headFont, headBackground));
+            table.addCell(createCellBackground("상세종류", 1, 1, headFont, headBackground));
+            table.addCell(createCellBackground("요청 소재", 1, 1, headFont, headBackground));
+            table.addCell(createCellBackground("요청사항", 1, 1, headFont, headBackground));
+            table.addCell(createCellBackground("비고", 1, 1, headFont, headBackground));
+            table.addCell(createCellBackground("수량", 1, 1, headFont, headBackground));
+            table.addCell(createCellBackground("납기", 1, 1, headFont, headBackground));
+            table.addCell(createCellBackground("관리번호", 1, 1, headFont, headBackground));
+            table.addCell(createCellBackground("Part", 1, 1, headFont, headBackground));
+
+            for(int i=0; i<dataList.size(); i++) {
+                table.addCell(createCell(""+(dataList.get(i).get("SEQ")), 1, 1, contentsFont));
+                table.addCell(createCell((String)dataList.get(i).get("MATERIAL_KIND_NM"), 1, 1, contentsFont));
+                table.addCell(createCell((String)dataList.get(i).get("MATERIAL_DETAIL_NM"), 1, 1, contentsFont));
+                table.addCell(createCell((String)dataList.get(i).get("SIZE_TXT"), 1, 1, contentsFont));
+                table.addCell(createCell((String)dataList.get(i).get("REQUEST_NOTE"), 1, 1, contentsFont));
+                table.addCell(createCell((String)dataList.get(i).get("ORDER_NOTE"), 1, 1, contentsFont));
+                table.addCell(createCell(""+dataList.get(i).get("ORDER_QTY"), 1, 1, contentsFont));
+                table.addCell(createCell((String)dataList.get(i).get("INNER_DUE_DT"), 1, 1, contentsFont));
+                table.addCell(createCell((String)dataList.get(i).get("CONTROL_NUM"), 1, 1, contentsFont));
+                table.addCell(createCell(""+dataList.get(i).get("PART_NUM"), 1, 1, contentsFont));
+            }
+            document.add(table);
+
+            table.flushContent();
+
+            iCount++;
+        }
+
+        document.close();
+    }
+
     private static PdfPCell createCell(String content, int colspan, int rowspan, Font font) {
     	PdfPCell cell = new PdfPCell(new Phrase(content, font));
     	cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -204,6 +295,17 @@ public class PDFPringMakeController {
     	cell.setRowspan(rowspan);
     	cell.setFixedHeight(20f);
     	return cell;
+    }
+
+    private static PdfPCell createCellBackground(String content, int colspan, int rowspan, Font font, BaseColor color) {
+        PdfPCell cell = new PdfPCell(new Phrase(content, font));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setColspan(colspan);
+        cell.setRowspan(rowspan);
+        cell.setFixedHeight(20f);
+        cell.setBackgroundColor(color);
+        return cell;
     }
 
     private static PdfPCell createImageCell(Image image, int colspan, int rowspan, Font font) {

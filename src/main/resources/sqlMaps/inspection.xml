@@ -7,7 +7,11 @@
         SELECT T.*
         FROM (
             SELECT
-                  X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.MCT_WORK_SEQ, X.INSPECT_SEQ, Z.INSPECT_TYPE, Z.INSPECT_GRADE
+                  X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.ORDER_COMP_CD, SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM
+                , CASE WHEN X.EMERGENCY_YN = 'Y' THEN '긴' ELSE SPACE(0) END AS EMERGENCY_YN_NM
+                , CASE Z.INSPECT_GRADE WHEN 'GRD040' THEN '불' WHEN 'GRD050' THEN '반' WHEN 'GRD060' THEN '반' ELSE SPACE(0) END AS INSPECT_GRADE_SHORT_NM
+                , X.EMERGENCY_YN, X.MAIN_INSPECTION, SF_GET_CODE_NM(1059, X.MAIN_INSPECTION, 'KR') AS MAIN_INSPECTION_NM
+                , X.MCT_WORK_SEQ, X.INSPECT_SEQ, Z.INSPECT_TYPE, Z.INSPECT_GRADE
                 , jmes.SF_GET_DATE_F(X.INNER_DUE_DT,'YY','') AS INNER_DUE_DT
                 , jmes.SF_GET_CODE_NM('1009', P.POP_POSITION, 'KR') AS POP_NM
                 , ( SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
@@ -20,8 +24,9 @@
                 , jmes.SF_GET_CODE_NM('1033', X.WORK_TYPE, 'KR') AS WORK_TYPE_NM
                 , jmes.SF_GET_CODE_NM('1035', X.MATERIAL_TYPE, 'KR') AS MATERIAL_TYPE_NM
                 , jmes.SF_GET_CONTROL_PART_QTY(X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ) AS ORDER_QTY
+                , IF(X.ORIGINAL_SIDE_QTY AND X.OTHER_SIDE_QTY, TRUE, FALSE) AS SYMMETRY
                 , X.SIZE_TXT
-                , jmes.SF_GET_DATE_F(Y.WORK_START_DT,'YY','M') AS MCT_WORK_DT        -- 변경 확인필요
+                , jmes.SF_GET_DATE_F(Y.WORK_START_DT,'YY','M') AS MCT_WORK_DT        <!-- 변경 확인필요 -->
                 , (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = Y.WORK_USER_ID) AS WORK_USER_NM
                 , (SELECT M.EQUIP_NM FROM jmes.TBL_EQUIP M WHERE M.EQUIP_SEQ = Y.EQUIP_SEQ) AS EQUIP_NM
                 , (SELECT NOTE FROM jmes.TBL_CAM M WHERE M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ) AS CAM_NOTE
@@ -40,15 +45,17 @@
                 , jmes.SF_GET_CODE_NM('1032', Z.ERROR_REASON, 'KR') AS Q_ERROR_REASON_NM
                 , jmes.SF_GET_CODE_NM('1025', Z.ERROR_ACTION, 'KR') AS Q_ERROR_ACTION_NM
                 , Z.ERROR_NOTE AS Q_ERROR_NOTE
-                , jmes.SF_GET_DATE_F(Z.INSERT_DT,'YY','M') AS Q_DT
+                , jmes.SF_GET_DATE_F(Z.INSERT_DT, '', 'M') AS Q_DT
                 , X.OUT_FINISH_DT
                 , X.NOT_RETURN_SETTLEMENT_CNT
             FROM (
                     SELECT
-                          B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                          B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.ORDER_COMP_CD
+                        , A.EMERGENCY_YN, A.MAIN_INSPECTION
                         , B.INNER_DUE_DT, B.OUTSIDE_COMP_CD, B.PART_STATUS
                         , A.CONTROL_NUM, B.PART_NUM, B.DRAWING_NUM
                         , B.MATERIAL_DETAIL, B.WORK_TYPE, B.MATERIAL_TYPE
+                        , B.ORIGINAL_SIDE_QTY, OTHER_SIDE_QTY
                         , B.PART_UNIT_QTY, B.SIZE_TXT, A.NOTE
                         , B.IMG_GFILE_SEQ
                         , (SELECT MAX(M.MCT_WORK_SEQ) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N') AS MCT_WORK_SEQ
@@ -72,7 +79,7 @@
                         AND B.OUTSIDE_COMP_CD = #{SEL_OUTSIDE_COMP_CD}
                     </if>
                     <if test="SEL_OUTSIDE_YN or SEL_OUTSIDE_YN == true">
-                        AND IFNULL(B.OUTSIDE_YN,0) = 'N'  -- 외주대상 제외 체크하면
+                        AND IFNULL(B.OUTSIDE_YN,0) = 'N'  <!-- 외주대상 제외 체크하면 -->
                     </if>
                     ) X LEFT OUTER JOIN jmes.TBL_MCT_WORK Y ON Y.MCT_WORK_SEQ = X.MCT_WORK_SEQ
                         LEFT OUTER JOIN jmes.TBL_INSPECT Z ON Z.INSPECT_SEQ = X.INSPECT_SEQ
@@ -84,15 +91,17 @@
             ) T
             WHERE 1=1
             <if test="SEL_INSPECT_GRADE or SEL_INSPECT_GRADE == true">
-                AND (T.INSPECT_GRADE IS NULL OR T.INSPECT_GRADE NOT IN ('GRD010','GRD020','GRD030'))  -- 검사완료품 제외를 체크하면
+                AND (T.INSPECT_GRADE IS NULL OR T.INSPECT_GRADE NOT IN ('GRD010','GRD020','GRD030'))  <!-- 검사완료품 제외를 체크하면 -->
             </if>
         ORDER BY T.INNER_DUE_DT, T.CONTROL_SEQ, T.CONTROL_DETAIL_SEQ
     </select>
     <select id="selectInspectionPopInfoBasic" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
-          , A.CONTROL_NUM
-          , B.DRAWING_NUM
-          , CONCAT(jmes.SF_GET_DATE_F(B.INNER_DUE_DT,'YYYY',''), CASE WHEN A.EMERGENCY_YN = 'Y' THEN ' (긴급)' ELSE ' ' END) AS INNER_DUE_DT
+          , CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM, ' # ', B.PART_NUM) END AS CONTROL_NUM
+          , CASE WHEN B.DRAWING_VER IS NULL THEN B.DRAWING_NUM ELSE CONCAT(B.DRAWING_NUM, ' (', B.DRAWING_VER, ')') END AS DRAWING_NUM
+          , SF_GET_CODE_NM(1059, A.MAIN_INSPECTION, 'KR') AS MAIN_INSPECTION_NM
+          , jmes.SF_GET_DATE_F(B.INNER_DUE_DT,'','') AS INNER_DUE_DT
+          , A.EMERGENCY_YN
           , B.ITEM_NM
           , jmes.SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, 'KR') AS MATERIAL_DETAIL_NM
           , jmes.SF_GET_CONTROL_ORDER_QTY(B.CONTROL_SEQ, 0) AS ORDER_QTY
@@ -102,15 +111,10 @@
           , B.SIZE_TXT
           , jmes.SF_GET_CODE_NM('1039', B.SURFACE_TREAT, 'KR') AS SURFACE_TREAT_NM
           , jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, 'KR') AS WORK_TYPE_NM
+          , CONCAT(B.SIZE_TXT, ' / ', jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, 'KR')) AS  SIZE_TXT_WORK_TYPE_NM
           , jmes.SF_GET_CODE_NM('1013', B.PART_STATUS, 'KR') AS PART_STATUS_NM
-          , ( SELECT M.COMP_NM
-              FROM jmes.TBL_COMPANY M
-              WHERE M.COMP_CD = A.ORDER_COMP_CD
-            ) AS ORDER_COMP_NM
-          , ( SELECT M.COMP_NM
-              FROM jmes.TBL_COMPANY M
-              WHERE M.COMP_CD = B.OUTSIDE_COMP_CD
-            ) AS OUTSIDE_COMP_NM
+          , SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM
+          , SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
           , (SELECT COUNT(*) + 1 FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS Q_SEQ
           , B.IMG_GFILE_SEQ
         FROM jmes.TBL_CONTROL A
@@ -132,7 +136,11 @@
     <select id="selectInspectionPopInfoList2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT ROW_NUMBER() OVER(ORDER BY A.INSPECT_SEQ) AS Q_SEQ
           , (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = A.INSPECT_USER_ID) AS Q_INSPECT_USER_NM
+          , jmes.SF_GET_CODE_NM('1040', A.INSPECT_GRADE, 'KR') AS Q_INSPECT_GRADE_NM
           , jmes.SF_GET_CODE_NM('1060', A.INSPECT_METHOD, 'KR') AS Q_INSPECT_METHOD_NM
+          , CASE WHEN A.INSPECT_TYPE = '1' THEN CASE WHEN A.INSPECT_GRADE = 'GRD040' THEN jmes.SF_GET_CODE_NM('1020', A.INSPECT_RESULT, 'KR') END
+                         WHEN A.INSPECT_TYPE = '2' THEN jmes.SF_GET_CODE_NM('1021', A.INSPECT_RESULT, 'KR')
+                    END AS Q_INSPECT_RESULT_NM <!-- 검사 코드 -->
           , CASE WHEN A.INSPECT_TYPE = '2' THEN jmes.SF_GET_DATE_F(A.INSERT_DT,'YY','M') END AS Q_RETURN_DT
           , (SELECT NOTE FROM jmes.TBL_CODE WHERE HIGH_CD = '1040' AND CODE_CD = A.INSPECT_GRADE) AS Q_INSPECT_GRADE_NOTE
           , CASE WHEN A.INSPECT_TYPE = '1' THEN ( SELECT IFNULL(SUM(N.ORDER_QTY) * M.PART_UNIT_QTY,0)
@@ -148,10 +156,11 @@
                  WHEN A.INSPECT_TYPE = '2' THEN jmes.SF_GET_CODE_NM('1021', A.INSPECT_RESULT, 'KR')
             END AS Q_INSPECT_RESULT_NM
           , A.INSPECT_DESC AS Q_INSPECT_DESC
+          , jmes.SF_GET_CODE_NM('1010', A.ERROR_PROCESS, 'KR') AS Q_ERROR_PROCESS_NM
           , jmes.SF_GET_CODE_NM('1032', A.ERROR_REASON, 'KR') AS Q_ERROR_REASON_NM
           , jmes.SF_GET_CODE_NM('1025', A.ERROR_ACTION, 'KR') AS Q_ERROR_ACTION_NM
           , A.ERROR_NOTE AS Q_ERROR_NOTE
-          , jmes.SF_GET_DATE_F(A.INSERT_DT,'YY','M') AS Q_DT
+          , jmes.SF_GET_DATE_F(A.INSERT_DT,'','M') AS Q_DT
         FROM jmes.TBL_INSPECT A
         WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
           AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
@@ -365,14 +374,22 @@
                     , T.PART_STATUS_NM
                     , T.POP_NM
                     , T.IMG_GFILE_SEQ
+                    , T.WORK_FINISH_DT
+                    , T.ORIGINAL_SIDE_QTY
+                    , T.OTHER_SIDE_QTY
+                    , T.WORK_FACTORY_NM
+                    , T.MATERIAL_RECEIPT_DT
+                    , T.OUTSIDE_IN_DT
+                    , T.Q_INSPECT_GRADE_NM
+                    , T.Q_DT
                 FROM (
                     SELECT
                           X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.ORDER_SEQ, X.INSPECT_SEQ
-                        , ( SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = X.ORDER_COMP_CD) AS ORDER_COMP_NM
+                        , jmes.SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM
                         , X.ORDER_NUM
                         , X.ORDER_DUE_DT
                         , X.INNER_DUE_DT
-                        , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
+                        , jmes.SF_GET_COMP_NM(X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
                         , X.CONTROL_NUM
                         , X.PART_NUM
                         , X.DRAWING_NUM
@@ -419,6 +436,14 @@
                             AND M.RETURN_SETTLEMENT_DT IS NULL
                             ) AS  RETURN_ING_CNT
                         , X.IMG_GFILE_SEQ
+                        , (SELECT jmes.SF_GET_DATE_F(M.POP_DT,'YY','M') FROM jmes.TBL_POP M WHERE M.POP_POSITION = 'POP090' AND M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ ORDER BY M.POP_SEQ LIMIT 1) AS WORK_FINISH_DT
+                        , X.ORIGINAL_SIDE_QTY
+                        , X.OTHER_SIDE_QTY
+                        , X.WORK_FACTORY_NM
+                        , X.MATERIAL_RECEIPT_DT
+                        , X.OUTSIDE_IN_DT
+                        , jmes.SF_GET_CODE_NM('1040', Z.INSPECT_GRADE, 'KR') AS Q_INSPECT_GRADE_NM
+                        , jmes.SF_GET_DATE_F(Z.INSERT_DT,'','M') AS Q_DT
                     FROM (
                         SELECT
                             C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, C.ORDER_SEQ
@@ -445,6 +470,11 @@
                             , (SELECT COUNT(M.PACKING_NUM) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = C.ORDER_SEQ) AS ORDER_PACKING_NUM_CNT
                             , (SELECT SUM(M.OUT_QTY) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = C.ORDER_SEQ) AS ORDER_OUT_QTY
                             , (SELECT MAX(M.OUT_DT) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = C.ORDER_SEQ) AS ORDER_OUT_DT
+                            , B.ORIGINAL_SIDE_QTY
+                            , B.OTHER_SIDE_QTY
+                            , jmes.SF_GET_CODE_NM('1014', B.WORK_FACTORY, 'KR') AS WORK_FACTORY_NM
+                            , jmes.SF_GET_MATERIAL_RECEIPT_DT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS MATERIAL_RECEIPT_DT
+                            , jmes.SF_GET_DATE_F(B.OUTSIDE_IN_DT, '', 'M') AS OUTSIDE_IN_DT
                         FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER C
                         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                         AND A.CONTROL_SEQ = C.CONTROL_SEQ
@@ -1039,14 +1069,15 @@
 
     </select>
     <select id="selectInspectionHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        -- 2. 검사 이력관리 쿼리
-        -- 항목은 검사리스트와 동일하게 하고 MCT 실적은 제거
-        -- 검색조건 확인필요 (불량코드콤보는 note값으로 처리, Show All seq 삭제)
+        <!-- 2. 검사 이력관리 쿼리 -->
+        <!-- 항목은 검사리스트와 동일하게 하고 MCT 실적은 제거 -->
+        <!-- 검색조건 확인필요 (불량코드콤보는 note값으로 처리, Show All seq 삭제) -->
 
                 SELECT V.CONTROL_SEQ, V.CONTROL_DETAIL_SEQ
-                    , V.WORK_FINISH_DT, V.INNER_DUE_DT, V.POP_NM, V.OUTSIDE_COMP_NM, V.PART_STATUS_NM, V.CONTROL_NUM, V.PART_NUM, V.DRAWING_NUM
-                    , V.MATERIAL_DETAIL_NM, V.WORK_TYPE_NM, V.MATERIAL_TYPE_NM, V.ORDER_QTY, V.SIZE_TXT
-                    , V.NOTE
+                    , V.WORK_FINISH_DT, V.ORDER_COMP_NM, V.INNER_DUE_DT, V.EMERGENCY_YN, V.MAIN_INSPECTION_NM
+                    , V.CONTROL_NUM, V.PART_NUM, V.DRAWING_NUM, V.WORK_TYPE_NM, V.WORK_FACTORY_NM, V.OUTSIDE_COMP_NM
+                    , V.MATERIAL_DETAIL_NM, V.ORDER_QTY, V.SIZE_TXT, V.NOTE, V.POP_NM, V.PART_STATUS_NM
+                    <!-- , V.MATERIAL_TYPE_NM -->
                     , W.INSPECT_SEQ
                     , W.INSPECT_NUM AS Q_SEQ
                     , (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = W.INSPECT_USER_ID) AS Q_INSPECT_USER_NM
@@ -1065,10 +1096,14 @@
                     , W.ERROR_NOTE AS Q_ERROR_NOTE
                     , jmes.SF_GET_DATE_F(W.INSERT_DT,'YY','M') AS Q_DT
                 FROM (  SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
+                            , CASE WHEN X.EMERGENCY_YN = 'Y' THEN '긴' END AS EMERGENCY_YN
+                            , jmes.SF_GET_CODE_NM('1059', X.MAIN_INSPECTION, 'KR') MAIN_INSPECTION_NM
+                            , jmes.SF_GET_CODE_NM('1014', X.WORK_FACTORY, 'KR') AS WORK_FACTORY_NM
                             , (SELECT jmes.SF_GET_DATE_F(M.POP_DT,'YY','M') FROM jmes.TBL_POP M WHERE M.POP_POSITION = 'POP090' AND M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ ORDER BY M.POP_SEQ LIMIT 1) AS WORK_FINISH_DT
-                            , jmes.SF_GET_DATE_F(X.INNER_DUE_DT,'YY','') AS INNER_DUE_DT
+                            , jmes.SF_GET_DATE_F(X.INNER_DUE_DT,'','') AS INNER_DUE_DT
                             , jmes.SF_GET_CODE_NM('1009', P.POP_POSITION, 'KR') AS POP_NM
-                            , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
+                            , jmes.SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM
+                            , jmes.SF_GET_COMP_NM(X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
                             , jmes.SF_GET_CODE_NM('1013', X.PART_STATUS, 'KR') AS PART_STATUS_NM
                             , X.CONTROL_NUM
                             , X.PART_NUM
@@ -1080,6 +1115,8 @@
                             , X.SIZE_TXT
                             , X.NOTE
                         FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                                    , A.ORDER_COMP_CD , A.EMERGENCY_YN , A.MAIN_INSPECTION
+                                    , B.WORK_FACTORY
                                     , B.INNER_DUE_DT, B.OUTSIDE_COMP_CD, B.PART_STATUS
                                     , A.CONTROL_NUM, B.PART_NUM, B.DRAWING_NUM
                                     , B.MATERIAL_DETAIL, B.WORK_TYPE, B.MATERIAL_TYPE
@@ -1106,21 +1143,21 @@
                 WHERE W.CONTROL_SEQ = V.CONTROL_SEQ
                     AND W.CONTROL_DETAIL_SEQ = V.CONTROL_DETAIL_SEQ
                     <if test="SEL_INSPECT_METHOD !='' and SEL_INSPECT_METHOD != null">
-                        AND W.INSPECT_METHOD = #{SEL_INSPECT_METHOD}   -- 측정방식('1060')
+                        AND W.INSPECT_METHOD = #{SEL_INSPECT_METHOD}   <!-- 측정방식('1060') -->
                     </if>
                     <if test="SEL_INSPECT_GRADE !='' and SEL_INSPECT_GRADE != null">
-                        AND W.INSPECT_GRADE IN (${SEL_INSPECT_GRADE})    -- 검사결과등급(복수)
+                        AND W.INSPECT_GRADE IN (${SEL_INSPECT_GRADE})    <!-- 검사결과등급(복수) -->
                     </if>
                     <if test="SEL_INSPECT_RESULT !='' and SEL_INSPECT_RESULT != null">
-                        AND W.INSPECT_RESULT = #{SEL_INSPECT_RESULT}            -- 불량코드 ('1020','1021')
+                        AND W.INSPECT_RESULT = #{SEL_INSPECT_RESULT}            <!-- 불량코드 ('1020','1021') -->
                     </if>
                     <if test="SEL_ERROR_ACTION !='' and SEL_ERROR_ACTION != null">
-                        AND W.ERROR_ACTION = #{SEL_ERROR_ACTION}   -- 조치('1025')
+                        AND W.ERROR_ACTION = #{SEL_ERROR_ACTION}   <!-- 조치('1025') -->
                     </if>
                     <if test="SEL_INSPECT_USER_ID !='' and SEL_INSPECT_USER_ID != null">
-                        AND W.INSPECT_USER_ID = #{SEL_INSPECT_USER_ID}   -- 검사자
+                        AND W.INSPECT_USER_ID = #{SEL_INSPECT_USER_ID}   <!-- 검사자 -->
                     </if>
-                ORDER BY V.CONTROL_SEQ, V.CONTROL_DETAIL_SEQ, W.INSPECT_SEQ DESC    -- 정렬도 확인필요
+                ORDER BY V.CONTROL_SEQ, V.CONTROL_DETAIL_SEQ, W.INSPECT_SEQ DESC    <!-- 정렬도 확인필요 -->
     </select>
     <delete id="deleteOutgoingHistoryInspectionCancelStep1" parameterType="java.util.HashMap">
         DELETE FROM jmes.TBL_OUT WHERE OUT_SEQ = #{OUT_SEQ}

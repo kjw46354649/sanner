@@ -58,18 +58,6 @@
     </div>
     <div class="bottomWrap">
         <div class="hWrap" style="padding: 0px;">
-            <div class="d-inline">
-                <input type="text" id="mctPlanManageFilterKeyword" placeholder="Enter your keyword">
-                <select id="mctPlanManageFilterColumn"></select>
-                <select id="mctPlanManageFilterCondition">
-                    <c:forEach var="code" items="${HighCode.H_1083}">
-                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                    </c:forEach>
-                </select>
-                <label for="mctPlanManageFrozen" class="label_50" style="font-size: 15px;">Fix</label>
-                <select id="mctPlanManageFrozen" name="mctPlanManageFrozen">
-                </select>
-            </div>
             <h2 style="height: 42px; line-height: 42px;">가공 대상 List</h2>
             <form id="MCT_PROCESS_TARGET_FORM" role="form">
                 <input type="hidden" name="queryId" id="queryId" value="machine.selectWorkPlanGridList">
@@ -138,8 +126,20 @@
                 <span class="refresh mg-left10"><button type="button" id="MCT_TARGET_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
                 <span class="gubun"></span>
                 <button type="button" class="defaultBtn btn-100w green" id="MCT_TARGET_SAVE">저장</button>
+            </form>
+            <div style="margin-left: 20px; margin-bottom: 10px;">
+                <input type="text" id="mctPlanManageFilterKeyword" placeholder="Enter your keyword">
+                <select id="mctPlanManageFilterColumn"></select>
+                <select id="mctPlanManageFilterCondition">
+                    <c:forEach var="code" items="${HighCode.H_1083}">
+                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                    </c:forEach>
+                </select>
+                <label for="mctPlanManageFrozen" class="label_50" style="font-size: 15px;">Fix</label>
+                <select id="mctPlanManageFrozen" name="mctPlanManageFrozen">
+                </select>
+            </div>
         </div>
-        </form>
         <div class="conWrap">
             <div class="tableWrap" style="background: #e1e1e1;">
                 <div id="PROCESS_TARGET_GRID"></div>
@@ -406,7 +406,7 @@
                             }
                         }
                     },
-                    {title: 'W/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'MCT_PLAN_WORKING_TIME', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
+                    {title: 'W/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORKING_TIME', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
                 ]
             },
             {title: 'MCT Actual', align: 'center',
@@ -446,7 +446,7 @@
                 }
             },
             {title: '관리번호', width: 120, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: 'Part', dataType: 'string', dataIndx: 'PART_NUM'},
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM'},
             {title: '소재종류<br>상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -584,7 +584,7 @@
             },
             cellSave: function (evt, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {
-                    estimateMasterBotGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                    $processTargetGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                 }
             }
         };
@@ -902,7 +902,7 @@
         });
 
         $('#MCT_TARGET_SAVE').on('click', function () {
-            fnModifyPQGrid($processTargetGrid, [], ['orderMapper.updateControlPart', 'machine.insertMctPlan']);
+            fnModifyPQGrid($processTargetGrid, [], ['machine.updateMctTarget', 'machine.insertMctPlan']);
             setTimeout(function () {
                 refreshMctPlanGrids();
             }, 1000);

@@ -391,10 +391,16 @@
             {title: '', dataType: 'string', dataIndx: 'MY_MAT_STOCK_SEQ', hidden: true},
             {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_CD', width: "7%" ,
                 editable: function(ui){
-                    if(ui.rowData.MY_MAT_STOCK_SEQ){
+                    if(ui.rowData != undefined) {
+                        let MY_MAT_STOCK_SEQ = ui.rowData.MY_MAT_STOCK_SEQ == undefined ? '' : ui.rowData.MY_MAT_STOCK_SEQ;
+                        if(MY_MAT_STOCK_SEQ) {
+                            return false;
+                        } else{
+                            return true;
+                        }
+                    } else {
                         return false;
                     }
-                    return true;
                 },
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1049') },
                 render: function (ui) {
@@ -420,10 +426,16 @@
             },
             {title: '상세위치', dataType: 'string', dataIndx: 'LOC_NM', minWidth: 120,
                 editable: function(ui){
-                    if(ui.rowData.MY_MAT_STOCK_SEQ){
+                    if(ui.rowData != undefined) {
+                        let MY_MAT_STOCK_SEQ = ui.rowData.MY_MAT_STOCK_SEQ == undefined ? '' : ui.rowData.MY_MAT_STOCK_SEQ;
+                        if(MY_MAT_STOCK_SEQ) {
+                            return false;
+                        } else{
+                            return true;
+                        }
+                    } else {
                         return false;
                     }
-                    return true;
                 },
                 editor: { type: 'select', valueIndx: "value", labelIndx: "text",
                     options: function(ui) {
@@ -455,10 +467,16 @@
             },
             {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', width: "7%" ,
                 editable: function(ui){
-                    if(ui.rowData.MY_MAT_STOCK_SEQ){
+                    if(ui.rowData != undefined) {
+                        let MY_MAT_STOCK_SEQ = ui.rowData.MY_MAT_STOCK_SEQ == undefined ? '' : ui.rowData.MY_MAT_STOCK_SEQ;
+                        if(MY_MAT_STOCK_SEQ) {
+                            return false;
+                        } else{
+                            return true;
+                        }
+                    } else {
                         return false;
                     }
-                    return true;
                 },
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029') },
                 render: function (ui) {
@@ -484,10 +502,16 @@
             },
             {title: '소재종류상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL' , minWidth: "8%",
                 editable: function(ui){
-                    if(ui.rowData.MY_MAT_STOCK_SEQ){
+                    if(ui.rowData != undefined) {
+                        let MY_MAT_STOCK_SEQ = ui.rowData.MY_MAT_STOCK_SEQ == undefined ? '' : ui.rowData.MY_MAT_STOCK_SEQ;
+                        if(MY_MAT_STOCK_SEQ) {
+                            return false;
+                        } else{
+                            return true;
+                        }
+                    } else {
                         return false;
                     }
-                    return true;
                 },
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027') },
                 render: function (ui) {
@@ -512,10 +536,16 @@
             },
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 150, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} ,
                 editable: function(ui){
-                    if(ui.rowData.MY_MAT_STOCK_SEQ){
+                    if(ui.rowData != undefined) {
+                        let MY_MAT_STOCK_SEQ = ui.rowData.MY_MAT_STOCK_SEQ == undefined ? '' : ui.rowData.MY_MAT_STOCK_SEQ;
+                        if(MY_MAT_STOCK_SEQ) {
+                            return false;
+                        } else{
+                            return true;
+                        }
+                    } else {
                         return false;
                     }
-                    return true;
                 },
             },
             {title: '보유수량', dataType: 'string', dataIndx: 'STOCK_QTY', minWidth: 80, editable: false },
@@ -571,7 +601,7 @@
             {title: '창고', dataType: 'string', dataIndx: 'WAREHOUSE_NM', width: 120, editable: false},
             {title: '위치', dataType: 'string', dataIndx: 'LOC_NM', width: 120, editable: false},
             {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 150, editable: false},
-            {title: '파트', dataType: 'string', dataIndx: 'PART_NUM', width: 30, editable: false},
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', width: 30, editable: false},
             {title: '요청일시', dataType: 'string', dataIndx: 'OUT_DT', width: 120, editable: false},
             {title: '요청자', dataType: 'string', dataIndx: 'OUT_USER_ID', minWidth: 100 , editable: false},
             {title: '수동 불출', dataType: 'string', dataIndx: 'MY_MAT_OUT_SEQ', editable: false, minWidth: 80,
@@ -623,7 +653,7 @@
         inWarehouseManageManageGrid01.pqGrid({
             width: "100%", height: 438,
             dataModel: {
-                location: "remote", dataType: "json", method: "POST", recIndx: 'MY_MAT_STOCK_SEQ',
+                location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
                 url: "/paramQueryGridSelect",
                 postData: fnFormToJsonArrayData('#in_warehouse_manage_search_form'),
                 getData: function (dataJSON) {
@@ -942,7 +972,8 @@
 
         /** 버튼 처리 **/
         $("#btnInWarehouseManageAdd").on('click', function(){
-            inWarehouseManageManageGrid01.pqGrid('addNodes', [{}], 0);
+            let rowCnt = inWarehouseManageManageGrid01.pqGrid('option', 'dataModel.data').length;
+            inWarehouseManageManageGrid01.pqGrid('addNodes', [{ "MY_MAT_STOCK_SEQ" : "", "ROWNUM" : (Number(rowCnt)+1) }], 0);
         });
 
         $("#btnInWarehouseManageRemove").on('click', function(){
