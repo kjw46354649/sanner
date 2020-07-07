@@ -168,7 +168,7 @@
 
             var popMasterColModel = [
                 {title: '긴급', minWidth: 30, width: 45, dataType: 'string', aligin: 'center', dataIndx: 'EMERGENCY_YN'},
-                {title: '요망납기', minWidth: 30, width: 85, datatype: 'string', dataIndx: 'INNER_DUE_DT'},
+                {title: '가공납기', minWidth: 30, width: 85, datatype: 'string', dataIndx: 'INNER_DUE_DT'},
                 {title: '발주업체', minWidth: 30, width: 150, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
                 {title: '관리번호', minWidth: 30, width: 300, dataType: 'string', dataIndx: 'CONTROL_NUM', },
                 {
