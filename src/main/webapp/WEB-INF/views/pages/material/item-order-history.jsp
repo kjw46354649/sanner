@@ -13,76 +13,50 @@
             <input type="hidden" name="queryId" id="queryId" value="selectItemOrderHistoryList">
             <input type="hidden" name="MATERIAL_ORDER_SEQ" id="MATERIAL_ORDER_SEQ" value="">
             <input type="hidden" name="CONCAT_SEQ" id="CONCAT_SEQ" value="">
-            <div class="none_gubunWrap row3_topWrap">
+            <div class="none_gubunWrap row2_topWrap">
                 <ul>
                     <li>
+                        <span class="ipu_wrap"><label class="label_100" for="CONTROL_NUM">관리번호</label><input type="text" name="CONTROL_NUM" id="CONTROL_NUM" class="wd_200" value="" title="관리번호"></span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="MATERIAL_ORDER_NUM">소재주문번호</label><input type="text" name="MATERIAL_ORDER_NUM" id="MATERIAL_ORDER_NUM" class="wd_200" value="" title="소재주문번호"></span>
+                        <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label for="COMP_CD" class="label_100">사업자</label>
-                            <select id="COMP_CD" name="COMP_CD" title="사업자" class="wd_200">
+                            <label class="label_100" for="MATERIAL_COMP_CD">소재주문업체</label>
+                            <select name="MATERIAL_COMP_CD" id="MATERIAL_COMP_CD" class="wd_200">
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label for="ORDER_COMP_CD" class="label_100">발주사</label>
-                            <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사" class="wd_200">
+                            <label class="label_100" for="MATERIAL_DETAIL">소재종류</label>
+                            <select name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200">
+                                <option value="">Select</option>
+                                <c:forEach var="code" items="${HighCode.H_1027}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
                             </select>
                         </span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap"><label class="label_100" for="MODULE_NM">견적번호</label><input type="text" name="MODULE_NM" id="MODULE_NM" class="wd_200" value="" title="견적번호"></span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap"><label class="label_100" for="ITEM_NM">품명</label><input type="text" name="ITEM_NM" id="ITEM_NM" class="wd_200" value="" title="품명"></span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap right_float"><button type="button" class="defaultBtn radius blue" id="btnItemOrderHistorySearch">검색</button></span>
                     </li>
                     <li>
-                        <span class="ipu_wrap"><label class="label_100" for="MANAGE_NUM">관리번호</label><input type="text" name="MANAGE_NUM" id="MANAGE_NUM" class="wd_200" value="" title="관리번호"></span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap"><label class="label_100" for="DRAWING_NUM">소재주문번호</label><input type="text" name="DRAWING_NUM" id="DRAWING_NUM" class="wd_200" value="" title="소재주문번호"></span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap"><label class="label_100" for="M_ORDER_COMP_CD">소재주문업체</label><input type="text" name="M_ORDER_COMP_CD" id="M_ORDER_COMP_CD" class="wd_200" value="" title="소재주문업체"></span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap"><label class="label_100" for="MATERIAL_DETAIL">소재종류</label><input type="text" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200" value="" title="소재주문업체"></span>
+                        <span class="ipu_wrap"><label class="label_100">주문일시</label></span>
+                        <div class="calendar_wrap" style="width:542px; padding-left: 0">
+                            <span class="calendar_span">
+                                <input type="text" title="달력정보" name="ITEM_ORDER_HISTORY_START_DATE" id="ITEM_ORDER_HISTORY_START_DATE"><button type="button">달력선택</button>
+                            </span>
+                            <span class="nbsp">~</span>
+                            <span class="calendar_span">
+                                <input type="text" title="달력정보" name="ITEM_ORDER_HISTORY_END_DATE" id="ITEM_ORDER_HISTORY_END_DATE" readonly><button type="button">달력선택</button>
+                            </span>
+                            <span class="chk_box" style="margin-left: 10px;"><input name="ITEM_ORDER_HISTORY_CHK_BOX" id="ITEM_ORDER_HISTORY_CHK_BOX" type="checkbox"><label for="ITEM_ORDER_HISTORY_CHK_BOX">선택</label></span>
+                        </div>
                         <span class="gubun"></span>
                     </li>
-
                 </ul>
-                <li class="">
-                    <span class="txt_span pd-right20">Option</span>
-                    <span class="chk_box"><input id="pr_ex1" type="checkbox"><label for="pr_ex1"> 발송완료</label></span>
-                    <span class="chk_box"><input id="pr_ex2" type="checkbox"><label for="pr_ex2"> 최신차수</label></span>
-                    <span class="gubun"></span>
-                    <span class="slt_wrap trans_slt mg-right10">
-                            <select id="daySltd" name="daySltd" title="등록일시">
-                                <option value="" selected="selected">등록일시</option>
-                                <option value="1">-ALL-</option>
-                                <option value="2">-ALL-</option>
-                            </select>
-                        </span>
-                    <span class="radio_box">
-                            <input reqcd="R" type="radio" id="fr_1001_1" name=""><label for="fr_1001_1">오늘</label>
-                        </span>
-                    <span class="radio_box">
-                            <input reqcd="R" type="radio" id="fr_1001_2" name=""><label for="fr_1001_2">현재월</label>
-                        </span>
-                    <span class="radio_box">
-                            <input reqcd="R" type="radio" id="fr_1001_3" name=""><label for="fr_1001_3">3개월</label>
-                        </span>
-                    <div class="calendar_wrap">
-                            <span class="calendar_span">
-                                <input type="text" name="dateOneIp" id="dateOneIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
-                            </span>
-                        <span class="nbsp">~</span>
-                        <span class="calendar_span">
-                                <input type="text" name="dateTwoIp" id="dateTwoIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
-                            </span>
-                    </div>
-                    <span class="chk_box"><input id="pr_ex" type="checkbox"><label for="pr_ex">선택</label></span>
-                </li>
             </div>
         </form>
-        <button type="button" class="topWrap_btn">펼치기 / 접기</button>
     </div>
-    <div class="bottomWrap row3_bottomWrap">
+    <div class="bottomWrap row2_bottomWrap">
         <div class="tableWrap">
             <div class="conWrap">
                 <div class="left_30Wrap">
@@ -296,7 +270,7 @@
         ];
 
         itemOrderHistoryLeftGrid.pqGrid({
-            height: '100%',
+            height: '100%', rowHtHead: 46,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
                 url: "/paramQueryGridSelect",
@@ -368,7 +342,7 @@
         selectItemOrderHistoryRightList();
         function selectItemOrderHistoryRightList() {
             itemOrderHistoryRightGrid.pqGrid({
-                height: '100%',
+                height: '100%', rowHtHead: 23,
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
                     url: "/paramQueryGridSelect",
@@ -445,12 +419,8 @@
 
         $("#btnItemOrderHistoryExcel").on('click', function(){
             let MATERIAL_ORDER_NUM = $("#item_order_history_hidden_form #MATERIAL_ORDER_NUM").val();
-            $("#common_excel_form #sqlId").val('selectItemOrderRegisterPopTable:selectItemOrderRegisterOrderSheetListExcel');
-            $("#common_excel_form #mapInputId").val('data');
-            $("#common_excel_form #paramName").val('MATERIAL_ORDER_NUM');
-            $("#common_excel_form #paramData").val(MATERIAL_ORDER_NUM);
-            $("#common_excel_form #template").val('item_order_sheet_template');
-            fnReportFormToHiddenFormPageAction("common_excel_form", "/itemOrderRegisterOrderSheetPrint");
+
+            printJS({printable:'/makeItemOrderSheetPrint?MATERIAL_ORDER_NUM='+encodeURI(MATERIAL_ORDER_NUM), type:'pdf', showModal:true});
         });
 
         $("#btnItemOrderHistoryCancel").on('click', function(){
@@ -500,10 +470,14 @@
             });
         });
 
+        $('#ITEM_ORDER_HISTORY_START_DATE').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#ITEM_ORDER_HISTORY_END_DATE').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#ITEM_ORDER_HISTORY_START_DATE').datepicker('setDate', 'today');
+        $('#ITEM_ORDER_HISTORY_END_DATE').datepicker('setDate', 'today');
 
         /** 공통 코드 이외의 처리 부분 **/
+        fnCommCodeDatasourceSelectBoxCreate($("#item_order_history_search_form").find("#MATERIAL_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
         fnCommCodeDatasourceSelectBoxCreate($("#item_order_history_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
-        fnCommCodeDatasourceSelectBoxCreate($("#item_order_history_search_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
 
         function fnInspection(parameter, MATERIAL_ORDER_SEQ) {
             let parameters = {'url': '/json-update', 'data': parameter};

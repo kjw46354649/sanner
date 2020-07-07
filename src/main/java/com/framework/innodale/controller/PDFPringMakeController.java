@@ -205,18 +205,12 @@ public class PDFPringMakeController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value="/makeItemOrderSheetPrint", method = RequestMethod.POST)
+    @RequestMapping(value="/makeItemOrderSheetPrint", method = RequestMethod.GET)
     public void makeItemOrderSheetPrint(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
 
-        String paramName = request.getParameter("paramName");
-        String paramData = request.getParameter("paramData");
-        String[] arrayParamName = paramName.split(":");
-        String[] arrayParams = paramData.split(":");
-        // AllData input Map
-        for (int i = 0; i < arrayParamName.length; i++) {
-            hashMap.put(arrayParamName[i], arrayParams[i]);
-        }
+        String MATERIAL_ORDER_NUM = ((String) hashMap.get("MATERIAL_ORDER_NUM"));
+        hashMap.put("MATERIAL_ORDER_NUM", MATERIAL_ORDER_NUM);
 
         response.setContentType("application/pdf");
         OutputStream out = response.getOutputStream();
@@ -229,7 +223,7 @@ public class PDFPringMakeController {
 
         Font headFont = new Font(bf, 10, Font.BOLD);
         Font contentsFont = new Font(bf, 8, Font.NORMAL);
-
+        BaseColor headBackground = new BaseColor(217, 217, 217);
         PdfWriter.getInstance(document, out);
 
         hashMap.put("queryId", "material.selectItemOrderRegisterPopTable");
@@ -253,23 +247,23 @@ public class PDFPringMakeController {
             table.setWidthPercentage(100);
             table.setWidths(new int[] {5, 10, 15, 15, 30, 30, 5, 5, 20, 5});
 
-            table.addCell(createCell("주문번호", 2, 1, headFont));
+            table.addCell(createCellBackground("주문번호", 2, 1, headFont, headBackground));
             table.addCell(createCell((String)infoList.get(j).get("MATERIAL_ORDER_NUM"), 2, 1, contentsFont));
-            table.addCell(createCell("주문일자", 1, 1, headFont));
+            table.addCell(createCellBackground("주문일자", 1, 1, headFont, headBackground));
             table.addCell(createCell((String)infoList.get(j).get("ORDER_DT"), 1, 1, contentsFont));
-            table.addCell(createCell("주문업체", 2, 1, headFont));
+            table.addCell(createCellBackground("주문업체", 2, 1, headFont, headBackground));
             table.addCell(createCell((String)infoList.get(j).get("MATERIAL_COMP_NM"), 2, 1, contentsFont));
 
-            table.addCell(createCell("No", 1, 1, headFont));
-            table.addCell(createCell("형태", 1, 1, headFont));
-            table.addCell(createCell("상세종류", 1, 1, headFont));
-            table.addCell(createCell("요청 소재", 1, 1, headFont));
-            table.addCell(createCell("요청사항", 1, 1, headFont));
-            table.addCell(createCell("비고", 1, 1, headFont));
-            table.addCell(createCell("수량", 1, 1, headFont));
-            table.addCell(createCell("납기", 1, 1, headFont));
-            table.addCell(createCell("관리번호", 1, 1, headFont));
-            table.addCell(createCell("Part", 1, 1, headFont));
+            table.addCell(createCellBackground("No", 1, 1, headFont, headBackground));
+            table.addCell(createCellBackground("형태", 1, 1, headFont, headBackground));
+            table.addCell(createCellBackground("상세종류", 1, 1, headFont, headBackground));
+            table.addCell(createCellBackground("요청 소재", 1, 1, headFont, headBackground));
+            table.addCell(createCellBackground("요청사항", 1, 1, headFont, headBackground));
+            table.addCell(createCellBackground("비고", 1, 1, headFont, headBackground));
+            table.addCell(createCellBackground("수량", 1, 1, headFont, headBackground));
+            table.addCell(createCellBackground("납기", 1, 1, headFont, headBackground));
+            table.addCell(createCellBackground("관리번호", 1, 1, headFont, headBackground));
+            table.addCell(createCellBackground("Part", 1, 1, headFont, headBackground));
 
             for(int i=0; i<dataList.size(); i++) {
                 table.addCell(createCell(""+(dataList.get(i).get("SEQ")), 1, 1, contentsFont));
@@ -279,7 +273,7 @@ public class PDFPringMakeController {
                 table.addCell(createCell((String)dataList.get(i).get("REQUEST_NOTE"), 1, 1, contentsFont));
                 table.addCell(createCell((String)dataList.get(i).get("ORDER_NOTE"), 1, 1, contentsFont));
                 table.addCell(createCell(""+dataList.get(i).get("ORDER_QTY"), 1, 1, contentsFont));
-                table.addCell(createCell((String)dataList.get(i).get("HOPE_DUE_DT"), 1, 1, contentsFont));
+                table.addCell(createCell((String)dataList.get(i).get("INNER_DUE_DT"), 1, 1, contentsFont));
                 table.addCell(createCell((String)dataList.get(i).get("CONTROL_NUM"), 1, 1, contentsFont));
                 table.addCell(createCell(""+dataList.get(i).get("PART_NUM"), 1, 1, contentsFont));
             }
@@ -301,6 +295,17 @@ public class PDFPringMakeController {
     	cell.setRowspan(rowspan);
     	cell.setFixedHeight(20f);
     	return cell;
+    }
+
+    private static PdfPCell createCellBackground(String content, int colspan, int rowspan, Font font, BaseColor color) {
+        PdfPCell cell = new PdfPCell(new Phrase(content, font));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setColspan(colspan);
+        cell.setRowspan(rowspan);
+        cell.setFixedHeight(20f);
+        cell.setBackgroundColor(color);
+        return cell;
     }
 
     private static PdfPCell createImageCell(Image image, int colspan, int rowspan, Font font) {
