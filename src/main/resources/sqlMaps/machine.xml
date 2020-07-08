@@ -883,6 +883,12 @@
             <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
                 AND A.WORK_FACTORY = #{WORK_FACTORY}
             </if>
+            <if test="BARCODE_NUM != null and BARCODE_NUM != ''">
+                AND EXISTS (SELECT 1 FROM jmes.TBL_CONTROL_BARCODE M
+                            WHERE A.CONTROL_SEQ = M.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ
+                                AND M.DEL_YN = 'N' AND M.BARCODE_NUM = #{BARCODE_NUM}
+                )
+            </if>
         GROUP BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
         ORDER BY B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), A.INNER_DUE_DT
     </select>

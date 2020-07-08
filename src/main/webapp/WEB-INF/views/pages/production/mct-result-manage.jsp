@@ -20,6 +20,7 @@
         <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
         <input type="hidden" id="DXF_GFILE_SEQ" name="DXF_GFILE_SEQ" value=""/>
         <input type="hidden" id="CAM_SEQ" name="CAM_SEQ" value=""/>
+        <input type="hidden" id="BARCODE_NUM" name="BARCODE_NUM" value=""/>
         <div class="layerPopup">
             <div class="h_area">
                 <h3>CAM 작업 관리</h3>
@@ -394,8 +395,9 @@
                     </c:forEach>
                 </select>
                 <label for="mctResultManageFrozen" class="label_50" style="font-size: 15px;">Fix</label>
-                <select id="mctResultManageFrozen" name="mctResultManageFrozen">
-                </select>
+                <select id="mctResultManageFrozen" name="mctResultManageFrozen"></select>
+                <span class="barCode" id="mctResultBarcodeSpan"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="mctResultBarcodeImg"></span>
+                <span class="barCodeTxt">&nbsp;<input type="text" class="wd_270_barcode" name="MCT_RESULT_BARCODE_NUM" id="MCT_RESULT_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요"></span>
                 <span class="rightSpan">
                     <button type="button" class="defaultBtn btn-120w" id="mctResultDetailViewBtn" >상세정보 조회</button>
                     <button type="button" class="defaultBtn btn-120w" id="mctResultDrawingViewBtn" >도면보기</button>
@@ -430,6 +432,53 @@
 
     $(function () {
         'use strict';
+        /** barcode **/
+        $("#MCT_RESULT_BARCODE_NUM").on('keyup', function(e) {
+            if (e.keyCode == 13) {
+                fnBarcodePrintCheck(function(confirm, callFunctionParam){
+                    let barcodeN = callFunctionParam;
+                    $("#MCT_RESULT_BARCODE_NUM").val("");
+                    if(confirm){
+                        //0. 바코드 정보 가져오기
+                        let data = {'queryId': "common.selectControlBarcodeInfo",'BARCODE_NUM': barcodeN};
+                        let parameters = {'url': '/json-info','data': data};
+                        fnPostAjax(function (data, callFunctionParam) {
+                            let dataInfo = data.info;
+                            if(dataInfo == null ) {
+                                alert("해당 바코드가 존재하지 않습니다.");
+                                return;
+                            }else{
+                                let parameters = {
+                                    'url': '/json-info',
+                                    'data': {'queryId': 'machine.selectResultManageList', 'BARCODE_NUM': barcodeN}
+                                };
+                                fnPostAjax(function (data, callFunctionParam) {
+                                    if(data.info){
+                                        camWorkManagePop(data.info);
+                                    }else{
+                                        alert("바코드를 확인 해 주십시오. 실적 등록 대상이 아닙니다.");
+                                        return;
+                                    }
+                                }, parameters, '');
+                            }
+                        }, parameters, '');
+                    }else{}
+                }, this.value, this.value);
+            }
+        });
+        $("#mctResultBarcodeSpan").on('click', function (e) {
+            $("#MCT_RESULT_BARCODE_NUM").focus();
+        });
+
+        $("#MCT_RESULT_BARCODE_NUM").on({
+            focus: function () {
+                $("#mctResultBarcodeImg").attr("src","/resource/asset/images/common/img_barcode_long_on.png");
+            },
+            blur: function () {
+                $("#mctResultBarcodeImg").attr("src","/resource/asset/images/common/img_barcode_long.png");
+            }
+        });
+
         /** function **/
         fnCommCodeDatasourceSelectBoxCreate($('#mct_result_manage_search_form').find('#EQUIP_SEQ'), 'all', {
             'url': '/json-list', 'data': {'queryId': 'dataSource.getMctEquipList'}
@@ -696,7 +745,6 @@
         /** 제품 시작 상세 표시 **/
         let camWorkManagePop = function(rowData) {
             fnResetFrom('cam_work_manage_pop_form');
-
             $("#cam_work_manage_pop_form").find("#CONTROL_SEQ").val(rowData.CONTROL_SEQ);
             $("#cam_work_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val(rowData.CONTROL_DETAIL_SEQ);
             $("#cam_work_manage_pop_form").find("#DXF_GFILE_SEQ").val(rowData.DXF_GFILE_SEQ);
@@ -950,6 +998,7 @@
         let camWorkStepSaveValidation = function(){
             let beforeCheckOrder = true;
             let returnMessage = "";
+            let checkCount = 0;
             $("#cam_work_manage_pop_form").find("input:checkbox[name^='CAM_WORK_CHK_']").each(function() {
                 if($(this).prop('checked')) {
                     let indexNum = $(this).attr('name').split('_').reverse()[0];
@@ -974,10 +1023,14 @@
                         return;
                     }
                     beforeCheckOrder = true;
+                    checkCount++;
                 }else{
                     beforeCheckOrder = false;
                 }
             });
+            if(checkCount == 0){
+                returnMessage = "하나 이상의 Step 정보를 등록하여야 합니다.";
+            }
             return returnMessage;
         }
 
