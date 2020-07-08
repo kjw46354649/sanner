@@ -50,8 +50,13 @@
 .locationWrap ul li:first-child:before{display: none;}
 
 .locationWrap ul li a { display: block; font-family: 'NotoKrR'; font-size: 12px; color: #fff; line-height: 45px; }
+
 .contentsWrap { position: relative; margin-left: 270px; box-sizing: border-box; background: #f6f6f9; padding-top: 5px;; }
 .contentsWrap:after { content: ''; width: 0; height: 0; display: block; overflow: hidden; clear: both; }
+
+.contentsSingleWrap { position: relative; box-sizing: border-box; background: #f6f6f9; padding-top: 5px;; }
+.contentsSingleWrap:after { content: ''; width: 0; height: 0; display: block; overflow: hidden; clear: both; }
+
 
 /*.tabMenuWrap{ padding-top: 17px; margin-left: 270px; min-height: 28px;}*/
 .tabMenuWrap{ padding-top: 8px; margin-left: 270px; min-height: 37px;}

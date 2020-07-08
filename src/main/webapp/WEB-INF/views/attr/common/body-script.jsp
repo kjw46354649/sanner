@@ -91,14 +91,6 @@
 
     $(document).ready(function() {
 
-        $('.contentsWrap .addTapPage').hide();
-        $('.tabMenuWrap ul').append("<li class='on'><a href='#a;' id='tab_999'>MAIN</a></li>");
-        $.get("/static/main/main", function (data) {
-            let containerDiv = "<span class='addTapPage' id='view_tab_999'>" + data + "</span>";
-            $(".contentsWrap").append(containerDiv).trigger('create');
-            tabMenuFn();
-        });
-
         $.ajax({
             url: '/json-list',
             cache: false,

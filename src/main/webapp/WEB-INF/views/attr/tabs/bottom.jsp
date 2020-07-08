@@ -250,16 +250,16 @@
                 <div class="listdiv">
                     <div class="tableWrap" >
                         <ul class="conWrapPop60">
-                            <h4>공유사항</h4>
-                            <div id="g_item_detail_pop_grid_03" class="jqx-refresh"></div>
-                        </ul>
-                        <ul class="conWrapPop40">
                             <h4>CAM작업이력 <span style="color:#7d1919" id="g_item_detail_pop_grid_04_info1"></span></h4>
                             <span class="slt_wrap namePlusSlt rightName" >
                                 <label for="g_item_detail_pop_grid_04_info2">Update</label>
                                 <input type="text" id="g_item_detail_pop_grid_04_info2" class="wd_150" title="">
                             </span>
                             <div id="g_item_detail_pop_grid_04" class="jqx-refresh"></div>
+                        </ul>
+                        <ul class="conWrapPop40">
+                            <h4>공유사항</h4>
+                            <div id="g_item_detail_pop_grid_03" class="jqx-refresh"></div>
                         </ul>
                     </div>
                 </div>
@@ -1012,11 +1012,32 @@
         {title: 'RNUM', dataType: 'string', dataIndx: 'RNUM', hidden:true},
         {title: 'STATUS_INFO', dataType: 'string', dataIndx: 'STATUS_INFO', hidden:true},
         {title: 'UPDATE_TIME_INFO', dataType: 'string', dataIndx: 'UPDATE_TIME_INFO', hidden:true},
-        {title: 'Step', dataType: 'string', dataIndx: 'CAM_SEQ', width: 95, editable: false},
+        {title: 'Step', dataType: 'string', dataIndx: 'CAM_SEQ', width: 10, editable: false},
         {title: '작업위치', dataType: 'string', dataIndx: 'WORK_DIRECTION', width: 95, editable: false},
-        {title: '작업내용', dataType: 'string', dataIndx: 'WORK_DESC', width: 95, editable: false},
-        {title: '작업자', dataType: 'string', dataIndx: 'WORK_USER_NM', width: 95, editable: false},
-        {title: '파일', dataType: 'string', dataIndx: 'CAM_GFILE_SEQ', width: 95, editable: false}
+        {title: '작업내용', dataType: 'string', dataIndx: 'WORK_DESC', width: 200, editable: false},
+        {title: '작업자', dataType: 'string', dataIndx: 'WORK_USER_NM', width: 60, editable: false},
+        {title: '파일', datatype: 'string', dataIndx: '', minWidth: 30, width: 60,
+            render: function (ui) {
+                let rowData = ui.rowData;
+                let iconFiles = '';
+                if(rowData.CAM_FILE_SEQ) iconFiles += '<span id="downloadCAMFIle" class="greenFileImageICon" style="cursor: pointer; margin-left:3px;"></span>&nbsp;&nbsp;';
+                if(rowData.NC_FILE_SEQ) iconFiles += '<span id="downloadNCFile" class="purpleFileImageICon" style="cursor: pointer; margin-left:25px;"></span>';
+                return iconFiles;
+            },
+            postRender: function (ui) {
+                let grid = this;
+                let $cell = grid.getCell(ui);
+                let rowData = ui.rowData;
+                $cell.find('#downloadCAMFIle').bind('click', function(e) {
+                    e.preventDefault();
+                    fnSingleFileDownloadFormPageAction(rowData.CAM_FILE_SEQ);
+                });
+                $cell.find('#downloadNCFile').bind('click', function(e) {
+                    e.preventDefault();
+                    fnSingleFileDownloadFormPageAction(rowData.NC_FILE_SEQ);
+                });
+            }
+        }
     ];
     let g_ItemDetailPopObj04 = {
         width: "100%", height: 120,
@@ -1028,6 +1049,7 @@
                 return {data: dataJSON.data};
             }
         },
+        postRenderInterval: -1,
         strNoRows: g_noData,
         columnTemplate: {align: 'center', hvalign: 'center'},
         scrollModel: {autoFit: true},
@@ -1195,10 +1217,7 @@
         $("#g_item_detail_pop_form").find("#queryId").val('inspection.selectCommItemDetailInfoGrid5');
         g_ItemDetailPopObj05.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
         g_ItemDetailPopGridId05.pqGrid(g_ItemDetailPopObj05);
-
         let data4 = g_ItemDetailPopGrid04.pqGrid('option', 'dataModel.data');
-        console.log(data4);
-        console.log(g_ItemDetailPopGrid04);
         if(data4 != null){
             setTimeout(function() {
                 let rowDataArray = g_ItemDetailPopGrid04.pqGrid('getRowData', {rowIndx: 0});
