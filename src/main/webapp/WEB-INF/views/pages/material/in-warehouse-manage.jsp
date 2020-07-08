@@ -393,14 +393,10 @@
                 editable: function(ui){
                     if(ui.rowData != undefined) {
                         let MY_MAT_STOCK_SEQ = ui.rowData.MY_MAT_STOCK_SEQ == undefined ? '' : ui.rowData.MY_MAT_STOCK_SEQ;
-                        if(MY_MAT_STOCK_SEQ) {
-                            return false;
-                        } else{
-                            return true;
-                        }
-                    } else {
-                        return false;
+                        if(MY_MAT_STOCK_SEQ) return false;
+                        return true;
                     }
+                    return false;
                 },
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1049') },
                 render: function (ui) {
@@ -424,7 +420,7 @@
                     }
                 }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
-            {title: '상세위치', dataType: 'string', dataIndx: 'LOC_NM', minWidth: 120,
+            {title: '상세위치', dataType: 'string', dataIndx: 'LOC_SEQ', minWidth: 120,
                 editable: function(ui){
                     if(ui.rowData != undefined) {
                         let MY_MAT_STOCK_SEQ = ui.rowData.MY_MAT_STOCK_SEQ == undefined ? '' : ui.rowData.MY_MAT_STOCK_SEQ;
@@ -449,19 +445,47 @@
                                     "WAREHOUSE_CD" : WAREHOUSE_CD
                                 }
                         };
-                        let ajaxData = "";
+                        let ajaxData = [];
 
                         fnPostAjaxAsync(function (data, callFunctionParam) {
                             ajaxData = data.list;
                         }, warehouseData, '');
 
                         return ajaxData;
-                    },
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
+                    }
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    if (cellData === '' || cellData === undefined) {
+                        return '';
+                    } else {
                         let rowData = inWarehouseManageManageGrid01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["LOC_SEQ"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                        let WAREHOUSE_CD = rowData["WAREHOUSE_CD"];
+                        let warehouseData = {
+                            "url" : '/json-list',
+                            'data' :
+                                {
+                                    "queryId": 'dataSource.getLocationListWithWarehouse',
+                                    "WAREHOUSE_CD" : WAREHOUSE_CD
+                                }
+                        };
+                        let ajaxData = "";
+
+                        fnPostAjaxAsync(function (data, callFunctionParam) {
+                            ajaxData = data.list;
+                        }, warehouseData, '');
+
+                        let index = ajaxData.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = ajaxData.findIndex(function (element) {
+                                return element.value == cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : ajaxData[index].text;
                     }
                 }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
@@ -719,6 +743,15 @@
                 $("#in_warehouse_manage_hidden_form #LOC_SEQ").val(LOC_SEQ);
                 //selectInWarehouseManageManageGrid02List();
                 //}
+            },
+            change: function (evt, ui) {
+                if(ui.source == "edit") {
+                    let WAREHOUSE_CD = ui.updateList[0].newRow.WAREHOUSE_CD == undefined ? "" : ui.updateList[0].newRow.WAREHOUSE_CD;
+                    if(WAREHOUSE_CD != "") {
+                        let rowIndx = ui.updateList[0].rowIndx;
+                        inWarehouseManageManageGrid01.pqGrid('updateRow', {rowIndx: rowIndx, row: {"LOC_SEQ": ""}});
+                    }
+                }
             },
             cellSave: function (evt, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {

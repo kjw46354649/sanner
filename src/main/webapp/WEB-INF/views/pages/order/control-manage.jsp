@@ -2428,26 +2428,49 @@
         // 바코드 출력
         $('#BARCODE_PRINT').on('click', function () {
             if (noSelectedRowAlert()) return false;
-            let formData = [];
-
-            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-                formData.push(rowData.CONTROL_BARCODE_NUM);
-            }
-            fnBarcodePrint(function(data, callFunctionParam){
-                alert(data.message);
-            }, formData, '');
-        });
-        // 라벨 출력
-        $('#LABEL_PRINT').on('click', function () {
-            if (noSelectedRowAlert()) return false;
-
             let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
             let selectedRowCount = selectedOrderManagementRowIndex.length;
             bodyHtml =
                 '<h4>\n' +
                 '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                '    <span>선택하신 ' + selectedRowCount + '건을 ' + controlStatusNm + '처리합니다. \n진행하시겠습니까?</span>\n' +
+                '    <span>선택하신 ' + selectedRowCount + '건을 처리합니다. \n진행하시겠습니까?</span>\n' +
+                '</h4>';
+            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+            let drawingBarcodelabelPrintConfirm = function (callback) {
+                commonConfirmPopup.show();
+                $("#commonConfirmYesBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                    callback(true);
+                    return;
+                });
+                $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                });
+            };
+            drawingBarcodelabelPrintConfirm(function (confirm) {
+                if (confirm) {
+                    let formData = [];
+                    for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                        let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+                        formData.push(rowData.CONTROL_BARCODE_NUM);
+                    }
+                    fnBarcodePrint(function(data, callFunctionParam){
+                        alert(data.message);
+                    }, formData, '');
+                }
+            });
+        });
+        // 라벨 출력
+        $('#LABEL_PRINT').on('click', function () {
+            if (noSelectedRowAlert()) return false;
+            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
+            let selectedRowCount = selectedOrderManagementRowIndex.length;
+            bodyHtml =
+                '<h4>\n' +
+                '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                '    <span>선택하신 ' + selectedRowCount + '건을 처리합니다. \n진행하시겠습니까?</span>\n' +
                 '</h4>';
             fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
             let labelPrintConfirm = function (callback) {

@@ -79,20 +79,25 @@ public class PopServiceImpl implements PopService {
             model.addAttribute("returnCode", "RET98");
             model.addAttribute("message", "도면에 문제가 있습니다. 도면 확인 바랍니다."); // 현재와 같은 Location 스캔 처리
         }else {
+
             /** 추가 되어야 할 데이터 **/
             String currentPopLocation = (String) controlPartInfo.get("POP_PREV_POSITION"); // 현재 위치
-            String createPro005 = (String) controlPartInfo.get("CREATE_PRO_005"); // 소재 입고 처리
-            String createPro019 = (String) controlPartInfo.get("CREATE_PRO_019");  // 외주 입고 처리
-            String createPro018 = (String) controlPartInfo.get("CREATE_PRO_018");  // 모도면 처리
+            String createPRO005 = (String) controlPartInfo.get("PRO005"); // 소재 입고 상태 처리
+            String createPRO019 = (String) controlPartInfo.get("PRO019"); // 외주 가공 입고 상태 처리
+            String createPRO009 = (String) controlPartInfo.get("PRO009"); // 가공완료 상태 처리
+            String createPRO013 = (String) controlPartInfo.get("PRO013"); // 후가공 완료 상태 처리
+            String createPRO015 = (String) controlPartInfo.get("PRO015"); // 표면처리 완료 상태 처리
+            String createPRO018 = (String) controlPartInfo.get("PRO018"); // 모도면 상태 처리
+            String innerWorkFinishDt = (String) controlPartInfo.get("INNER_WORK_FINISH_DT"); // 가공완료 일시 처리 여부
 
             if (currentPopLocation.equals(popLocation)) {
                 model.addAttribute("returnCode", "RET99");
                 model.addAttribute("message", "이미 등록된 도면 입니다. 확인 바랍니다."); // 현재와 같은 Location 스캔 처리
             } else {
                 // 소재 주문 이후에 POP 바코드 스캔 되면 소재 입고 처리를 완료 한다.
-                if (createPro005 != null && "PRO005".equals(createPro005)) {
+                if (createPRO005 != null && !"".equals(createPRO005)) {
                     // PART 소재 입고 처리
-                    controlPartInfo.put("PART_STATUS", "PRO005");
+                    controlPartInfo.put("PART_STATUS", createPRO005);
                     controlPartInfo.put("queryId", "popMapper.insertControlPartProgressStatus");
                     innodaleDao.create(controlPartInfo);
 
@@ -103,9 +108,9 @@ public class PopServiceImpl implements PopService {
                 }
 
                 // 외주 가공 요청 이후에 POP 스캔시에 외주 입고 처리
-                if (createPro019 != null && "PRO019".equals(createPro019)) {
+                if (createPRO019 != null && !"".equals(createPRO019)) {
                     // PART 소재 입고 처리
-                    controlPartInfo.put("PART_STATUS", createPro019);
+                    controlPartInfo.put("PART_STATUS", createPRO019);
                     controlPartInfo.put("queryId", "popMapper.insertControlPartProgressStatus");
                     innodaleDao.create(controlPartInfo);
 
@@ -114,19 +119,48 @@ public class PopServiceImpl implements PopService {
                     innodaleDao.update(controlPartInfo);
                 }
 
-                // 모도면이 POP 바코드 스캔 되면 조립전환 상태를 추가 한다.
-                if (createPro018 != null && "PRO018".equals(createPro018)) {
-                    controlPartInfo.put("PART_STATUS", "PRO018");
+                // 가공완료 상태 업데이트
+                if (createPRO009 != null && !"".equals(createPRO009)) {
+                    controlPartInfo.put("PART_STATUS", createPRO009);
                     controlPartInfo.put("queryId", "popMapper.insertControlPartProgressStatus");
                     innodaleDao.create(controlPartInfo);
                 }
 
+                // 후가공 상태 업데이트
+                if (createPRO013 != null && !"".equals(createPRO013)) {
+                    controlPartInfo.put("PART_STATUS", createPRO013);
+                    controlPartInfo.put("queryId", "popMapper.insertControlPartProgressStatus");
+                    innodaleDao.create(controlPartInfo);
+                }
+
+                // 표면처리 상태 업데이트
+                if (createPRO015 != null && !"".equals(createPRO015)) {
+                    controlPartInfo.put("PART_STATUS", createPRO015);
+                    controlPartInfo.put("queryId", "popMapper.insertControlPartProgressStatus");
+                    innodaleDao.create(controlPartInfo);
+                }
+
+                // 모도면이 POP 바코드 스캔 되면 조립전환 상태를 추가 한다.
+                if (createPRO018 != null && !"".equals(createPRO018)) {
+                    controlPartInfo.put("PART_STATUS", createPRO018);
+                    controlPartInfo.put("queryId", "popMapper.insertControlPartProgressStatus");
+                    innodaleDao.create(controlPartInfo);
+                }
+
+                // 가공 완료 일시 처리
+                if (innerWorkFinishDt != null && "Y".equals(innerWorkFinishDt)) {
+                    controlPartInfo.put("queryId", "popMapper.updateControlPartInnerWorkFinishDtStatus");
+                    innodaleDao.create(controlPartInfo);
+                }
+
                 // 검사실 스캔, 후가공 스캔, 표면 처리 스캔시 PART 상태도 변경 처리 한다.
-                if ("POP100".equals(popLocation) || "POP150".equals(popLocation) || "POP160".equals(popLocation)) {
-                    if ("POP100".equals(popLocation)) {
-                        // 검사실 스캔시 작업 완료대기
-                        controlPartInfo.put("PART_STATUS", "PRO009");
-                    } else if ("POP150".equals(popLocation)) {
+                if ("POP150".equals(popLocation) || "POP160".equals(popLocation)) {
+//                if ("POP100".equals(popLocation) || "POP150".equals(popLocation) || "POP160".equals(popLocation)) {
+//                    if ("POP100".equals(popLocation)) {
+//                        // 검사실 스캔시 작업 완료대기
+//                        controlPartInfo.put("PART_STATUS", "PRO009");
+//                    } else
+                    if ("POP150".equals(popLocation)) {
                         // 후가공 스캔시 후가공 입고
                         controlPartInfo.put("PART_STATUS", "PRO012");
                     } else if ("POP160".equals(popLocation)) {
@@ -147,8 +181,11 @@ public class PopServiceImpl implements PopService {
                 innodaleDao.create(controlPartInfo);
 
 
-                String controlInfo = (String) controlPartInfo.get("CONTROL_NUM_NM"); // 관리번호 정보
-                String locationInfo = (String) controlPartInfo.get("CHECK_POSITION_NM");   // POP 정보
+                hashMap.put("queryId", "popMapper.selectScanBarcodeInfo");
+                Map<String, Object> scanBarcodeInfo = innodaleDao.getInfo(hashMap);
+
+                String controlInfo = (String) scanBarcodeInfo.get("CONTROL_NUM_NM"); // 관리번호 정보
+                String locationInfo = (String) scanBarcodeInfo.get("CHECK_POSITION_NM");   // POP 정보
 
                 model.addAttribute("returnCode", "RET00");
                 model.addAttribute("controlInfo", controlInfo);

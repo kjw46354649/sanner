@@ -547,17 +547,8 @@
                     }
                 ]
             },
-            {
-                title: '외주요망납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'OUTSIDE_HOPE_DUE_DT',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
-                editable: function (ui) {
-                    let rowData = ui.rowData;
-
-                    return rowData.OUTSIDE_STATUS !== 'OST001';
-                },
-                editor: {type: 'textbox', init: fnDateEditor},
+            {title: '요망납기', width: 70, dataType: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor},
                 render: function (ui) {
-                    console.log(ui.cellData);
                     if (!ui.cellData) {
                         let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
                         visibleDate.setDate(visibleDate.getDate() - 2);
@@ -653,16 +644,10 @@
             numberCell: {title: 'No.'},
             trackModel: {on: true},
             editable: false,
-            columnTemplate: {
-                align: 'center',
-                halign: 'center',
-                hvalign: 'center',
-                render: outsourcingOrderManageFilterRender
-            },
-            filterModel: { mode: 'OR' },
+            columnTemplate: { align: 'center', halign: 'center', hvalign: 'center', render: outsourcingOrderManageFilterRender},
+            filterModel: {mode: 'OR'},
             colModel: colModel,
             strNoRows: g_noData,
-
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: {'queryId': 'dataSource.emptyGrid'}, recIndx: 'ROW_NUM',
@@ -942,7 +927,7 @@
                     {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
                 ]
             },
-            {title: '요망<br>납기', datatype: 'date', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor},
+            {title: '외주<br>요망납기', datatype: 'date', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor},
                 render: function (ui) {
                     if(!ui.cellData) {
                         console.log(ui.cellData);
@@ -1200,7 +1185,7 @@
                     {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
                 ]
             },
-            {title: '요망<br>납기', datatype: 'date', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor}},
+            {title: '외주<br>요망납기', datatype: 'date', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor}},
             {title: '비고', datatype: 'string', dataIndx: 'OUTSIDE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
         ];
         const cancelRequestOutsideObj = {
@@ -2149,7 +2134,7 @@
         $('#OUTSIDE_MANAGE_END_DATE_BUTTON').on('click', function () {
             $('#OUTSIDE_MANAGE_END_DATE').focus();
         });
-        
+
         /* 메일 드래그앤드랍 */
         /** drag & drop file Attach */
         // 임시 비활성화

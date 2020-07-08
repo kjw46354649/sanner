@@ -563,11 +563,23 @@
           AND A.ORDER_QTY = (SELECT IFNULL(SUM(M.OUT_QTY),0) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = A.ORDER_SEQ)
     </update>
     <update id="updateOutgoingOutType1After2" parameterType="java.util.HashMap">
-        UPDATE jmes.TBL_CONTROL A SET
-                                  A.OUT_FINISH_DT = CASE WHEN A.OUT_FINISH_DT IS NULL THEN NOW() ELSE A.OUT_FINISH_DT END
+        UPDATE jmes.TBL_CONTROL A
+        SET
+            A.OUT_FINISH_DT = CASE WHEN A.OUT_FINISH_DT IS NULL THEN NOW() ELSE A.OUT_FINISH_DT END
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
         AND EXISTS( SELECT 1 FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ)
           AND NOT EXISTS( SELECT 1 FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.OUT_FINISH_DT IS NULL)
+    </update>
+    <update id="updateOutgoingOutType1After3" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_CONTROL_PART A
+        SET
+            A.INNER_WORK_FINISH_DT = CASE WHEN A.INNER_WORK_FINISH_DT IS NULL THEN NOW() ELSE A.INNER_WORK_FINISH_DT END
+        WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND EXISTS (SELECT 1 FROM TBL_MCT_WORK T
+                    	     WHERE A.CONTROL_SEQ = T.CONTROL_SEQ AND T.DEL_YN = 'N'
+                    	    )
+            AND EXISTS( SELECT 1 FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ)
+            AND NOT EXISTS( SELECT 1 FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.OUT_FINISH_DT IS NULL)
     </update>
     <insert id="insertOutgoingOutType2" parameterType="java.util.HashMap">
     /* 그리드 여러개 출고버튼시 */
@@ -650,10 +662,21 @@
     </update>
     <update id="updateOutgoingOutType3After2" parameterType="java.util.HashMap">
         UPDATE jmes.TBL_CONTROL A
-        SET A.OUT_FINISH_DT = CASE WHEN A.OUT_FINISH_DT IS NULL THEN NOW() ELSE A.OUT_FINISH_DT END
+            SET A.OUT_FINISH_DT = CASE WHEN A.OUT_FINISH_DT IS NULL THEN NOW() ELSE A.OUT_FINISH_DT END
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
         AND EXISTS( SELECT 1 FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ)
           AND NOT EXISTS( SELECT 1 FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.OUT_FINISH_DT IS NULL)
+    </update>
+
+    <update id="updateOutgoingOutType3After3" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_CONTROL_PART A
+            SET A.INNER_WORK_FINISH_DT = CASE WHEN A.INNER_WORK_FINISH_DT IS NULL THEN NOW() ELSE A.INNER_WORK_FINISH_DT END
+        WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
+          AND EXISTS( SELECT 1 FROM TBL_MCT_WORK T
+                  	     WHERE A.CONTROL_SEQ = T.CONTROL_SEQ AND T.DEL_YN = 'N'
+                  	    )
+        AND EXISTS( SELECT 1 FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ)
+        AND NOT EXISTS( SELECT 1 FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.OUT_FINISH_DT IS NULL)
     </update>
 
     <select id="selectOutgoingOutType4" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -717,6 +740,18 @@
         AND EXISTS( SELECT 1 FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ)
           AND NOT EXISTS( SELECT 1 FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.OUT_FINISH_DT IS NULL)
     </update>
+    <update id="updateOutgoingOutType4After3" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_CONTROL_PART A
+        SET
+            A.INNER_WORK_FINISH_DT = CASE WHEN A.INNER_WORK_FINISH_DT IS NULL THEN NOW() ELSE A.INNER_WORK_FINISH_DT END
+        WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND EXISTS( SELECT 1 FROM TBL_MCT_WORK T
+                               	     WHERE A.CONTROL_SEQ = T.CONTROL_SEQ AND T.DEL_YN = 'N'
+                               	    )
+            AND EXISTS( SELECT 1 FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ)
+            AND NOT EXISTS( SELECT 1 FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.OUT_FINISH_DT IS NULL)
+    </update>
+
 
     <select id="selectOutgoingReturnInfo1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.ORDER_SEQ
