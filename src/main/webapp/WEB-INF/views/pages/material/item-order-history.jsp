@@ -29,7 +29,7 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="MATERIAL_DETAIL">소재종류</label>
                             <select name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200">
-                                <option value="">Select</option>
+                                <option value="">선택</option>
                                 <c:forEach var="code" items="${HighCode.H_1027}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -477,7 +477,6 @@
 
         /** 공통 코드 이외의 처리 부분 **/
         fnCommCodeDatasourceSelectBoxCreate($("#item_order_history_search_form").find("#MATERIAL_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
-        fnCommCodeDatasourceSelectBoxCreate($("#item_order_history_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
 
         function fnInspection(parameter, MATERIAL_ORDER_SEQ) {
             let parameters = {'url': '/json-update', 'data': parameter};
