@@ -1073,6 +1073,7 @@
     <update id="removeControl" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL
         SET
+            CONTROL_NUM = CONCAT('DEL_', #{CONTROL_NUM}),
             DEL_YN = 'Y',
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}

@@ -245,12 +245,19 @@
                     {title: '변경일시', width: 95, datatype: 'date', dataIndx: 'CONTROL_STATUS_DT', hidden: true}
                 ]
             },
-            {title: '단가확인', width: 70, dataType: 'string', dataIndx: 'PRICE_CONFIRM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text',  options: fnGetCommCodeGridSelectBox('1017')},
+            {
+                title: '단가확인', width: 70, dataType: 'string', dataIndx: 'PRICE_CONFIRM',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                },
+                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1017')},
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '' || cellData === undefined) {
+                    if (cellData === undefined || cellData === '') {
                         return '';
                     } else {
                         let priceConfirm = fnGetCommCodeGridSelectBox('1017');
@@ -268,12 +275,19 @@
                     }
                 }
             },
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+            {
+                title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: ORDER_COMPANY},
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '' || cellData === undefined) {
+                    if (cellData === undefined || cellData === '') {
                         return '';
                     } else {
                         let index = ORDER_COMPANY.findIndex(function (element) {
@@ -290,7 +304,14 @@
                     }
                 }
             },
-            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, hidden: true, editable: true,
+            {
+                title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', hidden: true,
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                },
                 editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text',
                     options: function (ui) {
@@ -304,7 +325,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '' || cellData === undefined) {
+                    if (cellData === undefined || cellData === '') {
                         return '';
                     } else {
                         let index = COMPANY_STAFF.findIndex(function (element) {
@@ -321,19 +342,73 @@
                     }
                 }
             },
-            {title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, hidden: true},
-            {title: '비고', dataType: 'string', dataIndx: 'CONTROL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {
+                title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}, hidden: true,
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                }
+            },
+            {
+                title: '비고', dataType: 'string', dataIndx: 'CONTROL_NOTE',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                }
+            },
             {title: 'INV No.<br>(거래명세No.)', width: 100, dataType: 'string', dataIndx: 'INVOICE_NUM', hidden: true},
-            {title: '프로젝트', width: 200, align: 'left', dataType: 'string', dataIndx: 'PROJECT_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, hidden: true},
-            {title: '모듈', width: 70, align: 'left', dataType: 'string', dataIndx: 'MODULE_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, hidden: true},
-            {title: '납품처', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, hidden: true},
-            {title: '비고(라벨)', width: 100, align: 'left', dataType: 'string', dataIndx: 'LABEL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, hidden: true},
-            {title: '주요<br>검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1059')},
+            {
+                title: '프로젝트', width: 200, align: 'left', dataType: 'string', dataIndx: 'PROJECT_NM', hidden: true,
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' ? true : false;
+                }
+            },
+            {
+                title: '모듈', width: 70, align: 'left', dataType: 'string', dataIndx: 'MODULE_NM', hidden: true,
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                }
+            },
+            {
+                title: '납품처', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM', hidden: true,
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' ? true : false;
+                }
+            },
+            {
+                title: '비고(라벨)', width: 100, align: 'left', dataType: 'string', dataIndx: 'LABEL_NOTE', hidden: true,
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' ? true : false;
+                }
+            },
+            {
+                title: '주요<br>검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' ? true : false;
+                },
+                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1059')},
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '' || cellData === undefined) {
+                    if (cellData === undefined || cellData === '') {
                         return '';
                     } else {
                         let mainInspection = fnGetCommCodeGridSelectBox('1059');
@@ -351,8 +426,15 @@
                     }
                 }
             },
-            {title: '긴<br>급', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
+            {
+                title: '긴<br>급', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                },
+                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -373,9 +455,23 @@
                     });
                 }
             },
-            {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'red'}, style: {'font-weight': 'bold', 'color': 'black'}, editable: true},
             {
-                title: '파<br>트', minWidth: 25, dataType: 'string', dataIndx: 'PART_NUM', editable: true,
+                title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'red'},
+                style: {'font-weight': 'bold', 'color': 'black'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                }
+            },
+            {
+                title: '파<br>트', minWidth: 25, dataType: 'string', dataIndx: 'PART_NUM',
+                editable: function(ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                },
                 render: function (ui) {
                     if (ui.rowData.WORK_TYPE === 'WTP020' && ui.rowData.LAG_WORK_TYPE == undefined && ui.rowData.CONTROL_STATUS !== 'ORD001') {
                         return '<span class="ui-icon ui-icon-circle-plus" name="PART_NUM_PLUS_BUTTON" style="cursor: pointer"></span>';
@@ -424,15 +520,46 @@
                     });
                 }
             },
-            {title: '도면번호', width: 150, dataType: 'string', dataIndx: 'DRAWING_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-            {title: '품명', width: 150, align: 'left', dataType: 'string', dataIndx: 'ITEM_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-            {title: '규격', width: 110, dataType: 'string', dataIndx: 'SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+            {
+                title: '도면번호', width: 150, dataType: 'string', dataIndx: 'DRAWING_NUM',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                }
+            },
+            {
+                title: '품명', width: 150, align: 'left', dataType: 'string', dataIndx: 'ITEM_NM',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                }
+            },
+            {
+                title: '규격', width: 110, dataType: 'string', dataIndx: 'SIZE_TXT',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                }
+            },
+            {
+                title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1033')},
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '' || cellData === undefined) {
+                    if (cellData === undefined || cellData === '') {
                         return '';
                     } else {
                         let workType = fnGetCommCodeGridSelectBox('1033');
@@ -450,7 +577,14 @@
                     }
                 }
             },
-            {title: '외<br>주', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'OUTSIDE_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+            {
+                title: '외<br>주', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'OUTSIDE_YN',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -458,12 +592,19 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+            {
+                title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1014')},
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '' || cellData === undefined) {
+                    if (cellData === undefined || cellData === '') {
                         return '';
                     } else {
                         let workFactory = fnGetCommCodeGridSelectBox('1014');
@@ -481,7 +622,14 @@
                     }
                 }
             },
-            {title: '소재<br>사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+            {
+                title: '소재<br>사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -489,15 +637,51 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor}},
-            {title: '소재<br>종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+            {
+                title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined && rowData.WORK_TYPE !== 'WTP020' ? true : false;
+                },
+                editor: {type: 'textbox', init: fnDateEditor},
+                render: function (ui) {
+                    let rowData = ui.rowData;
+
+                    if (rowData.WORK_TYPE === 'WTP020') {
+                        let cls = 'bg-lightgray';
+
+                        return {cls: cls};
+                    }
+                }
+            },
+            // TODO: 가공완료(집계용)
+            // {
+            //     title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT',
+            //     styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+            //     editable: function (ui) {
+            //         let rowData = ui.rowData;
+            //
+            //         return rowData.CONTROL_STATUS === undefined ? true : false;
+            //     },
+            //     editor: {type: 'textbox', init: fnDateEditor}
+            // },
+            {
+                title: '소재<br>종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined && rowData.WORK_TYPE !== 'WTP020' ? true : false;
+                },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027')},
                 render: function (ui) {
                     let cellData = ui.cellData;
+                    let rowData = ui.rowData;
+                    let cls = null, text = cellData;
 
-                    if (cellData === '' || cellData === undefined) {
-                        return '';
-                    } else {
+                    if (cellData !== undefined) {
                         let materialDetail = fnGetCommCodeGridSelectBox('1027');
                         let index = materialDetail.findIndex(function (element) {
                             return element.text === cellData;
@@ -509,21 +693,44 @@
                             });
                         }
 
-                        return (index < 0) ? cellData : materialDetail[index].text;
+                        text = index < 0 ? cellData : materialDetail[index].text;
+                    }
+
+                    if (rowData.WORK_TYPE === 'WTP020') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: text};
+                }
+            },
+            {
+                title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', hidden: true,
+                render: function (ui) {
+                    let rowData = ui.rowData;
+
+                    if (rowData.WORK_TYPE === 'WTP020') {
+                        let cls = 'bg-lightgray';
+
+                        return {cls: cls};
                     }
                 }
             },
-            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', hidden: true},
-            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+            {
+                title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined && rowData.WORK_TYPE !== 'WTP020' ? true : false;
+                },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text',options: fnGetCommCodeGridSelectBox('1029')},
                 render: function (ui) {
                     let cellData = ui.cellData;
+                    let rowData = ui.rowData;
+                    let cls = null, text;
 
-                    if (cellData === '' || cellData === undefined) {
-                        return '';
-                    } else {
+                    if (cellData !== undefined) {
                         let materialKind = fnGetCommCodeGridSelectBox('1029');
-
                         let index = materialKind.findIndex(function (element) {
                             return element.text === cellData;
                         });
@@ -534,11 +741,24 @@
                             });
                         }
 
-                        return (index < 0) ? cellData : materialKind[index].text;
+                        text = index < 0 ? cellData : materialKind[index].text;
                     }
+
+                    if (rowData.WORK_TYPE === 'WTP020') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: text};
                 }
             },
-            {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+            {
+                title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined && rowData.WORK_TYPE !== 'WTP020' ? true : false;
+                },
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -547,10 +767,10 @@
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
+                    let rowData = ui.rowData;
+                    let cls = null, text;
 
-                    if (cellData === '' || cellData === undefined) {
-                        return '';
-                    } else {
+                    if (cellData !== undefined) {
                         let surfaceTreat = fnGetCommCodeGridSelectBox('1039');
                         let index = surfaceTreat.findIndex(function (element) {
                             return element.text === cellData;
@@ -562,27 +782,98 @@
                             });
                         }
 
-                        return (index < 0) ? cellData : surfaceTreat[index].text;
+                        text = index < 0  ? cellData : surfaceTreat[index].text;
+                    }
+
+                    if (rowData.WORK_TYPE === 'WTP020') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: text};
+                }
+            },
+            {
+                title: '소재비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined && rowData.WORK_TYPE !== 'WTP020' ? true : false;
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    let rowData = ui.rowData;
+                    let cls = null, text = cellData;
+
+                    if (rowData.WORK_TYPE === 'WTP020') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: text};
+                }
+            },
+            {
+                title: '파트<br>단위<br>수량', align: 'right', dataType: 'integer', dataIndx: 'PART_UNIT_QTY',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined && rowData.WORK_TYPE === 'WTP050' ? true : false;
+                },
+                render: function (ui) {
+                    let rowData = ui.rowData;
+
+                    if (rowData.WORK_TYPE !== 'WTP050') {
+                        let cls = 'bg-lightgray';
+
+                        return {cls: cls};
                     }
                 }
             },
-            {title: '소재비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-            {title: '파트<br>단위<br>수량', align: 'right', dataType: 'integer', dataIndx: 'PART_UNIT_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true},
-            {title: '주문<br>수량', align: 'right', dataType: 'integer', dataIndx: 'CONTROL_ORDER_QTY'},
+            {title: '주문<br>수량', align: 'right', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY'},
             {
-                title: '대칭', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, colModel: [
-                    {title: '원칭', align: 'right', dataType: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-                    {title: '대칭', align: 'right', dataType: 'integer', dataIndx: 'OTHER_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
+                title: '대칭', align: 'center',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                colModel: [
+                    {
+                        title: '원칭', align: 'right', dataType: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return rowData.CONTROL_STATUS === undefined ? true : false;
+                        }
+                    },
+                    {
+                        title: '대칭', align: 'right', dataType: 'integer', dataIndx: 'OTHER_SIDE_QTY',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return rowData.CONTROL_STATUS === undefined ? true : false;
+                        }
+                    }
                 ]
             },
             {
-                title: '발주정보', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, colModel: [
+                title: '발주정보', align: 'center',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                colModel: [
                     {
-                        title: '', minWidth: 25, datatype: 'string', dataIndx: 'ORDER_NUM_PLUS_BUTTON', styleHead: {'background':'#a9d3f5'},
+                        title: '', minWidth: 25, datatype: 'string', dataIndx: 'ORDER_NUM_PLUS_BUTTON',
+                        styleHead: {'background': '#a9d3f5'},
                         render: function (ui) {
+                            let rowData = ui.rowData;
+                            let cls = null, text = null;
+
                             if ((ui.rowData.WORK_TYPE === 'WTP010' || ui.rowData.WORK_TYPE === 'WTP020' || ui.rowData.WORK_TYPE === 'WTP030') && ui.rowData.CONTROL_STATUS !== 'ORD001') {
-                                return '<span class="ui-icon ui-icon-circle-plus" name="ORDER_NUM_PLUS_BUTTON" style="cursor: pointer"></span>';
+                                text = '<span class="ui-icon ui-icon-circle-plus" name="ORDER_NUM_PLUS_BUTTON" style="cursor: pointer"></span>';
                             }
+                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
                         },
                         postRender: function (ui) {
                             let grid = this;
@@ -604,40 +895,162 @@
                             });
                         }
                     },
-                    {title: '발주번호', width: 90, datatype: 'string', dataIndx: 'ORDER_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-                    {title: '수량', datatype: 'string', dataIndx: 'ORDER_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-                    {title: '납기', width: 70, datatype: 'string', dataIndx: 'ORDER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor}},
-                    {title: '출고', datatype: 'string', dataIndx: 'OUT_QTY'},
-                    {title: '출고일자', datatype: 'string', dataIndx: 'ORDER_OUT_FINISH_DT'},
-                    {title: '납품확인', width: 70, datatype: 'string', dataIndx: 'DELIVERY_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor}},
-                ]
-            },
-            {
-                title: '상세가공요건', dataIndx: 'DETAIL_MACHINE_REQUIREMENT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-
-            },
-            /*{
-                title: '상세가공요건', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, hidden: true, colModel: [
-                    {title: '선반', datatype: 'string', dataIndx: 'DETAIL_LATHE', },
-                    {title: '가공면', datatype: 'string', dataIndx: 'DETAIL_SURFACE'},
-                    {title: '클램핑', datatype: 'string', dataIndx: 'DETAIL_CLAMPING'},
-                    {title: '포켓', datatype: 'string', dataIndx: 'DETAIL_POCKET'},
-                    {title: '드릴', datatype: 'string', dataIndx: 'DETAIL_DRILL'},
-                    {title: '난도', datatype: 'string', dataIndx: 'DETAIL_DIFFICULTY'}
-                ]
-            },*/
-            {
-                title: '소재마감', align: 'center',  styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, hidden: true, colModel: [
                     {
-                        title: 'TM각비', width: 70, dataType: 'string', dataIndx: 'MATERIAL_FINISH_TM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                        editable: true, hidden: true,
-                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010')},
+                        title: '발주번호', width: 90, datatype: 'string', dataIndx: 'ORDER_NUM',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return rowData.CONTROL_STATUS === undefined && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                        },
                         render: function (ui) {
                             let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
 
-                            if (cellData === '' || cellData === undefined) {
-                                return '';
-                            } else {
+                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
+                        }
+                    },
+                    {
+                        title: '수량', datatype: 'string', dataIndx: 'ORDER_QTY',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return rowData.CONTROL_STATUS === undefined && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                        },
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
+                            
+                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
+                        }
+                    },
+                    {
+                        title: '납기', width: 70, datatype: 'string', dataIndx: 'ORDER_DUE_DT',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return rowData.CONTROL_STATUS === undefined && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                        },
+                        editor: {type: 'textbox', init: fnDateEditor},
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
+
+                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
+                        }
+                    },
+                    {
+                        title: '출고', datatype: 'string', dataIndx: 'OUT_QTY',
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
+
+                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
+                        }
+                    },
+                    {
+                        title: '출고일자', datatype: 'string', dataIndx: 'ORDER_OUT_FINISH_DT',
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
+
+                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
+                        }
+                    },
+                    {
+                        title: '납품확인', width: 70, datatype: 'string', dataIndx: 'DELIVERY_DT',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return rowData.CONTROL_STATUS === undefined && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                        },
+                        editor: {type: 'textbox', init: fnDateEditor},
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
+
+                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
+                        }
+                    },
+                ]
+            },
+            {
+                title: '상세가공요건', width: 60, dataIndx: 'DETAIL_MACHINE_REQUIREMENT',
+                styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    let rowData = ui.rowData;
+                    let cls = null, text = cellData;
+
+                    if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: text};
+                }
+            },
+            {
+                title: '소재마감', align: 'center', hidden: true,
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                colModel: [
+                    {
+                        title: 'TM각비', width: 70, dataType: 'string', dataIndx: 'MATERIAL_FINISH_TM', hidden: true,
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return (rowData.CONTROL_STATUS === undefined) && (rowData.WORK_TYPE !== 'WTP020' || rowData.WORK_TYPE !== 'WTP040') ? true : false;
+                        },
+                        editor: {
+                            type: 'select',
+                            valueIndx: 'value',
+                            labelIndx: 'text',
+                            options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010')
+                        },
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
+
+                            if (cellData !== undefined) {
                                 let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
                                 let index = workFactory.findIndex(function (element) {
                                     return element.text === cellData;
@@ -649,20 +1062,31 @@
                                     });
                                 }
 
-                                return (index < 0) ? cellData : workFactory[index].text;
+                                text = index < 0 ? cellData : workFactory[index].text;
                             }
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
                         }
                     },
                     {
-                        title: '연마비', width: 70, dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                        editable: true, hidden: true,
+                        title: '연마비', width: 70, dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND', hidden: true,
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return (rowData.CONTROL_STATUS === undefined) && (rowData.WORK_TYPE !== 'WTP020' || rowData.WORK_TYPE !== 'WTP040') ? true : false;
+                        },
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020')},
                         render: function (ui) {
                             let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
 
-                            if (cellData === '' || cellData === undefined) {
-                                return '';
-                            } else {
+                            if (cellData !== undefined) {
                                 let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
                                 let index = workFactory.findIndex(function (element) {
                                     return element.text === cellData;
@@ -674,20 +1098,31 @@
                                     });
                                 }
 
-                                return (index < 0) ? cellData : workFactory[index].text;
+                                text = index < 0  ? cellData : workFactory[index].text;
                             }
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
                         }
                     },
                     {
-                        title: '열처리', width: 70, dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                        editable: true, hidden: true,
+                        title: '열처리', width: 70, dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', hidden: true,
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return (rowData.CONTROL_STATUS === undefined) && (rowData.WORK_TYPE !== 'WTP020' || rowData.WORK_TYPE !== 'WTP040') ? true : false;
+                        },
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030')},
                         render: function (ui) {
                             let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
 
-                            if (cellData === '' || cellData === undefined) {
-                                return '';
-                            } else {
+                            if (cellData !== undefined) {
                                 let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
                                 let index = workFactory.findIndex(function (element) {
                                     return element.text === cellData;
@@ -699,37 +1134,275 @@
                                     });
                                 }
 
-                                return (index < 0) ? cellData : workFactory[index].text;
+                                text = index < 0 ? cellData : workFactory[index].text;
                             }
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
                         }
                     },
                 ]
             },
             {
                 title: '예상소재 Size ( mm / Kg / cm3)', align: 'center', hidden: true, colModel: [
-                    {title: '@', datatype: 'string', dataIndx: 'RKFH'},
-                    {title: '가로', datatype: 'string', dataIndx: 'SIZE_W_M'},
-                    {title: '세로', datatype: 'string', dataIndx: 'SIZE_H_M'},
-                    {title: '높이', datatype: 'string', dataIndx: 'SIZE_T_M'},
-                    {title: '중량', datatype: 'string', dataIndx: 'SIZE_D_M'},
-                    {title: '부피', datatype: 'string', dataIndx: 'SIZE_L_M'}
+                    {
+                        title: '@', datatype: 'string', dataIndx: 'RKFH',
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
+                        }
+                    },
+                    {
+                        title: '가로', datatype: 'string', dataIndx: 'SIZE_W_M',
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
+                        }
+                    },
+                    {title: '세로', datatype: 'string', dataIndx: 'SIZE_H_M',
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
+                        }
+                    },
+                    {title: '높이', datatype: 'string', dataIndx: 'SIZE_T_M',
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
+                        }},
+                    {
+                        title: '중량', datatype: 'string', dataIndx: 'SIZE_D_M',
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
+                        }
+                    },
+                    {
+                        title: '부피', datatype: 'string', dataIndx: 'SIZE_L_M',
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
+                        }
+                    }
                 ]
             },
             {
-                title: '항목별 계산견적 단가 (10원단위 반올림)', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, hidden: true, colModel: [
-                    {title: '소재비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-                    {title: 'TM각비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_TM_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-                    {title: '연마비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_GRIND_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-                    {title: '열처리', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_HEAT_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-                    {title: '표면처리', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SURFACE_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-                    {title: '가공비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_PROCESS_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-                    {title: '기타추가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_ETC_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-                    {title: '견적비고', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_AMT_NOTE',styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},  editable: true}
+                title: '항목별 계산견적 단가 (10원단위 반올림)',
+                align: 'center',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                hidden: true,
+                colModel: [
+                    {
+                        title: '소재비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_AMT',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return (rowData.CONTROL_STATUS === undefined) && (rowData.WORK_TYPE !== 'WTP020' || rowData.WORK_TYPE !== 'WTP040') ? true : false;
+                        },
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
+                        }
+                    },
+                    {
+                        title: 'TM각비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_TM_AMT',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return (rowData.CONTROL_STATUS === undefined) && (rowData.WORK_TYPE !== 'WTP020' || rowData.WORK_TYPE !== 'WTP040') ? true : false;
+                        },
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
+                        }
+                    },
+                    {
+                        title: '연마비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_GRIND_AMT',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return (rowData.CONTROL_STATUS === undefined) && (rowData.WORK_TYPE !== 'WTP020' || rowData.WORK_TYPE !== 'WTP040') ? true : false;
+                        },
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
+                        }
+                    },
+                    {
+                        title: '열처리', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_HEAT_AMT',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return (rowData.CONTROL_STATUS === undefined) && (rowData.WORK_TYPE !== 'WTP020' || rowData.WORK_TYPE !== 'WTP040') ? true : false;
+                        },
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
+                        }
+                    },
+                    {
+                        title: '표면처리', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SURFACE_AMT',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return (rowData.CONTROL_STATUS === undefined) && (rowData.WORK_TYPE !== 'WTP020' || rowData.WORK_TYPE !== 'WTP040') ? true : false;
+                        },
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
+                        }
+                    },
+                    {
+                        title: '가공비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_PROCESS_AMT',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return (rowData.CONTROL_STATUS === undefined) && (rowData.WORK_TYPE !== 'WTP020' || rowData.WORK_TYPE !== 'WTP040') ? true : false;
+                        },
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
+                        }
+                    },
+                    {
+                        title: '기타추가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_ETC_AMT',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return (rowData.CONTROL_STATUS === undefined) && (rowData.WORK_TYPE !== 'WTP020' || rowData.WORK_TYPE !== 'WTP040') ? true : false;
+                        },
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
+                        }
+                    },
+                    {
+                        title: '견적비고', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_AMT_NOTE',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return (rowData.CONTROL_STATUS === undefined) && (rowData.WORK_TYPE !== 'WTP020' || rowData.WORK_TYPE !== 'WTP040') ? true : false;
+                        },
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null, text = cellData;
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: text};
+                        }
+                    }
                 ]
             },
             {title: '계산<br>견적단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CALC_EST_UNIT_COST', hidden: true,
                 render: function (ui) {
                     let rowData = ui.rowData;
+                    let cls = null;
                     let UNIT_MATERIAL_AMT = rowData.UNIT_MATERIAL_AMT || 0;
                     let UNIT_TM_AMT = rowData.UNIT_TM_AMT || 0;
                     let UNIT_GRIND_AMT = rowData.UNIT_GRIND_AMT || 0;
@@ -740,16 +1413,117 @@
                     let CALC_EST_UNIT_COST = UNIT_MATERIAL_AMT + UNIT_TM_AMT + UNIT_GRIND_AMT + UNIT_HEAT_AMT + UNIT_SURFACE_AMT + UNIT_PROCESS_AMT + UNIT_ETC_AMT;
 
                     if (CALC_EST_UNIT_COST > 0) {
-                        return CALC_EST_UNIT_COST.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                        CALC_EST_UNIT_COST = CALC_EST_UNIT_COST.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
                     }
+                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: CALC_EST_UNIT_COST};
                 }
             },
-            {title: '최종<br>견적단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, hidden: true},
-            {title: '견적<br>합계금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'EST_TOTAL_AMOUNT', hidden: true},
-            {title: '최종<br>공급단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, hidden: true},
-            {title: '합계금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMT', hidden: true},
-            {title: '종전가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'WHDWJSRK', hidden: true},
-            {title: '변경전<br>도면번호', width: 120, dataType: 'string', dataIndx: 'PREV_DRAWING_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {
+                title: '최종<br>견적단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', hidden: true,
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    let rowData = ui.rowData;
+                    let cls = null, text = cellData;
+
+                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: text};
+                }
+            },
+            {
+                title: '견적<br>합계금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'EST_TOTAL_AMOUNT', hidden: true,
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    let rowData = ui.rowData;
+                    let cls = null, text = cellData;
+
+                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: text};
+                }
+            },
+            {
+                title: '최종<br>공급단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', hidden: true,
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    let rowData = ui.rowData;
+                    let cls = null, text = cellData;
+
+                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: text};
+                }
+            },
+            {
+                title: '합계금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMT', hidden: true,
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    let rowData = ui.rowData;
+                    let cls = null, text = cellData;
+
+                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: text};
+                }
+            },
+            {
+                title: '종전가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'WHDWJSRK', hidden: true,
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    let rowData = ui.rowData;
+                    let cls = null, text = cellData;
+
+                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: text};
+                }
+            },
+            {
+                title: '변경전<br>도면번호', width: 120, dataType: 'string', dataIndx: 'PREV_DRAWING_NUM',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    let rowData = ui.rowData;
+                    let cls = null, text = cellData;
+
+                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: text};
+                }
+            },
             {title: '현재 위치', dataType: 'string', dataIndx: 'POP_POSITION', hidden: true},
             {title: '현재 위치', dataType: 'string', dataIndx: 'POP_POSITION_NM', hidden: true},
             {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', hidden: true},

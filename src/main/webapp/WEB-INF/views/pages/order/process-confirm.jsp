@@ -14,7 +14,7 @@
 
 <div class="page process_confirm">
     <div class="toolWrap">
-        <span class="barCode"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="CONFIRM_ORDER_BARCODE_IMG" style="height: 32px;"></span>
+        <span class="barCode" id="processConfirmBarcodeSpan"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="CONFIRM_ORDER_BARCODE_IMG" style="height: 32px;"></span>
         <span class="barCodeTxt"><input type="text" class="wd_270_barcode" name="CONFIRM_ORDER_BARCODE_NUM" id="CONFIRM_ORDER_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요" style="ime-mode:disable;"></span>
         <div class="right_float">
             <span class="refresh mg-left10"><button type="button" id="PROCESS_CONFIRM_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
@@ -709,6 +709,8 @@
                     updatePartStatus(list, 'PRO002');
                 }, parameters, '');
 
+                $('#CONFIRM_ORDER_BARCODE_NUM').val('');
+
                 e.preventDefault();
             }
         });
@@ -731,6 +733,9 @@
         //     let src = (thisElementSrc === imgOn) ? img : imgOn;
         //     $(this).children('img').attr('src', src);
         // });
+        $('#processConfirmBarcodeSpan').on('click', function () {
+            $('#CONFIRM_ORDER_BARCODE_NUM').focus();
+        });
 
         $('#CONFIRM_ORDER_BARCODE_NUM').on({
             focus: function () {
