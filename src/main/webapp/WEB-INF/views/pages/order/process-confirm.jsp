@@ -368,7 +368,9 @@
             {title: '표면<br>처리', width: '10%',  dataType: 'string', dataIndx: 'SURFACE_TREAT_NM'},
             {title: '열<br>처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT_NM'},
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
-            {title: '가공확정일시', width: '10%', dataType: 'string', dataIndx: 'CONTROL_STATUS_DT'}
+            {title: '가공확정일시', width: '15%', dataType: 'string', dataIndx: 'CONTROL_STATUS_DT'},
+            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', hidden: true},
+            {title: '진행상태', width:'10%', dataType: 'string', dataIndx: 'PART_STATUS_NM'}
         ];
         const topRightObj = {
             height: '90%',
@@ -554,9 +556,10 @@
             {title: '표면<br>처리', width: '10%',  dataType: 'string', dataIndx: 'SURFACE_TREAT_NM'},
             {title: '열<br>처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT_NM'},
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
-            {title: '가공완료<br>일시', dataType: 'string', dataIndx: ''},
-            {title: '진행상태', dataType: 'string', dataIndx: ''},
-            {title: '검사<br>실적', dataType: 'string', dataIndx: ''}
+            {title: '가공완료<br>일시', width: '15%', dataType: 'date', dataIndx: 'INNER_WORK_FINISH_DT'},
+            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', hidden: true},
+            {title: '진행상태', width:'10%', dataType: 'string', dataIndx: 'PART_STATUS_NM'},
+            {title: '검사<br>실적', dataType: 'string', dataIndx: 'INSPECT_GRADE_NM'}
         ];
         const botRightObj = {
             height: '85%',

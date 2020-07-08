@@ -74,7 +74,7 @@
                     </li>
                     <li>
                         <span class="slt_wrap trans_slt mg-right10">
-                            <select name="OUTSIDE_SEARCH_CONDITION" id="OUTSIDE_SEARCH_CONDITION">
+                            <select name="OUTSIDE_SEARCH_CONDITION" id="OUTSIDE_SEARCH_CONDITION" style="text-align-last: center;">
                                 <c:forEach var="code" items="${HighCode.H_1084}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -89,15 +89,15 @@
                         <span class="radio_box">
                             <input reqcd="R" type="radio" name="OUTSIDE_MANAGE_TERM" id="OUTSIDE_CAL_THREE_MONTHS" value="three_months"><label for="OUTSIDE_CAL_THREE_MONTHS">3개월</label>
                         </span>
-                        <div class="calendar_wrap">
+                        <div class="calendar_wrap" style="padding-left: 15px;">
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="OUTSIDE_MANAGE_START_DATE" id="OUTSIDE_MANAGE_START_DATE"><button type="button">달력선택</button>
+                                <input type="text" title="달력정보" name="OUTSIDE_MANAGE_START_DATE" id="OUTSIDE_MANAGE_START_DATE"><button type="button" id="OUTSIDE_MANAGE_START_DATE_BUTTON">달력선택</button>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="OUTSIDE_MANAGE_END_DATE" id="OUTSIDE_MANAGE_END_DATE" readonly><button type="button">달력선택</button>
+                                <input type="text" title="달력정보" name="OUTSIDE_MANAGE_END_DATE" id="OUTSIDE_MANAGE_END_DATE" readonly><button type="button" id="OUTSIDE_MANAGE_END_DATE_BUTTON">달력선택</button>
                             </span>
-                            <span class="chk_box"><input id="OUTSIDE_MANAGE_RANGE_SEARCH" type="checkbox"><label for="OUTSIDE_MANAGE_RANGE_SEARCH">선택</label></span>
+                            <span class="chk_box" style="margin-left: 10px;"><input id="OUTSIDE_MANAGE_RANGE_SEARCH" type="checkbox"><label for="OUTSIDE_MANAGE_RANGE_SEARCH">선택</label></span>
                         </div>
                         <span class="slt_wrap">
                             <label class="label_100" for="WORK_TYPE">작업구분</label>
@@ -384,10 +384,17 @@
                 }
             },
             {title: '원발주<br>상태', dataType: 'string', dataIndx: 'CONTROL_STATUS_NM'},
-            {title: '외주<br>발주상태', dataType: 'string', dataIndx: 'OUTSIDE_STATUS', hidden: true},
+            {title: '외주<br>발주상태', dataType: 'string', dataIndx: 'OUTSIDE_STATUS', hidden: false},
             {title: '외주<br>발주상태', dataType: 'string', dataIndx: 'OUTSIDE_STATUS_NM'},
             {title: '상태변경<br>일시', width: 100, dataType: 'string', dataIndx: 'OUTSIDE_STATUS_DT'},
-            {title: '외주업체', width: 70, dataType: 'string', dataIndx: 'OUTSIDE_COMP_CD', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable:true,
+            {
+                title: '외주업체', width: 70, dataType: 'string', dataIndx: 'OUTSIDE_COMP_CD',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.OUTSIDE_STATUS !== 'OST001';
+                },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: OUTSOURCE_COMPANY},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -425,6 +432,7 @@
                 }
             },
             {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM'},
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM'},
             {title: '', minWidth: 25, width: 25, dataType: 'string', dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
                     if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" id="imageView" style="cursor: pointer"></span>'
@@ -439,7 +447,6 @@
                 }
             },
             {title: '도면번호', width: 90, dataType: 'string', dataIndx: 'DRAWING_NUM'},
-            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', editable: true},
             {title: '작업<br>형태', width: 70, dataType: 'string', dataIndx: 'WORK_TYPE_NM'},
             {title: '규격', width: 70, dataType: 'string', dataIndx: 'SIZE_TXT'},
             {title: '소재종류', width:70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
@@ -452,7 +459,14 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '소재<br>제공', minWidth: 30, width: 40, dataType: 'string', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+            {
+                title: '소재<br>제공', minWidth: 30, width: 40, dataType: 'string', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.OUTSIDE_STATUS !== 'OST001';
+                },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -463,58 +477,127 @@
             {
                 title: '요청 가공 사항', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, colModel: [
                     {
-                        title: '완제품', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
+                        title: '완제품', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return rowData.OUTSIDE_STATUS !== 'OST001';
+                        },
+                        type: 'checkbox',
+                        cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
                         render: function (ui) {
-                            if(ui.cellData === 'Y') return '<input type="checkbox" checked>';
+                            if (ui.cellData === 'Y') return '<input type="checkbox" checked>';
                             return '<input type="checkbox">';
                         }
                     },
                     {
-                        title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
+                        title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return rowData.OUTSIDE_STATUS !== 'OST001';
+                        },
+                        type: 'checkbox',
+                        cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
                         render: function (ui) {
-                            if(ui.cellData === 'Y') return '<input type="checkbox" checked>';
+                            if (ui.cellData === 'Y') return '<input type="checkbox" checked>';
                             return '<input type="checkbox">';
                         }
                     },
                     {
-                        title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
+                        title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return rowData.OUTSIDE_STATUS !== 'OST001';
+                        },
+                        type: 'checkbox',
+                        cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
                         render: function (ui) {
-                            if(ui.cellData === 'Y') return '<input type="checkbox" checked>';
+                            if (ui.cellData === 'Y') return '<input type="checkbox" checked>';
                             return '<input type="checkbox">';
                         }
                     },
                     {
-                        title: '표면처리', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
+                        title: '표면처리', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return rowData.OUTSIDE_STATUS !== 'OST001';
+                        },
+                        type: 'checkbox',
+                        cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
                         render: function (ui) {
-                            if(ui.cellData === 'Y') return '<input type="checkbox" checked>';
+                            if (ui.cellData === 'Y') return '<input type="checkbox" checked>';
                             return '<input type="checkbox">';
                         }
                     },
-                    {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
+                    {
+                        title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return rowData.OUTSIDE_STATUS !== 'OST001';
+                        }
+                    }
                 ]
             },
-            {title: '요망납기', width: 70, dataType: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor},
+            {
+                title: '외주요망납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'OUTSIDE_HOPE_DUE_DT',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.OUTSIDE_STATUS !== 'OST001';
+                },
+                editor: {type: 'textbox', init: fnDateEditor},
                 render: function (ui) {
-                    if(!ui.cellData) {
+                    console.log(ui.cellData);
+                    if (!ui.cellData) {
                         let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
-                        visibleDate.setDate(visibleDate.getDate() - 3);
-                        return visibleDate.yymmdd();
+                        visibleDate.setDate(visibleDate.getDate() - 2);
+                        return visibleDate.mmdd();
                     }
                 }
             },
             {title: '입고일자', width: 100, dataType: 'string', dataIndx: 'OUTSIDE_IN_DT'},
-            {title: '외주<br>발주번호', dataType: 'string', dataIndx: 'OUTSIDE_ORDER_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-            {title: '비고', width: 90, dataType: 'string', dataIndx: 'OUTSIDE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-            {title: '외주<br>확정단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_UNIT_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {
+                title: '외주<br>발주번호', dataType: 'string', dataIndx: 'OUTSIDE_ORDER_NUM',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.OUTSIDE_STATUS !== 'OST001';
+                }
+            },
+            {
+                title: '비고', width: 90, dataType: 'string', dataIndx: 'OUTSIDE_NOTE',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.OUTSIDE_STATUS !== 'OST001';
+                }
+            },
+            {
+                title: '외주<br>확정단가', width: 90, align: 'right', dataType: 'integer', dataIndx: 'OUTSIDE_UNIT_AMT',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}, format: '#,###',
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.OUTSIDE_STATUS !== 'OST001';
+                }
+            },
             {title: '금액<br>합계', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
             {title: '외주<br>종전가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DHLWNWHDWJSRK'},
             {
                 title: '원발주 정보', align: 'center', colModel: [
-                    {title: '납기', width: 70, datatype: 'string', dataIndx: 'INNER_DUE_DT'},
+                    {title: '납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT', render: function (ui) {}},
                     {title: '공급단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
                     {title: '발주처', datatype: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
                     {title: '발주처', width: 70, datatype: 'string', dataIndx: 'ORDER_COMP_NM'}
@@ -530,7 +613,8 @@
             },
             {title: '원주문<br>확정 일시', width: 130, datatype: 'string', dataIndx: 'CONTROL_STATUS_DT'},
             {title: '외주가공<br>요청일시', width: 130, dataType: 'string', dataIndx: 'OUTSIDE_REQUEST_DT'},
-            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
+            {
+                title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'
                 },
@@ -544,7 +628,7 @@
                 }
             },
             {
-                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
+                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="redFileImageICon" style="cursor: pointer"></span>'
                 },
@@ -568,16 +652,17 @@
             rowHtHead: 15,
             numberCell: {title: 'No.'},
             trackModel: {on: true},
+            editable: false,
             columnTemplate: {
                 align: 'center',
                 halign: 'center',
                 hvalign: 'center',
-                editable: false,
                 render: outsourcingOrderManageFilterRender
             },
             filterModel: { mode: 'OR' },
             colModel: colModel,
             strNoRows: g_noData,
+
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: {'queryId': 'dataSource.emptyGrid'}, recIndx: 'ROW_NUM',
@@ -624,10 +709,14 @@
         let $mailRecipientGrid;
         const mailRecipientGridId = 'REQUEST_OUTSIDE_MAIL_RECIPIENT_GRID';
         const mailRecipientColModel = [
-            {title: '', dataType: 'string', dataIndx: 'STAFF_SEQ', hidden: true},
+            {title: '', dataType: 'string', dataIndx: 'STAFF_SEQ', hidden: false},
             {title: '성함', dataType: 'string', dataIndx: 'STAFF_NM'},
             {title: '메일주소', dataType: 'string', dataIndx: 'STAFF_EMAIL'},
-            {title: '전화번호', dataType: 'string', dataIndx: 'STAFF_TEL'}
+            {title: '전화번호', dataType: 'string', dataIndx: 'STAFF_TEL'},
+            {
+                title: '완제품', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+                type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
+            }
         ];
         const mailRecipientObj = {
             height: 175,
@@ -639,13 +728,15 @@
             editable: false,
             scrollModel: {autoFit: true},
             dragColumns: {enabled: false},
+            // trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
             colModel: mailRecipientColModel,
-            toolbar: toolbar,
+            // toolbar: toolbar,
             strNoRows: g_noData,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: {'queryId': 'dataSource.selectCompanyStaffEmailList', 'COMP_CD': ''}, // TODO: COMP_CD 변수
+                recIndx: 'STAFF_SEQ',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -857,7 +948,7 @@
                         console.log(ui.cellData);
                         let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
                         visibleDate.setDate(visibleDate.getDate() - 3);
-                        return visibleDate.yymmdd();
+                        return visibleDate.mmdd();
                     }
                 }
             },
@@ -1779,15 +1870,28 @@
         $('#OUTSIDE_ORDER_MANAGE_SAVE').on('click', function () {
             const updateQueryList = ['orderMapper.updateControlPart'];
 
+            console.count();
+            return false;
             fnModifyPQGrid($outsideOrderManageGrid, [], updateQueryList);
         });
 
         $('#OUTSIDE_ORDER_MANAGE_DELETE').on('click', function () {
             let list = [];
+            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
+
             for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = $outsideOrderManageGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
-
                 list.push(rowData);
+
+                if (rowData.OUTSIDE_STATUS === 'OST001') {
+                    bodyHtml =
+                        '<h4>\n' +
+                        '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                        '    <span>외주발주상태가 빈칸이나 요청취소인 경우에만 가능합니다</span>\n' +
+                        '</h4>';
+                    fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
+                    return false;
+                }
             }
 
             let parameters = {'url': '/modifyOutsideOrder', 'data': {data: JSON.stringify(list)}};
@@ -2036,6 +2140,14 @@
 
         $("#outsourcingOrderManageFrozen").on('change', function(e){
             fnFrozenHandler($outsideOrderManageGrid, $(this).val());
+        });
+
+        $('#OUTSIDE_MANAGE_START_DATE_BUTTON').on('click', function () {
+            $('#OUTSIDE_MANAGE_START_DATE').focus();
+        });
+
+        $('#OUTSIDE_MANAGE_END_DATE_BUTTON').on('click', function () {
+            $('#OUTSIDE_MANAGE_END_DATE').focus();
         });
         
         /* 메일 드래그앤드랍 */
