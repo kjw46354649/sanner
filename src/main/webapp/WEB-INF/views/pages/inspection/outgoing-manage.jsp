@@ -1409,7 +1409,7 @@
                 };
                 let QUERY_ID_ARRAY = {
                     'insertQueryId': ['inspection.insertOutgoingOutType2'],
-                    'updateQueryId': ['inspection.updateOutgoingOutType1After1', 'inspection.updateOutgoingOutType1After2']
+                    'updateQueryId': ['inspection.updateOutgoingOutType1After1', 'inspection.updateOutgoingOutType1After2', 'updateOutgoingOutType1After3']
                 };
                 changes.queryIdList = QUERY_ID_ARRAY;
                 let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
@@ -1533,7 +1533,7 @@
                                 $("#outgoing_manage_pop_type_label_form").find("#outgoing_manage_pop_type_label_form_view_3").html(dataInfo.MY_PACKING_NUM);
 
                                 //. 저장하기
-                                $("#outgoing_manage_pop_type_label_form").find("#queryId").val("inspection.insertOutgoingOutType4,inspection.updateOutgoingOutType4After1,inspection.updateOutgoingOutType4After2");
+                                $("#outgoing_manage_pop_type_label_form").find("#queryId").val("inspection.insertOutgoingOutType4,inspection.updateOutgoingOutType4After1,inspection.updateOutgoingOutType4After2,inspection.updateOutgoingOutType4After3");
                                 $("#outgoing_manage_pop_type_label_form").find("#BARCODE_NUM").val(barcodeNum);
                                 let parameters = {'url': '/json-manager', 'data': $('#outgoing_manage_pop_type_label_form').serialize() };
                                 //let data = {'queryId': 'inspection.insertOutgoingOutType4','BARCODE_NUM': barcodeNum};
@@ -1572,7 +1572,7 @@
                                         $("#outgoing_manage_pop_type_control_form").find("#outgoing_manage_pop_type_control_form_view_3").html(data.PLAN_QTY);
 
                                         //. 저장하기
-                                        $("#outgoing_manage_pop_type_control_form").find("#queryId").val("inspection.insertOutgoingOutType3,inspection.updateOutgoingOutType3After1,inspection.updateOutgoingOutType3After2");
+                                        $("#outgoing_manage_pop_type_control_form").find("#queryId").val("inspection.insertOutgoingOutType3,inspection.updateOutgoingOutType3After1,inspection.updateOutgoingOutType3After2,inspection.updateOutgoingOutType3After3");
                                         //let parameters = {'url': '/json-create', 'data': $('#outgoing_manage_pop_type_control_form').serialize() };
                                         let parameters = {'url': '/json-manager', 'data': $('#outgoing_manage_pop_type_control_form').serialize()};
                                         fnPostAjax(function (data, callFunctionParam) {

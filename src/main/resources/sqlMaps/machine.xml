@@ -684,6 +684,7 @@
             LEFT OUTER JOIN jmes.TBL_EQUIP L ON K.EQUIP_SEQ = L.EQUIP_SEQ
         WHERE 1 = 1
             AND IFNULL(A.OUTSIDE_YN, 'N') = 'N'
+            AND A.WORK_TYPE NOT IN ('WTP020')
             AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009')
             <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
                 AND B.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
@@ -868,6 +869,7 @@
             LEFT OUTER JOIN jmes.TBL_EQUIP L ON K.EQUIP_SEQ = L.EQUIP_SEQ
         WHERE 1 = 1
             AND IFNULL(A.OUTSIDE_YN, 'N') = 'N'
+            AND A.WORK_TYPE NOT IN ('WTP020')
             AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009')
             <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
                 AND B.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
