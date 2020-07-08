@@ -422,16 +422,12 @@
     </update>
 
     <insert id="insertItemOrderRegisterControlPartProgress" parameterType="java.util.HashMap" >
-        INSERT INTO TBL_CONTROL_PART_PROGRESS (
-        CONTROL_SEQ,
-        CONTROL_DETAIL_SEQ,
-        SEQ,
-        PART_STATUS,
-        STATUS_DT
-        )
-        SELECT CONTROL_SEQ, CONTROL_DETAIL_SEQ, NEXTVAL(SEQ_CONTROL_PART_PROGRESS), PART_STATUS, NOW()
+        INSERT INTO TBL_CONTROL_PART_PROGRESS
+            (CONTROL_SEQ, CONTROL_DETAIL_SEQ, SEQ, PART_STATUS, STATUS_DT, INSERT_ID)
+        SELECT
+            CONTROL_SEQ, CONTROL_DETAIL_SEQ, NEXTVAL(SEQ_CONTROL_PART_PROGRESS), PART_STATUS, NOW(), #{LOGIN_USER_ID}
         FROM TBL_CONTROL_PART
-        WHERE 1=1
+        WHERE 1 = 1
             AND CONTROL_SEQ = #{CONTROL_SEQ}
             AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </insert>
@@ -884,6 +880,17 @@
             B.UPDATE_ID = #{LOGIN_USER_ID}
         WHERE A.MATERIAL_ORDER_SEQ = #{MATERIAL_ORDER_SEQ}
     </update>
+
+    <insert id="insertInWareHouseManagePartProgressManual" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CONTROL_PART_PROGRESS
+            (CONTROL_SEQ, CONTROL_DETAIL_SEQ, SEQ, PART_STATUS, STATUS_DT, INSERT_ID)
+        SELECT
+            A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, NEXTVAL(SEQ_CONTROL_PART_PROGRESS), A.PART_STATUS, NOW(), #{LOGIN_USER_ID}
+        FROM TBL_CONTROL_PART A
+            INNER JOIN TBL_MATERIAL_ORDER B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                AND B.MATERIAL_ORDER_SEQ = #{MATERIAL_ORDER_SEQ}
+        WHERE 1 = 1
+    </insert>
 
     <insert id="insertInWareHouseManageOutManual" parameterType="java.util.HashMap">
         INSERT INTO TBL_MY_MATERIAL_OUT

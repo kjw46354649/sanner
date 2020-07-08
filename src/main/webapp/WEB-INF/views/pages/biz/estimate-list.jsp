@@ -149,9 +149,14 @@
                     let CONTROL_YN = ui.rowData.CONTROL_YN;
                     let EST_SEQ = ui.rowData.EST_SEQ;
                     let EST_VER = ui.rowData.EST_VER;
+                    let FINAL_VER = ui.rowData.FINAL_VER;
 
                     if(CONTROL_YN == 'N') {
-                        return '<button type="button" id="estimateOrder" data-seq="'+EST_SEQ+'" data-ver="'+EST_VER+'" class="miniBtn blue">주문접수</button>'
+                        if(FINAL_VER == 'Y'){
+                            return '<button type="button" id="estimateOrder" data-seq="'+EST_SEQ+'" data-ver="'+EST_VER+'" class="miniBtn blue">주문등록</button>'
+                        }
+                    }   else {
+                        return '<span class="miniBtn blue">등록완료</span>'
                     }
                 }
             },
