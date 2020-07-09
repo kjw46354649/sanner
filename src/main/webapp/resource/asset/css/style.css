@@ -180,7 +180,7 @@
 .mct .bottomWrap .hWrap .slt_wrap { }
 .mct .bottomWrap .hWrap label { }
 .mct .bottomWrap .hWrap select { }
-.mct .bottomWrap .conWrap { height: 367px; padding: 10px 0; box-sizing: border-box; }
+.mct .bottomWrap .conWrap { height: 335px; padding: 10px 0; box-sizing: border-box; }
 .mct .bottomWrap .conWrap .tableWrap {margin: 0 20px; position: relative;height: 100%; }
 
 /* 일보조회 */
