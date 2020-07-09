@@ -213,6 +213,7 @@
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
+        const WAREHOUSE = fnGetCommCodeGridSelectBox('1014');
         const COMPANY_STAFF = (function () {
             let list = [];
             let parameters = {'url': '/json-list', 'data': {'queryId': 'dataSource.getCompanyStaffList'}};
@@ -284,7 +285,7 @@
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: ORDER_COMPANY},
-                render: function (ui) {
+                /*render: function (ui) {
                     let cellData = ui.cellData;
 
                     if (cellData === undefined || cellData === '') {
@@ -300,9 +301,9 @@
                             });
                         }
 
-                        return (index < 0) ? cellData : ORDER_COMPANY[index].text;
+                        return controlManageFilterRender(ui);
                     }
-                }
+                }*/
             },
             {
                 title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', hidden: true,
@@ -557,7 +558,7 @@
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1033')},
-                render: function (ui) {
+                /*render: function (ui) {
                     let cellData = ui.cellData;
 
                     if (cellData === undefined || cellData === '') {
@@ -576,7 +577,7 @@
                         }
                         return (index < 0) ? cellData : workType[index].text;
                     }
-                }
+                }*/
             },
             {
                 title: '외<br>주', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'OUTSIDE_YN',
@@ -601,8 +602,8 @@
 
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 },
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1014')},
-                render: function (ui) {
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1014')}
+                /*render: function (ui) {
                     let cellData = ui.cellData;
 
                     if (cellData === undefined || cellData === '') {
@@ -621,7 +622,7 @@
 
                         return (index < 0) ? cellData : workFactory[index].text;
                     }
-                }
+                }*/
             },
             {
                 title: '소재<br>사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
@@ -910,7 +911,7 @@
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
                     {
@@ -1742,6 +1743,7 @@
                             checkEditable: false
                         });
                     }
+                    $orderManagementGrid.pqGrid('refreshView');
                 }
             },
             cellSave: function (evt, ui) {
@@ -1902,15 +1904,16 @@
         };
 
         function controlManageFilterRender(ui) {
-            var val = ui.column.formatVal == undefined ? "" : ui.column.formatVal,
-                filter = ui.column.filter,
-                crules = (filter || {}).crules;
-            if(val == ""){
-                val = ui.cellData == undefined ? "" : ui.cellData;
+            let val = ui.cellData == undefined ? "" : ui.cellData,
+                options = ui.column.editor == undefined ? "" : ui.column.editor.options;
+            let index = -1;
+            if(options) {
+                index = options.findIndex(function (element) {
+                    return element.value == val;
+                });
+                if(index > -1) val = options[index].text;
             }
-
-            // console.log(ui);
-            if (filter && filter.on && crules && crules[0].value) {
+            if (val) {
                 var condition = $("#controlManageFilterCondition :selected").val(),
                     valUpper = val.toString().toUpperCase(),
                     txt = $("#controlManageFilterKeyword").val(),
@@ -1932,6 +1935,7 @@
                         indx = -1;
                     }
                 }
+
                 if (indx >= 0) {
                     var txt1 = val.toString().substring(0, indx);
                     var txt2 = val.toString().substring(indx, indx + txtUpper.length);
