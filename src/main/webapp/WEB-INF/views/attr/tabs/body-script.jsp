@@ -725,7 +725,7 @@
     }
 
     /**
-     * @description 레퍼런스 참조 없는 배열 복사
+     * @description 레퍼런스 참조 없는 배열 복사(deep copy)
      * @param obj
      */
     let fnCloneObj = function (obj) {

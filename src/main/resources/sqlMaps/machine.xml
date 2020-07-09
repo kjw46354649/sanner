@@ -533,22 +533,42 @@
                 )
              LEFT OUTER JOIN jmes.TBL_MCT_WORK D ON A.CONTROL_SEQ = D.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.DEL_YN = 'N'
              LEFT OUTER JOIN jmes.TBL_EQUIP E ON E.EQUIP_SEQ = D.EQUIP_SEQ
+                <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
+                    AND E.EQUIP_SEQ = #{EQUIP_SEQ}
+                </if>
         WHERE 1 = 1
-            AND IFNULL(A.OUTSIDE_YN, 'N') = 'N' <!-- 외주 요청이 아닌경우 -->
-            AND A.WORK_TYPE NOT IN ('WTP020') <!-- 조립이 아닌경우 -->
+            AND A.WORK_TYPE != 'WTP020' <!-- 조립이 아닌경우 -->
             AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO019')
+            <if test="WORK_FACTORY != null and WORK_FACTORY!= ''">
+                AND A.WORK_FACTORY = #{WORK_FACTORY}
+            </if>
             <if test="MATERIAL_DETAIL != null and MATERIAL_DETAIL != ''">
                 AND A.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
             </if>
-            <if test="PROGRESS != null and PROGRESS != ''">
-                AND A.PART_STATUS = #{PROGRESS}
+            <if test="PART_STATUS != null and PART_STATUS != ''">
+                AND A.PART_STATUS = #{PART_STATUS}
             </if>
             <if test="MCT_WORK_TYPE != null and MCT_WORK_TYPE!= ''">
                 AND A.MCT_WORK_TYPE = #{MCT_WORK_TYPE}
             </if>
-            <if test="WORK_FACTORY != null and WORK_FACTORY!= ''">
-                AND A.WORK_FACTORY = #{WORK_FACTORY}
+            <if test="PLAN_ONLY != null and PLAN_ONLY != ''">
+                <!-- 계획단계 대상만 조회 -->
+                AND (A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) IN (  SELECT Q.CONTROL_SEQ, Q.CONTROL_DETAIL_SEQ
+                                                                FROM TBL_CONTROL_PART Q
+                                                                    INNER JOIN TBL_MCT_PLAN R ON Q.CONTROL_SEQ = R.CONTROL_SEQ AND Q.CONTROL_DETAIL_SEQ = R.CONTROL_DETAIL_SEQ AND R.DEL_YN = 'N'
+                                                                        AND (R.CONTROL_SEQ, R.CONTROL_DETAIL_SEQ) NOT IN (  SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
+                                                                                                                            FROM TBL_CONTROL_PART X
+                                                                                                                            INNER JOIN TBL_MCT_WORK Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = Y.CONTROL_DETAIL_SEQ
+                                                                                                                                AND Y.WORK_STATUS IS NOT NULL AND Y.DEL_YN = 'N'))
             </if>
+            <choose>
+                <when  test="INCLUDE_OUTSIDE !='' and INCLUDE_OUTSIDE != null">
+                    OR (A.OUTSIDE_STATUS = 'OST003' AND A.OUTSIDE_IN_DT IS NOT NULL) <!-- 외주 대상 포함 -->
+                </when>
+                <otherwise>
+                    AND A.OUTSIDE_YN = 'N' <!-- 외주 요청이 아닌경우 -->
+                </otherwise>
+            </choose>
         GROUP BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
         ORDER BY B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), A.INNER_DUE_DT
     </select>

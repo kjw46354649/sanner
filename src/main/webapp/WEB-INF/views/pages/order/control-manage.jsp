@@ -503,6 +503,7 @@
                             rowIndx: lastRowIndex + 1,
                             checkEditable: false
                         });
+                        $orderManagementGrid.pqGrid('setSelection', {rowIndx: lastRowIndex + 1});
                         event.preventDefault();
                     });
                 }
@@ -875,12 +876,19 @@
                                 let totalRecords = data.length;
                                 newRowData.ROW_NUM = totalRecords + 1;
                                 newRowData.ORDER_SEQ = null;
+                                newRowData.ORDER_NUM = null;
+                                newRowData.ORDER_QTY = null;
+                                newRowData.ORDER_DUE_DT = null;
+                                newRowData.OUT_QTY = null;
+                                newRowData.ORDER_OUT_FINISH_DT = null;
+                                newRowData.DELIVERY_DT = null;
 
                                 $orderManagementGrid.pqGrid('addRow', {
                                     newRow: newRowData,
                                     rowIndx: ui.rowIndx + 1,
                                     checkEditable: false
                                 });
+                                $orderManagementGrid.pqGrid('setSelection', {rowIndx: ui.rowIndx + 1});
                                 event.preventDefault();
                             });
                         }
@@ -2488,15 +2496,34 @@
             };
             labelPrintConfirm(function (confirm) {
                 if (confirm) {
-                    let formData = [];
+                    let controlSeqStr = '';
+                    let controlDetailSeqStr = '';
 
                     for (let i = 0; i < selectedRowCount; i++) {
                         let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-                        formData.push(rowData.LABEL_BARCODE_NUM);
+
+                        controlSeqStr += rowData.CONTROL_SEQ;
+                        controlDetailSeqStr += rowData.CONTROL_DETAIL_SEQ;
+
+                        if (i < selectedRowCount - 1) {
+                            controlSeqStr += ',';
+                            controlDetailSeqStr += ',';
+                        }
                     }
-                    fnBarcodePrint(function(data, callFunctionParam){
-                        alert(data.message);
-                    }, formData, '');
+
+                    let parameter = {'url': '/json-list', 'data': {queryId: 'orderMapper.selectLabelBarcodeNum', CONTROL_SEQ: controlSeqStr, CONTROL_DETAIL_SEQ: controlDetailSeqStr}}
+
+                    fnPostAjaxAsync(function (data1, callFunctionParam) {
+                        let barcodeList = [];
+
+                        for(let i in data1.list) {
+                            barcodeList[i] = (data1.list[i].BARCODE_NUM);
+                        }
+
+                        fnBarcodePrint(function(data2, callFunctionParam){
+                            alert(data2.message);
+                        }, barcodeList, '');
+                    }, parameter, '');
                 }
             });
         });

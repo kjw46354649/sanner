@@ -35,6 +35,7 @@ public class OutServiceImpl implements OutService {
         for (HashMap<String, Object> hashMap : jsonArray) {
 //            hashMap.put("CONTROL_STATUS", "ORD001");
             hashMap.put("OUTSIDE_YN", "N");
+            hashMap.put("OUTSIDE_STATUS_DT", null);
 //            this.orderDao.updateControlMaster(hashMap);
             this.orderDao.updateControlPart(hashMap);
         }
