@@ -251,7 +251,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 },
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1017')},
                 render: function (ui) {
@@ -281,7 +281,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: ORDER_COMPANY},
                 render: function (ui) {
@@ -310,7 +310,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 },
                 editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text',
@@ -347,7 +347,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 }
             },
             {
@@ -356,7 +356,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 }
             },
             {title: 'INV No.<br>(거래명세No.)', width: 100, dataType: 'string', dataIndx: 'INVOICE_NUM', hidden: true},
@@ -366,7 +366,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' ? true : false;
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
                 }
             },
             {
@@ -375,7 +375,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 }
             },
             {
@@ -384,7 +384,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' ? true : false;
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
                 }
             },
             {
@@ -393,7 +393,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' ? true : false;
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
                 }
             },
             {
@@ -402,7 +402,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' ? true : false;
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
                 },
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1059')},
                 render: function (ui) {
@@ -432,7 +432,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 },
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 render: function (ui) {
@@ -462,7 +462,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 }
             },
             {
@@ -470,7 +470,7 @@
                 editable: function(ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 },
                 render: function (ui) {
                     if (ui.rowData.WORK_TYPE === 'WTP020' && ui.rowData.LAG_WORK_TYPE == undefined && ui.rowData.CONTROL_STATUS !== 'ORD001') {
@@ -503,6 +503,7 @@
                             rowIndx: lastRowIndex + 1,
                             checkEditable: false
                         });
+                        $orderManagementGrid.pqGrid('setSelection', {rowIndx: lastRowIndex + 1});
                         event.preventDefault();
                     });
                 }
@@ -526,7 +527,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 }
             },
             {
@@ -535,7 +536,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 }
             },
             {
@@ -544,7 +545,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 }
             },
             {
@@ -553,7 +554,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1033')},
                 render: function (ui) {
@@ -583,7 +584,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 render: function (ui) {
@@ -598,7 +599,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1014')},
                 render: function (ui) {
@@ -628,7 +629,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 render: function (ui) {
@@ -638,12 +639,12 @@
                 }
             },
             {
-                title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT',
+                title: '가공납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined && rowData.WORK_TYPE !== 'WTP020' ? true : false;
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP020';
                 },
                 editor: {type: 'textbox', init: fnDateEditor},
                 render: function (ui) {
@@ -656,24 +657,14 @@
                     }
                 }
             },
-            // TODO: 가공완료(집계용)
-            // {
-            //     title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT',
-            //     styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
-            //     editable: function (ui) {
-            //         let rowData = ui.rowData;
-            //
-            //         return rowData.CONTROL_STATUS === undefined ? true : false;
-            //     },
-            //     editor: {type: 'textbox', init: fnDateEditor}
-            // },
+            {title: '가공완료', width: 70, dataType: 'date', dataIndx: 'INNER_WORK_FINISH_DT'},
             {
                 title: '소재<br>종류', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined && rowData.WORK_TYPE !== 'WTP020' ? true : false;
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP020'
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027')},
                 render: function (ui) {
@@ -721,7 +712,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined && rowData.WORK_TYPE !== 'WTP020' ? true : false;
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP020'
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text',options: fnGetCommCodeGridSelectBox('1029')},
                 render: function (ui) {
@@ -757,7 +748,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined && rowData.WORK_TYPE !== 'WTP020' ? true : false;
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP020'
                 },
                 editor: {
                     type: 'select',
@@ -798,7 +789,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined && rowData.WORK_TYPE !== 'WTP020' ? true : false;
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP020'
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -818,7 +809,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined && rowData.WORK_TYPE === 'WTP050' ? true : false;
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE === 'WTP050';
                 },
                 render: function (ui) {
                     let rowData = ui.rowData;
@@ -841,7 +832,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return rowData.CONTROL_STATUS === undefined ? true : false;
+                            return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                         }
                     },
                     {
@@ -850,7 +841,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return rowData.CONTROL_STATUS === undefined ? true : false;
+                            return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                         }
                     }
                 ]
@@ -885,12 +876,19 @@
                                 let totalRecords = data.length;
                                 newRowData.ROW_NUM = totalRecords + 1;
                                 newRowData.ORDER_SEQ = null;
+                                newRowData.ORDER_NUM = null;
+                                newRowData.ORDER_QTY = null;
+                                newRowData.ORDER_DUE_DT = null;
+                                newRowData.OUT_QTY = null;
+                                newRowData.ORDER_OUT_FINISH_DT = null;
+                                newRowData.DELIVERY_DT = null;
 
                                 $orderManagementGrid.pqGrid('addRow', {
                                     newRow: newRowData,
                                     rowIndx: ui.rowIndx + 1,
                                     checkEditable: false
                                 });
+                                $orderManagementGrid.pqGrid('setSelection', {rowIndx: ui.rowIndx + 1});
                                 event.preventDefault();
                             });
                         }
@@ -901,7 +899,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return rowData.CONTROL_STATUS === undefined && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                         },
                         render: function (ui) {
                             let cellData = ui.cellData;
@@ -921,7 +919,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return rowData.CONTROL_STATUS === undefined && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                         },
                         render: function (ui) {
                             let cellData = ui.cellData;
@@ -936,12 +934,12 @@
                         }
                     },
                     {
-                        title: '납기', width: 70, datatype: 'string', dataIndx: 'ORDER_DUE_DT',
+                        title: '납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return rowData.CONTROL_STATUS === undefined && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                         },
                         editor: {type: 'textbox', init: fnDateEditor},
                         render: function (ui) {
@@ -985,12 +983,12 @@
                         }
                     },
                     {
-                        title: '납품확인', width: 70, datatype: 'string', dataIndx: 'DELIVERY_DT',
+                        title: '납품확인', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'DELIVERY_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return rowData.CONTROL_STATUS === undefined && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                         },
                         editor: {type: 'textbox', init: fnDateEditor},
                         render: function (ui) {
@@ -1013,7 +1011,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -1037,7 +1035,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined) && (rowData.WORK_TYPE !== 'WTP020' || rowData.WORK_TYPE !== 'WTP040') ? true : false;
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         editor: {
                             type: 'select',
@@ -1078,7 +1076,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined) && (rowData.WORK_TYPE !== 'WTP020' || rowData.WORK_TYPE !== 'WTP040') ? true : false;
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020')},
                         render: function (ui) {
@@ -1114,7 +1112,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined) && (rowData.WORK_TYPE !== 'WTP020' || rowData.WORK_TYPE !== 'WTP040') ? true : false;
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030')},
                         render: function (ui) {
@@ -1243,7 +1241,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined) && (rowData.WORK_TYPE !== 'WTP020' || rowData.WORK_TYPE !== 'WTP040') ? true : false;
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         render: function (ui) {
                             let cellData = ui.cellData;
@@ -1263,7 +1261,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined) && (rowData.WORK_TYPE !== 'WTP020' || rowData.WORK_TYPE !== 'WTP040') ? true : false;
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         render: function (ui) {
                             let cellData = ui.cellData;
@@ -1283,7 +1281,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined) && (rowData.WORK_TYPE !== 'WTP020' || rowData.WORK_TYPE !== 'WTP040') ? true : false;
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         render: function (ui) {
                             let cellData = ui.cellData;
@@ -1303,7 +1301,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined) && (rowData.WORK_TYPE !== 'WTP020' || rowData.WORK_TYPE !== 'WTP040') ? true : false;
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         render: function (ui) {
                             let cellData = ui.cellData;
@@ -1323,7 +1321,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined) && (rowData.WORK_TYPE !== 'WTP020' || rowData.WORK_TYPE !== 'WTP040') ? true : false;
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         render: function (ui) {
                             let cellData = ui.cellData;
@@ -1343,7 +1341,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined) && (rowData.WORK_TYPE !== 'WTP020' || rowData.WORK_TYPE !== 'WTP040') ? true : false;
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         render: function (ui) {
                             let cellData = ui.cellData;
@@ -1363,7 +1361,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined) && (rowData.WORK_TYPE !== 'WTP020' || rowData.WORK_TYPE !== 'WTP040') ? true : false;
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         render: function (ui) {
                             let cellData = ui.cellData;
@@ -1383,7 +1381,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined) && (rowData.WORK_TYPE !== 'WTP020' || rowData.WORK_TYPE !== 'WTP040') ? true : false;
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         render: function (ui) {
                             let cellData = ui.cellData;
@@ -1428,7 +1426,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -1462,7 +1460,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -1510,7 +1508,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined ? true : false;
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -1883,7 +1881,7 @@
             let bottom = $('#view_tab_' + rollSeq + '0201 .bottomWrap');
             let con = $('#view_tab_' + rollSeq + '0201 .bottomWrap .tableWrap .conWrap');
 
-            top.stop().animate({'height': '40px'}, 300, 'easeInCubic');
+            top.stop().animate({'height': '37px'}, 300, 'easeInCubic');
             bottom.stop().animate({'height': '825px'}, 300, 'easeOutCubic');
             con.css({'height': '714px'});
 
@@ -2498,15 +2496,34 @@
             };
             labelPrintConfirm(function (confirm) {
                 if (confirm) {
-                    let formData = [];
+                    let controlSeqStr = '';
+                    let controlDetailSeqStr = '';
 
                     for (let i = 0; i < selectedRowCount; i++) {
                         let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-                        formData.push(rowData.LABEL_BARCODE_NUM);
+
+                        controlSeqStr += rowData.CONTROL_SEQ;
+                        controlDetailSeqStr += rowData.CONTROL_DETAIL_SEQ;
+
+                        if (i < selectedRowCount - 1) {
+                            controlSeqStr += ',';
+                            controlDetailSeqStr += ',';
+                        }
                     }
-                    fnBarcodePrint(function(data, callFunctionParam){
-                        alert(data.message);
-                    }, formData, '');
+
+                    let parameter = {'url': '/json-list', 'data': {queryId: 'orderMapper.selectLabelBarcodeNum', CONTROL_SEQ: controlSeqStr, CONTROL_DETAIL_SEQ: controlDetailSeqStr}}
+
+                    fnPostAjaxAsync(function (data1, callFunctionParam) {
+                        let barcodeList = [];
+
+                        for(let i in data1.list) {
+                            barcodeList[i] = (data1.list[i].BARCODE_NUM);
+                        }
+
+                        fnBarcodePrint(function(data2, callFunctionParam){
+                            alert(data2.message);
+                        }, barcodeList, '');
+                    }, parameter, '');
                 }
             });
         });

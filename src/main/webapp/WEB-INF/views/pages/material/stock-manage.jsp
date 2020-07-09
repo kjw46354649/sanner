@@ -338,30 +338,30 @@
                 ]
             },
             {title: '재고번호', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 150, width: 150, editable: false},
-            {title: '사업자구분', dataType: 'string', dataIndx: 'COMP_CD_NM', minWidth: 120, width: 120, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
+            {title: '사업자구분', dataType: 'string', dataIndx: 'COMP_CD', minWidth: 120, width: 120, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "COMP_CD_NM", id: "COMP_CD" },
                     valueIndx: "value",
                     labelIndx: "text",
-                    options: function(ui) {
-                        let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        let stockManageCompData = {
-                            "url" : '/json-list',
-                            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
-                        };
-                        let ajaxStockManageData = "";
-                        fnPostAjaxAsync(function (data, callFunctionParam) {
-                            ajaxStockManageData = data.list;
-                        }, stockManageCompData, '');
+                    options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}})
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    if (cellData === '' || cellData === undefined) {
+                        return '';
+                    } else {
+                        let data = fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
+                        let index = data.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
 
-                        return ajaxStockManageData;
-                    },
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["COMP_CD"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                        if (index < 0) {
+                            index = data.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : data[index].text;
                     }
                 },
                 validations: [
@@ -422,13 +422,9 @@
                     }
                 }
             },
-            {title: '재고위치', dataType: 'string', dataIndx: 'LOC_SEQ_NM', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
+            {title: '재고위치', dataType: 'string', dataIndx: 'LOC_SEQ', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
                 minWidth: 100, width: 100,
-                editor: {
-                    type: 'select',
-                    mapIndices: { name: "LOC_SEQ_NM", id: "LOC_SEQ" },
-                    valueIndx: "value",
-                    labelIndx: "text",
+                editor: { type: 'select', valueIndx: "value", labelIndx: "text",
                     options: function(ui) {
                         let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
                         let WAREHOUSE_CD = rowData["WAREHOUSE_CD"];
@@ -442,12 +438,36 @@
                         }, warehouseData, '');
 
                         return ajaxData;
-                    },
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
+                    }
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    if (cellData === '' || cellData === undefined) {
+                        return '';
+                    } else {
                         let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["LOC_SEQ"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                        let WAREHOUSE_CD = rowData["WAREHOUSE_CD"];
+                        let warehouseData = {
+                            "url" : '/json-list',
+                            'data' :{"queryId": 'dataSource.getLocationListWithWarehouse', "WAREHOUSE_CD" : WAREHOUSE_CD}
+                        };
+                        let ajaxData = "";
+
+                        fnPostAjaxAsync(function (data, callFunctionParam) {
+                            ajaxData = data.list;
+                        }, warehouseData, '');
+
+                        let index = ajaxData.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = ajaxData.findIndex(function (element) {
+                                return element.value == cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : ajaxData[index].text;
                     }
                 }
             },
@@ -617,6 +637,15 @@
                         for (let i = userMasterGridFirstRow; i <= userMasterGridLastRow; i++) {
                             SelectedRowIndex.push(i);
                         }
+                    }
+                }
+            },
+            change: function (evt, ui) {
+                if(ui.source == "edit") {
+                    let WAREHOUSE_CD = ui.updateList[0].newRow.WAREHOUSE_CD == undefined ? "" : ui.updateList[0].newRow.WAREHOUSE_CD;
+                    if(WAREHOUSE_CD != "") {
+                        let rowIndx = ui.updateList[0].rowIndx;
+                        stockManageGridId01.pqGrid('updateRow', {rowIndx: rowIndx, row: {"LOC_SEQ": ""}});
                     }
                 }
             },

@@ -106,13 +106,13 @@
                         <span class="gubun"></span>
                     </li>
                     <li>
-                        <span class="ipu_wrap"><label for="EST_NUM" class="label_65">견적번호</label><input type="text" name="EST_NUM" id="EST_NUM" class="wd_200" value="" title="견적번호 (차수)" readonly></span>
+                        <span class="ipu_wrap"><label for="EST_NUM" class="label_65">견적번호</label><input type="text" name="EST_NUM" id="EST_NUM" class="wd_200" value="" title="견적번호 (차수)" style="background: lightgrey;" readonly></span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label for="DTL_AMOUNT" class="label_65">견적금액</label><input type="text" name="DTL_AMOUNT" id="DTL_AMOUNT" class="wd_200" value="" title="견적금액 계" readonly></span>
+                        <span class="ipu_wrap"><label for="DTL_AMOUNT" class="label_65">견적금액</label><input type="text" name="DTL_AMOUNT" id="DTL_AMOUNT" class="wd_200" value="" title="견적금액 계" style="background: lightgrey;" readonly></span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label for="INSERT_DT" class="label_65">수정일시</label><input type="text" name="INSERT_DT" id="INSERT_DT" class="wd_200" value="" title="업데이트 일시" readonly></span>
+                        <span class="ipu_wrap"><label for="INSERT_DT" class="label_65">수정일시</label><input type="text" name="INSERT_DT" id="INSERT_DT" class="wd_200" value="" title="업데이트 일시" style="background: lightgrey;" readonly></span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label for="SEND_DT" class="label_65">회신일시</label><input type="text" name="SEND_DT" id="SEND_DT" class="wd_200" value="" title="회신일시" readonly></span>
+                        <span class="ipu_wrap"><label for="SEND_DT" class="label_65">회신일시</label><input type="text" name="SEND_DT" id="SEND_DT" class="wd_200" value="" title="회신일시" style="background: lightgrey;" readonly></span>
                         <span class="gubun"></span>
                     </li>
                 </ul>
@@ -149,9 +149,9 @@
                         <div class="float_left col-md-5 col-sm-5" style="width: 48% !important; padding: 0px !important; padding-right: 30px !important;">
                             <div class="">
                                 <h3>메일내용
-                                    <div class="right_float">
+                                    <%--<div class="right_float">
                                         <input type="checkbox" id="estimateRegisterAutoEmailSend"><label for="estimateRegisterAutoEmailSend"> 자동메일발송 사용</label>
-                                    </div>
+                                    </div>--%>
                                 </h3>
                                 <textarea class="col-md-12 col-sm-12" id="EMAIL_CONTENT_TXT" name="EMAIL_CONTENT_TXT" style="height: 300px;">
                                 </textarea>
@@ -220,6 +220,19 @@
             {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', width: 150, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', width: 80, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 170, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
+            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 100, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
             {
                 title: '파<br>트', clsHead: 'cantChange', dataType: 'integer', dataIndx: 'PART_NUM', editable: false,
@@ -514,7 +527,7 @@
                     {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
                     {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
                     {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-                    {title: '견적비고', dataType: 'integer', dataIndx: 'UNIT_AMT_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} }
+                    {title: '견적비고', dataType: 'string', dataIndx: 'UNIT_AMT_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} }
                 ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {title: '계산견적단가', dataType: 'float', dataIndx: 'CALCUL_EST_UNIT_COST', format: '#,###', width: 80, editable: false},
             {title: '최종견적가', dataType: 'float', dataIndx: 'UNIT_FINAL_EST_AMT', format: '#,###', width: 80, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
@@ -973,7 +986,7 @@
             //Confirm Box
             let headHtml = "messsage", bodyHtml ="", yseBtn="예", noBtn="아니오";
 
-            let autoEmailYn = $("#estimateRegisterAutoEmailSend").is(":checked");
+            let autoEmailYn = estimateRegisterBotGrid.pqGrid('option', 'dataModel.data').length > 0 ? true : false;
             if(autoEmailYn){
                 bodyHtml =
                     '<h4>\n' +
@@ -1043,7 +1056,8 @@
         });
 
         $("#btnEstimateRegisterAdd").on('click', function(){
-            estimateRegisterTopGrid.pqGrid('addNodes', [{}], 0);
+            let totalRecords = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data').length;
+            estimateRegisterTopGrid.pqGrid('addNodes', [{}], totalRecords+1);
         });
 
         $("#btnEstimateRegisterDelete").on('click', function(){
@@ -1094,6 +1108,11 @@
 
         /* 도면 등록 팝업 호출 */
         $btnEstimateRegisterDrawAdd.click(function () {
+            var gridInstance = estimateRegisterTopGrid.pqGrid('getInstance').grid;
+            if (gridInstance.isDirty()) {
+                alert("변경된 사항이 존재합니다. 저장 후 등록 해 주세요.");
+                return false;
+            }
             callCadDrawingUploadPopup('estimate', 'estimate.manageEstimateCadFiles');
         });
 

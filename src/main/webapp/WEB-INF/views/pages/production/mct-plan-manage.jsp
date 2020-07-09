@@ -92,8 +92,8 @@
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
-                    <label class="label_50" for="PROGRESS">진행상태</label>
-                    <select class="wd_100" name="PROGRESS" id="PROGRESS" title="진행상태">
+                    <label class="label_50" for="PART_STATUS">진행상태</label>
+                    <select class="wd_100" name="PART_STATUS" id="PART_STATUS" title="진행상태">
                         <option value="">All</option>
                         <c:forEach var="code" items="${HighCode.H_1013}">
                             <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -102,15 +102,15 @@
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
-                    <label class="label_50" for="MCT_NO">MCT No.</label>
-                    <select class="wd_100" name="MCT_NO" id="MCT_NO" title="MCT No.">
+                    <label class="label_50" for="EQUIP_SEQ">MCT No.</label>
+                    <select class="wd_100" name="EQUIP_SEQ" id="EQUIP_SEQ" title="MCT No.">
                         <option value="">ALL</option>
                     </select>
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
                     <label class="label_50" for="MCT_WORK_TYPE">작업구분</label>
-                    <select class="wd_100" name="MCT_WORK_TYPE" id="MCT_WORK_TYPE" title="작업구분">
+                    <select class="wd_50" name="MCT_WORK_TYPE" id="MCT_WORK_TYPE" title="작업구분">
                         <option value="">All</option>
                         <c:forEach var="code" items="${HighCode.H_1011}">
                             <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -119,15 +119,18 @@
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
-                    <input type="checkbox">
-                    <label class="label_100" for="MCT_WORK_TYPE">계획단계 대상만 조회</label>
+                    <input type="checkbox" name="PLAN_ONLY" id="PLAN_ONLY">
+                    <label class="label_100" for="PLAN_ONLY">계획단계 대상만 조회</label>
+                </span>
+                <span class="gubun"></span>
+                <span class="slt_wrap">
+                    <input type="checkbox" name="INCLUDE_OUTSIDE" id="INCLUDE_OUTSIDE">
+                    <label class="label_100" for="INCLUDE_OUTSIDE">외주 대상 포함 조회</label>
                 </span>
                 <span class="gubun"></span>
                 <span class="refresh mg-left10"><button type="button" id="MCT_TARGET_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
-                <span class="gubun"></span>
-                <button type="button" class="defaultBtn btn-100w green" id="MCT_TARGET_SAVE">저장</button>
             </form>
-            <div style="margin-left: 20px; margin-bottom: 10px;">
+            <div style="margin: 0 20px 10px 20px;">
                 <input type="text" id="mctPlanManageFilterKeyword" placeholder="Enter your keyword">
                 <select id="mctPlanManageFilterColumn"></select>
                 <select id="mctPlanManageFilterCondition">
@@ -138,6 +141,7 @@
                 <label for="mctPlanManageFrozen" class="label_50" style="font-size: 15px;">Fix</label>
                 <select id="mctPlanManageFrozen" name="mctPlanManageFrozen">
                 </select>
+                <button type="button" class="right_float defaultBtn btn-100w green" id="MCT_TARGET_SAVE">저장</button>
             </div>
         </div>
         <div class="conWrap">

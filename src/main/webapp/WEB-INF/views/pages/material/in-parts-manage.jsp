@@ -333,25 +333,8 @@
         mainPostData01 = fnFormToJsonArrayData('#search_form');
         mainColModel01 = [
             {title: 'CONSUMABLE_STOCK_SEQ', dataType: 'string', dataIndx: 'CONSUMABLE_STOCK_SEQ', hidden:true},
-            {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_CD_NM', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
-                editor: {
-                    type: 'select',
-                    mapIndices: { name: "WAREHOUSE_CD_NM", id: "WAREHOUSE_CD" },
-                    valueIndx: "value",
-                    labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1049'),
-                    listeners: [{
-                        change: function (evt, ui) {
-                            alert('it worked!');
-                        }
-                    }],
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = mainGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["WAREHOUSE_CD"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
-                    }
-                },
+            {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_CD', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
+                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1049') },
                 editable: function (ui) {
                   let rowData = mainGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
                   let CONSUMABLE_STOCK_SEQ = rowData["CONSUMABLE_STOCK_SEQ"];
@@ -361,16 +344,32 @@
                       return false;
                   }
                 },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    if (cellData === '' || cellData === undefined) {
+                        return '';
+                    } else {
+                        let data = fnGetCommCodeGridSelectBox('1049');
+
+                        let index = data.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = data.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : data[index].text;
+                    }
+                },
                 validations: [
                     { type: 'minLen', value: 1, msg: "Required" }
                 ]
             },
-            {title: '위치', dataType: 'string', dataIndx: 'LOC_SEQ_NM', minWidth: 120, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
-                editor: {
-                    type: 'select',
-                    mapIndices: { name: "LOC_SEQ_NM", id: "LOC_SEQ" },
-                    valueIndx: "value",
-                    labelIndx: "text",
+            {title: '위치', dataType: 'string', dataIndx: 'LOC_SEQ', minWidth: 120, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
+                editor: { type: 'select', valueIndx: "value", labelIndx: "text",
                     options: function(ui) {
                         let rowData = mainGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
                         let WAREHOUSE_CD = rowData["WAREHOUSE_CD"];
@@ -384,12 +383,36 @@
                         }, warehouseData, '');
 
                         return ajaxData;
-                    },
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
+                    }
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    if (cellData === '' || cellData === undefined) {
+                        return '';
+                    } else {
                         let rowData = mainGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["LOC_SEQ"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
+                        let WAREHOUSE_CD = rowData["WAREHOUSE_CD"];
+                        let warehouseData = {
+                            "url" : '/json-list',
+                            'data' :{"queryId": 'dataSource.getLocationListWithWarehouse', "WAREHOUSE_CD" : WAREHOUSE_CD}
+                        };
+                        let ajaxData = "";
+
+                        fnPostAjaxAsync(function (data, callFunctionParam) {
+                            ajaxData = data.list;
+                        }, warehouseData, '');
+
+                        let index = ajaxData.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = ajaxData.findIndex(function (element) {
+                                return element.value == cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : ajaxData[index].text;
                     }
                 },
                 editable: function (ui) {
@@ -517,11 +540,20 @@
                 $("#inPartsManageFrozen").empty();
                 $("#inPartsManageFrozen").html(frozenOts);
             },
+            change: function (evt, ui) {
+                if(ui.source == "edit") {
+                    let WAREHOUSE_CD = ui.updateList[0].newRow.WAREHOUSE_CD == undefined ? "" : ui.updateList[0].newRow.WAREHOUSE_CD;
+                    if(WAREHOUSE_CD != "") {
+                        let rowIndx = ui.updateList[0].rowIndx;
+                        mainGridId01.pqGrid('updateRow', {rowIndx: rowIndx, row: {"LOC_SEQ": ""}});
+                    }
+                }
+            },
             cellSave: function (evt, ui) {
-                  if (ui.dataIndx == "WAREHOUSE_CD_NM" && ui.newVal !== ui.oldVal) {
-                      mainGridId01.pqGrid("updateRow", { 'rowIndx': ui.rowIndx , row: { 'LOC_SEQ_NM': '' } });
-                  }
-              },
+                if (ui.oldVal === undefined && ui.newVal === null) {
+                    mainGridId01.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                }
+            },
             complete: function () {
                 let data = mainGridId01.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;

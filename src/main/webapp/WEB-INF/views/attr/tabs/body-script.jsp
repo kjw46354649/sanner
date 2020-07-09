@@ -694,7 +694,7 @@
     }
 
     /**
-     * @description 레퍼런스 참조 없는 배열 복사
+     * @description 레퍼런스 참조 없는 배열 복사(deep copy)
      * @param obj
      */
     let fnCloneObj = function (obj) {
@@ -805,6 +805,12 @@
             },            // function called before iframe is removed
         });
     }
+
+    Date.prototype.mmdd = function() {
+        let mm = (this.getMonth() + 1).toString();
+        let dd = this.getDate().toString();
+        return  (mm[1] ? mm : "0" + mm[0]) + "/" + (dd[1] ? dd : "0" + dd[0]);
+    };
 
     Date.prototype.yymmdd = function() {
         let yy = this.getFullYear().toString().substring(2);

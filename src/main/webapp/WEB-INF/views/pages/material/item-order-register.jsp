@@ -994,7 +994,6 @@
                         itemOrderRegisterRightGrid.pqGrid("updateRow", {'rowIndx': ui.updateList[0].rowIndx,
                             row: {'CONTROL_SEQ': CONTROL_SEQ, 'CONTROL_DETAIL_SEQ': CONTROL_DETAIL_SEQ, 'MATERIAL_ORDER_SEQ': MATERIAL_ORDER_SEQ} });
                     }
-
                 }
             });
 

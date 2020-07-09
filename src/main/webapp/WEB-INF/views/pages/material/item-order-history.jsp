@@ -169,7 +169,7 @@
                                     'ORDER_AMT': ORDER_AMT,
                                     'INSPECT_NOTE': INSPECT_NOTE
                                 };
-                                fnInspection(parameter, MATERIAL_ORDER_SEQ);
+                                itemOrderHistoryInspection(parameter, MATERIAL_ORDER_SEQ);
                             });
                         }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
                     },
@@ -200,7 +200,7 @@
                                     'ORDER_AMT': ORDER_AMT,
                                     'INSPECT_NOTE': INSPECT_NOTE
                                 };
-                                fnInspection(parameter, MATERIAL_ORDER_SEQ);
+                                itemOrderHistoryInspection(parameter, MATERIAL_ORDER_SEQ);
                             });
                         }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
                     },
@@ -231,7 +231,7 @@
                                     'ORDER_AMT': ORDER_AMT,
                                     'INSPECT_NOTE': INSPECT_NOTE
                                 };
-                                fnInspection(parameter, MATERIAL_ORDER_SEQ);
+                                itemOrderHistoryInspection(parameter, MATERIAL_ORDER_SEQ);
                             });
                         }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
                     },
@@ -397,6 +397,69 @@
         });
 
         $("#btnItemOrderHistorySave").on('click', function(){
+            itemOrdereHistoryInspectionIn();
+        });
+
+        $("#btnItemOrderHistoryExcel").on('click', function(){
+            let MATERIAL_ORDER_NUM = $("#item_order_history_hidden_form #MATERIAL_ORDER_NUM").val();
+
+            printJS({printable:'/makeItemOrderSheetPrint?MATERIAL_ORDER_NUM='+encodeURI(MATERIAL_ORDER_NUM), type:'pdf', showModal:true});
+        });
+
+        $("#btnItemOrderHistoryCancel").on('click', function(){
+            itemOrderHistoryOrderCancel();
+        });
+
+        $('#ITEM_ORDER_HISTORY_START_DATE').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#ITEM_ORDER_HISTORY_END_DATE').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#ITEM_ORDER_HISTORY_START_DATE').datepicker('setDate', 'today');
+        $('#ITEM_ORDER_HISTORY_END_DATE').datepicker('setDate', 'today');
+
+        /** 공통 코드 이외의 처리 부분 **/
+        fnCommCodeDatasourceSelectBoxCreate($("#item_order_history_search_form").find("#MATERIAL_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
+
+
+        /** Function **/
+        /**
+         * 수입 검사
+         * @param parameter
+         * @param MATERIAL_ORDER_SEQ
+         */
+        function itemOrderHistoryInspection(parameter, MATERIAL_ORDER_SEQ) {
+            let parameters = {'url': '/json-update', 'data': parameter};
+            fnPostAjax(function(data, callFunctionParam){
+                parameter = {
+                    'queryId': 'updateItemOrderHistoryOrderIn',
+                    'MATERIAL_ORDER_SEQ': MATERIAL_ORDER_SEQ,
+                };
+                parameters = {'url': '/json-update', 'data': parameter};
+                fnPostAjax(function(data, callFunctionParam){
+                    parameter = {
+                        'queryId': 'updateItemOrderHistoryPartIn',
+                        'MATERIAL_ORDER_SEQ': MATERIAL_ORDER_SEQ,
+                    };
+                    parameters = {'url': '/json-update', 'data': parameter};
+                    fnPostAjax(function(data, callFunctionParam){
+                        parameter = {
+                            'queryId': 'insertInWareHouseManagePartProgressManual',
+                            'MATERIAL_ORDER_SEQ': MATERIAL_ORDER_SEQ,
+                        };
+                        parameters = {'url': '/json-update', 'data': parameter};
+                        fnPostAjax(function(data, callFunctionParam){
+                            itemOrderHistoryRightGrid.pqGrid('option', "dataModel.postData", function (ui) {
+                                return (fnFormToJsonArrayData('#item_order_history_hidden_form'));
+                            });
+                            itemOrderHistoryRightGrid.pqGrid('refreshDataAndView');
+                        }, parameters, '');
+                    }, parameters, '');
+                }, parameters, '');
+            }, parameters, '');
+        };
+
+        /**
+         * 검사 입고
+         */
+        function itemOrdereHistoryInspectionIn() {
             let parameter = {
                 'queryId': 'updateItemOrderHistoryOrderInManual',
                 'MATERIAL_ORDER_SEQ': $("#item_order_history_hidden_form #MATERIAL_ORDER_SEQ").val(),
@@ -415,15 +478,12 @@
                     itemOrderHistoryRightGrid.pqGrid('refreshDataAndView');
                 }, parameters, '');
             }, parameters, '');
-        });
+        };
 
-        $("#btnItemOrderHistoryExcel").on('click', function(){
-            let MATERIAL_ORDER_NUM = $("#item_order_history_hidden_form #MATERIAL_ORDER_NUM").val();
-
-            printJS({printable:'/makeItemOrderSheetPrint?MATERIAL_ORDER_NUM='+encodeURI(MATERIAL_ORDER_NUM), type:'pdf', showModal:true});
-        });
-
-        $("#btnItemOrderHistoryCancel").on('click', function(){
+        /**
+         * 주문 취소
+         */
+        function itemOrderHistoryOrderCancel() {
             let headHtml = "Information", bodyHtml ="", yseBtn="예", noBtn="아니오";
             bodyHtml =
                 '<h4>\n' +
@@ -468,41 +528,8 @@
                     }, parameters, '');
                 }
             });
-        });
-
-        $('#ITEM_ORDER_HISTORY_START_DATE').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#ITEM_ORDER_HISTORY_END_DATE').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#ITEM_ORDER_HISTORY_START_DATE').datepicker('setDate', 'today');
-        $('#ITEM_ORDER_HISTORY_END_DATE').datepicker('setDate', 'today');
-
-        /** 공통 코드 이외의 처리 부분 **/
-        fnCommCodeDatasourceSelectBoxCreate($("#item_order_history_search_form").find("#MATERIAL_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
-
-        function fnInspection(parameter, MATERIAL_ORDER_SEQ) {
-            let parameters = {'url': '/json-update', 'data': parameter};
-            fnPostAjax(function(data, callFunctionParam){
-                parameter = {
-                    'queryId': 'updateItemOrderHistoryOrderIn',
-                    'MATERIAL_ORDER_SEQ': MATERIAL_ORDER_SEQ,
-                };
-
-                parameters = {'url': '/json-update', 'data': parameter};
-                fnPostAjax(function(data, callFunctionParam){
-                    parameter = {
-                        'queryId': 'updateItemOrderHistoryPartIn',
-                        'MATERIAL_ORDER_SEQ': MATERIAL_ORDER_SEQ,
-                    };
-
-                    parameters = {'url': '/json-update', 'data': parameter};
-                    fnPostAjax(function(data, callFunctionParam){
-                        itemOrderHistoryRightGrid.pqGrid('option', "dataModel.postData", function (ui) {
-                            return (fnFormToJsonArrayData('#item_order_history_hidden_form'));
-                        });
-                        itemOrderHistoryRightGrid.pqGrid('refreshDataAndView');
-                    }, parameters, '');
-                }, parameters, '');
-            }, parameters, '');
         }
+
     });
 
 </script>
