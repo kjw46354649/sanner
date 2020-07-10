@@ -700,7 +700,7 @@
                   , T.PACKING_NUM
                   , (SELECT IFNULL(COUNT(PACKING_NUM),0) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = T.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = T.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = T.ORDER_SEQ) AS OUT_PACKING_CNT
                 FROM jmes.TBL_OUT_BARCODE T
-                  , jmes.TBLIMG_GFILE_SEQ_CONTROL A
+                  , jmes.TBL_CONTROL A
                   , jmes.TBL_CONTROL_PART B
                   , jmes.TBL_CONTROL_PART_ORDER C
                 WHERE T.CONTROL_SEQ = A.CONTROL_SEQ

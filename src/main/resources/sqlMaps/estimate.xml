@@ -172,17 +172,9 @@
             B.ITEM_NM, <!-- 품명 -->
             B.PART_NUM, <!-- Part -->
             B.DRAWING_NUM,
-            #{MAPPING_STR} AS MAPPING_STR,
-            #{FILE_NM} AS FILE_NM,
             #{DXF_GFILE_SEQ} AS DXF_GFILE_SEQ,
             #{PDF_GFILE_SEQ} AS PDF_GFILE_SEQ,
-            #{IMG_GFILE_SEQ} AS IMG_GFILE_SEQ,
-            #{TIME_PATH} AS TIME_PATH,
-            #{FILE_PATH} AS FILE_PATH
-<!--        ,CASE WHEN IMG_GFILE_SEQ IS NOT NULL THEN '이미 등록됨, Save 후 교체됨'  &lt;!&ndash; 이미 등록된 Save시 교체 진행  메시지 처리 &ndash;&gt;-->
-<!--                WHEN IFNULL(#{DXF_GFILE_SEQ}, 0) <![CDATA[ <= ]]> 0 THEN  '파일 업로드 오류' &lt;!&ndash; 파일 업로드 오류 및 CONVERT 사이즈 오류 &ndash;&gt;-->
-<!--            ELSE ''-->
-<!--            END AS UPLOAD_MESSAGE-->
+            #{IMG_GFILE_SEQ} AS IMG_GFILE_SEQ
         FROM TBL_ESTIMATE A
             INNER JOIN TBL_ESTIMATE_DETAIL B ON A.EST_SEQ = B.EST_SEQ
         WHERE 1 = 1

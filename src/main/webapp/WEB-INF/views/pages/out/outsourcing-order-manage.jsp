@@ -1854,9 +1854,6 @@
 
         $('#OUTSIDE_ORDER_MANAGE_SAVE').on('click', function () {
             const updateQueryList = ['orderMapper.updateControlPart'];
-
-            console.count();
-            return false;
             fnModifyPQGrid($outsideOrderManageGrid, [], updateQueryList);
         });
 

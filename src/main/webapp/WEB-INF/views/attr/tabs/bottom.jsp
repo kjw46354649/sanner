@@ -645,6 +645,7 @@
                     let fileUploadDataList = data.fileUploadDataList;
                     if (fileUploadDataList.length <= 0) {
                         alert("주문 정보가 없습니다. 주문 정보를 확인 해 주세요.");
+                        $(this).stopWaitMe();
                         return false;
                     }
                     // 도면 번호 없는 경우 삭제 처리
@@ -1061,10 +1062,12 @@
         trackModel: {on: true},
         colModel: g_ItemDetailPopColModel04,
         dataReady: function (event, ui) {
-            let rowDataArray = g_ItemDetailPopGrid04.pqGrid('getRowData', {rowIndx: 0});
-            if(rowDataArray != null){
-                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_04_info1").html(rowDataArray.STATUS_INFO);
-                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_04_info2").html("Update : " + rowDataArray.UPDATE_TIME_INFO);
+            let data = g_ItemDetailPopGrid04.pqGrid('option', 'dataModel.data');
+            // let totalRecords = data.length;
+            // let rowDataArray = g_ItemDetailPopGrid04.pqGrid('getRowData', {rowIndx: 0});
+            if(data[0]){
+                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_04_info1").html(data[0].STATUS_INFO);
+                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_04_info2").html("Update : " + data[0].UPDATE_TIME_INFO);
             }else{
                 $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_04_info1").html("");
                 $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_04_info2").html("");
@@ -1142,9 +1145,12 @@
             'data': fnFormToJsonArrayData('g_item_detail_pop_form')
         };
         fnPostAjax(function (data, callFunctionParam) {
+            fnResetFrom("g_item_detail_pop_form");
             let dataInfo = data.info;
-            if(dataInfo == null ) {
-                fnResetFrom("g_item_detail_pop_form");
+
+            console.log(dataInfo);
+
+            if(!dataInfo) {
                 $("#g_item_detail_pop_form").find(".list1").find(".rowStyle").find("td").html('');
             }else{
                 //fnJsonDataToForm("stock_manage_pop_form", dataInfo);

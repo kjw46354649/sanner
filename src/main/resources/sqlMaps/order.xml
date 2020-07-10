@@ -1489,12 +1489,9 @@
             B.PART_NUM, <!-- Part -->
             B.DRAWING_NUM,
             B.DRAWING_VER,
-            #{FILE_NM} AS FILE_NM,
             #{DXF_GFILE_SEQ} AS DXF_GFILE_SEQ,
             #{PDF_GFILE_SEQ} AS PDF_GFILE_SEQ,
-            #{IMG_GFILE_SEQ} AS IMG_GFILE_SEQ,
-            #{TIME_PATH} AS TIME_PATH,
-            #{FILE_PATH} AS FILE_PATH
+            #{IMG_GFILE_SEQ} AS IMG_GFILE_SEQ
         FROM TBL_CONTROL C
             INNER JOIN TBL_CONTROL_PART B ON C.CONTROL_SEQ = B.CONTROL_SEQ
         WHERE 1 = 1
@@ -1556,13 +1553,9 @@
             B.DRAWING_VER,
             B.SIZE_TXT, <!-- 규격 -->
             SF_GET_DATE_F(B.DRAWING_UP_DT,'YY','M') AS DRAWING_UP_DT,
-            #{NEW_DRAWING_NUM} AS NEW_DRAWING_NUM,
-            #{FILE_NM} AS FILE_NM,
             #{DXF_GFILE_SEQ} AS DXF_GFILE_SEQ,
             #{PDF_GFILE_SEQ} AS PDF_GFILE_SEQ,
-            #{IMG_GFILE_SEQ} AS IMG_GFILE_SEQ,
-            #{TIME_PATH} AS TIME_PATH,
-            #{FILE_PATH} AS FILE_PATH
+            #{IMG_GFILE_SEQ} AS IMG_GFILE_SEQ
         FROM TBL_CONTROL C
             INNER JOIN TBL_CONTROL_PART B ON C.CONTROL_SEQ = B.CONTROL_SEQ
         WHERE 1 = 1
@@ -1577,6 +1570,7 @@
         SET
             DRAWING_VER = IFNULL(DRAWING_VER, 0) + 1,
             DRAWING_UP_DT = NOW(),
+            PREV_DRAWING_NUM = DRAWING_NUM,
             DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
             PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
             IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
