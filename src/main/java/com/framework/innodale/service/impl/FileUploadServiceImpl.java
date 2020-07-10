@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -133,8 +134,14 @@ public class FileUploadServiceImpl implements FileUploadService {
             String paramQueryId = (String)hashMap.get("queryId");
             List<MultipartFile> fileList = request.getFiles(itr.next());
 
-            HashMap<String, Object> pdfImageGfileSeqHashMap = new HashMap<String, Object>();
+            HashMap<String, Object> dxfGfileKeyHashMap = new HashMap();
+            HashMap<String, Object> pdfGfileKeyHashMap = new HashMap();
+            HashMap<String, Object> pngGfileKeyHashMap = new HashMap();
+            ArrayList<String> mappingNumList = new ArrayList();
 
+            /**
+             * PDF 파일을 Image 파일로 변환하고 먼저 저장하여 정보를 가지고 있는다.
+             */
             for(MultipartFile multipartFile:fileList) {
 
                 String serverFileName = CommonUtility.getUUIDString();
@@ -149,7 +156,7 @@ public class FileUploadServiceImpl implements FileUploadService {
                 mappingDrawingNum = mappingDrawingNum.substring(0, mappingDrawingNum.lastIndexOf("_")).toUpperCase();
                 String originalExtName = originalFullName.substring(originalFullName.lastIndexOf(".") + 1).toLowerCase();
 
-                if ("PDF".equalsIgnoreCase(originalExtName)) {
+                if ("PDF".equalsIgnoreCase(originalExtName) || "DXF".equalsIgnoreCase(originalExtName)) {
                     // 업로드 파일 경로
                     String targetFilePath = uploadFilePath + File.separator + serverFullFileName + "." + originalExtName;
 
@@ -166,14 +173,16 @@ public class FileUploadServiceImpl implements FileUploadService {
                     fileInfo.put("FILE_SIZE", multipartFile.getSize());
                     fileInfo.put("ROWNUM", iSuccessCount++);
 
-                    if(checkUploadDXF(fileList, mappingDrawingNum)) {
+                    // 원본 파일 DB 저장 처리
+                    managerFileInformationInsert(fileInfo);
+                    // 확장자에 따른 컬럼 정의
+                    settingFileInfoColumn(fileInfo, multipartFile.getSize(), originalExtName);
+                    // 파일 업로드 원본 파일
+                    multipartFile.transferTo(new File(targetFilePath));
 
-                        // 원본 파일 DB 저장 처리
-                        managerFileInformationInsert(fileInfo);
-                        // 확장자에 따른 컬럼 정의
-                        settingFileInfoColumn(fileInfo, multipartFile.getSize(), originalExtName);
-                        // 파일 업로드 원본 파일
-                        multipartFile.transferTo(new File(targetFilePath));
+                    if("PDF".equalsIgnoreCase(originalExtName)) {
+
+                        pdfGfileKeyHashMap.put(mappingDrawingNum, fileInfo.get("PDF_GFILE_SEQ"));
 
                         // 이미지 처리
                         String targetImageFullpath = uploadFilePath + File.separator + serverFullFileName + ".png";
@@ -196,8 +205,9 @@ public class FileUploadServiceImpl implements FileUploadService {
                             managerFileInformationInsert(imageFileInfo);
                             // 확장자에 따른 컬럼 정의
                             settingFileInfoColumn(imageFileInfo, ImageFile.length(), "png");
+
                             // 각 파일의 GKEY 값을 셋팅한다.
-                            pdfImageGfileSeqHashMap.put(mappingDrawingNum, fileInfo.get("PDF_GFILE_SEQ") + "^" + imageFileInfo.get("IMG_GFILE_SEQ"));
+                            pngGfileKeyHashMap.put(mappingDrawingNum, imageFileInfo.get("IMG_GFILE_SEQ"));
 
                             fileInfo.put("SUCCESS", "Y");
                             fileInfo.put("MESSAGE", "");
@@ -208,13 +218,19 @@ public class FileUploadServiceImpl implements FileUploadService {
                         }
 
                     }else{
-                        fileInfo.put("SUCCESS", "N");
-                        fileInfo.put("MESSAGE", "DXF 매핑 파일없음");
+
+                        dxfGfileKeyHashMap.put(mappingDrawingNum, fileInfo.get("DXF_GFILE_SEQ"));
+
+                        fileInfo.put("SUCCESS", "Y");
+                        fileInfo.put("MESSAGE", "");
                     }
+
+                    if(!mappingNumList.contains(mappingDrawingNum))
+                        mappingNumList.add(mappingDrawingNum);
 
                     fileUploadList.add(fileInfo);
 
-                } else if(!"DXF".equalsIgnoreCase(originalExtName)){
+                } else {
 
                     fileInfo.put("FILE_NM", serverFullFileName + "." + originalExtName);
                     fileInfo.put("TIME_PATH", uploadTimePath);
@@ -232,74 +248,30 @@ public class FileUploadServiceImpl implements FileUploadService {
                 }
             }
 
-            for(MultipartFile multipartFile:fileList) {
-
-                String serverFileName = CommonUtility.getUUIDString();
-                String serverFullFileName = "file-" + serverFileName;
+            for(String mappingDrawingNum : mappingNumList){
 
                 HashMap<String, Object> fileInfo = new HashMap<String, Object>();
 
-                // String originalFullName = new String(multipartFile.getOriginalFilename().getBytes("8859_1"), "utf-8");
-                String originalFullName = multipartFile.getOriginalFilename();
-                String mappingDrawingNum = originalFullName.substring(0, originalFullName.lastIndexOf(".")).toUpperCase();
-                if(mappingDrawingNum.indexOf("_") > 0)
-                mappingDrawingNum = mappingDrawingNum.substring(0, mappingDrawingNum.lastIndexOf("_")).toUpperCase();
-                String originalExtName = originalFullName.substring(originalFullName.lastIndexOf(".") + 1).toLowerCase();
+                if(dxfGfileKeyHashMap.containsKey(mappingDrawingNum))
+                    fileInfo.put("DXF_GFILE_SEQ", dxfGfileKeyHashMap.get("DXF_GFILE_SEQ"));
+                if(pdfGfileKeyHashMap.containsKey(mappingDrawingNum))
+                    fileInfo.put("PDF_GFILE_SEQ", pdfGfileKeyHashMap.get("PDF_GFILE_SEQ"));
+                if(pngGfileKeyHashMap.containsKey(mappingDrawingNum))
+                    fileInfo.put("IMG_GFILE_SEQ", dxfGfileKeyHashMap.get("IMG_GFILE_SEQ"));
 
-                if("DXF".equalsIgnoreCase(originalExtName)){
-                    // 업로드 파일 경로
-                    String targetFilePath = uploadFilePath + File.separator + serverFullFileName + "." + originalExtName;
+                fileInfo.put("MAPPING_STR", mappingDrawingNum);
+                fileInfo.put("queryId", paramQueryId);    // 연결 주문 정보 조회
+                List<Map<String, Object>> controlList = innodaleDao.getList(fileInfo);
 
-                    CommonUtility.createFileDirectory(new File(uploadFilePath));
-
-                    fileInfo.put("FILE_NM", serverFullFileName + "." + originalExtName);
-                    fileInfo.put("MAPPING_STR", mappingDrawingNum);
-                    fileInfo.put("FILE_PATH", targetFilePath);
-                    fileInfo.put("TIME_PATH", uploadTimePath);
-                    fileInfo.put("UPLOAD_FILE_NM", originalFullName);
-                    fileInfo.put("ORGINAL_FILE_NM", originalFullName);
-                    fileInfo.put("FILE_TYPE", multipartFile.getContentType());
-                    fileInfo.put("FILE_EXT", originalExtName);
-                    fileInfo.put("FILE_SIZE", multipartFile.getSize());
-                    fileInfo.put("ROWNUM", iSuccessCount++);
-
-                    // 원본 파일 DB 저장 처리
-                    managerFileInformationInsert(fileInfo);
-                    // 확장자에 따른 컬럼 정의
-                    settingFileInfoColumn(fileInfo, multipartFile.getSize(), originalExtName);
-                    // 파일 업로드 원본 파일
-                    multipartFile.transferTo(new File(targetFilePath));   // 원본 파일 저장
-
-                    // 파일 명으로 주문 번호의 파일 번호가 있는지 확인하여 처리 한다.
-                    fileInfo.put("queryId", paramQueryId);    // 연결 주문 정보 조회
-                    List<Map<String, Object>> controlList = innodaleDao.getList(fileInfo);
-
-                    // 파일 번호 정보가 있는 경우 Map에 파일 정보를 추가 한다.
-                    Iterator controlIterator = controlList.iterator();
-                    if(controlIterator.hasNext()) {
-                        while (controlIterator.hasNext()) {
-                           HashMap<String, Object> map = (HashMap<String, Object>) controlIterator.next();
-
-                           /** PDF 파일이 있는 경우 처리 한다. **/
-                            if(pdfImageGfileSeqHashMap.containsKey(mappingDrawingNum)){
-                                String[] gfilekeys = ((String)pdfImageGfileSeqHashMap.get(mappingDrawingNum)).split("\\^");
-                                map.put("PDF_GFILE_SEQ", gfilekeys[0]);
-                                map.put("IMG_GFILE_SEQ", gfilekeys[1]);
-                            }
-                           fileUploadDataList.add(map);
-                        }
-                        fileInfo.put("SUCCESS", "Y");
-                        fileInfo.put("MESSAGE", "");
-                        fileUploadList.add(fileInfo);
-                    }else{
-                        fileInfo.put("SUCCESS", "N");
-                        fileInfo.put("MESSAGE", "도면번호 매칭 불가");
-                        fileUploadList.add(fileInfo);
+                // 파일 번호 정보가 있는 경우 Map에 파일 정보를 추가 한다.
+                Iterator controlIterator = controlList.iterator();
+                if(controlIterator.hasNext()) {
+                    while (controlIterator.hasNext()) {
+                       HashMap<String, Object> map = (HashMap<String, Object>) controlIterator.next();
+                       fileUploadDataList.add(map);
                     }
                 }
             }
-            model.addAttribute("successCount",  iSuccessCount);
-            model.addAttribute("errorCount",    iErrorCount);
         }
         model.addAttribute("result",       "success");
         model.addAttribute("message",      "업로드를 완료 하였습니다.");
@@ -561,14 +533,28 @@ public class FileUploadServiceImpl implements FileUploadService {
         if (pageSize.getWidth() > pageSize.getHeight()) {
             page.setRotation(90); //Rotate Portrait
         }
-//        page.setArtBox(PDRectangle.A4);
-//        page.setMediaBox(PDRectangle.A4);
-
         //DPI 설정
         BufferedImage bim = pdfRenderer.renderImageWithDPI(0, 300, ImageType.RGB);
         // 이미지로 만든다.
-        ImageIOUtil.writeImage(bim, outImageFullPath , 300);
+        ImageIOUtil.writeImage(bim, inPDFFullPath + "temp.png" , 300);
         document.close(); //모두 사용한 PDF 문서는 닫는다.
+
+        File tempImagefile = new File(inPDFFullPath + "temp.png");
+        File targetfile = new File(inPDFFullPath + ".png");
+        File sourceFile = null;
+
+        BufferedImage image = ImageIO.read(tempImagefile);
+        int imageWidth = image.getWidth();
+        int imageHeight = image.getHeight();
+
+        if(imageWidth > imageHeight){
+            sourceFile = new File(inPDFFullPath + "_soruce.png");
+            ImageUtil.rotate90(tempImagefile, sourceFile);
+        }else{
+            sourceFile = tempImagefile;
+        }
+        ImageUtil.resizeFix(sourceFile, targetfile, (int)PDRectangle.A4.getWidth(), (int)PDRectangle.A4.getHeight());
+
         return 1;
     }
 

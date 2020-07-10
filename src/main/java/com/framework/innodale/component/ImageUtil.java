@@ -56,6 +56,39 @@ public class ImageUtil {
         }
     }
 
+/**
+     * 이미지를 리사이즈 한다.(png 저장)
+     * 소스 이미지 파일의 width, height 지정 사이즈로 이미지를 생성한다.
+     * @param srcFile 소스 이미지 파일
+     * @param destFile 대상 이미지 파일
+     * @param width 리사이즈할 가로 사이즈
+     * @param height 리사이즈할 세로 사이즈
+     */
+    public static void resizeFix(File srcFile, File destFile, int width, int height) {
+        Image resizedImg = null;
+        BufferedImage bufImg = null;
+        try {
+            BufferedImage image = ImageIO.read(srcFile);
+            int scaleWidth = width;
+            int scaleHeight = height;
+            resizedImg = image.getScaledInstance(scaleWidth, scaleHeight, Image.SCALE_SMOOTH);
+            bufImg = new BufferedImage(resizedImg.getWidth(null), resizedImg.getHeight(null), image.getType());
+            Graphics2D g2d = bufImg.createGraphics();
+            g2d.drawImage(resizedImg, 0, 0, null);
+            g2d.dispose();
+            ImageIO.write(bufImg, "jpg", destFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (resizedImg != null) {
+                resizedImg.flush();
+            }
+            if (bufImg != null) {
+                bufImg.flush();
+            }
+        }
+    }
+
     /**
      * 이미지를 리사이즈 한다.(png 저장)
      * 소스 이미지 파일의 width를 기준으로 하여 비율을 유지한채 이미지를 생성한다.

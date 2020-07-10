@@ -640,7 +640,7 @@
             {title: '규격', dataType: 'string', dataIndx: 'STANDARD_SIZE', minWidth: 40, width: 80},
             {title: '소재 Size', dataType: 'string', dataIndx: 'MATERAIL_ORDER_SIZE', minWidth: 40, width: 80},
             {title: '비고 기록사항', dataType: 'string', dataIndx: 'CONTROL_NOTE', minWidth: 40, width: 100},
-            {title: '예상가공<br>시간(M)', dataType: 'integer', dataIndx: 'MCT_WORK_TIME', minWidth: 15, width: 50},
+            // {title: '예상가공<br>시간(M)', dataType: 'integer', dataIndx: 'MCT_WORK_TIME', minWidth: 15, width: 50},
             {title: '작업<br>구분', dataType: 'string', dataIndx: 'MCT_WORK_TYPE_NM', minWidth: 15, width: 50},
             {
                 title: 'CAM 작업 실적', align: 'center', colModel: [
@@ -796,17 +796,19 @@
                 'data': $('#cam_work_manage_pop_form').serialize()
             };
             fnPostAjax(function (data, callFunctionParam) {
-                for(let i=0; i < data.list.length; i++){
-                    $('#cam_work_manage_detail_pop').find("input:checkbox[id='CAM_WORK_CHK_" + data.list[i].ROWNUM + "']").trigger("click");
-                    $('#cam_work_manage_detail_pop').find("#CAM_WORK_SEQ_" + data.list[i].ROWNUM).val(data.list[i].SEQ);
-                    $('#cam_work_manage_detail_pop').find("#CAM_WORK_GFILE_SEQ_" + data.list[i].ROWNUM).val(data.list[i].CAM_GFILE_SEQ);
-                    $('#cam_work_manage_detail_pop').find("select[id='CAM_WORK_DIRECTION_" + data.list[i].ROWNUM + "']").val(data.list[i].WORK_DIRECTION);
-                    $('#cam_work_manage_detail_pop').find("#CAM_WORK_DESC_" + data.list[i].ROWNUM).val(data.list[i].WORK_DESC);
-                    $('#cam_work_manage_detail_pop').find("#CAM_WORK_DESIGN_QTY_" + data.list[i].ROWNUM).val(data.list[i].DESIGN_QTY);
-                    $('#cam_work_manage_detail_pop').find("select[id='CAM_WORK_USER_ID_" + data.list[i].ROWNUM + "']").val(data.list[i].WORK_USER_ID);
-                    let fileHtml = "<a href='/downloadfile/" + data.list[i].CAM_FILE_SEQ + "' download>" + data.list[i].CAM_FILE_NM + "</a><br>" +
-                        "<a href='/downloadfile/" + data.list[i].NC_FILE_SEQ + "' download>" + data.list[i].NC_FILE_NM;
-                    $("#cam_work_manage_detail_pop").find("#CAM_WORK_FILE_" + data.list[i].ROWNUM).html(fileHtml);
+                if(data.list.length > 0) {
+                    for (let i = 0; i < data.list.length; i++) {
+                        $('#cam_work_manage_detail_pop').find("input:checkbox[id='CAM_WORK_CHK_" + data.list[i].ROWNUM + "']").trigger("click");
+                        $('#cam_work_manage_detail_pop').find("#CAM_WORK_SEQ_" + data.list[i].ROWNUM).val(data.list[i].SEQ);
+                        $('#cam_work_manage_detail_pop').find("#CAM_WORK_GFILE_SEQ_" + data.list[i].ROWNUM).val(data.list[i].CAM_GFILE_SEQ);
+                        $('#cam_work_manage_detail_pop').find("select[id='CAM_WORK_DIRECTION_" + data.list[i].ROWNUM + "']").val(data.list[i].WORK_DIRECTION);
+                        $('#cam_work_manage_detail_pop').find("#CAM_WORK_DESC_" + data.list[i].ROWNUM).val(data.list[i].WORK_DESC);
+                        $('#cam_work_manage_detail_pop').find("#CAM_WORK_DESIGN_QTY_" + data.list[i].ROWNUM).val(data.list[i].DESIGN_QTY);
+                        $('#cam_work_manage_detail_pop').find("select[id='CAM_WORK_USER_ID_" + data.list[i].ROWNUM + "']").val(data.list[i].WORK_USER_ID);
+                        let fileHtml = "<a href='/downloadfile/" + data.list[i].CAM_FILE_SEQ + "' download>" + data.list[i].CAM_FILE_NM + "</a><br>" +
+                            "<a href='/downloadfile/" + data.list[i].NC_FILE_SEQ + "' download>" + data.list[i].NC_FILE_NM;
+                        $("#cam_work_manage_detail_pop").find("#CAM_WORK_FILE_" + data.list[i].ROWNUM).html(fileHtml);
+                    }
                 }
                 $('#cam_work_manage_detail_pop').modal('show');
             }, parameters, '');
