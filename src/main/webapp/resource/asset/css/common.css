@@ -436,19 +436,25 @@ table.boardList .txtP{color: #7030a0;}
   white-space: nowrap;
 }
 
+.pq-merge-cell div{
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 /** etc file **/
-.blueFileImageICon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; left: 6px; display: block; background: url(../images/common/file_icon_blue.png) no-repeat 0 0; }
+.blueFileImageICon { display: inline-block; width: 20px;height: 20px; background: url(../images/common/file_icon_blue.png) no-repeat 0 0;}
 /** png, pdf file **/
-.redFileImageICon { content: ''; text-align: center; width: 20px; height: 20px; position: absolute; top: 3px; left: 6px; display: block; background: url(../images/common/file_icon_red.png) no-repeat 0 0; }
+.redFileImageICon { display: inline-block; width: 20px;height: 20px; background: url(../images/common/file_icon_red.png) no-repeat 0 0; }
 /** nc file **/
-.purpleFileImageICon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/file_icon_purple.png) no-repeat 0 0; }
+.purpleFileImageICon { display: inline-block; width: 20px;height: 20px; background: url(../images/common/file_icon_purple.png) no-repeat 0 0; }
 /** cam file TEST **/
-.greenFileImageICon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/file_icon_green.png) no-repeat 0 0; }
-.desktopIcon { content: ''; text-align:center; width: 16px; height: 16px; position: absolute; top: 3px; display: block; background: url(../images/common/ico_desktop.png) no-repeat 0 0; background-size: 16px; }
-.magnifyingGlassIcon { content: ''; text-align:center; width: 17px; height: 17px; position: absolute; top: 4px; display: block; background: url(../images/common/file_search_outline_icon.png) no-repeat; background-size: 17px; }
-.doubleFilesIcon { content: ''; text-align:center; width: 20px; height: 20px; position: absolute; top: 3px; display: block; background: url(../images/common/ico_documents_files.png) no-repeat; background-size: 20px; }
-.textFileIcon { content: ''; text-align:center; width: 16px; height: 16px; position: absolute; top: 3px; display: block; background: url(../images/common/ico_text_file_.png) no-repeat; background-size: 16px; }
-.circleMinusIcon { content: ''; text-align:center; width: 16px; height: 16px; position: absolute; top: 3px; display: block; background: url(../images/common/minuscirclelinear.png) no-repeat; background-size: 16px; }
+.greenFileImageICon { display: inline-block; width: 20px;height: 20px; background: url(../images/common/file_icon_green.png) no-repeat 0 0; }
+.desktopIcon { display: inline-block; width: 16px;height: 16px; background: url(../images/common/ico_desktop.png) no-repeat 0 0; background-size: 16px; }
+.magnifyingGlassIcon { display: inline-block; width: 17px;height: 17px; background: url(../images/common/file_search_outline_icon.png) no-repeat; background-size: 17px; }
+.doubleFilesIcon { display: inline-block; width: 20px;height: 20px; background: url(../images/common/ico_documents_files.png) no-repeat; background-size: 20px; }
+.textFileIcon { display: inline-block; width: 16px;height: 16px; background: url(../images/common/ico_text_file_.png) no-repeat; background-size: 16px; }
+.circleMinusIcon { display: inline-block; width: 16px;height: 16px; background: url(../images/common/minuscirclelinear.png) no-repeat; background-size: 16px; }
 
 .blink {
   -webkit-animation: blink 1s linear infinite alternate;

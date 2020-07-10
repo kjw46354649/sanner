@@ -557,27 +557,7 @@
 
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 },
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1033')},
-                /*render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === undefined || cellData === '') {
-                        return '';
-                    } else {
-                        let workType = fnGetCommCodeGridSelectBox('1033');
-                        let index = workType.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = workType.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-
-                        }
-                        return (index < 0) ? cellData : workType[index].text;
-                    }
-                }*/
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1033')}
             },
             {
                 title: '외<br>주', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'OUTSIDE_YN',
@@ -698,12 +678,14 @@
             {
                 title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', hidden: true,
                 render: function (ui) {
+                    let cellData = ui.cellData;
                     let rowData = ui.rowData;
+                    let cls = null, text = cellData;
 
                     if (rowData.WORK_TYPE === 'WTP020') {
                         let cls = 'bg-lightgray';
 
-                        return {cls: cls};
+                        return {cls: cls, text: text};
                     }
                 }
             },
@@ -926,7 +908,7 @@
                             let cellData = ui.cellData;
                             let rowData = ui.rowData;
                             let cls = null, text = cellData;
-                            
+
                             if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
                                 cls = 'bg-lightgray';
                             }
@@ -1614,6 +1596,7 @@
                     return {data: dataJSON.data};
                 }
             },
+            sortModel: {on: false},
             load: function( event, ui ) {
                 let filterOpts = '<option value=\"\">All Fields</option>';
                 let frozenOts = '<option value="0">Selected</option>';
@@ -1631,7 +1614,7 @@
             },
             // editModel: {clicksToEdit: 1},
             complete: function (event, ui) {
-                // this.flex();
+                autoMerge(this, true);
                 let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
 
                 $('#CONTROL_MANAGE_RECORDS').html(data.length);
@@ -1796,7 +1779,7 @@
                 '    <span>선택하신 ' + list.length + ' 건을 ' + controlStatusNm + '처리합니다. \n진행하시겠습니까?</span>\n' +
                 '</h4>';
             fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-            let estimateRegisterSubmitConfirm = function (callback) {
+            let orderManagementSubmitConfirm = function (callback) {
                 commonConfirmPopup.show();
                 $("#commonConfirmYesBtn").unbind().click(function (e) {
                     e.stopPropagation();
@@ -1809,7 +1792,7 @@
                     commonConfirmPopup.hide();
                 });
             };
-            estimateRegisterSubmitConfirm(function (confirm) {
+            orderManagementSubmitConfirm(function (confirm) {
                 if (confirm) {
                     updateOrderStatus(controlStatus);
                 }
@@ -1838,8 +1821,7 @@
              * 이미 처리된 대상에 대해서 동일한 상태처리를 진행할 경우
              * 빈칸인 상태에서 취소를 진행하는 경우
              */
-            // TODO:
-            if(controlStatusList.length > 1 || controlStatusList[0] === controlStatus || (controlStatusList[0] === undefined && controlStatus === 'ORD004')) {
+            if ((controlStatusList.length > 1 && !(controlStatusList.includes('ORD002') && controlStatusList.includes(undefined))) || controlStatusList[0] === controlStatus || (controlStatusList[0] === undefined && controlStatus === 'ORD004')) {
                 bodyHtml =
                     '<h4>\n' +
                     '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
@@ -1950,6 +1932,62 @@
                 return val;
             }
         }
+
+        const autoMerge = function (grid, refresh) {
+            let mergeCellList = [],
+                colModelList = grid.getColModel(),
+                i = colModelList.length,
+                data = grid.option("dataModel.data");
+
+            let includeList = [
+                'CONTROL_NUM', 'CONTROL_NUM_BUTTON', 'PART_NUM', 'CONTROL_VER', 'COMP_CD',
+                'ORDER_COMP_CD', 'ORDER_STAFF_SEQ', 'DESIGNER_NM', 'CONTROL_NOTE', 'PROJECT_NM',
+                'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN',
+                'CONTROL_STATUS_NM'
+            ];
+            // let excludeList = [
+            //     'INNER_DUE_DT', 'INNER_WORK_FINISH_DT', 'MATERIAL_DETAIL', 'MATERIAL_TYPE_NM', 'MATERIAL_KIND',
+            //     'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY',
+            //     'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'OUT_QTY', 'ORDER_OUT_FINISH_DT',
+            //     'DELIVERY_DT', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ'
+            // ]; //colModel
+
+
+            while (i--) {
+                let dataIndx = colModelList[i].dataIndx,
+                    rc = 1,
+                    j = data.length;
+
+                if (includeList.includes(dataIndx))
+                    while (j--) {
+                        let controlNum = data[j]['CONTROL_NUM'],
+                            controlNumPrev = data[j - 1] ? data[j - 1]['CONTROL_NUM'] : undefined; // 이전 데이터
+
+                        if (controlNum === controlNumPrev) {
+                            let cellData = data[j][dataIndx], // cellData
+                                cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] : undefined; // 이전 데이터
+
+                            // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
+                            if (cellDataPrev !== undefined && cellData == cellDataPrev) {
+                                rc++;
+                            }
+                        } else if (rc > 1) {
+                            /**
+                             * r1: rowIndx of first row. 첫 번째 행의 rowIndx.
+                             * c1: colIndx of first column. 첫 번째 열의 colIndx.
+                             * rc: number of rows in the range. 범위 내 행 수.
+                             * cc: number of columns in the range. 범위 내 열 수.
+                             */
+                            mergeCellList.push({r1: j, c1: i, rc: rc, cc: 1});
+                            rc = 1;
+                        }
+                    }
+            }
+            grid.option("mergeCells", mergeCellList);
+            if (refresh) {
+                grid.refreshView();
+            }
+        };
         /* function */
 
         /* event */
@@ -2176,15 +2214,14 @@
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'ORDER_COMP_CD', 'ORDER_STAFF_SEQ',
                 'DESIGNER_NM', 'CONTROL_NOTE', 'INVOICE_NUM', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE',
                 'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT',
-                'WORK_TYPE', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'MATERIAL_DETAIL',
-                'MATERIAL_TYPE_NM', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_ORDER_QTY',
+                'WORK_TYPE', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'INNER_WORK_FINISH_DT', 'MATERIAL_DETAIL',
+                'MATERIAL_TYPE_NM', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY',
                 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
-                'OUT_QTY', 'ORDER_OUT_FINISH_DT', 'DELIVERY_DT', 'DETAIL_MACHINE_REQUIREMENT', 'DETAIL_LATHE', 'DETAIL_SURFACE', 'DETAIL_CLAMPING', //TODO: 상세 가공요건 컬럼 확인
-                'DETAIL_POCKET', 'DETAIL_DRILL', 'DETAIL_DIFFICULTY', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND',
+                'OUT_QTY', 'ORDER_OUT_FINISH_DT', 'DELIVERY_DT', 'DETAIL_MACHINE_REQUIREMENT', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND',
                 'MATERIAL_FINISH_HEAT', 'RKFH', 'SIZE_W_M', 'SIZE_H_M', 'SIZE_T_M', 'SIZE_D_M', 'SIZE_L_M',
                 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
                 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'CALC_EST_UNIT_COST', 'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMOUNT',
-                'UNIT_FINAL_AMT', 'FINAL_AMT', 'WHDWJSRK', 'PREV_DRAWING_NUM', 'POP_POSITION_NM', 'PART_STATUS_NM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'DRAWING_VER',
+                'UNIT_FINAL_AMT', 'FINAL_AMT', 'WHDWJSRK', 'PREV_DRAWING_NUM', 'POP_POSITION_NM', 'PART_STATUS_NM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER',
                 'DRAWING_UP_DT.', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM', 'INSPECT_DESC',
                 'ERROR_ACTION_NM','ERROR_NOTE', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT',
                 'OUTSIDE_HOPE_DUE_DT', 'dhlwndlqrhskfWk', 'OUTSIDE_NOTE', 'dhlwnqnffidcode', 'dhlwnwhclqkddks',
@@ -2194,32 +2231,32 @@
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'PRICE_CONFIRM', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'MAIN_INSPECTION',
                 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'OUTSIDE_YN',
                 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'MATERIAL_DETAIL', 'MATERIAL_KIND',
-                'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_ORDER_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
+                'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
                 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'OUT_QTY', 'ORDER_OUT_FINISH_DT',
-                'DELIVERY_DT', 'PREV_DRAWING_NUM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'CONTROL_PART_INSERT_UPDATE_DT'
+                'DELIVERY_DT', 'PREV_DRAWING_NUM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'PDF_GFILE_SEQ', 'CONTROL_PART_INSERT_UPDATE_DT'
             ];
             const estimateArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'PRICE_CONFIRM', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'INVOICE_NUM',
                 'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT',
-                'WORK_TYPE', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'MATERIAL_DETAIL',
-                'MATERIAL_TYPE_NM', 'MATERIAL_KIND','SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_ORDER_QTY',
+                'WORK_TYPE', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'INNER_WORK_FINISH_DT', 'MATERIAL_DETAIL',
+                'MATERIAL_TYPE_NM', 'MATERIAL_KIND','SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY',
                 'DETAIL_MACHINE_REQUIREMENT', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
                 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
                 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'CALC_EST_UNIT_COST', 'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMOUNT',
                 'UNIT_FINAL_AMT', 'FINAL_AMT', 'WHDWJSRK', 'PREV_DRAWING_NUM','DXF_GFILE_SEQ', 'IMG_GFILE_SEQ',
-                'CONTROL_PART_INSERT_UPDATE_DT'
+                'PDF_GFILE_SEQ', 'CONTROL_PART_INSERT_UPDATE_DT'
             ];
             const outsideQualityArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'PRICE_CONFIRM', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'INVOICE_NUM',
                 'MAIN_INSPECTION',
                 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM',
                 'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'OUTSIDE_YN',
-                'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'MATERIAL_DETAIL', 'MATERIAL_TYPE_NM', 'MATERIAL_KIND',
-                'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_ORDER_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
+                'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'INNER_WORK_FINISH_DT', 'MATERIAL_DETAIL', 'MATERIAL_TYPE_NM', 'MATERIAL_KIND',
+                'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
                 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'OUT_QTY', 'ORDER_OUT_FINISH_DT',
                 'DELIVERY_DT', 'DETAIL_MACHINE_REQUIREMENT', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
                 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'PREV_DRAWING_NUM', 'POP_POSITION_NM', 'PART_STATUS_NM',
-                'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM',
+                'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'PDF_GFILE_SEQ', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM',
                 'INSPECT_DESC', 'ERROR_ACTION_NM', 'ERROR_NOTE', 'OUTSIDE_COMP_CD', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN',
                 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT', 'OUTSIDE_HOPE_DUE_DT', 'dhlwndlqrhskfWk', 'OUTSIDE_NOTE',
                 'dhlwnqnffidcode', 'dhlwnwhclqkddks', 'CONTROL_PART_INSERT_UPDATE_DT'
@@ -2254,6 +2291,7 @@
 
             //css 변경
             $(this).removeClass('virtual-disable').siblings().addClass('virtual-disable');
+            $orderManagementGrid.pqGrid('refreshView');
         });
         // 거래명세표
         $('#TRANSACTION_STATEMENT').on('click', function () {
@@ -2448,7 +2486,7 @@
                 '    <span>선택하신 ' + selectedRowCount + '건을 처리합니다. \n진행하시겠습니까?</span>\n' +
                 '</h4>';
             fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-            let drawingBarcodelabelPrintConfirm = function (callback) {
+            let drawingBarcodeLabelPrintConfirm = function (callback) {
                 commonConfirmPopup.show();
                 $("#commonConfirmYesBtn").unbind().click(function (e) {
                     e.stopPropagation();
@@ -2461,7 +2499,7 @@
                     commonConfirmPopup.hide();
                 });
             };
-            drawingBarcodelabelPrintConfirm(function (confirm) {
+            drawingBarcodeLabelPrintConfirm(function (confirm) {
                 if (confirm) {
                     let formData = [];
                     for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {

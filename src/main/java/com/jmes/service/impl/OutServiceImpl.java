@@ -128,13 +128,19 @@ public class OutServiceImpl implements OutService {
                 hashMap.put("OUTSIDE_REQUEST_SEQ", outsideRequestSeq);
                 hashMap.put("queryId", "outMapper.createOutsideRequestReceiver");
                 this.innodaleDao.create(hashMap);
-            }
-        }
 
-        // 메일 발송
-        if (requestMailForm != null && requestMailForm.size() > 0) {
-            requestMailForm.put("queryId", "mail.insertOutsideRequestSubmitMail");
-            this.innodaleDao.create(requestMailForm);
+                // 메일 발송
+                if (requestMailForm != null && requestMailForm.size() > 0) {
+                    String reception = (String) hashMap.get("RECEPTION");
+                    String reference = (String) hashMap.get("REFERENCE");
+                    String staffEmail = (String) hashMap.get("STAFF_EMAIL");
+                    requestMailForm.put("RECEPTION", reception);
+                    requestMailForm.put("REFERENCE", reference);
+                    requestMailForm.put("STAFF_EMAIL", staffEmail);
+                    requestMailForm.put("queryId", "mail.insertOutsideRequestSubmitMail");
+                    this.innodaleDao.create(requestMailForm);
+                }
+            }
         }
     }
 

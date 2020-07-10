@@ -258,6 +258,7 @@
                     return {data: dataJSON.data};
                 }
             },
+            summaryTitle: {sum: '{0}'},
             rowSelect: function (event, ui) {
                 salesClosingHistoryRowIndex = ui.addList[0].rowIndx;
             },
@@ -346,7 +347,8 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
-            }
+            },
+            summaryTitle: {sum: '{0}'}
         };
         
         let controlDetailPopup;

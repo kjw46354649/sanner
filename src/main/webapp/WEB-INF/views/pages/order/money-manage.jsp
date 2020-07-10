@@ -314,6 +314,7 @@
                     return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                 }
             },
+            summaryTitle: {sum: '{0}'},
             dataReady: function (event, ui) {
                 let data = $moneyManageStatusGrid.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
