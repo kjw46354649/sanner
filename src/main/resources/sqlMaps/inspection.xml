@@ -13,7 +13,7 @@
                 , X.EMERGENCY_YN, X.MAIN_INSPECTION, SF_GET_CODE_NM(1059, X.MAIN_INSPECTION, 'KR') AS MAIN_INSPECTION_NM
                 , X.MCT_WORK_SEQ, X.INSPECT_SEQ, Z.INSPECT_TYPE, Z.INSPECT_GRADE
                 , jmes.SF_GET_DATE_F(X.INNER_DUE_DT,'YY','') AS INNER_DUE_DT
-                , jmes.SF_GET_CODE_NM('1009', P.POP_POSITION, 'KR') AS POP_NM
+                , P.POP_POSITION_NM AS POP_NM
                 , ( SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
                 , jmes.SF_GET_CODE_NM('1013', X.PART_STATUS, 'KR') AS PART_STATUS_NM
                 , X.CONTROL_NUM
@@ -60,7 +60,6 @@
                         , B.IMG_GFILE_SEQ
                         , (SELECT MAX(M.MCT_WORK_SEQ) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N') AS MCT_WORK_SEQ
                         , (SELECT MAX(M.INSPECT_SEQ) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS INSPECT_SEQ
-                        , (SELECT MAX(M.POP_SEQ) FROM jmes.TBL_POP M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS POP_SEQ
                         , A.OUT_FINISH_DT
                         , (SELECT COUNT(*) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.INSPECT_TYPE = '2' AND M.RETURN_SETTLEMENT_DT IS NULL) AS NOT_RETURN_SETTLEMENT_CNT
                     FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
@@ -83,7 +82,13 @@
                     </if>
                     ) X LEFT OUTER JOIN jmes.TBL_MCT_WORK Y ON Y.MCT_WORK_SEQ = X.MCT_WORK_SEQ
                         LEFT OUTER JOIN jmes.TBL_INSPECT Z ON Z.INSPECT_SEQ = X.INSPECT_SEQ
-                        LEFT OUTER JOIN jmes.TBL_POP P ON P.POP_SEQ = X.POP_SEQ
+                        LEFT OUTER JOIN jmes.TBL_POP_VIEW P ON X.CONTROL_SEQ = P.CONTROL_SEQ
+                                                                AND X.CONTROL_DETAIL_SEQ = P.CONTROL_DETAIL_SEQ
+                                                                AND P.POP_VSEQ = (SELECT MAX(POP_VSEQ)
+                                                                                FROM TBL_POP_VIEW G
+                                                                                WHERE 1 = 1
+                                                                                    AND P.PCONTROL_SEQ = G.CONTROL_SEQ
+                                                                                    AND P.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ)
                         <if test="SEL_POP_POSITION !='' and SEL_POP_POSITION != null">
                             AND P.POP_POSITION = #{SEL_POP_POSITION}
                         </if>
@@ -278,13 +283,13 @@
         ORDER BY 1 DESC
     </select>
     <select id="selectCommItemDetailInfoGrid2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT A.POP_SEQ
-          , jmes.SF_GET_CODE_NM('1009', A.POP_POSITION, 'KR') AS POP_POSITION_NM
+        SELECT A.POP_VSEQ AS POP_SEQ
+          , A.POP_POSITION_NM
           , jmes.SF_GET_DATE_F(A.POP_DT,'YY','') AS POP_DT
-        FROM jmes.TBL_POP A
+        FROM jmes.TBL_POP_VIEW A
         WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
           AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-        ORDER BY A.POP_SEQ DESC
+        ORDER BY A.POP_VSEQ DESC
     </select>
     <select id="selectCommItemDetailInfoGrid3" parameterType="java.util.HashMap" resultType="java.util.HashMap">
        SELECT jmes.SF_GET_CODE_NM('1078', X.NOTE_TYPE, 'KR') AS NOTE_TYPE_NM
@@ -418,7 +423,7 @@
                         , jmes.SF_GET_CODE_NM('1025', Z.ERROR_ACTION, 'KR') AS Q_ERROR_ACTION_NM
                         , Z.ERROR_NOTE AS Q_ERROR_NOTE
                         , jmes.SF_GET_CODE_NM('1013', X.PART_STATUS, 'KR') AS PART_STATUS_NM
-                        , (SELECT jmes.SF_GET_CODE_NM('1009', M.POP_POSITION, 'KR') FROM jmes.TBL_POP M WHERE M.POP_SEQ = X.POP_SEQ) AS POP_NM
+                        , (SELECT M.POP_POSITION_NM FROM jmes.TBL_POP_VIEW M WHERE M.POP_SEQ = X.POP_SEQ) AS POP_NM
                         , X.OUT_FINISH_DT
                         , (SELECT SUM(M.ERROR_QTY) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = X.ORDER_SEQ AND M.INSPECT_TYPE = '2') AS RETURN_QTY
                         , (SELECT MAX(M.INSERT_DT) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = X.ORDER_SEQ AND M.INSPECT_TYPE = '2') AS  RETURN_LAST_DT
@@ -438,7 +443,8 @@
                             AND M.RETURN_SETTLEMENT_DT IS NULL
                             ) AS  RETURN_ING_CNT
                         , X.IMG_GFILE_SEQ
-                        , (SELECT jmes.SF_GET_DATE_F(M.POP_DT,'YY','M') FROM jmes.TBL_POP M WHERE M.POP_POSITION = 'POP090' AND M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ ORDER BY M.POP_SEQ LIMIT 1) AS WORK_FINISH_DT
+                        -- , (SELECT jmes.SF_GET_DATE_F(M.POP_DT,'YY','M') FROM jmes.TBL_POP M WHERE M.POP_POSITION = 'POP100' AND M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ ORDER BY M.POP_SEQ LIMIT 1) AS WORK_FINISH_DT
+                        , SF_GET_DATE_F(X.INNER_WORK_FINISH_DT, '', '') AS WORK_FINISH_DT
                         , X.ORIGINAL_SIDE_QTY
                         , X.OTHER_SIDE_QTY
                         , X.WORK_FACTORY_NM
@@ -451,7 +457,7 @@
                             C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, C.ORDER_SEQ
                             , (SELECT MAX(M.MCT_WORK_SEQ) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N') AS MCT_WORK_SEQ
                             , (SELECT MAX(M.INSPECT_SEQ) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ) AS INSPECT_SEQ
-                            , ( SELECT MAX(M.POP_SEQ) FROM jmes.TBL_POP M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ) AS POP_SEQ
+                            , ( SELECT MAX(M.POP_VSEQ) FROM jmes.TBL_POP_VIEW M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ) AS POP_SEQ
                             , A.ORDER_COMP_CD
                             , C.ORDER_NUM
                             , C.ORDER_DUE_DT
@@ -474,28 +480,29 @@
                             , (SELECT MAX(M.OUT_DT) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = C.ORDER_SEQ) AS ORDER_OUT_DT
                             , B.ORIGINAL_SIDE_QTY
                             , B.OTHER_SIDE_QTY
+                            , B.INNER_WORK_FINISH_DT
                             , jmes.SF_GET_CODE_NM('1014', B.WORK_FACTORY, 'KR') AS WORK_FACTORY_NM
                             , jmes.SF_GET_MATERIAL_RECEIPT_DT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS MATERIAL_RECEIPT_DT
                             , jmes.SF_GET_DATE_F(B.OUTSIDE_IN_DT, '', 'M') AS OUTSIDE_IN_DT
                         FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER C
                         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                        AND A.CONTROL_SEQ = C.CONTROL_SEQ
-                        AND B.CONTROL_SEQ = C.CONTROL_SEQ
-                        AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                        AND A.DEL_YN = 'N'
-                        -- AND B.PART_STATUS IN ('PRO009','PRO010','PRO011')  -- 상태확인 필요
-                        <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
-                            AND A.ORDER_COMP_CD = #{SEL_END_DT}
-                        </if>
-                        <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null">
-                            AND A.CONTROL_NUM LIKE CONCAT('%', #{SEL_CONTROL_NUM}, '%')
-                        </if>
-                        <if test="SEL_DRAWING_NUM !='' and SEL_DRAWING_NUM != null">
-                            AND B.DRAWING_NUM LIKE CONCAT('%', #{SEL_DRAWING_NUM}, '%')
-                        </if>
-                        <if test="SEL_ORDER_NUM !='' and SEL_ORDER_NUM != null">
-                            AND C.ORDER_NUM LIKE CONCAT('%', #{SEL_ORDER_NUM}, '%')
-                        </if>
+                            AND A.CONTROL_SEQ = C.CONTROL_SEQ
+                            AND B.CONTROL_SEQ = C.CONTROL_SEQ
+                            AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                            AND A.DEL_YN = 'N'
+                            -- AND B.PART_STATUS IN ('PRO009','PRO010','PRO011')  -- 상태확인 필요
+                            <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
+                                AND A.ORDER_COMP_CD = #{SEL_END_DT}
+                            </if>
+                            <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null">
+                                AND A.CONTROL_NUM LIKE CONCAT('%', #{SEL_CONTROL_NUM}, '%')
+                            </if>
+                            <if test="SEL_DRAWING_NUM !='' and SEL_DRAWING_NUM != null">
+                                AND B.DRAWING_NUM LIKE CONCAT('%', #{SEL_DRAWING_NUM}, '%')
+                            </if>
+                            <if test="SEL_ORDER_NUM !='' and SEL_ORDER_NUM != null">
+                                AND C.ORDER_NUM LIKE CONCAT('%', #{SEL_ORDER_NUM}, '%')
+                            </if>
                     ) X LEFT OUTER JOIN jmes.TBL_INSPECT Z ON ( Z.INSPECT_SEQ = X.INSPECT_SEQ AND Z.INSPECT_TYPE = '1' OR Z.INSPECT_SEQ = X.INSPECT_SEQ AND Z.INSPECT_TYPE = '2' AND Z.ORDER_SEQ = X.ORDER_SEQ)
                 ) T
                 WHERE 1=1
@@ -526,19 +533,19 @@
               ,X.ORDER_QTY - X.OUT_QTY AS NEW_OUT_QTY
         FROM(
             SELECT C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, C.ORDER_SEQ
-            , A.CONTROL_NUM
-            , B.DRAWING_NUM
-            , B.IMG_GFILE_SEQ
-            , C.ORDER_NUM
-            , IFNULL(C.ORDER_QTY,0) AS ORDER_QTY
-            , (SELECT IFNULL(SUM(M.OUT_QTY),0) FROM TBL_OUT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = C.ORDER_SEQ) AS OUT_QTY
+                , A.CONTROL_NUM
+                , B.DRAWING_NUM
+                , B.IMG_GFILE_SEQ
+                , C.ORDER_NUM
+                , IFNULL(C.ORDER_QTY,0) AS ORDER_QTY
+                , (SELECT IFNULL(SUM(M.OUT_QTY),0) FROM TBL_OUT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = C.ORDER_SEQ) AS OUT_QTY
             FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER C
             WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-            AND B.CONTROL_SEQ = C.CONTROL_SEQ
-            AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-            AND A.CONTROL_SEQ = #{CONTROL_SEQ}
-            AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-            AND C.ORDER_SEQ = #{ORDER_SEQ}
+                AND B.CONTROL_SEQ = C.CONTROL_SEQ
+                AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+                AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+                AND C.ORDER_SEQ = #{ORDER_SEQ}
         )X
     </select>
 
@@ -843,14 +850,14 @@
             , jmes.SF_GET_CODE_NM('1040', T.INSPECT_GRADE, 'KR') AS INSPECT_GRADE_NM
             , jmes.SF_GET_CODE_NM('1021', T.INSPECT_RESULT, 'KR') AS INSPECT_RESULT_NM
             , T.ERROR_NOTE
-            , (SELECT jmes.SF_GET_CODE_NM('1009', M.POP_POSITION, 'KR') FROM jmes.TBL_POP M WHERE M.POP_SEQ = T.POP_SEQ) AS POP_NM
+            , (SELECT M.POP_POSITION_NM FROM jmes.TBL_POP_VIEW M WHERE M.POP_SEQ = T.POP_SEQ) AS POP_NM
             FROM (  SELECT A.INSPECT_SEQ, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.ORDER_SEQ
                     , A.ERROR_QTY
                     , A.INSERT_DT AS RETURN_DT
                     , A.INSPECT_GRADE
                     , A.INSPECT_RESULT
                     , A.ERROR_NOTE
-                    , (SELECT MAX(M.POP_SEQ) FROM jmes.TBL_POP M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ) AS POP_SEQ
+                    , (SELECT MAX(M.POP_VSEQ) FROM jmes.TBL_POP_VIEW M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ) AS POP_SEQ
                     , (SELECT COUNT(M.PACKING_NUM) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = A.ORDER_SEQ) AS ORDER_PACKING_NUM_CNT
                     , (SELECT SUM(M.OUT_QTY) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = A.ORDER_SEQ) AS ORDER_OUT_QTY
                     FROM jmes.TBL_INSPECT A
@@ -1136,9 +1143,10 @@
                             , CASE WHEN X.EMERGENCY_YN = 'Y' THEN '긴' END AS EMERGENCY_YN
                             , jmes.SF_GET_CODE_NM('1059', X.MAIN_INSPECTION, 'KR') MAIN_INSPECTION_NM
                             , jmes.SF_GET_CODE_NM('1014', X.WORK_FACTORY, 'KR') AS WORK_FACTORY_NM
-                            , (SELECT jmes.SF_GET_DATE_F(M.POP_DT,'YY','M') FROM jmes.TBL_POP M WHERE M.POP_POSITION = 'POP090' AND M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ ORDER BY M.POP_SEQ LIMIT 1) AS WORK_FINISH_DT
+                            , SF_GET_DATE_F(X.INNER_WORK_FINISH_DT, '', '') AS WORK_FINISH_DT
+                            -- , (SELECT jmes.SF_GET_DATE_F(M.POP_DT,'YY','M') FROM jmes.TBL_POP M WHERE M.POP_POSITION = 'POP100' AND M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ ORDER BY M.POP_SEQ LIMIT 1) AS WORK_FINISH_DT
                             , jmes.SF_GET_DATE_F(X.INNER_DUE_DT,'','') AS INNER_DUE_DT
-                            , jmes.SF_GET_CODE_NM('1009', P.POP_POSITION, 'KR') AS POP_NM
+                            , P.POP_POSITION_NM AS POP_NM
                             , jmes.SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM
                             , jmes.SF_GET_COMP_NM(X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
                             , jmes.SF_GET_CODE_NM('1013', X.PART_STATUS, 'KR') AS PART_STATUS_NM
@@ -1157,8 +1165,8 @@
                                     , B.INNER_DUE_DT, B.OUTSIDE_COMP_CD, B.PART_STATUS
                                     , A.CONTROL_NUM, B.PART_NUM, B.DRAWING_NUM
                                     , B.MATERIAL_DETAIL, B.WORK_TYPE, B.MATERIAL_TYPE
-                                    , B.PART_UNIT_QTY, B.SIZE_TXT, A.NOTE
-                                    , (SELECT MAX(M.POP_SEQ) FROM jmes.TBL_POP M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS POP_SEQ
+                                    , B.PART_UNIT_QTY, B.SIZE_TXT, A.NOTE, B.INNER_WORK_FINISH_DT
+                                    , (SELECT MAX(M.POP_VSEQ) FROM jmes.TBL_POP_VIEW M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS POP_SEQ
                                 FROM jmes.TBL_CONTROL A
                                     , jmes.TBL_CONTROL_PART B
                                 WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
@@ -1175,7 +1183,7 @@
                                     <if test="SEL_MATERIAL_DETAIL !='' and SEL_MATERIAL_DETAIL != null">
                                         AND B.MATERIAL_DETAIL = #{SEL_MATERIAL_DETAIL}
                                     </if>
-                            ) X LEFT OUTER JOIN jmes.TBL_POP P ON P.POP_SEQ = X.POP_SEQ
+                            ) X LEFT OUTER JOIN jmes.TBL_POP_VIEW P ON P.POP_VSEQ = X.POP_SEQ
                       ) V, jmes.TBL_INSPECT W
                 WHERE W.CONTROL_SEQ = V.CONTROL_SEQ
                     AND W.CONTROL_DETAIL_SEQ = V.CONTROL_DETAIL_SEQ
