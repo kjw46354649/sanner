@@ -1,8 +1,10 @@
 package com.framework.innodale.component;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.PixelGrabber;
 import java.io.File;
 import java.io.IOException;
 
@@ -64,29 +66,34 @@ public class ImageUtil {
      * @param width 리사이즈할 가로 사이즈
      * @param height 리사이즈할 세로 사이즈
      */
-    public static void resizeFix(File srcFile, File destFile, int width, int height) {
-        Image resizedImg = null;
-        BufferedImage bufImg = null;
-        try {
-            BufferedImage image = ImageIO.read(srcFile);
-            int scaleWidth = width;
-            int scaleHeight = height;
-            resizedImg = image.getScaledInstance(scaleWidth, scaleHeight, Image.SCALE_SMOOTH);
-            bufImg = new BufferedImage(resizedImg.getWidth(null), resizedImg.getHeight(null), image.getType());
-            Graphics2D g2d = bufImg.createGraphics();
-            g2d.drawImage(resizedImg, 0, 0, null);
-            g2d.dispose();
-            ImageIO.write(bufImg, "jpg", destFile);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (resizedImg != null) {
-                resizedImg.flush();
-            }
-            if (bufImg != null) {
-                bufImg.flush();
-            }
+    public static void resizeFix(File src, File dest, int width, int height) throws IOException {
+        Image srcImg = null;
+        String suffix = src.getName().substring(src.getName().lastIndexOf('.')+1).toLowerCase();
+        if (suffix.equals("bmp") || suffix.equals("png") || suffix.equals("gif")) {
+            srcImg = ImageIO.read(src);
+        } else {
+            // BMP가 아닌 경우 ImageIcon을 활용해서 Image 생성
+            // 이렇게 하는 이유는 getScaledInstance를 통해 구한 이미지를
+            // PixelGrabber.grabPixels로 리사이즈 할때
+            // 빠르게 처리하기 위함이다.
+            srcImg = new ImageIcon(src.toURL()).getImage();
         }
+
+        int destWidth = srcImg.getWidth(null);
+        int destHeight = srcImg.getHeight(null);
+
+        Image imgTarget = srcImg.getScaledInstance(destWidth, destHeight, Image.SCALE_SMOOTH);
+        int pixels[] = new int[destWidth * destHeight];
+        PixelGrabber pg = new PixelGrabber(imgTarget, 0, 0, destWidth, destHeight, pixels, 0, destWidth);
+        try {
+            pg.grabPixels();
+        } catch (InterruptedException e) {
+            throw new IOException(e.getMessage());
+        }
+        BufferedImage destImg = new BufferedImage(destWidth, destHeight, BufferedImage.TYPE_INT_RGB);
+        destImg.setRGB(0, 0, destWidth, destHeight, pixels, 0, destWidth);
+
+        ImageIO.write(destImg, "jpg", dest);
     }
 
     /**

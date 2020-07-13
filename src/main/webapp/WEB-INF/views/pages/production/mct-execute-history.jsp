@@ -707,7 +707,7 @@
                     },
                     {title: '위치', datatype: 'string', dataIndx: 'WORK_DIRECTION'},
                     {title: '작업내용', minWidth: 80, width: 80, datatype: 'string', dataIndx: 'WORK_DESC'},
-                    {title: '작업자', minWidth: 100, width: 100, datatype: 'string', dataIndx: 'WORK_USER_ID'},
+                    {title: '작업자', minWidth: 100, width: 100, datatype: 'string', dataIndx: 'WORK_USER_NM'},
                     {title: '파일', minWidth: 60, width: 60, datatype: 'string', dataIndx: '',
                         render: function (ui) {
                             let rowData = ui.rowData;

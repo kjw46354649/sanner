@@ -185,8 +185,8 @@ public class PDFPringMakeController {
 
             if(controlInfo.get("IMAGE_PATH") != null && !"".equals(controlInfo.get("IMAGE_PATH"))) {
                 Image pngImage = Image.getInstance((String) controlInfo.get("IMAGE_PATH"));
-                pngImage.setAbsolutePosition(0, 17);
-                pngImage.scaleAbsolute(PageSize.A4.getWidth() - 20, PageSize.A4.getHeight() - 70);
+                pngImage.setAbsolutePosition(15, 10);
+                pngImage.scaleAbsolute(PageSize.A4.getWidth() - 30, PageSize.A4.getHeight() - 70);
 
                 document.add(pngImage);
             }

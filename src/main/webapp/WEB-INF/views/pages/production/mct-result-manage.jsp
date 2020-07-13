@@ -454,7 +454,7 @@
                                 };
                                 fnPostAjax(function (data, callFunctionParam) {
                                     if(data.info){
-                                        camWorkManagePop(data.info);
+                                        camWorkManagePop(data.info, true);
                                     }else{
                                         alert("바코드를 확인 해 주십시오. 실적 등록 대상이 아닙니다.");
                                         return;
@@ -557,11 +557,11 @@
                     let rowData = ui.rowData;
                     $cell.find('#CAM_WORK_START_ACTION').bind('click', function(e) {
                         e.preventDefault();
-                        camWorkManagePop(rowData);
+                        camWorkManagePop(rowData, true);
                     });
                     $cell.find('#CAM_WORK_COMPLETE_ACTION').bind('click', function(e) {
                         e.preventDefault();
-                        camWorkManagePop(rowData);
+                        camWorkManagePop(rowData, true);
                     });
                 }
             },
@@ -647,7 +647,7 @@
                     {title: 'step', datatype: 'integer', dataIndx: 'CAM_STEP', minWidth: 30, width: 35},
                     {title: '가공위치', datatype: 'string', dataIndx: 'WORK_DIRECTION', minWidth: 30, width: 50},
                     {title: '작업내용', datatype: 'string', dataIndx: 'WORK_DESC', minWidth: 30, width: 80},
-                    {title: '작업자', datatype: 'string', dataIndx: 'WORK_USER_ID', minWidth: 30, width: 100},
+                    {title: '작업자', datatype: 'string', dataIndx: 'WORK_USER_NM', minWidth: 30, width: 100},
                     {title: '파일', datatype: 'string', dataIndx: '', minWidth: 30, width: 60,
                         render: function (ui) {
                             let rowData = ui.rowData;
@@ -743,7 +743,7 @@
         };
         /* function */
         /** 제품 시작 상세 표시 **/
-        let camWorkManagePop = function(rowData) {
+        let camWorkManagePop = function(rowData, popOpenFalg) {
             fnResetFrom('cam_work_manage_pop_form');
             $("#cam_work_manage_pop_form").find("#CONTROL_SEQ").val(rowData.CONTROL_SEQ);
             $("#cam_work_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val(rowData.CONTROL_DETAIL_SEQ);
@@ -788,29 +788,43 @@
             $("#cam_work_manage_pop_form").find("#HISTORY_NOTE").val(rowData.HISTORY_NOTE);
             $("#cam_work_manage_pop_form").find("#NOTE").val(rowData.NOTE);
             camWorkStatusConfig(rowData);
-            if(!lastWorkEquipId && rowData.CAM_STATUS === "CWS020"){   // 처음 작업인 경우 첫번째 체크 버튼 활성화
-                $('#cam_work_manage_detail_pop').find("input:checkbox[id='CAM_WORK_CHK_01']").trigger("click");
-            }
             let parameters = {
                 'url': '/json-list',
                 'data': $('#cam_work_manage_pop_form').serialize()
             };
             fnPostAjax(function (data, callFunctionParam) {
+                var icount = 1;
                 if(data.list.length > 0) {
                     for (let i = 0; i < data.list.length; i++) {
-                        $('#cam_work_manage_detail_pop').find("input:checkbox[id='CAM_WORK_CHK_" + data.list[i].ROWNUM + "']").trigger("click");
-                        $('#cam_work_manage_detail_pop').find("#CAM_WORK_SEQ_" + data.list[i].ROWNUM).val(data.list[i].SEQ);
-                        $('#cam_work_manage_detail_pop').find("#CAM_WORK_GFILE_SEQ_" + data.list[i].ROWNUM).val(data.list[i].CAM_GFILE_SEQ);
-                        $('#cam_work_manage_detail_pop').find("select[id='CAM_WORK_DIRECTION_" + data.list[i].ROWNUM + "']").val(data.list[i].WORK_DIRECTION);
-                        $('#cam_work_manage_detail_pop').find("#CAM_WORK_DESC_" + data.list[i].ROWNUM).val(data.list[i].WORK_DESC);
-                        $('#cam_work_manage_detail_pop').find("#CAM_WORK_DESIGN_QTY_" + data.list[i].ROWNUM).val(data.list[i].DESIGN_QTY);
-                        $('#cam_work_manage_detail_pop').find("select[id='CAM_WORK_USER_ID_" + data.list[i].ROWNUM + "']").val(data.list[i].WORK_USER_ID);
-                        let fileHtml = "<a href='/downloadfile/" + data.list[i].CAM_FILE_SEQ + "' download>" + data.list[i].CAM_FILE_NM + "</a><br>" +
-                            "<a href='/downloadfile/" + data.list[i].NC_FILE_SEQ + "' download>" + data.list[i].NC_FILE_NM;
-                        $("#cam_work_manage_detail_pop").find("#CAM_WORK_FILE_" + data.list[i].ROWNUM).html(fileHtml);
+                        let fileHtml = "";
+                        if(rowData.CAM_STATUS === "CWS020"){
+                            camWorkStepStatusConfig("0" + icount, true);
+                            fileHtml = "<a href='/downloadfile/" + data.list[i].CAM_FILE_SEQ + "' download>" + data.list[i].CAM_FILE_NM + "</a><br>" +
+                                "<a href='/downloadfile/" + data.list[i].NC_FILE_SEQ + "' download>" + data.list[i].NC_FILE_NM + "</a>";
+                        }else {
+                            camWorkStepStatusConfig("0" + icount, false);
+                            fileHtml = "" + data.list[i].CAM_FILE_NM + "<br>" + "" + data.list[i].NC_FILE_NM;
+                        }
+                        $('#cam_work_manage_detail_pop').find("#CAM_WORK_SEQ_0" + icount).val(data.list[i].SEQ);
+                        $('#cam_work_manage_detail_pop').find("#CAM_WORK_GFILE_SEQ_0" + icount).val(data.list[i].CAM_GFILE_SEQ);
+                        $('#cam_work_manage_detail_pop').find("select[id='CAM_WORK_DIRECTION_0" + icount + "']").val(data.list[i].WORK_DIRECTION);
+                        $('#cam_work_manage_detail_pop').find("#CAM_WORK_DESC_0" + icount).val(data.list[i].WORK_DESC);
+                        $('#cam_work_manage_detail_pop').find("#CAM_WORK_DESIGN_QTY_0" + icount).val(data.list[i].DESIGN_QTY);
+                        $('#cam_work_manage_detail_pop').find("select[id='CAM_WORK_USER_ID_0" + icount + "']").val(data.list[i].WORK_USER_ID);
+                        $("#cam_work_manage_detail_pop").find("#CAM_WORK_FILE_0" + icount).html(fileHtml);
+                        icount++;
                     }
                 }
-                $('#cam_work_manage_detail_pop').modal('show');
+                for (let i = icount; i <= 5; i++) {
+                    if(i == 1 && rowData.CAM_STATUS === "CWS020"){
+                        camWorkStepStatusConfig("0" + i, true);
+                    }else {
+                        camWorkStepStatusConfig("0" + i, false);
+                    }
+                    $("#cam_work_manage_detail_pop").find("#CAM_WORK_FILE_0" + i).html("&nbsp;<br>&nbsp;");
+                }
+                if(popOpenFalg) $('#cam_work_manage_detail_pop').modal('show');
+
             }, parameters, '');
         };
 
@@ -845,8 +859,25 @@
                         'data': $('#cam_work_manage_pop_form').serialize()
                     };
                     fnPostAjax(function (data, callFunctionParam) {
-                        $('#cam_work_manage_detail_pop').modal('hide');
-                        $mctCamManageSearchBtn.trigger("click");
+                        let infoParameters = {
+                            'url': '/json-info',
+                            'data': {'queryId': 'machine.selectResultManageList',
+                                'CONTROL_NUM': $('#cam_work_manage_pop_form').find('#CONTROL_NUM').val(),
+                                'CONTROL_DETAIL_SEQ': $('#cam_work_manage_pop_form').find('#CONTROL_DETAIL_SEQ').val()}
+                        };
+
+                        console.log(infoParameters);
+
+                        fnPostAjax(function (infoData, infoCallFunctionParam) {
+                            if(infoData.info){
+                                camWorkManagePop(infoData.info, false);
+                            }else{
+                                alert("관리번호를 확인 해 주십시오. 실적 등록 대상이 아닙니다.");
+                                return;
+                            }
+                        }, infoParameters, '');
+                        // $('#cam_work_manage_detail_pop').modal('hide');
+                        // $mctCamManageSearchBtn.trigger("click");
                     }, parameters, '');
                 }
             });
@@ -1040,11 +1071,13 @@
         let camWorkStepStatusConfig = function(index, disableFlag){
             if(disableFlag){
                 disableFlag = false;
+                $('#cam_work_manage_pop_form').find("input:checkbox[id='CAM_WORK_CHK_" + index + "']").prop("checked", true);
                 $("#cam_work_manage_pop_form").find("select[name='CAM_WORK_USER_ID_" + index + "']").each(function() {
                     $(this).val('${authUserInfo.USER_ID}');
                 });
             } else {
                 disableFlag = true;
+                $('#cam_work_manage_pop_form').find("input:checkbox[id='CAM_WORK_CHK_" + index + "']").prop("checked", false);
                 $("#cam_work_manage_pop_form").find("select[name*='" + index + "']").each(function() {
                     if($(this).find('option:first').val() == ''){
                         $(this).val('');
@@ -1053,13 +1086,11 @@
                     }
                 });
                 $("#cam_work_manage_pop_form").find("input[name*='" + index + "']").val("");
-                $("#cam_work_manage_pop_form").find("#CAM_WORK_FILE_" + index).html("&nbsp;<br>&nbsp;");
             }
             $("#cam_work_manage_pop_form").find("input[name*='" + index + "']").attr('readonly', disableFlag);
             $("#cam_work_manage_pop_form").find("input[name*='" + index + "']").attr('disabled', disableFlag);
             $("#cam_work_manage_pop_form").find("select[name*='" + index + "']").attr('readonly', disableFlag);
             $("#cam_work_manage_pop_form").find("select[name*='" + index + "']").attr('disabled', disableFlag);
-            $("#cam_work_manage_pop_form").find(".camworkChekbox").attr('disabled', false);
         }
 
         /** 시작 전 Disable 처리 **/
@@ -1081,6 +1112,7 @@
             }
             $("#cam_work_manage_pop_form").find(".statusConfig").attr('readonly', disableFlag);
             $("#cam_work_manage_pop_form").find(".statusConfig").attr('disabled', disableFlag);
+            $("#cam_work_manage_pop_form").find(".camworkChekbox").attr('checkec', false);
             $("#cam_work_manage_pop_form").find(".camworkChekbox").attr('disabled', disableCheck);
             $("#cam_work_manage_pop_form").find("#HISTORY_NOTE").attr('readonly', disableCheck);
             $("#cam_work_manage_pop_form").find("#HISTORY_NOTE").attr('disabled', disableCheck);
