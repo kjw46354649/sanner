@@ -215,7 +215,7 @@ public class PDFPringMakeController {
         response.setContentType("application/pdf");
         OutputStream out = response.getOutputStream();
 
-        Document document = new Document(PageSize.A4.rotate(), 15, 15, 15, 15);
+        Document document = new Document(PageSize.A5.rotate(), 15, 15, 15, 15);
 
         // 한글 처리를 위한 글꼴 설정 추가
         String fontPath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.font.path") + "/malgun/malgun.ttf";

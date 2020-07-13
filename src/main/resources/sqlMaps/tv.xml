@@ -178,6 +178,7 @@
                                         ) T
                                    ) Y
                             ON X.EQUIP_SEQ = Y.EQUIP_SEQ
+        WHERE Y.KEY_SEQ IS NOT NULL
         ORDER BY X.FACTORY_AREA, X.LAYOUT_ROW, X.LAYOUT_COL, Y.WORK_PLAN_TYPE, Y.INNER_DUE_DT, Y.CONTROL_PART_INFO
     </select>
     <select id="selectMctGrid1List" parameterType="java.util.HashMap" resultType="java.util.HashMap">

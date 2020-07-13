@@ -123,14 +123,14 @@
             {title: '.', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
             {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120 , editable: false, hidden: true} ,
             {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', width: 35, editable: false},
-            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM', width: 60, editable: false},
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', width: 60, editable: false},
-            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'SIZE_TXT', width: 70, editable: false},
+            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM', width: 65, editable: false},
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', width: 65, editable: false},
+            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'SIZE_TXT', width: 75, editable: false},
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 30 , editable: false},
-            {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_NM', minWidth: 60 , editable: false},
+            {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_NM', minWidth: 65 , editable: false},
             {title: '요청 사항', align: "center", colModel: [
-                    {title: '요청 사항', dataType: 'string', dataIndx: 'REQUEST_NOTE', minWidth: 130},
-                    {title: '비고', dataType: 'string', dataIndx: 'ORDER_NOTE', minWidth: 120},
+                    {title: '요청 사항', dataType: 'string', dataIndx: 'REQUEST_NOTE', minWidth: 130, editable: false},
+                    {title: '비고', dataType: 'string', dataIndx: 'ORDER_NOTE', minWidth: 120, editable: false},
                 ]
             },
             /*{title: '금액.', dataType: 'string', dataIndx: 'ORDER_AMT', width: 50, format: '#,###',
@@ -237,7 +237,7 @@
                     },
                 ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
-            {title: '검사 비고', dataType: 'string', dataIndx: 'INSPECT_NOTE',
+            {title: '검사 비고', dataType: 'string', dataIndx: 'INSPECT_NOTE', minWidth: 130,
                 editable: function (ui) {
                     if (ui.rowData.IN_YN == 'Y') {
                         return false;
@@ -265,8 +265,8 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 140, editable: false},
-            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', width: 30, editable: false},
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 180, editable: false},
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 30, width: 30, editable: false},
         ];
 
         itemOrderHistoryLeftGrid.pqGrid({
@@ -291,6 +291,7 @@
             colModel: itemOrderHistoryLeftColModel,
             showTitle: false,
             title: false,
+            editable: false,
             complete: function(event, ui) {
                 //this.flex();
                 let data = itemOrderHistoryLeftGrid.pqGrid('option', 'dataModel.data');

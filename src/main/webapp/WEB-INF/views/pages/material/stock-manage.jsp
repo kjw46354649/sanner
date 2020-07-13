@@ -284,36 +284,20 @@
         $("#stock_manage_form").find("#queryId").val("material.selectInsideStockList");
         stockManagePostData01 = fnFormToJsonArrayData('#stock_manage_form');
         stockManageColModel01 = [
-            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD_NM',  minWidth: 110, width: 110,
+            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD',  minWidth: 110, width: 110,
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "ORDER_COMP_CD_NM", id: "ORDER_COMP_CD" },
                     valueIndx: "value",
                     labelIndx: "text",
-                    options: function(ui) {
-                        let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        let stockManageCompData = {
-                            "url" : '/json-list',
-                            'data': {'queryId': 'dataSource.getOrderCompanyList'}
-                        };
-                        let ajaxStockManageData = "";
-                        fnPostAjaxAsync(function (data, callFunctionParam) {
-                            ajaxStockManageData = data.list;
-                        }, stockManageCompData, '');
-
-                        return ajaxStockManageData;
-                    },
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["ORDER_COMP_CD"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
-                    }
+                    options: fnCommCodeDatasourceGridSelectBoxCreate({
+                        "url" : '/json-list',
+                        'data': {'queryId': 'dataSource.getOrderCompanyList'}
+                    }),
                 },
                 editable: function (ui) {return gridCellEditable(ui);},
                 validations: [
                     { type: 'minLen', value: 1, msg: "Required" }
-                ]
+                ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
             {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {
@@ -329,13 +313,14 @@
                 }
             },
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 150, width: 150,
-                editable: function (ui) { return gridCellEditable(ui);}
+                editable: function (ui) { return gridCellEditable(ui);},
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
             },
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', minWidth: 200, width: 200,
                 editable: function (ui) { return gridCellEditable(ui);},
                 validations: [
                     { type: 'minLen', value: 1, msg: "Required" }
-                ]
+                ], styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
             },
             {title: '재고번호', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 150, width: 150, editable: false},
             {title: '사업자구분', dataType: 'string', dataIndx: 'COMP_CD', minWidth: 120, width: 120, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
@@ -345,48 +330,25 @@
                     labelIndx: "text",
                     options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}})
                 },
-                render: function (ui) {
-                    let cellData = ui.cellData;
-                    if (cellData === '' || cellData === undefined) {
-                        return '';
-                    } else {
-                        let data = fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
-                        let index = data.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = data.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : data[index].text;
-                    }
-                },
                 validations: [
                     { type: 'minLen', value: 1, msg: "Required" }
                 ]
             },
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 100, width: 100, editable: function (ui) { return gridCellEditable(ui);}},
-            {title: '소재Type', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM',editable: function (ui) { return gridCellEditable(ui);},
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 100, width: 100,
+                editable: function (ui) { return gridCellEditable(ui);},
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+            },
+            {title: '소재Type', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',editable: function (ui) { return gridCellEditable(ui);},
                 minWidth: 100, width: 100,
                 editor: {
                     type: 'select',
-                    mapIndices: { name: "MATERIAL_DETAIL_NM", id: "MATERIAL_DETAIL" },
                     valueIndx: "value",
                     labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1027'),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["MATERIAL_DETAIL"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
-                    }
+                    options: fnGetCommCodeGridSelectBox('1027')
                 },
                 validations: [
                     { type: 'minLen', value: 1, msg: "Required" }
-                ]
+                ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
             {title: '재고수량<br>(EA)', dataType: 'integer', dataIndx: 'INSIDE_STOCK_CURR_QTY', editable: function (ui) { return gridCellEditable(ui);}
                 , styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}
@@ -400,27 +362,7 @@
             // },
             {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_CD', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
                 minWidth: 100, width: 100,
-                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1049') },
-                render: function (ui) {
-                    let cellData = ui.cellData;
-                    if (cellData === '' || cellData === undefined) {
-                        return '';
-                    } else {
-                        let data = fnGetCommCodeGridSelectBox('1049');
-
-                        let index = data.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = data.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : data[index].text;
-                    }
-                }
+                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1049') }
             },
             {title: '재고위치', dataType: 'string', dataIndx: 'LOC_SEQ', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
                 minWidth: 100, width: 100,
@@ -531,7 +473,8 @@
             //         return '';
             //     }
             // },
-            {title: '입고/출고', minWidth: 100, width: 100, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': '#ffffff'}, dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_IN_OUT',
+            {title: '입고/출고', dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_IN_OUT', minWidth: 100, width: 100,
+                styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: false,
                 render: function (ui) {
                     let grid = this;
                     let $cell = grid.getCell(ui);
@@ -1217,11 +1160,16 @@ console.log("change",JSON.stringify(changes));
         });
 
         function stockManageFilterRender(ui) {
-            var val = ui.cellData == undefined ? "" : ui.cellData,
-                filter = ui.column.filter,
-                crules = (filter || {}).crules;
-
-            if (filter && filter.on && crules && crules[0].value) {
+            let val = ui.cellData == undefined ? "" : ui.cellData,
+                options = ui.column.editor == undefined ? "" : ui.column.editor.options;
+            let index = -1;
+            if(options) {
+                index = options.findIndex(function (element) {
+                    return element.value == val;
+                });
+                if(index > -1) val = options[index].text;
+            }
+            if (val) {
                 var condition = $("#stockManageFilterCondition :selected").val(),
                     valUpper = val.toString().toUpperCase(),
                     txt = $("#stockManageFilterKeyword").val(),
@@ -1243,6 +1191,7 @@ console.log("change",JSON.stringify(changes));
                         indx = -1;
                     }
                 }
+
                 if (indx >= 0) {
                     var txt1 = val.toString().substring(0, indx);
                     var txt2 = val.toString().substring(indx, indx + txtUpper.length);
