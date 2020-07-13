@@ -652,7 +652,7 @@
             IFNULL(H.SEQ, SPACE(0)) AS CAM_STEP, <!-- CAM 스탭 -->
             SF_GET_CODE_NM(1080, H.WORK_DIRECTION, 'EN') AS WORK_DIRECTION, <!-- CAM 가공위치 -->
             H.WORK_DESC, <!-- CAM 작업 내용 -->
-            H.WORK_USER_ID, <!-- CAM 작업자 -->
+            (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = H.WORK_USER_ID) AS WORK_USER_NM, <!-- CAM 작업자 -->
             CASE WHEN H.CAM_GFILE_SEQ IS NOT NULL THEN (SELECT FILE_SEQ FROM TBL_FILE I WHERE H.CAM_GFILE_SEQ = I.GFILE_SEQ AND I.FILE_KIND = 'EXC') ELSE SPACE(0) END CAM_FILE_SEQ, <!-- CAM FILE -->
             CASE WHEN H.CAM_GFILE_SEQ IS NOT NULL THEN (SELECT FILE_SEQ FROM TBL_FILE I WHERE H.CAM_GFILE_SEQ = I.GFILE_SEQ AND I.FILE_KIND = 'EXN') ELSE SPACE(0) END NC_FILE_SEQ, <!-- NC FILE -->
             G.HISTORY_NOTE,  <!-- CAM 기록사항 -->
@@ -837,7 +837,7 @@
             H.SEQ AS CAM_STEP, <!-- CAM 스탭 -->
             SF_GET_CODE_NM(1080, H.WORK_DIRECTION, 'EN') AS WORK_DIRECTION, <!-- CAM 가공위치 -->
             H.WORK_DESC, <!-- CAM 작업 내용 -->
-            H.WORK_USER_ID, <!-- CAM 작업자 -->
+            (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = H.WORK_USER_ID) AS WORK_USER_NM, <!-- CAM 작업자 -->
             CASE WHEN H.CAM_GFILE_SEQ IS NOT NULL THEN (SELECT FILE_SEQ FROM TBL_FILE I WHERE H.CAM_GFILE_SEQ = I.GFILE_SEQ AND I.FILE_KIND = 'EXC') ELSE SPACE(0) END CAM_FILE_SEQ, <!-- CAM FILE -->
             CASE WHEN H.CAM_GFILE_SEQ IS NOT NULL THEN (SELECT FILE_SEQ FROM TBL_FILE I WHERE H.CAM_GFILE_SEQ = I.GFILE_SEQ AND I.FILE_KIND = 'EXN') ELSE SPACE(0) END NC_FILE_SEQ, <!-- NC FILE -->
             G.HISTORY_NOTE,  <!-- CAM 기록사항 -->
@@ -892,7 +892,10 @@
             AND A.WORK_TYPE NOT IN ('WTP020')
             AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009')
             <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
-                AND B.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
+                AND A.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
+            </if>
+            <if test="CONTROL_DETAIL_SEQ != null and CONTROL_DETAIL_SEQ != ''">
+                AND A.CONTROL_DETAIL_SEQ LIKE CONCAT('%', #{CONTROL_DETAIL_SEQ}, '%')
             </if>
             <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
                 AND A.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')

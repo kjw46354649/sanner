@@ -142,6 +142,7 @@
             numberCell: {title: 'No.'},
             columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
             colModel: userMasterColModel,
+            // sortModel: { type: 'local', sorter: [{ dataIndx: 'USER_NM', dir: 'up'}] },
             dataModel: {
                 recIndx: 'ROWNUM', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: userMasterPostData,

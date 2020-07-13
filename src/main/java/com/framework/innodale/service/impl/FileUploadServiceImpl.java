@@ -253,12 +253,13 @@ public class FileUploadServiceImpl implements FileUploadService {
                 HashMap<String, Object> fileInfo = new HashMap<String, Object>();
 
                 if(dxfGfileKeyHashMap.containsKey(mappingDrawingNum))
-                    fileInfo.put("DXF_GFILE_SEQ", dxfGfileKeyHashMap.get("DXF_GFILE_SEQ"));
+                    fileInfo.put("DXF_GFILE_SEQ", dxfGfileKeyHashMap.get(mappingDrawingNum));
                 if(pdfGfileKeyHashMap.containsKey(mappingDrawingNum))
-                    fileInfo.put("PDF_GFILE_SEQ", pdfGfileKeyHashMap.get("PDF_GFILE_SEQ"));
+                    fileInfo.put("PDF_GFILE_SEQ", pdfGfileKeyHashMap.get(mappingDrawingNum));
                 if(pngGfileKeyHashMap.containsKey(mappingDrawingNum))
-                    fileInfo.put("IMG_GFILE_SEQ", dxfGfileKeyHashMap.get("IMG_GFILE_SEQ"));
+                    fileInfo.put("IMG_GFILE_SEQ", pngGfileKeyHashMap.get(mappingDrawingNum));
 
+                fileInfo.put("MAPPING_STR", mappingDrawingNum);
                 fileInfo.put("MAPPING_STR", mappingDrawingNum);
                 fileInfo.put("queryId", paramQueryId);    // 연결 주문 정보 조회
                 List<Map<String, Object>> controlList = innodaleDao.getList(fileInfo);
@@ -273,6 +274,25 @@ public class FileUploadServiceImpl implements FileUploadService {
                 }
             }
         }
+
+        Collections.sort(fileUploadDataList, new Comparator<HashMap<String, Object >>() {
+            @Override
+            public int compare(HashMap<String, Object> firstMappingStr, HashMap<String, Object> secondMappingStr) {
+                String fMapStr = String.valueOf(firstMappingStr.get("MAPPING_STR"));
+                String sMapStr = String.valueOf(secondMappingStr.get("MAPPING_STR"));
+                return fMapStr.compareTo(sMapStr);
+            }
+        });
+
+        Collections.sort(fileUploadList, new Comparator<HashMap<String, Object >>() {
+            @Override
+            public int compare(HashMap<String, Object> firstMappingStr, HashMap<String, Object> secondMappingStr) {
+                String fMapStr = String.valueOf(firstMappingStr.get("CONTROL_NUM"));
+                String sMapStr = String.valueOf(secondMappingStr.get("CONTROL_NUM"));
+                return fMapStr.compareTo(sMapStr);
+            }
+        });
+
         model.addAttribute("result",       "success");
         model.addAttribute("message",      "업로드를 완료 하였습니다.");
         model.addAttribute("fileUploadList", fileUploadList);
@@ -534,26 +554,39 @@ public class FileUploadServiceImpl implements FileUploadService {
             page.setRotation(90); //Rotate Portrait
         }
         //DPI 설정
-        BufferedImage bim = pdfRenderer.renderImageWithDPI(0, 300, ImageType.RGB);
+        BufferedImage bim = pdfRenderer.renderImageWithDPI(0, 100, ImageType.RGB);
         // 이미지로 만든다.
-        ImageIOUtil.writeImage(bim, inPDFFullPath + "temp.png" , 300);
+        ImageIOUtil.writeImage(bim, inPDFFullPath + "temp.png" , 100);
         document.close(); //모두 사용한 PDF 문서는 닫는다.
 
         File tempImagefile = new File(inPDFFullPath + "temp.png");
-        File targetfile = new File(inPDFFullPath + ".png");
-        File sourceFile = null;
-
         BufferedImage image = ImageIO.read(tempImagefile);
         int imageWidth = image.getWidth();
         int imageHeight = image.getHeight();
 
+        File targetfile = new File(outImageFullPath);
+
         if(imageWidth > imageHeight){
-            sourceFile = new File(inPDFFullPath + "_soruce.png");
-            ImageUtil.rotate90(tempImagefile, sourceFile);
+            ImageUtil.rotate90(tempImagefile, targetfile);
         }else{
-            sourceFile = tempImagefile;
+            tempImagefile.renameTo(targetfile);
         }
-        ImageUtil.resizeFix(sourceFile, targetfile, (int)PDRectangle.A4.getWidth(), (int)PDRectangle.A4.getHeight());
+
+//        File tempImagefile = new File(inPDFFullPath + "temp.png");
+//        File targetfile = new File(outImageFullPath);
+//        File sourceFile = null;
+//
+//        BufferedImage image = ImageIO.read(tempImagefile);
+//        int imageWidth = image.getWidth();
+//        int imageHeight = image.getHeight();
+//
+//        if(imageWidth > imageHeight){
+//            sourceFile = new File(inPDFFullPath + "_soruce.png");
+//            ImageUtil.rotate90(tempImagefile, sourceFile);
+//        }else{
+//            sourceFile = tempImagefile;
+//        }
+//        ImageUtil.resizeFix(sourceFile, targetfile, (int)PDRectangle.A4.getWidth(), (int)PDRectangle.A4.getHeight());
 
         return 1;
     }
