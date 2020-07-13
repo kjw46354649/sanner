@@ -190,10 +190,13 @@
             str += '    <input type="hidden" name="EQUIP_SEQ" id="EQUIP_SEQ" value="' + equipSeq + '">';
             str += '    <div class="table">';
             str += '        <div class="titleWrap">';
-            str += '            <span class="equipLabel">' + equipNm +'&nbsp;&nbsp;&nbsp;<span id="NC' + order + '_WORK_USER_ID"></span></span>';
+            str += '            <span class="equipLabel">';
+            str += '                <span>' + equipNm + '</span>';
+            str += '                <span id="NC' + order + '_WORK_USER_ID"></span>';
+            str += '            </span>';
             str += '            <p class="listTxt" style="display: none;">';
             str += '                <span id="NC' + order + '_CONTRO_NUM"></span>';
-            str += '                <span id="NC' + order + '_MATERIAL_DETAIL"></span>';
+            str += '                <span id="NC' + order + '_MATERIAL_TYPE"></span>';
             str += '                <span id="NC' + order + '_PART_UNIT_QTY"></span>';
             str += '            </p>';
             str += '        </div>';
@@ -270,8 +273,8 @@
             {title: '관리번호', minWidht: 300, width: 300, dataType: 'string', dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM'},
             {title: '수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
-            {title: '재질', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden: true},
-            {title: '재질', width: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
+            {title: '재질', width: 70, dataType: 'string', dataIndx: 'MATERIAL_TYPE', hidden: true},
+            {title: '재질', width: 70, dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM_SUBSTR'},
             {title: '규격', width: 50, dataType: 'string', dataIndx: 'SIZE_TXT'},
             {title: '예상', dataType: 'string', dataIndx: 'WORKING_TIME'},
             {
@@ -784,12 +787,12 @@
                 controlNumElement.hide();
                 listTxtElement.hide();
             } else {
-                let materialDetailElement = listTxtElement.children('[id$=MATERIAL_DETAIL]');
+                let materialTypeElement = listTxtElement.children('[id$=MATERIAL_TYPE]');
                 let partUnitQtyElement = listTxtElement.children('[id$=PART_UNIT_QTY]');
                 let workUserIdElement = listTxtElement.children('[id$=WORK_USER_ID]');
 
                 controlNumElement.html(data.CONTROL_NUM);
-                materialDetailElement.html(data.MATERIAL_DETAIL_NM);
+                materialTypeElement.html(data.MATERIAL_TYPE_NM_SUBSTR);
                 partUnitQtyElement.html(data.CONTROL_PART_QTY);
                 workUserIdElement.html(data.WORK_USER_NM);
 

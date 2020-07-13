@@ -8,34 +8,34 @@
         A.CONTROL_NUM, <!-- 관리번호 -->
         A.CONTROL_VER, <!-- 관리번호 버전 -->
         A.COMP_CD, <!-- 사업자 구분 -->
-        SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM, <!-- 사업자구분 -->
+        IFNULL(SF_GET_COMP_NM(A.COMP_CD), SPACE(0)) AS COMP_NM, <!-- 사업자구분 -->
         A.ORDER_COMP_CD, <!-- 발주업체 -->
-        SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM, <!-- 발주업체 -->
+        IFNULL(SF_GET_COMP_NM(A.ORDER_COMP_CD), SPACE(0)) AS ORDER_COMP_NM, <!-- 발주업체 -->
         A.ORDER_STAFF_SEQ, <!-- 구매담당자 -->
-        SF_GET_STAFF_NM(A.ORDER_STAFF_SEQ) AS ORDER_STAFF_NM, <!-- 구매담당자  -->
-        A.DESIGNER_NM, <!-- 설계자 -->
-        A.NOTE AS CONTROL_NOTE, <!-- 주문관리 비고 -->
-        A.PROJECT_NM, <!-- 프로젝트 -->
-        A.MODULE_NM, <!-- 모듈명 -->
-        A.DELIVERY_COMP_NM, <!-- 납품처 -->
-        A.LABEL_NOTE, <!-- 라벨비고 -->
-        A.MAIN_INSPECTION, <!-- 주요검사품 -->
+        IFNULL(SF_GET_STAFF_NM(A.ORDER_STAFF_SEQ), SPACE(0)) AS ORDER_STAFF_NM, <!-- 구매담당자  -->
+        IFNULL(A.DESIGNER_NM, SPACE(0)) AS DESIGNER_NM, <!-- 설계자 -->
+        IFNULL(A.NOTE, SPACE(0)) AS CONTROL_NOTE, <!-- 주문관리 비고 -->
+        IFNULL(A.PROJECT_NM, SPACE(0)) AS PROJECT_NM, <!-- 프로젝트 -->
+        IFNULL(A.MODULE_NM, SPACE(0)) AS MODULE_NM, <!-- 모듈명 -->
+        IFNULL(A.DELIVERY_COMP_NM, SPACE(0)) AS DELIVERY_COMP_NM, <!-- 납품처 -->
+        IFNULL(A.LABEL_NOTE, SPACE(0)) AS LABEL_NOTE, <!-- 라벨비고 -->
+        IFNULL(A.MAIN_INSPECTION, SPACE(0)) AS MAIN_INSPECTION, <!-- 주요검사품 -->
         IFNULL(SF_GET_CODE_NM(1042, A.MAIN_INSPECTION, 'EN'), SPACE(0)) AS MAIN_INSPECTION_NM, <!-- 주요검사품 -->
         A.EMERGENCY_YN, <!-- 긴급 -->
-        IF(A.EMERGENCY_YN IS NULL, SPACE(0), '긴급') AS EMERGENCY_BARCODE_NM, <!-- 바코드 긴급 -->
+        IF(A.EMERGENCY_YN = 'Y', '긴급', SPACE(0)) AS EMERGENCY_BARCODE_NM, <!-- 바코드 긴급 -->
         A.CONTROL_STATUS, <!-- 주문관리상태 -->
-        SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR') AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
-        SF_GET_DATE_F(A.STATUS_DT, 'YY', 'M') AS CONTROL_STATUS_DT, <!-- 주문관리 상태확정일 -->
+        IFNULL(SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR'), SPACE(0)) AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
+        IFNULL(SF_GET_DATE_F(A.STATUS_DT, 'YY', 'M'), SPACE(0)) AS CONTROL_STATUS_DT, <!-- 주문관리 상태확정일 -->
         A.EST_SEQ, <!-- 견적일련번호 -->
-        A.PRICE_CONFIRM, <!-- 단가확인 -->
-        A.OUT_FINISH_DT AS CONTROL_OUT_FINISH_DT <!-- 주문관리 출고완료일 -->
+        IFNULL(A.PRICE_CONFIRM, SPACE(0)) AS PRICE_CONFIRM, <!-- 단가확인 -->
+        IFNULL(A.OUT_FINISH_DT, SPACE(0)) AS CONTROL_OUT_FINISH_DT <!-- 주문관리 출고완료일 -->
     </sql>
 
     <sql id="controlPart">
         B.CONTROL_DETAIL_SEQ, <!-- 주문관리상세일련번호 -->
         IFNULL(B.PART_NUM, SPACE(0)) AS PART_NUM, <!-- Part -->
-        B.DRAWING_NUM, <!-- 도면번호 -->
-        B.DRAWING_VER, <!-- 도면번호 버전 -->
+        IFNULL(B.DRAWING_NUM, SPACE(0)) AS DRAWING_NUM, <!-- 도면번호 -->
+        IFNULL(B.DRAWING_VER, SPACE(0)) AS DRAWING_VER, <!-- 도면번호 버전 -->
         SF_GET_DATE_F(B.DRAWING_UP_DT, 'YY', 'M') AS DRAWING_UP_DT, <!-- 도면업로드시간 -->
         B.PREV_DRAWING_NUM, <!-- 변경전 도면번호 -->
         B.ITEM_NM, <!-- 품명 -->

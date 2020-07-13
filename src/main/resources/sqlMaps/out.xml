@@ -756,8 +756,8 @@
             B.STAFF_EMAIL,
             B.STAFF_TEL
         FROM TBL_COMPANY A
-        INNER JOIN TBL_COMPANY_STAFF B ON A.COMP_CD = B.COMP_CD
-        WHERE A.COMP_CD = #{OUTSIDE_COMP_CD}
+            INNER JOIN TBL_COMPANY_STAFF B ON A.COMP_CD = B.COMP_CD AND B.DEL_YN = 'N'
+        WHERE A.COMP_CD = #{OUTSIDE_COMP_CD} AND A.DEL_YN = 'N'
     </select>
 
     <insert id="createOutsideRequest" parameterType="java.util.HashMap" >

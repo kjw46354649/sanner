@@ -188,6 +188,9 @@
             <input type="hidden" name="COMP_CD" id="COMP_CD">
             <input type="hidden" name="OUTSIDE_STATUS" id="OUTSIDE_STATUS" value="OST001">
             <input type="hidden" name="GFILE_SEQ" id="GFILE_SEQ">
+            <div class="text-right mg-bottom10">
+                <button class="defaultBtn green" id="REQUEST_OUTSIDE_SAVE_SUBMIT">저장 & 제출</button>
+            </div>
             <div style="display: grid; grid-template-columns: repeat(2, 1fr);  grid-template-rows: repeat(2, 1fr); gap: 20px; margin-bottom: 10px;">
                 <div style="grid-column-start: 1; grid-column-end: 2; grid-row-start: 1; grid-row-end: 3;">
                     <div style="display: inline-block;">
@@ -204,11 +207,10 @@
                     </div>
                 </div>
                 <div style="grid-column-start: 2; grid-column-end: 3; grid-row-start: 1; grid-row-end: 2;">
-                    <div class="d-inline-block">
-                        <h5>메일수신처</h5>
-                    </div>
+                    <div class="d-inline-block"><h5>메일수신처</h5></div>
                     <div class="d-inline-block right_float">
-                        <button class="defaultBtn green" id="REQUEST_OUTSIDE_SAVE_SUBMIT">저장 & 제출</button>
+                        <button class="defaultBtn red" id="">삭제</button>
+                        <button class="defaultBtn green" id="">추가</button>
                     </div>
                     <div id="REQUEST_OUTSIDE_MAIL_RECIPIENT_GRID"></div>
                 </div>
@@ -699,28 +701,33 @@
             {title: '메일주소', dataType: 'string', dataIndx: 'STAFF_EMAIL'},
             {title: '전화번호', dataType: 'string', dataIndx: 'STAFF_TEL'},
             {
-                title: '완제품', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
+                title: '수신', datatype: 'bool', dataIndx: 'RECEPTION', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+                type: 'checkbox', cb: {all: false, header: false, select: false, check: 'true', uncheck: 'false'}
+            },
+            {
+                title: '참조', datatype: 'bool', dataIndx: 'REFERENCE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+                type: 'checkbox', cb: {all: false, header: false, select: false, check: 'true', uncheck: 'false'}
             }
         ];
         const mailRecipientObj = {
-            height: 175,
+            height: 140,
             collapsible: false,
             resizable: false,
             showTitle: false,
             rowHtHead: 15,
             numberCell: {title: 'No.'},
-            editable: false,
             scrollModel: {autoFit: true},
+            selectionModel: {type: 'row', mode: 'single'},
+            trackModel: {on: true},
             dragColumns: {enabled: false},
-            // trackModel: {on: true},
+            editable: false,
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
             colModel: mailRecipientColModel,
             // toolbar: toolbar,
             strNoRows: g_noData,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'dataSource.selectCompanyStaffEmailList', 'COMP_CD': ''}, // TODO: COMP_CD 변수
+                postData: {'queryId': 'outMapper.selectOutsideMailDestination', 'OUTSIDE_COMP_CD': ''}, // TODO: COMP_CD 변수
                 recIndx: 'STAFF_SEQ',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
@@ -944,10 +951,10 @@
             collapsible: false,
             resizable: false,
             showTitle: false,
+            rowHtHead: 15,
+            scrollModel: {autoFit: true},
             numberCell: {title: 'No.'},
             trackModel: {on: true},
-            scrollModel: {autoFit: true},
-            rowHtHead: 15,
             dragColumns: {enabled: false},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
             colModel: outsideProcessRequestColModel,
@@ -1401,7 +1408,7 @@
             $('#OUTSIDE_MANAGE_END_DATE').val(today.yyyymmdd());
         };
 
-        const asdfasdf = function (mailFormElement, status) {
+        const isStatusCheck = function (mailFormElement, status) {
             // status : OST001 = 가공요청, OST002 = 요청취소
             let compCdList= [];
             let outsideCompCdList = [];
@@ -1454,6 +1461,11 @@
                 return true;
             }
 
+            if(outsideStatusList[0] === 'OST003') {
+                alert('입고완료.');
+                return true;
+            }
+
             $('#' + mailFormElement + ' > #COMP_CD').val(compCdList[0]);
         };
 
@@ -1469,8 +1481,7 @@
             outsideCompCdList = outsideCompCdList.filter(function (element, index, array) {
                 return array.indexOf(element) === index;
             });
-            console.log($('#' + mailFormElement + ' #OUTSIDE_COMP_CD').val());
-            console.log(outsideCompCdList[0]);
+
             $('#' + mailFormElement + ' #OUTSIDE_COMP_CD').val(outsideCompCdList[0]);
         };
 
@@ -1496,12 +1507,13 @@
 
             fnPostAjaxAsync(function (data) {
                 let grid = $('#' + mailFormElement).find('[id$=REQUEST_OUTSIDE_MAIL_RECIPIENT_GRID]');
+                console.log(11123);
                 grid.pqGrid('option', 'dataModel.data', data.list);
                 grid.pqGrid('refreshView');
             }, parameters, '');
         };
 
-        let makeMailInnerTable = function (list) {
+        let createMailInnerTable = function (list) {
             let table = '';
             let font_header = 'background:lightgray; font-weight:600;';
             let st_center = 'border:1px solid #d0d0d0; text-align:center;';
@@ -1642,7 +1654,10 @@
                 if (noSelectedRowAlert()) {
                     return false;
                 }
-                if (asdfasdf('REQUEST_OUTSIDE_MAIL_FORM', 'OST001')) {
+                if (isStatusCheck('REQUEST_OUTSIDE_MAIL_FORM', 'OST001')) {
+                    return false;
+                }
+                if (fnIsGridEditing($outsideOrderManageGrid)) {
                     return false;
                 }
 
@@ -1655,8 +1670,10 @@
                 $requestOutsideFileGrid = $('#' + requestOutsideFileGridId).pqGrid(requestOutsideFileObj);
                 // 요청 외주 업체 선택
                 selectOutsideCompCd('REQUEST_OUTSIDE_MAIL_FORM');
-                // 메일 수신처 가져오기
-                getRequestOutsideMailDestination('REQUEST_OUTSIDE_MAIL_FORM');
+                setTimeout(function() {
+                    // 메일 수신처 가져오기
+                    getRequestOutsideMailDestination('REQUEST_OUTSIDE_MAIL_FORM');
+                }, 500);
                 // 메일 템플릿 가져오기
                 getRequestOutsideMailContent('REQUEST_OUTSIDE_MAIL_FORM', 'REQUEST_OUTSIDE_EMAIL_CONTENT_TXT');
                 // 하단 그리드 데이터 가져오기
@@ -1665,15 +1682,19 @@
             'hide.bs.modal': function () {
                 $mailRecipientGrid.pqGrid('destroy');
                 $outsideProcessRequestGrid.pqGrid('destroy');
+                $requestOutsideFileGrid.pqGrid('destroy');
             }
         });
 
         $('#CANCEL_REQUEST_OUTSIDE_POPUP').on({
-            'show.bs.modal': function () {
+            'show.bs.modal': function (event) {
                 if (noSelectedRowAlert()) {
                     return false;
                 }
-                if (asdfasdf('CANCEL_REQUEST_OUTSIDE_MAIL_FORM', 'OST002')) {
+                if (isStatusCheck('CANCEL_REQUEST_OUTSIDE_MAIL_FORM', 'OST002')) {
+                    return false;
+                }
+                if (fnIsGridEditing($outsideOrderManageGrid)) {
                     return false;
                 }
 
@@ -1686,8 +1707,10 @@
                 $cancelRequestOutsideFileGrid = $('#' + cancelRequestOutsideFileGridId).pqGrid(cancelRequestOutsideFileObj);
                 // 요청 외주 업체 선택
                 selectOutsideCompCd('CANCEL_REQUEST_OUTSIDE_MAIL_FORM');
-                // 메일 수신처 가져오기
-                getRequestOutsideMailDestination('CANCEL_REQUEST_OUTSIDE_MAIL_FORM');
+                setTimeout(function() {
+                    // 메일 수신처 가져오기
+                    getRequestOutsideMailDestination('REQUEST_OUTSIDE_MAIL_FORM');
+                }, 500);
                 // 메일 템플릿 가져오기
                 getRequestOutsideMailContent('CANCEL_REQUEST_OUTSIDE_MAIL_FORM', 'CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT');
                 // 하단 그리드 데이터 가져오기
@@ -1696,6 +1719,7 @@
             'hide.bs.modal': function () {
                 $cancelMailRecipientGrid.pqGrid('destroy');
                 $cancelRequestOutsideGrid.pqGrid('destroy');
+                $cancelRequestOutsideFileGrid.pqGrid('destroy');
             }
         });
 
@@ -1707,6 +1731,9 @@
 
         $('#ORDER_EXTRACTION').on('click', function () {
             if (noSelectedRowAlert()) {
+                return false;
+            }
+            if (fnIsGridEditing($outsideOrderManageGrid)) {
                 return false;
             }
 
@@ -1854,6 +1881,7 @@
 
         $('#OUTSIDE_ORDER_MANAGE_SAVE').on('click', function () {
             const updateQueryList = ['orderMapper.updateControlPart'];
+
             fnModifyPQGrid($outsideOrderManageGrid, [], updateQueryList);
         });
 
@@ -1895,191 +1923,6 @@
         $('[name=CANCEL_REQUEST_OUTSIDE_POPUP_CLOSE]').on('click', function () {
             $('#CANCEL_REQUEST_OUTSIDE_POPUP').modal('hide');
         });
-        /* event */
-
-        /* init */
-        $('#OUTSIDE_MANAGE_START_DATE').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#OUTSIDE_MANAGE_END_DATE').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#OUTSIDE_MANAGE_START_DATE').datepicker('setDate', 'today');
-        $('#OUTSIDE_MANAGE_END_DATE').datepicker('setDate', 'today');
-
-        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM').find('#ORDER_COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOrderCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM').find('#OUTSIDE_COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOutsourceProcessCompanyList'}
-        });
-
-        $outsideOrderManageGrid = $('#' + gridId).pqGrid(obj);
-        $outsideOrderManageGrid.pqGrid('option', 'dataModel.postData', function () {
-            return (fnFormToJsonArrayData('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM'));
-        });
-        $outsideOrderManageGrid.pqGrid('refreshDataAndView');
-
-
-        /* 견적 요청*/
-        // CKEDITOR 부분
-        CKEDITOR.replace('REQUEST_OUTSIDE_EMAIL_CONTENT_TXT', {height: 285});
-
-        const outsideRequestSave = function () {
-            const updateQueryList = ['outMapper.updateControlPart'];
-
-            fnModifyPQGrid($outsideProcessRequestGrid, [], updateQueryList);
-        };
-
-        const outsideRequestSendEmail = function (mailFormElement) {
-            let list = $outsideProcessRequestGrid.pqGrid('option', 'dataModel.data');
-            let a = CKEDITOR.instances.REQUEST_OUTSIDE_EMAIL_CONTENT_TXT.getData();
-            let b = makeMailInnerTable(list);
-            let c = a + b;
-            $('#REQUEST_OUTSIDE_MAIL_FORM > #queryId').val('mail.insertOutsideRequestSubmitMail');
-            $('#REQUEST_OUTSIDE_MAIL_FORM #REQUEST_OUTSIDE_EMAIL_CONTENT_TXT').val(c);
-            let parameters = {'url': '/json-create', 'data': $('#REQUEST_OUTSIDE_MAIL_FORM').serialize()};
-            console.log(parameters);
-            fnPostAjax(function (data, callFunctionParam) {
-                alert("<spring:message code='com.alert.default.save.success' />");
-            }, parameters, '');
-        };
-
-        fnCommCodeDatasourceSelectBoxCreate($('#REQUEST_OUTSIDE_POPUP').find('#OUTSIDE_COMP_CD'), 'select', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOutsourceProcessCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#CANCEL_REQUEST_OUTSIDE_POPUP').find('#OUTSIDE_COMP_CD'), 'select', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOutsourceProcessCompanyList'}
-        });
-
-        $('#REQUEST_OUTSIDE_SAVE_SUBMIT').on('click', function (){
-            // // 메일 전송 부분
-            let step1List = $outsideProcessRequestGrid.pqGrid('option', 'dataModel.data');
-            console.log(step1List);
-            let a = CKEDITOR.instances.REQUEST_OUTSIDE_EMAIL_CONTENT_TXT.getData();
-            let b = makeMailInnerTable(step1List);
-            let c = a + b;
-            // $('#REQUEST_OUTSIDE_MAIL_FORM > #queryId').val('mail.insertOutsideRequestSubmitMail');
-            $('#REQUEST_OUTSIDE_MAIL_FORM #REQUEST_OUTSIDE_EMAIL_CONTENT_TXT').val(c);
-            //
-            let outsideCompCd = $('#REQUEST_OUTSIDE_MAIL_FORM').find('#OUTSIDE_COMP_CD').val();
-            for (let i = 0, STEP1LIST_LENGTH = step1List.length; i < STEP1LIST_LENGTH; i++) {
-                step1List[i].OUTSIDE_COMP_CD = outsideCompCd;
-            }
-            let step4List = $mailRecipientGrid.pqGrid('option', 'dataModel.data');
-            // REQUEST_OUTSIDE_MAIL_FORM
-            let requestMailForm = fnFormToJsonArrayData('#REQUEST_OUTSIDE_MAIL_FORM'); //object
-            let postData = {
-                status: 'request',
-                controlPartList: step1List, // 그리드
-                mailReceiverList: step4List, // 수신처
-                requestMailForm: requestMailForm // tbl_outside_request 저장용
-            };
-
-            let parameters = {'url': '/managerRequestOutside', 'data': {data: JSON.stringify(postData)}};
-            fnPostAjax(function (data, callFunctionParam) {
-                alert("<spring:message code='com.alert.default.save.success' />");
-                $('#REQUEST_OUTSIDE_POPUP').modal('hide');
-                $outsideOrderManageGrid.pqGrid('refreshDataAndView');
-            }, parameters, '');
-        });
-
-        $('#REQUEST_OUTSIDE_MAIL_FORM').on('change', function () {
-            // 메일 수신처 가져오기
-            getRequestOutsideMailDestination('REQUEST_OUTSIDE_MAIL_FORM');
-        });
-
-        $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM').on('change', function () {
-            // 메일 수신처 가져오기
-            getRequestOutsideMailDestination('CANCEL_REQUEST_OUTSIDE_MAIL_FORM');
-        });
-        /* 가공 요청*/
-
-        /* 가공 취소 요청 */
-        CKEDITOR.replace('CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT', {height: 285});
-
-        const cancelRequestOutsideConfirm = function () {
-            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
-
-            bodyHtml =
-                '<h4>\n' +
-                '    <span>이미 가공이 진행되고 있을 수 있습니다. 반드시 해당업체 확인 후에 진행바랍니다. 취소 진행 및 메일발송을 진행하시겠습니까?</span>\n' +
-                '</h4>';
-
-            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-            let estimateRegisterSubmitConfirm = function (callback) {
-                commonConfirmPopup.show();
-                $("#commonConfirmYesBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                    callback(true);
-                    return;
-                });
-                $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                });
-            };
-            estimateRegisterSubmitConfirm(function (confirm) {
-                if (confirm) {
-                    let step1List = $cancelRequestOutsideGrid.pqGrid('option', 'dataModel.data');
-                    let a = CKEDITOR.instances.CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT.getData();
-                    let b = makeMailInnerTable(step1List);
-                    let c = a + b;
-                    // $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM > #queryId').val('mail.insertOutsideRequestSubmitMail');
-                    $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM #CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT').val(c);
-                    //
-                    let outsideCompCd = $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM').find('#OUTSIDE_COMP_CD').val();
-                    for (let i = 0, STEP1LIST_LENGTH = step1List.length; i < STEP1LIST_LENGTH; i++) {
-                        step1List[i].OUTSIDE_COMP_CD = outsideCompCd;
-                    }
-                    let step4List = $cancelMailRecipientGrid.pqGrid('option', 'dataModel.data');
-                    // CANCEL_REQUEST_OUTSIDE_MAIL_FORM
-                    let requestMailForm = fnFormToJsonArrayData('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM'); //object
-                    let postData = {
-                        status: 'cancel',
-                        controlPartList: step1List, // 그리드
-                        mailReceiverList: step4List, // 수신처
-                        requestMailForm: requestMailForm // tbl_outside_request 저장용
-                    };
-
-                    let parameters = {'url': '/managerRequestOutside', 'data': {data: JSON.stringify(postData)}};
-                    fnPostAjax(function (data, callFunctionParam) {
-                        alert("<spring:message code='com.alert.default.save.success' />");
-                        $('#CANCEL_REQUEST_OUTSIDE_POPUP').modal('hide');
-                        $outsideOrderManageGrid.pqGrid('refreshDataAndView');
-                    }, parameters, '');
-                }
-            });
-        };
-
-        const cancelRequestOutsideSave = function () {
-            const updateQueryList = ['outMapper.updateOutsideProcessRequest'];
-
-            fnModifyPQGrid($cancelRequestOutsideGrid, [], updateQueryList);
-        };
-
-        const cancelRequestOutsideSendEmail = function () {
-            let list = $cancelRequestOutsideGrid.pqGrid('option', 'dataModel.data');
-            let a = CKEDITOR.instances.CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT.getData();
-            let b = makeMailInnerTable(list);
-            let c = a + b;
-            $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM > #queryId').val('mail.insertOutsideRequestSubmitMail');
-            $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM #CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT').val(c);
-            let parameters = {'url': '/json-create', 'data': $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM').serialize()};
-            fnPostAjax(function (data, callFunctionParam) {
-                alert("<spring:message code='com.alert.default.save.success' />");
-            }, parameters, '');
-        };
-
-        fnCommCodeDatasourceSelectBoxCreate($('#REQUEST_OUTSIDE_POPUP').find('#OUTSIDE_COMP_CD'), 'select', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOutsourceProcessCompanyList'}
-        });
 
         $('#CANCEL_REQUEST_OUTSIDE_SAVE_SUBMIT').on('click', function (){
             cancelRequestOutsideConfirm();
@@ -2095,7 +1938,9 @@
 
         $('#REQUEST_OUTSIDE_FILE_UPLOAD').on('click', function () {
             let GfileKey = $('#common_file_download_form').find('#GFILE_SEQ').val();
+            console.log(GfileKey);
             $('#REQUEST_OUTSIDE_MAIL_FORM #GFILE_SEQ').val(GfileKey);
+            console.log($('#REQUEST_OUTSIDE_MAIL_FORM #GFILE_SEQ').val());
             let postData = {'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey};
             fnRequestGridData($requestOutsideFileGrid, postData);
         });
@@ -2131,61 +1976,155 @@
         $('#OUTSIDE_MANAGE_END_DATE_BUTTON').on('click', function () {
             $('#OUTSIDE_MANAGE_END_DATE').focus();
         });
+        /* event */
 
-        /* 메일 드래그앤드랍 */
-        /** drag & drop file Attach */
-        // 임시 비활성화
-       /* let uploadFiles = [];
+        /* init */
+        $('#OUTSIDE_MANAGE_START_DATE').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#OUTSIDE_MANAGE_END_DATE').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#OUTSIDE_MANAGE_START_DATE').datepicker('setDate', 'today');
+        $('#OUTSIDE_MANAGE_END_DATE').datepicker('setDate', 'today');
 
-        let $attachDragAndDrop = $('[name=attachDragAndDrop]');
-        $attachDragAndDrop.on("dragenter", function(e) {  //드래그 요소가 들어왔을떄
-            $(this).addClass('drag-over');
-        }).on("dragleave", function(e) {  //드래그 요소가 나갔을때
-            $(this).removeClass('drag-over');
-        }).on("dragover", function(e) {
-            e.stopPropagation();
-            e.preventDefault();
-        }).on('drop', function(e) {  //드래그한 항목을 떨어뜨렸을때
-            e.preventDefault();
-            $(this).removeClass('drag-over');
-            let files = e.originalEvent.dataTransfer.files; //드래그&드랍 항목
-            for(let i = 0; i < files.length; i++) {
-                let file = files[i];
-                uploadFiles.push(file); //업로드 목록에 추가
+        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM').find('#ORDER_COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOrderCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM').find('#OUTSIDE_COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOutsourceProcessCompanyList'}
+        });
+
+        $outsideOrderManageGrid = $('#' + gridId).pqGrid(obj);
+        $outsideOrderManageGrid.pqGrid('option', 'dataModel.postData', function () {
+            return (fnFormToJsonArrayData('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM'));
+        });
+        $outsideOrderManageGrid.pqGrid('refreshDataAndView');
+
+
+        /* 견적 요청*/
+        // CKEDITOR 부분
+        CKEDITOR.replace('REQUEST_OUTSIDE_EMAIL_CONTENT_TXT', {height: 285});
+
+        fnCommCodeDatasourceSelectBoxCreate($('#REQUEST_OUTSIDE_POPUP').find('#OUTSIDE_COMP_CD'), 'select', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOutsourceProcessCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#CANCEL_REQUEST_OUTSIDE_POPUP').find('#OUTSIDE_COMP_CD'), 'select', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOutsourceProcessCompanyList'}
+        });
+
+        $('#REQUEST_OUTSIDE_SAVE_SUBMIT').on('click', function (){
+            let step1List = $outsideProcessRequestGrid.pqGrid('option', 'dataModel.data');
+            // 메일 내용
+            let a = CKEDITOR.instances.REQUEST_OUTSIDE_EMAIL_CONTENT_TXT.getData();
+            // 하단 그리드 테이블로 생성
+            let b = createMailInnerTable(step1List);
+            let c = a + b;
+            $('#REQUEST_OUTSIDE_MAIL_FORM #REQUEST_OUTSIDE_EMAIL_CONTENT_TXT').val(c);
+
+            let outsideCompCd = $('#REQUEST_OUTSIDE_MAIL_FORM').find('#OUTSIDE_COMP_CD').val();
+
+            for (let i = 0, STEP1LIST_LENGTH = step1List.length; i < STEP1LIST_LENGTH; i++) {
+                step1List[i].OUTSIDE_COMP_CD = outsideCompCd;
             }
-            if (uploadFiles.length > 0) { // file upload
-                let formData = new FormData();
-                $.each(uploadFiles, function(i, file) {
-                    if(file.upload != 'disable') //삭제하지 않은 이미지만 업로드 항목으로 추가
-                        formData.append('file', file, file.name);
+
+            let step4List = $mailRecipientGrid.pqGrid('option', 'dataModel.data');
+            let requestMailForm = fnFormToJsonArrayData('#REQUEST_OUTSIDE_MAIL_FORM'); //object
+            let postData = {
+                status: 'request',
+                controlPartList: step1List, // 그리드
+                mailReceiverList: step4List, // 수신처
+                requestMailForm: requestMailForm // tbl_outside_request 저장용
+            };
+
+            let parameters = {'url': '/managerRequestOutside', 'data': {data: JSON.stringify(postData)}};
+            fnPostAjax(function (data, callFunctionParam) {
+                alert("<spring:message code='com.alert.default.save.success' />");
+                $('#REQUEST_OUTSIDE_POPUP').modal('hide');
+                $outsideOrderManageGrid.pqGrid('refreshDataAndView');
+            }, parameters, '');
+        });
+
+        $('#REQUEST_OUTSIDE_MAIL_FORM #OUTSIDE_COMP_CD').on('change', function () {
+            // 메일 수신처 가져오기
+            getRequestOutsideMailDestination('REQUEST_OUTSIDE_MAIL_FORM');
+        });
+
+        $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM #OUTSIDE_COMP_CD').on('change', function () {
+            // 메일 수신처 가져오기
+            getRequestOutsideMailDestination('CANCEL_REQUEST_OUTSIDE_MAIL_FORM');
+        });
+        /* 가공 요청*/
+
+        /* 가공 취소 요청 */
+        CKEDITOR.replace('CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT', {height: 285});
+
+        const cancelRequestOutsideConfirm = function () {
+            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
+
+            bodyHtml =
+                '<h4>\n' +
+                '    <span>이미 가공이 진행되고 있을 수 있습니다. 반드시 해당업체 확인 후에 진행바랍니다. 취소 진행 및 메일발송을 진행하시겠습니까?</span>\n' +
+                '</h4>';
+
+            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+            let estimateRegisterSubmitConfirm = function (callback) {
+                commonConfirmPopup.show();
+                $("#commonConfirmYesBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                    callback(true);
+                    return;
                 });
-                formData.append('queryId', $('#common_cad_file_attach_form').find("#queryId").val() + "_select");
-                formData.append('GFILE_SEQ', '');
-                uploadFiles = [];    // 파일 업로드 정보 초기화
-                fnFormDataFileUploadAjax(function (data) {
-                    let fileUploadList = data.fileUploadList;
-                    // 메일폼을 찾아서 GFILE_SEQ를 대입한다
-                    $(e.currentTarget).closest('[id$=REQUEST_OUTSIDE_MAIL_FORM]').children('#GFILE_SEQ').val(data.GFILE_SEQ);
+                $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                    e.stopPropagation();
+                    commonConfirmPopup.hide();
+                });
+            };
+            estimateRegisterSubmitConfirm(function (confirm) {
+                if (confirm) {
+                    let step1List = $cancelRequestOutsideGrid.pqGrid('option', 'dataModel.data');
+                    // 메일 내용
+                    let a = CKEDITOR.instances.CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT.getData();
+                    // 하단 그리드 테이블로 생성
+                    let b = createMailInnerTable(step1List);
+                    let c = a + b;
+                    $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM #CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT').val(c);
 
-                    if (!(fileUploadList === undefined) && !(fileUploadList === null)) {
-                        let fileHtml = '';
-                        $.each(fileUploadList, function (index, file) {
-                            let sizeHtml = fn_getFileSize(file.FILE_SIZE);
-                            fileHtml = fileHtml +
-                                '<tr>' +
-                                '   <td scope="col" class="fileName">'+file.ORGINAL_FILE_NM+'</td>' +
-                                '   <td scope="col" class="etcInfo">'+sizeHtml+'</td>' +
-                                '   <td scope="col" class="etcInfo">' +
-                                '       <button type="button" class="smallBtn red"><i class="fa fa-trash"></i><span id="spanFileUploadDelete" gfileSeq="'+file.DXF_GFILE_SEQ+'"> Delete </span></button>'+
-                                '   </td>' +
-                                '</tr>';
-                        });
-                        clearMailFileAttachPopup(e.currentTarget, fileHtml);
+                    let outsideCompCd = $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM').find('#OUTSIDE_COMP_CD').val();
+
+                    for (let i = 0, STEP1LIST_LENGTH = step1List.length; i < STEP1LIST_LENGTH; i++) {
+                        step1List[i].OUTSIDE_COMP_CD = outsideCompCd;
                     }
-                }, formData, '');
-            }
-        });*/
-        /* 메일 드래그앤드랍 */
+
+                    let step4List = $cancelMailRecipientGrid.pqGrid('option', 'dataModel.data');
+                    let requestMailForm = fnFormToJsonArrayData('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM'); //object
+                    let postData = {
+                        status: 'cancel',
+                        controlPartList: step1List, // 그리드
+                        mailReceiverList: step4List, // 수신처
+                        requestMailForm: requestMailForm // tbl_outside_request 저장용
+                    };
+
+                    let parameters = {'url': '/managerRequestOutside', 'data': {data: JSON.stringify(postData)}};
+                    fnPostAjax(function (data, callFunctionParam) {
+                        alert("<spring:message code='com.alert.default.save.success' />");
+                        $('#CANCEL_REQUEST_OUTSIDE_POPUP').modal('hide');
+                        $outsideOrderManageGrid.pqGrid('refreshDataAndView');
+                    }, parameters, '');
+                }
+            });
+        };
+
+        fnCommCodeDatasourceSelectBoxCreate($('#REQUEST_OUTSIDE_POPUP').find('#OUTSIDE_COMP_CD'), 'select', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOutsourceProcessCompanyList'}
+        });
+
 
         /* init */
     });

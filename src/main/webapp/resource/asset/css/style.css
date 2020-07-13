@@ -161,7 +161,9 @@
 .mct .tableWrap ul li { padding: 0; margin-right: 1px; float: left; }
 .mct .tableWrap ul li .table { width: 500px; height: 200px; box-sizing: border-box; border: 1px solid #9b9b9b; }
 .mct .tableWrap ul li .table .titleWrap { height: 18px; border-bottom: 1px solid #9b9b9b; background: #e7eef7; }
-.mct .tableWrap ul li .table .titleWrap .equipLabel{ display: inline-block; width: 60px; height: inherit; text-align: center; /*line-height: 25px;*/ color: #000; font-size: 12px; font-weight: bold; font-family: 'Verdana'; }
+.mct .tableWrap ul li .table .titleWrap .equipLabel { display: inline-block; padding: 0 10px; }
+.mct .tableWrap ul li .table .titleWrap .equipLabel > span { /*text-align: center;*/ font-size: 12px; font-weight: bold; font-family: 'NotoKrR'; }
+.mct .tableWrap ul li .table .titleWrap .equipLabel > span + span { margin-left: 10px; }
 .mct .tableWrap ul li .table .titleWrap .data_ipt { margin-left: 10px; }
 .mct .tableWrap ul li .table .titleWrap .listTxt { display: inline-block; }
 .mct .tableWrap ul li .table .titleWrap .listTxt span { font-size: 12px; color: #000; font-family: 'NotoKrR'; padding: 0 14px; border-right: 1px solid #ababab; }
@@ -180,7 +182,7 @@
 .mct .bottomWrap .hWrap .slt_wrap { }
 .mct .bottomWrap .hWrap label { }
 .mct .bottomWrap .hWrap select { }
-.mct .bottomWrap .conWrap { height: 367px; padding: 10px 0; box-sizing: border-box; }
+.mct .bottomWrap .conWrap { height: 335px; padding: 10px 0; box-sizing: border-box; }
 .mct .bottomWrap .conWrap .tableWrap {margin: 0 20px; position: relative;height: 100%; }
 
 /* 일보조회 */

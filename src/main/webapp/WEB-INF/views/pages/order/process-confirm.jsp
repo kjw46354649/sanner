@@ -604,9 +604,6 @@
             $outsideGrid.pqGrid('refreshDataAndView');
             $processCompleteGrid.pqGrid('refreshDataAndView');
         };
-        const tenSeconds = 10000;
-
-        // setInterval(reloadData, tenSeconds);
 
         const isProcessAssembly = function (rowData) {
             let flag = false;
@@ -697,6 +694,9 @@
         $processConfirmGrid = $('#' + topRightGridId).pqGrid(topRightObj);
         $outsideGrid = $('#' + botLeftGridId).pqGrid(botLeftObj);
         $processCompleteGrid = $('#' + botRightGridId).pqGrid(botRightObj);
+
+        const THIRTY_SECONDS = 30 * 1000;
+        setInterval(reloadData, THIRTY_SECONDS);
         /* init */
 
 
