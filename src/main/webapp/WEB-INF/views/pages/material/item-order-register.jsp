@@ -587,6 +587,19 @@
                     },
                 ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
+            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+                render: function (ui) {
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                    });
+                }
+            },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 120, editable: false, styleHead: {'font-weight': 'bold','color': 'red'},
                 render: function(ui){
                     let WORK_TYPE = ui.rowData.WORK_TYPE == undefined ? '' : ui.rowData.WORK_TYPE;
@@ -613,7 +626,9 @@
             },
             {title: '', dataType: 'string', dataIndx: '', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {
-                    return '<span id="deleteItem" class="circleMinusIcon" style="cursor: pointer"></span>'
+                    let ORDER_STATUS = ui.rowData.ORDER_STATUS;
+                    if(ORDER_STATUS == 'MST002' || ORDER_STATUS == 'MST004') return '';
+                    else return '<span id="deleteItem" class="circleMinusIcon" style="cursor: pointer"></span>';
                 },
                 postRender: function (ui) {
                     let grid = this,
@@ -629,7 +644,9 @@
                             }
                         };
                         fnPostAjaxAsync(function (data, callFunctionParam) {
-                            this.pqGrid('deleteRow', { rowIndx: rowIndex });
+                            itemOrderRegisterPopTopGrid.pqGrid('deleteRow', { rowIndx: rowIndex });
+                            let rowCount = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length;
+                            if(rowCount == 0) $("#item_order_register_popup").modal('hide');
                         }, parameters, '');
                     });
                 }
@@ -646,12 +663,7 @@
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 80, editable: false},
             {title: '발주량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false},
             {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND' , editable: false,
-                editor: {
-                    type: 'select',
-                    valueIndx: 'value',
-                    labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1029')
-                },
+                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029') },
                 render: function (ui) {
                     let cellData = ui.cellData;
                     if (cellData === '' || cellData === undefined) {
@@ -725,7 +737,7 @@
                 }
             },
             {title: '보유소재 충당수량', align: "center", colModel: [
-                    {   title: '요청사항', dataType: 'string', dataIndx: 'REQUEST_NOTE', minWidth: 150, editable: false,
+                    {   title: '요청사항', dataType: 'string', dataIndx: 'REQUEST_NOTE', minWidth: 150, width: 150, editable: false,
                         editor: {
                             type: 'select',
                             cls: 'item_order_register_pop_material_order_note',
@@ -754,7 +766,7 @@
                             }
                         }
                     },
-                    {title: '비고사항', dataType: 'string', dataIndx: 'M_ORDER_NOTE', minWidth: 120, editable: false}
+                    {title: '비고사항', dataType: 'string', dataIndx: 'M_ORDER_NOTE', minWidth: 120, width: 120, editable: false}
                 ]
             },
             {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
@@ -780,7 +792,7 @@
                     return returnVal;
                 }
             },
-            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 30, editable: false },
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 30, width: 30, editable: false },
             {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
@@ -795,27 +807,7 @@
                 }
             },
             {title: '', dataType: 'string', dataIndx: '', minWidth: 25, width: 25, editable: false,
-                render: function (ui) {
-                    return '<span id="deleteItem" class="circleMinusIcon" style="cursor: pointer"></span>'
-                },
-                postRender: function (ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    let rowIndex = ui.rowIndx;
-                    $cell.find("#deleteItem").bind("click", function () {
-                        let rowData = ui.rowData;
-                        let parameters = {
-                            'url': '/json-list',
-                            'data': {
-                                'queryId': 'deleteItemOrderRegisterCancelOrderManual',
-                                'MATERIAL_ORDER_SEQ': rowData.MATERIAL_ORDER_SEQ
-                            }
-                        };
-                        fnPostAjaxAsync(function (data, callFunctionParam) {
-                            itemOrderRegisterPopTopGrid.pqGrid('deleteRow', { rowIndx: rowIndex });
-                        }, parameters, '');
-                    });
-                }
+                render: function (ui) { return ''; }
             },
             {title: '', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
@@ -960,8 +952,6 @@
                     }
                 }
             });
-
-            //itemOrderRegisterRightGrid.pqGrid("refreshDataAndView");
         };
 
         let itemOrderRegisterGridCellEditable = function(ui){
@@ -986,6 +976,8 @@
             $("#item_order_register_material_order_num_temp").val('');
 
             $(".popupTableDiv").html('');
+
+            $("#btnItemOrderRegisterSearch").trigger('click');
         });
 
         $('#item_order_register_popup').on('show.bs.modal',function() {
@@ -1013,7 +1005,7 @@
                 title: false,
                 editModel: {clicksToEdit: 1},
                 complete: function (event, ui) {
-                    this.flex();
+                    //this.flex();
                     let data = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data');
                     $('#item_order_register_popup_top_grid_records').html(data.length);
 
@@ -1097,10 +1089,7 @@
                 fnModifyPQGrid(itemOrderRegisterRightGrid, itemOrderRegisterOutInsertUpdateQueryList, itemOrderRegisterOutInsertUpdateQueryList);
 
                 setTimeout(function(){
-                    itemOrderRegisterLeftGrid.pqGrid('option', "dataModel.postData", function (ui) {
-                        return (fnFormToJsonArrayData('#item_order_register_search_form'));
-                    });
-                    itemOrderRegisterLeftGrid.pqGrid('refreshDataAndView');
+                    $("#btnItemOrderRegisterSearch").trigger('click');
                 }, 1500);
 
             }else{
@@ -1255,7 +1244,6 @@
                             if($("#item_order_register_popup").hasClass("in")){
                                 $("#item_order_register_popup").modal('hide');
                             }
-                            $("#btnItemOrderRegisterSearch").trigger('click');
                         }, parameters, '');
                     }, parameters, '');
                 }
@@ -1428,7 +1416,6 @@
                             fnPostAjax(function(data, callFunctionParam){
                                 alert("취소 완료되었습니다.");
                                 $("#item_order_register_popup").modal('hide');
-                                $("#btnItemOrderRegisterSearch").trigger('click');
                             }, parameters, '');
                         }, parameters, '');
                     }, parameters, '');
@@ -1670,7 +1657,6 @@
                     e.stopPropagation();
                     commonConfirmPopup.hide();
                     $("#item_order_register_popup").modal('toggle');
-                    $("#btnItemOrderRegisterSearch").trigger('click');
                 });
             };
             itemOrderRegisterPopSubmitConfirm(function(confirm){
@@ -1683,7 +1669,6 @@
                     itemOrderRegisterPopTopGrid.pqGrid('refreshDataAndView');
 
                     btnDisabled();
-                    $("#btnItemOrderRegisterSearch").trigger('click');
                 }
             });
         }
