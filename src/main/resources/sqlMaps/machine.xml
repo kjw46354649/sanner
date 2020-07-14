@@ -888,9 +888,32 @@
             LEFT OUTER JOIN TBL_MCT_PLAN K ON A.CONTROL_SEQ = K.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = K.CONTROL_DETAIL_SEQ AND K.DEL_YN = 'N'
             LEFT OUTER JOIN jmes.TBL_EQUIP L ON K.EQUIP_SEQ = L.EQUIP_SEQ
         WHERE 1 = 1
-            AND IFNULL(A.OUTSIDE_YN, 'N') = 'N'
-            AND A.WORK_TYPE NOT IN ('WTP020')
-            AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009')
+            <choose>
+                <when test='SEL_ASSEMBLY != null or SEL_OUTSIDE_YN != null or SEL_COMPLETED_YN != null'>
+                    <if test='SEL_ASSEMBLY == null'>
+                        AND A.WORK_TYPE NOT IN ('WTP020')
+                    </if>
+                    <if test='SEL_OUTSIDE_YN == null'>
+                        AND IFNULL(A.OUTSIDE_YN, 'N') = 'N'
+                    </if>
+                    <if test='SEL_COMPLETED_YN != null'>
+                        AND B.OUT_FINISH_DT IS NULL
+                    </if>
+                    <choose>
+                        <when test='SEL_OUTSIDE_YN != null'>
+                            AND A.PART_STATUS IN ('PRO001', 'PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO012', 'PRO013', 'PRO014', 'PRO015', 'PRO018', 'PRO019')
+                        </when>
+                        <otherwise>
+                            AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO012', 'PRO013', 'PRO014', 'PRO015', 'PRO018')
+                        </otherwise>
+                    </choose>
+                </when>
+                <otherwise>
+                    AND A.WORK_TYPE NOT IN ('WTP020')
+                    AND IFNULL(A.OUTSIDE_YN, 'N') = 'N'
+                    AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO012', 'PRO013', 'PRO014', 'PRO015', 'PRO018')
+                </otherwise>
+            </choose>
             <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
                 AND A.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
             </if>
