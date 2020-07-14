@@ -130,17 +130,17 @@
                 <span class="gubun"></span>
                 <span class="refresh mg-left10"><button type="button" id="MCT_TARGET_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
             </form>
-            <div style="margin: 0 20px 10px 20px;">
-                <input type="text" id="mctPlanManageFilterKeyword" placeholder="Enter your keyword">
-                <select id="mctPlanManageFilterColumn"></select>
-                <select id="mctPlanManageFilterCondition">
-                    <c:forEach var="code" items="${HighCode.H_1083}">
-                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                    </c:forEach>
-                </select>
-                <label for="mctPlanManageFrozen" class="label_50" style="font-size: 15px;">Fix</label>
-                <select id="mctPlanManageFrozen" name="mctPlanManageFrozen">
-                </select>
+            <div style="display:flow-root; margin: 0 20px 10px 20px;">
+<%--                <input type="text" id="mctPlanManageFilterKeyword" placeholder="Enter your keyword">--%>
+<%--                <select id="mctPlanManageFilterColumn"></select>--%>
+<%--                <select id="mctPlanManageFilterCondition">--%>
+<%--                    <c:forEach var="code" items="${HighCode.H_1083}">--%>
+<%--                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>--%>
+<%--                    </c:forEach>--%>
+<%--                </select>--%>
+<%--                <label for="mctPlanManageFrozen" class="label_50" style="font-size: 15px;">Fix</label>--%>
+<%--                <select id="mctPlanManageFrozen" name="mctPlanManageFrozen">--%>
+<%--                </select>--%>
                 <button type="button" class="right_float defaultBtn btn-100w green" id="MCT_TARGET_SAVE">저장</button>
             </div>
         </div>
@@ -551,7 +551,8 @@
             // scrollModel: {autoFit: true},
             editModel: {clicksToEdit: 1},
             trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false, render: mctPlanManageFilterRender},
+            editable: false,
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
             filterModel: {mode: 'OR'},
             colModel: processTargetGridColModel,
             strNoRows: g_noData,
@@ -597,7 +598,7 @@
         };
 
         /* function */
-        function mctPlanManageFilterRender(ui) {
+        /*function mctPlanManageFilterRender(ui) {
             let val = ui.column.formatVal === undefined ? '' : ui.column.formatVal,
                 filter = ui.column.filter,
                 crules = (filter || {}).crules;
@@ -638,7 +639,7 @@
             } else {
                 return val;
             }
-        }
+        }*/
 
         const modifyPQGrid = function (grid, insertQueryList, updateQueryList, deleteQueryList) {
             let parameters;
@@ -903,25 +904,26 @@
         $processPlanGrid11 = $('#' + processPlanGrid11Id).pqGrid(processPlanObj11);
         $processTargetGrid = $('#' + processTargetGridId).pqGrid(processTargetGridObj);
 
-        fnCommCodeDatasourceSelectBoxCreate($('#MCT_PROCESS_TARGET_FORM').find('#MCT_NO'), 'all', {
+        fnCommCodeDatasourceSelectBoxCreate($('#MCT_PROCESS_TARGET_FORM').find('#EQUIP_SEQ'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'machine.selectNCMachineList'}
         });
 
         $('#MCT_TARGET_SAVE').on('click', function () {
+            console.count();
             fnModifyPQGrid($processTargetGrid, [], ['machine.updateMctTarget', 'machine.insertMctPlan']);
             setTimeout(function () {
                 refreshMctPlanGrids();
             }, 1000);
         });
 
-        $('#mctPlanManageFilterKeyword').on('keyup', function(e){
+        /*$('#mctPlanManageFilterKeyword').on('keyup', function(e){
             fnFilterHandler($processTargetGrid, 'mctPlanManageFilterKeyword', 'mctPlanManageFilterCondition', 'mctPlanManageFilterColumn');
-        });
+        });*/
 
-        $('#mctPlanManageFrozen').on('change', function(e){
-            fnFrozenHandler($processTargetGrid, $(this).val());
-        });
+        /*$('#mctPlanManageFrozen').on('change', function(e){
+             fnFrozenHandler($processTargetGrid, $(this).val());
+         });*/
 
         /*setInterval(function () {
             refreshMctPlanGrids();
