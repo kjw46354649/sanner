@@ -215,13 +215,13 @@ public class PDFPringMakeController {
         response.setContentType("application/pdf");
         OutputStream out = response.getOutputStream();
 
-        Document document = new Document(PageSize.A5.rotate(), 15, 15, 15, 15);
+        Document document = new Document(PageSize.A5.rotate(), 10, 10, 10, 10);
 
         // 한글 처리를 위한 글꼴 설정 추가
         String fontPath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.font.path") + "/malgun/malgun.ttf";
         BaseFont bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 
-        Font headFont = new Font(bf, 10, Font.BOLD);
+        Font headFont = new Font(bf, 9, Font.BOLD);
         Font contentsFont = new Font(bf, 8, Font.NORMAL);
         BaseColor headBackground = new BaseColor(217, 217, 217);
         PdfWriter.getInstance(document, out);
