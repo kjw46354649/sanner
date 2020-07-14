@@ -53,26 +53,26 @@
                 <div class="tableWrap">
                     <div class="tab-content">
                         <div class="equipWrap workList">
-                            <table class="modal-table">
+                            <table class="modal-table" style="word-wrap:break-word;word-break:break-all;">
                                 <thead>
                                     <tr>
-                                        <th class="modal-table-header" style="width:65%;">관리번호</th>
-                                        <th class="modal-table-header" style="width:10%;">Part</th>
-                                        <th class="modal-table-header" style="width:12%;">수량</th>
-                                        <th class="modal-table-header" style="width:15%;">납기</th>
+                                        <th class="modal-table-header" style="width:291px;">관리번호</th>
+                                        <th class="modal-table-header" style="width:88px;">Part</th>
+                                        <th class="modal-table-header" style="width:88px;">수량</th>
+                                        <th class="modal-table-header" style="width:108px;">가공납기</th>
                                     </tr>
                                 </thead>
                                 <tbody id="equipBodyListHtml"></tbody>
                             </table>
                         </div>
                         <div class="areaWrap workList" style="display: none">
-                            <table class="modal-table">
+                            <table class="modal-table" style="word-wrap:break-word;word-break:break-all;">
                                 <thead>
                                     <tr>
-                                        <th class="modal-table-header" style="width:65%;">관리번호</th>
-                                        <th class="modal-table-header" style="width:10%;">Part</th>
-                                        <th class="modal-table-header" style="width:12%;">수량</th>
-                                        <th class="modal-table-header" style="width:15%;">납기</th>
+                                        <th class="modal-table-header" style="width:291px;">관리번호</th>
+                                        <th class="modal-table-header" style="width:88px;">Part</th>
+                                        <th class="modal-table-header" style="width:88px;">수량</th>
+                                        <th class="modal-table-header" style="width:108px;">가공납기</th>
                                     </tr>
                                 </thead>
                                 <tbody id="popBodyListHtml"></tbody>
@@ -98,7 +98,7 @@
                             <td class="modal-table-contents">관리번호</td>
                             <td class="modal-table-contents">Part</td>
                             <td class="modal-table-contents">수량</td>
-                            <td class="modal-table-contents">납기</td>
+                            <td class="modal-table-contents">가공납기</td>
                         </tr>
                         <tr>
                             <td class="modal-table-header" id="scanControlNumHtml"></td>
@@ -176,12 +176,12 @@
                     <table>
                         <tbody>
                         <tr>
-                            <td class="modal-table-header" style="width:10%;">관리번호</td>
+                            <td class="modal-table-header" style="width:10%;">관리<br>번호</td>
                             <td class="modal-table-contents" id="completeControlNumHtml" style="width:50%;text-align: left"></td>
                             <td class="modal-table-header" style="width:8%;">Part</td>
                             <td class="modal-table-contents" id="completeControlPartNumHtml" style="width:7%;"></td>
                             <td class="modal-table-header" style="width:10%;">수량</td>
-                            <td class="modal-table-contents" id="completeControlOrderQtyHtml" style="width:15%; text-align: right;"></td>
+                            <td class="modal-table-contents" id="completeControlOrderQtyHtml" style="width:15%; text-align: right; padding-right: 5px;"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -195,14 +195,14 @@
                         </tr>
                         <tr>
                             <td class="modal-table-contents-end">
-                                <button type="button" style="padding-right: 0px; position: absolute; right: 525px; top: 142px;" class="btn_plus" id="complete_success_qty_pop_plus_btn">더하기</button>
-                                <span class="text" style="padding-right: 23px; font-size: 31px; position: absolute; right: 460px; top: 148px;" id="completeControlCompleteQtyHtml">0</span>
-                                <button type="button" style="position: absolute; right: 420px; top: 142px;" class="btn_minus" id="complete_success_qty_pop_minus_btn">빼기</button>
+                                <button type="button" style="padding-right: 0px; position: absolute; right: 525px; top: 157px;" class="btn_plus" id="complete_success_qty_pop_plus_btn">더하기</button>
+                                <span class="text" style="padding-right: 23px; font-size: 31px; position: absolute; right: 460px; top: 165px;" id="completeControlCompleteQtyHtml">0</span>
+                                <button type="button" style="position: absolute; right: 420px; top: 157px;" class="btn_minus" id="complete_success_qty_pop_minus_btn">빼기</button>
                             </td>
                             <td class="modal-table-contents-end">
-                                <button type="button" style="position: absolute; right: 355px; top: 142px;" class="btn_plus" id="complete_fail_qty_pop_plus_btn">더하기</button>
-                                <span class="text" style="padding-right: 23px; font-size: 31px; position: absolute; right: 286px; top: 148px;" id="completeControlFailQtyHtml">1</span>
-                                <button type="button" class="btn_minus" style="position: absolute; right: 250px; top: 142px;" id="complete_fail_qty_pop_minus_btn">빼기</button>
+                                <button type="button" style="position: absolute; right: 355px; top: 157px;" class="btn_plus" id="complete_fail_qty_pop_plus_btn">더하기</button>
+                                <span class="text" style="padding-right: 23px; font-size: 31px; position: absolute; right: 286px; top: 165px;" id="completeControlFailQtyHtml">1</span>
+                                <button type="button" class="btn_minus" style="position: absolute; right: 250px; top: 157px;" id="complete_fail_qty_pop_minus_btn">빼기</button>
                             </td>
                             <td class="modal-table-contents-end">
                                 <select id="ERROR_REASON" name="ERROR_REASON">
@@ -419,6 +419,9 @@
                         };
                         fnPostAjax(function (data, callFunctionParam) {
                             if(data.info != null){
+                                if(!checkDoubleWorkControl(data.info.CONTROL_SEQ, data.info.CONTROL_DETAIL_SEQ)){
+                                    return false;
+                                }
                                 startWork(data.info);
                             }else{
                                showMessage("최신 도면이 아닙니다. 사무실에 확인바랍니다.");
@@ -527,10 +530,10 @@
                 if(data.list.length > 0 ) {
                     for (let i = 0; i < data.list.length; i++) {
                         workerListHtml += '<tr class="workListAction" stype="'+sType+'" sControlSeq="' + data.list[i].CONTROL_SEQ + '" sControlDetailSeq="' + data.list[i].CONTROL_DETAIL_SEQ + '">';
-                        workerListHtml += '    <td class="modal-table-contents" style="width:65%;">' + data.list[i].CONTROL_NUM + '</td>';
-                        workerListHtml += '    <td class="modal-table-contents" style="width:10%;">' + data.list[i].PART_NUM + '</td>';
-                        workerListHtml += '    <td class="modal-table-contents" style="width:12%;">' + data.list[i].ORDER_QTY + '</td>';
-                        workerListHtml += '    <td class="modal-table-contents" >' + data.list[i].INNER_DUE_DT + '</td>';
+                        workerListHtml += '    <td class="modal-table-contents" style="width:283px;">' + data.list[i].CONTROL_NUM + '</td>';
+                        workerListHtml += '    <td class="modal-table-contents" style="width:87px;">' + data.list[i].PART_NUM + '</td>';
+                        workerListHtml += '    <td class="modal-table-contents" style="width:87px;">' + data.list[i].ORDER_QTY + '</td>';
+                        workerListHtml += '    <td class="modal-table-contents" style="width:108px;">' + data.list[i].INNER_DUE_DT + '</td>';
                         workerListHtml += '</tr>';
                     }
                 }else{
@@ -562,6 +565,10 @@
         $(document).on("click", '#drawing_worker_target_list_popup .workListAction', function() {
             let controlSeq = $(this).attr("sControlSeq");
             let controlDetailSeq = $(this).attr("sControlDetailSeq");
+
+            if(!checkDoubleWorkControl(controlSeq, controlDetailSeq)){
+                return false;
+            }
 
             var tr = $(this);
             var td = tr.children();
@@ -768,6 +775,7 @@
         };
 
         function fnDrawingBoardSave(){
+            /** todo 최신 작업과 같은 Part 작업인 경우 진행 안되도록 처리 **/
             let parameters = {
                 'url': '/drawing-board-start',
                 'data': $("#drawing_action_form").serialize()
@@ -805,6 +813,17 @@
 
             $("#drawing_worker_target_list_popup").css("display", "none");
             $("#drawing_worker_scan_popup").css("display", "block");
+        }
+
+        let checkDoubleWorkControl = function(controlSeq, controlDetailSeq){
+            let beforeControlSeq = $("#drawing_action_form").find("#CONTROL_SEQ").val();
+            let beforeControlDetailSeq = $("#drawing_action_form").find("#CONTROL_DETAIL_SEQ").val();
+            if(beforeControlSeq == controlSeq && beforeControlDetailSeq == controlDetailSeq){
+                alert("이전 작업과 같은 작업을 연속적으로 시작하지 못합니다.");
+                return false;
+            }else{
+                return true;
+            }
         }
 
         let showMessage = function(message){

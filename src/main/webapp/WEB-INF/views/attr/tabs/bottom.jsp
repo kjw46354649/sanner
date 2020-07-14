@@ -156,8 +156,8 @@
                 <div class="list1">
                     <table class="rowStyle" style="table-layout: fixed;">
                         <colgroup>
-                            <col width="10%">
-                            <col width="16%">
+                            <col width="8%">
+                            <col width="18%">
                             <col width="10%">
                             <col width="16%">
                             <col width="10%">
@@ -168,7 +168,7 @@
                             <td id="CONTROL_NUM" class="red"></td>
                             <th>도면번호</th>
                             <td id="DRAWING_NUM" class="red"></td>
-                            <th>납기</th>
+                            <th>가공납기</th>
                             <td id="INNER_DUE_DT"></td>
                         </tr>
                         <tr>

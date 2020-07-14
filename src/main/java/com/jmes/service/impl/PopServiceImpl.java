@@ -102,6 +102,11 @@ public class PopServiceImpl implements PopService {
 
                     // TODO  Part 가 있는 경우 Part 상태를 조립전환으로 변경해야 한다.
                     //      -- PART 에서 가공 이력이 있는 경우 PART 공일시를 업데이트 한다.
+                    controlPartInfo.put("queryId", "popMapper.insertControlPartChildProgressStatus");
+                    innodaleDao.create(controlPartInfo);
+
+                    controlPartInfo.put("queryId", "popMapper.updateControlPartChildProgressMappingStatus");
+                    innodaleDao.create(controlPartInfo);
 
                 }
 

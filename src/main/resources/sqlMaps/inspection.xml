@@ -268,9 +268,9 @@
         SELECT ROW_NUMBER() OVER(ORDER BY A.MCT_WORK_SEQ) AS RNUM
           , B.PROCESS_TYPE, jmes.SF_GET_CODE_NM('1010', B.PROCESS_TYPE, 'KR') AS PROCESS_TYPE_NM
           , B.EQUIP_NM
-          , A.WORK_STATUS
-          , jmes.SF_GET_DATE_F(A.WORK_START_DT,'YY','M') AS WORK_START_DT
-          , jmes.SF_GET_DATE_F(A.WORK_FINISH_DT,'YY','M') AS WORK_FINISH_DT
+          , jmes.SF_GET_CODE_NM('1079', A.WORK_STATUS, 'KR') AS WORK_STATUS
+          , jmes.SF_GET_DATE_F(A.WORK_START_DT,'','M') AS WORK_START_DT
+          , jmes.SF_GET_DATE_F(A.WORK_FINISH_DT,'','M') AS WORK_FINISH_DT
           , (SELECT SUM(TIMESTAMPDIFF(MINUTE, M.WORK_START_DT, M.WORK_STOP_DT)) FROM jmes.TBL_MCT_WORK_TIME M WHERE M.MCT_WORK_SEQ = A.MCT_WORK_SEQ) AS WORKING_TIME     -- 확인
           , (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = A.WORK_USER_ID) AS WORK_USER
           , A.FINISH_QTY
@@ -282,6 +282,7 @@
           AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
         ORDER BY 1 DESC
     </select>
+
     <select id="selectCommItemDetailInfoGrid2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.POP_VSEQ AS POP_SEQ
           , A.POP_POSITION_NM
@@ -291,6 +292,7 @@
           AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
         ORDER BY A.POP_VSEQ DESC
     </select>
+
     <select id="selectCommItemDetailInfoGrid3" parameterType="java.util.HashMap" resultType="java.util.HashMap">
        SELECT jmes.SF_GET_CODE_NM('1078', X.NOTE_TYPE, 'KR') AS NOTE_TYPE_NM
           , X.NOTE
