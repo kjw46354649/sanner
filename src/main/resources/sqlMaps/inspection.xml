@@ -87,7 +87,7 @@
                                                                 AND P.POP_VSEQ = (SELECT MAX(POP_VSEQ)
                                                                                 FROM TBL_POP_VIEW G
                                                                                 WHERE 1 = 1
-                                                                                    AND P.PCONTROL_SEQ = G.CONTROL_SEQ
+                                                                                    AND P.CONTROL_SEQ = G.CONTROL_SEQ
                                                                                     AND P.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ)
                         <if test="SEL_POP_POSITION !='' and SEL_POP_POSITION != null">
                             AND P.POP_POSITION = #{SEL_POP_POSITION}
