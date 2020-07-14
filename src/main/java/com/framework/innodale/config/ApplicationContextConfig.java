@@ -159,7 +159,7 @@ public class ApplicationContextConfig {
         mailSender.setPassword(environment.getRequiredProperty("smtp_userpawd"));
 
         Properties props = mailSender.getJavaMailProperties();
-        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.transport.protocol", "smtps");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.debug", "true");

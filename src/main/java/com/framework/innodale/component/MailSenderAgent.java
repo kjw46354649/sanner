@@ -2,6 +2,8 @@ package com.framework.innodale.component;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -23,6 +25,9 @@ public class MailSenderAgent {
     @Autowired
     public JavaMailSender javaMailSender;
 
+    @Autowired
+    private Environment environment;
+
     private static Logger logger = Logger.getLogger(MailSenderAgent.class);
 
     /**
@@ -35,8 +40,9 @@ public class MailSenderAgent {
 
                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-                message.setReplyTo(new InternetAddress((String)mailInfo.get("SEND_EMAIL")));
-                message.setFrom((String)mailInfo.get("SEND_EMAIL"), (String)mailInfo.get("SEND_NAME"));
+                message.setReplyTo(new InternetAddress(environment.getRequiredProperty("smtp_username")));
+                message.setFrom(environment.getRequiredProperty("smtp_username"), (String)mailInfo.get("SEND_NAME"));
+//                message.setFrom((String)mailInfo.get("SEND_EMAIL"), (String)mailInfo.get("SEND_NAME"));
 
                 String setToEmail [] = ((String)mailInfo.get("RECV_EMAIL")).split(",");
                 message.setTo(setToEmail);

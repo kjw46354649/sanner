@@ -418,13 +418,13 @@
             },
             {title: 'MCT Actual', align: 'center',
                 colModel: [
-                    {title: '1', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_ID_1'},
+                    {title: '1', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'EQUIP_NM_1'},
                     {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_1'},
-                    {title: '2', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_ID_2'},
+                    {title: '2', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'EQUIP_NM_2'},
                     {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_2'},
-                    {title: '3', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_ID_3'},
+                    {title: '3', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'EQUIP_NM_3'},
                     {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_3'},
-                    {title: '4', minWidth: 15, width: 40, datatype: 'integer', dataIndx: 'EQUIP_ID_4'},
+                    {title: '4', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'EQUIP_NM_4'},
                     {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_4'},
                 ]
             },
