@@ -566,7 +566,8 @@
             dragModel: {
                 on: true,
                 diHelper: ['CONTROL_NUM'],
-                beforeDrop: function () {}
+                beforeDrop: function () {
+                }
             },
             load: function (event, ui) {
                 let filterOpts = '<option value=\"\">All Fields</option>';
@@ -593,6 +594,11 @@
             cellSave: function (evt, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {
                     $processTargetGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                } else {
+                    fnModifyPQGrid($processTargetGrid, [], ['machine.updateMctTarget', 'machine.insertMctPlan']);
+                    setTimeout(function () {
+                        refreshMctPlanGrids();
+                    }, 1000);
                 }
             }
         };

@@ -255,7 +255,7 @@
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 },
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1017')},
-                render: function (ui) {
+                /*render: function (ui) {
                     let cellData = ui.cellData;
 
                     if (cellData === undefined || cellData === '') {
@@ -274,8 +274,39 @@
                         }
                         return (index < 0) ? cellData : priceConfirm[index].text;
                     }
-                }
+                }*/
             },
+            {title: '단가확인', width: 70, dataType: 'string', dataIndx: 'PRICE_CONFIRM_NM', hidden: true},
+            {
+                title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: true,
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
+                },
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: ORDER_COMPANY},
+                /*render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === undefined || cellData === '') {
+                        return '';
+                    } else {
+                        let index = ORDER_COMPANY.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = ORDER_COMPANY.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return controlManageFilterRender(ui);
+                    }
+                }*/
+            },
+            {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD_NM', hidden: true},
             {
                 title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
@@ -305,6 +336,7 @@
                     }
                 }*/
             },
+            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD_NM', hidden: true},
             {
                 title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_SEQ', hidden: true,
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
@@ -343,6 +375,7 @@
                     }
                 }
             },
+            {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', hidden: true},
             {
                 title: '설계자', dataType: 'string', dataIndx: 'DESIGNER_NM', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}, hidden: true,
                 editable: function (ui) {
@@ -406,7 +439,7 @@
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
                 },
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1059')},
-                render: function (ui) {
+                /*render: function (ui) {
                     let cellData = ui.cellData;
 
                     if (cellData === undefined || cellData === '') {
@@ -425,8 +458,9 @@
 
                         return (index < 0) ? cellData : mainInspection[index].text;
                     }
-                }
+                }*/
             },
+            {title: '주요<br>검사품', dataType: 'string', dataIndx: 'MAIN_INSPECTION_NM', hidden: true},
             {
                 title: '긴<br>급', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
@@ -559,6 +593,7 @@
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1033')}
             },
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM', hidden: true},
             {
                 title: '외<br>주', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'OUTSIDE_YN',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
@@ -604,6 +639,7 @@
                     }
                 }*/
             },
+            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY_NM', hidden: true},
             {
                 title: '소재<br>사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
@@ -629,13 +665,16 @@
                 },
                 editor: {type: 'textbox', init: fnDateEditor},
                 render: function (ui) {
+                    let cellData = ui.cellData;
                     let rowData = ui.rowData;
+                    let cls = null, text = cellData;
 
                     if (rowData.WORK_TYPE === 'WTP020') {
-                        let cls = 'bg-lightgray';
-
-                        return {cls: cls};
+                        cls = 'bg-lightgray';
                     }
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
+
                 }
             },
             {title: '가공완료', width: 70, dataType: 'date', dataIndx: 'INNER_WORK_FINISH_DT'},
@@ -653,26 +692,11 @@
                     let rowData = ui.rowData;
                     let cls = null, text = cellData;
 
-                    if (cellData !== undefined) {
-                        let materialDetail = fnGetCommCodeGridSelectBox('1027');
-                        let index = materialDetail.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = materialDetail.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        text = index < 0 ? cellData : materialDetail[index].text;
-                    }
-
                     if (rowData.WORK_TYPE === 'WTP020') {
                         cls = 'bg-lightgray';
                     }
 
-                    return {cls: cls, text: text};
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -683,10 +707,10 @@
                     let cls = null, text = cellData;
 
                     if (rowData.WORK_TYPE === 'WTP020') {
-                        let cls = 'bg-lightgray';
-
-                        return {cls: cls, text: text};
+                        cls = 'bg-lightgray';
                     }
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -703,26 +727,11 @@
                     let rowData = ui.rowData;
                     let cls = null, text;
 
-                    if (cellData !== undefined) {
-                        let materialKind = fnGetCommCodeGridSelectBox('1029');
-                        let index = materialKind.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = materialKind.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        text = index < 0 ? cellData : materialKind[index].text;
-                    }
-
                     if (rowData.WORK_TYPE === 'WTP020') {
                         cls = 'bg-lightgray';
                     }
 
-                    return {cls: cls, text: text};
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -744,26 +753,11 @@
                     let rowData = ui.rowData;
                     let cls = null, text;
 
-                    if (cellData !== undefined) {
-                        let surfaceTreat = fnGetCommCodeGridSelectBox('1039');
-                        let index = surfaceTreat.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = surfaceTreat.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        text = index < 0  ? cellData : surfaceTreat[index].text;
-                    }
-
                     if (rowData.WORK_TYPE === 'WTP020') {
                         cls = 'bg-lightgray';
                     }
 
-                    return {cls: cls, text: text};
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -783,7 +777,7 @@
                         cls = 'bg-lightgray';
                     }
 
-                    return {cls: cls, text: text};
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -847,7 +841,7 @@
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         },
                         postRender: function (ui) {
                             let grid = this;
@@ -913,7 +907,7 @@
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
                     {
@@ -934,7 +928,7 @@
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
                     {
@@ -948,7 +942,7 @@
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
                     {
@@ -962,7 +956,7 @@
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
                     {
@@ -983,7 +977,7 @@
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
                 ]
@@ -1005,7 +999,7 @@
                         cls = 'bg-lightgray';
                     }
 
-                    return {cls: cls, text: text};
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -1031,26 +1025,11 @@
                             let rowData = ui.rowData;
                             let cls = null, text = cellData;
 
-                            if (cellData !== undefined) {
-                                let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
-                                let index = workFactory.findIndex(function (element) {
-                                    return element.text === cellData;
-                                });
-
-                                if (index < 0) {
-                                    index = workFactory.findIndex(function (element) {
-                                        return element.value === cellData;
-                                    });
-                                }
-
-                                text = index < 0 ? cellData : workFactory[index].text;
-                            }
-
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
                     {
@@ -1067,26 +1046,11 @@
                             let rowData = ui.rowData;
                             let cls = null, text = cellData;
 
-                            if (cellData !== undefined) {
-                                let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
-                                let index = workFactory.findIndex(function (element) {
-                                    return element.text === cellData;
-                                });
-
-                                if (index < 0) {
-                                    index = workFactory.findIndex(function (element) {
-                                        return element.value === cellData;
-                                    });
-                                }
-
-                                text = index < 0  ? cellData : workFactory[index].text;
-                            }
-
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
                     {
@@ -1103,26 +1067,11 @@
                             let rowData = ui.rowData;
                             let cls = null, text = cellData;
 
-                            if (cellData !== undefined) {
-                                let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
-                                let index = workFactory.findIndex(function (element) {
-                                    return element.text === cellData;
-                                });
-
-                                if (index < 0) {
-                                    index = workFactory.findIndex(function (element) {
-                                        return element.value === cellData;
-                                    });
-                                }
-
-                                text = index < 0 ? cellData : workFactory[index].text;
-                            }
-
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
                 ]
@@ -1140,7 +1089,7 @@
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
                     {
@@ -1154,7 +1103,7 @@
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
                     {title: '세로', datatype: 'string', dataIndx: 'SIZE_H_M',
@@ -1167,7 +1116,7 @@
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
                     {title: '높이', datatype: 'string', dataIndx: 'SIZE_T_M',
@@ -1180,7 +1129,7 @@
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }},
                     {
                         title: '중량', datatype: 'string', dataIndx: 'SIZE_D_M',
@@ -1193,7 +1142,7 @@
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
                     {
@@ -1207,7 +1156,7 @@
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     }
                 ]
@@ -1235,7 +1184,7 @@
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
                     {
@@ -1255,7 +1204,7 @@
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
                     {
@@ -1275,7 +1224,7 @@
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
                     {
@@ -1295,7 +1244,7 @@
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
                     {
@@ -1315,7 +1264,7 @@
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
                     {
@@ -1335,7 +1284,7 @@
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
                     {
@@ -1355,7 +1304,7 @@
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
                     {
@@ -1375,7 +1324,7 @@
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: text};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     }
                 ]
@@ -1420,7 +1369,7 @@
                         cls = 'bg-lightgray';
                     }
 
-                    return {cls: cls, text: text};
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -1434,7 +1383,7 @@
                         cls = 'bg-lightgray';
                     }
 
-                    return {cls: cls, text: text};
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -1454,7 +1403,7 @@
                         cls = 'bg-lightgray';
                     }
 
-                    return {cls: cls, text: text};
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -1468,7 +1417,7 @@
                         cls = 'bg-lightgray';
                     }
 
-                    return {cls: cls, text: text};
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -1482,7 +1431,7 @@
                         cls = 'bg-lightgray';
                     }
 
-                    return {cls: cls, text: text};
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -1502,7 +1451,7 @@
                         cls = 'bg-lightgray';
                     }
 
-                    return {cls: cls, text: text};
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {title: '현재 위치', dataType: 'string', dataIndx: 'POP_POSITION', hidden: true},
@@ -1539,6 +1488,8 @@
             },
             {title: 'Rev.', dataType: 'string', dataIndx: 'DRAWING_VER', hidden: true},
             {title: 'Rev. 일시', width: 120, dataType: 'string', dataIndx: 'DRAWING_UP_DT', hidden: true},
+            {title: '바코드도면<br>출력일시', width: 120, dataType: 'date', /*format: 'mm/dd',*/ dataIndx: '', hidden: true},
+            {title: '라벨<br>출력일시', width: 120, dataType: 'date', /*format: 'mm/dd',*/ dataIndx: '', hidden: true},
             {
                 title: '품질현황', align: 'center', colModel: [
                     {title: 'Seq.', minWidth: 30, width: 35, datatype: 'integer', dataIndx: 'INSPECT_SEQ'},
@@ -1564,7 +1515,7 @@
                     {title: '외주단가', align: 'right', dataType: 'integer', dataIndx: 'OUTSIDE_UNIT_AMT'},
                     {title: '합계금액', align: 'right', dataType: 'integer', dataIndx: 'OUTSIDE_FINAL_AMT'},
                     {title: '요망납기', datatype: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
-                    {title: '입고날짜', datatype: 'string', dataIndx: 'dhlwndlqrhskfWk'},
+                    {title: '입고날짜', datatype: 'string', dataIndx: 'OUTSIDE_IN_DT'},
                     {title: '비고', datatype: 'string', dataIndx: 'OUTSIDE_NOTE'},
                     {title: '불량Code', datatype: 'string', dataIndx: 'dhlwnqnffidcode'},
                     {title: '조치방안', datatype: 'string', dataIndx: 'dhlwnwhclqkddks'}
@@ -1587,7 +1538,9 @@
             rowHtHead: 15,
             numberCell: {title: 'No.'},
             trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false, render: controlManageFilterRender}, filterModel: { mode: 'OR' },
+            editable: false,
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', render: controlManageFilterRender},
+            filterModel: {mode: 'OR'},
             colModel: colModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -2002,7 +1955,7 @@
         });
 
         $('#CONTROL_MANAGE_SAVE').on('click', function () {
-            const insertQueryList = ['orderMapper.createControlPart', 'orderMapper.createControlPartOrder'];
+            const insertQueryList = ['orderMapper.createControlPart', 'orderMapper.createControlPartOrder', 'orderMapper.createOutBarcode'];
             const updateQueryList = ['orderMapper.updateControlMaster', 'orderMapper.updateControlPart', 'orderMapper.updateControlPartOrder'];
 
             fnModifyPQGrid($orderManagementGrid, insertQueryList, updateQueryList);
@@ -2211,7 +2164,7 @@
             let Cols = $orderManagementGridInstance.Columns();
             let array = [];
             const allArray = [
-                'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'ORDER_COMP_CD', 'ORDER_STAFF_SEQ',
+                'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'ORDER_STAFF_SEQ',
                 'DESIGNER_NM', 'CONTROL_NOTE', 'INVOICE_NUM', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE',
                 'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT',
                 'WORK_TYPE', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'INNER_WORK_FINISH_DT', 'MATERIAL_DETAIL',
@@ -2222,9 +2175,9 @@
                 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
                 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'CALC_EST_UNIT_COST', 'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMOUNT',
                 'UNIT_FINAL_AMT', 'FINAL_AMT', 'WHDWJSRK', 'PREV_DRAWING_NUM', 'POP_POSITION_NM', 'PART_STATUS_NM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER',
-                'DRAWING_UP_DT.', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM', 'INSPECT_DESC',
-                'ERROR_ACTION_NM','ERROR_NOTE', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT',
-                'OUTSIDE_HOPE_DUE_DT', 'dhlwndlqrhskfWk', 'OUTSIDE_NOTE', 'dhlwnqnffidcode', 'dhlwnwhclqkddks',
+                'DRAWING_UP_DT', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM', 'INSPECT_DESC',
+                'ERROR_ACTION_NM', 'ERROR_NOTE', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT',
+                'OUTSIDE_HOPE_DUE_DT', 'OUTSIDE_IN_DT', 'OUTSIDE_NOTE', 'dhlwnqnffidcode', 'dhlwnwhclqkddks',
                 'CONTROL_PART_INSERT_UPDATE_DT'
             ];
             const easyArray = [
@@ -2236,14 +2189,14 @@
                 'DELIVERY_DT', 'PREV_DRAWING_NUM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'PDF_GFILE_SEQ', 'CONTROL_PART_INSERT_UPDATE_DT'
             ];
             const estimateArray = [
-                'CONTROL_STATUS_NM', 'CONTROL_VER', 'PRICE_CONFIRM', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'INVOICE_NUM',
+                'CONTROL_STATUS_NM', 'CONTROL_VER', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'INVOICE_NUM',
                 'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT',
                 'WORK_TYPE', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'INNER_WORK_FINISH_DT', 'MATERIAL_DETAIL',
-                'MATERIAL_TYPE_NM', 'MATERIAL_KIND','SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY',
+                'MATERIAL_TYPE_NM', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY',
                 'DETAIL_MACHINE_REQUIREMENT', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
                 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
                 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'CALC_EST_UNIT_COST', 'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMOUNT',
-                'UNIT_FINAL_AMT', 'FINAL_AMT', 'WHDWJSRK', 'PREV_DRAWING_NUM','DXF_GFILE_SEQ', 'IMG_GFILE_SEQ',
+                'UNIT_FINAL_AMT', 'FINAL_AMT', 'WHDWJSRK', 'PREV_DRAWING_NUM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ',
                 'PDF_GFILE_SEQ', 'CONTROL_PART_INSERT_UPDATE_DT'
             ];
             const outsideQualityArray = [
@@ -2258,7 +2211,7 @@
                 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'PREV_DRAWING_NUM', 'POP_POSITION_NM', 'PART_STATUS_NM',
                 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'PDF_GFILE_SEQ', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM',
                 'INSPECT_DESC', 'ERROR_ACTION_NM', 'ERROR_NOTE', 'OUTSIDE_COMP_CD', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN',
-                'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT', 'OUTSIDE_HOPE_DUE_DT', 'dhlwndlqrhskfWk', 'OUTSIDE_NOTE',
+                'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT', 'OUTSIDE_HOPE_DUE_DT', 'OUTSIDE_IN_DT', 'OUTSIDE_NOTE',
                 'dhlwnqnffidcode', 'dhlwnwhclqkddks', 'CONTROL_PART_INSERT_UPDATE_DT'
             ];
 

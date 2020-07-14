@@ -358,8 +358,8 @@
         const openNewWindowControlDetail = function (rowData) {
             let url = '/controlDetail';
             // 팝업 사이즈
-            let nWidth = 1012;
-            let nHeight = 800;
+            let nWidth = 1400;
+            let nHeight = 770;
             let winWidth = document.body.clientWidth;
             let winHeight = document.body.clientHeight;
             let winX = window.screenX || window.screenLeft || 0;

@@ -516,6 +516,7 @@
             collapsible: false,
             resizable: false,
             showTitle: false,
+            trackModel: {on: true},
             numberCell: {title: 'No.'},
             dragColumns: {enabled: false},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
@@ -525,12 +526,17 @@
             strNoRows: g_noData,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {queryId: 'dataSource.getRownumEmptyData', 'COUNT': 20},
+                postData: {queryId: 'dataSource.getRownumEmptyData', 'COUNT': 20}, recIndx: 'ROWNUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
             },
             editModel: {clicksToEdit: 1},
+            cellSave: function (evt, ui) {
+                if (ui.oldVal === undefined && ui.newVal === null) {
+                    $orderManagementGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                }
+            },
             change: function (evt, ui) {
                 console.count();
                 if (ui.source === 'paste') {

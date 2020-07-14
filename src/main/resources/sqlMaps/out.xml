@@ -3,17 +3,16 @@
 
 <mapper namespace="outMapper">
 
-    <sql id="outsideRequest">
-        C.OUTSIDE_REQUEST_SEQ,
-        SF_GET_DATE_F(C.INSERT_DT, 'YY', 'M') AS OUTSIDE_REQUEST_DT <!-- 외주가공요청일시 -->
-    </sql>
-
     <select id="selectOutsideOrderManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER () OVER () AS ROW_NUM,
             <include refid="orderMapper.control"/>,
             <include refid="orderMapper.controlPart"/>,
-            <include refid="outsideRequest"/>,
+            C.OUTSIDE_REQUEST_SEQ,
+            CASE
+                WHEN B.OUTSIDE_STATUS IN ('OST001', 'OST003', 'OST003') THEN SF_GET_DATE_F(C.INSERT_DT, 'YY', 'M')
+                ELSE NULL
+            END AS OUTSIDE_REQUEST_DT,
             H.INSPECT_SEQ, <!-- SEQ -->
             H.INSPECT_GRADE, <!-- 등급 -->
             SF_GET_CODE_NM('1040', H.INSPECT_GRADE, 'KR') AS INSPECT_GRADE_NM, <!-- 등급 -->
@@ -137,26 +136,9 @@
     <select id="selectOutsideProcessRequestList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER () OVER () AS ROW_NUM,
-            B.CONTROL_SEQ,
-            B.CONTROL_DETAIL_SEQ,
-            C.OUTSIDE_REQUEST_SEQ,
-            A.CONTROL_NUM, <!-- 관리번호 -->
-            B.DRAWING_NUM, <!-- 도면번호 -->
-            B.IMG_GFILE_SEQ,
-            B.PART_NUM, <!-- Part -->
-            B.SIZE_TXT, <!-- 규격 -->
-            B.MATERIAL_DETAIL, <!-- 소재종류 -->
-            SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, 'KR') AS MATERIAL_DETAIL_NM, <!-- 소재종류 -->
-            B.SURFACE_TREAT, <!-- 표면 처리 -->
-            SF_GET_CODE_NM('1039', B.SURFACE_TREAT, 'KR') AS SURFACE_TREAT_NM,  <!-- 표면 처리 -->
-            B.OUTSIDE_MATERIAL_SUPPLY_YN, <!-- 소재 제공 -->
-            B.OUTSIDE_REQUEST_FINISH_YN, <!-- 완제품 -->
-            B.OUTSIDE_REQUEST_PROCESS_YN, <!-- 가공 -->
-            B.OUTSIDE_REQUEST_GRIND_YN, <!-- 연마 -->
-            B.OUTSIDE_REQUEST_SURFACE_YN, <!-- 표면 처리 -->
-            B.OUTSIDE_REQUEST_ETC, <!-- 기타사항 -->
-            B.OUTSIDE_HOPE_DUE_DT, <!-- 요망 납기 -->
-            B.OUTSIDE_NOTE <!-- 비고 -->
+            <include refid="orderMapper.control"/>,
+            <include refid="orderMapper.controlPart"/>,
+            C.OUTSIDE_REQUEST_SEQ
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             LEFT OUTER JOIN TBL_OUTSIDE_REQUEST_DETAIL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
@@ -379,7 +361,7 @@
             ROW_NUMBER () OVER () AS ROW_NUM,
             <include refid="orderMapper.control"/>,
             <include refid="orderMapper.controlPart"/>,
-            <include refid="outsideRequest"/>,
+            C.OUTSIDE_REQUEST_SEQ,
             DATE_FORMAT(STR_TO_DATE(E.CLOSE_MONTH, '%Y%m'), '%Y.%m') AS OUTSIDE_CLOSE_MONTH,
             E.CLOSE_VER,
             SF_GET_DATE_F(E.CLOSE_DT, 'YY', 'M') AS OUTSIDE_CLOSE_DT

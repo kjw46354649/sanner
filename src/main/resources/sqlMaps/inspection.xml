@@ -405,7 +405,7 @@
                         , jmes.SF_GET_CODE_NM('1039', X.SURFACE_TREAT, 'KR') AS SURFACE_TREAT_NM
                         , X.SIZE_TXT
                         , X.ORDER_QTY
-                        , CASE WHEN X.ORDER_PACKING_NUM_CNT > 0 AND X.ORDER_PACKING_NUM_CNT <![CDATA[ < ]]> X.PACKING_CNT
+                        , CASE WHEN X.ORDER_PACKING_NUM_CNT > 0 <!-- AND X.ORDER_PACKING_NUM_CNT <![CDATA[ < ]]> X.PACKING_CNT -->
                           THEN CONCAT('(',cast(X.ORDER_PACKING_NUM_CNT as char(1)),'/',X.PACKING_CNT,')') ELSE X.ORDER_OUT_QTY END AS OUT_QTY
                         , X.PACKING_CNT
                         , (SELECT COUNT(*) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ) AS Q_SEQ
@@ -490,7 +490,7 @@
                             AND B.CONTROL_SEQ = C.CONTROL_SEQ
                             AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                             AND A.DEL_YN = 'N'
-                            -- AND B.PART_STATUS IN ('PRO009','PRO010','PRO011')  -- 상태확인 필요
+                            <!-- AND B.PART_STATUS IN ('PRO009','PRO010','PRO011') 상태확인 필요 -->
                             <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
                                 AND A.ORDER_COMP_CD = #{SEL_END_DT}
                             </if>
@@ -509,19 +509,24 @@
                 <if test="SEL_ST_DT !='' and SEL_ST_DT != null">
                     <if test="SEL_END_DT !='' and SEL_END_DT != null">
                         <if test='SEL_OUTGOING_DATE_TYPE == "1"'>
-                            AND T.ORDER_DUE_DT BETWEEN #{SEL_ST_DT} AND #{SEL_END_DT}    -- 요망납기
+                            AND T.ORDER_DUE_DT BETWEEN #{SEL_ST_DT} AND #{SEL_END_DT}    <!-- 요망납기 -->
                         </if>
                         <if test='SEL_OUTGOING_DATE_TYPE == "2"'>
-                            AND T.INNER_DUE_DT BETWEEN #{SEL_ST_DT} AND #{SEL_END_DT}    -- 가공납기
+                            AND T.INNER_DUE_DT BETWEEN #{SEL_ST_DT} AND #{SEL_END_DT}    <!-- 가공납기 -->
                         </if>
                         <if test='SEL_OUTGOING_DATE_TYPE == "3"'>
-                            AND T.OUT_DT BETWEEN #{SEL_ST_DT} AND #{SEL_END_DT}          -- 출고일시
+                            AND T.OUT_DT BETWEEN #{SEL_ST_DT} AND #{SEL_END_DT}          <!-- 출고일시 -->
                         </if>
                     </if>
                 </if>
-                <if test="SEL_PART_NUM_VIEW_YN == false">
-                    AND PART_NUM IS NULL                            -- Part 단위표시가 체크가 안되어 있는 경우
-                </if>
+                <choose>
+                    <when  test="SEL_PART_NUM_VIEW_YN !='' and SEL_PART_NUM_VIEW_YN != null">
+
+                    </when>
+                    <otherwise>
+                        AND PART_NUM IS NULL                            <!-- Part 단위표시가 체크가 안되어 있는 경우 -->
+                    </otherwise>
+                </choose>
 
             </select>
 
@@ -696,7 +701,7 @@
           , X.ORDER_NUM
           , CONCAT(X.ORDER_QTY,'(',X.PACKING_CNT,')') AS QTY_INFO
           , X.PACKING_CNT - X.OUT_PACKING_CNT - 1 AS REMAIN_PACKING_CNT
-          , CONCAT(X.PACKING_CNT,'-',X.PACKING_NUM) AS MY_PACKING_NUM
+          , CONCAT(X.PACKING_NUM,'/',X.PACKING_CNT) AS MY_PACKING_NUM
         FROM (  SELECT T.CONTROL_SEQ, T.CONTROL_DETAIL_SEQ, T.ORDER_SEQ
                   , A.CONTROL_NUM
                   , B.DRAWING_NUM
@@ -731,7 +736,7 @@
         FROM jmes.TBL_OUT_BARCODE A
         WHERE A.BARCODE_NUM = #{BARCODE_NUM}
           AND IFNULL(DEL_YN,'N') = 'N'
-          AND NOT EXISTS (SELECT 1 FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = A.ORDER_SEQ AND M.PACKING_NUM IS NULL)
+          AND NOT EXISTS (SELECT 1 FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = A.ORDER_SEQ AND (M.PACKING_NUM IS NULL OR M.PACKING_NUM = A.PACKING_NUM))
 
     </insert>
     <update id="updateOutgoingOutType4After1" parameterType="java.util.HashMap">

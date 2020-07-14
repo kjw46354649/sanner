@@ -618,6 +618,19 @@
             return flag;
         };
 
+        const hasInStock = function (rowData) {
+            let flag = false;
+            let postData = {queryId: 'orderMapper.selectHasInStock'};
+            postData = $.extend(postData, rowData);
+            let parameters = {'url': '/json-list', 'data': postData};
+
+            fnPostAjaxAsync(function (data) {
+                flag = data.list[0].FLAG;
+            }, parameters, '');
+
+            return flag;
+        };
+
         const updatePartStatus = function (rowData, partStatus) {
             let newRowData = fnCloneObj(rowData);
             newRowData.PART_STATUS = partStatus;
@@ -632,15 +645,25 @@
             } else {
                 QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateControlPartStatus', 'orderMapper.createControlPartProgress', 'orderMapper.updateControlPartAssembly']};
             }*/
+            if (hasInStock(rowData)) {
+                let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인';
+                bodyHtml =
+                    '<h4>\n' +
+                    '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                    '    <span>소재입고된 항목은 확정취소가 불가능합니다.</span>\n' +
+                    '</h4>';
+                fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
+                return false;
+            } else {
+                QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateControlPartStatus', 'orderMapper.createControlPartProgress']};
+                changes.queryIdList = QUERY_ID_ARRAY;
+                parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
 
-            QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateControlPartStatus', 'orderMapper.createControlPartProgress']};
-            changes.queryIdList = QUERY_ID_ARRAY;
-            parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
-
-            fnPostAjax(function (data, callFunctionParam) {
-                $confirmOrderGrid.pqGrid('refreshDataAndView');
-                $processConfirmGrid.pqGrid('refreshDataAndView');
-            }, parameters, '');
+                fnPostAjax(function (data, callFunctionParam) {
+                    $confirmOrderGrid.pqGrid('refreshDataAndView');
+                    $processConfirmGrid.pqGrid('refreshDataAndView');
+                }, parameters, '');
+            }
         };
 
         $('#CONFIRM_ORDER_SEARCH_FORM').on('change', function() {

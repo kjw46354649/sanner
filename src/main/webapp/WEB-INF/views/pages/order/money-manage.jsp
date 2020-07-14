@@ -219,16 +219,6 @@
         fnAppendSelectboxYear('MONEY_RECEIVE_CLOSE_YEAR_ED', 10);
         fnAppendSelectboxMonth('MONEY_RECEIVE_CLOSE_MONTH_ED');
 
-        let dateEditor = function (ui) {
-            let $inp = ui.$cell.find("input"), $grid = $(this);
-            $inp.datepicker({
-                changeMonth: true, changeYear: true, showAnim: '', dateFormat: 'yy-mm-dd',
-                onSelect: function () { this.firstOpen = true; },
-                beforeShow: function (input, inst) {return !this.firstOpen; },
-                onClose: function () { this.focus(); }
-            });
-        };
-
         $('#MONEY_RECEIVE_CLOSE_MONTH_ED').val(((money_today.getMonth() + 1) < 10 ? '0' : '') + (money_today.getMonth() + 1)).prop('selected', true);
         money_today.setMonth(money_today.getMonth() - 1);   // before 1 month
         $('#MONEY_RECEIVE_CLOSE_MONTH_ST').val(((money_today.getMonth() + 1) < 10 ? '0' : '') + (money_today.getMonth() + 1)).prop('selected', true);
@@ -351,7 +341,7 @@
             {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
             {title: '매출년월', dataType: 'string', dataIndx: 'CLOSE_MONTH_NM'},
-            {title: '매출금액', dataIndx: 'ORDER_AMT', align: 'right', dataType: 'integer', format: '#,###'},
+            {title: '매출금액', dataIndx: 'ORDER_AMT', halign: 'center', align: 'right', dataType: 'integer', format: '#,###'},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true}
         ];
 
@@ -398,10 +388,10 @@
                 }
             },
             {title: '입금월일', dataType: "string", styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, dataIndx: 'DEPOSIT_DATE',
-                editable: true, editor: { type: 'textbox', init: dateEditor }
+                editable: true, editor: { type: 'textbox', init: fnDateEditor }
             },
             {title: '입금액', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, dataIndx: 'DEPOSIT_AMT',
-                align: 'right', dataType: 'integer', format: '#,###'},
+                halign: 'center', align: 'right', dataType: 'integer', format: '#,###'},
             {title: '종류', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, dataIndx: 'DEPOSIT_TYPE', editable: true,
                 editor: {
                     type: 'select',
@@ -427,11 +417,21 @@
                     }
                 }
             },
-            {title: '만기', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, dataIndx: 'DUE_DATE', dataType: 'string', editable: true,
-                editor: { type: 'textbox', init: dateEditor }
+            {title: '만기', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, dataIndx: 'DUE_DATE', dataType: 'string',
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData === undefined ? true : rowData.DEPOSIT_TYPE !== '1';
+                },
+                editor: { type: 'textbox', init: fnDateEditor }
             },
             {title: '만기어음/지급여부', dataType: 'checkbox', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, dataIndx: 'DUE_PAY_YN',
-                align: 'center', editable: true,
+                align: 'center',
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData === undefined ? true : rowData.DEPOSIT_TYPE !== '1';
+                },
                 type: 'checkbox',
                 cb: {
                     all: false, //header checkbox to affect checkboxes on all pages.
@@ -440,8 +440,14 @@
                     uncheck: "N" //uncheck when "NO".
                 }
             },
-            {title: '어음지급액', dataIndx: 'DUE_PAY_AMT', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
-                align: 'right', dataType: 'integer', format: '#,###'},
+            {title: '어음지급액', dataIndx: 'DUE_PAY_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+                halign: 'center', align: 'right', dataType: 'integer', format: '#,###',
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData === undefined ? true : rowData.DEPOSIT_TYPE !== '1';
+                },
+            },
             {title: '비고', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, dataIndx: 'NOTE', editable: true}
         ];
 
@@ -488,6 +494,7 @@
             height: 700, width: "100%", selectionModel: { type: 'row', mode: 'single'} , swipeModel: {on: false}, collapsible: false,
             trackModel: {on: true}, resizable: false, flexWidth: false, scrollModel: { autoFit: true }, showTitle: false, rowHtHead: 15,
             numberCell: {title: 'No.'}, toolbar: false, columnTemplate: { align: 'center', hvalign: 'center' },
+            editModel: {clicksToEdit: 1},
             colModel: moneyReceiveStatusModel,
             dataModel: {
                 recIndx: "DEPOSIT_SEQ", location: "remote", dataType: "json", method: "POST", url: "/paramQueryGridSelect",

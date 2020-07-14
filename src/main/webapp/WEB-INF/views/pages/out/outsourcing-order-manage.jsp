@@ -80,15 +80,6 @@
                                 </c:forEach>
                             </select>
                         </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="OUTSIDE_MANAGE_TERM" id="OUTSIDE_CAL_TODAY" value="today" checked><label for="OUTSIDE_CAL_TODAY">오늘</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="OUTSIDE_MANAGE_TERM" id="OUTSIDE_CAL_CURRENT_MONTH" value="current_month"><label for="OUTSIDE_CAL_CURRENT_MONTH">현재월</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="OUTSIDE_MANAGE_TERM" id="OUTSIDE_CAL_THREE_MONTHS" value="three_months"><label for="OUTSIDE_CAL_THREE_MONTHS">3개월</label>
-                        </span>
                         <div class="calendar_wrap" style="padding-left: 15px;">
                             <span class="calendar_span">
                                 <input type="text" title="달력정보" name="OUTSIDE_MANAGE_START_DATE" id="OUTSIDE_MANAGE_START_DATE"><button type="button" id="OUTSIDE_MANAGE_START_DATE_BUTTON">달력선택</button>
@@ -197,7 +188,7 @@
                         <h5>메일내용</h5>
                     </div>
                     <div class="d-inline-block right_float">
-                        <label for="">요청 외주 업체</label>
+                        <label for="OUTSIDE_COMP_CD">요청 외주 업체</label>
                         <select class="" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
                             <option></option>
                         </select>
@@ -209,8 +200,8 @@
                 <div style="grid-column-start: 2; grid-column-end: 3; grid-row-start: 1; grid-row-end: 2;">
                     <div class="d-inline-block"><h5>메일수신처</h5></div>
                     <div class="d-inline-block right_float">
-                        <button class="defaultBtn red" id="">삭제</button>
-                        <button class="defaultBtn green" id="">추가</button>
+                        <button class="defaultBtn red" id="REQUEST_OUTSIDE_MAIL_DESTINATION_DELETE_BUTTON">삭제</button>
+                        <button class="defaultBtn green" id="REQUEST_OUTSIDE_MAIL_DESTINATION_ADD_BUTTON">추가</button>
                     </div>
                     <div id="REQUEST_OUTSIDE_MAIL_RECIPIENT_GRID"></div>
                 </div>
@@ -246,13 +237,16 @@
             <input type="hidden" id="COMP_CD" name="COMP_CD" value="">
             <input type="hidden" name="OUTSIDE_STATUS" id="OUTSIDE_STATUS" value="OST002">
             <input type="hidden" name="GFILE_SEQ" id="GFILE_SEQ">
+            <div class="text-right mg-bottom10">
+                <button class="defaultBtn green" id="CANCEL_REQUEST_OUTSIDE_SAVE_SUBMIT">저장 & 제출</button>
+            </div>
             <div style="display: grid; grid-template-columns: repeat(2, 1fr);  grid-template-rows: repeat(2, 1fr); gap: 20px; margin-bottom: 10px;">
                 <div style="grid-column-start: 1; grid-column-end: 2; grid-row-start: 1; grid-row-end: 3;">
                     <div style="display: inline-block;">
                         <h5>메일내용</h5>
                     </div>
                     <div class="d-inline-block right_float">
-                        <label for="">요청 외주 업체</label>
+                        <label for="OUTSIDE_COMP_CD">요청 외주 업체</label>
                         <select class="" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
                             <option></option>
                         </select>
@@ -262,11 +256,10 @@
                     </div>
                 </div>
                 <div style="grid-column-start: 2; grid-column-end: 3; grid-row-start: 1; grid-row-end: 2;">
-                    <div class="d-inline-block">
-                        <h5>메일수신처</h5>
-                    </div>
+                    <div class="d-inline-block"><h5>메일수신처</h5></div>
                     <div class="d-inline-block right_float">
-                        <button class="defaultBtn green" id="CANCEL_REQUEST_OUTSIDE_SAVE_SUBMIT">저장 & 제출</button>
+                        <button class="defaultBtn red" id="CANCEL_REQUEST_OUTSIDE_MAIL_DESTINATION_DELETE_BUTTON">삭제</button>
+                        <button class="defaultBtn green" id="CANCEL_REQUEST_OUTSIDE_MAIL_DESTINATION_ADD_BUTTON">추가</button>
                     </div>
                     <div id="CANCEL_REQUEST_OUTSIDE_MAIL_RECIPIENT_GRID"></div>
                 </div>
@@ -367,6 +360,8 @@
             'data': {'queryId': 'dataSource.getOutsourceProcessCompanyList'}
         });
         let selectedRowIndex = [];
+        let selectedReqeustMailRowIndex = [];
+        let selectedCancelMailRowIndex = [];
         let $outsideOrderManageGrid;
         const gridId = 'OUTSIDE_ORDER_MANAGE_GRID';
         const colModel = [
@@ -697,9 +692,12 @@
         const mailRecipientGridId = 'REQUEST_OUTSIDE_MAIL_RECIPIENT_GRID';
         const mailRecipientColModel = [
             {title: '', dataType: 'string', dataIndx: 'STAFF_SEQ', hidden: false},
-            {title: '성함', dataType: 'string', dataIndx: 'STAFF_NM'},
-            {title: '메일주소', dataType: 'string', dataIndx: 'STAFF_EMAIL'},
-            {title: '전화번호', dataType: 'string', dataIndx: 'STAFF_TEL'},
+            {title: '성함', dataType: 'string', dataIndx: 'STAFF_NM',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
+            {title: '메일주소', dataType: 'string', dataIndx: 'STAFF_EMAIL',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
+            {title: '전화번호', dataType: 'string', dataIndx: 'STAFF_TEL',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
             {
                 title: '수신', datatype: 'bool', dataIndx: 'RECEPTION', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 type: 'checkbox', cb: {all: false, header: false, select: false, check: 'true', uncheck: 'false'}
@@ -710,7 +708,7 @@
             }
         ];
         const mailRecipientObj = {
-            height: 140,
+            height: 175,
             collapsible: false,
             resizable: false,
             showTitle: false,
@@ -720,7 +718,7 @@
             selectionModel: {type: 'row', mode: 'single'},
             trackModel: {on: true},
             dragColumns: {enabled: false},
-            editable: false,
+            // editable: false,
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
             colModel: mailRecipientColModel,
             // toolbar: toolbar,
@@ -732,6 +730,9 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            rowSelect: function (event, ui) {
+                selectedReqeustMailRowIndex = ui.addList[0].rowIndx;
             }
         };
         let $requestOutsideFileGrid;
@@ -792,7 +793,7 @@
             }
         ];
         const requestOutsideFileObj = {
-            height: 175,
+            height: 165,
             collapsible: false,
             postRenderInterval: -1,
             resizable: false,
@@ -905,8 +906,15 @@
                 }
             },
             {title: '수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
-            {title: '소재<br>제공', minWidth: 30, width: 40, dataType: 'string', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+            {
+                title: '소재<br>제공', minWidth: 30, width: 40, dataType: 'string', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                },
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -937,7 +945,6 @@
             {title: '외주<br>요망납기', datatype: 'date', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor},
                 render: function (ui) {
                     if(!ui.cellData) {
-                        console.log(ui.cellData);
                         let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
                         visibleDate.setDate(visibleDate.getDate() - 3);
                         return visibleDate.mmdd();
@@ -952,7 +959,7 @@
             resizable: false,
             showTitle: false,
             rowHtHead: 15,
-            scrollModel: {autoFit: true},
+            // scrollModel: {autoFit: true},
             numberCell: {title: 'No.'},
             trackModel: {on: true},
             dragColumns: {enabled: false},
@@ -966,6 +973,9 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            complete: function(event, ui) {
+                this.flex();
             }
         };
         let $cancelMailRecipientGrid;
@@ -976,9 +986,11 @@
             resizable: false,
             showTitle: false,
             scrollModel: {autoFit: true},
+            selectionModel: {type: 'row', mode: 'single'},
             rowHtHead: 15,
             dragColumns: {enabled: false},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            editable: false,
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
             colModel: mailRecipientColModel,
             toolbar: toolbar,
             strNoRows: g_noData,
@@ -988,6 +1000,9 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            rowSelect: function (event, ui) {
+                selectedReqeustMailRowIndex = ui.addList[0].rowIndx;
             }
         };
         let $cancelRequestOutsideFileGrid;
@@ -1166,7 +1181,6 @@
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 render: function (ui) {
                     let cellData = ui.cellData;
-                    console.log(cellData);
 
                     return cellData === 'Y' ? cellData : '';
                 }
@@ -1507,7 +1521,6 @@
 
             fnPostAjaxAsync(function (data) {
                 let grid = $('#' + mailFormElement).find('[id$=REQUEST_OUTSIDE_MAIL_RECIPIENT_GRID]');
-                console.log(11123);
                 grid.pqGrid('option', 'dataModel.data', data.list);
                 grid.pqGrid('refreshView');
             }, parameters, '');
@@ -1938,9 +1951,7 @@
 
         $('#REQUEST_OUTSIDE_FILE_UPLOAD').on('click', function () {
             let GfileKey = $('#common_file_download_form').find('#GFILE_SEQ').val();
-            console.log(GfileKey);
             $('#REQUEST_OUTSIDE_MAIL_FORM #GFILE_SEQ').val(GfileKey);
-            console.log($('#REQUEST_OUTSIDE_MAIL_FORM #GFILE_SEQ').val());
             let postData = {'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey};
             fnRequestGridData($requestOutsideFileGrid, postData);
         });
@@ -1975,6 +1986,22 @@
 
         $('#OUTSIDE_MANAGE_END_DATE_BUTTON').on('click', function () {
             $('#OUTSIDE_MANAGE_END_DATE').focus();
+        });
+
+        $('#REQUEST_OUTSIDE_MAIL_DESTINATION_ADD_BUTTON').on('click', function () {
+            $mailRecipientGrid.pqGrid('addRow', {newRow: {}, rowIndx: 0});
+        });
+
+        $('#REQUEST_OUTSIDE_MAIL_DESTINATION_DELETE_BUTTON').on('click', function () {
+            $mailRecipientGrid.pqGrid('deleteRow', {'rowIndx': selectedReqeustMailRowIndex});
+        });
+
+        $('#CANCEL_REQUEST_OUTSIDE_MAIL_DESTINATION_ADD_BUTTON').on('click', function () {
+            $cancelMailRecipientGrid.pqGrid('addRow', {newRow: {}, rowIndx: 0});
+        });
+
+        $('#CANCEL_REQUEST_OUTSIDE_MAIL_DESTINATION_DELETE_BUTTON').on('click', function () {
+            $cancelMailRecipientGrid.pqGrid('deleteRow', {'rowIndx': selectedReqeustMailRowIndex});
         });
         /* event */
 
