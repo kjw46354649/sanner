@@ -104,7 +104,7 @@ public class CommonUtility {
         Locale localInfo = (Locale)(request.getSession().getAttribute("LocalInfo"));
         paramMap.put("LOGIN_LOCALE",	 localInfo.getDefault().toString().toUpperCase());
 
-        //System.out.println("############# LOGIN_LOCALE=[" + localInfo.getDefault().toString().toUpperCase() + "]");
+        System.out.println("############# LOGIN_LOCALE=[" + localInfo.getDefault().toString().toUpperCase() + "]");
 
 
         //device_code : ACCESS IP, VENDOR, ID, NAME, DEPT_CODE

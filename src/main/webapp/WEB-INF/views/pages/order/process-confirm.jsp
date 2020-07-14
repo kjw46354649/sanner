@@ -20,6 +20,7 @@
             <span class="refresh mg-left10"><button type="button" id="PROCESS_CONFIRM_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
             <button type="button" class="defaultBtn btn-100w" id="PROCESS_CONFIRM_DETAIL">상세정보 조회</button>
             <button type="button" class="defaultBtn btn-100w" id="PROCESS_CONFIRM_DRAWING_VIEW">도면 보기</button>
+            <button type="button" class="defaultBtn btn-100w orange" id="PROCESS_CONFIRM_FULLSCREEN">FULL SCREEN</button>
         </div>
     </div>
     <div class="topLeftWrap left_float">
@@ -776,6 +777,11 @@
             let rowData = selectedGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[0]});
             g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ);
         });
-        
+
+        /** 전체창으로 주문 확정 띄우기 **/
+        $('#PROCESS_CONFIRM_FULLSCREEN').on('click', function () {
+            window.open('/workConfirm');
+        });
+
     });
 </script>

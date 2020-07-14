@@ -17,7 +17,7 @@
         <div class="bodyWrap" id="bodyWrap">
             <section class="containerBody">
                 <div class="contentsSingleWrap">
-                    <div class="page process_confirm">
+                    <div class="page process_confirm_single">
                         <div class="toolWrap">
                             <span class="barCode" id="processConfirmBarcodeSpan"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="CONFIRM_ORDER_BARCODE_IMG" style="height: 32px;"></span>
                             <span class="barCodeTxt"><input type="text" class="wd_270_barcode" name="CONFIRM_ORDER_BARCODE_NUM" id="CONFIRM_ORDER_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요" style="ime-mode:disable;"></span>
@@ -61,7 +61,7 @@
                             </form>
                         </div>
 
-                        <div class="topRightWrap left_float">
+                        <div class="topRightWrap right_float">
                             <form class="form-inline" id="PROCESS_CONFIRM_SEARCH_FORM" role="form" onsubmit="return false;" style="height: inherit;">
                                 <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectProcessConfirmList">
                                 <div style="height: inherit;">
@@ -133,7 +133,7 @@
                             </form>
                         </div>
 
-                        <div class="botRightWrap left_float">
+                        <div class="botRightWrap right_float">
                             <form class="form-inline" id="PROCESS_COMPLETE_SEARCH_FORM" role="form" onsubmit="return false;" style="height: inherit;">
                                 <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectProcessCompleteList">
                                 <div style="height: inherit;">
@@ -252,7 +252,7 @@
             {title: '비고', width: '20%', dataType: 'string', dataIndx: 'CONTROL_NOTE'}
         ];
         let topLeftObj = {
-            height: '90%',
+            height: '95%',
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             resizable: false,
@@ -380,7 +380,7 @@
             {title: '가공확정일시', width: '10%', dataType: 'string', dataIndx: 'CONTROL_STATUS_DT'}
         ];
         const topRightObj = {
-            height: '90%',
+            height: '95%',
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             resizable: false,
@@ -476,7 +476,7 @@
             {title: '발생일시', width:90, dataType: 'string', dataIndx: 'STATUS_DT'}
         ];
         const botLeftObj = {
-            height: '85%',
+            height: '90%',
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             resizable: false,
@@ -568,7 +568,7 @@
             {title: '검사<br>실적', dataType: 'string', dataIndx: ''}
         ];
         const botRightObj = {
-            height: '85%',
+            height: '90%',
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             resizable: false,
@@ -610,13 +610,23 @@
             $outsideGrid.pqGrid('refreshDataAndView');
             $processCompleteGrid.pqGrid('refreshDataAndView');
         };
-        const tenSeconds = 10000;
-
-        // setInterval(reloadData, tenSeconds);
 
         const isProcessAssembly = function (rowData) {
             let flag = false;
             let postData = {queryId: 'orderMapper.selectIsProcessAssembly'};
+            postData = $.extend(postData, rowData);
+            let parameters = {'url': '/json-list', 'data': postData};
+
+            fnPostAjaxAsync(function (data) {
+                flag = data.list[0].FLAG;
+            }, parameters, '');
+
+            return flag;
+        };
+
+        const hasInStock = function (rowData) {
+            let flag = false;
+            let postData = {queryId: 'orderMapper.selectHasInStock'};
             postData = $.extend(postData, rowData);
             let parameters = {'url': '/json-list', 'data': postData};
 
@@ -641,15 +651,25 @@
             } else {
                 QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateControlPartStatus', 'orderMapper.createControlPartProgress', 'orderMapper.updateControlPartAssembly']};
             }*/
+            if (hasInStock(rowData)) {
+                let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인';
+                bodyHtml =
+                    '<h4>\n' +
+                    '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                    '    <span>소재입고된 항목은 확정취소가 불가능합니다.</span>\n' +
+                    '</h4>';
+                fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
+                return false;
+            } else {
+                QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateControlPartStatus', 'orderMapper.createControlPartProgress']};
+                changes.queryIdList = QUERY_ID_ARRAY;
+                parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
 
-            QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateControlPartStatus', 'orderMapper.createControlPartProgress']};
-            changes.queryIdList = QUERY_ID_ARRAY;
-            parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
-
-            fnPostAjax(function (data, callFunctionParam) {
-                $confirmOrderGrid.pqGrid('refreshDataAndView');
-                $processConfirmGrid.pqGrid('refreshDataAndView');
-            }, parameters, '');
+                fnPostAjax(function (data, callFunctionParam) {
+                    $confirmOrderGrid.pqGrid('refreshDataAndView');
+                    $processConfirmGrid.pqGrid('refreshDataAndView');
+                }, parameters, '');
+            }
         };
 
         $('#CONFIRM_ORDER_SEARCH_FORM').on('change', function() {
@@ -703,6 +723,9 @@
         $processConfirmGrid = $('#' + topRightGridId).pqGrid(topRightObj);
         $outsideGrid = $('#' + botLeftGridId).pqGrid(botLeftObj);
         $processCompleteGrid = $('#' + botRightGridId).pqGrid(botRightObj);
+
+        const THIRTY_SECONDS = 30 * 1000;
+        setInterval(reloadData, THIRTY_SECONDS);
         /* init */
 
 
@@ -733,6 +756,15 @@
             callWindowImageViewer(999);
         });
 
+        // $('.barcode').on('click', function () {
+        //     console.log('click');
+        //     let thisElementSrc = $(this).children('img').attr('src');
+        //     // barcodeDisableAll();
+        //     let imgOn = "/resource/asset/images/common/img_barcode_long_on.png";
+        //     let img = "/resource/asset/images/common/img_barcode_long.png";
+        //     let src = (thisElementSrc === imgOn) ? img : imgOn;
+        //     $(this).children('img').attr('src', src);
+        // });
         $('#processConfirmBarcodeSpan').on('click', function () {
             $('#CONFIRM_ORDER_BARCODE_NUM').focus();
         });
