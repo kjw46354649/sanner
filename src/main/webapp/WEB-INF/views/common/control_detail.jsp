@@ -19,24 +19,21 @@
     <title>거래 명세표</title>
 </head>
 <body>
-<div class="popup_container" id="SALES_STATUS_DETAIL_LIST_VIEW_POPUP">
-    <div class="layerPopup">
-        <h3>상세 List 조회</h3>
-        <hr>
-        <div>
-            <form class="form-inline" id="DETAIL_LIST_VIEW_FORM" role="form">
-                <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectControlDetailList">
-                <input type="hidden" name="COMP_CD" id="COMP_CD">
-                <input type="hidden" name="CLOSE_MONTH" id="CLOSE_MONTH">
-                <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                <input type="hidden" name="CLOSE_VER" id="CLOSE_VER">
-                <div id="DETAIL_LIST_VIEW_GRID"></div>
-            </form>
-        </div>
-        <div class="btnWrap">
-            <button type="button" class="defaultBtn grayPopGra" id="SALES_STATUS_DETAIL_LIST_VIEW_POPUP_CLOSE">닫기
-            </button>
-        </div>
+<div style="padding: 10px;">
+    <h3 style="font-size: 20px; font-family: 'NotoKrB'; color: #000; display: inline-block;">상세 List 조회</h3>
+    <hr style="display: block; border: 1px solid #e0e2e6; margin: 7px;">
+    <div>
+        <form class="form-inline" id="DETAIL_LIST_VIEW_FORM" role="form">
+            <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectControlDetailList">
+            <input type="hidden" name="COMP_CD" id="COMP_CD">
+            <input type="hidden" name="CLOSE_MONTH" id="CLOSE_MONTH">
+            <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
+            <input type="hidden" name="CLOSE_VER" id="CLOSE_VER">
+            <div id="DETAIL_LIST_VIEW_GRID"></div>
+        </form>
+    </div>
+    <div style="text-align: center; margin: 12px 0;">
+        <button type="button" class="defaultBtn grayPopGra" id="CONTROL_MANGE_CLOSE_BUTTON">닫기</button>
     </div>
 </div>
 
@@ -93,7 +90,7 @@
             {title: '합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMOUNT', colModel: []}
         ];
         const detailListViewObj = {
-            height: 670,
+            height: 650,
             collapsible: false,
             resizable: false,
             showTitle: false,
@@ -111,6 +108,88 @@
             }
         };
        const $detailListViewGrid = $('#' + detailListViewGridId).pqGrid(detailListViewObj);
+
+        /* function */
+        // Returns a function, that, as long as it continues to be invoked, will not
+        // be triggered. The function will be called after it stops being called for
+        // N milliseconds. If `immediate` is passed, trigger the function on the
+        // leading edge, instead of the trailing.
+        const debounce = function (func, wait, immediate) {
+            let timeout, result;
+
+            let later = function(context, args) {
+                timeout = null;
+                if (args) result = func.apply(context, args);
+            };
+
+            let debounced = restArguments(function(args) {
+                if (timeout) clearTimeout(timeout);
+                if (immediate) {
+                    let callNow = !timeout;
+                    timeout = setTimeout(later, wait);
+                    if (callNow) result = func.apply(this, args);
+                } else {
+                    timeout = delay(later, wait, this, args);
+                }
+
+                return result;
+            });
+
+            debounced.cancel = function() {
+                clearTimeout(timeout);
+                timeout = null;
+            };
+
+            return debounced;
+        };
+
+        // Some functions take a letiable number of arguments, or a few expected
+        // arguments at the beginning and then a letiable number of values to operate
+        // on. This helper accumulates all remaining arguments past the function’s
+        // argument length (or an explicit `startIndex`), into an array that becomes
+        // the last argument. Similar to ES6’s "rest parameter".
+        const restArguments = function (func, startIndex) {
+            startIndex = startIndex == null ? func.length - 1 : +startIndex;
+            return function() {
+                let length = Math.max(arguments.length - startIndex, 0),
+                    rest = Array(length),
+                    index = 0;
+                for (; index < length; index++) {
+                    rest[index] = arguments[index + startIndex];
+                }
+                switch (startIndex) {
+                    case 0: return func.call(this, rest);
+                    case 1: return func.call(this, arguments[0], rest);
+                    case 2: return func.call(this, arguments[0], arguments[1], rest);
+                }
+                let args = Array(startIndex + 1);
+                for (index = 0; index < startIndex; index++) {
+                    args[index] = arguments[index];
+                }
+                args[startIndex] = rest;
+                return func.apply(this, args);
+            };
+        };
+
+        // Delays a function for the given number of milliseconds, and then calls
+        // it with the arguments supplied.
+        const delay = restArguments(function(func, wait, args) {
+            return setTimeout(function() {
+                return func.apply(null, args);
+            }, wait);
+        });
+        /* function */
+
+        // TODO: 창크기가 변경 되면 그리드 높이를 조절한다.
+        $(window).on('resize', debounce(function() {
+            const padding = 20;
+            const h3 = 28;
+            const hr = 16;
+            const button = 54;
+            const fixSize = padding + h3 + hr + button;
+            let size = window.innerHeight - fixSize;
+            $detailListViewGrid.pqGrid('option', 'height', size);
+        }, 500));
 
        $('#SALES_STATUS_DETAIL_LIST_VIEW_POPUP_CLOSE').on('click', function () {
            window.close();

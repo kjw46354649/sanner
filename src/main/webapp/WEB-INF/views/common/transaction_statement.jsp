@@ -136,7 +136,7 @@
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM'},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT'},
             {title: '작업형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM'},
-            {title: '수량', align: 'right', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY'},
+            {title: '수량', align: 'right', dataType: 'integer', dataIndx: 'CONTROL_ORDER_QTY'},
             {title: '공급단가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
             {title: '금액 계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
             {
@@ -160,6 +160,7 @@
         const transactionStatementObj = {
             height: 470,
             collapsible: false,
+            postRenderInterval: -1, //call postRender synchronously.
             resizable: false,
             showTitle: false,
             strNoRows: g_noData,
@@ -176,6 +177,9 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            complete: function(event, ui) {
+                this.flex();
             }
         };
 
@@ -353,6 +357,8 @@
 
             let parameters = {'url': '/createInvoice', 'data': {data: JSON.stringify(postData)}};
             fnPostAjax(function (data) {
+                $('#TRANSACTION_STATEMENT_FORM #INVOICE_NUM').text(data.info);
+                $('#TRANSACTION_STATEMENT_FORM #INVOICE_NUM_INPUT').val(data.info);
                 alert("<spring:message code='com.alert.default.save.success' />");
                 $transactionStatementGrid.pqGrid('refreshDataAndView');
                 opener.$orderManagementGrid.pqGrid('refreshDataAndView');

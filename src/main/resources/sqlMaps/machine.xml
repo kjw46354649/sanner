@@ -556,10 +556,10 @@
                 AND (A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) IN (  SELECT Q.CONTROL_SEQ, Q.CONTROL_DETAIL_SEQ
                                                                 FROM TBL_CONTROL_PART Q
                                                                     INNER JOIN TBL_MCT_PLAN R ON Q.CONTROL_SEQ = R.CONTROL_SEQ AND Q.CONTROL_DETAIL_SEQ = R.CONTROL_DETAIL_SEQ AND R.DEL_YN = 'N'
-                                                                        AND (R.CONTROL_SEQ, R.CONTROL_DETAIL_SEQ) NOT IN (  SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
-                                                                                                                            FROM TBL_CONTROL_PART X
-                                                                                                                            INNER JOIN TBL_MCT_WORK Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = Y.CONTROL_DETAIL_SEQ
-                                                                                                                                AND Y.WORK_STATUS IS NOT NULL AND Y.DEL_YN = 'N'))
+                                                                        AND (R.CONTROL_SEQ, R.CONTROL_DETAIL_SEQ) IN (  SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
+                                                                                                                        FROM TBL_CONTROL_PART X
+                                                                                                                        INNER JOIN TBL_MCT_WORK Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = Y.CONTROL_DETAIL_SEQ
+                                                                                                                            AND Y.WORK_STATUS IS NOT NULL AND Y.DEL_YN = 'N'))
             </if>
             <choose>
                 <when  test="INCLUDE_OUTSIDE !='' and INCLUDE_OUTSIDE != null">

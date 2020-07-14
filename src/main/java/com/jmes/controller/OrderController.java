@@ -92,9 +92,9 @@ public class OrderController {
      * @description 거래명세표 저장
      */
     @RequestMapping(value = "/createInvoice", method = RequestMethod.POST)
-    public String createInvoice(HttpServletRequest request) throws Exception {
+    public String createInvoice(Model model, HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
-        this.orderService.createInvoice(map);
+        model.addAttribute("info", this.orderService.createInvoice(map));
         return "jsonView";
     }
 

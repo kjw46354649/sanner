@@ -609,15 +609,14 @@
                     alert("해당 데이터가 존재하지 않습니다.");
                     $('#inspection_manage_pop').modal('hide');
                 }else{
-                    let emergencySpan = null;
+                    let emergencySpan = '';
                     fnJsonDataToForm("inspection_manage_pop_form", dataInfo);
-                    console.log(dataInfo);
                     $("#inspection_manage_pop_form").find("#Q_SEQ").html(dataInfo.Q_SEQ);
                     $("#inspection_manage_pop_form").find("#CONTROL_NUM" + "_VIEW_T").html(dataInfo.CONTROL_NUM);
                     $("#inspection_manage_pop_form").find("#DRAWING_NUM" + "_VIEW_T").html(dataInfo.DRAWING_NUM);
                     $("#inspection_manage_pop_form").find("#MAIN_INSPECTION_NM" + "_VIEW_T").html(dataInfo.MAIN_INSPECTION_NM);
                     if(dataInfo.EMERGENCY_YN === 'Y') {
-                        let emergencySpan = '<span style="display: inline-block; margin: 0 5px; padding: 0px 7px; border: solid red; border-radius: 5px; color: red; text-align: center; font-size: 1rem;">긴급</span>';
+                        emergencySpan = '<span style="display: inline-block; margin: 0 5px; padding: 0px 7px; border: solid red; border-radius: 5px; color: red; text-align: center; font-size: 1rem;">긴급</span>';
                     }
                     $("#inspection_manage_pop_form").find("#INNER_DUE_DT" + "_VIEW_T").html(dataInfo.INNER_DUE_DT + emergencySpan);
                     $("#inspection_manage_pop_form").find("#ITEM_NM" + "_VIEW_T").html(dataInfo.ITEM_NM);

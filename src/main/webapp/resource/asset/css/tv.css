@@ -135,7 +135,7 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=1, Direction=135, Colo
 /*.pop .popWrap .oneDepthRow .oneDepthIB .twoDepthCol .pro30{width:30.1%;}*/
 /*.pop .popWrap .oneDepthRow .oneDepthIB .twoDepthCol .pro16{width:16%;}*/
 /*.pop.ty2 .popWrap .oneDepthRow .oneDepthIB .twoDepthCol .twoDepthIB{margin-right: 96px;}*/
-.pop.ty2 .popWrap .oneDepthRow .oneDepthIB .twoDepthCol .twoDepthIB:last-child{margin-right: 0;}
+.pop.ty2 .popWrap .oneDepthRow .oneDepthIB .twoDepthCol .twoDepthIB:lasft-child{margin-right: 0;}
 .pop.ty2 .popWrap .twoDepthIB .page .p_row{padding:21px 22px 0;}
 .pop.ty2 .popWrap .twoDepthIB .page .p_row .p_col{width:490px; height:300px; float:left;}
 .pop.ty2 .popWrap .twoDepthIB .page .p_row .p_col~.p_col{margin-left:30px;}
@@ -163,6 +163,9 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=1, Direction=135, Colo
 .statusWrap .statusConts .inWrap.on .txtR{color: #d41616; font-size: 19px;}
 .statusTblWrap{padding:25px 1.25%; box-sizing: border-box; overflow: hidden; background-color: #f8f9fa; border-radius: 5px;}
 .statusTblWrap .statusTblBox{width:800px; float: left; color: #000;}
+.statusTblWrap .statusTblBox.w1260{width: 1260px;}
+.statusTblWrap .statusTblBox.w1150{width: 1150px;}
+.statusTblWrap .statusTblBox.w1100{width: 1100px;}
 .statusTblWrap .statusTblBox.w960{width: 960px;}
 .statusTblWrap .statusTblBox.w900{width: 900px;}
 .statusTblWrap .statusTblBox~.statusTblBox{margin-left:50px;}

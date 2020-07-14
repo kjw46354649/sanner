@@ -176,7 +176,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void createInvoice(Map<String, Object> map) throws Exception {
+    public String createInvoice(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
@@ -196,7 +196,7 @@ public class OrderServiceImpl implements OrderService {
         if (infoData != null && infoData.size() > 0) {
             for (HashMap<String, Object> hashMap : infoData) {
                 invoiceNum = (String) hashMap.get("INVOICE_NUM");
-                System.out.println(invoiceNum);
+
                 if (invoiceNum == "") {
                     hashMap.put("queryId", "outMapper.createInvoiceNum");
                     invoiceNum = this.orderDao.createInvoiceNum(hashMap);
@@ -212,6 +212,8 @@ public class OrderServiceImpl implements OrderService {
                 this.orderDao.createInvoiceDetail(hashMap);
             }
         }
+
+        return invoiceNum;
     }
 
     @Override

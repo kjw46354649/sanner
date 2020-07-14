@@ -20,7 +20,7 @@
                                 <input type="text" class="wd_100" name="INNER_DUE_DT" id="BUSINESS_STATUS_INNER_DUE_DT">
                             </span>
                             <span class="slt_wrap mg-left10">
-                                <label class="label_50" for="ORDER_COMP_CHARGE">발주처</label>
+                                <label class="label_50" for="ORDER_COMP_CD">발주처</label>
                                 <select class="wd_100" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
                                     <option value="">All</option>
                                 </select>
@@ -115,7 +115,7 @@
                 businessCalendar.getEventSources();
             }
             , dateClick: function(info) {
-                $('#business_status_search_form').find('#BUSINESS_STATUS_INNER_DUE_DT').datepicker('setDate', info.dateStr);
+                $('#business_status_search_form').find('#BUSINESS_STATUS_INNER_DUE_DT').datepicker('setDate', info.dateStr.replace(/-/g, '/'));
                 $businessOutgoingListGrid.pqGrid('option', 'dataModel.postData', function () {
                     return (fnFormToJsonArrayData('#business_status_search_form'));
                 });
@@ -143,6 +143,7 @@
             // , eventDrop  : function(stillEvent, movingEvent) {debugger; return false;    }
             , eventSources: [{
                 events: function (info, successCallback, failureCallback) {
+                    console.log(moment(info.startStr).format('YYYYMMDD'));
                     $.ajax({
                         url: '/json-list',
                         type: 'POST',
@@ -206,7 +207,8 @@
 
         fnCommCodeDatasourceSelectBoxCreate($('#business_status_search_form').find('#ORDER_STAFF_SEQ'), 'all', {
             'url': '/json-list',
-            'data': {'queryId': 'dataSource.getCompanyStaffList'}
+            'data': {'queryId': 'dataSource.selectOrderCompChargeList'}
+            // 'data': {'queryId': 'dataSource.getCompanyStaffList'}
         });
 
         $('#business_status_search_form').find('#ORDER_COMP_CD').change(function() {

@@ -17,7 +17,7 @@ public interface OrderService {
 
     void removeMonthClose(Map<String, Object> map) throws Exception;
 
-    void createInvoice(Map<String, Object> map) throws Exception;
+    String createInvoice(Map<String, Object> map) throws Exception;
 
     void removeInvoice(Map<String, Object> map) throws Exception;
 

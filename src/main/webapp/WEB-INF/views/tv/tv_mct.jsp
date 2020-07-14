@@ -1144,7 +1144,7 @@
 						<ul class="twoDepthCol">
 							<li class="twoDepthIB pro">
 								<div class="statusTblWrap">
-									<div class="statusTblBox w960">
+									<div class="statusTblBox w1260">
 										<div class="tblTitWrap">
 											<div class="tblTit"><span>불량/반품</span> 발생 현황 (3일간)</div>
 											<div class="tblDate">2020/1/29 ~ 1/31</div>
@@ -1227,7 +1227,7 @@
 											</table>
 										</div>
 									</div>
-									<div class="statusTblBox">
+									<div class="statusTblBox w1100">
 										<div class="tblTitWrap">
 											<div class="tblTit ty2"><span>긴급</span>주문 진행현황</div>
 											<div class="tblDate">2020/1/29 ~ 1/31</div>
@@ -1305,7 +1305,7 @@
 											</table>
 										</div>
 									</div>
-									<div class="statusTblBox w900">
+									<div class="statusTblBox w1150">
 										<div class="tblTitWrap">
 											<div class="tblTit ty3">납기 <span>지연</span> 목록 (3일간)</div>
 											<div class="tblDate">2020/1/29 ~ 1/31</div>
@@ -1383,7 +1383,7 @@
 											</table>
 										</div>
 									</div>
-									<div class="statusTblBox">
+									<div class="statusTblBox" style="display: none;">
 										<div class="tblTitWrap">
 											<div class="tblTit ty4">납기 <span>지연 위험</span> List</div>
 											<div class="tblDate">2020/1/29 ~ 1/31</div>
@@ -1411,7 +1411,7 @@
 														<th>담당영업</th>
 													</tr>
 												</thead>
-												<tbody>
+												<tbody id="grid4">
 													<tr>
 														<td>1</td>
 														<td>4/16</td>
@@ -1553,7 +1553,12 @@
 								divHtml += '	<span>'+inner_due_dt+'<br>'+work_type_nm+'</span>';
 								divHtml += '	<span><span class="txtB ellipsis" style="font-size: 17px;">'+control_part_info+'</span><br>'+size_txt+'&nbsp;&nbsp;'+material_detail_nm+'</span>';
 								divHtml += '	<span>'+part_qty+'</span>';
-								divHtml += '	<span><span class="txtR">'+working_time_info+'</span><br><span class="txtB ty2">'+plan_working_time_info+'</span></span>';
+								/*divHtml += '	<span><span class="txtR">'+working_time_info+'</span><br><span class="txtB ty2">'+plan_working_time_info+'</span></span>';*/
+								if(work_plan_type == 1) {
+									divHtml += '	<span><span class="txtR">'+working_time_info+'</span></span>';
+								} else if(work_plan_type == 2) {
+									divHtml += '	<span><span class="txtB ty2">'+plan_working_time_info+'</span></span>';
+								}
 								divHtml += '</a>';
 								divHtml += '</div>';
 
@@ -1584,14 +1589,14 @@
 						if (grid_list1 != '')
 						{
 							for (let i = 0; i < grid_list1.length; i++) {
-								let inspect_dt = grid_list1[i].INSPECT_DT;
-								let order_comp_nm = grid_list1[i].ORDER_COMP_NM;
-								let control_part_info = grid_list1[i].CONTROL_PART_INFO;
-								let error_type = grid_list1[i].ERROR_TYPE;
-								let error_qty_info = grid_list1[i].ERROR_QTY_INFO;
-								let inner_due_dt = grid_list1[i].INNER_DUE_DT;
-								let inspect_result_nm = grid_list1[i].INSPECT_RESULT_NM;
-								let error_action_nm = grid_list1[i].ERROR_ACTION_NM;
+								let inspect_dt = grid_list1[i].INSPECT_DT == undefined ? "" : grid_list1[i].INSPECT_DT;
+								let order_comp_nm = grid_list1[i].ORDER_COMP_NM == undefined ? "" : grid_list1[i].ORDER_COMP_NM;
+								let control_part_info = grid_list1[i].CONTROL_PART_INFO == undefined ? "" : grid_list1[i].CONTROL_PART_INFO;
+								let error_type = grid_list1[i].ERROR_TYPE == undefined ? "" : grid_list1[i].ERROR_TYPE;
+								let error_qty_info = grid_list1[i].ERROR_QTY_INFO == undefined ? "" : grid_list1[i].ERROR_QTY_INFO;
+								let inner_due_dt = grid_list1[i].INNER_DUE_DT == undefined ? "" : grid_list1[i].INNER_DUE_DT;
+								let inspect_result_nm = grid_list1[i].INSPECT_RESULT_NM == undefined ? "" : grid_list1[i].INSPECT_RESULT_NM;
+								let error_action_nm = grid_list1[i].ERROR_ACTION_NM == undefined ? "" : grid_list1[i].ERROR_ACTION_NM;
 
 								let grid1Html = '<tr>';
 									grid1Html += '<td>' + (i+1) +'</td>';
@@ -1616,13 +1621,13 @@
 						if (grid_list2 != '')
 						{
 							for (let i = 0; i < grid_list2.length; i++) {
-								let inner_due_dt = grid_list2[i].INNER_DUE_DT;
-								let out_finish_dt = grid_list2[i].OUT_FINISH_DT;
-								let order_comp_nm = grid_list2[i].ORDER_COMP_NM;
-								let control_part_info = grid_list2[i].CONTROL_PART_INFO;
-								let control_part_qty = grid_list2[i].CONTROL_PART_QTY;
-								let control_part_qty_info = grid_list2[i].CONTROL_PART_QTY_INFO;
-								let part_status_nm = grid_list2[i].PART_STATUS_NM;
+								let inner_due_dt = grid_list2[i].INNER_DUE_DT == undefined ? "" : grid_list2[i].INNER_DUE_DT;
+								let out_finish_dt = grid_list2[i].OUT_FINISH_DT == undefined ? "" : grid_list2[i].OUT_FINISH_DT;
+								let order_comp_nm = grid_list2[i].ORDER_COMP_NM == undefined ? "" : grid_list2[i].ORDER_COMP_NM;
+								let control_part_info = grid_list2[i].CONTROL_PART_INFO == undefined ? "" : grid_list2[i].CONTROL_PART_INFO;
+								let control_part_qty = grid_list2[i].CONTROL_PART_QTY == undefined ? "" : grid_list2[i].CONTROL_PART_QTY;
+								let control_part_qty_info = grid_list2[i].CONTROL_PART_QTY_INFO == undefined ? "" : grid_list2[i].CONTROL_PART_QTY_INFO;
+								let part_status_nm = grid_list2[i].PART_STATUS_NM == undefined ? "" : grid_list2[i].PART_STATUS_NM;
 
 								let grid2Html = '<tr>';
 									grid2Html += '<td>' + (i+1) +'</td>';
@@ -1645,13 +1650,13 @@
 						if (grid_list3 != '')
 						{
 							for (let i = 0; i < grid_list3.length; i++) {
-								let inner_due_dt = grid_list3[i].INNER_DUE_DT;
-								let out_finish_dt = grid_list3[i].OUT_FINISH_DT;
-								let order_comp_nm = grid_list3[i].ORDER_COMP_NM;
-								let control_part_info = grid_list3[i].CONTROL_PART_INFO;
-								let control_part_qty_info = grid_list3[i].CONTROL_PART_QTY_INFO;
-								let part_status_nm = grid_list3[i].PART_STATUS_NM;
-								let charge_user_nm = grid_list3[i].CHARGE_USER_NM;
+								let inner_due_dt = grid_list3[i].INNER_DUE_DT == undefined ? "" : grid_list3[i].INNER_DUE_DT;
+								let out_finish_dt = grid_list3[i].OUT_FINISH_DT == undefined ? "" : grid_list3[i].OUT_FINISH_DT;
+								let order_comp_nm = grid_list3[i].ORDER_COMP_NM == undefined ? "" : grid_list3[i].ORDER_COMP_NM;
+								let control_part_info = grid_list3[i].CONTROL_PART_INFO == undefined ? "" : grid_list3[i].CONTROL_PART_INFO;
+								let control_part_qty_info = grid_list3[i].CONTROL_PART_QTY_INFO == undefined ? "" : grid_list3[i].CONTROL_PART_QTY_INFO;
+								let part_status_nm = grid_list3[i].PART_STATUS_NM == undefined ? "" : grid_list3[i].PART_STATUS_NM;
+								let charge_user_nm = grid_list3[i].CHARGE_USER_NM == undefined ? "" : grid_list3[i].CHARGE_USER_NM;
 
 
 								let grid3Html = '<tr>';
@@ -1666,6 +1671,37 @@
 									grid3Html += '</tr>';
 
 								$("#grid3").append(grid3Html);
+								if((i+1) == 5){
+									break;
+								}
+
+							}
+						}
+
+						if (grid_list4 != '')
+						{
+							for (let i = 0; i < grid_list4.length; i++) {
+								let inner_due_dt = grid_list4[i].INNER_DUE_DT == undefined ? "" : grid_list4[i].INNER_DUE_DT;
+								let out_finish_dt = grid_list4[i].OUT_FINISH_DT == undefined ? "" : grid_list4[i].OUT_FINISH_DT;
+								let order_comp_nm = grid_list4[i].ORDER_COMP_NM == undefined ? "" : grid_list4[i].ORDER_COMP_NM;
+								let control_part_info = grid_list4[i].CONTROL_PART_INFO == undefined ? "" : grid_list4[i].CONTROL_PART_INFO;
+								let control_part_qty_info = grid_list4[i].CONTROL_PART_QTY_INFO == undefined ? "" : grid_list4[i].CONTROL_PART_QTY_INFO;
+								let part_status_nm = grid_list4[i].PART_STATUS_NM == undefined ? "" : grid_list4[i].PART_STATUS_NM;
+								let charge_user_nm = grid_list4[i].CHARGE_USER_NM == undefined ? "" : grid_list4[i].CHARGE_USER_NM;
+
+
+								let grid4Html = '<tr>';
+								grid4Html += '<td>' + (i+1) +'</td>';
+								grid4Html += '<td class="txtR bold">'+ inner_due_dt + '</td>';
+								grid4Html += '<td>'+ out_finish_dt + '</td>';
+								grid4Html += '<td class="alignLeft ellipsis">'+ order_comp_nm + '</td>';
+								grid4Html += '<td class="alignLeft ellipsis">'+ control_part_info + '</td>';
+								grid4Html += '<td>'+ control_part_qty_info + '</td>';
+								grid4Html += '<td>'+ part_status_nm + '</td>';
+								grid4Html += '<td>'+ charge_user_nm + '</td>';
+								grid4Html += '</tr>';
+
+								$("#grid4").append(grid4Html);
 								if((i+1) == 5){
 									break;
 								}
