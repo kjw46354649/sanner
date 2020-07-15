@@ -282,22 +282,22 @@
     });
     let calcQty = function(type){
 
-        let POP_STOCK_QTY = $('#POP_STOCK_QTY').html();
-        let POP_CURR_QTY = $('#POP_CURR_QTY').html();
-        let POP_OUT_QTY = $("#pop_form").find("#OUT_QTY").val();
+        let POP_STOCK_QTY = $('#PARTS_MANAGE_CURRENT_POPUP #POP_STOCK_QTY').html();
+        let POP_CURR_QTY = $('#PARTS_MANAGE_CURRENT_POPUP #POP_CURR_QTY').html();
+        let POP_OUT_QTY = $("#PARTS_MANAGE_CURRENT_POPUP").find("#OUT_QTY").val();
         if(POP_STOCK_QTY == "" || POP_STOCK_QTY == "0"){
             alert("수량이 없습니다.");
             return;
         }
         if(type == "PLUS"){
-            if(parseInt(POP_CURR_QTY) > 0){
-                POP_OUT_QTY = parseInt(POP_OUT_QTY)+1;
-                POP_CURR_QTY = parseInt(POP_CURR_QTY)-1;
+            if(Number(POP_CURR_QTY) > 0){
+                POP_OUT_QTY = Number(POP_OUT_QTY)+1;
+                POP_CURR_QTY = Number(POP_CURR_QTY)-1;
             }
         }else if(type == "MINUS"){
-            if(parseInt(POP_OUT_QTY) > 0){
-                POP_OUT_QTY = parseInt(POP_OUT_QTY)-1;
-                POP_CURR_QTY = parseInt(POP_CURR_QTY)+1;
+            if(Number(POP_OUT_QTY) > 0){
+                POP_OUT_QTY = Number(POP_OUT_QTY)-1;
+                POP_CURR_QTY = Number(POP_CURR_QTY)+1;
             }
 
         }

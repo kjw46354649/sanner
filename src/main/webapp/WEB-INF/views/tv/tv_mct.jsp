@@ -1740,7 +1740,7 @@
 			}
 
 			getData();
-			// timer();
+			timer();
 
 			$(document).on('click', 'a[href="#a;"]', function(e){
 				e.preventDefault();

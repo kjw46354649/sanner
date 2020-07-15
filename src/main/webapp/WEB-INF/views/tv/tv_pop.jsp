@@ -1598,7 +1598,7 @@
 
                         }
                     }
-					 console.log(m_list);
+					//console.log(m_list);
 
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
@@ -1686,7 +1686,7 @@
 		}
 
 		getAllData();
-		// timer();
+		timer();
 		timer_alarm();
 	});
 
