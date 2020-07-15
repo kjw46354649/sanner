@@ -199,8 +199,6 @@ public class PDFPringMakeController {
 
     /**
      * 클라이언트에서 출력 리스트를 받아서 PDF 작성이후 파일 URL 을 넘긴다.
-     * @param model
-     * @param session
      * @param request
      * @return
      * @throws Exception
@@ -221,8 +219,8 @@ public class PDFPringMakeController {
         String fontPath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.font.path") + "/malgun/malgun.ttf";
         BaseFont bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 
-        Font headFont = new Font(bf, 9, Font.BOLD);
-        Font contentsFont = new Font(bf, 8, Font.NORMAL);
+        Font headFont = new Font(bf, 8, Font.BOLD);
+        Font contentsFont = new Font(bf, 7, Font.NORMAL);
         BaseColor headBackground = new BaseColor(217, 217, 217);
         PdfWriter.getInstance(document, out);
 
@@ -245,7 +243,7 @@ public class PDFPringMakeController {
             PdfPTable table = new PdfPTable(10);
             table.init();
             table.setWidthPercentage(100);
-            table.setWidths(new int[] {5, 10, 15, 15, 30, 30, 5, 5, 20, 5});
+            table.setWidths(new int[] {3, 8, 10, 10, 20, 20, 6, 6, 20, 4});
 
             table.addCell(createCellBackground("주문번호", 2, 1, headFont, headBackground));
             table.addCell(createCell((String)infoList.get(j).get("MATERIAL_ORDER_NUM"), 2, 1, contentsFont));
