@@ -115,12 +115,12 @@
                 <div class="resultWrap99 list99" style="height: 440px;">
                     <div class="leftWrap mg-top15">
                         <input type="hidden" id="LOGO_GFILE_SEQ" name="LOGO_GFILE_SEQ" value="">
-                        <img src="/image/999" id="LOGO_GFILE_SRC" width="388px" height="150px" alt="사진" style="border:1px solid #707070">
+                        <img src="/image/999" id="LOGO_GFILE_SRC" width="388px" height="150px" alt="사진" style="border:1px solid #707070; width: 388px !important; height:150px !important;">
                         <div class="btnWrap">
                             <button type="button" id="company_logo_upload" class="defaultBtn">로고파일 업로드</button>
                         </div><br/>
                         <input type="hidden" id="SIGN_GFILE_SEQ" name="SIGN_GFILE_SEQ" value="">
-                        <img src="/image/999" id="SIGN_GFILE_SRC" width="388px" height="150px" alt="사진" style="border:1px solid #707070">
+                        <span style="text-align: center; margin:112px;"><img src="/image/999" id="SIGN_GFILE_SRC" width="388px" height="150px" alt="사진" style="border:1px solid #707070; width: 150px !important; height:150px !important;"></span>
                         <div class="btnWrap">
                             <button type="button" id="company_sign_upload" class="defaultBtn">직인파일 업로드</button>
                         </div>

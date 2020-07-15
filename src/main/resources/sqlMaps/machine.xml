@@ -703,9 +703,10 @@
             LEFT OUTER JOIN TBL_MCT_PLAN K ON A.CONTROL_SEQ = K.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = K.CONTROL_DETAIL_SEQ AND K.DEL_YN = 'N'
             LEFT OUTER JOIN jmes.TBL_EQUIP L ON K.EQUIP_SEQ = L.EQUIP_SEQ
         WHERE 1 = 1
-            AND IFNULL(A.OUTSIDE_YN, 'N') = 'N'
-            AND A.WORK_TYPE NOT IN ('WTP020')
-            AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009')
+            AND (EXISTS (SELECT * FROM jmes.TBL_MCT_WORK MW WHERE A.CONTROL_SEQ = MW.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = MW.CONTROL_DETAIL_SEQ AND MW.DEL_YN = 'N')
+                    OR
+                EXISTS (SELECT * FROM jmes.TBL_CAM CAM WHERE A.CONTROL_SEQ = CAM.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = CAM.CONTROL_DETAIL_SEQ)
+                )
             <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
                 AND B.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
             </if>
@@ -885,7 +886,7 @@
             LEFT OUTER JOIN jmes.TBL_CAM_DETAIL H ON G.CAM_SEQ = H.CAM_SEQ AND H.SEQ = (SELECT MAX(I.SEQ) FROM jmes.TBL_CAM_DETAIL I WHERE H.CAM_SEQ = I.CAM_SEQ GROUP BY I.CAM_SEQ)
             LEFT OUTER JOIN jmes.TBL_INSPECT J ON A.CONTROL_SEQ = J.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = J.CONTROL_DETAIL_SEQ AND J.INSPECT_TYPE = '1'
                 AND J.INSPECT_SEQ = (SELECT MAX(INSPECT_SEQ) FROM jmes.TBL_INSPECT I WHERE J.CONTROL_SEQ = I.CONTROL_SEQ AND J.CONTROL_DETAIL_SEQ = I.CONTROL_DETAIL_SEQ AND I.INSPECT_TYPE = '1')
-            LEFT OUTER JOIN TBL_MCT_PLAN K ON A.CONTROL_SEQ = K.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = K.CONTROL_DETAIL_SEQ AND K.DEL_YN = 'N'
+            LEFT OUTER JOIN jmes.TBL_MCT_PLAN K ON A.CONTROL_SEQ = K.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = K.CONTROL_DETAIL_SEQ AND K.DEL_YN = 'N'
             LEFT OUTER JOIN jmes.TBL_EQUIP L ON K.EQUIP_SEQ = L.EQUIP_SEQ
         WHERE 1 = 1
             <choose>
@@ -914,6 +915,12 @@
                     AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO012', 'PRO013', 'PRO014', 'PRO015', 'PRO018')
                 </otherwise>
             </choose>
+            <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
+                AND EXISTS (SELECT * FROM jmes.TBL_MCT_PLAN MP
+                        WHERE A.CONTROL_SEQ = MP.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = MP.CONTROL_DETAIL_SEQ AND MP.DEL_YN = 'N'
+                            AND MP.EQUIP_SEQ = #{EQUIP_SEQ}
+                )
+            </if>
             <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
                 AND A.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
             </if>
@@ -923,10 +930,10 @@
             <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
                 AND A.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
             </if>
-            <if test="MATERIAL_KIND != null and MATERIAL_KIND != ''">
-                AND A.MATERIAL_KIND = #{MATERIAL_KIND}
+            <if test="MATERIAL_DETAIL != null and MATERIAL_DETAIL != ''">
+                AND A.MATERIAL_KIND = #{MATERIAL_DETAIL}
             </if>
-            <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+            <if test="FACTORY_CLASSIFY != null and FACTORY_CLASSIFY != ''">
                 AND A.WORK_FACTORY = #{WORK_FACTORY}
             </if>
             <if test="BARCODE_NUM != null and BARCODE_NUM != ''">
