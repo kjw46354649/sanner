@@ -18,7 +18,7 @@
     <div class="bottomWrap">
         <div class="tableNotSearchOneGridWrap">
             <div class="conWrap">
-                <div id="business_status_calendar"></div>
+                <div id="calender_scheduler_master"></div>
             </div>
         </div>
     </div>
@@ -40,7 +40,7 @@
             }
         }
 
-        let schedulerCalendarEl = document.getElementById('business_status_calendar');
+        let schedulerCalendarEl = document.getElementById('calender_scheduler_master');
         let schedulerCalendarProps = {
             customButtons: {
                 holidaySetting: {
@@ -131,6 +131,7 @@
                 textColor: '#fff' // an option!
             }]
         };
+
         schedulerCalendar = new FullCalendar.Calendar(schedulerCalendarEl, schedulerCalendarProps);
         schedulerCalendar.render();
 
