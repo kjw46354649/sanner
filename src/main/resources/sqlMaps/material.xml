@@ -642,7 +642,7 @@
         WHERE 1=1
             AND CONTROL_SEQ IS NULL
             AND CONTROL_DETAIL_SEQ IS NULL
-            AND ORDER_STATUS = 'MST003'
+            AND MATERIAL_ORDER_NUM = NULL
     </delete>
 
     <delete id="deleteItemOrderRegisterCancelOrderManual" parameterType="java.util.HashMap">

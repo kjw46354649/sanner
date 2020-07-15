@@ -282,9 +282,9 @@
     });
     let calcQty = function(type){
 
-        let POP_STOCK_QTY = $('#PARTS_MANAGE_CURRENT_POPUP #POP_STOCK_QTY').html();
-        let POP_CURR_QTY = $('#PARTS_MANAGE_CURRENT_POPUP #POP_CURR_QTY').html();
-        let POP_OUT_QTY = $("#PARTS_MANAGE_CURRENT_POPUP").find("#OUT_QTY").val();
+        let POP_STOCK_QTY = $('#pop_form #POP_STOCK_QTY').html();
+        let POP_CURR_QTY = $('#pop_form #POP_CURR_QTY').html();
+        let POP_OUT_QTY = $("#pop_form #OUT_QTY").val();
         if(POP_STOCK_QTY == "" || POP_STOCK_QTY == "0"){
             alert("수량이 없습니다.");
             return;
@@ -302,11 +302,11 @@
 
         }
 
-        $('#POP_CURR_QTY').html(POP_CURR_QTY);
-        $('#POP_OUT_QTY').html(POP_OUT_QTY);
-        $('#OUT_QTY').val(POP_OUT_QTY);
-        console.log("POP_CURR_QTY",POP_CURR_QTY);
-        console.log("POP_OUT_QTY",POP_OUT_QTY);
+        $('#pop_form #POP_CURR_QTY').html(POP_CURR_QTY);
+        $('#pop_form #POP_OUT_QTY').html(POP_OUT_QTY);
+        $('#pop_form #OUT_QTY').val(POP_OUT_QTY);
+        //console.log("POP_CURR_QTY",POP_CURR_QTY);
+        //console.log("POP_OUT_QTY",POP_OUT_QTY);
 
     }
     /**  선언 **/
