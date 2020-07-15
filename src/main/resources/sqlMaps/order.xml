@@ -194,7 +194,7 @@
             LEFT OUTER JOIN TBL_POP_VIEW G ON B.CONTROL_SEQ = G.CONTROL_SEQ
                                         AND B.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ
                                         AND G.POP_VSEQ = (SELECT MAX(POP_VSEQ)
-                                                        FROM TBL_POP
+                                                        FROM TBL_POP_VIEW
                                                         WHERE 1 = 1
                                                             AND CONTROL_SEQ = G.CONTROL_SEQ
                                                             AND CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ)
