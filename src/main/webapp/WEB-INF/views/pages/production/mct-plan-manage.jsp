@@ -61,9 +61,10 @@
             <h2 style="height: 42px; line-height: 42px;">가공 대상 List</h2>
             <form id="MCT_PROCESS_TARGET_FORM" role="form">
                 <input type="hidden" name="queryId" id="queryId" value="machine.selectWorkPlanGridList">
+
                 <span class="slt_wrap mg-left20">
-                    <label class="label_50" for="FACTORY_CLASSIFY">공장구분</label>
-                    <select class="wd_70" name="FACTORY_CLASSIFY" id="FACTORY_CLASSIFY" title="공장구분">
+                    <label class="label_80" for="FACTORY_CLASSIFY">공장구분</label>
+                    <select class="wd_100" name="FACTORY_CLASSIFY" id="FACTORY_CLASSIFY" title="공장구분">
                         <option value="">All</option>
                         <c:forEach var="code" items="${HighCode.H_1014}">
                             <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -72,7 +73,7 @@
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
-                    <label class="label_50" for="POP_POSITION">위치</label>
+                    <label class="label_80" for="POP_POSITION">위치</label>
                     <select class="wd_100" id="POP_POSITION" name="POP_POSITION" title="위치">
                         <option value="">ALL</option>
                         <c:forEach var="code" items="${HighCode.H_1009}">
@@ -82,7 +83,7 @@
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
-                    <label class="label_50" for="MATERIAL_DETAIL">소재분류</label>
+                    <label class="label_80" for="MATERIAL_DETAIL">소재분류</label>
                     <select class="wd_100" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" title="소재분류">
                         <option value="">All</option>
                         <c:forEach var="code" items="${HighCode.H_1027}">
@@ -92,7 +93,7 @@
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
-                    <label class="label_50" for="PART_STATUS">진행상태</label>
+                    <label class="label_80" for="PART_STATUS">진행상태</label>
                     <select class="wd_100" name="PART_STATUS" id="PART_STATUS" title="진행상태">
                         <option value="">All</option>
                         <c:forEach var="code" items="${HighCode.H_1013}">
@@ -102,15 +103,15 @@
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
-                    <label class="label_50" for="EQUIP_SEQ">MCT No.</label>
+                    <label class="label_80" for="EQUIP_SEQ">MCT No.</label>
                     <select class="wd_100" name="EQUIP_SEQ" id="EQUIP_SEQ" title="MCT No.">
                         <option value="">ALL</option>
                     </select>
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
-                    <label class="label_50" for="MCT_WORK_TYPE">작업구분</label>
-                    <select class="wd_50" name="MCT_WORK_TYPE" id="MCT_WORK_TYPE" title="작업구분">
+                    <label class="label_80" for="MCT_WORK_TYPE">작업구분</label>
+                    <select class="wd_100" name="MCT_WORK_TYPE" id="MCT_WORK_TYPE" title="작업구분">
                         <option value="">All</option>
                         <c:forEach var="code" items="${HighCode.H_1011}">
                             <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -118,19 +119,25 @@
                     </select>
                 </span>
                 <span class="gubun"></span>
-                <span class="slt_wrap">
-                    <input type="checkbox" name="PLAN_ONLY" id="PLAN_ONLY">
-                    <label class="label_100" for="PLAN_ONLY">계획단계 대상만 조회</label>
-                </span>
-                <span class="gubun"></span>
-                <span class="slt_wrap">
-                    <input type="checkbox" name="INCLUDE_OUTSIDE" id="INCLUDE_OUTSIDE">
-                    <label class="label_100" for="INCLUDE_OUTSIDE">외주 대상 포함 조회</label>
-                </span>
-                <span class="gubun"></span>
                 <span class="refresh mg-left10"><button type="button" id="MCT_TARGET_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
+                <div style="margin: 0 0 10px 20px;">
+                    <span class="slt_wrap">
+                        <input type="checkbox" name="PLAN_ONLY" id="PLAN_ONLY">
+                        <label class="label_100" for="PLAN_ONLY">계획단계 대상만 조회</label>
+                    </span>
+                    <span class="gubun"></span>
+                    <span class="slt_wrap">
+                        <input type="checkbox" name="INCLUDE_OUTSIDE" id="INCLUDE_OUTSIDE">
+                        <label class="label_100" for="INCLUDE_OUTSIDE">외주 대상 포함 조회</label>
+                    </span>
+                    <span class="gubun"></span>
+                    <span class="slt_wrap">
+                        <input type="checkbox" name="INCLUDE_PROCESSING" id="INCLUDE_PROCESSING">
+                        <label class="label_80" for="INCLUDE_PROCESSING">가공 완료 포함</label>
+                    </span>
+                </div>
             </form>
-            <div style="display:flow-root; margin: 0 20px 10px 20px;">
+<%--            <div style="display:flow-root; margin: 0 20px 10px 20px;">--%>
 <%--                <input type="text" id="mctPlanManageFilterKeyword" placeholder="Enter your keyword">--%>
 <%--                <select id="mctPlanManageFilterColumn"></select>--%>
 <%--                <select id="mctPlanManageFilterCondition">--%>
@@ -141,8 +148,8 @@
 <%--                <label for="mctPlanManageFrozen" class="label_50" style="font-size: 15px;">Fix</label>--%>
 <%--                <select id="mctPlanManageFrozen" name="mctPlanManageFrozen">--%>
 <%--                </select>--%>
-                <button type="button" class="right_float defaultBtn btn-100w green" id="MCT_TARGET_SAVE">저장</button>
-            </div>
+<%--                <button type="button" class="right_float defaultBtn btn-100w green" id="MCT_TARGET_SAVE">저장</button>--%>
+<%--            </div>--%>
         </div>
         <div class="conWrap">
             <div class="tableWrap" style="background: #e1e1e1;">
@@ -547,7 +554,8 @@
             showTitle: false,
             rowHtHead: 15,
             numberCell: {title: 'No.'},
-            selectionModel: {type: 'row', mode: 'single'},
+            // selectionModel: {type: 'row', mode: 'single'},
+            hoverMode: 'cell',
             // scrollModel: {autoFit: true},
             editModel: {clicksToEdit: 1},
             trackModel: {on: true},
@@ -587,9 +595,17 @@
             // complete: function () {
             //     // this.flex();
             // },
-            rowSelect: function (event, ui) {
+            selectChange: function (event, ui) {
                 selectedGrid = $(this.element.context);
-                selectedRowIndex = ui.addList[0].rowIndx;
+
+                if (ui.selection.iCells.ranges[0] !== undefined) {
+                    selectedRowIndex = [];
+                    let firstRow = ui.selection.iCells.ranges[0].r1;
+                    let lastRow = ui.selection.iCells.ranges[0].r2;
+
+                    if (firstRow === lastRow) selectedRowIndex[0] = firstRow;
+                    else for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
+                }
             },
             cellSave: function (evt, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {

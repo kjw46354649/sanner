@@ -340,7 +340,8 @@
                 validations: [
                     {type: 'minLen', value: '1', msg: 'Required'},
                 ],
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'}
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editor: {type: 'textbox', init: dateEditor}
             },
             {
                 title: '규격', width: 100, dataType: 'string', dataIndx: 'SIZE_TXT',
@@ -457,8 +458,16 @@
                         ],
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
                     },
-                    {title: '납기', width: 70, datatype: 'string', dataIndx: 'ORDER_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}},
-                    {title: '납품확인', width: 70, datatype: 'string', dataIndx: 'DELIVERY_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}}
+                    {
+                        title: '납기', width: 70, datatype: 'string', dataIndx: 'ORDER_DUE_DT',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                        editor: {type: 'textbox', init: dateEditor}
+                    },
+                    {
+                        title: '납품확인', width: 70, datatype: 'date', dataIndx: 'DELIVERY_DT', format: "yymmdd",
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                        editor: {type: 'textbox', init: dateEditor}
+                    }
                 ]
             },
             {title: '최종<br>견적단가', width: 100, dataType: 'string', dataIndx: 'UNIT_FINAL_EST_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
@@ -478,7 +487,15 @@
                 {
                     type: 'button', label: 'Save & 확정', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function () {
+                            prevErrorList = errorList;
+                            errorList = [];
                             let data = $orderRegisterGrid.pqGrid('option', 'dataModel.data');
+
+                            validationCheck(data);
+                            console.log(errorList);
+                            changeCellColor(errorList, prevErrorList);
+
+                            return false;
                             let parameters = {
                                 'url': '/createNewOrderConfirm',
                                 'data': {data: JSON.stringify(data)}
@@ -848,6 +865,95 @@
                 return func.apply(null, args);
             }, wait);
         });
+
+        const validationCheck = function (dataList) {
+          for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
+              let rowData = dataList[i];
+
+              validation1(rowData);
+              validation2(rowData);
+              validation3(rowData);
+          }
+        };
+
+        // required 체크
+        const validation1 = function (rowData) {
+            let list = [];
+            const commonRequiredList = ['COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NUM', 'DRAWING_NUM', 'ITEM_NM', 'INNER_DUE_DT', 'SIZE_TXT'];
+            const singleList = ['MATERIAL_KIND', 'SURFACE_TREAT', 'ORDER_QTY']; // 단품
+            const assemblyList = ['ORDER_QTY']; // 조립
+            const modifiedList = ['MATERIAL_KIND', 'SURFACE_TREAT', 'ORDER_QTY']; // 수정
+            const stockList = ['MATERIAL_KIND', 'ORDER_QTY']; // 재고
+            const partList = ['MATERIAL_KIND', 'SURFACE_TREAT', 'PART_UNIT_QTY']; // 파트
+
+            switch (rowData.WORK_TYPE) {
+                case 'WTP010':
+                    // list = $.extend(true, commonRequiredList, singleList);
+                    list = commonRequiredList.concat(singleList);
+                    break;
+                case 'WTP020':
+                    list = commonRequiredList.concat(assemblyList);
+                    break;
+                case 'WTP030':
+                    list = commonRequiredList.concat(modifiedList);
+                    break;
+                case 'WTP040':
+                    list = commonRequiredList.concat(stockList);
+                    break;
+                case 'WTP050':
+                    list = commonRequiredList.concat(partList);
+                    break;
+            }
+
+            for (let i in list) {
+                if (rowData[list[i]] === undefined || rowData[list[i]] == null || rowData[list[i]] === '' || (rowData[list[i]] != null && typeof rowData[list[i]] == 'object' && !Object.keys(rowData[list[i]]).length)) {
+                    errorrrrrrrrr(rowData.pq_ri, list[i]);
+                }
+            }
+        };
+
+        // 잘못된 데이터(코드) 체크
+        const validation2 = function (rowData) {
+            // console.log(rowData);
+        };
+
+        // 잘못된 데이터(코드) 체크
+        const validation3 = function (rowData) {
+            // console.log(rowData);
+        };
+
+        // error
+        let errorList = [];
+        let prevErrorList = [];
+        const errorrrrrrrrr = function (rowIndex, dataIndex) {
+            let tempObject = {};
+            tempObject.rowIndx = rowIndex;
+            tempObject.dataIndx = dataIndex;
+            errorList.push(tempObject);
+        };
+
+        // cell 색 변경
+        const changeCellColor = function (list, prevList) {
+            for(let i in prevList) {
+                $orderRegisterGrid.pqGrid('removeClass', {rowIndx: prevList[i].rowIndx, dataIndx: prevList[i].dataIndx, cls: 'bg-lightgray'} );
+            }
+
+            if (list.length > 0) {
+                for(let i in list) {
+                    $orderRegisterGrid.pqGrid('addClass', {rowIndx: list[i].rowIndx, dataIndx: list[i].dataIndx, cls: 'bg-lightgray'} );
+                }
+            }
+        };
+
+        function dateEditor (ui) {
+            let $inp = ui.$cell.find("input"), $grid = $(this);
+            $inp.datepicker({
+                changeMonth: true, changeYear: true, showAnim: '', dateFormat: 'yymmdd',
+                onSelect: function () { this.firstOpen = true; },
+                beforeShow: function (input, inst) {return !this.firstOpen; },
+                onClose: function () { this.focus(); }
+            });
+        };
         /* function */
 
         /* event */

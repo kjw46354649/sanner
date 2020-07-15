@@ -149,25 +149,26 @@
 
     <select id="selectTransactionStatementListExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ROW_NUMBER () OVER () AS ROWNUM,
+            ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, C.ORDER_NUM) AS ROWNUM,
             A.CONTROL_NUM, <!-- 관리번호 -->
             B.DRAWING_NUM, <!-- 도면번호 -->
             B.SIZE_TXT, <!-- 규격 -->
             <!-- SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR') AS CONTROL_STATUS_NM, -->
             IFNULL(SF_GET_CODE_NM(1033, B.WORK_TYPE, 'KR'), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 이름 -->
-            SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY,  <!-- 수량 -->
+            SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY,  <!-- 수량 -->
             B.UNIT_FINAL_AMT, <!-- 공급단가 -->
             B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT, <!-- 금액 계 -->
             D.NOTE <!-- 비고 -->
         FROM TBL_CONTROL A
         INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-        INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-                                               AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+        LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
         INNER JOIN TBL_INVOICE_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ
                                            AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-        WHERE
-            D.INVOICE_NUM = #{INVOICE_NUM}
-            AND B.WORK_TYPE NOT IN ('WTP050')
+        WHERE 1 = 1
+            AND D.INVOICE_NUM = #{INVOICE_NUM}
+            AND B.WORK_TYPE != 'WTP050'
+        ORDER BY A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, C.ORDER_NUM
     </select>
 
     <select id="selectControlEstimateDetailListExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">

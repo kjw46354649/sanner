@@ -834,14 +834,14 @@
                             let rowData = ui.rowData;
                             let cls = null, text = null;
 
-                            if ((ui.rowData.WORK_TYPE === 'WTP010' || ui.rowData.WORK_TYPE === 'WTP020' || ui.rowData.WORK_TYPE === 'WTP030') && ui.rowData.CONTROL_STATUS !== 'ORD001') {
+                            if ((ui.rowData.WORK_TYPE === 'WTP010' || ui.rowData.WORK_TYPE === 'WTP020' || ui.rowData.WORK_TYPE === 'WTP030') && (ui.rowData.CONTROL_STATUS === undefined || ui.rowData.CONTROL_STATUS == null || ui.rowData.CONTROL_STATUS === 'ORD002')) {
                                 text = '<span class="ui-icon ui-icon-circle-plus" name="ORDER_NUM_PLUS_BUTTON" style="cursor: pointer"></span>';
                             }
                             if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
                                 cls = 'bg-lightgray';
                             }
 
-                            return {cls: cls, text: controlManageFilterRender(ui)};
+                            return {cls: cls, text: text};
                         },
                         postRender: function (ui) {
                             let grid = this;
@@ -1575,7 +1575,7 @@
             cellClick: function (event, ui) {
                 supplyUnitCostInit(); // 공급단가적용 초기화
 
-                if(ui.rowData.IMG_GFILE_SEQ && typeof(windowImageViewer) != 'undefined' && !windowImageViewer.closed) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                if(ui.rowData.IMG_GFILE_SEQ && (typeof(windowImageViewer) == 'undefined' || windowImageViewer.closed)) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             },
             selectChange: function (event, ui) {
                 supplyUnitCostInit(); // 공급단가적용 초기화
@@ -2468,60 +2468,61 @@
         // 라벨 출력
         $('#LABEL_PRINT').on('click', function () {
             if (noSelectedRowAlert()) return false;
-            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
+
+            let barcodeList = [];
             let selectedRowCount = selectedOrderManagementRowIndex.length;
-            bodyHtml =
-                '<h4>\n' +
-                '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                '    <span>선택하신 ' + selectedRowCount + '건을 처리합니다. \n진행하시겠습니까?</span>\n' +
-                '</h4>';
-            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-            let labelPrintConfirm = function (callback) {
-                commonConfirmPopup.show();
-                $("#commonConfirmYesBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                    callback(true);
-                    return;
-                });
-                $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                });
-            };
-            labelPrintConfirm(function (confirm) {
-                if (confirm) {
-                    let controlSeqStr = '';
-                    let controlDetailSeqStr = '';
 
-                    for (let i = 0; i < selectedRowCount; i++) {
-                        let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-
-                        controlSeqStr += rowData.CONTROL_SEQ;
-                        controlDetailSeqStr += rowData.CONTROL_DETAIL_SEQ;
-
-                        if (i < selectedRowCount - 1) {
-                            controlSeqStr += ',';
-                            controlDetailSeqStr += ',';
-                        }
+            for (let i = 0; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+                let postData = {
+                    'queryId': 'inspection.selectOutgoingLabelType2',
+                    'CONTROL_SEQ': rowData.CONTROL_SEQ,
+                    'CONTROL_DETAIL_SEQ': rowData.CONTROL_DETAIL_SEQ,
+                    'ORDER_SEQ': rowData.ORDER_SEQ
+                };
+                let parameter = {'url': '/json-list', 'data': postData};
+                fnPostAjaxAsync(function (data, callFunctionParam) {
+                    for (let i = 0, DATALIST_LENGTH = data.list.length; i < DATALIST_LENGTH; i++) {
+                        barcodeList.push(data.list[i].BARCODE_NUM);
                     }
+                }, parameter, '');
+            }
 
-                    let parameter = {'url': '/json-list', 'data': {queryId: 'orderMapper.selectLabelBarcodeNum', CONTROL_SEQ: controlSeqStr, CONTROL_DETAIL_SEQ: controlDetailSeqStr}}
+            let bCodePrintLen = barcodeList.length;
 
-                    fnPostAjaxAsync(function (data1, callFunctionParam) {
-                        let barcodeList = [];
-
-                        for(let i in data1.list) {
-                            barcodeList[i] = (data1.list[i].BARCODE_NUM);
-                        }
-
-                        fnBarcodePrint(function(data2, callFunctionParam){
-                            alert(data2.message);
+            if (bCodePrintLen) {
+                let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
+                bodyHtml =
+                    '<h4>\n' +
+                    '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                    '    <span>선택하신 ' + bCodePrintLen + '건을 처리합니다. \n진행하시겠습니까?</span>\n' +
+                    '</h4>';
+                fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+                let labelPrintConfirm = function (callback) {
+                    commonConfirmPopup.show();
+                    $("#commonConfirmYesBtn").unbind().click(function (e) {
+                        e.stopPropagation();
+                        commonConfirmPopup.hide();
+                        callback(true);
+                        return;
+                    });
+                    $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                        e.stopPropagation();
+                        commonConfirmPopup.hide();
+                    });
+                };
+                labelPrintConfirm(function (confirm) {
+                    if (confirm) {
+                        fnBarcodePrint(function (data, callFunctionParam) {
+                            alert(data.message);
                         }, barcodeList, '');
-                    }, parameter, '');
-                }
-            });
+                    }
+                });
+            } else {
+                alert("출력할 바코드가 존재 하지 않습니다.");
+            }
         });
+
         /** 도면 등록 팝업 호출 **/
         $('#DRAWING_REGISTRATION').on('click', function () {
             callCadDrawingUploadPopup('control', 'orderMapper.manageControlCadFiles');
@@ -2532,7 +2533,9 @@
         });
         /** 도면 보기 팝업 호출 */
         $('#CONTROL_MANAGE_DRAWING_VIEW').on('click', function () {
-            callWindowImageViewer(999);
+            let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[0]});
+
+            callWindowImageViewer(rowData.IMG_GFILE_SEQ);
         });
         // 도면출력
         $('#DRAWING_PRINT').on('click', function () {

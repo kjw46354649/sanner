@@ -95,15 +95,6 @@ public class OrderServiceImpl implements OrderService {
             this.innodaleDao.update(hashMap);
             hashMap.put("queryId", "orderMapper.createControlProgress");
             this.innodaleDao.create(hashMap);
-            // 주문상태가 확정이고 외주이면 상태 변경
-            if (hashMap.get("CONTROL_STATUS").equals("ORD001")) {
-                String rules = "AND OUTSIDE_YN = 'Y'";
-                hashMap.put("PART_STATUS", "PRO001");
-                hashMap.put("_search", "true");
-                hashMap.put("rules", rules);
-                hashMap.put("queryId", "orderMapper.updateControlPartStatusAll");
-                this.innodaleDao.update(hashMap);
-            }
         }
     }
 

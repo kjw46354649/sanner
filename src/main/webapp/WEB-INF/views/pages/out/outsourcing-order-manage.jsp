@@ -461,14 +461,20 @@
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
-
+                    // console.log(rowData.OUTSIDE_STATUS);
+                    // console.log(rowData.MATERIAL_SUPPLY_YN);
+                    // console.log(rowData.OUTSIDE_STATUS !== 'OST001');
+                    // console.log(rowData.MATERIAL_SUPPLY_YN !== 'Y');
+                    // console.log(rowData.OUTSIDE_STATUS !== 'OST001' || rowData.MATERIAL_SUPPLY_YN !== 'Y');
+                    // return rowData.OUTSIDE_STATUS !== 'OST001' || rowData.MATERIAL_SUPPLY_YN !== 'Y';
                     return rowData.OUTSIDE_STATUS !== 'OST001';
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 render: function (ui) {
                     let cellData = ui.cellData;
+                    let rowData = ui.rowData;
 
-                    return cellData === 'Y' ? cellData : '';
+                    return cellData === 'Y' ? cellData : rowData.MATERIAL_SUPPLY_YN === 'Y' ? 'Y' : '';
                 }
             },
             {
@@ -913,12 +919,13 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                    return rowData.OUTSIDE_STATUS !== 'OST001' || rowData.MATERIAL_SUPPLY_YN !== 'Y';
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
+                    let rowData = ui.rowData;
 
-                    return cellData === 'Y' ? cellData : '';
+                    return cellData === 'Y' ? cellData : rowData.MATERIAL_SUPPLY_YN === 'Y' ? 'Y' : '';
                 }
             },
             {
@@ -1177,12 +1184,18 @@
                 }
             },
             {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
-            {title: '소재<br>제공', dataType: 'bool', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+            {title: '소재<br>제공', dataType: 'bool', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.OUTSIDE_STATUS !== 'OST001' || rowData.MATERIAL_SUPPLY_YN !== 'Y';
+                },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 render: function (ui) {
                     let cellData = ui.cellData;
+                    let rowData = ui.rowData;
 
-                    return cellData === 'Y' ? cellData : '';
+                    return cellData === 'Y' ? cellData : rowData.MATERIAL_SUPPLY_YN === 'Y' ? 'Y' : '';
                 }
             },
             {
@@ -2045,6 +2058,11 @@
         });
 
         $('#REQUEST_OUTSIDE_SAVE_SUBMIT').on('click', function (){
+            let outsideCompCd = $('#REQUEST_OUTSIDE_MAIL_FORM').find('#OUTSIDE_COMP_CD').val();
+            if (!outsideCompCd) {
+                alert('요청 외주 업체가 없습니다.');
+                return false;
+            }
             let step1List = $outsideProcessRequestGrid.pqGrid('option', 'dataModel.data');
             // 메일 내용
             let a = CKEDITOR.instances.REQUEST_OUTSIDE_EMAIL_CONTENT_TXT.getData();
@@ -2053,7 +2071,6 @@
             let c = a + b;
             $('#REQUEST_OUTSIDE_MAIL_FORM #REQUEST_OUTSIDE_EMAIL_CONTENT_TXT').val(c);
 
-            let outsideCompCd = $('#REQUEST_OUTSIDE_MAIL_FORM').find('#OUTSIDE_COMP_CD').val();
 
             for (let i = 0, STEP1LIST_LENGTH = step1List.length; i < STEP1LIST_LENGTH; i++) {
                 step1List[i].OUTSIDE_COMP_CD = outsideCompCd;

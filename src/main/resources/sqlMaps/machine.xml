@@ -538,7 +538,15 @@
                 </if>
         WHERE 1 = 1
             AND A.WORK_TYPE != 'WTP020' <!-- 조립이 아닌경우 -->
-            AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO019')
+            <choose>
+                <when  test="INCLUDE_PROCESSING !='' and INCLUDE_PROCESSING != null">
+                    AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO019', 'PRO012', 'PRO013', 'PRO014', 'PRO015', 'PRO018', 'PRO019')
+                </when>
+                <otherwise>
+                    AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO019')
+                </otherwise>
+            </choose>
+            AND B.CONTROL_STATUS = 'ORD001' <!-- 확정 -->
             <if test="WORK_FACTORY != null and WORK_FACTORY!= ''">
                 AND A.WORK_FACTORY = #{WORK_FACTORY}
             </if>
@@ -552,23 +560,24 @@
                 AND A.MCT_WORK_TYPE = #{MCT_WORK_TYPE}
             </if>
             <if test="PLAN_ONLY != null and PLAN_ONLY != ''">
-                <!-- 계획단계 대상만 조회 -->
-                AND (A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) IN (  SELECT Q.CONTROL_SEQ, Q.CONTROL_DETAIL_SEQ
-                                                                FROM TBL_CONTROL_PART Q
-                                                                    INNER JOIN TBL_MCT_PLAN R ON Q.CONTROL_SEQ = R.CONTROL_SEQ AND Q.CONTROL_DETAIL_SEQ = R.CONTROL_DETAIL_SEQ AND R.DEL_YN = 'N'
-                                                                        AND (R.CONTROL_SEQ, R.CONTROL_DETAIL_SEQ) IN (  SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
-                                                                                                                        FROM TBL_CONTROL_PART X
-                                                                                                                        INNER JOIN TBL_MCT_WORK Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = Y.CONTROL_DETAIL_SEQ
-                                                                                                                            AND Y.WORK_STATUS IS NOT NULL AND Y.DEL_YN = 'N'))
+                AND (A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) NOT IN (  SELECT Q.CONTROL_SEQ, Q.CONTROL_DETAIL_SEQ
+                                                                    FROM TBL_CONTROL_PART Q
+                                                                        INNER JOIN TBL_MCT_PLAN R ON Q.CONTROL_SEQ = R.CONTROL_SEQ
+                                                                                                     AND Q.CONTROL_DETAIL_SEQ = R.CONTROL_DETAIL_SEQ
+                                                                                                     AND R.DEL_YN = 'N'
+                                                                    GROUP BY Q.CONTROL_SEQ, Q.CONTROL_DETAIL_SEQ)
+                AND (A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) NOT IN (  SELECT Q.CONTROL_SEQ, Q.CONTROL_DETAIL_SEQ
+                                                                    FROM TBL_CONTROL_PART Q
+                                                                        INNER JOIN TBL_MCT_WORK R ON Q.CONTROL_SEQ = R.CONTROL_SEQ
+                                                                                                     AND Q.CONTROL_DETAIL_SEQ = R.CONTROL_DETAIL_SEQ
+                                                                                                     AND R.WORK_STATUS IS NOT NULL
+                                                                                                     AND R.DEL_YN = 'N'
+                                                                    GROUP BY Q.CONTROL_SEQ, Q.CONTROL_DETAIL_SEQ)
+                AND C.POP_POSITION IN ('POP010', 'POP020', 'POP030', 'POP070', 'POP080', 'POP090', 'PRQ040', 'PRQ050')
             </if>
-            <choose>
-                <when  test="INCLUDE_OUTSIDE !='' and INCLUDE_OUTSIDE != null">
-                    OR (A.OUTSIDE_STATUS = 'OST003' AND A.OUTSIDE_IN_DT IS NOT NULL) <!-- 외주 대상 포함 -->
-                </when>
-                <otherwise>
-                    AND A.OUTSIDE_YN = 'N' <!-- 외주 요청이 아닌경우 -->
-                </otherwise>
-            </choose>
+            <if test="INCLUDE_OUTSIDE != null and INCLUDE_OUTSIDE != ''">
+                AND A.OUTSIDE_YN = 'N' <!-- 외주 요청이 아닌경우 -->
+            </if>
         GROUP BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
         ORDER BY B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), A.INNER_DUE_DT
     </select>
@@ -703,9 +712,10 @@
             LEFT OUTER JOIN TBL_MCT_PLAN K ON A.CONTROL_SEQ = K.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = K.CONTROL_DETAIL_SEQ AND K.DEL_YN = 'N'
             LEFT OUTER JOIN jmes.TBL_EQUIP L ON K.EQUIP_SEQ = L.EQUIP_SEQ
         WHERE 1 = 1
-            AND IFNULL(A.OUTSIDE_YN, 'N') = 'N'
+            AND A.OUTSIDE_YN = 'N'
             AND A.WORK_TYPE NOT IN ('WTP020')
             AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009')
+            AND G.START_DT IS NOT NULL AND G.FINISH_DT IS NOT NULL <!-- 완료된 대상만 조회 -->
             <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
                 AND B.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
             </if>

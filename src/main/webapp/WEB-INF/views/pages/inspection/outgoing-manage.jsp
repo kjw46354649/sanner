@@ -44,7 +44,7 @@
                             </select>
                         </span>
                         <span class="slt_wrap mg-right10">
-                            <label class="label_25" for="SEL_OUTGOING_DATE_TYPE">To</label>
+                            <label class="label_25" for="SEL_OUTGOING_DATE_TYPE">From</label>
                             <select class="wd_100" name="" id="">
 <%--                               <option value=""><spring:message code="com.form.top.all.option" /></option>--%>
                                 <c:forEach var="vlocale" items="${HighCode.H_1066}">
@@ -53,7 +53,7 @@
                             </select>
                         </span>
                         <span class="slt_wrap mg-right10">
-                            <label class="label_25" for="SEL_OUTGOING_DATE_TYPE">From</label>
+                            <label class="label_25" for="SEL_OUTGOING_DATE_TYPE">To</label>
                             <select class="wd_100" name="" id="">
 <%--                               <option value=""><spring:message code="com.form.top.all.option" /></option>--%>
                                 <c:forEach var="vlocale" items="${HighCode.H_1066}">

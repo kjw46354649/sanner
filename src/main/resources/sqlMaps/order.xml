@@ -1397,9 +1397,6 @@
             STATUS_DT = NOW(),
             UPDATE_DT = NOW()
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
-        <if test="_search == 'true'">
-            ${rules}
-        </if>
     </update>
 
     <update id="updateControlPartAssembly" parameterType="java.util.HashMap">
@@ -1880,6 +1877,7 @@
                 ROW_NUMBER () OVER () AS ROW_NUM,
                 A.CONTROL_SEQ,
                 B.CONTROL_DETAIL_SEQ,
+                C.ORDER_SEQ,
                 SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR') AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
                 A.CONTROL_NUM, <!-- 관리번호 -->
                 C.ORDER_NUM, <!-- 발주번호 -->
@@ -1892,26 +1890,23 @@
                 B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT, <!-- 금액 계 -->
                 C.PACKING_CNT, <!-- 포장수량 -->
                 '' AS NOTE, <!-- 비고 -->
-                D.BARCODE_NUM AS LABEL_BARCODE_NUM,
                 B.IMG_GFILE_SEQ
             FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-                                                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                INNER JOIN TBL_OUT_BARCODE D ON B.CONTROL_SEQ = D.CONTROL_SEQ
-                                                AND B.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                                                AND C.ORDER_SEQ = D.ORDER_SEQ
+                LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                                            AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
             WHERE 1 = 1
                 AND A.CONTROL_SEQ IN (${CONTROL_SEQ_STR})
                 AND A.COMP_CD = #{COMP_CD}
                 AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-                AND B.WORK_TYPE NOT IN ('WTP050') <!-- Part 부속은 제외(작업형태 파트가공) -->
+                AND B.WORK_TYPE != 'WTP050' <!-- Part 부속은 제외(작업형태 파트) -->
                 AND NOT EXISTS (SELECT * FROM TBL_INVOICE WHERE INVOICE_NUM = #{INVOICE_NUM})
             UNION ALL
             SELECT
                 ROW_NUMBER () OVER () AS ROW_NUM,
                 A.CONTROL_SEQ,
                 B.CONTROL_DETAIL_SEQ,
+                C.ORDER_SEQ,
                 SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR') AS CONTROL_STATUS_NM,
                 A.CONTROL_NUM, <!-- 관리번호 -->
                 C.ORDER_NUM,
@@ -1924,19 +1919,14 @@
                 B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT, <!-- 금액 계 -->
                 C.PACKING_CNT,
                 D.NOTE,
-                F.BARCODE_NUM,
                 B.IMG_GFILE_SEQ
             FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-                                                       AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                                            AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                 INNER JOIN TBL_INVOICE_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ
                                                    AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-                INNER JOIN TBL_INVOICE E ON D.INVOICE_NUM = E.INVOICE_NUM
-                INNER JOIN TBL_OUT_BARCODE F ON B.CONTROL_SEQ = F.CONTROL_SEQ
-                                                AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
-                                                AND C.ORDER_SEQ = F.ORDER_SEQ
-            WHERE E.INVOICE_NUM = #{INVOICE_NUM}
+            WHERE D.INVOICE_NUM = #{INVOICE_NUM}
         ) X
         ORDER BY X.CONTROL_SEQ, X.ORDER_NUM
     </select>
@@ -2558,15 +2548,6 @@
             AND D.CLOSE_MONTH = #{CLOSE_MONTH}
             AND D.ORDER_COMP_CD = #{ORDER_COMP_CD}
             AND D.CLOSE_VER = #{CLOSE_VER}
-    </select>
-
-    <select id="selectLabelBarcodeNum" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT BARCODE_NUM
-        FROM TBL_OUT_BARCODE
-        WHERE 1 = 1
-            AND CONTROL_SEQ IN (${CONTROL_SEQ})
-            AND CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})
-            AND DEL_YN = 'N'
     </select>
 
     <insert id="createOutBarcode" parameterType="java.util.HashMap">

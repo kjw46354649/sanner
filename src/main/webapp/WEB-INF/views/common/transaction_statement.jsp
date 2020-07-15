@@ -45,6 +45,12 @@
                 <!-- 버튼 -->
 
                 <table class="tableL">
+                    <colgroup>
+                        <col width="15%;">
+                        <col width="15%;">
+                        <col width="15%;">
+                        <col width="55%;">
+                    </colgroup>
                     <tbody>
                     <tr>
                         <td class="headerDisable">발주사</td>
@@ -104,8 +110,9 @@
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+            {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true},
             {title: '주문상태', dataType: 'string', dataIndx: 'CONTROL_STATUS_NM'},
-            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false, hidden: true,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
                     return '';
@@ -246,16 +253,17 @@
         }, parameters, '');
 
         /* 구매 담당자 */
-        postData.queryId = 'dataSource.getCompanyStaffList';
-        parameters = {'url': '/json-list', 'data': postData};
-
+        let postDataA = fnCloneObj(postData);
+        postDataA.queryId = 'dataSource.getCompanyStaffList';
+        postDataA.COMP_CD = postDataA.ORDER_COMP_CD;
+        parameters = {'url': '/json-list', 'data': postDataA};
         fnPostAjax(function (data) {
             $('#TRANSACTION_STATEMENT_FORM #ORDER_STAFF_SEQ').empty();
 
             for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
                 let obj = data.list[i];
 
-                $('#TRANSACTION_STATEMENT_FORM #ORDER_STAFF_SEQ').append(new Option(obj.ORDER_STAFF_NM, obj.ORDER_STAFF_SEQ));
+                $('#TRANSACTION_STATEMENT_FORM #ORDER_STAFF_SEQ').append(new Option(obj.CODE_NM, obj.CODE_CD));
             }
         }, parameters, '');
 
@@ -263,18 +271,60 @@
         /* event */
         // 라벨 출력
         $('#TRANSACTION_STATEMENT_LABEL_PRINT').on('click', function () {
-            // if (noSelectedRowAlert()) return false;
-            let formData = [];
+            let barcodeList = [];
             let data = $transactionStatementGrid.pqGrid('option', 'dataModel.data');
 
             for (let i = 0, DATA_LENGTH = data.length; i < DATA_LENGTH; i++) {
-                formData.push(data[i].LABEL_BARCODE_NUM);
+                let rowData = data[i];
+                let postData = {
+                    'queryId': 'inspection.selectOutgoingLabelType2',
+                    'CONTROL_SEQ': rowData.CONTROL_SEQ,
+                    'CONTROL_DETAIL_SEQ': rowData.CONTROL_DETAIL_SEQ,
+                    'ORDER_SEQ': rowData.ORDER_SEQ
+                };
+                let parameter = {'url': '/json-list', 'data': postData};
+                fnPostAjaxAsync(function (data, callFunctionParam) {
+                    for (let i = 0, DATALIST_LENGTH = data.list.length; i < DATALIST_LENGTH; i++) {
+                        barcodeList.push(data.list[i].BARCODE_NUM);
+                    }
+                }, parameter, '');
             }
 
-            fnBarcodePrint(function (data, callFunctionParam) {
-                alert(data.message);
-            }, formData, '');
+            let bCodePrintLen = barcodeList.length;
+
+            if (bCodePrintLen) {
+                let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
+                bodyHtml =
+                    '<h4>\n' +
+                    '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                    '    <span>선택하신 ' + bCodePrintLen + '건을 처리합니다. \n진행하시겠습니까?</span>\n' +
+                    '</h4>';
+                fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+                let labelPrintConfirm = function (callback) {
+                    commonConfirmPopup.show();
+                    $("#commonConfirmYesBtn").unbind().click(function (e) {
+                        e.stopPropagation();
+                        commonConfirmPopup.hide();
+                        callback(true);
+                        return;
+                    });
+                    $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                        e.stopPropagation();
+                        commonConfirmPopup.hide();
+                    });
+                };
+                labelPrintConfirm(function (confirm) {
+                    if (confirm) {
+                        fnBarcodePrint(function (data, callFunctionParam) {
+                            alert(data.message);
+                        }, barcodeList, '');
+                    }
+                });
+            } else {
+                alert("출력할 바코드가 존재 하지 않습니다.");
+            }
         });
+
         // 삭제
         $('#TRANSACTION_STATEMENT_DELETE').on('click', function () {
             let parameters;
