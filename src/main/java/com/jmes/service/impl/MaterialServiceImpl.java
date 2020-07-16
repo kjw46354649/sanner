@@ -198,7 +198,7 @@ public class MaterialServiceImpl implements MaterialService {
             }
         }
 
-        if(checkYn) {
+        /*if(checkYn) {
             for (HashMap<String, Object> dataList : updateList) {
                 dataList.put("queryId", selectQueryId.get(0));
                 Map<String, Object> resultMap = this.innodaleDao.getInfo(dataList);
@@ -208,7 +208,7 @@ public class MaterialServiceImpl implements MaterialService {
                     break;
                 }
             }
-        }
+        }*/
 
         if(checkYn) {
             if (addList != null && addList.size() > 0) {

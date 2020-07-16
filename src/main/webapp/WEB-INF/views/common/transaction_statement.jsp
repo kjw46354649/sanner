@@ -206,18 +206,9 @@
             // invoiceNumList.push(rowData.INVOICE_NUM);
         }
         // 중복제거
-        controlSeqList = controlSeqList.filter(function (element, index, array) {
-            return array.indexOf(element) === index;
-        });
-        compCdList = compCdList.filter(function (element, index, array) {
-            return array.indexOf(element) === index;
-        });
-        orderCompCdList = orderCompCdList.filter(function (element, index, array) {
-            return array.indexOf(element) === index;
-        });
-        // invoiceNumList = invoiceNumList.filter(function (element, index, array) {
-        //     return array.indexOf(element) === index;
-        // });
+        controlSeqList = [...new Set(controlSeqList)];
+        compCdList = [...new Set(compCdList)];
+        orderCompCdList = [...new Set(orderCompCdList)];
 
         for (let i = 0; i < controlSeqList.length; i++) {
             controlSeqStr += controlSeqList[i];
@@ -339,9 +330,7 @@
                 invoiceNumList.push(rowData.INVOICE_NUM);
             }
             // 중복제거
-            invoiceNumList = invoiceNumList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
+            invoiceNumList = [...new Set(invoiceNumList)];
 
             if (invoiceNumList[0] === undefined) {
                 bodyHtml =
@@ -445,15 +434,9 @@
             }
 
             // 중복제거
-            controlSeqList = controlSeqList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            compCdList = compCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
+            controlSeqList = [...new Set(controlSeqList)];
+            compCdList = [...new Set(compCdList)];
+            orderCompCdList = [...new Set(orderCompCdList)];
 
             for (let i = 0; i < controlSeqList.length; i++) {
                 controlSeqStr += controlSeqList[i];

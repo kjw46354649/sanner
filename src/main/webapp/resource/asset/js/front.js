@@ -121,6 +121,12 @@ function tabMenuFn() {
 		$('.contentsWrap').find('#view_' + tabId).show();
 		// barcodeDisableAll();
 		// currentTabBarcodeEnable(tabId);
+		setTimeout(function(){
+			var grids = $(".pq-grid");
+			grids.each(function(index, pgGrid){
+				$("#" + pgGrid.id).pqGrid('option', 'width', 'auto').pqGrid('refresh');
+			});
+		}, 300);
 	});
 }
 

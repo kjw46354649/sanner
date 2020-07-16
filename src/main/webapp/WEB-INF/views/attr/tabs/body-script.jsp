@@ -1057,4 +1057,24 @@
         });
     };
 
+    /**
+     * @description 바코드 첫글자 영문 변환
+     * @param {string} text
+     * @returns {string} text
+     */
+    const fnBarcodeKo2En = function (text) {
+        let char = text.substring(0, 1);
+
+        switch (char) {
+            case 'ㅊ':
+                char = 'C';
+                break;
+            case 'ㅣ':
+                char = 'L';
+                break;
+        }
+
+        return (char + text.substring(1)).toUpperCase();
+    };
+
 </script>

@@ -36,7 +36,7 @@ public class OutServiceImpl implements OutService {
 //            hashMap.put("CONTROL_STATUS", "ORD001");
             hashMap.put("PART_STATUS", null);
             hashMap.put("OUTSIDE_YN", "N");
-            hashMap.put("OUTSIDE_STATUS_DT", null);
+            hashMap.put("OUTSIDE_STATUS", null);
 //            this.orderDao.updateControlMaster(hashMap);
             this.orderDao.updateControlPart(hashMap);
             hashMap.put("queryId", "outMapper.updateOutsideRequestDetailDelete");

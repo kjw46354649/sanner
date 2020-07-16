@@ -30,6 +30,13 @@
 <script>
     $(function () {
         'use strict';
+        const priceConfirmList = fnGetCommCodeGridSelectBox('1017');
+        const mainInspectionList = fnGetCommCodeGridSelectBox('1059');
+        const workTypeList = fnGetCommCodeGridSelectBox('1033');
+        const workFactoryList = fnGetCommCodeGridSelectBox('1014');
+        const materialDetailList = fnGetCommCodeGridSelectBox('1027');
+        const materialKindList = fnGetCommCodeGridSelectBox('1029');
+        const surfaceTreatList = fnGetCommCodeGridSelectBox('1039');
         const BUSINESS_COMPANY = fnCommCodeDatasourceGridSelectBoxCreate({
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getBusinessCompanyList'}
@@ -83,9 +90,6 @@
             {
                 title: '사업자<br>구분', width: 100, dataType: 'string', dataIndx: 'COMP_CD',  styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: BUSINESS_COMPANY},
-                validations: [
-                    { type: 'minLen', value: '1', msg: 'Required' },
-                ],
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -109,9 +113,6 @@
             {
                 title: '발주업체', width: 100, dataType: 'string', dataIndx: 'ORDER_COMP_CD', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: ORDER_COMPANY},
-                validations: [
-                    { type: 'minLen', value: '1', msg: 'Required' },
-                ],
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -211,24 +212,15 @@
             },
             {
                 title: '관리번호', width: 200, dataType: 'string', dataIndx: 'CONTROL_NUM',
-                validations: [
-                    {type: 'minLen', value: '1', msg: 'Required'},
-                ],
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
             },
             {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {
                 title: '도면번호', width: 200, dataType: 'string', dataIndx: 'DRAWING_NUM',
-                validations: [
-                    {type: 'minLen', value: '1', msg: 'Required'},
-                ],
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
             },
             {
                 title: '품명', width: 200, dataType: 'string', dataIndx: 'ITEM_NM',
-                validations: [
-                    {type: 'minLen', value: '1', msg: 'Required'},
-                ],
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
             },
             {
@@ -239,9 +231,6 @@
                     labelIndx: 'text',
                     options: fnGetCommCodeGridSelectBox('1033')
                 },
-                validations: [
-                    {type: 'minLen', value: '1', msg: 'Required'},
-                ],
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -337,17 +326,11 @@
             },
             {
                 title: '가공납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT',
-                validations: [
-                    {type: 'minLen', value: '1', msg: 'Required'},
-                ],
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editor: {type: 'textbox', init: dateEditor}
             },
             {
                 title: '규격', width: 100, dataType: 'string', dataIndx: 'SIZE_TXT',
-                validations: [
-                    {type: 'minLen', value: '1', msg: 'Required'},
-                ],
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
             },
             {
@@ -382,9 +365,6 @@
             {
                 title: '소재<br>형태', width: 100, dataType: 'string', dataIndx: 'MATERIAL_KIND', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029')},
-                validations: [
-                    {type: 'minLen', value: '1', msg: 'Required'},
-                ],
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -410,9 +390,6 @@
             {
                 title: '표면<br>처리', width: 100, dataType: 'string', dataIndx: 'SURFACE_TREAT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1039')},
-                validations: [
-                    {type: 'minLen', value: '1', msg: 'Required'},
-                ],
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -437,9 +414,6 @@
             {title: '소재비고', width: 200, dataType: 'string', dataIndx: 'MATERIAL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {
                 title: '파트<br>단위<br>수량', dataType: 'string', dataIndx: 'PART_UNIT_QTY',
-                validations: [
-                    {type: 'minLen', value: '1', msg: 'Required'},
-                ],
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
             },
             {
@@ -453,9 +427,6 @@
                     {title: '발주번호', width: 200, datatype: 'string', dataIndx: 'ORDER_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
                     {
                         title: '수량', datatype: 'string', dataIndx: 'ORDER_QTY',
-                        validations: [
-                            {type: 'minLen', value: '1', msg: 'Required'},
-                        ],
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
                     },
                     {
@@ -492,10 +463,12 @@
                             let data = $orderRegisterGrid.pqGrid('option', 'dataModel.data');
 
                             validationCheck(data);
-                            console.log(errorList);
                             changeCellColor(errorList, prevErrorList);
+                            if (errorList.length) {
+                                alert(errorList.length + '건의 데이터가 올바르지 않습니다.');
+                                return false;
+                            }
 
-                            return false;
                             let parameters = {
                                 'url': '/createNewOrderConfirm',
                                 'data': {data: JSON.stringify(data)}
@@ -512,11 +485,16 @@
                 {
                     type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function () {
+                            prevErrorList = errorList;
+                            errorList = [];
                             let data = $orderRegisterGrid.pqGrid('option', 'dataModel.data');
-                            let parameters = {
-                                'url': '/createNewOrder',
-                                'data': {data: JSON.stringify(data)}
-                            };
+
+                            validationCheck(data);
+                            changeCellColor(errorList, prevErrorList);
+                            if (errorList.length) {
+                                alert(errorList.length + '건의 데이터가 올바르지 않습니다.');
+                                return false;
+                            }
 
                             fnPostAjax(function () {
                                 alert("<spring:message code='com.alert.default.save.success' />");
@@ -533,7 +511,7 @@
             collapsible: false,
             resizable: false,
             showTitle: false,
-            trackModel: {on: true},
+            // trackModel: {on: true},
             numberCell: {title: 'No.'},
             dragColumns: {enabled: false},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
@@ -555,17 +533,9 @@
                 }
             },
             change: function (evt, ui) {
-                console.count();
                 if (ui.source === 'paste') {
-                    const priceConfirmList = fnGetCommCodeGridSelectBox('1017');
-                    const mainInspectionList = fnGetCommCodeGridSelectBox('1059');
-                    const workTypeList = fnGetCommCodeGridSelectBox('1033');
-                    const workFactoryList = fnGetCommCodeGridSelectBox('1014');
-                    const materialDetailList = fnGetCommCodeGridSelectBox('1027');
-                    const materialKindList = fnGetCommCodeGridSelectBox('1029');
-                    const surfaceTreatList = fnGetCommCodeGridSelectBox('1039');
                     let rowListConvert = [];
-                    console.log(ui);
+
                     for (let i = 0, addListLength = ui.addList.length; i < addListLength; i++) {
                         const newRowData = ui.addList[i].newRow;
                         const rowIndx = ui.addList[i].rowIndx;
@@ -603,7 +573,6 @@
 
                             if (index >= 0) orderCompCd = ORDER_COMPANY[index].value;
                         }
-
                         // 구매 담당자
                         if (newRowData.ORDER_STAFF_SEQ !== undefined) {
                             let index = COMPANY_STAFF.findIndex(function (element) {
@@ -612,7 +581,6 @@
 
                             if (index >= 0) orderStaffSeq = COMPANY_STAFF[index].value;
                         }
-
                         // 주요검사품
                         if (newRowData.MAIN_INSPECTION !== undefined) {
                             let index = mainInspectionList.findIndex(function (element) {
@@ -675,7 +643,6 @@
                     }
 
                     for (let i = 0, updateLength = ui.updateList.length; i < updateLength; i++) {
-                        console.log(ui);
                         const newRowData = ui.updateList[i].newRow;
                         const rowIndx = ui.updateList[i].rowIndx;
                         let priceConfirm = null;
@@ -712,7 +679,6 @@
 
                             if (index >= 0) orderCompCd = ORDER_COMPANY[index].value;
                         }
-
                         // 구매 담당자
                         if (newRowData.ORDER_STAFF_SEQ !== undefined) {
                             let index = COMPANY_STAFF.findIndex(function (element) {
@@ -721,7 +687,6 @@
 
                             if (index >= 0) orderStaffSeq = COMPANY_STAFF[index].value;
                         }
-
                         // 주요검사품
                         if (newRowData.MAIN_INSPECTION !== undefined) {
                             let index = mainInspectionList.findIndex(function (element) {
@@ -870,14 +835,16 @@
           for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
               let rowData = dataList[i];
 
-              validation1(rowData);
-              validation2(rowData);
-              validation3(rowData);
+              if(Object.keys(rowData).length > 2) {
+                  requiredCheck(rowData);
+                  badCodeCheck(rowData);
+                   inputErrorCheck(rowData);
+              }
           }
         };
 
         // required 체크
-        const validation1 = function (rowData) {
+        const requiredCheck = function (rowData) {
             let list = [];
             const commonRequiredList = ['COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NUM', 'DRAWING_NUM', 'ITEM_NM', 'INNER_DUE_DT', 'SIZE_TXT'];
             const singleList = ['MATERIAL_KIND', 'SURFACE_TREAT', 'ORDER_QTY']; // 단품
@@ -903,29 +870,141 @@
                 case 'WTP050':
                     list = commonRequiredList.concat(partList);
                     break;
+                default:
+                    list = commonRequiredList.concat(['WORK_TYPE']);
             }
 
             for (let i in list) {
                 if (rowData[list[i]] === undefined || rowData[list[i]] == null || rowData[list[i]] === '' || (rowData[list[i]] != null && typeof rowData[list[i]] == 'object' && !Object.keys(rowData[list[i]]).length)) {
-                    errorrrrrrrrr(rowData.pq_ri, list[i]);
+                    addErrorList(rowData.pq_ri, list[i]);
                 }
             }
         };
 
         // 잘못된 데이터(코드) 체크
-        const validation2 = function (rowData) {
-            // console.log(rowData);
+        const badCodeCheck = function (rowData) {
+            console.count();
+            let rowIndex = rowData.pq_ri;
+
+            // 단가확인
+            if (!(rowData.PRICE_CONFIRM !== undefined || rowData.PRICE_CONFIRM !== null || rowData.PRICE_CONFIRM !== '')) {
+                let index = priceConfirmList.findIndex(function (element) {
+                    return element.value === rowData.PRICE_CONFIRM;
+                });
+                if (index < 0) addErrorList(rowIndex, 'PRICE_CONFIRM');
+            }
+            // 사업자
+            if (!(rowData.COMP_CD !== undefined || rowData.COMP_CD !== null || rowData.COMP_CD !== '')) {
+                let index = BUSINESS_COMPANY.findIndex(function (element) {
+                    return element.value === rowData.COMP_CD;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'COMP_CD');
+            }
+            // 발주업체
+            if (!(rowData.ORDER_COMP_CD !== undefined || rowData.ORDER_COMP_CD !== null || rowData.ORDER_COMP_CD !== '')) {
+                let index = ORDER_COMPANY.findIndex(function (element) {
+                    return element.value === rowData.ORDER_COMP_CD;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'ORDER_COMP_CD');
+            }
+            // 구매 담당자
+            if (!(rowData.ORDER_STAFF_SEQ !== undefined || rowData.ORDER_STAFF_SEQ !== null || rowData.ORDER_STAFF_SEQ !== '')) {
+                let index = COMPANY_STAFF.findIndex(function (element) {
+                    return element.value === rowData.ORDER_STAFF_SEQ;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'ORDER_STAFF_SEQ');
+            }
+            // 주요검사품
+            if (!(rowData.MAIN_INSPECTION !== undefined || rowData.MAIN_INSPECTION !== null || rowData.MAIN_INSPECTION !== '')) {
+                let index = mainInspectionList.findIndex(function (element) {
+                    return element.value === rowData.MAIN_INSPECTION;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'MAIN_INSPECTION');
+            }
+            // 작업형태
+            if (!(rowData.WORK_TYPE !== undefined || rowData.WORK_TYPE !== null || rowData.WORK_TYPE !== '')) {
+                let index = workTypeList.findIndex(function (element) {
+                    return element.value === rowData.WORK_TYPE;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'WORK_TYPE');
+            }
+            // 수행공장
+            if (!(rowData.WORK_FACTORY !== undefined || rowData.WORK_FACTORY !== null || rowData.WORK_FACTORY !== '')) {
+                let index = workFactoryList.findIndex(function (element) {
+                    return element.value === rowData.WORK_FACTORY;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'WORK_FACTORY');
+            }
+            //소재 상세
+            if (!(rowData.MATERIAL_DETAIL !== undefined || rowData.MATERIAL_DETAIL !== null || rowData.MATERIAL_DETAIL !== '')) {
+                let index = materialDetailList.findIndex(function (element) {
+                    return element.value === rowData.MATERIAL_DETAIL;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'MATERIAL_DETAIL');
+            }
+            // 소재형태
+            if (!(rowData.MATERIAL_KIND !== undefined || rowData.MATERIAL_KIND !== null || rowData.MATERIAL_KIND !== '')) {
+                let index = materialKindList.findIndex(function (element) {
+                    return element.value === rowData.MATERIAL_KIND;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'MATERIAL_KIND');
+            }
+            // 표면처리
+            if (!(rowData.SURFACE_TREAT !== undefined || rowData.SURFACE_TREAT !== null || rowData.SURFACE_TREAT !== '')) {
+                let index = surfaceTreatList.findIndex(function (element) {
+                    return element.value === rowData.SURFACE_TREAT;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'SURFACE_TREAT');
+            }
         };
 
-        // 잘못된 데이터(코드) 체크
-        const validation3 = function (rowData) {
-            // console.log(rowData);
+        // 잘못 입력된 데이터 체크
+        const  inputErrorCheck = function (rowData) {
+            let list = [];
+            const singleList = ['PART_UNIT_QTY']; // 단품
+            const assemblyList = ['MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY']; // 조립
+            const modifiedList = ['PART_UNIT_QTY']; // 수정
+            const stockList = ['PART_UNIT_QTY', 'ORDER_NUM', 'ORDER_DUE_DT', 'DELIVERY_DT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT']; // 재고
+            const partList = ['ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'DELIVERY_DT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT']; // 파트
+
+            switch (rowData.WORK_TYPE) {
+                case 'WTP010':
+                    list = singleList;
+                    break;
+                case 'WTP020':
+                    list = assemblyList;
+                    break;
+                case 'WTP030':
+                    list = modifiedList;
+                    break;
+                case 'WTP040':
+                    list = stockList;
+                    break;
+                case 'WTP050':
+                    list = partList;
+                    break;
+            }
+
+            for (let i in list) {
+                if (!(rowData[list[i]] !== undefined || rowData[list[i]] != null || rowData[list[i]] !== '')) {
+                    addErrorList(rowData.pq_ri, list[i]);
+                }
+            }
         };
 
         // error
         let errorList = [];
         let prevErrorList = [];
-        const errorrrrrrrrr = function (rowIndex, dataIndex) {
+        const addErrorList = function (rowIndex, dataIndex) {
             let tempObject = {};
             tempObject.rowIndx = rowIndex;
             tempObject.dataIndx = dataIndex;
@@ -953,7 +1032,7 @@
                 beforeShow: function (input, inst) {return !this.firstOpen; },
                 onClose: function () { this.focus(); }
             });
-        };
+        }
         /* function */
 
         /* event */

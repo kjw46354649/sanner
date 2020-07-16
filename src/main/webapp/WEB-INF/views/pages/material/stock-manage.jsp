@@ -854,7 +854,6 @@
                 //step 3 save
                 let gridInstance = stockManageGridId01.pqGrid('getInstance').grid;
                 let changes = gridInstance.getChanges({format: 'byVal'});
-console.log("change",JSON.stringify(changes));
 
                 let parameters = {
                     'url': '/managerInsideStock',

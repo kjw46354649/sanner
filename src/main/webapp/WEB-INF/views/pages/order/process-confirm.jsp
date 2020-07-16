@@ -726,19 +726,24 @@
 
         $("#CONFIRM_ORDER_BARCODE_NUM").on('keyup', function(e) {
             if (e.keyCode === 13) {
-                $('#barcode_form').children('#queryId').val('popMapper.selectBarcodeInfo');
-                $('#barcode_form').children('#popBarcode').val(this.value);
-
-                let parameters = {'url': '/json-list', 'data': $('#barcode_form').serialize()};
-
-                fnPostAjax(function (data, callFunctionParam) {
-                    let list = data.list[0];
-                    updatePartStatus(list, 'PRO002');
-                }, parameters, '');
-
-                $('#CONFIRM_ORDER_BARCODE_NUM').val('');
-
-                e.preventDefault();
+                fnBarcodePrintCheck(function (confirm, callFunctionParam) {
+                    let barcodeN = callFunctionParam;
+                    if (confirm) {
+                        //0. 바코드 정보 가져오기
+                        let data = {'queryId': "common.selectControlBarcodeInfo", 'BARCODE_NUM': barcodeN};
+                        let parameters = {'url': '/json-info', 'data': data};
+                        fnPostAjax(function (data, callFunctionParam) {
+                            let dataInfo = data.info;
+                            if (dataInfo == null) {
+                                alert("해당 바코드가 존재하지 않습니다.");
+                                return;
+                            } else {
+                                updatePartStatus(dataInfo, 'PRO002');
+                            }
+                        }, parameters, '');
+                    }
+                }, fnBarcodeKo2En(this.value), fnBarcodeKo2En(this.value));
+                this.value = '';
             }
         });
 
@@ -751,15 +756,6 @@
             callWindowImageViewer(999);
         });
 
-        // $('.barcode').on('click', function () {
-        //     console.log('click');
-        //     let thisElementSrc = $(this).children('img').attr('src');
-        //     // barcodeDisableAll();
-        //     let imgOn = "/resource/asset/images/common/img_barcode_long_on.png";
-        //     let img = "/resource/asset/images/common/img_barcode_long.png";
-        //     let src = (thisElementSrc === imgOn) ? img : imgOn;
-        //     $(this).children('img').attr('src', src);
-        // });
         $('#processConfirmBarcodeSpan').on('click', function () {
             $('#CONFIRM_ORDER_BARCODE_NUM').focus();
         });
@@ -774,8 +770,7 @@
         });
 
         $('#PROCESS_CONFIRM_DETAIL').on('click', function () {
-            let rowData = selectedGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[0]});
-            g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ);
+            g_item_detail_pop_view('', '');
         });
 
         /** 전체창으로 주문 확정 띄우기 **/

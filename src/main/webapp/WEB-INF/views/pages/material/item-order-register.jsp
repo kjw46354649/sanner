@@ -239,16 +239,50 @@
         };
 
         let itemOrderRegisterLeftColModel= [
-            {title: '.', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden: true},
-            {title: '.', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-            {title: '.', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
-            /*{title: '주문 발주 상태', align: "center", colModel: [
-                    {title: '상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', width: 70, editable: false},
-                    {title: '확정/취소 일시', dataType: 'date', dataIndx: 'STATUS_DT', width: 120, editable: false}
-                ]},*/
-            {title: '가공 확정일시', dataType: 'date', dataIndx: 'STATUS_DT', width: 90, editable: false},
-            {title: '소재주문<br>상태', dataType: 'string', dataIndx: 'M_STATUS_NM', width: 70, editable: false},
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 80, editable: false,
+            {title: '가공 확정일시', dataType: 'date', dataIndx: 'STATUS_DT', width: 75, editable: false},
+            {title: '소재주문<br>상태', dataType: 'string', dataIndx: 'M_STATUS_NM', width: 60, editable: false},
+            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+                render: function (ui) {
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                    });
+                }
+            },
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 140, editable: false,
+                render: function(ui){
+                    let WORK_TYPE = ui.rowData.WORK_TYPE == undefined ? '' : ui.rowData.WORK_TYPE;
+                    let returnVal = ui.cellData;
+                    if(WORK_TYPE == 'WTP020') {
+                        returnVal = '';
+                    }
+                    return returnVal;
+                }
+            },
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 25, width: 25, editable: false},
+            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', minWidth: 50, width: 50, editable: false,
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1033')}
+            },
+            {title: '가공<br>납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', width: 50, editable: false},
+            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 60, editable: false,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "ORDER_COMP_NM", id: "ORDER_COMP_CD" },
@@ -264,108 +298,29 @@
                     }
                 }
             },
-            {title: '소재 주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120, editable: false,
-                render: function (ui) {
-                    let cls = null;
-                    if (ui.cellData) cls = 'underlinePoint';
-                    return {cls: cls, text: itemOrderRegisterFilterRender(ui)};
-                },
-                postRender: function(ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    if($cell.hasClass("underlinePoint")){
-                        $cell.bind("click", function () {
-                            itemOrder();
-                        });
-                    }
-                }
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 90, width: 90, editable: false } ,
+            {title: '발주량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 50, width: 50, editable: false},
+            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', minWidth: 60, width: 60, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029') },
+                editable: function (ui) {return itemOrderRegisterGridCellEditable(ui);}
             },
-            {title: '주문업체', dataType: 'string', dataIndx: 'M_COMP_CD', width: 80, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+            {title: '소재<br>종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', minWidth: 70, width: 70, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027') },
+                editable: function (ui) {return itemOrderRegisterGridCellEditable(ui);},
+            },
+            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', minWidth: 90, width: 90, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, width: 120,
+                editable: function (ui) {return itemOrderRegisterGridCellEditable(ui);}
+            },
+            {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', minWidth: 50, width: 50, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {return itemOrderRegisterGridCellEditable(ui);}
+            },
+            {title: '주문업체', dataType: 'string', dataIndx: 'M_COMP_CD', width: 70, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select',
                     valueIndx: "value",
                     labelIndx: "text",
                     options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}}),
                 },
-                editable: function (ui) {return itemOrderRegisterGridCellEditable(ui);}
-            },
-            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
-                render: function (ui) {
-                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
-                    return '';
-                },
-                postRender: function(ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find("#detailView").bind("click", function () {
-                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
-                    });
-                }
-            },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 120, editable: false,
-                render: function(ui){
-                    let WORK_TYPE = ui.rowData.WORK_TYPE == undefined ? '' : ui.rowData.WORK_TYPE;
-                    let returnVal = ui.cellData;
-                    if(WORK_TYPE == 'WTP020') {
-                        returnVal = '';
-                    }
-                    return returnVal;
-                }
-            },
-            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
-                render: function (ui) {
-                    if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
-                },
-                postRender: function (ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find("#imageView").bind("click", function () {
-                        let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
-                    });
-                }
-            },
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 120, editable: false},
-            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 30, width: 30, editable: false},
-            {title: '도면Rev.', dataType: 'string', dataIndx: 'DRAWING_VER ', editable: false},
-            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
-                render: function (ui) {
-                    if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'
-                },
-                postRender: function (ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find("#downloadView").bind("click", function () {
-                        let rowData = ui.rowData;
-                        fnFileDownloadFormPageAction(rowData.DXF_GFILE_SEQ);
-                    });
-                }
-            },
-            {
-                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
-                render: function (ui) {
-                    if (ui.cellData) return '<span id="imageView" class="redFileImageICon" style="cursor: pointer"></span>'
-                },
-                postRender: function (ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find("#imageView").bind("click", function () {
-                        let rowData = ui.rowData;
-                        fnFileDownloadFormPageAction(rowData.PDF_GFILE_SEQ);
-                    });
-                }
-            },
-            {title: '가공<br>납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', width: 80, editable: false},
-            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029') },
-                editable: function (ui) {return itemOrderRegisterGridCellEditable(ui);}
-            },
-            {title: '소재<br>종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', width: 70, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027') },
-                editable: function (ui) {return itemOrderRegisterGridCellEditable(ui);},
-            },
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 120, editable: false } ,
-            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, width: 120,
                 editable: function (ui) {return itemOrderRegisterGridCellEditable(ui);}
             },
             {title: '요청 사항', align: "center", colModel: [
@@ -404,8 +359,7 @@
                     },
                 ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
-            {title: '원<br>발주량', dataType: 'string', dataIndx: 'ORDER_QTY', editable: false},
-            {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+            {title: '비고', dataType: 'string', dataIndx: 'DTL_AMOUNT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, minWidth: 120,
                 editable: function (ui) {return itemOrderRegisterGridCellEditable(ui);}
             },
             {title: '보유소재 충당수량', align: "center", colModel: [
@@ -453,11 +407,61 @@
                             return cellData === 'Y' ? cellData : '';
                         }
                     },
-                ]},
-            {title: '비고', dataType: 'string', dataIndx: 'DTL_AMOUNT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, minWidth: 120,
-                editable: function (ui) {return itemOrderRegisterGridCellEditable(ui);}
+                ]
             },
-            {title: '주문<br>요청 일시', dataType: 'date', dataIndx: 'M_ORDER_DT',  width: 120, editable: false}
+            {title: '소재 주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120, editable: false,
+                render: function (ui) {
+                    let cls = null;
+                    if (ui.cellData) cls = 'underlinePoint';
+                    return {cls: cls, text: itemOrderRegisterFilterRender(ui)};
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    if($cell.hasClass("underlinePoint")){
+                        $cell.bind("click", function () {
+                            itemOrder();
+                        });
+                    }
+                }
+            },
+            {title: '주문<br>요청 일시', dataType: 'date', dataIndx: 'M_ORDER_DT',  width: 120, editable: false},
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 120, editable: false},
+            {title: '.', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden: true},
+            {title: '.', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+            {title: '.', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
+            /*{title: '주문 발주 상태', align: "center", colModel: [
+                    {title: '상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', width: 70, editable: false},
+                    {title: '확정/취소 일시', dataType: 'date', dataIndx: 'STATUS_DT', width: 120, editable: false}
+                ]},
+            {title: '도면Rev.', dataType: 'string', dataIndx: 'DRAWING_VER ', editable: false},
+            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#downloadView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        fnFileDownloadFormPageAction(rowData.DXF_GFILE_SEQ);
+                    });
+                }
+            },
+            {
+                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="imageView" class="redFileImageICon" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        fnFileDownloadFormPageAction(rowData.PDF_GFILE_SEQ);
+                    });
+                }
+            }*/
         ];
 
         let itemOrderRegisterRightColModel= [
@@ -644,9 +648,15 @@
                             }
                         };
                         fnPostAjaxAsync(function (data, callFunctionParam) {
-                            itemOrderRegisterPopTopGrid.pqGrid('deleteRow', { rowIndx: rowIndex });
-                            let rowCount = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length;
-                            if(rowCount == 0) $("#item_order_register_popup").modal('hide');
+                            parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
+                            fnPostAjax(function(data, callFunctionParam){
+                                alert("삭제 되었습니다.");
+                                itemOrderRegisterPopTopGrid.pqGrid('deleteRow', { rowIndx: rowIndex });
+                                let rowCount = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length;
+                                if(rowCount == 0) $("#item_order_register_popup").modal('hide');
+
+                                makeInnerTable();
+                            }, parameters, '');
                         }, parameters, '');
                     });
                 }
@@ -792,7 +802,7 @@
                     return returnVal;
                 }
             },
-            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 30, width: 30, editable: false },
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 30, width: 30, editable: false, styleHead: {'font-weight': 'bold','color': 'red'}},
             {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
@@ -1275,9 +1285,7 @@
             let CONCAT_SEQ = rowDataArray.substr(0 , rowDataArray.length-1);
 
             // 중복제거
-            orderList = orderList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
+            orderList = [...new Set(orderList)];
 
             if (orderList.length > 1) {
                 alert('주문번호를 확인 해 주세요.');

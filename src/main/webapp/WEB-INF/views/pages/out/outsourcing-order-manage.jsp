@@ -381,7 +381,7 @@
                 }
             },
             {title: '원발주<br>상태', dataType: 'string', dataIndx: 'CONTROL_STATUS_NM'},
-            {title: '외주<br>발주상태', dataType: 'string', dataIndx: 'OUTSIDE_STATUS', hidden: false},
+            {title: '외주<br>발주상태', dataType: 'string', dataIndx: 'OUTSIDE_STATUS', hidden: true},
             {title: '외주<br>발주상태', dataType: 'string', dataIndx: 'OUTSIDE_STATUS_NM'},
             {title: '상태변경<br>일시', width: 100, dataType: 'string', dataIndx: 'OUTSIDE_STATUS_DT'},
             {
@@ -448,7 +448,7 @@
             {title: '규격', width: 70, dataType: 'string', dataIndx: 'SIZE_TXT'},
             {title: '소재종류', width:70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '표면처리', width:90, dataType: 'string', dataIndx: 'SURFACE_TREAT_NM'},
-            {title: '수량', dataType: 'integer', dataIndx: 'ITEM_QTY'},
+                {title: '수량', dataType: 'integer', dataIndx: 'CONTROL_ORDER_QTY'},
             {title: '사급<br>여부', minWidth: 30, width: 40, dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -697,7 +697,7 @@
         let $mailRecipientGrid;
         const mailRecipientGridId = 'REQUEST_OUTSIDE_MAIL_RECIPIENT_GRID';
         const mailRecipientColModel = [
-            {title: '', dataType: 'string', dataIndx: 'STAFF_SEQ', hidden: false},
+            {title: '', dataType: 'string', dataIndx: 'STAFF_SEQ', hidden: true},
             {title: '성함', dataType: 'string', dataIndx: 'STAFF_NM',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
             {title: '메일주소', dataType: 'string', dataIndx: 'STAFF_EMAIL',
@@ -1450,15 +1450,9 @@
             }
 
             // 중복제거
-            compCdList = compCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            outsideCompCdList = outsideCompCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            outsideStatusList = outsideStatusList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
+            compCdList = [...new Set(compCdList)];
+            outsideCompCdList = [...new Set(outsideCompCdList)];
+            outsideStatusList = [...new Set(outsideStatusList)];
 
             if (compCdList.length > 1) {
                 alert('선택된 대상들의 발주사는 동일해야 합니다.');
@@ -1505,9 +1499,7 @@
             }
 
             // 중복제거
-            outsideCompCdList = outsideCompCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
+            outsideCompCdList = [...new Set(outsideCompCdList)];
 
             $('#' + mailFormElement + ' #OUTSIDE_COMP_CD').val(outsideCompCdList[0]);
         };
@@ -1613,11 +1605,16 @@
         };
 
         function outsourcingOrderManageFilterRender(ui) {
-            var val = ui.cellData == undefined ? "" : ui.cellData,
-                filter = ui.column.filter,
-                crules = (filter || {}).crules;
-
-            if (filter && filter.on && crules && crules[0].value) {
+            let val = ui.cellData == undefined ? "" : ui.cellData,
+                options = ui.column.editor == undefined ? "" : ui.column.editor.options;
+            let index = -1;
+            if(options) {
+                index = options.findIndex(function (element) {
+                    return element.value == val;
+                });
+                if(index > -1) val = options[index].text;
+            }
+            if (val) {
                 var condition = $("#outsourcingOrderManageFilterCondition :selected").val(),
                     valUpper = val.toString().toUpperCase(),
                     txt = $("#outsourcingOrderManageFilterKeyword").val(),
@@ -1735,7 +1732,7 @@
                 selectOutsideCompCd('CANCEL_REQUEST_OUTSIDE_MAIL_FORM');
                 setTimeout(function() {
                     // 메일 수신처 가져오기
-                    getRequestOutsideMailDestination('REQUEST_OUTSIDE_MAIL_FORM');
+                    getRequestOutsideMailDestination('CANCEL_REQUEST_OUTSIDE_MAIL_FORM');
                 }, 500);
                 // 메일 템플릿 가져오기
                 getRequestOutsideMailContent('CANCEL_REQUEST_OUTSIDE_MAIL_FORM', 'CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT');
@@ -1783,18 +1780,10 @@
                 orderStaffSeqStr = rowData.ORDER_STAFF_SEQ;
             }
             // 중복제거
-            controlSeqList = controlSeqList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            controlDetailSeqList = controlDetailSeqList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            compCdList = compCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
+            controlSeqList = [...new Set(controlSeqList)];
+            controlDetailSeqList = [...new Set(controlDetailSeqList)];
+            compCdList = [...new Set(compCdList)];
+            orderCompCdList = [...new Set(orderCompCdList)];
 
             if (orderCompCdList.length > 1) {
                 alert('선택된 대상들의 외주업체는 반드시 동일해야합니다');
@@ -1836,12 +1825,8 @@
                     outsideCompCdList.push(rowData.OUTSIDE_COMP_CD);
                 }
                 // 중복제거
-                compCdList = compCdList.filter(function (element, index, array) {
-                    return array.indexOf(element) === index;
-                });
-                outsideCompCdList = outsideCompCdList.filter(function (element, index, array) {
-                    return array.indexOf(element) === index;
-                });
+                compCdList = [...new Set(compCdList)];
+                outsideCompCdList = [...new Set(outsideCompCdList)];
 
                 if (outsideCompCdList.length === 0 || outsideCompCdList[0] === undefined) {
                     alert('외주업체가 없습니다!');
@@ -2058,11 +2043,27 @@
         });
 
         $('#REQUEST_OUTSIDE_SAVE_SUBMIT').on('click', function (){
+            let mailFlag = true;
             let outsideCompCd = $('#REQUEST_OUTSIDE_MAIL_FORM').find('#OUTSIDE_COMP_CD').val();
+            let mailRecipientData = $mailRecipientGrid.pqGrid('option', 'dataModel.data');
+
             if (!outsideCompCd) {
                 alert('요청 외주 업체가 없습니다.');
                 return false;
             }
+
+            for(let i in mailRecipientData) {
+                if (mailRecipientData[i].RECEPTION === 'true') {
+                    mailFlag = false;
+                    break;
+                }
+            }
+
+            if (mailFlag) {
+                alert('메일 수신자 정보는 필수입니다.');
+                return false;
+            }
+
             let step1List = $outsideProcessRequestGrid.pqGrid('option', 'dataModel.data');
             // 메일 내용
             let a = CKEDITOR.instances.REQUEST_OUTSIDE_EMAIL_CONTENT_TXT.getData();
@@ -2131,6 +2132,21 @@
             };
             estimateRegisterSubmitConfirm(function (confirm) {
                 if (confirm) {
+                    let mailFlag = true;
+                    let cancelMailRecipientData = $cancelMailRecipientGrid.pqGrid('option', 'dataModel.data');
+
+                    for(let i in cancelMailRecipientData) {
+                        if (cancelMailRecipientData[i].RECEPTION === 'true') {
+                            mailFlag = false;
+                            break;
+                        }
+                    }
+
+                    if (mailFlag) {
+                        alert('메일 수신자 정보는 필수입니다.');
+                        return false;
+                    }
+
                     let step1List = $cancelRequestOutsideGrid.pqGrid('option', 'dataModel.data');
                     // 메일 내용
                     let a = CKEDITOR.instances.CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT.getData();

@@ -994,11 +994,16 @@
     };
 
     function estimateListFilterRender(ui) {
-        var val = ui.cellData == undefined ? "" : ui.cellData,
-            filter = ui.column.filter,
-            crules = (filter || {}).crules;
-
-        if (filter && filter.on && crules && crules[0].value) {
+        let val = ui.cellData == undefined ? "" : ui.cellData,
+            options = ui.column.editor == undefined ? "" : ui.column.editor.options;
+        let index = -1;
+        if(options) {
+            index = options.findIndex(function (element) {
+                return element.value == val;
+            });
+            if(index > -1) val = options[index].text;
+        }
+        if (val) {
             var condition = $("#estimateListFilterCondition :selected").val(),
                 valUpper = val.toString().toUpperCase(),
                 txt = $("#estimateListFilterKeyword").val(),

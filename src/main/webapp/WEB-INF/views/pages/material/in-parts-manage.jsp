@@ -282,31 +282,31 @@
     });
     let calcQty = function(type){
 
-        let POP_STOCK_QTY = $('#POP_STOCK_QTY').html();
-        let POP_CURR_QTY = $('#POP_CURR_QTY').html();
-        let POP_OUT_QTY = $("#pop_form").find("#OUT_QTY").val();
+        let POP_STOCK_QTY = $('#pop_form #POP_STOCK_QTY').html();
+        let POP_CURR_QTY = $('#pop_form #POP_CURR_QTY').html();
+        let POP_OUT_QTY = $("#pop_form #OUT_QTY").val();
         if(POP_STOCK_QTY == "" || POP_STOCK_QTY == "0"){
             alert("수량이 없습니다.");
             return;
         }
         if(type == "PLUS"){
-            if(parseInt(POP_CURR_QTY) > 0){
-                POP_OUT_QTY = parseInt(POP_OUT_QTY)+1;
-                POP_CURR_QTY = parseInt(POP_CURR_QTY)-1;
+            if(Number(POP_CURR_QTY) > 0){
+                POP_OUT_QTY = Number(POP_OUT_QTY)+1;
+                POP_CURR_QTY = Number(POP_CURR_QTY)-1;
             }
         }else if(type == "MINUS"){
-            if(parseInt(POP_OUT_QTY) > 0){
-                POP_OUT_QTY = parseInt(POP_OUT_QTY)-1;
-                POP_CURR_QTY = parseInt(POP_CURR_QTY)+1;
+            if(Number(POP_OUT_QTY) > 0){
+                POP_OUT_QTY = Number(POP_OUT_QTY)-1;
+                POP_CURR_QTY = Number(POP_CURR_QTY)+1;
             }
 
         }
 
-        $('#POP_CURR_QTY').html(POP_CURR_QTY);
-        $('#POP_OUT_QTY').html(POP_OUT_QTY);
-        $('#OUT_QTY').val(POP_OUT_QTY);
-        console.log("POP_CURR_QTY",POP_CURR_QTY);
-        console.log("POP_OUT_QTY",POP_OUT_QTY);
+        $('#pop_form #POP_CURR_QTY').html(POP_CURR_QTY);
+        $('#pop_form #POP_OUT_QTY').html(POP_OUT_QTY);
+        $('#pop_form #OUT_QTY').val(POP_OUT_QTY);
+        //console.log("POP_CURR_QTY",POP_CURR_QTY);
+        //console.log("POP_OUT_QTY",POP_OUT_QTY);
 
     }
     /**  선언 **/
@@ -1008,11 +1008,16 @@
     }
 
     function inPartsManageFilterRender(ui) {
-        var val = ui.cellData == undefined ? "" : ui.cellData,
-            filter = ui.column.filter,
-            crules = (filter || {}).crules;
-
-        if (filter && filter.on && crules && crules[0].value) {
+        let val = ui.cellData == undefined ? "" : ui.cellData,
+            options = ui.column.editor == undefined ? "" : ui.column.editor.options;
+        let index = -1;
+        if(options) {
+            index = options.findIndex(function (element) {
+                return element.value == val;
+            });
+            if(index > -1) val = options[index].text;
+        }
+        if (val) {
             var condition = $("#inPartsManageFilterCondition :selected").val(),
                 valUpper = val.toString().toUpperCase(),
                 txt = $("#inPartsManageFilterKeyword").val(),
@@ -1050,11 +1055,16 @@
     }
 
     function inPartsManageInOutFilterRender(ui) {
-        var val = ui.cellData == undefined ? "" : ui.cellData,
-            filter = ui.column.filter,
-            crules = (filter || {}).crules;
-
-        if (filter && filter.on && crules && crules[0].value) {
+        let val = ui.cellData == undefined ? "" : ui.cellData,
+            options = ui.column.editor == undefined ? "" : ui.column.editor.options;
+        let index = -1;
+        if(options) {
+            index = options.findIndex(function (element) {
+                return element.value == val;
+            });
+            if(index > -1) val = options[index].text;
+        }
+        if (val) {
             var condition = $("#inPartsManageInOutFilterCondition :selected").val(),
                 valUpper = val.toString().toUpperCase(),
                 txt = $("#inPartsManageInOutFilterKeyword").val(),

@@ -518,9 +518,7 @@
                 outsideCompCdList.push(rowData.OUTSIDE_COMP_CD);
             }
             // 중복제거
-            controlDetailSeqList = controlDetailSeqList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
+            controlDetailSeqList = [...new Set(controlDetailSeqList)];
 
             for (let i = 0, CONTROL_SEQ_LIST_LENGTH = controlDetailSeqList.length; i < CONTROL_SEQ_LIST_LENGTH; i++) {
                 controlDetailSeqStr += controlDetailSeqList[i];
@@ -550,11 +548,16 @@
         };
 
         function outsourcingCloseHistoryFilterRender(ui) {
-            var val = ui.cellData == undefined ? "" : ui.cellData,
-                filter = ui.column.filter,
-                crules = (filter || {}).crules;
-
-            if (filter && filter.on && crules && crules[0].value) {
+            let val = ui.cellData == undefined ? "" : ui.cellData,
+                options = ui.column.editor == undefined ? "" : ui.column.editor.options;
+            let index = -1;
+            if(options) {
+                index = options.findIndex(function (element) {
+                    return element.value == val;
+                });
+                if(index > -1) val = options[index].text;
+            }
+            if (val) {
                 var condition = $("#outsourcingCloseHistoryFilterCondition :selected").val(),
                     valUpper = val.toString().toUpperCase(),
                     txt = $("#outsourcingCloseHistoryFilterKeyword").val(),
@@ -630,15 +633,10 @@
                 }
 
                 // 중복제거
-                compCdList = compCdList.filter(function (element, index, array) {
-                    return array.indexOf(element) === index;
-                });
-                orderCompCdList = orderCompCdList.filter(function (element, index, array) {
-                    return array.indexOf(element) === index;
-                });
-                outsideCompCdList = outsideCompCdList.filter(function (element, index, array) {
-                    return array.indexOf(element) === index;
-                });
+                compCdList = [...new Set(compCdList)];
+                orderCompCdList = [...new Set(orderCompCdList)];
+                outsideCompCdList = [...new Set(outsideCompCdList)];
+
                 if (compCdList.length > 1) {
                     alert('선택된 대상들의 발주사는 동일해야 합니다.');
                     return false;

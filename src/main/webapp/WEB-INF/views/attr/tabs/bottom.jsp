@@ -1270,32 +1270,33 @@
 
     $("#g_item_detail_pop_barcode_num").on({
         focus: function () {
-            $("#g_item_detail_pop_barcode_img").attr("src","/resource/asset/images/common/img_barcode_long_on.png");
+            $("#g_item_detail_pop_barcode_img").attr("src", "/resource/asset/images/common/img_barcode_long_on.png");
         },
         blur: function () {
-            $("#g_item_detail_pop_barcode_img").attr("src","/resource/asset/images/common/img_barcode_long.png");
+            $("#g_item_detail_pop_barcode_img").attr("src", "/resource/asset/images/common/img_barcode_long.png");
         },
         keyup: function (e) {
             if (e.keyCode == 13) {
-                fnBarcodePrintCheck(function(confirm,callFunctionParam){
-                   let barcodeN = callFunctionParam;
-                   if(confirm){
+                fnBarcodePrintCheck(function (confirm, callFunctionParam) {
+                    let barcodeN = callFunctionParam;
+                    if (confirm) {
                         //0. 바코드 정보 가져오기
-                        let data = {'queryId': "common.selectControlBarcodeInfo",'BARCODE_NUM': barcodeN};
-                        let parameters = {'url': '/json-info','data': data};
+                        let data = {'queryId': "common.selectControlBarcodeInfo", 'BARCODE_NUM': barcodeN};
+                        let parameters = {'url': '/json-info', 'data': data};
                         fnPostAjax(function (data, callFunctionParam) {
                             let dataInfo = data.info;
-                            if(dataInfo == null ) {
+                            if (dataInfo == null) {
                                 alert("해당 바코드가 존재하지 않습니다.");
                                 return;
-                            }else{
-                                let CONTROL_SEQ =  dataInfo.CONTROL_SEQ;
-                                let CONTROL_DETAIL_SEQ =  dataInfo.CONTROL_DETAIL_SEQ;
-                                g_item_detail_pop_view(CONTROL_SEQ,CONTROL_DETAIL_SEQ);
+                            } else {
+                                let CONTROL_SEQ = dataInfo.CONTROL_SEQ;
+                                let CONTROL_DETAIL_SEQ = dataInfo.CONTROL_DETAIL_SEQ;
+                                g_item_detail_pop_view(CONTROL_SEQ, CONTROL_DETAIL_SEQ);
                             }
                         }, parameters, '');
-                   }else{}
-                },this.value, this.value);
+                    }
+                }, fnBarcodeKo2En(this.value), fnBarcodeKo2En(this.value));
+                this.value = '';
             }
         }
     });
