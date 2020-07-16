@@ -524,7 +524,7 @@
                     }
                 }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
-            {title: '소재종류상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL' , minWidth: "8%",
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL' , minWidth: "8%",
                 editable: function(ui){
                     if(ui.rowData != undefined) {
                         let MY_MAT_STOCK_SEQ = ui.rowData.MY_MAT_STOCK_SEQ == undefined ? '' : ui.rowData.MY_MAT_STOCK_SEQ;

@@ -1602,7 +1602,7 @@
     <select id="manageStockCadFiles_select" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             UUID() AS ROWNUM,
-            A.INSIDE_STOCK_NUM AS CONTROL_NUM, <!-- 정렬을 위한 조회 -->
+            A.INSIDE_STOCK_NUM AS SORTKEY, <!-- 정렬을 위한 조회 -->
             A.INSIDE_STOCK_NUM, <!-- 재고번호 -->
             A.ITEM_NM, <!-- 품명 -->
             A.DRAWING_NUM,

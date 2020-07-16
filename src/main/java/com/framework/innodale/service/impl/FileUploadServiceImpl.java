@@ -129,8 +129,6 @@ public class FileUploadServiceImpl implements FileUploadService {
 
         if(itr.hasNext()) {
 
-            int iSuccessCount = 0;
-            int iErrorCount = 0;
             String paramQueryId = (String)hashMap.get("queryId");
             List<MultipartFile> fileList = request.getFiles(itr.next());
 
@@ -171,7 +169,6 @@ public class FileUploadServiceImpl implements FileUploadService {
                     fileInfo.put("FILE_TYPE", multipartFile.getContentType());
                     fileInfo.put("FILE_EXT", originalExtName);
                     fileInfo.put("FILE_SIZE", multipartFile.getSize());
-                    fileInfo.put("ROWNUM", iSuccessCount++);
 
                     // 원본 파일 DB 저장 처리
                     managerFileInformationInsert(fileInfo);
@@ -240,7 +237,6 @@ public class FileUploadServiceImpl implements FileUploadService {
                     fileInfo.put("FILE_TYPE", multipartFile.getContentType());
                     fileInfo.put("FILE_EXT", originalExtName);
                     fileInfo.put("FILE_SIZE", multipartFile.getSize());
-                    fileInfo.put("ROWNUM", iSuccessCount++);
                     fileInfo.put("MESSAGE", "업로드 확장자 불가");
                     fileInfo.put("SUCCESS", "N");
 
@@ -251,6 +247,7 @@ public class FileUploadServiceImpl implements FileUploadService {
             for(String mappingDrawingNum : mappingNumList){
 
                 HashMap<String, Object> fileInfo = new HashMap<String, Object>();
+                boolean isMapperCheck = false;
 
                 if(dxfGfileKeyHashMap.containsKey(mappingDrawingNum))
                     fileInfo.put("DXF_GFILE_SEQ", dxfGfileKeyHashMap.get(mappingDrawingNum));
@@ -259,7 +256,6 @@ public class FileUploadServiceImpl implements FileUploadService {
                 if(pngGfileKeyHashMap.containsKey(mappingDrawingNum))
                     fileInfo.put("IMG_GFILE_SEQ", pngGfileKeyHashMap.get(mappingDrawingNum));
 
-                fileInfo.put("MAPPING_STR", mappingDrawingNum);
                 fileInfo.put("MAPPING_STR", mappingDrawingNum);
                 fileInfo.put("queryId", paramQueryId);    // 연결 주문 정보 조회
                 List<Map<String, Object>> controlList = innodaleDao.getList(fileInfo);
@@ -271,24 +267,40 @@ public class FileUploadServiceImpl implements FileUploadService {
                        HashMap<String, Object> map = (HashMap<String, Object>) controlIterator.next();
                        fileUploadDataList.add(map);
                     }
+                    isMapperCheck = true;
+                }
+
+                // 매핑 정보가 없을 경우 업로드 파일 정보의 메시지 처리 한다.
+                if(!isMapperCheck) {
+                    for (int i=0;i<fileUploadList.size();i++) {
+                        HashMap<String, Object> uploadFile = fileUploadList.get(i);
+                        String uploadFileMappingStr = (String)uploadFile.get("MAPPING_STR");
+                        if(uploadFileMappingStr.equals(mappingDrawingNum)) {
+                            uploadFile.put("MESSAGE", "대상을 찾을 수 없습니다.");
+                            uploadFile.put("SUCCESS", "N");
+                            fileUploadList.set(i, uploadFile);
+                        }
+                    }
                 }
             }
         }
 
+        // 업로드 이후 매핑 자료의 정렬 처리
         Collections.sort(fileUploadDataList, new Comparator<HashMap<String, Object >>() {
             @Override
             public int compare(HashMap<String, Object> firstMappingStr, HashMap<String, Object> secondMappingStr) {
-                String fMapStr = String.valueOf(firstMappingStr.get("MAPPING_STR"));
-                String sMapStr = String.valueOf(secondMappingStr.get("MAPPING_STR"));
+                String fMapStr = String.valueOf(firstMappingStr.get("SORTKEY"));
+                String sMapStr = String.valueOf(secondMappingStr.get("SORTKEY"));
                 return fMapStr.compareTo(sMapStr);
             }
         });
 
+        // 업로드 이후 파일 이름의 정렬 처리
         Collections.sort(fileUploadList, new Comparator<HashMap<String, Object >>() {
             @Override
             public int compare(HashMap<String, Object> firstMappingStr, HashMap<String, Object> secondMappingStr) {
-                String fMapStr = String.valueOf(firstMappingStr.get("CONTROL_NUM"));
-                String sMapStr = String.valueOf(secondMappingStr.get("CONTROL_NUM"));
+                String fMapStr = String.valueOf(firstMappingStr.get("ORGINAL_FILE_NM"));
+                String sMapStr = String.valueOf(secondMappingStr.get("ORGINAL_FILE_NM"));
                 return fMapStr.compareTo(sMapStr);
             }
         });
@@ -332,9 +344,6 @@ public class FileUploadServiceImpl implements FileUploadService {
 
         if(itr.hasNext()) {
 
-            int iSuccessCount = 0;
-            int iErrorCount = 0;
-
             String paramQueryId = (String)hashMap.get("queryId");
             List<MultipartFile> fileList = request.getFiles(itr.next());
 
@@ -362,7 +371,6 @@ public class FileUploadServiceImpl implements FileUploadService {
                 fileInfo.put("FILE_TYPE", multipartFile.getContentType());
                 fileInfo.put("FILE_EXT", originalExtName);
                 fileInfo.put("FILE_SIZE", multipartFile.getSize());
-                fileInfo.put("ROWNUM", iSuccessCount++);
 
                 // 원본 파일 DB 저장 처리
                 managerFileInformationInsert(fileInfo);
@@ -383,14 +391,8 @@ public class FileUploadServiceImpl implements FileUploadService {
                         fileUploadDataList.add(map);
                     }
                     fileUploadList.add(fileInfo);
-                }else{
-                    iErrorCount++;
                 }
             }
-
-            model.addAttribute("successCount",  iSuccessCount);
-            model.addAttribute("errorCount",    iErrorCount);
-
         }
         model.addAttribute("result",       "success");
         model.addAttribute("message",      "업로드를 완료 하였습니다.");
@@ -550,43 +552,31 @@ public class FileUploadServiceImpl implements FileUploadService {
 
         PDPage page = document.getPage(0);
         PDRectangle pageSize = page.getMediaBox();
-        if (pageSize.getWidth() > pageSize.getHeight()) {
-            page.setRotation(90); //Rotate Portrait
-        }
+
         //DPI 설정
-        BufferedImage bim = pdfRenderer.renderImageWithDPI(0, 100, ImageType.RGB);
-        // 이미지로 만든다.
-        ImageIOUtil.writeImage(bim, inPDFFullPath + "temp.png" , 100);
+        BufferedImage bim = pdfRenderer.renderImageWithDPI(0, 300, ImageType.RGB);
+        ImageIOUtil.writeImage(bim, outImageFullPath , 300);
+//        ImageIOUtil.writeImage(bim, inPDFFullPath + ".quality.png" , 300);
+
+        bim = pdfRenderer.renderImageWithDPI(0, 50, ImageType.RGB);
+        ImageIOUtil.writeImage(bim, inPDFFullPath + ".thumbnail.png" , 50);
+
         document.close(); //모두 사용한 PDF 문서는 닫는다.
 
-        File tempImagefile = new File(inPDFFullPath + "temp.png");
-        BufferedImage image = ImageIO.read(tempImagefile);
-        int imageWidth = image.getWidth();
-        int imageHeight = image.getHeight();
-
-        File targetfile = new File(outImageFullPath);
-
-        if(imageWidth > imageHeight){
-            ImageUtil.rotate90(tempImagefile, targetfile);
-        }else{
-            tempImagefile.renameTo(targetfile);
-        }
-
-//        File tempImagefile = new File(inPDFFullPath + "temp.png");
-//        File targetfile = new File(outImageFullPath);
-//        File sourceFile = null;
-//
+//        File tempImagefile = new File(inPDFFullPath + ".quality.png");
 //        BufferedImage image = ImageIO.read(tempImagefile);
 //        int imageWidth = image.getWidth();
 //        int imageHeight = image.getHeight();
 //
+//        File targetfile = new File(outImageFullPath);
+//
 //        if(imageWidth > imageHeight){
-//            sourceFile = new File(inPDFFullPath + "_soruce.png");
-//            ImageUtil.rotate90(tempImagefile, sourceFile);
+//            ImageUtil.rotate90(tempImagefile, targetfile);
 //        }else{
-//            sourceFile = tempImagefile;
+//            tempImagefile.renameTo(targetfile);
 //        }
-//        ImageUtil.resizeFix(sourceFile, targetfile, (int)PDRectangle.A4.getWidth(), (int)PDRectangle.A4.getHeight());
+//
+//         ImageUtil.resizeFix(targetfile, targetfile, (int)PDRectangle.A4.getWidth(), (int)PDRectangle.A4.getHeight());
 
         return 1;
     }

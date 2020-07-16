@@ -66,7 +66,7 @@ public class ImageUtil {
      * @param width 리사이즈할 가로 사이즈
      * @param height 리사이즈할 세로 사이즈
      */
-    public static void resizeFix(File src, File dest, int width, int height) throws IOException {
+    public static void resizeFix(File src, File dest, int destWidth, int destHeight) throws IOException {
         Image srcImg = null;
         String suffix = src.getName().substring(src.getName().lastIndexOf('.')+1).toLowerCase();
         if (suffix.equals("bmp") || suffix.equals("png") || suffix.equals("gif")) {
@@ -78,9 +78,6 @@ public class ImageUtil {
             // 빠르게 처리하기 위함이다.
             srcImg = new ImageIcon(src.toURL()).getImage();
         }
-
-        int destWidth = srcImg.getWidth(null);
-        int destHeight = srcImg.getHeight(null);
 
         Image imgTarget = srcImg.getScaledInstance(destWidth, destHeight, Image.SCALE_SMOOTH);
         int pixels[] = new int[destWidth * destHeight];
