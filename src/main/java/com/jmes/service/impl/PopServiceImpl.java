@@ -77,7 +77,13 @@ public class PopServiceImpl implements PopService {
 
         if(controlPartInfo == null){
             model.addAttribute("returnCode", "RET98");
-            model.addAttribute("message", "도면에 문제가 있습니다. 도면 확인 바랍니다."); // 현재와 같은 Location 스캔 처리
+            model.addAttribute("message", "도면에 문제가 있습니다. 도면 확인 바랍니다."); // 정보가 없는 경우
+        }else if("Y".equals(controlPartInfo.get("OUTSIDE_YN")) && !"ORD001".equals(controlPartInfo.get("CONTROL_STATUS"))){
+            model.addAttribute("returnCode", "RET98");
+            model.addAttribute("message", "외주 가공은 주문 확정 이후에 스캔 가능합니다."); // 외주 이면서 확정 상태가 아닌 경우
+        }else if("Y".equals(controlPartInfo.get("OUTSIDE_YN")) && !"ORD001".equals(controlPartInfo.get("CONTROL_STATUS"))){
+                    model.addAttribute("returnCode", "RET98");
+                    model.addAttribute("message", "외주 가공은 주문 확정 이후에 스캔 가능합니다."); // 외주 이면서 확정 상태가 아닌 경우
         }else {
 
             /** 추가 되어야 할 데이터 **/
