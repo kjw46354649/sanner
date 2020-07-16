@@ -434,9 +434,9 @@
             {title: 'IMG_GFILE_SEQ', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', hidden: true, width: 1, minWidth: 70},
             {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE', width: 150, minWidth: 100},
             {title: '관리번호', datatype: 'string', dataIndx: 'CONTROL_NUM', width: 155, minWidth: 100},
+            {title: '파<br>트', align: 'center', dataType: 'string', dataIndx: 'PART_NUM', width: 50, minWidth: 50},
             {title: '품명', align: 'center', dataType: 'string', dataIndx: 'ITEM_NM', width: 155, minWidth: 100},
             {title: '도면번호', align: 'center', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 155, minWidth: 100},
-            {title: '파<br>트', align: 'center', dataType: 'string', dataIndx: 'PART_NUM', width: 50, minWidth: 50},
             {title: 'Rev', align: 'center', dataType: 'string', dataIndx: 'DRAWING_VER', width: 50, minWidth: 50},
             {
                 title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ',
@@ -535,7 +535,7 @@
             {title: 'SUCCESS', dataType: 'string', dataIndx: 'SUCCESS', hidden: true, width: 0, minWidth: 0},
             {title: '파일명', dataType: 'string', dataIndx: 'ORGINAL_FILE_NM', width: 200, minWidth: 70},
             {title: '확장자', dataType: 'string', dataIndx: 'FILE_EXT', width: 70, minWidth: 70},
-            {title: '파일 사이즈', datatype: 'string', dataIndx: 'FILE_SIZE', width: 80, minWidth: 50,
+            {title: '파일크기', datatype: 'string', dataIndx: 'FILE_SIZE', width: 80, minWidth: 50,
                 render: function (ui) {
                     return fn_getFileSize(ui.rowData.FILE_SIZE);
                 },
@@ -1270,32 +1270,33 @@
 
     $("#g_item_detail_pop_barcode_num").on({
         focus: function () {
-            $("#g_item_detail_pop_barcode_img").attr("src","/resource/asset/images/common/img_barcode_long_on.png");
+            $("#g_item_detail_pop_barcode_img").attr("src", "/resource/asset/images/common/img_barcode_long_on.png");
         },
         blur: function () {
-            $("#g_item_detail_pop_barcode_img").attr("src","/resource/asset/images/common/img_barcode_long.png");
+            $("#g_item_detail_pop_barcode_img").attr("src", "/resource/asset/images/common/img_barcode_long.png");
         },
         keyup: function (e) {
             if (e.keyCode == 13) {
-                fnBarcodePrintCheck(function(confirm,callFunctionParam){
-                   let barcodeN = callFunctionParam;
-                   if(confirm){
+                fnBarcodePrintCheck(function (confirm, callFunctionParam) {
+                    let barcodeN = callFunctionParam;
+                    if (confirm) {
                         //0. 바코드 정보 가져오기
-                        let data = {'queryId': "common.selectControlBarcodeInfo",'BARCODE_NUM': barcodeN};
-                        let parameters = {'url': '/json-info','data': data};
+                        let data = {'queryId': "common.selectControlBarcodeInfo", 'BARCODE_NUM': barcodeN};
+                        let parameters = {'url': '/json-info', 'data': data};
                         fnPostAjax(function (data, callFunctionParam) {
                             let dataInfo = data.info;
-                            if(dataInfo == null ) {
+                            if (dataInfo == null) {
                                 alert("해당 바코드가 존재하지 않습니다.");
                                 return;
-                            }else{
-                                let CONTROL_SEQ =  dataInfo.CONTROL_SEQ;
-                                let CONTROL_DETAIL_SEQ =  dataInfo.CONTROL_DETAIL_SEQ;
-                                g_item_detail_pop_view(CONTROL_SEQ,CONTROL_DETAIL_SEQ);
+                            } else {
+                                let CONTROL_SEQ = dataInfo.CONTROL_SEQ;
+                                let CONTROL_DETAIL_SEQ = dataInfo.CONTROL_DETAIL_SEQ;
+                                g_item_detail_pop_view(CONTROL_SEQ, CONTROL_DETAIL_SEQ);
                             }
                         }, parameters, '');
-                   }else{}
-                },this.value, this.value);
+                    }
+                }, fnBarcodeKo2En(this.value), fnBarcodeKo2En(this.value));
+                this.value = '';
             }
         }
     });

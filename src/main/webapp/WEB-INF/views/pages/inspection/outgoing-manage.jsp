@@ -1499,7 +1499,7 @@
                 if (e.keyCode == 13) {
                     //fnResetFrom("outgoing_manage_pop_form");
                     //L : LABEL, C:BARCODE
-                    let barcodeNum = this.value;
+                    let barcodeNum = fnBarcodeKo2En(this.value);
                     let barcodeType = barcodeNum.charAt(0).toUpperCase();
                     let barcodesql = "";
 
@@ -1625,7 +1625,7 @@
                 // }, parameter, '');
                 if (e.keyCode == 13) {
                     let formData = new Array();
-                    formData[0] = this.value;
+                    formData[0] = fnBarcodeKo2En(this.value);
                     fnBarcodePrint(function (data, callFunctionParam) {
                         alert(data.message);
                         $("#OUTGOING_BARCODE_NUM").val("");

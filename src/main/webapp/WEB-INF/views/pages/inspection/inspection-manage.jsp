@@ -309,7 +309,7 @@
                     return '';
                 }
             },
-            {title: '가공완료<br>일시', dataType: 'string', dataIndx: 'WORK_FINISH_DT', minWidth: 80, width: 80, editable: false},
+            {title: '가공완료<br>일시', dataType: 'string', dataIndx: 'WORK_FINISH_DT', minWidth: 100, width: 100, editable: false},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', minWidth: 80, width: 80, editable: false},
             {title: '납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', minWidth: 95, width: 95, editable: false},
             {title: '긴<br>급', minWidth: 20, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN_NM', editable: false},
@@ -373,9 +373,9 @@
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 120, width: 120, editable: false},
             {
                 title: '최근 MCT 실적', datatype: 'string', align: 'center', colModel: [
-                    {title: '날짜', datatype: 'string', dataIndx: 'MCT_WORK_DT', minWidth: 80, width: 80, editable: false},
+                    {title: '날짜', datatype: 'string', dataIndx: 'MCT_WORK_DT', minWidth: 100, width: 100, editable: false},
                     {title: '작업자', datatype: 'string', dataIndx: 'WORK_USER_NM', minWidth: 80, width: 80, editable: false},
-                    {title: 'NC No.', datatype: 'string', dataIndx: 'EQUIP_NM', minWidth: 120, width: 120, editable: false},
+                    {title: 'NC No.', datatype: 'string', dataIndx: 'EQUIP_NM', minWidth: 80, width: 80, editable: false},
                     {title: '비고', datatype: 'string', dataIndx: 'CAM_NOTE', minWidth: 300, width: 300, editable: false}
                 ]
             },
@@ -406,15 +406,15 @@
                         }
                     },
                     {title: '합/불', datatype: 'string', dataIndx: 'Q_INSPECT_GRADE_NOTE', minWidth: 80, width: 80, editable: false},
-                    {title: '대상수량', datatype: 'string', dataIndx: 'Q_ERROR_QTY', minWidth: 60, width: 60, editable: false},
-                    {title: '반품일시', datatype: 'string', dataIndx: 'Q_RETURN_DT', minWidth: 120, width: 120, editable: false},
-                    {title: '검사코드', datatype: 'string', dataIndx: 'Q_INSPECT_RESULT_NM', minWidth: 120, width: 120, editable: false},
-                    {title: '상세 내용', datatype: 'string', dataIndx: 'Q_INSPECT_DESC', minWidth: 300, width: 300, editable: false},
+                    {title: '불량수량', datatype: 'string', dataIndx: 'Q_ERROR_QTY', minWidth: 60, width: 60, editable: false},
+                    {title: '반품일시', datatype: 'string', dataIndx: 'Q_RETURN_DT', minWidth: 100, width: 100, editable: false},
+                    {title: '검사코드', datatype: 'string', dataIndx: 'Q_INSPECT_RESULT_NM', minWidth: 100, width: 100, editable: false},
+                    {title: '상세 내용', datatype: 'string', dataIndx: 'Q_INSPECT_DESC', minWidth: 200, width: 200, editable: false},
                     {title: '발생공정', datatype: 'string', dataIndx: 'Q_ERROR_PROCESS_NM', minWidth: 120, width: 120, editable: false},
-                    {title: '원인', datatype: 'string', dataIndx: 'Q_ERROR_REASON_NM', minWidth: 120, width: 120, editable: false},
+                    {title: '원인', datatype: 'string', dataIndx: 'Q_ERROR_REASON_NM', minWidth: 100, width: 100, editable: false},
                     {title: '조치', datatype: 'string', dataIndx: 'Q_ERROR_ACTION_NM', minWidth: 80, width: 80, editable: false},
                     {title: '조치방안 및 비고', datatype: 'string', dataIndx: 'Q_ERROR_NOTE', minWidth: 120, width: 120, editable: false},
-                    {title: '작성일시', datatype: 'string', dataIndx: 'Q_DT', minWidth: 80, width: 80, editable: false},
+                    {title: '작성일시', datatype: 'string', dataIndx: 'Q_DT', minWidth: 100, width: 100, editable: false},
                     {title: '최근 실적<br>삭제', align: 'center', dataType: 'string', dataIndx: 'CONTROL_SEQ_DELETE', width: 80, minWidth: 80, editable: false,
                         render: function (ui) {
                             if (ui.rowData.INSPECT_SEQ > 0) return "<button type=\"button\" class=\"miniBtn black\">삭제</button>";
@@ -552,7 +552,7 @@
             {title: '발생공정', dataType: 'string', dataIndx: 'Q_ERROR_PROCESS_NM',  width: 95},
             {title: '조치', dataType: 'string', dataIndx: 'Q_ERROR_ACTION_NM',  width: 95},
             {title: '조치방안 및 비고', dataType: 'string', dataIndx: 'Q_ERROR_NOTE',  width: 95},
-            {title: '작성일시', dataType: 'string', dataIndx: 'Q_DT',  width: 95}
+            {title: '작성일시', dataType: 'string', dataIndx: 'Q_DT',  width: 100}
         ];
         inspectionManageGridIdPop02.pqGrid({
             width: "100%", height: 115,
@@ -728,29 +728,30 @@
         $("#INSPECTION_BARCODE_NUM").on('keyup', function(e) {
 
             if (e.keyCode == 13) {
-                fnBarcodePrintCheck(function(confirm, callFunctionParam){
+                fnBarcodePrintCheck(function (confirm, callFunctionParam) {
                     let barcodeN = callFunctionParam;
-                    if(confirm){
+                    if (confirm) {
                         fnResetFrom("inspection_manage_pop_form");
 
                         //0. 바코드 정보 가져오기
-                        let data = {'queryId': "common.selectControlBarcodeInfo",'BARCODE_NUM': barcodeN};
-                        let parameters = {'url': '/json-info','data': data};
+                        let data = {'queryId': "common.selectControlBarcodeInfo", 'BARCODE_NUM': barcodeN};
+                        let parameters = {'url': '/json-info', 'data': data};
                         fnPostAjax(function (data, callFunctionParam) {
                             let dataInfo = data.info;
-                            if(dataInfo == null ) {
+                            if (dataInfo == null) {
                                 alert("해당 바코드가 존재하지 않습니다.");
                                 return;
-                            }else{
-                                let CONTROL_SEQ =  dataInfo.CONTROL_SEQ;
-                                let CONTROL_DETAIL_SEQ =  dataInfo.CONTROL_DETAIL_SEQ;
+                            } else {
+                                let CONTROL_SEQ = dataInfo.CONTROL_SEQ;
+                                let CONTROL_DETAIL_SEQ = dataInfo.CONTROL_DETAIL_SEQ;
                                 $("#inspection_manage_pop_form").find("#CONTROL_SEQ").val(CONTROL_SEQ);
                                 $("#inspection_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val(CONTROL_DETAIL_SEQ);
                                 $('#inspection_manage_pop').modal('show');
                             }
                         }, parameters, '');
-                    }else{}
-                },this.value, this.value);
+                    }
+                }, fnBarcodeKo2En(this.value), fnBarcodeKo2En(this.value));
+                $('#INSPECTION_BARCODE_NUM').val('');
             }
         });
 

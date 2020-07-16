@@ -732,7 +732,7 @@
         $("#CONFIRM_ORDER_BARCODE_NUM").on('keyup', function(e) {
             if (e.keyCode === 13) {
                 $('#barcode_form').children('#queryId').val('popMapper.selectBarcodeInfo');
-                $('#barcode_form').children('#popBarcode').val(this.value);
+                $('#barcode_form').children('#popBarcode').val(fnBarcodeKo2En(this.value));
 
                 let parameters = {'url': '/json-list', 'data': $('#barcode_form').serialize()};
 

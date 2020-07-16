@@ -463,7 +463,7 @@
                             }
                         }, parameters, '');
                     }else{}
-                }, this.value, this.value);
+                }, fnBarcodeKo2En(this.value), fnBarcodeKo2En(this.value));
             }
         });
         $("#mctResultBarcodeSpan").on('click', function (e) {
