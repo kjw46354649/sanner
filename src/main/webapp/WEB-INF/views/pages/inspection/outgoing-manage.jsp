@@ -378,7 +378,7 @@
                         <th>출고</th>
                         <td colspan="4" class="bg_green">
                             <button type="button" class="btn_plus" id="outgoing_manage_mini_pop_plus_btn">더하기</button>
-                            <span class="text" id="NEW_OUT_QTY_VIEW">0</span>
+                            <input type="number" class="text" id="NEW_OUT_QTY_VIEW" value="0" min="0" autocomplete="off" pattern="\d*">
                             <button type="button" class="btn_minus" id="outgoing_manage_mini_pop_minus_btn">빼기</button>
                             <button type="button" class="btn_allPlus" id="outgoing_manage_mini_pop_all_btn">전량</button>
                         </td>
@@ -1191,7 +1191,7 @@
                     let view = dataInfo.NEW_OUT_QTY + "/" + dataInfo.ORDER_QTY;
                     $("#outgoing_manage_pop_type_1_form").find("#outgoing_manage_pop_type_1_form_view_1").html(view);
                     $("#outgoing_manage_pop_type_1_form").find("#outgoing_manage_pop_type_1_form_view_2").html("0");
-                    $("#outgoing_manage_pop_type_1_form").find("#NEW_OUT_QTY_VIEW").html(dataInfo.NEW_OUT_QTY);
+                    $("#outgoing_manage_pop_type_1_form").find("#NEW_OUT_QTY_VIEW").val(dataInfo.NEW_OUT_QTY);
                     $("#outgoing_manage_pop_type_1_form").find("#ORG_NEW_OUT_QTY").val(dataInfo.NEW_OUT_QTY);
 
                 }
@@ -1288,29 +1288,30 @@
             let ORIGINAL_NEW_OUT_QTY = $('#outgoing_manage_pop_type_1_form').find('#ORG_NEW_OUT_QTY').val();
 
             $('#outgoing_manage_pop_type_1_form').find('#outgoing_manage_pop_type_1_form_view_2').html("0");
-            $('#outgoing_manage_pop_type_1_form').find('#NEW_OUT_QTY_VIEW').html(ORIGINAL_NEW_OUT_QTY);
+            $('#outgoing_manage_pop_type_1_form').find('#NEW_OUT_QTY_VIEW').val(ORIGINAL_NEW_OUT_QTY);
             $('#outgoing_manage_pop_type_1_form').find('#NEW_OUT_QTY').val(ORIGINAL_NEW_OUT_QTY);
 
         });
-        let outgoingManageMiniPopCalcQty = function(type){
+        let outgoingManageMiniPopCalcQty = function (type) {
             //ORDER_QTY 총수량, OUT_QTY 나간 수량, NEW_OUT_QTY 나갈 수량량
             let ORIGINAL_NEW_OUT_QTY = $('#outgoing_manage_pop_type_1_form').find('#ORG_NEW_OUT_QTY').val();
             let NEW_OUT_QTY = $('#outgoing_manage_pop_type_1_form').find('#NEW_OUT_QTY').val();
-
-            if(type == "PLUS"){
-                if(parseInt(ORIGINAL_NEW_OUT_QTY) > parseInt(NEW_OUT_QTY)) {
+            console.log(ORIGINAL_NEW_OUT_QTY);
+            console.log(NEW_OUT_QTY);
+            if (type == "PLUS") {
+                if (parseInt(ORIGINAL_NEW_OUT_QTY) > parseInt(NEW_OUT_QTY)) {
                     NEW_OUT_QTY = parseInt(NEW_OUT_QTY) + 1;
                 }
-            }else if(type == "MINUS"){
-                if(parseInt(NEW_OUT_QTY) >  0){
-                    NEW_OUT_QTY = parseInt(NEW_OUT_QTY)-1;
+            } else if (type == "MINUS") {
+                if (parseInt(NEW_OUT_QTY) > 0) {
+                    NEW_OUT_QTY = parseInt(NEW_OUT_QTY) - 1;
                 }
             }
             let restQty = ORIGINAL_NEW_OUT_QTY - NEW_OUT_QTY;
             $('#outgoing_manage_pop_type_1_form').find('#outgoing_manage_pop_type_1_form_view_2').html(restQty);
-            $('#outgoing_manage_pop_type_1_form').find('#NEW_OUT_QTY_VIEW').html(NEW_OUT_QTY);
+            $('#outgoing_manage_pop_type_1_form').find('#NEW_OUT_QTY_VIEW').val(NEW_OUT_QTY);
             $('#outgoing_manage_pop_type_1_form').find('#NEW_OUT_QTY').val(NEW_OUT_QTY);
-        }
+        };
         $('#outgoing_manage_return_pop_plus_btn').on('click', function(e) {
             outgoingManageReturnPopCalcQty("PLUS");
         });
@@ -1345,7 +1346,7 @@
         $('#outgoing_manage_mini_pop_save_btn').on('click', function () {
             // validation
 
-            if($("#outgoing_manage_pop_type_1_form").find("#NEW_OUT_QTY_VIEW").html() == 0){
+            if($("#outgoing_manage_pop_type_1_form").find("#NEW_OUT_QTY_VIEW").val() == 0){
                 alert("출고수량은 1개 이상이어야 합니다.");
                 return;
             }else{
@@ -1756,6 +1757,22 @@
                 return val;
             }
         }
+
+        $('#NEW_OUT_QTY_VIEW').on('change keyup paste input', function () {
+            //ORDER_QTY 총수량, OUT_QTY 나간 수량, NEW_OUT_QTY 나갈 수량량
+            let ORIGINAL_NEW_OUT_QTY = $('#outgoing_manage_pop_type_1_form').find('#ORG_NEW_OUT_QTY').val();
+            let NEW_OUT_QTY = this.value || 0;
+
+            if (Number(ORIGINAL_NEW_OUT_QTY) < Number(NEW_OUT_QTY)) {
+                this.value = ORIGINAL_NEW_OUT_QTY;
+                return false;
+            }
+
+            let restQty = ORIGINAL_NEW_OUT_QTY - NEW_OUT_QTY;
+            $('#outgoing_manage_pop_type_1_form').find('#outgoing_manage_pop_type_1_form_view_2').html(restQty);
+            $('#outgoing_manage_pop_type_1_form').find('#NEW_OUT_QTY_VIEW').val(NEW_OUT_QTY);
+            $('#outgoing_manage_pop_type_1_form').find('#NEW_OUT_QTY').val(NEW_OUT_QTY);
+        });
     });
 
 
