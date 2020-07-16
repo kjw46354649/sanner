@@ -72,7 +72,7 @@ public class PDFPringMakeController {
             //Creating a blank page
             PDPage addPage = new PDPage(PDRectangle.A4);
             //Adding the blank page to the document
-            PDImageXObject pdImageXObject = PDImageXObject.createFromFile((String)fileInfo.get("FILE_PATH"), document);
+            PDImageXObject pdImageXObject = PDImageXObject.createFromFile((String)fileInfo.get("FILE_PATH") + ".print.png", document);
             PDPageContentStream contentStream = new PDPageContentStream(document, addPage);
             contentStream.drawImage(pdImageXObject, 0, 0, PDRectangle.A4.getWidth(), PDRectangle.A4.getHeight());
             // contentStream.drawImage(pdImageXObject, 0f, -10f, pdImageXObject.getWidth() / 300f * 72, pdImageXObject.getHeight() / 300f * 72);
@@ -184,17 +184,9 @@ public class PDFPringMakeController {
             table.flushContent();
 
             if(controlInfo.get("IMAGE_PATH") != null && !"".equals(controlInfo.get("IMAGE_PATH"))) {
-                Image pngImage = Image.getInstance((String) controlInfo.get("IMAGE_PATH"));
-
-                int imageWidth = (int)pngImage.getWidth();
-                int imageHeight = (int)pngImage.getHeight();
-                if(imageWidth > imageHeight){
-                    pngImage.setRotationDegrees(90);
-                }
-
+                Image pngImage = Image.getInstance((String) controlInfo.get("IMAGE_PATH") + ".print.png");
                 pngImage.setAbsolutePosition(15, 10);
                 pngImage.scaleAbsolute(PageSize.A4.getWidth() - 30, PageSize.A4.getHeight() - 70);
-
                 document.add(pngImage);
             }
             iCount++;

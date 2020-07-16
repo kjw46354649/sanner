@@ -559,24 +559,22 @@ public class FileUploadServiceImpl implements FileUploadService {
 //        ImageIOUtil.writeImage(bim, inPDFFullPath + ".quality.png" , 300);
 
         bim = pdfRenderer.renderImageWithDPI(0, 50, ImageType.RGB);
-        ImageIOUtil.writeImage(bim, inPDFFullPath + ".thumbnail.png" , 50);
+        ImageIOUtil.writeImage(bim, outImageFullPath + ".thumbnail.png" , 50);
 
         document.close(); //모두 사용한 PDF 문서는 닫는다.
 
-//        File tempImagefile = new File(inPDFFullPath + ".quality.png");
-//        BufferedImage image = ImageIO.read(tempImagefile);
-//        int imageWidth = image.getWidth();
-//        int imageHeight = image.getHeight();
-//
-//        File targetfile = new File(outImageFullPath);
-//
-//        if(imageWidth > imageHeight){
-//            ImageUtil.rotate90(tempImagefile, targetfile);
-//        }else{
-//            tempImagefile.renameTo(targetfile);
-//        }
-//
-//         ImageUtil.resizeFix(targetfile, targetfile, (int)PDRectangle.A4.getWidth(), (int)PDRectangle.A4.getHeight());
+        File tempImagefile = new File(outImageFullPath);
+        File targetfile = new File(outImageFullPath + ".print.png");
+        BufferedImage image = ImageIO.read(tempImagefile);
+        int imageWidth = image.getWidth();
+        int imageHeight = image.getHeight();
+        if(imageWidth > imageHeight){
+            ImageUtil.rotate90(tempImagefile, targetfile);
+        }else{
+            tempImagefile.renameTo(targetfile);
+        }
+
+         ImageUtil.resizeFix(targetfile, targetfile, (int)PDRectangle.A4.getWidth(), (int)PDRectangle.A4.getHeight());
 
         return 1;
     }
