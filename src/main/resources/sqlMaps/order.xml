@@ -11,7 +11,7 @@
         IFNULL(SF_GET_COMP_NM(A.COMP_CD), SPACE(0)) AS COMP_NM, <!-- 사업자구분 -->
         A.ORDER_COMP_CD, <!-- 발주업체 -->
         IFNULL(SF_GET_COMP_NM(A.ORDER_COMP_CD), SPACE(0)) AS ORDER_COMP_NM, <!-- 발주업체 -->
-        A.ORDER_STAFF_SEQ, <!-- 구매담당자 -->
+        IFNULL(A.ORDER_STAFF_SEQ, SPACE(0)) AS ORDER_STAFF_SEQ, <!-- 구매담당자 -->
         IFNULL(SF_GET_STAFF_NM(A.ORDER_STAFF_SEQ), SPACE(0)) AS ORDER_STAFF_NM, <!-- 구매담당자  -->
         IFNULL(A.DESIGNER_NM, SPACE(0)) AS DESIGNER_NM, <!-- 설계자 -->
         IFNULL(A.NOTE, SPACE(0)) AS CONTROL_NOTE, <!-- 주문관리 비고 -->
@@ -1256,7 +1256,7 @@
         <if test="UNIT_FINAL_AMT != null and UNIT_FINAL_AMT != ''">
             UNIT_FINAL_AMT = #{UNIT_FINAL_AMT},
         </if>
-        <if test="PART_STATUS != null and PART_STATUS != ''">
+        <if test="PART_STATUS != ''">
             PART_STATUS = #{PART_STATUS},
         </if>
         <if test="MCT_NOTE != null and MCT_NOTE != ''">
@@ -1302,6 +1302,16 @@
             OUTSIDE_STATUS = #{OUTSIDE_STATUS},
             OUTSIDE_STATUS_DT = NOW(),
         </if>
+        <choose>
+            <when test="OUTSIDE_STATUS != null and OUTSIDE_STATUS != ''">
+                OUTSIDE_STATUS = #{OUTSIDE_STATUS},
+                OUTSIDE_STATUS_DT = NOW(),
+            </when>
+            <when test="OUTSIDE_STATUS == null">
+                OUTSIDE_STATUS = #{OUTSIDE_STATUS},
+                OUTSIDE_STATUS_DT = NULL,
+            </when>
+        </choose>
         <if test="OUTSIDE_IN_DT != null and OUTSIDE_IN_DT != ''">
             OUTSIDE_IN_DT = #{OUTSIDE_IN_DT},
         </if>

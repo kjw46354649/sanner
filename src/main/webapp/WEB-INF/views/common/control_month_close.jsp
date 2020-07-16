@@ -173,15 +173,9 @@
                 orderCompCdList.push(rowData.ORDER_COMP_CD);
             }
             // 중복제거
-            controlSeqList = controlSeqList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            compCdList = compCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
+            controlSeqList = [...new Set(controlSeqList)];
+            compCdList = [...new Set(compCdList)];
+            orderCompCdList = [...new Set(orderCompCdList)];
 
             for (let i = 0, CONTROL_SEQ_LIST_LENGTH = controlSeqList.length; i < CONTROL_SEQ_LIST_LENGTH; i++) {
                 controlSeqStr += controlSeqList[i];

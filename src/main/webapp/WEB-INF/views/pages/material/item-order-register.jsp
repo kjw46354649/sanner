@@ -1285,9 +1285,7 @@
             let CONCAT_SEQ = rowDataArray.substr(0 , rowDataArray.length-1);
 
             // 중복제거
-            orderList = orderList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
+            orderList = [...new Set(orderList)];
 
             if (orderList.length > 1) {
                 alert('주문번호를 확인 해 주세요.');

@@ -575,7 +575,7 @@
                                                                     GROUP BY Q.CONTROL_SEQ, Q.CONTROL_DETAIL_SEQ)
                 AND C.POP_POSITION IN ('POP010', 'POP020', 'POP030', 'POP070', 'POP080', 'POP090', 'PRQ040', 'PRQ050')
             </if>
-            <if test="INCLUDE_OUTSIDE != null and INCLUDE_OUTSIDE != ''">
+            <if test="INCLUDE_OUTSIDE == null">
                 AND A.OUTSIDE_YN = 'N' <!-- 외주 요청이 아닌경우 -->
             </if>
         GROUP BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ

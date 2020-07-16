@@ -684,9 +684,7 @@
                 controlSeqList.push(rowData.CONTROL_SEQ);
             }
             // 중복제거
-            controlSeqList = controlSeqList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
+            controlSeqList = [...new Set(controlSeqList)];
 
             for (let i = 0, CONTROL_SEQ_LIST_LENGTH = controlSeqList.length; i < CONTROL_SEQ_LIST_LENGTH; i++) {
                 controlSeqStr += controlSeqList[i];
@@ -722,9 +720,7 @@
                 controlStatusList.push(rowData.CONTROL_STATUS);
             }
             // 중복제거
-            controlStatusList = controlStatusList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
+            controlStatusList = [...new Set(controlStatusList)];
 
             if (controlStatusList.length > 1) {
                 alert('주문 상태가 다릅니다.'); //TODO: 문구 수정
@@ -817,12 +813,9 @@
                 }
 
                 // 중복제거
-                compCdList = compCdList.filter(function (element, index, array) {
-                    return array.indexOf(element) === index;
-                });
-                orderCompCdList = orderCompCdList.filter(function (element, index, array) {
-                    return array.indexOf(element) === index;
-                });
+                compCdList = [...new Set(compCdList)];
+                orderCompCdList = [...new Set(orderCompCdList)];
+
                 if (compCdList.length > 1) {
                     alert('선택된 대상들의 발주사는 동일해야 합니다.');
                     return false;

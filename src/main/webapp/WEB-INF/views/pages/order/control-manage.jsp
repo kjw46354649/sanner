@@ -127,7 +127,7 @@
         <button type="button" class="topWrap_btn" id="CONTROL_MANAGE_TOPWRAP_BTN">펼치기 / 접기</button>
     </div>
     <div class="bottomWrap row1_bottomWrap">
-        <div class="hWrap">
+        <div class="hWrap mg-bottom10">
             <div>
                 <button type="button" class="defaultBtn btn-100w" id="NEW_ORDER_REGISTRATION">신규 주문 등록</button>
                 <button type="button" class="defaultBtn btn-100w" id="DRAWING_REGISTRATION">도면 등록</button>
@@ -209,6 +209,10 @@
     $(function () {
         'use strict';
         /* variable */
+        const FAMILY_COMPANY = fnCommCodeDatasourceGridSelectBoxCreate({
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
+        });
         const ORDER_COMPANY = fnCommCodeDatasourceGridSelectBoxCreate({
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
@@ -285,26 +289,7 @@
 
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 },
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: ORDER_COMPANY},
-                /*render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === undefined || cellData === '') {
-                        return '';
-                    } else {
-                        let index = ORDER_COMPANY.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = ORDER_COMPANY.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return controlManageFilterRender(ui);
-                    }
-                }*/
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: FAMILY_COMPANY}
             },
             {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD_NM', hidden: true},
             {
@@ -315,26 +300,7 @@
 
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 },
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: ORDER_COMPANY},
-                /*render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === undefined || cellData === '') {
-                        return '';
-                    } else {
-                        let index = ORDER_COMPANY.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = ORDER_COMPANY.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return controlManageFilterRender(ui);
-                    }
-                }*/
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: ORDER_COMPANY}
             },
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD_NM', hidden: true},
             {
@@ -345,7 +311,7 @@
 
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 },
-                editor: {
+                /*editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text',
                     options: function (ui) {
                         let companyStaffList = COMPANY_STAFF.filter(function (value, index, array) {
@@ -373,7 +339,7 @@
 
                         return (index < 0) ? cellData : COMPANY_STAFF[index].text;
                     }
-                }
+                }*/
             },
             {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', hidden: true},
             {
@@ -532,7 +498,24 @@
                         newRowData = fnCloneObj(newRowData);
                         newRowData.ROW_NUM = totalRecords + 1;
                         newRowData.PART_NUM = newPartNum;
-
+                        newRowData.CONTROL_PART_QTY = null;
+                        newRowData.OUT_QTY = null;
+                        newRowData.ORDER_OUT_FINISH_DT = null;
+                        newRowData.OUTSIDE_COMP_CD = null;
+                        newRowData.OUTSIDE_ORDER_NUM = null;
+                        newRowData.OUTSIDE_NOTE = null;
+                        newRowData.OUTSIDE_MATERIAL_SUPPLY_YN = null;
+                        newRowData.OUTSIDE_REQUEST_FINISH_YN = null;
+                        newRowData.OUTSIDE_REQUEST_PROCESS_YN = null;
+                        newRowData.OUTSIDE_REQUEST_GRIND_YN = null;
+                        newRowData.OUTSIDE_REQUEST_SURFACE_YN = null;
+                        newRowData.OUTSIDE_REQUEST_ETC = null;
+                        newRowData.OUTSIDE_HOPE_DUE_DT = null;
+                        newRowData.OUTSIDE_UNIT_AMT = null;
+                        newRowData.OUTSIDE_IN_DT = null;
+                        newRowData.OUTSIDE_STATUS = null;
+                        newRowData.OUTSIDE_STATUS_DT = null;
+                        console.log(newRowData);
                         $orderManagementGrid.pqGrid('addRow', {
                             newRow: newRowData,
                             rowIndx: lastRowIndex + 1,
@@ -1308,7 +1291,7 @@
                         }
                     },
                     {
-                        title: '견적비고', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_AMT_NOTE',
+                        title: '견적비고', dataType: 'string', dataIndx: 'UNIT_AMT_NOTE',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1551,24 +1534,21 @@
             },
             sortModel: {on: false},
             load: function( event, ui ) {
+                autoMerge(this, true);
+                let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
                 let filterOpts = '<option value=\"\">All Fields</option>';
                 let frozenOts = '<option value="0">Selected</option>';
-                this.getColModel().forEach(function(column){
+                this.getColModel().forEach(function (column) {
                     let hiddenYn = column.hidden === undefined ? true : false;
-                    if(hiddenYn && column.title){
-                        filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
-                        frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
+                    if (hiddenYn && column.title) {
+                        filterOpts += '<option value="' + column.dataIndx + '">' + column.title + '</option>';
+                        frozenOts += '<option value="' + (column.leftPos + 1) + '">' + column.title + '</option>';
                     }
                 });
                 $("#controlManageFilterColumn").empty();
                 $("#controlManageFilterColumn").html(filterOpts);
                 $("#controlManageFrozen").empty();
                 $("#controlManageFrozen").html(frozenOts);
-            },
-            // editModel: {clicksToEdit: 1},
-            complete: function (event, ui) {
-                autoMerge(this, true);
-                let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
 
                 $('#CONTROL_MANAGE_RECORDS').html(data.length);
             },
@@ -1765,9 +1745,7 @@
             }
 
             // 중복제거
-            controlStatusList = controlStatusList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
+            controlStatusList = [...new Set(controlStatusList)];
 
             /**
              * 상태값이 다를 때
@@ -2060,13 +2038,8 @@
             }
 
             // 중복제거
-            compCdList = compCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-
+            compCdList = [...new Set(compCdList)];
+            orderCompCdList = [...new Set(orderCompCdList)];
             if (compCdList.length > 1) {
                 alert('선택된 대상들의 발주사와 공급사는 동일해야 합니다.');
                 return false;
@@ -2243,7 +2216,7 @@
             });
 
             //css 변경
-            $(this).removeClass('virtual-disable').siblings().addClass('virtual-disable');
+            $(this).removeClass('virtual-disable').siblings('[name=CONTROL_MANAGE_VIEW]').addClass('virtual-disable');
             $orderManagementGrid.pqGrid('refreshView');
         });
         // 거래명세표
@@ -2271,18 +2244,10 @@
                 invoiceNumList.push(rowData.INVOICE_NUM);
             }
             // 중복제거
-            controlSeqList = controlSeqList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            compCdList = compCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            invoiceNumList = invoiceNumList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
+            controlSeqList = [...new Set(controlSeqList)];
+            compCdList = [...new Set(compCdList)];
+            orderCompCdList = [...new Set(orderCompCdList)];
+            invoiceNumList = [...new Set(invoiceNumList)];
 
             if (controlSeqList.length === 0) {
                 alert('에러!');
@@ -2361,9 +2326,7 @@
                 controlSeqList.push(rowData.CONTROL_SEQ);
             }
             // 중복제거
-            controlSeqList = controlSeqList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
+            controlSeqList = [...new Set(controlSeqList)];
 
             for (let i = 0; i < controlSeqList.length; i++) {
                 controlSeqStr += controlSeqList[i];
@@ -2648,18 +2611,10 @@
                 orderStaffSeqList.push(rowData.ORDER_STAFF_SEQ);
             }
             // 중복제거
-            controlSeqList = controlSeqList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            compCdList = compCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            orderCompCdList = orderCompCdList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
-            orderStaffSeqList = orderStaffSeqList.filter(function (element, index, array) {
-                return array.indexOf(element) === index;
-            });
+            controlSeqList = [...new Set(controlSeqList)];
+            compCdList = [...new Set(compCdList)];
+            orderCompCdList = [...new Set(orderCompCdList)];
+            orderStaffSeqList = [...new Set(orderStaffSeqList)];
 
             if (controlSeqList.length === 0) {
                 alert('에러!');

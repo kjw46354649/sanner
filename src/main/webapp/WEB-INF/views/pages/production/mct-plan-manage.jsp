@@ -57,7 +57,7 @@
         </div>
     </div>
     <div class="bottomWrap">
-        <div class="hWrap" style="padding: 0px;">
+        <div class="hWrap" style="padding: 0;">
             <h2 style="height: 42px; line-height: 42px;">가공 대상 List</h2>
             <form id="MCT_PROCESS_TARGET_FORM" role="form">
                 <input type="hidden" name="queryId" id="queryId" value="machine.selectWorkPlanGridList">
@@ -574,8 +574,7 @@
             dragModel: {
                 on: true,
                 diHelper: ['CONTROL_NUM'],
-                beforeDrop: function () {
-                }
+                afterDrop: function (evt, uiDrop) {}
             },
             load: function (event, ui) {
                 let filterOpts = '<option value=\"\">All Fields</option>';
