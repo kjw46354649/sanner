@@ -130,7 +130,7 @@
         )
         SELECT
             NEXTVAL(SEQ_MAIL),  REPLACE(REPLACE(TEMPLATE_TITLE, '%CURRENT_TIME%', NOW()), '%COMP_CD%', SF_GET_COMP_NM(#{COMP_CD})),  REPLACE(#{EMAIL_CONTENT_TXT}, 'undefined', SPACE(0)),
-            SEND_NAME, SEND_EMAIL,
+            SF_GET_COMP_NM(#{COMP_CD}), SEND_EMAIL,
             <choose>
                 <when test="RECEPTION != null and RECEPTION != ''">
                     #{STAFF_EMAIL},
