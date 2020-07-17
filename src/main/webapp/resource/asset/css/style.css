@@ -21,7 +21,7 @@
 
 /* index */
 .main .leftWrap { float: left; width: 32.5%; padding: 0 1%; }
-.main .leftWrap .chartWrap { background: #fff; border: 1px solid #e2e2e2; border-radius: 3px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)";/*IE 8*/ -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*FF 3.5+*/ -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*Saf3-4, Chrome, iOS 4.0.2-4.2, Android 2.3+*/ box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); margin-bottom: 25px; /*IE 5.5-7*/ }
+.main .leftWrap .chartWrap { background: #fff; border: 1px solid #e2e2e2; border-radius: 3px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)";/*IE 8*/ -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*FF 3.5+*/ -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*Saf3-4, Chrome, iOS 4.0.2-4.2, Android 2.3+*/ box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); margin-bottom: 13px; /*IE 5.5-7*/ }
 .main .leftWrap .hWrap { border-bottom: 1px solid #e2e2e2; font-size: 0; position: relative; }
 .main .leftWrap .hWrap h2 { height: 50px; line-height: 48px; padding-left: 20px; font-size: 16px; font-family: 'NotoKrB'; color: #000; display: inline-block; vertical-align: top; }
 .main .leftWrap .conWrap { padding: 10px 5px 5px; }
@@ -56,7 +56,7 @@
 .main .rightWrap .tableWrap .hWrap .ipu_wrap { display: inline-block; }
 .main .rightWrap .tableWrap .hWrap .ipu_wrap label { }
 .main .hWrap .refresh { float: right; display: inline-block; padding-top: 14px; padding-right: 20px; }
-.main .rightWrap .tableWrap .conWrap { padding: 10px; box-sizing: border-box; height: 841px; }
+.main .rightWrap .tableWrap .conWrap { padding: 10px; box-sizing: border-box; height: 830px; }
 .main .rightWrap .tableWrap .conWrap img { width: 100%; height: 100%; }
 
 /* 견적관리 */

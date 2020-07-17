@@ -311,7 +311,7 @@
 
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 },
-                /*editor: {
+                editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text',
                     options: function (ui) {
                         let companyStaffList = COMPANY_STAFF.filter(function (value, index, array) {
@@ -339,7 +339,7 @@
 
                         return (index < 0) ? cellData : COMPANY_STAFF[index].text;
                     }
-                }*/
+                }
             },
             {title: '구매담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', hidden: true},
             {
@@ -1519,6 +1519,7 @@
             showTitle: false,
             strNoRows: g_noData,
             rowHtHead: 15,
+            copyModel: {render: true},
             numberCell: {title: 'No.'},
             trackModel: {on: true},
             editable: false,

@@ -1441,14 +1441,9 @@
         <if test="MATERIAL_KIND != null and MATERIAL_KIND != ''">
             AND B.MATERIAL_KIND = #{MATERIAL_KIND}
         </if>
-        <choose>
-            <when test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
-                AND EMERGENCY_YN = 'Y'
-            </when>
-            <otherwise>
-                AND EMERGENCY_YN = 'N'
-            </otherwise>
-        </choose>
+        <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
+            AND EMERGENCY_YN = 'Y'
+        </if>
         ORDER BY A.CONTROL_SEQ, B.PART_NUM
     </select>
 

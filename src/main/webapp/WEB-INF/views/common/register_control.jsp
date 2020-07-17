@@ -496,6 +496,11 @@
                                 return false;
                             }
 
+                            let parameters = {
+                                'url': '/createNewOrder',
+                                'data': {data: JSON.stringify(data)}
+                            };
+
                             fnPostAjax(function () {
                                 alert("<spring:message code='com.alert.default.save.success' />");
                                 window.close();
@@ -1014,12 +1019,12 @@
         // cell 색 변경
         const changeCellColor = function (list, prevList) {
             for(let i in prevList) {
-                $orderRegisterGrid.pqGrid('removeClass', {rowIndx: prevList[i].rowIndx, dataIndx: prevList[i].dataIndx, cls: 'bg-lightgray'} );
+                $orderRegisterGrid.pqGrid('removeClass', {rowIndx: prevList[i].rowIndx, dataIndx: prevList[i].dataIndx, cls: 'bg-lightcoral'} );
             }
 
             if (list.length > 0) {
                 for(let i in list) {
-                    $orderRegisterGrid.pqGrid('addClass', {rowIndx: list[i].rowIndx, dataIndx: list[i].dataIndx, cls: 'bg-lightgray'} );
+                    $orderRegisterGrid.pqGrid('addClass', {rowIndx: list[i].rowIndx, dataIndx: list[i].dataIndx, cls: 'bg-lightcoral'} );
                 }
             }
         };
