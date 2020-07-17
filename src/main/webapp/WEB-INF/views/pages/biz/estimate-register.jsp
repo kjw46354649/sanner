@@ -649,7 +649,7 @@
             selectionModel : {type: 'row', mode: 'single'}, numberCell: {title: 'No.'}, dragColumns: {enabled: false},
             editable : false,
             scrollModel: {autoFit: false}, trackModel: {on: true}, showBottom : true, postRenderInterval: -1, //call postRender synchronously.
-            columnTemplate: { align: 'center', halign: 'center', hvalign: 'center' }, //to vertically center align the header cells.
+            columnTemplate: { align: 'center', halign: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
             colModel: estimateRegisterFileModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -683,7 +683,7 @@
             },
             postRenderInterval: -1, //call postRender synchronously.
             scrollModel: { autoFit: false },
-            columnTemplate: {align: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
             numberCell: {width: 30, title: "No", show: true },
             //selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
@@ -844,7 +844,7 @@
                 numberCell: {width: 30, title: "No", show: true },
                 //selectionModel: { type: 'row', mode: 'single'} ,
                 collapsible: false,
-                columnTemplate: { align: 'center', halign: 'center', hvalign: 'center' },
+                columnTemplate: { align: 'center', halign: 'center', hvalign: 'center', valign: 'center' },
                 swipeModel: {on: false},
                 trackModel: {on: true},
                 resizable: false,

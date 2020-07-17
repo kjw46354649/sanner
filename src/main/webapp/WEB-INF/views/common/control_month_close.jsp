@@ -109,7 +109,7 @@
             rowHtHead: 15,
             scrollModel: {autoFit: true},
             dragColumns: {enabled: false},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: controlMonthCloseLeftColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -145,7 +145,7 @@
             rowHtHead: 15,
             scrollModel: {autoFit: true},
             dragColumns: {enabled: false},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: controlMonthCloseRightColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',

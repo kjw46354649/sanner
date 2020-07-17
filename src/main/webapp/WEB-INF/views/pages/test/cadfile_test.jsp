@@ -145,7 +145,7 @@
             columnTemplate: {
                 align: 'center',
                 halign: 'center',
-                hvalign: 'center' //to vertically center align the header cells.
+                hvalign: 'center', valign: 'center' //to vertically center align the header cells.
             },
             colModel: [
                 {title: 'ROWNUM', dataType: 'integer', dataIndx: 'ROWNUM', hidden: true, width: 70, minWidth: 70, colModel: []},

@@ -525,7 +525,7 @@
                 }
             },
             strNoRows: g_noData,
-            columnTemplate: {align: 'center', hvalign: 'center', render: stockManageFilterRender}, filterModel: { mode: 'OR' },
+            columnTemplate: {align: 'center', hvalign: 'center', valign: 'center', render: stockManageFilterRender}, filterModel: { mode: 'OR' },
             //scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
             //selectionModel: { type: 'row', mode: 'single'} ,

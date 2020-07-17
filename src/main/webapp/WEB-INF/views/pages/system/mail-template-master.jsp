@@ -137,7 +137,7 @@
             showTitle: false,
             numberCell: {title: 'No.'},
             editable: false,
-            columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
+            columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
             colModel: mailTempalteMasterColModel,
             dataModel: {
                 recIndx: 'USER_ID', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',

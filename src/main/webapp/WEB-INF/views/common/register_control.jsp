@@ -519,7 +519,7 @@
             // trackModel: {on: true},
             numberCell: {title: 'No.'},
             dragColumns: {enabled: false},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
             colModel: popupColModel,
             copyModel: {render: true},
             toolbar: popupToolbar,

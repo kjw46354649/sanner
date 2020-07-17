@@ -1444,7 +1444,7 @@
         <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
             AND EMERGENCY_YN = 'Y'
         </if>
-        ORDER BY A.CONTROL_SEQ, B.PART_NUM
+        ORDER BY A.STATUS_DT DESC, A.CONTROL_SEQ, B.PART_NUM
     </select>
 
     <select id="selectOutsideProcessingList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -1859,7 +1859,8 @@
             A.COMP_CD, <!-- 공급사 -->
             SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM, <!-- 공급사 -->
             E.INVOICE_NUM, <!-- 인보이스 넘버 -->
-            FORMAT(SUM(B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ)), 0)  AS TOTAL_AMT <!-- 금액 합계 -->
+            FORMAT(SUM(B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ)), 0)  AS TOTAL_AMT, <!-- 금액 합계 -->
+            E.INVOICE_TITLE <!-- 제목 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
@@ -2376,11 +2377,13 @@
         FROM TBL_CONTROL A
                  INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_NUM IS NULL
                  INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-            AND C.ORDER_DUE_DT BETWEEN DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -3 DAY), '%Y%m%d') AND DATE_FORMAT(NOW(), '%Y%m%d')
+<!--             AND C.ORDER_DUE_DT BETWEEN DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -3 DAY), '%Y%m%d') AND DATE_FORMAT(NOW(), '%Y%m%d') -->
                  INNER JOIN TBL_COMPANY F ON A.ORDER_COMP_CD = F.COMP_CD
                  LEFT OUTER JOIN TBL_OUT D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND C.ORDER_SEQ = D.ORDER_SEQ
         WHERE 1 = 1
-          AND IFNULL(A.EMERGENCY_YN, 'N') = 'Y'
+            AND A.CONTROL_STATUS NOT IN ('ORD003', 'ORD004')
+            AND A.EMERGENCY_YN  = 'Y'
+            AND A.DEL_YN = 'N'
         GROUP BY A.CONTROL_SEQ
         ORDER BY C.ORDER_DUE_DT
     </select>

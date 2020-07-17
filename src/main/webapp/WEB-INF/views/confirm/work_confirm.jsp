@@ -261,7 +261,7 @@
             numberCell: {title: 'No.'},
             trackModel: {on: true},
             selectionModel: {type: 'row', mode: 'single'},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: topLeftColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -389,7 +389,7 @@
             numberCell: {title: 'No.'},
             trackModel: {on: true},
             selectionModel: {type: 'row', mode: 'single'},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: topRightColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -486,7 +486,7 @@
             // scrollModel: {autoFit: true},
             trackModel: {on: true},
             selectionModel: {type: 'row', mode: 'single'},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: botLeftColModel,
             // toolbar: rightBotToolbar,
             dataModel: {
@@ -578,7 +578,7 @@
             // scrollModel: {autoFit: true},
             trackModel: {on: true},
             selectionModel: {type: 'row', mode: 'single'},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: botRightColModel,
             // toolbar: rightBotToolbar,
             dataModel: {

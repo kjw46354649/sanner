@@ -436,7 +436,7 @@
                 }
             },
             strNoRows: g_noData,
-            columnTemplate: {align: 'center', hvalign: 'center', render: inspectionManageFilterRender}, filterModel: { mode: 'OR' },
+            columnTemplate: {align: 'center', hvalign: 'center', valign: 'center', render: inspectionManageFilterRender}, filterModel: { mode: 'OR' },
             //scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
             selectionModel: { type: 'row', mode: 'single'} ,
@@ -521,7 +521,7 @@
                 }
             },
             strNoRows: g_noData,
-            columnTemplate: {align: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
             scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
             selectionModel: { type: 'row', mode: 'single'} ,
@@ -565,7 +565,7 @@
                 }
             },
             strNoRows: g_noData,
-            columnTemplate: {align: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', hvalign: 'center', valign: 'center', editable: false},
             scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: false , styleHead: {'vertical-align':'middle'}},
             selectionModel: { type: 'row', mode: 'single'} ,

@@ -836,7 +836,7 @@
                 }
             },
             postRenderInterval: -1,
-            columnTemplate: {align: 'center', hvalign: 'center', render: itemOrderRegisterFilterRender}, filterModel: { mode: 'OR' },
+            columnTemplate: {align: 'center', hvalign: 'center', valign: 'center', render: itemOrderRegisterFilterRender}, filterModel: { mode: 'OR' },
             scrollModel: {autoFit: false},
             numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'cell', mode: 'multiple'} ,
@@ -926,7 +926,7 @@
                         return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                     }
                 },
-                columnTemplate: {align: 'center', hvalign: 'center'},
+                columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
                 scrollModel: {autoFit: false},
                 numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'row', mode: 'single'} ,
@@ -1001,7 +1001,7 @@
                         return {data: dataJSON.data};
                     }
                 },
-                columnTemplate: {align: 'center', hvalign: 'center'},
+                columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
                 scrollModel: {autoFit: false},
                 numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'row', mode: 'single'} ,

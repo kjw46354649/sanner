@@ -609,7 +609,7 @@
                 }
             },
             scrollModel: { autoFit: false },
-            columnTemplate: {align: 'center', hvalign: 'center', render: estimateListFilterRender}, filterModel: { mode: 'OR' },
+            columnTemplate: {align: 'center', hvalign: 'center', valign: 'center', render: estimateListFilterRender}, filterModel: { mode: 'OR' },
             numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
@@ -687,7 +687,7 @@
                 },
                 postRenderInterval: -1, //call postRender synchronously.
                 scrollModel: { autoFit: false },
-                columnTemplate: {align: 'center', hvalign: 'center'},
+                columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
                 numberCell: {width: 30, title: "No", show: true },
                 //selectionModel: { type: 'row', mode: 'single'} ,
                 swipeModel: {on: false},

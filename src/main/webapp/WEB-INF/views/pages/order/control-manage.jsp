@@ -1158,17 +1158,17 @@
 
                             return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-                            let rowData = ui.rowData;
-                            let cls = null, text = cellData;
-
-                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
-                                cls = 'bg-lightgray';
-                            }
-
-                            return {cls: cls, text: controlManageFilterRender(ui)};
-                        }
+                        // render: function (ui) {
+                        //     let cellData = ui.cellData;
+                        //     let rowData = ui.rowData;
+                        //     let cls = null, text = cellData;
+                        //
+                        //     if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                        //         cls = 'bg-lightgray';
+                        //     }
+                        //
+                        //     return {cls: cls, text: controlManageFilterRender(ui)};
+                        // }
                     },
                     {
                         title: 'TM각비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_TM_AMT',
@@ -1523,7 +1523,7 @@
             numberCell: {title: 'No.'},
             trackModel: {on: true},
             editable: false,
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', render: controlManageFilterRender},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', render: controlManageFilterRender},
             filterModel: {mode: 'OR'},
             colModel: colModel,
             dataModel: {
@@ -1919,6 +1919,14 @@
                 grid.refreshView();
             }
         };
+
+        const valiiiiiiiiiiiiiiiiiidationnnnnnnnnnnnnnnnn = function () {
+            var gridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
+            let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
+            var addList = gridInstance.getChanges().addList;
+            var updateList = gridInstance.getChanges().updateList;
+        };
+
         /* function */
 
         /* event */
@@ -2340,18 +2348,23 @@
         });
         // 바코드도면출력
         $('#BARCODE_DRAWING_PRINT').on('click', function () {
+            if (noSelectedRowAlert()) return false;
+
             let printHtml  = "";
             let selectedRowCount = selectedOrderManagementRowIndex.length;
             let selectControlList = "";
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-                if(!rowData.IMG_GFILE_SEQ){
+                if (!rowData.IMG_GFILE_SEQ) {
                     alert("이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.");
                     return;
-                }else{
-                    console.log(rowData.CONTROL_SEQ);
-                    console.log(rowData.CONTROL_DETAIL_SEQ);
-                    selectControlList += rowData.CONTROL_SEQ+''+rowData.CONTROL_DETAIL_SEQ+"^";
+                } else {
+                    selectControlList += rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ + "^";
+                }
+
+                if (!(rowData.CONTROL_STATUS === 'ORD001')) {
+                    alert('주문상태 확정 이후 출력 가능합니다');
+                    return false;
                 }
             }
             let drawingBarcodePrintModalConfirm = function(callback){
@@ -2396,6 +2409,14 @@
             if (noSelectedRowAlert()) return false;
             let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
             let selectedRowCount = selectedOrderManagementRowIndex.length;
+            for (let i = 0; i < selectedRowCount; i++) {
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+
+                if (!(rowData.CONTROL_STATUS === 'ORD001')) {
+                    alert('주문상태 확정 이후 출력 가능합니다');
+                    return false;
+                }
+            }
             bodyHtml =
                 '<h4>\n' +
                 '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
@@ -2437,6 +2458,12 @@
 
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+
+                if (!(rowData.CONTROL_STATUS === 'ORD001')) {
+                    alert('주문상태 확정 이후 출력 가능합니다');
+                    return false;
+                }
+
                 let postData = {
                     'queryId': 'inspection.selectOutgoingLabelType2',
                     'CONTROL_SEQ': rowData.CONTROL_SEQ,
@@ -2663,6 +2690,7 @@
         });
 
         $("#controlManageFrozen").on('change', function(e){
+            console.log($(this).val());
             fnFrozenHandler($orderManagementGrid, $(this).val());
         });
     });

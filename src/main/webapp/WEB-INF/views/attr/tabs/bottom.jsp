@@ -506,7 +506,7 @@
             height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
             selectionModel : {type: 'row', mode: 'single'}, numberCell: {title: 'No.'}, dragColumns: {enabled: false}, editable : false,
             scrollModel: {autoFit: true}, trackModel: {on: true}, showBottom : true, postRenderInterval: -1, //call postRender synchronously.
-            columnTemplate: { align: 'center', halign: 'center', hvalign: 'center' }, //to vertically center align the header cells.
+            columnTemplate: { align: 'center', halign: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
             colModel: controlCadFileColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -582,7 +582,7 @@
             selectionModel : {type: 'row', mode: 'single'}, numberCell: {title: 'No.'}, dragColumns: {enabled: false}, editable : false,
             strNoRows: '<div style="font-size:14px;margin-top:20px;">마우스로 파일을 Drag & Drop 하세요.</div>',
             scrollModel: {autoFit: false}, trackModel: {on: true}, showBottom : true, postRenderInterval: -1, //call postRender synchronously.
-            columnTemplate: { align: 'center', halign: 'center', hvalign: 'center' }, //to vertically center align the header cells.
+            columnTemplate: { align: 'center', halign: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
             colModel: commonUploadFileListColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -813,7 +813,7 @@
         selectionModel : {type: 'row', mode: 'single'}, numberCell: {title: 'No.'}, dragColumns: {enabled: false},
         editable : false,
         scrollModel: {autoFit: false}, trackModel: {on: true}, showBottom : true, postRenderInterval: -1, //call postRender synchronously.
-        columnTemplate: { align: 'center', halign: 'center', hvalign: 'center' }, //to vertically center align the header cells.
+        columnTemplate: { align: 'center', halign: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
         colModel: commonFileDownUploadModel,
         dataModel: {
             location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -937,7 +937,7 @@
             }
         },
         strNoRows: g_noData,
-        columnTemplate: {align: 'center', hvalign: 'center'},
+        columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
         scrollModel: {autoFit: true},
         numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
         selectionModel: { type: 'row', mode: 'single'} ,
@@ -967,7 +967,7 @@
             }
         },
         strNoRows: g_noData,
-        columnTemplate: {align: 'center', hvalign: 'center'},
+        columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
         scrollModel: {autoFit: true},
         numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
         selectionModel: { type: 'row', mode: 'single'} ,
@@ -995,7 +995,7 @@
             }
         },
         strNoRows: g_noData,
-        columnTemplate: {align: 'center', hvalign: 'center'},
+        columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
         scrollModel: {autoFit: true},
         numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
         selectionModel: { type: 'row', mode: 'single'} ,
@@ -1051,7 +1051,7 @@
         },
         postRenderInterval: -1,
         strNoRows: g_noData,
-        columnTemplate: {align: 'center', hvalign: 'center'},
+        columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
         scrollModel: {autoFit: true},
         numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
         selectionModel: { type: 'row', mode: 'single'} ,
@@ -1111,7 +1111,7 @@
             }
         },
         strNoRows: g_noData,
-        columnTemplate: {align: 'center', hvalign: 'center'},
+        columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
         scrollModel: {autoFit: true},
         numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
         selectionModel: { type: 'row', mode: 'single'} ,
@@ -1357,7 +1357,7 @@
            }
         },
         strNoRows: g_noData,
-        columnTemplate: {align: 'center', hvalign: 'center'},
+        columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
         //scrollModel: {autoFit: true},
         numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
         selectionModel: { type: 'row', mode: 'single'} ,
@@ -1465,7 +1465,7 @@
                 return {data: dataJSON.data};
             }
         },
-        columnTemplate: {align: 'center', hvalign: 'center'},
+        columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
         scrollModel: {autoFit: false},
         numberCell: {width: 30, title: "No", show: true },
         selectionModel: { type: 'row', mode: 'single'} ,

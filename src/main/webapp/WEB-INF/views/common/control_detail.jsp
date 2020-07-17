@@ -95,7 +95,7 @@
             resizable: false,
             showTitle: false,
             rowHtHead: 15,
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: detailListViewColModel,
             strNoRows: g_noData,
             // dataModel: {data: qwe}

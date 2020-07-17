@@ -175,7 +175,7 @@
             rowHtHead: 15,
             // dragColumns: {enabled: false},
             trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             editModel: {clicksToEdit: 1},
             colModel: transactionStatementColModel,
             dataModel: {
@@ -234,6 +234,7 @@
             $('#TRANSACTION_STATEMENT_FORM #TOTAL_AMT').text(obj.TOTAL_AMT);
             $('#TRANSACTION_STATEMENT_FORM #INVOICE_NUM').text(obj.INVOICE_NUM);
             $('#TRANSACTION_STATEMENT_FORM #INVOICE_NUM_INPUT').val(obj.INVOICE_NUM);
+            $('#TRANSACTION_STATEMENT_FORM #INVOICE_TITLE').val(obj.INVOICE_TITLE);
 
             $transactionStatementGrid = $('#' + transactionStatementGridId).pqGrid(transactionStatementObj);
             $('#TRANSACTION_STATEMENT_FORM #queryId').val('orderMapper.selectControlTransactionStatementList');
@@ -262,6 +263,7 @@
         /* event */
         // 라벨 출력
         $('#TRANSACTION_STATEMENT_LABEL_PRINT').on('click', function () {
+            console.log(1111);
             let barcodeList = [];
             let data = $transactionStatementGrid.pqGrid('option', 'dataModel.data');
 
@@ -452,6 +454,12 @@
 
         $('#TRANSACTION_STATEMENT_POPUP_CLOSE_BUTTON').on('click', function () {
             window.close();
+        });
+
+        $('#INVOICE_TITLE').on('keydown', function (e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+            }
         });
         /* event */
     });

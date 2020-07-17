@@ -741,7 +741,7 @@
         const tab1Obj = {
             minHeight: '100%', height: 720, collapsible: false, postRenderInterval: -1, //call postRender synchronously.
             resizable: false, showTitle: false, strNoRows: g_noData, rowHtHead: 15, numberCell: {title: 'No.'},
-            trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false, render: camWorkHistoryFilterRender}, filterModel: { mode: 'OR' },
+            trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false, render: camWorkHistoryFilterRender}, filterModel: { mode: 'OR' },
             colModel: tab1ColModel,
             // height: 720,
             // minHeight: '100%',
@@ -752,7 +752,7 @@
             // rowHtHead: 15,
             // numberCell: {title: 'No.'},
             // trackModel: {on: true},
-            // columnTemplate: {align: 'center', halign: 'center', hvalign: 'center',  editable: false, render: camWorkHistoryFilterRender}, filterModel: { mode: 'OR' },
+            // columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center',  editable: false, render: camWorkHistoryFilterRender}, filterModel: { mode: 'OR' },
             // colModel: tab1ColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -842,7 +842,7 @@
             numberCell: {title: 'No.'},
             scrollModel: {autoFit: false},
             // trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false, render: ncPerformanceHistoryFilterRender}, filterModel: { mode: 'OR' },
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false, render: ncPerformanceHistoryFilterRender}, filterModel: { mode: 'OR' },
             colModel: tab2ColModel,
             toolPanel: {show: false},
             dataModel: {

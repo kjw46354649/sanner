@@ -192,7 +192,7 @@
             var popMasterObj = {
                 width: "100%", height: 1720, collapsible: false, postRenderInterval: -1, //call postRender synchronously.
                 resizable: false, showTitle: false, strNoRows: g_noData, numberCell: {width:50, title: 'No.'}, editable: false, scrollModel: { autoFit: false },
-                trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+                trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
                 colModel: popMasterColModel,
                 dataModel: {
                     recIndx: 'ROWNUM', location: 'remote', dataType: 'json', method: 'POST', url: '/popParamQueryGridSelect',

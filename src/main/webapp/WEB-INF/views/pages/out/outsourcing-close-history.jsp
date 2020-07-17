@@ -312,7 +312,7 @@
             // scrollModel: {autoFit: true},
             trackModel: {on: true},
             editable: false,
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', render: outsourcingCloseHistoryFilterRender}, filterModel: { mode: 'OR' },
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', render: outsourcingCloseHistoryFilterRender}, filterModel: { mode: 'OR' },
             colModel: colModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -415,7 +415,7 @@
             // scrollModel: {autoFit: true},
             rowHtHead: 15,
             dragColumns: {enabled: false},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: outsideCloseCancelLeftColModel,
             strNoRows: g_noData,
             dataModel: {
@@ -449,7 +449,7 @@
             // scrollModel: {autoFit: true},
             rowHtHead: 15,
             dragColumns: {enabled: false},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: outsideCloseCancelLeftColModel,
             strNoRows: g_noData,
             dataModel: {

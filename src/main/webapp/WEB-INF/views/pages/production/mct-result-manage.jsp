@@ -700,7 +700,7 @@
         let machineResultManageObj = {
             minHeight: '100%', height: 730, collapsible: false, postRenderInterval: -1, //call postRender synchronously.
             resizable: false, showTitle: false, strNoRows: g_noData, rowHtHead: 15, numberCell: {title: 'No.'},
-            trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false, render: mctResultManageFilterRender}, filterModel: { mode: 'OR' },
+            trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false, render: mctResultManageFilterRender}, filterModel: { mode: 'OR' },
             colModel: machineResultManagecolModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',

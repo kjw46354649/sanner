@@ -280,7 +280,7 @@
                     return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                 }
             },
-            columnTemplate: {align: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
             scrollModel: {autoFit: false},
             numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'row', mode: 'single'} ,
@@ -354,7 +354,7 @@
                     }
                 },
                 postRenderInterval: -1,
-                columnTemplate: {align: 'center', hvalign: 'center'},
+                columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
                 scrollModel: {autoFit: false},
                 numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'row', mode: 'single'} ,
