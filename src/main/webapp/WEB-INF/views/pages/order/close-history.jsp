@@ -472,7 +472,7 @@
             numberCell: {title: 'No.'},
             // scrollModel: {autoFit: true},
             trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false ,render: closeHistoryFilterRender}, filterModel: { mode: 'OR' },
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false ,render: closeHistoryFilterRender}, filterModel: { mode: 'OR' },
             colModel: colModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -581,7 +581,7 @@
             // scrollModel: {autoFit: true},
             rowHtHead: 15,
             dragColumns: {enabled: false},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: controlCloseCancelLeftColModel,
             strNoRows: g_noData,
             dataModel: {
@@ -622,7 +622,7 @@
             // dragColumns: {enabled: false},
             editable: false,
             trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
             colModel: controlCloseCancelRightColModel,
             strNoRows: g_noData,
             dataModel: {

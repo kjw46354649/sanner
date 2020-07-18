@@ -248,7 +248,7 @@
             selectionModel: {type: 'row', mode: 'single'},
             scrollModel: {autoFit: true},
             trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: tab1ColModel,
             groupModel: tab1GroupModel,
             dataModel: {
@@ -335,7 +335,7 @@
             numberCell: {show: false},
             scrollModel: {autoFit: true},
             // trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: tab2ColModel,
             groupModel: tab2GroupModel,
             toolPanel: {

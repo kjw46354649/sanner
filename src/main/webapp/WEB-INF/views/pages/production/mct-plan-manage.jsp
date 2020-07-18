@@ -63,8 +63,8 @@
                 <input type="hidden" name="queryId" id="queryId" value="machine.selectWorkPlanGridList">
 
                 <span class="slt_wrap mg-left20">
-                    <label class="label_80" for="FACTORY_CLASSIFY">공장구분</label>
-                    <select class="wd_100" name="FACTORY_CLASSIFY" id="FACTORY_CLASSIFY" title="공장구분">
+                    <label class="label_50" for="FACTORY_CLASSIFY">공장구분</label>
+                    <select class="wd_70" name="FACTORY_CLASSIFY" id="FACTORY_CLASSIFY" title="공장구분">
                         <option value="">All</option>
                         <c:forEach var="code" items="${HighCode.H_1014}">
                             <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -73,8 +73,8 @@
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
-                    <label class="label_80" for="POP_POSITION">위치</label>
-                    <select class="wd_100" id="POP_POSITION" name="POP_POSITION" title="위치">
+                    <label class="label_50" for="POP_POSITION">위치</label>
+                    <select class="wd_70" id="POP_POSITION" name="POP_POSITION" title="위치">
                         <option value="">ALL</option>
                         <c:forEach var="code" items="${HighCode.H_1009}">
                             <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -83,7 +83,7 @@
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
-                    <label class="label_80" for="MATERIAL_DETAIL">소재분류</label>
+                    <label class="label_50" for="MATERIAL_DETAIL">소재분류</label>
                     <select class="wd_100" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" title="소재분류">
                         <option value="">All</option>
                         <c:forEach var="code" items="${HighCode.H_1027}">
@@ -93,7 +93,7 @@
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
-                    <label class="label_80" for="PART_STATUS">진행상태</label>
+                    <label class="label_50" for="PART_STATUS">진행상태</label>
                     <select class="wd_100" name="PART_STATUS" id="PART_STATUS" title="진행상태">
                         <option value="">All</option>
                         <c:forEach var="code" items="${HighCode.H_1013}">
@@ -103,14 +103,14 @@
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
-                    <label class="label_80" for="EQUIP_SEQ">MCT No.</label>
+                    <label class="label_50" for="EQUIP_SEQ">MCT No.</label>
                     <select class="wd_100" name="EQUIP_SEQ" id="EQUIP_SEQ" title="MCT No.">
                         <option value="">ALL</option>
                     </select>
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
-                    <label class="label_80" for="MCT_WORK_TYPE">작업구분</label>
+                    <label class="label_50" for="MCT_WORK_TYPE">작업구분</label>
                     <select class="wd_100" name="MCT_WORK_TYPE" id="MCT_WORK_TYPE" title="작업구분">
                         <option value="">All</option>
                         <c:forEach var="code" items="${HighCode.H_1011}">
@@ -119,23 +119,24 @@
                     </select>
                 </span>
                 <span class="gubun"></span>
-                <span class="refresh mg-left10"><button type="button" id="MCT_TARGET_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
-                <div style="margin: 0 0 10px 20px;">
-                    <span class="slt_wrap">
+                <span class="slt_wrap">
                         <input type="checkbox" name="PLAN_ONLY" id="PLAN_ONLY">
-                        <label class="label_100" for="PLAN_ONLY">계획단계 대상만 조회</label>
+                        <label class="label_50" for="PLAN_ONLY">계획단계만</label>
                     </span>
-                    <span class="gubun"></span>
-                    <span class="slt_wrap">
+                <span class="gubun"></span>
+                <span class="slt_wrap">
                         <input type="checkbox" name="INCLUDE_OUTSIDE" id="INCLUDE_OUTSIDE">
-                        <label class="label_100" for="INCLUDE_OUTSIDE">외주 대상 포함 조회</label>
+                        <label class="label_50" for="INCLUDE_OUTSIDE">외주 포함</label>
                     </span>
-                    <span class="gubun"></span>
-                    <span class="slt_wrap">
+                <span class="gubun"></span>
+                <span class="slt_wrap">
                         <input type="checkbox" name="INCLUDE_PROCESSING" id="INCLUDE_PROCESSING">
                         <label class="label_80" for="INCLUDE_PROCESSING">가공 완료 포함</label>
                     </span>
-                </div>
+                <span class="refresh mg-left10"><button type="button" id="MCT_TARGET_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
+<%--                <div style="margin: 0 0 10px 20px;">--%>
+
+<%--                </div>--%>
             </form>
 <%--            <div style="display:flow-root; margin: 0 20px 10px 20px;">--%>
 <%--                <input type="text" id="mctPlanManageFilterKeyword" placeholder="Enter your keyword">--%>
@@ -278,11 +279,9 @@
             {title: 'SORT_NUM', dataType: 'integer', dataIndx: 'SORT_NUM', hidden: true},
             {title: '납기', width: 150, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
             {title: '관리번호', minWidht: 300, width: 300, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM'},
             {title: '수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
             {title: '재질', width: 70, dataType: 'string', dataIndx: 'MATERIAL_TYPE', hidden: true},
             {title: '재질', width: 70, dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM_SUBSTR'},
-            {title: '규격', width: 50, dataType: 'string', dataIndx: 'SIZE_TXT'},
             {title: '예상', dataType: 'string', dataIndx: 'WORKING_TIME'},
             {
                 title: '', dataType: 'string', dataIndx: 'DELETE_BUTTON', editable: false,
@@ -314,7 +313,7 @@
             scrollModel: {autoFit: true},
             trackModel: {on: true},
             editable: true,
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
             colModel: processPlanColModel,
             strNoRows: g_noData,
             dataModel: {
@@ -560,7 +559,7 @@
             editModel: {clicksToEdit: 1},
             trackModel: {on: true},
             editable: false,
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
             filterModel: {mode: 'OR'},
             colModel: processTargetGridColModel,
             strNoRows: g_noData,

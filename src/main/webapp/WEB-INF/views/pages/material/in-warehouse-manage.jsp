@@ -619,7 +619,7 @@
                 }
             },
             postRenderInterval: -1,
-            columnTemplate: {align: 'center', hvalign: 'center', render: inWarehouseManageFilterRender}, filterModel: { mode: 'OR' },
+            columnTemplate: {align: 'center', hvalign: 'center', valign: 'center', render: inWarehouseManageFilterRender}, filterModel: { mode: 'OR' },
             scrollModel: {autoFit: false},
             numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'row', mode: 'single'} ,
@@ -708,7 +708,7 @@
                     }
                 },
                 postRenderInterval: -1, //call postRender synchronously.
-                columnTemplate: {align: 'center', hvalign: 'center'},
+                columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
                 scrollModel: {autoFit: false},
                 numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'row', mode: 'single'} ,
@@ -744,7 +744,7 @@
                         return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                     }
                 },
-                columnTemplate: {align: 'center', hvalign: 'center', render: inWarehouseManageOutFilterRender}, filterModel: { mode: 'OR' },
+                columnTemplate: {align: 'center', hvalign: 'center', valign: 'center', render: inWarehouseManageOutFilterRender}, filterModel: { mode: 'OR' },
                 scrollModel: {autoFit: false},
                 numberCell: {width: 30, title: "No", show: true},
                 selectionModel: {type: 'row', mode: 'single'},

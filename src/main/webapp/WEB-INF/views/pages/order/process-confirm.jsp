@@ -253,7 +253,7 @@
             numberCell: {title: 'No.'},
             trackModel: {on: true},
             selectionModel: {type: 'row', mode: 'single'},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: topLeftColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -383,7 +383,7 @@
             numberCell: {title: 'No.'},
             trackModel: {on: true},
             selectionModel: {type: 'row', mode: 'single'},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: topRightColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -480,7 +480,7 @@
             // scrollModel: {autoFit: true},
             trackModel: {on: true},
             selectionModel: {type: 'row', mode: 'single'},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: botLeftColModel,
             // toolbar: rightBotToolbar,
             dataModel: {
@@ -573,7 +573,7 @@
             // scrollModel: {autoFit: true},
             trackModel: {on: true},
             selectionModel: {type: 'row', mode: 'single'},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: botRightColModel,
             // toolbar: rightBotToolbar,
             dataModel: {
@@ -647,13 +647,7 @@
                 QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateControlPartStatus', 'orderMapper.createControlPartProgress', 'orderMapper.updateControlPartAssembly']};
             }*/
             if (hasInStock(rowData)) {
-                let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인';
-                bodyHtml =
-                    '<h4>\n' +
-                    '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                    '    <span>소재입고된 항목은 확정취소가 불가능합니다.</span>\n' +
-                    '</h4>';
-                fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
+                showMessage('소재입고된 항목은 확정취소가 불가능합니다.');
                 return false;
             } else {
                 QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateControlPartStatus', 'orderMapper.createControlPartProgress']};
@@ -666,6 +660,14 @@
                 }, parameters, '');
             }
         };
+
+        let showMessage = function(message){
+            dhx.message({
+                text: message, icon: "dxi-close", "expire": 2000, "position": "top-right", type:"myCss"
+            });
+        };
+
+        /* function */
 
         $('#CONFIRM_ORDER_SEARCH_FORM').on('change', function() {
             topLeftPostData = fnFormToJsonArrayData('#CONFIRM_ORDER_SEARCH_FORM');
@@ -735,7 +737,7 @@
                         fnPostAjax(function (data, callFunctionParam) {
                             let dataInfo = data.info;
                             if (dataInfo == null) {
-                                alert("해당 바코드가 존재하지 않습니다.");
+                                showMessage('해당 바코드가 존재하지 않습니다.');
                                 return;
                             } else {
                                 updatePartStatus(dataInfo, 'PRO002');

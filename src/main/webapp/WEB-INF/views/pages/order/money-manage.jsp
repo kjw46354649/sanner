@@ -293,7 +293,7 @@
         let moneyManageStatusObj = {
             height: 770, collapsible: false, resizable: false, selectionModel: { type: 'row', mode: 'single'} ,
             showTitle: false, rowHtHead: 15, strNoRows: g_noData, numberCell: {show: false}, scrollModel: {autoFit: false}, trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center',  editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center',  editable: false},
             colModel: moneyManageStatusModel, toolbar: false,
             groupModel: moneyManageStatusGroupModel,
             dataModel: {
@@ -455,7 +455,7 @@
         let moneySalesMonthObj = {
             height: 700, width: 472, selectionModel: { type: 'row', mode: 'single'} , swipeModel: {on: false}, collapsible: false,
             trackModel: {on: true}, resizable: false, flexWidth: false, scrollModel: { autoFit: true }, showTitle: false,
-            rowHtHead: 15,numberCell: {title: 'No.'}, toolbar: false, columnTemplate: { align: 'center', hvalign: 'center' },
+            rowHtHead: 15,numberCell: {title: 'No.'}, toolbar: false, columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' },
             colModel: moneySalesMonthModel,
             dataModel: {
                 recIndx: 'ROW_NUM', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -493,7 +493,7 @@
         let moneyReceiveStatusObj = {
             height: 700, width: "100%", selectionModel: { type: 'row', mode: 'single'} , swipeModel: {on: false}, collapsible: false,
             trackModel: {on: true}, resizable: false, flexWidth: false, scrollModel: { autoFit: true }, showTitle: false, rowHtHead: 15,
-            numberCell: {title: 'No.'}, toolbar: false, columnTemplate: { align: 'center', hvalign: 'center' },
+            numberCell: {title: 'No.'}, toolbar: false, columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' },
             editModel: {clicksToEdit: 1},
             colModel: moneyReceiveStatusModel,
             dataModel: {

@@ -201,6 +201,8 @@ public class OrderServiceImpl implements OrderService {
             for (HashMap<String, Object> hashMap : listData) {
                 hashMap.put("INVOICE_NUM", invoiceNum);
                 this.orderDao.createInvoiceDetail(hashMap);
+                hashMap.put("queryId", "inspection.updateControlPartOrderPackingCnt1");
+                this.innodaleDao.update(hashMap);
             }
         }
 

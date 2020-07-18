@@ -267,7 +267,7 @@
                 }
             },
             strNoRows: g_noData,
-            columnTemplate: {align: 'center', hvalign: 'center', editable: false, render: inspectionHistoryFilterRender},
+            columnTemplate: {align: 'center', hvalign: 'center', valign: 'center', editable: false, render: inspectionHistoryFilterRender},
             filterModel: { mode: 'OR' },
             //scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},

@@ -186,7 +186,7 @@
                     return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                 }
             },
-            columnTemplate: {align: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
             scrollModel: {autoFit: false},
             rowHtHead: 15,
             numberCell: {width: 30, title: "No", show: true },
@@ -247,7 +247,7 @@
                         return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
                     }
                 },
-                columnTemplate: {align: 'center', hvalign: 'center'},
+                columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
                 scrollModel: {autoFit: true},
                 rowHtHead: 15,
                 numberCell: {width: 30, title: "No", show: true },

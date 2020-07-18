@@ -1446,7 +1446,7 @@
                 AND EMERGENCY_YN = 'Y'
             </when>
         </choose>
-        ORDER BY A.CONTROL_SEQ, B.PART_NUM
+        ORDER BY A.STATUS_DT DESC, A.CONTROL_SEQ, B.PART_NUM
     </select>
 
     <select id="selectOutsideProcessingList" parameterType="java.util.HashMap" resultType="java.util.HashMap">

@@ -199,7 +199,7 @@
                 }
             },
             strNoRows: g_noData,
-            columnTemplate: {align: 'center', hvalign: 'center', render: outgoingReturnHistoryFilterRender}, filterModel: { mode: 'OR' },
+            columnTemplate: {align: 'center', hvalign: 'center', valign: 'center', render: outgoingReturnHistoryFilterRender}, filterModel: { mode: 'OR' },
             scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
             //selectionModel: { type: 'row', mode: 'multiple'} ,

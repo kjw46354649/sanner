@@ -114,7 +114,7 @@
 			scrollModel: { autoFit: true },
 			showTitle: false,
 			numberCell: {title: 'No.'},
-			columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
+			columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
 			colModel: topColModel,
 			dataModel: {
 				location: "remote",
@@ -163,7 +163,7 @@
 			scrollModel: { autoFit: true },
 			showTitle: false,
 			numberCell: {title: 'No.'},
-			columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
+			columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
 			colModel: botColModel,
 			dataModel: {
 				location: "remote",

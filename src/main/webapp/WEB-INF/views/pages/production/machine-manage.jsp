@@ -617,7 +617,7 @@
             columnTemplate: {
                 align: 'center',
                 halign: 'center',
-                hvalign: 'center', //to vertically center align the header cells.
+                hvalign: 'center', valign: 'center', //to vertically center align the header cells.
                 editable: false
             },
             colModel: logColModel,
@@ -798,7 +798,7 @@
             columnTemplate: {
                 align: 'center',
                 halign: 'center',
-                hvalign: 'center'
+                hvalign: 'center', valign: 'center'
             },
             scrollModel: {autoFit: true},
             rowHtHead: 15,

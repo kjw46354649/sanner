@@ -815,7 +815,7 @@
                 }
             },
             strNoRows: g_noData,
-            columnTemplate: {align: 'center', hvalign: 'center', editable: false, render: outgoingManageFilterRender},
+            columnTemplate: {align: 'center', hvalign: 'center', valign: 'center', editable: false, render: outgoingManageFilterRender},
             filterModel: { mode: 'OR' },
             //scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
@@ -1023,7 +1023,7 @@
                 }
             },
             strNoRows: g_noData,
-            columnTemplate: {align: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
             //scrollModel: {autoFit: true},
             //numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
             //selectionModel: { type: 'row', mode: 'multiple'} ,

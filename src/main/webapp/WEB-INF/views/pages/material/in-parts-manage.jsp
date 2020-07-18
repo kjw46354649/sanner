@@ -512,7 +512,7 @@
             columnTemplate: {
                 align: 'center',
                 halign: 'center',
-                hvalign: 'center',
+                hvalign: 'center', valign: 'center',
                 render: inPartsManageFilterRender
             },
             filterModel: { mode: 'OR' },
@@ -610,7 +610,7 @@
             columnTemplate: {
                 align: 'center',
                 halign: 'center',
-                hvalign: 'center',
+                hvalign: 'center', valign: 'center',
                 render: inPartsManageInOutFilterRender
             },
             filterModel: { mode: 'OR' },

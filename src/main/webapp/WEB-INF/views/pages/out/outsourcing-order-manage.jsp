@@ -525,7 +525,7 @@
                         }
                     },
                     {
-                        title: '표면처리', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN',
+                        title: '표면', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -550,7 +550,7 @@
                     }
                 ]
             },
-            {title: '요망납기', width: 70, dataType: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor},
+            {title: '외주납기', width: 70, dataType: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor},
                 render: function (ui) {
                     if (!ui.cellData) {
                         let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
@@ -647,7 +647,7 @@
             numberCell: {title: 'No.'},
             trackModel: {on: true},
             editable: false,
-            columnTemplate: { align: 'center', halign: 'center', hvalign: 'center', render: outsourcingOrderManageFilterRender},
+            columnTemplate: { align: 'center', halign: 'center', hvalign: 'center', valign: 'center', render: outsourcingOrderManageFilterRender},
             filterModel: {mode: 'OR'},
             colModel: colModel,
             strNoRows: g_noData,
@@ -725,7 +725,7 @@
             trackModel: {on: true},
             dragColumns: {enabled: false},
             // editable: false,
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
             colModel: mailRecipientColModel,
             // toolbar: toolbar,
             strNoRows: g_noData,
@@ -811,7 +811,7 @@
             editable : false,
             scrollModel: {autoFit: true},
             dragColumns: {enabled: false},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
             colModel: requestOutsideFileColModel,
             strNoRows: g_noData,
             dataModel: {
@@ -943,7 +943,7 @@
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
                     {
-                        title: '표면처리', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+                        title: '표면', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
                     {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
@@ -970,7 +970,7 @@
             numberCell: {title: 'No.'},
             trackModel: {on: true},
             dragColumns: {enabled: false},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: outsideProcessRequestColModel,
             strNoRows: g_noData,
             dataModel: {
@@ -997,7 +997,7 @@
             rowHtHead: 15,
             dragColumns: {enabled: false},
             editable: false,
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
             colModel: mailRecipientColModel,
             toolbar: toolbar,
             strNoRows: g_noData,
@@ -1082,7 +1082,7 @@
             editable : false,
             scrollModel: {autoFit: true},
             dragColumns: {enabled: false},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center'},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
             colModel: cancelRequestOutsideFileColModel,
             toolbar: toolbar,
             strNoRows: g_noData,
@@ -1184,13 +1184,8 @@
                 }
             },
             {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
-            {title: '소재<br>제공', dataType: 'bool', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                editable: function (ui) {
-                    let rowData = ui.rowData;
-
-                    return rowData.OUTSIDE_STATUS !== 'OST001' || rowData.MATERIAL_SUPPLY_YN !== 'Y';
-                },
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
+            {
+                title: '소재<br>제공', dataType: 'bool', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
                     let rowData = ui.rowData;
@@ -1199,24 +1194,24 @@
                 }
             },
             {
-                title: '요청가공', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, colModel: [
+                title: '요청가공', align: 'center', colModel: [
                     {
-                        title: '완제품', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true,
+                        title: '완제품', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN',
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
                     {
-                        title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true,
+                        title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN',
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
                     {
-                        title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true,
+                        title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN',
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
                     {
-                        title: '표면<br>처리', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true,
+                        title: '표면<br>처리', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN',
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
-                    {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
+                    {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC'}
                 ]
             },
             {title: '외주<br>요망납기', datatype: 'date', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor}},
@@ -1232,8 +1227,9 @@
             scrollModel: {autoFit: true},
             rowHtHead: 15,
             dragColumns: {enabled: false},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
-            colModel: outsideProcessRequestColModel,
+            editable: false,
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
+            colModel: cancelRequestOutsideColModel,
             strNoRows: g_noData,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -1242,6 +1238,9 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            complete: function(event, ui) {
+                this.flex();
             }
         };
 
@@ -1270,7 +1269,7 @@
             scrollModel: {autoFit: true},
             rowHtHead: 15,
             dragColumns: {enabled: false},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: outsideCloseLeftColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -1301,7 +1300,7 @@
             scrollModel: {autoFit: true},
             rowHtHead: 15,
             dragColumns: {enabled: false},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: outsideCloseRightColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',

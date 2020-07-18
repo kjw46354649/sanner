@@ -253,7 +253,7 @@
             collapsible: false, resizable: false, flexWidth: false, showTitle: false,
             postRenderInterval: -1, //call postRender synchronously.
             // scrollModel: { autoFit: true },
-            columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
+            columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
             colModel: businessStatusColModel,
             dataModel: {
                 recIndx: 'ROW_NUM', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -297,11 +297,11 @@
             height: 228, width: 500, minHeight: "auto", rowHtHead: 15, numberCell: {title: 'No.'},
             selectionModel: { type: 'row', mode: 'single'}, swipeModel: {on: false}, trackModel: {on: true},
             collapsible: false, resizable: false, flexWidth: false, showTitle: false,
-            columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
+            columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
             colModel: businessEmergencyColModel,
             dataModel: {
                 recIndx: 'ROW_NUM', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'businessEmergencyList'},
+                postData: {'queryId': 'orderMapper.businessEmergencyList'},
                 getData: function (response, textStatus, jqXHR) {
                     return {data: response.data};
                 }
@@ -343,7 +343,7 @@
             selectionModel: { type: 'row', mode: 'single'}, swipeModel: {on: false}, trackModel: {on: true},
             collapsible: false, resizable: false, flexWidth: false, showTitle: false,
             postRenderInterval: -1, //call postRender synchronously.
-            columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
+            columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
             colModel: businessOverOrderColModel,
             dataModel: {
                 recIndx: 'ROW_NUM', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -375,7 +375,7 @@
             height: 228, width: 330, minHeight: "auto", numberCell: {title: 'No.'},
             selectionModel: { type: 'row', mode: 'single'}, swipeModel: {on: false}, trackModel: {on: true},
             collapsible: false, resizable: false, flexWidth: false, showTitle: false,
-            columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
+            columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
             colModel: businessOverDangerColModel,
             dataModel: {
                 recIndx: 'ROW_NUM', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',

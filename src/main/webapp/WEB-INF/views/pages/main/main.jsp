@@ -216,7 +216,7 @@
             scrollModel: { autoFit: true },
             showTitle: false,
             numberCell: {title: 'No.'},
-            columnTemplate: { align: 'center', hvalign: 'center' }, //to vertically center align the header cells.
+            columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
             colModel: mainMasterColModel,
             dataModel: {
                 recIndx: 'ROW_NUM', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
