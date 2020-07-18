@@ -1108,11 +1108,12 @@
     </update>
 
     <insert id="beforeStatusControlPartProgress" parameterType="java.util.HashMap" >
-        DELETE FROM TBL_CONTROL_PART_PROGRESS A
-        WHERE A.PART_STATUS = 'PRO006'
-            AND A.SEQ = (SELECT MAX(B.SEQ) FROM TBL_CONTROL_PART_PROGRESS B WHERE A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
-            AND A.CONTROL_SEQ = #{CONTROL_SEQ}
-            AND A.CONTROL_DETAIL_SEQ  = #{CONTROL_DETAIL_SEQ}
+        DELETE FROM TBL_CONTROL_PART_PROGRESS
+        WHERE PART_STATUS = 'PRO006'
+            AND SEQ = (SELECT MAX(A.SEQ) FROM TBL_CONTROL_PART_PROGRESS A WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
+                        AND A.CONTROL_DETAIL_SEQ  = #{CONTROL_DETAIL_SEQ})
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ  = #{CONTROL_DETAIL_SEQ}
     </insert>
 
     <insert id="beforeStatusControlPart" parameterType="java.util.HashMap" >

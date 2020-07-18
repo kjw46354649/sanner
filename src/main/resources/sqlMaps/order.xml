@@ -1445,9 +1445,6 @@
             <when test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
                 AND EMERGENCY_YN = 'Y'
             </when>
-            <otherwise>
-                AND EMERGENCY_YN = 'N'
-            </otherwise>
         </choose>
         ORDER BY A.CONTROL_SEQ, B.PART_NUM
     </select>
