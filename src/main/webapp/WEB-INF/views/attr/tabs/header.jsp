@@ -35,6 +35,10 @@
 <!-- print -->
 <link rel="stylesheet" type="text/css" href='/resource/plugins/print.js/print.min.css' />
 
+<!-- alertify -->
+<link rel="stylesheet" type="text/css" href="/resource/plugins/alertifyjs/css/alertify.css" />
+<link rel="stylesheet" type="text/css" href="/resource/plugins/alertifyjs/css/themes/default.css" />
+
 <link rel="stylesheet" type="text/css" href="/resource/asset/css/reset.css" />
 <link rel="stylesheet" type="text/css" href="/resource/asset/css/webFont.css" />
 <link rel="stylesheet" type="text/css" href="/resource/asset/css/common.css" />
@@ -49,8 +53,3 @@
 
 <!-- Multi Select -->
 <link rel="stylesheet" type="text/css" href="/resource/plugins/multi_select/example-styles.css" />
-
-
-
-
-

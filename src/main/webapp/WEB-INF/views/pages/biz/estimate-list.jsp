@@ -156,7 +156,7 @@
                             return '<button type="button" id="estimateOrder" data-seq="'+EST_SEQ+'" data-ver="'+EST_VER+'" class="miniBtn blue">주문등록</button>'
                         }
                     }   else {
-                        return '<span class="miniBtn blue">등록완료</span>'
+                        return '<span class="miniBtn gray">등록완료</span>'
                     }
                 }
             },
