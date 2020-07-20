@@ -558,8 +558,8 @@ public class FileUploadServiceImpl implements FileUploadService {
         ImageIOUtil.writeImage(bim, outImageFullPath , 300);
 //        ImageIOUtil.writeImage(bim, inPDFFullPath + ".quality.png" , 300);
 
-        bim = pdfRenderer.renderImageWithDPI(0, 50, ImageType.RGB);
-        ImageIOUtil.writeImage(bim, outImageFullPath + ".thumbnail.png" , 50);
+        bim = pdfRenderer.renderImageWithDPI(0, 70, ImageType.RGB);
+        ImageIOUtil.writeImage(bim, outImageFullPath + ".thumbnail.png" , 70);
 
         document.close(); //모두 사용한 PDF 문서는 닫는다.
 
@@ -574,7 +574,7 @@ public class FileUploadServiceImpl implements FileUploadService {
             tempImagefile.renameTo(targetfile);
         }
 
-         ImageUtil.resizeFix(targetfile, targetfile, (int)PDRectangle.A4.getWidth(), (int)PDRectangle.A4.getHeight());
+        //ImageUtil.resizeFix(targetfile, targetfile, (int)PDRectangle.A4.getWidth(), (int)PDRectangle.A4.getHeight());
 
         return 1;
     }
