@@ -167,31 +167,19 @@
             });
 
             var popMasterColModel = [
-                {title: '긴급', minWidth: 30, width: 45, dataType: 'string', aligin: 'center', dataIndx: 'EMERGENCY_YN'},
+                {title: '긴', minWidth: 25, width: 25, dataType: 'string', aligin: 'center', dataIndx: 'EMERGENCY_YN'},
                 {title: '가공납기', minWidth: 30, width: 85, datatype: 'string', dataIndx: 'INNER_DUE_DT'},
                 {title: '발주업체', minWidth: 30, width: 150, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-                {title: '관리번호', minWidth: 30, width: 300, dataType: 'string', dataIndx: 'CONTROL_NUM', },
-                {
-                    title: '파<br>트', minWidth: 30, width: 50, dataType: 'integer', dataIndx: 'PART_NUM',
-                    render: function (ui) {
-                        if (ui.rowData.WORK_TYPE === 'WTP020') {
-                            return "<span></span>";
-                        }
-                    }
-                },
-                // {title: '도면번호', minWidth: 30, width: 160, dataType: 'string', dataIndx: 'DRAWING_NUM', },
+                {title: '관리번호', minWidth: 30, width: 310, align: 'left', dataType: 'string', dataIndx: 'CONTROL_NUM', },
                 {title: '규격', minWidth: 30, width: 120, dataType: 'string', dataIndx: 'SIZE_TXT', },
-                // {title: '표면 처리', minWidth: 30, width: 100, dataType: 'string', dataIndx: 'SURFACE_TREAT'},
                 {title: '수량', minWidth: 30, width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY'},
-                {title: '현재위치', minWidth: 30, width: 150, dataType: 'string', dataIndx: 'POP_POSITION' },
                 {title: '이전위치', minWidth: 30, width: 150, dataType: 'string', dataIndx: 'POP_PREV_POSITION'},
-                {title: '위치일시', minWidth: 30, width: 150, dataType: 'string', dataIndx: 'POP_DT'},
                 {title: '비고', minWidth: 30, width: 300, dataType: 'string', dataIndx: ''}
             ];
 
             var popMasterObj = {
                 width: "100%", height: 1720, collapsible: false, postRenderInterval: -1, //call postRender synchronously.
-                resizable: false, showTitle: false, strNoRows: g_noData, numberCell: {width:50, title: 'No.'}, editable: false, scrollModel: { autoFit: false },
+                resizable: false, showTitle: false, strNoRows: g_noData, numberCell: {width:45, title: 'No'}, editable: false, scrollModel: { autoFit: false },
                 trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
                 colModel: popMasterColModel,
                 dataModel: {
@@ -292,6 +280,7 @@
                 $popMasterGrid.pqGrid('option', "dataModel.postData", function (ui) {
                     return (fnFormToJsonArrayData('#pop_search_form'));
                 });
+                // $popMasterGrid.pqGrid('refreshDataAndView');
                 $popMasterGrid.pqGrid('refreshDataAndView');
             };
 

@@ -107,8 +107,8 @@
             <div class="qualityWrap">
                 <div class="h_area">
                     <div class="right_sort ">
-                        <button type="button" class="defaultBtn btn-120w red" id="companyMasterRegisterSaveBtn">저장</button>
-                        <button type="button" class="defaultBtn btn-120w green" id="companyMasterRegisterDelBtn">삭제</button>
+                        <button type="button" class="defaultBtn btn-120w green" id="companyMasterRegisterSaveBtn">저장</button>
+                        <button type="button" class="defaultBtn btn-120w red" id="companyMasterRegisterDelBtn">삭제</button>
                     </div>
 
                 </div>
@@ -1164,16 +1164,9 @@
                         result +=  COMP_TYPE5 + "|" + HIGH_TYPE5 +",";
                     }
                 }
-
-
-
-
                 result = result.substring(0, result.length-1);
-
                 $("#company_master_register_form").find("#compType").val(result);
                 // console.log($("#company_master_register_form").find("#compType").val());
-
-
                 let parameters = {
                     'url': '/managerSystemCompany',
                     'data': $('#company_master_register_form').serialize()

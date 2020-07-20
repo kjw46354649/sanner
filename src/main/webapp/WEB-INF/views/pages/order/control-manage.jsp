@@ -2349,36 +2349,37 @@
         // 바코드도면출력
         $('#BARCODE_DRAWING_PRINT').on('click', function () {
             if (noSelectedRowAlert()) return false;
-
-            let printHtml  = "";
             let selectedRowCount = selectedOrderManagementRowIndex.length;
+            let selectControlPartCount = 0;
+            let selectControlPartInfo = "";
             let selectControlList = "";
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-                if (!rowData.IMG_GFILE_SEQ) {
-                    alert("이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.");
-                    return;
-                } else {
-                    selectControlList += rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ + "^";
-                }
-
+                let curControlPartInfo = rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ;
                 if (!(rowData.CONTROL_STATUS === 'ORD001')) {
                     alert('주문상태 확정 이후 출력 가능합니다');
                     return false;
+                }
+                if (!rowData.IMG_GFILE_SEQ) {
+                    alert("이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.");
+                    return;
+                // } else if(rowData.WORK_TYPE != 'WTP020' && selectControlPartInfo != curControlPartInfo){
+                } else if(selectControlPartInfo != curControlPartInfo){
+                    selectControlList += rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ + "^";
+                    selectControlPartCount++;
+                    selectControlPartInfo = curControlPartInfo;
                 }
             }
             let drawingBarcodePrintModalConfirm = function(callback){
                 let text = '<h4>' +
                     '           <img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
-                    '               <span>' + selectedRowCount + ' 건의 바코드 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
+                    '               <span>' + selectControlPartCount + ' 건의 바코드 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
                     '       </h4>';
                 $("#commonConfirmBodyHtml").html(text);
                 commonConfirmPopup.show();
                 $("#commonConfirmYesBtn").unbind().click(function (e) {
                     e.stopPropagation();
                     commonConfirmPopup.hide();
-                    // $(this).startWaitMe();
-                    // $(".cadDrawingPrint").html(printHtml).trigger('create');
                     callback(true);
                     return;
                 });
@@ -2389,18 +2390,7 @@
             };
             drawingBarcodePrintModalConfirm(function(confirm){
                 if(confirm){
-
-                    console.log(selectControlList);
-
                     printJS({printable:'/makeCadBarcodePrint?selectControlList='+encodeURI(selectControlList), type:'pdf', showModal:true});
-                    // let postData = {
-                    //     'list-data': selectCadBarcodeList
-                    // };
-                    // let parameters = {'url': '/makeCadBarcodePrint', 'data': {data: JSON.stringify(postData)}};
-                    // fnPostAjax(function (data, callFunctionParam) {
-                    //     $(this).stopWaitMe();
-                    //     printJS({printable:'/image/'+data.GFILE_SEQ, type:'pdf', showModal:true});
-                    // }, parameters, '');
                 }
             });
         });
@@ -2409,18 +2399,30 @@
             if (noSelectedRowAlert()) return false;
             let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
             let selectedRowCount = selectedOrderManagementRowIndex.length;
+            let selectControlPartCount = 0;
+            let selectControlPartInfo = "";
+            let formData = [];
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-
+                let curControlPartInfo = rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ;
                 if (!(rowData.CONTROL_STATUS === 'ORD001')) {
                     alert('주문상태 확정 이후 출력 가능합니다');
                     return false;
+                }
+                if (!rowData.IMG_GFILE_SEQ) {
+                    alert("이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.");
+                    return;
+                // } else if(rowData.WORK_TYPE != 'WTP020' && selectControlPartInfo != curControlPartInfo){
+                } else if(selectControlPartInfo != curControlPartInfo){
+                    selectControlPartCount++;
+                    selectControlPartInfo = curControlPartInfo;
+                    formData.push(rowData.CONTROL_BARCODE_NUM);
                 }
             }
             bodyHtml =
                 '<h4>\n' +
                 '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                '    <span>선택하신 ' + selectedRowCount + '건을 처리합니다. \n진행하시겠습니까?</span>\n' +
+                '    <span>선택하신 ' + selectControlPartCount + '건을 처리합니다. \n진행하시겠습니까?</span>\n' +
                 '</h4>';
             fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
             let drawingBarcodeLabelPrintConfirm = function (callback) {
@@ -2438,11 +2440,11 @@
             };
             drawingBarcodeLabelPrintConfirm(function (confirm) {
                 if (confirm) {
-                    let formData = [];
-                    for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
-                        let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-                        formData.push(rowData.CONTROL_BARCODE_NUM);
-                    }
+                    // let formData = [];
+                    // for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                    //     let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+                    //     formData.push(rowData.CONTROL_BARCODE_NUM);
+                    // }
                     fnBarcodePrint(function(data, callFunctionParam){
                         alert(data.message);
                     }, formData, '');
@@ -2477,9 +2479,7 @@
                     }
                 }, parameter, '');
             }
-
             let bCodePrintLen = barcodeList.length;
-
             if (bCodePrintLen) {
                 let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
                 bodyHtml =

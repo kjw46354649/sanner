@@ -472,6 +472,8 @@
 
         $("#MCT_RESULT_BARCODE_NUM").on({
             focus: function () {
+                var grid = $mctResultManageGrid.pqGrid('getInstance').grid;
+                grid.setSelection(null);
                 $("#mctResultBarcodeImg").attr("src","/resource/asset/images/common/img_barcode_long_on.png");
             },
             blur: function () {
@@ -1091,6 +1093,10 @@
             $("#cam_work_manage_pop_form").find("input[name*='" + index + "']").attr('disabled', disableFlag);
             $("#cam_work_manage_pop_form").find("select[name*='" + index + "']").attr('readonly', disableFlag);
             $("#cam_work_manage_pop_form").find("select[name*='" + index + "']").attr('disabled', disableFlag);
+
+            $("#cam_work_manage_pop_form").find("#CAM_WORK_CHK_" + index).attr('readonly', false);
+            $("#cam_work_manage_pop_form").find("#CAM_WORK_CHK_" + index).attr('disabled', false);
+
         }
 
         /** 시작 전 Disable 처리 **/
@@ -1112,8 +1118,8 @@
             }
             $("#cam_work_manage_pop_form").find(".statusConfig").attr('readonly', disableFlag);
             $("#cam_work_manage_pop_form").find(".statusConfig").attr('disabled', disableFlag);
-            $("#cam_work_manage_pop_form").find(".camworkChekbox").attr('checkec', false);
-            $("#cam_work_manage_pop_form").find(".camworkChekbox").attr('disabled', disableCheck);
+            // $("#cam_work_manage_pop_form").find(".camworkChekbox").attr('checkec', false);
+            // $("#cam_work_manage_pop_form").find(".camworkChekbox").attr('disabled', disableCheck);
             $("#cam_work_manage_pop_form").find("#HISTORY_NOTE").attr('readonly', disableCheck);
             $("#cam_work_manage_pop_form").find("#HISTORY_NOTE").attr('disabled', disableCheck);
             $("#cam_work_manage_pop_form").find("#NOTE").attr('readonly', disableCheck);

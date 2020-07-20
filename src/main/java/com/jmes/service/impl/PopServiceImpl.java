@@ -87,7 +87,8 @@ public class PopServiceImpl implements PopService {
         }else {
 
             /** 추가 되어야 할 데이터 **/
-            String currentPopLocation = (String) controlPartInfo.get("POP_PREV_POSITION"); // 현재 위치
+            String currentPopLocation = (String) controlPartInfo.get("POP_CUR_POSITION"); // 현재 위치
+            String prevPopLocation = (String) controlPartInfo.get("POP_PREV_POSITION"); // 이전 pop 위치
             String createPRO005 = (String) controlPartInfo.get("PRO005"); // 소재 입고 상태 처리
             String createPRO019 = (String) controlPartInfo.get("PRO019"); // 외주 가공 입고 상태 처리
             String createPRO009 = (String) controlPartInfo.get("PRO009"); // 가공완료 상태 처리
@@ -96,7 +97,7 @@ public class PopServiceImpl implements PopService {
             String createPRO018 = (String) controlPartInfo.get("PRO018"); // 모도면 상태 처리
             String innerWorkFinishDt = (String) controlPartInfo.get("INNER_WORK_FINISH_DT"); // 가공완료 일시 처리 여부
 
-            if (currentPopLocation.equals(popLocation)) {
+            if (popLocation.equals(prevPopLocation)) {
                 model.addAttribute("returnCode", "RET99");
                 model.addAttribute("message", "이미 등록된 도면 입니다. 확인 바랍니다."); // 현재와 같은 Location 스캔 처리
             } else {
