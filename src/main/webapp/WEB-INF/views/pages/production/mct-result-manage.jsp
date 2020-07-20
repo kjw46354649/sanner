@@ -472,6 +472,8 @@
 
         $("#MCT_RESULT_BARCODE_NUM").on({
             focus: function () {
+                var grid = $mctResultManageGrid.pqGrid('getInstance').grid;
+                grid.setSelection(null);
                 $("#mctResultBarcodeImg").attr("src","/resource/asset/images/common/img_barcode_long_on.png");
             },
             blur: function () {

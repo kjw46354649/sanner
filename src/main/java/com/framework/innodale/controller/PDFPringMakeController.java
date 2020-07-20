@@ -135,7 +135,7 @@ public class PDFPringMakeController {
             table.init();
 
             table.setWidthPercentage(100);
-            table.setWidths(new int[] {20, 2, 15, 15, 4, 10, 10, 10, 7, 4, 4, 6});
+            table.setWidths(new int[] {20, 2, 15, 15, 4, 11, 9, 10, 7, 4, 4, 6});
 
             BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String)controlInfo.get("BARCODE_NUM"), 110, 35);
             int width = bitMatrix.getWidth();
@@ -172,7 +172,7 @@ public class PDFPringMakeController {
             table.addCell(createCell((String)controlInfo.get("DRAWING_VER"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("CONTROL_NUM"), 2, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("PART_NUM"), 1, 1, headFont));
-            table.addCell(createCell((String)controlInfo.get("MATERIAL_DETAIL_NM"), 1, 1, headFont));
+            table.addCell(createCell((String)controlInfo.get("SURFACE_TREAT_NM"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("EMERGENCY_BARCODE_NM"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("MAIN_INSPECTION_NM"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("ORIGINAL_SIDE_QTY"), 1, 1, headFont));

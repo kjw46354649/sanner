@@ -229,15 +229,15 @@
                             <h4>가공이력</h4>
                             <span class="slt_wrap namePlusSlt rightName" >
                                 <label for="g_item_detail_pop_grid_01_info_1">총시간</label>
-                                <input type="text" id="g_item_detail_pop_grid_01_info_1" class="wd_50" title="총시간">
+                                <input type="text" id="g_item_detail_pop_grid_01_info_1" class="wd_50" style="text-align: right;" title="총시간">
                                 <label for="g_item_detail_pop_grid_01_info_2">선반</label>
-                                <input type="text" id="g_item_detail_pop_grid_01_info_2" class="wd_50" title="선반">
+                                <input type="text" id="g_item_detail_pop_grid_01_info_2" class="wd_50" style="text-align: right;" title="선반">
                                 <label for="g_item_detail_pop_grid_01_info_3">NC</label>
-                                <input type="text" id="g_item_detail_pop_grid_01_info_3" class="wd_50" title="NC">
+                                <input type="text" id="g_item_detail_pop_grid_01_info_3" class="wd_50" style="text-align: right;" title="NC">
                                 <label for="g_item_detail_pop_grid_01_info_4">밀링</label>
-                                <input type="text" id="g_item_detail_pop_grid_01_info_4" class="wd_50" title="밀링">
+                                <input type="text" id="g_item_detail_pop_grid_01_info_4" class="wd_50" style="text-align: right;" title="밀링">
                                 <label for="g_item_detail_pop_grid_01_info_5">연마</label>
-                                <input type="text" id="g_item_detail_pop_grid_01_info_5" class="wd_50" title="연마">
+                                <input type="text" id="g_item_detail_pop_grid_01_info_5" class="wd_50" style="text-align: right;" title="연마">
                             </span>
                             <div id="g_item_detail_pop_grid_01" class="jqx-refresh"></div>
                         </ul>
@@ -1211,15 +1211,22 @@
         };
         fnPostAjax(function (data, callFunctionParam) {
             let dataInfo = data.info;
+
+            console.log(dataInfo);
+
             if(dataInfo == null ) {
-                fnResetFrom("g_item_detail_pop_form");
+                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_1").val('');
+                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_2").val('');
+                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_3").val('');
+                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_4").val('');
+                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_5").val('');
             }else{
                 //fnJsonDataToForm("stock_manage_pop_form", dataInfo);
-                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_1").html(dataInfo.WORK_TIME_TOTAL);
-                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_2").html(dataInfo.WORK_TIME_MPR040);
-                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_3").html(dataInfo.WORK_TIME_MPR010);
-                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_4").html(dataInfo.WORK_TIME_MPR020);
-                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_5").html(dataInfo.WORK_TIME_MPR030);
+                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_1").val(dataInfo.WORK_TIME_TOTAL);
+                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_2").val(dataInfo.WORK_TIME_MPR040);
+                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_3").val(dataInfo.WORK_TIME_MPR010);
+                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_4").val(dataInfo.WORK_TIME_MPR020);
+                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_5").val(dataInfo.WORK_TIME_MPR030);
             }
         }, parameters2, '');
 
@@ -1244,6 +1251,7 @@
         g_ItemDetailPopGridId05.pqGrid(g_ItemDetailPopObj05);
         $("#g_item_detail_pop_form").find("#g_item_detail_pop_barcode_num").focus();
     }
+
     $("#g_item_detail_pop").on('hide.bs.modal', function(){
         fnResetFrom("g_item_detail_pop_form");
         g_ItemDetailPopGridId01.pqGrid('destroy');
