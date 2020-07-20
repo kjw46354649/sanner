@@ -70,13 +70,15 @@ public class EstimateServiceImpl implements EstimateService {
         for(int i=0; i<jsonMap.size(); i++) {
             data = jsonMap.get(i);
 
-            System.out.println(" ################################## ");
-            System.out.println(data);
-            System.out.println(" ################################## ");
+            //System.out.println(" ################################## ");
+            //System.out.println(data);
+            //System.out.println(" ################################## ");
 
             estimateDao.insertEstimateOrderControlMaster(data);
             estimateDao.insertEstimateOrderControlDetail(data);
             estimateDao.insertEstimateOrderControlOrder(data);
+            estimateDao.insertEstimateOrderControlBarcode(data);
+
         }
 
         estimateDao.updateEstimateMasterFinish(data);

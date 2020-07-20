@@ -49,4 +49,9 @@ public class EstimateDaoImpl implements EstimateDao {
     public void insertEstimateOrderControlOrder(Map<String, Object> map) throws SQLException {
         sqlSessionTemplate.insert("insertEstimateOrderControlOrder", map);
     }
+
+    @Override
+    public void insertEstimateOrderControlBarcode(Map<String, Object> map) throws SQLException {
+        sqlSessionTemplate.insert("insertEstimateOrderControlBarcode", map);
+    }
 }
