@@ -135,7 +135,7 @@
         SF_GET_DATE_F(C.ORDER_DUE_DT, 'YYYY', '') AS ORDER_DUE_DT, <!-- 발주납기 -->
         SF_GET_DATE_F(C.DELIVERY_DT, 'YYYY', '') AS DELIVERY_DT, <!-- 발주정보_납품확인 -->
         C.PACKING_CNT, <!-- 포장묶음 -->
-        SF_GET_DATE_F(C.OUT_FINISH_DT, 'YY', '') AS ORDER_OUT_FINISH_DT <!-- 출고완료일 -->
+        SF_GET_DATE_F(C.OUT_FINISH_DT, 'YYYY', '') AS ORDER_OUT_FINISH_DT <!-- 출고완료일 -->
     </sql>
 
     <sql id="monthClose">
@@ -180,14 +180,14 @@
             H.ERROR_ACTION, <!-- 조치 -->
             SF_GET_CODE_NM('1025', H.ERROR_ACTION, 'KR') AS ERROR_ACTION_NM, <!-- 조치 -->
             H.ERROR_NOTE, <!-- 조치방안 -->
-            D.BARCODE_NUM AS CONTROL_BARCODE_NUM, <!-- 주문관리바코드번호(도면라벨) -->
+            <!-- D.BARCODE_NUM AS CONTROL_BARCODE_NUM, 주문관리바코드번호(도면라벨) -->
             <!-- E.BARCODE_NUM AS LABEL_BARCODE_NUM, 라벨바코드번호(박스라벨) -->
             SF_GET_DATE_F(IF(TIMESTAMPDIFF(SECOND, B.INSERT_DT, B.UPDATE_DT) <![CDATA[ < ]]> 0, B.INSERT_DT, B.UPDATE_DT), 'YY', 'M') AS CONTROL_PART_INSERT_UPDATE_DT <!-- 등록/업데이트 일시 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
                                                         AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-            LEFT OUTER JOIN TBL_CONTROL_BARCODE D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.DEL_YN = 'N'
+            <!-- LEFT OUTER JOIN TBL_CONTROL_BARCODE D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.DEL_YN = 'N' -->
             <!-- LEFT OUTER JOIN TBL_OUT_BARCODE E ON B.CONTROL_SEQ = E.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ AND C.ORDER_SEQ = E.ORDER_SEQ AND E.DEL_YN = 'N' -->
             LEFT OUTER JOIN TBL_INVOICE_DETAIL F ON B.CONTROL_SEQ = F.CONTROL_SEQ
                                                     AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
@@ -1875,41 +1875,47 @@
         ORDER BY Z.YYYY, Z.COMP_CD, Z.ORDER_COMP_CD, Z.STATUS_TYPE
     </select>
 
-    <insert id="insertControlBarcode" parameterType="java.util.HashMap" >
+    <insert id="createControlBarcode" parameterType="java.util.HashMap" >
         INSERT INTO TBL_CONTROL_BARCODE (
-            BARCODE_NUM,
-            CONTROL_SEQ,
-            CONTROL_DETAIL_SEQ,
-            CONTROL_VER,
-            DRAWING_VER
-        ) VALUES
-        <foreach collection="list" item="item" separator=",">
-        (
-            (
-                SELECT CONCAT('C', DATE_FORMAT(CURDATE(), '%y%m'), LPAD(SUBSTR(MAX(A.BARCODE_NUM), 6) + 1, 5, '0'))
-                FROM TBL_CONTROL_BARCODE A
-                WHERE A.BARCODE_NUM LIKE CONCAT('C', DATE_FORMAT(CURDATE(), '%y%m'), '%')
-            ),
-            (
-                SELECT B.CONTROL_SEQ
-                FROM TBL_CONTROL B
-                WHERE B.CONTROL_NUM = #{item.CONTROL_NUM}
-            ),
-            (
-                SELECT C.CONTROL_DETAIL_SEQ
-                FROM TBL_CONTROL_PART C
-                    INNER JOIN TBL_CONTROL D ON C.CONTROL_SEQ = D.CONTROL_SEQ
-                WHERE D.CONTROL_NUM = #{item.CONTROL_NUM}
-                    AND C.CONTROL_DETAIL_SEQ NOT IN (SELECT E.CONTROL_DETAIL_SEQ
-                                                FROM TBL_CONTROL_BARCODE E
-                                                WHERE E.CONTROL_SEQ = C.CONTROL_SEQ)
-                                                ORDER BY C.CONTROL_DETAIL_SEQ
-                                                LIMIT 1
-            ),
-            IFNULL (#{CONTROL_VER}, 0),
-            IFNULL (#{DRAWING_VER}, 0)
-        )
-        </foreach>
+            BARCODE_NUM, CONTROL_SEQ, CONTROL_DETAIL_SEQ, CONTROL_VER, DRAWING_VER)
+        SELECT
+            CONCAT('C',LPAD(NEXTVAL(SEQ_BARCODE),9,'0')) AS BARCODE_NUM, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.CONTROL_VER, B.DRAWING_VER
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+        WHERE 1 = 1
+                AND A.DEL_YN = 'N'
+                AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+                AND B.CONTROL_DETAIL_SEQ = (SELECT Q.CONTROL_DETAIL_SEQ
+                                            FROM TBL_CONTROL_PART Q
+                                            WHERE 1 = 1
+                                                AND Q.CONTROL_SEQ = #{CONTROL_SEQ}
+                                                <choose>
+                                                    <when test="PART_NUM != null and PART_NUM != ''">
+                                                        AND Q.PART_NUM = #{PART_NUM}
+                                                    </when>
+                                                    <otherwise>
+                                                        AND Q.PART_NUM IS NULL
+                                                    </otherwise>
+                                                </choose>
+                                            )
+                AND NOT EXISTS (SELECT *
+                                FROM TBL_CONTROL_BARCODE X
+                                WHERE 1 = 1
+                                    AND X.CONTROL_SEQ = #{CONTROL_SEQ}
+                                    AND X.CONTROL_DETAIL_SEQ = ( SELECT Q.CONTROL_DETAIL_SEQ
+                                                                 FROM TBL_CONTROL_PART Q
+                                                                 WHERE 1 = 1
+                                                                    AND Q.CONTROL_SEQ = #{CONTROL_SEQ}
+                                                                    <choose>
+                                                                        <when test="PART_NUM != null and PART_NUM != ''">
+                                                                            AND Q.PART_NUM = #{PART_NUM}
+                                                                        </when>
+                                                                        <otherwise>
+                                                                            AND Q.PART_NUM IS NULL
+                                                                        </otherwise>
+                                                                    </choose>
+                                                                    )
+                                    AND X.DEL_YN = 'N')
     </insert>
 
     <select id="selectControlTransactionStatementInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -2632,7 +2638,12 @@
         WHERE 1 = 1
             AND A.CONTROL_NUM = #{CONTROL_NUM}
             AND B.ORDER_NUM = #{ORDER_NUM}
-            AND NOT EXISTS (SELECT * FROM TBL_CONTROL_PART_ORDER WHERE ORDER_NUM = #{ORDER_NUM})
+            AND NOT EXISTS (SELECT *
+                            FROM TBL_CONTROL_PART_ORDER Q
+                                INNER JOIN TBL_OUT_BARCODE R ON Q.CONTROL_SEQ = R.CONTROL_SEQ AND Q.CONTROL_DETAIL_SEQ = R.CONTROL_DETAIL_SEQ AND Q.ORDER_SEQ = R.ORDER_SEQ
+                            WHERE 1 = 1
+                                AND Q.ORDER_SEQ = #{ORDER_SEQ}
+                                AND R.DEL_YN = 'N')
     </insert>
 
 </mapper>

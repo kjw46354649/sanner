@@ -1943,7 +1943,7 @@
         });
 
         $('#CONTROL_MANAGE_SAVE').on('click', function () {
-            const insertQueryList = ['orderMapper.createControlPart', 'orderMapper.createControlPartOrder', 'orderMapper.createOutBarcode'];
+            const insertQueryList = ['orderMapper.createControlPart', 'orderMapper.createControlPartOrder', 'orderMapper.createControlBarcode', 'orderMapper.createOutBarcode'];
             const updateQueryList = ['orderMapper.updateControlMaster', 'orderMapper.updateControlPart', 'orderMapper.updateControlPartOrder'];
 
             fnModifyPQGrid($orderManagementGrid, insertQueryList, updateQueryList);

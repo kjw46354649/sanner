@@ -439,10 +439,10 @@
             {title: '진행상태', minWidth: 40, width: 100, dataType: 'string', dataIndx: 'PART_STATUS'},
             {title: '가공진행 현황', align: 'center',
                 colModel: [
-                    {title: 'NC', datatype: 'integer', align: 'right', dataIndx: 'PROCESS_PROGRESS_NC'},
-                    {title: '밀링', datatype: 'integer', align: 'right', dataIndx: 'PROCESS_PROGRESS_MILLING'},
-                    {title: '선반', datatype: 'integer', align: 'right', dataIndx: 'PROCESS_PROGRESS_RACK'},
-                    {title: '연마', datatype: 'integer', align: 'right', dataIndx: 'PROCESS_PROGRESS_GRINDING'},
+                    {title: 'NC', datatype: 'integer', dataIndx: 'PROCESS_NC'},
+                    {title: '밀링', datatype: 'integer', dataIndx: 'PROCESS_MILLING'},
+                    {title: '선반', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_RACK'},
+                    {title: '연마', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_GRINDING'},
                 ]
             },
             {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,

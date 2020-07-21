@@ -744,6 +744,7 @@
                 let barcodeNum = fnBarcodeKo2En(this.value);
 
                 if(isNotBarcodeValid(barcodeNum)) {
+                    this.value = '';
                     return false;
                 }
 
