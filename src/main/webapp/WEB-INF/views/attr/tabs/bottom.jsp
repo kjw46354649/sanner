@@ -840,7 +840,6 @@
     commonFileDownUploadPopup.on('hide.bs.modal', function (e) {
         commonFileDownUploadGrid.pqGrid('destroy');
         let callElement = $("#common_file_download_form").find("#callElement").val();
-        fnResetFrom('common_file_download_form');
         $("#common_file_download_form #deleteYn").val(true);
         $("#" + callElement ).trigger('click');
     });
