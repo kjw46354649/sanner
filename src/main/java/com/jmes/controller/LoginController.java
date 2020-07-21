@@ -1,6 +1,7 @@
 package com.jmes.controller;
 
 import com.framework.innodale.component.CommonUtility;
+import com.framework.innodale.service.InnodaleService;
 import com.jmes.service.LoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -25,6 +27,9 @@ import java.util.Map;
 public class LoginController {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+
+    @Autowired
+    private InnodaleService innodaleService;
 
     @Autowired
     private LoginService loginService;
@@ -129,7 +134,7 @@ public class LoginController {
     }
 
     @RequestMapping("/drawing-change-user-locale")
-    public String drawingChangeMainUserLocale(@RequestParam(value = "lang", defaultValue = "ko_KR")  String newLocale,
+    public String drawingChangeMainUserLocale(@RequestParam(value = "lang", defaultValue = "ko_KR")  String newLocale, Model model,
                                HttpSession session, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 
         /** Begin Locale Setting **/
@@ -141,7 +146,18 @@ public class LoginController {
 
         session.setAttribute("LocalInfo", localeEditor.getValue());
 
-        return "redirect:/drawing-worker";
+        HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
+
+        /** 사용자 선택에서 장비 정보가 없고 세션 정보도 없는 경우 장비 선택 화면으로 이동 **/
+        if(session.getAttribute("drawingInfo") == null){
+            return "redirect:/drawing";
+        }
+
+        hashMap.put("queryId", "drawingMapper.selectDrawingWorkerGroupList");
+        model.addAttribute("workerGroupList", this.innodaleService.getList(hashMap));
+
+//        return "redirect:/drawing-worker";
+        return "board/drawing-worker";
     }
 
 }

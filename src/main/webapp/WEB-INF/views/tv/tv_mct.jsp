@@ -9,6 +9,10 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>J-MES POP</title>
+	<!-- Firefox, Opera (Chrome and Safari say thanks but no thanks) -->
+	<link rel="shortcut icon" href="/favicon.ico">
+	<!-- Chrome, Safari, IE -->
+	<link rel="icon" href="/favicon.ico">
     <link href="/resource/asset/css/tvreset.css" rel="stylesheet" type="text/css" />
     <link href="/resource/asset/css/webFont.css" rel="stylesheet" type="text/css" />
     <link href="/resource/asset/css/common.css" rel="stylesheet" type="text/css" />

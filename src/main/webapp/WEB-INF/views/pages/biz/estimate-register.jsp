@@ -713,11 +713,17 @@
             },
             change: function( event, ui ) {
                 if (ui.source === 'paste') {
-                    const addListLength = ui.addList.length;
+                    let addListLength = ui.addList.length;
+                    let updateListLength = ui.updateList.length;
+
                     const workTypeList = fnGetCommCodeGridSelectBox('1033');
                     const materialDetailList = fnGetCommCodeGridSelectBox('1027');
                     const materialKindList = fnGetCommCodeGridSelectBox('1029');
                     const surfaceTreatList = fnGetCommCodeGridSelectBox('1039');
+                    const materialFinishTmList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
+                    const materialFinishGrindList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
+                    const materialFinishHeatList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
+
                     let rowListConvert = [];
 
                     for (let i = 0; i < addListLength; i++) {
@@ -727,6 +733,9 @@
                         let materialDetail = null;
                         let materialKind = null;
                         let surfaceTreat = null;
+                        let materialFinishTm = null;
+                        let materialFinishGrind = null;
+                        let materialFinishHeat = null;
 
                         // 작업형태
                         if (newRowData.WORK_TYPE !== undefined) {
@@ -759,6 +768,110 @@
                             });
 
                             if (index >= 0) surfaceTreat = surfaceTreatList[index].value;
+                        }
+                        // TM각비
+                        if (newRowData.MATERIAL_FINISH_TM !== undefined) {
+                            let index = materialFinishTmList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_FINISH_TM;
+                            });
+
+                            if (index >= 0) materialFinishTm = surfaceTreatList[index].value;
+                        }
+                        // 연마비
+                        if (newRowData.MATERIAL_FINISH_GRIND !== undefined) {
+                            let index = materialFinishGrindList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_FINISH_GRIND;
+                            });
+
+                            if (index >= 0) materialFinishGrind = surfaceTreatList[index].value;
+                        }
+                        // 열처리
+                        if (newRowData.MATERIAL_FINISH_HEAT !== undefined) {
+                            let index = materialFinishHeatList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_FINISH_HEAT;
+                            });
+
+                            if (index >= 0) materialFinishHeat = surfaceTreatList[index].value;
+                        }
+
+                        let tempObject = {
+                            rowIndx: rowIndx,
+                            newRow: {
+                                'WORK_TYPE': workType,
+                                'MATERIAL_DETAIL': materialDetail,
+                                'MATERIAL_KIND': materialKind,
+                                'SURFACE_TREAT': surfaceTreat
+                            }
+                        };
+                        rowListConvert.push(tempObject);
+                    }
+
+                    for (let i = 0; i < updateListLength; i++) {
+                        const newRowData = ui.updateList[i].newRow;
+                        const rowIndx = ui.updateList[i].rowIndx;
+                        let workType = null;
+                        let materialDetail = null;
+                        let materialKind = null;
+                        let surfaceTreat = null;
+                        let materialFinishTm = null;
+                        let materialFinishGrind = null;
+                        let materialFinishHeat = null;
+
+                        // 작업형태
+                        if (newRowData.WORK_TYPE !== undefined) {
+                            let index = workTypeList.findIndex(function (element) {
+                                return element.text === newRowData.WORK_TYPE;
+                            });
+
+                            if (index >= 0) workType = workTypeList[index].value;
+                        }
+                        //소재 상세
+                        if (newRowData.MATERIAL_DETAIL !== undefined) {
+                            let index = materialDetailList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_DETAIL;
+                            });
+
+                            if (index >= 0) materialDetail = materialDetailList[index].value;
+                        }
+                        // 소재형태
+                        if (newRowData.MATERIAL_KIND !== undefined) {
+                            let index = materialKindList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_KIND;
+                            });
+
+                            if (index >= 0) materialKind = materialKindList[index].value;
+                        }
+                        // 표면처리
+                        if (newRowData.SURFACE_TREAT !== undefined) {
+                            let index = surfaceTreatList.findIndex(function (element) {
+                                return element.text === newRowData.SURFACE_TREAT;
+                            });
+
+                            if (index >= 0) surfaceTreat = surfaceTreatList[index].value;
+                        }
+                        // TM각비
+                        if (newRowData.MATERIAL_FINISH_TM !== undefined) {
+                            let index = materialFinishTmList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_FINISH_TM;
+                            });
+
+                            if (index >= 0) materialFinishTm = surfaceTreatList[index].value;
+                        }
+                        // 연마비
+                        if (newRowData.MATERIAL_FINISH_GRIND !== undefined) {
+                            let index = materialFinishGrindList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_FINISH_GRIND;
+                            });
+
+                            if (index >= 0) materialFinishGrind = surfaceTreatList[index].value;
+                        }
+                        // 열처리
+                        if (newRowData.MATERIAL_FINISH_HEAT !== undefined) {
+                            let index = materialFinishHeatList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_FINISH_HEAT;
+                            });
+
+                            if (index >= 0) materialFinishHeat = surfaceTreatList[index].value;
                         }
 
                         let tempObject = {
@@ -876,7 +989,6 @@
         });
 
         function estimateRegisterSaveCallBack(response, callMethodParam){
-            alert("<spring:message code='com.alert.default.save.success' />");
             estimateRegisterReloadPageData();
         };
 

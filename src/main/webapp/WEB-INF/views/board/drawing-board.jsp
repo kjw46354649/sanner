@@ -9,6 +9,10 @@
 <html lang="en" class="app">
 <head>
     <title>J-MES POP 1</title>
+    <!-- Firefox, Opera (Chrome and Safari say thanks but no thanks) -->
+   	<link rel="shortcut icon" href="/favicon.ico">
+   	<!-- Chrome, Safari, IE -->
+   	<link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/resource/plugins/dhtmlx/suite.css" type="text/css" />
     <link rel="stylesheet" href="/resource/asset/css/reset.css" type="text/css" />
     <link rel="stylesheet" href="/resource/asset/css/common.css" type="text/css" />
@@ -46,9 +50,9 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div class="buttonWrap right_float">
-                    <button type="button" id="area_tab" class="listBlueBtn save">대기</button>
-                    <button type="button" id="equip_tab" class="listBlueBtn save">스케줄</button>
-                    <button type="button" class="listGrnBtn closeBe targetListClose">닫기</button>
+                    <button type="button" id="area_tab" class="listBlueBtn save"><srping:message key="drawing.board.button.11"/></button>
+                    <button type="button" id="equip_tab" class="listBlueBtn save"><srping:message key="drawing.board.button.10"/></button>
+                    <button type="button" class="listGrnBtn closeBe targetListClose"><srping:message key="drawing.board.button.09"/></button>
                 </div>
                 <div class="tableWrap">
                     <div class="tab-content">
@@ -56,10 +60,10 @@
                             <table class="modal-table" style="word-wrap:break-word;word-break:break-all;">
                                 <thead>
                                     <tr>
-                                        <th class="modal-table-header" style="width:291px;">관리번호</th>
-                                        <th class="modal-table-header" style="width:88px;">Part</th>
-                                        <th class="modal-table-header" style="width:88px;">수량</th>
-                                        <th class="modal-table-header" style="width:108px;">가공납기</th>
+                                        <th class="modal-table-header" style="width:291px;"><srping:message key="drawing.board.label.03"/></th>
+                                        <th class="modal-table-header" style="width:88px;"><srping:message key="drawing.board.label.04"/></th>
+                                        <th class="modal-table-header" style="width:88px;"><srping:message key="drawing.board.label.05"/></th>
+                                        <th class="modal-table-header" style="width:108px;"><srping:message key="drawing.board.label.06"/></th>
                                     </tr>
                                 </thead>
                                 <tbody id="equipBodyListHtml"></tbody>
@@ -69,10 +73,10 @@
                             <table class="modal-table" style="word-wrap:break-word;word-break:break-all;">
                                 <thead>
                                     <tr>
-                                        <th class="modal-table-header" style="width:291px;">관리번호</th>
-                                        <th class="modal-table-header" style="width:88px;">Part</th>
-                                        <th class="modal-table-header" style="width:88px;">수량</th>
-                                        <th class="modal-table-header" style="width:108px;">가공납기</th>
+                                        <th class="modal-table-header" style="width:291px;"><srping:message key="drawing.board.label.03"/></th>
+                                        <th class="modal-table-header" style="width:88px;"><srping:message key="drawing.board.label.04"/></th>
+                                        <th class="modal-table-header" style="width:88px;"><srping:message key="drawing.board.label.05"/></th>
+                                        <th class="modal-table-header" style="width:108px;"><srping:message key="drawing.board.label.06"/></th>
                                     </tr>
                                 </thead>
                                 <tbody id="popBodyListHtml"></tbody>
@@ -95,10 +99,10 @@
                     <table>
                         <tbody>
                         <tr>
-                            <td class="modal-table-contents">관리번호</td>
-                            <td class="modal-table-contents">Part</td>
-                            <td class="modal-table-contents">수량</td>
-                            <td class="modal-table-contents">가공납기</td>
+                            <td class="modal-table-contents"><srping:message key="drawing.board.label.03"/></td>
+                            <td class="modal-table-contents"><srping:message key="drawing.board.label.04"/></td>
+                            <td class="modal-table-contents"><srping:message key="drawing.board.label.05"/></td>
+                            <td class="modal-table-contents"><srping:message key="drawing.board.label.06"/></td>
                         </tr>
                         <tr>
                             <td class="modal-table-header" id="scanControlNumHtml"></td>
@@ -108,12 +112,12 @@
                         </tr>
                         </tbody>
                     </table>
-                    <div><p class="work-txt">작업을 시작하겠습니까?</p></div>
+                    <div><p class="work-txt"><srping:message key="drawing.board.alert.06"/></p></div>
                     <div class="buttonCenterWrap">
-                        <button type="button" id="scanBtnSave" class="listBlueBtn save">예</button>
-                        <button type="button" id="scanBtnCancel" class="listGrnBtn closeBe">아니오</button>
+                        <button type="button" id="scanBtnSave" class="listBlueBtn save"><srping:message key="drawing.board.button.05"/></button>
+                        <button type="button" id="scanBtnCancel" class="listGrnBtn closeBe"><srping:message key="drawing.board.button.12"/></button>
                     </div>
-                    <div><p class="scan-time">5초 후 자동 진행됩니다 (5)</p></div>
+                    <div><p class="scan-time"><srping:message key="drawing.board.alert.04"/> (10)</p></div>
                 </div>
             </div>
         </div>
@@ -129,13 +133,13 @@
                 <div class="tableWrap">
                     <div><p class="stop-txt"><span class="red-txt">일시정지</span> 되었습니다</p></div>
                     <div>
-                        <p class="stop-time">정지시간 :
-                            <span id="stopMinutes">0분</span>
-                            <span id="stopSeconds">0초</span>
+                        <p class="stop-time"><srping:message key="drawing.board.label.14"/> :
+                            <span id="stopMinutes">0<srping:message key="drawing.board.label.01"/></span>
+                            <span id="stopSeconds">0<srping:message key="drawing.board.label.02"/></span>
                         </p>
                     </div>
                     <div style="text-align: center;">
-                        <button type="button" id="workRestartBtn" class="gradeMidBtn red">작업재개</button>
+                        <button type="button" id="workRestartBtn" class="gradeMidBtn red"><srping:message key="drawing.board.button.13"/><</button>
                         <%--<button id="stopBtn">작업재개</button>--%>
                     </div>
                 </div>
@@ -154,8 +158,8 @@
                     <div><p class="stop-txt">작업을<span class="red-txt">취소</span>하시겠습니까?</p></div>
                     <br/>
                     <div style="text-align: center;">
-                        <button type="button" id="cancelBtnSave" class="gradeMidBtn red">예</button>
-                        <button type="button" id="cancelBtnCancel" class="gradeMidBtn white">아니오</button>
+                        <button type="button" id="cancelBtnSave" class="gradeMidBtn red"><srping:message key="drawing.board.button.05"/></button>
+                        <button type="button" id="cancelBtnCancel" class="gradeMidBtn white"><srping:message key="drawing.board.button.12"/></button>
                     </div>
 <%--                    <div>--%>
 <%--                        <button id="cancelBtnSave">Yes</button>--%>
@@ -176,11 +180,11 @@
                     <table>
                         <tbody>
                         <tr>
-                            <td class="modal-table-header" style="width:10%;">관리<br>번호</td>
+                            <td class="modal-table-header" style="width:10%;"><srping:message key="drawing.board.label.03.01"/></td>
                             <td class="modal-table-contents" id="completeControlNumHtml" style="width:50%;text-align: left"></td>
-                            <td class="modal-table-header" style="width:8%;">Part</td>
+                            <td class="modal-table-header" style="width:8%;"><srping:message key="drawing.board.label.04"/></td>
                             <td class="modal-table-contents" id="completeControlPartNumHtml" style="width:7%;"></td>
-                            <td class="modal-table-header" style="width:10%;">수량</td>
+                            <td class="modal-table-header" style="width:10%;"><srping:message key="drawing.board.label.05"/></td>
                             <td class="modal-table-contents" id="completeControlOrderQtyHtml" style="width:15%; text-align: right; padding-right: 5px;"></td>
                         </tr>
                         </tbody>
@@ -189,9 +193,9 @@
                     <table>
                         <tbody>
                         <tr>
-                            <td class="modal-table-header-end" style="width:30%;">완료수량</td>
-                            <td class="modal-table-header-end" style="width:30%;">불량</td>
-                            <td class="modal-table-header-end" style="width:40%;">불량원인</td>
+                            <td class="modal-table-header-end" style="width:30%;"><srping:message key="drawing.board.label.15"/></td>
+                            <td class="modal-table-header-end" style="width:30%;"><srping:message key="drawing.board.label.16"/></td>
+                            <td class="modal-table-header-end" style="width:40%;"><srping:message key="drawing.board.label.17"/></td>
                         </tr>
                         <tr>
                             <td class="modal-table-contents-end">
@@ -215,17 +219,17 @@
                         </tr>
                         </tbody>
                     </table>
-                    <div id="singleComplete" style="display: block"><p class="end-txt">작업을<span class="red-txt">완료 하시겠습니까?</span> </p></div>
-                    <div id="continueComplete" style="display: none"><p class="continue-end-txt">이전 작업을<span class="continue-red-txt">종료하고<br>새로운 작업을</span><span class="continue-end-txt">진행 하겠습니까?</span></p></div>
+                    <div id="singleComplete" style="display: block"><p class="end-txt"><srping:message key="drawing.board.message.01"/></p></div>
+                    <div id="continueComplete" style="display: none"><p class="continue-end-txt"><srping:message key="drawing.board.message.02"/></p></div>
                     <div style="text-align: center;">
-                        <button type="button" id="endBtnSave" class="gradeMaxBtn red">예</button>
-                        <button type="button" id="endBtnCancel" class="gradeMaxBtn white">아니오</button>
+                        <button type="button" id="endBtnSave" class="gradeMaxBtn red"><srping:message key="drawing.board.button.05"/></button>
+                        <button type="button" id="endBtnCancel" class="gradeMaxBtn white"><srping:message key="drawing.board.button.12"/></button>
                     </div>
 <%--                    <div>--%>
 <%--                        <button id="endBtnSave">Yes</button>--%>
 <%--                        <button id="endBtnCancel">Cancel</button>--%>
 <%--                    </div>--%>
-                    <div><p class="scan-time">5초 후 자동 진행됩니다 (5)</p></div>
+                    <div><p class="scan-time">5 <srping:message key="drawing.board.alert.04"/></p></div>
                 </div>
             </div>
         </div>
@@ -291,18 +295,18 @@
             <c:if test="${empty drawingInfo.currentWork}">
                 <input type="hidden" name="curStatus" id="curStatus" value="stop">
                 <div class="contsTitWrap" id="workMainLastConts">
-                    <div class="contsTit">최근 작업내용</div>
-                    <div class="slecBox"><a href="#">작업대상 선택</a></div>
+                    <div class="contsTit"><srping:message key='drawing.board.label.11'/></div>
+                    <div class="slecBox"><a href="#"><srping:message key='drawing.board.label.12'/></a></div>
                 </div>
             </c:if>
             <c:if test="${not empty drawingInfo.currentWork}">
                 <input type="hidden" name="curStatus" id="curStatus" value="work">
                 <div class="contsTitWrap" id="workMainProgressConts" style="">
-                    <div class="contsTit">진행중인 작업</div>
+                    <div class="contsTit"><srping:message key='drawing.board.label.13'/></div>
                     <div class="right_sort">
-                        <button type="button" id="workCancelBtn" class="gradeMidBtn red">작업취소</button>
-                        <button type="button" id="workPuaseBtn" class="gradeMidBtn green">일시정지</button>
-                        <button type="button" id="workCompletelBtn" class="gradeMidBtn purple">종료하기</button>
+                        <button type="button" id="workCancelBtn" class="gradeMidBtn red"><srping:message key='drawing.board.button.06'/></button>
+                        <button type="button" id="workPuaseBtn" class="gradeMidBtn green"><srping:message key='drawing.board.button.07'/></button>
+                        <button type="button" id="workCompletelBtn" class="gradeMidBtn purple"><srping:message key='drawing.board.button.08'/></button>
                     </div>
 <%--                    <div class="endBox"><a href="#">종료하기</a></div>--%>
 <%--                    <div class="stopBox"><a href="#">일시</br>정지</a></div>--%>
@@ -312,20 +316,20 @@
             <div class="contsWrap">
                 <div class="topConts">
                     <div class="timeWrap">
-                        <span class="timeTit">시작</span>
+                        <span class="timeTit"><srping:message key='drawing.board.button.01'/></span>
                         <span class="time"><span><c:if test="${not empty workInfo}">${workInfo.WORK_START_DT}</c:if></span></span>
                     </div>
                     <div class="timeWrap">
-                        <span class="timeTit">종료</span>
+                        <span class="timeTit"><srping:message key='drawing.board.button.02'/></span>
                         <span class="time"><span><c:if test="${not empty workInfo}">${workInfo.WORK_FINISH_DT}</c:if></span></span>
                     </div>
                     <div class="timeWrap">
-                        <span class="timeTit">정지</span>
-                        <span class="time"><c:if test="${not empty workInfo}">${workInfo.STOP_TIME}</c:if>분</span>
+                        <span class="timeTit"><srping:message key='drawing.board.button.03'/></span>
+                        <span class="time"><c:if test="${not empty workInfo}">${workInfo.STOP_TIME}</c:if></span>
                     </div>
                     <div class="timeWrap">
-                        <span class="timeTit">작업</span>
-                        <span class="time"><c:if test="${not empty workInfo}">${workInfo.WORK_TIME}</c:if>분</span>
+                        <span class="timeTit"><srping:message key='drawing.board.button.04'/></span>
+                        <span class="time"><c:if test="${not empty workInfo}">${workInfo.WORK_TIME}</c:if></span>
                     </div>
                 </div>
                 <div class="middleConts">
@@ -340,10 +344,10 @@
                             </colgroup>
                             <thead>
                             <tr>
-                                <th>관리번호</th>
-                                <th>Part</th>
-                                <th>수량</th>
-                                <th>가공납기</th>
+                                <th><srping:message key='drawing.board.label.03'/></th>
+                                <th><srping:message key='drawing.board.label.04'/></th>
+                                <th><srping:message key='drawing.board.label.05'/></th>
+                                <th><srping:message key='drawing.board.label.06'/></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -357,11 +361,11 @@
                         </table>
                     </div>
                     <div class="share">
-                        <div class="shareTit">공유</div>
+                        <div class="shareTit"><srping:message key='drawing.board.label.07'/></div>
                         <div class="shareConts"><c:if test="${not empty workInfo}">${workInfo.NOTE}</c:if></div>
                     </div>
                     <div class="qual">
-                        <div class="qualTit">과거<br/>기록</div>
+                        <div class="qualTit"><srping:message key='drawing.board.label.08'/></div>
                         <div class="qualConts">
                             <span></span>
                         </div>
@@ -369,10 +373,10 @@
                 </div>
                 <div class="alertConts">
                     <c:if test="${not empty workInfo && workInfo.MAIN_INSPECTION eq 'Y'}">
-                        <span class="alertBox">주요검사</span>
+                        <span class="alertBox"><srping:message key='drawing.board.label.09'/></span>
                     </c:if>
                     <c:if test="${not empty workInfo && workInfo.EMERGENCY_YN eq 'Y'}">
-                        <span class="alertBox">긴급</span>
+                        <span class="alertBox"><srping:message key='drawing.board.label.10'/></span>
                     </c:if>
                 </div>
             </div>
@@ -424,7 +428,7 @@
                                 }
                                 startWork(data.info);
                             }else{
-                               showMessage("최신 도면이 아닙니다. 사무실에 확인바랍니다.");
+                               showMessage("<srping:message key='drawing.board.alert.01'/>");
                                return false;
                             }
                         }, parameters, '');
@@ -688,7 +692,7 @@
             let finishParseQty = isNaN(parseInt(finishQty)) ? 0 : parseInt(finishQty);
             let errorParseQty = isNaN(parseInt(errorQty)) ? 0 : parseInt(errorQty);
             if(finishParseQty <= 0 && errorParseQty <= 0){
-                showMessage("작업종료는 완료수량이나 불량수량을 등록하여야 합니다. ");
+                showMessage("<srping:message key='drawing.board.alert.05'/>");
                 return false;
             }
             let parameters = {
@@ -794,7 +798,7 @@
         }
 
         function fnRemainTimeSet(seconds){
-            let html = seconds+"초 후 자동 진행됩니다 ("+seconds+")";
+            let html = "<srping:message key='drawing.board.alert.04'/> ("+seconds+")";
             return html;
         }
 
@@ -819,7 +823,7 @@
             let beforeControlSeq = $("#drawing_action_form").find("#CONTROL_SEQ").val();
             let beforeControlDetailSeq = $("#drawing_action_form").find("#CONTROL_DETAIL_SEQ").val();
             if(beforeControlSeq == controlSeq && beforeControlDetailSeq == controlDetailSeq){
-                alert("이전 작업과 같은 작업을 연속적으로 시작하지 못합니다.");
+                alert("<srping:message key='drawing.board.alert.03'/>");
                 return false;
             }else{
                 return true;
@@ -837,7 +841,7 @@
             let returnVal = false;
             let barcodeType = barcodeNumber.charAt(0).toUpperCase();
             if(barcodeType == "L") {//라벨
-                showMessage("라벨 바코드는 사용이 불가능합니다.");
+                showMessage("<srping:message key='drawing.board.alert.02'/>");
                 return returnVal;
             }
             $.ajax({
@@ -848,15 +852,14 @@
                        if(data.info != null && data.info.USE_YN == 'Y'){
                            returnVal = true;
                        }else {
-                           showMessage("최신 도면이 아닙니다. 사무실에 확인바랍니다.");
+                           showMessage("<srping:message key='drawing.board.alert.01'/>");
                        }
                     } else {
-
-                        showMessage("시스템 오류가 발생하였습니다. 관리자에게 문의 바랍니다.");
+                        showMessage("<srping:message key='error.common'/>");
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    showMessage("시스템 오류가 발생하였습니다. 관리자에게 문의 바랍니다.");
+                    showMessage("<srping:message key='error.common'/>");
                     return false;
                 }
             });
@@ -887,7 +890,7 @@
                         <%--alert('<spring:message code='com.alert.default.failText' />');--%>
                         // }
                     } else {
-                        showMessage("시스템 오류가 발생하였습니다. 관리자에게 문의 바랍니다.");
+                        showMessage('<srping:message key='error.common'/>');
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
