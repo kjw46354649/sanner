@@ -38,7 +38,7 @@
                             <label class="label_100" for="SEL_OUTGOING_DATE_TYPE">구분</label>
                             <select class="wd_100" name="SEL_OUTGOING_DATE_TYPE" id="SEL_OUTGOING_DATE_TYPE">
 <%--                               <option value=""><spring:message code="com.form.top.all.option" /></option>--%>
-                                <c:forEach let="vlocale" items="${HighCode.H_1066}">
+                                <c:forEach var="vlocale" items="${HighCode.H_1066}">
                                     <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
@@ -71,7 +71,7 @@
                 <input type="text" id="outgoingManageFilterKeyword" placeholder="Enter your keyword">
                 <select id="outgoingManageFilterColumn"></select>
                 <select id="outgoingManageFilterCondition">
-                    <c:forEach let="code" items="${HighCode.H_1083}">
+                    <c:forEach var="code" items="${HighCode.H_1083}">
                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                     </c:forEach>
                 </select>
@@ -156,7 +156,7 @@
                     <span class="list_t" style="width: 192px;">반품종류</span>
                     <span style="width: 193px;">
 							<select id="INSPECT_GRADE" name="INSPECT_GRADE" title="반품종류">
-                                <c:forEach let="vlocale" items="${HighCode.H_1040}">
+                                <c:forEach var="vlocale" items="${HighCode.H_1040}">
                                     <c:if test="${vlocale.CODE_CD == 'GRD050' or vlocale.CODE_CD == 'GRD060'}">
                                         <option value="${vlocale.CODE_CD}">${vlocale.NOTE}</option>
                                     </c:if>
@@ -208,7 +208,7 @@
                     <span style="width: 194px;">
 							<select id="INSPECT_RESULT" name="INSPECT_RESULT" title="불량코드">
                                  <option value=""><spring:message code="com.form.top.sel.option" /></option>
-                                <c:forEach let="vlocale" items="${HighCode.H_1021}">
+                                <c:forEach var="vlocale" items="${HighCode.H_1021}">
                                     <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                 </c:forEach>
 							</select>
@@ -234,7 +234,7 @@
                         <td >
                             <select id="ERROR_REASON" name="ERROR_REASON" title="원인" >
                                 <option value=""><spring:message code="com.form.top.sel.option" /></option>
-                                <c:forEach let="vlocale" items="${HighCode.H_1032}">
+                                <c:forEach var="vlocale" items="${HighCode.H_1032}">
                                     <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
@@ -243,7 +243,7 @@
                         <td>
                             <select id="ERROR_ACTION" name="ERROR_ACTION" title="조치" >
                                 <option value=""><spring:message code="com.form.top.sel.option" /></option>
-                                <c:forEach let="vlocale" items="${HighCode.H_1025}">
+                                <c:forEach var="vlocale" items="${HighCode.H_1025}">
                                     <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>

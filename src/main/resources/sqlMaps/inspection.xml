@@ -408,8 +408,7 @@
                         , jmes.SF_GET_CODE_NM('1039', X.SURFACE_TREAT, 'KR') AS SURFACE_TREAT_NM
                         , X.SIZE_TXT
                         , X.ORDER_QTY
-                        , CASE WHEN X.ORDER_PACKING_NUM_CNT > 0 <!-- AND X.ORDER_PACKING_NUM_CNT <![CDATA[ < ]]> X.PACKING_CNT -->
-                          THEN CONCAT('(',cast(X.ORDER_PACKING_NUM_CNT as char(1)),'/',X.PACKING_CNT,')') ELSE X.ORDER_OUT_QTY END AS OUT_QTY
+                        , CASE WHEN X.ORDER_PACKING_NUM_CNT > 0 AND X.ORDER_PACKING_NUM_CNT <![CDATA[ < ]]> X.PACKING_CNT THEN CONCAT('(',cast(X.ORDER_PACKING_NUM_CNT as char(1)),'/',X.PACKING_CNT,')') ELSE X.ORDER_OUT_QTY END AS OUT_QTY
                         , X.PACKING_CNT
                         , (SELECT COUNT(*) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ) AS Q_SEQ
                         , ( SELECT
@@ -512,13 +511,13 @@
                 <if test="SEL_ST_DT !='' and SEL_ST_DT != null">
                     <if test="SEL_END_DT !='' and SEL_END_DT != null">
                         <if test='SEL_OUTGOING_DATE_TYPE == "1"'>
-                            AND T.ORDER_DUE_DT BETWEEN #{SEL_ST_DT} AND #{SEL_END_DT}    <!-- 요망납기 -->
+                            AND T.ORDER_DUE_DT BETWEEN REPLACE(#{SEL_ST_DT}, '/', SPACE(0)) AND REPLACE(#{SEL_END_DT}, '/', SPACE(0))    <!-- 요망납기 -->
                         </if>
                         <if test='SEL_OUTGOING_DATE_TYPE == "2"'>
-                            AND T.INNER_DUE_DT BETWEEN #{SEL_ST_DT} AND #{SEL_END_DT}    <!-- 가공납기 -->
+                            AND T.INNER_DUE_DT BETWEEN REPLACE(#{SEL_ST_DT}, '/', SPACE(0)) AND REPLACE(#{SEL_END_DT}, '/', SPACE(0))    <!-- 가공납기 -->
                         </if>
                         <if test='SEL_OUTGOING_DATE_TYPE == "3"'>
-                            AND T.OUT_DT BETWEEN #{SEL_ST_DT} AND #{SEL_END_DT}          <!-- 출고일시 -->
+                            AND T.OUT_DT BETWEEN BETWEEN REPLACE(#{SEL_ST_DT}, '/', SPACE(0)) AND REPLACE(#{SEL_END_DT}, '/', SPACE(0))          <!-- 출고일시 -->
                         </if>
                     </if>
                 </if>
@@ -705,6 +704,7 @@
           , CONCAT(X.ORDER_QTY,'(',X.PACKING_CNT,')') AS QTY_INFO
           , X.PACKING_CNT - X.OUT_PACKING_CNT - 1 AS REMAIN_PACKING_CNT
           , CONCAT(X.PACKING_NUM,'/',X.PACKING_CNT) AS MY_PACKING_NUM
+          , X.USED_CNT
         FROM (  SELECT T.CONTROL_SEQ, T.CONTROL_DETAIL_SEQ, T.ORDER_SEQ
                   , A.CONTROL_NUM
                   , B.DRAWING_NUM
@@ -714,6 +714,7 @@
                   , C.PACKING_CNT
                   , T.PACKING_NUM
                   , (SELECT IFNULL(COUNT(PACKING_NUM),0) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = T.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = T.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = T.ORDER_SEQ) AS OUT_PACKING_CNT
+                  , (SELECT COUNT(*) FROM TBL_OUT O WHERE O.CONTROL_SEQ = T.CONTROL_SEQ AND O.CONTROL_DETAIL_SEQ = T.CONTROL_DETAIL_SEQ AND O.ORDER_SEQ = T.ORDER_SEQ AND O.PACKING_NUM = T.PACKING_NUM) AS USED_CNT
                 FROM jmes.TBL_OUT_BARCODE T
                   , jmes.TBL_CONTROL A
                   , jmes.TBL_CONTROL_PART B
@@ -726,6 +727,7 @@
                   AND T.ORDER_SEQ = C.ORDER_SEQ
                   AND T.BARCODE_NUM = #{BARCODE_NUM}
                   AND T.DEL_YN = 'N'
+                  AND NOT EXISTS (SELECT * FROM TBL_OUT O WHERE O.CONTROL_SEQ = T.CONTROL_SEQ AND O.CONTROL_DETAIL_SEQ = T.CONTROL_DETAIL_SEQ AND O.ORDER_SEQ = T.ORDER_SEQ AND O.PACKING_NUM = T.PACKING_NUM)
             ) X
     </select>
     <insert id="insertOutgoingOutType4" parameterType="java.util.HashMap">
@@ -740,7 +742,6 @@
         WHERE A.BARCODE_NUM = #{BARCODE_NUM}
           AND IFNULL(DEL_YN,'N') = 'N'
           AND NOT EXISTS (SELECT 1 FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = A.ORDER_SEQ AND (M.PACKING_NUM IS NULL OR M.PACKING_NUM = A.PACKING_NUM))
-
     </insert>
     <update id="updateOutgoingOutType4After1" parameterType="java.util.HashMap">
         UPDATE jmes.TBL_CONTROL_PART_ORDER A
@@ -754,7 +755,7 @@
         UPDATE jmes.TBL_CONTROL A
         SET A.OUT_FINISH_DT = CASE WHEN A.OUT_FINISH_DT IS NULL THEN NOW() ELSE A.OUT_FINISH_DT END
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
-        AND EXISTS( SELECT 1 FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ)
+          AND EXISTS( SELECT 1 FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ)
           AND NOT EXISTS( SELECT 1 FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.OUT_FINISH_DT IS NULL)
     </update>
     <update id="updateOutgoingOutType4After3" parameterType="java.util.HashMap">

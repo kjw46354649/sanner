@@ -1,5 +1,6 @@
 package com.jmes.service.impl;
 
+import java.sql.SQLException;
 import java.util.UUID;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,6 +9,7 @@ import com.jmes.dao.OrderDao;
 import com.jmes.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.*;
 
@@ -213,5 +215,50 @@ public class OrderServiceImpl implements OrderService {
     public void removeInvoice(Map<String, Object> map) throws Exception {
         this.orderDao.removeInvoiceDetail(map);
         this.orderDao.removeInvoice(map);
+    }
+
+    @Override
+    public void processConfirmBarcodeInfo(Model model, Map<String, Object> map) throws SQLException {
+        String barcodeNum = (String) map.get("BARCODE_NUM");
+        boolean flag = false;
+        String message = "";
+
+        if (barcodeNum != null) {
+            // 유효한 바코드인지 확인
+            map.put("queryId", "orderMapper.selectIsbarcodeValid");
+            if(this.orderDao.getFlag(map)) {
+                flag = true;
+                message = "최신 도면이 아닙니다.";
+            };
+            // 주문상태가 확정인지 확인
+            map.put("queryId", "orderMapper.selectHasControlStatusConfirm");
+            if(this.orderDao.getFlag(map) && !flag) {
+                flag = true;
+                message = "먼저 가공확정을 해주세요.";
+            };
+            // 이미 가공확정 됐는지 확인
+            map.put("queryId", "orderMapper.selectHasPartStatusConfirm");
+            if(this.orderDao.getFlag(map) && !flag) {
+                flag = true;
+                message = "이미 확정된 도면입니다.";
+            };
+            // 외주인지 확인
+            map.put("queryId", "orderMapper.selectHasInOutside");
+            if(this.orderDao.getFlag(map) && !flag) {
+                flag = true;
+                message = "외주";
+            };
+
+            model.addAttribute("flag", flag);
+            model.addAttribute("message", message);
+            // 소재입고 확인
+            /*map.put("queryId", "orderMapper.selectHasInStock");
+            if(this.orderDao.getFlag(map)) {
+                message = "크크크";
+                model.addAttribute("flag", true);
+                model.addAttribute("message", message);
+                return;
+            };*/
+        }
     }
 }

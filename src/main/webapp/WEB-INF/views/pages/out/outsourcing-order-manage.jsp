@@ -367,7 +367,7 @@
         const colModel = [
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: false},
             {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true},
             {title: 'OUTSIDE_REQUEST_SEQ', dataType: 'integer', dataIndx: 'OUTSIDE_REQUEST_SEQ', hidden: true},
             {title: '담당자', dataType: 'integer', dataIndx: 'ORDER_STAFF_SEQ', hidden: true},
@@ -758,7 +758,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#downloadSingleFile").bind("click", function () {
                         let rowData = ui.rowData;
-                        alert(rowData.FILE_SEQ);
+
                         fnSingleFileDownloadFormPageAction(rowData.FILE_SEQ);
                     });
                 }
@@ -1029,7 +1029,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#downloadSingleFile").bind("click", function () {
                         let rowData = ui.rowData;
-                        alert(rowData.FILE_SEQ);
+
                         fnSingleFileDownloadFormPageAction(rowData.FILE_SEQ);
                     });
                 }
@@ -1424,7 +1424,7 @@
             if (selectedRowIndex.length > 0) {
                 return false;
             } else {
-                alert('하나 이상 선택해주세요');
+                fnAlert(null, '하나 이상 선택해주세요');
                 return true;
             }
         };
@@ -1434,7 +1434,7 @@
             $('#OUTSIDE_MANAGE_END_DATE').val(today.yyyymmdd());
         };
 
-        const isStatusCheck = function (mailFormElement, status) {
+        const checkStatus = function (mailFormElement, status) {
             // status : OST001 = 가공요청, OST002 = 요청취소
             let compCdList= [];
             let outsideCompCdList = [];
@@ -1454,35 +1454,35 @@
             outsideStatusList = [...new Set(outsideStatusList)];
 
             if (compCdList.length > 1) {
-                alert('선택된 대상들의 발주사는 동일해야 합니다.');
+                fnAlert(null, '선택된 대상들의 발주사는 동일해야 합니다.');
                 return true;
             }
             if (outsideCompCdList.length > 1) {
-                alert('선택된 대상들의 협력업체는 동일해야 합니다.');
+                fnAlert(null, '선택된 대상들의 협력업체는 동일해야 합니다.');
                 return true;
             }
-            if (outsideStatusList.length > 1) {
-                alert('상태가 일치 하지 않음');
+            if (outsideStatusList.length > 1 && !(outsideStatusList.includes(undefined) && outsideStatusList.includes('OST002'))) {
+                fnAlert(null, '외주발주상태가 일치 하지 않습니다.');
                 return true;
             }
 
             if (outsideStatusList[0] === 'OST001' && outsideStatusList[0] === status) {
-                alert('이미 발송된 요청입니다.');
+                fnAlert(null, '이미 외주가공한 대상입니다.');
                 return true;
             }
 
             if (outsideStatusList[0] === 'OST002' && outsideStatusList[0] === status) {
-                alert('이미 발송된 요청입니다.');
+                fnAlert(null, '이미 가공요청 취소한 대상입니다.');
                 return true;
             }
 
             if (outsideStatusList[0] === undefined && status === 'OST002') {
-                alert('가공요청 취소 할 수 없습니다.');
+                fnAlert(null, '가공요청 취소 할 수 없습니다.');
                 return true;
             }
 
-            if(outsideStatusList[0] === 'OST003') {
-                alert('입고완료.');
+            if(outsideStatusList.includes('OST003')) {
+                fnAlert(null, '이미 입고완료 된 대상이 포함되어있습니다.');
                 return true;
             }
 
@@ -1676,7 +1676,7 @@
                 if (noSelectedRowAlert()) {
                     return false;
                 }
-                if (isStatusCheck('REQUEST_OUTSIDE_MAIL_FORM', 'OST001')) {
+                if (checkStatus('REQUEST_OUTSIDE_MAIL_FORM', 'OST001')) {
                     return false;
                 }
                 if (fnIsGridEditing($outsideOrderManageGrid)) {
@@ -1713,7 +1713,7 @@
                 if (noSelectedRowAlert()) {
                     return false;
                 }
-                if (isStatusCheck('CANCEL_REQUEST_OUTSIDE_MAIL_FORM', 'OST002')) {
+                if (checkStatus('CANCEL_REQUEST_OUTSIDE_MAIL_FORM', 'OST002')) {
                     return false;
                 }
                 if (fnIsGridEditing($outsideOrderManageGrid)) {
@@ -1785,7 +1785,7 @@
             orderCompCdList = [...new Set(orderCompCdList)];
 
             if (orderCompCdList.length > 1) {
-                alert('선택된 대상들의 외주업체는 반드시 동일해야합니다');
+                fnAlert(null, '선택된 대상들의 외주업체는 반드시 동일해야합니다');
                 return false;
             }
 
@@ -1828,16 +1828,16 @@
                 outsideCompCdList = [...new Set(outsideCompCdList)];
 
                 if (outsideCompCdList.length === 0 || outsideCompCdList[0] === undefined) {
-                    alert('외주업체가 없습니다!');
+                    fnAlert(null, '외주업체가 없습니다!');
                     return false;
                 }
 
                 if (compCdList.length > 1) {
-                    alert('선택된 대상들의 사업자는 동일해야 합니다.');
+                    fnAlert(null, '선택된 대상들의 사업자는 동일해야 합니다.');
                     return false;
                 }
                 if (outsideCompCdList.length > 1) {
-                    alert('선택된 대상들의 협력업체는 동일해야 합니다.');
+                    fnAlert(null, '선택된 대상들의 협력업체는 동일해야 합니다.');
                     return false;
                 }
 
@@ -1897,19 +1897,18 @@
 
         $('#OUTSIDE_ORDER_MANAGE_DELETE').on('click', function () {
             let list = [];
-            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
 
             for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = $outsideOrderManageGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
                 list.push(rowData);
 
                 if (rowData.OUTSIDE_STATUS === 'OST001') {
-                    bodyHtml =
+                    let messsage =
                         '<h4>\n' +
                         '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
                         '    <span>외주발주상태가 빈칸이나 요청취소인 경우에만 가능합니다</span>\n' +
                         '</h4>';
-                    fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
+                    fnAlert(null, messsage);
                     return false;
                 }
             }
@@ -1917,7 +1916,7 @@
             let parameters = {'url': '/modifyOutsideOrder', 'data': {data: JSON.stringify(list)}};
 
             fnPostAjax(function (data) {
-                alert("<spring:message code='com.alert.default.remove.success' />");
+                fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");
                 $outsideOrderManageGrid.pqGrid('refreshDataAndView');
             }, parameters, '');
         });
@@ -2047,7 +2046,7 @@
             let mailRecipientData = $mailRecipientGrid.pqGrid('option', 'dataModel.data');
 
             if (!outsideCompCd) {
-                alert('요청 외주 업체가 없습니다.');
+                fnAlert(null, '요청 외주 업체가 없습니다.');
                 return false;
             }
 
@@ -2059,7 +2058,7 @@
             }
 
             if (mailFlag) {
-                alert('메일 수신자 정보는 필수입니다.');
+                fnAlert(null, '메일 수신자 정보는 필수입니다.');
                 return false;
             }
 
@@ -2087,7 +2086,7 @@
 
             let parameters = {'url': '/managerRequestOutside', 'data': {data: JSON.stringify(postData)}};
             fnPostAjax(function (data, callFunctionParam) {
-                alert("<spring:message code='com.alert.default.save.success' />");
+                fnAlert(null, "<spring:message code='com.alert.default.save.success' />");
                 $('#REQUEST_OUTSIDE_POPUP').modal('hide');
                 $outsideOrderManageGrid.pqGrid('refreshDataAndView');
             }, parameters, '');
@@ -2142,7 +2141,7 @@
                     }
 
                     if (mailFlag) {
-                        alert('메일 수신자 정보는 필수입니다.');
+                        fnAlert(null, '메일 수신자 정보는 필수입니다.');
                         return false;
                     }
 
@@ -2171,7 +2170,7 @@
 
                     let parameters = {'url': '/managerRequestOutside', 'data': {data: JSON.stringify(postData)}};
                     fnPostAjax(function (data, callFunctionParam) {
-                        alert("<spring:message code='com.alert.default.save.success' />");
+                        fnAlert(null, "<spring:message code='com.alert.default.save.success' />");
                         $('#CANCEL_REQUEST_OUTSIDE_POPUP').modal('hide');
                         $outsideOrderManageGrid.pqGrid('refreshDataAndView');
                     }, parameters, '');

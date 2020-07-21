@@ -25,7 +25,7 @@
         CASE WHEN IFNULL(A.EMERGENCY_YN, 'N') = 'Y' THEN '긴급' ELSE SPACE(0) END AS EMERGENCY_BARCODE_NM, <!-- 바코드 긴급 -->
         A.CONTROL_STATUS, <!-- 주문관리상태 -->
         IFNULL(SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR'), SPACE(0)) AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
-        IFNULL(SF_GET_DATE_F(A.STATUS_DT, 'YY', 'M'), SPACE(0)) AS CONTROL_STATUS_DT, <!-- 주문관리 상태확정일 -->
+        IFNULL(SF_GET_DATE_F(A.STATUS_DT, 'YYYY', ''), SPACE(0)) AS CONTROL_STATUS_DT, <!-- 주문관리 상태확정일 -->
         A.EST_SEQ, <!-- 견적일련번호 -->
         IFNULL(A.PRICE_CONFIRM, SPACE(0)) AS PRICE_CONFIRM, <!-- 단가확인 -->
         IFNULL(SF_GET_CODE_NM(1017, PRICE_CONFIRM, 'KR'), SPACE(0)) AS PRICE_CONFIRM_NM, <!-- 단가확인 -->
@@ -1319,7 +1319,17 @@
             UPDATE_DT = NOW()
             <!-- ,UPDATE_ID #{UPDATE_ID} -->
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
-              AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+        <choose>
+            <when test="CONTROL_DETAIL_SEQ != null and CONTROL_DETAIL_SEQ != ''">
+                AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            </when>
+            <otherwise>
+                AND CONTROL_DETAIL_SEQ = (  SELECT A.CONTROL_DETAIL_SEQ
+                                            FROM TBL_CONTROL_PART A
+                                            WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
+                                            AND A.PART_NUM = #{PART_NUM})
+            </otherwise>
+        </choose>
     </update>
 
     <update id="updateControlPartOrder" parameterType="java.util.HashMap">
@@ -1370,7 +1380,55 @@
                    AND WORK_TYPE = 'WTP020') AS FLAG
     </select>
 
-    <select id="selectHasInStock" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    <!-- 유효 도면 -->
+    <select id="selectIsbarcodeValid" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
+        SELECT NOT EXISTS ( SELECT *
+                            FROM TBL_CONTROL_BARCODE
+                            WHERE 1 = 1
+                                AND BARCODE_NUM = #{BARCODE_NUM}
+                                AND DEL_YN = 'N' ) AS FLAG
+    </select>
+
+    <!-- 주문상태 가공 확정 확인 -->
+    <select id="selectHasControlStatusConfirm" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
+        SELECT NOT EXISTS ( SELECT *
+                            FROM TBL_CONTROL
+                            WHERE 1 = 1
+                                AND CONTROL_SEQ = ( SELECT CONTROL_SEQ
+                                                    FROM TBL_CONTROL_BARCODE
+                                                    WHERE 1 = 1
+                                                        AND BARCODE_NUM = #{BARCODE_NUM}
+                                                        AND DEL_YN = 'N')
+                                AND CONTROL_STATUS = 'ORD001') AS FLAG
+    </select>
+
+    <!-- 이미 확정 -->
+    <select id="selectHasPartStatusConfirm" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
+        SELECT EXISTS ( SELECT PART_STATUS
+                        FROM TBL_CONTROL_PART
+                        WHERE 1 = 1
+                            AND (CONTROL_SEQ, CONTROL_DETAIL_SEQ) IN (  SELECT CONTROL_SEQ, CONTROL_DETAIL_SEQ
+                                                                        FROM TBL_CONTROL_BARCODE
+                                                                        WHERE 1 = 1
+                                                                            AND BARCODE_NUM = #{BARCODE_NUM}
+                                                                            AND DEL_YN = 'N')
+                            AND PART_STATUS = 'PRO002') AS FLAG
+    </select>
+
+    <!-- 외주 입고 -->
+    <select id="selectHasInOutside" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
+        SELECT EXISTS ( SELECT PART_STATUS
+                        FROM TBL_CONTROL_PART
+                        WHERE 1 = 1
+                            AND (CONTROL_SEQ, CONTROL_DETAIL_SEQ) IN (  SELECT CONTROL_SEQ, CONTROL_DETAIL_SEQ
+                                                                        FROM TBL_CONTROL_BARCODE
+                                                                        WHERE 1 = 1
+                                                                            AND BARCODE_NUM = #{BARCODE_NUM}
+                                                                            AND DEL_YN = 'N')
+                            AND OUTSIDE_YN = 'Y') AS FLAG
+    </select>
+    <!-- 소재 입고 -->
+    <select id="selectHasInStock" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
         SELECT EXISTS ( SELECT *
                         FROM TBL_MATERIAL_ORDER
                         WHERE 1 = 1

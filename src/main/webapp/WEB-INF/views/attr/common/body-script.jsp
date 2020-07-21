@@ -874,7 +874,7 @@
             return numberVal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         else
             return numberVal;
-    }
+    };
 
     let fnBarcodePrint = function (callFunction, formData, callFunctionParam) {
         'use strict';

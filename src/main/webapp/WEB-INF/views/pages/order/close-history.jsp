@@ -667,7 +667,7 @@
             if (selectedRowIndex.length > 0) {
                 return false;
             } else {
-                alert('하나 이상 선택해주세요');
+                fnAlert(null, '하나 이상 선택해주세요');
                 return true;
             }
         };
@@ -723,11 +723,11 @@
             controlStatusList = [...new Set(controlStatusList)];
 
             if (controlStatusList.length > 1) {
-                alert('주문 상태가 다릅니다.'); //TODO: 문구 수정
+                fnAlert(null, '주문 상태가 다릅니다.'); //TODO: 문구 수정
                 return true;
             }
             if(controlStatusList[0] !== status) {
-                alert('주문 상태가 다릅니다.'); //TODO: 문구 수정
+                fnAlert(null, '주문 상태가 다릅니다.'); //TODO: 문구 수정
                 return true;
             }
 
@@ -817,11 +817,11 @@
                 orderCompCdList = [...new Set(orderCompCdList)];
 
                 if (compCdList.length > 1) {
-                    alert('선택된 대상들의 발주사는 동일해야 합니다.');
+                    fnAlert(null, '선택된 대상들의 발주사는 동일해야 합니다.');
                     return false;
                 }
                 if (orderCompCdList.length > 1) {
-                    alert('선택된 대상들의 공급사는 동일해야 합니다.');
+                    fnAlert(null, '선택된 대상들의 공급사는 동일해야 합니다.');
                     return false;
                 }
 
