@@ -359,7 +359,7 @@
                     },
                 ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
-            {title: '비고', dataType: 'string', dataIndx: 'DTL_AMOUNT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, minWidth: 120,
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, minWidth: 120,
                 editable: function (ui) {return itemOrderRegisterGridCellEditable(ui);}
             },
             {title: '보유소재 충당수량', align: "center", colModel: [
@@ -1004,7 +1004,7 @@
                 columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
                 scrollModel: {autoFit: false},
                 numberCell: {width: 30, title: "No", show: true },
-                selectionModel: { type: 'row', mode: 'single'} ,
+                selectionModel: { type: 'cell', mode: 'multiple'} ,
                 swipeModel: {on: false},
                 collapsible: false,
                 postRenderInterval: -1,
@@ -1409,21 +1409,28 @@
                     $("#item_order_register_popup_form #MATERIAL_ORDER_SEQ").val(ORDER_SEQ);
 
                     let parameter = {
-                        'queryId': 'updateItemOrderRegisterMaterialOrderCancel',
+                        'queryId': 'insertItemOrderRegisterMasterOrderHistory',
                         'MATERIAL_ORDER_SEQ': ORDER_SEQ,
                     };
-                    let parameters = {'url': '/json-remove', 'data': parameter};
+                    let parameters = {'url': '/json-create', 'data': parameter};
                     fnPostAjax(function(data, callFunctionParam){
                         parameter = {
-                            'queryId': 'updateItemOrderRegisterControlPartCancel',
-                            'CONCAT_SEQ': CONCAT_SEQ,
+                            'queryId': 'updateItemOrderRegisterMaterialOrderCancel',
+                            'MATERIAL_ORDER_SEQ': ORDER_SEQ,
                         };
                         parameters = {'url': '/json-remove', 'data': parameter};
                         fnPostAjax(function(data, callFunctionParam){
-                            parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
+                            parameter = {
+                                'queryId': 'updateItemOrderRegisterControlPartCancel',
+                                'CONCAT_SEQ': CONCAT_SEQ,
+                            };
+                            parameters = {'url': '/json-remove', 'data': parameter};
                             fnPostAjax(function(data, callFunctionParam){
-                                alert("취소 완료되었습니다.");
-                                $("#item_order_register_popup").modal('hide');
+                                parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
+                                fnPostAjax(function(data, callFunctionParam){
+                                    alert("취소 완료되었습니다.");
+                                    $("#item_order_register_popup").modal('hide');
+                                }, parameters, '');
                             }, parameters, '');
                         }, parameters, '');
                     }, parameters, '');

@@ -309,7 +309,7 @@
             } ,
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 80 } ,
             {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY', width: 50},
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: true,
+                {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: false,
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -1004,6 +1004,7 @@
             if(index > -1) val = options[index].text;
         }
         if (val) {
+            if($.isNumeric(val)) val = numberWithCommas(val);
             var condition = $("#estimateListFilterCondition :selected").val(),
                 valUpper = val.toString().toUpperCase(),
                 txt = $("#estimateListFilterKeyword").val(),
