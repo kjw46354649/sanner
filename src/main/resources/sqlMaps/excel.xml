@@ -5,7 +5,7 @@
 
     <select id="selectEstimateMasterInfoExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            A.EST_TITLE, CONCAT(A.EST_NUM, '(', A.EST_NUM, ')') AS EST_NUM, A.EMAIL_TITLE,
+            A.EST_TITLE, CONCAT(A.EST_NUM, '(', A.EST_VER, ')') AS EST_NUM, A.EMAIL_TITLE,
             IFNULL(B.COMP_NUM, SPACE(0)) ORDER_COMP_NUM,
             IFNULL(B.COMP_NM, SPACE(0)) ORDER_COMP_NM,
             IFNULL(B.CEO_NM, SPACE(0)) ORDER_CEO_NM,
