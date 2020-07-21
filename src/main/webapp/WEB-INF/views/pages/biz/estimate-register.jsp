@@ -7,6 +7,7 @@
 --%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="modal" id="estimate_master_record_popup" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -319,12 +320,7 @@
                 }
             },*/
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
-                editor: {
-                    type: 'select',
-                    valueIndx: "value",
-                    labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1027'),
-                },
+                editor: { type: 'select', valueIndx: "value", labelIndx: "text", options: fnGetCommCodeGridSelectBox('1027') },
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -351,7 +347,7 @@
                     type: 'select',
                     valueIndx: "value",
                     labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1029'),
+                    options: fnGetCommCodeGridSelectBox('1029')
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -649,7 +645,7 @@
             selectionModel : {type: 'row', mode: 'single'}, numberCell: {title: 'No.'}, dragColumns: {enabled: false},
             editable : false,
             scrollModel: {autoFit: false}, trackModel: {on: true}, showBottom : true, postRenderInterval: -1, //call postRender synchronously.
-            columnTemplate: { align: 'center', halign: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
+            columnTemplate: { align: 'center', halign: 'center', hvalign: 'center', valign: 'center', render: estimateRegisterFilterRender},
             colModel: estimateRegisterFileModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -801,16 +797,18 @@
                         calculateEstimateAmt += UNIT_PROCESS_AMT;
                         calculateEstimateAmt += UNIT_ETC_AMT;
 
-                        estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'CALCUL_EST_UNIT_COST': calculateEstimateAmt }, checkEditable: false });
+                        if(calculateEstimateAmt != 0) {
+                            estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'CALCUL_EST_UNIT_COST': calculateEstimateAmt }, checkEditable: false });
 
-                        let UNIT_FINAL_EST_AMT = ui.updateList[iTmp].newRow.UNIT_FINAL_EST_AMT
-                        if(UNIT_FINAL_EST_AMT != undefined){
-                            calculateEstimateAmt = UNIT_FINAL_EST_AMT;
+                            let UNIT_FINAL_EST_AMT = ui.updateList[iTmp].newRow.UNIT_FINAL_EST_AMT
+                            if(UNIT_FINAL_EST_AMT != undefined){
+                                calculateEstimateAmt = UNIT_FINAL_EST_AMT;
+                            }
+                            estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'UNIT_FINAL_EST_AMT': calculateEstimateAmt }, checkEditable: false });
+
+                            calculateEstimateAmt *= ITEM_QTY;
+                            estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'DTL_AMOUNT': calculateEstimateAmt }, checkEditable: false });
                         }
-                        estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'UNIT_FINAL_EST_AMT': calculateEstimateAmt }, checkEditable: false });
-
-                        calculateEstimateAmt *= ITEM_QTY;
-                        estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'DTL_AMOUNT': calculateEstimateAmt }, checkEditable: false });
                     }
                 }
             },
@@ -878,6 +876,7 @@
         });
 
         function estimateRegisterSaveCallBack(response, callMethodParam){
+            alert("<spring:message code='com.alert.default.save.success' />");
             estimateRegisterReloadPageData();
         };
 
@@ -905,7 +904,7 @@
                     $("#estimate_register_info_form #EST_USER_ID").val(list.EST_USER_ID);
                     $("#estimate_register_info_form #EST_NUM").val(list.EST_NUM + ' (' + list.EST_VER + ')');
                     $("#estimate_register_info_form #DTL_CNT").val(list.DTL_CNT);
-                    $("#estimate_register_info_form #DTL_AMOUNT").val(list.DTL_AMOUNT);
+                    $("#estimate_register_info_form #DTL_AMOUNT").val(numberWithCommas(list.DTL_AMOUNT));
                     $("#estimate_register_info_form #INSERT_DT").val(list.INSERT_DT);
                     $("#estimate_register_info_form #SEND_DT").val(list.SEND_DT);
                     $("#estimate_register_info_form #GFILE_SEQ").val(GfileKey);
@@ -1178,4 +1177,51 @@
         }
     }
 
+    function estimateRegisterFilterRender(ui) {
+        let val = ui.cellData == undefined ? "" : ui.cellData,
+            options = ui.column.editor == undefined ? "" : ui.column.editor.options;
+        let index = -1;
+        if(options) {
+            index = options.findIndex(function (element) {
+                return element.value == val;
+            });
+            if(index > -1) val = options[index].text;
+        }
+        if (val) {
+            if($.isNumeric(val)) val = numberWithCommas(val);
+            var condition = $("#estimateListFilterCondition :selected").val(),
+                valUpper = val.toString().toUpperCase(),
+                txt = $("#estimateListFilterKeyword").val(),
+                txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                indx = -1;
+
+            if (condition == "end") {
+                indx = valUpper.lastIndexOf(txtUpper);
+                if (indx + txtUpper.length != valUpper.length) {
+                    indx = -1;
+                }
+            }
+            else if (condition == "contain") {
+                indx = valUpper.indexOf(txtUpper);
+            }
+            else if (condition == "begin") {
+                indx = valUpper.indexOf(txtUpper);
+                if (indx > 0) {
+                    indx = -1;
+                }
+            }
+            if (indx >= 0) {
+                var txt1 = val.toString().substring(0, indx);
+                var txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                var txt3 = val.toString().substring(indx + txtUpper.length);
+                return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+            }
+            else {
+                return val;
+            }
+        }
+        else {
+            return val;
+        }
+    }
 </script>

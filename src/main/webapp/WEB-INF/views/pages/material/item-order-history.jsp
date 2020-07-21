@@ -510,20 +510,27 @@
             itemOrderRegisterPopSubmitConfirm(function(confirm) {
                 if (confirm) {
                     let parameter = {
-                        'queryId': 'updateItemOrderRegisterMaterialOrderCancel',
+                        'queryId': 'insertItemOrderRegisterMasterOrderHistory',
                         'MATERIAL_ORDER_SEQ': $("#item_order_history_search_form #MATERIAL_ORDER_SEQ").val(),
                     };
-                    let parameters = {'url': '/json-remove', 'data': parameter};
-                    fnPostAjax(function (data, callFunctionParam) {
+                    let parameters = {'url': '/json-create', 'data': parameter};
+                    fnPostAjax(function(data, callFunctionParam){
                         parameter = {
-                            'queryId': 'updateItemOrderRegisterControlPartCancel',
-                            'CONCAT_SEQ': $("#item_order_history_search_form #CONCAT_SEQ").val(),
+                            'queryId': 'updateItemOrderRegisterMaterialOrderCancel',
+                            'MATERIAL_ORDER_SEQ': $("#item_order_history_search_form #MATERIAL_ORDER_SEQ").val(),
                         };
                         parameters = {'url': '/json-remove', 'data': parameter};
                         fnPostAjax(function (data, callFunctionParam) {
-                            parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
-                            fnPostAjax(function(data, callFunctionParam){
-                                $("#btnItemOrderHistorySearch").trigger('click');
+                            parameter = {
+                                'queryId': 'updateItemOrderRegisterControlPartCancel',
+                                'CONCAT_SEQ': $("#item_order_history_search_form #CONCAT_SEQ").val(),
+                            };
+                            parameters = {'url': '/json-remove', 'data': parameter};
+                            fnPostAjax(function (data, callFunctionParam) {
+                                parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
+                                fnPostAjax(function(data, callFunctionParam){
+                                    $("#btnItemOrderHistorySearch").trigger('click');
+                                }, parameters, '');
                             }, parameters, '');
                         }, parameters, '');
                     }, parameters, '');

@@ -151,7 +151,9 @@
                         data: {
                             'queryId': 'orderMapper.businessMonthOutgoingList',
                             'SEL_START_DATE': moment(info.startStr).format('YYYYMMDD'),
-                            'SEL_END_DATE': moment(info.endStr).format('YYYYMMDD')
+                            'SEL_END_DATE': moment(info.endStr).format('YYYYMMDD'),
+                            'ORDER_COMP_CD': $('#business_status_search_form').find("#ORDER_COMP_CD").val(),
+                            'ORDER_COMP_CHARGE': $('#business_status_search_form').find("#ORDER_STAFF_SEQ").val()
                         },
                         success: function(data) {
                             successCallback(data.list);
@@ -207,7 +209,9 @@
 
         fnCommCodeDatasourceSelectBoxCreate($('#business_status_search_form').find('#ORDER_STAFF_SEQ'), 'all', {
             'url': '/json-list',
-            'data': {'queryId': 'dataSource.selectOrderCompChargeList'}
+            'data': {'queryId': 'dataSource.selectOrderCompChargeList',
+                'COMP_CD': $('#business_status_search_form').find("#ORDER_COMP_CD").val(),
+            }
             // 'data': {'queryId': 'dataSource.getCompanyStaffList'}
         });
 
@@ -243,7 +247,7 @@
             {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', width: 80},
             {title: '현재위치', dataType: 'string', dataIndx: 'LAST_POP_POSITION', width: 80},
             {title: '검사', dataType: 'string', dataIndx: 'INSPECT_GRADE', width: 30},
-            {title: '담당자', dataType: 'string', dataIndx: 'USER_NM', width: 80}
+            {title: '담당자', dataType: 'string', dataIndx: 'STAFF_NM', width: 80}
         ];
 
         let businessStatusObj = {
@@ -272,8 +276,8 @@
         $businessOutgoingListGrid = $('#' + businessOutgoingListGridId).pqGrid(businessStatusObj);
 
         let businessEmergencyColModel = [
-            {title: '납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', width: 50},
-            {title: '출고', dataType: 'string', dataIndx: 'DELIVERY_DT', width: 50},
+            {title: '납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', width: 50},
+            {title: '출고', dataType: 'string', dataIndx: 'OUT_FINISH_DT', width: 50},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 80},
             {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
@@ -288,9 +292,9 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 150},
-            {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', width: 50},
-            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', width: 80}
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_PART_INFO', width: 150},
+            {title: '수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY_INFO', width: 50},
+            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', width: 80}
         ];
 
         let businessEmergencyObj = {
@@ -301,7 +305,7 @@
             colModel: businessEmergencyColModel,
             dataModel: {
                 recIndx: 'ROW_NUM', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'orderMapper.businessEmergencyList'},
+                postData: {'queryId': 'tvMapper.selectMctGrid2List'},
                 getData: function (response, textStatus, jqXHR) {
                     return {data: response.data};
                 }
@@ -316,8 +320,8 @@
         $businessEmergencyListGrid = $('#' + businessEmergencyListGridId).pqGrid(businessEmergencyObj);
 
         let businessOverOrderColModel = [
-            {title: '납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', width: 50},
-            {title: '출고', dataType: 'string', dataIndx: 'DELIVERY_DT', width: 50},
+            {title: '납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', width: 55},
+            {title: '출고', dataType: 'string', dataIndx: 'OUT_FINISH_DT', width: 55},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 80},
             {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
@@ -332,10 +336,10 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 150},
-            {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', width: 50},
-            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', width: 80},
-            {title: '담당자', dataType: 'string', dataIndx: 'USER_NM', width: 80}
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_PART_INFO', width: 150},
+            {title: '수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY_INFO', width: 50},
+            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', width: 80},
+            {title: '담당자', dataType: 'string', dataIndx: 'CHARGE_USER_NM', width: 80}
         ];
 
         let businessOverOrderObj = {
@@ -347,7 +351,7 @@
             colModel: businessOverOrderColModel,
             dataModel: {
                 recIndx: 'ROW_NUM', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'businessOverOrderList'},
+                postData: {'queryId': 'tvMapper.selectMctGrid3List'},
                 getData: function (response, textStatus, jqXHR) {
                     return {data: response.data};
                 }
@@ -399,6 +403,7 @@
                 return (fnFormToJsonArrayData('#business_status_search_form'));
             });
             $businessOutgoingListGrid.pqGrid('refreshDataAndView');
+            businessCalendar.refetchEvents();
         });
     });
 

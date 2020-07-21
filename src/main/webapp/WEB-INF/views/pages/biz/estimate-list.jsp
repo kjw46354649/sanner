@@ -156,7 +156,7 @@
                             return '<button type="button" id="estimateOrder" data-seq="'+EST_SEQ+'" data-ver="'+EST_VER+'" class="miniBtn blue">주문등록</button>'
                         }
                     }   else {
-                        return '<span class="miniBtn blue">등록완료</span>'
+                        return '<span class="miniBtn gray">등록완료</span>'
                     }
                 }
             },
@@ -309,7 +309,7 @@
             } ,
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 80 } ,
             {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY', width: 50},
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: true,
+                {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: false,
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -1004,6 +1004,7 @@
             if(index > -1) val = options[index].text;
         }
         if (val) {
+            if($.isNumeric(val)) val = numberWithCommas(val);
             var condition = $("#estimateListFilterCondition :selected").val(),
                 valUpper = val.toString().toUpperCase(),
                 txt = $("#estimateListFilterKeyword").val(),

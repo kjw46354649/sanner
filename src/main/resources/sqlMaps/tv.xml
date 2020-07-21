@@ -216,14 +216,16 @@
     </select>
     <select id="selectMctGrid2List" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         -- 하단 그리드 2 (긴급주문 진행현황)
-        SELECT jmes.SF_GET_DATE_F(X.INNER_DUE_DT,'YY','') AS INNER_DUE_DT
+        SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
+            , jmes.SF_GET_DATE_F(X.INNER_DUE_DT,'YY','') AS INNER_DUE_DT
             , jmes.SF_GET_DATE_F(X.OUT_FINISH_DT,'YY','') AS OUT_FINISH_DT
             , X.ORDER_COMP_NM
             , X.CONTROL_PART_INFO
             , X.CONTROL_PART_QTY, CONCAT(X.CONTROL_PART_QTY,'ea') AS CONTROL_PART_QTY_INFO
             , X.PART_STATUS_NM
         FROM (  -- 출고일 없는경우
-                SELECT B.INNER_DUE_DT
+                SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                    , B.INNER_DUE_DT
                     , A.OUT_FINISH_DT
                     , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
                     , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
@@ -237,7 +239,8 @@
                     AND A.OUT_FINISH_DT IS NULL
                     AND B.INNER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')
                 UNION ALL
-                SELECT B.INNER_DUE_DT
+                SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                    , B.INNER_DUE_DT
                     , A.OUT_FINISH_DT
                     , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
                     , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
@@ -264,7 +267,8 @@
             , X.PART_STATUS_NM
             , X.CHARGE_USER_NM
         FROM (  -- 출고일 없는경우
-                SELECT B.INNER_DUE_DT
+                SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                    , B.INNER_DUE_DT
                     , A.OUT_FINISH_DT
                     , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
                     , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
@@ -278,7 +282,8 @@
                     AND A.OUT_FINISH_DT IS NULL
                     AND B.INNER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')
                 UNION ALL
-                SELECT B.INNER_DUE_DT
+                SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                    , B.INNER_DUE_DT
                     , A.OUT_FINISH_DT
                     , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
                     , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
