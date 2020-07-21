@@ -139,7 +139,7 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
 
 
         /** drawing path **/
-//        passList.add("/drawing");
+        passList.add("/drawing-change-user-locale");
 //        passList.add("/drawing-worker");
 //        passList.add("/drawing-board");
 //        passList.add("/drawing-board-save");

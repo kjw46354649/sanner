@@ -8,6 +8,10 @@
 <html lang="en" class="app">
 <head>
     <title>J-MES POP</title>
+    <!-- Firefox, Opera (Chrome and Safari say thanks but no thanks) -->
+   	<link rel="shortcut icon" href="/favicon.ico">
+   	<!-- Chrome, Safari, IE -->
+   	<link rel="icon" href="/favicon.ico">
     <link href="/resource/asset/css/reset.css" rel="stylesheet" type="text/css" />
     <link href="/resource/asset/css/common.css" rel="stylesheet" type="text/css" />
     <link href="/resource/asset/css/tab.css" rel="stylesheet" type="text/css" />
@@ -47,8 +51,8 @@
                     <button type="button" id="selectUserBtn"><srping:message key="drawing.login.user.sel"/></button>
                 </div>
                 <div class="langBtn">
-                    <button type="button" id="local_ko" name="local_ko" <c:if test="${LocalInfo eq 'ko'}"> class="on" </c:if> >Korean</button>
-                    <button type="button" id="local_en" name="local_en" <c:if test="${LocalInfo ne 'ko'}"> class="on" </c:if> >English</button>
+                    <button type="button" id="local_ko" name="local_ko" <c:if test="${LocalInfo eq 'ko'}"> class="on" </c:if> ><srping:message key="index.locale.language.kr"/></button>
+                    <button type="button" id="local_en" name="local_en" <c:if test="${LocalInfo ne 'ko'}"> class="on" </c:if> ><srping:message key="index.locale.language.en"/></button>
                 </div>
             </div>
         </form>

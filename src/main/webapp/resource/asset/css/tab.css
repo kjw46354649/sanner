@@ -22,7 +22,7 @@
 .bodyWrap.user .head{float: left; font-size: 30px; color: #000; font-weight: bold; position: relative; padding-left: 33px;}
 .bodyWrap.user .head span{color: #272727; font-weight: bold;}
 .bodyWrap.user .head:before{content: ''; position: absolute; top: 0; left: 0; width: 29px; height: 29px;}
-.bodyWrap.user .langBtn{float: right; padding-top: 4.5px;}
+.bodyWrap.user .langBtn{float: right; padding-top: 9.5px;}
 .bodyWrap.user .contents{overflow-y: auto; height: 508px;}
 .bodyWrap select#DEPT{background: url(../images/login/bg_menu_2.png) no-repeat 0 0; width:300px; height: 52px; line-height: 52px; background-size: 100% 100%; font-size: 19px; font-weight: bold; color:#205067; padding-left: 30px;  border: 0;}
 .userWrap{overflow:hidden;margin:-10px 0;}

@@ -914,11 +914,11 @@
     let g_ItemDetailPopGridId01 =  $("#g_item_detail_pop_grid_01");
     let g_ItemDetailPopColModel01 = [
         {title: 'RNUM', dataType: 'string', dataIndx: 'RNUM', hidden:true},
-        {title: '공정', dataType: 'string', dataIndx: 'PROCESS_TYPE_NM', width: 95, editable: false},
+        {title: '공정', dataType: 'string', dataIndx: 'PROCESS_TYPE_NM', width: 60, editable: false},
         {title: '기기명', dataType: 'string', dataIndx: 'EQUIP_NM', width: 95, editable: false},
-        {title: '진행상태', dataType: 'string', dataIndx: 'WORK_STATUS', width: 95, editable: false},
-        {title: '시작', dataType: 'string', dataIndx: 'WORK_START_DT', width: 95, editable: false},
-        {title: '종료', dataType: 'string', dataIndx: 'WORK_FINISH_DT', width: 95, editable: false},
+        {title: '상태', dataType: 'string', dataIndx: 'WORK_STATUS', width: 60, editable: false},
+        {title: '시작', dataType: 'string', dataIndx: 'WORK_START_DT', width: 105, editable: false},
+        {title: '종료', dataType: 'string', dataIndx: 'WORK_FINISH_DT', width: 105, editable: false},
         {title: '소요시간', dataType: 'string', dataIndx: 'WORKING_TIME', width: 95, editable: false},
         {title: '작업자', dataType: 'string', dataIndx: 'WORK_USER', width: 95, editable: false},
         {title: '수량', dataType: 'string', dataIndx: 'FINISH_QTY', width: 95, editable: false},

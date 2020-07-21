@@ -6,9 +6,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <!-- Firefox, Opera (Chrome and Safari say thanks but no thanks) -->
-<!-- <link rel="shortcut icon" href="/asset/images/common/favicon-32.png"> -->
+<link rel="shortcut icon" href="/favicon.ico">
 <!-- Chrome, Safari, IE -->
-<!-- <link rel="icon" href="/asset/images/common/favicon.ico"> -->
+<link rel="icon" href="/favicon.ico">
 <!-- Android&IOS Touch Icon -->
 <!-- <link rel="apple-touch-icon-precomposed" href="/asset/images/common/favicon-152.png"> -->
 <%--<link rel="stylesheet" href="/resource/plugins/fullcalendar/core/main.css"  />--%>

@@ -8,6 +8,10 @@
 <html lang="en" class="app">
 <head>
     <title>J-MES POP</title>
+    <!-- Firefox, Opera (Chrome and Safari say thanks but no thanks) -->
+   	<link rel="shortcut icon" href="/favicon.ico">
+   	<!-- Chrome, Safari, IE -->
+   	<link rel="icon" href="/favicon.ico">
     <link href="/resource/asset/css/reset.css" rel="stylesheet" type="text/css" />
     <link href="/resource/asset/css/common.css" rel="stylesheet" type="text/css" />
     <link href="/resource/asset/css/tab.css" rel="stylesheet" type="text/css" />
@@ -25,10 +29,9 @@
 </head>
 <body onresize="parent.resizeTo(1024,600)" onload="parent.resizeTo(1024,600)">
     <div class="bodyWrap user" id="bodyWrap">
-        <!-- contents 영역에 각페이지 명에 맞는 class 추가 !! -->
         <header>
-            <div class="head">
-                <span><srping:message key="drawing.login.user.sel"/></span>
+            <div class="head" style="padding-left: 0px;">
+                <%--<span><srping:message key="drawing.login.user.department"/></span>--%>
                 <span>
                     <select id="DEPT" name="DEPT" title="부서">
                         <c:forEach var="code" items="${workerGroupList}">
@@ -37,9 +40,13 @@
                     </select>
                 </span>
             </div>
+<%--            <div class="langBtn">--%>
+<%--                <button type="button" id="main" name="main" ><img src="/resource/asset/images/common/logo-01.png" style="width: 50px;height: 40px; margin-top: 0px;">Home</button>--%>
+<%--            </div>--%>
             <div class="langBtn">
-                <button type="button" id="local_ko" name="local_ko" <c:if test="${LocalInfo eq 'ko'}"> class="on" </c:if> >Korean</button>
-                <button type="button" id="local_en" name="local_en" <c:if test="${LocalInfo ne 'ko'}"> class="on" </c:if> >English</button>
+                <button type="button" id="local_ko" name="local_ko" <c:if test="${LocalInfo eq 'ko'}"> class="on" </c:if> ><srping:message key="index.locale.language.kr"/></button>
+                <button type="button" id="local_en" name="local_en" <c:if test="${LocalInfo ne 'ko'}"> class="on" </c:if> ><srping:message key="index.locale.language.en"/></button>
+                <button type="button" id="go_home" name="go_home" class="on green" >Home</button>
             </div>
         </header>
         <form id="drawing_worker_form" method="post" action="/drawing-board">
@@ -47,23 +54,13 @@
             <input id="USER_NM" name="USER_NM" type="hidden" value="${FACTORY_AREA}">
             <input id="USER_GFILE_SEQ" name="USER_GFILE_SEQ" type="hidden" value="${EQUIP_SEQ}">
             <section class="contents">
-                <ul class="userWrap" id="userWrapHtml">
-<%--                    <c:forEach var="user" items="#{user}">--%>
-<%--                    <li class="userBox" attr="${user.DEPT}">--%>
-<%--                        <a href="#" class="userTag" attr="${user.USER_ID}">--%>
-<%--                            <div class="userImg"><img src="${user.FILE_PATH}" alt=""></div>--%>
-<%--                            <div class="userName">--%>
-<%--                                <span class="ko">${user.USER_ID} </span><span>/</span><span class="en"> ${user.USER_NM}</span>--%>
-<%--                            </div>--%>
-<%--                        </a>--%>
-<%--                    </li>--%>
-<%--                    </c:forEach>--%>
-                </ul>
+                <ul class="userWrap" id="userWrapHtml"></ul>
             </section>
         </form>
-        <form action="/drawing-change-user-locale" id="locale-form" name="locale-form" method="get">
+        <form action="/drawing-change-user-locale" id="locale-form" name="locale-form" method="POST">
             <input type="hidden" name="lang" id="lang" value="">
         </form>
+        <form action="/drawing" id="home-form" name="home-form" method="POST"></form>
     </div>
 <script type='text/javascript'>
 
@@ -77,6 +74,10 @@
         $('#local_en').click(function(){
             $("#locale-form").find("#lang").val("en");
             document.getElementById('locale-form').submit();
+        });
+
+        $('#go_home').click(function(){
+            document.getElementById('home-form').submit();
         });
 
         $("#DEPT").on('change', function(){
@@ -98,22 +99,21 @@
                             workerHtml += '    </a>';
                             workerHtml += '</li>';
                         }
-                        $("#drawing_worker_form").find('#userWrapHtml').html(workerHtml);
+                        $("#drawing_worker_form").find('#userWrapHtml').html(workerHtml).trigger('create');
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                 }
             });
         });
-
         $("#DEPT").trigger("change");
+    });
 
-        $(".userTag").on('click', function(){
-           $("#USER_ID").val($(this).attr("attr"));
-           $("#USER_NM").val($(this).attr("attrNm"));
-           $("#USER_GFILE_SEQ").val($(this).attr("attrSeq"));
-           $("#drawing_worker_form").submit();
-        });
+    $(document).on('click', '.userTag', function(event){
+        $("#USER_ID").val($(this).attr("attr"));
+        $("#USER_NM").val($(this).attr("attrNm"));
+        $("#USER_GFILE_SEQ").val($(this).attr("attrSeq"));
+        $("#drawing_worker_form").submit();
     });
 
 </script>

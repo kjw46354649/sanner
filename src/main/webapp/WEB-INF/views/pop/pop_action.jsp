@@ -7,6 +7,10 @@
 <html lang="en" class="app">
 <head>
     <title>J-MES POP</title>
+    <!-- Firefox, Opera (Chrome and Safari say thanks but no thanks) -->
+   	<link rel="shortcut icon" href="/favicon.ico">
+   	<!-- Chrome, Safari, IE -->
+   	<link rel="icon" href="/favicon.ico">
     <!--jQueryUI version >= 1.11.4 only -->
     <link rel="stylesheet" href="/resource/plugins/jquery-ui-1.11.4/themes/smoothness/jquery-ui.min.css" />
     <!--ParamQuery Grid css files-->
