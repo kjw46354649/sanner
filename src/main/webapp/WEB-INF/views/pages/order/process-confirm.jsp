@@ -647,7 +647,7 @@
                 QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateControlPartStatus', 'orderMapper.createControlPartProgress', 'orderMapper.updateControlPartAssembly']};
             }*/
             if (hasInStock(rowData)) {
-                showMessage('소재입고된 항목은 확정취소가 불가능합니다.');
+                fnAlert(null, '소재입고된 항목은 확정취소가 불가능합니다.');
                 return false;
             } else {
                 QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateControlPartStatus', 'orderMapper.createControlPartProgress']};
@@ -725,26 +725,36 @@
         setInterval(reloadData, THIRTY_SECONDS);
         /* init */
 
+        const isNotBarcodeValid = function (barcodeNum) {
+            let flag = false;
+            let parameters = {'url': '/processConfirmBarcodeInfo', 'data': {BARCODE_NUM: fnBarcodeKo2En(barcodeNum)}};
+
+            fnPostAjaxAsync(function (data) {
+                flag = data.flag;
+                if (data.flag) {
+                    fnConfirm(null, data.message, function () {}, null, 5);
+                }
+            }, parameters, '');
+
+            return flag;
+        };
 
         $("#CONFIRM_ORDER_BARCODE_NUM").on('keyup', function(e) {
             if (e.keyCode === 13) {
-                fnBarcodePrintCheck(function (confirm, callFunctionParam) {
-                    let barcodeN = callFunctionParam;
-                    if (confirm) {
-                        //0. 바코드 정보 가져오기
-                        let data = {'queryId': "common.selectControlBarcodeInfo", 'BARCODE_NUM': barcodeN};
-                        let parameters = {'url': '/json-info', 'data': data};
-                        fnPostAjax(function (data, callFunctionParam) {
-                            let dataInfo = data.info;
-                            if (dataInfo == null) {
-                                showMessage('해당 바코드가 존재하지 않습니다.');
-                                return;
-                            } else {
-                                updatePartStatus(dataInfo, 'PRO002');
-                            }
-                        }, parameters, '');
-                    }
-                }, fnBarcodeKo2En(this.value), fnBarcodeKo2En(this.value));
+                let barcodeNum = fnBarcodeKo2En(this.value);
+
+                if(isNotBarcodeValid(barcodeNum)) {
+                    return false;
+                }
+
+                let data = {'queryId': "common.selectControlBarcodeInfo", 'BARCODE_NUM': barcodeNum};
+                let parameters = {'url': '/json-info', 'data': data};
+                fnPostAjax(function (data, callFunctionParam) {
+                    let dataInfo = data.info;
+
+                    updatePartStatus(dataInfo, 'PRO002');
+                }, parameters, '');
+
                 this.value = '';
             }
         });

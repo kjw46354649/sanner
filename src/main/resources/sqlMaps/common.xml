@@ -135,7 +135,8 @@
             ,INSERT_ID
             ,UPDATE_DT
             ,UPDATE_ID
-        FROM jmes.TBL_CONTROL_BARCODE
+            , (SELECT COUNT(*) FROM TBL_CONTROL Q WHERE Q.CONTROL_SEQ = A.CONTROL_SEQ AND Q.OUT_FINISH_DT IS NOT NULL AND Q.DEL_YN = 'N') AS USED_CNT
+        FROM jmes.TBL_CONTROL_BARCODE A
         WHERE BARCODE_NUM = #{BARCODE_NUM}
     </select>
     <select id="selectOutBarcodeInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">

@@ -1,6 +1,7 @@
 package com.jmes.service;
 
-import java.util.List;
+import org.springframework.ui.Model;
+
 import java.util.Map;
 
 public interface OrderService {
@@ -21,4 +22,5 @@ public interface OrderService {
 
     void removeInvoice(Map<String, Object> map) throws Exception;
 
+    void processConfirmBarcodeInfo(Model model, Map<String, Object> map) throws Exception;
 }

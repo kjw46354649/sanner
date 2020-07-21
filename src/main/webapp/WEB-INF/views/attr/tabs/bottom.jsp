@@ -839,8 +839,8 @@
 
     commonFileDownUploadPopup.on('hide.bs.modal', function (e) {
         commonFileDownUploadGrid.pqGrid('destroy');
-        $("#common_file_download_form #deleteYn").val(true);
         let callElement = $("#common_file_download_form").find("#callElement").val();
+        $("#common_file_download_form #deleteYn").val(true);
         $("#" + callElement ).trigger('click');
     });
 
@@ -1294,7 +1294,7 @@
                         fnPostAjax(function (data, callFunctionParam) {
                             let dataInfo = data.info;
                             if (dataInfo == null) {
-                                alert("해당 바코드가 존재하지 않습니다.");
+                                fnAlert(null, "해당 바코드가 존재하지 않습니다.");
                                 return;
                             } else {
                                 let CONTROL_SEQ = dataInfo.CONTROL_SEQ;

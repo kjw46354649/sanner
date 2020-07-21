@@ -916,7 +916,7 @@
                     'data': $('#machine_manage_pop_form').serialize()
                 };
                 fnPostAjax(function (data, callFunctionParam) {
-                    alert('장비상세 정보가 저장되었습니다.');
+                    fnAlert(null, '장비상세 정보가 저장되었습니다.');
                     $('#CURRENT_POPUP').modal('hide');
                     $searchBtn.trigger("click");
                 }, parameters, '');

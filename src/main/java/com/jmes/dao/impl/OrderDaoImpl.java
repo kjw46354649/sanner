@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -128,6 +127,11 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public String createInvoiceNum(HashMap<String, Object> hashMap) throws SQLException {
         return sqlSessionTemplate.selectOne("createInvoiceNum", hashMap);
+    }
+
+    @Override
+    public boolean getFlag(Map<String, Object> map) throws SQLException {
+        return sqlSessionTemplate.selectOne((String)map.get("queryId"), map);
     }
 
 }

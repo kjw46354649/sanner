@@ -349,7 +349,7 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Colo
 .miniPopup .footerWrap .barcode .barCode{ display: inline-block; float: right; margin: 9px 15px 0 0;}
 .miniPopup .footerWrap .process{ margin: 0 15px;}
 .miniPopup .footerWrap .process .pr_txt{ background: #fff; display: block; border: 1px solid #dedcdc; text-align: center; font-size: 14px; color: #001539; padding: 10px 0;}
-.miniPopup .footerWrap .process .pr_txt b{ font-weight: normal; color: #880000;}
+.miniPopup .footerWrap .process .pr_txt b{ font-weight: normal; color: blue;}
 .miniPopup .footerWrap .process .pr_txt b.block{display: block;;}
 .miniPopup .footerWrap .process .btnWrap{ margin-top: 7px; text-align: center;}
 .miniPopup .footerWrap .process .btnWrap button+button{margin-left: 12px;}

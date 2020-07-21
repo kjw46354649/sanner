@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -105,6 +106,20 @@ public class OrderController {
     public String removeInvoice(HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
         this.orderService.removeInvoice(map);
+        return "jsonView";
+    }
+
+    /**
+     * @description
+     * @param model
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/processConfirmBarcodeInfo")
+    public String processConfirmBarcodeInfo(Model model, HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+        this.orderService.processConfirmBarcodeInfo(model, map);
         return "jsonView";
     }
 }

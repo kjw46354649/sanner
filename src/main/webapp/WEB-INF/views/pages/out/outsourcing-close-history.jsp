@@ -491,7 +491,7 @@
             if (selectedRowIndex.length > 0) {
                 return false;
             } else {
-                alert('하나 이상 선택해주세요');
+                fnAlert(null, '하나 이상 선택해주세요');
                 return true;
             }
         };
@@ -638,15 +638,15 @@
                 outsideCompCdList = [...new Set(outsideCompCdList)];
 
                 if (compCdList.length > 1) {
-                    alert('선택된 대상들의 발주사는 동일해야 합니다.');
+                    fnAlert(null, '선택된 대상들의 발주사는 동일해야 합니다.');
                     return false;
                 }
                 if (orderCompCdList.length > 1) {
-                    alert('선택된 대상들의 공급사는 동일해야 합니다.');
+                    fnAlert(null, '선택된 대상들의 공급사는 동일해야 합니다.');
                     return false;
                 }
                 if (outsideCompCdList.length > 1) {
-                    alert('선택된 대상들의 협력업체는 동일해야 합니다.');
+                    fnAlert(null, '선택된 대상들의 협력업체는 동일해야 합니다.');
                     return false;
                 }
 

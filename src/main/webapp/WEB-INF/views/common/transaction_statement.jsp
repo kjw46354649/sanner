@@ -314,7 +314,7 @@
                     }
                 });
             } else {
-                alert("출력할 바코드가 존재 하지 않습니다.");
+                fnAlert(null, "출력할 바코드가 존재 하지 않습니다.");
             }
         });
 
@@ -376,7 +376,7 @@
                 if (confirm) {
                     let parameters = {'url': '/removeInvoice', 'data': {INVOICE_NUM: invoiceNumList[0]}};
                     fnPostAjax(function (data, callFunctionParam) {
-                        alert("<spring:message code='com.alert.default.remove.success' />");
+                        fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");
                         window.close();
                         opener.$orderManagementGrid.pqGrid('refreshDataAndView');
                     }, parameters, '');
@@ -400,7 +400,7 @@
             fnPostAjax(function (data) {
                 $('#TRANSACTION_STATEMENT_FORM #INVOICE_NUM').text(data.info);
                 $('#TRANSACTION_STATEMENT_FORM #INVOICE_NUM_INPUT').val(data.info);
-                alert("<spring:message code='com.alert.default.save.success' />");
+                fnAlert(null, "<spring:message code='com.alert.default.save.success' />");
                 $transactionStatementGrid.pqGrid('refreshDataAndView');
                 opener.$orderManagementGrid.pqGrid('refreshDataAndView');
             }, parameters, '');
@@ -425,7 +425,7 @@
             });
 
             if (invoiceNumList[0] === undefined) {
-                alert('저장 후 엑셀 출력해주세요.');
+                fnAlert(null, '저장 후 엑셀 출력해주세요.');
                 return false;
             }
 
