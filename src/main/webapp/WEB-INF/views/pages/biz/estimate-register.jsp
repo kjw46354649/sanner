@@ -989,7 +989,6 @@
         });
 
         function estimateRegisterSaveCallBack(response, callMethodParam){
-            alert("<spring:message code='com.alert.default.save.success' />");
             estimateRegisterReloadPageData();
         };
 
