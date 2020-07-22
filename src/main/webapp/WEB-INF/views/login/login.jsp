@@ -56,7 +56,7 @@
                     try{
                         console.log(data);
                         if(data.result == "error"){
-                            alert(data.message);
+                            fnAlert(null, data.message);
                             $('#userPassword').val("");
                             return false;
                         }else{

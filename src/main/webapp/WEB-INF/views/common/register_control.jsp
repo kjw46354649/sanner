@@ -11,8 +11,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<jsp:include page="/WEB-INF/views/attr/tabs/header.jsp"></jsp:include>
-<jsp:include page="/WEB-INF/views/attr/tabs/body-script.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/attr/tabs/header.jsp"/>
+<jsp:include page="/WEB-INF/views/attr/tabs/body-script.jsp"/>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -49,7 +49,7 @@
             let list = [];
             let parameters = {'url': '/json-list', 'data': {'queryId': 'dataSource.getCompanyStaffList'}};
 
-            fnPostAjax(function (data, callFunctionParam) {
+            fnPostAjax(function (data) {
                 for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
                     let obj = data.list[i];
 
@@ -138,10 +138,9 @@
                 editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text',
                     options: function (ui) {
-                        let companyStaffList = COMPANY_STAFF.filter(function (value, index, array) {
-                            return value.compCd == ui.rowData.ORDER_COMP_CD;
+                        return COMPANY_STAFF.filter(function (value) {
+                            return value.compCd === ui.rowData.ORDER_COMP_CD;
                         });
-                        return companyStaffList;
                     }
                 },
                 render: function (ui) {
@@ -151,12 +150,12 @@
                         return '';
                     } else {
                         let index = COMPANY_STAFF.findIndex(function (element) {
-                            return element.text == cellData;
+                            return element.text === cellData;
                         });
 
                         if (index < 0) {
                             index = COMPANY_STAFF.findIndex(function (element) {
-                                return element.value == cellData;
+                                return element.value === cellData;
                             });
                         }
 
@@ -543,7 +542,6 @@
 
                     for (let i = 0, addListLength = ui.addList.length; i < addListLength; i++) {
                         const newRowData = ui.addList[i].newRow;
-                        const rowIndx = ui.addList[i].rowIndx;
                         let priceConfirm = null;
                         let compCd = null;
                         let orderCompCd = null;
@@ -870,7 +868,7 @@
 
         // required 체크
         const requiredCheck = function (rowData) {
-            let list = [];
+            let list;
             const commonRequiredList = ['COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NUM', 'DRAWING_NUM', 'ITEM_NM', 'INNER_DUE_DT', 'SIZE_TXT'];
             const singleList = ['MATERIAL_KIND', 'SURFACE_TREAT', 'ORDER_QTY']; // 단품
             const assemblyList = ['ORDER_QTY']; // 조립
@@ -908,18 +906,17 @@
 
         // 잘못된 데이터(코드) 체크
         const badCodeCheck = function (rowData) {
-            console.count();
             let rowIndex = rowData.pq_ri;
 
             // 단가확인
-            if (!(rowData.PRICE_CONFIRM !== undefined || rowData.PRICE_CONFIRM !== null || rowData.PRICE_CONFIRM !== '')) {
+            if (rowData.PRICE_CONFIRM !== undefined && rowData.PRICE_CONFIRM !== null && rowData.PRICE_CONFIRM !== '') {
                 let index = priceConfirmList.findIndex(function (element) {
                     return element.value === rowData.PRICE_CONFIRM;
                 });
                 if (index < 0) addErrorList(rowIndex, 'PRICE_CONFIRM');
             }
             // 사업자
-            if (!(rowData.COMP_CD !== undefined || rowData.COMP_CD !== null || rowData.COMP_CD !== '')) {
+            if (rowData.COMP_CD !== undefined && rowData.COMP_CD !== null && rowData.COMP_CD !== '') {
                 let index = BUSINESS_COMPANY.findIndex(function (element) {
                     return element.value === rowData.COMP_CD;
                 });
@@ -927,7 +924,7 @@
                 if (index < 0) addErrorList(rowIndex, 'COMP_CD');
             }
             // 발주업체
-            if (!(rowData.ORDER_COMP_CD !== undefined || rowData.ORDER_COMP_CD !== null || rowData.ORDER_COMP_CD !== '')) {
+            if (rowData.ORDER_COMP_CD !== undefined && rowData.ORDER_COMP_CD !== null && rowData.ORDER_COMP_CD !== '') {
                 let index = ORDER_COMPANY.findIndex(function (element) {
                     return element.value === rowData.ORDER_COMP_CD;
                 });
@@ -935,7 +932,7 @@
                 if (index < 0) addErrorList(rowIndex, 'ORDER_COMP_CD');
             }
             // 구매 담당자
-            if (!(rowData.ORDER_STAFF_SEQ !== undefined || rowData.ORDER_STAFF_SEQ !== null || rowData.ORDER_STAFF_SEQ !== '')) {
+            if (rowData.ORDER_STAFF_SEQ !== undefined && rowData.ORDER_STAFF_SEQ !== null && rowData.ORDER_STAFF_SEQ !== '') {
                 let index = COMPANY_STAFF.findIndex(function (element) {
                     return element.value === rowData.ORDER_STAFF_SEQ;
                 });
@@ -943,7 +940,7 @@
                 if (index < 0) addErrorList(rowIndex, 'ORDER_STAFF_SEQ');
             }
             // 주요검사품
-            if (!(rowData.MAIN_INSPECTION !== undefined || rowData.MAIN_INSPECTION !== null || rowData.MAIN_INSPECTION !== '')) {
+            if (rowData.MAIN_INSPECTION !== undefined && rowData.MAIN_INSPECTION !== null && rowData.MAIN_INSPECTION !== '') {
                 let index = mainInspectionList.findIndex(function (element) {
                     return element.value === rowData.MAIN_INSPECTION;
                 });
@@ -951,7 +948,7 @@
                 if (index < 0) addErrorList(rowIndex, 'MAIN_INSPECTION');
             }
             // 작업형태
-            if (!(rowData.WORK_TYPE !== undefined || rowData.WORK_TYPE !== null || rowData.WORK_TYPE !== '')) {
+            if (rowData.WORK_TYPE !== undefined && rowData.WORK_TYPE !== null && rowData.WORK_TYPE !== '') {
                 let index = workTypeList.findIndex(function (element) {
                     return element.value === rowData.WORK_TYPE;
                 });
@@ -959,7 +956,7 @@
                 if (index < 0) addErrorList(rowIndex, 'WORK_TYPE');
             }
             // 수행공장
-            if (!(rowData.WORK_FACTORY !== undefined || rowData.WORK_FACTORY !== null || rowData.WORK_FACTORY !== '')) {
+            if (rowData.WORK_FACTORY !== undefined && rowData.WORK_FACTORY !== null && rowData.WORK_FACTORY !== '') {
                 let index = workFactoryList.findIndex(function (element) {
                     return element.value === rowData.WORK_FACTORY;
                 });
@@ -967,7 +964,7 @@
                 if (index < 0) addErrorList(rowIndex, 'WORK_FACTORY');
             }
             //소재 상세
-            if (!(rowData.MATERIAL_DETAIL !== undefined || rowData.MATERIAL_DETAIL !== null || rowData.MATERIAL_DETAIL !== '')) {
+            if (rowData.MATERIAL_DETAIL !== undefined && rowData.MATERIAL_DETAIL !== null && rowData.MATERIAL_DETAIL !== '') {
                 let index = materialDetailList.findIndex(function (element) {
                     return element.value === rowData.MATERIAL_DETAIL;
                 });
@@ -975,7 +972,7 @@
                 if (index < 0) addErrorList(rowIndex, 'MATERIAL_DETAIL');
             }
             // 소재형태
-            if (!(rowData.MATERIAL_KIND !== undefined || rowData.MATERIAL_KIND !== null || rowData.MATERIAL_KIND !== '')) {
+            if (rowData.MATERIAL_KIND !== undefined && rowData.MATERIAL_KIND !== null && rowData.MATERIAL_KIND !== '') {
                 let index = materialKindList.findIndex(function (element) {
                     return element.value === rowData.MATERIAL_KIND;
                 });
@@ -983,7 +980,7 @@
                 if (index < 0) addErrorList(rowIndex, 'MATERIAL_KIND');
             }
             // 표면처리
-            if (!(rowData.SURFACE_TREAT !== undefined || rowData.SURFACE_TREAT !== null || rowData.SURFACE_TREAT !== '')) {
+            if (rowData.SURFACE_TREAT !== undefined && rowData.SURFACE_TREAT !== null && rowData.SURFACE_TREAT !== '') {
                 let index = surfaceTreatList.findIndex(function (element) {
                     return element.value === rowData.SURFACE_TREAT;
                 });
@@ -1020,8 +1017,10 @@
             }
 
             for (let i in list) {
-                if (!(rowData[list[i]] !== undefined || rowData[list[i]] != null || rowData[list[i]] !== '')) {
-                    addErrorList(rowData.pq_ri, list[i]);
+                if (list.hasOwnProperty(i)) {
+                    if (rowData[list[i]] !== undefined && rowData[list[i]] != null && rowData[list[i]] !== '') {
+                        addErrorList(rowData.pq_ri, list[i]);
+                    }
                 }
             }
         };
@@ -1039,22 +1038,26 @@
         // cell 색 변경
         const changeCellColor = function (list, prevList) {
             for(let i in prevList) {
-                $orderRegisterGrid.pqGrid('removeClass', {rowIndx: prevList[i].rowIndx, dataIndx: prevList[i].dataIndx, cls: 'bg-lightcoral'} );
+                if (prevList.hasOwnProperty(i)) {
+                    $orderRegisterGrid.pqGrid('removeClass', {rowIndx: prevList[i].rowIndx, dataIndx: prevList[i].dataIndx, cls: 'bg-lightcoral'} );
+                }
             }
 
             if (list.length > 0) {
                 for(let i in list) {
-                    $orderRegisterGrid.pqGrid('addClass', {rowIndx: list[i].rowIndx, dataIndx: list[i].dataIndx, cls: 'bg-lightcoral'} );
+                    if (list.hasOwnProperty(i)) {
+                        $orderRegisterGrid.pqGrid('addClass', {rowIndx: list[i].rowIndx, dataIndx: list[i].dataIndx, cls: 'bg-lightcoral'} );
+                    }
                 }
             }
         };
 
         function dateEditor (ui) {
-            let $inp = ui.$cell.find("input"), $grid = $(this);
+            let $inp = ui.$cell.find("input");
             $inp.datepicker({
                 changeMonth: true, changeYear: true, showAnim: '', dateFormat: 'yymmdd',
                 onSelect: function () { this.firstOpen = true; },
-                beforeShow: function (input, inst) {return !this.firstOpen; },
+                beforeShow: function () {return !this.firstOpen; },
                 onClose: function () { this.focus(); }
             });
         }
@@ -1083,4 +1086,4 @@
 </script>
 </body>
 </html>
-<jsp:include page="/WEB-INF/views/attr/tabs/bottom.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/attr/tabs/bottom.jsp"/>

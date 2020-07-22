@@ -11,8 +11,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<jsp:include page="/WEB-INF/views/attr/tabs/header.jsp"></jsp:include>
-<jsp:include page="/WEB-INF/views/attr/tabs/body-script.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/attr/tabs/header.jsp"/>
+<jsp:include page="/WEB-INF/views/attr/tabs/body-script.jsp"/>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -46,10 +46,8 @@
 
                 <table class="tableL">
                     <colgroup>
-                        <col width="15%;">
-                        <col width="15%;">
-                        <col width="15%;">
-                        <col width="55%;">
+                        <col span="3" style="width: 15%">
+                        <col span="1" style="width: 55%">
                     </colgroup>
                     <tbody>
                     <tr>
@@ -61,7 +59,7 @@
                     <tr>
                         <td class="headerSelectChange">구매 담당자</td>
                         <td>
-                            <select name="ORDER_STAFF_SEQ" id="ORDER_STAFF_SEQ" style="width: 100%; border: 0; text-align: center;">
+                            <label for="ORDER_STAFF_SEQ"></label><select name="ORDER_STAFF_SEQ" id="ORDER_STAFF_SEQ" style="width: 100%; border: 0; text-align: center;">
                                 <option></option>
                             </select>
                         </td>
@@ -73,7 +71,7 @@
                         <td ID="INVOICE_NUM"></td>
                         <td class="headerInputChange">제목</td>
                         <td>
-                            <input type="text" name="INVOICE_TITLE" id="INVOICE_TITLE" style="width: 100%; border: 0; text-align: center;" autocomplete="off">
+                            <label for="INVOICE_TITLE"></label><input type="text" name="INVOICE_TITLE" id="INVOICE_TITLE" style="width: 100%; border: 0; text-align: center;" autocomplete="off">
                         </td>
                     </tr>
                     </tbody>
@@ -185,7 +183,7 @@
                     return {data: dataJSON.data};
                 }
             },
-            complete: function(event, ui) {
+            complete: function() {
                 this.flex();
             }
         };
@@ -276,7 +274,7 @@
                     'ORDER_SEQ': rowData.ORDER_SEQ
                 };
                 let parameter = {'url': '/json-list', 'data': postData};
-                fnPostAjaxAsync(function (data, callFunctionParam) {
+                fnPostAjaxAsync(function (data) {
                     for (let i = 0, DATALIST_LENGTH = data.list.length; i < DATALIST_LENGTH; i++) {
                         barcodeList.push(data.list[i].BARCODE_NUM);
                     }
@@ -286,33 +284,38 @@
             let bCodePrintLen = barcodeList.length;
 
             if (bCodePrintLen) {
-                let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
-                bodyHtml =
+                let message =
                     '<h4>\n' +
-                    '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                    '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
                     '    <span>선택하신 ' + bCodePrintLen + '건을 처리합니다. \n진행하시겠습니까?</span>\n' +
                     '</h4>';
                 fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-                let labelPrintConfirm = function (callback) {
-                    commonConfirmPopup.show();
-                    $("#commonConfirmYesBtn").unbind().click(function (e) {
-                        e.stopPropagation();
-                        commonConfirmPopup.hide();
-                        callback(true);
-                        return;
-                    });
-                    $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                        e.stopPropagation();
-                        commonConfirmPopup.hide();
-                    });
-                };
-                labelPrintConfirm(function (confirm) {
-                    if (confirm) {
-                        fnBarcodePrint(function (data, callFunctionParam) {
-                            alert(data.message);
-                        }, barcodeList, '');
-                    }
-                });
+                fnConfirm(null, message, function () {
+                    fnBarcodePrint(function (data) {
+                        fnAlert(null, data.message);
+                    }, barcodeList, '');
+                })
+
+                // let labelPrintConfirm = function (callback) {
+                //     commonConfirmPopup.show();
+                //     $("#commonConfirmYesBtn").unbind().click(function (e) {
+                //         e.stopPropagation();
+                //         commonConfirmPopup.hide();
+                //         callback(true);
+                //
+                //     });
+                //     $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                //         e.stopPropagation();
+                //         commonConfirmPopup.hide();
+                //     });
+                // };
+                // labelPrintConfirm(function (confirm) {
+                //     if (confirm) {
+                //         fnBarcodePrint(function (data, callFunctionParam) {
+                //             fnAlert(null, data.message);
+                //         }, barcodeList, '');
+                //     }
+                // });
             } else {
                 fnAlert(null, "출력할 바코드가 존재 하지 않습니다.");
             }
@@ -320,11 +323,9 @@
 
         // 삭제
         $('#TRANSACTION_STATEMENT_DELETE').on('click', function () {
-            let parameters;
             let selectedRowCount = opener.selectedOrderManagementRowIndex.length;
             let invoiceNumList = [];
-            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
-
+            let message;
 
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = opener.$orderManagementGrid.pqGrid('getRowData', {rowIndx: opener.selectedOrderManagementRowIndex[i]});
@@ -335,53 +336,57 @@
             invoiceNumList = [...new Set(invoiceNumList)];
 
             if (invoiceNumList[0] === undefined) {
-                bodyHtml =
+                message =
                     '<h4>\n' +
-                    '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                    '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
                     '    <span>삭제할 거래명세표가 없습니다</span>\n' +
                     '</h4>';
-                fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
+                fnAlert(null, message);
                 return false;
             }
             if (invoiceNumList.length > 1) {
-                bodyHtml =
+                message =
                     '<h4>\n' +
-                    '    <img src="/resource/asset/images/work/alert.png" style="width: 32px; height: 32px;" >\n' +
+                    '    <img alt="alert" src="/resource/asset/images/work/alert.png" style="width: 32px; height: 32px;" >\n' +
                     '    <span>선택된 대상들의 거래명세 번호는 동일해야 합니다.</span>\n' +
                     '</h4>';
-                fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
+                fnAlert(null, message);
                 return false;
             }
 
-            bodyHtml =
+            message =
                 '<h4>\n' +
-                '    <img src="/resource/asset/images/work/alert.png" style="width: 32px; height: 32px;" >\n' +
+                '    <img alt="alert" src="/resource/asset/images/work/alert.png" style="width: 32px; height: 32px;" >\n' +
                 '    <span>발주번호 ' + invoiceNumList[0] + ' 이 삭제됩니다. 진행하시겠습니까?</span>\n' +
                 '</h4>';
-            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-            let transactionStatementSubmitConfirm = function (callback) {
-                commonConfirmPopup.show();
-                $("#commonConfirmYesBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                    callback(true);
-                    return;
-                });
-                $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                });
-            };
-            transactionStatementSubmitConfirm(function (confirm) {
-                if (confirm) {
-                    let parameters = {'url': '/removeInvoice', 'data': {INVOICE_NUM: invoiceNumList[0]}};
-                    fnPostAjax(function (data, callFunctionParam) {
-                        fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");
-                        window.close();
-                        opener.$orderManagementGrid.pqGrid('refreshDataAndView');
-                    }, parameters, '');
-                }
+            // fnCommonConfirmBoxCreate(headHtml, message, yseBtn, noBtn);
+            fnConfirm(null, message, function () {
+                let parameters = {'url': '/removeInvoice', 'data': {INVOICE_NUM: invoiceNumList[0]}};
+
+                fnPostAjax(function () {
+                    fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");
+                    window.close();
+                    opener.$orderManagementGrid.pqGrid('refreshDataAndView');
+                }, parameters, '');
             });
+            // let transactionStatementSubmitConfirm = function (callback) {
+            //     commonConfirmPopup.show();
+            //     $("#commonConfirmYesBtn").unbind().click(function (e) {
+            //         e.stopPropagation();
+            //         commonConfirmPopup.hide();
+            //         callback(true);
+            //
+            //     });
+            //     $(".commonConfirmCloseBtn").unbind().click(function (e) {
+            //         e.stopPropagation();
+            //         commonConfirmPopup.hide();
+            //     });
+            // };
+            // transactionStatementSubmitConfirm(function (confirm) {
+            //     if (confirm) {
+            //
+            //     }
+            // });
 
 
         });
@@ -457,7 +462,7 @@
         });
 
         $('#INVOICE_TITLE').on('keydown', function (e) {
-            if (e.keyCode == 13) {
+            if (e.keyCode === 13) {
                 e.preventDefault();
             }
         });
@@ -466,4 +471,4 @@
 </script>
 </body>
 </html>
-<jsp:include page="/WEB-INF/views/attr/tabs/bottom.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/attr/tabs/bottom.jsp"/>

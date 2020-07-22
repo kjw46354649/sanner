@@ -9,7 +9,7 @@
     <meta charset="utf-8">
     <title>진성정밀 MES 시스템</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <jsp:include page="/WEB-INF/views/attr/tabs/header.jsp"></jsp:include>
+    <jsp:include page="/WEB-INF/views/attr/tabs/header.jsp"/>
     <jsp:include page="/WEB-INF/views/attr/common/body-script.jsp"></jsp:include>
 </head>
 <body>
@@ -167,7 +167,7 @@
                 </div>
             </section>
         </div>
-        <jsp:include page="/WEB-INF/views/attr/tabs/bottom.jsp"></jsp:include>
+        <jsp:include page="/WEB-INF/views/attr/tabs/bottom.jsp"/>
     </div>
 </body>
 <script>

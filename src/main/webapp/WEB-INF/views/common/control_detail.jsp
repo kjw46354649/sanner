@@ -11,8 +11,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<jsp:include page="/WEB-INF/views/attr/tabs/header.jsp"></jsp:include>
-<jsp:include page="/WEB-INF/views/attr/tabs/body-script.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/attr/tabs/header.jsp"/>
+<jsp:include page="/WEB-INF/views/attr/tabs/body-script.jsp"/>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -198,4 +198,4 @@
 </script>
 </body>
 </html>
-<jsp:include page="/WEB-INF/views/attr/tabs/bottom.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/attr/tabs/bottom.jsp"/>
