@@ -77,7 +77,7 @@
                     </li>
                     <li>
                         <span class="slt_wrap trans_slt" style="width: 120px;">
-                            <select name="CONTROL_SEARCH_CONDITION" id="CONTROL_SEARCH_CONDITION" style="width: inherit; text-align-last: center;">
+                            <label for="CONTROL_SEARCH_CONDITION"></label><select name="CONTROL_SEARCH_CONDITION" id="CONTROL_SEARCH_CONDITION" style="width: inherit; text-align-last: center;">
                                 <c:forEach var="code" items="${HighCode.H_1047}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -151,9 +151,9 @@
             </div>
             <div class="mg-top10">
                 <div class="d-inline">
-                    <input type="text" id="controlManageFilterKeyword" placeholder="Enter your keyword">
-                    <select id="controlManageFilterColumn"></select>
-                    <select id="controlManageFilterCondition">
+                    <label for="controlManageFilterKeyword"></label><input type="text" id="controlManageFilterKeyword" placeholder="Enter your keyword">
+                    <label for="controlManageFilterColumn"></label><select id="controlManageFilterColumn"></select>
+                    <label for="controlManageFilterCondition"></label><select id="controlManageFilterCondition">
                         <c:forEach var="code" items="${HighCode.H_1083}">
                             <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                         </c:forEach>
@@ -217,12 +217,11 @@
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
-        const WAREHOUSE = fnGetCommCodeGridSelectBox('1014');
         const COMPANY_STAFF = (function () {
             let list = [];
             let parameters = {'url': '/json-list', 'data': {'queryId': 'dataSource.getCompanyStaffList'}};
 
-            fnPostAjax(function (data, callFunctionParam) {
+            fnPostAjax(function (data) {
                 for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
                     let obj = data.list[i];
 
@@ -233,7 +232,6 @@
         })();
 
         const gridId = 'CONTROL_MANAGE_GRID';
-        let postData = fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM');
         const colModel = [
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
@@ -371,7 +369,7 @@
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 },
                 render: function (ui) {
-                    if (ui.rowData.WORK_TYPE === 'WTP020' && ui.rowData.LAG_WORK_TYPE == undefined && ui.rowData.CONTROL_STATUS !== 'ORD001') {
+                    if (ui.rowData.WORK_TYPE === 'WTP020' && ui.rowData.LAG_WORK_TYPE === undefined && ui.rowData.CONTROL_STATUS !== 'ORD001') {
                         return '<span class="ui-icon ui-icon-circle-plus" name="PART_NUM_PLUS_BUTTON" style="cursor: pointer"></span>';
                     }
                 },
@@ -502,9 +500,8 @@
                             return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                         },
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
                                 cls = 'bg-lightgray';
@@ -524,7 +521,7 @@
                         render: function (ui) {
                             let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
                                 cls = 'bg-lightgray';
@@ -543,9 +540,8 @@
                         },
                         editor: {type: 'textbox', init: fnDateEditor},
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
                                 cls = 'bg-lightgray';
@@ -557,9 +553,8 @@
                     {
                         title: '출고', dataType: 'string', dataIndx: 'OUT_QTY',
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
                                 cls = 'bg-lightgray';
@@ -571,9 +566,8 @@
                     {
                         title: '출고일자', dataType: 'date', format: 'm/dd', dataIndx: 'ORDER_OUT_FINISH_DT',
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
                                 cls = 'bg-lightgray';
@@ -593,9 +587,8 @@
                         },
                         editor: {type: 'textbox', init: fnDateEditor},
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
                                 cls = 'bg-lightgray';
@@ -671,9 +664,8 @@
                 },
                 editor: {type: 'textbox', init: fnDateEditor},
                 render: function (ui) {
-                    let cellData = ui.cellData;
                     let rowData = ui.rowData;
-                    let cls = null, text = cellData;
+                    let cls = null;
 
                     if (rowData.WORK_TYPE === 'WTP020') {
                         cls = 'bg-lightgray';
@@ -785,9 +777,8 @@
                     return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                 },
                 render: function (ui) {
-                    let cellData = ui.cellData;
                     let rowData = ui.rowData;
-                    let cls = null, text = cellData;
+                    let cls = null;
 
                     if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
                         cls = 'bg-lightgray';
@@ -799,9 +790,8 @@
             {
                 title: '합계금액', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMT', hidden: true,
                 render: function (ui) {
-                    let cellData = ui.cellData;
                     let rowData = ui.rowData;
-                    let cls = null, text = cellData;
+                    let cls = null;
 
                     if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
                         cls = 'bg-lightgray';
@@ -813,9 +803,8 @@
             {
                 title: '종전가', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'WHDWJSRK', hidden: true,
                 render: function (ui) {
-                    let cellData = ui.cellData;
                     let rowData = ui.rowData;
-                    let cls = null, text = cellData;
+                    let cls = null;
 
                     if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
                         cls = 'bg-lightgray';
@@ -982,11 +971,9 @@
                 editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text',
                     options: function (ui) {
-                        let companyStaffList = COMPANY_STAFF.filter(function (value, index, array) {
-                            return value.compCd == ui.rowData.ORDER_COMP_CD;
+                        return COMPANY_STAFF.filter(function (value) {
+                            return value.compCd === ui.rowData.ORDER_COMP_CD;
                         });
-
-                        return companyStaffList;
                     }
                 },
                 render: function (ui) {
@@ -996,12 +983,12 @@
                         return '';
                     } else {
                         let index = COMPANY_STAFF.findIndex(function (element) {
-                            return element.text == cellData;
+                            return element.text === cellData;
                         });
 
                         if (index < 0) {
                             index = COMPANY_STAFF.findIndex(function (element) {
-                                return element.value == cellData;
+                                return element.value === cellData;
                             });
                         }
 
@@ -1027,9 +1014,8 @@
                     return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                 },
                 render: function (ui) {
-                    let cellData = ui.cellData;
                     let rowData = ui.rowData;
-                    let cls = null, text = cellData;
+                    let cls = null;
 
                     if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
                         cls = 'bg-lightgray';
@@ -1048,9 +1034,8 @@
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027')},
                 render: function (ui) {
-                    let cellData = ui.cellData;
                     let rowData = ui.rowData;
-                    let cls = null, text = cellData;
+                    let cls = null;
 
                     if (rowData.WORK_TYPE === 'WTP020') {
                         cls = 'bg-lightgray';
@@ -1062,9 +1047,8 @@
             {
                 title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', hidden: true,
                 render: function (ui) {
-                    let cellData = ui.cellData;
                     let rowData = ui.rowData;
-                    let cls = null, text = cellData;
+                    let cls = null;
 
                     if (rowData.WORK_TYPE === 'WTP020') {
                         cls = 'bg-lightgray';
@@ -1083,9 +1067,8 @@
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text',options: fnGetCommCodeGridSelectBox('1029')},
                 render: function (ui) {
-                    let cellData = ui.cellData;
                     let rowData = ui.rowData;
-                    let cls = null, text;
+                    let cls = null;
 
                     if (rowData.WORK_TYPE === 'WTP020') {
                         cls = 'bg-lightgray';
@@ -1109,9 +1092,8 @@
                     options: fnGetCommCodeGridSelectBox('1039')
                 },
                 render: function (ui) {
-                    let cellData = ui.cellData;
                     let rowData = ui.rowData;
-                    let cls = null, text;
+                    let cls = null;
 
                     if (rowData.WORK_TYPE === 'WTP020') {
                         cls = 'bg-lightgray';
@@ -1129,9 +1111,8 @@
                     return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP020'
                 },
                 render: function (ui) {
-                    let cellData = ui.cellData;
                     let rowData = ui.rowData;
-                    let cls = null, text = cellData;
+                    let cls = null;
 
                     if (rowData.WORK_TYPE === 'WTP020') {
                         cls = 'bg-lightgray';
@@ -1182,9 +1163,8 @@
                             options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010')
                         },
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
@@ -1203,9 +1183,8 @@
                         },
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020')},
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
@@ -1224,9 +1203,8 @@
                         },
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030')},
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
@@ -1272,9 +1250,8 @@
                             return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
@@ -1292,9 +1269,8 @@
                             return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
@@ -1312,9 +1288,8 @@
                             return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
@@ -1332,9 +1307,8 @@
                             return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
@@ -1352,9 +1326,8 @@
                             return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
@@ -1372,9 +1345,8 @@
                             return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
@@ -1392,9 +1364,8 @@
                             return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
@@ -1414,9 +1385,8 @@
                     return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                 },
                 render: function (ui) {
-                    let cellData = ui.cellData;
                     let rowData = ui.rowData;
-                    let cls = null, text = cellData;
+                    let cls = null;
 
                     if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                         cls = 'bg-lightgray';
@@ -1521,13 +1491,13 @@
                 }
             },
             sortModel: {on: false},
-            load: function( event, ui ) {
+            load: function () {
                 autoMerge(this, true);
                 let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
                 let filterOpts = '<option value=\"\">All Fields</option>';
                 let frozenOts = '<option value="0">Selected</option>';
                 this.getColModel().forEach(function (column) {
-                    let hiddenYn = column.hidden === undefined ? true : false;
+                    let hiddenYn = column.hidden === undefined;
                     if (hiddenYn && column.title) {
                         filterOpts += '<option value="' + column.dataIndx + '">' + column.title + '</option>';
                         frozenOts += '<option value="' + (column.leftPos + 1) + '">' + column.title + '</option>';
@@ -1599,14 +1569,14 @@
                     }
 
                     if (estimateFlag) {
-                        let UNIT_MATERIAL_AMT = data.UNIT_MATERIAL_AMT == null || data.UNIT_MATERIAL_AMT == '' ? 0 : Number(data.UNIT_MATERIAL_AMT); // 소재비
-                        let UNIT_TM_AMT = data.UNIT_TM_AMT == null || data.UNIT_TM_AMT == '' ? 0 : Number(data.UNIT_TM_AMT); //TM각비
-                        let UNIT_GRIND_AMT = data.UNIT_GRIND_AMT == null || data.UNIT_GRIND_AMT == '' ? 0 : Number(data.UNIT_GRIND_AMT); // 연마비
-                        let UNIT_HEAT_AMT = data.UNIT_HEAT_AMT == null || data.UNIT_HEAT_AMT == '' ? 0 : Number(data.UNIT_HEAT_AMT); // 열처리
-                        let UNIT_SURFACE_AMT = data.UNIT_SURFACE_AMT == null || data.UNIT_SURFACE_AMT == '' ? 0 : Number(data.UNIT_SURFACE_AMT); // 표면처리
-                        let UNIT_PROCESS_AMT = data.UNIT_PROCESS_AMT == null || data.UNIT_PROCESS_AMT == '' ? 0 : Number(data.UNIT_PROCESS_AMT); // 가공비
-                        let UNIT_ETC_AMT = data.UNIT_ETC_AMT == null || data.UNIT_ETC_AMT == '' ? 0 : Number(data.UNIT_ETC_AMT); // 기타추가
-                        let ORDER_QTY = data.ORDER_QTY == null || data.ORDER_QTY == '' ? 0 : Number(data.ORDER_QTY); //발주 수량
+                        let UNIT_MATERIAL_AMT = data.UNIT_MATERIAL_AMT == null || data.UNIT_MATERIAL_AMT === '' ? 0 : Number(data.UNIT_MATERIAL_AMT); // 소재비
+                        let UNIT_TM_AMT = data.UNIT_TM_AMT == null || data.UNIT_TM_AMT === '' ? 0 : Number(data.UNIT_TM_AMT); //TM각비
+                        let UNIT_GRIND_AMT = data.UNIT_GRIND_AMT == null || data.UNIT_GRIND_AMT === '' ? 0 : Number(data.UNIT_GRIND_AMT); // 연마비
+                        let UNIT_HEAT_AMT = data.UNIT_HEAT_AMT == null || data.UNIT_HEAT_AMT === '' ? 0 : Number(data.UNIT_HEAT_AMT); // 열처리
+                        let UNIT_SURFACE_AMT = data.UNIT_SURFACE_AMT == null || data.UNIT_SURFACE_AMT === '' ? 0 : Number(data.UNIT_SURFACE_AMT); // 표면처리
+                        let UNIT_PROCESS_AMT = data.UNIT_PROCESS_AMT == null || data.UNIT_PROCESS_AMT === '' ? 0 : Number(data.UNIT_PROCESS_AMT); // 가공비
+                        let UNIT_ETC_AMT = data.UNIT_ETC_AMT == null || data.UNIT_ETC_AMT === '' ? 0 : Number(data.UNIT_ETC_AMT); // 기타추가
+                        let ORDER_QTY = data.ORDER_QTY == null || data.ORDER_QTY === '' ? 0 : Number(data.ORDER_QTY); //발주 수량
                         let calculateEstimateAmount = 0; // 견적금액(계산 견적단가)
                         calculateEstimateAmount += UNIT_MATERIAL_AMT;
                         calculateEstimateAmount += UNIT_TM_AMT;
@@ -1668,7 +1638,6 @@
         };
 
         const confrimOrderStatus = function (controlStatus) {
-            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
             let controlStatusNm = '';
             let list = [];
 
@@ -1687,41 +1656,13 @@
             for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                 list[i] = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
             }
-            //
-            // // 중복 제거
-            // list = list.filter(function (element, index, array) {
-            //     return array.indexOf(element) === index;
-            // });
+
             let message =
                 '<h4>\n' +
-                '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
                 '    <span>선택하신 ' + list.length + ' 건을 ' + controlStatusNm + '처리합니다. \n진행하시겠습니까?</span>\n' +
                 '</h4>';
             fnConfirm(null, message, function () {updateOrderStatus(controlStatus)});
-            // bodyHtml =
-            //     '<h4>\n' +
-            //     '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-            //     '    <span>선택하신 ' + list.length + ' 건을 ' + controlStatusNm + '처리합니다. \n진행하시겠습니까?</span>\n' +
-            //     '</h4>';
-            // fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-            // let orderManagementSubmitConfirm = function (callback) {
-            //     commonConfirmPopup.show();
-            //     $("#commonConfirmYesBtn").unbind().click(function (e) {
-            //         e.stopPropagation();
-            //         commonConfirmPopup.hide();
-            //         callback(true);
-            //         return;
-            //     });
-            //     $(".commonConfirmCloseBtn").unbind().click(function (e) {
-            //         e.stopPropagation();
-            //         commonConfirmPopup.hide();
-            //     });
-            // };
-            // orderManagementSubmitConfirm(function (confirm) {
-            //     if (confirm) {
-            //         updateOrderStatus(controlStatus);
-            //     }
-            // });
         };
 
         const updateOrderStatus = function (controlStatus) {
@@ -1747,7 +1688,7 @@
             if ((controlStatusList.length > 1 && !(controlStatusList.includes('ORD002') && controlStatusList.includes(undefined))) || controlStatusList[0] === controlStatus || (controlStatusList[0] === undefined && controlStatus === 'ORD004')) {
                 message =
                     '<h4>\n' +
-                    '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                    '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
                     '    <span>상태변경이 불가한 대상이 있습니다.\n선택목록을 확인해주세요</span>\n' +
                     '</h4>';
                 fnAlert(null, message);
@@ -1809,42 +1750,37 @@
         };
 
         function controlManageFilterRender(ui) {
-            let val = ui.cellData == undefined ? "" : ui.cellData,
-                options = ui.column.editor == undefined ? "" : ui.column.editor.options;
+            let val = ui.cellData === undefined ? "" : ui.cellData,
+                options = ui.column.editor === undefined ? "" : ui.column.editor.options;
             let index = -1;
-            if(options) {
+            if (options) {
                 index = options.findIndex(function (element) {
-                    return element.value == val;
+                    return element.value === val;
                 });
-                if(index > -1) val = options[index].text;
+                if (index > -1) val = options[index].text;
             }
             if (val) {
                 if (ui.column.dataType === 'integer') {
                     val = numberWithCommas(val);
-                }
-
-                if(ui.column.dataType === 'date' && ui.column.format !== undefined) {
-                    var o = new Date(val);
+                } else if (ui.column.dataType === 'date' && ui.column.format !== undefined) {
+                    let o = new Date(val);
                     val = o && !isNaN(o.getTime()) && $.datepicker.formatDate(ui.column.format, o);
-                    console.log(val);
                 }
 
-                var condition = $("#controlManageFilterCondition :selected").val(),
+                let condition = $("#controlManageFilterCondition :selected").val(),
                     valUpper = val.toString().toUpperCase(),
                     txt = $("#controlManageFilterKeyword").val(),
                     txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
                     indx = -1;
 
-                if (condition == "end") {
+                if (condition === "end") {
                     indx = valUpper.lastIndexOf(txtUpper);
-                    if (indx + txtUpper.length != valUpper.length) {
+                    if (indx + txtUpper.length !== valUpper.length) {
                         indx = -1;
                     }
-                }
-                else if (condition == "contain") {
+                } else if (condition === "contain") {
                     indx = valUpper.indexOf(txtUpper);
-                }
-                else if (condition == "begin") {
+                } else if (condition === "begin") {
                     indx = valUpper.indexOf(txtUpper);
                     if (indx > 0) {
                         indx = -1;
@@ -1852,16 +1788,14 @@
                 }
 
                 if (indx >= 0) {
-                    var txt1 = val.toString().substring(0, indx);
-                    var txt2 = val.toString().substring(indx, indx + txtUpper.length);
-                    var txt3 = val.toString().substring(indx + txtUpper.length);
+                    let txt1 = val.toString().substring(0, indx);
+                    let txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                    let txt3 = val.toString().substring(indx + txtUpper.length);
                     return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
-                }
-                else {
+                } else {
                     return val;
                 }
-            }
-            else {
+            } else {
                 return val;
             }
         }
@@ -1901,7 +1835,7 @@
                                 cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] : undefined; // 이전 데이터
 
                             // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
-                            if (cellDataPrev !== undefined && cellData == cellDataPrev) {
+                            if (cellDataPrev !== undefined && cellData === cellDataPrev) {
                                 rc++;
                             }
                         } else if (rc > 1) {
@@ -1923,10 +1857,10 @@
         };
 
         const valiiiiiiiiiiiiiiiiiidationnnnnnnnnnnnnnnnn = function () {
-            var gridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
+            let gridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
             let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
-            var addList = gridInstance.getChanges().addList;
-            var updateList = gridInstance.getChanges().updateList;
+            let addList = gridInstance.getChanges().addList;
+            let updateList = gridInstance.getChanges().updateList;
         };
 
         /* function */
@@ -1951,54 +1885,61 @@
 
         $('#CONTROL_MANAGE_DELETE').on('click', function () {
             let list = [];
-            let controlNumList = [];
-            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
+            // let controlNumList = [];
+            let message;
 
             for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                 let thisRowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
                 list[i] = thisRowData;
-                controlNumList[i] = thisRowData.CONTROL_NUM;
+                // controlNumList[i] = thisRowData.CONTROL_NUM;
 
                 if (!(thisRowData.CONTROL_STATUS === undefined || thisRowData.CONTROL_STATUS === null || thisRowData.CONTROL_STATUS === 'ORD002')) {
-                    bodyHtml =
+                    message =
                         '<h4>\n' +
-                        '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                        '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
                         '    <span>확정상태가 빈칸(임시저장)이나 확정취소인 경우에만 가능합니다</span>\n' +
                         '</h4>';
-                    fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
+                    fnAlert(null, message);
                     return false;
                 }
             }
 
             //TODO: list.lenth 건수
-            bodyHtml =
+            message =
                 '<h4>\n' +
-                '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
                 '    <span>' + list.length + ' 건이 삭제됩니다. 진행하시겠습니까?</span>\n' +
                 '</h4>';
-            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-            let estimateRegisterSubmitConfirm = function (callback) {
-                commonConfirmPopup.show();
-                $("#commonConfirmYesBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                    callback(true);
-                    return;
-                });
-                $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                });
-            };
-            estimateRegisterSubmitConfirm(function (confirm) {
-                if (confirm) {
-                    let parameters = {'url': '/removeControl', 'data': {data: JSON.stringify(list)}};
-                    fnPostAjax(function (data) {
-                        fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");
-                        $orderManagementGrid.pqGrid('refreshDataAndView');
-                    }, parameters, '');
-                }
+            fnConfirm(null, message, function () {
+                let parameters = {'url': '/removeControl', 'data': {data: JSON.stringify(list)}};
+                fnPostAjax(function () {
+                    fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");
+                    $orderManagementGrid.pqGrid('refreshDataAndView');
+                }, parameters, '');
             });
+
+            // let estimateRegisterSubmitConfirm = function (callback) {
+            //     commonConfirmPopup.show();
+            //     $("#commonConfirmYesBtn").unbind().click(function (e) {
+            //         e.stopPropagation();
+            //         commonConfirmPopup.hide();
+            //         callback(true);
+            //         return;
+            //     });
+            //     $(".commonConfirmCloseBtn").unbind().click(function (e) {
+            //         e.stopPropagation();
+            //         commonConfirmPopup.hide();
+            //     });
+            // };
+            // estimateRegisterSubmitConfirm(function (confirm) {
+            //     if (confirm) {
+            //         let parameters = {'url': '/removeControl', 'data': {data: JSON.stringify(list)}};
+            //         fnPostAjax(function (data) {
+            <%--            fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");--%>
+            //             $orderManagementGrid.pqGrid('refreshDataAndView');
+            //         }, parameters, '');
+            //     }
+            // });
         });
 
         $('#NEW_ORDER_REGISTRATION').on('click', function () {
@@ -2099,7 +2040,7 @@
             let selectedRowCount = selectedOrderManagementRowIndex.length;
 
             for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+                // let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
 
                 // TODO: 필수데이터가 입력되어 있어야만 확정 가능
                 // if (rowData.OUTSIDE_YN === 'Y') {
@@ -2115,7 +2056,7 @@
          * @description 취소버튼 클릭
          */
         $('#CANCEL').on('click', function (event) {
-            let selectedRowCount = selectedOrderManagementRowIndex.length;
+            // let selectedRowCount = selectedOrderManagementRowIndex.length;
 
             //TODO: 외주가 ‘Y’ 인 상태에서는 외주관리화면에서 대상을 먼저 삭제해야만 확정취소가 가능
             /* for (let i = 0; i < selectedRowCount; i++) {
@@ -2275,7 +2216,7 @@
             if (compCdList.length > 1) {
                 bodyHtml =
                     '<h4>\n' +
-                    '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                    '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
                     '    <span>선택된 대상들의 발주사와 공급사는 동일해야 합니다.</span>\n' +
                     '</h4>';
                 fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
@@ -2284,7 +2225,7 @@
             if (orderCompCdList.length > 1) {
                 bodyHtml =
                     '<h4>\n' +
-                    '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                    '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
                     '    <span>선택된 대상들의 발주사와 공급사는 동일해야 합니다.</span>\n' +
                     '</h4>';
                 fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
@@ -2293,7 +2234,7 @@
             if (invoiceNumList.length > 1) {
                 bodyHtml =
                     '<h4>\n' +
-                    '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                    '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
                     '    <span>선택된 대상들의 거래명세 번호는 동일해야 합니다.</span>\n' +
                     '</h4>';
                 fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
@@ -2367,40 +2308,43 @@
                     fnAlert(null, "이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.");
                     return;
                 // } else if(rowData.WORK_TYPE != 'WTP020' && selectControlPartInfo != curControlPartInfo){
-                } else if(selectControlPartInfo != curControlPartInfo){
+                } else if(selectControlPartInfo !== curControlPartInfo){
                     selectControlList += rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ + "^";
                     selectControlPartCount++;
                     selectControlPartInfo = curControlPartInfo;
                 }
             }
-            let drawingBarcodePrintModalConfirm = function(callback){
+            // let drawingBarcodePrintModalConfirm = function(callback){
                 let text = '<h4>' +
-                    '           <img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
+                    '           <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
                     '               <span>' + selectControlPartCount + ' 건의 바코드 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
                     '       </h4>';
-                $("#commonConfirmBodyHtml").html(text);
-                commonConfirmPopup.show();
-                $("#commonConfirmYesBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                    callback(true);
-                    return;
-                });
-                $(".commonConfirmCloseBtn").unbind().click(function(e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                });
-            };
-            drawingBarcodePrintModalConfirm(function(confirm){
-                if(confirm){
-                    printJS({printable:'/makeCadBarcodePrint?selectControlList='+encodeURI(selectControlList), type:'pdf', showModal:true});
-                }
+            //     $("#commonConfirmBodyHtml").html(text);
+            //     commonConfirmPopup.show();
+            //     $("#commonConfirmYesBtn").unbind().click(function (e) {
+            //         e.stopPropagation();
+            //         commonConfirmPopup.hide();
+            //         callback(true);
+            //         return;
+            //     });
+            //     $(".commonConfirmCloseBtn").unbind().click(function(e) {
+            //         e.stopPropagation();
+            //         commonConfirmPopup.hide();
+            //     });
+            // };
+            // drawingBarcodePrintModalConfirm(function(confirm){
+            //     if(confirm){
+            //         printJS({printable:'/makeCadBarcodePrint?selectControlList='+encodeURI(selectControlList), type:'pdf', showModal:true});
+            //     }
+            // });
+            fnConfirm(null, text, function () {
+                printJS({printable:'/makeCadBarcodePrint?selectControlList='+encodeURI(selectControlList), type:'pdf', showModal:true});
             });
         });
         // 바코드 출력
         $('#BARCODE_PRINT').on('click', function () {
             if (noSelectedRowAlert()) return false;
-            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
+            let bodyHtml;
             let selectedRowCount = selectedOrderManagementRowIndex.length;
             let selectControlPartCount = 0;
             let selectControlPartInfo = "";
@@ -2416,7 +2360,7 @@
                     fnAlert(null, "이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.");
                     return;
                 // } else if(rowData.WORK_TYPE != 'WTP020' && selectControlPartInfo != curControlPartInfo){
-                } else if(selectControlPartInfo != curControlPartInfo){
+                } else if(selectControlPartInfo !== curControlPartInfo){
                     selectControlPartCount++;
                     selectControlPartInfo = curControlPartInfo;
                     formData.push(rowData.CONTROL_BARCODE_NUM);
@@ -2424,35 +2368,40 @@
             }
             bodyHtml =
                 '<h4>\n' +
-                '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
                 '    <span>선택하신 ' + selectControlPartCount + '건을 처리합니다. \n진행하시겠습니까?</span>\n' +
                 '</h4>';
-            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-            let drawingBarcodeLabelPrintConfirm = function (callback) {
-                commonConfirmPopup.show();
-                $("#commonConfirmYesBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                    callback(true);
-                    return;
-                });
-                $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                });
-            };
-            drawingBarcodeLabelPrintConfirm(function (confirm) {
-                if (confirm) {
+            // fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+            fnConfirm(null, bodyHtml, function () {
+                fnBarcodePrint(function(data){
+                    fnAlert(null, data.message);
+                }, formData, '');
+            });
+            // let drawingBarcodeLabelPrintConfirm = function (callback) {
+            //     commonConfirmPopup.show();
+            //     $("#commonConfirmYesBtn").unbind().click(function (e) {
+            //         e.stopPropagation();
+            //         commonConfirmPopup.hide();
+            //         callback(true);
+            //         return;
+            //     });
+            //     $(".commonConfirmCloseBtn").unbind().click(function (e) {
+            //         e.stopPropagation();
+            //         commonConfirmPopup.hide();
+            //     });
+            // };
+            // drawingBarcodeLabelPrintConfirm(function (confirm) {
+            //     if (confirm) {
                     // let formData = [];
                     // for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                     //     let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
                     //     formData.push(rowData.CONTROL_BARCODE_NUM);
                     // }
-                    fnBarcodePrint(function(data, callFunctionParam){
-                        alert(data.message);
-                    }, formData, '');
-                }
-            });
+                    // fnBarcodePrint(function(data, callFunctionParam){
+                    //     fnAlert(null, data.message);
+                    // }, formData, '');
+                // }
+            // });
         });
         // 라벨 출력
         $('#LABEL_PRINT').on('click', function () {
@@ -2476,7 +2425,7 @@
                     'ORDER_SEQ': rowData.ORDER_SEQ
                 };
                 let parameter = {'url': '/json-list', 'data': postData};
-                fnPostAjaxAsync(function (data, callFunctionParam) {
+                fnPostAjaxAsync(function (data) {
                     for (let i = 0, DATALIST_LENGTH = data.list.length; i < DATALIST_LENGTH; i++) {
                         barcodeList.push(data.list[i].BARCODE_NUM);
                     }
@@ -2484,33 +2433,39 @@
             }
             let bCodePrintLen = barcodeList.length;
             if (bCodePrintLen) {
-                let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
-                bodyHtml =
+                // let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
+                let bodyHtml =
                     '<h4>\n' +
-                    '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                    '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
                     '    <span>선택하신 ' + bCodePrintLen + '건을 처리합니다. \n진행하시겠습니까?</span>\n' +
                     '</h4>';
-                fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-                let labelPrintConfirm = function (callback) {
-                    commonConfirmPopup.show();
-                    $("#commonConfirmYesBtn").unbind().click(function (e) {
-                        e.stopPropagation();
-                        commonConfirmPopup.hide();
-                        callback(true);
-                        return;
-                    });
-                    $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                        e.stopPropagation();
-                        commonConfirmPopup.hide();
-                    });
-                };
-                labelPrintConfirm(function (confirm) {
-                    if (confirm) {
-                        fnBarcodePrint(function (data, callFunctionParam) {
-                            alert(data.message);
-                        }, barcodeList, '');
-                    }
+                fnConfirm(null, bodyHtml, function () {
+                    fnBarcodePrint(function (data) {
+                        fnAlert(null, data.message);
+                    }, barcodeList, '');
                 });
+                // fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
+                // let labelPrintConfirm = function (callback) {
+                //     commonConfirmPopup.show();
+                //     $("#commonConfirmYesBtn").unbind().click(function (e) {
+                //         e.stopPropagation();
+                //         commonConfirmPopup.hide();
+                //         callback(true);
+                //         return;
+                //     });
+                //     $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                //         e.stopPropagation();
+                //         commonConfirmPopup.hide();
+                //     });
+                // };
+                // labelPrintConfirm(function (confirm) {
+                //     if (confirm) {
+                //         fnBarcodePrint(function (data, callFunctionParam) {
+                //             fnAlert(null, data.message);
+                //         }, barcodeList, '');
+                //     }
+                // });
+
             } else {
                 fnAlert(null, "출력할 바코드가 존재 하지 않습니다.");
             }
@@ -2536,44 +2491,48 @@
             let imgGfileSeq = "";
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-                if(!rowData.IMG_GFILE_SEQ){
+                if (!rowData.IMG_GFILE_SEQ) {
                     fnAlert(null, "이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.");
                     return;
-                }else{
+                } else {
                     imgGfileSeq += rowData.IMG_GFILE_SEQ + "^";
                 }
             }
-            let drawingPrintModalConfirm = function(callback){
+
+            // let drawingPrintModalConfirm = function(callback){
                 let text = '<h4>' +
-                    '           <img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
+                    '           <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
                     '               <span>' + selectedRowCount + ' 건의 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
                     '       </h4>';
-                $("#commonConfirmBodyHtml").html(text);
-                commonConfirmPopup.show();
-                $("#commonConfirmYesBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
+                fnConfirm(null, text, function () {
+                    printJS({printable:'/makeCadPrint?imgGfileSeq='+encodeURI(imgGfileSeq), type:'pdf', showModal:true});
+                });
+                // $("#commonConfirmBodyHtml").html(text);
+                // commonConfirmPopup.show();
+                // $("#commonConfirmYesBtn").unbind().click(function (e) {
+                //     e.stopPropagation();
+                //     commonConfirmPopup.hide();
                     // $(this).startWaitMe();
                     // $(".cadDrawingPrint").html(printHtml).trigger('create');
-                    callback(true);
-                    return;
-                });
-                $(".commonConfirmCloseBtn").unbind().click(function(e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                });
-            };
-            drawingPrintModalConfirm(function(confirm){
-                if(confirm){
+                    // callback(true);
+                    // return;
+                // });
+                // $(".commonConfirmCloseBtn").unbind().click(function(e) {
+                //     e.stopPropagation();
+                //     commonConfirmPopup.hide();
+                // });
+            // };
+            // drawingPrintModalConfirm(function(confirm){
+            //     if(confirm){
                     // $(this).stopWaitMe();
-                    printJS({printable:'/makeCadPrint?imgGfileSeq='+encodeURI(imgGfileSeq), type:'pdf', showModal:true});
+                    // printJS({printable:'/makeCadPrint?imgGfileSeq='+encodeURI(imgGfileSeq), type:'pdf', showModal:true});
                     // let postData = { 'imgGfileSeq': imgGfileSeq};
                     // let parameters = {'url': '/make_cad_print', 'data': postData};
                     // fnPostAjax(function (data, callFunctionParam) {
                     //     printJS('/image/' + data.GFILE_SEQ);
                     // }, parameters, '');
-                }
-            });
+                // }
+            // });
         });
 
         $('#SUPPLY_UNIT_COST_APPLY').on('change', function () {
@@ -2624,7 +2583,7 @@
                 return false;
             }
 
-            let list = [];
+            // let list = [];
             let controlSeqList = [];
             let compCdList = [];
             let orderCompCdList = [];
@@ -2634,7 +2593,7 @@
             for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
 
-                list.push(rowData);
+                // list.push(rowData);
                 controlSeqList.push(rowData.CONTROL_SEQ);
                 compCdList.push(rowData.COMP_CD);
                 orderCompCdList.push(rowData.ORDER_COMP_CD);
@@ -2688,11 +2647,11 @@
             event.preventDefault();
         });
 
-        $("#controlManageFilterKeyword").on("keyup", function(e){
+        $("#controlManageFilterKeyword").on("keyup", function(){
             fnFilterHandler($orderManagementGrid, 'controlManageFilterKeyword', 'controlManageFilterCondition', 'controlManageFilterColumn');
         });
 
-        $("#controlManageFrozen").on('change', function(e){
+        $("#controlManageFrozen").on('change', function(){
             console.log($(this).val());
             fnFrozenHandler($orderManagementGrid, $(this).val());
         });

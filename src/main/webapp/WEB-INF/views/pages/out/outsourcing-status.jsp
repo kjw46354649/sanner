@@ -56,13 +56,13 @@
                             <label class="label_100">마감년월</label>
                         </span>
                         <span class="chk_box">
-                            <select name="CLOSE_YEAR_LEFT" id="OUTSIDE_CLOSE_YEAR_LEFT" style="width: 100px; margin-right: 5px;"></select>
-                            <select name="CLOSE_MONTH_LEFT" id="OUTSIDE_CLOSE_MONTH_LEFT" style="width: 80px; margin-right: 10px;"></select>
+                            <label for="OUTSIDE_CLOSE_YEAR_LEFT"></label><select name="CLOSE_YEAR_LEFT" id="OUTSIDE_CLOSE_YEAR_LEFT" style="width: 100px; margin-right: 5px;"></select>
+                            <label for="OUTSIDE_CLOSE_MONTH_LEFT"></label><select name="CLOSE_MONTH_LEFT" id="OUTSIDE_CLOSE_MONTH_LEFT" style="width: 80px; margin-right: 10px;"></select>
                         </span>
                         <span style="vertical-align: middle; font-size: 1.4rem;">~</span>
                         <span class="chk_box">
-                            <select name="CLOSE_YEAR_RIGHT" id="CLOSE_YEAR_RIGHT" disabled style="width:100px; margin-right: 5px;" ></select>
-                            <select name="CLOSE_MONTH_RIGHT" id="CLOSE_MONTH_RIGHT" disabled style="width:80px;"></select>
+                            <label for="CLOSE_YEAR_RIGHT"></label><select name="CLOSE_YEAR_RIGHT" id="CLOSE_YEAR_RIGHT" disabled style="width:100px; margin-right: 5px;" ></select>
+                            <label for="CLOSE_MONTH_RIGHT"></label><select name="CLOSE_MONTH_RIGHT" id="CLOSE_MONTH_RIGHT" disabled style="width:80px;"></select>
                         </span>
                         <button type="button" class="right_float defaultBtn radius blue" id="TAB1_SEARCH">검색</button>
                     </li>
@@ -162,8 +162,7 @@
                     if(ui.rowData.pq_grandsummary) {
                         return ui.cellData;
                     } else {
-                        return ("<a href='#DETAIL_LIST_VIEW_POPUP' class='' id='' data-target='' data-toggle='modal' " +
-                            "data-refform='DETAIL_LIST_VIEW_POPUP'><u>" + ui.cellData + "</u></a>");
+                        return ("<a data-toggle='modal' data-refform='DETAIL_LIST_VIEW_POPUP'><u>" + ui.cellData + "</u></a>");
                     }
                 }
             },
@@ -296,7 +295,7 @@
 
         $('#TAB1_SEARCH').on('click', function () {
             tab1PostData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM');
-            $outsideCloseStatusGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+            $outsideCloseStatusGrid.pqGrid('option', 'dataModel.postData', function () {
                 return tab1PostData;
             });
             $outsideCloseStatusGrid.pqGrid('refreshDataAndView');
@@ -304,7 +303,7 @@
 
         $('#TAB2_SEARCH').on('click', function () {
             tab2PostData = fnFormToJsonArrayData('#MONTH_OUTSIDE_STATUS_SEARCH_FORM');
-            $monthlyOutsideStatusGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+            $monthlyOutsideStatusGrid.pqGrid('option', 'dataModel.postData', function () {
                 return tab2PostData;
             });
             $monthlyOutsideStatusGrid.pqGrid('refreshDataAndView');
@@ -342,7 +341,7 @@
         $('#CLOSE_YEAR_RIGHT').on('change', function () {
             fnAppendSelectboxMonth('CLOSE_MONTH_RIGHT', this.value);
         });
-        $('#RANGE_SEARCH').on('change', function (event) {
+        $('#RANGE_SEARCH').on('change', function () {
             if ($(this).prop('checked')) {
                 $('#CLOSE_YEAR_RIGHT').prop('disabled', false);
                 $('#CLOSE_MONTH_RIGHT').prop('disabled', false);

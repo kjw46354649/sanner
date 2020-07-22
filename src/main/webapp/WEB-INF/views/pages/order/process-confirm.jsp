@@ -14,10 +14,10 @@
 
 <div class="page process_confirm">
     <div class="toolWrap">
-        <span class="barCode" id="processConfirmBarcodeSpan"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="CONFIRM_ORDER_BARCODE_IMG" style="height: 32px;"></span>
-        <span class="barCodeTxt"><input type="text" class="wd_270_barcode" name="CONFIRM_ORDER_BARCODE_NUM" id="CONFIRM_ORDER_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요" style="ime-mode:disable;"></span>
+        <span class="barCode" id="processConfirmBarcodeSpan"><img src="<c:url value="/resource/asset/images/common/img_barcode_long.png"/>" alt="바코드" id="CONFIRM_ORDER_BARCODE_IMG" style="height: 32px;"></span>
+        <span class="barCodeTxt"><label for="CONFIRM_ORDER_BARCODE_NUM"></label><input type="text" class="wd_270_barcode" name="CONFIRM_ORDER_BARCODE_NUM" id="CONFIRM_ORDER_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요"></span>
         <div class="right_float">
-            <span class="refresh mg-left10"><button type="button" id="PROCESS_CONFIRM_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
+            <span class="refresh mg-left10"><button type="button" id="PROCESS_CONFIRM_REFRESH"><img src="<c:url value="/resource/asset/images/common/btn_refresh.png"/>" alt="새로고침"></button></span>
             <button type="button" class="defaultBtn btn-100w" id="PROCESS_CONFIRM_DETAIL">상세정보 조회</button>
             <button type="button" class="defaultBtn btn-100w" id="PROCESS_CONFIRM_DRAWING_VIEW">도면 보기</button>
             <button type="button" class="defaultBtn btn-100w orange" id="PROCESS_CONFIRM_FULLSCREEN">FULL SCREEN</button>
@@ -187,7 +187,7 @@
             },
             {
                 title: '', width: '10%', dataType: 'string', dataIndx: 'PROCESS_CONFIRM_BUTTON',
-                render: function (ui) {
+                render: function () {
                     return '<button class="miniBtn green" name="PROCESS_CONFIRM_BUTTON">가공확정</button>';
                 },
                 postRender: function (ui) {
@@ -294,7 +294,7 @@
             {title: '진행상태', width: '10%', dataType: 'string', dataIndx: 'PART_STATUS_NM'},
             {
                 title: '', width: '10%', dataType: 'string', dataIndx: 'CONFIRM_CANCEL_BUTTON',
-                render: function (ui) {
+                render: function () {
                     return '<button class="miniBtn red" name="CONFIRM_CANCEL_BUTTON">확정취소</button>';
                 },
                 postRender: function (ui) {
@@ -355,7 +355,7 @@
             },
             {title: '요망<br>납기', width: '10%', dataType: 'string', dataIndx: 'ORDER_DUE_DT'},
             {title: '가공<br>납기', width: '10%', dataType: 'string', dataIndx: 'INNER_DUE_DT'},
-            {title: '긴<br>급', minWidth: 15, minWidth: 15, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN',
+            {title: '긴<br>급', minWidth: 15, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -606,7 +606,7 @@
             $processCompleteGrid.pqGrid('refreshDataAndView');
         };
 
-        const isProcessAssembly = function (rowData) {
+        /*const isProcessAssembly = function (rowData) {
             let flag = false;
             let postData = {queryId: 'orderMapper.selectIsProcessAssembly'};
             postData = $.extend(postData, rowData);
@@ -617,7 +617,7 @@
             }, parameters, '');
 
             return flag;
-        };
+        };*/
 
         const hasInStock = function (rowData) {
             let flag = false;
@@ -654,38 +654,31 @@
                 changes.queryIdList = QUERY_ID_ARRAY;
                 parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
 
-                fnPostAjax(function (data, callFunctionParam) {
+                fnPostAjax(function () {
                     $confirmOrderGrid.pqGrid('refreshDataAndView');
                     $processConfirmGrid.pqGrid('refreshDataAndView');
                 }, parameters, '');
             }
         };
-
-        let showMessage = function(message){
-            dhx.message({
-                text: message, icon: "dxi-close", "expire": 2000, "position": "top-right", type:"myCss"
-            });
-        };
-
         /* function */
 
         $('#CONFIRM_ORDER_SEARCH_FORM').on('change', function() {
             topLeftPostData = fnFormToJsonArrayData('#CONFIRM_ORDER_SEARCH_FORM');
-            $confirmOrderGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+            $confirmOrderGrid.pqGrid('option', 'dataModel.postData', function () {
                 return topLeftPostData;
             });
             $confirmOrderGrid.pqGrid('refreshDataAndView');
         });
         $('#PROCESS_CONFIRM_SEARCH_FORM').on('change', function() {
             topRightPostData = fnFormToJsonArrayData('#PROCESS_CONFIRM_SEARCH_FORM');
-            $processConfirmGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+            $processConfirmGrid.pqGrid('option', 'dataModel.postData', function () {
                 return topRightPostData;
             });
             $processConfirmGrid.pqGrid('refreshDataAndView');
         });
         $('#OUTSIDE_SEARCH_FORM').on('change', function() {
             botLeftPostData = fnFormToJsonArrayData('#OUTSIDE_SEARCH_FORM');
-            $outsideGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+            $outsideGrid.pqGrid('option', 'dataModel.postData', function () {
                 return botLeftPostData;
             });
             $outsideGrid.pqGrid('refreshDataAndView');
@@ -750,7 +743,7 @@
 
                 let data = {'queryId': "common.selectControlBarcodeInfo", 'BARCODE_NUM': barcodeNum};
                 let parameters = {'url': '/json-info', 'data': data};
-                fnPostAjax(function (data, callFunctionParam) {
+                fnPostAjax(function (data) {
                     let dataInfo = data.info;
 
                     updatePartStatus(dataInfo, 'PRO002');
@@ -766,6 +759,8 @@
 
         /** 도면 보기 팝업 호출 */
         $('#PROCESS_CONFIRM_DRAWING_VIEW').on('click', function () {
+            console.log(selectedRowIndex);
+            console.log(selectedGrid);
             callWindowImageViewer(999);
         });
 

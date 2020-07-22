@@ -63,8 +63,8 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="">외주발주상태</label>
-                            <select class="wd_200" name="OUTSIDE_STATUS" id="OUTSIDE_STATUS">
+                            <label class="label_100">외주발주상태</label>
+                            <label for="OUTSIDE_STATUS"></label><select class="wd_200" name="OUTSIDE_STATUS" id="OUTSIDE_STATUS">
                                 <option value="">All</option>
                                 <c:forEach var="code" items="${HighCode.H_1031}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -74,7 +74,7 @@
                     </li>
                     <li>
                         <span class="slt_wrap trans_slt mg-right10">
-                            <select name="OUTSIDE_SEARCH_CONDITION" id="OUTSIDE_SEARCH_CONDITION" style="text-align-last: center;">
+                            <label for="OUTSIDE_SEARCH_CONDITION"></label><select name="OUTSIDE_SEARCH_CONDITION" id="OUTSIDE_SEARCH_CONDITION" style="text-align-last: center;">
                                 <c:forEach var="code" items="${HighCode.H_1084}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -131,9 +131,9 @@
     <div class="bottomWrap row4_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
-                <input type="text" id="outsourcingOrderManageFilterKeyword" placeholder="Enter your keyword">
-                <select id="outsourcingOrderManageFilterColumn"></select>
-                <select id="outsourcingOrderManageFilterCondition">
+                <label for="outsourcingOrderManageFilterKeyword"></label><input type="text" id="outsourcingOrderManageFilterKeyword" placeholder="Enter your keyword">
+                <label for="outsourcingOrderManageFilterColumn"></label><select id="outsourcingOrderManageFilterColumn"></select>
+                <label for="outsourcingOrderManageFilterCondition"></label><select id="outsourcingOrderManageFilterCondition">
                     <c:forEach var="code" items="${HighCode.H_1083}">
                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                     </c:forEach>
@@ -194,7 +194,7 @@
                         </select>
                     </div>
                     <div>
-                        <textarea name="EMAIL_CONTENT_TXT" id="REQUEST_OUTSIDE_EMAIL_CONTENT_TXT"></textarea>
+                        <label for="REQUEST_OUTSIDE_EMAIL_CONTENT_TXT"></label><textarea name="EMAIL_CONTENT_TXT" id="REQUEST_OUTSIDE_EMAIL_CONTENT_TXT"></textarea>
                     </div>
                 </div>
                 <div style="grid-column-start: 2; grid-column-end: 3; grid-row-start: 1; grid-row-end: 2;">
@@ -252,7 +252,7 @@
                         </select>
                     </div>
                     <div>
-                        <textarea name="EMAIL_CONTENT_TXT" id="CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT"></textarea>
+                        <label for="CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT"></label><textarea name="EMAIL_CONTENT_TXT" id="CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT"></textarea>
                     </div>
                 </div>
                 <div style="grid-column-start: 2; grid-column-end: 3; grid-row-start: 1; grid-row-end: 2;">
@@ -309,7 +309,7 @@
                         </select>
                     </div>
                     <div class="d-inline-block">
-                        <select name="CLOSE_VER" id="CLOSE_VER">
+                        <label for="CLOSE_VER"></label><select name="CLOSE_VER" id="CLOSE_VER">
                             <option value="1">1차</option>
                             <option value="2">2차</option>
                             <option value="3">3차</option>
@@ -326,7 +326,7 @@
                 <div id="OUTSIDE_CLOSE_LEFT_GRID"></div>
             </div>
             <div style="display: flex; float:left; align-items: center; justify-content: center; width: 70px; height: 250px;">
-                <img src="/resource/asset/images/common/img_right_arrow.png" alt="오른쪽 화살표">
+                <img src="<c:url value="/resource/asset/images/common/img_right_arrow.png"/>" alt="오른쪽 화살표">
             </div>
             <div style="width: 450px; float:left;">
                 <div id="OUTSIDE_CLOSE_RIGHT_GRID"></div>
@@ -658,19 +658,17 @@
                     return {data: dataJSON.data};
                 }
             },
-            load: function( event, ui ) {
-                var filterOpts = '<option value=\"\">All Fields</option>';
-                var frozenOts = '<option value="0">Selected</option>';
-                this.getColModel().forEach(function(column){
-                    let hiddenYn = column.hidden == undefined ? true : false;
-                    if(hiddenYn && column.title){
-                        filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
-                        frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
+            load: function () {
+                let filterOpts = '<option value=\"\">All Fields</option>';
+                let frozenOts = '<option value="0">Selected</option>';
+                this.getColModel().forEach(function (column) {
+                    let hiddenYn = column.hidden === undefined;
+                    if (hiddenYn && column.title) {
+                        filterOpts += '<option value="' + column.dataIndx + '">' + column.title + '</option>';
+                        frozenOts += '<option value="' + (column.leftPos + 1) + '">' + column.title + '</option>';
                     }
                 });
-                $("#outsourcingOrderManageFilterColumn").empty();
                 $("#outsourcingOrderManageFilterColumn").html(filterOpts);
-                $("#outsourcingOrderManageFrozen").empty();
                 $("#outsourcingOrderManageFrozen").html(frozenOts);
             },
             complete: function () {
@@ -748,7 +746,7 @@
             {title: '파일명', dataType: 'string', dataIndx: 'ORGINAL_FILE_NM', width: 500, minWidth: 70,
                 render: function(ui) {
                     let returnVal = ui.cellData;
-                    if(ui.rowData.FILE_SEQ != undefined){
+                    if (ui.rowData.FILE_SEQ !== undefined) {
                         returnVal += '<span id=\"downloadSingleFile\" class=\"ui-icon ui-icon-search\" style=\"cursor: pointer\"></span>';
                     }
                     return returnVal;
@@ -775,7 +773,7 @@
                     let EST_STATUS = $("#estimate_register_info_form #EST_STATUS").val();
                     let returnVal = "";
                     if (ui.cellData) {
-                        if(EST_STATUS != 'EST020') returnVal = '<span id="deleteSingleFile" class="ui-icon ui-icon-close" style="cursor: pointer"></span>';
+                        if (EST_STATUS !== 'EST020') returnVal = '<span id="deleteSingleFile" class="ui-icon ui-icon-close" style="cursor: pointer"></span>';
 
                         return returnVal;
                     }
@@ -807,7 +805,6 @@
             selectionModel : {type: 'row', mode: 'single'},
             rowHtHead: 15,
             numberCell: {title: 'No.'},
-            dragColumns: {enabled: false},
             editable : false,
             scrollModel: {autoFit: true},
             dragColumns: {enabled: false},
@@ -1019,7 +1016,7 @@
             {title: '파일명', dataType: 'string', dataIndx: 'ORGINAL_FILE_NM', width: 500, minWidth: 70,
                 render: function(ui) {
                     let returnVal = ui.cellData;
-                    if(ui.rowData.FILE_SEQ != undefined){
+                    if (ui.rowData.FILE_SEQ !== undefined) {
                         returnVal += '<span id=\"downloadSingleFile\" class=\"ui-icon ui-icon-search\" style=\"cursor: pointer\"></span>';
                     }
                     return returnVal;
@@ -1046,7 +1043,7 @@
                     let EST_STATUS = $("#estimate_register_info_form #EST_STATUS").val();
                     let returnVal = "";
                     if (ui.cellData) {
-                        if(EST_STATUS != 'EST020') returnVal = '<span id="deleteSingleFile" class="ui-icon ui-icon-close" style="cursor: pointer"></span>';
+                        if (EST_STATUS !== 'EST020') returnVal = '<span id="deleteSingleFile" class="ui-icon ui-icon-close" style="cursor: pointer"></span>';
 
                         return returnVal;
                     }
@@ -1078,7 +1075,6 @@
             selectionModel : {type: 'row', mode: 'single'},
             rowHtHead: 15,
             numberCell: {title: 'No.'},
-            dragColumns: {enabled: false},
             editable : false,
             scrollModel: {autoFit: true},
             dragColumns: {enabled: false},
@@ -1604,48 +1600,51 @@
         };
 
         function outsourcingOrderManageFilterRender(ui) {
-            let val = ui.cellData == undefined ? "" : ui.cellData,
-                options = ui.column.editor == undefined ? "" : ui.column.editor.options;
+            let val = ui.cellData === undefined ? "" : ui.cellData,
+                options = ui.column.editor === undefined ? "" : ui.column.editor.options;
             let index = -1;
-            if(options) {
+            if (options) {
                 index = options.findIndex(function (element) {
-                    return element.value == val;
+                    return element.value === val;
                 });
-                if(index > -1) val = options[index].text;
+                if (index > -1) val = options[index].text;
             }
             if (val) {
-                var condition = $("#outsourcingOrderManageFilterCondition :selected").val(),
+                if (ui.column.dataType === 'integer') {
+                    val = numberWithCommas(val);
+                } else if (ui.column.dataType === 'date' && ui.column.format !== undefined) {
+                    let o = new Date(val);
+                    val = o && !isNaN(o.getTime()) && $.datepicker.formatDate(ui.column.format, o);
+                }
+
+                let condition = $("#outsourcingOrderManageFilterCondition :selected").val(),
                     valUpper = val.toString().toUpperCase(),
                     txt = $("#outsourcingOrderManageFilterKeyword").val(),
                     txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
                     indx = -1;
 
-                if (condition == "end") {
+                if (condition === "end") {
                     indx = valUpper.lastIndexOf(txtUpper);
                     if (indx + txtUpper.length != valUpper.length) {
                         indx = -1;
                     }
-                }
-                else if (condition == "contain") {
+                } else if (condition === "contain") {
                     indx = valUpper.indexOf(txtUpper);
-                }
-                else if (condition == "begin") {
+                } else if (condition === "begin") {
                     indx = valUpper.indexOf(txtUpper);
                     if (indx > 0) {
                         indx = -1;
                     }
                 }
                 if (indx >= 0) {
-                    var txt1 = val.toString().substring(0, indx);
-                    var txt2 = val.toString().substring(indx, indx + txtUpper.length);
-                    var txt3 = val.toString().substring(indx + txtUpper.length);
+                    let txt1 = val.toString().substring(0, indx);
+                    let txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                    let txt3 = val.toString().substring(indx + txtUpper.length);
                     return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
-                }
-                else {
+                } else {
                     return val;
                 }
-            }
-            else {
+            } else {
                 return val;
             }
         }
@@ -1905,7 +1904,7 @@
                 if (rowData.OUTSIDE_STATUS === 'OST001') {
                     let messsage =
                         '<h4>\n' +
-                        '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                        '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
                         '    <span>외주발주상태가 빈칸이나 요청취소인 경우에만 가능합니다</span>\n' +
                         '</h4>';
                     fnAlert(null, messsage);
@@ -2050,10 +2049,12 @@
                 return false;
             }
 
-            for(let i in mailRecipientData) {
-                if (mailRecipientData[i].RECEPTION === 'true') {
-                    mailFlag = false;
-                    break;
+            for (let i in mailRecipientData) {
+                if (mailRecipientData.hasOwnProperty(i)) {
+                    if (mailRecipientData[i].RECEPTION === 'true') {
+                        mailFlag = false;
+                        break;
+                    }
                 }
             }
 
@@ -2107,75 +2108,76 @@
         CKEDITOR.replace('CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT', {height: 285});
 
         const cancelRequestOutsideConfirm = function () {
-            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
-
-            bodyHtml =
+            let message =
                 '<h4>\n' +
                 '    <span>이미 가공이 진행되고 있을 수 있습니다. 반드시 해당업체 확인 후에 진행바랍니다. 취소 진행 및 메일발송을 진행하시겠습니까?</span>\n' +
                 '</h4>';
 
-            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-            let estimateRegisterSubmitConfirm = function (callback) {
-                commonConfirmPopup.show();
-                $("#commonConfirmYesBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                    callback(true);
-                    return;
-                });
-                $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                });
-            };
-            estimateRegisterSubmitConfirm(function (confirm) {
-                if (confirm) {
-                    let mailFlag = true;
-                    let cancelMailRecipientData = $cancelMailRecipientGrid.pqGrid('option', 'dataModel.data');
+            // fnCommonConfirmBoxCreate(headHtml, message, yseBtn, noBtn);
+            fnConfirm(null, message, function () {
+                let mailFlag = true;
+                let cancelMailRecipientData = $cancelMailRecipientGrid.pqGrid('option', 'dataModel.data');
 
-                    for(let i in cancelMailRecipientData) {
-                        if (cancelMailRecipientData[i].RECEPTION === 'true') {
-                            mailFlag = false;
-                            break;
-                        }
+                for(let i in cancelMailRecipientData) {
+                    if (cancelMailRecipientData[i].RECEPTION === 'true') {
+                        mailFlag = false;
+                        break;
                     }
-
-                    if (mailFlag) {
-                        fnAlert(null, '메일 수신자 정보는 필수입니다.');
-                        return false;
-                    }
-
-                    let step1List = $cancelRequestOutsideGrid.pqGrid('option', 'dataModel.data');
-                    // 메일 내용
-                    let a = CKEDITOR.instances.CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT.getData();
-                    // 하단 그리드 테이블로 생성
-                    let b = createMailInnerTable(step1List);
-                    let c = a + b;
-                    $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM #CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT').val(c);
-
-                    let outsideCompCd = $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM').find('#OUTSIDE_COMP_CD').val();
-
-                    for (let i = 0, STEP1LIST_LENGTH = step1List.length; i < STEP1LIST_LENGTH; i++) {
-                        step1List[i].OUTSIDE_COMP_CD = outsideCompCd;
-                    }
-
-                    let step4List = $cancelMailRecipientGrid.pqGrid('option', 'dataModel.data');
-                    let requestMailForm = fnFormToJsonArrayData('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM'); //object
-                    let postData = {
-                        status: 'cancel',
-                        controlPartList: step1List, // 그리드
-                        mailReceiverList: step4List, // 수신처
-                        requestMailForm: requestMailForm // tbl_outside_request 저장용
-                    };
-
-                    let parameters = {'url': '/managerRequestOutside', 'data': {data: JSON.stringify(postData)}};
-                    fnPostAjax(function (data, callFunctionParam) {
-                        fnAlert(null, "<spring:message code='com.alert.default.save.success' />");
-                        $('#CANCEL_REQUEST_OUTSIDE_POPUP').modal('hide');
-                        $outsideOrderManageGrid.pqGrid('refreshDataAndView');
-                    }, parameters, '');
                 }
+
+                if (mailFlag) {
+                    fnAlert(null, '메일 수신자 정보는 필수입니다.');
+                    return false;
+                }
+
+                let step1List = $cancelRequestOutsideGrid.pqGrid('option', 'dataModel.data');
+                // 메일 내용
+                let a = CKEDITOR.instances.CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT.getData();
+                // 하단 그리드 테이블로 생성
+                let b = createMailInnerTable(step1List);
+                let c = a + b;
+                $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM #CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT').val(c);
+
+                let outsideCompCd = $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM').find('#OUTSIDE_COMP_CD').val();
+
+                for (let i = 0, STEP1LIST_LENGTH = step1List.length; i < STEP1LIST_LENGTH; i++) {
+                    step1List[i].OUTSIDE_COMP_CD = outsideCompCd;
+                }
+
+                let step4List = $cancelMailRecipientGrid.pqGrid('option', 'dataModel.data');
+                let requestMailForm = fnFormToJsonArrayData('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM'); //object
+                let postData = {
+                    status: 'cancel',
+                    controlPartList: step1List, // 그리드
+                    mailReceiverList: step4List, // 수신처
+                    requestMailForm: requestMailForm // tbl_outside_request 저장용
+                };
+
+                let parameters = {'url': '/managerRequestOutside', 'data': {data: JSON.stringify(postData)}};
+                fnPostAjax(function (data, callFunctionParam) {
+                    fnAlert(null, "<spring:message code='com.alert.default.save.success' />");
+                    $('#CANCEL_REQUEST_OUTSIDE_POPUP').modal('hide');
+                    $outsideOrderManageGrid.pqGrid('refreshDataAndView');
+                }, parameters, '');
             });
+            // let estimateRegisterSubmitConfirm = function (callback) {
+            //     commonConfirmPopup.show();
+            //     $("#commonConfirmYesBtn").unbind().click(function (e) {
+            //         e.stopPropagation();
+            //         commonConfirmPopup.hide();
+            //         callback(true);
+            //         return;
+            //     });
+            //     $(".commonConfirmCloseBtn").unbind().click(function (e) {
+            //         e.stopPropagation();
+            //         commonConfirmPopup.hide();
+            //     });
+            // };
+            // estimateRegisterSubmitConfirm(function (confirm) {
+            //     if (confirm) {
+            //
+            //     }
+            // });
         };
 
         fnCommCodeDatasourceSelectBoxCreate($('#REQUEST_OUTSIDE_POPUP').find('#OUTSIDE_COMP_CD'), 'select', {
