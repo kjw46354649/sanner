@@ -25,7 +25,7 @@
         CASE WHEN IFNULL(A.EMERGENCY_YN, 'N') = 'Y' THEN '긴급' ELSE SPACE(0) END AS EMERGENCY_BARCODE_NM, <!-- 바코드 긴급 -->
         A.CONTROL_STATUS, <!-- 주문관리상태 -->
         IFNULL(SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR'), SPACE(0)) AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
-        IFNULL(SF_GET_DATE_F(A.STATUS_DT, 'YYYY', ''), SPACE(0)) AS CONTROL_STATUS_DT, <!-- 주문관리 상태확정일 -->
+        IFNULL(SF_GET_DATE_F(A.STATUS_DT, 'YYYY', 'M'), SPACE(0)) AS CONTROL_STATUS_DT, <!-- 주문관리 상태확정일 -->
         A.EST_SEQ, <!-- 견적일련번호 -->
         IFNULL(A.PRICE_CONFIRM, SPACE(0)) AS PRICE_CONFIRM, <!-- 단가확인 -->
         IFNULL(SF_GET_CODE_NM(1017, PRICE_CONFIRM, 'KR'), SPACE(0)) AS PRICE_CONFIRM_NM, <!-- 단가확인 -->

@@ -129,7 +129,7 @@
             INSERT_DT, INSERT_ID
         )
         SELECT
-            NEXTVAL(SEQ_MAIL),  REPLACE(REPLACE(TEMPLATE_TITLE, '%CURRENT_TIME%', NOW()), '%COMP_CD%', SF_GET_COMP_NM(#{COMP_CD})),  REPLACE(#{EMAIL_CONTENT_TXT}, 'undefined', SPACE(0)),
+            NEXTVAL(SEQ_MAIL),  REPLACE(REPLACE(REPLACE(TEMPLATE_TITLE, '%CURRENT_TIME%', NOW()), '%COMP_CD%', SF_GET_COMP_NM(#{COMP_CD})), '%ROW_NUM%', #{ROW_CNT}),  REPLACE(#{EMAIL_CONTENT_TXT}, 'undefined', SPACE(0)),
             SF_GET_COMP_NM(#{COMP_CD}), SEND_EMAIL,
             <choose>
                 <when test="RECEPTION != null and RECEPTION != ''">

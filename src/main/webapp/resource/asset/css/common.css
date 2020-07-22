@@ -437,13 +437,19 @@ table.boardList .txtP{color: #7030a0;}
   white-space: nowrap;
 }
 
-.pq-merge-cell div{
+.pq-merge-cell div {
   position: relative;
   top: 50%;
   transform: translateY(-50%);
 }
 
-/** etc file **/
+.pq-grid-norows {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: large !important;
+}
+  /** etc file **/
 .blueFileImageICon { display: inline-block; width: 20px;height: 20px; background: url(../images/common/file_icon_blue.png) no-repeat 0 0;}
 /** png, pdf file **/
 .redFileImageICon { display: inline-block; width: 20px;height: 20px; background: url(../images/common/file_icon_red.png) no-repeat 0 0; }

@@ -178,6 +178,7 @@
             <input type="hidden" name="TEMPLATE_SEQ" id="TEMPLATE_SEQ" value="2">
             <input type="hidden" name="COMP_CD" id="COMP_CD">
             <input type="hidden" name="OUTSIDE_STATUS" id="OUTSIDE_STATUS" value="OST001">
+            <input type="hidden" name="ROW_CNT" id="ROW_CNT">
             <input type="hidden" name="GFILE_SEQ" id="GFILE_SEQ">
             <div class="text-right mg-bottom10">
                 <button class="defaultBtn green" id="REQUEST_OUTSIDE_SAVE_SUBMIT">저장 & 제출</button>
@@ -236,6 +237,7 @@
             <input type="hidden" id="TEMPLATE_SEQ" name="TEMPLATE_SEQ" value="3">
             <input type="hidden" id="COMP_CD" name="COMP_CD" value="">
             <input type="hidden" name="OUTSIDE_STATUS" id="OUTSIDE_STATUS" value="OST002">
+            <input type="hidden" name="ROW_CNT" id="ROW_CNT">
             <input type="hidden" name="GFILE_SEQ" id="GFILE_SEQ">
             <div class="text-right mg-bottom10">
                 <button class="defaultBtn green" id="CANCEL_REQUEST_OUTSIDE_SAVE_SUBMIT">저장 & 제출</button>
@@ -367,7 +369,7 @@
         const colModel = [
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: false},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true},
             {title: 'OUTSIDE_REQUEST_SEQ', dataType: 'integer', dataIndx: 'OUTSIDE_REQUEST_SEQ', hidden: true},
             {title: '담당자', dataType: 'integer', dataIndx: 'ORDER_STAFF_SEQ', hidden: true},
@@ -505,8 +507,7 @@
                         type: 'checkbox',
                         cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
                         render: function (ui) {
-                            if (ui.cellData === 'Y') return '<input type="checkbox" checked>';
-                            return '<input type="checkbox">';
+                            return '<input type="checkbox" checked>';
                         }
                     },
                     {
@@ -933,7 +934,10 @@
                     },
                     {
                         title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
+                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
+                        render: function () {
+                            return '<input type="checkbox" checked>';
+                        }
                     },
                     {
                         title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
@@ -1197,7 +1201,10 @@
                     },
                     {
                         title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN',
-                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
+                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
+                        render: function () {
+                            return '<input type="checkbox" checked>';
+                        }
                     },
                     {
                         title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN',
@@ -2071,8 +2078,9 @@
             let c = a + b;
             $('#REQUEST_OUTSIDE_MAIL_FORM #REQUEST_OUTSIDE_EMAIL_CONTENT_TXT').val(c);
 
-
-            for (let i = 0, STEP1LIST_LENGTH = step1List.length; i < STEP1LIST_LENGTH; i++) {
+            let STEP1LIST_LENGTH = step1List.length;
+            $('#REQUEST_OUTSIDE_MAIL_FORM #ROW_CNT').val(STEP1LIST_LENGTH);
+            for (let i = 0; i < STEP1LIST_LENGTH; i++) {
                 step1List[i].OUTSIDE_COMP_CD = outsideCompCd;
             }
 
@@ -2140,7 +2148,9 @@
 
                 let outsideCompCd = $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM').find('#OUTSIDE_COMP_CD').val();
 
-                for (let i = 0, STEP1LIST_LENGTH = step1List.length; i < STEP1LIST_LENGTH; i++) {
+                let STEP1LIST_LENGTH = step1List.length;
+                $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM #ROW_CNT').val(STEP1LIST_LENGTH);
+                for (let i = 0; i < STEP1LIST_LENGTH; i++) {
                     step1List[i].OUTSIDE_COMP_CD = outsideCompCd;
                 }
 

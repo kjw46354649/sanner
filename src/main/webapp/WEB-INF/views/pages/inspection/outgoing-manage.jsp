@@ -78,7 +78,7 @@
                 <label for="outgoingManageFrozen" class="label_50" style="font-size: 15px;">Fix</label>
                 <select id="outgoingManageFrozen" name="outgoingManageFrozen">
                 </select>
-                <span class="barCode" id="outgoingBarcodeSpan"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="outgoingBarcodeImg"></span>
+                <span class="barCode" id="outgoingBarcodeSpan"><img src="<c:url value="/resource/asset/images/common/img_barcode_long.png"/>" alt="바코드" id="outgoingBarcodeImg"></span>
                 <span class="barCodeTxt">&nbsp;<input type="text" class="wd_270_barcode" name="OUTGOING_BARCODE_NUM" id="OUTGOING_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요"></span>
 <%--                <span class="radio_box">--%>
 <%--                    <input reqcd="R" type="radio" name="OUTGOING_BARCODE_PRINT_TYPE" id="OUTGOING_BARCODE_PRINT_TYPE_1" value="1" checked><label for="OUTGOING_BARCODE_PRINT_TYPE_1">출고</label>--%>
@@ -169,11 +169,11 @@
                 <table class="colStyle">
                     <%--<caption></caption>--%>
                     <colgroup>
-                        <col width="50px">
-                        <col width="50px">
-                        <col width="50px">
-                        <col width="170px">
-                        <col width="100px">
+                        <col style="width: 50px">
+                        <col style="width: 50px">
+                        <col style="width: 50px">
+                        <col style="width: 170px">
+                        <col style="width: 100px">
                     </colgroup>
                     <tr>
                         <th scope="col">주문수량</th>
@@ -220,9 +220,9 @@
                 <table class="colStyle">
                     <%--<caption></caption>--%>
                     <colgroup>
-                        <col width="20%">
-                        <col width="60%">
-                        <col width="20%">
+                        <col style="width: 20%">
+                        <col style="width: 60%">
+                        <col style="width: 20%">
                     </colgroup>
                     <tr>
                         <th scope="col" >원인</th>
@@ -400,11 +400,11 @@
                 <table>
                     <caption></caption>
                     <colgroup>
-                        <col width="90px">
-                        <col width="120px">
-                        <col width="90px">
-                        <col width="40px">
-                        <col width="40px">
+                        <col style="width: 90px">
+                        <col style="width: 120px">
+                        <col style="width: 90px">
+                        <col style="width: 40px">
+                        <col style="width: 40px">
                     </colgroup>
                     <tr>
                         <th>관리번호</th>
@@ -461,11 +461,11 @@
                 <table>
                     <caption></caption>
                     <colgroup>
-                        <col width="90px">
-                        <col width="120px">
-                        <col width="90px">
-                        <col width="40px">
-                        <col width="40px">
+                        <col style="width: 90px">
+                        <col style="width: 120px">
+                        <col style="width: 90px">
+                        <col style="width: 40px">
+                        <col style="width: 40px">
                     </colgroup>
                     <tr>
                         <th>관리번호</th>
@@ -569,7 +569,6 @@
 <!-- 라벨 출력 그리드 버튼 mini popup : E -->
 
 <script>
-    fnConfirm(null, "이미 출하처리 되었습니다", function() {}, null, 2);
     $(function () {
         'use strict';
 
@@ -577,7 +576,7 @@
 
         let outgoingManageGridId01 = $("#outgoing_manage_grid");
         let outgoingManageColModel01;
-        let outgoingManagePostData01;
+        // let outgoingManagePostData01;
 
         /**  리스트 그리드 선언 시작 **/
         $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
@@ -642,19 +641,19 @@
             {
                 title: '수동 입력 버튼', minWidth: 150, width: 150, dataType: 'string', dataIndx: 'BTN',
                 render: function (ui) {
-                    let grid = this;
+                    // let grid = this;
                     // let $cell = grid.getCell(ui);
                     let rowData = ui.rowData;
                     let outBtn = '';
                     let returnBtn = '';
                     let labelBtn = '';
                     // console.log("ui.rowData['PART_NUM']",ui.rowData['PART_NUM']);
-                    if (ui.rowData['PART_NUM'] == undefined) {//part 있음 모든 버튼 안보이게
+                    if (ui.rowData['PART_NUM'] === undefined) {//part 있음 모든 버튼 안보이게
                         // console.log("ui.rowData['OUT_FINISH_DT']",ui.rowData['OUT_FINISH_DT']);
                         // console.log("ui.rowData['ORDER_SEQ']",ui.rowData['ORDER_SEQ']);
                         // console.log("ui.rowData['ORDER_QTY']",ui.rowData['ORDER_QTY']);
-                        if (ui.rowData['ORDER_SEQ'] != undefined) {
-                            if (ui.rowData['OUT_FINISH_DT'] != undefined) {// 출고완료
+                        if (ui.rowData['ORDER_SEQ'] !== undefined) {
+                            if (ui.rowData['OUT_FINISH_DT'] !== undefined) {// 출고완료
                                 outBtn = '<button type=\"button\" class=\"miniBtn gray\" style=\"color: #777 !important;\">출고</button>' + '&nbsp;';
                                 returnBtn = '<button type=\"button\" class=\"miniBtn orange\" id=\"returnBtn\"  data-control_seq=\"' + rowData.CONTROL_SEQ + '\" data-control_detail_seq=\"' + rowData.CONTROL_DETAIL_SEQ + '\" data-order_seq=\"' + rowData.ORDER_SEQ + '\">반품</button>' + '&nbsp;';
                             } else {
@@ -663,26 +662,26 @@
                             }
                         }
 
-                        /*if (ui.rowData['OUT_FINISH_DT'] != undefined){
-                            if (ui.rowData['ORDER_SEQ'] != undefined){
+                        /*if (ui.rowData['OUT_FINISH_DT'] !== undefined){
+                            if (ui.rowData['ORDER_SEQ'] !== undefined){
                                 outBtn = '<button type=\"button\" class=\"miniBtn gray\">출고</button>' + '&nbsp;';
                             }
                         }else{
-                            if (ui.rowData['ORDER_SEQ'] != undefined){
+                            if (ui.rowData['ORDER_SEQ'] !== undefined){
                                 outBtn = '<button type=\"button\" class=\"miniBtn black\" id=\"outBtn\"  data-control_seq=\"'+ rowData.CONTROL_SEQ +'\" data-control_detail_seq=\"'+ rowData.CONTROL_DETAIL_SEQ +'\" data-order_seq=\"'+ rowData.ORDER_SEQ +'\">출고</button>' + '&nbsp;';
                             }
                         }
 
 
-                        if (ui.rowData['ORDER_SEQ'] != undefined){
-                            if (ui.rowData['ORDER_QTY'] != undefined){
+                        if (ui.rowData['ORDER_SEQ'] !== undefined){
+                            if (ui.rowData['ORDER_QTY'] !== undefined){
                                 returnBtn = '<button type=\"button\" class=\"miniBtn blue\" id=\"returnBtn\"  data-control_seq=\"'+ rowData.CONTROL_SEQ +'\" data-control_detail_seq=\"'+ rowData.CONTROL_DETAIL_SEQ +'\" data-order_seq=\"'+ rowData.ORDER_SEQ +'\">반품</button>' + '&nbsp;';
                             }else{
                                 returnBtn = '<button type=\"button\" class=\"miniBtn gray\">반품</button>' + '&nbsp;';
                             }
                         }*/
 
-                        if (ui.rowData['ORDER_SEQ'] != undefined) {
+                        if (ui.rowData['ORDER_SEQ'] !== undefined) {
                             labelBtn = '<button type=\"button\" class=\"miniBtn blue\" id=\"labelBtn\"  data-control_seq=\"' + rowData.CONTROL_SEQ + '\" data-control_detail_seq=\"' + rowData.CONTROL_DETAIL_SEQ + '\" data-order_seq=\"' + rowData.ORDER_SEQ + '\">라벨</button>';
                         }
                     }
@@ -694,7 +693,7 @@
                                   let $cell = grid.getCell(ui);
                                   //let rowData = ui.rowData;
                       alert(1);
-                                  if (ui.rowData['ORDER_SEQ'] != undefined && ui.rowData['ORDER_SEQ'] >0) {
+                                  if (ui.rowData['ORDER_SEQ'] !== undefined && ui.rowData['ORDER_SEQ'] >0) {
                                           $cell.find('#outBtn').bind('click', function(e) {
                                               alert(2);
                                             e.preventDefault();
@@ -805,7 +804,7 @@
             resizable: false,
             trackModel: {on: true},
             colModel: outgoingManageColModel01,
-            load: function (event, ui) {
+            load: function () {
                 let filterOpts = '<option value=\"\">All Fields</option>';
                 let frozenOts = '<option value="0">Selected</option>';
                 this.getColModel().forEach(function (column) {
@@ -841,7 +840,7 @@
                 }
             },
             change: function (event, ui) {
-                if (ui.source == 'edit') {
+                if (ui.source === 'edit') {
 
                     let row = ui.updateList[0].rowData;
                     let newRow = ui.updateList[0].newRow;
@@ -854,7 +853,7 @@
                         'PACKING_CNT': newRow.PACKING_CNT
                     };
                     let parameters = {'url': '/json-manager', 'data': data};
-                    fnPostAjax(function (data, callFunctionParam) {
+                    fnPostAjax(function () {
                         // alert("등록이 완료되었습니다.");
                         $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
                         $("#outgoing_manage_search_btn").trigger("click");
@@ -877,7 +876,7 @@
             }
             /*, cellClick: function (event, ui) {
                  let rowIndx = ui.rowIndx, $grid = this;
-                 if (ui.rowData['ORDER_SEQ'] != undefined && ui.rowData['ORDER_SEQ'] >0) {
+                 if (ui.rowData['ORDER_SEQ'] !== undefined && ui.rowData['ORDER_SEQ'] >0) {
                      if (ui.dataIndx == 'MANUAL_OUT') {
                          fnResetFrom("outgoing_manage_pop_type_1_form");
                          $("#outgoing_manage_pop_type_1_form").find("#CONTROL_SEQ").val(ui.rowData['CONTROL_SEQ']);
@@ -1019,14 +1018,14 @@
             },
             cellClick: function (event, ui) {
                 // let rowIndx = ui.rowIndx, $grid = this;
-                if (ui.rowData['INSPECT_SEQ'] != undefined && ui.rowData['INSPECT_SEQ'] > 0) {
-                    if (ui.dataIndx == 'MANUAL_ACTION') {
+                if (ui.rowData['INSPECT_SEQ'] !== undefined && ui.rowData['INSPECT_SEQ'] > 0) {
+                    if (ui.dataIndx === 'MANUAL_ACTION') {
                         let data = {
                             'queryId': 'inspection.updateOutgoingReturnComplete',
                             'INSPECT_SEQ': ui.rowData['INSPECT_SEQ']
                         };
                         let parameters = {'url': '/json-create', 'data': data};
-                        fnPostAjax(function (data, callFunctionParam) {
+                        fnPostAjax(function () {
                             fnAlert(null, "<spring:message code='com.alert.default.save.success' />");
                             $('#outgoing_manage_return_complete_pop').modal('hide');
                             $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
@@ -1050,7 +1049,7 @@
             $("#outgoing_manage_return_form").find("#queryId").val("inspection.insertOutgoingReturn");
 
             let parameters = {'url': '/json-create', 'data': $("#outgoing_manage_return_form").serialize()};
-            fnPostAjax(function (data, callFunctionParam) {
+            fnPostAjax(function () {
                 alert("등록이 완료되었습니다.");
                 $('#outgoing_manage_return_pop').modal('hide');
             }, parameters, '');
@@ -1085,7 +1084,7 @@
                 'url': '/json-info',
                 'data': $('#outgoing_manage_return_form').serialize()
             };
-            fnPostAjax(function (data, callFunctionParam) {
+            fnPostAjax(function (data) {
                 let dataInfo = data.info;
                 if (dataInfo == null) {
                     alert("해당 데이터가 존재하지 않습니다.");
@@ -1111,7 +1110,7 @@
                         'url': '/json-info',
                         'data': $('#outgoing_manage_return_form').serialize()
                     };
-                    fnPostAjax(function (data, callFunctionParam) {
+                    fnPostAjax(function (data) {
                         let dataInfo = data.info;
                         if (dataInfo == null) {
                         } else {
@@ -1154,7 +1153,7 @@
                 'url': '/json-info',
                 'data': $('#outgoing_manage_pop_type_1_form').serialize()
             };
-            fnPostAjax(function (data, callFunctionParam) {
+            fnPostAjax(function (data) {
                 let dataInfo = data.info;
                 if (dataInfo == null) {
                     alert("해당 데이터가 존재하지 않습니다.");
@@ -1184,7 +1183,7 @@
                 'url': '/json-info',
                 'data': $('#outgoing_manage_pop_label_type_1_form').serialize()
             };
-            fnPostAjax(function (data, callFunctionParam) {
+            fnPostAjax(function (data) {
                 let dataInfo = data.info;
                 if (dataInfo == null) {
                     fnAlert(null, "해당 데이터가 존재하지 않습니다.");
@@ -1207,7 +1206,7 @@
 
             let formData = [];
             formData[0] = $("#outgoing_manage_pop_label_type_1_form").find("#SEL_BARCODE_NUM").val();
-            fnBarcodePrint(function (data, callFunctionParam) {
+            fnBarcodePrint(function (data) {
                 fnAlert(null, data.message);
             }, formData, '');
         });
@@ -1216,7 +1215,7 @@
             $("#outgoing_manage_pop_label_type_1_form").find("#SEL_BARCODE_NUM>option").each(function () {
                 formData.push($(this).val());
             });
-            fnBarcodePrint(function (data, callFunctionParam) {
+            fnBarcodePrint(function (data) {
                 fnAlert(null, data.message);
             }, formData, '');
         });
@@ -1234,7 +1233,7 @@
             g_item_detail_pop_view('', '');
         });
         $("#outgoing_manage_search_btn").on('click', function () {
-            outgoingManageGridId01.pqGrid("option", "dataModel.postData", function (ui) {
+            outgoingManageGridId01.pqGrid("option", "dataModel.postData", function () {
                 return fnFormToJsonArrayData('#outgoing_manage_form');
             });
             outgoingManageGridId01.pqGrid("refreshDataAndView");
@@ -1254,13 +1253,13 @@
             $(this).datepicker({dateFormat: 'yy/mm/dd'});
         });
 
-        $('#outgoing_manage_mini_pop_plus_btn').on('click', function (e) {
+        $('#outgoing_manage_mini_pop_plus_btn').on('click', function () {
             outgoingManageMiniPopCalcQty("PLUS");
         });
-        $('#outgoing_manage_mini_pop_minus_btn').on('click', function (e) {
+        $('#outgoing_manage_mini_pop_minus_btn').on('click', function () {
             outgoingManageMiniPopCalcQty("MINUS");
         });
-        $('#outgoing_manage_mini_pop_all_btn').on('click', function (e) {
+        $('#outgoing_manage_mini_pop_all_btn').on('click', function () {
             let ORIGINAL_NEW_OUT_QTY = $('#outgoing_manage_pop_type_1_form').find('#ORG_NEW_OUT_QTY').val();
 
             $('#outgoing_manage_pop_type_1_form').find('#outgoing_manage_pop_type_1_form_view_2').html("0");
@@ -1278,7 +1277,7 @@
                 if (parseInt(ORIGINAL_NEW_OUT_QTY) > parseInt(NEW_OUT_QTY)) {
                     NEW_OUT_QTY = parseInt(NEW_OUT_QTY) + 1;
                 }
-            } else if (type == "MINUS") {
+            } else if (type === "MINUS") {
                 if (parseInt(NEW_OUT_QTY) > 0) {
                     NEW_OUT_QTY = parseInt(NEW_OUT_QTY) - 1;
                 }
@@ -1288,13 +1287,13 @@
             $('#outgoing_manage_pop_type_1_form').find('#NEW_OUT_QTY_VIEW').val(NEW_OUT_QTY);
             $('#outgoing_manage_pop_type_1_form').find('#NEW_OUT_QTY').val(NEW_OUT_QTY);
         };
-        $('#outgoing_manage_return_pop_plus_btn').on('click', function (e) {
+        $('#outgoing_manage_return_pop_plus_btn').on('click', function () {
             outgoingManageReturnPopCalcQty("PLUS");
         });
-        $('#outgoing_manage_return_pop_minus_btn').on('click', function (e) {
+        $('#outgoing_manage_return_pop_minus_btn').on('click', function () {
             outgoingManageReturnPopCalcQty("MINUS");
         });
-        $('#outgoing_manage_return_pop_all_btn').on('click', function (e) {
+        $('#outgoing_manage_return_pop_all_btn').on('click', function () {
             let ORG_REAL_OUT_QTY = $('#outgoing_manage_return_form').find('#ORG_REAL_OUT_QTY').val();
 
             $('#outgoing_manage_return_form').find('#ERROR_QTY_VIEW').html(ORG_REAL_OUT_QTY);
@@ -1306,11 +1305,11 @@
             let ERROR_QTY = $('#outgoing_manage_return_form').find('#ERROR_QTY').val();
 
             console.log("ERROR_QTY", ERROR_QTY);
-            if (type == "PLUS") {
+            if (type === "PLUS") {
                 if (parseInt(ORG_REAL_OUT_QTY) > parseInt(ERROR_QTY)) {
                     ERROR_QTY = parseInt(ERROR_QTY) + 1;
                 }
-            } else if (type == "MINUS") {
+            } else if (type === "MINUS") {
                 if (parseInt(ERROR_QTY) > 0) {
                     ERROR_QTY = parseInt(ERROR_QTY) - 1;
                 }
@@ -1322,14 +1321,14 @@
         $('#outgoing_manage_mini_pop_save_btn').on('click', function () {
             // validation
 
-            if ($("#outgoing_manage_pop_type_1_form").find("#NEW_OUT_QTY_VIEW").val() == 0) {
+            if ($("#outgoing_manage_pop_type_1_form").find("#NEW_OUT_QTY_VIEW").val() === 0) {
                 alert("출고수량은 1개 이상이어야 합니다.");
 
             } else {
                 $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.insertOutgoingOutType1,inspection.updateOutgoingOutType1After1,inspection.updateOutgoingOutType1After2");
 
                 let parameters = {'url': '/json-manager', 'data': $("#outgoing_manage_pop_type_1_form").serialize()};
-                fnPostAjax(function (data, callFunctionParam) {
+                fnPostAjax(function () {
                     alert("등록이 완료되었습니다.");
                     $('#outgoing_manage_pop_type_1').modal('hide');
                 }, parameters, '');
@@ -1370,7 +1369,7 @@
             };
             let parameters = {'url': '/json-create', 'data': data };
             */
-            if (outgoingManageSelectedRowIndex.length == 0) {
+            if (outgoingManageSelectedRowIndex.length === 0) {
                 alert("출고등록할 항목을 선택하여 주십시오.");
             } else {
                 if (confirm("선택항목을 출고등록 하시겠습니까?")) {
@@ -1384,15 +1383,14 @@
                         'addList': list,
                         'updateList': list
                     };
-                    let QUERY_ID_ARRAY = {
+                    changes.queryIdList = {
                         'insertQueryId': ['inspection.insertOutgoingOutType2'],
                         'updateQueryId': ['inspection.updateOutgoingOutType1After1', 'inspection.updateOutgoingOutType1After2', 'updateOutgoingOutType1After3']
                     };
-                    changes.queryIdList = QUERY_ID_ARRAY;
                     let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
 
 
-                    fnPostAjax(function (data, callFunctionParam) {
+                    fnPostAjax(function () {
                         alert("등록이 완료되었습니다.");
                         fnResetFrom("outgoing_manage_pop_type_1_form");
                         $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
@@ -1419,7 +1417,7 @@
                     };
 
                     let parameter = {'url': '/json-list', 'data': postData};
-                    fnPostAjaxAsync(function (data, callFunctionParam) {
+                    fnPostAjaxAsync(function (data) {
                         for (let i = 0; i < data.list.length; i++) {
                             barcodeList.push(data.list[i].BARCODE_NUM);
                         }
@@ -1428,7 +1426,7 @@
                 let bCodePrintLen = barcodeList.length;
                 if (bCodePrintLen > 0) {
                     if (fnConfirm(null, bCodePrintLen + "건에 대해서 라벨을 출력합니다.\n진행하시겠습니까?")) {
-                        fnBarcodePrint(function (data, callFunctionParam) {
+                        fnBarcodePrint(function (data) {
                             fnAlert(null, data.message);
                         }, barcodeList, '');
                     }
@@ -1458,14 +1456,14 @@
             $('#outgoing_manage_return_form').find("#INSPECT_RESULT").val("");
             $('#outgoing_manage_return_form').find("#ERROR_REASON").val("");
             $('#outgoing_manage_return_form').find("#INSPECT_DESC").val("");
-            if (value == "GRD050") {
+            if (value === "GRD050") {
 
                 $('#outgoing_manage_return_form').find("#INSPECT_RESULT").attr("disabled", true);
                 $('#outgoing_manage_return_form').find("#ERROR_REASON").attr("disabled", true);
                 $('#outgoing_manage_return_form').find("#INSPECT_DESC").attr("readonly", true);
 
 
-            } else if (value == "GRD060") {
+            } else if (value === "GRD060") {
                 $('#outgoing_manage_return_form').find("#INSPECT_RESULT").attr("disabled", false);
                 $('#outgoing_manage_return_form').find("#ERROR_REASON").attr("disabled", false);
                 $('#outgoing_manage_return_form').find("#INSPECT_DESC").attr("readonly", false);
@@ -1498,7 +1496,7 @@
                 //0. 바코드 정보 가져오기
                 let data = {'queryId': barcodesql, 'BARCODE_NUM': barcodeNum};
                 let parameters = {'url': '/json-info', 'data': data};
-                fnPostAjax(function (data, callFunctionParam) {
+                fnPostAjax(function (data) {
                     let dataInfo = data.info;
                     if (dataInfo == null) {
                         fnAlert(null, "해당 바코드가 존재하지 않습니다.");
@@ -1525,7 +1523,7 @@
                             };
                             //let data = {'queryId': 'inspection.insertOutgoingOutType4','BARCODE_NUM': barcodeNum};
                             //let parameters = {'url': '/json-create', 'data': data };
-                            fnPostAjaxAsync(function (data, callFunctionParam) {
+                            fnPostAjaxAsync(function () {
 
                                 //. 모달 띄우기
                                 $('#outgoing_manage_pop_type_label').modal('show');
@@ -1546,7 +1544,7 @@
                                 'url': '/json-info',
                                 'data': $('#outgoing_manage_pop_type_control_form').serialize()
                             };
-                            fnPostAjaxAsync(function (data, callFunctionParam) {
+                            fnPostAjaxAsync(function (data) {
                                 let dataInfo = data.info;
                                 if (dataInfo == null) {
                                     fnAlert(null, "정보가 존재하지 않습니다. " + dataInfo);
@@ -1569,7 +1567,7 @@
                                         'url': '/json-manager',
                                         'data': $('#outgoing_manage_pop_type_control_form').serialize()
                                     };
-                                    fnPostAjax(function (data, callFunctionParam) {
+                                    fnPostAjax(function () {
 
                                         //. 모달 띄우기
                                         $('#outgoing_manage_pop_type_control').modal('show');
@@ -1629,7 +1627,7 @@
 
         });
 
-        $("#outgoingBarcodeSpan").on('click', function (e) {
+        $("#outgoingBarcodeSpan").on('click', function () {
             $("#OUTGOING_BARCODE_NUM").focus();
         });
 
@@ -1651,7 +1649,7 @@
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
 
-        $("#outBtn").on('click', function (e) {
+        $("#outBtn").on('click', function () {
             fnAlert(null, "outBtn");
 
         });
@@ -1690,11 +1688,11 @@
             $('#outgoing_manage_pop_label_type_1').modal('show');
         });
 
-        $("#outgoingManageFilterKeyword").on("keyup", function (e) {
+        $("#outgoingManageFilterKeyword").on("keyup", function () {
             fnFilterHandler(outgoingManageGridId01, 'outgoingManageFilterKeyword', 'outgoingManageFilterCondition', 'outgoingManageFilterColumn');
         });
 
-        $("#outgoingManageFrozen").on('change', function (e) {
+        $("#outgoingManageFrozen").on('change', function () {
             fnFrozenHandler(outgoingManageGridId01, $(this).val());
         });
 
@@ -1717,7 +1715,7 @@
 
                 if (condition == "end") {
                     indx = valUpper.lastIndexOf(txtUpper);
-                    if (indx + txtUpper.length != valUpper.length) {
+                    if (indx + txtUpper.length !== valUpper.length) {
                         indx = -1;
                     }
                 } else if (condition == "contain") {
