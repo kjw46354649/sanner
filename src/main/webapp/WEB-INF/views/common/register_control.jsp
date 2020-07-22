@@ -434,7 +434,7 @@
                         editor: {type: 'textbox', init: dateEditor}
                     },
                     {
-                        title: '납품확인', width: 70, datatype: 'date', dataIndx: 'DELIVERY_DT', format: "yymmdd",
+                        title: '납품확인', width: 70, datatype: 'date', dataIndx: 'DELIVERY_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                         editor: {type: 'textbox', init: dateEditor}
                     }
@@ -533,7 +533,7 @@
             editModel: {clicksToEdit: 1},
             cellSave: function (evt, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {
-                    $orderManagementGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
+                    $orderRegisterGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                 }
             },
             change: function (evt, ui) {
@@ -858,7 +858,7 @@
             for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
                 let rowData = dataList[i];
 
-                if (Object.keys(rowData).length > 2) {
+                if (Object.keys(rowData).length > 10) {
                     requiredCheck(rowData);
                     badCodeCheck(rowData);
                     inputErrorCheck(rowData);
