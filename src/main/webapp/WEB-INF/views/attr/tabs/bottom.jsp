@@ -721,7 +721,7 @@
         commonCadFileAttachPopup.on('hide.bs.modal',function(e) {
             var actionType = $('#common_cad_file_attach_form').find('#actionType').val();
             if(actionType == 'estimate') {          // 견적 도면 등록
-                $("#reloadEstimateTopgrid").trigger("click");
+                $("#estimateRegisterReloadBtn").trigger("click");
             }else if(actionType == 'control' || actionType == 'controlRev') {     // 주문 도면 등록 || 주문 도면 차수 변경
                 $("#CONTROL_MANAGE_SEARCH").trigger("click");
             }else if(actionType == 'inside') {      // 자재 도면 등록

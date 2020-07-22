@@ -775,8 +775,10 @@
             return;
         }else {
             windowImageViewer.focus();
-            $(windowImageViewer.window.document).find("#image_seq").val(imageSeq);
-            windowImageViewer.onImageViewStart();
+            setTimeout(function() {
+                $(windowImageViewer.window.document).find("#image_seq").val(imageSeq);
+                windowImageViewer.onImageViewStart();
+            }, 500);
         }
     }
 

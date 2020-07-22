@@ -825,7 +825,7 @@
 
             $("a[pid='10000102']").trigger("click");
             setTimeout(function(){
-                $("#test").trigger('click');
+                $("#estimateRegisterReloadBtn").trigger('click');
             }, 800)
         });
 
@@ -862,7 +862,7 @@
                         fnPostAjax('',parameters, '');
                         $("a[pid='10000102']").trigger("click");
                         setTimeout(function(){
-                            $("#test").trigger('click');
+                            $("#estimateRegisterReloadBtn").trigger('click');
                         }, 800)
 
                     }, parameters, '');
@@ -949,7 +949,7 @@
 
         $("a[pid='10000102']").trigger("click");
         setTimeout(function(){
-            $("#test").trigger('click');
+            $("#estimateRegisterReloadBtn").trigger('click');
         }, 800)
         event.preventDefault();
     });

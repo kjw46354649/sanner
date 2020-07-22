@@ -185,7 +185,7 @@
     </div>
 </div>
 
-<input type="button" id="test" style="display: none;">
+<input type="button" id="estimateRegisterReloadBtn" style="display: none;">
 <input type="button" id="updateFromControl" style="display: none;">
 <input type="button" id="estimateRegisterFileUpload" style="display: none;">
 <form id="estimate_register_hidden_form" method="POST">
@@ -630,11 +630,11 @@
                             'queryId': 'common.deleteFileKey',
                             'FILE_SEQ': rowData.FILE_SEQ
                         };
-                        let parameters = {'url': '/json-remove', 'data': parameter};
-                        fnPostAjaxAsync(function(data, callFunctionParam){
-                            let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': rowData.GFILE_SEQ };
-                            fnRequestGridData(estimateRegisterFileGrid, postData);
-                        }, parameters, '');
+                        // let parameters = {'url': '/json-remove', 'data': parameter};
+                        // fnPostAjaxAsync(function(data, callFunctionParam){
+                        //     let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': rowData.GFILE_SEQ };
+                        //     fnRequestGridData(estimateRegisterFileGrid, postData);
+                        // }, parameters, '');
                     });
                 }
             }
@@ -925,6 +925,9 @@
                     }
                 }
             },
+            cellClick: function (event, ui) {
+                if(ui.rowData.IMG_GFILE_SEQ && typeof(windowImageViewer) != 'undefined' && !windowImageViewer.closed) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+            },
             cellSave: function (evt, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {
                     estimateRegisterTopGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
@@ -989,10 +992,12 @@
         });
 
         function estimateRegisterSaveCallBack(response, callMethodParam){
+            fnAlert(null,"저장 되었습니다.");
             estimateRegisterReloadPageData();
         };
 
         function estimateRegisterReloadPageData(){
+
             let EST_SEQ = $("#estimate_version_up_sequence_form #hidden_est_seq").val();
             let postData = { 'queryId': 'estimate.selectEstimateRegisterMaster', 'EST_SEQ': EST_SEQ };
 
@@ -1044,13 +1049,12 @@
             }, parameter, '');
         };
 
-        $(document).on('click', '#test', function(){
+        $(document).on('click', '#estimateRegisterReloadBtn', function(){
             estimateRegisterReloadPageData();
         });
 
         function fnEstimateRegisterSave() {
             $("#estimate_register_info_form #queryId").val('selectEstimateNextSequence');
-
             let parameters = {'url': '/json-list', 'data': $("#estimate_register_info_form").serialize()};
             let EST_SEQ = $("#estimate_register_info_form #EST_SEQ").val();
             fnPostAjaxAsync(function (data, callFunctionParam) {
@@ -1079,7 +1083,6 @@
                     'data': $("#estimate_register_info_form").serialize()
                 };
                 fnPostAjaxAsync(estimateRegisterSaveCallBack, parameters, '');
-
             }, parameters, '');
         }
 
@@ -1173,7 +1176,6 @@
 
         $("#btnEstimateRegisterDelete").on('click', function(){
             let USER_MASTER_QUERY_ID = 'deleteEstimateDetail';
-
             fnDeletePQGrid(estimateRegisterTopGrid, estimateRegisterSelectedRowIndex, USER_MASTER_QUERY_ID);
         });
 
@@ -1221,7 +1223,7 @@
         $btnEstimateRegisterDrawAdd.click(function () {
             var gridInstance = estimateRegisterTopGrid.pqGrid('getInstance').grid;
             if (gridInstance.isDirty()) {
-                alert("변경된 사항이 존재합니다. 저장 후 등록 해 주세요.");
+                fnAlert(null,"변경된 사항이 존재합니다. 저장 후 등록 해 주세요.");
                 return false;
             }
             callCadDrawingUploadPopup('estimate', 'estimate.manageEstimateCadFiles');
@@ -1245,29 +1247,13 @@
                 let info = data.info;
 
                 $("#estimate_register_info_form #ORDER_COMP_CD").val(info.ORDER_COMP_CD);
-                // $("#estimate_register_info_form #EST_TITLE").val(info.EST_TITLE);
                 $("#estimate_register_info_form #ORDER_STAFF_SEQ").val(info.ORDER_STAFF_SEQ);
                 $("#estimate_register_info_form #COMP_CD").val(info.COMP_CD);
-                // $("#estimate_register_info_form #EST_USER_ID").val(info.EST_USER_ID);
-                // $("#estimate_register_info_form #EST_NUM").val(info.EST_NUM + ' (' + info.EST_VER + ')');
                 $("#estimate_register_info_form #DTL_CNT").val(info.DTL_CNT);
                 $("#estimate_register_info_form #DTL_AMOUNT").val(info.DTL_AMOUNT);
                 $("#estimate_register_info_form #INSERT_DT").val(info.INSERT_DT);
-                // $("#estimate_register_info_form #SEND_DT").val(info.SEND_DT);
-                //$("#EMAIL_CONTENT_TXT").val(list.EMAIL_CONTENT);
                 context = info.EMAIL_CONTENT;
                 CKEDITOR.instances.EMAIL_CONTENT_TXT.setData(info.EMAIL_CONTENT);
-                // $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
-                //
-                // $("#common_excel_form #paramData").val(EST_SEQ);
-
-
-                //
-                // postData = { 'queryId': 'estimate.selectEstimateReceiverList', 'EST_SEQ': EST_SEQ };
-                // fnRequestGridData(estimateRegisterBotGrid, postData);
-
-                // btnDisabled(list.EST_STATUS);
-
                 btnDisabled();
             }, parameter, '');
 
