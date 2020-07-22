@@ -569,6 +569,7 @@
 <!-- 라벨 출력 그리드 버튼 mini popup : E -->
 
 <script>
+    fnConfirm(null, "이미 출하처리 되었습니다", function() {}, null, 2);
     $(function () {
         'use strict';
 
@@ -1207,7 +1208,7 @@
             let formData = [];
             formData[0] = $("#outgoing_manage_pop_label_type_1_form").find("#SEL_BARCODE_NUM").val();
             fnBarcodePrint(function (data, callFunctionParam) {
-                alert(data.message);
+                fnAlert(null, data.message);
             }, formData, '');
         });
         $("#outgoing_manage_pop_label_type_1_form_print_all").on('click', function () {
@@ -1216,7 +1217,7 @@
                 formData.push($(this).val());
             });
             fnBarcodePrint(function (data, callFunctionParam) {
-                alert(data.message);
+                fnAlert(null, data.message);
             }, formData, '');
         });
         $("#outgoing_manage_detail_btn").on('click', function () {
@@ -1428,7 +1429,7 @@
                 if (bCodePrintLen > 0) {
                     if (fnConfirm(null, bCodePrintLen + "건에 대해서 라벨을 출력합니다.\n진행하시겠습니까?")) {
                         fnBarcodePrint(function (data, callFunctionParam) {
-                            alert(data.message);
+                            fnAlert(null, data.message);
                         }, barcodeList, '');
                     }
 
@@ -1502,7 +1503,10 @@
                     if (dataInfo == null) {
                         fnAlert(null, "해당 바코드가 존재하지 않습니다.");
                         $("#OUTGOING_BARCODE_NUM").val("");
-
+                        return false;
+                    } else if (dataInfo.OUT_CNT > 0) {
+                        fnConfirm(null, "이미 출하처리 되었습니다", function() {}, null, 2);
+                        return false;
                     } else {
 
                         if (barcodeType == "L") {
@@ -1547,7 +1551,10 @@
                                 if (dataInfo == null) {
                                     fnAlert(null, "정보가 존재하지 않습니다. " + dataInfo);
                                     $("#OUTGOING_BARCODE_NUM").val("");
-
+                                    return false;
+                                } else if (dataInfo.OUT_CNT > 0) {
+                                    fnConfirm(null, "이미 출하처리 되었습니다", function() {}, null, 2);
+                                    return false;
                                 } else {
                                     fnJsonDataToForm("outgoing_manage_pop_type_control_form", dataInfo);
 
@@ -1608,7 +1615,7 @@
             //         let formData = new Array();
             //         formData[0] = fnBarcodeKo2En(this.value);
             //         fnBarcodePrint(function (data, callFunctionParam) {
-            //             alert(data.message);
+            //             fnAlert(null, data.message);
             //             $("#OUTGOING_BARCODE_NUM").val("");
             //         }, formData, '');
             //     }
