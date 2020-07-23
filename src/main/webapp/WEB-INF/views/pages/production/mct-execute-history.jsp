@@ -344,7 +344,7 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="EQUIP_SEQ">NC NO.</label>
                             <select class="wd_200" name="EQUIP_SEQ" id="EQUIP_SEQ">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
@@ -377,7 +377,7 @@
 <%--                        <span class="slt_wrap">--%>
 <%--                            <label class="label_100" for="CLOSE_VER">규격</label>--%>
 <%--                            <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">--%>
-<%--                                <option value="">All</option>--%>
+<%--                                <option value=""><spring:message code="com.form.top.all.option"/></option>--%>
 <%--                            </select>--%>
 <%--                        </span>--%>
 <%--                        <span class="gubun"></span>--%>
@@ -394,7 +394,7 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="WORK_USER_ID">작업자</label>
                             <select class="wd_200" name="WORK_USER_ID" id="WORK_USER_ID">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                     </li>

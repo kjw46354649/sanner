@@ -27,18 +27,18 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="ORDER_COMP_CD">발주사</label>
                             <select class="label_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="발주사">
-                                <option value="" selected="selected">ALL</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="ORDER_NUM">발주번호</label>
-                            <input type="text" class="label_200"name="ORDER_NUM" id="ORDER_NUM" title="발주번호">
+                            <input type="text" class="label_200" name="ORDER_NUM" id="ORDER_NUM" title="발주번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="DRAWING_NUM">도면번호</label>
-                            <input type="text" class="label_200"name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
+                            <input type="text" class="label_200" name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap right_float">
@@ -49,7 +49,7 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="COMP_CD">사업자구분</label>
                             <select class="label_200" name="COMP_CD" id="COMP_CD" title="사업자구분">
-                                <option value="">ALL</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
@@ -61,14 +61,14 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="RBRUR">규격</label>
                             <select class="label_200" name="RBRUR" id="RBRUR" title="규격">
-                                <option value="" selected="selected">ALL</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="MATERIAL_KIND">소재형태</label>
                             <select class="label_200" name="MATERIAL_KIND" id="MATERIAL_KIND" title="소재형태">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1029}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -97,14 +97,14 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="UNIT_FINAL_AMT">단가</label>
                             <select class="label_200" name="UNIT_FINAL_AMT" id="UNIT_FINAL_AMT" title="단가">
-                                <option value="" selected="selected">ALL</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="WORK_TYPE">작업형태</label>
                             <select class="label_200" name="WORK_TYPE" id="WORK_TYPE" title="작업형태">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1033}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>

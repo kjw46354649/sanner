@@ -367,7 +367,7 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="FACTORY_CLASSIFY">공장 구분</label>
                             <select class="wd_200" name="FACTORY_CLASSIFY" id="FACTORY_CLASSIFY" title="공장구분">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1014}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>

@@ -22,11 +22,11 @@
                             <span class="slt_wrap mg-left10">
                                 <label class="label_50" for="ORDER_COMP_CD">발주처</label>
                                 <select class="wd_100" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                                    <option value="">All</option>
+                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 </select>
                                 <label class="label_50" for="ORDER_STAFF_SEQ">담당자</label>
                                 <select class="wd_100 mg-left10" name="ORDER_STAFF_SEQ" id="ORDER_STAFF_SEQ">
-                                    <option value="">All</option>
+                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 </select>
                             </span>
                         </form>

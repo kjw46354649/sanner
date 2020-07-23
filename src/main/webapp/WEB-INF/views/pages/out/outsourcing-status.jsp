@@ -22,21 +22,21 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="COMP_CD">사업자</label>
                             <select class="wd_200" name="COMP_CD" id="COMP_CD">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="OUTSIDE_COMP_CD">외주업체</label>
                             <select class="wd_200" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="CLOSE_VER">차수</label>
                             <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <option value="1">1차</option>
                                 <option value="2">2차</option>
                                 <option value="3">3차</option>
@@ -80,14 +80,14 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="COMP_CD">사업자</label>
                             <select class="wd_200" name="COMP_CD" id="COMP_CD">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="OUTSIDE_COMP_CD">외주업체</label>
                             <select class="wd_200" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>

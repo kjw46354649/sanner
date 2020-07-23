@@ -41,13 +41,13 @@
                                             <span>
                                                 <label class="label_50" for="CONFIRM_ORDER_CORPORATION">발주처</label>
                                                 <select class="wd_100" name="ORDER_COMP_CD" id="CONFIRM_ORDER_CORPORATION">
-                                                    <option value="">ALL</option>
+                                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
                                                 </select>
                                             </span>
                                             <span>
                                                 <label class="label_50" for="CONFIRM_ORDER_MATERIAL">소재</label>
                                                 <select class="wd_100" name="MATERIAL_TYPE" id="CONFIRM_ORDER_MATERIAL">
-                                                    <option value="">ALL</option>
+                                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
                                                     <c:forEach var="code" items="${HighCode.H_1027}">
                                                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                                     </c:forEach>
@@ -79,7 +79,7 @@
                                             <span>
                                                 <label class="label_50" for="PROCESS_CONFIRM_CORPORATION">발주처</label>
                                                 <select class="wd_100" name="ORDER_COMP_CD" id="PROCESS_CONFIRM_CORPORATION">
-                                                    <option value="">ALL</option>
+                                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
                                                     <c:forEach var="code" items="${HighCode.H_1007}">
                                                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                                     </c:forEach>
@@ -88,7 +88,7 @@
                                                 <span>
                                                 <label class="label_50" for="PROCESS_CONFIRM_MATERIAL">소재</label>
                                                 <select class="wd_100" name="MATERIAL_TYPE" id="PROCESS_CONFIRM_MATERIAL">
-                                                    <option value=""> ALL</option>
+                                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
                                                     <c:forEach var="code" items="${HighCode.H_1027}">
                                                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                                     </c:forEach>
@@ -116,13 +116,13 @@
                                             <span>
                                                 <label class="label_50" for="OUTSIDE_CORPORATION">발주처</label>
                                                 <select class="wd_100" name="ORDER_COMP_CD" id="OUTSIDE_CORPORATION">
-                                                    <option value="">ALL</option>
+                                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
                                                 </select>
                                             </span>
                                             <span>
                                                 <label class="label_50" for="OUTSIDE_SUBCONTRACTOR">외주업체</label>
                                                 <select class="wd_100" name="OUTSIDE_COMP_CD" id="OUTSIDE_SUBCONTRACTOR">
-                                                    <option value="">ALL</option>
+                                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
                                                 </select>
                                             </span>
                                         </div>
@@ -147,13 +147,13 @@
                                             <span>
                                                 <label class="label_50" for="PROCESS_COMPLETE_CORPORATION">발주처</label>
                                                 <select class="wd_100" name="ORDER_COMP_CD" id="PROCESS_COMPLETE_CORPORATION">
-                                                    <option value="">ALL</option>
+                                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
                                                 </select>
                                             </span>
                                             <span>
                                                 <label class="label_50" for="PROCESS_COMPLETE_SUBCONTRACTOR">외주업체</label>
                                                 <select class="wd_100" name="OUTSIDE_COMP_CD" id="PROCESS_COMPLETE_SUBCONTRACTOR">
-                                                    <option value="">ALL</option>
+                                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
                                                 </select>
                                             </span>
                                         </div>

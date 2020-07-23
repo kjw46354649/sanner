@@ -22,14 +22,14 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="COMP_CD">사업자</label>
                             <select class="wd_150" name="COMP_CD" id="COMP_CD">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="ORDER_COMP_CD">발주처</label>
                             <select class="wd_150" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
@@ -52,14 +52,14 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="COMP_CD">사업자</label>
                             <select class="wd_150" name="COMP_CD" id="COMP_CD">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="ORDER_COMP_CD">발주사</label>
                             <select class="wd_150" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>

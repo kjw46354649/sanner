@@ -22,14 +22,14 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="COMP_CD">사업자</label>
                             <select class="wd_200" name="COMP_CD" id="COMP_CD">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="ORDER_COMP_CD">발주사</label>
                             <select class="wd_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
@@ -58,14 +58,14 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="OUTSIDE_COMP_CD">외주업체</label>
                             <select class="wd_200" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100">외주발주상태</label>
                             <label for="OUTSIDE_STATUS"></label><select class="wd_200" name="OUTSIDE_STATUS" id="OUTSIDE_STATUS">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1031}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -93,7 +93,7 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="WORK_TYPE">작업구분</label>
                             <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1013}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -103,7 +103,7 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="WORK_TYPE">품질현황</label>
                             <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1040}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>

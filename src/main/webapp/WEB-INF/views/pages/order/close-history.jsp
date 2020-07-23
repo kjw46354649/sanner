@@ -27,7 +27,7 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="ORDER_COMP_CD">발주사</label>
                             <select class="wd_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="발주사">
-                                <option value="" selected="selected">ALL</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
@@ -45,7 +45,7 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="COMP_CD">사업자구분</label>
                             <select class="wd_200" name="COMP_CD" id="COMP_CD" title="사업자구분">
-                                <option value="">ALL</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
@@ -57,7 +57,7 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="RBRUR">규격</label>
                             <select class="wd_200" name="RBRUR" id="RBRUR" title="규격">
-                                <option value="" selected="selected">ALL</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
@@ -70,7 +70,7 @@
                         <div class="slt_wrap">
                             <label class="label_100" for="QUALITY_SEQ">품질Seq.</label>
                             <select class="wd_200" name="QUALITY_SEQ" id="QUALITY_SEQ">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </div>
                         <span class="gubun"></span>
