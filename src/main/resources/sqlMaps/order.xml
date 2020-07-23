@@ -362,6 +362,7 @@
             SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM, <!-- 발주처 -->
             X.CLOSE_MONTH, <!-- 마감월 -->
             DATE_FORMAT(STR_TO_DATE(X.CLOSE_MONTH, '%Y%m'), '%Y.%m월') AS CLOSE_MONTH_TRAN, <!-- 마감월 -->
+            COUNT(*) AS CNT, <!-- 품수 -->
             X.CLOSE_VER, <!-- 차수 -->
             CONCAT(X.CLOSE_VER, '차') AS CLOSE_VER_TRAN, <!-- 차수 -->
             SUM(X.CONTROL_PART_QTY) AS CONTROL_PART_QTY, <!-- 수량 -->
@@ -455,7 +456,7 @@
             X.COMP_CD,
             X.ORDER_COMP_CD,
             X.CLOSE_MONTH,
-            X.CLOSE_VER DESC
+            X.CLOSE_VER
     </select>
 
     <select id="selectControlCloseCancelLeftList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -510,6 +511,7 @@
             DATE_FORMAT(STR_TO_DATE(Y.CLOSE_MONTH, '%Y%m'), '%Y.%m월') AS CLOSE_MONTH_TRAN,
             Y.CLOSE_VER,
             CONCAT(Y.CLOSE_VER, '차') AS CLOSE_VER_TRAN,
+            COUNT(*) AS CNT, <!-- 품수 -->
             Y.UNIT_FINAL_AMT,
             Y.CONTROL_PART_QTY,
             IF(Y.CONTROL_PART_QTY > 0, CONCAT(CAST(Y.CONTROL_PART_QTY AS CHAR), '건'), '-') AS CONTROL_PART_QTY_TRAN,
@@ -586,7 +588,7 @@
                                                                                     GROUP BY COMP_CD, CLOSE_MONTH, ORDER_COMP_CD))
             GROUP BY A.COMP_CD, A.ORDER_COMP_CD, A.CLOSE_MONTH, A.CLOSE_VER
         ) Y
-        ORDER BY Y.COMP_CD, Y.ORDER_COMP_CD, Y.CLOSE_MONTH, Y.CLOSE_VER DESC
+        ORDER BY Y.COMP_CD, Y.ORDER_COMP_CD, Y.CLOSE_MONTH, Y.CLOSE_VER
     </select>
 
     <insert id="createMonthClose" parameterType="java.util.HashMap" >
@@ -1485,9 +1487,12 @@
         SELECT
             ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.PART_NUM) AS ROW_NUM,
             <include refid="control"/>,
-            <include refid="controlPart"/>
+            <include refid="controlPart"/>,
+            D.POP_POSITION_NM AS LAST_POP_POSITION
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            LEFT OUTER JOIN TBL_POP_VIEW D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+                AND D.POP_VSEQ = (SELECT MAX(X.POP_VSEQ) FROM TBL_POP_VIEW X WHERE X.CONTROL_SEQ = D.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ)
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001'
             AND B.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO010', 'PRO011', 'PRO012', 'PRO013', 'PRO014', 'PRO015')
@@ -1533,10 +1538,13 @@
             ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.PART_NUM) AS ROW_NUM,
             <include refid="control"/>,
             <include refid="controlPart"/>,
-            SF_GET_CODE_NM(1040, C.INSPECT_GRADE, 'KR') AS INSPECT_GRADE_NM
+            SF_GET_CODE_NM(1040, C.INSPECT_GRADE, 'KR') AS INSPECT_GRADE_NM,
+            D.POP_POSITION_NM AS LAST_POP_POSITION
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             LEFT OUTER JOIN TBL_INSPECT C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_POP_VIEW D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+                AND D.POP_VSEQ = (SELECT MAX(X.POP_VSEQ) FROM TBL_POP_VIEW X WHERE X.CONTROL_SEQ = D.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ)
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001'
             AND B.PART_STATUS = 'PRO009'
@@ -2376,7 +2384,7 @@
     <select id="businessOutgoingList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER() OVER() AS ROW_NUM,
-            A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ,
+            A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.IMG_GFILE_SEQ,
             CASE WHEN IFNULL(A.EMERGENCY_YN, 'N') = 'Y' THEN '긴' ELSE SPACE(0) END EMERGENCY_YN_NM,
             A.ORDER_COMP_CD, SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM,
             DATE_FORMAT(STR_TO_DATE(C.ORDER_DUE_DT, '%Y%m%d'), '%m-%d') as ORDER_DUE_DT,
@@ -2384,7 +2392,7 @@
             A.CONTROL_NUM, C.ORDER_QTY, C.ORDER_NUM,
             SF_GET_CODE_NM('1013', B.PART_STATUS, 'EN') AS PART_STATUS,
             D.POP_POSITION_NM AS LAST_POP_POSITION,
-            G.INSPECT_GRADE, F.USER_NM, H.STAFF_NM
+            G.INSPECT_GRADE, jmes.SF_GET_CODE_NM('1040', H.INSPECT_GRADE, 'KR') AS INSPECT_GRADE_NM, <!-- 등급 --> F.USER_NM, H.STAFF_NM
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_NUM IS NULL
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ

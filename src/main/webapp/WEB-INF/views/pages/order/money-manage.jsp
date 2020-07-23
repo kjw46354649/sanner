@@ -22,14 +22,14 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="COMP_CD">사업자</label>
                             <select class="wd_150" name="COMP_CD" id="COMP_CD">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="ORDER_COMP_CD">발주처</label>
                             <select class="wd_150" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
@@ -52,14 +52,14 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="COMP_CD">사업자</label>
                             <select class="wd_150" name="COMP_CD" id="COMP_CD">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="ORDER_COMP_CD">발주사</label>
                             <select class="wd_150" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
@@ -225,12 +225,12 @@
 
         let moneyManageStatusModel = [
             {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
-            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '조회년도', dataType: 'string', dataIndx: 'CLOSE_YEAR', hidden: true},
+            {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
+            {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true},
+            {title: '조회년도', dataIndx: 'CLOSE_YEAR', hidden: true},
             {title: 'No.', minWidth: 30, width: 30, align: 'right', dataType: 'integer', dataIndx: 'ROW_NUM'},
-            {title: '사업자', minWidth: 30, width: 120, dataType: 'string', dataIndx: 'COMP_CD_NM'},
-            {title: '발주처', minWidth: 30, width: 200, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+            {title: '사업자', minWidth: 30, width: 120, dataIndx: 'COMP_CD_NM'},
+            {title: '발주처', minWidth: 30, width: 200, dataIndx: 'ORDER_COMP_NM'},
             {title: '2020년 <BR>매출현황', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'SALE_AMT',
                 summary: {
                     type: "sum",
@@ -271,7 +271,7 @@
                     edit: true
                 },
             },
-            {title: '비고', dataType: 'string', align: 'left', minWidth: 30, width: 350, dataIndx: 'NOTE', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
+            {title: '비고', align: 'left', minWidth: 30, width: 350, dataIndx: 'NOTE', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
         ];
 
         //calculate sum of 3rd and 4th column.
@@ -338,16 +338,16 @@
 
         let moneySalesMonthModel = [
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
-            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '매출년월', dataType: 'string', dataIndx: 'CLOSE_MONTH_NM'},
+            {title: '사업자', dataIndx: 'COMP_NM'},
+            {title: '발주처', dataIndx: 'ORDER_COMP_NM'},
+            {title: '매출년월', dataIndx: 'CLOSE_MONTH_NM'},
             {title: '매출금액', dataIndx: 'ORDER_AMT', halign: 'center', align: 'right', dataType: 'integer', format: '#,###'},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', editable: true}
+            {title: '비고', dataIndx: 'NOTE', editable: true}
         ];
 
         let moneyReceiveStatusModel = [
             {title: 'DEPOSIT_SEQ', dataType: 'integer', dataIndx: 'DEPOSIT_SEQ', hidden: true},
-            {title: '사업자 구분', clsHead: 'display_none', width: 70, dataType: 'string', dataIndx: 'COMP_CD', editable: true,
+            {title: '사업자 구분', clsHead: 'display_none', width: 70, dataIndx: 'COMP_CD', editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: MONEY_BUSINESS_COMPANY},
                 styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 render: function (ui) {
@@ -367,7 +367,7 @@
                     }
                 }
             },
-            {title: '발주업체', clsHead: 'display_none', dataType: 'string', dataIndx: 'ORDER_COMP_CD', editable: true,
+            {title: '발주업체', clsHead: 'display_none', dataIndx: 'ORDER_COMP_CD', editable: true,
                 styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: MONEY_ORDER_COMPANY},
                 render: function (ui) {
@@ -392,7 +392,7 @@
             },
             {title: '입금액', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, dataIndx: 'DEPOSIT_AMT',
                 halign: 'center', align: 'right', dataType: 'integer', format: '#,###'},
-            {title: '종류', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, dataIndx: 'DEPOSIT_TYPE', editable: true,
+            {title: '종류', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, dataIndx: 'DEPOSIT_TYPE', editable: true,
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -417,7 +417,7 @@
                     }
                 }
             },
-            {title: '만기', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, dataIndx: 'DUE_DATE', dataType: 'string',
+            {title: '만기', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, dataIndx: 'DUE_DATE',
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
@@ -448,7 +448,7 @@
                     return rowData === undefined ? true : rowData.DEPOSIT_TYPE !== '1';
                 },
             },
-            {title: '비고', dataType: 'string', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, dataIndx: 'NOTE', editable: true}
+            {title: '비고', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, dataIndx: 'NOTE', editable: true}
         ];
 
         /** 상세 수금 현환 **/
