@@ -192,7 +192,7 @@
             },
             {
                 title: '긴<br>급', minWidth: 30, dataIndx: 'EMERGENCY_YN',
-                styleHead: {'font-weight': '800', 'color': 'red'},
+                styleHead: {'font-weight': 'bold', 'color': 'red'},
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -666,6 +666,10 @@
                 }, parameters, '');
             }
         };
+
+        let BBEEEEEEP = function () {
+
+        };
         /* function */
 
         $('#CONFIRM_ORDER_SEARCH_FORM').on('change', function() {
@@ -742,6 +746,12 @@
             if (e.keyCode === 13) {
                 let barcodeNum = fnBarcodeKo2En(this.value);
 
+                if (!(windowImageViewer === undefined || windowImageViewer.closed)) {
+                    let rowData = selectedGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex});
+
+                    callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                }
+
                 if(isNotBarcodeValid(barcodeNum)) {
                     this.value = '';
                     return false;
@@ -752,6 +762,9 @@
                 fnPostAjax(function (data) {
                     let dataInfo = data.info;
 
+                    if (!(windowImageViewer === undefined || windowImageViewer.closed)) {
+                        callWindowImageViewer(dataInfo.IMG_GFILE_SEQ);
+                    }
                     updatePartStatus(dataInfo, 'PRO002');
                 }, parameters, '');
 
@@ -765,9 +778,11 @@
 
         /** 도면 보기 팝업 호출 */
         $('#PROCESS_CONFIRM_DRAWING_VIEW').on('click', function () {
-            let rowData = selectedGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex});
+            if (selectedGrid !== undefined && selectedRowIndex.length !== 0) {
+                let rowData = selectedGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex});
 
-            callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+            }
         });
 
         $('#processConfirmBarcodeSpan').on('click', function () {

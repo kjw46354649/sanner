@@ -40,14 +40,14 @@
                     <div id="business_status_calendar"></div>
                     <div class="">
                         <div class="left_float left-Warp">
-                            <div class="left_float"><h2>긴급주문 목록</h2></div>
+                            <div class="left_float"><h2 style="color: red">긴급주문 목록</h2></div>
                             <div class="left_float" id="business_emergency_grid"></div>
                             <div class="right_float">
                                 전체 조회 건수 (Total : <span id="business_emergency_records" style="color: #00b3ee">0</span>)
                             </div>
                         </div>
                         <div class="left_float right-Warp" style="padding-left:5px;">
-                            <div class="left_float"><h2>납기지연 목록</h2></div>
+                            <div class="left_float"><h2 style="color: red">납기지연 목록</h2></div>
                             <div class="left_float" id="business_over_order_grid"></div>
                             <div class="right_float">
                                 전체 조회 건수 (Total : <span id="business_over_total_records" style="color: #00b3ee">0</span>)
@@ -223,31 +223,45 @@
         });
 
         let businessStatusColModel = [
-            {title: '긴', dataType: 'string', dataIndx: 'EMERGENCY_YN_NM', width: 40,},
-            {title: '중', dataType: 'string', dataIndx: '', width: 40,},
-            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 80},
-            {title: '납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', width: 50},
-            {title: '출고', dataType: 'string', dataIndx: 'DELIVERY_DT', width: 50},
-            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+            {dataIndx: 'IMG_GFILE_SEQ', hidden: true},
+            {title: '긴', dataIndx: 'EMERGENCY_YN_NM', minWidth: 30, styleHead: {'color': 'red'}},
+            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: '10%'},
+            {title: '납기', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'ORDER_DUE_DT'},
+            {title: '출고', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'DELIVERY_DT'},
+            {title: '', align: 'center', minWidth: 30,
                 render: function (ui) {
-                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
-                    return '';
+                    if (ui.rowData.CONTROL_NUM)
+                        return '<span  class="doubleFilesIcon" name="detailView" style="cursor: pointer"></span>';
                 },
-                postRender: function(ui) {
+                postRender: function (ui) {
                     let grid = this,
                         $cell = grid.getCell(ui);
-                    $cell.find("#detailView").bind("click", function () {
-                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                    $cell.find('[name=detailView]').bind("click", function () {
+                        let rowData = ui.rowData;
+                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ);
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 150},
-            {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', width: 50},
-            {title: '발주번호', dataType: 'string', dataIndx: 'ORDER_NUM', width: 120},
-            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', width: 80},
-            {title: '현재위치', dataType: 'string', dataIndx: 'LAST_POP_POSITION', width: 80},
-            {title: '검사', dataType: 'string', dataIndx: 'INSPECT_GRADE', width: 30},
-            {title: '담당자', dataType: 'string', dataIndx: 'STAFF_NM', width: 80}
+            {title: '관리번호', dataIndx: 'CONTROL_NUM', width: 180},
+            {
+                title: '', minWidth: 30, dataIndx: 'DRAWING_NUM_BUTTON', styleHead: {'background': '#a9d3f5'},
+                render: function (ui) {
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" name="imageView" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('[name=imageView]').bind('click', function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
+            {title: '수량', dataIndx: 'ORDER_QTY', minWidth: 40},
+            {title: '발주번호', dataIndx: 'ORDER_NUM', width: 120},
+            {title: '진행상태', dataIndx: 'PART_STATUS', width: '10%'},
+            {title: '현재위치', dataIndx: 'LAST_POP_POSITION', width: 80},
+            {title: '검사', dataIndx: 'INSPECT_GRADE_NM', minWidth: 30}
         ];
 
         let businessStatusObj = {
@@ -276,10 +290,12 @@
         $businessOutgoingListGrid = $('#' + businessOutgoingListGridId).pqGrid(businessStatusObj);
 
         let businessEmergencyColModel = [
-            {title: '납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', width: 50},
-            {title: '출고', dataType: 'string', dataIndx: 'OUT_FINISH_DT', width: 50},
-            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 80},
-            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+            {dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
+            {dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+            {title: '납기', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'INNER_DUE_DT'},
+            {title: '출고', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'OUT_FINISH_DT'},
+            {title: '발주처', dataIndx: 'ORDER_COMP_NM', width: 80},
+            {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
                     return '';
@@ -292,9 +308,9 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_PART_INFO', width: 150},
-            {title: '수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY_INFO', width: 50},
-            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', width: 80}
+            {title: '관리번호', dataIndx: 'CONTROL_PART_INFO', width: 180},
+            {title: '수량', dataIndx: 'CONTROL_PART_QTY_INFO', minWidth: 40},
+            {title: '진행상태', dataIndx: 'PART_STATUS_NM', width: 60}
         ];
 
         let businessEmergencyObj = {
@@ -320,10 +336,12 @@
         $businessEmergencyListGrid = $('#' + businessEmergencyListGridId).pqGrid(businessEmergencyObj);
 
         let businessOverOrderColModel = [
-            {title: '납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', width: 55},
-            {title: '출고', dataType: 'string', dataIndx: 'OUT_FINISH_DT', width: 55},
-            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 80},
-            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+            {dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
+            {dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+            {title: '납기', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'INNER_DUE_DT'},
+            {title: '출고', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'OUT_FINISH_DT'},
+            {title: '발주처', dataIndx: 'ORDER_COMP_NM', width: 80},
+            {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
                     return '';
@@ -336,10 +354,9 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_PART_INFO', width: 150},
-            {title: '수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY_INFO', width: 50},
-            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', width: 80},
-            {title: '담당자', dataType: 'string', dataIndx: 'CHARGE_USER_NM', width: 80}
+            {title: '관리번호', dataIndx: 'CONTROL_PART_INFO', width: 180},
+            {title: '수량', dataIndx: 'CONTROL_PART_QTY_INFO', minWidth: 40},
+            {title: '진행상태', dataIndx: 'PART_STATUS_NM', width: 60}
         ];
 
         let businessOverOrderObj = {
@@ -366,13 +383,13 @@
         $businessOverOrderListGrid = $('#' + businessOverOrderListGridId).pqGrid(businessOverOrderObj);
 
         /*let businessOverDangerColModel = [
-            {title: '납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', width: 50},
-            {title: '출고', dataType: 'string', dataIndx: 'DELIVERY_DT', width: 50},
-            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 80},
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 150},
-            {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', width: 50},
-            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', width: 80},
-            {title: '담당자', dataType: 'string', dataIndx: 'USER_NM', width: 80}
+            {title: '납기', dataIndx: 'ORDER_DUE_DT', width: 50},
+            {title: '출고', dataIndx: 'DELIVERY_DT', width: 50},
+            {title: '발주처', dataIndx: 'ORDER_COMP_NM', width: 80},
+            {title: '관리번호', dataIndx: 'CONTROL_NUM', width: 150},
+            {title: '수량', dataIndx: 'ORDER_QTY', width: 50},
+            {title: '진행상태', dataIndx: 'PART_STATUS', width: 80},
+            {title: '담당자', dataIndx: 'USER_NM', width: 80}
         ];*/
 
         /*let businessOverDangerObj = {

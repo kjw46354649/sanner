@@ -48,12 +48,12 @@
         const detailListViewGridId = 'DETAIL_LIST_VIEW_GRID';
         const detailListViewPostData = fnFormToJsonArrayData('#DETAIL_LIST_VIEW_FORM');
         const detailListViewColModel = [
-            {title: '사업자<br>구분', minWidth: 70, dataType: 'string', dataIndx: 'COMP_NM', colModel: []},
-            {title: '발주업체', minWidth: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM', colModel: []},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', colModel: []},
-            {title: 'INV No.<br>(거래명세No.)', minWidth: 100, dataType: 'string', dataIndx: 'CHARGE_USER_ID', colModel: []},
-            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', colModel: []},
-            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+            {title: '사업자<br>구분', width: 70, dataIndx: 'COMP_NM'},
+            {title: '발주업체', width: 70, dataIndx: 'ORDER_COMP_NM'},
+            {title: '비고', dataIndx: 'NOTE'},
+            {title: 'INV No.<br>(거래명세No.)', width: 100, dataIndx: 'CHARGE_USER_ID'},
+            {title: '모듈명', dataIndx: 'MODULE_NM'},
+            {title: '', align: 'center', minWidth: 25, 
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
                     return '';
@@ -66,28 +66,28 @@
                     });
                 }
             },
-            {title: '관리번호', minWidth: 100, dataType: 'string', dataIndx: 'CONTROL_NUM', colModel: []},
-            {title: '파<br>트', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM', colModel: []},
-            {title: '도면번호', minWidth: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', colModel: []},
-            {title: '품명', minWidth: 110, dataType: 'string', dataIndx: 'ITEM_NM', colModel: []},
-            {title: '작업<br>형태', minWidth: 110, dataType: 'string', dataIndx: 'WORK_NM', colModel: []},
-            {title: '외주', dataType: 'string', dataIndx: 'OUTSIDE_YN', colModel: []},
-            {title: '자재<br>사급', dataType: 'string', dataIndx: 'OUTSIDE_YN', colModel: []},
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', colModel: []},
-            {title: '소재<br>종류', minWidth: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL', colModel: []},
-            {title: '표면<br>처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', colModel: []},
-            {title: '파트<br>단위<br>수량', align: 'right', dataType: 'integer', dataIndx: 'PART_UNIT_QTY', colModel: []},
-            {title: '발주번호', minWidth: 90, datatype: 'string', dataIndx: 'ORDER_NUM', colModel: []},
-            // {title: '주문<br>수량', dataType: 'string', dataIndx: 'ITEM_QTY', colModel: []},
+            {title: '관리번호', width: 100, dataIndx: 'CONTROL_NUM'},
+            {title: '파<br>트', dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: '도면번호', width: 120, dataIndx: 'DRAWING_NUM'},
+            {title: '품명', width: 110, dataIndx: 'ITEM_NM'},
+            {title: '작업<br>형태', width: 110, dataIndx: 'WORK_NM'},
+            {title: '외주', dataIndx: 'OUTSIDE_YN'},
+            {title: '자재<br>사급', dataIndx: 'OUTSIDE_YN'},
+            {title: '규격', dataIndx: 'SIZE_TXT'},
+            {title: '소재<br>종류', width: 70, dataIndx: 'MATERIAL_DETAIL'},
+            {title: '표면<br>처리', dataIndx: 'SURFACE_TREAT'},
+            {title: '파트<br>단위<br>수량', align: 'right', dataType: 'integer', dataIndx: 'PART_UNIT_QTY'},
+            {title: '발주번호', width: 90, dataIndx: 'ORDER_NUM'},
+            // {title: '주문<br>수량', dataIndx: 'ITEM_QTY'},
             {
                 title: '대칭', align: 'center', colModel: [
                     {title: '원칭', align: 'right', dataType: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY'},
                     {title: '대칭', align: 'right', dataType: 'integer', dataIndx: 'OTHER_SIDE_QTY'}
                 ]
             },
-            {title: '견적단가', minWidth: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', colModel: []},
-            {title: '공급단가', minWidth: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', colModel: []},
-            {title: '합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMOUNT', colModel: []}
+            {title: '견적단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT'},
+            {title: '공급단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
+            {title: '합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMOUNT'}
         ];
         const detailListViewObj = {
             height: 650,

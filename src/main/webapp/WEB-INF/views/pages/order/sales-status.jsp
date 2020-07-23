@@ -191,16 +191,16 @@
         const tab1ColModel = [
             {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
             {title: 'No.', minWidth: 30, width: 30, align: 'right', dataType: 'integer', dataIndx: 'ROW_NUM'},
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
-            {title: '년도', dataType: 'string', dataIndx: 'YYYY'},
-            {title: '분기', dataType: 'string', dataIndx: 'QUARTER'},
-            {title: '마감월', dataType: 'string', dataIndx: 'FINISH_MONTH'},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER', hidden: true},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER_TRAN'},
-            {title: '발주사', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '발주사', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '품수', dataType: 'string', dataIndx: 'ITEM_NUMBER', summary: {type: 'sum', edit: true},
+            {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
+            {title: '사업자', dataIndx: 'COMP_NM'},
+            {title: '년도', dataIndx: 'YYYY'},
+            {title: '분기', dataIndx: 'QUARTER'},
+            {title: '마감월', dataIndx: 'FINISH_MONTH'},
+            {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
+            {title: '차수', dataIndx: 'CLOSE_VER_TRAN'},
+            {title: '발주사', dataIndx: 'ORDER_COMP_CD', hidden: true},
+            {title: '발주사', dataIndx: 'ORDER_COMP_NM'},
+            {title: '품수', dataIndx: 'ITEM_NUMBER', summary: {type: 'sum', edit: true},
                 render: function (ui) {
                     if(ui.rowData.pq_grandsummary) {
                         return ui.cellData;
@@ -221,7 +221,7 @@
             {title: '마감금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, summary: {type: 'sum'}, editable: true},
             {title: '부가세액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'VAT_AMOUNT', summary: {type: 'sum'}},
             {title: '합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMOUNT', summary: {type: 'sum'}},
-            {title: '비고', dataType: 'string', dataIndx: 'CLOSE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
+            {title: '비고', dataIndx: 'CLOSE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
         ];
         const tab1GroupModel = {
             on: true,
@@ -271,14 +271,14 @@
         const tab2ColModel = [
             {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
             {title: 'No.', minWidth: 30, width: 30, align: 'right', dataType: 'integer', dataIndx: 'ROW_NUM'},
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
-            // {title: 'CONTROL_TYPE', dataType: 'string', dataIndx: 'CONTROL_TYPE', hidden: true},
-            // {title: 'CONTROL_NM', dataType: 'string', dataIndx: 'CONTROL_NM'},
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '구분', dataType: 'string', dataIndx: 'STATUS_TYPE',},
+            {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
+            // {title: 'CONTROL_TYPE', dataIndx: 'CONTROL_TYPE', hidden: true},
+            // {title: 'CONTROL_NM', dataIndx: 'CONTROL_NM'},
+            {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
+            {title: '사업자', dataIndx: 'COMP_NM'},
+            {title: '발주업체', dataIndx: 'ORDER_COMP_CD', hidden: true},
+            {title: '발주업체', dataIndx: 'ORDER_COMP_NM'},
+            {title: '구분', dataIndx: 'STATUS_TYPE',},
             {
                 title: '1분기', align: 'center', colModel: [
                     {title: '1월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '01_AMT', summary: {type: 'sum'}},

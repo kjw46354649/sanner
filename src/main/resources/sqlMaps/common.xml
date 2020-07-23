@@ -125,18 +125,20 @@
 
     <select id="selectControlBarcodeInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-             BARCODE_NUM
-            ,CONTROL_SEQ
-            ,CONTROL_DETAIL_SEQ
-            ,CONTROL_VER
-            ,DRAWING_VER
-            ,DEL_YN
-            ,INSERT_DT
-            ,INSERT_ID
-            ,UPDATE_DT
-            ,UPDATE_ID
+            A.BARCODE_NUM
+            , A.CONTROL_SEQ
+            , A.CONTROL_DETAIL_SEQ
+            , A.CONTROL_VER
+            , A.DRAWING_VER
+            , A.DEL_YN
+            , A.INSERT_DT
+            , A.INSERT_ID
+            , A.UPDATE_DT
+            , A.UPDATE_ID
             , (SELECT COUNT(*) FROM TBL_CONTROL Q WHERE Q.CONTROL_SEQ = A.CONTROL_SEQ AND Q.OUT_FINISH_DT IS NOT NULL AND Q.DEL_YN = 'N') AS OUT_CNT
+            , B.IMG_GFILE_SEQ
         FROM jmes.TBL_CONTROL_BARCODE A
+            LEFT OUTER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
         WHERE BARCODE_NUM = #{BARCODE_NUM}
     </select>
     <select id="selectOutBarcodeInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">

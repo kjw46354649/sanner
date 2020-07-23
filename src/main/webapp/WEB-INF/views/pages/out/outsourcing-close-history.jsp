@@ -172,24 +172,24 @@
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true},
-            {title: 'OUTSIDE_REQUEST_SEQ', dataType: 'integer', dataIndx: 'OUTSIDE_REQUEST_SEQ', hidden: true},
+            // {title: 'OUTSIDE_REQUEST_SEQ', dataType: 'integer', dataIndx: 'OUTSIDE_REQUEST_SEQ', hidden: true},
             {title: 'CLOSE_VER', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CLOSE_VER', hidden: true},
-            {title: 'PART_STATUS', dataType: 'string', dataIndx: 'PART_STATUS', hidden: true},
-            {title: '마감월', dataType: 'string', dataIndx: 'OUTSIDE_CLOSE_MONTH'},
-            {title: '차수', dataType: 'string', dataIndx: 'OUTSIDE_CLOSE_VER'},
-            {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자<br>구분', minWidth: 70, dataType: 'string', dataIndx: 'COMP_NM'},
-            {title: '외주<br>구분', dataType: 'string', dataIndx: 'OUTSIDE_YN'},
-            {title: '원발주<br>상태', minWidth: 70, dataType: 'string', dataIndx: 'CONTROL_PART_STATUS'},
-            {title: '외주<br>발주상태', dataType: 'string', dataIndx: 'DHLWNQKFWNTKDXO', hidden: true},
-            {title: '상태변경<br>일시', minWidth: 70, dataType: 'string', dataIndx: 'PART_SATUS_DT'},
-            {title: '외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
-            {title: '외주업체', minWidth: 70, dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM'},
-            {title: '입고일자', dataType: 'string', dataIndx: 'DLQRHDLFWK'},
-            {title: '외주<br>발주번호', dataType: 'string', dataIndx: 'OUTSIDE_ORDER_NUM'},
-            {title: '비고', dataType: 'string', dataIndx: 'OUTSIDE_NOTE'},
-            {title: '비고(주문)', width: 150, dataType: 'string', dataIndx: 'CONTROL_NOTE'},
-            {title: '', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'CONTROL_NUM_BUTTON',
+            {title: 'PART_STATUS', dataIndx: 'PART_STATUS', hidden: true},
+            {title: '마감월', dataIndx: 'OUTSIDE_CLOSE_MONTH'},
+            {title: '차수', dataIndx: 'OUTSIDE_CLOSE_VER'},
+            {title: '사업자<br>구분', dataIndx: 'COMP_CD', hidden: true},
+            {title: '사업자<br>구분', minWidth: 70, dataIndx: 'COMP_NM'},
+            {title: '외주<br>구분', dataIndx: 'OUTSIDE_YN'},
+            {title: '원발주<br>상태', minWidth: 70, dataIndx: 'CONTROL_PART_STATUS'},
+            {title: '외주<br>발주상태', dataIndx: 'DHLWNQKFWNTKDXO', hidden: true},
+            {title: '상태변경<br>일시', minWidth: 70, dataIndx: 'PART_SATUS_DT'},
+            {title: '외주업체', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
+            {title: '외주업체', minWidth: 70, dataIndx: 'OUTSIDE_COMP_NM'},
+            {title: '입고일자', dataIndx: 'DLQRHDLFWK'},
+            {title: '외주<br>발주번호', dataIndx: 'OUTSIDE_ORDER_NUM'},
+            {title: '비고', dataIndx: 'OUTSIDE_NOTE'},
+            {title: '비고(주문)', width: 150, dataIndx: 'CONTROL_NOTE'},
+            {title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON',
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
                         return '<span  class="doubleFilesIcon" name="detailView" style="cursor: pointer"></span>';
@@ -203,8 +203,8 @@
                     });
                 }
             },
-            {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
+            {title: '관리번호', width: 150, dataIndx: 'CONTROL_NUM'},
+            {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
                 },
@@ -217,22 +217,22 @@
                     });
                 }
             },
-            {title: '도면번호', width: 90, dataType: 'string', dataIndx: 'DRAWING_NUM'},
-            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM'},
-            {title: '품명', minWidth: 70, dataType: 'string', dataIndx: 'ITEM_NM'},
-            {title: '규격', minWidth: 100, dataType: 'string', dataIndx: 'SIZE_TXT'},
-            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT_NM'},
-            {title: '규격', minWidth: 90, dataType: 'string', dataIndx: 'SIZE_TXT'},
-            {title: '소재<br>종류', minWidth: 90, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
-            // {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
-            {title: '사급<br>여부', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
+            {title: '도면번호', width: 90, dataIndx: 'DRAWING_NUM'},
+            {title: '파<br>트', dataIndx: 'PART_NUM'},
+            {title: '품명', minWidth: 70, dataIndx: 'ITEM_NM'},
+            {title: '규격', minWidth: 100, dataIndx: 'SIZE_TXT'},
+            {title: '표면처리', dataIndx: 'SURFACE_TREAT_NM'},
+            {title: '규격', minWidth: 90, dataIndx: 'SIZE_TXT'},
+            {title: '소재<br>종류', minWidth: 90, dataIndx: 'MATERIAL_DETAIL_NM'},
+            // {title: '수량', dataIndx: 'ITEM_QTY'},
+            {title: '사급<br>여부', dataIndx: 'MATERIAL_SUPPLY_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '소재<br>제공', dataType: 'string', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
+            {title: '소재<br>제공', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -241,37 +241,37 @@
             },
             {
                 title: '요청 가공 사항', align: 'center', colModel: [
-                    {title: '완제품', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN'},
-                    {title: '가공', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN'},
-                    {title: '연마', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN'},
-                    {title: '표면처리', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN'},
-                    {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC'}
+                    {title: '완제품', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN'},
+                    {title: '가공', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN'},
+                    {title: '연마', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN'},
+                    {title: '표면처리', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN'},
+                    {title: '기타사항', dataIndx: 'OUTSIDE_REQUEST_ETC'}
                 ]
             },
-            {title: '요망납기', dataType: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
+            {title: '요망납기', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
             {title: '외주<br>확정단가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_UNIT_AMT'},
             {title: '금액<br>합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
             {title: '외주<br>종전가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DHLWNWHDWJSRK'},
             {
                 title: '원발주 정보', align: 'center', colModel: [
-                    {title: '납기', minWidth: 70, datatype: 'string', dataIndx: 'INNER_DUE_DT'},
-                    {title: '공급단가', datatype: 'string', dataIndx: 'UNIT_FINAL_AMT'},
-                    {title: '발주처', datatype: 'string', dataIndx: 'ORDER_COMP_CD'},
-                    {title: '발주처', datatype: 'string', dataIndx: 'ORDER_COMP_NM'}
+                    {title: '납기', minWidth: 70, dataIndx: 'INNER_DUE_DT'},
+                    {title: '공급단가', dataIndx: 'UNIT_FINAL_AMT'},
+                    {title: '발주처', dataIndx: 'ORDER_COMP_CD'},
+                    {title: '발주처', dataIndx: 'ORDER_COMP_NM'}
                 ]
             },
             {
                 title: '품질결과', align: 'center', hidden: true, colModel: [
-                    {title: 'Seq.', datatype: 'string', dataIndx: 'Seq.'},
-                    {title: '결과', datatype: 'string', dataIndx: 'RUFRHK'},
-                    {title: '불량코드', datatype: 'string', dataIndx: 'QNFFIDZHEM'},
-                    {title: '측정일시', datatype: 'string', dataIndx: 'CMRWJDDLFTL'}
+                    {title: 'Seq.', dataIndx: 'Seq.'},
+                    {title: '결과', dataIndx: 'RUFRHK'},
+                    {title: '불량코드', dataIndx: 'QNFFIDZHEM'},
+                    {title: '측정일시', dataIndx: 'CMRWJDDLFTL'}
                 ]
             },
-            {title: '원주문<br>확정 일시', minWidth: 70, datatype: 'string', dataIndx: 'CONTROL_STATUS'},
-            {title: '외주가공<br>요청일시.', minWidth: 70, dataType: 'string', dataIndx: 'OUTSIDE_REQUEST_DATE'},
-            {title: '외주가공<br>마감일시', minWidth: 70, dataType: 'string', dataIndx: 'OUTSIDE_FINISH_DATE'},
-            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
+            {title: '원주문<br>확정 일시', minWidth: 70, dataIndx: 'CONTROL_STATUS'},
+            {title: '외주가공<br>요청일시.', minWidth: 70, dataIndx: 'OUTSIDE_REQUEST_DATE'},
+            {title: '외주가공<br>마감일시', minWidth: 70, dataIndx: 'OUTSIDE_FINISH_DATE'},
+            {title: 'DXF', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'
                 },
@@ -285,7 +285,7 @@
                 }
             },
             {
-                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
+                title: 'PDF', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="redFileImageICon" style="cursor: pointer"></span>'
                 },
@@ -395,15 +395,15 @@
         let $outsideCloseCancelLeftGrid;
         const outsideCloseCancelLeftGridId = 'OUTSIDE_CLOSE_CANCEL_LEFT_GRID';
         const outsideCloseCancelLeftColModel = [
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자', width: 70,  dataType: 'string', dataIndx: 'COMP_NM'},
-            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '발주처', width: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
-            {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER', hidden: true},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER_TRAN'},
-            {title: '건수', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
+            {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
+            {title: '사업자', width: 70,  dataIndx: 'COMP_NM'},
+            {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true},
+            {title: '발주처', width: 70, dataIndx: 'ORDER_COMP_NM'},
+            {title: '마감월', dataIndx: 'CLOSE_MONTH', hidden: true},
+            {title: '마감월', width: 70, dataIndx: 'CLOSE_MONTH_TRAN'},
+            {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
+            {title: '차수', dataIndx: 'CLOSE_VER_TRAN'},
+            {title: '건수', dataIndx: 'CONTROL_PART_QTY'},
             {title: '발주가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}
             // {title: '마감금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CLOSE_CONTROL_AMT'}
         ];
@@ -429,15 +429,15 @@
         let $outsideCloseCancelRightGrid;
         const outsideCloseCancelRightGridId = 'OUTSIDE_CLOSE_CANCEL_RIGHT_GRID';
         const outsideCloseCancelRightColModel = [
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자', width: 70,  dataType: 'string', dataIndx: 'COMP_NM'},
-            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '발주처', width: 70, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
-            {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER', hidden: true},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER_TRAN', style: {'font-weight': 'bold', 'color': 'red'}},
-            {title: '건수', dataType: 'string', dataIndx: 'CONTROL_PART_QTY', style: {'font-weight': 'bold', 'color': 'red'}},
+            {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
+            {title: '사업자', width: 70,  dataIndx: 'COMP_NM'},
+            {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true},
+            {title: '발주처', width: 70, dataIndx: 'ORDER_COMP_NM'},
+            {title: '마감월', dataIndx: 'CLOSE_MONTH', hidden: true},
+            {title: '마감월', width: 70, dataIndx: 'CLOSE_MONTH_TRAN'},
+            {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
+            {title: '차수', dataIndx: 'CLOSE_VER_TRAN', style: {'font-weight': 'bold', 'color': 'red'}},
+            {title: '건수', dataIndx: 'CONTROL_PART_QTY', style: {'font-weight': 'bold', 'color': 'red'}},
             {title: '발주가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT', style: {'font-weight': 'bold', 'color': 'red'}}
             // {title: '마감금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CLOSE_CONTROL_AMT'}
         ];

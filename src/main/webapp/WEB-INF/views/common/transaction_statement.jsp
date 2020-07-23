@@ -109,8 +109,8 @@
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true},
-            {title: '주문상태', dataType: 'string', dataIndx: 'CONTROL_STATUS_NM'},
-            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false, hidden: true,
+            {title: '주문상태', dataIndx: 'CONTROL_STATUS_NM'},
+            {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false, hidden: true,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
                     return '';
@@ -123,9 +123,9 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: '발주번호', dataType: 'string', dataIndx: 'ORDER_NUM'},
-            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
+            {title: '관리번호', dataIndx: 'CONTROL_NUM'},
+            {title: '발주번호', dataIndx: 'ORDER_NUM'},
+            {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
                 },
@@ -138,9 +138,9 @@
                     });
                 }
             },
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM'},
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT'},
-            {title: '작업형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM'},
+            {title: '도면번호', dataIndx: 'DRAWING_NUM'},
+            {title: '규격', dataIndx: 'SIZE_TXT'},
+            {title: '작업형태', dataIndx: 'WORK_TYPE_NM'},
             {title: '수량', align: 'right', dataType: 'integer', dataIndx: 'CONTROL_ORDER_QTY'},
             {title: '공급단가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
             {title: '금액 계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
@@ -160,7 +160,7 @@
                 editable: true,
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
             },
-            {title: 'LABEL_BARCODE_NUM', dataType: 'string', dataIndx: 'LABEL_BARCODE_NUM', hidden: true},
+            {title: 'LABEL_BARCODE_NUM', dataIndx: 'LABEL_BARCODE_NUM', hidden: true},
         ];
         const transactionStatementObj = {
             height: 470,

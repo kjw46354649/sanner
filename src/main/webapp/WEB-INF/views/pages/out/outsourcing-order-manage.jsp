@@ -373,21 +373,21 @@
             {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true},
             {title: 'OUTSIDE_REQUEST_SEQ', dataType: 'integer', dataIndx: 'OUTSIDE_REQUEST_SEQ', hidden: true},
             {title: '담당자', dataType: 'integer', dataIndx: 'ORDER_STAFF_SEQ', hidden: true},
-            {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자<br>구분', dataType: 'string', dataIndx: 'COMP_NM'},
-            {title: '외주<br>구분', dataType: 'string', dataIndx: 'OUTSIDE_YN',
+            {title: '사업자<br>구분', dataIndx: 'COMP_CD', hidden: true},
+            {title: '사업자<br>구분', dataIndx: 'COMP_NM'},
+            {title: '외주<br>구분', dataIndx: 'OUTSIDE_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '원발주<br>상태', dataType: 'string', dataIndx: 'CONTROL_STATUS_NM'},
-            {title: '외주<br>발주상태', dataType: 'string', dataIndx: 'OUTSIDE_STATUS', hidden: true},
-            {title: '외주<br>발주상태', dataType: 'string', dataIndx: 'OUTSIDE_STATUS_NM'},
-            {title: '상태변경<br>일시', width: 100, dataType: 'string', dataIndx: 'OUTSIDE_STATUS_DT'},
+            {title: '원발주<br>상태', dataIndx: 'CONTROL_STATUS_NM'},
+            {title: '외주<br>발주상태', dataIndx: 'OUTSIDE_STATUS', hidden: true},
+            {title: '외주<br>발주상태', dataIndx: 'OUTSIDE_STATUS_NM'},
+            {title: '상태변경<br>일시', width: 100, dataIndx: 'OUTSIDE_STATUS_DT'},
             {
-                title: '외주업체', width: 70, dataType: 'string', dataIndx: 'OUTSIDE_COMP_CD',
+                title: '외주업체', width: 70, dataIndx: 'OUTSIDE_COMP_CD',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -415,8 +415,8 @@
                     }
                 }
             },
-            {title: '비고(주문)', width: 90, dataType: 'string', dataIndx: 'CONTROL_NOTE'},
-            {title: '', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'CONTROL_NUM_BUTTON',
+            {title: '비고(주문)', width: 90, dataIndx: 'CONTROL_NOTE'},
+            {title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON',
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
                         return '<span  class="doubleFilesIcon" name="detailView" style="cursor: pointer"></span>';
@@ -430,9 +430,9 @@
                     });
                 }
             },
-            {title: '관리번호', width: 150, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM'},
-            {title: '', minWidth: 25, width: 25, dataType: 'string', dataIndx: 'DRAWING_NUM_BUTTON',
+            {title: '관리번호', width: 150, dataIndx: 'CONTROL_NUM'},
+            {title: '파<br>트', minWidth: 30, dataIndx: 'PART_NUM'},
+            {title: '', minWidth: 30, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
                     if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" id="imageView" style="cursor: pointer"></span>'
                 },
@@ -445,13 +445,13 @@
                     });
                 }
             },
-            {title: '도면번호', width: 90, dataType: 'string', dataIndx: 'DRAWING_NUM'},
-            {title: '작업<br>형태', width: 70, dataType: 'string', dataIndx: 'WORK_TYPE_NM'},
-            {title: '규격', width: 70, dataType: 'string', dataIndx: 'SIZE_TXT'},
-            {title: '소재종류', width:70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
-            {title: '표면처리', width:90, dataType: 'string', dataIndx: 'SURFACE_TREAT_NM'},
-                {title: '수량', dataType: 'integer', dataIndx: 'CONTROL_ORDER_QTY'},
-            {title: '사급<br>여부', minWidth: 30, width: 40, dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
+            {title: '도면번호', width: 90, dataIndx: 'DRAWING_NUM'},
+            {title: '작업<br>형태', width: 70, dataIndx: 'WORK_TYPE_NM'},
+            {title: '규격', width: 70, dataIndx: 'SIZE_TXT'},
+            {title: '소재종류', width:70, dataIndx: 'MATERIAL_DETAIL_NM'},
+            {title: '표면처리', width:90, dataIndx: 'SURFACE_TREAT_NM'},
+            {title: '수량', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY'},
+            {title: '사급<br>여부', minWidth: 30, width: 40, dataIndx: 'MATERIAL_SUPPLY_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -459,7 +459,7 @@
                 }
             },
             {
-                title: '소재<br>제공', minWidth: 30, width: 40, dataType: 'string', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
+                title: '소재<br>제공', minWidth: 30, width: 40, dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -541,7 +541,7 @@
                         }
                     },
                     {
-                        title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC',
+                        title: '기타사항', dataIndx: 'OUTSIDE_REQUEST_ETC',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -551,18 +551,18 @@
                     }
                 ]
             },
-            {title: '외주납기', width: 70, dataType: 'string', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor},
+            {title: '외주납기', width: 70, dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor},
                 render: function (ui) {
                     if (!ui.cellData) {
                         let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
-                        visibleDate.setDate(visibleDate.getDate() - 2);
+                        visibleDate.setDate(visibleDate.getDate() - 1);
                         return visibleDate.mmdd();
                     }
                 }
             },
-            {title: '입고일자', width: 100, dataType: 'string', dataIndx: 'OUTSIDE_IN_DT'},
+            {title: '입고일자', width: 100, dataIndx: 'OUTSIDE_IN_DT'},
             {
-                title: '외주<br>발주번호', dataType: 'string', dataIndx: 'OUTSIDE_ORDER_NUM',
+                title: '외주<br>발주번호', dataIndx: 'OUTSIDE_ORDER_NUM',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -571,7 +571,7 @@
                 }
             },
             {
-                title: '비고', width: 90, dataType: 'string', dataIndx: 'OUTSIDE_NOTE',
+                title: '비고', width: 90, dataIndx: 'OUTSIDE_NOTE',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -594,22 +594,22 @@
                 title: '원발주 정보', align: 'center', colModel: [
                     {title: '납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT', render: function (ui) {}},
                     {title: '공급단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
-                    {title: '발주처', datatype: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
-                    {title: '발주처', width: 70, datatype: 'string', dataIndx: 'ORDER_COMP_NM'}
+                    {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true},
+                    {title: '발주처', width: 70, dataIndx: 'ORDER_COMP_NM'}
                 ]
             },
             {
                 title: '품질결과', align: 'center', colModel: [
                     {title: 'Seq.', minWidth: 30, width: 35, datatype: 'integer', dataIndx: 'INSPECT_SEQ'},
-                    {title: '등급', minWidth: 30, width: 35, datatype: 'string', dataIndx: 'INSPECT_GRADE_NM'},
-                    {title: '불량코드', minWidth: 30, width: 70, datatype: 'string', dataIndx: 'INSPECT_RESULT_NM'},
-                    {title: '측정일시', datatype: 'string', dataIndx: 'INSPECT_INSERT_UPDATE_DT'}
+                    {title: '등급', minWidth: 30, width: 35, dataIndx: 'INSPECT_GRADE_NM'},
+                    {title: '불량코드', minWidth: 30, width: 70, dataIndx: 'INSPECT_RESULT_NM'},
+                    {title: '측정일시', dataIndx: 'INSPECT_INSERT_UPDATE_DT'}
                 ]
             },
-            {title: '원주문<br>확정 일시', width: 130, datatype: 'string', dataIndx: 'CONTROL_STATUS_DT'},
-            {title: '외주가공<br>요청일시', width: 130, dataType: 'string', dataIndx: 'OUTSIDE_REQUEST_DT'},
+            {title: '원주문<br>확정 일시', width: 130, dataIndx: 'CONTROL_STATUS_DT'},
+            {title: '외주가공<br>요청일시', width: 130, dataIndx: 'OUTSIDE_REQUEST_DT'},
             {
-                title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35,
+                title: 'DXF', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'
                 },
@@ -623,7 +623,7 @@
                 }
             },
             {
-                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35,
+                title: 'PDF', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="redFileImageICon" style="cursor: pointer"></span>'
                 },
@@ -696,12 +696,12 @@
         let $mailRecipientGrid;
         const mailRecipientGridId = 'REQUEST_OUTSIDE_MAIL_RECIPIENT_GRID';
         const mailRecipientColModel = [
-            {title: '', dataType: 'string', dataIndx: 'STAFF_SEQ', hidden: true},
-            {title: '성함', dataType: 'string', dataIndx: 'STAFF_NM',
+            {title: '', dataIndx: 'STAFF_SEQ', hidden: true},
+            {title: '성함', dataIndx: 'STAFF_NM',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
-            {title: '메일주소', dataType: 'string', dataIndx: 'STAFF_EMAIL',
+            {title: '메일주소', dataIndx: 'STAFF_EMAIL',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
-            {title: '전화번호', dataType: 'string', dataIndx: 'STAFF_TEL',
+            {title: '전화번호', dataIndx: 'STAFF_TEL',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
             {
                 title: '수신', datatype: 'bool', dataIndx: 'RECEPTION', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
@@ -743,8 +743,8 @@
         let $requestOutsideFileGrid;
         const requestOutsideFileGridId = 'REQUEST_OUTSIDE_FILE_GRID';
         const requestOutsideFileColModel =  [
-            {title: 'GFILE_SEQ', dataType: 'string', dataIndx: 'GFILE_SEQ', hidden: true},
-            {title: '파일명', dataType: 'string', dataIndx: 'ORGINAL_FILE_NM', width: 500, minWidth: 70,
+            {title: 'GFILE_SEQ', dataIndx: 'GFILE_SEQ', hidden: true},
+            {title: '파일명', dataIndx: 'ORGINAL_FILE_NM', width: 500, minWidth: 70,
                 render: function(ui) {
                     let returnVal = ui.cellData;
                     if (ui.rowData.FILE_SEQ !== undefined) {
@@ -762,14 +762,14 @@
                     });
                 }
             },
-            {title: '용량', dataType: 'string', dataIndx: 'FILE_SIZE',  width: 100, minWidth: 100,
+            {title: '용량', dataIndx: 'FILE_SIZE',  width: 100, minWidth: 100,
                 render: function(ui) {
                     return fn_getFileSize(ui.cellData);
                 }
 
             },
-            {title: '업로드 일시', dataType: 'string', dataIndx: 'INSERT_DT',  width: 110, minWidth: 70},
-            {title: '', align: 'center', dataType: 'string', dataIndx: 'FILE_SEQ', width: 40, minWidth: 40,
+            {title: '업로드 일시', dataIndx: 'INSERT_DT',  width: 110, minWidth: 70},
+            {title: '', align: 'center', dataIndx: 'FILE_SEQ', width: 40, minWidth: 40,
                 render: function (ui) {
                     let EST_STATUS = $("#estimate_register_info_form #EST_STATUS").val();
                     let returnVal = "";
@@ -835,7 +835,7 @@
         const outsideProcessRequestColModel = [
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: 'OUTSIDE_REQUEST_SEQ', dataType: 'integer', dataIndx: 'OUTSIDE_REQUEST_SEQ', hidden: true},
-            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+            {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
                     return '';
@@ -848,8 +848,8 @@
                     });
                 }
             },
-            {title: '관리번호', minWidth: 100, dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true},
-            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
+            {title: '관리번호', minWidth: 100, dataIndx: 'CONTROL_NUM', editable: true},
+            {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
                 },
@@ -862,10 +862,10 @@
                     });
                 }
             },
-            {title: '도면번호', minWidth: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', editable: true},
-            {title: '파<br>트', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM'},
-            {title: '규격', minWidth: 110, dataType: 'string', dataIndx: 'SIZE_TXT', editable: true},
-            {title: '자재<br>종류', minWidth: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
+            {title: '도면번호', minWidth: 120, dataIndx: 'DRAWING_NUM', editable: true},
+            {title: '파<br>트', minWidth:30, dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: '규격', minWidth: 110, dataIndx: 'SIZE_TXT', editable: true},
+            {title: '자재<br>종류', minWidth: 70, dataIndx: 'MATERIAL_DETAIL',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -887,7 +887,7 @@
                     }
                 }
             },
-            {title: '표면<br>처리', minWidth: 70, dataType: 'string', dataIndx: 'SURFACE_TREAT',
+            {title: '표면<br>처리', minWidth: 70, dataIndx: 'SURFACE_TREAT',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -909,9 +909,9 @@
                     }
                 }
             },
-            {title: '수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
+            {title: '수량', dataIndx: 'CONTROL_PART_QTY'},
             {
-                title: '소재<br>제공', minWidth: 30, width: 40, dataType: 'string', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
+                title: '소재<br>제공', minWidth: 30, width: 40, dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 editable: function (ui) {
@@ -947,7 +947,7 @@
                         title: '표면', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
-                    {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
+                    {title: '기타사항', dataIndx: 'OUTSIDE_REQUEST_ETC', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
                 ]
             },
             {title: '외주<br>요망납기', datatype: 'date', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor},
@@ -959,7 +959,7 @@
                     }
                 }
             },
-            {title: '비고', datatype: 'string', dataIndx: 'OUTSIDE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {title: '비고', dataIndx: 'OUTSIDE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
         ];
         const outsideProcessRequestObj = {
             height: 200,
@@ -1016,8 +1016,8 @@
         let $cancelRequestOutsideFileGrid;
         const cancelRequestOutsideFileGridId = 'CANCEL_REQUEST_OUTSIDE_FILE_GRID';
         const cancelRequestOutsideFileColModel =  [
-            {title: 'GFILE_SEQ', dataType: 'string', dataIndx: 'GFILE_SEQ', hidden: true},
-            {title: '파일명', dataType: 'string', dataIndx: 'ORGINAL_FILE_NM', width: 500, minWidth: 70,
+            {title: 'GFILE_SEQ', dataIndx: 'GFILE_SEQ', hidden: true},
+            {title: '파일명', dataIndx: 'ORGINAL_FILE_NM', width: 500, minWidth: 70,
                 render: function(ui) {
                     let returnVal = ui.cellData;
                     if (ui.rowData.FILE_SEQ !== undefined) {
@@ -1035,14 +1035,14 @@
                     });
                 }
             },
-            {title: '용량', dataType: 'string', dataIndx: 'FILE_SIZE',  width: 100, minWidth: 100,
+            {title: '용량', dataIndx: 'FILE_SIZE',  width: 100, minWidth: 100,
                 render: function(ui) {
                     return fn_getFileSize(ui.cellData);
                 }
 
             },
-            {title: '업로드 일시', dataType: 'string', dataIndx: 'INSERT_DT',  width: 110, minWidth: 70},
-            {title: '', align: 'center', dataType: 'string', dataIndx: 'FILE_SEQ', width: 40, minWidth: 40,
+            {title: '업로드 일시', dataIndx: 'INSERT_DT',  width: 110, minWidth: 70},
+            {title: '', align: 'center', dataIndx: 'FILE_SEQ', width: 40, minWidth: 40,
                 render: function (ui) {
                     let EST_STATUS = $("#estimate_register_info_form #EST_STATUS").val();
                     let returnVal = "";
@@ -1109,7 +1109,7 @@
         const cancelRequestOutsideColModel = [
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: 'OUTSIDE_REQUEST_SEQ', dataType: 'integer', dataIndx: 'OUTSIDE_REQUEST_SEQ', hidden: true},
-            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+            {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
                     return '';
@@ -1122,8 +1122,8 @@
                     });
                 }
             },
-            {title: '관리번호', minWidth: 100, dataType: 'string', dataIndx: 'CONTROL_NUM', editable: true},
-            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
+            {title: '관리번호', minWidth: 100, dataIndx: 'CONTROL_NUM', editable: true},
+            {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
                 },
@@ -1136,10 +1136,10 @@
                     });
                 }
             },
-            {title: '도면번호', minWidth: 120, dataType: 'string', dataIndx: 'DRAWING_NUM', editable: true},
-            {title: '파<br>트', align: 'right', dataType: 'integer', dataIndx: 'PART_NUM'},
-            {title: '규격', minWidth: 110, dataType: 'string', dataIndx: 'SIZE_TXT', editable: true},
-            {title: '자재<br>종류', minWidth: 70, dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
+            {title: '도면번호', minWidth: 120, dataIndx: 'DRAWING_NUM', editable: true},
+            {title: '파<br>트', minWidth:30, dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: '규격', minWidth: 110, dataIndx: 'SIZE_TXT', editable: true},
+            {title: '자재<br>종류', minWidth: 70, dataIndx: 'MATERIAL_DETAIL',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -1161,7 +1161,7 @@
                     }
                 }
             },
-            {title: '표면<br>처리', minWidth: 70, dataType: 'string', dataIndx: 'SURFACE_TREAT',
+            {title: '표면<br>처리', minWidth: 70, dataIndx: 'SURFACE_TREAT',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -1183,7 +1183,7 @@
                     }
                 }
             },
-            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY'},
+            {title: '수량', dataIndx: 'ITEM_QTY'},
             {
                 title: '소재<br>제공', dataType: 'bool', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
                 render: function (ui) {
@@ -1214,11 +1214,11 @@
                         title: '표면<br>처리', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN',
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
                     },
-                    {title: '기타사항', datatype: 'string', dataIndx: 'OUTSIDE_REQUEST_ETC'}
+                    {title: '기타사항', dataIndx: 'OUTSIDE_REQUEST_ETC'}
                 ]
             },
             {title: '외주<br>요망납기', datatype: 'date', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor}},
-            {title: '비고', datatype: 'string', dataIndx: 'OUTSIDE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {title: '비고', dataIndx: 'OUTSIDE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
         ];
         const cancelRequestOutsideObj = {
             height: 200,
@@ -1251,15 +1251,15 @@
         const outsideCloseLeftGridId = 'OUTSIDE_CLOSE_LEFT_GRID';
         // let outsideCloseLeftPostData;
         const outsideCloseLeftColModel = [
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
-            {title: '대상업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
-            {title: '대상업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM'},
-            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
-            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER', hidden: true},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER_TRAN'},
-            {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
+            {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
+            {title: '사업자', dataIndx: 'COMP_NM'},
+            {title: '대상업체', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
+            {title: '대상업체', dataIndx: 'OUTSIDE_COMP_NM'},
+            {title: '마감월', dataIndx: 'CLOSE_MONTH', hidden: true},
+            {title: '마감월', dataIndx: 'CLOSE_MONTH_TRAN'},
+            {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
+            {title: '차수', dataIndx: 'CLOSE_VER_TRAN'},
+            {title: '건수', dataIndx: 'ORDER_QTY'},
             {title: '발주가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}, // 2020-06-08
             {title: '마감금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT'}
         ];
@@ -1283,15 +1283,16 @@
         let $outsideCloseRightGrid;
         const outsideCloseRightGridId = 'OUTSIDE_CLOSE_RIGHT_GRID';
         const outsideCloseRightColModel = [
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
-            {title: '대상업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
-            {title: '대상업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM'},
-            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
-            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER', hidden: true},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER_TRAN'},
-            {title: '건수', dataType: 'string', dataIndx: 'ORDER_QTY'},
+            {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
+            {title: '사업자', dataIndx: 'COMP_NM'},
+            {title: '대상업체', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
+            {title: '대상업체', dataIndx: 'OUTSIDE_COMP_NM'},
+            {title: '마감월', dataIndx: 'CLOSE_MONTH', hidden: true},
+            {title: '마감월', dataIndx: 'CLOSE_MONTH_TRAN'},
+            {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
+            {title: '차수', dataIndx: 'CLOSE_VER_TRAN'},
+            {title: '품수', dataIndx: 'CNT'},
+            {title: '건수', dataIndx: 'ORDER_QTY'},
             {title: '발주가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}, // 2020-06-08
             {title: '마감금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
         ];
