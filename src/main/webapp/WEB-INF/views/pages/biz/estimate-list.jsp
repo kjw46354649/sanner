@@ -131,6 +131,7 @@
     <input type="hidden" id="EST_SEQ" name="EST_SEQ"/>
     <input type="hidden" id="EST_VER" name="EST_VER"/>
     <input type="hidden" id="N_EST_SEQ" name="N_EST_SEQ"/>
+    <input type="hidden" id="VERSION_UP_YN" name="VERSION_UP_YN"/>
 </form>
 <input type="button" id="estimateListFileUpload" style="display: none;">
 
@@ -657,6 +658,7 @@
 
                 $("#estimate_master_hidden_form #EST_SEQ").val(EST_SEQ);
                 $("#estimate_master_hidden_form #EST_VER").val(EST_VER);
+                $("#estimate_master_hidden_form #VERSION_UP_YN").val(VERSION_UP_YN);
                 $("#common_excel_form #paramData").val(EST_SEQ);
                 selectEstimateBotList(EST_SEQ);
                 //}
@@ -832,6 +834,11 @@
         $("#btnEstimateListNewVersion").on('click', function(){
             let parameters = {'url': '/json-list', 'data': {'queryId':'selectEstimateNextSequence'}};
             let EST_SEQ = "";
+            let VERSION_UP_YN = $("#estimate_master_hidden_form #VERSION_UP_YN").val();
+            if(VERSION_UP_YN == 'N') {
+                alert("최신 차수의 상태를 확인 해 주세요. ");
+                return false;
+            }
 
             fnPostAjax(function (data, callFunctionParam) {
                 let list = data.list[0];

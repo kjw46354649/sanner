@@ -11,6 +11,10 @@
 <div class="popup_container" id="item_order_register_popup" style="display: none;" data-backdrop="static">
     <div class="layerPopup" style="height: fit-content;">
         <h3>소재 주문</h3>
+        <span style="padding-left: 30px;">
+            <span class="barCode" id="itemOrderRegisterBarcodeSpan"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="itempOrderResgisterBarcodeImg" style="height: 32px;"></span>
+            <span class="barCodeTxt"><label for="itempOrderResgisterBarcodeNum"></label><input type="text" class="wd_270_barcode" id="itempOrderResgisterBarcodeNum" placeholder="도면의 바코드를 스캔해 주세요"></span>
+        </span>
         <button type="button" class="pop_close mg-top10 mg-right8" data-dismiss="modal">닫기</button>
         <div class="t_area mg-top10">
             <div class="t_h">
@@ -650,7 +654,7 @@
                         fnPostAjaxAsync(function (data, callFunctionParam) {
                             parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
                             fnPostAjax(function(data, callFunctionParam){
-                                alert("삭제 되었습니다.");
+                                fnAlert(null,"삭제 되었습니다.");
                                 itemOrderRegisterPopTopGrid.pqGrid('deleteRow', { rowIndx: rowIndex });
                                 let rowCount = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length;
                                 if(rowCount == 0) $("#item_order_register_popup").modal('hide');
@@ -859,6 +863,10 @@
                 });
                 $("#itemOrderRegisterFilterColumn").empty();
                 $("#itemOrderRegisterFilterColumn").html(opts);
+
+                let rollSeq = '${authUserInfo.ROLE_SEQ}';
+                let pqTheme = $('#view_tab_' + rollSeq + '0401 .pq-theme');
+                pqTheme.css('overflow', 'initial');
             },
             complete: function(event, ui) {
                 //this.flex();
@@ -1017,9 +1025,12 @@
                 complete: function (event, ui) {
                     //this.flex();
                     let data = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data');
-                    $('#item_order_register_popup_top_grid_records').html(data.length);
+                    let MATERIAL_ORDER_NUM = "";
+                    if(data.length > 0) {
+                        $('#item_order_register_popup_top_grid_records').html(data.length);
 
-                    let MATERIAL_ORDER_NUM = data[0].MATERIAL_ORDER_NUM === undefined ? "" : data[0].MATERIAL_ORDER_NUM;
+                        MATERIAL_ORDER_NUM = data[0].MATERIAL_ORDER_NUM === undefined ? "" : data[0].MATERIAL_ORDER_NUM;
+                    }
                     setTimeout(function(){
                         let parameters = {'url': '/json-list', 'data': {'queryId': 'selectItemOrderRegisterNextMaterialOrderNum'}};
                         fnPostAjaxAsync(function (data, callFunctionParam) {
@@ -1035,7 +1046,6 @@
                             makeInnerTable();
                         }, parameters, '');
                     }, 900);
-
                     btnDisabled();
                 },
                 cellSave: function (evt, ui) {
@@ -1103,7 +1113,7 @@
                 }, 1500);
 
             }else{
-                alert("You must be select item.");
+                fnAlert(null,"You must be select item.");
                 return;
             }
 
@@ -1159,6 +1169,52 @@
                 return (fnFormToJsonArrayData('#item_order_register_hidden_form'));
             });
             itemOrderRegisterRightGrid.pqGrid('refreshDataAndView');
+        });
+
+        /** 팝업 바코드 처리 **/
+        $("#itemOrderRegisterBarcodeSpan").on('click', function(){
+            $("#itempOrderResgisterBarcodeNum").focus();
+        });
+
+        $("#itempOrderResgisterBarcodeImg").on('click', function(){
+            $("#itempOrderResgisterBarcodeNum").focus();
+        })
+        $('#itempOrderResgisterBarcodeNum').on({
+            focus: function () {
+                $('#itempOrderResgisterBarcodeImg').attr('src','/resource/asset/images/common/img_barcode_long_on.png');
+            },
+            blur: function () {
+                $('#itempOrderResgisterBarcodeImg').attr('src','/resource/asset/images/common/img_barcode_long.png');
+            }
+        });
+
+        $("#itempOrderResgisterBarcodeNum").on('keyup', function(e) {
+            if (e.keyCode === 13) {
+                let barcodeNum = fnBarcodeKo2En(this.value);
+                let data = {'queryId': "material.selectItemOrderRegisterBarcodeChk", 'BARCODE_NUM': barcodeNum};
+                let parameters = {'url': '/json-info', 'data': data};
+                fnPostAjax(function (data) {
+                    let BARCODE_YN = data.info.BARCODE_YN;
+                    if(BARCODE_YN == 'N') {
+                        fnAlert(null,"유효하지 않은 도면 바코드입니다.");
+                    }else {
+                        let CONCAT_SEQ = data.info.CONCAT_SEQ;
+                        data = {'queryId': "material.selectItemOrderRegisterPopListSeq", 'CONCAT_SEQ': CONCAT_SEQ};
+                        let parameters = {'url': '/json-info', 'data': data};
+                        fnPostAjax(function (data) {
+                            let newRowData = fnCloneObj(data.info);
+                            let newRowIndex = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length + 1;
+                            itemOrderRegisterPopTopGrid.pqGrid('addRow', {
+                                newRow: newRowData,
+                                rowIndx: newRowIndex,
+                                checkEditable: false
+                            });
+                        }, parameters, '');
+                    }
+                }, parameters, '');
+
+                this.value = '';
+            }
         });
 
         /** 팝업 버튼 처리 **/
@@ -1250,7 +1306,7 @@
 
                         parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
                         fnPostAjax(function(data, callFunctionParam){
-                            alert("취소 완료되었습니다.");
+                            fnAlert(null,"취소 완료되었습니다.");
                             if($("#item_order_register_popup").hasClass("in")){
                                 $("#item_order_register_popup").modal('hide');
                             }
@@ -1270,36 +1326,41 @@
 
         function itemOrder() {
             let rowDataArray = "";
-            let selectedRowCount = itemOrderRegisterSelectedRowIndex.length;
             let orderList = [];
             let MATERIAL_ORDER_NUM = "";
-            for (let i = 0; i < selectedRowCount; i++) {
-                let CONTROL_SEQ = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).CONTROL_SEQ;
-                let CONTROL_DETAIL_SEQ = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).CONTROL_DETAIL_SEQ;
-                rowDataArray += "'"+CONTROL_SEQ+""+CONTROL_DETAIL_SEQ+"',";
+            if(itemOrderRegisterSelectedRowIndex) {
+                let selectedRowCount = itemOrderRegisterSelectedRowIndex.length;
+                for (let i = 0; i < selectedRowCount; i++) {
+                    let CONTROL_SEQ = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).CONTROL_SEQ;
+                    let CONTROL_DETAIL_SEQ = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).CONTROL_DETAIL_SEQ;
+                    rowDataArray += "'" + CONTROL_SEQ + "" + CONTROL_DETAIL_SEQ + "',";
 
-                MATERIAL_ORDER_NUM = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).MATERIAL_ORDER_NUM;
-                orderList.push(MATERIAL_ORDER_NUM);
+                    MATERIAL_ORDER_NUM = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).MATERIAL_ORDER_NUM;
+                    orderList.push(MATERIAL_ORDER_NUM);
 
-            }
-            let CONCAT_SEQ = rowDataArray.substr(0 , rowDataArray.length-1);
+                }
+                let CONCAT_SEQ = rowDataArray.substr(0, rowDataArray.length - 1);
 
-            // 중복제거
-            orderList = [...new Set(orderList)];
+                // 중복제거
+                orderList = [...new Set(orderList)];
 
-            if (orderList.length > 1) {
-                alert('주문번호를 확인 해 주세요.');
-                return false;
-            }
+                if (orderList.length > 1) {
+                    fnAlert(null,"주문번호를 확인 해 주세요.");
+                    return false;
+                }
 
-            if(MATERIAL_ORDER_NUM == '' || MATERIAL_ORDER_NUM == undefined) {
+                if (MATERIAL_ORDER_NUM == '' || MATERIAL_ORDER_NUM == undefined) {
+                    $("#item_order_register_popup_form #queryId").val("selectItemOrderRegisterPopListSeq");
+                    $("#item_order_register_popup_form #CONCAT_SEQ").val(CONCAT_SEQ);
+                    $("#item_order_register_popup_form #MATERIAL_ORDER_NUM").val("");
+                } else {
+                    $("#item_order_register_popup_form #queryId").val("selectItemOrderRegisterPopListNum");
+                    $("#item_order_register_popup_form #CONCAT_SEQ").val("");
+                    $("#item_order_register_popup_form #MATERIAL_ORDER_NUM").val(MATERIAL_ORDER_NUM);
+                }
+            } else {
                 $("#item_order_register_popup_form #queryId").val("selectItemOrderRegisterPopListSeq");
-                $("#item_order_register_popup_form #CONCAT_SEQ").val(CONCAT_SEQ);
-                $("#item_order_register_popup_form #MATERIAL_ORDER_NUM").val("");
-            }else{
-                $("#item_order_register_popup_form #queryId").val("selectItemOrderRegisterPopListNum");
-                $("#item_order_register_popup_form #CONCAT_SEQ").val("");
-                $("#item_order_register_popup_form #MATERIAL_ORDER_NUM").val(MATERIAL_ORDER_NUM);
+                $("#item_order_register_popup_form #CONCAT_SEQ").val(0);
             }
             $("#item_order_register_popup").modal('toggle');
         }
@@ -1365,7 +1426,7 @@
             }
 
             if( !availableCancel ) {
-                alert("소재주문상태를 확인 해 주세요.");
+                fnAlert(null,"소재주문상태를 확인 해 주세요.");
                 return false;
             }
 
@@ -1428,7 +1489,7 @@
                             fnPostAjax(function(data, callFunctionParam){
                                 parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
                                 fnPostAjax(function(data, callFunctionParam){
-                                    alert("취소 완료되었습니다.");
+                                    fnAlert(null,"취소 완료되었습니다.");
                                     $("#item_order_register_popup").modal('hide');
                                 }, parameters, '');
                             }, parameters, '');
@@ -1690,10 +1751,15 @@
 
         function btnDisabled() {
             let data = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data');
+            let MATERIAL_ORDER_NUM = "";
+            let ORDER_STATUS = "";
+
             $('#item_order_register_popup_top_grid_records').html(data.length);
 
-            let MATERIAL_ORDER_NUM = data[0].MATERIAL_ORDER_NUM === undefined ? "" : data[0].MATERIAL_ORDER_NUM;
-            let ORDER_STATUS = data[0].ORDER_STATUS === undefined ? "" : data[0].ORDER_STATUS;
+            if(data.length > 0 ){
+                MATERIAL_ORDER_NUM = data[0].MATERIAL_ORDER_NUM === undefined ? "" : data[0].MATERIAL_ORDER_NUM;
+                ORDER_STATUS = data[0].ORDER_STATUS === undefined ? "" : data[0].ORDER_STATUS;
+            }
 
             $("#orderNotCompleteBtnBox").css('display', 'none');
             $("#orderCompleteBtnBox").css('display', 'none');
