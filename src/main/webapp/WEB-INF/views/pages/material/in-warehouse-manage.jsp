@@ -1087,7 +1087,7 @@
                         indx = -1;
                     }
                 }
-                if (indx >= 0) {
+                if (indx >= 0 && txt) {
                     var txt1 = val.toString().substring(0, indx);
                     var txt2 = val.toString().substring(indx, indx + txtUpper.length);
                     var txt3 = val.toString().substring(indx + txtUpper.length);
@@ -1134,7 +1134,7 @@
                         indx = -1;
                     }
                 }
-                if (indx >= 0) {
+                if (indx >= 0 && txt) {
                     var txt1 = val.toString().substring(0, indx);
                     var txt2 = val.toString().substring(indx, indx + txtUpper.length);
                     var txt3 = val.toString().substring(indx + txtUpper.length);
