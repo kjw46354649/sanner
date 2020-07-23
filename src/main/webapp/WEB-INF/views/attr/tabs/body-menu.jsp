@@ -40,6 +40,12 @@
                 <li><a href="#" url="${menu.MENU_LINK}" tname="${menu.MENU_NM}" pid="${menu.CD_NO}">${menu.MENU_NM}</a></li>
             </c:if>
             <c:set var="menuCnt" value="${menuCnt + 1}"/>
+            <c:if test="${menu.MENU_SEQ eq 12}">
+                <input type="hidden" name="estimateNo" id="estimateNo" value="${menu.CD_NO}">
+            </c:if>
+            <c:if test="${menu.MENU_SEQ eq 24}">
+                <input type="hidden" name="stockNo" id="stockNo" value="${menu.CD_NO}">
+            </c:if>
         </c:forEach>
                             </ul>
                         </div>

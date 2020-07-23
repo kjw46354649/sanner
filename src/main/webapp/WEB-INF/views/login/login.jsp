@@ -114,6 +114,59 @@
         }
     }
 
+/**
+     * @title {String or DOMElement} The dialog title.
+     * @message {String or DOMElement} The dialog contents.
+     * @onok {Function} Invoked when the user clicks OK button or closes the dialog.
+     *
+     * fnAlert(null,"<h1>안녕하세요</h1>", function () {alert('확인 클릭')});
+     *
+     */
+    const fnAlert = function (title, message, onok) {
+        alertify.alert()
+            .setting({
+                'title': title,
+                'message': message,
+                'onok': onok,
+                'movable': false,
+                'transitionOff': true
+            }).show();
+    };
+
+    /**
+     * @title {String or DOMElement} The dialog title.
+     * @message {String or DOMElement} The dialog contents.
+     * @onok {Function} Invoked when the user clicks OK button.
+     * @oncancel {Function} Invoked when the user clicks Cancel button or closes the dialog.
+     * @autoOk {number} Automatically confirms the dialog after n seconds.
+     *
+     * fnConfirm(null, 'message', function() {alert('확인 클릭')}, function() {alert('취소 클릭')}, 5);
+     *
+     */
+    const fnConfirm = function (title, message, onok, oncancel, autoOk) {
+        if (autoOk == undefined || autoOk == null) {
+            alertify.confirm()
+                .setting({
+                    'title': title,
+                    'message': message,
+                    'onok': onok,
+                    'oncancel': oncancel,
+                    'movable': false,
+                    'transitionOff': true
+                }).show();
+        } else {
+            alertify.confirm()
+                .setting({
+                    'title': title,
+                    'message': message,
+                    'onok': onok,
+                    'oncancel': oncancel,
+                    'movable': false,
+                    'transitionOff': true
+                }).show().autoOk(autoOk);
+        }
+    };
+
     loadStorage();
 
 </script>
