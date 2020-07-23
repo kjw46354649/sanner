@@ -78,10 +78,10 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
     <!--JSPrintManager scripts-->
-    <script type="text/javascript" src="/resource/plugins/jspPrint/JSPrintManager.js"></script>
-    <script type="text/javascript" src="/resource/plugins/jspPrint/zip.js"></script>
-    <script type="text/javascript" src="/resource/plugins/jspPrint/zip-ext.js"></script>
-    <script type="text/javascript" src="/resource/plugins/jspPrint/deflate.js"></script>
+<%--    <script type="text/javascript" src="/resource/plugins/jspPrint/JSPrintManager.js"></script>--%>
+<%--    <script type="text/javascript" src="/resource/plugins/jspPrint/zip.js"></script>--%>
+<%--    <script type="text/javascript" src="/resource/plugins/jspPrint/zip-ext.js"></script>--%>
+<%--    <script type="text/javascript" src="/resource/plugins/jspPrint/deflate.js"></script>--%>
     <!--end JSPrintManager scripts-->
 
       <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
