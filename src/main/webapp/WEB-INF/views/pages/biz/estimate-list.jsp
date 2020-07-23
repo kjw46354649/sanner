@@ -823,7 +823,7 @@
         $("#btnEstimateListNewEstimate").on('click', function(){
             $("#estimate_version_up_sequence_form #hidden_est_seq").val('');
 
-            $("a[pid='10000102']").trigger("click");
+            $("a[pid='" + $("#estimateNo").val() + "']").trigger("click");
             setTimeout(function(){
                 $("#estimateRegisterReloadBtn").trigger('click');
             }, 800)
@@ -860,7 +860,7 @@
                         };
                         parameters = {'url': '/json-create', 'data': parameter};
                         fnPostAjax('',parameters, '');
-                        $("a[pid='10000102']").trigger("click");
+                        $("a[pid='" + $("#estimateNo").val() + "']").trigger("click");
                         setTimeout(function(){
                             $("#estimateRegisterReloadBtn").trigger('click');
                         }, 800)
@@ -947,7 +947,7 @@
 
         $("#estimate_version_up_sequence_form #hidden_est_seq").val(seq);
 
-        $("a[pid='10000102']").trigger("click");
+        $("a[pid='" + $("#estimateNo").val() + "']").trigger("click");
         setTimeout(function(){
             $("#estimateRegisterReloadBtn").trigger('click');
         }, 800)

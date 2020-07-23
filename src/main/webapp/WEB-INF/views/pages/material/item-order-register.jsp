@@ -1067,7 +1067,7 @@
 
         $("#btnItemOrderRegisterCurrentStock").on('click', function(){
             let role_seq = '${authUserInfo.ROLE_SEQ}';
-            $("a[pid='"+ role_seq +"0403']").trigger("click");
+            $("a[pid='"+ $("#stockNo").val() +"']").trigger("click");
         });
 
         $("#chkItemOrderRegisterAutoMatching").on('change', function(evt){

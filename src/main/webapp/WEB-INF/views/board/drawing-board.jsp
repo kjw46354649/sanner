@@ -17,6 +17,9 @@
     <link rel="stylesheet" href="/resource/asset/css/reset.css" type="text/css" />
     <link rel="stylesheet" href="/resource/asset/css/common.css" type="text/css" />
     <link rel="stylesheet" href="/resource/asset/css/tab.css" type="text/css" />
+    <!-- alertify -->
+    <link rel="stylesheet" type="text/css" href="/resource/plugins/alertifyjs/css/alertify.css" />
+    <link rel="stylesheet" type="text/css" href="/resource/plugins/alertifyjs/css/themes/default.css" />
 
     <script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
@@ -24,6 +27,9 @@
     <script type="text/javascript" src="/resource/plugins/dhtmlx/suite.min.js"></script>
     <script type="text/javascript" src='/resource/plugins/waitme/waitMe.js'></script>
     <script type="text/javascript" src="/resource/plugins/scanner/onscan.js" ></script>
+    <!-- alertify -->
+    <script type="text/javascript" src='/resource/plugins/alertifyjs/alertify.js'></script>
+
     <style type="text/css">
         .dhx_message__icon{
             color:#ffffff !important;
@@ -367,7 +373,7 @@
                     <div class="qual">
                         <div class="qualTit"><srping:message key='drawing.board.label.08'/></div>
                         <div class="qualConts">
-                            <span></span>
+                            <span><%--<img src="/barcode/code128/C000003844">--%></span>
                         </div>
                     </div>
                 </div>
@@ -849,11 +855,18 @@
                 data: { 'queryId': 'common.selectBarcodePrintControlCheck', 'BARCODE_NUM': barcodeNumber},
                 success: function (data, textStatus, jqXHR) {
                     if (textStatus === 'success') {
-                       if(data.info != null && data.info.USE_YN == 'Y'){
-                           returnVal = true;
-                       }else {
-                           showMessage("<srping:message key='drawing.board.alert.01'/>");
-                       }
+                        if(data.info){
+                            let partStatus = data.info.PART_STATUS;
+                            if(partStatus == "" || partStatus == "PRO001" || partStatus == "PRO003" || partStatus == "PRO004" || partStatus == "PRO012" || partStatus == "PRO014") {
+                                showMessage("<srping:message key='drawing.board.alert.07'/>");
+                            } else if(data.info.USE_YN == 'Y') {
+                                returnVal = true;
+                            } else {
+                                showMessage("<srping:message key='drawing.board.alert.01'/>");
+                            }
+                        }else{
+                            showMessage("<srping:message key='drawing.board.alert.01'/>");
+                        }
                     } else {
                         showMessage("<srping:message key='error.common'/>");
                     }
@@ -942,6 +955,60 @@
            $("#drawing_worker_target_list_popup").css("display", "none");
            $("#drawing_worker_scan_popup").css("display", "block");
        };
+
+        /**
+         * @title {String or DOMElement} The dialog title.
+         * @message {String or DOMElement} The dialog contents.
+         * @onok {Function} Invoked when the user clicks OK button or closes the dialog.
+         *
+         * fnAlert(null,"<h1>안녕하세요</h1>", function () {alert('확인 클릭')});
+         *
+         */
+        const fnAlert = function (title, message, onok) {
+            alertify.alert()
+                .setting({
+                    'title': title,
+                    'message': message,
+                    'onok': onok,
+                    'movable': false,
+                    'transitionOff': true
+                }).show();
+        };
+
+        /**
+         * @title {String or DOMElement} The dialog title.
+         * @message {String or DOMElement} The dialog contents.
+         * @onok {Function} Invoked when the user clicks OK button.
+         * @oncancel {Function} Invoked when the user clicks Cancel button or closes the dialog.
+         * @autoOk {number} Automatically confirms the dialog after n seconds.
+         *
+         * fnConfirm(null, 'message', function() {alert('확인 클릭')}, function() {alert('취소 클릭')}, 5);
+         *
+         */
+        const fnConfirm = function (title, message, onok, oncancel, autoOk) {
+            if (autoOk == undefined || autoOk == null) {
+                alertify.confirm()
+                    .setting({
+                        'title': title,
+                        'message': message,
+                        'onok': onok,
+                        'oncancel': oncancel,
+                        'movable': false,
+                        'transitionOff': true
+                    }).show();
+            } else {
+                alertify.confirm()
+                    .setting({
+                        'title': title,
+                        'message': message,
+                        'onok': onok,
+                        'oncancel': oncancel,
+                        'movable': false,
+                        'transitionOff': true
+                    }).show().autoOk(autoOk);
+            }
+        };
+
     });
 
 </script>

@@ -604,7 +604,7 @@
             }
         };
 
-        let reloadData = function () {
+        let reloadWorkProcessConfigData = function () {
             $confirmOrderGrid.pqGrid('refreshDataAndView');
             $processConfirmGrid.pqGrid('refreshDataAndView');
             $outsideGrid.pqGrid('refreshDataAndView');
@@ -725,7 +725,7 @@
         $processCompleteGrid = $('#' + botRightGridId).pqGrid(botRightObj);
 
         const THIRTY_SECONDS = 30 * 1000;
-        setInterval(reloadData, THIRTY_SECONDS);
+        setInterval(reloadWorkProcessConfigData, THIRTY_SECONDS);
         /* init */
 
 
@@ -748,7 +748,7 @@
         });
 
         $('#PROCESS_CONFIRM_REFRESH').on('click', function () {
-            reloadData();
+            reloadWorkProcessConfigData();
         });
 
         /** 도면 보기 팝업 호출 */

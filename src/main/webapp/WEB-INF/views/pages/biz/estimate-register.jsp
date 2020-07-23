@@ -992,7 +992,7 @@
         });
 
         function estimateRegisterSaveCallBack(response, callMethodParam){
-            fnAlert(null,"저장 되었습니다.");
+            // fnAlert(null,"저장 되었습니다.");
             estimateRegisterReloadPageData();
         };
 
@@ -1082,7 +1082,7 @@
                     'url': '/registerEstimateSave',
                     'data': $("#estimate_register_info_form").serialize()
                 };
-                fnPostAjaxAsync(estimateRegisterSaveCallBack, parameters, '');
+                fnPostAjax(estimateRegisterSaveCallBack, parameters, '');
             }, parameters, '');
         }
 
@@ -1096,25 +1096,22 @@
 
         $("#btn_estimate_register_submit").on("click", function(){
             fnEstimateRegisterSave();
-
             //Confirm Box
             let headHtml = "messsage", bodyHtml ="", yseBtn="예", noBtn="아니오";
-
             let autoEmailYn = estimateRegisterBotGrid.pqGrid('option', 'dataModel.data').length > 0 ? true : false;
             if(autoEmailYn){
                 bodyHtml =
                     '<h4>\n' +
-                    '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
+                    '<img style=\'width: 32px; height: 32px;\' src=\'/resource/asset/images/work/alert.png\'>&nbsp;&nbsp;\n' +
                     '<span>메일을 송신합니다. 계속 진행하시겠습니까?</span>' +
                     '</h4>';
             }else{
                 bodyHtml =
                     '<h4>\n' +
-                    '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
+                    '<img style=\'width: 32px; height: 32px;\' src=\'/resource/asset/images/work/alert.png\'>&nbsp;&nbsp;\n' +
                     '<span>메일 송신 없이 완료처리만 진행합니다.\n 진행하시겠습니까?</span>' +
                     '</h4>';
             }
-
             fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
             let estimateRegisterSubmitConfirm = function(callback) {
                 commonConfirmPopup.show();

@@ -2640,7 +2640,7 @@
 
             $('#estimate_version_up_sequence_form > #hidden_control_seq').val(controlSeqStr);
 
-            $("a[pid='10000102']").trigger('click');
+            $("a[pid='" + $("#estimateNo").val() + "']").trigger('click');
             setTimeout(function () {
                 $('#updateFromControl').trigger('click');
             }, 800);
