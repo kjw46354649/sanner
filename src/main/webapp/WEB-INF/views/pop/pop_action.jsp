@@ -117,7 +117,7 @@
                             </span>
                             <span class="wd_200">&nbsp;</span>
                             <span class="ipu_wrap"><img id="barCodeImg" class="barCodeImg" src="/resource/asset/images/common/img_barcode_long.png"  style="height: 50px;" alt="바코드"></span>
-                            <span class="ipu_wrap" style="padding-left: 10px;"><input type="text" name="popBarcode" id="popBarcode" class="popBarcode" placeholder="읽기 불가능 모드" value="" title="바코드번호"></span>
+                            <span class="ipu_wrap" style="padding-left: 10px;"><input type="text" name="popBarcode" id="popBarcode" class="popBarcode" placeholder="읽기 불가능 모드" value="" title="바코드번호" style="ime-mode:inactive;"></span>
                         </form>
                     </div>
                     <div class="right_float">
@@ -173,12 +173,12 @@
             var popMasterColModel = [
                 {title: '긴', minWidth: 25, width: 25, dataType: 'string', aligin: 'center', dataIndx: 'EMERGENCY_YN'},
                 {title: '가공납기', minWidth: 30, width: 85, datatype: 'string', dataIndx: 'INNER_DUE_DT'},
-                {title: '발주업체', minWidth: 30, width: 150, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
+                {title: '발주업체', minWidth: 30, width: 120, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
                 {title: '관리번호', minWidth: 30, width: 310, align: 'left', dataType: 'string', dataIndx: 'CONTROL_NUM', },
-                {title: '규격', minWidth: 30, width: 120, dataType: 'string', dataIndx: 'SIZE_TXT', },
+                {title: '규격', minWidth: 30, width: 160, dataType: 'string', dataIndx: 'SIZE_TXT', },
                 {title: '수량', minWidth: 30, width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY'},
-                {title: '이전위치', minWidth: 30, width: 150, dataType: 'string', dataIndx: 'POP_PREV_POSITION'},
-                {title: '비고', minWidth: 30, width: 300, dataType: 'string', dataIndx: ''}
+                {title: '위치일시', minWidth: 30, width: 120, dataType: 'string', dataIndx: 'POP_DT'},
+                {title: '이전위치', minWidth: 30, width: 120, dataType: 'string', dataIndx: 'POP_PREV_POSITION'}
             ];
 
             var popMasterObj = {

@@ -321,7 +321,7 @@
                 <div id="commonAlertBodyHtml">
                     <h4>
                         <img style='width: 32px; height: 32px;' src="/resource/asset/images/work/alert.png">
-                        <span>ㅃㅃㅃㅃ</span>
+                        <span></span>
                     </h4>
                 </div>
             </div>
@@ -376,6 +376,124 @@
     </div>
 </div>
 <!-- 창고 공통 팝업 : E -->
+<!-- 사용자 정보 팝업 : S -->
+<div class="popup_container" id="user_info_pop" style="display: none;">
+    <form class="form-inline" id="user_info_pop_form" name="user_info_pop_form" role="form">
+        <input type="hidden" id="queryId" name="queryId" value="system.selectUserInfo">
+        <input type="hidden" id="selUserId" name="selUserId" value="">
+        <div class="layerPopup">
+            <h3>사용자 정보</h3>
+            <button type="button" class="pop_close mg-top10 mg-right8" id="user_info_pop_close2">닫기</button>
+            <div class="qualityWrap">
+                <div class="h_area">
+					<div class="right_sort ">
+                        <button type="button" class="defaultBtn btn-120w red" id="saveBtn">저장</button>
+                        <button type="button" class="defaultBtn btn-120w red" id="notUseBtn">사용안함</button>
+                        <button type="button" class="defaultBtn btn-120w green" id="deleteBtn">삭제</button>
+					</div>
+                </div>
+                <div class="resultWrap99 list99">
+                    <div class="leftWrap" style="margin-top: 16px;">
+                        <input type="hidden" id="PHOTO_GFILE_SEQ" name="PHOTO_GFILE_SEQ" value="">
+                        <img src="/image/999" id="PHOTO_GFILE_SRC" width="400px" alt="장비사진" style="border:1px solid #707070">
+                        <div class="btnWrap">
+                            <button type="button" id="photo_upload" class="defaultBtn">사진변경하기</button>
+                        </div>
+                    </div>
+                    <div class="rightWrap">
+                        <table class="rowStyle">
+                            <caption></caption>
+                            <colgroup>
+                                <col width="110px">
+                                <col width="171px">
+                                <col width="110px">
+                                <col width="171px">
+                            </colgroup>
+                            <tr>
+                                <th scope="row">사용자 아이디</th>
+                                <td><input type="text" name="EQUIP_ID" id="EQUIP_ID" placeholder="Item ID" value="" title="Item ID" class="wd_150"></td>
+                                <th scope="row">사용자 이름</th>
+                                <td id="EQUIP_KIND_NM"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">패스워드</th>
+                                <td ><input type="text" name="EQUIP_NM" id="EQUIP_NM" placeholder="장비명" value="" title="장비명" class="wd_150"></td>
+                                <th scope="row">패스워드 체크</th>
+                                <td>
+                                    <select id="PROCESS_TYPE" name="PROCESS_TYPE" data-required="true" class="wd_150">
+                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                        <c:forEach var="vlocale" items="${HighCode.H_1010}">
+                                            <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
+                                        </c:forEach>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">전화</th>
+                                <td>
+                                    <select id="EQUIP_TYPE" name="EQUIP_TYPE" data-required="true" class="wd_150">
+                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                        <c:forEach var="vlocale" items="${HighCode.H_1012}">
+                                            <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
+                                        </c:forEach>
+                                    </select>
+                                </td>
+                                <th scope="row">이메일</th>
+                                <td>
+                                    <input type="text" name="EQUIP_SIZE" id="EQUIP_SIZE" placeholder="장비규격" value="" title="장비규격" class="wd_150">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">직급</th>
+                                <td>
+                                    <select id="EQUIP_COMP_CD" name="EQUIP_COMP_CD" data-required="true" class="wd_150">
+                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                        <c:forEach var="vlocale" items="${HighCode.H_1037}">
+                                            <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
+                                        </c:forEach>
+                                    </select>
+                                </td>
+                                <th scope="row">직책</th>
+                                <td>
+                                    <select id="FACTORY_AREA" name="FACTORY_AREA" data-required="true" class="wd_150">
+                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                        <c:forEach var="vlocale" items="${HighCode.H_1005}">
+                                            <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
+                                        </c:forEach>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">부서</th>
+                                <td>
+                                    <select id="EQUIP_COMP_CD" name="EQUIP_COMP_CD" data-required="true" class="wd_150">
+                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                        <c:forEach var="vlocale" items="${HighCode.H_1037}">
+                                            <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
+                                        </c:forEach>
+                                    </select>
+                                </td>
+                                <th scope="row">권한그룹</th>
+                                <td>
+                                    <select id="FACTORY_AREA" name="FACTORY_AREA" data-required="true" class="wd_150">
+                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                        <c:forEach var="vlocale" items="${HighCode.H_1005}">
+                                            <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
+                                        </c:forEach>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="btnWrap">
+                 <button type="button" class="defaultBtn grayPopGra" id="user_info_pop_close">닫기</button>
+             </div>
+        </div>
+    </form>
+</div>
+<!-- 창고 공통 팝업 : E -->
 
 <script type="text/javascript">
 
@@ -400,6 +518,26 @@
 
     $(function() {
         'use strict';
+
+
+        $("#user_info_pop").on('hide.bs.modal', function(){
+            fnResetFrom("user_info_pop_form");
+            // $("#user_info_pop_form").find("#PHOTO_GFILE_SRC").attr("src", "/image/999");
+        });
+        // 모달 open
+        $("#user_info_pop").on('show.bs.modal', function(){
+            let parameters = {
+                'url': '/json-info',
+                'data': $('#user_info_pop_form').serialize()
+            };
+            fnPostAjax(function (data, callFunctionParam) {
+                let dataInfo = data.info;
+            }, parameters, '');
+        });
+
+        $('#user_info_pop_form').find('#user_info_pop_close2, #user_info_pop_close').on('click', function () {
+            $('#user_info_pop').modal('hide');
+        });
 
         /** 캐드 파일 업로드 시작 스크립트 **/
         let estimateCadFileColModel =  [
@@ -1428,12 +1566,6 @@
 
     }
 
-
-    // $("#g_item_detail_pop_cam_pop").on('show.bs.modal', function(){
-    //
-    //
-    //
-    // });
     $("#g_item_detail_pop_cam_pop_grid_pop_close, #g_item_detail_pop_cam_pop_grid_pop_close2").on('click', function () {
          //fnResetFrom("g_item_detail_pop_cam_pop_form");
         //       console.log(g_ItemDetailPopCamPopGridId01);
@@ -1449,8 +1581,6 @@
 
     /**  공통 제품상세 정보  끝 **/
 
-    
-    
     /** 공통 창고 팝업 Start **/
     let commonWarehouseManageGrid = $("#common_warehouse_manage_grid");
     let commonWarehouseManageModel= [
@@ -1497,12 +1627,9 @@
     }
     function fnCommonWarehouse() {
         $('#common_warehouse_manage_popup').modal('show');
-
         $("#common_warehouse_manage_popup_form").find("#queryId").val('material.selectCommonWarehouseManageList');
-
         commonWarehouseManageObj.dataModel.postData = fnFormToJsonArrayData('common_warehouse_manage_popup_form');
         commonWarehouseManageGrid.pqGrid(commonWarehouseManageObj);
-
         commonWarehouseManageGrid.pqGrid('refreshDataAndView');
     }
     
@@ -1516,7 +1643,6 @@
     $("#btnCommonWarehouseManageAdd").on('click', function(){
         let WAREHOUSE_CD = $("#common_warehouse_manage_popup_form #WAREHOUSE_CD option:selected").val();
         let WAREHOUSE_NM = $("#common_warehouse_manage_popup_form #WAREHOUSE_CD option:selected").text();
-
         commonWarehouseManageGrid.pqGrid('addRow', {
             newRow: {WAREHOUSE_CD:WAREHOUSE_CD, WAREHOUSE_NM:WAREHOUSE_NM},
             rowIndx : 0,
@@ -1538,7 +1664,6 @@
     });
     
     /** 공통 창고 팝업 end **/
-    
     function estimateListFileUploadCallback(GfileSeq) {
         if(!GfileSeq) {
             let parameter = {

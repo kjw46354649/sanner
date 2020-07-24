@@ -59,6 +59,30 @@
         ORDER BY USER_ID
     </select>
 
+    <select id="selectUserInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+            SELECT
+                USER_ID,
+                USER_NM,
+                USER_TEL,
+                USER_EMAIL,
+                USER_PWD,
+                ROLE_SEQ,
+                (SELECT ROLE_NM FROM TBL_ROLE WHERE TBL_ROLE.ROLE_SEQ = TBL_USER.ROLE_SEQ) AS ROLE_SEQ_NM,
+                POSITION_NM,
+                JOB_TITLE,
+                DEL_YN,
+                DEPARTMENT,
+                SF_GET_CODE_NM(1061, DEPARTMENT, 'EN') AS DEPARTMENT_NM,
+                SF_GET_CODE_NM(1042, DEL_YN, 'EN') AS DEL_YN_NM,
+                PHOTO_GFILE_SEQ,
+                INSERT_DT
+            FROM TBL_USER
+            WHERE 1=1
+                <if test="selUserId != null and selUserId != ''">
+                    AND USER_ID = #{selUserId}
+                </if>
+        </select>
+
     <insert id="insertUser" parameterType="java.util.HashMap">
 		INSERT INTO TBL_USER
             (USER_ID, USER_NM, USER_PWD, USER_TEL, USER_EMAIL, POSITION_NM, JOB_TITLE, PHOTO_GFILE_SEQ, DEPARTMENT, ROLE_SEQ, DEL_YN, INSERT_ID)

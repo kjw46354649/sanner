@@ -194,7 +194,6 @@
         <input type="hidden" id="EQUIP_KIND" name="EQUIP_KIND" value="">
         <input type="hidden" id="EQUIP_SEQ" name="EQUIP_SEQ" value="" >
         <input type="hidden" id="historyGrid" name="historyGrid" value="" >
-
         <div class="layerPopup">
             <h3>장비상세정보</h3>
             <button type="button" class="pop_close mg-top10 mg-right8" id="machine_manage_pop-close2">닫기</button>
@@ -256,12 +255,6 @@
                                 <th scope="row">장비규격</th>
                                 <td>
                                     <input type="text" name="EQUIP_SIZE" id="EQUIP_SIZE" placeholder="장비규격" value="" title="장비규격" class="wd_150">
-<%--                                    <select id="EQUIP_SIZE" name="EQUIP_SIZE" data-required="true" class="wd_150">--%>
-<%--                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>--%>
-<%--                                        <c:forEach var="vlocale" items="${HighCode.H_1034}">--%>
-<%--                                            <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>--%>
-<%--                                        </c:forEach>--%>
-<%--                                    </select>--%>
                                 </td>
                             </tr>
                             <tr>
@@ -364,16 +357,13 @@
                             </ul>
                         </div>
                     </div>
-
-
-
                 </div>
             </div>
             <div class="btnWrap">
                  <button type="button" class="defaultBtn grayPopGra" id="machine_manage_pop-close">닫기</button>
              </div>
         </div>
-
+    </form>
 </div>
 <!-- 품질실적 layer popup : E -->
 

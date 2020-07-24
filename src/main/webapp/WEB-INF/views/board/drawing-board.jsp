@@ -331,11 +331,11 @@
                     </div>
                     <div class="timeWrap">
                         <span class="timeTit"><srping:message key='drawing.board.button.03'/></span>
-                        <span class="time"><c:if test="${not empty workInfo}">${workInfo.STOP_TIME}</c:if></span>
+                        <span class="time"><c:if test="${not empty workInfo}">${workInfo.STOP_TIME}</c:if> &nbsp;<srping:message key='drawing.board.label.02'/></span>
                     </div>
                     <div class="timeWrap">
                         <span class="timeTit"><srping:message key='drawing.board.button.04'/></span>
-                        <span class="time"><c:if test="${not empty workInfo}">${workInfo.WORK_TIME}</c:if></span>
+                        <span class="time"><c:if test="${not empty workInfo}">${workInfo.WORK_TIME}</c:if> &nbsp;<srping:message key='drawing.board.label.02'/></span>
                     </div>
                 </div>
                 <div class="middleConts">
@@ -378,8 +378,8 @@
                     </div>
                 </div>
                 <div class="alertConts">
-                    <c:if test="${not empty workInfo && workInfo.MAIN_INSPECTION eq 'Y'}">
-                        <span class="alertBox"><srping:message key='drawing.board.label.09'/></span>
+                    <c:if test="${not empty workInfo && workInfo.MAIN_INSPECTION ne ''}">
+                        <span class="alertBox">${workInfo.MAIN_INSPECTION}</span>
                     </c:if>
                     <c:if test="${not empty workInfo && workInfo.EMERGENCY_YN eq 'Y'}">
                         <span class="alertBox"><srping:message key='drawing.board.label.10'/></span>
@@ -429,9 +429,9 @@
                         };
                         fnPostAjax(function (data, callFunctionParam) {
                             if(data.info != null){
-                                if(!checkDoubleWorkControl(data.info.CONTROL_SEQ, data.info.CONTROL_DETAIL_SEQ)){
-                                    return false;
-                                }
+                                // if(!checkDoubleWorkControl(data.info.CONTROL_SEQ, data.info.CONTROL_DETAIL_SEQ)){
+                                //     return false;
+                                // }
                                 startWork(data.info);
                             }else{
                                showMessage("<srping:message key='drawing.board.alert.01'/>");
@@ -576,9 +576,9 @@
             let controlSeq = $(this).attr("sControlSeq");
             let controlDetailSeq = $(this).attr("sControlDetailSeq");
 
-            if(!checkDoubleWorkControl(controlSeq, controlDetailSeq)){
-                return false;
-            }
+            // if(!checkDoubleWorkControl(controlSeq, controlDetailSeq)){
+            //     return false;
+            // }
 
             var tr = $(this);
             var td = tr.children();
@@ -825,16 +825,16 @@
             $("#drawing_worker_scan_popup").css("display", "block");
         }
 
-        let checkDoubleWorkControl = function(controlSeq, controlDetailSeq){
-            let beforeControlSeq = $("#drawing_action_form").find("#CONTROL_SEQ").val();
-            let beforeControlDetailSeq = $("#drawing_action_form").find("#CONTROL_DETAIL_SEQ").val();
-            if(beforeControlSeq == controlSeq && beforeControlDetailSeq == controlDetailSeq){
-                alert("<srping:message key='drawing.board.alert.03'/>");
-                return false;
-            }else{
-                return true;
-            }
-        }
+        <%--let checkDoubleWorkControl = function(controlSeq, controlDetailSeq){--%>
+        <%--    let beforeControlSeq = $("#drawing_action_form").find("#CONTROL_SEQ").val();--%>
+        <%--    let beforeControlDetailSeq = $("#drawing_action_form").find("#CONTROL_DETAIL_SEQ").val();--%>
+        <%--    if(beforeControlSeq == controlSeq && beforeControlDetailSeq == controlDetailSeq){--%>
+        <%--        alert("<srping:message key='drawing.board.alert.03'/>");--%>
+        <%--        return false;--%>
+        <%--    }else{--%>
+        <%--        return true;--%>
+        <%--    }--%>
+        <%--}--%>
 
         let showMessage = function(message){
             dhx.message({

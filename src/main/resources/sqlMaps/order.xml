@@ -180,6 +180,7 @@
             H.ERROR_ACTION, <!-- 조치 -->
             SF_GET_CODE_NM('1025', H.ERROR_ACTION, 'KR') AS ERROR_ACTION_NM, <!-- 조치 -->
             H.ERROR_NOTE, <!-- 조치방안 -->
+            (SELECT D.BARCODE_NUM FROM TBL_CONTROL_BARCODE D WHERE B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.DEL_YN = 'N') AS CONTROL_BARCODE_NUM,
             <!-- D.BARCODE_NUM AS CONTROL_BARCODE_NUM, 주문관리바코드번호(도면라벨) -->
             <!-- E.BARCODE_NUM AS LABEL_BARCODE_NUM, 라벨바코드번호(박스라벨) -->
             SF_GET_DATE_F(IF(TIMESTAMPDIFF(SECOND, B.INSERT_DT, B.UPDATE_DT) <![CDATA[ < ]]> 0, B.INSERT_DT, B.UPDATE_DT), 'YY', 'M') AS CONTROL_PART_INSERT_UPDATE_DT <!-- 등록/업데이트 일시 -->
@@ -1576,6 +1577,7 @@
         FROM TBL_CONTROL C
             INNER JOIN TBL_CONTROL_PART B ON C.CONTROL_SEQ = B.CONTROL_SEQ
         WHERE 1 = 1
+            AND C.DEL_YN = 'N'
             AND IFNULL(C.CONTROL_STATUS, 'ORD002') IN ('ORD002')    <!-- 확정/종료/마감 완료된 대상은 업로드 불가 추소 & 대기만 업로드 가능 -->
             AND UPPER(B.DRAWING_NUM) = #{MAPPING_STR}
     </select>

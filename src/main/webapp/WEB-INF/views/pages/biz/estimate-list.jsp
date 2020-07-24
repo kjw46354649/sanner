@@ -944,11 +944,9 @@
     $(document).on('click', '#estimateRegisterPage', function(event){
         let seq = event.target.dataset.seq;
         let status = event.target.dataset.status;
-
-        $("#estimate_version_up_sequence_form #hidden_est_seq").val(seq);
-
         $("a[pid='" + $("#estimateNo").val() + "']").trigger("click");
         setTimeout(function(){
+            $("#estimate_version_up_sequence_form #hidden_est_seq").val(seq);
             $("#estimateRegisterReloadBtn").trigger('click');
         }, 800)
         event.preventDefault();

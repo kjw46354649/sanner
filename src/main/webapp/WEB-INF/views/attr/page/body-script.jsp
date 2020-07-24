@@ -156,7 +156,6 @@
             };
             changes.queryIdList = QUERY_ID_ARRAY;
             parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}}
-
             fnPostAjax(function (data, callFunctionParam) {
                 grid.pqGrid('refreshDataAndView');
             }, parameters, '');
@@ -178,17 +177,13 @@
             rowDataArray[i] = grid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
             rowDataArray[i].queryId = QUERY_ID;
         }
-
         parameters = {'url': '/paramQueryDeleteGrid', 'data': {data: JSON.stringify(rowDataArray)}}
-
         fnPostAjax(function (data, callFunctionParam) {
             if (selectedRowCount > 0) {
                 var rowListConvert = [];
-
                 for (var row of selectedRowIndex) {
                     rowListConvert.push({'rowIndx': row});
                 }
-
                 grid.pqGrid('deleteRow', {rowList: rowListConvert});
             }
         }, parameters, '');

@@ -450,13 +450,13 @@ table.boardList .txtP{color: #7030a0;}
   font-size: large !important;
 }
   /** etc file **/
-.blueFileImageICon { display: inline-block; width: 20px;height: 20px; background: url(../images/common/file_icon_blue.png) no-repeat 0 0;}
+.blueFileImageICon { display: inline-block; width: 17px;height: 17px; background: url(../images/common/file_icon_blue.png) no-repeat 0 0; background-size: 16px 16px}
 /** png, pdf file **/
-.redFileImageICon { display: inline-block; width: 20px;height: 20px; background: url(../images/common/file_icon_red.png) no-repeat 0 0; }
+.redFileImageICon { display: inline-block; width: 17px;height: 17px; background: url(../images/common/file_icon_red.png) no-repeat 0 0;  background-size: 16px 16px}
 /** nc file **/
-.purpleFileImageICon { display: inline-block; width: 20px;height: 20px; background: url(../images/common/file_icon_purple.png) no-repeat 0 0; }
+.purpleFileImageICon { display: inline-block; width: 17px;height: 17px; background: url(../images/common/file_icon_purple.png) no-repeat 0 0;  background-size: 16px 16px}
 /** cam file TEST **/
-.greenFileImageICon { display: inline-block; width: 20px;height: 20px; background: url(../images/common/file_icon_green.png) no-repeat 0 0; }
+.greenFileImageICon { display: inline-block; width: 17px;height: 17px; background: url(../images/common/file_icon_green.png) no-repeat 0 0;  background-size: 16px 16px}
 .desktopIcon { display: inline-block; width: 16px;height: 16px; background: url(../images/common/ico_desktop.png) no-repeat 0 0; background-size: 16px; }
 .magnifyingGlassIcon { display: inline-block; width: 17px;height: 17px; background: url(../images/common/file_search_outline_icon.png) no-repeat; background-size: 17px; }
 .doubleFilesIcon { display: inline-block; width: 17px;height: 17px; background: url(../images/common/ico_documents_files.png) no-repeat; background-size: 17px; }

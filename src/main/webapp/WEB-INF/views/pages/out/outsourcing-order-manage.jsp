@@ -564,29 +564,30 @@
             {
                 title: '외주<br>발주번호', dataIndx: 'OUTSIDE_ORDER_NUM',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
-                editable: function (ui) {
-                    let rowData = ui.rowData;
-
-                    return rowData.OUTSIDE_STATUS !== 'OST001';
-                }
+                editable: true
+                // editable: function (ui) {
+                //     let rowData = ui.rowData;
+                //
+                //     return rowData.OUTSIDE_STATUS !== 'OST001';
+                // }
             },
             {
                 title: '비고', width: 90, dataIndx: 'OUTSIDE_NOTE',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
-                editable: function (ui) {
-                    let rowData = ui.rowData;
-
-                    return rowData.OUTSIDE_STATUS !== 'OST001';
-                }
+                editable: true
+                // editable: function (ui) {
+                //     let rowData = ui.rowData;
+                //     return rowData.OUTSIDE_STATUS !== 'OST001';
+                // }
             },
             {
                 title: '외주<br>확정단가', width: 90, align: 'right', dataType: 'integer', dataIndx: 'OUTSIDE_UNIT_AMT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}, format: '#,###',
-                editable: function (ui) {
-                    let rowData = ui.rowData;
-
-                    return rowData.OUTSIDE_STATUS !== 'OST001';
-                }
+                editable: true
+                // editable: function (ui) {
+                //     let rowData = ui.rowData;
+                //     return rowData.OUTSIDE_STATUS !== 'OST001';
+                // }
             },
             {title: '금액<br>합계', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
             {title: '외주<br>종전가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DHLWNWHDWJSRK'},

@@ -234,7 +234,7 @@
                 FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
                 WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                     AND A.DEL_YN = 'N'
-                    AND A.CONTROL_STATUS IN ('ORD001','ORD003')
+                    -- AND A.CONTROL_STATUS IN ('ORD001','ORD003')
                     AND A.EMERGENCY_YN = 'Y'
                     AND A.OUT_FINISH_DT IS NULL
                     AND B.INNER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')
@@ -249,7 +249,7 @@
                 FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
                 WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                     AND A.DEL_YN = 'N'
-                    AND A.CONTROL_STATUS IN ('ORD001','ORD003')
+                    -- AND A.CONTROL_STATUS IN ('ORD001','ORD003')
                     AND A.EMERGENCY_YN = 'Y'
                     AND A.OUT_FINISH_DT IS NOT NULL
                     AND B.INNER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')

@@ -2165,7 +2165,6 @@
                     let flag = array.includes(col.dataIndx);
                     flag = !flag;
                     col.hidden = flag;
-
                     if (flag === false && col.parent !== undefined) {
                         col.parent.hidden = flag;
                     }
@@ -2365,7 +2364,7 @@
                     fnAlert(null, "이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.");
                     return;
                 // } else if(rowData.WORK_TYPE != 'WTP020' && selectControlPartInfo != curControlPartInfo){
-                } else if(selectControlPartInfo !== curControlPartInfo){
+                } else if(selectControlPartInfo != curControlPartInfo){
                     selectControlPartCount++;
                     selectControlPartInfo = curControlPartInfo;
                     formData.push(rowData.CONTROL_BARCODE_NUM);

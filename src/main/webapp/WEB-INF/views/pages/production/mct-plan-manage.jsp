@@ -419,7 +419,7 @@
                             }
                         }
                     },
-                    {title: 'W/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORKING_TIME', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
+                    {title: 'E/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORKING_TIME', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
                 ]
             },
             {title: 'MCT Actual', align: 'center',
@@ -553,14 +553,14 @@
             showTitle: false,
             rowHtHead: 15,
             numberCell: {title: 'No.'},
-            // selectionModel: {type: 'row', mode: 'single'},
-            hoverMode: 'cell',
+            selectionModel: {type: 'row', mode: 'single'},
+            hoverMode: 'row',
             // scrollModel: {autoFit: true},
             editModel: {clicksToEdit: 1},
             trackModel: {on: true},
             editable: false,
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
-            filterModel: {mode: 'OR'},
+            // filterModel: {mode: 'OR'},
             colModel: processTargetGridColModel,
             strNoRows: g_noData,
             dataModel: {

@@ -172,6 +172,13 @@
                         }
                     }
                 }
+            },
+            cellDblClick: function (event, ui) {
+                alert("test");
+                let rowData = ui.rowData;
+                fnResetFrom("user_info_pop_form");
+                $("#user_info_pop_form").find("#selUserId").val(rowData.USER_ID);
+                // $("#user_info_pop").modal("show");
             }
         };
 
