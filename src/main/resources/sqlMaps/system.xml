@@ -21,7 +21,8 @@
             DEPARTMENT,
             SF_GET_CODE_NM(1061, DEPARTMENT, 'EN') AS DEPARTMENT_NM,
             SF_GET_CODE_NM(1042, DEL_YN, 'EN') AS DEL_YN_NM,
-            PHOTO_GFILE_SEQ
+            PHOTO_GFILE_SEQ,
+            USER_PRINTER
         FROM TBL_USER
         WHERE 1=1
             AND DEL_YN = 'N'
@@ -47,6 +48,7 @@
             SF_GET_CODE_NM(1061, DEPARTMENT, 'EN') AS DEPARTMENT_NM,
             SF_GET_CODE_NM(1042, DEL_YN, 'EN') AS DEL_YN_NM,
             PHOTO_GFILE_SEQ,
+            USER_PRINTER,
             INSERT_DT
         FROM TBL_USER
         WHERE 1=1
@@ -75,6 +77,7 @@
                 SF_GET_CODE_NM(1061, DEPARTMENT, 'EN') AS DEPARTMENT_NM,
                 SF_GET_CODE_NM(1042, DEL_YN, 'EN') AS DEL_YN_NM,
                 PHOTO_GFILE_SEQ,
+                USER_PRINTER,
                 INSERT_DT
             FROM TBL_USER
             WHERE 1=1
@@ -85,8 +88,8 @@
 
     <insert id="insertUser" parameterType="java.util.HashMap">
 		INSERT INTO TBL_USER
-            (USER_ID, USER_NM, USER_PWD, USER_TEL, USER_EMAIL, POSITION_NM, JOB_TITLE, PHOTO_GFILE_SEQ, DEPARTMENT, ROLE_SEQ, DEL_YN, INSERT_ID)
-        VALUES(#{USER_ID}, #{USER_NM}, #{USER_PWD}, #{USER_TEL}, #{USER_EMAIL}, #{POSITION_NM}, #{JOB_TITLE}, #{PHOTO_GFILE_SEQ}, #{DEPARTMENT}, #{ROLE_SEQ}, 'N', #{LOGIN_USER_ID})
+            (USER_ID, USER_NM, USER_PWD, USER_TEL, USER_EMAIL, POSITION_NM, JOB_TITLE, PHOTO_GFILE_SEQ, DEPARTMENT, ROLE_SEQ, USER_PRINTER, DEL_YN, INSERT_ID)
+        VALUES(#{USER_ID}, #{USER_NM}, #{USER_PWD}, #{USER_TEL}, #{USER_EMAIL}, #{POSITION_NM}, #{JOB_TITLE}, #{PHOTO_GFILE_SEQ}, #{DEPARTMENT}, #{ROLE_SEQ}, #{USER_PRINTER}, 'N', #{LOGIN_USER_ID})
 	</insert>
 
     <update id="updateUser" parameterType="java.util.HashMap">
@@ -100,11 +103,33 @@
             DEPARTMENT = #{DEPARTMENT},
             ROLE_SEQ = #{ROLE_SEQ},
             PHOTO_GFILE_SEQ = #{PHOTO_GFILE_SEQ},
+            USER_PRINTER = #{USER_PRINTER},
             DEL_YN = #{DEL_YN},
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}
       WHERE USER_ID = #{USER_ID}
    </update>
+
+    <insert id="insertMasterUser" parameterType="java.util.HashMap">
+        INSERT INTO TBL_USER
+            (USER_ID, USER_NM, USER_PWD, USER_TEL, USER_EMAIL, POSITION_NM, JOB_TITLE, PHOTO_GFILE_SEQ, DEPARTMENT, ROLE_SEQ, USER_PRINTER, DEL_YN, INSERT_ID)
+        VALUES
+            (#{USER_ID}, #{USER_NM}, #{USER_PWD}, #{USER_TEL}, #{USER_EMAIL}, #{POSITION_NM}, #{JOB_TITLE}, #{PHOTO_GFILE_SEQ}, #{DEPARTMENT}, #{ROLE_SEQ}, #{USER_PRINTER}, 'N', #{LOGIN_USER_ID})
+        ON DUPLICATE KEY UPDATE
+            USER_NM = #{USER_NM},
+            USER_PWD = #{USER_PWD},
+            USER_TEL = #{USER_TEL},
+            USER_EMAIL = #{USER_EMAIL},
+            POSITION_NM = #{POSITION_NM},
+            JOB_TITLE = #{JOB_TITLE},
+            DEPARTMENT = #{DEPARTMENT},
+            ROLE_SEQ = #{ROLE_SEQ},
+            PHOTO_GFILE_SEQ = #{PHOTO_GFILE_SEQ},
+            USER_PRINTER = #{USER_PRINTER},
+            DEL_YN = IFNULL(#{DEL_YN}, 'N'),
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+    </insert>
 
     <delete id="deleteUser" parameterType="java.util.HashMap">
       DELETE FROM TBL_USER

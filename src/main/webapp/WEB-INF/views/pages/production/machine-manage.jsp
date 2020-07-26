@@ -101,7 +101,6 @@
 
                 <div class="rightSpan">
                     <button type="button" id="newBtn" class="defaultBtn yelllowGra">신규등록</button>
-
                 </div>
             </div>
         </div>
