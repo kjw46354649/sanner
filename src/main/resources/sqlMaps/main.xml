@@ -7,7 +7,7 @@
         SELECT
             ROW_NUMBER() OVER() AS ROW_NUM,
             A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ,
-            CASE WHEN A.EMERGENCY_YN = 'Y' THEN '긴급' ELSE '' END EMERGENCY_YN_NM,
+            CASE WHEN A.EMERGENCY_YN = 'Y' THEN '긴' ELSE '' END EMERGENCY_YN_NM,
             '' as FAIL_STATUS,
             SF_GET_DATE_F(B.INNER_DUE_DT, '', '') as INNER_DUE_DT,
             F.EQUIP_SEQ AS LAST_MCT_PLAN,

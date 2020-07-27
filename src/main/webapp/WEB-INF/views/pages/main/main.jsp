@@ -174,11 +174,11 @@
         });
 
         let mainMasterColModel = [
-            {title: '긴급', dataType: 'string', dataIndx: 'EMERGENCY_YN_NM', width: 100,},
-            {title: '불량', dataType: 'string', dataIndx: 'FAIL_STATUS', width: 120},
-            {title: '가공납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', width: 80},
-            {title: 'NC계획', dataType: 'string', dataIndx: 'LAST_MCT_PLAN', width: 120},
-            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 150},
+            {title: '긴<br>급', dataType: 'string', dataIndx: 'EMERGENCY_YN_NM', width: 25, minWidth: 25},
+            {title: '불<br>량', dataType: 'string', dataIndx: 'FAIL_STATUS', width: 20, minWidth: 25},
+            {title: '가공납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', width: 50, minWidth: 40},
+            {title: 'NC계획', dataType: 'string', dataIndx: 'LAST_MCT_PLAN', width: 60},
+            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 100},
             {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
@@ -192,31 +192,22 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 200},
-            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', width: 70},
-            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', width: 150},
-            {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', width: 150},
-            {title: '가공완료', dataType: 'string', dataIndx: 'LAST_PRODUCT_COMPLETE_DT', width: 150},
-            {title: '현재위치', dataType: 'string', dataIndx: 'LAST_POP_POSITION', width: 150},
-            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', width: 150},
-            {title: '영업담당', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM', width: 150}
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 200, minWidth: 150},
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', width: 25, minWidth: 25},
+            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', width: 80, minWidth: 50},
+            {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY', width: 60, minWidth: 50},
+            {title: '가공완료', dataType: 'string', dataIndx: 'LAST_PRODUCT_COMPLETE_DT', width: 50, minWidth: 40},
+            {title: '현재위치', dataType: 'string', dataIndx: 'LAST_POP_POSITION', width: 80, minWidth: 40},
+            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', width: 80, minWidth: 40},
+            {title: '영업담당', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM', width: 80, minWidth: 40}
         ];
 
         let mainMasterObj = {
             minHeight: "auto",
             height: 800,
-            width: "auto",
-            selectionModel: { type: 'row', mode: 'single'} ,
-            swipeModel: {on: false},
-            collapsible: false,
-            postRenderInterval: -1, //call postRender synchronously.
-            trackModel: {on: true},
-            resizable: false,
-            flexWidth: false,
-            scrollModel: { autoFit: true },
-            showTitle: false,
-            numberCell: {title: 'No.'},
-            columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
+            width: "auto", collapsible: false, postRenderInterval: -1, //call postRender synchronously.
+            resizable: false, showTitle: false, strNoRows: g_noData, rowHtHead: 15, numberCell: {title: 'No.'},
+            trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: mainMasterColModel,
             dataModel: {
                 recIndx: 'ROW_NUM', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
