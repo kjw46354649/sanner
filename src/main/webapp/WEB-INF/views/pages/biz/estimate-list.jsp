@@ -40,35 +40,24 @@
                     </li>
                     <li class="">
                         <span class="ipu_wrap"><label class="label_100">기간 조회</label></span>
-                        <span class="chk_box"><input id="pr_ex1" type="checkbox"><label for="pr_ex1"> 발송완료</label></span>
-                        <span class="chk_box"><input id="pr_ex2" type="checkbox"><label for="pr_ex2"> 최신차수</label></span>
+                        <span class="chk_box"><input id="SEND_YN" name="SEND_YN" type="checkbox"><label for="SEND_YN"> 발송완료</label></span>
+                        <span class="chk_box"><input id="FINAL_VER" name="FINAL_VER" type="checkbox"><label for="FINAL_VER"> 최신차수</label></span>
                         <span class="gubun"></span>
                         <span class="slt_wrap trans_slt mg-right10">
-                            <select id="daySltd" name="daySltd" title="등록일시">
+                            <select id="daySltd" name="SEL_DATE_CONDITION" title="등록일시">
                                 <option value="" selected="selected">등록일시</option>
-                                <option value="1">-ALL-</option>
-                                <option value="2">-ALL-</option>
                             </select>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" id="fr_1001_1" name=""><label for="fr_1001_1">오늘</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" id="fr_1001_2" name=""><label for="fr_1001_2">현재월</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" id="fr_1001_3" name=""><label for="fr_1001_3">3개월</label>
                         </span>
                         <div class="calendar_wrap">
                             <span class="calendar_span">
-                                <input type="text" name="dateOneIp" id="dateOneIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
+                                <input type="text" name="ESTIMATE_LIST_START_DT" id="ESTIMATE_LIST_START_DT" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input type="text" name="dateTwoIp" id="dateTwoIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
+                                <input type="text" name="ESTIMATE_LIST_END_DT" id="ESTIMATE_LIST_END_DT" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
                             </span>
                         </div>
-                        <span class="chk_box"><input id="pr_ex" type="checkbox"><label for="pr_ex">선택</label></span>
+                        <span class="chk_box"><input id="SEL_DATE" name="SEL_DATE" type="checkbox"><label for="SEL_DATE">선택</label></span>
                     </li>
                 </ul>
             </div>
@@ -156,7 +145,7 @@
                         if(FINAL_VER == 'Y'){
                             return '<button type="button" id="estimateOrder" data-seq="'+EST_SEQ+'" data-ver="'+EST_VER+'" class="miniBtn blue">주문등록</button>'
                         }
-                    }   else {
+                    } else {
                         return '<span class="miniBtn gray">등록완료</span>'
                     }
                 }
@@ -655,6 +644,7 @@
 
                 let EST_SEQ = ui.addList[0].rowData.EST_SEQ;
                 let EST_VER = ui.addList[0].rowData.EST_VER;
+                let VERSION_UP_YN = ui.addList[0].rowData.VERSION_UP_YN;
 
                 $("#estimate_master_hidden_form #EST_SEQ").val(EST_SEQ);
                 $("#estimate_master_hidden_form #EST_VER").val(EST_VER);
@@ -836,7 +826,7 @@
             let EST_SEQ = "";
             let VERSION_UP_YN = $("#estimate_master_hidden_form #VERSION_UP_YN").val();
             if(VERSION_UP_YN == 'N') {
-                alert("최신 차수의 상태를 확인 해 주세요. ");
+                alert("이미 등록되어있습니다.");
                 return false;
             }
 
@@ -866,12 +856,12 @@
                             'N_EST_SEQ': $("#estimate_master_hidden_form #N_EST_SEQ").val()
                         };
                         parameters = {'url': '/json-create', 'data': parameter};
-                        fnPostAjax('',parameters, '');
+                        fnPostAjaxAsync('',parameters, '');
                         $("a[pid='" + $("#estimateNo").val() + "']").trigger("click");
                         setTimeout(function(){
+                            $("#btnEstimateListSearch").trigger('click');
                             $("#estimateRegisterReloadBtn").trigger('click');
-                        }, 800)
-
+                        }, 300)
                     }, parameters, '');
                 }, parameters, '');
             }, parameters, '');
@@ -926,6 +916,12 @@
                 $(this).addClass('on');
             }
         });
+
+        /** topWrap datepicker 처리 **/
+        $('#ESTIMATE_LIST_START_DT').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#ESTIMATE_LIST_END_DT').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#ESTIMATE_LIST_START_DT').datepicker('setDate', '-1M');
+        $('#ESTIMATE_LIST_END_DT').datepicker('setDate', 'today');
     });
 
     /** 그리드 버튼 처리 **/
@@ -940,7 +936,7 @@
             };
 
             fnPostAjax(function () {
-                alert("<spring:message code='com.alert.default.save.success' />");
+                fnAlert(null,"<spring:message code='com.alert.default.save.success'/>");
                 $("#btnEstimateListSearch").trigger('click');
             }, parameters, '');
 
