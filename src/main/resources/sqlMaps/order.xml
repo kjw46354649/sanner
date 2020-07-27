@@ -1418,6 +1418,19 @@
                             AND PART_STATUS = 'PRO002') AS FLAG
     </select>
 
+    <!-- 이미 외주 전환 -->
+    <select id="selectHasPartStatusConversion" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
+        SELECT EXISTS ( SELECT PART_STATUS
+                        FROM TBL_CONTROL_PART
+                        WHERE 1 = 1
+                            AND (CONTROL_SEQ, CONTROL_DETAIL_SEQ) IN (  SELECT CONTROL_SEQ, CONTROL_DETAIL_SEQ
+                                                                        FROM TBL_CONTROL_BARCODE
+                                                                        WHERE 1 = 1
+                                                                            AND BARCODE_NUM = #{BARCODE_NUM}
+                                                                            AND DEL_YN = 'N')
+                            AND PART_STATUS = 'PRO001') AS FLAG
+    </select>
+
     <!-- 외주 입고 -->
     <select id="selectHasInOutside" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
         SELECT EXISTS ( SELECT PART_STATUS
@@ -1440,6 +1453,19 @@
                       ) AS FLAG
     </select>
 
+    <!-- 소재 입고(바코드 스캔) -->
+    <select id="selectHasInStockFromBarcode" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
+        SELECT EXISTS ( SELECT *
+                        FROM TBL_MATERIAL_ORDER
+                        WHERE 1 = 1
+                            AND (CONTROL_SEQ, CONTROL_DETAIL_SEQ) IN (  SELECT CONTROL_SEQ, CONTROL_DETAIL_SEQ
+                                                                        FROM TBL_CONTROL_BARCODE
+                                                                        WHERE 1 = 1
+                                                                            AND BARCODE_NUM = #{BARCODE_NUM}
+                                                                            AND DEL_YN = 'N')) AS FLAG
+    </select>
+
+
     <update id="updateControlStatus" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL
         SET
@@ -1454,6 +1480,19 @@
         UPDATE TBL_CONTROL_PART
         SET
             PART_STATUS = #{PART_STATUS},
+            STATUS_DT = NOW(),
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+              AND CONTROL_DETAIL_SEQ  = #{CONTROL_DETAIL_SEQ}
+    </update>
+
+
+    <update id="updateOutsideConversion" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            PART_STATUS = #{PART_STATUS},
+            OUTSIDE_YN = #{OUTSIDE_YN},
             STATUS_DT = NOW(),
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}

@@ -215,7 +215,7 @@
                                 </td>
                                 <th scope="row">업체명(Full)</th>
                                 <td>
-                                    <input type="text" id="COMP_NM2" name="COMP_NM2" value="" class="wd_150" data-notblank="true" class="form-control" placeholder="업체명2">
+                                    <input type="text" id="COMP_NM2" name="COMP_NM2" value="" class="wd_150" data-notblank="true" class="form-control" placeholder="업체명(Full)">
                                 </td>
                             </tr>
                             <tr>
@@ -1082,89 +1082,89 @@
                 fnAlertMessageAutoClose('save');
             }, parameters, '');
             */
-            if(confirm("업체정보가 저장 됩니다.\n저장 하시겠습니까?")) {
+            fnConfirm(null, "업체정보가 저장 됩니다.\n저장 하시겠습니까?", function () {
                 // 그리드 데이터 폼에 넣기 to-do
                 var gridInstance = $systemCompanyRegisterGrid.pqGrid('getInstance').grid;
                 var changes = gridInstance.getChanges({format: 'byVal'});
                 $("#company_master_register_form").find("#staffGrid").val(JSON.stringify(changes));
 
-                let result =  "";
+                let result = "";
 
                 // 업체종류 하나에 담기
                 let data_1 = $type1Grid.pqGrid('option', 'dataModel.data');
                 let totalRecords_1 = data_1.length;
 
-                for(let tempI=0; tempI<totalRecords_1; tempI++){
+                for (let tempI = 0; tempI < totalRecords_1; tempI++) {
 
                     let rowData1 = $type1Grid.pqGrid("getRowData", {rowIndx: tempI});
                     let APPLY_YN1 = rowData1["APPLY_YN"];
                     let COMP_TYPE1 = rowData1["COMP_TYPE"];
                     let HIGH_TYPE1 = rowData1["HIGH_TYPE"];
 
-                    if(APPLY_YN1 == 'Y'){
-                        result +=  COMP_TYPE1 + "|" + HIGH_TYPE1 +",";
+                    if (APPLY_YN1 == 'Y') {
+                        result += COMP_TYPE1 + "|" + HIGH_TYPE1 + ",";
                     }
                 }
                 //협력업체 가공 그리드
                 let data2 = $type2Grid.pqGrid('option', 'dataModel.data');
-                let totalRecords2= data2.length;
-                for(let tempI=0; tempI<totalRecords2; tempI++){
+                let totalRecords2 = data2.length;
+                for (let tempI = 0; tempI < totalRecords2; tempI++) {
 
                     let rowData2 = $type2Grid.pqGrid("getRowData", {rowIndx: tempI});
                     let APPLY_YN2 = rowData2["APPLY_YN"];
                     let COMP_TYPE2 = rowData2["COMP_TYPE"];
                     let HIGH_TYPE2 = rowData2["HIGH_TYPE"];
 
-                    if(APPLY_YN2 == 'Y'){
-                        result +=  COMP_TYPE2 + "|" + HIGH_TYPE2 +",";
+                    if (APPLY_YN2 == 'Y') {
+                        result += COMP_TYPE2 + "|" + HIGH_TYPE2 + ",";
                     }
                 }
 
                 //협력업체 소재 그리드
                 let data3 = $type3Grid.pqGrid('option', 'dataModel.data');
-                let totalRecords3= data3.length;
-                for(let tempI=0; tempI<totalRecords3; tempI++){
+                let totalRecords3 = data3.length;
+                for (let tempI = 0; tempI < totalRecords3; tempI++) {
 
                     let rowData3 = $type3Grid.pqGrid("getRowData", {rowIndx: tempI});
                     let APPLY_YN3 = rowData3["APPLY_YN"];
                     let COMP_TYPE3 = rowData3["COMP_TYPE"];
                     let HIGH_TYPE3 = rowData3["HIGH_TYPE"];
 
-                    if(APPLY_YN3 == 'Y'){
-                        result +=  COMP_TYPE3 + "|" + HIGH_TYPE3 +",";
+                    if (APPLY_YN3 == 'Y') {
+                        result += COMP_TYPE3 + "|" + HIGH_TYPE3 + ",";
                     }
                 }
 
                 //협력업체 표면처리 그리드
                 let data4 = $type4Grid.pqGrid('option', 'dataModel.data');
-                let totalRecords4= data4.length;
-                for(let tempI=0; tempI<totalRecords4; tempI++){
+                let totalRecords4 = data4.length;
+                for (let tempI = 0; tempI < totalRecords4; tempI++) {
 
                     let rowData4 = $type4Grid.pqGrid("getRowData", {rowIndx: tempI});
                     let APPLY_YN4 = rowData4["APPLY_YN"];
                     let COMP_TYPE4 = rowData4["COMP_TYPE"];
                     let HIGH_TYPE4 = rowData4["HIGH_TYPE"];
 
-                    if(APPLY_YN4 == 'Y'){
-                        result +=  COMP_TYPE4 + "|" + HIGH_TYPE4 +",";
+                    if (APPLY_YN4 == 'Y') {
+                        result += COMP_TYPE4 + "|" + HIGH_TYPE4 + ",";
                     }
                 }
 
                 //협력업체 후가공 그리드
                 let data5 = $type5Grid.pqGrid('option', 'dataModel.data');
-                let totalRecords5= data5.length;
-                for(let tempI=0; tempI<totalRecords5; tempI++){
+                let totalRecords5 = data5.length;
+                for (let tempI = 0; tempI < totalRecords5; tempI++) {
 
                     let rowData5 = $type5Grid.pqGrid("getRowData", {rowIndx: tempI});
                     let APPLY_YN5 = rowData5["APPLY_YN"];
                     let COMP_TYPE5 = rowData5["COMP_TYPE"];
                     let HIGH_TYPE5 = rowData5["HIGH_TYPE"];
 
-                    if(APPLY_YN5 == 'Y'){
-                        result +=  COMP_TYPE5 + "|" + HIGH_TYPE5 +",";
+                    if (APPLY_YN5 == 'Y') {
+                        result += COMP_TYPE5 + "|" + HIGH_TYPE5 + ",";
                     }
                 }
-                result = result.substring(0, result.length-1);
+                result = result.substring(0, result.length - 1);
                 $("#company_master_register_form").find("#compType").val(result);
                 // console.log($("#company_master_register_form").find("#compType").val());
                 let parameters = {
@@ -1175,8 +1175,7 @@
                     $('#system_company_popup').modal('hide');
                     $companyMasterMainSearchBtn.trigger("click");
                 }, parameters, '');
-            }
-
+            });
         });
 
         // 업체상세 모달 delete

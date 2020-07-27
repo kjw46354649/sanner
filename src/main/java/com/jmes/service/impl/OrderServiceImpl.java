@@ -2,6 +2,7 @@ package com.jmes.service.impl;
 
 import java.sql.SQLException;
 import java.util.UUID;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.framework.innodale.dao.InnodaleDao;
@@ -226,45 +227,60 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void processConfirmBarcodeInfo(Model model, Map<String, Object> map) throws SQLException {
         String barcodeNum = (String) map.get("BARCODE_NUM");
+        String type = (String) map.get("TYPE");
         boolean flag = false;
         String message = "";
 
         if (barcodeNum != null) {
             // 유효한 바코드인지 확인
             map.put("queryId", "orderMapper.selectIsbarcodeValid");
-            if(this.orderDao.getFlag(map)) {
+            if (this.orderDao.getFlag(map)) {
                 flag = true;
                 message = "최신 도면이 아닙니다.";
-            };
+            }
             // 주문상태가 확정인지 확인
             map.put("queryId", "orderMapper.selectHasControlStatusConfirm");
-            if(this.orderDao.getFlag(map) && !flag) {
+            if (this.orderDao.getFlag(map) && !flag) {
                 flag = true;
                 message = "먼저 가공확정을 해주세요.";
-            };
-            // 이미 가공확정 됐는지 확인
-            map.put("queryId", "orderMapper.selectHasPartStatusConfirm");
-            if(this.orderDao.getFlag(map) && !flag) {
-                flag = true;
-                message = "이미 확정된 도면입니다.";
-            };
-            // 외주인지 확인
-            map.put("queryId", "orderMapper.selectHasInOutside");
-            if(this.orderDao.getFlag(map) && !flag) {
-                flag = true;
-                message = "외주 관리번호는 가공확정을 할수 없습니다.";
-            };
+            }
+
+            if (type.equals("confirm")) {
+                // 이미 가공확정 됐는지 확인
+                map.put("queryId", "orderMapper.selectHasPartStatusConfirm");
+                if (this.orderDao.getFlag(map) && !flag) {
+                    flag = true;
+                    message = "이미 확정된 도면입니다.";
+                }
+                // 외주인지 확인
+                map.put("queryId", "orderMapper.selectHasInOutside");
+                if (this.orderDao.getFlag(map) && !flag) {
+                    flag = true;
+                    message = "외주 관리번호는 가공확정을 할수 없습니다.";
+                }
+            } else if (type.equals("conversion")) {
+                // 이미 가공확정 됐는지 확인
+                map.put("queryId", "orderMapper.selectHasPartStatusConfirm");
+                if (this.orderDao.getFlag(map) && !flag) {
+                    flag = true;
+                    message = "주문 확정 상태로 변경해주세요.";
+                }
+                // 이미 외주전환 됐는지 확인
+                map.put("queryId", "orderMapper.selectHasPartStatusConversion");
+                if (this.orderDao.getFlag(map) && !flag) {
+                    flag = true;
+                    message = "이미 외주전환 된 도면입니다.";
+                }
+                // 소재입고 확인
+                map.put("queryId", "orderMapper.selectHasInStockFromBarcode");
+                if (this.orderDao.getFlag(map)) {
+                    flag = true;
+                    message = "주문 확정 상태로 변경해주세요.";
+                }
+            }
 
             model.addAttribute("flag", flag);
             model.addAttribute("message", message);
-            // 소재입고 확인
-            /*map.put("queryId", "orderMapper.selectHasInStock");
-            if(this.orderDao.getFlag(map)) {
-                message = "크크크";
-                model.addAttribute("flag", true);
-                model.addAttribute("message", message);
-                return;
-            };*/
         }
     }
 }
