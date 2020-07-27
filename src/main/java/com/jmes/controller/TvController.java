@@ -85,7 +85,7 @@ public class TvController {
    @RequestMapping(value = "/tv/mct/data", method = RequestMethod.POST)
    public String mctData(Model model, HttpServletRequest request, HttpSession session) throws Exception {
        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
-       System.out.println("12312312312 mctData");
+//       System.out.println("12312312312 mctData");
 
        hashMap.put("queryId","tvMapper.selectMctAreInfoList");//mct info
        List<Map<String, Object>> mct_info_list = this.innodaleService.getList(hashMap);

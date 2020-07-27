@@ -19,6 +19,7 @@
     <title>신규 주문 등록</title>
 </head>
 <body>
+<div id="waitMeContainerDiv">
     <div style="padding: 10px;">
         <h3 style="font-size: 20px; font-family: 'NotoKrB'; color: #000; display: inline-block;">신규 주문 등록</h3>
         <hr style="display: block; border: 1px solid #e0e2e6; margin: 7px;">
@@ -27,6 +28,7 @@
             <button type="button" class="defaultBtn grayPopGra" id="CONTROL_MANGE_CLOSE_BUTTON">닫기</button>
         </div>
     </div>
+</div>
 <script>
     $(function () {
         'use strict';
@@ -134,7 +136,7 @@
                 }
             },
             {
-                title: '구매<br>담당자', width: 70, dataIndx: 'ORDER_STAFF_SEQ', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                title: '구매<br>담당자', dataType: 'integer', width: 70, dataIndx: 'ORDER_STAFF_SEQ', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text',
                     options: function (ui) {
@@ -152,7 +154,7 @@
                         let index = COMPANY_STAFF.findIndex(function (element) {
                             return element.text === cellData;
                         });
-                        console.log(index);
+
                         if (index < 0) {
                             index = COMPANY_STAFF.findIndex(function (element) {
                                 return element.value === Number(cellData);
@@ -473,8 +475,10 @@
                                 'data': {data: JSON.stringify(data)}
                             };
 
+                            $(this).startWaitMe();
                             fnPostAjax(function () {
-                                fnAlert(null, "<spring:message code='com.alert.default.save.success' />");
+                                $(this).stopWaitMe();
+                                fnAlert(null, '<spring:message code="com.alert.default.save.success" />');
                                 window.close();
                                 opener.$orderManagementGrid.pqGrid('refreshDataAndView');
                             }, parameters, '');
@@ -500,8 +504,10 @@
                                 'data': {data: JSON.stringify(data)}
                             };
 
+                            $(this).startWaitMe();
                             fnPostAjax(function () {
-                                alert("<spring:message code='com.alert.default.save.success' />");
+                                $(this).stopWaitMe();
+                                fnAlert(null, '<spring:message code="com.alert.default.save.success" />');
                                 window.close();
                                 opener.$orderManagementGrid.pqGrid('refreshDataAndView');
                             }, parameters, '');
