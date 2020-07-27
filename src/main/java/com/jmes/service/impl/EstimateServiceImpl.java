@@ -37,10 +37,10 @@ public class EstimateServiceImpl implements EstimateService {
 
         for(int i=0; i<jsonMap.size(); i++) {
             data = jsonMap.get(i);
-            if(data.get("DRAWING_NUM") != null && "".equals(data.get("DRAWING_NUM")) && data.containsValue("DRAWING_NUM")){
+            //if(data.get("DRAWING_NUM") != null && !"".equals(data.get("DRAWING_NUM")) && data.containsValue("DRAWING_NUM")){
                 data.put("EST_SEQ",EST_SEQ);
                 estimateDao.insertEstimateDetail(data);
-            }
+            //}
         }
 
         if (jsonReceive != null) {

@@ -69,7 +69,7 @@
                 <h2 class="headerTitle_01">다운로드</h2>
             </div>
             <div class="modal-body" id="commonFileUpdatePop">
-                <form class="" role="form" id="common_file_download_form" name="common_file_download_form">
+                <form class="" role="form" id="common_file_download_form" name="common_file_download_form" method="POST">
                     <input type="hidden" id="GFILE_SEQ" name="GFILE_SEQ" value="">
                     <input type="hidden" id="callElement" name="callElement" value="">
                     <input type="hidden" id="deleteYn" name="deleteYn" value="">
@@ -943,7 +943,11 @@
                     let parameters = {'url': '/json-remove', 'data': parameter};
                     fnPostAjaxAsync(function(data, callFunctionParam){
                         let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': rowData.GFILE_SEQ };
-                        fnRequestGridData(commonFileDownUploadGrid, postData);
+                        commonFileDownUploadGrid.pqGrid('option', 'dataModel.postData', function () {
+                            return postData;
+                        });
+                        commonFileDownUploadGrid.pqGrid('refreshDataAndView');
+                        //fnRequestGridData(commonFileDownUploadGrid, postData);
                     }, parameters, '');
                 });
             }
@@ -985,7 +989,7 @@
     commonFileDownUploadPopup.on('hide.bs.modal', function (e) {
         commonFileDownUploadGrid.pqGrid('destroy');
         let callElement = $("#common_file_download_form").find("#callElement").val();
-        $("#common_file_download_form #deleteYn").val(true);
+        $("#common_file_download_form #deleteYn").val(false);
         $("#" + callElement ).trigger('click');
     });
 
