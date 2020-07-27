@@ -12,10 +12,10 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/fmt' prefix='fmt' %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/functions' prefix='fn' %>
 
-<script type="text/javascript" src="/resource/plugins/jspPrint/zip.js"></script>
-<script type="text/javascript" src="/resource/plugins/jspPrint/zip-ext.js"></script>
-<script type="text/javascript" src="/resource/plugins/jspPrint/deflate.js"></script>
-<script type="text/javascript" src="/resource/plugins/jspPrint/JSPrintManager.js"></script>
+<%--<script type="text/javascript" src="/resource/plugins/jspPrint/zip.js"></script>--%>
+<%--<script type="text/javascript" src="/resource/plugins/jspPrint/zip-ext.js"></script>--%>
+<%--<script type="text/javascript" src="/resource/plugins/jspPrint/deflate.js"></script>--%>
+<%--<script type="text/javascript" src="/resource/plugins/jspPrint/JSPrintManager.js"></script>--%>
 
 <script type="text/javascript" src="/resource/plugins/bluebird.min.js"></script>
 <script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>

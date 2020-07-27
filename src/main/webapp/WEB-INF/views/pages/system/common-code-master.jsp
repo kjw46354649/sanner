@@ -267,7 +267,7 @@
             minHeight: "auto",
             height: 230,
             width: "auto",
-            selectionModel: { type: 'row', mode: 'single'} ,
+            // selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
             collapsible: false,
             trackModel: {on: true},

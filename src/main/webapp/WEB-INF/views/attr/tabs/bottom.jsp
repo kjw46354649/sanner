@@ -321,7 +321,7 @@
                 <div id="commonAlertBodyHtml">
                     <h4>
                         <img style='width: 32px; height: 32px;' src="/resource/asset/images/work/alert.png">
-                        <span>ㅃㅃㅃㅃ</span>
+                        <span></span>
                     </h4>
                 </div>
             </div>
@@ -376,6 +376,96 @@
     </div>
 </div>
 <!-- 창고 공통 팝업 : E -->
+<!-- 사용자 정보 팝업 : S -->
+<div class="popup_container" id="user_info_pop" style="display: none;">
+    <form class="form-inline" id="user_info_pop_form" name="user_info_pop_form" role="form">
+        <input type="hidden" id="queryId" name="queryId" value="systemMapper.insertMasterUser">
+        <input type="hidden" id="selUserId" name="selUserId" value="">
+        <div class="userLayerPopup">
+            <h3>사용자 정보</h3>
+            <button type="button" class="pop_close mg-top10 mg-right8" id="user_info_pop_close2">닫기</button>
+            <div class="qualityWrap">
+                <div class="userResultWrap99 userInfoList99">
+                    <div class="leftWrap" style="margin-top: 16px;">
+                        <input type="hidden" id="PHOTO_GFILE_SEQ" name="PHOTO_GFILE_SEQ" value="">
+                        <img src="/image/999" id="PHOTO_GFILE_SRC" width="180px" alt="사용자사진" style="border:1px solid #707070">
+                        <div class="btnWrap">
+                            <button type="button" id="user_info_upload" class="defaultBtn">사진변경하기</button>
+                        </div>
+                    </div>
+                    <div class="rightWrap">
+                        <table class="rowStyle">
+                            <caption></caption>
+                            <colgroup>
+                                <col width="130px">
+                                <col width="151px">
+                                <col width="130px">
+                                <col width="151px">
+                            </colgroup>
+                            <tr>
+                                <th scope="row">아이디</th>
+                                <td><input type="text" name="USER_ID" id="USER_ID" placeholder="아이디" value="" title="아이디" class="wd_130"></td>
+                                <th scope="row">이름</th>
+                                <td><input type="text" name="USER_NM" id="USER_NM" placeholder="이름" value="" title="이름" class="wd_130"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">패스워드</th>
+                                <td ><input type="text" name="USER_PWD" id="USER_PWD" placeholder="패스워드" value="" title="패스워드" class="wd_130"></td>
+                                <th scope="row">패스워드(Re.)</th>
+                                <td><input type="text" name="R_USER_PWD" id="R_USER_PWD" placeholder="패스워드체크" value="" title="패스워드체크" class="wd_130"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">연락처</th>
+                                <td><input type="text" name="USER_TEL" id="USER_TEL" placeholder="연락처" value="" title="연락처" class="wd_130"></td>
+                                <th scope="row">이메일</th>
+                                <td><input type="text" name="USER_EMAIL" id="USER_EMAIL" placeholder="이메일" value="" title="이메일" class="wd_130"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">직급</th>
+                                <td><input type="text" name="POSITION_NM" id="POSITION_NM" placeholder="직급" value="" title="직급" class="wd_130"></td>
+                                <th scope="row">직책</th>
+                                <td><input type="text" name="JOB_TITLE" id="JOB_TITLE" placeholder="직책" value="" title="직책" class="wd_130"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">부서</th>
+                                <td>
+                                    <select id="DEPARTMENT" name="DEPARTMENT" data-required="true" class="wd_130">
+                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                        <c:forEach var="vlocale" items="${HighCode.H_1061}">
+                                            <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
+                                        </c:forEach>
+                                    </select>
+                                </td>
+                                <th scope="row">권한그룹</th>
+                                <td>
+                                    <select id="ROLE_SEQ" name="ROLE_SEQ" data-required="true" class="wd_130"></select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">사용프린터</th>
+                                <td><input type="text" name="USER_PRINTER" id="USER_PRINTER" placeholder="사용프린터" value="" title="사용프린터" class="wd_130"></td>
+                                <th scope="row">사용여부</th>
+                                <td>
+                                    <select id="DEL_YN" name="DEL_YN" data-required="true" class="wd_130">
+                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                        <c:forEach var="vlocale" items="${HighCode.H_1042}">
+                                            <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
+                                        </c:forEach>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="btnWrap">
+                <button type="button" class="defaultBtn grayPopGra" id="user_info_pop_close">닫기</button>
+                <button type="button" class="defaultBtn btn-120w red" id="saveUserMasterBtn">저장</button>
+             </div>
+        </div>
+    </form>
+</div>
+<!-- 창고 공통 팝업 : E -->
 
 <script type="text/javascript">
 
@@ -400,6 +490,58 @@
 
     $(function() {
         'use strict';
+
+
+
+        $("#user_info_pop").on('hide.bs.modal', function(){
+            fnResetFrom("user_info_pop_form");
+            // $("#user_info_pop_form").find("#PHOTO_GFILE_SRC").attr("src", "/image/999");
+        });
+        // 모달 open
+        $("#user_info_pop").on('show.bs.modal', function(){
+        });
+
+        $('#user_info_pop_form').find('#user_info_pop_close2, #user_info_pop_close').on('click', function () {
+            $('#user_info_pop').modal('hide');
+        });
+
+        /** 장비 파일 업로드 */
+        $("#user_info_pop_form").find("#user_info_upload").click(function (e) {
+           let userPhotoFile = $("#common_formdata_multi_upload_form").find("#click_singfile_chose_btn");
+           userPhotoFile.trigger("click");
+           userPhotoFile.unbind().change(function () {
+               var input = $(this);
+               var files = input.get(0).files;
+
+               if (files.length > 0) {
+                   let formData = new FormData();
+                   for (var i = 0; i < files.length; i++) {
+                       formData.append("file" + i, files[i]);
+                   }
+                   fnFormDataFileUploadAjax(function (data) {
+                       input.val('');
+                       let fileInfo = data.fileUploadList[0];
+                       $("#user_info_pop_form").find("#PHOTO_GFILE_SRC").attr("src", "/image/" + fileInfo.GFILE_SEQ);
+                       $("#user_info_pop_form").find("#PHOTO_GFILE_SEQ").val(fileInfo.GFILE_SEQ);
+                   }, formData, '');
+               }
+           });
+        });
+
+        $('#user_info_pop_form').find('#saveUserMasterBtn').on('click', function () {
+            if(confirm("저장 하시겠습니까?")){
+                let parameters = {
+                    'url': '/json-update',
+                    'data': $('#user_info_pop_form').serialize()
+                };
+                fnPostAjax(function (data, callFunctionParam) {
+                    fnAlert(null, '사용자 정보가 저장되었습니다.');
+                    $('#user_info_pop').modal('hide');
+                    $("#userMasterSearchBtn").trigger("click");
+                }, parameters, '');
+
+            }
+        });
 
         /** 캐드 파일 업로드 시작 스크립트 **/
         let estimateCadFileColModel =  [
@@ -1432,12 +1574,6 @@
 
     }
 
-
-    // $("#g_item_detail_pop_cam_pop").on('show.bs.modal', function(){
-    //
-    //
-    //
-    // });
     $("#g_item_detail_pop_cam_pop_grid_pop_close, #g_item_detail_pop_cam_pop_grid_pop_close2").on('click', function () {
          //fnResetFrom("g_item_detail_pop_cam_pop_form");
         //       console.log(g_ItemDetailPopCamPopGridId01);
@@ -1453,8 +1589,6 @@
 
     /**  공통 제품상세 정보  끝 **/
 
-    
-    
     /** 공통 창고 팝업 Start **/
     let commonWarehouseManageGrid = $("#common_warehouse_manage_grid");
     let commonWarehouseManageModel= [
@@ -1501,12 +1635,9 @@
     }
     function fnCommonWarehouse() {
         $('#common_warehouse_manage_popup').modal('show');
-
         $("#common_warehouse_manage_popup_form").find("#queryId").val('material.selectCommonWarehouseManageList');
-
         commonWarehouseManageObj.dataModel.postData = fnFormToJsonArrayData('common_warehouse_manage_popup_form');
         commonWarehouseManageGrid.pqGrid(commonWarehouseManageObj);
-
         commonWarehouseManageGrid.pqGrid('refreshDataAndView');
     }
     
@@ -1520,7 +1651,6 @@
     $("#btnCommonWarehouseManageAdd").on('click', function(){
         let WAREHOUSE_CD = $("#common_warehouse_manage_popup_form #WAREHOUSE_CD option:selected").val();
         let WAREHOUSE_NM = $("#common_warehouse_manage_popup_form #WAREHOUSE_CD option:selected").text();
-
         commonWarehouseManageGrid.pqGrid('addRow', {
             newRow: {WAREHOUSE_CD:WAREHOUSE_CD, WAREHOUSE_NM:WAREHOUSE_NM},
             rowIndx : 0,
@@ -1542,7 +1672,6 @@
     });
     
     /** 공통 창고 팝업 end **/
-    
     function estimateListFileUploadCallback(GfileSeq) {
         if(!GfileSeq) {
             let parameter = {

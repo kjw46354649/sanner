@@ -48,6 +48,7 @@
                 , jmes.SF_GET_DATE_F(Z.INSERT_DT, '', 'M') AS Q_DT
                 , X.OUT_FINISH_DT
                 , X.NOT_RETURN_SETTLEMENT_CNT
+                , X.WORK_FINISH_DT
             FROM (
                     SELECT
                           B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.ORDER_COMP_CD
@@ -58,6 +59,7 @@
                         , B.ORIGINAL_SIDE_QTY, OTHER_SIDE_QTY
                         , B.PART_UNIT_QTY, B.SIZE_TXT, A.NOTE
                         , B.IMG_GFILE_SEQ
+                        , SF_GET_DATE_F(B.INNER_WORK_FINISH_DT, '', '') AS WORK_FINISH_DT
                         , (SELECT MAX(M.MCT_WORK_SEQ) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N') AS MCT_WORK_SEQ
                         , (SELECT MAX(M.INSPECT_SEQ) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS INSPECT_SEQ
                         , A.OUT_FINISH_DT
@@ -287,7 +289,7 @@
     <select id="selectCommItemDetailInfoGrid2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.POP_VSEQ AS POP_SEQ
           , A.POP_POSITION_NM
-          , jmes.SF_GET_DATE_F(A.POP_DT,'YY','') AS POP_DT
+          , jmes.SF_GET_DATE_F(A.POP_DT,'','M') AS POP_DT
         FROM jmes.TBL_POP_VIEW A
         WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
           AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}

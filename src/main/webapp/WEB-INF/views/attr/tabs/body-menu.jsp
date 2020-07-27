@@ -14,7 +14,7 @@
         <div class="sidebarWrap on">
             <h1 class="logo"><a href="/main"><span class="invisible">진성정밀 MES 시스템</span></a></h1>
             <div class="profileWrap">
-                <span class="imgWrap"><img src="asset/images/common/profile.png" alt=""></span>
+                <span class="imgWrap"><img src="/image/${authUserInfo.PHOTO_GFILE_SEQ}" alt=""></span>
                 <span class="textWrap"><b>${authUserInfo.USER_NM}</b>님 안녕하세요.</span>
                 <a href="/userLotout"><span class="btnWrap"><button type="button" class="btn"></button></span></a>
             </div>
@@ -40,6 +40,12 @@
                 <li><a href="#" url="${menu.MENU_LINK}" tname="${menu.MENU_NM}" pid="${menu.CD_NO}">${menu.MENU_NM}</a></li>
             </c:if>
             <c:set var="menuCnt" value="${menuCnt + 1}"/>
+            <c:if test="${menu.MENU_SEQ eq 12}">
+                <input type="hidden" name="estimateNo" id="estimateNo" value="${menu.CD_NO}">
+            </c:if>
+            <c:if test="${menu.MENU_SEQ eq 24}">
+                <input type="hidden" name="stockNo" id="stockNo" value="${menu.CD_NO}">
+            </c:if>
         </c:forEach>
                             </ul>
                         </div>

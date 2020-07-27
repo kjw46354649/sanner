@@ -170,25 +170,25 @@
                     <div class="buttonWrap">
                         <div class="d-inline">
                             <select id="itemOrderRegisterWarehouseSelectBox" name="itemOrderRegisterWarehouseSelectBox" title="창고">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1049}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
                             <select id="itemOrderRegisterMaterialDetailSelectBox" name="itemOrderRegisterMaterialDetailSelectBox" title="소재종류">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1027}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
                             <select id="itemOrderRegisterAreaSelectBox" name="itemOrderRegisterAreaSelectBox" title="넓이조건">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1050}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
                             <select id="itemOrderRegisterTconditionSelectBox" name="itemOrderRegisterTconditionSelectBox" title="T 조건">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1050}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -1077,7 +1077,7 @@
 
         $("#btnItemOrderRegisterCurrentStock").on('click', function(){
             let role_seq = '${authUserInfo.ROLE_SEQ}';
-            $("a[pid='"+ role_seq +"0403']").trigger("click");
+            $("a[pid='"+ $("#stockNo").val() +"']").trigger("click");
         });
 
         $("#chkItemOrderRegisterAutoMatching").on('change', function(evt){
@@ -1832,7 +1832,7 @@
                         indx = -1;
                     }
                 }
-                if (indx >= 0) {
+                if (indx >= 0 && txt) {
                     var txt1 = val.toString().substring(0, indx);
                     var txt2 = val.toString().substring(indx, indx + txtUpper.length);
                     var txt3 = val.toString().substring(indx + txtUpper.length);

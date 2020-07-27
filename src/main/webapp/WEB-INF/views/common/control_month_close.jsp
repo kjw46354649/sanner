@@ -89,17 +89,17 @@
 
         const controlMonthCloseLeftGridId = 'CONTROL_MONTH_CLOSE_LEFT_GRID';
         const controlMonthCloseLeftColModel = [
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
-            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
-            {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
-            {title: '품수', dataType: 'string', dataIndx: 'CNT'},
-            {title: '수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
-            {title: '공급가', width: 70, align: 'right', dataType: 'string', dataIndx: 'TOTAL_AMT'},
-            {title: '마감금액', width: 70, align: 'right', dataType: 'string', dataIndx: 'FINAL_NEGO_AMT'}
+            {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
+            {title: '사업자', dataIndx: 'COMP_NM'},
+            {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true},
+            {title: '발주처', dataIndx: 'ORDER_COMP_NM'},
+            {title: '마감월', dataIndx: 'CLOSE_MONTH', hidden: true},
+            {title: '마감월', width: 70, dataIndx: 'CLOSE_MONTH_TRAN'},
+            {title: '차수', dataIndx: 'CLOSE_VER'},
+            {title: '품수', dataIndx: 'CNT'},
+            {title: '수량', dataIndx: 'CONTROL_PART_QTY'},
+            {title: '공급가', width: 70, align: 'right', dataIndx: 'TOTAL_AMT'},
+            {title: '마감금액', width: 70, align: 'right', dataIndx: 'FINAL_NEGO_AMT'}
         ];
         const controlMonthCloseLeftObj = {
             height: 300,
@@ -121,15 +121,16 @@
         };
         const controlMonthCloseRightGridId = 'CONTROL_MONTH_CLOSE_RIGHT_GRID';
         const controlMonthCloseRightColModel = [
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
-            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-            {title: '마감월', dataType: 'string', dataIndx: 'CLOSE_MONTH', hidden: true},
-            {title: '마감월', width: 70, dataType: 'string', dataIndx: 'CLOSE_MONTH_TRAN'},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
-            {title: '품수', dataType: 'string', dataIndx: 'CNT'},
-            {title: '수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
+            {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
+            {title: '사업자', dataIndx: 'COMP_NM'},
+            {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true},
+            {title: '발주처', dataIndx: 'ORDER_COMP_NM'},
+            {title: '마감월', dataIndx: 'CLOSE_MONTH', hidden: true},
+            {title: '마감월', width: 70, dataIndx: 'CLOSE_MONTH_TRAN'},
+            {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
+            {title: '차수', dataIndx: 'CLOSE_VER_TRAN'},
+            {title: '품수', dataIndx: 'CNT'},
+            {title: '수량', dataIndx: 'CONTROL_PART_QTY'},
             {title: '공급가', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
             {
                 title: '마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###',

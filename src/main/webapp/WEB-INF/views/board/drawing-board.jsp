@@ -17,6 +17,9 @@
     <link rel="stylesheet" href="/resource/asset/css/reset.css" type="text/css" />
     <link rel="stylesheet" href="/resource/asset/css/common.css" type="text/css" />
     <link rel="stylesheet" href="/resource/asset/css/tab.css" type="text/css" />
+    <!-- alertify -->
+    <link rel="stylesheet" type="text/css" href="/resource/plugins/alertifyjs/css/alertify.css" />
+    <link rel="stylesheet" type="text/css" href="/resource/plugins/alertifyjs/css/themes/default.css" />
 
     <script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
@@ -24,6 +27,9 @@
     <script type="text/javascript" src="/resource/plugins/dhtmlx/suite.min.js"></script>
     <script type="text/javascript" src='/resource/plugins/waitme/waitMe.js'></script>
     <script type="text/javascript" src="/resource/plugins/scanner/onscan.js" ></script>
+    <!-- alertify -->
+    <script type="text/javascript" src='/resource/plugins/alertifyjs/alertify.js'></script>
+
     <style type="text/css">
         .dhx_message__icon{
             color:#ffffff !important;
@@ -325,11 +331,11 @@
                     </div>
                     <div class="timeWrap">
                         <span class="timeTit"><srping:message key='drawing.board.button.03'/></span>
-                        <span class="time"><c:if test="${not empty workInfo}">${workInfo.STOP_TIME}</c:if></span>
+                        <span class="time"><c:if test="${not empty workInfo}">${workInfo.STOP_TIME}</c:if> &nbsp;<srping:message key='drawing.board.label.02'/></span>
                     </div>
                     <div class="timeWrap">
                         <span class="timeTit"><srping:message key='drawing.board.button.04'/></span>
-                        <span class="time"><c:if test="${not empty workInfo}">${workInfo.WORK_TIME}</c:if></span>
+                        <span class="time"><c:if test="${not empty workInfo}">${workInfo.WORK_TIME}</c:if> &nbsp;<srping:message key='drawing.board.label.02'/></span>
                     </div>
                 </div>
                 <div class="middleConts">
@@ -367,13 +373,13 @@
                     <div class="qual">
                         <div class="qualTit"><srping:message key='drawing.board.label.08'/></div>
                         <div class="qualConts">
-                            <span></span>
+                            <span><%--<img src="/barcode/code128/C000003844">--%></span>
                         </div>
                     </div>
                 </div>
                 <div class="alertConts">
-                    <c:if test="${not empty workInfo && workInfo.MAIN_INSPECTION eq 'Y'}">
-                        <span class="alertBox"><srping:message key='drawing.board.label.09'/></span>
+                    <c:if test="${not empty workInfo && workInfo.MAIN_INSPECTION ne ''}">
+                        <span class="alertBox">${workInfo.MAIN_INSPECTION}</span>
                     </c:if>
                     <c:if test="${not empty workInfo && workInfo.EMERGENCY_YN eq 'Y'}">
                         <span class="alertBox"><srping:message key='drawing.board.label.10'/></span>
@@ -423,9 +429,9 @@
                         };
                         fnPostAjax(function (data, callFunctionParam) {
                             if(data.info != null){
-                                if(!checkDoubleWorkControl(data.info.CONTROL_SEQ, data.info.CONTROL_DETAIL_SEQ)){
-                                    return false;
-                                }
+                                // if(!checkDoubleWorkControl(data.info.CONTROL_SEQ, data.info.CONTROL_DETAIL_SEQ)){
+                                //     return false;
+                                // }
                                 startWork(data.info);
                             }else{
                                showMessage("<srping:message key='drawing.board.alert.01'/>");
@@ -570,9 +576,9 @@
             let controlSeq = $(this).attr("sControlSeq");
             let controlDetailSeq = $(this).attr("sControlDetailSeq");
 
-            if(!checkDoubleWorkControl(controlSeq, controlDetailSeq)){
-                return false;
-            }
+            // if(!checkDoubleWorkControl(controlSeq, controlDetailSeq)){
+            //     return false;
+            // }
 
             var tr = $(this);
             var td = tr.children();
@@ -819,16 +825,16 @@
             $("#drawing_worker_scan_popup").css("display", "block");
         }
 
-        let checkDoubleWorkControl = function(controlSeq, controlDetailSeq){
-            let beforeControlSeq = $("#drawing_action_form").find("#CONTROL_SEQ").val();
-            let beforeControlDetailSeq = $("#drawing_action_form").find("#CONTROL_DETAIL_SEQ").val();
-            if(beforeControlSeq == controlSeq && beforeControlDetailSeq == controlDetailSeq){
-                alert("<srping:message key='drawing.board.alert.03'/>");
-                return false;
-            }else{
-                return true;
-            }
-        }
+        <%--let checkDoubleWorkControl = function(controlSeq, controlDetailSeq){--%>
+        <%--    let beforeControlSeq = $("#drawing_action_form").find("#CONTROL_SEQ").val();--%>
+        <%--    let beforeControlDetailSeq = $("#drawing_action_form").find("#CONTROL_DETAIL_SEQ").val();--%>
+        <%--    if(beforeControlSeq == controlSeq && beforeControlDetailSeq == controlDetailSeq){--%>
+        <%--        alert("<srping:message key='drawing.board.alert.03'/>");--%>
+        <%--        return false;--%>
+        <%--    }else{--%>
+        <%--        return true;--%>
+        <%--    }--%>
+        <%--}--%>
 
         let showMessage = function(message){
             dhx.message({
@@ -849,11 +855,18 @@
                 data: { 'queryId': 'common.selectBarcodePrintControlCheck', 'BARCODE_NUM': barcodeNumber},
                 success: function (data, textStatus, jqXHR) {
                     if (textStatus === 'success') {
-                       if(data.info != null && data.info.USE_YN == 'Y'){
-                           returnVal = true;
-                       }else {
-                           showMessage("<srping:message key='drawing.board.alert.01'/>");
-                       }
+                        if(data.info){
+                            let partStatus = data.info.PART_STATUS;
+                            if(partStatus == "" || partStatus == "PRO001" || partStatus == "PRO003" || partStatus == "PRO004" || partStatus == "PRO012" || partStatus == "PRO014") {
+                                showMessage("<srping:message key='drawing.board.alert.07'/>");
+                            } else if(data.info.USE_YN == 'Y') {
+                                returnVal = true;
+                            } else {
+                                showMessage("<srping:message key='drawing.board.alert.01'/>");
+                            }
+                        }else{
+                            showMessage("<srping:message key='drawing.board.alert.01'/>");
+                        }
                     } else {
                         showMessage("<srping:message key='error.common'/>");
                     }
@@ -942,6 +955,60 @@
            $("#drawing_worker_target_list_popup").css("display", "none");
            $("#drawing_worker_scan_popup").css("display", "block");
        };
+
+        /**
+         * @title {String or DOMElement} The dialog title.
+         * @message {String or DOMElement} The dialog contents.
+         * @onok {Function} Invoked when the user clicks OK button or closes the dialog.
+         *
+         * fnAlert(null,"<h1>안녕하세요</h1>", function () {alert('확인 클릭')});
+         *
+         */
+        const fnAlert = function (title, message, onok) {
+            alertify.alert()
+                .setting({
+                    'title': title,
+                    'message': message,
+                    'onok': onok,
+                    'movable': false,
+                    'transitionOff': true
+                }).show();
+        };
+
+        /**
+         * @title {String or DOMElement} The dialog title.
+         * @message {String or DOMElement} The dialog contents.
+         * @onok {Function} Invoked when the user clicks OK button.
+         * @oncancel {Function} Invoked when the user clicks Cancel button or closes the dialog.
+         * @autoOk {number} Automatically confirms the dialog after n seconds.
+         *
+         * fnConfirm(null, 'message', function() {alert('확인 클릭')}, function() {alert('취소 클릭')}, 5);
+         *
+         */
+        const fnConfirm = function (title, message, onok, oncancel, autoOk) {
+            if (autoOk == undefined || autoOk == null) {
+                alertify.confirm()
+                    .setting({
+                        'title': title,
+                        'message': message,
+                        'onok': onok,
+                        'oncancel': oncancel,
+                        'movable': false,
+                        'transitionOff': true
+                    }).show();
+            } else {
+                alertify.confirm()
+                    .setting({
+                        'title': title,
+                        'message': message,
+                        'onok': onok,
+                        'oncancel': oncancel,
+                        'movable': false,
+                        'transitionOff': true
+                    }).show().autoOk(autoOk);
+            }
+        };
+
     });
 
 </script>

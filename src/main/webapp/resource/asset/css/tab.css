@@ -89,7 +89,7 @@
 .qualConts span.txtR{background: url(../images/work/bg_st_4_2.png) no-repeat 0 0; width: 113px; color: #b50000; font-weight: bold;}
 .qualConts span:nth-child(3){background: url(../images/work/bg_st_4_3.png) no-repeat 0 0; width: 313px; text-align: left; }
 .qualConts span~span{margin-left: 6px;}
-.alertConts{padding: 19px 19px 0; font-size: 0;}
+.alertConts{padding: 19px 19px 0px 30px; font-size: 0;}
 .alertBox{display: inline-block; width: 107px; height: 35px; line-height: 35px; font-size: 14px; font-weight: bold; color: #756363; background-color: #fef2fd; border: 1px solid #ee2e52; box-shadow: 0 0 3px 2px rgba(238,46,82,0.2);  position: relative; padding-left: 37px; border-radius: 5px;}
 .alertBox:before{content: ''; position: absolute; top: 4px; left: 7px; width: 24px; height: 22px; background: url(../images/work/alert.png) no-repeat 0 0;}
 .alertBox~.alertBox{margin-left: 13px;}

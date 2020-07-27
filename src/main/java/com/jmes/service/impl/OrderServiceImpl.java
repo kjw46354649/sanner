@@ -205,6 +205,12 @@ public class OrderServiceImpl implements OrderService {
                 this.orderDao.createInvoiceDetail(hashMap);
                 hashMap.put("queryId", "inspection.updateControlPartOrderPackingCnt1");
                 this.innodaleDao.update(hashMap);
+
+                hashMap.put("queryId", "inspection.updateControlPartOrderPackingCnt2");
+                this.innodaleDao.update(hashMap);
+
+                hashMap.put("queryId", "inspection.insertControlPartOrderPackingCnt3");
+                this.innodaleDao.create(hashMap);
             }
         }
 
@@ -246,7 +252,7 @@ public class OrderServiceImpl implements OrderService {
             map.put("queryId", "orderMapper.selectHasInOutside");
             if(this.orderDao.getFlag(map) && !flag) {
                 flag = true;
-                message = "외주";
+                message = "외주 관리번호는 가공확정을 할수 없습니다.";
             };
 
             model.addAttribute("flag", flag);

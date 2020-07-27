@@ -21,10 +21,16 @@
     <link href="/resource/asset/css/style.css" rel="stylesheet" type="text/css" />
     <link href="/resource/plugins/validation_engine/css/validationEngine.jquery.css" rel="stylesheet" type="text/css" />
 
+    <!-- alertify -->
+    <link rel="stylesheet" type="text/css" href="/resource/plugins/alertifyjs/css/alertify.css" />
+    <link rel="stylesheet" type="text/css" href="/resource/plugins/alertifyjs/css/themes/default.css" />
+
     <script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
     <script type="text/javascript" src="/resource/plugins/validation_engine/js/jquery.validationEngine.js"></script>
     <script type="text/javascript" src="/resource/plugins/validation_engine/js/languages/jquery.validationEngine-en.js"></script>
+    <!-- alertify -->
+    <script type="text/javascript" src='/resource/plugins/alertifyjs/alertify.js'></script>
 
     <!-- include Head : e -->
 </head>

@@ -825,7 +825,7 @@
         $("#btnEstimateListNewEstimate").on('click', function(){
             $("#estimate_version_up_sequence_form #hidden_est_seq").val('');
 
-            $("a[pid='10000102']").trigger("click");
+            $("a[pid='" + $("#estimateNo").val() + "']").trigger("click");
             setTimeout(function(){
                 $("#estimateRegisterReloadBtn").trigger('click');
             }, 800)
@@ -867,7 +867,7 @@
                         };
                         parameters = {'url': '/json-create', 'data': parameter};
                         fnPostAjax('',parameters, '');
-                        $("a[pid='10000102']").trigger("click");
+                        $("a[pid='" + $("#estimateNo").val() + "']").trigger("click");
                         setTimeout(function(){
                             $("#estimateRegisterReloadBtn").trigger('click');
                         }, 800)
@@ -951,11 +951,9 @@
     $(document).on('click', '#estimateRegisterPage', function(event){
         let seq = event.target.dataset.seq;
         let status = event.target.dataset.status;
-
-        $("#estimate_version_up_sequence_form #hidden_est_seq").val(seq);
-
-        $("a[pid='10000102']").trigger("click");
+        $("a[pid='" + $("#estimateNo").val() + "']").trigger("click");
         setTimeout(function(){
+            $("#estimate_version_up_sequence_form #hidden_est_seq").val(seq);
             $("#estimateRegisterReloadBtn").trigger('click');
         }, 800)
         event.preventDefault();
@@ -1033,7 +1031,7 @@
                     indx = -1;
                 }
             }
-            if (indx >= 0) {
+            if (indx >= 0 && txt) {
                 var txt1 = val.toString().substring(0, indx);
                 var txt2 = val.toString().substring(indx, indx + txtUpper.length);
                 var txt3 = val.toString().substring(indx + txtUpper.length);

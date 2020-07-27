@@ -66,7 +66,7 @@
                 AND B.ITEM_NM = #{ITEM_NM}
             </if>
         GROUP BY A.EST_SEQ
-        ORDER BY A.EST_NUM, A.EST_SEQ, A.EST_VER
+        ORDER BY A.INSERT_DT DESC, A.EST_NUM, A.EST_SEQ, A.EST_VER
     </select>
 
     <select id="selectEstimateRegisterMaster" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -411,6 +411,12 @@
     <delete id="deleteEstimateDetail"  parameterType="java.util.HashMap">
         DELETE FROM TBL_ESTIMATE_DETAIL
         WHERE EST_SEQ = #{EST_SEQ}
+    </delete>
+
+    <delete id="deleteEstimateDetailEach"  parameterType="java.util.HashMap">
+        DELETE FROM TBL_ESTIMATE_DETAIL
+        WHERE EST_SEQ = #{EST_SEQ}
+            AND SEQ = #{SEQ}
     </delete>
 
     <delete id="deleteEstimateReceiver"  parameterType="java.util.HashMap">

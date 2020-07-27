@@ -60,28 +60,28 @@
 
     $(function () {
         let OrderStatusLeftColModel= [
-            {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120 } ,
-            {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_NM', width: 80 } ,
-            {title: '총수량', dataType: 'string', dataIndx: 'ORDER_QTY' } ,
+            {title: '주문번호', dataIndx: 'MATERIAL_ORDER_NUM', width: 120 } ,
+            {title: '주문업체', dataIndx: 'MATERIAL_COMP_NM', width: 80 } ,
+            {title: '총수량', dataIndx: 'ORDER_QTY' } ,
             {title: '주문일시', dataType: 'date', dataIndx: 'ORDER_DT', width: 120 },
-            {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_CD' , hidden: true}
+            {title: '주문업체', dataIndx: 'MATERIAL_COMP_CD' , hidden: true}
         ];
 
         let OrderStatusRightColModel= [
-            {title: '.', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden: true},
-            {title: '.', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-            {title: '.', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
-            {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120 , editable: false} ,
-            {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_CD', width: 80 , editable: false} ,
-            {title: '소재종류', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 120, editable: false},
-            {title: '형태', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 120, editable: false},
-            {title: '상세종류', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 120, editable: false},
-            {title: '소재Size', dataType: 'string', dataIndx: 'SIZE_TXT', width: 120, editable: false},
-            {title: '주문', dataType: 'string', dataIndx: 'ORDER_QTY' , editable: false},
-            {title: '비고', dataType: 'string', dataIndx: 'ORDER_NOTE', editable: false},
-            {title: '금액.', dataType: 'string', dataIndx: 'ORDER_AMT '},
-            {title: '수입검사', dataType: 'string', align: "center", colModel: [
-                    {title: '소재', dataType: 'string', dataIndx: 'INSPECT_MATERIAL_YN', editable: false,
+            {title: '.', dataIndx: 'CONTROL_SEQ', hidden: true},
+            {title: '.', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+            {title: '.', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
+            {title: '주문번호', dataIndx: 'MATERIAL_ORDER_NUM', width: 120 , editable: false} ,
+            {title: '주문업체', dataIndx: 'MATERIAL_COMP_CD', width: 80 , editable: false} ,
+            {title: '소재종류', dataIndx: 'CONTROL_NUM', width: 120, editable: false},
+            {title: '형태', dataIndx: 'CONTROL_NUM', width: 120, editable: false},
+            {title: '상세종류', dataIndx: 'DRAWING_NUM', width: 120, editable: false},
+            {title: '소재Size', dataIndx: 'SIZE_TXT', width: 120, editable: false},
+            {title: '주문', dataIndx: 'ORDER_QTY' , editable: false},
+            {title: '비고', dataIndx: 'ORDER_NOTE', editable: false},
+            {title: '금액.', dataIndx: 'ORDER_AMT '},
+            {title: '수입검사', align: "center", colModel: [
+                    {title: '소재', dataIndx: 'INSPECT_MATERIAL_YN', editable: false,
                         render: function(ui){
                             let icon = ui.rowData.INSPECT_MATERIAL_YN == 'Y' ? 'ui-icon-check' : 'ui-icon-closethick';
                             let returnVal = ui.rowData.INSPECT_MATERIAL_YN == 'Y' ? 'N' : 'Y';
@@ -90,7 +90,7 @@
                                 '   <span data-col="INSPECT_MATERIAL_YN" data-val="'+returnVal+'" data-seq="'+MATERIAL_ORDER_SEQ+'" class="ui-icon '+icon+'"></span></a>';
                         }
                     },
-                    {title: '외관', dataType: 'string', dataIndx: 'INSPECT_SURFACE_YN', editable: false,
+                    {title: '외관', dataIndx: 'INSPECT_SURFACE_YN', editable: false,
                         render: function(ui){
                             let icon = ui.rowData.INSPECT_SURFACE_YN == 'Y' ? 'ui-icon-check' : 'ui-icon-closethick';
                             let returnVal = ui.rowData.INSPECT_SURFACE_YN == 'Y' ? 'N' : 'Y';
@@ -99,7 +99,7 @@
                                 '   <span data-col="INSPECT_SURFACE_YN" data-val="'+returnVal+'" data-seq="'+MATERIAL_ORDER_SEQ+'" class="ui-icon '+icon+'"></span></a>';
                         }
                     },
-                    {title: '치수', dataType: 'string', dataIndx: 'INSPECT_SIZE_YN', editable: false,
+                    {title: '치수', dataIndx: 'INSPECT_SIZE_YN', editable: false,
                         render: function(ui){
                             let icon = ui.rowData.INSPECT_SIZE_YN == 'Y' ? 'ui-icon-check' : 'ui-icon-closethick';
                             let returnVal = ui.rowData.INSPECT_SIZE_YN == 'Y' ? 'N' : 'Y';
@@ -109,14 +109,14 @@
                         }
                     },
                 ]},
-            {title: '검사 비고', dataType: 'string', dataIndx: 'INSPECT_NOTE'},
-            {title: '입고', dataType: 'string', dataIndx: '', width: 80, editable: false,
+            {title: '검사 비고', dataIndx: 'INSPECT_NOTE'},
+            {title: '입고', dataIndx: '', width: 80, editable: false,
                 render: function(ui){
                     return '<a href="#"><span class="ui-icon ui-icon-closethick"></span></a>';
                 }
             },
-            {title: '입고 일시', dataType: 'string', dataIndx: 'IN_DT', editable: false},
-            {title: '관리번호', dataType: 'string', dataIndx: '', editable: false}
+            {title: '입고 일시', dataIndx: 'IN_DT', editable: false},
+            {title: '관리번호', dataIndx: '', editable: false}
         ];
 
         let OrderStatusLeftToolbar = {

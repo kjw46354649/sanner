@@ -23,7 +23,7 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="SEL_ORDER_COMP_CD">발주사</label>
                             <select class="wd_200" name="SEL_ORDER_COMP_CD" id="SEL_ORDER_COMP_CD" title="발주사">
-                                <option value="" selected="selected">ALL</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
@@ -1191,7 +1191,7 @@
                     }
                 }
 
-                if (indx >= 0) {
+                if (indx >= 0 && txt) {
                     var txt1 = val.toString().substring(0, indx);
                     var txt2 = val.toString().substring(indx, indx + txtUpper.length);
                     var txt3 = val.toString().substring(indx + txtUpper.length);

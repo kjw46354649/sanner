@@ -18,7 +18,7 @@
             jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS ORDER_QTY, <!-- 수량 -->
             C.POP_POSITION_NM AS POP_POSITION, <!-- 현재위치 -->
             SF_GET_POP_PREV_POSITION(2, 'NM', A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS POP_PREV_POSITION, <!-- 이전위치 -->
-            jmes.SF_GET_DATE_F(C.POP_DT, 'YY', 'M') AS POP_DT <!-- 외치 일시 -->
+            jmes.SF_GET_DATE_F(C.POP_DT, '', 'M') AS POP_DT <!-- 외치 일시 -->
         FROM jmes.TBL_CONTROL_PART A
              INNER JOIN jmes.TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.CONTROL_STATUS = 'ORD001' <!-- 주문확정 -->
              INNER JOIN jmes.TBL_POP_VIEW C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
@@ -27,7 +27,7 @@
                         AND K.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ GROUP BY K.CONTROL_SEQ, K.CONTROL_DETAIL_SEQ
                 )
         WHERE 1 = 1
-        ORDER BY C.POP_DT
+        ORDER BY C.POP_DT DESC
     </select>
 
     <select id="selectPopPartStatus" parameterType="java.util.HashMap" resultType="java.util.HashMap">

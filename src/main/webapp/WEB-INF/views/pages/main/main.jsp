@@ -133,10 +133,10 @@
                     <span class="chk_box mg-left20"><input id="pr_ex" type="checkbox"><label for="pr_ex"> 가공완료제외</label></span>
                     <span class="slt_wrap mg-left10">
                         <select class="wd_150" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                            <option value="">All</option>
+                            <option value=""><spring:message code="com.form.top.all.option"/></option>
                         </select>
                         <select class="label_150 mg-left10" name="MATERIAL_TYPE" id="MATERIAL_TYPE" title="재질">
-                            <option value="">All</option>
+                            <option value=""><spring:message code="com.form.top.all.option"/></option>
                             <c:forEach var="code" items="${HighCode.H_1035}">
                                 <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                             </c:forEach>

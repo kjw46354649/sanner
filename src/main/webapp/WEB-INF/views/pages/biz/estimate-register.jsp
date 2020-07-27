@@ -963,12 +963,13 @@
             });
 
             estimateRegisterBotGrid.pqGrid("refreshDataAndView");
+
+            // 파일 업로드
+            estimateRegisterFileGrid.pqGrid(estimateRegisterFileObj);
+            estimateRegisterFileGrid.pqGrid('option', 'colModel', estimateRegisterFileModel);
+            estimateRegisterFileGrid.pqGrid('option', 'height', '111').pqGrid('refresh');
         };
 
-        // 파일 업로드
-        estimateRegisterFileGrid.pqGrid(estimateRegisterFileObj);
-        estimateRegisterFileGrid.pqGrid('option', 'colModel', estimateRegisterFileModel);
-        estimateRegisterFileGrid.pqGrid('option', 'height', '111').pqGrid('refresh');
 
         $("#estimate_register_info_form #ORDER_COMP_CD").on('change', function(){
             let compCd = $(this).val();

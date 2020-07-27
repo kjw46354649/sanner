@@ -367,7 +367,7 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="FACTORY_CLASSIFY">공장 구분</label>
                             <select class="wd_200" name="FACTORY_CLASSIFY" id="FACTORY_CLASSIFY" title="공장구분">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1014}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -593,7 +593,7 @@
                             }
                         }
                     },
-                    {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORKING_TIME', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
+                    {title: 'E/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORKING_TIME', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
                 ]
             },
             {title: 'MCT Actual', align: 'center',
@@ -1159,7 +1159,7 @@
                         indx = -1;
                     }
                 }
-                if (indx >= 0) {
+                if (indx >= 0 && txt) {
                     var txt1 = val.toString().substring(0, indx);
                     var txt2 = val.toString().substring(indx, indx + txtUpper.length);
                     var txt3 = val.toString().substring(indx + txtUpper.length);

@@ -22,21 +22,21 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="COMP_CD">사업자</label>
                             <select class="wd_200" name="COMP_CD" id="COMP_CD">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="OUTSIDE_COMP_CD">외주업체</label>
                             <select class="wd_200" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="CLOSE_VER">차수</label>
                             <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <option value="1">1차</option>
                                 <option value="2">2차</option>
                                 <option value="3">3차</option>
@@ -80,14 +80,14 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="COMP_CD">사업자</label>
                             <select class="wd_200" name="COMP_CD" id="COMP_CD">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="OUTSIDE_COMP_CD">외주업체</label>
                             <select class="wd_200" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
-                                <option value="">All</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
@@ -149,15 +149,15 @@
         tab1PostData.CLOSE_MONTH_LEFT = MONTH;
         const tab1ColModel = [
             {title: 'ROW_NUM', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ROW_NUM', hidden: true},
-            {title: '사업자 구분', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자 구분', dataType: 'string', dataIndx: 'COMP_NM'},
-            {title: '년도', dataType: 'string', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '분기', dataType: 'string', dataIndx: 'QUARTER'},
-            {title: '마감월', dataType: 'string', dataIndx: 'FINISH_MONTH'},
-            {title: '차수', dataType: 'string', dataIndx: 'CLOSE_VER'},
-            {title: '외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
-            {title: '외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM'},
-            {title: '품수', dataType: 'string', dataIndx: 'ITEM_NUMBER', summary: {type: 'sum', edit: true},
+            {title: '사업자 구분', dataIndx: 'COMP_CD', hidden: true},
+            {title: '사업자 구분', dataIndx: 'COMP_NM'},
+            {title: '년도', dataIndx: 'ORDER_COMP_CD', hidden: true},
+            {title: '분기', dataIndx: 'QUARTER'},
+            {title: '마감월', dataIndx: 'FINISH_MONTH'},
+            {title: '차수', dataIndx: 'CLOSE_VER'},
+            {title: '외주업체', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
+            {title: '외주업체', dataIndx: 'OUTSIDE_COMP_NM'},
+            {title: '품수', dataIndx: 'ITEM_NUMBER', summary: {type: 'sum', edit: true},
                 render: function (ui) {
                     if(ui.rowData.pq_grandsummary) {
                         return ui.cellData;
@@ -172,9 +172,9 @@
             {title: '외주<br>마감 금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', summary: {type: 'sum', edit: true}}, // 2020-06-07 add
             {title: '부가세', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'VAT_AMOUNT', summary: {type: 'sum', edit: true}},
             {title: '부가세<br>합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'VAT_AMOUNT', summary: {type: 'sum', edit: true}}, // 2020-06-07 add
-            {title: '업데이트<br>일시', dataType: 'string', dataIndx: 'VAT_AMOUNT'}, // 2020-06-07 add
-            // {title: '합계금액', dataType: 'string', dataIndx: 'TOTAL_AMOUNT'},
-            {title: '비고', dataType: 'string', dataIndx: 'CLOSE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
+            {title: '업데이트<br>일시', dataIndx: 'VAT_AMOUNT'}, // 2020-06-07 add
+            // {title: '합계금액', dataIndx: 'TOTAL_AMOUNT'},
+            {title: '비고', dataIndx: 'CLOSE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
         ];
         const tab1GroupModel = {
             on: true,
@@ -217,11 +217,11 @@
         let tab2PostData = fnFormToJsonArrayData('#MONTH_OUTSIDE_STATUS_SEARCH_FORM');
         tab2PostData.YEAR = YEAR;
         const tab2ColModel = [
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자', dataType: 'string', dataIndx: 'COMP_NM'},
-            {title: '발주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
-            {title: '대상외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_CD_NM'},
-            {title: '구분', dataType: 'string', dataIndx: 'STATUS_TYPE',},
+            {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
+            {title: '사업자', dataIndx: 'COMP_NM'},
+            {title: '발주업체', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
+            {title: '대상외주업체', dataIndx: 'OUTSIDE_COMP_CD_NM'},
+            {title: '구분', dataIndx: 'STATUS_TYPE',},
             {
                 title: '1분기', align: 'center', colModel: [
                     {title: '1월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_01_AMT', summary: {type: 'sum'}},
@@ -254,7 +254,7 @@
                     {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_12_SUM_AMT', summary: {type: 'sum'}},
                 ]
             },
-            {title: '합계', dataType: 'string', dataIndx: 'TOTAL_AMT'}
+            {title: '합계', dataIndx: 'TOTAL_AMT'}
         ];
         const tab2GroupModel = {
             on: true, header:false,

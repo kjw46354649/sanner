@@ -65,7 +65,7 @@
                 <span class="slt_wrap mg-left20">
                     <label class="label_50" for="FACTORY_CLASSIFY">공장구분</label>
                     <select class="wd_70" name="FACTORY_CLASSIFY" id="FACTORY_CLASSIFY" title="공장구분">
-                        <option value="">All</option>
+                        <option value=""><spring:message code="com.form.top.all.option"/></option>
                         <c:forEach var="code" items="${HighCode.H_1014}">
                             <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                         </c:forEach>
@@ -75,7 +75,7 @@
                 <span class="slt_wrap">
                     <label class="label_50" for="POP_POSITION">위치</label>
                     <select class="wd_70" id="POP_POSITION" name="POP_POSITION" title="위치">
-                        <option value="">ALL</option>
+                        <option value=""><spring:message code="com.form.top.all.option"/></option>
                         <c:forEach var="code" items="${HighCode.H_1009}">
                             <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                         </c:forEach>
@@ -85,7 +85,7 @@
                 <span class="slt_wrap">
                     <label class="label_50" for="MATERIAL_DETAIL">소재분류</label>
                     <select class="wd_100" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" title="소재분류">
-                        <option value="">All</option>
+                        <option value=""><spring:message code="com.form.top.all.option"/></option>
                         <c:forEach var="code" items="${HighCode.H_1027}">
                             <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                         </c:forEach>
@@ -95,7 +95,7 @@
                 <span class="slt_wrap">
                     <label class="label_50" for="PART_STATUS">진행상태</label>
                     <select class="wd_100" name="PART_STATUS" id="PART_STATUS" title="진행상태">
-                        <option value="">All</option>
+                        <option value=""><spring:message code="com.form.top.all.option"/></option>
                         <c:forEach var="code" items="${HighCode.H_1013}">
                             <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                         </c:forEach>
@@ -105,14 +105,14 @@
                 <span class="slt_wrap">
                     <label class="label_50" for="EQUIP_SEQ">MCT No.</label>
                     <select class="wd_100" name="EQUIP_SEQ" id="EQUIP_SEQ" title="MCT No.">
-                        <option value="">ALL</option>
+                        <option value=""><spring:message code="com.form.top.all.option"/></option>
                     </select>
                 </span>
                 <span class="gubun"></span>
                 <span class="slt_wrap">
                     <label class="label_50" for="MCT_WORK_TYPE">작업구분</label>
                     <select class="wd_100" name="MCT_WORK_TYPE" id="MCT_WORK_TYPE" title="작업구분">
-                        <option value="">All</option>
+                        <option value=""><spring:message code="com.form.top.all.option"/></option>
                         <c:forEach var="code" items="${HighCode.H_1011}">
                             <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                         </c:forEach>
@@ -419,7 +419,7 @@
                             }
                         }
                     },
-                    {title: 'W/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORKING_TIME', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
+                    {title: 'E/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORKING_TIME', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
                 ]
             },
             {title: 'MCT Actual', align: 'center',
@@ -553,14 +553,14 @@
             showTitle: false,
             rowHtHead: 15,
             numberCell: {title: 'No.'},
-            // selectionModel: {type: 'row', mode: 'single'},
-            hoverMode: 'cell',
+            selectionModel: {type: 'row', mode: 'single'},
+            hoverMode: 'row',
             // scrollModel: {autoFit: true},
             editModel: {clicksToEdit: 1},
             trackModel: {on: true},
             editable: false,
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
-            filterModel: {mode: 'OR'},
+            // filterModel: {mode: 'OR'},
             colModel: processTargetGridColModel,
             strNoRows: g_noData,
             dataModel: {
