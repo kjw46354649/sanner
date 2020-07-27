@@ -909,7 +909,7 @@
             render: function (ui) {
                 let returnVal = "";
                 if (ui.cellData) {
-                    returnVal = '<button id="downloadSingleFile" class="miniBtn green">다운로드</button>'
+                    returnVal = '<button type="button" id="downloadSingleFile" class="miniBtn green">다운로드</button>'
                 }
                 return returnVal;
             },
@@ -927,7 +927,7 @@
                 let deleteYn = $("#common_file_download_form #deleteYn").val();
                 let returnVal = "";
                 if (ui.cellData) {
-                    if(eval(deleteYn)) returnVal = '<button id="deleteSingleFile" class="miniBtn red">삭제</button>'
+                    if(eval(deleteYn)) returnVal = '<button type="button" id="deleteSingleFile" class="miniBtn red">삭제</button>'
                     return returnVal;
                 }
             },
