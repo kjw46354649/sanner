@@ -1218,8 +1218,8 @@
                     {title: '기타사항', dataIndx: 'OUTSIDE_REQUEST_ETC'}
                 ]
             },
-            {title: '외주<br>요망납기', datatype: 'date', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor}},
-            {title: '비고', dataIndx: 'OUTSIDE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
+            {title: '외주<br>요망납기', datatype: 'date', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
+            {title: '비고', dataIndx: 'OUTSIDE_NOTE'}
         ];
         const cancelRequestOutsideObj = {
             height: 200,
@@ -1228,7 +1228,7 @@
             showTitle: false,
             numberCell: {title: 'No.'},
             trackModel: {on: true},
-            scrollModel: {autoFit: true},
+            // scrollModel: {autoFit: true},
             rowHtHead: 15,
             dragColumns: {enabled: false},
             editable: false,

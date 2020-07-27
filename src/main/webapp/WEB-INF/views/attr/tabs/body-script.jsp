@@ -148,10 +148,11 @@
                     <%--alert('<spring:message code='com.alert.default.failText' />');--%>
                     // }
                 } else {
-                    // alert('fail=[' + json.msg + ']111');
+                    fnAlert(null, '<srping:message key="error.common"/>');
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
+                if (waitMeMainContainer !== undefined) $(this).stopWaitMe();
                 // alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
                 // if (errorThrown == 'Forbidden') {
                 //     $(this).fnHiddenFormPageAction('/');

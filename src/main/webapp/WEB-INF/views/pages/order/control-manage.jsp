@@ -162,10 +162,10 @@
                     <select id="controlManageFrozen" name="controlManageFrozen">
                     </select>
                 </div>
-                <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_ESTIMATE">입력필드</button>
-                <button type="button" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_EASY">일반모드</button>
-                <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_OUTSIDE_QUALITY">마감모드</button>
-                <button type=" button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_VIEW_ALL">전체모드</button>
+                <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_INPUT_MODE">입력필드</button>
+                <button type="button" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_NORMAL_MODE">일반모드</button>
+                <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_CLOSE_MODE">마감모드</button>
+                <button type=" button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_ALL_MODE">전체모드</button>
                 <div class="rightSpan">
                     <span class="slt_wrap namePlusSlt">
                         <label for="SUPPLY_UNIT_COST_APPLY">공급단가적용</label>
@@ -737,7 +737,7 @@
                 }
             },
             {title: '진행상태', dataIndx: 'PART_STATUS', hidden: true},
-            {title: '진행상태', dataIndx: 'PART_STATUS_NM', hidden: true},
+            {title: '진행상태', dataIndx: 'PART_STATUS_NM'},
             {title: '가공<br>완료', width: 70, dataType: 'date', format: 'm/dd', dataIndx: 'INNER_WORK_FINISH_DT'},
             {
                 title: '규격', width: 110, dataIndx: 'SIZE_TXT',
@@ -749,7 +749,7 @@
                 }
             },
             {
-                title: '최종<br>견적단가', width: 90, dataType: 'integer', format: '#,##0', dataIndx: 'UNIT_FINAL_EST_AMT', hidden: true,
+                title: '최종<br>견적단가', width: 90, dataType: 'integer', format: '#,##0', dataIndx: 'UNIT_FINAL_EST_AMT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -769,7 +769,7 @@
                 // }
             },
             {
-                title: '최종<br>공급단가', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', hidden: true,
+                title: '최종<br>공급단가', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -788,7 +788,7 @@
                 }
             },
             {
-                title: '합계금액', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMT', hidden: true,
+                title: '합계금액', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMT',
                 render: function (ui) {
                     let rowData = ui.rowData;
                     let cls = null;
@@ -801,7 +801,7 @@
                 }
             },
             {
-                title: '종전가', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'WHDWJSRK', hidden: true,
+                title: '종전가', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'WHDWJSRK',
                 render: function (ui) {
                     let rowData = ui.rowData;
                     let cls = null;
@@ -1103,6 +1103,26 @@
                 }
             },
             {
+                title: '열처리', width: 70, dataIndx: 'MATERIAL_FINISH_HEAT', hidden: true,
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                },
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030')},
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let cls = null;
+
+                    if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
+                }
+            },
+            {
                 title: '소재비고', dataIndx: 'MATERIAL_NOTE',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {
@@ -1193,26 +1213,7 @@
                             return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
-                    {
-                        title: '열처리', width: 70, dataIndx: 'MATERIAL_FINISH_HEAT', hidden: true,
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                        editable: function (ui) {
-                            let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
-                        },
-                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030')},
-                        render: function (ui) {
-                            let rowData = ui.rowData;
-                            let cls = null;
-
-                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
-                                cls = 'bg-lightgray';
-                            }
-
-                            return {cls: cls, text: controlManageFilterRender(ui)};
-                        }
-                    },
                 ]
             },
             {
@@ -1499,7 +1500,6 @@
                 let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
                 let filterOpts = '<option value=\"\">All Fields</option>';
                 let frozenOts = '<option value="0">Selected</option>';
-                console.log(this.getColModel());
                 this.getColModel().forEach(function (column) {
                     let hiddenYn = column.hidden === undefined;
                     if (hiddenYn && column.title) {
@@ -1558,6 +1558,7 @@
                 }
 
                 if (ui.source === 'edit') {
+                    debugger;
                     let rowIndx = ui.updateList[0].rowIndx;
                     let data = ui.updateList[0].rowData;
                     let newRow = ui.updateList[0].newRow;
@@ -1643,7 +1644,7 @@
 
         const confrimOrderStatus = function (controlStatus) {
             let controlStatusNm = '';
-            let list = [];
+            let controlSeqList = [];
 
             switch (controlStatus) {
                 case 'ORD001':
@@ -1658,13 +1659,17 @@
             }
 
             for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
-                list[i] = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+                let rowData  = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+                controlSeqList[i] = rowData.CONTROL_SEQ;
             }
+
+            // 중복제거
+            controlSeqList = [...new Set(controlSeqList)];
 
             let message =
                 '<h4>\n' +
                 '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                '    <span>선택하신 ' + list.length + ' 건을 ' + controlStatusNm + '처리합니다. \n진행하시겠습니까?</span>\n' +
+                '    <span>선택하신 ' + controlSeqList.length + ' 건을 ' + controlStatusNm + '처리합니다. \n진행하시겠습니까?</span>\n' +
                 '</h4>';
             fnConfirm(null, message, function () {updateOrderStatus(controlStatus)});
         };
@@ -2092,7 +2097,7 @@
             let $orderManagementGridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
             let Cols = $orderManagementGridInstance.Columns();
             let array = [];
-            const estimateArray = [
+            const inputModeArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NOTE',
                 'MAIN_INSPECTION', 'ORDER_NUM', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM',
                 'ORDER_NUM_PLUS_BUTTON', 'ITEM_NM', 'SIZE_TXT',
@@ -2104,15 +2109,19 @@
                 'UNIT_FINAL_AMT', 'FINAL_AMT', 'WHDWJSRK', 'PREV_DRAWING_NUM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ',
                 'PDF_GFILE_SEQ', 'CONTROL_PART_INSERT_UPDATE_DT'
             ];
-            const easyArray = [
-                'CONTROL_STATUS_NM', 'CONTROL_VER', 'PRICE_CONFIRM', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'MAIN_INSPECTION',
-                'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'OUTSIDE_YN',
-                'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'MATERIAL_DETAIL', 'MATERIAL_KIND',
-                'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
-                'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'OUT_QTY', 'ORDER_OUT_FINISH_DT',
-                'DELIVERY_DT', 'PREV_DRAWING_NUM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'PDF_GFILE_SEQ', 'CONTROL_PART_INSERT_UPDATE_DT'
+            const normalModeArray = [
+                'CONTROL_STATUS_NM', 'CONTROL_VER', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'MAIN_INSPECTION',
+                'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM',
+                'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'OUT_QTY', 'ORDER_OUT_FINISH_DT', 'INVOICE_NUM', 'PART_UNIT_QTY',
+                'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'CONTROL_PART_QTY', 'WORK_TYPE',
+                'INNER_DUE_DT', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'PART_STATUS_NM', 'SIZE_TXT', 'INNER_WORK_FINISH_DT',
+                'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'FINAL_AMT', 'WHDWJSRK',
+                'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE', 'ITEM_NM', 'ORDER_STAFF_SEQ', 'PREV_DRAWING_NUM',
+                'MATERIAL_DETAIL', 'MATERIAL_TYPE_NM', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE',
+                'ORDER_NUM_PLUS_BUTTON',
+                'DELIVERY_DT', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'PDF_GFILE_SEQ', 'CONTROL_PART_INSERT_UPDATE_DT'
             ];
-            const outsideQualityArray = [
+            const closeModeArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'PRICE_CONFIRM', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'INVOICE_NUM',
                 'MAIN_INSPECTION',
                 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM',
@@ -2127,7 +2136,7 @@
                 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT', 'OUTSIDE_HOPE_DUE_DT', 'OUTSIDE_IN_DT', 'OUTSIDE_NOTE',
                 'dhlwnqnffidcode', 'dhlwnwhclqkddks', 'CONTROL_PART_INSERT_UPDATE_DT'
             ];
-            const allArray = [
+            const allModeArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'ORDER_STAFF_SEQ',
                 'DESIGNER_NM', 'CONTROL_NOTE', 'INVOICE_NUM', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE',
                 'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT',
@@ -2146,17 +2155,17 @@
             ];
 
             switch (elementId) {
-                case 'CONTROL_MANAGE_VIEW_ESTIMATE':
-                    array = estimateArray;
+                case 'CONTROL_MANAGE_INPUT_MODE':
+                    array = inputModeArray;
                     break;
-                case 'CONTROL_MANAGE_VIEW_EASY':
-                    array = easyArray;
+                case 'CONTROL_MANAGE_NORMAL_MODE':
+                    array = normalModeArray;
                     break;
-                case 'CONTROL_MANAGE_VIEW_OUTSIDE_QUALITY':
-                    array = outsideQualityArray;
+                case 'CONTROL_MANAGE_CLOSE_MODE':
+                    array = closeModeArray;
                     break;
-                case 'CONTROL_MANAGE_VIEW_ALL':
-                    array = allArray;
+                case 'CONTROL_MANAGE_ALL_MODE':
+                    array = allModeArray;
                     break;
             }
 

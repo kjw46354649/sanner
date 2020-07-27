@@ -61,7 +61,7 @@
 </div>
 <!-- CAD 도면 업로드 공통 End -->
 <!-- 파일 다운로드 공통 Start -->
-<div class="modal" id="common_file_download_upload_pop" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal" id="common_file_download_upload_pop" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
     <div class="modal-dialog modal-lg cadDrawing">
         <div class="modal-content">
             <div class="modal-header">
@@ -976,7 +976,10 @@
         let GfileKey = $("#common_file_download_form").find("#GFILE_SEQ").val();
         commonFileDownUploadGrid.pqGrid(commonFileDownUploadObj);
         let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey };
-        fnRequestGridData(commonFileDownUploadGrid, postData);
+        commonFileDownUploadGrid.pqGrid('option', 'dataModel.postData', function () {
+            return postData;
+        });
+        commonFileDownUploadGrid.pqGrid('refreshDataAndView');
     });
 
     commonFileDownUploadPopup.on('hide.bs.modal', function (e) {
@@ -1039,6 +1042,7 @@
                 let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GFILE_SEQ };
                 fnRequestGridData(commonFileDownUploadGrid, postData);
                 $("#common_file_download_form").find("#GFILE_SEQ").val(GFILE_SEQ);
+                fnAlert(null,"파일 업로드가 완료 되었습니다.");
             }, formData, '');
         }
     });
