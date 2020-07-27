@@ -1,6 +1,7 @@
 package com.framework.innodale.controller;
 
 import com.framework.innodale.component.CommonUtility;
+import com.framework.innodale.service.CadFileConvertService;
 import com.framework.innodale.service.InnodaleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,7 @@ public class CadFileConvertController {
     private static final Logger logger = LoggerFactory.getLogger(CadFileConvertController.class);
 
     @Autowired
-    private InnodaleService innodaleService;
+    private CadFileConvertService cadFileConvertService;
 
     /**
      * @description 주문 CAD 파일을 업로드 한다.
@@ -27,7 +28,7 @@ public class CadFileConvertController {
     public String cadFileConvert(HttpServletRequest request) throws Exception {
 
         Map<String, Object> map = CommonUtility.getParameterMap(request);
-        this.innodaleService.modifyGrid(map);   // db 매핑 정보로 DXF 키를 업데이트 한다.
+        this.cadFileConvertService.createCadFileUpload(map);   // db 매핑 정보로 DXF 키를 업데이트 한다.
 
         // background 방식으로 처리 된다.
         // CONVERT 작업과 DXF 키로 이미지 KEY를 업로드 한다.

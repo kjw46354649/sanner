@@ -27,7 +27,6 @@ public class CadFileConvertServiceImpl implements CadFileConvertService {
         Map<String, Object> jsonMap = null;
 
         ArrayList<HashMap<String, Object>> addList = null;
-        ArrayList<HashMap<String, Object>> updateList = null;
         HashMap<String, Object> queryIdList = null;
 
         if (jsonObject != null)
@@ -36,13 +35,15 @@ public class CadFileConvertServiceImpl implements CadFileConvertService {
         if (jsonMap.containsKey("addList"))
             addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
 
+        if (jsonMap.containsKey("queryIdList"))
+            queryIdList = (HashMap<String, Object>) jsonMap.get("queryIdList");
+
         if (addList != null && addList.size() > 0) {
             ArrayList<String> queryId = (ArrayList<String>) queryIdList.get("insertQueryId");
             for (HashMap<String, Object> hashMap : addList) {
                 for (int i = 0, queryCount = queryId.size(); i < queryCount; i++) {
                     hashMap.put("queryId", queryId.get(i));
                     this.innodaleDao.insertGrid(hashMap);
-
                     // CAD 파일이 확정이후 출고 이전에 CAD 도면 파일을 수정하는 경우 도면 파일의 REV 버젼을 업로드 한다.
                     if("orderMapper.manageControlCadRevFiles".equals(queryId.get(0))){
                         hashMap.put("queryId", queryId.get(0) + "_revDelete");     // 데이터 저장 파일 등록
