@@ -165,7 +165,7 @@
 
 
         /**  리스트 그리드 선언 시작 **/
-        $("#inspection_manage_form").find("#queryId").val("inspection.selectInspectionHistoryList");
+        $("#inspection_history_form").find("#queryId").val("inspection.selectInspectionHistoryList");
         inspectionHistoryPostData01 = fnFormToJsonArrayData('#inspection_history_form');
         inspectionHistoryColModel01 = [
             {title: 'INSPECT_SEQ', dataType: 'string', dataIndx: 'INSPECT_SEQ', hidden:true},

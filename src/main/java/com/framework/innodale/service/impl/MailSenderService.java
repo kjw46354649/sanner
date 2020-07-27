@@ -54,7 +54,7 @@ public class MailSenderService {
 
                     // 첨부 파일이 있을 경우 처리
                     if(mailInfo.containsValue("GFILE_SEQ") && mailInfo.get("GFILE_SEQ") != null){
-                        mailInfo.put("queryId", "mail.selectGfileFileListInfo");
+                        mailInfo.put("queryId", "common.selectGfileFileList");
                         mailInfo.put("attachFileList", innodaleDao.getList(mailInfo));
                     }
 
