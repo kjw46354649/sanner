@@ -483,7 +483,7 @@
             cellDblClick: function (event, ui) {
                 if (ui.dataIndx === 'PHOTO_GFILE_SEQ' || ui.dataIndx === 'EQUIP_NM'){
                     let target = ui.rowData.EQUIP_SEQ;
-                    console.log(ui.rowData.EQUIP_SEQ);
+                    // console.log(ui.rowData.EQUIP_SEQ);
                     fnResetFrom("machine_manage_pop_form");
                     $("#machine_manage_pop_form").find("#EQUIP_SEQ").val(target);
                     $('#CURRENT_POPUP').modal('show');
@@ -618,7 +618,7 @@
                 }
             },
             rowClick: function( event, ui ) {
-                console.log(ui) ;
+                // console.log(ui) ;
                 // let rowData = ui.rowData;
                 // fnResetFrom("company_master_register_form");
                 // $("#company_master_register_form").find("#COMP_CD").val(rowData.COMP_CD);
@@ -839,7 +839,7 @@
                     var gridInstance = $historyGrid.pqGrid('getInstance').grid;
                     var changes = gridInstance.getChanges({format: 'byVal'});
                     $historyGrid.pqGrid("refresh");
-                    console.log("after1", changes);
+                    // console.log("after1", changes);
 
                     return;
                 }
@@ -887,7 +887,7 @@
                     var gridInstance = $historyGrid.pqGrid('getInstance').grid;
                     var changes = gridInstance.getChanges({format: 'byVal'});
                     $("#machine_manage_pop_form").find("#historyGrid").val(JSON.stringify(changes));
-                    console.log("change",JSON.stringify(changes));
+                    // console.log("change",JSON.stringify(changes));
                 }else{
                     $("#machine_manage_pop_form").find("#historyGrid").val("");
                 }
@@ -1081,7 +1081,7 @@
             'url': '/json-info',
             'data': $('#machine_manage_pop_form').serialize()
         };
-        console.log($('#machine_manage_pop_form').serialize());
+        // console.log($('#machine_manage_pop_form').serialize());
         fnPostAjax(function (data, callFunctionParam) {
             let dataInfo = data.info;
 

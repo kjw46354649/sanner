@@ -930,7 +930,7 @@
         });
 
         $('#MCT_TARGET_SAVE').on('click', function () {
-            console.count();
+            // console.count();
             fnModifyPQGrid($processTargetGrid, [], ['machine.updateMctTarget', 'machine.insertMctPlan']);
             setTimeout(function () {
                 refreshMctPlanGrids();

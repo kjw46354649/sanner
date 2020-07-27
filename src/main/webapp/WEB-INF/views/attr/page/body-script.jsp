@@ -62,7 +62,7 @@
             data: param.data,
             success: function (data, textStatus, jqXHR) {
                 if (textStatus === 'success') {
-                    alert("ddd");
+                    // alert("ddd");
                     // if (data.exception === null) {
                     callback.add(callFunction);
                     callback.fire(data, callFunctionParam);
@@ -146,7 +146,7 @@
         var gridInstance = grid.pqGrid('getInstance').grid;
         //추가 또는 수정된 값이 있으면 true
 
-        console.log(gridInstance.isDirty());
+        // console.log(gridInstance.isDirty());
 
         if (gridInstance.isDirty()) {
             var changes = gridInstance.getChanges({format: 'byVal'});

@@ -888,8 +888,8 @@
             data: {data : JSON.stringify(formData)},
             success: function (data, textStatus, jqXHR) {
                 if (textStatus === 'success') {
-                    console.log('data=[' + data + ']111');
-                    console.log(data);
+                    // console.log('data=[' + data + ']111');
+                    // console.log(data);
                     // if (data.exception === null) {
                     callback.add(callFunction);
                     //callback.fire(jQuery.parseJSON(data));

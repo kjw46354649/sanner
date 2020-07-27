@@ -143,7 +143,7 @@
             // , eventDrop  : function(stillEvent, movingEvent) {debugger; return false;    }
             , eventSources: [{
                 events: function (info, successCallback, failureCallback) {
-                    console.log(moment(info.startStr).format('YYYYMMDD'));
+                    // console.log(moment(info.startStr).format('YYYYMMDD'));
                     $.ajax({
                         url: '/json-list',
                         type: 'POST',

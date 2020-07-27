@@ -237,7 +237,7 @@
         $authorityAccessMenuSaveBtn.click(function(){
             let grid = $authorityAccessMenuGrid.pqGrid('getInstance').grid;
             //추가 또는 수정된 값이 있으면 true
-                console.log(grid.isDirty());
+            // console.log(grid.isDirty());
 
 
             if (grid.isDirty()) {

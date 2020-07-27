@@ -722,12 +722,12 @@
                             let rowData = ui.rowData;
 
                             $cell.find('#downloadCAMFIle').bind('click', function(e) {
-                                console.log(rowData.CAM_FILE_SEQ);
+                                // console.log(rowData.CAM_FILE_SEQ);
                                 e.preventDefault();
                                 fnSingleFileDownloadFormPageAction(rowData.CAM_FILE_SEQ);
                             });
                             $cell.find('#downloadNCFile').bind('click', function(e) {
-                                console.log(rowData.NC_FILE_SEQ);
+                                // console.log(rowData.NC_FILE_SEQ);
                                 e.preventDefault();
                                 fnSingleFileDownloadFormPageAction(rowData.NC_FILE_SEQ);
                             });

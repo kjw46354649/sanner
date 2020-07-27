@@ -261,7 +261,7 @@
         /* event */
         // 라벨 출력
         $('#TRANSACTION_STATEMENT_LABEL_PRINT').on('click', function () {
-            console.log(1111);
+            // console.log(1111);
             let barcodeList = [];
             let data = $transactionStatementGrid.pqGrid('option', 'dataModel.data');
 

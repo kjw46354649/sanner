@@ -68,7 +68,7 @@
             }
             , locale : 'ko' // 한국어 설정이다. 하지만 date Cell 포맷팅이 어려우니 그냥 주석으로
             , dayClick: function(date){
-                console.log(date);
+                // console.log(date);
             }
             , titleFormat : function(date) { // title 설정
                 return date.date.year +"년 "+(date.date.month +1)+"월";
@@ -91,10 +91,10 @@
                 alert('Event: ' + calEvent.title);
                 alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
                 alert('View: ' + view.name);
-                console.log("eventClick");
-                console.log(date);
-                console.log(jsEvent);
-                console.log(view);
+                // console.log("eventClick");
+                // console.log(date);
+                // console.log(jsEvent);
+                // console.log(view);
                 let title = prompt('일정 메모');
                 if (title) {
                     let parameters = {'url': '/json-create', 'data': {'queryId':'systemMapper.insertSchedulerNote', 'CAL_DT': arg.startStr, 'NOTE':title}};

@@ -786,7 +786,7 @@
             };
             fnPostAjaxAsync(function (data, callFunctionParam) {
                 rowCnt = data.info.CNT;
-                console.log(rowCnt);
+                // console.log(rowCnt);
             }, deleteData, '');
 
             if(rowCnt > 0){
@@ -880,7 +880,7 @@
                 'data': $('#stock_manage_pop_form').serialize()
             };
             fnPostAjax(function (data, callFunctionParam) {
-                console.log(data);
+                // console.log(data);
                 let footer_msg ="";
                 let popType = $("#stock_manage_pop_form").find("#POP_TYPE").val();
                 if(popType == "BARCODE"){
@@ -1045,7 +1045,7 @@
                     POP_ORDER_QTY = parseInt(POP_ORDER_QTY)+1;
                     POP_STOCK_QTY_AFTER = parseInt(POP_STOCK_QTY) + POP_ORDER_QTY;
                 }else if(type == "MINUS"){
-                    console.log("MINUS POP_ORDER_QTY",parseInt(POP_ORDER_QTY));
+                    // console.log("MINUS POP_ORDER_QTY",parseInt(POP_ORDER_QTY));
                     if(parseInt(POP_ORDER_QTY) > 0){
                         POP_ORDER_QTY = parseInt(POP_ORDER_QTY)-1;
                         POP_STOCK_QTY_AFTER = parseInt(POP_STOCK_QTY) + POP_ORDER_QTY;
@@ -1069,8 +1069,8 @@
 
             $('#stock_manage_pop_form').find('#ORDER_QTY').val(POP_ORDER_QTY);
             $('#stock_manage_pop_form').find('#POP_STOCK_QTY_AFTER').val(POP_STOCK_QTY_AFTER);
-            console.log("POP_ORDER_QTY",POP_ORDER_QTY);
-            console.log("POP_STOCK_QTY_AFTER",POP_STOCK_QTY_AFTER);
+            // console.log("POP_ORDER_QTY",POP_ORDER_QTY);
+            // console.log("POP_STOCK_QTY_AFTER",POP_STOCK_QTY_AFTER);
 
         }
         $("#stock_manage_pop_form").find("#BARCODE_NUM").on({
