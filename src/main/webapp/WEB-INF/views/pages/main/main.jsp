@@ -130,8 +130,9 @@
                 <form class="form-inline" id="main_master_search_form" name="main_master_search_form" role="form">
                     <input type="hidden" name="queryId" id="queryId" value="main.selectMainTodayMCTList">
                     <h2>금일 가공 대상 List</h2>
-                    <span class="chk_box mg-left20"><input id="pr_ex" type="checkbox"><label for="pr_ex"> 가공완료제외</label></span>
+                    <span class="chk_box mg-left20"></span>
                     <span class="slt_wrap mg-left10">
+                        <input type="checkbox" id="NOTEXISTS_INNER_WORK_FINISH_DT_CHK"><label for="pr_ex">&nbsp;&nbsp;가공완료제외</label>
                         <select class="wd_150" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
                             <option value=""><spring:message code="com.form.top.all.option"/></option>
                         </select>
@@ -165,7 +166,7 @@
     $(function () {
         'use strict';
 
-        $('#main_master_search_form').find('#INNER_DUE_DT').datepicker();
+        $('#main_master_search_form').find('#INNER_DUE_DT').datepicker({dateFormat: 'yy/mm/dd'});
         $('#main_master_search_form').find('#INNER_DUE_DT').datepicker('setDate', 'today');
 
         fnCommCodeDatasourceSelectBoxCreate($('#main_master_search_form').find('#ORDER_COMP_CD'), 'all', {
@@ -211,7 +212,7 @@
             colModel: mainMasterColModel,
             dataModel: {
                 recIndx: 'ROW_NUM', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: mainMasterPostData,
+                postData: fnFormToJsonArrayData('main_master_search_form'),
                 getData: function (response, textStatus, jqXHR) {
                     return {data: response.data};
                 }

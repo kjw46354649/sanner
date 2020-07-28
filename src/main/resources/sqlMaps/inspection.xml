@@ -496,7 +496,7 @@
                             AND A.DEL_YN = 'N'
                             <!-- AND B.PART_STATUS IN ('PRO009','PRO010','PRO011') 상태확인 필요 -->
                             <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
-                                AND A.ORDER_COMP_CD = #{SEL_END_DT}
+                                AND A.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                             </if>
                             <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null">
                                 AND A.CONTROL_NUM LIKE CONCAT('%', #{SEL_CONTROL_NUM}, '%')

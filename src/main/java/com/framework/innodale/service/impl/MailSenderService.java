@@ -26,7 +26,7 @@ public class MailSenderService {
     MailSenderAgent mailSenderAgent;
 
    	@Async
-//	@Scheduled(fixedRate=30000)  // 30 secound,	1000 = 1sec
+	@Scheduled(fixedRate=60000)  // 30 secound,	1000 = 1sec
     public void manageMailSenderActionService(){
 
         log.info("manageMailSenderActionService start");

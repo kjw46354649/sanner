@@ -1356,16 +1356,17 @@
             <include refid="controlPart"/>
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                AND IFNULL(B.OUTSIDE_YN, 'N') = 'N'
+                AND B.PART_STATUS IS NULL
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001'
-            AND B.OUTSIDE_YN = 'N'
-            AND B.PART_STATUS IS NULL
-        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-            AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-        </if>
-        <if test="MATERIAL_TYPE != null and MATERIAL_TYPE != ''">
-        	AND B.MATERIAL_TYPE = #{MATERIAL_TYPE}
-        </if>
+            AND A.OUT_FINISH_DT IS NULL
+            <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+            </if>
+            <if test="MATERIAL_TYPE != null and MATERIAL_TYPE != ''">
+                AND B.MATERIAL_TYPE = #{MATERIAL_TYPE}
+            </if>
         ORDER BY
         <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
             A.EMERGENCY_YN DESC,
@@ -1492,24 +1493,24 @@
             D.POP_POSITION_NM AS LAST_POP_POSITION
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                AND IFNULL(B.OUTSIDE_YN, 'N') = 'N'
+                AND B.PART_STATUS IS NOT NULL
+                AND B.INNER_WORK_FINISH_DT IS NULL
+                <if test="MATERIAL_KIND != null and MATERIAL_KIND != ''">
+                    AND B.MATERIAL_KIND = #{MATERIAL_KIND}
+                </if>
             LEFT OUTER JOIN TBL_POP_VIEW D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
                 AND D.POP_VSEQ = (SELECT MAX(X.POP_VSEQ) FROM TBL_POP_VIEW X WHERE X.CONTROL_SEQ = D.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ)
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001'
-            AND B.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO010', 'PRO011', 'PRO012', 'PRO013', 'PRO014', 'PRO015')
-            <!-- AND B.WORK_TYPE != 'WTP020' -->
-            AND B.OUTSIDE_YN = 'N'
-        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-            AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-        </if>
-        <if test="MATERIAL_KIND != null and MATERIAL_KIND != ''">
-            AND B.MATERIAL_KIND = #{MATERIAL_KIND}
-        </if>
-        <choose>
-            <when test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
-                AND EMERGENCY_YN = 'Y'
-            </when>
-        </choose>
+            AND A.OUT_FINISH_DT IS NULL
+          <!-- AND B.WORK_TYPE != 'WTP020' -->
+            <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+            </if>
+            <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
+                AND A.EMERGENCY_YN = #{EMERGENCY_YN}
+            </if>
         ORDER BY A.STATUS_DT DESC, A.CONTROL_SEQ, B.PART_NUM
     </select>
 
@@ -1520,17 +1521,19 @@
             <include refid="controlPart"/>
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                AND IFNULL(B.OUTSIDE_YN, 'N') = 'Y'
+                AND B.OUTSIDE_IN_DT IS NULL
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001'
             <!-- AND B.PART_STATUS = 'PRO001' -->
             <!-- AND B.WORK_TYPE != 'WTP020' -->
-            AND B.OUTSIDE_YN = 'Y'
-        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-            AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-        </if>
-        <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
-            AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
-        </if>
+            AND A.OUT_FINISH_DT IS NULL
+            <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+            </if>
+            <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
+                AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
+            </if>
         ORDER BY A.CONTROL_SEQ, B.PART_NUM
     </select>
 
@@ -1543,19 +1546,23 @@
             D.POP_POSITION_NM AS LAST_POP_POSITION
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                AND B.WORK_TYPE != 'WTP020'
+                AND (( IFNULL(B.OUTSIDE_YN, 'N') = 'Y' AND B.OUTSIDE_IN_DT IS NOT NULL )
+                    OR
+                    ( IFNULL(B.OUTSIDE_YN, 'N') = 'N' AND B.INNER_WORK_FINISH_DT IS NOT NULL ))
+                )  <!-- AND B.PART_STATUS = 'PRO009'  -->
             LEFT OUTER JOIN TBL_INSPECT C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
             LEFT OUTER JOIN TBL_POP_VIEW D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
                 AND D.POP_VSEQ = (SELECT MAX(X.POP_VSEQ) FROM TBL_POP_VIEW X WHERE X.CONTROL_SEQ = D.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ)
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001'
-            AND B.PART_STATUS = 'PRO009'
-            AND B.WORK_TYPE != 'WTP020'
-        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-            AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-        </if>
-        <if test="MATERIAL_TYPE != null and MATERIAL_KIND != ''">
-            AND B.MATERIAL_TYPE = #{MATERIAL_TYPE}
-        </if>
+            AND A.OUT_FINISH_DT IS NULL
+            <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+            </if>
+            <if test="MATERIAL_TYPE != null and MATERIAL_KIND != ''">
+                AND B.MATERIAL_TYPE = #{MATERIAL_TYPE}
+            </if>
         ORDER BY A.CONTROL_SEQ, B.PART_NUM
     </select>
 
