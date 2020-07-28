@@ -420,22 +420,15 @@ public class CommonUtility {
     }
 
     public static boolean isScheduleRunning() {
-
         boolean isRunning = false;
-
         try{
-
             InetAddress local = InetAddress.getLocalHost();
             String ip = local.getHostAddress();
-
             // System.out.println("local.getHostAddress=[" + ip + "]");
-
-            if("10.246.195.150".equals(ip) || "10.246.194.242".equals(ip) || "169.254.95.120".equals(ip)){
+            if("106.240.243.250".equals(ip) || "172.16.0.83".equals(ip) || "192.168.122.1".equals(ip)){
                 isRunning = true;
             }
-
         }catch(Exception exception){ }
-
         return isRunning;
     }
 

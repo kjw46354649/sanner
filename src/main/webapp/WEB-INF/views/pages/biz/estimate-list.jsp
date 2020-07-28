@@ -84,9 +84,9 @@
                     <input type="text" id="estimateListFilterKeyword" placeholder="Enter your keyword">
                     <select id="estimateListFilterColumn"></select>
                     <select id="estimateListFilterCondition">
-                    <c:forEach var="code" items="${HighCode.H_1083}">
-                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                    </c:forEach>
+                        <c:forEach var="code" items="${HighCode.H_1083}">
+                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                        </c:forEach>
                     </select>
                     <label for="estimateListFrozen" class="label_50" style="font-size: 15px;">Fix</label>
                     <select id="estimateListFrozen" name="estimateListFrozen">
