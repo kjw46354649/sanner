@@ -26,7 +26,7 @@
                             <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사" class="wd_200"></select>
                         </span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label class="label_100" for="TITLE">제목</label><input type="text" name="TITLE" id="TITLE" class="wd_200" value="" title="제목"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="EST_TITLE">제목</label><input type="text" name="EST_TITLE" id="EST_TITLE" class="wd_200" title="제목"></span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label class="label_100" for="DRAWING_NUM">도면번호</label><input type="text" name="DRAWING_NUM" id="DRAWING_NUM" class="wd_200" value="" title="도면번호"></span>
                         <span class="gubun"></span>
@@ -40,35 +40,27 @@
                     </li>
                     <li class="">
                         <span class="ipu_wrap"><label class="label_100">기간 조회</label></span>
-                        <span class="chk_box"><input id="pr_ex1" type="checkbox"><label for="pr_ex1"> 발송완료</label></span>
-                        <span class="chk_box"><input id="pr_ex2" type="checkbox"><label for="pr_ex2"> 최신차수</label></span>
+                        <span class="d-inline-block wd_200">
+                            <span class="chk_box"><input name="SHIPMENT_COMPLETED" id="SHIPMENT_COMPLETED" type="checkbox"><label for="SHIPMENT_COMPLETED"> 발송완료</label></span>
+                            <span class="chk_box"><input name="LATEST_VER" id="LATEST_VER" type="checkbox"><label for="LATEST_VER"> 최신차수</label></span>
+                        </span>
                         <span class="gubun"></span>
-                        <span class="slt_wrap trans_slt mg-right10">
-                            <select id="daySltd" name="daySltd" title="등록일시">
-                                <option value="" selected="selected">등록일시</option>
-                                <option value="1">-ALL-</option>
-                                <option value="2">-ALL-</option>
+                        <span class="slt_wrap trans_slt" style="width: 120px">
+                            <select id="DATE_CONDITION" name="DATE_CONDITION" title="등록일시" style="width: inherit; text-align-last: center">
+                                <c:forEach var="code" items="${HighCode.H_1044}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
                             </select>
                         </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" id="fr_1001_1" name=""><label for="fr_1001_1">오늘</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" id="fr_1001_2" name=""><label for="fr_1001_2">현재월</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" id="fr_1001_3" name=""><label for="fr_1001_3">3개월</label>
-                        </span>
-                        <div class="calendar_wrap">
+                        <div class="d-inline-block">
                             <span class="calendar_span">
-                                <input type="text" name="dateOneIp" id="dateOneIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
+                                <input type="text" name="dateOneIp" id="dateOneIp"><button type="button" id="dateOneIpButton">달력선택</button>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input type="text" name="dateTwoIp" id="dateTwoIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
+                                <input type="text" name="dateTwoIp" id="dateTwoIp"><button type="button" id="dateTwoIpButton">달력선택</button>
                             </span>
                         </div>
-                        <span class="chk_box"><input id="pr_ex" type="checkbox"><label for="pr_ex">선택</label></span>
                     </li>
                 </ul>
             </div>
@@ -142,6 +134,11 @@
     let estimateMasterBotGrid = $("#estimate_master_bot_grid");
 
     $(function () {
+        $('#dateOneIp').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#dateTwoIp').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#dateOneIp').datepicker('setDate', 'today');
+        $('#dateTwoIp').datepicker('setDate', 'today');
+
         let estimateMasterTopColModel= [
             //{title: 'No.', dataType: 'string', dataIndx: 'EST_SEQ'},
             {title: '상태', dataType: 'string', dataIndx: 'EST_STATUS_NM', width: 60 },
@@ -972,7 +969,7 @@
         con.css({height:'321px'});
 
         estimateMasterBotGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
-    };
+    }
 
     // topWrap 축소 함수
     function topMenuClose(){
@@ -985,7 +982,7 @@
         con.css({height:'384px'});
 
         estimateMasterBotGrid.pqGrid('option', 'height', '100%').pqGrid('refresh');
-    };
+    }
 
     function btnDisabled(status) {
         if(status == 'EST020'){
@@ -996,7 +993,7 @@
             $("#btnEstimateListDelete").attr('disabled', false);
             $("#btnEstimateListSave").attr('disabled', false);
         }
-    };
+    }
 
     function estimateListFilterRender(ui) {
         let val = ui.cellData == undefined ? "" : ui.cellData,
@@ -1046,4 +1043,10 @@
         }
     }
 
+    $('#dateOneIpButton').on('click', function () {
+        $('#dateOneIp').focus();
+    });
+    $('#dateTwoIpButton').on('click', function () {
+        $('#dateTwoIp').focus();
+    });
 </script>
