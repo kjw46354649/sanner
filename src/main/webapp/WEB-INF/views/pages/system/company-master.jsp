@@ -897,7 +897,7 @@
                     }else{
                         fnJsonDataToForm("company_master_register_form", dataInfo);
 
-                        console.log("fnJsonDataToForm 2");
+                        // console.log("fnJsonDataToForm 2");
                         //READONLY
                         $("#company_master_register_form").find("#COMP_CD").attr("readonly", true);
 
@@ -1265,10 +1265,10 @@
             companyLogoFile.unbind().change(function () {
                 var input = $(this);
                 var files = input.get(0).files;
-                console.log("------------ file ---------------------");
-                console.log(input);
-                console.log(files);
-                console.log(files.length);
+                // console.log("------------ file ---------------------");
+                // console.log(input);
+                // console.log(files);
+                // console.log(files.length);
 
                 if (files.length > 0) {
                     let formData = new FormData();

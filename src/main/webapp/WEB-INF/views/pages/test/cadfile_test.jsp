@@ -165,7 +165,7 @@
                             $cell = grid.getCell(ui);
                         $cell.find("#imageView").bind("click", function () {
                             var rowData = ui.rowData;
-                            console.log(rowData.IMG_GFILE_SEQ);
+                            // console.log(rowData.IMG_GFILE_SEQ);
                             $("#cad_img_src").attr("src", "/image/" + rowData.IMG_GFILE_SEQ);
                             // callWindowImageViewer(rowData.IMG_GFILE_SEQ);
                         });
@@ -185,7 +185,7 @@
                             $cell = grid.getCell(ui);
                         $cell.find("#imageView").bind("click", function () {
                             var rowData = ui.rowData;
-                            console.log(rowData.IMG_GFILE_SEQ);
+                            // console.log(rowData.IMG_GFILE_SEQ);
                             $("#cad_img_src").attr("src", "/image/" + rowData.IMG_GFILE_SEQ);
                             // callWindowImageViewer(rowData.IMG_GFILE_SEQ);
                         });

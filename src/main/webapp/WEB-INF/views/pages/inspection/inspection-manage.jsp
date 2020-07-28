@@ -471,7 +471,7 @@
                 SelectedRowIndex = [];
                 let selectList = ui.addList;
                 for (let i = 0; i < selectList.length; i++) {
-                    console.log(selectList[i].rowIndx);
+                    // console.log(selectList[i].rowIndx);
                     SelectedRowIndex.push(selectList[i].rowIndx);
                 }
             },
@@ -654,7 +654,7 @@
 
         })
         $("#inspection_manage_search_btn").on('click', function () {
-            console.log(fnFormToJsonArrayData('#inspection_manage_form'));
+            // console.log(fnFormToJsonArrayData('#inspection_manage_form'));
             inspectionManageGridId01.pqGrid("option", "dataModel.postData", function(ui){
                 return fnFormToJsonArrayData('#inspection_manage_form');
             } );

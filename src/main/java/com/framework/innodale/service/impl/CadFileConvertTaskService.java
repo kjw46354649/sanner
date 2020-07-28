@@ -22,7 +22,7 @@ public class CadFileConvertTaskService {
 
     @Async
     public void jobRunningInBackground(Map<String, Object> map) {
-        System.out.println("######################################   Thread Start");
+        System.out.println("###################################### 사용안함  Thread Start");
 
         List<String> CAD_CONVERT_TYPE = new ArrayList<>(Arrays.asList(new String[]{ "pdf", "png"}));
 

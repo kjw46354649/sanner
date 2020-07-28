@@ -40,8 +40,8 @@ public class MailSenderAgent {
 
                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-                message.setReplyTo(new InternetAddress(environment.getRequiredProperty("smtp_username")));
-                message.setFrom(environment.getRequiredProperty("smtp_username"), (String)mailInfo.get("SEND_NAME"));
+                // message.setReplyTo(new InternetAddress(environment.getRequiredProperty("smtp_useremail")));
+                message.setFrom(environment.getRequiredProperty("smtp_useremail"), environment.getRequiredProperty("smtp_username"));
 //                message.setFrom((String)mailInfo.get("SEND_EMAIL"), (String)mailInfo.get("SEND_NAME"));
 
                 String setToEmail [] = ((String)mailInfo.get("RECV_EMAIL")).split(",");
@@ -58,7 +58,7 @@ public class MailSenderAgent {
                     message.setCc(cc);
                 }
 
-                message.setBcc(new InternetAddress("yesplus@sedovina.com"));
+                message.setBcc(new InternetAddress("tomes-test@daum.net"));
 
                 message.setSubject((String)mailInfo.get("TITLE"));
                 message.setText((String)mailInfo.get("CONTEXT"), true);

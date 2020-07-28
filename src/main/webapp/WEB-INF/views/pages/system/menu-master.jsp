@@ -224,7 +224,7 @@
 			let grid = menuMasterBotGrid.pqGrid('getInstance').grid;
 			//추가 또는 수정된 값이 있으면 true
 
-			console.log(grid.isDirty());
+			// console.log(grid.isDirty());
 
 			if (grid.isDirty()) {
 				let changes = grid.getChanges();
@@ -233,7 +233,7 @@
 					'updateQueryId': ['updateSubMenuCode','updateTopMenuKr','updateTopMenuEn']
 				};
 				changes.queryIdList = QUERY_ID_ARRAY;
-				console.log(JSON.stringify(changes));
+				// console.log(JSON.stringify(changes));
 				$.ajax({
 					type: 'POST',
 					url: '/paramQueryModifyGrid',

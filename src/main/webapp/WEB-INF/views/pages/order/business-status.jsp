@@ -24,10 +24,10 @@
                                 <select class="wd_100" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
                                     <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 </select>
-                                <label class="label_50" for="ORDER_STAFF_SEQ">담당자</label>
-                                <select class="wd_100 mg-left10" name="ORDER_STAFF_SEQ" id="ORDER_STAFF_SEQ">
-                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                </select>
+<%--                                <label class="label_50" for="ORDER_STAFF_SEQ">담당자</label>--%>
+<%--                                <select class="wd_100 mg-left10" name="ORDER_STAFF_SEQ" id="ORDER_STAFF_SEQ">--%>
+<%--                                    <option value=""><spring:message code="com.form.top.all.option"/></option>--%>
+<%--                                </select>--%>
                             </span>
                         </form>
                     </div>
@@ -143,7 +143,7 @@
             // , eventDrop  : function(stillEvent, movingEvent) {debugger; return false;    }
             , eventSources: [{
                 events: function (info, successCallback, failureCallback) {
-                    console.log(moment(info.startStr).format('YYYYMMDD'));
+                    // console.log(moment(info.startStr).format('YYYYMMDD'));
                     $.ajax({
                         url: '/json-list',
                         type: 'POST',
@@ -153,7 +153,7 @@
                             'SEL_START_DATE': moment(info.startStr).format('YYYYMMDD'),
                             'SEL_END_DATE': moment(info.endStr).format('YYYYMMDD'),
                             'ORDER_COMP_CD': $('#business_status_search_form').find("#ORDER_COMP_CD").val(),
-                            'ORDER_COMP_CHARGE': $('#business_status_search_form').find("#ORDER_STAFF_SEQ").val()
+                            // 'ORDER_COMP_CHARGE': $('#business_status_search_form').find("#ORDER_STAFF_SEQ").val()
                         },
                         success: function(data) {
                             successCallback(data.list);
@@ -207,20 +207,20 @@
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
 
-        fnCommCodeDatasourceSelectBoxCreate($('#business_status_search_form').find('#ORDER_STAFF_SEQ'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.selectOrderCompChargeList',
-                'COMP_CD': $('#business_status_search_form').find("#ORDER_COMP_CD").val(),
-            }
-            // 'data': {'queryId': 'dataSource.getCompanyStaffList'}
-        });
+        // fnCommCodeDatasourceSelectBoxCreate($('#business_status_search_form').find('#ORDER_STAFF_SEQ'), 'all', {
+        //     'url': '/json-list',
+        //     'data': {'queryId': 'dataSource.selectOrderCompChargeList',
+        //         'COMP_CD': $('#business_status_search_form').find("#ORDER_COMP_CD").val(),
+        //     }
+        //     // 'data': {'queryId': 'dataSource.getCompanyStaffList'}
+        // });
 
-        $('#business_status_search_form').find('#ORDER_COMP_CD').change(function() {
-            fnCommCodeDatasourceSelectBoxCreate($('#business_status_search_form').find('#ORDER_STAFF_SEQ'), 'all', {
-                'url': '/json-list',
-                'data': {'queryId': 'dataSource.getCompanyStaffList', 'COMP_CD': $(this).val()}
-            });
-        });
+        // $('#business_status_search_form').find('#ORDER_COMP_CD').change(function() {
+        //     fnCommCodeDatasourceSelectBoxCreate($('#business_status_search_form').find('#ORDER_STAFF_SEQ'), 'all', {
+        //         'url': '/json-list',
+        //         'data': {'queryId': 'dataSource.getCompanyStaffList', 'COMP_CD': $(this).val()}
+        //     });
+        // });
 
         let businessStatusColModel = [
             {dataIndx: 'IMG_GFILE_SEQ', hidden: true},

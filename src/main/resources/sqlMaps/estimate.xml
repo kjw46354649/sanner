@@ -33,7 +33,7 @@
             CASE WHEN (SELECT COUNT(*) FROM TBL_CONTROL WHERE EST_SEQ = A.EST_SEQ AND DEL_YN ='N') > 0 THEN 'Y' ELSE 'N' END CONTROL_YN,
             A.EMAIL_TITLE,
             CASE WHEN A.EMAIL_CONTENT IS NOT NULL THEN A.EMAIL_CONTENT
-            ELSE (SELECT TEMPLATE_CONTENT FROM TBL_MAIL_TEMPLATE WHERE TEMPLATE_SEQ = 0)
+                ELSE (SELECT TEMPLATE_CONTENT FROM TBL_MAIL_TEMPLATE WHERE TEMPLATE_SEQ = 0)
             END EMAIL_CONTENT,
             SF_GET_DATE_F(A.SEND_DT,'YY','') AS SEND_DT,
             CASE WHEN D.SEND_DT IS NOT NULL THEN SF_GET_DATE_F(D.SEND_DT,'YY','') END AS MAIL_SEND_DT,
@@ -47,19 +47,19 @@
             LEFT OUTER JOIN TBL_ESTIMATE_DETAIL B ON A.EST_SEQ = B.EST_SEQ
             LEFT OUTER JOIN TBL_MAIL_BOX D ON A.MAIL_BOX_SEQ = D.MAIL_BOX_SEQ
         WHERE 1=1
-            <if test="COMP_CD !='' and COMP_CD !=null">
+            <if test="COMP_CD !='' and COMP_CD != null">
                 AND A.COMP_CD = #{COMP_CD}
             </if>
-            <if test="ORDER_COMP_CD !='' and ORDER_COMP_CD !=null">
+            <if test="ORDER_COMP_CD !='' and ORDER_COMP_CD != null">
                 AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
             </if>
-            <if test="EST_TITLE !='' and EST_TITLE !=null">
+            <if test="EST_TITLE !='' and EST_TITLE != null">
                 AND UPPER(A.EST_TITLE) LIKE CONCAT('%', UPPER(#{EST_TITLE}), '%')
             </if>
-            <if test="DRAWING_NUM !='' and DRAWING_NUM !=null">
+            <if test="DRAWING_NUM !='' and DRAWING_NUM != null">
                 AND UPPER(A.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
             </if>
-            <if test="EST_NUM !='' and EST_NUM !=null">
+            <if test="EST_NUM !='' and EST_NUM != null">
                 AND UPPER(A.EST_NUM) LIKE CONCAT('%', UPPER(#{EST_NUM}), '%')
             </if>
             <if test="ITEM_NM !='' and ITEM_NM != null">

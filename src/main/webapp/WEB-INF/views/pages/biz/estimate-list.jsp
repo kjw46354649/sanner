@@ -54,11 +54,11 @@
                         </span>
                         <div class="d-inline-block">
                             <span class="calendar_span">
-                                <input type="text" name="dateOneIp" id="dateOneIp"><button type="button" id="dateOneIpButton">달력선택</button>
+                                <input type="text" name="ESTIMATE_LIST_START_DT" id="ESTIMATE_LIST_START_DT"><button type="button" id="dateOneIpButton">달력선택</button>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input type="text" name="dateTwoIp" id="dateTwoIp"><button type="button" id="dateTwoIpButton">달력선택</button>
+                                <input type="text" name="ESTIMATE_LIST_END_DT" id="ESTIMATE_LIST_END_DT"><button type="button" id="dateTwoIpButton">달력선택</button>
                             </span>
                         </div>
                     </li>
@@ -153,7 +153,7 @@
                         if(FINAL_VER == 'Y'){
                             return '<button type="button" id="estimateOrder" data-seq="'+EST_SEQ+'" data-ver="'+EST_VER+'" class="miniBtn blue">주문등록</button>'
                         }
-                    }   else {
+                    } else {
                         return '<span class="miniBtn gray">등록완료</span>'
                     }
                 }
@@ -652,6 +652,7 @@
 
                 let EST_SEQ = ui.addList[0].rowData.EST_SEQ;
                 let EST_VER = ui.addList[0].rowData.EST_VER;
+                let VERSION_UP_YN = ui.addList[0].rowData.VERSION_UP_YN;
 
                 $("#estimate_master_hidden_form #EST_SEQ").val(EST_SEQ);
                 $("#estimate_master_hidden_form #EST_VER").val(EST_VER);
@@ -833,7 +834,7 @@
             let EST_SEQ = "";
             let VERSION_UP_YN = $("#estimate_master_hidden_form #VERSION_UP_YN").val();
             if(VERSION_UP_YN == 'N') {
-                alert("최신 차수의 상태를 확인 해 주세요. ");
+                alert("이미 등록되어있습니다.");
                 return false;
             }
 
@@ -863,12 +864,12 @@
                             'N_EST_SEQ': $("#estimate_master_hidden_form #N_EST_SEQ").val()
                         };
                         parameters = {'url': '/json-create', 'data': parameter};
-                        fnPostAjax('',parameters, '');
+                        fnPostAjaxAsync('',parameters, '');
                         $("a[pid='" + $("#estimateNo").val() + "']").trigger("click");
                         setTimeout(function(){
+                            $("#btnEstimateListSearch").trigger('click');
                             $("#estimateRegisterReloadBtn").trigger('click');
-                        }, 800)
-
+                        }, 300)
                     }, parameters, '');
                 }, parameters, '');
             }, parameters, '');
@@ -923,6 +924,12 @@
                 $(this).addClass('on');
             }
         });
+
+        /** topWrap datepicker 처리 **/
+        $('#ESTIMATE_LIST_START_DT').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#ESTIMATE_LIST_END_DT').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#ESTIMATE_LIST_START_DT').datepicker('setDate', '-1M');
+        $('#ESTIMATE_LIST_END_DT').datepicker('setDate', 'today');
     });
 
     /** 그리드 버튼 처리 **/
@@ -937,7 +944,7 @@
             };
 
             fnPostAjax(function () {
-                alert("<spring:message code='com.alert.default.save.success' />");
+                fnAlert(null,"<spring:message code='com.alert.default.save.success'/>");
                 $("#btnEstimateListSearch").trigger('click');
             }, parameters, '');
 

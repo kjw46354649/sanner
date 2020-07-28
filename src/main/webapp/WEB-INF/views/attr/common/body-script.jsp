@@ -70,6 +70,9 @@
 <script type="text/javascript" src='/resource/plugins/multi_select/jquery.multi-select.js'></script>
 <script type="text/javascript" src='/resource/plugins/multi_select/jquery.multi-select.min.js'></script>
 
+<!-- alertify -->
+<script type="text/javascript" src='/resource/plugins/alertifyjs/alertify.js'></script>
+
 <script type='text/javascript'>
 
     var g_code;
@@ -106,13 +109,6 @@
     });
 
     /**
-     * @description 열려있는 탭 id 가져오기
-     */
-    let fnCurrentTabId = function () {
-        return $('.tabMenu').children('li.on').children('a').attr('id');
-    };
-
-    /**
      * @description Ajax Post
      * @param {function} callFunction - 리텅 Function 처리
      * @param {object} params - 호출 URL에 Parameter 정보
@@ -137,10 +133,11 @@
                     <%--alert('<spring:message code='com.alert.default.failText' />');--%>
                     // }
                 } else {
-                    // alert('fail=[' + json.msg + ']111');
+                    fnAlert(null, '<srping:message key="error.common"/>');
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
+                if (waitMeMainContainer !== undefined) $(this).stopWaitMe();
                 // alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
                 // if (errorThrown == 'Forbidden') {
                 //     $(this).fnHiddenFormPageAction('/');
@@ -220,9 +217,9 @@
     };
 
     /* form에 JsonData를 셋팅 한다.
-		/* formid : form 아이디
-		/* data : json return data
-		*/
+        /* formid : form 아이디
+        /* data : json return data
+        */
     let fnJsonDataToForm = function (formid, data) {
         fnResetFrom(formid);
         if(formid.indexOf("#") == -1) formid = "#"+formid;
@@ -258,9 +255,9 @@
     };
 
     /* form 값을 JsonData 값으로 변경하여 전달 한다.
-		/* formid : form 아이디
-		/* data : json return data
-		*/
+        /* formid : form 아이디
+        /* data : json return data
+        */
     let fnFormToJsonArrayData = function (formid) {
         if(formid.indexOf("#") == -1) formid = "#"+formid;
         let elementArray = {};
@@ -686,7 +683,7 @@
     }
 
     /**
-     * @description 레퍼런스 참조 없는 배열 복사
+     * @description 레퍼런스 참조 없는 배열 복사(deep copy)
      * @param obj
      */
     let fnCloneObj = function (obj) {
@@ -764,8 +761,10 @@
             return;
         }else {
             windowImageViewer.focus();
-            $(windowImageViewer.window.document).find("#image_seq").val(imageSeq);
-            windowImageViewer.onImageViewStart();
+            setTimeout(function() {
+                $(windowImageViewer.window.document).find("#image_seq").val(imageSeq);
+                windowImageViewer.onImageViewStart();
+            }, 500);
         }
     }
 
@@ -797,6 +796,12 @@
             },            // function called before iframe is removed
         });
     }
+
+    Date.prototype.mmdd = function() {
+        let mm = (this.getMonth() + 1).toString();
+        let dd = this.getDate().toString();
+        return  (mm[1] ? mm : "0" + mm[0]) + "/" + (dd[1] ? dd : "0" + dd[0]);
+    };
 
     Date.prototype.yymmdd = function() {
         let yy = this.getFullYear().toString().substring(2);
@@ -874,7 +879,7 @@
             return numberVal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         else
             return numberVal;
-    };
+    }
 
     let fnBarcodePrint = function (callFunction, formData, callFunctionParam) {
         'use strict';
@@ -888,8 +893,8 @@
             data: {data : JSON.stringify(formData)},
             success: function (data, textStatus, jqXHR) {
                 if (textStatus === 'success') {
-                    console.log('data=[' + data + ']111');
-                    console.log(data);
+                    // console.log('data=[' + data + ']111');
+                    // console.log(data);
                     // if (data.exception === null) {
                     callback.add(callFunction);
                     //callback.fire(jQuery.parseJSON(data));
@@ -1041,6 +1046,80 @@
             beforeShow: function (input, inst) {return !this.firstOpen; },
             onClose: function () { this.focus(); }
         });
+    };
+
+    /**
+     * @description 바코드 첫글자 영문 변환
+     * @param {string} text
+     * @returns {string} text
+     */
+    const fnBarcodeKo2En = function (text) {
+        let char = text.substring(0, 1);
+
+        switch (char) {
+            case 'ㅊ':
+                char = 'C';
+                break;
+            case 'ㅣ':
+                char = 'L';
+                break;
+        }
+
+        return (char + text.substring(1)).toUpperCase();
+    };
+
+
+    /**
+     * @title {String or DOMElement} The dialog title.
+     * @message {String or DOMElement} The dialog contents.
+     * @onok {Function} Invoked when the user clicks OK button or closes the dialog.
+     *
+     * fnAlert(null,"<h1>안녕하세요</h1>", function () {alert('확인 클릭')});
+     *
+     */
+    const fnAlert = function (title, message, onok) {
+        alertify.alert()
+            .setting({
+                'title': title,
+                'message': message,
+                'onok': onok,
+                'movable': false,
+                'transitionOff': true
+            }).show();
+    };
+
+    /**
+     * @title {String or DOMElement} The dialog title.
+     * @message {String or DOMElement} The dialog contents.
+     * @onok {Function} Invoked when the user clicks OK button.
+     * @oncancel {Function} Invoked when the user clicks Cancel button or closes the dialog.
+     * @autoOk {number} Automatically confirms the dialog after n seconds.
+     *
+     * fnConfirm(null, 'message', function() {alert('확인 클릭')}, function() {alert('취소 클릭')}, 5);
+     *
+     */
+    const fnConfirm = function (title, message, onok, oncancel, autoOk) {
+        if (autoOk == undefined || autoOk == null) {
+            alertify.confirm()
+                .setting({
+                    'title': title,
+                    'message': message,
+                    'onok': onok,
+                    'oncancel': oncancel,
+                    'movable': false,
+                    'transitionOff': true
+                }).show();
+        } else {
+            alertify.confirm()
+                .setting({
+                    'title': title,
+                    'message': message,
+                    'onok': onok,
+                    'oncancel': oncancel,
+                    'movable': false,
+                    'transitionOff': true
+                }).show().autoOk(autoOk);
+        }
     };
 
 </script>

@@ -646,20 +646,20 @@
 
     function callWindowImageViewer(imageSeq)
     {
-        console.log(imageSeq);
+        // console.log(imageSeq);
 
         // 팝업창 열려 있는지 확인
         if(typeof(windowImageViewer)=='undefined' || windowImageViewer.closed) {
             windowImageViewer = window.open("/imageviewer", "jmesImageViewChildForm", "width=1024, height=768, resizable = no, scrollbars = no");
             windowImageViewer.onload = function(){
-                console.log($(windowImageViewer.window.document).find("#image_seq").val(imageSeq));
+                // console.log($(windowImageViewer.window.document).find("#image_seq").val(imageSeq));
                 $(windowImageViewer.window.document).find("#image_seq").val(imageSeq);
                 windowImageViewer.onImageViewStart();
             }
             return;
         }else {
             windowImageViewer.focus();
-            console.log($(windowImageViewer.window.document).find("#image_seq").val(imageSeq));
+            // console.log($(windowImageViewer.window.document).find("#image_seq").val(imageSeq));
             $(windowImageViewer.window.document).find("#image_seq").val(imageSeq);
             windowImageViewer.onImageViewStart();
         }

@@ -54,7 +54,7 @@
                 type: "POST", dataType: "json", url: "/userLogin", data: $('#login-form').serialize(),
                 success: function(data){
                     try{
-                        console.log(data);
+                        // console.log(data);
                         if(data.result == "error"){
                             fnAlert(null, data.message);
                             $('#userPassword').val("");

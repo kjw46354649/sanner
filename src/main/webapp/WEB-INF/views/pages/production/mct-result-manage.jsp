@@ -789,7 +789,6 @@
             $("#cam_work_manage_pop_form").find("#WORK_HISTORY_INFO").html(camPopHtml);
             $("#cam_work_manage_pop_form").find("#HISTORY_NOTE").val(rowData.HISTORY_NOTE);
             $("#cam_work_manage_pop_form").find("#NOTE").val(rowData.NOTE);
-            camWorkStatusConfig(rowData);
             let parameters = {
                 'url': '/json-list',
                 'data': $('#cam_work_manage_pop_form').serialize()
@@ -800,13 +799,12 @@
                     for (let i = 0; i < data.list.length; i++) {
                         let fileHtml = "";
                         if(rowData.CAM_STATUS === "CWS020"){
-                            camWorkStepStatusConfig("0" + icount, true);
                             fileHtml = "<a href='/downloadfile/" + data.list[i].CAM_FILE_SEQ + "' download>" + data.list[i].CAM_FILE_NM + "</a><br>" +
                                 "<a href='/downloadfile/" + data.list[i].NC_FILE_SEQ + "' download>" + data.list[i].NC_FILE_NM + "</a>";
                         }else {
-                            camWorkStepStatusConfig("0" + icount, false);
                             fileHtml = "" + data.list[i].CAM_FILE_NM + "<br>" + "" + data.list[i].NC_FILE_NM;
                         }
+                        camWorkStepStatusConfig("0" + icount, true);
                         $('#cam_work_manage_detail_pop').find("#CAM_WORK_SEQ_0" + icount).val(data.list[i].SEQ);
                         $('#cam_work_manage_detail_pop').find("#CAM_WORK_GFILE_SEQ_0" + icount).val(data.list[i].CAM_GFILE_SEQ);
                         $('#cam_work_manage_detail_pop').find("select[id='CAM_WORK_DIRECTION_0" + icount + "']").val(data.list[i].WORK_DIRECTION);
@@ -818,13 +816,16 @@
                     }
                 }
                 for (let i = icount; i <= 5; i++) {
-                    if(i == 1 && rowData.CAM_STATUS === "CWS020"){
-                        camWorkStepStatusConfig("0" + i, true);
-                    }else {
-                        camWorkStepStatusConfig("0" + i, false);
-                    }
+                    // if(i == 1 && rowData.CAM_STATUS === "CWS020"){
+                    //     camWorkStepStatusConfig("0" + i, true);
+                    // }else {
+                    //     camWorkStepStatusConfig("0" + i, false);
+                    // }
+                    camWorkStepStatusConfig("0" + i, false);
                     $("#cam_work_manage_detail_pop").find("#CAM_WORK_FILE_0" + i).html("&nbsp;<br>&nbsp;");
                 }
+                // 상태에 따른 Check box 처리
+                camWorkStatusConfig(rowData);
                 if(popOpenFalg) $('#cam_work_manage_detail_pop').modal('show');
 
             }, parameters, '');
@@ -867,9 +868,6 @@
                                 'CONTROL_NUM': $('#cam_work_manage_pop_form').find('#CONTROL_NUM').val(),
                                 'CONTROL_DETAIL_SEQ': $('#cam_work_manage_pop_form').find('#CONTROL_DETAIL_SEQ').val()}
                         };
-
-                        console.log(infoParameters);
-
                         fnPostAjax(function (infoData, infoCallFunctionParam) {
                             if(infoData.info){
                                 camWorkManagePop(infoData.info, false);
@@ -974,7 +972,7 @@
             let idxNum = $(this).attr("idx");
             let isCheckYn = $("#cam_work_manage_pop_form").find("#CAM_WORK_CHK_" + idxNum).prop('checked');
             if(!isCheckYn){
-                $('#cam_work_manage_detail_pop').find("input:checkbox[id='CAM_WORK_CHK_" + idxNum + "']").trigger("click");
+                $('#cam_work_manage_pop_form').find("input:checkbox[id='CAM_WORK_CHK_" + idxNum + "']").trigger("click");
             }
             let mctCamWorkUploadFiles = e.originalEvent.dataTransfer.files; //드래그&드랍 항목
             if (mctCamWorkUploadFiles.length > 0) { // file upload
@@ -1034,7 +1032,7 @@
             let beforeCheckOrder = true;
             let returnMessage = "";
             let checkCount = 0;
-            $("#cam_work_manage_pop_form").find("input:checkbox[name^='CAM_WORK_CHK_']").each(function() {
+            $("#cam_work_manage_pop_form").find("input:checkbox[id^='CAM_WORK_CHK_']").each(function() {
                 if($(this).prop('checked')) {
                     let indexNum = $(this).attr('name').split('_').reverse()[0];
                     if (!beforeCheckOrder) {
@@ -1071,31 +1069,33 @@
 
         /** 선택 setp 에 따른 활성화 비활성화 처리 **/
         let camWorkStepStatusConfig = function(index, disableFlag){
-            if(disableFlag){
+            if(disableFlag){    // 체크 처리
                 disableFlag = false;
                 $('#cam_work_manage_pop_form').find("input:checkbox[id='CAM_WORK_CHK_" + index + "']").prop("checked", true);
-                $("#cam_work_manage_pop_form").find("select[name='CAM_WORK_USER_ID_" + index + "']").each(function() {
-                    $(this).val('${authUserInfo.USER_ID}');
-                });
-            } else {
+                <%--$("#cam_work_manage_pop_form").find("select[name='CAM_WORK_USER_ID_" + index + "']").each(function() {--%>
+                <%--    $(this).val('${authUserInfo.USER_ID}');--%>
+                <%--});--%>
+            } else {            // 체크 안됨
                 disableFlag = true;
                 $('#cam_work_manage_pop_form').find("input:checkbox[id='CAM_WORK_CHK_" + index + "']").prop("checked", false);
-                $("#cam_work_manage_pop_form").find("select[name*='" + index + "']").each(function() {
-                    if($(this).find('option:first').val() == ''){
-                        $(this).val('');
-                    } else {
-                        $(this).val($(this).find('option:first').val());
-                    }
-                });
-                $("#cam_work_manage_pop_form").find("input[name*='" + index + "']").val("");
+                // $("#cam_work_manage_pop_form").find("select[name*='" + index + "']").each(function() {
+                //     if($(this).find('option:first').val() == ''){
+                //         $(this).val('');
+                //     } else {
+                //         $(this).val($(this).find('option:first').val());
+                //     }
+                // });
+                // $("#cam_work_manage_pop_form").find("input[name*='" + index + "']").val("");
             }
+            // console.log(index);
+            // console.log(disableFlag);
             $("#cam_work_manage_pop_form").find("input[name*='" + index + "']").attr('readonly', disableFlag);
             $("#cam_work_manage_pop_form").find("input[name*='" + index + "']").attr('disabled', disableFlag);
             $("#cam_work_manage_pop_form").find("select[name*='" + index + "']").attr('readonly', disableFlag);
             $("#cam_work_manage_pop_form").find("select[name*='" + index + "']").attr('disabled', disableFlag);
 
-            $("#cam_work_manage_pop_form").find("#CAM_WORK_CHK_" + index).attr('readonly', false);
-            $("#cam_work_manage_pop_form").find("#CAM_WORK_CHK_" + index).attr('disabled', false);
+            // $("#cam_work_manage_pop_form").find("#CAM_WORK_CHK_" + index).attr('readonly', false);
+            // $("#cam_work_manage_pop_form").find("#CAM_WORK_CHK_" + index).attr('disabled', false);
 
         }
 
@@ -1106,7 +1106,7 @@
             switch (rowData.CAM_STATUS) {
                 case 'CWS010':     // 대기
                 case 'CWS030':     // 완료
-                    // disableFlag = true;
+                    disableFlag = true;
                     $('#cam_work_manage_detail_pop').find(".beforeStart").show();
                     $('#cam_work_manage_detail_pop').find(".afterStart").hide();
                     break;
@@ -1116,10 +1116,10 @@
                     $('#cam_work_manage_detail_pop').find(".afterStart").show();
                     break;
             }
-            $("#cam_work_manage_pop_form").find(".statusConfig").attr('readonly', disableFlag);
-            $("#cam_work_manage_pop_form").find(".statusConfig").attr('disabled', disableFlag);
+            // $("#cam_work_manage_pop_form").find(".statusConfig").attr('readonly', disableFlag);
+            // $("#cam_work_manage_pop_form").find(".statusConfig").attr('disabled', disableFlag);
             // $("#cam_work_manage_pop_form").find(".camworkChekbox").attr('checkec', false);
-            // $("#cam_work_manage_pop_form").find(".camworkChekbox").attr('disabled', disableCheck);
+            $("#cam_work_manage_pop_form").find(".camworkChekbox").attr('disabled', disableCheck);
             $("#cam_work_manage_pop_form").find("#HISTORY_NOTE").attr('readonly', disableCheck);
             $("#cam_work_manage_pop_form").find("#HISTORY_NOTE").attr('disabled', disableCheck);
             $("#cam_work_manage_pop_form").find("#NOTE").attr('readonly', disableCheck);

@@ -597,9 +597,7 @@
             {title: '', align: 'center', dataType: 'string', dataIndx: 'FILE_SEQ', width: 80, minWidth: 80,
                 render: function (ui) {
                     let returnVal = "";
-                    if (ui.cellData) {
-                        returnVal = '<button id="downloadSingleFile" class="miniBtn green">다운로드</button>'
-                    }
+                    if (ui.cellData) returnVal = '<button id="downloadSingleFile" class="miniBtn green">다운로드</button>'
                     return returnVal;
                 },
                 postRender: function (ui) {
@@ -611,13 +609,12 @@
                     });
                 }
             },
-            {title: '', align: 'center', dataType: 'string', dataIndx: 'FILE_SEQ', width: 40, minWidth: 40,
+            {title: '', align: 'center', dataType: 'string', dataIndx: 'FILE_SEQ', width: 70, minWidth: 70,
                 render: function (ui) {
                     let EST_STATUS = $("#estimate_register_info_form #EST_STATUS").val();
                     let returnVal = "";
                     if (ui.cellData) {
                         if(EST_STATUS != 'EST020') returnVal = '<button id="deleteSingleFile" class="miniBtn red">삭제</button>'
-
                         return returnVal;
                     }
                 },
@@ -630,11 +627,11 @@
                             'queryId': 'common.deleteFileKey',
                             'FILE_SEQ': rowData.FILE_SEQ
                         };
-                        // let parameters = {'url': '/json-remove', 'data': parameter};
-                        // fnPostAjaxAsync(function(data, callFunctionParam){
-                        //     let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': rowData.GFILE_SEQ };
-                        //     fnRequestGridData(estimateRegisterFileGrid, postData);
-                        // }, parameters, '');
+                        let parameters = {'url': '/json-remove', 'data': parameter};
+                        fnPostAjaxAsync(function(data, callFunctionParam){
+                            let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': rowData.GFILE_SEQ };
+                            fnRequestGridData(estimateRegisterFileGrid, postData);
+                        }, parameters, '');
                     });
                 }
             }
@@ -979,7 +976,6 @@
         });
 
         function estimateRegisterSaveCallBack(response, callMethodParam){
-            fnAlert(null,"저장 되었습니다.");
             estimateRegisterReloadPageData();
         };
 
@@ -1040,7 +1036,7 @@
             estimateRegisterReloadPageData();
         });
 
-        function fnEstimateRegisterSave() {
+        function fnEstimateRegisterSave(alertYn) {
             $("#estimate_register_info_form #queryId").val('selectEstimateNextSequence');
             let parameters = {'url': '/json-list', 'data': $("#estimate_register_info_form").serialize()};
             let EST_SEQ = $("#estimate_register_info_form #EST_SEQ").val();
@@ -1070,6 +1066,7 @@
                     'data': $("#estimate_register_info_form").serialize()
                 };
                 fnPostAjaxAsync(estimateRegisterSaveCallBack, parameters, '');
+                if(alertYn == 'Y') fnAlert(null,"저장 되었습니다.");
             }, parameters, '');
         }
 
@@ -1082,7 +1079,7 @@
         });
 
         $("#btn_estimate_register_submit").on("click", function(){
-            fnEstimateRegisterSave();
+            fnEstimateRegisterSave('N');
 
             //Confirm Box
             let headHtml = "messsage", bodyHtml ="", yseBtn="예", noBtn="아니오";
@@ -1137,23 +1134,25 @@
                                     'data': $("#estimate_register_info_form").serialize()
                                 };
                                 fnPostAjaxAsync(estimateRegisterSaveCallBack, parameters, '');
+                                fnAlert(null,"제출 완료하였습니다.");
                             }, parameters, '');
 
                         }, parameters, '');
-                    }else{
+                    } else {
                         $("#estimate_register_info_form #queryId").val('estimate.updateEstimateMasterFinish');
                         let parameters = {
                             'url': '/json-update',
                             'data': $("#estimate_register_info_form").serialize()
                         };
                         fnPostAjaxAsync(estimateRegisterSaveCallBack, parameters, '');
+                        fnAlert(null,"완료처리 되었습니다.");
                     }
                 }
             });
         });
 
         $("#btn_estimate_register_save").on("click", function(){
-            fnEstimateRegisterSave();
+            fnEstimateRegisterSave('Y');
         });
 
         $("#btnEstimateRegisterAdd").on('click', function(){
@@ -1206,6 +1205,7 @@
         $("#btnEstimateRegisterFileUpload").on('click', function(){
             let GfileKey = $("#estimate_register_info_form #GFILE_SEQ").val();
             $("#common_file_download_form").find("#GFILE_SEQ").val(GfileKey);
+            $("#common_file_download_form #deleteYn").val(true);
             commonFileDownUploadPopupCall(GfileKey, 'estimateRegisterFileUpload');
         });
 
