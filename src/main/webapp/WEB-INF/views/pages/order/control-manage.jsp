@@ -245,7 +245,7 @@
                     {title: '상태', dataIndx: 'CONTROL_STATUS', hidden: true},
                     {title: '상태', dataIndx: 'CONTROL_STATUS_NM'},
                     {title: '', minWidth:15, width:20, dataType: 'integer', dataIndx: 'CONTROL_VER'},
-                    {title: '변경일시', width: 95, dataType: 'date', format: 'm/dd', dataIndx: 'CONTROL_STATUS_DT', hidden: true}
+                    {title: '변경일시', width: 95, dataType: 'date', format: 'm/dd', dataIndx: 'CONTROL_STATUS_DT'}
                 ]
             },
             {
@@ -258,9 +258,16 @@
                 },
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1017')}
             },
-            {title: '단가확인', width: 70, dataIndx: 'PRICE_CONFIRM_NM', hidden: true},
             {
-                title: '사업자<br>구분', dataIndx: 'COMP_CD', hidden: true,
+                title: '단가확인', width: 70, dataIndx: 'PRICE_CONFIRM_NM', hidden: true,
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
+                }
+            },
+            {
+                title: '사업자<br>구분', dataIndx: 'COMP_CD',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -287,7 +294,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
                 }
             },
 
@@ -345,7 +352,7 @@
                 postRender: function (ui) {
                     let grid = this,
                         $cell = grid.getCell(ui);
-                    $cell.find('[name=detailView]').bind("click", function () {
+                    $cell.find('[name=detailView]').bind('click', function () {
                         let rowData = ui.rowData;
                         g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ);
                     });
@@ -362,7 +369,7 @@
                 }
             },
             {
-                title: '파<br>트', minWidth: 25, dataIndx: 'PART_NUM',
+                title: '파<br>트', minWidth: 25, dataIndx: 'PART_NUM', styleHead: {'background':'#a9d3f5'},
                 editable: function(ui) {
                     let rowData = ui.rowData;
 
@@ -411,7 +418,6 @@
                         newRowData.OUTSIDE_IN_DT = null;
                         newRowData.OUTSIDE_STATUS = null;
                         newRowData.OUTSIDE_STATUS_DT = null;
-                        console.log(newRowData);
                         $orderManagementGrid.pqGrid('addRow', {
                             newRow: newRowData,
                             rowIndx: lastRowIndex + 1,
@@ -429,7 +435,7 @@
                 postRender: function (ui) {
                     let grid = this,
                         $cell = grid.getCell(ui);
-                    $cell.find("#imageView").bind("click", function () {
+                    $cell.find('#imageView').bind('click', function () {
                         let rowData = ui.rowData;
                         callWindowImageViewer(rowData.IMG_GFILE_SEQ);
                     });
@@ -497,7 +503,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                         },
                         render: function (ui) {
                             let rowData = ui.rowData;
@@ -536,7 +542,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                         },
                         editor: {type: 'textbox', init: fnDateEditor},
                         render: function (ui) {
@@ -576,16 +582,16 @@
                             return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
-                    {title: 'INV No.', width: 100, dataIndx: 'INVOICE_NUM', hidden: true},
+                    {title: 'INV No.', width: 100, dataIndx: 'INVOICE_NUM'},
                     {
                         title: '납품확인', width: 70, dataType: 'date', format: 'm/dd', dataIndx: 'DELIVERY_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        editor: {type: 'textbox', init: fnDateEditor},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                         },
-                        editor: {type: 'textbox', init: fnDateEditor},
                         render: function (ui) {
                             let rowData = ui.rowData;
                             let cls = null;
@@ -696,7 +702,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1014')}
                 /*render: function (ui) {
@@ -745,7 +751,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
                 }
             },
             {
@@ -754,7 +760,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                 },
                 // render: function (ui) {
                 //     let cellData = ui.cellData;
@@ -774,7 +780,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                 },
                 render: function (ui) {
                     let rowData = ui.rowData;
@@ -916,7 +922,7 @@
             },*/
 
             {
-                title: '프로젝트', width: 200, align: 'left', dataIndx: 'PROJECT_NM', hidden: true,
+                title: '프로젝트', width: 200, align: 'left', dataIndx: 'PROJECT_NM',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -925,16 +931,7 @@
                 }
             },
             {
-                title: '모듈', width: 70, align: 'left', dataIndx: 'MODULE_NM', hidden: true,
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
-                editable: function (ui) {
-                    let rowData = ui.rowData;
-
-                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
-                }
-            },
-            {
-                title: '납품처', dataIndx: 'DELIVERY_COMP_NM', hidden: true,
+                title: '모듈', width: 70, align: 'left', dataIndx: 'MODULE_NM',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -943,7 +940,16 @@
                 }
             },
             {
-                title: '비고(라벨)', width: 100, align: 'left', dataIndx: 'LABEL_NOTE', hidden: true,
+                title: '납품처', dataIndx: 'DELIVERY_COMP_NM',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
+                }
+            },
+            {
+                title: '비고(라벨)', width: 100, align: 'left', dataIndx: 'LABEL_NOTE',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -957,16 +963,16 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
                 }
             },
             {
-                title: '구매담당', dataIndx: 'ORDER_STAFF_SEQ', hidden: true,
+                title: '구매담당', dataIndx: 'ORDER_STAFF_SEQ',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
                 },
                 editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text',
@@ -998,11 +1004,11 @@
             },
             {title: '구매담당', dataIndx: 'ORDER_STAFF_NM', hidden: true},
             {
-                title: '설계자', dataIndx: 'DESIGNER_NM', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}, hidden: true,
+                title: '설계자', dataIndx: 'DESIGNER_NM', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
                 }
             },
             {
@@ -1011,7 +1017,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                 },
                 render: function (ui) {
                     let rowData = ui.rowData;
@@ -1030,7 +1036,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP020'
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP020'
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027')},
                 render: function (ui) {
@@ -1045,7 +1051,7 @@
                 }
             },
             {
-                title: '재질', dataIndx: 'MATERIAL_TYPE_NM', hidden: true,
+                title: '재질', dataIndx: 'MATERIAL_TYPE_NM',
                 render: function (ui) {
                     let rowData = ui.rowData;
                     let cls = null;
@@ -1063,7 +1069,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP020'
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP020'
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text',options: fnGetCommCodeGridSelectBox('1029')},
                 render: function (ui) {
@@ -1083,7 +1089,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP020'
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP020'
                 },
                 editor: {
                     type: 'select',
@@ -1108,7 +1114,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030')},
                 render: function (ui) {
@@ -1128,7 +1134,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP020'
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP020'
                 },
                 render: function (ui) {
                     let rowData = ui.rowData;
@@ -1141,7 +1147,7 @@
                     return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
-            {title: '계산<br>견적단가', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'CALC_EST_UNIT_COST', hidden: true,
+            {title: '계산<br>견적단가', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'CALC_EST_UNIT_COST',
                 render: function (ui) {
                     let rowData = ui.rowData;
                     let cls = null;
@@ -1174,7 +1180,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         editor: {
                             type: 'select',
@@ -1199,7 +1205,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020')},
                         render: function (ui) {
@@ -1228,7 +1234,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         // render: function (ui) {
                         //     let cellData = ui.cellData;
@@ -1248,7 +1254,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         render: function (ui) {
                             let rowData = ui.rowData;
@@ -1267,7 +1273,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         render: function (ui) {
                             let rowData = ui.rowData;
@@ -1286,7 +1292,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         render: function (ui) {
                             let rowData = ui.rowData;
@@ -1305,7 +1311,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         render: function (ui) {
                             let rowData = ui.rowData;
@@ -1324,7 +1330,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         render: function (ui) {
                             let rowData = ui.rowData;
@@ -1343,7 +1349,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         render: function (ui) {
                             let rowData = ui.rowData;
@@ -1362,7 +1368,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
                         render: function (ui) {
                             let rowData = ui.rowData;
@@ -1378,12 +1384,12 @@
                 ]
             },
             {
-                title: '가공요건', width: 60, dataIndx: 'DETAIL_MACHINE_REQUIREMENT',
+                title: '가공요건', width: 60, dataIndx: 'DETAIL_MACHINE_REQUIREMENT', hidden: true,
                 styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                 },
                 render: function (ui) {
                     let rowData = ui.rowData;
@@ -1397,8 +1403,7 @@
                 }
             },
             {title: '현재 위치', dataIndx: 'POP_POSITION', hidden: true},
-            {title: '현재 위치', dataIndx: 'POP_POSITION_NM', hidden: true},
-
+            {title: '현재 위치', dataIndx: 'POP_POSITION_NM'},
             {
                 title: 'DXF', minWidth: 35, dataIndx: 'DXF_GFILE_SEQ',
                 render: function (ui) {
@@ -1407,7 +1412,7 @@
                 postRender: function (ui) {
                     let grid = this,
                         $cell = grid.getCell(ui);
-                    $cell.find("#downloadView").bind("click", function () {
+                    $cell.find('#downloadView').bind('click', function () {
                         let rowData = ui.rowData;
                         fnFileDownloadFormPageAction(rowData.DXF_GFILE_SEQ);
                     });
@@ -1421,29 +1426,29 @@
                 postRender: function (ui) {
                     let grid = this,
                         $cell = grid.getCell(ui);
-                    $cell.find("#downloadView").bind("click", function () {
+                    $cell.find('#downloadView').bind('click', function () {
                         let rowData = ui.rowData;
                         fnFileDownloadFormPageAction(rowData.PDF_GFILE_SEQ);
                     });
                 }
             },
-            {title: 'Rev.', dataIndx: 'DRAWING_VER', hidden: true},
-            {title: 'Rev. 일시', width: 120, dataIndx: 'DRAWING_UP_DT', hidden: true},
+            {title: 'Rev.', dataIndx: 'DRAWING_VER'},
+            {title: 'Rev. 일시', width: 120, dataIndx: 'DRAWING_UP_DT'},
             {title: '바코드도면<br>출력일시', width: 120, dataType: 'date', /*format: 'mm/dd',*/ dataIndx: '', hidden: true},
             {title: '라벨<br>출력일시', width: 120, dataType: 'date', /*format: 'mm/dd',*/ dataIndx: '', hidden: true},
             {
                 title: '품질현황', align: 'center', colModel: [
                     {title: 'Seq.', minWidth: 30, width: 35, dataType: 'integer', dataIndx: 'INSPECT_SEQ'},
                     {title: '등급', minWidth: 30, width: 35, dataIndx: 'INSPECT_GRADE_NM'},
-                    {title: '불량/반품', minWidth: 30, width: 70, dataIndx: 'INSPECT_TYPE_NM'},
-                    {title: '불량코드', minWidth: 30, width: 70, dataIndx: 'INSPECT_RESULT_NM'},
-                    {title: '비고', minWidth: 20, width: 55, dataIndx: 'INSPECT_DESC'},
-                    {title: '조치', minWidth: 30, width: 70, dataIndx: 'ERROR_ACTION_NM'},
-                    {title: '조치방안', minWidth: 30, width: 70, dataIndx: 'ERROR_NOTE'}
+                    {title: '불량/반품', minWidth: 30, width: 70, dataIndx: 'INSPECT_TYPE_NM', hidden: true},
+                    {title: '불량코드', minWidth: 30, width: 70, dataIndx: 'INSPECT_RESULT_NM', hidden: true},
+                    {title: '비고', minWidth: 20, width: 55, dataIndx: 'INSPECT_DESC', hidden: true},
+                    {title: '조치', minWidth: 30, width: 70, dataIndx: 'ERROR_ACTION_NM', hidden: true},
+                    {title: '조치방안', minWidth: 30, width: 70, dataIndx: 'ERROR_NOTE', hidden: true}
                 ]
             },
             {
-                title: '외주현황', align: 'center', hidden: true, colModel: [
+                title: '외주현황', align: 'center', colModel: [
                     {title: '외주업체', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
                     {title: '외주업체', dataIndx: 'OUTSIDE_COMP_NM'},
                     {title: '자재사급', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
@@ -1454,12 +1459,12 @@
                         }
                     },
                     {title: '외주단가', dataType: 'integer', dataIndx: 'OUTSIDE_UNIT_AMT'},
-                    {title: '합계금액', dataType: 'integer', dataIndx: 'OUTSIDE_FINAL_AMT'},
-                    {title: '요망납기', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
-                    {title: '입고날짜', dataIndx: 'OUTSIDE_IN_DT'},
-                    {title: '비고', dataIndx: 'OUTSIDE_NOTE'},
-                    {title: '불량Code', dataIndx: 'dhlwnqnffidcode'},
-                    {title: '조치방안', dataIndx: 'dhlwnwhclqkddks'}
+                    {title: '합계금액', dataType: 'integer', dataIndx: 'OUTSIDE_FINAL_AMT', hidden: true},
+                    {title: '요망납기', dataType: 'date', format: 'm/dd', dataIndx: 'OUTSIDE_HOPE_DUE_DT', hidden: true},
+                    {title: '입고날짜', dataType: 'date', format: 'm/dd', dataIndx: 'OUTSIDE_IN_DT'},
+                    {title: '비고', dataIndx: 'OUTSIDE_NOTE', hidden: true},
+                    {title: '불량Code', dataIndx: 'dhlwnqnffidcode', hidden: true},
+                    {title: '조치방안', dataIndx: 'dhlwnwhclqkddks', hidden: true}
                 ]
             },
             {title: '등록/업데이트<br>일시', width: 120, dataIndx: 'CONTROL_PART_INSERT_UPDATE_DT'},
@@ -1494,7 +1499,7 @@
             sortModel: {on: false},
             load: function () {
                 autoMerge(this, true);
-                $orderManagementGrid.pqGrid('getInstance').grid.option("freezeCols", 24);
+                $orderManagementGrid.pqGrid('getInstance').grid.option('freezeCols', 24);
                 $orderManagementGrid.pqGrid('getInstance').grid.refresh();
 
                 let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
@@ -1507,10 +1512,10 @@
                         frozenOts += '<option value="' + (column.leftPos + 1) + '">' + column.title + '</option>';
                     }
                 });
-                $("#controlManageFilterColumn").empty();
-                $("#controlManageFilterColumn").html(filterOpts);
-                $("#controlManageFrozen").empty();
-                $("#controlManageFrozen").html(frozenOts);
+                $('#controlManageFilterColumn').empty();
+                $('#controlManageFilterColumn').html(filterOpts);
+                $('#controlManageFrozen').empty();
+                $('#controlManageFrozen').html(frozenOts);
 
                 $('#CONTROL_MANAGE_RECORDS').html(data.length);
             },
@@ -1558,7 +1563,6 @@
                 }
 
                 if (ui.source === 'edit') {
-                    debugger;
                     let rowIndx = ui.updateList[0].rowIndx;
                     let data = ui.updateList[0].rowData;
                     let newRow = ui.updateList[0].newRow;
@@ -1759,8 +1763,8 @@
         };
 
         function controlManageFilterRender(ui) {
-            let val = ui.cellData === undefined ? "" : ui.cellData,
-                options = ui.column.editor === undefined ? "" : ui.column.editor.options;
+            let val = ui.cellData === undefined ? '' : ui.cellData,
+                options = ui.column.editor === undefined ? '' : ui.column.editor.options;
             let index = -1;
             if (options) {
                 index = options.findIndex(function (element) {
@@ -1776,20 +1780,20 @@
                     val = o && !isNaN(o.getTime()) && $.datepicker.formatDate(ui.column.format, o);
                 }
 
-                let condition = $("#controlManageFilterCondition :selected").val(),
+                let condition = $('#controlManageFilterCondition :selected').val(),
                     valUpper = val.toString().toUpperCase(),
-                    txt = $("#controlManageFilterKeyword").val(),
-                    txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
+                    txt = $('#controlManageFilterKeyword').val(),
+                    txtUpper = (txt == null) ? '' : txt.toString().toUpperCase(),
                     indx = -1;
 
-                if (condition === "end") {
+                if (condition === 'end') {
                     indx = valUpper.lastIndexOf(txtUpper);
                     if (indx + txtUpper.length !== valUpper.length) {
                         indx = -1;
                     }
-                } else if (condition === "contain") {
+                } else if (condition === 'contain') {
                     indx = valUpper.indexOf(txtUpper);
-                } else if (condition === "begin") {
+                } else if (condition === 'begin') {
                     indx = valUpper.indexOf(txtUpper);
                     if (indx > 0) {
                         indx = -1;
@@ -1814,7 +1818,7 @@
             let mergeCellList = [],
                 colModelList = grid.getColModel(),
                 i = colModelList.length,
-                data = grid.option("dataModel.data");
+                data = grid.option('dataModel.data');
 
             let includeList = [
                 'CONTROL_NUM', 'CONTROL_NUM_BUTTON', 'PART_NUM', 'CONTROL_VER', 'COMP_CD',
@@ -1860,7 +1864,7 @@
                         }
                     }
             }
-            grid.option("mergeCells", mergeCellList);
+            grid.option('mergeCells', mergeCellList);
             if (refresh) {
                 grid.refreshView();
             }
@@ -1930,13 +1934,13 @@
 
             // let estimateRegisterSubmitConfirm = function (callback) {
             //     commonConfirmPopup.show();
-            //     $("#commonConfirmYesBtn").unbind().click(function (e) {
+            //     $('#commonConfirmYesBtn').unbind().click(function (e) {
             //         e.stopPropagation();
             //         commonConfirmPopup.hide();
             //         callback(true);
             //         return;
             //     });
-            //     $(".commonConfirmCloseBtn").unbind().click(function (e) {
+            //     $('.commonConfirmCloseBtn').unbind().click(function (e) {
             //         e.stopPropagation();
             //         commonConfirmPopup.hide();
             //     });
@@ -1945,7 +1949,7 @@
             //     if (confirm) {
             //         let parameters = {'url': '/removeControl', 'data': {data: JSON.stringify(list)}};
             //         fnPostAjax(function (data) {
-            <%--            fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");--%>
+            <%--            fnAlert(null, '<spring:message code='com.alert.default.remove.success' />');--%>
             //             $orderManagementGrid.pqGrid('refreshDataAndView');
             //         }, parameters, '');
             //     }
@@ -2098,31 +2102,31 @@
             let Cols = $orderManagementGridInstance.Columns();
             let array = [];
             const inputModeArray = [
-                'CONTROL_STATUS_NM', 'CONTROL_VER', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NOTE',
-                'MAIN_INSPECTION', 'ORDER_NUM', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM',
-                'ORDER_NUM_PLUS_BUTTON', 'ITEM_NM', 'SIZE_TXT',
-                'WORK_TYPE', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'INNER_WORK_FINISH_DT', 'MATERIAL_DETAIL',
-                'MATERIAL_TYPE_NM', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY',
-                'DETAIL_MACHINE_REQUIREMENT', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
-                'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
-                'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'CALC_EST_UNIT_COST', 'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMOUNT',
-                'UNIT_FINAL_AMT', 'FINAL_AMT', 'WHDWJSRK', 'PREV_DRAWING_NUM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ',
-                'PDF_GFILE_SEQ', 'CONTROL_PART_INSERT_UPDATE_DT'
+                'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN',
+                'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM',
+                'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'DELIVERY_DT', 'PART_UNIT_QTY',
+                'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ITEM_NM', 'ORDER_STAFF_SEQ', 'DESIGNER_NM', 'SIZE_TXT', 'WORK_TYPE', 'INNER_DUE_DT', 'OUTSIDE_YN',
+                'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE',
+                'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT', 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT',
+                'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE',
+                'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMOUNT', 'UNIT_FINAL_AMT', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM',
+                'LABEL_NOTE', 'PREV_DRAWING_NUM'
             ];
             const normalModeArray = [
-                'CONTROL_STATUS_NM', 'CONTROL_VER', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'MAIN_INSPECTION',
-                'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM',
-                'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'OUT_QTY', 'ORDER_OUT_FINISH_DT', 'INVOICE_NUM', 'PART_UNIT_QTY',
-                'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'CONTROL_PART_QTY', 'WORK_TYPE',
-                'INNER_DUE_DT', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'PART_STATUS_NM', 'SIZE_TXT', 'INNER_WORK_FINISH_DT',
-                'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'FINAL_AMT', 'WHDWJSRK',
-                'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE', 'ITEM_NM', 'ORDER_STAFF_SEQ', 'PREV_DRAWING_NUM',
-                'MATERIAL_DETAIL', 'MATERIAL_TYPE_NM', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE',
-                'ORDER_NUM_PLUS_BUTTON',
-                'DELIVERY_DT', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'PDF_GFILE_SEQ', 'CONTROL_PART_INSERT_UPDATE_DT'
+                'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD',
+                'CONTROL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM',
+                'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
+                'OUT_QTY', 'ORDER_OUT_FINISH_DT', 'INVOICE_NUM', 'PART_UNIT_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
+                'CONTROL_PART_QTY', 'WORK_TYPE', 'INNER_DUE_DT', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN',
+                'PART_STATUS_NM', 'SIZE_TXT', 'INNER_WORK_FINISH_DT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'FINAL_AMT',
+                'WHDWJSRK', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE', 'ITEM_NM', 'ORDER_STAFF_SEQ',
+                'DESIGNER_NM', 'PREV_DRAWING_NUM', 'MATERIAL_DETAIL', 'MATERIAL_TYPE_NM', 'MATERIAL_KIND', 'SURFACE_TREAT',
+                'MATERIAL_NOTE', 'CALC_EST_UNIT_COST', 'POP_POSITION_NM', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER',
+                'DRAWING_UP_DT', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN',
+                'OUTSIDE_UNIT_AMT', 'OUTSIDE_IN_DT', 'DELIVERY_DT', 'IMG_GFILE_SEQ', 'CONTROL_PART_INSERT_UPDATE_DT'
             ];
             const closeModeArray = [
-                'CONTROL_STATUS_NM', 'CONTROL_VER', 'PRICE_CONFIRM', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'INVOICE_NUM',
+                'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'INVOICE_NUM',
                 'MAIN_INSPECTION',
                 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM',
                 'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'OUTSIDE_YN',
@@ -2130,11 +2134,11 @@
                 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
                 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'OUT_QTY', 'ORDER_OUT_FINISH_DT',
                 'DELIVERY_DT', 'DETAIL_MACHINE_REQUIREMENT', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
-                'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'PREV_DRAWING_NUM', 'POP_POSITION_NM', 'PART_STATUS_NM',
-                'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'PDF_GFILE_SEQ', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM',
-                'INSPECT_DESC', 'ERROR_ACTION_NM', 'ERROR_NOTE', 'OUTSIDE_COMP_CD', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN',
-                'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT', 'OUTSIDE_HOPE_DUE_DT', 'OUTSIDE_IN_DT', 'OUTSIDE_NOTE',
-                'dhlwnqnffidcode', 'dhlwnwhclqkddks', 'CONTROL_PART_INSERT_UPDATE_DT'
+                'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
+                'UNIT_ETC_AMT', 'UNIT_AMT_NOTE',
+                'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'FINAL_AMT', 'WHDWJSRK', 'PROJECT_NM', 'ITEM_NM', 'ORDER_STAFF_SEQ',
+                'ORDER_STAFF_NM', 'PREV_DRAWING_NUM', 'PART_STATUS_NM',
+                'IMG_GFILE_SEQ', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN'
             ];
             const allModeArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'ORDER_STAFF_SEQ',
@@ -2308,8 +2312,8 @@
             if (noSelectedRowAlert()) return false;
             let selectedRowCount = selectedOrderManagementRowIndex.length;
             let selectControlPartCount = 0;
-            let selectControlPartInfo = "";
-            let selectControlList = "";
+            let selectControlPartInfo = '';
+            let selectControlList = '';
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
                 let curControlPartInfo = rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ;
@@ -2318,11 +2322,11 @@
                     return false;
                 }
                 if (!rowData.IMG_GFILE_SEQ) {
-                    fnAlert(null, "이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.");
+                    fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
                     return;
                 // } else if(rowData.WORK_TYPE != 'WTP020' && selectControlPartInfo != curControlPartInfo){
                 } else if(selectControlPartInfo !== curControlPartInfo){
-                    selectControlList += rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ + "^";
+                    selectControlList += rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ + '^';
                     selectControlPartCount++;
                     selectControlPartInfo = curControlPartInfo;
                 }
@@ -2332,15 +2336,15 @@
                     '           <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
                     '               <span>' + selectControlPartCount + ' 건의 바코드 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
                     '       </h4>';
-            //     $("#commonConfirmBodyHtml").html(text);
+            //     $('#commonConfirmBodyHtml').html(text);
             //     commonConfirmPopup.show();
-            //     $("#commonConfirmYesBtn").unbind().click(function (e) {
+            //     $('#commonConfirmYesBtn').unbind().click(function (e) {
             //         e.stopPropagation();
             //         commonConfirmPopup.hide();
             //         callback(true);
             //         return;
             //     });
-            //     $(".commonConfirmCloseBtn").unbind().click(function(e) {
+            //     $('.commonConfirmCloseBtn').unbind().click(function(e) {
             //         e.stopPropagation();
             //         commonConfirmPopup.hide();
             //     });
@@ -2360,7 +2364,7 @@
             let bodyHtml;
             let selectedRowCount = selectedOrderManagementRowIndex.length;
             let selectControlPartCount = 0;
-            let selectControlPartInfo = "";
+            let selectControlPartInfo = '';
             let formData = [];
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
@@ -2370,7 +2374,7 @@
                     return false;
                 }
                 if (!rowData.IMG_GFILE_SEQ) {
-                    fnAlert(null, "이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.");
+                    fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
                     return;
                 // } else if(rowData.WORK_TYPE != 'WTP020' && selectControlPartInfo != curControlPartInfo){
                 } else if(selectControlPartInfo != curControlPartInfo){
@@ -2392,13 +2396,13 @@
             });
             // let drawingBarcodeLabelPrintConfirm = function (callback) {
             //     commonConfirmPopup.show();
-            //     $("#commonConfirmYesBtn").unbind().click(function (e) {
+            //     $('#commonConfirmYesBtn').unbind().click(function (e) {
             //         e.stopPropagation();
             //         commonConfirmPopup.hide();
             //         callback(true);
             //         return;
             //     });
-            //     $(".commonConfirmCloseBtn").unbind().click(function (e) {
+            //     $('.commonConfirmCloseBtn').unbind().click(function (e) {
             //         e.stopPropagation();
             //         commonConfirmPopup.hide();
             //     });
@@ -2460,13 +2464,13 @@
                 // fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
                 // let labelPrintConfirm = function (callback) {
                 //     commonConfirmPopup.show();
-                //     $("#commonConfirmYesBtn").unbind().click(function (e) {
+                //     $('#commonConfirmYesBtn').unbind().click(function (e) {
                 //         e.stopPropagation();
                 //         commonConfirmPopup.hide();
                 //         callback(true);
                 //         return;
                 //     });
-                //     $(".commonConfirmCloseBtn").unbind().click(function (e) {
+                //     $('.commonConfirmCloseBtn').unbind().click(function (e) {
                 //         e.stopPropagation();
                 //         commonConfirmPopup.hide();
                 //     });
@@ -2480,7 +2484,7 @@
                 // });
 
             } else {
-                fnAlert(null, "출력할 바코드가 존재 하지 않습니다.");
+                fnAlert(null, '출력할 바코드가 존재 하지 않습니다.');
             }
         });
 
@@ -2501,14 +2505,14 @@
         // 도면출력
         $('#DRAWING_PRINT').on('click', function () {
             let selectedRowCount = selectedOrderManagementRowIndex.length;
-            let imgGfileSeq = "";
+            let imgGfileSeq = '';
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
                 if (!rowData.IMG_GFILE_SEQ) {
-                    fnAlert(null, "이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.");
+                    fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
                     return;
                 } else {
-                    imgGfileSeq += rowData.IMG_GFILE_SEQ + "^";
+                    imgGfileSeq += rowData.IMG_GFILE_SEQ + '^';
                 }
             }
 
@@ -2520,17 +2524,17 @@
                 fnConfirm(null, text, function () {
                     printJS({printable:'/makeCadPrint?imgGfileSeq='+encodeURI(imgGfileSeq), type:'pdf', showModal:true});
                 });
-                // $("#commonConfirmBodyHtml").html(text);
+                // $('#commonConfirmBodyHtml').html(text);
                 // commonConfirmPopup.show();
-                // $("#commonConfirmYesBtn").unbind().click(function (e) {
+                // $('#commonConfirmYesBtn').unbind().click(function (e) {
                 //     e.stopPropagation();
                 //     commonConfirmPopup.hide();
                     // $(this).startWaitMe();
-                    // $(".cadDrawingPrint").html(printHtml).trigger('create');
+                    // $('.cadDrawingPrint').html(printHtml).trigger('create');
                     // callback(true);
                     // return;
                 // });
-                // $(".commonConfirmCloseBtn").unbind().click(function(e) {
+                // $('.commonConfirmCloseBtn').unbind().click(function(e) {
                 //     e.stopPropagation();
                 //     commonConfirmPopup.hide();
                 // });
@@ -2660,11 +2664,11 @@
             event.preventDefault();
         });
 
-        $("#controlManageFilterKeyword").on("keyup", function(){
+        $('#controlManageFilterKeyword').on('keyup', function(){
             fnFilterHandler($orderManagementGrid, 'controlManageFilterKeyword', 'controlManageFilterCondition', 'controlManageFilterColumn');
         });
 
-        $("#controlManageFrozen").on('change', function(){
+        $('#controlManageFrozen').on('change', function(){
             fnFrozenHandler($orderManagementGrid, $(this).val());
         });
     });
