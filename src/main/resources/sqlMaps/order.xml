@@ -1771,7 +1771,7 @@
             AND A.DEL_YN = 'N'
             AND A.CONTROL_STATUS IN ('ORD003', 'ORD004')
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
-            AND A.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
+            AND UPPER(A.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
         </if>
         <if test="COMP_CD != null and COMP_CD != ''">
             AND A.COMP_CD = #{COMP_CD}
@@ -1780,10 +1780,10 @@
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
         <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
-            AND B.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
+            AND UPPER(B.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
         </if>
         <if test="ITEM_NM != null and ITEM_NM != ''">
-            AND B.ITEM_NM LIKE CONCAT('%', UPPER(#{ITEM_NM}), '%')
+            AND UPPER(B.ITEM_NM) LIKE CONCAT('%', UPPER(#{ITEM_NM}), '%')
         </if>
         <if test="MATERIAL_KIND != null and MATERIAL_KIND != ''">
             AND B.MATERIAL_KIND = #{MATERIAL_KIND}
@@ -1792,7 +1792,7 @@
             AND A.CONTROL_SEQ = #{CONTROL_SEQ}
         </if>
         <if test="MODULE_NM != null and MODULE_NM != ''">
-            AND A.MODULE_NM LIKE CONCAT('%', #{MODULE_NM}, '%')
+            AND UPPER(A.MODULE_NM) LIKE CONCAT('%', UPPER(#{MODULE_NM}), '%')
         </if>
         ORDER BY
         <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
@@ -2433,7 +2433,7 @@
             A.CONTROL_NUM, C.ORDER_QTY, C.ORDER_NUM,
             SF_GET_CODE_NM('1013', B.PART_STATUS, 'EN') AS PART_STATUS,
             D.POP_POSITION_NM AS LAST_POP_POSITION,
-            G.INSPECT_GRADE, jmes.SF_GET_CODE_NM('1040', H.INSPECT_GRADE, 'KR') AS INSPECT_GRADE_NM, <!-- 등급 --> F.USER_NM, H.STAFF_NM
+            G.INSPECT_GRADE, jmes.SF_GET_CODE_NM('1040', G.INSPECT_GRADE, 'KR') AS INSPECT_GRADE_NM, <!-- 등급 --> F.USER_NM, H.STAFF_NM
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_NUM IS NULL
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ

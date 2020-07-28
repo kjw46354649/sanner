@@ -573,6 +573,7 @@
             dragModel: {
                 on: true,
                 diHelper: ['CONTROL_NUM'],
+                beforeDrop: function () {},
                 afterDrop: function (evt, uiDrop) {}
             },
             load: function (event, ui) {
