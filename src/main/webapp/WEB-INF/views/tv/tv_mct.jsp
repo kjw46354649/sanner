@@ -1590,8 +1590,7 @@
 							});
 						}
 
-						if (grid_list1 != '')
-						{
+						if (grid_list1 != '') {
 							for (let i = 0; i < grid_list1.length; i++) {
 								let inspect_dt = grid_list1[i].INSPECT_DT == undefined ? "" : grid_list1[i].INSPECT_DT;
 								let order_comp_nm = grid_list1[i].ORDER_COMP_NM == undefined ? "" : grid_list1[i].ORDER_COMP_NM;
@@ -1620,10 +1619,14 @@
 								}
 
 							}
+						} else {
+							for (let i = 0; i < 5; i++) {
+								let grid1Html = '<tr><td colspan="8"></td></tr>';
+								$("#grid1").append(grid1Html);
+							}
 						}
 
-						if (grid_list2 != '')
-						{
+						if (grid_list2 != '') {
 							for (let i = 0; i < grid_list2.length; i++) {
 								let inner_due_dt = grid_list2[i].INNER_DUE_DT == undefined ? "" : grid_list2[i].INNER_DUE_DT;
 								let out_finish_dt = grid_list2[i].OUT_FINISH_DT == undefined ? "" : grid_list2[i].OUT_FINISH_DT;
@@ -1649,10 +1652,14 @@
 								}
 
 							}
+						}  else {
+							for (let i = 0; i < 5; i++) {
+								let grid2Html = '<tr><td colspan="8"></td></tr>';
+								$("#grid2").append(grid2Html);
+							}
 						}
 
-						if (grid_list3 != '')
-						{
+						if (grid_list3 != '') {
 							for (let i = 0; i < grid_list3.length; i++) {
 								let inner_due_dt = grid_list3[i].INNER_DUE_DT == undefined ? "" : grid_list3[i].INNER_DUE_DT;
 								let out_finish_dt = grid_list3[i].OUT_FINISH_DT == undefined ? "" : grid_list3[i].OUT_FINISH_DT;
@@ -1680,10 +1687,14 @@
 								}
 
 							}
+						} else {
+							for (let i = 0; i < 5; i++) {
+								let grid3Html = '<tr><td colspan="8"></td></tr>';
+								$("#grid3").append(grid3Html);
+							}
 						}
 
-						if (grid_list4 != '')
-						{
+						if (grid_list4 != '') {
 							for (let i = 0; i < grid_list4.length; i++) {
 								let inner_due_dt = grid_list4[i].INNER_DUE_DT == undefined ? "" : grid_list4[i].INNER_DUE_DT;
 								let out_finish_dt = grid_list4[i].OUT_FINISH_DT == undefined ? "" : grid_list4[i].OUT_FINISH_DT;
@@ -1711,6 +1722,11 @@
 								}
 
 							}
+						} else {
+							for (let i = 0; i < 5; i++) {
+								let grid4Html = '<tr><td colspan="8"></td></tr>';
+								$("#grid4").append(grid4Html);
+							}
 						}
 
 
@@ -1731,7 +1747,7 @@
 					}
 					$("#CNT_" + popPosition).html(totalCnt);
 				}
-			}
+			};
 
 
 			let setIntervalTimer;
@@ -1741,7 +1757,7 @@
 				setIntervalTimer = setInterval(function() {
 					getData();
 				}, timesec*selVal);
-			}
+			};
 
 			getData();
 			timer();
@@ -1749,7 +1765,31 @@
 			$(document).on('click', 'a[href="#a;"]', function(e){
 				e.preventDefault();
 			});
-		});
+
+		Date.prototype.format = function (f) {
+			if (!this.valueOf()) return ' ';
+
+			let d = this;
+
+			return f.replace(/(Y|c|e)/gi, function ($1) {
+				switch ($1) {
+					case 'Y':
+						return d.getFullYear(); // Year with 4 digits.
+					case "c":
+						return d.getMonth() + 1; // Month with 1 or 2 digits.
+					case "e":
+						return d.getDate(); // Day with 1 or 2 digits.
+					default:
+						return $1;
+				}
+			});
+		};
+
+		const TODAY = new Date();
+		const TWO_DAYS_LATER = new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate() + 2);
+
+		$('.tblDate').html(TODAY.format('Y/c/e') + '~' + TWO_DAYS_LATER.format('c/e'));
+	});
 </script>
 </body>
 </html>

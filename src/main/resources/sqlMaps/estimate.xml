@@ -54,26 +54,37 @@
                 AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
             </if>
             <if test="EST_TITLE !='' and EST_TITLE != null">
-                AND A.EST_TITLE = #{EST_TITLE}
+                AND UPPER(A.EST_TITLE) LIKE CONCAT('%', UPPER(#{EST_TITLE}), '%')
             </if>
             <if test="DRAWING_NUM !='' and DRAWING_NUM != null">
-                AND A.DRAWING_NUM = #{DRAWING_NUM}
+                AND UPPER(A.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
             </if>
             <if test="EST_NUM !='' and EST_NUM != null">
-                AND A.EST_NUM = #{EST_NUM}
+                AND UPPER(A.EST_NUM) LIKE CONCAT('%', UPPER(#{EST_NUM}), '%')
             </if>
             <if test="ITEM_NM !='' and ITEM_NM != null">
-                AND B.ITEM_NM = #{ITEM_NM}
+                AND UPPER(B.ITEM_NM) LIKE CONCAT('%', UPPER(#{ITEM_NM}), '%')
             </if>
-            <if test="SEL_DATE != '' and SEL_DATE != null">
-                AND DATE_FORMAT(A.INSERT_DT, '%Y/%m/%d') BETWEEN STR_TO_DATE(#{ESTIMATE_LIST_START_DT}, '%Y/%m/%d') AND STR_TO_DATE(#{ESTIMATE_LIST_END_DT}, '%Y/%m/%d')
+            <if test="LATEST_VER !='' and LATEST_VER != null">
+                AND A.EST_SEQ = (   SELECT Q.EST_SEQ
+                                    FROM TBL_ESTIMATE Q
+                                    WHERE Q.EST_NUM = A.EST_NUM
+                                    AND Q.DEL_YN = 'N'
+                                    ORDER BY Q.EST_VER DESC
+                                    LIMIT 1
+                                )
             </if>
-            <if test="SEND_YN != '' and SEND_YN != null">
-                AND EXISTS (SELECT * FROM TBL_CONTROL Z WHERE Z.EST_SEQ = A.EST_SEQ AND Z.DEL_YN ='N')
-            </if>
-            <if test="FINAL_VER != '' and FINAL_VER != null">
-                AND A.EST_VER = (SELECT MAX(X.EST_VER) FROM TBL_ESTIMATE X WHERE A.EST_NUM = X.EST_NUM)
-            </if>
+            <if test="SHIPMENT_COMPLETED !='' and SHIPMENT_COMPLETED != null">
+                AND A.EST_STATUS = 'EST020'
+           </if>
+           <choose>
+               <when test="DATE_CONDITION == 1">
+                    AND DATE_FORMAT(A.INSERT_DT, '%Y/%m/%d') BETWEEN #{dateOneIp} AND #{dateTwoIp}
+                </when>
+                <when test="DATE_CONDITION == 2">
+                    AND DATE_FORMAT(A.SEND_DT, '%Y%m/%d') BETWEEN #{dateOneIp} AND #{dateTwoIp}
+                </when>
+           </choose>
         GROUP BY A.EST_SEQ
         ORDER BY A.INSERT_DT DESC, A.EST_NUM, A.EST_SEQ, A.EST_VER
     </select>

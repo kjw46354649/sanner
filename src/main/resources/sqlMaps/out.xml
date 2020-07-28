@@ -84,47 +84,19 @@
         <choose>
             <!-- 확정일시 -->
             <when test="OUTSIDE_SEARCH_CONDITION == 'OSC00'">
-                AND DATE_FORMAT(A.STATUS_DT, '%Y/%m/%d') BETWEEN STR_TO_DATE(#{OUTSIDE_MANAGE_START_DATE}, '%Y/%m/%d') AND <choose>
-                                                                                                                                <when test="OUTSIDE_MANAGE_RANGE_SEARCH != null and OUTSIDE_MANAGE_RANGE_SEARCH != ''">
-                                                                                                                                    STR_TO_DATE(#{OUTSIDE_MANAGE_END_DATE}, '%Y/%m/%d')
-                                                                                                                                </when>
-                                                                                                                                <otherwise>
-                                                                                                                                    DATE_FORMAT(NOW(), '%Y/%m/%d')
-                                                                                                                                </otherwise>
-                                                                                                                            </choose>
+                AND DATE_FORMAT(A.STATUS_DT, '%Y/%m/%d') BETWEEN #{OUTSIDE_MANAGE_START_DATE} AND #{OUTSIDE_MANAGE_END_DATE}
             </when>
             <!-- 외주요청일시 -->
             <when test="OUTSIDE_SEARCH_CONDITION == 'OSC01'">
-                AND DATE_FORMAT(B.OUTSIDE_STATUS_DT, '%Y/%m/%d') BETWEEN STR_TO_DATE(#{OUTSIDE_MANAGE_START_DATE}, '%Y/%m/%d') AND <choose>
-                                                                                                                                    <when test="OUTSIDE_MANAGE_RANGE_SEARCH != null and OUTSIDE_MANAGE_RANGE_SEARCH != ''">
-                                                                                                                                        STR_TO_DATE(#{OUTSIDE_MANAGE_END_DATE}, '%Y/%m/%d')
-                                                                                                                                    </when>
-                                                                                                                                    <otherwise>
-                                                                                                                                        DATE_FORMAT(NOW(), '%Y/%m/%d')
-                                                                                                                                    </otherwise>
-                                                                                                                                </choose>
+                AND DATE_FORMAT(B.OUTSIDE_STATUS_DT, '%Y/%m/%d') BETWEEN #{OUTSIDE_MANAGE_START_DATE} AND #{OUTSIDE_MANAGE_END_DATE}
             </when>
             <!-- 요망납기 -->
             <when test="OUTSIDE_SEARCH_CONDITION == 'OSC02'">
-                AND DATE_FORMAT(B.OUTSIDE_HOPE_DUE_DT, '%Y%m%d') BETWEEN STR_TO_DATE(#{OUTSIDE_MANAGE_START_DATE}, '%Y-%m-%d') AND <choose>
-                                                                                                                                        <when test="OUTSIDE_MANAGE_RANGE_SEARCH != null and OUTSIDE_MANAGE_RANGE_SEARCH != ''">
-                                                                                                                                            STR_TO_DATE(#{OUTSIDE_MANAGE_END_DATE}, '%Y-%m-%d')
-                                                                                                                                        </when>
-                                                                                                                                        <otherwise>
-                                                                                                                                            DATE_FORMAT(NOW(), '%Y%m%d')
-                                                                                                                                        </otherwise>
-                                                                                                                                    </choose>
+                AND DATE_FORMAT(B.OUTSIDE_HOPE_DUE_DT, '%Y%m%d') BETWEEN #{OUTSIDE_MANAGE_START_DATE} AND #{OUTSIDE_MANAGE_END_DATE}
             </when>
             <!-- 입고일자 -->
             <when test="OUTSIDE_SEARCH_CONDITION == 'OSC03'">
-                AND DATE_FORMAT(B.OUTSIDE_IN_DT, '%Y/%m/%d') BETWEEN STR_TO_DATE(#{OUTSIDE_MANAGE_START_DATE}, '%Y/%m/%d') AND <choose>
-                                                                                                                                    <when test="OUTSIDE_MANAGE_RANGE_SEARCH != null and OUTSIDE_MANAGE_RANGE_SEARCH != ''">
-                                                                                                                                        STR_TO_DATE(#{OUTSIDE_MANAGE_END_DATE}, '%Y/%m/%d')
-                                                                                                                                    </when>
-                                                                                                                                    <otherwise>
-                                                                                                                                        DATE_FORMAT(NOW(), '%Y/%m/%d')
-                                                                                                                                    </otherwise>
-                                                                                                                                </choose>
+                AND DATE_FORMAT(B.OUTSIDE_IN_DT, '%Y/%m/%d') BETWEEN #{OUTSIDE_MANAGE_START_DATE} AND #{OUTSIDE_MANAGE_END_DATE}
             </when>
         </choose>
         <if test="IN_STOCK != null and IN_STOCK != ''">

@@ -15,9 +15,10 @@
 <div class="page process_confirm">
     <div class="toolWrap">
         <span class="barCode" id="processConfirmBarcodeSpan"><img src="<c:url value="/resource/asset/images/common/img_barcode_long.png"/>" alt="바코드" id="CONFIRM_ORDER_BARCODE_IMG" style="height: 32px;"></span>
-        <span class="barCodeTxt"><label for="CONFIRM_ORDER_BARCODE_NUM"></label><input type="text" class="wd_270_barcode" name="CONFIRM_ORDER_BARCODE_NUM" id="CONFIRM_ORDER_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요"></span>
+        <span class="barCodeTxt"><label for="CONFIRM_ORDER_BARCODE_NUM"></label><input type="text" class="wd_270_barcode" name="CONFIRM_ORDER_BARCODE_NUM" id="CONFIRM_ORDER_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요" autocomplete="off"></span>
         <div class="right_float">
             <span class="refresh mg-left10"><button type="button" id="PROCESS_CONFIRM_REFRESH"><img src="<c:url value="/resource/asset/images/common/btn_refresh.png"/>" alt="새로고침"></button></span>
+            <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#outsourcingConversionModal">외주 전환</button>
             <button type="button" class="defaultBtn btn-100w" id="PROCESS_CONFIRM_DETAIL">상세정보 조회</button>
             <button type="button" class="defaultBtn btn-100w" id="PROCESS_CONFIRM_DRAWING_VIEW">도면 보기</button>
             <button type="button" class="defaultBtn btn-100w orange" id="PROCESS_CONFIRM_FULLSCREEN">FULL SCREEN</button>
@@ -160,6 +161,29 @@
         </form>
     </div>
 
+    <!-- 외주 전환 -->
+    <div class="modal" id="outsourcingConversionModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="font-size: large; font-weight: bold">외주 전환</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <img src="<c:url value="/resource/asset/images/common/img_barcode_long.png"/>" alt="바코드" id="OUTSOURCING_CONVERSION_IMG" height="32px;">
+                        <input type="text" id="OUTSOURCING_CONVERSION_BARCODE_NUM" autocomplete="off" style="margin: 0 10px">
+                    </div>
+                </div>
+                <div class="modal-footer" style="text-align: center !important">
+                    <button type="button" class="defaultBtn grayPopGra" data-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 외주 전환 -->
 </div>
 
 <script>
@@ -666,9 +690,24 @@
                 }, parameters, '');
             }
         };
+        const updateOutsideConversion = function (rowData) {
+            let newRowData = fnCloneObj(rowData);
+            newRowData.PART_STATUS = 'PRO001';
+            newRowData.OUTSIDE_YN = 'Y';
+            let gridInstance = $processConfirmGrid.pqGrid('getInstance').grid;
+            let changes = gridInstance.getChanges({format: 'byVal'});
+            let QUERY_ID_ARRAY;
+            changes.updateList.push(newRowData);
+            let parameters;
 
-        let BBEEEEEEP = function () {
+            QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateOutsideConversion', 'orderMapper.createControlPartProgress']};
+            changes.queryIdList = QUERY_ID_ARRAY;
+            parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
 
+            fnPostAjax(function () {
+                $confirmOrderGrid.pqGrid('refreshDataAndView');
+                $outsideGrid.pqGrid('refreshDataAndView');
+            }, parameters, '');
         };
         /* function */
 
@@ -728,9 +767,9 @@
         setInterval(reloadProcessConfigData, THIRTY_SECONDS);
         /* init */
 
-        const isNotBarcodeValid = function (barcodeNum) {
+        const isNotBarcodeValid = function (barcodeNum, type) {
             let flag = false;
-            let parameters = {'url': '/processConfirmBarcodeInfo', 'data': {BARCODE_NUM: fnBarcodeKo2En(barcodeNum)}};
+            let parameters = {'url': '/processConfirmBarcodeInfo', 'data': {BARCODE_NUM: fnBarcodeKo2En(barcodeNum), TYPE: type}};
 
             fnPostAjaxAsync(function (data) {
                 flag = data.flag;
@@ -752,7 +791,7 @@
                     callWindowImageViewer(rowData.IMG_GFILE_SEQ);
                 }
 
-                if(isNotBarcodeValid(barcodeNum)) {
+                if(isNotBarcodeValid(barcodeNum, 'confirm')) {
                     this.value = '';
                     return false;
                 }
@@ -791,10 +830,10 @@
 
         $('#CONFIRM_ORDER_BARCODE_NUM').on({
             focus: function () {
-                $('#CONFIRM_ORDER_BARCODE_IMG').attr('src','/resource/asset/images/common/img_barcode_long_on.png');
+                $('#CONFIRM_ORDER_BARCODE_IMG').prop('src','/resource/asset/images/common/img_barcode_long_on.png');
             },
             blur: function () {
-                $('#CONFIRM_ORDER_BARCODE_IMG').attr('src','/resource/asset/images/common/img_barcode_long.png');
+                $('#CONFIRM_ORDER_BARCODE_IMG').prop('src','/resource/asset/images/common/img_barcode_long.png');
             }
         });
 
@@ -805,6 +844,43 @@
         /** 전체창으로 주문 확정 띄우기 **/
         $('#PROCESS_CONFIRM_FULLSCREEN').on('click', function () {
             window.open('/workConfirm');
+        });
+
+        $('#OUTSOURCING_CONVERSION_IMG').on('click', function () {
+            $('#OUTSOURCING_CONVERSION_BARCODE_NUM').focus();
+        });
+
+        $('#OUTSOURCING_CONVERSION_BARCODE_NUM').on({
+            focus: function () {
+                $('#OUTSOURCING_CONVERSION_IMG').prop('src','/resource/asset/images/common/img_barcode_long_on.png');
+            },
+            blur: function () {
+                $('#OUTSOURCING_CONVERSION_IMG').prop('src','/resource/asset/images/common/img_barcode_long.png');
+            }
+        });
+
+        $("#OUTSOURCING_CONVERSION_BARCODE_NUM").on('keyup', function(e) {
+            if (e.keyCode === 13) {
+                let barcodeNum = fnBarcodeKo2En(this.value);
+
+                if(isNotBarcodeValid(barcodeNum, 'conversion')) {
+                    this.value = '';
+                    return false;
+                }
+
+                let data = {'queryId': "common.selectControlBarcodeInfo", 'BARCODE_NUM': barcodeNum};
+                let parameters = {'url': '/json-info', 'data': data};
+                fnPostAjax(function (data) {
+                    let dataInfo = data.info;
+
+                    if (!(windowImageViewer === undefined || windowImageViewer.closed)) {
+                        callWindowImageViewer(dataInfo.IMG_GFILE_SEQ);
+                    }
+                    updateOutsideConversion(dataInfo);
+                }, parameters, '');
+
+                this.value = '';
+            }
         });
 
     });

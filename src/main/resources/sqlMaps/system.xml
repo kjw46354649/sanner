@@ -679,7 +679,7 @@
         INSERT INTO jmes.TBL_COMPANY
         (
               COMP_CD, COMP_NM, CEO_NM, COMP_NUM, FAMILY_COMPANY_YN, BUSINESS_TYPE, BUSINESS_ITEM
-            , CHARGE_USER_ID, COMP_EMAIL, COMP_TEL, COMP_FAX, COMP_ADDRESS, COMP_NM2,
+            , CHARGE_USER_ID, COMP_EMAIL, COMP_TEL, COMP_FAX, COMP_ADDRESS
             <if test="LOGO_GFILE_SEQ != null and LOGO_GFILE_SEQ != ''">
                 ,LOGO_GFILE_SEQ
             </if>
@@ -689,10 +689,10 @@
             <if test="ETC_GFILE_SEQ != null and ETC_GFILE_SEQ != ''">
                 ,ETC_GFILE_SEQ
             </if>
-            ,ACTIVE_YN, NOTE, INSERT_ID
+            , ACTIVE_YN, NOTE, ABBR_NM, COMP_NM2, INSERT_ID
         )VALUES (
               #{COMP_CD}, #{COMP_NM}, #{CEO_NM}, #{COMP_NUM}, IFNULL(#{FAMILY_COMPANY_YN}, 'N'), #{BUSINESS_TYPE}, #{BUSINESS_ITEM}
-            , #{CHARGE_USER_ID}, #{COMP_EMAIL}, #{COMP_TEL}, #{COMP_FAX}, #{COMP_ADDRESS}, #{COMP_NM2},
+            , #{CHARGE_USER_ID}, #{COMP_EMAIL}, #{COMP_TEL}, #{COMP_FAX}, #{COMP_ADDRESS}
             <if test="LOGO_GFILE_SEQ != null and LOGO_GFILE_SEQ != ''">
                 ,LOGO_GFILE_SEQ
             </if>
@@ -702,7 +702,7 @@
             <if test="ETC_GFILE_SEQ != null and ETC_GFILE_SEQ != ''">
                 ,ETC_GFILE_SEQ
             </if>
-            , IFNULL(#{ACTIVE_YN}, 'N'), #{NOTE}, #{LOGIN_USER_ID}
+            , IFNULL(#{ACTIVE_YN}, 'N'), #{NOTE}, #{ABBR_NM}, #{COMP_NM2}, #{LOGIN_USER_ID}
         )
     </insert>
 
@@ -731,7 +731,8 @@
             , BUSINESS_ITEM = #{BUSINESS_ITEM}
             , ACTIVE_YN = IFNULL(#{ACTIVE_YN}, 'N')
             , NOTE = #{NOTE}
-            , COMP_NM2 = #{COMP_NM2}
+            , ABBR_NM = #{ABBR_NM}
+            , COMP_NM2 #{COMP_NM2}
             , UPDATE_ID = #{LOGIN_USER_ID}
             , UPDATE_DT = NOW()
         WHERE COMP_CD = #{COMP_CD}

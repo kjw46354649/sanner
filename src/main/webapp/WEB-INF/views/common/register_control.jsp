@@ -139,7 +139,7 @@
             },
             {
                 title: '구매<br>담당자', dataType: 'integer', width: 70, dataIndx: 'ORDER_STAFF_SEQ', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                editor: {
+               editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text',
                     options: function (ui) {
                         return COMPANY_STAFF.filter(function (value) {
@@ -149,6 +149,7 @@
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
+                    console.log(cellData);
 
                     if (cellData === '' || cellData === undefined) {
                         return '';
@@ -162,7 +163,7 @@
                                 return element.value === Number(cellData);
                             });
                         }
-
+                        console.log(index);
                         return (index < 0) ? cellData : COMPANY_STAFF[index].text;
                     }
                 }
@@ -545,6 +546,7 @@
                 }
             },
             change: function (evt, ui) {
+                console.log(ui);
                 if (ui.source === 'paste') {
                     let rowListConvert = [];
 
@@ -701,6 +703,7 @@
                             }
                         }
                         // 구매 담당자
+                        console.log(newRowData.ORDER_STAFF_SEQ);
                         if (newRowData.ORDER_STAFF_SEQ !== undefined) {
                             let index = COMPANY_STAFF.findIndex(function (element) {
                                 return element.text === newRowData.ORDER_STAFF_SEQ;

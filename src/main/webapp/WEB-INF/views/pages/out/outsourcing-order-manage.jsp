@@ -74,13 +74,13 @@
                     </li>
                     <li>
                         <span class="slt_wrap trans_slt mg-right10">
-                            <label for="OUTSIDE_SEARCH_CONDITION"></label><select name="OUTSIDE_SEARCH_CONDITION" id="OUTSIDE_SEARCH_CONDITION" style="text-align-last: center;">
+                            <label for="OUTSIDE_SEARCH_CONDITION"></label><select name="OUTSIDE_SEARCH_CONDITION" id="OUTSIDE_SEARCH_CONDITION" style="width: 100px; text-align-last: center;">
                                 <c:forEach var="code" items="${HighCode.H_1084}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
                         </span>
-                        <div class="calendar_wrap" style="padding-left: 15px;">
+                        <div class="d-inline-block" style="width: 542px">
                             <span class="calendar_span">
                                 <input type="text" title="달력정보" name="OUTSIDE_MANAGE_START_DATE" id="OUTSIDE_MANAGE_START_DATE"><button type="button" id="OUTSIDE_MANAGE_START_DATE_BUTTON">달력선택</button>
                             </span>
@@ -88,8 +88,8 @@
                             <span class="calendar_span">
                                 <input type="text" title="달력정보" name="OUTSIDE_MANAGE_END_DATE" id="OUTSIDE_MANAGE_END_DATE" readonly><button type="button" id="OUTSIDE_MANAGE_END_DATE_BUTTON">달력선택</button>
                             </span>
-                            <span class="chk_box" style="margin-left: 10px;"><input id="OUTSIDE_MANAGE_RANGE_SEARCH" type="checkbox"><label for="OUTSIDE_MANAGE_RANGE_SEARCH">선택</label></span>
                         </div>
+                        <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="WORK_TYPE">작업구분</label>
                             <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE">

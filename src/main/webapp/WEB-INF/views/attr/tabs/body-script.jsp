@@ -152,7 +152,7 @@
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                if (waitMeMainContainer !== undefined) $(this).stopWaitMe();
+                if ($waitMeMainContainer !== undefined) $(this).stopWaitMe();
                 // alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
                 // if (errorThrown == 'Forbidden') {
                 //     $(this).fnHiddenFormPageAction('/');
