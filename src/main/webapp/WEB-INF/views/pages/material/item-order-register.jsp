@@ -852,7 +852,6 @@
             columnTemplate: {align: 'center', hvalign: 'center', valign: 'center', render: itemOrderRegisterFilterRender}, filterModel: { mode: 'OR' },
             scrollModel: {autoFit: false},
             numberCell: {width: 30, title: "No", show: true },
-            selectionModel: { type: 'cell', mode: 'multiple'} ,
             swipeModel: {on: false},
             collapsible: false,
             resizable: false,
@@ -884,18 +883,15 @@
                 $('#item_order_register_left_grid_records').html(data.length);
             },
             selectChange: function (event, ui) {
-                if (ui.selection.iCells.ranges[0] !== undefined) {
-                    itemOrderRegisterSelectedRowIndex = [];
-                    let firstRow = ui.selection.iCells.ranges[0].r1;
-                    let lastRow = ui.selection.iCells.ranges[0].r2;
+                itemOrderRegisterSelectedRowIndex = [];
+                for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
+                    let firstRow = ui.selection._areas[i].r1;
+                    let lastRow = ui.selection._areas[i].r2;
 
-                    if (firstRow === lastRow) itemOrderRegisterSelectedRowIndex[0] = firstRow;
-                    else for (let i = firstRow; i <= lastRow; i++) itemOrderRegisterSelectedRowIndex.push(i);
+                    for (let i = firstRow; i <= lastRow; i++) itemOrderRegisterSelectedRowIndex.push(i);
                 }
             },
             cellClick: function( event, ui) {
-                itemOrderRegisterSelectedRowIndex = [];
-                itemOrderRegisterSelectedRowIndex.push(ui.rowIndx);
                 let MATERIAL_ORDER_SEQ = ui.rowData.MATERIAL_ORDER_SEQ == undefined ? '' : ui.rowData.MATERIAL_ORDER_SEQ;
                 let ORDER_STATUS = ui.rowData.M_STATUS == undefined ? '' : ui.rowData.M_STATUS;
 
@@ -1200,24 +1196,28 @@
         $("#itempOrderResgisterBarcodeNum").on('keyup', function(e) {
             if (e.keyCode === 13) {
                 let barcodeNum = fnBarcodeKo2En(this.value);
-                let data = {'queryId': "material.selectItemOrderRegisterBarcodeChk", 'BARCODE_NUM': barcodeNum};
+                let data = {'queryId': "common.selectControlBarcodeInfo", 'BARCODE_NUM': barcodeNum};
                 let parameters = {'url': '/json-info', 'data': data};
                 fnPostAjax(function (data) {
                     let BARCODE_YN = data.info.BARCODE_YN;
-                    if(BARCODE_YN == 'N') {
-                        fnAlert(null,"유효하지 않은 도면 바코드입니다.");
-                    }else {
-                        let CONCAT_SEQ = data.info.CONCAT_SEQ;
+                    if (BARCODE_YN == 'N') {
+                        fnAlert(null, "유효하지 않은 도면 바코드입니다.");
+                    } else {
+                        let CONCAT_SEQ = "'" + data.info.CONTROL_SEQ + data.info.CONTROL_DETAIL_SEQ + "'";
                         data = {'queryId': "material.selectItemOrderRegisterPopListSeq", 'CONCAT_SEQ': CONCAT_SEQ};
                         let parameters = {'url': '/json-info', 'data': data};
                         fnPostAjax(function (data) {
-                            let newRowData = fnCloneObj(data.info);
-                            let newRowIndex = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length + 1;
-                            itemOrderRegisterPopTopGrid.pqGrid('addRow', {
-                                newRow: newRowData,
-                                rowIndx: newRowIndex,
-                                checkEditable: false
-                            });
+                            if (data.info) {
+                                let newRowData = fnCloneObj(data.info);
+                                let newRowIndex = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length + 1;
+                                itemOrderRegisterPopTopGrid.pqGrid('addRow', {
+                                    newRow: newRowData,
+                                    rowIndx: newRowIndex,
+                                    checkEditable: false
+                                });
+                            } else {
+                                fnAlert(null, "유효하지 않은 도면 바코드입니다.");
+                            }
                         }, parameters, '');
                     }
                 }, parameters, '');

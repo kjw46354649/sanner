@@ -241,7 +241,7 @@
 					AND B.MATERIAL_SUPPLY_YN = 'N'
 				LEFT OUTER JOIN TBL_MATERIAL_ORDER F ON B.CONTROL_SEQ = F.CONTROL_SEQ AND F.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
 			WHERE A.CONTROL_STATUS = 'ORD001'
-				AND CONCAT(A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) IN(${CONCAT_SEQ})
+                AND CONCAT(A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) IN(${CONCAT_SEQ})
 			GROUP BY A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
 			UNION ALL
 			SELECT
@@ -985,6 +985,18 @@
         FROM TBL_MY_MATERIAL_STOCK A
             LEFT OUTER JOIN TBL_WAREHOUSE_LOCATION B ON A.WAREHOUSE_CD = B.WAREHOUSE_CD AND A.LOC_SEQ = B.LOC_SEQ AND B.DEL_YN = 'N'
         WHERE A.DEL_YN ='N'
+        <if test="WAREHOUSE_CD !='' and WAREHOUSE_CD != null">
+            AND A.WAREHOUSE_CD = #{WAREHOUSE_CD}
+        </if>
+        <if test="LOC_SEQ !='' and LOC_SEQ != null">
+            AND A.LOC_SEQ = #{LOC_SEQ}
+        </if>
+        <if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
+            AND A.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
+        </if>
+        <if test="MATERIAL_KIND !='' and MATERIAL_KIND != null">
+            AND A.MATERIAL_KIND = #{MATERIAL_KIND}
+        </if>
         GROUP BY A.WAREHOUSE_CD, A.MATERIAL_KIND, A.MATERIAL_DETAIL, A.SIZE_TXT
     </select>
 
@@ -1059,6 +1071,22 @@
                 LEFT OUTER JOIN TBL_MATERIAL_ORDER G ON F.CONTROL_SEQ = G.CONTROL_SEQ AND F.CONTROL_DETAIL_SEQ AND G.CONTROL_DETAIL_SEQ
             WHERE 1=1
             ) Z
+        WHERE 1 = 1
+        <if test="WAREHOUSE_CD !='' and WAREHOUSE_CD != null">
+            AND Z.WAREHOUSE_CD = #{WAREHOUSE_CD}
+        </if>
+        <if test="LOC_SEQ !='' and LOC_SEQ != null">
+            AND Z.LOC_SEQ = #{LOC_SEQ}
+        </if>
+        <if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
+            AND Z.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
+        </if>
+        <if test="MATERIAL_KIND !='' and MATERIAL_KIND != null">
+            AND Z.MATERIAL_KIND = #{MATERIAL_KIND}
+        </if>
+        <if test="IN_OUT_NM !='' and IN_OUT_NM != null">
+            AND Z.IN_OUT_NM = #{IN_OUT_NM}
+        </if>
         ORDER BY Z.REGISTED_DT DESC
     </select>
 
@@ -1358,7 +1386,7 @@
             FROM jmes.TBL_CONSUMABLE_STOCK A, jmes.TBL_CONSUMABLE_IN B
             WHERE A.CONSUMABLE_STOCK_SEQ = B.CONSUMABLE_STOCK_SEQ
                 <if test="SEL_WAREHOUSE_CD !='' and SEL_WAREHOUSE_CD != null">
-                    AND A.WAREHOUSE_CD = #{SEL_FACTORY_AREA}
+                    AND A.WAREHOUSE_CD = #{SEL_WAREHOUSE_CD}
                 </if>
                 <if test="SEL_LOC_SEQ !='' and SEL_LOC_SEQ != null">
                     AND A.LOC_SEQ = #{SEL_LOC_SEQ}
@@ -1375,11 +1403,9 @@
                 <if test="SEL_ACTIVE_YN !='' and SEL_ACTIVE_YN != null">
                     AND A.ACTIVE_YN = #{SEL_ACTIVE_YN}
                 </if>
-                <if test="SEL_TERM_DT_USE or SEL_TERM_DT_USE ==true">
-                    <if test='SEL_DAY_TYPE == "1"'>
-                        AND B.IN_DT >= CONVERT(REPLACE(#{SEL_ST_DT},'-',space(0)),'%Y%m%d')
-                        AND B.IN_DT <![CDATA[ <= ]]> CONVERT(REPLACE(#{SEL_END_DT},'-',space(0)),'%Y%m%d')
-                    </if>
+                <if test='SEL_DAY_TYPE == "1"'>
+                    AND B.IN_DT >= CONVERT(REPLACE(#{MATERIAL_CONSUMABLE_ST_DT},'-',space(0)),'%Y%m%d')
+                    AND B.IN_DT <![CDATA[ <= ]]> CONVERT(REPLACE(#{MATERIAL_CONSUMABLE_END_DT},'-',space(0)),'%Y%m%d')
                 </if>
             UNION ALL
             SELECT
@@ -1390,7 +1416,7 @@
             FROM jmes.TBL_CONSUMABLE_STOCK A, jmes.TBL_CONSUMABLE_OUT B
             WHERE A.CONSUMABLE_STOCK_SEQ = B.CONSUMABLE_STOCK_SEQ
                 <if test="SEL_WAREHOUSE_CD !='' and SEL_WAREHOUSE_CD != null">
-                    AND A.WAREHOUSE_CD = #{SEL_FACTORY_AREA}
+                    AND A.WAREHOUSE_CD = #{SEL_WAREHOUSE_CD}
                 </if>
                 <if test="SEL_LOC_SEQ !='' and SEL_LOC_SEQ != null">
                     AND A.LOC_SEQ = #{SEL_LOC_SEQ}
@@ -1407,11 +1433,9 @@
                 <if test="SEL_ACTIVE_YN !='' and SEL_ACTIVE_YN != null">
                     AND A.ACTIVE_YN = #{SEL_ACTIVE_YN}
                 </if>
-                <if test="SEL_TERM_DT_USE or SEL_TERM_DT_USE ==true">
-                    <if test='SEL_DAY_TYPE == "1"'>
-                        AND B.OUT_DT >= CONVERT(REPLACE(#{SEL_ST_DT},'-',space(0)),'%Y%m%d')
-                        AND B.OUT_DT <![CDATA[ <= ]]> CONVERT(REPLACE(#{SEL_END_DT},'-',space(0)),'%Y%m%d')
-                    </if>
+                <if test='SEL_DAY_TYPE == "1"'>
+                    AND B.OUT_DT >= CONVERT(REPLACE(#{MATERIAL_CONSUMABLE_ST_DT},'-',space(0)),'%Y%m%d')
+                    AND B.OUT_DT <![CDATA[ <= ]]> CONVERT(REPLACE(#{MATERIAL_CONSUMABLE_END_DT},'-',space(0)),'%Y%m%d')
                 </if>
         ) X
         ORDER BY X.IN_OUT_DT DESC

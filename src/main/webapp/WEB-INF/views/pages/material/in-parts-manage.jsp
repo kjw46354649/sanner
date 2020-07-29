@@ -78,27 +78,27 @@
                                 <option value="1">입력일시</option>
                             </select>
                         </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_1" value="today" ><label for="fr_1001_1">오늘</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_2" value="current_month"><label for="fr_1001_2">현재월</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_3" value="three_months"><label for="fr_1001_3">3개월</label>
-                        </span>
+<%--                        <span class="radio_box">--%>
+<%--                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_1" value="today" ><label for="fr_1001_1">오늘</label>--%>
+<%--                        </span>--%>
+<%--                        <span class="radio_box">--%>
+<%--                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_2" value="current_month"><label for="fr_1001_2">현재월</label>--%>
+<%--                        </span>--%>
+<%--                        <span class="radio_box">--%>
+<%--                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_3" value="three_months"><label for="fr_1001_3">3개월</label>--%>
+<%--                        </span>--%>
                         <div class="calendar_wrap">
                             <span class="calendar_span">
-                                <input class="datepicker-input" type="text" name="SEL_ST_DT" id="SEL_ST_DT" placeholder="" value="" title="시작날짜">
-<%--                                <button type="button">달력선택</button>--%>
+                                <input class="datepicker-input" type="text" name="MATERIAL_CONSUMABLE_ST_DT" id="MATERIAL_CONSUMABLE_ST_DT" title="시작날짜">
+                                <button type="button" id="MATERIAL_CONSUMABLE_ST_DT_BUTTON">달력선택</button>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input class="datepicker-input" type="text" name="SEL_END_DT" id="SEL_END_DT" placeholder="" value="" title="종료날짜">
-<%--                                <button type="button">달력선택</button>--%>
+                                <input class="datepicker-input" type="text" name="MATERIAL_CONSUMABLE_END_DT" id="MATERIAL_CONSUMABLE_END_DT" title="종료날짜">
+                                <button type="button" id="MATERIAL_CONSUMABLE_END_DT_BUTTON">달력선택</button>
                             </span>
                         </div>
-                        <span class="chk_box mg-left20">&nbsp;&nbsp;<input id="SEL_TERM_DT_USE" name="SEL_TERM_DT_USE" type="checkbox"><label for="SEL_TERM_DT_USE">선택</label></span>
+<%--                        <span class="chk_box mg-left20">&nbsp;&nbsp;<input id="SEL_TERM_DT_USE" name="SEL_TERM_DT_USE" type="checkbox"><label for="SEL_TERM_DT_USE">선택</label></span>--%>
                         <button type="button" class="right_float defaultBtn radius blue" id="searchBtn">검색</button>
                     </li>
                 </ul>
@@ -666,7 +666,10 @@
 
 /**  이벤트  **/
 
-        $(".datepicker-input").each(function(){ $(this).datepicker();});
+        $(".datepicker-input").each(function () {
+            $(this).datepicker({dateFormat: 'yy/mm/dd'});
+            $(this).datepicker('setDate', 'today');
+        });
 
         $("#search_form").find("#SEL_WAREHOUSE_CD").change(function(){
             let WAREHOUSE_CD = this.value;
@@ -712,8 +715,8 @@
         $("#searchBtn").on('click', function(e) {
             let targetTab = $("#search_form").find("#SEL_TAB_TYPE").val();
             let SEL_TERM_DT_USE = $("#search_form").find("#SEL_TERM_DT_USE").val();
-            let SEL_ST_DT = $("#search_form").find("#SEL_ST_DT").val();
-            let SEL_END_DT = $("#search_form").find("#SEL_END_DT").val();
+            let SEL_ST_DT = $("#search_form").find("#MATERIAL_CONSUMABLE_ST_DT").val();
+            let SEL_END_DT = $("#search_form").find("#MATERIAL_CONSUMABLE_END_DT").val();
 
             if(SEL_TERM_DT_USE == "Y"){
                 if(SEL_ST_DT == "" || SEL_END_DT == ""){
@@ -846,34 +849,6 @@
                 }
             }
         });
-        $('[name=CONTROL_MANAGE_TERM]').change(function () {
-            let value = $(this).val(), today = new Date(), newDate = new Date();
-
-            switch (value) {
-                case 'today':
-                    changeDate(newDate, today);
-                    break;
-                case 'current_month':
-                    newDate.setDate(1);
-
-                    changeDate(newDate, today);
-                    break;
-                case 'three_months':
-                    newDate.setMonth(newDate.getMonth() - 3);
-
-                    changeDate(newDate, today);
-                    break;
-            }
-
-           // $('#CONTROL_MANAGE_DATEPICKER_READ_ONLY').prop('checked', true);
-            //createOrDestoryDatepicker();
-        });
-        let changeDate = function (newDate = new Date(), today = new Date()) {
-
-            $('#SEL_ST_DT').val(newDate.yyyymmdd());
-            $('#SEL_END_DT').val(today.yyyymmdd());
-
-        };
         $('.pop_close, #partsCloseBtn').on('click', function(e) {
             $('#PARTS_MANAGE_CURRENT_POPUP').modal('hide');
         });
@@ -1100,5 +1075,18 @@
             return val;
         }
     }
+
+    $('#MATERIAL_CONSUMABLE_ST_DT_BUTTON').on('click', function () {
+       $('#MATERIAL_CONSUMABLE_ST_DT').focus();
+    });
+    $('#MATERIAL_CONSUMABLE_END_DT_BUTTON').on('click', function () {
+       $('#MATERIAL_CONSUMABLE_END_DT').focus();
+    });
+    $('#MATERIAL_CONSUMABLE_ST_DT_BUTTON').on('click', function () {
+       $('#MATERIAL_CONSUMABLE_ST_DT').focus();
+    });
+    $('#MATERIAL_CONSUMABLE_END_DT_BUTTON').on('click', function () {
+       $('#MATERIAL_CONSUMABLE_END_DT').focus();
+    });
 
 </script>

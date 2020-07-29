@@ -85,11 +85,11 @@
                         </span>
                         <div class="calendar_wrap" style="width:542px; padding-left: 0">
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="CONTROL_MANAGE_START_DATE" id="CONTROL_MANAGE_START_DATE"><button type="button">달력선택</button>
+                                <input type="text" title="달력정보" name="CONTROL_MANAGE_START_DATE" id="CONTROL_MANAGE_START_DATE"><button type="button" id="CONTROL_MANAGE_START_DATE_BUTTON">달력선택</button>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="CONTROL_MANAGE_END_DATE" id="CONTROL_MANAGE_END_DATE" readonly><button type="button">달력선택</button>
+                                <input type="text" title="달력정보" name="CONTROL_MANAGE_END_DATE" id="CONTROL_MANAGE_END_DATE" readonly><button type="button" id="CONTROL_MANAGE_END_DATE_BUTTON">달력선택</button>
                             </span>
                             <span class="chk_box" style="margin-left: 10px;"><input name="CHECK_BOX" id="CHECK_BOX" type="checkbox"><label for="CHECK_BOX">선택</label></span>
                         </div>
@@ -1526,13 +1526,12 @@
             selectChange: function (event, ui) {
                 supplyUnitCostInit(); // 공급단가적용 초기화
 
-                if (ui.selection.iCells.ranges[0] !== undefined) {
-                    selectedOrderManagementRowIndex = [];
-                    let firstRow = ui.selection.iCells.ranges[0].r1;
-                    let lastRow = ui.selection.iCells.ranges[0].r2;
+                selectedOrderManagementRowIndex = [];
+                for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
+                    let firstRow = ui.selection._areas[i].r1;
+                    let lastRow = ui.selection._areas[i].r2;
 
-                    if (firstRow === lastRow) selectedOrderManagementRowIndex[0] = firstRow;
-                    else for (let i = firstRow; i <= lastRow; i++) selectedOrderManagementRowIndex.push(i);
+                    for (let i = firstRow; i <= lastRow; i++) selectedOrderManagementRowIndex.push(i);
                 }
             },
             change: function (evt, ui) {
@@ -2670,6 +2669,13 @@
 
         $('#controlManageFrozen').on('change', function(){
             fnFrozenHandler($orderManagementGrid, $(this).val());
+        });
+
+        $('#CONTROL_MANAGE_START_DATE_BUTTON').on('click', function () {
+            $('#CONTROL_MANAGE_START_DATE').focus();
+        });
+        $('#CONTROL_MANAGE_END_DATE_BUTTON').on('click', function () {
+            $('#CONTROL_MANAGE_END_DATE').focus();
         });
     });
 
