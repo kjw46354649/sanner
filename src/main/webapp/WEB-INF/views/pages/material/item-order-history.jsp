@@ -7,10 +7,11 @@
 --%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="page estimate">
     <div class="topWrap">
         <form class="form-inline" id="item_order_history_search_form" name="item_order_history_search_form" role="form">
-            <input type="hidden" name="queryId" id="queryId" value="selectItemOrderHistoryList">
+            <input type="hidden" name="queryId" id="queryId" value="material.selectItemOrderHistoryList">
             <input type="hidden" name="MATERIAL_ORDER_SEQ" id="MATERIAL_ORDER_SEQ" value="">
             <input type="hidden" name="CONCAT_SEQ" id="CONCAT_SEQ" value="">
             <div class="none_gubunWrap row2_topWrap">
@@ -29,7 +30,7 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="MATERIAL_DETAIL">소재종류</label>
                             <select name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200">
-                                <option value="">선택</option>
+                                <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1027}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -42,13 +43,12 @@
                         <span class="ipu_wrap"><label class="label_100">주문일시</label></span>
                         <div class="calendar_wrap" style="width:542px; padding-left: 0">
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="ITEM_ORDER_HISTORY_START_DATE" id="ITEM_ORDER_HISTORY_START_DATE"><button type="button">달력선택</button>
+                                <input type="text" title="달력정보" name="ITEM_ORDER_HISTORY_START_DATE" id="ITEM_ORDER_HISTORY_START_DATE"><button type="button" id="ITEM_ORDER_HISTORY_START_DATE_BUTTON">달력선택</button>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="ITEM_ORDER_HISTORY_END_DATE" id="ITEM_ORDER_HISTORY_END_DATE" readonly><button type="button">달력선택</button>
+                                <input type="text" title="달력정보" name="ITEM_ORDER_HISTORY_END_DATE" id="ITEM_ORDER_HISTORY_END_DATE" readonly><button type="button" id="ITEM_ORDER_HISTORY_END_DATE_BUTTON">달력선택</button>
                             </span>
-                            <span class="chk_box" style="margin-left: 10px;"><input name="ITEM_ORDER_HISTORY_CHK_BOX" id="ITEM_ORDER_HISTORY_CHK_BOX" type="checkbox"><label for="ITEM_ORDER_HISTORY_CHK_BOX">선택</label></span>
                         </div>
                         <span class="gubun"></span>
                     </li>
@@ -92,7 +92,7 @@
 </div>
 
 <form id="item_order_history_hidden_form" name="item_order_history_hidden_form">
-    <input type="hidden" id="queryId" name="queryId" value="selectItemOrderHistoryListDetail"/>
+    <input type="hidden" id="queryId" name="queryId" value="material.selectItemOrderHistoryListDetail"/>
     <input type="hidden" id="MATERIAL_ORDER_NUM" name="MATERIAL_ORDER_NUM"/>
     <input type="hidden" id="MATERIAL_COMP_CD" name="MATERIAL_COMP_CD"/>
     <input type="hidden" id="MATERIAL_ORDER_SEQ" name="MATERIAL_ORDER_SEQ"/>
@@ -537,6 +537,14 @@
                 }
             });
         }
+
+        $('#ITEM_ORDER_HISTORY_START_DATE_BUTTON').on('click', function () {
+            $('#ITEM_ORDER_HISTORY_START_DATE').focus();
+        });
+
+        $('#ITEM_ORDER_HISTORY_END_DATE_BUTTON').on('click', function () {
+            $('#ITEM_ORDER_HISTORY_END_DATE').focus();
+        });
 
     });
 
