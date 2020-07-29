@@ -151,23 +151,35 @@
                     <ul>
                         <li>
                             <span class="slt_wrap">
-                                <label class="label_100" for="WAREHOUSE">창고</label>
-                                <select id="WAREHOUSE" name="WAREHOUSE" title="창고" class="wd_200">
+                                <label class="label_100" for="WAREHOUSE_CD">창고</label>
+                                <select id="WAREHOUSE_CD" name="WAREHOUSE_CD" title="창고" class="wd_200">
+                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                    <c:forEach var="code" items="${HighCode.H_1049}">
+                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                    </c:forEach>
                                 </select>
                             </span>
                             <span class="slt_wrap">
-                                <label class="label_100" for="LOC_NM">위치</label>
-                                <select id="LOC_NM" name="LOC_NM" title="위치" class="wd_200">
+                                <label class="label_100" for="LOC_SEQ">위치</label>
+                                <select id="LOC_SEQ" name="LOC_SEQ" title="위치" class="wd_200">
                                 </select>
                             </span>
                             <span class="slt_wrap">
                                 <label class="label_100" for="MATERIAL_DETAIL">소재종류</label>
                                 <select id="MATERIAL_DETAIL" name="MATERIAL_DETAIL" title="소재종류" class="wd_200">
+                                    <option value=""><spring:message code="com.form.top.sel.option"/></option>
+                                    <c:forEach var="code" items="${HighCode.H_1027}">
+                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                    </c:forEach>
                                 </select>
                             </span>
                             <span class="slt_wrap">
                                 <label class="label_100" for="MATERIAL_KIND">소재형태</label>
                                 <select id="MATERIAL_KIND" name="MATERIAL_KIND" title="소재형태" class="wd_200">
+                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                    <c:forEach var="code" items="${HighCode.H_1029}">
+                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                    </c:forEach>
                                 </select>
                             </span>
                             <span class="ipu_wrap right_float"></span>
@@ -182,10 +194,10 @@
                             <span class="ipu_wrap"><label class="label_100" for="SIZE_H">세로</label><input type="text" name="SIZE_H" id="SIZE_H" class="wd_200" value="" title="세로"></span>
                             <span class="ipu_wrap"><label class="label_100" for="SIZE_D">두께</label><input type="text" name="SIZE_D" id="SIZE_D" class="wd_200" value="" title="두께"></span>
                         </li>
-                        <li>
-                            <span class="ipu_wrap"><label class="label_100" for="M_ORDER_COMP_CD">소재주문업체</label><input type="text" name="M_ORDER_COMP_CD" id="M_ORDER_COMP_CD" class="wd_200" value="" title="소재주문업체"></span>
-                            <span class="ipu_wrap"><label class="label_100" for="MATERIAL_DETAIL">소재종류</label><input type="text" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200" value="" title="소재주문업체"></span>
-                        </li>
+<%--                        <li>--%>
+<%--                            <span class="ipu_wrap"><label class="label_100" for="M_ORDER_COMP_CD">소재주문업체</label><input type="text" name="M_ORDER_COMP_CD" id="M_ORDER_COMP_CD" class="wd_200" value="" title="소재주문업체"></span>--%>
+<%--                            <span class="ipu_wrap"><label class="label_100" for="MATERIAL_DETAIL">소재종류</label><input type="text" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200" value="" title="소재주문업체"></span>--%>
+<%--                        </li>--%>
                     </ul>
                 </div>
             </div>
@@ -200,21 +212,33 @@
                             <span class="slt_wrap">
                                 <label class="label_100" for="WAREHOUSE">창고</label>
                                 <select id="WAREHOUSE" name="WAREHOUSE" title="창고" class="wd_200">
+                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                    <c:forEach var="code" items="${HighCode.H_1049}">
+                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                    </c:forEach>
                                 </select>
                             </span>
                             <span class="slt_wrap">
-                                <label class="label_100" for="LOC_NM">위치</label>
-                                <select id="LOC_NM" name="LOC_NM" title="위치" class="wd_200">
+                                <label class="label_100" for="LOC_SEQ">위치</label>
+                                <select id="LOC_SEQ" name="LOC_SEQ" title="위치" class="wd_200">
                                 </select>
                             </span>
                             <span class="slt_wrap">
                                 <label class="label_100" for="MATERIAL_DETAIL">소재종류</label>
                                 <select id="MATERIAL_DETAIL" name="MATERIAL_DETAIL" title="소재종류" class="wd_200">
+                                    <option value=""><spring:message code="com.form.top.sel.option"/></option>
+                                    <c:forEach var="code" items="${HighCode.H_1027}">
+                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                    </c:forEach>
                                 </select>
                             </span>
                             <span class="slt_wrap">
                                 <label class="label_100" for="MATERIAL_KIND">소재형태</label>
                                 <select id="MATERIAL_KIND" name="MATERIAL_KIND" title="소재형태" class="wd_200">
+                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                    <c:forEach var="code" items="${HighCode.H_1029}">
+                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                    </c:forEach>
                                 </select>
                             </span>
                             <span class="ipu_wrap right_float"><button type="button" class="defaultBtn radius blue" id="btnInWarehouseManageOutSearch">검색</button></span>
@@ -229,8 +253,14 @@
                             <span class="ipu_wrap"><label class="label_100" for="SIZE_D">두께</label><input type="text" name="SIZE_D" id="SIZE_D" class="wd_200" value="" title="두께"></span>
                         </li>
                         <li>
-                            <span class="ipu_wrap"><label class="label_100" for="M_ORDER_COMP_CD">소재주문업체</label><input type="text" name="M_ORDER_COMP_CD" id="M_ORDER_COMP_CD" class="wd_200" value="" title="소재주문업체"></span>
-                            <span class="ipu_wrap"><label class="label_100" for="MATERIAL_DETAIL">소재종류</label><input type="text" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200" value="" title="소재주문업체"></span>
+                            <span class="ipu_wrap"><label class="label_100" for="IN_OUT_NM">수불 구분</label>
+                                <select id="IN_OUT_NM" name="IN_OUT_NM" title="수불 구분" class="wd_200">
+                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                    <c:forEach var="code" items="${HighCode.H_1055}">
+                                        <option value="${code.CODE_NM_KR}">${code.CODE_NM_KR}</option>
+                                    </c:forEach>
+                                </select>
+                            </span>
                         </li>
                     </ul>
                 </div>
@@ -305,10 +335,6 @@
     <input type="hidden" id="queryId" name="queryId" value="material.selectInWarehouseManageListDetail"/>
     <input type="hidden" id="MY_MAT_STOCK_SEQ" name="MY_MAT_STOCK_SEQ"/>
     <input type="hidden" id="MATERIAL_COMP_CD" name="MATERIAL_COMP_CD"/>
-</form>
-
-<form id="in_warehouse_manage_out_hidden_form" name="in_warehouse_manage_out_hidden_form">
-    <input type="hidden" id="queryId" name="queryId" value="material.selectInWarehouseManageOutList"/>
 </form>
 
 <script type="text/javascript">
@@ -738,7 +764,7 @@
                 dataModel: {
                     location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
                     url: "/paramQueryGridSelect",
-                    postData: fnFormToJsonArrayData('#in_warehouse_manage_out_hidden_form'),
+                    postData: fnFormToJsonArrayData('#in_warehouse_manage_out_search_form'),
                     getData: function (dataJSON) {
                         let data = dataJSON.data;
                         return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
@@ -794,7 +820,7 @@
 
         $("#btnInWarehouseManageOutSearch").on('click', function(){
             inWarehouseManageOutGrid.pqGrid('option', "dataModel.postData", function (ui) {
-                return (fnFormToJsonArrayData('#in_warehouse_manage_out_hidden_form'));
+                return (fnFormToJsonArrayData('#in_warehouse_manage_out_search_form'));
             });
             inWarehouseManageOutGrid.pqGrid('refreshDataAndView');
         });
@@ -1148,6 +1174,15 @@
                 return val;
             }
         }
+
+        fnCommCodeDatasourceSelectBoxCreate($('#in_warehouse_manage_search_form').find('#LOC_SEQ'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getLocationListWithWarehouse'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#in_warehouse_manage_out_search_form').find('#LOC_SEQ'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getLocationListWithWarehouse'}
+        });
 
 
     });
