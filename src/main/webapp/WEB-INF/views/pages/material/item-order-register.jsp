@@ -1200,19 +1200,24 @@
                 let parameters = {'url': '/json-info', 'data': data};
                 fnPostAjax(function (data) {
                     let BARCODE_YN = data.info.BARCODE_YN;
-                    if(BARCODE_YN == 'N') {
-                        fnAlert(null,"유효하지 않은 도면 바코드입니다.");
-                    }else {
-                        data = {'queryId': "material.selectItemOrderRegisterPopListSeq", 'CONTROL_SEQ': data.info.CONTROL_SEQ, 'CONTROL_DETAIL_SEQ': data.info.CONTROL_DETAIL_SEQ};
+                    if (BARCODE_YN == 'N') {
+                        fnAlert(null, "유효하지 않은 도면 바코드입니다.");
+                    } else {
+                        let CONCAT_SEQ = "'" + data.info.CONTROL_SEQ + data.info.CONTROL_DETAIL_SEQ + "'";
+                        data = {'queryId': "material.selectItemOrderRegisterPopListSeq", 'CONCAT_SEQ': CONCAT_SEQ};
                         let parameters = {'url': '/json-info', 'data': data};
                         fnPostAjax(function (data) {
-                            let newRowData = fnCloneObj(data.info);
-                            let newRowIndex = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length + 1;
-                            itemOrderRegisterPopTopGrid.pqGrid('addRow', {
-                                newRow: newRowData,
-                                rowIndx: newRowIndex,
-                                checkEditable: false
-                            });
+                            if (data.info) {
+                                let newRowData = fnCloneObj(data.info);
+                                let newRowIndex = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length + 1;
+                                itemOrderRegisterPopTopGrid.pqGrid('addRow', {
+                                    newRow: newRowData,
+                                    rowIndx: newRowIndex,
+                                    checkEditable: false
+                                });
+                            } else {
+                                fnAlert(null, "유효하지 않은 도면 바코드입니다.");
+                            }
                         }, parameters, '');
                     }
                 }, parameters, '');
