@@ -252,6 +252,7 @@
 
         let itemOrderRegisterLeftColModel= [
             {title: '가공 확정일시', dataType: 'date', dataIndx: 'STATUS_DT', width: 75, editable: false},
+            {title: '가공 확정일시(조회 조건용)', dataType: 'date', dataIndx: 'STATUS_DT_CONDITION', width: 75, editable: false, hidden: true},
             {title: '소재주문<br>상태', dataType: 'string', dataIndx: 'M_STATUS_NM', width: 60, editable: false},
             {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
