@@ -81,15 +81,15 @@
             },
             {title: '아이디', dataType: 'string', dataIndx: 'USER_ID', width: 100},
             {title: '이름', dataType: 'string', dataIndx: 'USER_NM', width: 80},
-            {title: '패스워드', dataType: 'string', dataIndx: 'USER_PWD', width: 80},
-            {title: '연락처', dataType: 'string', dataIndx: 'USER_TEL', width: 120},
-            {title: '이메일', dataType: 'string', dataIndx: 'USER_EMAIL', width: 150},
-            {title: '사용 프린터', dataType: 'string', dataIndx: 'USER_PRINTER', width: 150},
-            {title: '직급', dataType: 'string', dataIndx: 'POSITION_NM', width: 150},
-            {title: '직책', dataType: 'string', dataIndx: 'JOB_TITLE', width: 150},
+            {title: '패스워드', dataType: 'string', dataIndx: 'USER_PWD', width: 60},
+            {title: '연락처', dataType: 'string', dataIndx: 'USER_TEL', width: 180},
+            {title: '이메일', dataType: 'string', dataIndx: 'USER_EMAIL', width: 200},
+            {title: '사용 프린터', dataType: 'string', dataIndx: 'USER_PRINTER', width: 100},
+            {title: '직급', dataType: 'string', dataIndx: 'POSITION_NM', width: 80},
+            {title: '직책', dataType: 'string', dataIndx: 'JOB_TITLE', width: 80},
             {title: '부서', dataType: 'string', dataIndx: 'DEPARTMENT_NM', width: 150},
-            {title: '권한그룹', dataType: 'integer', dataIndx: 'ROLE_SEQ_NM'},
-            {title: '사용여부', dataType: 'select', dataIndx: 'DEL_YN_NM', width: 70}
+            {title: '권한그룹', dataType: 'integer', dataIndx: 'ROLE_SEQ_NM', width: 150},
+            {title: '사용여부', dataType: 'select', dataIndx: 'DEL_YN_NM', width: 50}
         ];
 
         let userMasterObj = {
