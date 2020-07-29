@@ -7,7 +7,7 @@
 --%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
-
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="popup_container" id="item_order_register_popup" style="display: none;" data-backdrop="static">
     <div class="layerPopup" style="height: fit-content;">
         <h3>소재 주문</h3>
@@ -61,7 +61,7 @@
 <div class="page estimate">
     <div class="topWrap">
         <form class="form-inline" id="item_order_register_search_form" name="item_order_register_search_form" role="form">
-            <input type="hidden" name="queryId" id="queryId" value="selectItemOrderRegisterList">
+            <input type="hidden" name="queryId" id="queryId" value="material.selectItemOrderRegisterList">
             <div class="none_gubunWrap row3_topWrap">
                 <ul>
                     <li>
@@ -79,7 +79,15 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label class="label_100" for="DRAWING_NUM">도면번호</label><input type="text" name="DRAWING_NUM" id="DRAWING_NUM" class="wd_200" value="" title="도면번호"></span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label class="label_100" for="ITEM_NM">품명</label><input type="text" name="ITEM_NM" id="ITEM_NM" class="wd_200" value="" title="품명"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="WORK_TYPE">작업형태</label>
+                            <select class="label_200" name="WORK_TYPE" id="WORK_TYPE" title="작업형태">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                <c:forEach var="code" items="${HighCode.H_1033}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap right_float"><button type="button" class="defaultBtn radius blue" id="btnItemOrderRegisterSearch">검색</button></span>
                     </li>
@@ -97,7 +105,7 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="MATERIAL_DETAIL">소재종류</label>
                             <select name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200">
-                                <option value="">선택</option>
+                                <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1027}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -108,31 +116,31 @@
                     <li class="">
                         <span class="slt_wrap trans_slt" style="width: 120px;">
                             <select name="ITEM_ORDER_REGISTER_CONDITION" id="ITEM_ORDER_REGISTER_CONDITION" style="width: inherit; text-align-last: center;">
-                                <c:forEach var="code" items="${HighCode.H_1047}">
+                                <c:forEach var="code" items="${HighCode.H_1085}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
                         </span>
                         <div class="calendar_wrap" style="width:542px; padding-left: 0">
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="ITEM_ORDER_REGISTER_START_DATE" id="ITEM_ORDER_REGISTER_START_DATE"><button type="button">달력선택</button>
+                                <input type="text" title="달력정보" name="ITEM_ORDER_REGISTER_START_DATE" id="ITEM_ORDER_REGISTER_START_DATE"><button type="button" id="ITEM_ORDER_REGISTER_START_DATE_BUTTON">달력선택</button>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="ITEM_ORDER_REGISTER_END_DATE" id="ITEM_ORDER_REGISTER_END_DATE" readonly><button type="button">달력선택</button>
+                                <input type="text" title="달력정보" name="ITEM_ORDER_REGISTER_END_DATE" id="ITEM_ORDER_REGISTER_END_DATE" readonly><button type="button" id="ITEM_ORDER_REGISTER_END_DATE_BUTTON">달력선택</button>
                             </span>
-                            <span class="chk_box" style="margin-left: 10px;"><input name="ITEM_ORDER_REGISTER_CHK_BOX" id="ITEM_ORDER_REGISTER_CHK_BOX" type="checkbox"><label for="ITEM_ORDER_REGISTER_CHK_BOX">선택</label></span>
                         </div>
                         <span class="gubun"></span>
                         <span>
                             <span class="ipu_wrap"><label class="label_100">Option</label></span>
-                            <span class="chk_box"><input name="ORDER_WAIT_YN" id="ORDER_WAIT_YN" type="checkbox"><label for="ORDER_WAIT_YN"> 소재주문대기</label></span>
-                            <span class="chk_box"><input name="ORDER_YN" id="ORDER_YN" type="checkbox"><label for="ORDER_YN"> 주문완료</label></span>
-                            <span class="chk_box"><input name="IN_YN" id="IN_YN" type="checkbox"><label for="IN_YN"> 입고</label></span>
+                            <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="ORDER_WAIT_YN" value="MST001"><label for="ORDER_WAIT_YN"> 소재주문대기</label></span>
+                            <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="ORDER_YN" value="MST002"><label for="ORDER_YN"> 주문완료</label></span>
+<%--                            <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="IN_YN" value="MST004"><label for="IN_YN"> 입고</label></span>--%>
                         </span>
                     </li>
                 </ul>
             </div>
+            <input type="hidden" name="ORDER_STATUS" id="ORDER_STATUS">
         </form>
     </div>
     <div class="bottomWrap row3_bottomWrap">
@@ -970,7 +978,7 @@
                     }
                 }
             });
-        };
+        }
 
         let itemOrderRegisterGridCellEditable = function(ui){
             let rowData = itemOrderRegisterLeftGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
@@ -980,7 +988,7 @@
             }else{
                 return true;
             }
-        }
+        };
 
         $('#item_order_register_popup').on('hide.bs.modal', function() {
             if(itemOrderRegisterPopTopGrid.hasClass('pq-grid')){
@@ -1036,12 +1044,12 @@
                         fnPostAjaxAsync(function (data, callFunctionParam) {
                             let list = data.list[0];
                             if(MATERIAL_ORDER_NUM == '' || MATERIAL_ORDER_NUM == undefined){
-                                MATERIAL_ORDER_NUM = list.MATERIAL_ORDER_NUM
+                                MATERIAL_ORDER_NUM = list.MATERIAL_ORDER_NUM;
                                 $("#item_order_register_material_order_num_temp").val(MATERIAL_ORDER_NUM);
                             }else{
                                 $("#item_order_register_material_order_num_temp").val(MATERIAL_ORDER_NUM);
                                 $("#item_order_register_material_order_num").val(MATERIAL_ORDER_NUM);
-                            };
+                            }
 
                             makeInnerTable();
                         }, parameters, '');
@@ -1114,7 +1122,7 @@
 
             }else{
                 fnAlert(null,"You must be select item.");
-                return;
+
             }
 
         });
@@ -1178,7 +1186,7 @@
 
         $("#itempOrderResgisterBarcodeImg").on('click', function(){
             $("#itempOrderResgisterBarcodeNum").focus();
-        })
+        });
         $('#itempOrderResgisterBarcodeNum').on({
             focus: function () {
                 $('#itempOrderResgisterBarcodeImg').attr('src','/resource/asset/images/common/img_barcode_long_on.png');
@@ -1288,7 +1296,7 @@
                     e.stopPropagation();
                     commonConfirmPopup.hide();
                     callback(true);
-                    return;
+
                 });
                 $(".commonConfirmCloseBtn").unbind().click(function (e) {
                     e.stopPropagation();
@@ -1394,7 +1402,7 @@
                     // 소재 주문 상태
                     if(ORDER_STATUS == 'MST002') {
                         includeOrder = false;
-                        continue;
+
                     }
                 }
 
@@ -1420,7 +1428,7 @@
                     // 소재 주문 상태
                     if(ORDER_STATUS == 'MST002') {
                         includeOrder = false;
-                        continue;
+
                     }
                 }
             }
@@ -1454,7 +1462,7 @@
                     e.stopPropagation();
                     commonConfirmPopup.hide();
                     callback(true);
-                    return;
+
                 });
                 $(".commonConfirmCloseBtn").unbind().click(function (e) {
                     e.stopPropagation();
@@ -1615,7 +1623,7 @@
                     e.stopPropagation();
                     commonConfirmPopup.hide();
                     callback(true);
-                    return;
+
                 });
                 $(".commonConfirmCloseBtn").unbind().click(function (e) {
                     e.stopPropagation();
@@ -1624,7 +1632,7 @@
             };
             itemOrderRegisterPopSubmitConfirm(function(confirm){
                 if(confirm) {
-                    let list = new Array() ;
+                    let list = [] ;
                     let rowCount = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length;
                     for (let i = 0; i < rowCount; i++) {
                         let rowData = itemOrderRegisterPopTopGrid.pqGrid('getRowData', {rowIndx: i});
@@ -1727,7 +1735,7 @@
                     e.stopPropagation();
                     commonConfirmPopup.hide();
                     callback(true);
-                    return;
+
                 });
                 $(".commonConfirmCloseBtn").unbind().click(function (e) {
                     e.stopPropagation();
@@ -1888,4 +1896,23 @@
         }, 100);
     }
 
+    $('#ITEM_ORDER_REGISTER_START_DATE_BUTTON').on('click', function () {
+        $('#ITEM_ORDER_REGISTER_START_DATE').focus();
+    });
+
+    $('#ITEM_ORDER_REGISTER_END_DATE_BUTTON').on('click', function () {
+        $('#ITEM_ORDER_REGISTER_END_DATE').focus();
+    });
+
+    $('[name=ORDER_STATUS_CHECK_BOX]').on('change', function () {
+        let checkedValue = '';
+
+        $("input[name=ORDER_STATUS_CHECK_BOX]:checked").each(function (index) {
+            if (index > 0) {
+                checkedValue += ', ';
+            }
+            checkedValue += '\'' + $(this).val() + '\'';
+        });
+        $('#ORDER_STATUS').val(checkedValue);
+    });
 </script>

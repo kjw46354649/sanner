@@ -138,7 +138,7 @@
                 }
             },
             {
-                title: '구매<br>담당자', dataType: 'integer', width: 70, dataIndx: 'ORDER_STAFF_SEQ', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                title: '구매<br>담당자', width: 70, dataIndx: 'ORDER_STAFF_SEQ', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text',
                     options: function (ui) {
@@ -149,7 +149,6 @@
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
-                    console.log(cellData);
 
                     if (cellData === '' || cellData === undefined) {
                         return '';
@@ -163,7 +162,7 @@
                                 return element.value === Number(cellData);
                             });
                         }
-                        console.log(index);
+
                         return (index < 0) ? cellData : COMPANY_STAFF[index].text;
                     }
                 }
@@ -540,13 +539,12 @@
                 }
             },
             editModel: {clicksToEdit: 1},
-            cellSave: function (evt, ui) {
+            /*cellSave: function (evt, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {
                     $orderRegisterGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                 }
-            },
+            },*/
             change: function (evt, ui) {
-                console.log(ui);
                 if (ui.source === 'paste') {
                     let rowListConvert = [];
 
@@ -703,7 +701,6 @@
                             }
                         }
                         // 구매 담당자
-                        console.log(newRowData.ORDER_STAFF_SEQ);
                         if (newRowData.ORDER_STAFF_SEQ !== undefined) {
                             let index = COMPANY_STAFF.findIndex(function (element) {
                                 return element.text === newRowData.ORDER_STAFF_SEQ;
@@ -945,7 +942,7 @@
             // 구매 담당자
             if (rowData.ORDER_STAFF_SEQ !== undefined && rowData.ORDER_STAFF_SEQ !== null && rowData.ORDER_STAFF_SEQ !== '') {
                 let index = COMPANY_STAFF.findIndex(function (element) {
-                    return element.value === rowData.ORDER_STAFF_SEQ;
+                    return element.value === Number(rowData.ORDER_STAFF_SEQ);
                 });
 
                 if (index < 0) addErrorList(rowIndex, 'ORDER_STAFF_SEQ');

@@ -7,7 +7,7 @@
 --%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
-
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="popup_container" id="in_warehouse_manage_out_popup" style="display: none;">
     <div class="layerPopup" style="height: fit-content;">
         <h3 style="margin-bottom: 10px;">소재 불출 진행</h3>

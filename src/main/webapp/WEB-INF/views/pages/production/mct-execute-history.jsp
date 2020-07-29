@@ -100,7 +100,7 @@
                                 <tr><th>위치</th>
                                     <td colspan="2">
                                         <select name="CAM_WORK_DIRECTION_01" id="CAM_WORK_DIRECTION_01" class="wd_150 statusConfig" >
-                                            <option value="">선택</option>
+                                            <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                             <c:forEach var="code" items="${HighCode.H_1080}">
                                                 <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                             </c:forEach>
@@ -142,7 +142,7 @@
                                 <tr><th>위치</th>
                                     <td colspan="2">
                                         <select name="CAM_WORK_DIRECTION_02" id="CAM_WORK_DIRECTION_02" class="wd_150 statusConfig" >
-                                            <option value="">선택</option>
+                                            <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                             <c:forEach var="code" items="${HighCode.H_1080}">
                                                 <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                             </c:forEach>
@@ -184,7 +184,7 @@
                                 <tr><th>위치</th>
                                     <td colspan="2">
                                         <select name="CAM_WORK_DIRECTION_03" id="CAM_WORK_DIRECTION_03" class="wd_150 statusConfig" >
-                                            <option value="">선택</option>
+                                            <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                             <c:forEach var="code" items="${HighCode.H_1080}">
                                                 <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                             </c:forEach>
@@ -226,7 +226,7 @@
                                 <tr><th>위치</th>
                                     <td colspan="2">
                                         <select name="CAM_WORK_DIRECTION_04" id="CAM_WORK_DIRECTION_04" class="wd_150 statusConfig" >
-                                            <option value="">선택</option>
+                                            <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                             <c:forEach var="code" items="${HighCode.H_1080}">
                                                 <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                             </c:forEach>
@@ -268,7 +268,7 @@
                                 <tr><th>위치</th>
                                     <td colspan="2">
                                         <select name="CAM_WORK_DIRECTION_05" id="CAM_WORK_DIRECTION_05" class="wd_150 statusConfig" >
-                                            <option value="">선택</option>
+                                            <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                             <c:forEach var="code" items="${HighCode.H_1080}">
                                                 <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                             </c:forEach>

@@ -120,13 +120,16 @@
 		    AND Z.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
         <if test="DRAWING_NUM !='' and DRAWING_NUM != null">
-		    AND Z.DRAWING_NUM = #{DRAWING_NUM}
+		    AND UPPER(Z.DRAWING_NUM) LIKE CONCAT('%', #{DRAWING_NUM}, '%')
+        </if>
+        <if test="WORK_TYPE !='' and WORK_TYPE != null">
+            AND Z.WORK_TYPE = #{WORK_TYPE}
         </if>
         <if test="CONTROL_NUM !='' and CONTROL_NUM != null">
-		    AND Z.CONTROL_NUM = #{CONTROL_NUM}
+		    AND UPPER(Z.CONTROL_NUM) LIKE CONCAT('%', #{CONTROL_NUM}, '%')
         </if>
         <if test="MATERIAL_ORDER_NUM !='' and MATERIAL_ORDER_NUM != null">
-		    AND Z.MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
+		    AND UPPER(Z.MATERIAL_ORDER_NUM) LIKE CONCAT('%', #{MATERIAL_ORDER_NUM}, '%')
         </if>
         <if test="M_COMP_CD !='' and M_COMP_CD != null">
 		    AND Z.M_COMP_CD = #{M_COMP_CD}
@@ -134,6 +137,17 @@
         <if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
 		    AND Z.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
         </if>
+        <if test="ORDER_STATUS != '' and ORDER_STATUS != null">
+            AND Z.ORDER_STATUS IN (${ORDER_STATUS})
+        </if>
+        <choose>
+            <when test="ITEM_ORDER_REGISTER_CONDITION =='IOM010'">
+                AND DATE_FORMAT(Z.STATUS_DT, '%Y/%m/%d') BETWEEN #{ITEM_ORDER_REGISTER_START_DATE} AND #{ITEM_ORDER_REGISTER_END_DATE}
+            </when>
+            <when test="ITEM_ORDER_REGISTER_CONDITION =='IOM020'">
+                AND DATE_FORMAT(Z.M_ORDER_DT, '%Y/%m/%d') BETWEEN #{ITEM_ORDER_REGISTER_START_DATE} AND #{ITEM_ORDER_REGISTER_END_DATE}
+            </when>
+        </choose>
         ORDER BY Z.MATERIAL_ORDER_NUM ASC, Z.M_COMP_CD, Z.CONTROL_NUM, Z.PART_NUM
     </select>
 
@@ -793,22 +807,23 @@
                 <if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
                     AND MATERIAL_DETAIL = #{MATERIAL_DETAIL}
                 </if>
-                <if test="ITEM_ORDER_HISTORY_CHK_BOX or ITEM_ORDER_HISTORY_CHK_BOX == true">
-                    AND SF_GET_DATE_F(ORDER_DT,'YYYY','') >= #{ITEM_ORDER_HISTORY_START_DATE}
-                    AND SF_GET_DATE_F(ORDER_DT,'YYYY','') <![CDATA[ <= ]]> #{ITEM_ORDER_HISTORY_END_DATE}
-                </if>
+                AND SF_GET_DATE_F(ORDER_DT,'YYYY','') >= #{ITEM_ORDER_HISTORY_START_DATE}
+                AND SF_GET_DATE_F(ORDER_DT,'YYYY','') <![CDATA[ <= ]]> #{ITEM_ORDER_HISTORY_END_DATE}
         ) Z
             LEFT OUTER JOIN TBL_CONTROL_PART B ON Z.CONTROL_SEQ = B.CONTROL_SEQ AND Z.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
             LEFT OUTER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
         WHERE 1=1
             <if test="CONTROL_NUM !='' and CONTROL_NUM != null">
-                AND C.CONTROL_NUM = #{CONTROL_NUM}
+                AND UPPER(C.CONTROL_NUM LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
             </if>
             <if test="MATERIAL_ORDER_NUM !='' and MATERIAL_ORDER_NUM != null">
-                AND Z.MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
+                AND UPPER(Z.MATERIAL_ORDER_NUM LIKE CONCAT('%', UPPER(#{MATERIAL_ORDER_NUM}), '%')
             </if>
             <if test="MATERIAL_COMP_CD !='' and MATERIAL_COMP_CD != null">
                 AND Z.MATERIAL_COMP_CD = #{MATERIAL_COMP_CD}
+            </if>
+            <if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
+                AND Z.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
             </if>
         GROUP BY MATERIAL_COMP_CD, MATERIAL_ORDER_NUM
         ORDER BY ORDER_DT DESC
