@@ -110,8 +110,9 @@
                             <span class="slt_wrap">
 <%--                                <label for="popLocation">위치정보</label>--%>
                                 <select id="popLocation" name="popLocation" title="위치정보" class="wd_200">
+                                    <c:set value="${popLocation}" var="pLocation"></c:set>
                                     <c:forEach var="code" items="${HighCode.H_1009}">
-                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                        <option value="${code.CODE_CD}" <c:if test="${pLocation eq code.CODE_CD}">selected="selected"</c:if> >${code.CODE_NM_KR}</option>
                                     </c:forEach>
                                 </select>
                             </span>

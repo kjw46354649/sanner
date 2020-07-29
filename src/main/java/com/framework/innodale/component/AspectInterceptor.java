@@ -154,7 +154,7 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
         passList.add("/paramQueryGridSelect");
         passList.add("/uploadControlCadFilesTesting");
 
-        String patterns[] = {"/image", "/barcode", "/static", "/downloadGfile", "/downloadfile", "/drawing"};
+        String patterns[] = {"/image", "/barcode", "/static", "/downloadGfile", "/downloadfile", "/drawing", "/pop"};
 
         if(passList.contains(url)) return true;
 

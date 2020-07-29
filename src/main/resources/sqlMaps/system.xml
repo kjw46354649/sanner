@@ -732,7 +732,7 @@
             , ACTIVE_YN = IFNULL(#{ACTIVE_YN}, 'N')
             , NOTE = #{NOTE}
             , ABBR_NM = #{ABBR_NM}
-            , COMP_NM2 #{COMP_NM2}
+            , COMP_NM2 = #{COMP_NM2}
             , UPDATE_ID = #{LOGIN_USER_ID}
             , UPDATE_DT = NOW()
         WHERE COMP_CD = #{COMP_CD}
