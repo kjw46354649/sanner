@@ -713,64 +713,72 @@
 
         /** 작업 완료 플러스 처리 **/
         $("#complete_success_qty_pop_plus_btn").on('click', function(){
+            clearTimeout(stopInterval);
+            $("#drawing_worker_end_popup .scan-time").html("");
             let orderQty = $("#drawing_action_form").find("#ORDER_QTY").val();
             let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
             let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
             let afterQty = parseInt(finishQty) + 1;
             let errorParseQty = isNaN(parseInt(errorQty)) ? 0 : parseInt(errorQty);
-            if((afterQty + errorParseQty) <= orderQty){
-                $("#drawing_action_form").find("#FINISH_QTY").val(afterQty);
-                $("#completeControlCompleteQtyHtml").html(afterQty);
-            }
-            clearTimeout(stopInterval);
-            $("#drawing_worker_end_popup .scan-time").html("");
+            $("#drawing_action_form").find("#FINISH_QTY").val(afterQty);
+            $("#completeControlCompleteQtyHtml").html(afterQty);
+            // if((afterQty + errorParseQty) <= orderQty){
+            //     $("#drawing_action_form").find("#FINISH_QTY").val(afterQty);
+            //     $("#completeControlCompleteQtyHtml").html(afterQty);
+            // }
         });
 
         /** 작업 완료 마이너스 처리 **/
         $("#complete_success_qty_pop_minus_btn").on('click', function(){
+            clearTimeout(stopInterval);
+            $("#drawing_worker_end_popup .scan-time").html("");
             let orderQty = $("#drawing_action_form").find("#ORDER_QTY").val();
             let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
             let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
             let afterQty = parseInt(finishQty) - 1;
             let errorParseQty = isNaN(parseInt(errorQty)) ? 0 : parseInt(errorQty);
-            if((afterQty + errorParseQty) <= orderQty && afterQty >= 0 ){
-                $("#drawing_action_form").find("#FINISH_QTY").val(afterQty);
-                $("#completeControlCompleteQtyHtml").html(afterQty);
-            }
-            clearTimeout(stopInterval);
-            $("#drawing_worker_end_popup .scan-time").html("");
+            $("#drawing_action_form").find("#FINISH_QTY").val(afterQty);
+            $("#completeControlCompleteQtyHtml").html(afterQty);
+            // if((afterQty + errorParseQty) <= orderQty && afterQty >= 0 ){
+            //     $("#drawing_action_form").find("#FINISH_QTY").val(afterQty);
+            //     $("#completeControlCompleteQtyHtml").html(afterQty);
+            // }
         });
 
         /** 불량 수량 플러스 처리 **/
         $("#complete_fail_qty_pop_plus_btn").on('click', function(){
+            clearTimeout(stopInterval);
+            $("#drawing_worker_end_popup .scan-time").html("");
             let orderQty = $("#drawing_action_form").find("#ORDER_QTY").val();
             let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
             let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
             let afterQty = 0;
             let finishParseQty = isNaN(parseInt(finishQty)) ? 0 : parseInt(finishQty);
             if(errorQty) afterQty = parseInt(errorQty) + 1
-            if((afterQty + finishParseQty) <= orderQty){
-                $("#drawing_action_form").find("#ERROR_QTY").val(afterQty);
-                $("#completeControlFailQtyHtml").html(afterQty);
-            }
-            clearTimeout(stopInterval);
-            $("#drawing_worker_end_popup .scan-time").html("");
+            $("#drawing_action_form").find("#ERROR_QTY").val(afterQty);
+            $("#completeControlFailQtyHtml").html(afterQty);
+            // if((afterQty + finishParseQty) <= orderQty){
+            //     $("#drawing_action_form").find("#ERROR_QTY").val(afterQty);
+            //     $("#completeControlFailQtyHtml").html(afterQty);
+            // }
         });
 
         /** 불량 수량 마이너스 처리 **/
         $("#complete_fail_qty_pop_minus_btn").on('click', function(){
+            clearTimeout(stopInterval);
+            $("#drawing_worker_end_popup .scan-time").html("");
             let orderQty = $("#drawing_action_form").find("#ORDER_QTY").val();
             let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
             let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
             let afterQty = 0;
             let finishParseQty = isNaN(parseInt(finishQty)) ? 0 : parseInt(finishQty);
             if(errorQty) afterQty = parseInt(errorQty) - 1;
-            if((afterQty + finishParseQty) <= orderQty && afterQty >= 0) {
-                $("#drawing_action_form").find("#ERROR_QTY").val(afterQty);
-                $("#completeControlFailQtyHtml").html(afterQty);
-            }
-            clearTimeout(stopInterval);
-            $("#drawing_worker_end_popup .scan-time").html("");
+            $("#drawing_action_form").find("#ERROR_QTY").val(afterQty);
+            $("#completeControlFailQtyHtml").html(afterQty);
+            // if((afterQty + finishParseQty) <= orderQty && afterQty >= 0) {
+            //     $("#drawing_action_form").find("#ERROR_QTY").val(afterQty);
+            //     $("#completeControlFailQtyHtml").html(afterQty);
+            // }
         });
 
         $("#ERROR_REASON").on('change', function(){
