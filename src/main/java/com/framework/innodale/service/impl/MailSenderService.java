@@ -34,36 +34,39 @@ public class MailSenderService {
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
 
         try{
+            // 운영 서버인 경우만 메일 발송 처리 된다.
+            if(CommonUtility.isScheduleRunning()){
 
-            // Demon Key 생성, 자동화 발신 이메일 정보만 UPDATE 한다.
-            hashMap.put("SKEY", CommonUtility.getUUIDString("mail"));
+                // Demon Key 생성, 자동화 발신 이메일 정보만 UPDATE 한다.
+                hashMap.put("SKEY", CommonUtility.getUUIDString("mail"));
 
-            // 발송일이 현재 시간보다 적은것은 모두 처리 한다.
-            hashMap.put("queryId", "mail.setSendEmailSessionKey");
-            innodaleDao.update(hashMap);
+                // 발송일이 현재 시간보다 적은것은 모두 처리 한다.
+                hashMap.put("queryId", "mail.setSendEmailSessionKey");
+                innodaleDao.update(hashMap);
 
-            hashMap.put("queryId", "mail.selectSendMailList");
-            List<Map<String, Object>> sendMailData = innodaleDao.getList(hashMap);
+                hashMap.put("queryId", "mail.selectSendMailList");
+                List<Map<String, Object>> sendMailData = innodaleDao.getList(hashMap);
 
-            if(sendMailData.size() > 0){
-                log.info("update automaticMessage count=[" + sendMailData.size() + "]");
-            }
-
-            if(sendMailData != null && sendMailData.size() > 0){
-                for(Map<String, Object> mailInfo : sendMailData){
-
-                    // 첨부 파일이 있을 경우 처리
-                    if(mailInfo.containsValue("GFILE_SEQ") && mailInfo.get("GFILE_SEQ") != null){
-                        mailInfo.put("queryId", "common.selectGfileFileList");
-                        mailInfo.put("attachFileList", innodaleDao.getList(mailInfo));
-                    }
-
-                    updateEmailSendConditsion(mailInfo, hashMap);
-                    // 2 second Next Mail Send
-                    Thread.sleep(2000);
+                if(sendMailData.size() > 0){
+                    log.info("update automaticMessage count=[" + sendMailData.size() + "]");
                 }
-                // 5 second Next Mail Group 조회
-                Thread.sleep(5000);
+
+                if(sendMailData != null && sendMailData.size() > 0) {
+                    for (Map<String, Object> mailInfo : sendMailData) {
+
+                        // 첨부 파일이 있을 경우 처리
+                        if (mailInfo.containsValue("GFILE_SEQ") && mailInfo.get("GFILE_SEQ") != null) {
+                            mailInfo.put("queryId", "common.selectGfileFileList");
+                            mailInfo.put("attachFileList", innodaleDao.getList(mailInfo));
+                        }
+
+                        updateEmailSendConditsion(mailInfo, hashMap);
+                        // 2 second Next Mail Send
+                        Thread.sleep(2000);
+                    }
+                    // 5 second Next Mail Group 조회
+                    Thread.sleep(5000);
+                }
             }
         } catch(Exception e) {
             log.error("Exception in manageMailSenderActionService Service: " + e.toString());

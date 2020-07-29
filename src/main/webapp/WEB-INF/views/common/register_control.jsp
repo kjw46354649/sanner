@@ -50,16 +50,18 @@
         const COMPANY_STAFF = (function () {
             let list = [];
             let parameters = {'url': '/json-list', 'data': {'queryId': 'dataSource.getCompanyStaffList'}};
-
-            fnPostAjax(function (data) {
+            fnPostAjaxAsync(function (data) {
                 for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
                     let obj = data.list[i];
-
-                    list.push({value: obj.CODE_CD, text: obj.CODE_NM, compCd: obj.COMP_CD});
+                    list.push({'value': obj.CODE_CD, 'text': obj.CODE_NM, 'compCd': obj.COMP_CD});
                 }
             }, parameters, '');
             return list;
         })();
+
+        console.log(ORDER_COMPANY);
+        console.log(COMPANY_STAFF);
+
         let $orderRegisterGrid;
         const popupGridId = 'ORDER_REGISTER_GRID';
         const popupColModel = [
