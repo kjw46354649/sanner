@@ -1530,7 +1530,7 @@
                 var material_order_seq = list[i].MATERIAL_ORDER_SEQ;
 
                 table += "<tr>";
-                table += "<td style='"+ st_center	+"'>"	+ list[i].COMP_NM+"</td>";
+                table += "<td style='"+ st_center	+"'>진성정밀</td>";
                 table += "<td style='"+ st_center 	+"'>"	+ list[i].MATERIAL_COMP_NM +"</td>";
                 table += "<td style='"+ st_center 	+"'>"	+ list[i].MATERIAL_KIND_NM+"</td>";
                 table += "<td style='"+ st_center	+"'>"	+ list[i].MATERIAL_DETAIL_NM+"</td>";

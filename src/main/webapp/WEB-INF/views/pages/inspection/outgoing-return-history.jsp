@@ -105,8 +105,10 @@
     $(function () {
         'use strict';
 
-        $(".datepicker-input").each(function(){ $(this).datepicker();});
-        $(".datepicker-input").each(function(){ $(this).datepicker('setDate', 'today');});
+        $("#outgoing_history_form").find('#SEL_ST_DT').datepicker({dateFormat: 'yy/mm/dd'});
+        $("#outgoing_history_form").find('#SEL_END_DT').datepicker({dateFormat: 'yy/mm/dd'});
+        $("#outgoing_history_form").find(".datepicker-input").each(function(){ $(this).datepicker();});
+        $("#outgoing_history_form").find(".datepicker-input").each(function(){ $(this).datepicker('setDate', 'today');});
         $("#outgoing_history_form").find("#SEL_OUTGOING_TERM_1").trigger("click");
 
         let outgoingHistoryGridId01 = $("#outgoing_history_grid");
@@ -137,6 +139,7 @@
                     //return cellData;
                }
             },
+            {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', minWidth: 80, width: 120, editable: false},
             {title: '외주가공', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', minWidth: 80, width: 80, editable: false},
             {title: '발주번호', dataType: 'string', dataIndx: 'ORDER_NUM', minWidth: 120, width: 120, editable: false},
             {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,

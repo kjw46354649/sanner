@@ -1404,8 +1404,8 @@
                     AND A.ACTIVE_YN = #{SEL_ACTIVE_YN}
                 </if>
                 <if test='SEL_DAY_TYPE == "1"'>
-                    AND B.IN_DT >= CONVERT(REPLACE(#{MATERIAL_CONSUMABLE_ST_DT},'-',space(0)),'%Y%m%d')
-                    AND B.IN_DT <![CDATA[ <= ]]> CONVERT(REPLACE(#{MATERIAL_CONSUMABLE_END_DT},'-',space(0)),'%Y%m%d')
+                    AND B.IN_DT >= CONVERT(REPLACE(#{MATERIAL_CONSUMABLE_ST_DT},'/',space(0)),'%Y%m%d')
+                    AND B.IN_DT <![CDATA[ <= ]]> CONVERT(REPLACE(#{MATERIAL_CONSUMABLE_END_DT},'/',space(0)),'%Y%m%d')
                 </if>
             UNION ALL
             SELECT
@@ -1434,8 +1434,8 @@
                     AND A.ACTIVE_YN = #{SEL_ACTIVE_YN}
                 </if>
                 <if test='SEL_DAY_TYPE == "1"'>
-                    AND B.OUT_DT >= CONVERT(REPLACE(#{MATERIAL_CONSUMABLE_ST_DT},'-',space(0)),'%Y%m%d')
-                    AND B.OUT_DT <![CDATA[ <= ]]> CONVERT(REPLACE(#{MATERIAL_CONSUMABLE_END_DT},'-',space(0)),'%Y%m%d')
+                    AND B.OUT_DT >= CONVERT(REPLACE(#{MATERIAL_CONSUMABLE_ST_DT},'/',space(0)),'%Y%m%d')
+                    AND B.OUT_DT <![CDATA[ <= ]]> CONVERT(REPLACE(#{MATERIAL_CONSUMABLE_END_DT},'/',space(0)),'%Y%m%d')
                 </if>
         ) X
         ORDER BY X.IN_OUT_DT DESC

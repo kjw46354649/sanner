@@ -180,6 +180,8 @@
             <input type="hidden" name="OUTSIDE_STATUS" id="OUTSIDE_STATUS" value="OST001">
             <input type="hidden" name="ROW_CNT" id="ROW_CNT">
             <input type="hidden" name="GFILE_SEQ" id="GFILE_SEQ">
+            <input type="hidden" name="RECEIVE_EMAIL" id="RECEIVE_EMAIL">
+            <input type="hidden" name="CC_EMAIL" id="CC_EMAIL">
             <div class="text-right mg-bottom10">
                 <button class="defaultBtn green" id="REQUEST_OUTSIDE_SAVE_SUBMIT">저장 & 제출</button>
             </div>
@@ -239,6 +241,8 @@
             <input type="hidden" name="OUTSIDE_STATUS" id="OUTSIDE_STATUS" value="OST002">
             <input type="hidden" name="ROW_CNT" id="ROW_CNT">
             <input type="hidden" name="GFILE_SEQ" id="GFILE_SEQ">
+            <input type="hidden" name="RECEIVE_EMAIL" id="RECEIVE_EMAIL">
+            <input type="hidden" name="CC_EMAIL" id="CC_EMAIL">
             <div class="text-right mg-bottom10">
                 <button class="defaultBtn green" id="CANCEL_REQUEST_OUTSIDE_SAVE_SUBMIT">저장 & 제출</button>
             </div>
@@ -501,13 +505,13 @@
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
-
                             return rowData.OUTSIDE_STATUS !== 'OST001';
                         },
                         type: 'checkbox',
                         cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
                         render: function (ui) {
-                            return '<input type="checkbox" checked>';
+                            if (ui.cellData === 'Y') return '<input type="checkbox" checked>';
+                            return '<input type="checkbox">';
                         }
                     },
                     {
@@ -936,9 +940,6 @@
                     {
                         title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
-                        render: function () {
-                            return '<input type="checkbox" checked>';
-                        }
                     },
                     {
                         title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
@@ -1203,9 +1204,6 @@
                     {
                         title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN',
                         type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
-                        render: function () {
-                            return '<input type="checkbox" checked>';
-                        }
                     },
                     {
                         title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN',
@@ -1535,7 +1533,7 @@
             }, parameters, '');
         };
 
-        let createMailInnerTable = function (list) {
+        let createMailInnerTable = function (type, list) {
             let table = '';
             let font_header = 'background:lightgray; font-weight:600;';
             let st_center = 'border:1px solid #d0d0d0; text-align:center;';
@@ -1545,34 +1543,39 @@
                     '<thead>\n' +
                     '    <tr>\n' +
                     '        <th rowspan="2" style="' + st_center + font_header + '">No.</th>\n' +
-                    '        <th rowspan="2" style="' + st_center + font_header + '">관리번호</th>\n' +
-                    '        <th rowspan="2" style="' + st_center + font_header + '">도면번호</th>\n' +
-                    '        <th rowspan="2" style="' + st_center + font_header + '">Part</th>\n' +
-                    '        <th rowspan="2" style="' + st_center + font_header + '">규격</th>\n' +
-                    '        <th rowspan="2" style="' + st_center + font_header + '">자재<br>종류</th>\n' +
-                    '        <th rowspan="2" style="' + st_center + font_header + '">표면<br>처리</th>\n' +
-                    '        <th rowspan="2" style="' + st_center + font_header + '">소재<br>제공</th>\n' +
-                    '        <th colspan="5" style="' + st_center + font_header + '">요청가공</th>\n' +
-                    '        <th rowspan="2" style="' + st_center + font_header + '">요망<br>납기</th>\n' +
-                    '        <th rowspan="2" style="' + st_center + font_header + '">비고</th>\n' +
+                    '        <th rowspan="2" style="width:200px; ' + st_center + font_header + '">관리번호</th>\n' +
+                    '        <th rowspan="2" style="width:200px; ' + st_center + font_header + '">도면번호</th>\n' +
+                    '        <th rowspan="2" style="width:30px; ' + st_center + font_header + '">Part</th>\n' +
+                    '        <th rowspan="2" style="width:120px; ' + st_center + font_header + '">규격</th>\n' +
+                    '        <th rowspan="2" style="width:120px;' + st_center + font_header + '">자재<br>종류</th>\n' +
+                    '        <th rowspan="2" style="width:120px;' + st_center + font_header + '">표면<br>처리</th>\n' +
+                    '        <th rowspan="2" style="width:80px;' + st_center + font_header + '">소재<br>제공</th>\n' +
+                    '        <th rowspan="2" style="width:80px;' + st_center + font_header + '">수량</th>\n' +
+                    '        <th colspan="5" style="width:300px;' + st_center + font_header + '">요청가공</th>\n' +
+                    '        <th rowspan="2" style="width:80px;' + st_center + font_header + '">요망<br>납기</th>\n' +
+                    '        <th rowspan="2" style="width:140px;' + st_center + font_header + '">비고</th>\n' +
                     '    </tr>\n' +
                     '    <tr>\n' +
-                    '        <th style="' + st_center + font_header + '">완제품</th>\n' +
-                    '        <th style="' + st_center + font_header + '">가공</th>\n' +
-                    '        <th style="' + st_center + font_header + '">연마</th>\n' +
-                    '        <th style="' + st_center + font_header + '">표면<br>처리</th>\n' +
-                    '        <th style="' + st_center + font_header + '">기타사항</th>\n' +
+                    '        <th style="width:50px; ' + st_center + font_header + '">완제품</th>\n' +
+                    '        <th style="width:50px; ' + st_center + font_header + '">가공</th>\n' +
+                    '        <th style="width:50px; ' + st_center + font_header + '">연마</th>\n' +
+                    '        <th style="width:50px; ' + st_center + font_header + '">표면<br>처리</th>\n' +
+                    '        <th style="width:50px; ' + st_center + font_header + '">기타<br>사항</th>\n' +
                     '    </tr>\n' +
                     '</thead>\n' +
                     '<tbody>\n';
 
+            let titleInfo = "";
             for (let i = 0, LIST_LENGTH = list.length; i < LIST_LENGTH; i++) {
-                let outsideMaterialSupplyYnChecked = list[i].OUTSIDE_MATERIAL_SUPPLY_YN === 'Y' ? 'checked' : '';
-                let outsideRequestFinishYnChecked = list[i].OUTSIDE_REQUEST_FINISH_YN === 'Y' ? 'checked' : '';
-                let outsideRequestProcessYnChecked = list[i].OUTSIDE_REQUEST_PROCESS_YN === 'Y' ? 'checked' : '';
-                let outsideRequestGrindYnChecked = list[i].OUTSIDE_REQUEST_GRIND_YN === 'Y' ? 'checked' : '';
-                let outsideRequestSurfaceYnChecked = list[i].OUTSIDE_REQUEST_SURFACE_YN === 'Y' ? 'checked' : '';
-
+                let outsideMaterialSupplyYnChecked = list[i].OUTSIDE_MATERIAL_SUPPLY_YN === 'Y' ? 'V' : '';
+                let outsideRequestFinishYnChecked = list[i].OUTSIDE_REQUEST_FINISH_YN === 'Y' ? 'V' : '';
+                let outsideRequestProcessYnChecked = list[i].OUTSIDE_REQUEST_PROCESS_YN === 'Y' ? 'V' : '';
+                let outsideRequestGrindYnChecked = list[i].OUTSIDE_REQUEST_GRIND_YN === 'Y' ? 'V' : '';
+                let outsideRequestSurfaceYnChecked = list[i].OUTSIDE_REQUEST_SURFACE_YN === 'Y' ? 'V' : '';
+                let requestEtc = "";
+                if(list[i].OUTSIDE_REQUEST_ETC) requestEtc = list[i].OUTSIDE_REQUEST_ETC;
+                let outsideNote = "";
+                if(list[i].OUTSIDE_NOTE) outsideNote = list[i].OUTSIDE_NOTE;
                 table +=
                 '    <tr>\n' +
                 '        <td style="' + st_center + '">' + list[i].ROW_NUM + '</td>\n' +
@@ -1582,15 +1585,26 @@
                 '        <td style="' + st_center + '">' + list[i].SIZE_TXT + '</td>\n' +
                 '        <td style="' + st_center + '">' + list[i].MATERIAL_DETAIL_NM + '</td>\n' +
                 '        <td style="' + st_center + '">' + list[i].SURFACE_TREAT_NM + '</td>\n' +
-                '        <td style="' + st_center + '"><input type="checkbox" value="' + list[i].OUTSIDE_MATERIAL_SUPPLY_YN + '" ' + outsideMaterialSupplyYnChecked + '></td>\n' +
-                '        <td style="' + st_center + '"><input type="checkbox" value="' + list[i].OUTSIDE_REQUEST_FINISH_YN + '" ' + outsideRequestFinishYnChecked + '></td>\n' +
-                '        <td style="' + st_center + '"><input type="checkbox" value="' + list[i].OUTSIDE_REQUEST_PROCESS_YN + '" ' + outsideRequestProcessYnChecked + '></td>\n' +
-                '        <td style="' + st_center + '"><input type="checkbox" value="' + list[i].OUTSIDE_REQUEST_GRIND_YN + '" ' + outsideRequestGrindYnChecked + '></td>\n' +
-                '        <td style="' + st_center + '"><input type="checkbox" value="' + list[i].OUTSIDE_REQUEST_SURFACE_YN + '" ' + outsideRequestSurfaceYnChecked + '></td>\n' +
-                '        <td style="' + st_center + '">' + list[i].OUTSIDE_REQUEST_ETC + '</td>\n' +
+                '        <td style="' + st_center + '">' + list[i].CONTROL_PART_QTY + '</td>\n' +
+                '        <td style="' + st_center + '"> ' + outsideMaterialSupplyYnChecked + '</td>\n' +
+                '        <td style="' + st_center + '"> ' + outsideRequestFinishYnChecked + '</td>\n' +
+                '        <td style="' + st_center + '"> ' + outsideRequestProcessYnChecked +'</td>\n' +
+                '        <td style="' + st_center + '"> ' + outsideRequestGrindYnChecked + '</td>\n' +
+                '        <td style="' + st_center + '"> ' + outsideRequestSurfaceYnChecked + '</td>\n' +
+                '        <td style="' + st_center + '">' + requestEtc + '</td>\n' +
                 '        <td style="' + st_center + '">' + list[i].OUTSIDE_HOPE_DUE_DT + '</td>\n' +
-                '        <td style="' + st_center + '">' + list[i].OUTSIDE_NOTE + '</td>\n' +
+                '        <td style="' + st_center + '">' + outsideNote + '</td>\n' +
                 '    </tr>\n';
+
+                if(i == 0){
+                    titleInfo = list[i].CONTROL_NUM;
+                }
+            }
+            titleInfo = titleInfo + "외 - 총" + list.length + "품";
+            if(type == "request"){
+                $('#REQUEST_OUTSIDE_MAIL_FORM').find('#ROW_CNT').val(titleInfo);
+            }else{
+                $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM').find('#ROW_CNT').val(titleInfo);
             }
 
             table += '</tbody>\n';
@@ -2058,14 +2072,29 @@
                 return false;
             }
 
+            let receiveEmail = "";
+            let hccEmail = "";
+
             for (let i in mailRecipientData) {
                 if (mailRecipientData.hasOwnProperty(i)) {
                     if (mailRecipientData[i].RECEPTION === 'true') {
-                        mailFlag = false;
-                        break;
+                        if(mailFlag) mailFlag = false;
+                        if(!receiveEmail)
+                            receiveEmail += mailRecipientData[i].STAFF_EMAIL;
+                        else
+                            receiveEmail += "," + mailRecipientData[i].STAFF_EMAIL;
+                    }
+                    if(mailRecipientData[i].REFERENCE === 'true') {
+                        if(!hccEmail)
+                            hccEmail += mailRecipientData[i].STAFF_EMAIL;
+                        else
+                            hccEmail += "," + mailRecipientData[i].STAFF_EMAIL;
+
                     }
                 }
             }
+            $('#REQUEST_OUTSIDE_MAIL_FORM').find('#RECEIVE_EMAIL').val(receiveEmail);
+            $('#REQUEST_OUTSIDE_MAIL_FORM').find('#CC_EMAIL').val(hccEmail);
 
             if (mailFlag) {
                 fnAlert(null, '메일 수신자 정보는 필수입니다.');
@@ -2076,12 +2105,12 @@
             // 메일 내용
             let a = CKEDITOR.instances.REQUEST_OUTSIDE_EMAIL_CONTENT_TXT.getData();
             // 하단 그리드 테이블로 생성
-            let b = createMailInnerTable(step1List);
+            let b = createMailInnerTable('request', step1List);
             let c = a + b;
             $('#REQUEST_OUTSIDE_MAIL_FORM #REQUEST_OUTSIDE_EMAIL_CONTENT_TXT').val(c);
 
             let STEP1LIST_LENGTH = step1List.length;
-            $('#REQUEST_OUTSIDE_MAIL_FORM #ROW_CNT').val(STEP1LIST_LENGTH);
+            // $('#REQUEST_OUTSIDE_MAIL_FORM #ROW_CNT').val(STEP1LIST_LENGTH);
             for (let i = 0; i < STEP1LIST_LENGTH; i++) {
                 step1List[i].OUTSIDE_COMP_CD = outsideCompCd;
             }
@@ -2094,7 +2123,6 @@
                 mailReceiverList: step4List, // 수신처
                 requestMailForm: requestMailForm // tbl_outside_request 저장용
             };
-
             let parameters = {'url': '/managerRequestOutside', 'data': {data: JSON.stringify(postData)}};
             fnPostAjax(function (data, callFunctionParam) {
                 fnAlert(null, "<spring:message code='com.alert.default.save.success' />");
@@ -2128,30 +2156,45 @@
                 let mailFlag = true;
                 let cancelMailRecipientData = $cancelMailRecipientGrid.pqGrid('option', 'dataModel.data');
 
+                let receiveEmail = "";
+                let hccEmail = "";
                 for(let i in cancelMailRecipientData) {
-                    if (cancelMailRecipientData[i].RECEPTION === 'true') {
-                        mailFlag = false;
-                        break;
+                    if (cancelMailRecipientData.hasOwnProperty(i)) {
+                        if (cancelMailRecipientData[i].RECEPTION === 'true') {
+                            if (mailFlag) mailFlag = false;
+                            if(!receiveEmail)
+                                receiveEmail += cancelMailRecipientData[i].STAFF_EMAIL;
+                            else
+                                receiveEmail += "," + cancelMailRecipientData[i].STAFF_EMAIL;
+                        }
+                        if (cancelMailRecipientData[i].REFERENCE === 'true') {
+                            if(!hccEmail)
+                                hccEmail += cancelMailRecipientData[i].STAFF_EMAIL;
+                            else
+                                hccEmail += "," + cancelMailRecipientData[i].STAFF_EMAIL;
+                        }
                     }
                 }
-
                 if (mailFlag) {
                     fnAlert(null, '메일 수신자 정보는 필수입니다.');
                     return false;
                 }
 
+                $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM').find('#RECEIVE_EMAIL').val(receiveEmail);
+                $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM').find('#CC_EMAIL').val(hccEmail);
+
                 let step1List = $cancelRequestOutsideGrid.pqGrid('option', 'dataModel.data');
                 // 메일 내용
                 let a = CKEDITOR.instances.CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT.getData();
                 // 하단 그리드 테이블로 생성
-                let b = createMailInnerTable(step1List);
+                let b = createMailInnerTable('cancel', step1List);
                 let c = a + b;
                 $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM #CANCEL_REQUEST_OUTSIDE_EMAIL_CONTENT_TXT').val(c);
 
                 let outsideCompCd = $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM').find('#OUTSIDE_COMP_CD').val();
 
                 let STEP1LIST_LENGTH = step1List.length;
-                $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM #ROW_CNT').val(STEP1LIST_LENGTH);
+                // $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM #ROW_CNT').val(STEP1LIST_LENGTH);
                 for (let i = 0; i < STEP1LIST_LENGTH; i++) {
                     step1List[i].OUTSIDE_COMP_CD = outsideCompCd;
                 }

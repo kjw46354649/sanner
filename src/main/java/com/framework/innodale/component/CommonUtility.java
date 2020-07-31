@@ -63,11 +63,11 @@ public class CommonUtility {
             if (values.length == 1) {
                 paramMap.put(key, values[0].trim());
 
-//               System.out.println("key=[" + key + "][" + values[0].trim() + "]");
+               // System.out.println("key=[" + key + "][" + values[0].trim() + "]");
             } else {
                 paramMap.put(key, values);
 
-//               System.out.println("key=[" + key + "][" + values + "]");
+               // System.out.println("key=[" + key + "][" + values + "]");
             }
         }
 
@@ -78,7 +78,7 @@ public class CommonUtility {
             Object obj = request.getAttribute(key);
             if(obj instanceof java.lang.String){
 
-//                System.out.println("key=[" + key + "][" + obj + "]");
+                // System.out.println("key=[" + key + "][" + obj + "]");
                 paramMap.put(key, obj);
             }
         }

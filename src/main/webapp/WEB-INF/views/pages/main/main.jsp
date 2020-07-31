@@ -225,5 +225,12 @@
             toolbar: false,
         };
         $mainMasterGrid = $('#' + mainMasterGridId).pqGrid(mainMasterObj);
+
+        $('#main_master_search_form').on('change', function () {
+            $mainMasterGrid.pqGrid('option', 'dataModel.postData', function () {
+                return (fnFormToJsonArrayData('#main_master_search_form'));
+            });
+            $mainMasterGrid.pqGrid('refreshDataAndView');
+        });
     });
 </script>

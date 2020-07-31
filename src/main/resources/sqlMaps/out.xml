@@ -771,6 +771,26 @@
         )
     </insert>
 
+    <insert id="createMailAttachCadFilePlus" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_FILE
+        (FILE_SEQ, FILE_NM, FILE_PATH, TIME_PATH, ORGINAL_FILE_NM, FILE_TYPE, FILE_EXT, FILE_SIZE,
+            FILE_KIND, GFILE_SEQ, INSERT_ID)
+        SELECT
+            NEXTVAL(SEQ_FILE), Z.FILE_NM, Z.FILE_PATH, Z.TIME_PATH, Z.ORGINAL_FILE_NM, Z.FILE_TYPE, Z.FILE_EXT, Z.FILE_SIZE,
+            Z.FILE_KIND, #{GFILE_SEQ}, #{LOGIN_USER_ID}
+        FROM (
+        	SELECT
+                A.FILE_NM, A.FILE_PATH, A.TIME_PATH, A.ORGINAL_FILE_NM, A.FILE_TYPE, A.FILE_EXT, A.FILE_SIZE, A.FILE_KIND
+        	FROM jmes.TBL_FILE A, jmes.TBL_CONTROL_PART B
+        	WHERE B.CONTROL_SEQ = #{CONTROL_SEQ} AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ} AND A.GFILE_SEQ = B.DXF_GFILE_SEQ
+        	UNION ALL
+        	SELECT
+                A.FILE_NM, A.FILE_PATH, A.TIME_PATH, A.ORGINAL_FILE_NM, A.FILE_TYPE, A.FILE_EXT, A.FILE_SIZE, A.FILE_KIND
+        	FROM jmes.TBL_FILE A, jmes.TBL_CONTROL_PART B
+        	WHERE B.CONTROL_SEQ = #{CONTROL_SEQ} AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ} AND A.GFILE_SEQ = B.PDF_GFILE_SEQ
+        ) Z
+    </insert>
+
     <update id="updateOutsideRequestDetailDelete" parameterType="java.util.HashMap">
         UPDATE TBL_OUTSIDE_REQUEST_DETAIL
         SET
