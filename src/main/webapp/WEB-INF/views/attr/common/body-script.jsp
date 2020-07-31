@@ -652,21 +652,21 @@
     };
 
     let fnSingleFileDownloadFormPageAction = function(fileSeq) {
-        let elem = document.getElementById('downloadActionForm');
+        let elem = document.getElementById('downloadSingleActionForm');
         if(elem != null && typeof(elem) !== undefined){
-            $('#downloadActionForm').remove()
+            $('#downloadSingleActionForm').remove()
         }
-        let downloadActionForm = document.createElement("form");
-        downloadActionForm.setAttribute("id", "downloadActionForm");
-        downloadActionForm.setAttribute("name", "downloadActionForm");
-        downloadActionForm.hidden=true;
-        downloadActionForm.name='downloadActionForm';
-        downloadActionForm.method='POST';
-        downloadActionForm.target='_self';
-        downloadActionForm.action= '/downloadfile/' + fileSeq;
+        let downloadSingleActionForm = document.createElement("form");
+        downloadSingleActionForm.setAttribute("id", "downloadSingleActionForm");
+        downloadSingleActionForm.setAttribute("name", "downloadSingleActionForm");
+        downloadSingleActionForm.hidden=true;
+        downloadSingleActionForm.name='downloadSingleActionForm';
+        downloadSingleActionForm.method='POST';
+        downloadSingleActionForm.target='_self';
+        downloadSingleActionForm.action= '/downloadfile/' + fileSeq;
 
-        document.body.appendChild(downloadActionForm);
-        downloadActionForm.submit();
+        document.body.appendChild(downloadSingleActionForm);
+        downloadSingleActionForm.submit();
     };
 
     function initExcelHiddenForm(theForm, key, value) {
