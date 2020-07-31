@@ -692,7 +692,6 @@
         };
         const updateOutsideConversion = function (rowData) {
             let newRowData = fnCloneObj(rowData);
-            newRowData.PART_STATUS = 'PRO001';
             newRowData.OUTSIDE_YN = 'Y';
             let gridInstance = $processConfirmGrid.pqGrid('getInstance').grid;
             let changes = gridInstance.getChanges({format: 'byVal'});
@@ -700,7 +699,7 @@
             changes.updateList.push(newRowData);
             let parameters;
 
-            QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateOutsideConversion', 'orderMapper.createControlPartProgress']};
+            QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateOutsideConversion']};
             changes.queryIdList = QUERY_ID_ARRAY;
             parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
 
