@@ -21,14 +21,14 @@
                     <li>
                         <span class="slt_wrap">
                             <label class="label_100" for="COMP_CD">사업자</label>
-                            <select class="wd_200" name="COMP_CD" id="COMP_CD" multiple>
+                            <select class="wd_200" name="COMP_CD" id="COMP_CD">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="ORDER_COMP_CD">발주사</label>
-                            <select class="wd_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD" multiple>
+                            <select class="wd_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
@@ -57,14 +57,15 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="OUTSIDE_COMP_CD">외주업체</label>
-                            <select class="wd_200" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD" multiple>
+                            <select class="wd_200" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100">외주발주상태</label>
-                            <label for="OUTSIDE_STATUS"></label><select class="wd_200" name="OUTSIDE_STATUS" id="OUTSIDE_STATUS" multiple>
+                            <label for="OUTSIDE_STATUS"></label><select class="wd_200" name="OUTSIDE_STATUS" id="OUTSIDE_STATUS">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1031}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -74,7 +75,6 @@
                     <li>
                         <span class="slt_wrap trans_slt mg-right10">
                             <label for="OUTSIDE_SEARCH_CONDITION"></label><select name="OUTSIDE_SEARCH_CONDITION" id="OUTSIDE_SEARCH_CONDITION" style="width: 100px; text-align-last: center;">
-                                <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1084}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -92,7 +92,8 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="WORK_TYPE">작업구분</label>
-                            <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE" multiple>
+                            <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1013}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -100,8 +101,9 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="INSPECT_GRADE">품질현황</label>
-                            <select class="wd_200" name="INSPECT_GRADE" id="INSPECT_GRADE" multiple>
+                            <label class="label_100" for="WORK_TYPE">품질현황</label>
+                            <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1040}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -652,7 +654,7 @@
             colModel: colModel,
             strNoRows: g_noData,
             dataModel: {
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelectIncludeArray',
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: {'queryId': 'dataSource.emptyGrid'}, recIndx: 'ROW_NUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
@@ -2013,24 +2015,18 @@
         $('#OUTSIDE_MANAGE_START_DATE').datepicker('setDate', 'today');
         $('#OUTSIDE_MANAGE_END_DATE').datepicker('setDate', 'today');
 
-        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM').find('#COMP_CD'), null, {
+        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getBusinessCompanyList'}
         });
-        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM').find('#ORDER_COMP_CD'), null, {
+        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM').find('#ORDER_COMP_CD'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
-        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM').find('#OUTSIDE_COMP_CD'), null, {
+        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM').find('#OUTSIDE_COMP_CD'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOutsourceProcessCompanyList'}
         });
-        $('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM #COMP_CD').multiselect();
-        $('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM #ORDER_COMP_CD').multiselect();
-        $('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM #OUTSIDE_COMP_CD').multiselect();
-        $('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM #OUTSIDE_STATUS').multiselect();
-        $('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM #WORK_TYPE').multiselect();
-        $('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM #INSPECT_GRADE').multiselect();
 
         $outsideOrderManageGrid = $('#' + gridId).pqGrid(obj);
         $outsideOrderManageGrid.pqGrid('option', 'dataModel.postData', function () {

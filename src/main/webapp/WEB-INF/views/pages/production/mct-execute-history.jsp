@@ -330,8 +330,8 @@
                 <ul>
                     <li>
                         <span class="slt_wrap">
-                            <label class="label_100" for="FACTORY_AREA">MCT 공장 구분</label>
-                            <select class="wd_200" name="FACTORY_AREA" id="FACTORY_AREA">
+                            <label class="label_100" for="COMP_CD">MCT 공장 구분</label>
+                            <select class="wd_200" name="COMP_CD" id="COMP_CD">
                                 <option value="">전체</option>
                                 <c:forEach var="code" items="${HighCode.H_1005}">
                                     <c:if test="${code.ETC2 == 'W'}">
@@ -382,8 +382,8 @@
 <%--                        </span>--%>
 <%--                        <span class="gubun"></span>--%>
                         <span class="slt_wrap">
-                            <label class="label_100" for="WORK_TYPE">형태</label>
-                            <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE">
+                            <label class="label_100" for="CLOSE_VER">형태</label>
+                            <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
                                 <option value="">전체</option>
                                 <c:forEach var="code" items="${HighCode.H_1033}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -429,7 +429,7 @@
                 <ul>
                     <li>
                         <span class="slt_wrap">
-                            <label class="label_100" for="FACTORY_AREA">MCT 공장 구분</label>
+                            <label class="label_100" for="COMP_CD">MCT 공장 구분</label>
                             <select class="wd_200" name="FACTORY_AREA" id="FACTORY_AREA" title="공장구분">
                                 <option value="">전체</option>
                                 <c:forEach var="code" items="${HighCode.H_1005}">

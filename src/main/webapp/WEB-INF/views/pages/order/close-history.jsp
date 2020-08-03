@@ -26,7 +26,7 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="ORDER_COMP_CD">발주사</label>
-                            <select class="wd_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="발주사" multiple>
+                            <select class="wd_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="발주사">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
@@ -44,7 +44,7 @@
                     <li>
                         <span class="slt_wrap">
                             <label class="label_100" for="COMP_CD">사업자구분</label>
-                            <select class="wd_200" name="COMP_CD" id="COMP_CD" title="사업자구분" multiple>
+                            <select class="wd_200" name="COMP_CD" id="COMP_CD" title="사업자구분">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
@@ -475,7 +475,7 @@
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false ,render: closeHistoryFilterRender}, filterModel: { mode: 'OR' },
             colModel: colModel,
             dataModel: {
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelectIncludeArray',
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: postData, recIndx: 'ROW_NUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
@@ -893,16 +893,14 @@
         /* event */
 
         /* init */
-        fnCommCodeDatasourceSelectBoxCreate($('#CLOSE_HISTORY_SEARCH_FORM').find('#ORDER_COMP_CD'), null, {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOrderCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#CLOSE_HISTORY_SEARCH_FORM').find('#COMP_CD'), null, {
+        fnCommCodeDatasourceSelectBoxCreate($('#CLOSE_HISTORY_SEARCH_FORM').find('#COMP_CD'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getBusinessCompanyList'}
         });
-        $('#CLOSE_HISTORY_SEARCH_FORM #ORDER_COMP_CD').multiselect();
-        $('#CLOSE_HISTORY_SEARCH_FORM #COMP_CD').multiselect();
+        fnCommCodeDatasourceSelectBoxCreate($('#CLOSE_HISTORY_SEARCH_FORM').find('#ORDER_COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOrderCompanyList'}
+        });
         fnAppendSelectboxYear('CLOSE_HISTORY_CLOSE_YEAR', 10);
         fnAppendSelectboxMonth('CLOSE_HISTORY_CLOSE_MONTH');
         $('#CLOSE_HISTORY_CLOSE_MONTH').val(postData.CLOSE_MONTH);

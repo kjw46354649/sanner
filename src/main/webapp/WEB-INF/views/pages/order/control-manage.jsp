@@ -29,7 +29,6 @@
                             <select class="label_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="발주사" multiple>
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
-                            <input type="hidden" name="ORDER_COMP_CD_HIDDEN" id="ORDER_COMP_CD_HIDDEN">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">

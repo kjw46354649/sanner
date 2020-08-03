@@ -1766,14 +1766,10 @@
             AND UPPER(A.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
         </if>
         <if test="COMP_CD != null and COMP_CD != ''">
-            AND A.COMP_CD IN <foreach collection="COMP_CD" item="item" separator="," open="(" close=")">
-                                #{item}
-                            </foreach>
+            AND A.COMP_CD = #{COMP_CD}
         </if>
         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-            AND A.ORDER_COMP_CD IN <foreach collection="ORDER_COMP_CD" item="item" separator="," open="(" close=")">
-                                        #{item}
-                                    </foreach>
+            AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
         <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
             AND UPPER(B.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
@@ -1831,14 +1827,10 @@
                                             AND D.ORDER_COMP_CD = E.ORDER_COMP_CD
             WHERE 1 = 1
         <if test="COMP_CD != null and COMP_CD != ''">
-            AND A.COMP_CD IN <foreach collection="COMP_CD" item="item" separator="," open="(" close=")">
-                                #{item}
-                            </foreach>
+            AND A.COMP_CD = #{COMP_CD}
         </if>
         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-            AND A.ORDER_COMP_CD IN <foreach collection="ORDER_COMP_CD" item="item" separator="," open="(" close=")">
-                                        #{item}
-                                    </foreach>
+            AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
         <if test="NOTE != null and NOTE != ''">
             AND A.NOTE LIKE CONCAT('%', #{NOTE}, '%')

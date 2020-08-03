@@ -48,14 +48,10 @@
             LEFT OUTER JOIN TBL_MAIL_BOX D ON A.MAIL_BOX_SEQ = D.MAIL_BOX_SEQ
         WHERE 1=1
             <if test="COMP_CD !='' and COMP_CD != null">
-                AND A.COMP_CD IN <foreach collection="COMP_CD" item="item" separator="," open="(" close=")">
-                                    #{item}
-                                </foreach>
+                AND A.COMP_CD = #{COMP_CD}
             </if>
             <if test="ORDER_COMP_CD !='' and ORDER_COMP_CD != null">
-                AND A.ORDER_COMP_CD IN <foreach collection="ORDER_COMP_CD" item="item" separator="," open="(" close=")">
-                                            #{item}
-                                        </foreach>
+                AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
             </if>
             <if test="EST_TITLE !='' and EST_TITLE != null">
                 AND UPPER(A.EST_TITLE) LIKE CONCAT('%', UPPER(#{EST_TITLE}), '%')

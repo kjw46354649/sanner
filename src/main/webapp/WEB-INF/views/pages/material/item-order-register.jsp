@@ -67,13 +67,13 @@
                     <li>
                         <span class="slt_wrap">
                             <label for="COMP_CD" class="label_100">사업자</label>
-                            <select id="COMP_CD" name="COMP_CD" title="사업자" class="wd_200" multiple>
+                            <select id="COMP_CD" name="COMP_CD" title="사업자" class="wd_200">
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label for="ORDER_COMP_CD" class="label_100">발주사</label>
-                            <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사" class="wd_200" multiple>
+                            <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사" class="wd_200">
                             </select>
                         </span>
                         <span class="gubun"></span>
@@ -81,7 +81,8 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="WORK_TYPE">작업형태</label>
-                            <select class="label_200" name="WORK_TYPE" id="WORK_TYPE" title="작업형태" multiple>
+                            <select class="label_200" name="WORK_TYPE" id="WORK_TYPE" title="작업형태">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1033}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -97,13 +98,14 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="M_COMP_CD">소재주문업체</label>
-                            <select name="M_COMP_CD" id="M_COMP_CD" class="wd_200" multiple>
+                            <select name="M_COMP_CD" id="M_COMP_CD" class="wd_200">
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="MATERIAL_DETAIL">소재종류</label>
-                            <select name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200" multiple>
+                            <select name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200">
+                                <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1027}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -1898,14 +1900,9 @@
         $('#ITEM_ORDER_REGISTER_END_DATE').datepicker('setDate', 'today');
         
         /** 공통 코드 이외의 처리 부분 **/
-        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#ORDER_COMP_CD"), null, {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
-        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#M_COMP_CD"), null, {"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
-        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#COMP_CD"), null, {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
-        $('#item_order_register_search_form #ORDER_COMP_CD').multiselect();
-        $('#item_order_register_search_form #M_COMP_CD').multiselect();
-        $('#item_order_register_search_form #COMP_CD').multiselect();
-        $('#item_order_register_search_form #WORK_TYPE').multiselect();
-        $('#item_order_register_search_form #MATERIAL_DETAIL').multiselect();
+        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#M_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
     });
 
     // topWrap 확장 함수
