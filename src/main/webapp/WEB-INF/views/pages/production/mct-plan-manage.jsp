@@ -203,9 +203,10 @@
             str += '                <span id="NC' + order + '_WORK_USER_ID"></span>';
             str += '            </span>';
             str += '            <p class="listTxt" style="display: none;">';
-            str += '                <span id="NC' + order + '_CONTRO_NUM"></span>';
-            str += '                <span id="NC' + order + '_MATERIAL_TYPE"></span>';
+            str += '                <span id="NC' + order + '_CONTROL_NUM"></span>';
             str += '                <span id="NC' + order + '_PART_UNIT_QTY"></span>';
+            str += '                <span id="NC' + order + '_MATERIAL_TYPE"></span>';
+            str += '                <span id="NC' + order + '_WORK_TIME"></span>';
             str += '            </p>';
             str += '        </div>';
             str += '        <div class="listWrap">';
@@ -277,14 +278,14 @@
             // {title: 'WORK_USER_ID', dataType: 'string', dataIndx: 'WORK_USER_ID', hidden: true},
             // {title: 'WORK_STATUS', dataType: 'string', dataIndx: 'WORK_STATUS', hidden: true},
             {title: 'SORT_NUM', dataType: 'integer', dataIndx: 'SORT_NUM', hidden: true},
-            {title: '납기', width: 150, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
-            {title: '관리번호', minWidht: 300, width: 300, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: '수량', dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
-            {title: '재질', width: 70, dataType: 'string', dataIndx: 'MATERIAL_TYPE', hidden: true},
-            {title: '재질', width: 70, dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM_SUBSTR'},
-            {title: '예상', dataType: 'string', dataIndx: 'WORKING_TIME'},
+            {title: '납기', width: 50, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
+            {title: '관리번호', width: 175, dataType: 'string', dataIndx: 'CONTROL_NUM'},
+            {title: '수량', width: 75, dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
+            {title: '재질', width: 75, dataType: 'string', dataIndx: 'MATERIAL_TYPE', hidden: true},
+            {title: '재질', width: 75, dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM_SUBSTR'},
+            {title: '예상', width: 75, dataType: 'string', dataIndx: 'WORKING_TIME'},
             {
-                title: '', dataType: 'string', dataIndx: 'DELETE_BUTTON', editable: false,
+                title: '', minWidth: 30, dataType: 'string', dataIndx: 'DELETE_BUTTON', editable: false,
                 render: function (ui) {
                     return '<span class="ui-icon ui-icon-circle-minus" name="MCT_PLAN_DELETE_BUTTON" style="cursor: pointer"></span>'
                 },
@@ -802,23 +803,24 @@
         };
 
         const showTitle = function (data, tableElement) {
-            let controlNumElement = $(tableElement).find('.data_ipt');
+            let equipLabelElement = $(tableElement).find('.equipLabel');
             let listTxtElement = $(tableElement).find('.listTxt');
 
             if(data === null) {
-                controlNumElement.hide();
                 listTxtElement.hide();
             } else {
+                let workUserIdElement = equipLabelElement.children('[id$=WORK_USER_ID]');
+                let controlNumElement = listTxtElement.children('[id$=CONTROL_NUM]');
                 let materialTypeElement = listTxtElement.children('[id$=MATERIAL_TYPE]');
                 let partUnitQtyElement = listTxtElement.children('[id$=PART_UNIT_QTY]');
-                let workUserIdElement = listTxtElement.children('[id$=WORK_USER_ID]');
+                let workTimeElement = listTxtElement.children('[id$=WORK_TIME]');
 
+                workUserIdElement.html(data.WORK_USER_NM);
                 controlNumElement.html(data.CONTROL_NUM);
                 materialTypeElement.html(data.MATERIAL_TYPE_NM_SUBSTR);
                 partUnitQtyElement.html(data.CONTROL_PART_QTY);
-                workUserIdElement.html(data.WORK_USER_NM);
+                workTimeElement.html(data.WORK_TIME);
 
-                controlNumElement.show();
                 listTxtElement.show();
             }
         };
