@@ -59,6 +59,14 @@ public interface InnodaleService {
         public List<Map<String, Object>> getList(Map<String, Object> hashMap) throws Exception;
 
         /**
+         * 리스트 조회
+         * @param hashMap
+         * @return
+         * @throws Exception
+         */
+        public List<Map<String, Object>> getList(Map<String, Object> hashMap, String type) throws Exception;
+
+        /**
          * 페이지 처리시 페이지 리스트 조회
          * @param hashMap
          * @return

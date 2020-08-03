@@ -23,14 +23,14 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="MATERIAL_COMP_CD">소재주문업체</label>
-                            <select name="MATERIAL_COMP_CD" id="MATERIAL_COMP_CD" class="wd_200">
+                            <select name="MATERIAL_COMP_CD" id="MATERIAL_COMP_CD" class="wd_200" multiple>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="MATERIAL_DETAIL">소재종류</label>
-                            <select name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200">
-                                <option value=""><spring:message code="com.form.top.sel.option"/></option>
+                            <select name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200" multiple>
+<%--                                <option value=""><spring:message code="com.form.top.sel.option"/></option>--%>
                                 <c:forEach var="code" items="${HighCode.H_1027}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -273,7 +273,7 @@
             height: '100%', rowHtHead: 46,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
-                url: "/paramQueryGridSelect",
+                url: "/paramQueryGridSelectIncludeArray",
                 postData: fnFormToJsonArrayData('#item_order_history_search_form'),
                 getData: function (dataJSON) {
                     let data = dataJSON.data;
@@ -417,7 +417,9 @@
         $('#ITEM_ORDER_HISTORY_END_DATE').datepicker('setDate', 'today');
 
         /** 공통 코드 이외의 처리 부분 **/
-        fnCommCodeDatasourceSelectBoxCreate($("#item_order_history_search_form").find("#MATERIAL_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#item_order_history_search_form").find("#MATERIAL_COMP_CD"), null, {"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
+        $('#item_order_history_search_form #MATERIAL_COMP_CD').multiselect();
+        $('#item_order_history_search_form #MATERIAL_DETAIL').multiselect();
 
 
         /** Function **/

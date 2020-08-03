@@ -7,10 +7,7 @@ import com.framework.innodale.service.InnodaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class InnodaleServiceImpl implements InnodaleService {
@@ -51,6 +48,25 @@ public class InnodaleServiceImpl implements InnodaleService {
     @Override
     public List<Map<String, Object>> getList(Map<String, Object> hashMap) throws Exception {
         return this.innodaleDao.getList(hashMap);
+    }
+
+    /**
+     * 리스트 조회
+     *
+     * @param hashMap
+     * @param type
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public List<Map<String, Object>> getList(Map<String, Object> hashMap, String type) throws Exception {
+        HashMap<String, Object> newMap = new HashMap<String, Object>();
+
+        for (String key : hashMap.keySet()) {
+            newMap.put(key.replaceAll("\\[", "").replaceAll("\\]",""), hashMap.get(key));
+        }
+
+        return this.innodaleDao.getList(newMap);
     }
 
     @Override

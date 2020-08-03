@@ -18,12 +18,12 @@
                     <li>
                         <span class="slt_wrap">
                             <label for="COMP_CD" class="label_100">사업자구분</label>
-                            <select id="COMP_CD" name="COMP_CD" title="사업자구분" class="wd_200"></select>
+                            <select id="COMP_CD" name="COMP_CD" title="사업자구분" class="wd_200" multiple></select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label for="ORDER_COMP_CD" class="label_100">발주사</label>
-                            <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사" class="wd_200"></select>
+                            <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사" class="wd_200" multiple></select>
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label class="label_100" for="EST_TITLE">제목</label><input type="text" name="EST_TITLE" id="EST_TITLE" class="wd_200" title="제목"></span>
@@ -47,6 +47,7 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap trans_slt" style="width: 120px">
                             <select id="DATE_CONDITION" name="DATE_CONDITION" title="등록일시" style="width: inherit; text-align-last: center">
+                                <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1044}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -599,7 +600,7 @@
             postRenderInterval: -1, //call postRender synchronously.
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'EST_SEQ',
-                url: "/paramQueryGridSelect",
+                url: "/paramQueryGridSelectIncludeArray",
                 postData: fnFormToJsonArrayData('#estimate_master_search_form'),
                 getData: function (dataJSON) {
                     let data = dataJSON.data;
@@ -911,8 +912,10 @@
         });
 
         /** 공통 코드 이외의 처리 부분 **/
-        fnCommCodeDatasourceSelectBoxCreate($("#estimate_master_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
-        fnCommCodeDatasourceSelectBoxCreate($("#estimate_master_search_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#estimate_master_search_form").find("#COMP_CD"), null, {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#estimate_master_search_form").find("#ORDER_COMP_CD"), null, {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
+        $('#estimate_master_search_form #COMP_CD').multiselect();
+        $('#estimate_master_search_form #ORDER_COMP_CD').multiselect();
 
         /** topWrap Open/ Close 처리 **/
         $('.topWrap_btn').on('click' , function(){

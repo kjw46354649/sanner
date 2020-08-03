@@ -116,28 +116,38 @@
 		) Z
 		WHERE 1=1
         <if test="COMP_CD !='' and COMP_CD != null">
-            AND Z.COMP_CD = #{COMP_CD}
+            AND Z.COMP_CD IN <foreach collection="COMP_CD" item="item" separator="," open="(" close=")">
+                                #{item}
+                            </foreach>
         </if>
         <if test="ORDER_COMP_CD !='' and ORDER_COMP_CD != null">
-		    AND Z.ORDER_COMP_CD = #{ORDER_COMP_CD}
+		    AND Z.ORDER_COMP_CD IN <foreach collection="ORDER_COMP_CD" item="item" separator="," open="(" close=")">
+                                        #{item}
+                                    </foreach>
         </if>
         <if test="DRAWING_NUM !='' and DRAWING_NUM != null">
-		    AND UPPER(Z.DRAWING_NUM) LIKE CONCAT('%', #{DRAWING_NUM}, '%')
+		    AND UPPER(Z.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
         </if>
         <if test="WORK_TYPE !='' and WORK_TYPE != null">
-            AND Z.WORK_TYPE = #{WORK_TYPE}
+            AND Z.WORK_TYPE IN <foreach collection="WORK_TYPE" item="item" separator="," open="(" close=")">
+                                    #{item}
+                                </foreach>
         </if>
         <if test="CONTROL_NUM !='' and CONTROL_NUM != null">
-		    AND UPPER(Z.CONTROL_NUM) LIKE CONCAT('%', #{CONTROL_NUM}, '%')
+		    AND UPPER(Z.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
         </if>
         <if test="MATERIAL_ORDER_NUM !='' and MATERIAL_ORDER_NUM != null">
-		    AND UPPER(Z.MATERIAL_ORDER_NUM) LIKE CONCAT('%', #{MATERIAL_ORDER_NUM}, '%')
+		    AND UPPER(Z.MATERIAL_ORDER_NUM) LIKE CONCAT('%', UPPER(#{MATERIAL_ORDER_NUM}), '%')
         </if>
         <if test="M_COMP_CD !='' and M_COMP_CD != null">
-		    AND Z.M_COMP_CD = #{M_COMP_CD}
+		    AND Z.M_COMP_CD IN <foreach collection="M_COMP_CD" item="item" separator="," open="(" close=")">
+                                    #{item}
+                                </foreach>
         </if>
         <if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
-		    AND Z.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
+		    AND Z.MATERIAL_DETAIL IN <foreach collection="MATERIAL_DETAIL" item="item" separator="," open="(" close=")">
+                                        #{item}
+                                    </foreach>
         </if>
         <if test="ORDER_STATUS != '' and ORDER_STATUS != null">
             AND Z.ORDER_STATUS IN (${ORDER_STATUS})
@@ -807,7 +817,9 @@
             FROM TBL_MATERIAL_ORDER
             WHERE IFNULL(ORDER_STATUS, SPACE(0)) IN('MST002','MST004')
                 <if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
-                    AND MATERIAL_DETAIL = #{MATERIAL_DETAIL}
+                    AND MATERIAL_DETAIL IN <foreach collection="MATERIAL_DETAIL" item="item" separator="," open="(" close=")">
+                                                #{item}
+                                            </foreach>
                 </if>
                 AND SF_GET_DATE_F(ORDER_DT,'YYYY','') >= #{ITEM_ORDER_HISTORY_START_DATE}
                 AND SF_GET_DATE_F(ORDER_DT,'YYYY','') <![CDATA[ <= ]]> #{ITEM_ORDER_HISTORY_END_DATE}
@@ -822,10 +834,14 @@
                 AND UPPER(Z.MATERIAL_ORDER_NUM LIKE CONCAT('%', UPPER(#{MATERIAL_ORDER_NUM}), '%')
             </if>
             <if test="MATERIAL_COMP_CD !='' and MATERIAL_COMP_CD != null">
-                AND Z.MATERIAL_COMP_CD = #{MATERIAL_COMP_CD}
+                AND Z.MATERIAL_COMP_CD IN <foreach collection="MATERIAL_COMP_CD" item="item" separator="," open="(" close=")">
+                                            #{item}
+                                          </foreach>
             </if>
             <if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
-                AND Z.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
+                AND Z.MATERIAL_DETAIL IN <foreach collection="MATERIAL_DETAIL" item="item" separator="," open="(" close=")">
+                                            #{item}
+                                        </foreach>
             </if>
         GROUP BY MATERIAL_COMP_CD, MATERIAL_ORDER_NUM
         ORDER BY ORDER_DT DESC

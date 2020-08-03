@@ -702,17 +702,26 @@
             LEFT OUTER JOIN TBL_MCT_PLAN K ON A.CONTROL_SEQ = K.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = K.CONTROL_DETAIL_SEQ AND K.DEL_YN = 'N'
             LEFT OUTER JOIN jmes.TBL_EQUIP L ON K.EQUIP_SEQ = L.EQUIP_SEQ
         WHERE 1 = 1
+            <if test="FACTORY_AREA != null and FACTORY_AREA != ''">
+                AND E.FACTORY_AREA = #{FACTORY_AREA}
+            </if>
+            <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
+                AND E.EQUIP_SEQ = #{EQUIP_SEQ}
+            </if>
+            <if test="MATERIAL_TYPE != null and MATERIAL_TYPE != ''">
+                AND A.MATERIAL_TYPE = #{MATERIAL_TYPE}
+            </if>
             <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
-                AND B.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
+                AND UPPER(B.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
             </if>
             <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
-                AND A.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
+                AND UPPER(A.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
             </if>
             <if test="MATERIAL_KIND != null and MATERIAL_KIND != ''">
                 AND A.MATERIAL_KIND = #{MATERIAL_KIND}
             </if>
-            <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
-                AND A.WORK_FACTORY = #{WORK_FACTORY}
+            <if test="WORK_TYPE != null and WORK_TYPE != ''">
+                AND A.WORK_TYPE = #{WORK_TYPE}
             </if>
         GROUP BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
         ORDER BY B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), A.INNER_DUE_DT

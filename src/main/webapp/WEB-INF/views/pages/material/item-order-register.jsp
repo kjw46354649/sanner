@@ -67,13 +67,13 @@
                     <li>
                         <span class="slt_wrap">
                             <label for="COMP_CD" class="label_100">사업자</label>
-                            <select id="COMP_CD" name="COMP_CD" title="사업자" class="wd_200">
+                            <select id="COMP_CD" name="COMP_CD" title="사업자" class="wd_200" multiple>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label for="ORDER_COMP_CD" class="label_100">발주사</label>
-                            <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사" class="wd_200">
+                            <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사" class="wd_200" multiple>
                             </select>
                         </span>
                         <span class="gubun"></span>
@@ -81,8 +81,7 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="WORK_TYPE">작업형태</label>
-                            <select class="label_200" name="WORK_TYPE" id="WORK_TYPE" title="작업형태">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                            <select class="label_200" name="WORK_TYPE" id="WORK_TYPE" title="작업형태" multiple>
                                 <c:forEach var="code" items="${HighCode.H_1033}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -98,14 +97,13 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="M_COMP_CD">소재주문업체</label>
-                            <select name="M_COMP_CD" id="M_COMP_CD" class="wd_200">
+                            <select name="M_COMP_CD" id="M_COMP_CD" class="wd_200" multiple>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="MATERIAL_DETAIL">소재종류</label>
-                            <select name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200">
-                                <option value=""><spring:message code="com.form.top.sel.option"/></option>
+                            <select name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200" multiple>
                                 <c:forEach var="code" items="${HighCode.H_1027}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -336,8 +334,9 @@
                 },
                 editable: function (ui) {return itemOrderRegisterGridCellEditable(ui);}
             },
-            {title: '요청 사항', align: "center", colModel: [
-                    {title: '요청 사항', dataType: 'string', dataIndx: 'REQUEST_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, minWidth: 150,
+            {title: '요청사항', align: "center", colModel: [
+                    {title: '요청사항', dataType: 'string', dataIndx: 'REQUEST_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, minWidth: 150,
+                        halign:'center', align: 'left',
                         editor: {
                             type: 'select',
                             cls: 'item_order_register_material_order_note',
@@ -346,7 +345,18 @@
                             options: fnGetCommCodeGridSelectBox('1026'),
                             attr: 'multiple',
                             init: function(ui) {
-                                $('.item_order_register_material_order_note').multiSelect();
+                                let cellData = ui.cellData;
+
+                                $('.item_order_register_material_order_note').multiselect();
+
+                                if (cellData) {
+                                    cellData = cellData.split(',');
+                                    for (let i = 0, list = fnGetCommCodeGridSelectBox('1026'), LIST_LENGTH = list.length; i < LIST_LENGTH; i++) {
+                                        if(cellData.includes(list[i].text)) {
+                                            $('.item_order_register_material_order_note').multiselect().select(list[i].value);
+                                        }
+                                    }
+                                }
                             },
                             getData: function(ui) {
                                 let clave = ui.$cell.find("select").val();
@@ -356,9 +366,9 @@
                                     return concatVal;
                                 }
 
-                                for(let iTmp=0; iTmp<clave.length; iTmp++){
-                                    concatVal += ui.$cell.find("select option[value='"+clave[iTmp]+"']").text()+",";
-                                    concatCd += clave[iTmp]+",";
+                                for (let iTmp = 0; iTmp < clave.length; iTmp++) {
+                                    concatVal += ui.$cell.find("select option[value='" + clave[iTmp] + "']").text() + ",";
+                                    concatCd += clave[iTmp] + ",";
                                 }
                                 let rowData = itemOrderRegisterLeftGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
                                 rowData["REQUEST_NOTE"] = concatCd.substring(0, concatCd.length-1);
@@ -568,6 +578,7 @@
             {title: '보유소재 충당수량', align: "center", colModel: [
                     {   title: '요청사항', dataType: 'string', dataIndx: 'REQUEST_NOTE', minWidth: 150,
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                        halign:'center', align: 'left',
                         editor: {
                             type: 'select',
                             cls: 'item_order_register_pop_material_order_note',
@@ -575,8 +586,19 @@
                             labelIndx: "text",
                             options: fnGetCommCodeGridSelectBox('1026'),
                             attr: 'multiple',
-                            init: function (ui) {
-                                $('.item_order_register_pop_material_order_note').multiSelect();
+                            init: function(ui) {
+                                let cellData = ui.cellData;
+
+                                $('.item_order_register_pop_material_order_note').multiselect();
+
+                                if (cellData) {
+                                    cellData = cellData.split(',');
+                                    for (let i = 0, list = fnGetCommCodeGridSelectBox('1026'), LIST_LENGTH = list.length; i < LIST_LENGTH; i++) {
+                                        if(cellData.includes(list[i].text)) {
+                                            $('.item_order_register_pop_material_order_note').multiselect().select(list[i].value);
+                                        }
+                                    }
+                                }
                             },
                             getData: function (ui) {
                                 let clave = ui.$cell.find("select").val();
@@ -761,6 +783,7 @@
             },
             {title: '보유소재 충당수량', align: "center", colModel: [
                     {   title: '요청사항', dataType: 'string', dataIndx: 'REQUEST_NOTE', minWidth: 150, width: 150, editable: false,
+                        halign:'center', align: 'left',
                         editor: {
                             type: 'select',
                             cls: 'item_order_register_pop_material_order_note',
@@ -768,8 +791,19 @@
                             labelIndx: "text",
                             options: fnGetCommCodeGridSelectBox('1026'),
                             attr: 'multiple',
-                            init: function (ui) {
-                                $('.item_order_register_pop_material_order_note').multiSelect();
+                            init: function(ui) {
+                                let cellData = ui.cellData;
+
+                                $('.item_order_register_pop_material_order_note').multiselect();
+
+                                if (cellData) {
+                                    cellData = cellData.split(',');
+                                    for (let i = 0, list = fnGetCommCodeGridSelectBox('1026'), LIST_LENGTH = list.length; i < LIST_LENGTH; i++) {
+                                        if(cellData.includes(list[i].text)) {
+                                            $('.item_order_register_pop_material_order_note').multiselect().select(list[i].value);
+                                        }
+                                    }
+                                }
                             },
                             getData: function (ui) {
                                 let clave = ui.$cell.find("select").val();
@@ -841,7 +875,7 @@
             height: '100%',
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'CONTROL_DETAIL_SEQ',
-                url: "/paramQueryGridSelect",
+                url: "/paramQueryGridSelectIncludeArray",
                 postData: fnFormToJsonArrayData('#item_order_register_search_form'),
                 getData: function (dataJSON) {
                     let data = dataJSON.data;
@@ -1210,6 +1244,8 @@
                             if (data.info) {
                                 let newRowData = fnCloneObj(data.info);
                                 let newRowIndex = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length + 1;
+                                newRowData.ROWNUM = newRowIndex;
+
                                 itemOrderRegisterPopTopGrid.pqGrid('addRow', {
                                     newRow: newRowData,
                                     rowIndx: newRowIndex,
@@ -1266,7 +1302,7 @@
                 }, parameters, '');
             }
 
-            setTimeout(function(){
+            setTimeout(function () {
                 btnDisabled();
                 //Popup table 생성
                 makeInnerTable();
@@ -1862,9 +1898,14 @@
         $('#ITEM_ORDER_REGISTER_END_DATE').datepicker('setDate', 'today');
         
         /** 공통 코드 이외의 처리 부분 **/
-        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
-        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#M_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
-        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#ORDER_COMP_CD"), null, {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#M_COMP_CD"), null, {"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#COMP_CD"), null, {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
+        $('#item_order_register_search_form #ORDER_COMP_CD').multiselect();
+        $('#item_order_register_search_form #M_COMP_CD').multiselect();
+        $('#item_order_register_search_form #COMP_CD').multiselect();
+        $('#item_order_register_search_form #WORK_TYPE').multiselect();
+        $('#item_order_register_search_form #MATERIAL_DETAIL').multiselect();
     });
 
     // topWrap 확장 함수

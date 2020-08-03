@@ -58,10 +58,14 @@
 <!--                                 AND BB.CONTROL_SEQ = B.CONTROL_SEQ -->
 <!--                                 AND BB.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) -->
         <if test="COMP_CD != null and COMP_CD != ''">
-            AND A.COMP_CD = #{COMP_CD}
+            AND A.COMP_CD IN <foreach collection="COMP_CD" item="item" separator="," open="(" close=")">
+                                #{item}
+                            </foreach>
         </if>
         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-            AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+            AND A.ORDER_COMP_CD IN <foreach collection="ORDER_COMP_CD" item="item" separator="," open="(" close=")">
+                                        #{item}
+                                    </foreach>
         </if>
         <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
             AND B.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
@@ -76,10 +80,19 @@
             AND A.MODULE_NM LIKE CONCAT('%', #{MODULE_NM}, '%')
         </if>
         <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
-            AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
+            AND B.OUTSIDE_COMP_CD IN <foreach collection="OUTSIDE_COMP_CD" item="item" separator="," open="(" close=")">
+                                        #{item}
+                                    </foreach>
         </if>
         <if test="OUTSIDE_STATUS != null and OUTSIDE_STATUS != ''">
-            AND B.OUTSIDE_STATUS = #{OUTSIDE_STATUS}
+            AND B.OUTSIDE_STATUS IN <foreach collection="OUTSIDE_STATUS" item="item" separator="," open="(" close=")">
+                                        #{item}
+                                    </foreach>
+        </if>
+        <if test="INSPECT_GRADE != null and INSPECT_GRADE != ''">
+            AND H.INSPECT_GRADE IN <foreach collection="INSPECT_GRADE" item="item" separator="," open="(" close=")">
+                                        #{item}
+                                    </foreach>
         </if>
         <choose>
             <!-- 확정일시 -->
