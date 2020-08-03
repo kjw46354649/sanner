@@ -63,8 +63,8 @@
                 <input type="hidden" name="queryId" id="queryId" value="machine.selectWorkPlanGridList">
 
                 <span class="slt_wrap mg-left20">
-                    <label class="label_50" for="FACTORY_CLASSIFY">공장구분</label>
-                    <select class="wd_70" name="FACTORY_CLASSIFY" id="FACTORY_CLASSIFY" title="공장구분">
+                    <label class="label_50" for="WORK_FACTORY">공장구분</label>
+                    <select class="wd_70" name="WORK_FACTORY" id="WORK_FACTORY" title="공장구분">
                         <option value=""><spring:message code="com.form.top.all.option"/></option>
                         <c:forEach var="code" items="${HighCode.H_1014}">
                             <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
