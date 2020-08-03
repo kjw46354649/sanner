@@ -753,7 +753,7 @@
                 }
             },
             {
-                title: '최종<br>견적단가', width: 90, dataType: 'integer', format: '#,##0', dataIndx: 'UNIT_FINAL_EST_AMT',
+                title: '최종<br>견적단가', width: 90, format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -773,7 +773,7 @@
                 // }
             },
             {
-                title: '최종<br>공급단가', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT',
+                title: '최종<br>공급단가', width: 90, format: '#,###', dataIndx: 'UNIT_FINAL_AMT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -1227,7 +1227,7 @@
                 hidden: true,
                 colModel: [
                     {
-                        title: '소재비', dataType: 'integer', format: '#,##0', dataIndx: 'UNIT_MATERIAL_AMT',
+                        title: '소재비', format: '#,###', dataIndx: 'UNIT_MATERIAL_AMT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1247,7 +1247,7 @@
                         // }
                     },
                     {
-                        title: 'TM각비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_TM_AMT',
+                        title: 'TM각비', format: '#,###', dataIndx: 'UNIT_TM_AMT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1266,7 +1266,7 @@
                         }
                     },
                     {
-                        title: '연마비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_GRIND_AMT',
+                        title: '연마비', format: '#,###', dataIndx: 'UNIT_GRIND_AMT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1285,7 +1285,7 @@
                         }
                     },
                     {
-                        title: '열처리', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_HEAT_AMT',
+                        title: '열처리', format: '#,###', dataIndx: 'UNIT_HEAT_AMT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1304,7 +1304,7 @@
                         }
                     },
                     {
-                        title: '표면처리', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SURFACE_AMT',
+                        title: '표면처리', format: '#,###', dataIndx: 'UNIT_SURFACE_AMT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1323,7 +1323,7 @@
                         }
                     },
                     {
-                        title: '가공비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_PROCESS_AMT',
+                        title: '가공비', format: '#,###', dataIndx: 'UNIT_PROCESS_AMT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1342,7 +1342,7 @@
                         }
                     },
                     {
-                        title: '기타추가', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_ETC_AMT',
+                        title: '기타추가', format: '#,###', dataIndx: 'UNIT_ETC_AMT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;

@@ -1192,25 +1192,25 @@
             OTHER_SIDE_QTY = #{OTHER_SIDE_QTY},
         </if>
         <if test="UNIT_MATERIAL_AMT != null and UNIT_MATERIAL_AMT != ''">
-            UNIT_MATERIAL_AMT = #{UNIT_MATERIAL_AMT},
+            UNIT_MATERIAL_AMT = REPLACE(#{UNIT_MATERIAL_AMT}, ',', SPACE(0)),
         </if>
         <if test="UNIT_TM_AMT != null and UNIT_TM_AMT != ''">
-            UNIT_TM_AMT = #{UNIT_TM_AMT},
+            UNIT_TM_AMT = REPLACE(#{UNIT_TM_AMT}, ',', SPACE(0)),
         </if>
         <if test="UNIT_GRIND_AMT != null and UNIT_GRIND_AMT != ''">
-            UNIT_GRIND_AMT = #{UNIT_GRIND_AMT},
+            UNIT_GRIND_AMT = REPLACE(#{UNIT_GRIND_AMT}, ',', SPACE(0)),
         </if>
         <if test="UNIT_HEAT_AMT != null and UNIT_HEAT_AMT != ''">
-            UNIT_HEAT_AMT = #{UNIT_HEAT_AMT},
+            UNIT_HEAT_AMT = REPLACE(#{UNIT_HEAT_AMT}, ',', SPACE(0)),
         </if>
         <if test="UNIT_SURFACE_AMT != null and UNIT_SURFACE_AMT != ''">
-            UNIT_SURFACE_AMT = #{UNIT_SURFACE_AMT},
+            UNIT_SURFACE_AMT = REPLACE(#{UNIT_SURFACE_AMT}, ',', SPACE(0)),
         </if>
         <if test="UNIT_PROCESS_AMT != null and UNIT_PROCESS_AMT != ''">
-            UNIT_PROCESS_AMT = #{UNIT_PROCESS_AMT},
+            UNIT_PROCESS_AMT = REPLACE(#{UNIT_PROCESS_AMT}, ',', SPACE(0)),
         </if>
         <if test="UNIT_ETC_AMT != null and UNIT_ETC_AMT != ''">
-            UNIT_ETC_AMT = #{UNIT_ETC_AMT},
+            UNIT_ETC_AMT = REPLACE(#{UNIT_ETC_AMT}, ',', SPACE(0)),
         </if>
         <if test="UNIT_MATERIAL_AUTO_YN != null and UNIT_MATERIAL_AUTO_YN != ''">
             UNIT_MATERIAL_AUTO_YN = IFNULL(#{UNIT_MATERIAL_AUTO_YN}, 'N'),
@@ -1234,10 +1234,10 @@
             UNIT_AMT_NOTE = #{UNIT_AMT_NOTE},
         </if>
         <if test="UNIT_FINAL_EST_AMT != null and UNIT_FINAL_EST_AMT != ''">
-            UNIT_FINAL_EST_AMT = #{UNIT_FINAL_EST_AMT},
+            UNIT_FINAL_EST_AMT = REPLACE(#{UNIT_FINAL_EST_AMT}, ',', SPACE(0)),
         </if>
         <if test="UNIT_FINAL_AMT != null and UNIT_FINAL_AMT != ''">
-            UNIT_FINAL_AMT = #{UNIT_FINAL_AMT},
+            UNIT_FINAL_AMT = REPLACE(#{UNIT_FINAL_AMT}, ',', SPACE(0)),
         </if>
         <if test="PART_STATUS != ''">
             PART_STATUS = #{PART_STATUS},
