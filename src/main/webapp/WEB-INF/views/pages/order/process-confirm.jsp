@@ -692,7 +692,9 @@
         };
         const updateOutsideConversion = function (rowData) {
             let newRowData = fnCloneObj(rowData);
+            newRowData.PART_STATUS = 'PRO001';
             newRowData.OUTSIDE_YN = 'Y';
+            newRowData.WORK_FACTORY = null;
             let gridInstance = $processConfirmGrid.pqGrid('getInstance').grid;
             let changes = gridInstance.getChanges({format: 'byVal'});
             let QUERY_ID_ARRAY;
@@ -880,6 +882,12 @@
 
                 this.value = '';
             }
+        });
+
+        $('#outsourcingConversionModal').on('show.bs.modal', function () {
+            setTimeout(function() {
+                $('#OUTSOURCING_CONVERSION_BARCODE_NUM').focus();
+            });
         });
 
     });

@@ -1141,7 +1141,7 @@
             OUTSIDE_YN = #{OUTSIDE_YN},
         </if>
         <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
-            WORK_FACTORY = #{WORK_FACTORY},
+            WORK_FACTORY = REPLACE(#{WORK_FACTORY}, 'null', NULL),
         </if>
         <if test="MATERIAL_SUPPLY_YN != null and MATERIAL_SUPPLY_YN != ''">
             MATERIAL_SUPPLY_YN = IFNULL(#{MATERIAL_SUPPLY_YN}, 'N'),
@@ -1466,6 +1466,7 @@
         SET
             PART_STATUS = #{PART_STATUS},
             OUTSIDE_YN = #{OUTSIDE_YN},
+            WORK_FACTORY = NULL,
             STATUS_DT = NOW(),
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}

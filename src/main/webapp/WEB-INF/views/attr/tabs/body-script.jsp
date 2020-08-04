@@ -446,11 +446,16 @@
         }, parameters, '');
     };
 
-    let fnGetCommCodeGridSelectBox = function (highCd) {
+    let fnGetCommCodeGridSelectBox = function (highCd, topOption) {
         'use strict';
         let selectBoxContents = [];
-        for(var i=0; i < g_code.length; i++){
-            if(g_code[i].HIGH_CD == highCd){
+
+        if (topOption === null) {
+            selectBoxContents.push(new Option('', null));
+        }
+
+        for (let i = 0, LENGTH = g_code.length; i < LENGTH; i++) {
+            if (g_code[i].HIGH_CD == highCd) {
                 selectBoxContents.push({'value':g_code[i].CODE_CD, 'text':g_code[i].CODE_NM_KR});
             }
         }
