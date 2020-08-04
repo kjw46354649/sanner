@@ -164,10 +164,10 @@
     <!-- 외주 전환 -->
     <div class="modal" id="outsourcingConversionModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            <div class="modal-content" style="width: 500px">
                 <div class="modal-header">
                     <h5 class="modal-title" style="font-size: large; font-weight: bold">외주 전환</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -21.5px">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
