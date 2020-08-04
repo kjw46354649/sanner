@@ -78,6 +78,7 @@
                     <li>
                         <span class="slt_wrap trans_slt" style="width: 120px;">
                             <label for="CONTROL_SEARCH_CONDITION"></label><select name="CONTROL_SEARCH_CONDITION" id="CONTROL_SEARCH_CONDITION" style="width: inherit; text-align-last: center;">
+                                <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1047}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
