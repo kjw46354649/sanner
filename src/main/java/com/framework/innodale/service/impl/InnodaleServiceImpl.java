@@ -63,7 +63,17 @@ public class InnodaleServiceImpl implements InnodaleService {
         HashMap<String, Object> newMap = new HashMap<String, Object>();
 
         for (String key : hashMap.keySet()) {
-            newMap.put(key.replaceAll("\\[", "").replaceAll("\\]",""), hashMap.get(key));
+            if (key.contains("[]")) {
+                if(hashMap.get(key).getClass().getName().equals("java.lang.String")) { // 하나만 선택 했을경우
+                    String value = (String) hashMap.get(key);
+                    String[] values = {value};
+                    newMap.put(key.replaceAll("\\[", "").replaceAll("\\]",""), values);
+                } else { // 여러개 선택 했을경우
+                    newMap.put(key.replaceAll("\\[", "").replaceAll("\\]",""), hashMap.get(key));
+                }
+            } else {
+                newMap.put(key, hashMap.get(key));
+            }
         }
 
         return this.innodaleDao.getList(newMap);
