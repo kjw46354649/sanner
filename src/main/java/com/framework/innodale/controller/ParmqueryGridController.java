@@ -30,6 +30,14 @@ public class ParmqueryGridController {
         return "jsonView";
     }
 
+    @RequestMapping(value = "/paramQueryGridSelectIncludeArray", method = RequestMethod.POST)
+    public String paramQueryGridSelectIncludeArray(Model model, HttpServletRequest request, HttpSession session) throws Exception {
+        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+        List<Map<String, Object>> list = this.innodaleService.getList(hashMap, "includeArray");
+        model.addAttribute("data", list);
+        return "jsonView";
+    }
+
     /**
      * 그리드 삽입/갱신
      */

@@ -122,16 +122,16 @@
 		    AND Z.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
         <if test="DRAWING_NUM !='' and DRAWING_NUM != null">
-		    AND UPPER(Z.DRAWING_NUM) LIKE CONCAT('%', #{DRAWING_NUM}, '%')
+		    AND UPPER(Z.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
         </if>
         <if test="WORK_TYPE !='' and WORK_TYPE != null">
             AND Z.WORK_TYPE = #{WORK_TYPE}
         </if>
         <if test="CONTROL_NUM !='' and CONTROL_NUM != null">
-		    AND UPPER(Z.CONTROL_NUM) LIKE CONCAT('%', #{CONTROL_NUM}, '%')
+		    AND UPPER(Z.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
         </if>
         <if test="MATERIAL_ORDER_NUM !='' and MATERIAL_ORDER_NUM != null">
-		    AND UPPER(Z.MATERIAL_ORDER_NUM) LIKE CONCAT('%', #{MATERIAL_ORDER_NUM}, '%')
+		    AND UPPER(Z.MATERIAL_ORDER_NUM) LIKE CONCAT('%', UPPER(#{MATERIAL_ORDER_NUM}), '%')
         </if>
         <if test="M_COMP_CD !='' and M_COMP_CD != null">
 		    AND Z.M_COMP_CD = #{M_COMP_CD}

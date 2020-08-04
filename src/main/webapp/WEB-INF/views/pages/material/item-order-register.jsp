@@ -336,8 +336,9 @@
                 },
                 editable: function (ui) {return itemOrderRegisterGridCellEditable(ui);}
             },
-            {title: '요청 사항', align: "center", colModel: [
-                    {title: '요청 사항', dataType: 'string', dataIndx: 'REQUEST_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, minWidth: 150,
+            {title: '요청사항', align: "center", colModel: [
+                    {title: '요청사항', dataType: 'string', dataIndx: 'REQUEST_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, minWidth: 150,
+                        halign:'center', align: 'left',
                         editor: {
                             type: 'select',
                             cls: 'item_order_register_material_order_note',
@@ -346,7 +347,18 @@
                             options: fnGetCommCodeGridSelectBox('1026'),
                             attr: 'multiple',
                             init: function(ui) {
-                                $('.item_order_register_material_order_note').multiSelect();
+                                let cellData = ui.cellData;
+
+                                $('.item_order_register_material_order_note').multiselect();
+
+                                if (cellData) {
+                                    cellData = cellData.split(',');
+                                    for (let i = 0, list = fnGetCommCodeGridSelectBox('1026'), LIST_LENGTH = list.length; i < LIST_LENGTH; i++) {
+                                        if(cellData.includes(list[i].text)) {
+                                            $('.item_order_register_material_order_note').multiselect().select(list[i].value);
+                                        }
+                                    }
+                                }
                             },
                             getData: function(ui) {
                                 let clave = ui.$cell.find("select").val();
@@ -356,9 +368,9 @@
                                     return concatVal;
                                 }
 
-                                for(let iTmp=0; iTmp<clave.length; iTmp++){
-                                    concatVal += ui.$cell.find("select option[value='"+clave[iTmp]+"']").text()+",";
-                                    concatCd += clave[iTmp]+",";
+                                for (let iTmp = 0; iTmp < clave.length; iTmp++) {
+                                    concatVal += ui.$cell.find("select option[value='" + clave[iTmp] + "']").text() + ",";
+                                    concatCd += clave[iTmp] + ",";
                                 }
                                 let rowData = itemOrderRegisterLeftGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
                                 rowData["REQUEST_NOTE"] = concatCd.substring(0, concatCd.length-1);
@@ -568,6 +580,7 @@
             {title: '보유소재 충당수량', align: "center", colModel: [
                     {   title: '요청사항', dataType: 'string', dataIndx: 'REQUEST_NOTE', minWidth: 150,
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                        halign:'center', align: 'left',
                         editor: {
                             type: 'select',
                             cls: 'item_order_register_pop_material_order_note',
@@ -575,8 +588,19 @@
                             labelIndx: "text",
                             options: fnGetCommCodeGridSelectBox('1026'),
                             attr: 'multiple',
-                            init: function (ui) {
-                                $('.item_order_register_pop_material_order_note').multiSelect();
+                            init: function(ui) {
+                                let cellData = ui.cellData;
+
+                                $('.item_order_register_pop_material_order_note').multiselect();
+
+                                if (cellData) {
+                                    cellData = cellData.split(',');
+                                    for (let i = 0, list = fnGetCommCodeGridSelectBox('1026'), LIST_LENGTH = list.length; i < LIST_LENGTH; i++) {
+                                        if(cellData.includes(list[i].text)) {
+                                            $('.item_order_register_pop_material_order_note').multiselect().select(list[i].value);
+                                        }
+                                    }
+                                }
                             },
                             getData: function (ui) {
                                 let clave = ui.$cell.find("select").val();
@@ -761,6 +785,7 @@
             },
             {title: '보유소재 충당수량', align: "center", colModel: [
                     {   title: '요청사항', dataType: 'string', dataIndx: 'REQUEST_NOTE', minWidth: 150, width: 150, editable: false,
+                        halign:'center', align: 'left',
                         editor: {
                             type: 'select',
                             cls: 'item_order_register_pop_material_order_note',
@@ -768,8 +793,19 @@
                             labelIndx: "text",
                             options: fnGetCommCodeGridSelectBox('1026'),
                             attr: 'multiple',
-                            init: function (ui) {
-                                $('.item_order_register_pop_material_order_note').multiSelect();
+                            init: function(ui) {
+                                let cellData = ui.cellData;
+
+                                $('.item_order_register_pop_material_order_note').multiselect();
+
+                                if (cellData) {
+                                    cellData = cellData.split(',');
+                                    for (let i = 0, list = fnGetCommCodeGridSelectBox('1026'), LIST_LENGTH = list.length; i < LIST_LENGTH; i++) {
+                                        if(cellData.includes(list[i].text)) {
+                                            $('.item_order_register_pop_material_order_note').multiselect().select(list[i].value);
+                                        }
+                                    }
+                                }
                             },
                             getData: function (ui) {
                                 let clave = ui.$cell.find("select").val();
@@ -841,7 +877,7 @@
             height: '100%',
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'CONTROL_DETAIL_SEQ',
-                url: "/paramQueryGridSelect",
+                url: "/paramQueryGridSelectIncludeArray",
                 postData: fnFormToJsonArrayData('#item_order_register_search_form'),
                 getData: function (dataJSON) {
                     let data = dataJSON.data;
@@ -1210,6 +1246,8 @@
                             if (data.info) {
                                 let newRowData = fnCloneObj(data.info);
                                 let newRowIndex = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length + 1;
+                                newRowData.ROWNUM = newRowIndex;
+
                                 itemOrderRegisterPopTopGrid.pqGrid('addRow', {
                                     newRow: newRowData,
                                     rowIndx: newRowIndex,
@@ -1266,7 +1304,7 @@
                 }, parameters, '');
             }
 
-            setTimeout(function(){
+            setTimeout(function () {
                 btnDisabled();
                 //Popup table 생성
                 makeInnerTable();

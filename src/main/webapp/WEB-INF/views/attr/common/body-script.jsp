@@ -70,6 +70,8 @@
 <script type="text/javascript" src='/resource/plugins/multi_select/jquery.multi-select.js'></script>
 <script type="text/javascript" src='/resource/plugins/multi_select/jquery.multi-select.min.js'></script>
 
+<script type="text/javascript" src='/resource/plugins/multiselect-master/multiselect.min.js'></script>
+
 <!-- alertify -->
 <script type="text/javascript" src='/resource/plugins/alertifyjs/alertify.js'></script>
 

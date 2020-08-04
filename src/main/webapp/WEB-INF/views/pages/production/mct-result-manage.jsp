@@ -336,15 +336,13 @@
                     <li>
                         <span class="slt_wrap">
                             <label class="label_100" for="EQUIP_SEQ">NC NO.</label>
-                            <select class="wd_200" name="EQUIP_SEQ" id="EQUIP_SEQ">
-                                <option value="">전체</option>
+                            <select class="wd_200" name="EQUIP_SEQ" id="EQUIP_SEQ" multiple>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_50" for="MATERIAL_DETAIL">소재종류</label>
-                            <select class="wd_200" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL">
-                                <option value="">전체</option>
+                            <select class="wd_200" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" multiple>
                                 <c:forEach var="code" items="${HighCode.H_1027}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -365,9 +363,8 @@
                     </li>
                     <li>
                         <span class="slt_wrap">
-                            <label class="label_100" for="FACTORY_CLASSIFY">공장 구분</label>
-                            <select class="wd_200" name="FACTORY_CLASSIFY" id="FACTORY_CLASSIFY" title="공장구분">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                            <label class="label_100" for="WORK_FACTORY">공장 구분</label>
+                            <select class="wd_200" name="WORK_FACTORY" id="WORK_FACTORY" title="공장구분" multiple>
                                 <c:forEach var="code" items="${HighCode.H_1014}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -482,7 +479,7 @@
         });
 
         /** function **/
-        fnCommCodeDatasourceSelectBoxCreate($('#mct_result_manage_search_form').find('#EQUIP_SEQ'), 'all', {
+        fnCommCodeDatasourceSelectBoxCreate($('#mct_result_manage_search_form').find('#EQUIP_SEQ'), null, {
             'url': '/json-list', 'data': {'queryId': 'dataSource.getMctEquipList'}
         });
         fnCommCodeDatasourceSelectBoxCreate($('#cam_work_manage_pop_form').find('#CAM_WORK_USER_ID_01'), 'sel', {
@@ -504,6 +501,10 @@
             'url': '/json-list',
             'data': {'queryId': 'machine.selectNCMachineList'}
         });
+        $('#mct_result_manage_search_form #EQUIP_SEQ').multiselect();
+        $('#mct_result_manage_search_form #MATERIAL_DETAIL').multiselect();
+        $('#mct_result_manage_search_form #WORK_FACTORY').multiselect();
+
         machineResultManagecolModel = [
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
@@ -638,7 +639,7 @@
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 50, width: 160},
             {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 10, width: 30},
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 40, width: 80},
-            {title: '수량', align: 'right', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 50},
+            {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 50},
             {title: '규격', dataType: 'string', dataIndx: 'STANDARD_SIZE', minWidth: 40, width: 80},
             {title: '소재 Size', dataType: 'string', dataIndx: 'MATERAIL_ORDER_SIZE', minWidth: 40, width: 80},
             {title: '비고 기록사항', dataType: 'string', dataIndx: 'CONTROL_NOTE', minWidth: 40, width: 100},
@@ -705,7 +706,7 @@
             trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false, render: mctResultManageFilterRender}, filterModel: { mode: 'OR' },
             colModel: machineResultManagecolModel,
             dataModel: {
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelectIncludeArray',
                 postData: machineResultManagePostData, recIndx: 'ROWNUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};

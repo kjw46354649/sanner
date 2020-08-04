@@ -213,10 +213,14 @@
              AND A.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
         </if>
         <if test="COMP_CD != null and COMP_CD != ''">
-             AND A.COMP_CD = #{COMP_CD}
+             AND A.COMP_CD IN <foreach collection="COMP_CD" item="item" separator="," open="(" close=")">
+                                #{item}
+                              </foreach>
         </if>
         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+             AND A.ORDER_COMP_CD IN <foreach collection="ORDER_COMP_CD" item="item" separator="," open="(" close=")">
+                                        #{item}
+                                    </foreach>
         </if>
         <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
              AND B.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
@@ -225,7 +229,9 @@
              AND B.ITEM_NM LIKE CONCAT('%', UPPER(#{ITEM_NM}), '%')
         </if>
         <if test="WORK_TYPE != null and WORK_TYPE != ''">
-             AND B.WORK_TYPE = #{WORK_TYPE}
+             AND B.WORK_TYPE IN <foreach collection="WORK_TYPE" item="item" separator="," open="(" close=")">
+                                    #{item}
+                                </foreach>
         </if>
         <if test="ORDER_NUM != null and ORDER_NUM != ''">
              AND C.ORDER_NUM LIKE CONCAT('%', #{ORDER_NUM}, '%')
@@ -234,7 +240,9 @@
              AND A.ORDER_STATUS = #{ORDER_STATUS}
         </if>
         <if test="MATERIAL_KIND != null and MATERIAL_KIND != ''">
-            AND B.MATERIAL_KIND = #{MATERIAL_KIND}
+            AND B.MATERIAL_KIND IN <foreach collection="MATERIAL_KIND" item="item" separator="," open="(" close=")">
+                                    #{item}
+                                   </foreach>
         </if>
         <if test="MATERIAL_SUPPLY_YN != null and MATERIAL_SUPPLY_YN != ''">
             AND B.MATERIAL_SUPPLY_YN = 'Y'
@@ -254,47 +262,19 @@
         <choose>
             <!-- 주문 상태 -->
             <when test="CONTROL_SEARCH_CONDITION == 'OCM00'">
-                AND DATE_FORMAT(A.STATUS_DT, '%Y/%m/%d') BETWEEN STR_TO_DATE(#{CONTROL_MANAGE_START_DATE}, '%Y/%m/%d') AND <choose>
-                                                                                                                            <when test="CHECK_BOX != null and CHECK_BOX != ''">
-                                                                                                                                STR_TO_DATE(#{CONTROL_MANAGE_END_DATE}, '%Y/%m/%d')
-                                                                                                                            </when>
-                                                                                                                            <otherwise>
-                                                                                                                                DATE_FORMAT(NOW(), '%Y/%m/%d')
-                                                                                                                            </otherwise>
-                                                                                                                        </choose>
+                AND DATE_FORMAT(A.STATUS_DT, '%Y/%m/%d') BETWEEN #{CONTROL_MANAGE_START_DATE} AND #{CONTROL_MANAGE_END_DATE}
             </when>
             <!-- 납기 -->
             <when test="CONTROL_SEARCH_CONDITION == 'OCM01'">
-                AND DATE_FORMAT(C.ORDER_DUE_DT, '%Y/%m/%d') BETWEEN STR_TO_DATE(#{CONTROL_MANAGE_START_DATE}, '%Y/%m/%d') AND <choose>
-                                                                                                                                <when test="CHECK_BOX != null and CHECK_BOX != ''">
-                                                                                                                                    STR_TO_DATE(#{CONTROL_MANAGE_END_DATE}, '%Y/%m/%d')
-                                                                                                                                </when>
-                                                                                                                                <otherwise>
-                                                                                                                                    DATE_FORMAT(NOW(), '%Y/%m/%d')
-                                                                                                                                </otherwise>
-                                                                                                                            </choose>
+                AND DATE_FORMAT(C.ORDER_DUE_DT, '%Y/%m/%d') BETWEEN #{CONTROL_MANAGE_START_DATE} AND #{CONTROL_MANAGE_END_DATE}
             </when>
             <!-- 가공 납기 -->
             <when test="CONTROL_SEARCH_CONDITION == 'OCM02'">
-                AND DATE_FORMAT(B.INNER_DUE_DT, '%Y%m%d') BETWEEN STR_TO_DATE(#{CONTROL_MANAGE_START_DATE}, '%Y-%m-%d') AND <choose>
-                                                                                                                                <when test="CHECK_BOX != null and CHECK_BOX != ''">
-                                                                                                                                    STR_TO_DATE(#{CONTROL_MANAGE_END_DATE}, '%Y-%m-%d')
-                                                                                                                                </when>
-                                                                                                                                <otherwise>
-                                                                                                                                    DATE_FORMAT(NOW(), '%Y%m%d')
-                                                                                                                                </otherwise>
-                                                                                                                            </choose>
+                AND DATE_FORMAT(B.INNER_DUE_DT, '%Y%m%d') BETWEEN #{CONTROL_MANAGE_START_DATE} AND #{CONTROL_MANAGE_END_DATE}
             </when>
             <!-- Update일시 -->
             <when test="CONTROL_SEARCH_CONDITION == 'OCM03'">
-                AND DATE_FORMAT(B.UPDATE_DT, '%Y/%m/%d') BETWEEN STR_TO_DATE(#{CONTROL_MANAGE_START_DATE}, '%Y/%m/%d') AND <choose>
-                                                                                                                                <when test="CHECK_BOX != null and CHECK_BOX != ''">
-                                                                                                                                    STR_TO_DATE(#{CONTROL_MANAGE_END_DATE}, '%Y/%m/%d')
-                                                                                                                                </when>
-                                                                                                                                <otherwise>
-                                                                                                                                    DATE_FORMAT(NOW(), '%Y/%m/%d')
-                                                                                                                                </otherwise>
-                                                                                                                            </choose>
+                AND DATE_FORMAT(B.UPDATE_DT, '%Y/%m/%d') BETWEEN #{CONTROL_MANAGE_START_DATE} AND #{CONTROL_MANAGE_END_DATE}
             </when>
         </choose>
         ORDER BY A.CONTROL_SEQ, B.PART_NUM, C.ORDER_NUM

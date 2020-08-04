@@ -26,7 +26,7 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="ORDER_COMP_CD">발주사</label>
-                            <select class="label_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="발주사">
+                            <select class="label_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="발주사" multiple>
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
@@ -48,7 +48,7 @@
                     <li>
                         <span class="slt_wrap">
                             <label class="label_100" for="COMP_CD">사업자구분</label>
-                            <select class="label_200" name="COMP_CD" id="COMP_CD" title="사업자구분">
+                            <select class="label_200" name="COMP_CD" id="COMP_CD" title="사업자구분" multiple>
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
@@ -67,8 +67,7 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="MATERIAL_KIND">소재형태</label>
-                            <select class="label_200" name="MATERIAL_KIND" id="MATERIAL_KIND" title="소재형태">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                            <select class="label_200" name="MATERIAL_KIND" id="MATERIAL_KIND" title="소재형태" multiple>
                                 <c:forEach var="code" items="${HighCode.H_1029}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -78,12 +77,13 @@
                     <li>
                         <span class="slt_wrap trans_slt" style="width: 120px;">
                             <label for="CONTROL_SEARCH_CONDITION"></label><select name="CONTROL_SEARCH_CONDITION" id="CONTROL_SEARCH_CONDITION" style="width: inherit; text-align-last: center;">
+                                <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1047}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
                         </span>
-                        <div class="calendar_wrap" style="width:542px; padding-left: 0">
+                        <div class="d-inline-block" style="width:542px">
                             <span class="calendar_span">
                                 <input type="text" title="달력정보" name="CONTROL_MANAGE_START_DATE" id="CONTROL_MANAGE_START_DATE"><button type="button" id="CONTROL_MANAGE_START_DATE_BUTTON">달력선택</button>
                             </span>
@@ -91,7 +91,6 @@
                             <span class="calendar_span">
                                 <input type="text" title="달력정보" name="CONTROL_MANAGE_END_DATE" id="CONTROL_MANAGE_END_DATE" readonly><button type="button" id="CONTROL_MANAGE_END_DATE_BUTTON">달력선택</button>
                             </span>
-                            <span class="chk_box" style="margin-left: 10px;"><input name="CHECK_BOX" id="CHECK_BOX" type="checkbox"><label for="CHECK_BOX">선택</label></span>
                         </div>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -103,8 +102,7 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="WORK_TYPE">작업형태</label>
-                            <select class="label_200" name="WORK_TYPE" id="WORK_TYPE" title="작업형태">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                            <select class="label_200" name="WORK_TYPE" id="WORK_TYPE" title="작업형태" multiple>
                                 <c:forEach var="code" items="${HighCode.H_1033}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -1490,7 +1488,7 @@
             filterModel: {mode: 'OR'},
             colModel: colModel,
             dataModel: {
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelectIncludeArray',
                 postData: {'queryId': 'dataSource.emptyGrid'}, recIndx: 'ROW_NUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
@@ -2578,11 +2576,11 @@
         $('#CONTROL_MANAGE_START_DATE').datepicker('setDate', 'today');
         $('#CONTROL_MANAGE_END_DATE').datepicker('setDate', 'today');
         // setDatePickerToday();
-        fnCommCodeDatasourceSelectBoxCreate($('#CONTROL_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {
+        fnCommCodeDatasourceSelectBoxCreate($('#CONTROL_MANAGE_SEARCH_FORM').find('#COMP_CD'), null, {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getBusinessCompanyList'}
         });
-        fnCommCodeDatasourceSelectBoxCreate($('#CONTROL_MANAGE_SEARCH_FORM').find('#ORDER_COMP_CD'), 'all', {
+        fnCommCodeDatasourceSelectBoxCreate($('#CONTROL_MANAGE_SEARCH_FORM').find('#ORDER_COMP_CD'), null, {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
@@ -2677,6 +2675,10 @@
         $('#CONTROL_MANAGE_END_DATE_BUTTON').on('click', function () {
             $('#CONTROL_MANAGE_END_DATE').focus();
         });
-    });
 
+        $('#CONTROL_MANAGE_SEARCH_FORM #ORDER_COMP_CD').multiselect();
+        $('#CONTROL_MANAGE_SEARCH_FORM #COMP_CD').multiselect();
+        $('#CONTROL_MANAGE_SEARCH_FORM #MATERIAL_KIND').multiselect();
+        $('#CONTROL_MANAGE_SEARCH_FORM #WORK_TYPE').multiselect();
+    });
 </script>
