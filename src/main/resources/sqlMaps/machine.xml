@@ -526,11 +526,6 @@
                 AND C.POP_VSEQ = (SELECT MAX(C.POP_VSEQ) FROM jmes.TBL_POP_VIEW K WHERE K.CONTROL_SEQ = C.CONTROL_SEQ
                                    AND K.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ GROUP BY C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ
                 )
-             LEFT OUTER JOIN jmes.TBL_MCT_WORK D ON A.CONTROL_SEQ = D.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.DEL_YN = 'N'
-             LEFT OUTER JOIN jmes.TBL_EQUIP E ON E.EQUIP_SEQ = D.EQUIP_SEQ AND E.DEL_YN = 'N'
-                <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
-                    AND E.EQUIP_SEQ = #{EQUIP_SEQ}
-                </if>
              LEFT OUTER JOIN jmes.TBL_POP_VIEW N ON A.CONTROL_SEQ = N.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = N.CONTROL_DETAIL_SEQ
                                                 AND N.POP_VSEQ = (SELECT LAG(O.POP_VSEQ, 1) OVER(PARTITION BY O.CONTROL_SEQ, O.CONTROL_DETAIL_SEQ ORDER BY O.POP_VSEQ) AS POP_VSEQ
                                                 				FROM jmes.TBL_POP_VIEW O WHERE N.CONTROL_SEQ = O.CONTROL_SEQ
@@ -538,6 +533,12 @@
                                                 )
         WHERE 1 = 1
             AND A.WORK_TYPE != 'WTP020' <!-- 조립이 아닌경우 -->
+            <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
+                AND EXISTS (SELECT 1 FROM jmes.TBL_MCT_WORK D, jmes.TBL_EQUIP E WHERE A.CONTROL_SEQ = D.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.DEL_YN = 'N'
+                    AND E.EQUIP_SEQ = D.EQUIP_SEQ AND E.DEL_YN = 'N'
+                    AND E.EQUIP_SEQ = #{EQUIP_SEQ}
+                )
+            </if>
             <choose>
                 <when  test="INCLUDE_PROCESSING !='' and INCLUDE_PROCESSING != null">
                     AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO019', 'PRO012', 'PRO013', 'PRO014', 'PRO015', 'PRO018', 'PRO019')
@@ -892,9 +893,6 @@
                 AND C.POP_VSEQ = (SELECT MAX(C.POP_VSEQ) FROM jmes.TBL_POP_VIEW K WHERE K.CONTROL_SEQ = C.CONTROL_SEQ
                                                                              AND K.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ GROUP BY C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ
                 )
-            LEFT OUTER JOIN jmes.TBL_MCT_WORK D ON A.CONTROL_SEQ = D.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.DEL_YN = 'N'
-            LEFT OUTER JOIN jmes.TBL_EQUIP E ON E.EQUIP_SEQ = D.EQUIP_SEQ
-            LEFT OUTER JOIN jmes.TBL_CODE F ON F.CODE_CD = D.WORK_STATUS AND F.HIGH_CD = '1079'
             LEFT OUTER JOIN jmes.TBL_CAM G ON G.CONTROL_SEQ = A.CONTROL_SEQ AND G.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
             LEFT OUTER JOIN jmes.TBL_CAM_DETAIL H ON G.CAM_SEQ = H.CAM_SEQ AND H.SEQ = (SELECT MAX(I.SEQ) FROM jmes.TBL_CAM_DETAIL I WHERE H.CAM_SEQ = I.CAM_SEQ GROUP BY I.CAM_SEQ)
             LEFT OUTER JOIN jmes.TBL_INSPECT J ON A.CONTROL_SEQ = J.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = J.CONTROL_DETAIL_SEQ AND J.INSPECT_TYPE = '1'
@@ -992,6 +990,37 @@
         ) Z
         ORDER BY Z.CAM_SEQ, Z.SEQ
     </select>
+
+    <select id="selectStartMctCamCheck" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            CAM_SEQ, CASE WHEN A.FINISH_DT IS NULL THEN 'Y' ELSE 'N' END ALREADY_STARTED
+        FROM jmes.TBL_CAM A
+        WHERE 1 = 1
+          AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+          AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </select>
+
+    <insert id="insertCamWork"  parameterType="java.util.HashMap" >
+        <selectKey keyProperty="CAM_SEQ" resultType="integer" order="BEFORE">
+            SELECT NEXTVAL(SEQ_CAM) AS CAM_SEQ FROM DUAL
+        </selectKey>
+        INSERT INTO jmes.TBL_CAM
+        (CAM_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, START_DT, HISTORY_NOTE, NOTE, INSERT_ID)
+        VALUES
+        (#{CAM_SEQ}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}, NOW(), #{HISTORY_NOTE}, #{NOTE}, #{LOGIN_USER_ID})
+    </insert>
+
+    <insert id="updateCamWork"  parameterType="java.util.HashMap" >
+        UPDATE jmes.TBL_CAM
+        SET
+            FINISH_DT= NULL,
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE 1 = 1
+            AND CAM_SEQ = #{CAM_SEQ}
+            AND CONTROL_SEQ =  #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ =  #{CONTROL_DETAIL_SEQ}
+    </insert>
 
     <insert id="insertMctCamWork"  parameterType="java.util.HashMap" >
         <selectKey keyProperty="CAM_SEQ" resultType="integer" order="BEFORE">

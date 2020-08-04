@@ -20,14 +20,40 @@ public class ProductionServiceImpl implements ProductionService {
 
     @Override
     public void managerStartCamWork(Model model, Map<String, Object> map) throws Exception {
-        map.put("queryId", "machine.insertMctCamWork");
-        innodaleDao.update(map);
 
-        // parts 상태 업데이트 처리
-        map.put("queryId", "machine.createCamStartControlPartProgress");
-        innodaleDao.update(map);
-        map.put("queryId", "machine.updateCamStartControlPartStatus");
-        innodaleDao.update(map);
+//        map.put("queryId", "machine.insertMctCamWork");
+//        innodaleDao.update(map);
+//
+//        // parts 상태 업데이트 처리
+//        map.put("queryId", "machine.createCamStartControlPartProgress");
+//        innodaleDao.update(map);
+//        map.put("queryId", "machine.updateCamStartControlPartStatus");
+//        innodaleDao.update(map);
+
+        boolean updateStatus = false;
+
+        map.put("queryId", "machine.selectStartMctCamCheck");
+        Map<String, Object> camInfo = innodaleDao.getInfo(map);
+
+        if (camInfo == null) {
+            map.put("queryId", "machine.insertMctCamWork");
+            innodaleDao.create(map);
+            updateStatus = true;
+        } else if (camInfo != null && "N".equals(camInfo.get("ALREADY_STARTED"))) {
+            map.put("CAM_SEQ", camInfo.get("CAM_SEQ"));
+            map.put("queryId", "machine.updateCamWork");
+            innodaleDao.update(map);
+            updateStatus = true;
+        }
+
+        if(updateStatus){
+            // parts 상태 업데이트 처리
+            map.put("queryId", "machine.createCamStartControlPartProgress");
+            innodaleDao.update(map);
+            map.put("queryId", "machine.updateCamStartControlPartStatus");
+            innodaleDao.update(map);
+        }
+
     }
 
     @Override
