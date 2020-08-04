@@ -162,6 +162,14 @@
             (NEXTVAL(SEQ_MCT_WORK), #{machineInfo.EQUIP_SEQ}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}, #{userInfo.USER_ID}, #{WORK_STATUS}, NOW(), NOW(), 'N', #{userInfo.USER_ID})
     </insert>
 
+    <update id="updateEquipmentWorker"  parameterType="java.util.HashMap" >
+        UPDATE jmes.TBL_EQUIP
+        SET
+            LOGIN_USER_ID = #{USER_ID}
+          , UPDATE_DT = NOW()
+          , UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE EQUIP_SEQ = #{EQUIP_SEQ}
+    </update>
 
     <update id="updateMctWork"  parameterType="java.util.HashMap" >
         UPDATE jmes.TBL_MCT_WORK

@@ -856,6 +856,9 @@
             };
             camWorkStartSubmitConfirm(function(confirm){
                 if(confirm) {
+
+                    $(this).startWaitMe();
+
                     $("#cam_work_manage_pop_form").find("#actionType").val("start");
                     let parameters = {
                         'url': '/managerCamWork',
@@ -869,6 +872,7 @@
                                 'CONTROL_DETAIL_SEQ': $('#cam_work_manage_pop_form').find('#CONTROL_DETAIL_SEQ').val()}
                         };
                         fnPostAjax(function (infoData, infoCallFunctionParam) {
+                            $(this).stopWaitMe();
                             if(infoData.info){
                                 camWorkManagePop(infoData.info, false);
                             }else{

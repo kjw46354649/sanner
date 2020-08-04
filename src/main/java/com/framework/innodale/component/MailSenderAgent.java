@@ -47,10 +47,11 @@ public class MailSenderAgent {
                 String setToEmail [] = ((String)mailInfo.get("RECV_EMAIL")).split(",");
                 message.setTo(setToEmail);
 
-                if(mailInfo.containsKey("HCC_EMAIL") && !"".equals(mailInfo.get("HCC_EMAIL"))){
-                    // 숨은 참조
-                    message.setBcc(new InternetAddress((String)mailInfo.get("HCC_EMAIL")));
-                }
+//                if(mailInfo.containsKey("HCC_EMAIL") && !"".equals(mailInfo.get("HCC_EMAIL"))){
+//                    // 숨은 참조
+//                    String hcc [] = ((String)mailInfo.get("HCC_EMAIL")).split(",");
+//                    message.setBcc(hcc);
+//                }
                 if(mailInfo.containsKey("CC_EMAIL") && !"".equals(mailInfo.get("CC_EMAIL"))){
                     // 참조
                     //message.setCc(new InternetAddress((String)mailInfo.get("CC_EMAIL")));

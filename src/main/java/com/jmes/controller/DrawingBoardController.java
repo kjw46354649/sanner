@@ -59,6 +59,16 @@ public class DrawingBoardController {
         hashMap.put("queryId", "drawingMapper.selectDrawingAreaList");
         model.addAttribute("areaList", this.innodaleService.getList(hashMap));
 
+        HashMap<String, Object> drawingInfo = (HashMap<String, Object>)(request.getSession().getAttribute("drawingInfo"));
+
+        if(drawingInfo != null){
+            /** 장비 선택 정보 **/
+            HashMap<String, Object> machineInfo = (HashMap<String, Object>)drawingInfo.get("machineInfo");
+            model.addAttribute("EQUIP_SEQ", machineInfo.get("EQUIP_SEQ"));
+            model.addAttribute("FACTORY_AREA", machineInfo.get("FACTORY_AREA"));
+        }
+
+
         /** Session clear **/
         if(session.getAttribute("drawingInfo") != null){
             session.removeAttribute("drawingInfo");
@@ -134,7 +144,14 @@ public class DrawingBoardController {
 
             /** 최종 Session 에 저장되는 정보 **/
             drawingInfo.put("userInfo", userInfo);
+
         }
+
+        /** 장비 로그인 사용자 정보를 업데이트 한다. **/
+        machineInfo.put("USER_ID", userInfo.get("USER_ID"));
+        machineInfo.put("queryId", "drawingMapper.updateEquipmentWorker");
+        drawingInfo.put("lastWork",innodaleService.getInfo(machineInfo));
+
 
         /** 장비 정보를 기초로 최근 작업정보 **/
         machineInfo.put("queryId", "drawingMapper.selectDrawingBoardLastWork");

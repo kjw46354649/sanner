@@ -88,9 +88,21 @@ public class OutServiceImpl implements OutService {
         if (jsonMap.containsKey("mailReceiverList"))
             mailReceiverList = (ArrayList<HashMap<String, Object>>) jsonMap.get("mailReceiverList");
 
+        String mailAttachGfileSeq = "";
+        if (requestMailForm.get("GFILE_SEQ") != null && !"".equals(requestMailForm.get("GFILE_SEQ"))){
+            mailAttachGfileSeq = (String)requestMailForm.get("GFILE_SEQ");
+        }else{
+            requestMailForm.put("GFILE_SEQ", "");                   // GFILE 신규 등록
+            requestMailForm.put("queryId", "common.insertFileGroup");
+            innodaleDao.update(requestMailForm);
+
+            mailAttachGfileSeq = Integer.toString((int) requestMailForm.get("GFILE_SEQ"));
+        }
+
         // 주문관리 Part 저장
         if (controlPartList != null && controlPartList.size() > 0) {
             for (HashMap<String, Object> hashMap : controlPartList) {
+
                 hashMap.put("queryId", "outMapper.updateOutsideRequestDetailDelete");
                 this.innodaleDao.update(hashMap);
 
@@ -99,6 +111,12 @@ public class OutServiceImpl implements OutService {
                     hashMap.put("OUTSIDE_STATUS", "OST001");
                     hashMap.put("queryId", "orderMapper.createControlPartProgress");
                     this.innodaleDao.create(hashMap);
+
+                    // 첨부 파일을 하나의 Gfile로 추가 한다.
+                    hashMap.put("GFILE_SEQ", mailAttachGfileSeq);
+                    hashMap.put("queryId", "outMapper.createMailAttachCadFilePlus");
+                    this.innodaleDao.create(hashMap);
+
                 } else {
                     hashMap.put("PART_STATUS", null);
                     hashMap.put("OUTSIDE_STATUS", "OST002");
@@ -131,18 +149,16 @@ public class OutServiceImpl implements OutService {
                 hashMap.put("OUTSIDE_REQUEST_SEQ", outsideRequestSeq);
                 hashMap.put("queryId", "outMapper.createOutsideRequestReceiver");
                 this.innodaleDao.create(hashMap);
+            }
 
-                // 메일 발송
-                if (requestMailForm != null && requestMailForm.size() > 0) {
-                    String reception = (String) hashMap.get("RECEPTION");
-                    String reference = (String) hashMap.get("REFERENCE");
-                    String staffEmail = (String) hashMap.get("STAFF_EMAIL");
-                    requestMailForm.put("RECEPTION", reception);
-                    requestMailForm.put("REFERENCE", reference);
-                    requestMailForm.put("STAFF_EMAIL", staffEmail);
-                    requestMailForm.put("queryId", "mail.insertOutsideRequestSubmitMail");
-                    this.innodaleDao.create(requestMailForm);
-                }
+            // 메일 발송
+            if (requestMailForm != null && requestMailForm.size() > 0) {
+                String reception = (String) requestMailForm.get("RECEIVE_EMAIL");
+                String reference = (String) requestMailForm.get("CC_EMAIL");
+                requestMailForm.put("RECEPTION", reception);
+                requestMailForm.put("REFERENCE", reference);
+                requestMailForm.put("queryId", "mail.insertOutsideRequestSubmitMail");
+                this.innodaleDao.create(requestMailForm);
             }
         }
     }

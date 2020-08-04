@@ -33,12 +33,13 @@
         <form id="drawing_login_form" name="drawing_login_form" method="POST" action="/drawing-worker">
             <input type="hidden" name="queryId" id="queryId" value="drawingMapper.selectDrawingEquipment">
             <input type="hidden" name="EQUIP_NM" id="EQUIP_NM" value="">
+            <input type="hidden" name="SEL_EQUIP_SEQ" id="SEL_EQUIP_SEQ" value="${EQUIP_SEQ}">
             <div class="loginWrap">
                 <ul>
                     <li>
                         <select id="FACTORY_AREA" name="FACTORY_AREA" title="메뉴선택">
                             <c:forEach var="code" items="${areaList}">
-                                <option value="${code.CODE_CD}">${code.CODE_NM}</option>
+                                <option value="${code.CODE_CD}" <c:if test="${FACTORY_AREA eq code.CODE_CD}">selected="selected"</c:if> >${code.CODE_NM}</option>
                             </c:forEach>
                         </select>
                     </li>
@@ -76,6 +77,10 @@
         });
 
         $("#selectUserBtn").click(function () {
+            if($("#drawing_login_form").find("#EQUIP_SEQ option:checked").val() == ""){
+                alert("<srping:message key='drawing.board.alert.08'/>");
+                return false;
+            }
             $("#drawing_login_form").find("#EQUIP_NM").val($("#drawing_login_form").find("#EQUIP_SEQ option:checked").text());
             document.getElementById('drawing_login_form').submit();
         })
@@ -90,6 +95,8 @@
                         for(let i=0; i < data.list.length; i++){
                             document.getElementById("EQUIP_SEQ").options.add(new Option(data.list[i].EQUIP_NM, data.list[i].EQUIP_SEQ));
                         }
+                        if($("#drawing_login_form").find("#SEL_EQUIP_SEQ").val() != "")
+                            $("#EQUIP_SEQ").val($("#drawing_login_form").find("#SEL_EQUIP_SEQ").val()).prop("selected", true);
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
