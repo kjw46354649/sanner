@@ -912,9 +912,11 @@
                         $("#company_master_register_form").find("#SIGN_GFILE_SRC").attr("src", "/image/" + dataInfo.SIGN_GFILE_SEQ);
                         if(dataInfo.ACTIVE_YN == "Y") {
                             $("#company_master_register_form").find("#ACTIVE_YN").trigger("click");
+                            $("#company_master_register_form").find("#ACTIVE_YN").val("Y");
                         }
                         if(dataInfo.FAMILY_COMPANY_YN == "Y") {
                             $("#company_master_register_form").find("#FAMILY_COMPANY_YN").prop('checked', true);
+                            $("#company_master_register_form").find("#FAMILY_COMPANY_YN").val("Y");
                         }
                     }
 

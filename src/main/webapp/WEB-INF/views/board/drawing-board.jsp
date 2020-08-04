@@ -20,6 +20,7 @@
     <!-- alertify -->
     <link rel="stylesheet" type="text/css" href="/resource/plugins/alertifyjs/css/alertify.css" />
     <link rel="stylesheet" type="text/css" href="/resource/plugins/alertifyjs/css/themes/default.css" />
+    <link rel="stylesheet" type="text/css" href="/resource/plugins/waitme/waitMe.css" />
 
     <script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
@@ -48,7 +49,7 @@
         }
     </style>
 </head>
-<body onresize="parent.resizeTo(1024,600)" onload="parent.resizeTo(1024,600)">
+<body onresize="parent.resizeTo(1024,600)" onload="parent.resizeTo(1024,600)" >
 
 <!-- Target Modal Start -->
 <div class="modal" id="drawing_worker_target_list_popup" style="display: none;">
@@ -123,7 +124,7 @@
                         <button type="button" id="scanBtnSave" class="listBlueBtn save"><srping:message key="drawing.board.button.05"/></button>
                         <button type="button" id="scanBtnCancel" class="listGrnBtn closeBe"><srping:message key="drawing.board.button.12"/></button>
                     </div>
-                    <div><p class="scan-time"><srping:message key="drawing.board.alert.04"/> (10)</p></div>
+                    <div><p class="scan-time">10 <srping:message key="drawing.board.alert.04"/></p></div>
                 </div>
             </div>
         </div>
@@ -145,7 +146,7 @@
                         </p>
                     </div>
                     <div style="text-align: center;">
-                        <button type="button" id="workRestartBtn" class="gradeMidBtn red"><srping:message key="drawing.board.button.13"/><</button>
+                        <button type="button" id="workRestartBtn" class="gradeMidBtn red"><srping:message key="drawing.board.button.13"/></button>
                         <%--<button id="stopBtn">작업재개</button>--%>
                     </div>
                 </div>
@@ -235,155 +236,157 @@
 <%--                        <button id="endBtnSave">Yes</button>--%>
 <%--                        <button id="endBtnCancel">Cancel</button>--%>
 <%--                    </div>--%>
-                    <div><p class="scan-time">5 <srping:message key="drawing.board.alert.04"/></p></div>
+                    <div><p class="scan-time">10 <srping:message key="drawing.board.alert.04"/></p></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <!-- End Modal End -->
-<div class="bodyWrap work waitMeContainerDiv" id="bodyWrap">
-    <c:set var="workInfo" value="${drawingInfo.lastWork}" />
-    <c:if test="${not empty drawingInfo.currentWork}">
-        <c:set var="workInfo" value="${drawingInfo.currentWork}" />
-    </c:if>
-    <!-- contents 영역에 각페이지 명에 맞는 class 추가 !! -->
-    <div class="leftLogWrap">
-        <!-- 팝업에서 신규 작업 선택시 처리 되는 부분 이전 정보나 현재 진행 중인 정보를 보여 준다. -->
-        <form id="drawing_action_form" name="drawing_action_form" method="POST" action="/drawing-board">
-            <input id="DATA_TYPE" name="DATA_TYPE" type="hidden" value="${workInfo.DATA_TYPE}">
-            <input id="MCT_WORK_SEQ" name="MCT_WORK_SEQ" type="hidden" value="${workInfo.MCT_WORK_SEQ}">
-            <input id="CONTROL_SEQ" name="CONTROL_SEQ" type="hidden" value="${workInfo.CONTROL_SEQ}">
-            <input id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" type="hidden" value="${workInfo.CONTROL_DETAIL_SEQ}">
-            <input id="CONTROL_NUM" name="CONTROL_NUM" type="hidden" value="${workInfo.CONTROL_NUM}">
-            <input id="BARCODE_NUM" name="BARCODE_NUM" type="hidden" value="${workInfo.BARCODE_NUM}">
-            <input id="PART_NUM" name="PART_NUM" type="hidden" value="${workInfo.PART_NUM}">
-            <input id="ORDER_QTY" name="ORDER_QTY" type="hidden" value="${workInfo.ORDER_QTY}">
-            <input id="INNER_DUE_DT" name="INNER_DUE_DT" type="hidden" value="${workInfo.INNER_DUE_DT}">
-            <input id="FINISH_QTY" name="FINISH_QTY" type="hidden" value="${workInfo.ORDER_QTY}">
-            <input id="ERROR_QTY" name="ERROR_QTY" type="hidden" value="">
-            <input id="ERROR_REASON" name="ERROR_REASON" type="hidden" value="">
-            <input id="RE_BARCODE_NUM" name="RE_BARCODE_NUM" type="hidden" value="">
-        </form>
-        <form id="re_start_work_info_form" name="re_start_work_info_form">
-            <input id="CONTROL_SEQ" name="CONTROL_SEQ" type="hidden" value="${reStartWorkinfo.CONTROL_SEQ}">
-            <input id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" type="hidden" value="${reStartWorkinfo.CONTROL_DETAIL_SEQ}">
-            <input id="CONTROL_NUM" name="CONTROL_NUM" type="hidden" value="${reStartWorkinfo.CONTROL_NUM}">
-            <input id="PART_NUM" name="PART_NUM" type="hidden" value="${reStartWorkinfo.PART_NUM}">
-            <input id="ORDER_QTY" name="ORDER_QTY" type="hidden" value="${reStartWorkinfo.ORDER_QTY}">
-            <input id="INNER_DUE_DT" name="INNER_DUE_DT" type="hidden" value="${reStartWorkinfo.INNER_DUE_DT}">
-        </form>
-        <form id="drawing_log_out_form" name="drawing_log_out_form" method="POST" action="/drawing-worker">
-            <input id="EQUIP_NM" name="EQUIP_NM" type="hidden" value="${drawingInfo.machineInfo.EQUIP_NM}">
-            <input id="EQUIP_SEQ" name="EQUIP_SEQ" type="hidden" value="${drawingInfo.machineInfo.EQUIP_SEQ}">
-            <input id="FACTORY_AREA" name="FACTORY_AREA" type="hidden" value="${drawingInfo.machineInfo.FACTORY_AREA}">
-<%--            <input id="CONTROL_SEQ" name="CONTROL_SEQ" type="hidden" value="<c:if test="${not empty workInfo}">${workInfo.CONTROL_SEQ}</c:if>">--%>
-<%--            <input id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" type="hidden" value="<c:if test="${not empty workInfo}">${workInfo.CONTROL_DETAIL_SEQ}</c:if>">--%>
-            <div class="logInWrap">
-                <div class="mainTit">${drawingInfo.machineInfo.EQUIP_NM}</div>
-                <div class="userWrap">
-                    <div class="userImg"><img src="/image/${drawingInfo.userInfo.USER_GFILE_SEQ}" alt=""></div>
-                    <div class="userInfo">
-                        <p class="name">${drawingInfo.userInfo.USER_NM}</p>
-                        <p><span class="dept">(${drawingInfo.userInfo.USER_ID})</span></p>
+<div class="bodyWrap work" id="bodyWrap">
+    <div id="waitMeContainerDiv">
+        <c:set var="workInfo" value="${drawingInfo.lastWork}" />
+        <c:if test="${not empty drawingInfo.currentWork}">
+            <c:set var="workInfo" value="${drawingInfo.currentWork}" />
+        </c:if>
+        <!-- contents 영역에 각페이지 명에 맞는 class 추가 !! -->
+        <div class="leftLogWrap">
+            <!-- 팝업에서 신규 작업 선택시 처리 되는 부분 이전 정보나 현재 진행 중인 정보를 보여 준다. -->
+            <form id="drawing_action_form" name="drawing_action_form" method="POST" action="/drawing-board">
+                <input id="DATA_TYPE" name="DATA_TYPE" type="hidden" value="${workInfo.DATA_TYPE}">
+                <input id="MCT_WORK_SEQ" name="MCT_WORK_SEQ" type="hidden" value="${workInfo.MCT_WORK_SEQ}">
+                <input id="CONTROL_SEQ" name="CONTROL_SEQ" type="hidden" value="${workInfo.CONTROL_SEQ}">
+                <input id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" type="hidden" value="${workInfo.CONTROL_DETAIL_SEQ}">
+                <input id="CONTROL_NUM" name="CONTROL_NUM" type="hidden" value="${workInfo.CONTROL_NUM}">
+                <input id="BARCODE_NUM" name="BARCODE_NUM" type="hidden" value="${workInfo.BARCODE_NUM}">
+                <input id="PART_NUM" name="PART_NUM" type="hidden" value="${workInfo.PART_NUM}">
+                <input id="ORDER_QTY" name="ORDER_QTY" type="hidden" value="${workInfo.ORDER_QTY}">
+                <input id="INNER_DUE_DT" name="INNER_DUE_DT" type="hidden" value="${workInfo.INNER_DUE_DT}">
+                <input id="FINISH_QTY" name="FINISH_QTY" type="hidden" value="${workInfo.ORDER_QTY}">
+                <input id="ERROR_QTY" name="ERROR_QTY" type="hidden" value="">
+                <input id="ERROR_REASON" name="ERROR_REASON" type="hidden" value="">
+                <input id="RE_BARCODE_NUM" name="RE_BARCODE_NUM" type="hidden" value="">
+            </form>
+            <form id="re_start_work_info_form" name="re_start_work_info_form">
+                <input id="CONTROL_SEQ" name="CONTROL_SEQ" type="hidden" value="${reStartWorkinfo.CONTROL_SEQ}">
+                <input id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" type="hidden" value="${reStartWorkinfo.CONTROL_DETAIL_SEQ}">
+                <input id="CONTROL_NUM" name="CONTROL_NUM" type="hidden" value="${reStartWorkinfo.CONTROL_NUM}">
+                <input id="PART_NUM" name="PART_NUM" type="hidden" value="${reStartWorkinfo.PART_NUM}">
+                <input id="ORDER_QTY" name="ORDER_QTY" type="hidden" value="${reStartWorkinfo.ORDER_QTY}">
+                <input id="INNER_DUE_DT" name="INNER_DUE_DT" type="hidden" value="${reStartWorkinfo.INNER_DUE_DT}">
+            </form>
+            <form id="drawing_log_out_form" name="drawing_log_out_form" method="POST" action="/drawing-worker">
+                <input id="EQUIP_NM" name="EQUIP_NM" type="hidden" value="${drawingInfo.machineInfo.EQUIP_NM}">
+                <input id="EQUIP_SEQ" name="EQUIP_SEQ" type="hidden" value="${drawingInfo.machineInfo.EQUIP_SEQ}">
+                <input id="FACTORY_AREA" name="FACTORY_AREA" type="hidden" value="${drawingInfo.machineInfo.FACTORY_AREA}">
+    <%--            <input id="CONTROL_SEQ" name="CONTROL_SEQ" type="hidden" value="<c:if test="${not empty workInfo}">${workInfo.CONTROL_SEQ}</c:if>">--%>
+    <%--            <input id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" type="hidden" value="<c:if test="${not empty workInfo}">${workInfo.CONTROL_DETAIL_SEQ}</c:if>">--%>
+                <div class="logInWrap">
+                    <div class="mainTit">${drawingInfo.machineInfo.EQUIP_NM}</div>
+                    <div class="userWrap">
+                        <div class="userImg"><img src="/image/${drawingInfo.userInfo.USER_GFILE_SEQ}" alt=""></div>
+                        <div class="userInfo">
+                            <p class="name">${drawingInfo.userInfo.USER_NM}</p>
+                            <p><span class="dept">(${drawingInfo.userInfo.USER_ID})</span></p>
+                        </div>
+                        <div class="logStatus"><button type="submit">Log off</button></div>
                     </div>
-                    <div class="logStatus"><button type="submit">Log off</button></div>
+                    <%--<div class="langBtn">
+                        <button type="button" class="on">Korean</button>
+                        <button type="button">English</button>
+                    </div>--%>
                 </div>
-                <%--<div class="langBtn">
-                    <button type="button" class="on">Korean</button>
-                    <button type="button">English</button>
-                </div>--%>
-            </div>
-        </form>
-    </div>
-    <div class="rightWorkWrap">
-        <div class="workInWrap">
-            <c:if test="${empty drawingInfo.currentWork}">
-                <input type="hidden" name="curStatus" id="curStatus" value="stop">
-                <div class="contsTitWrap" id="workMainLastConts">
-                    <div class="contsTit"><srping:message key='drawing.board.label.11'/></div>
-                    <div class="slecBox"><a href="#"><srping:message key='drawing.board.label.12'/></a></div>
-                </div>
-            </c:if>
-            <c:if test="${not empty drawingInfo.currentWork}">
-                <input type="hidden" name="curStatus" id="curStatus" value="work">
-                <div class="contsTitWrap" id="workMainProgressConts" style="">
-                    <div class="contsTit"><srping:message key='drawing.board.label.13'/></div>
-                    <div class="right_sort">
-                        <button type="button" id="workCancelBtn" class="gradeMidBtn red"><srping:message key='drawing.board.button.06'/></button>
-                        <button type="button" id="workPuaseBtn" class="gradeMidBtn green"><srping:message key='drawing.board.button.07'/></button>
-                        <button type="button" id="workCompletelBtn" class="gradeMidBtn purple"><srping:message key='drawing.board.button.08'/></button>
+            </form>
+        </div>
+        <div class="rightWorkWrap">
+            <div class="workInWrap">
+                <c:if test="${empty drawingInfo.currentWork}">
+                    <input type="hidden" name="curStatus" id="curStatus" value="stop">
+                    <div class="contsTitWrap" id="workMainLastConts">
+                        <div class="contsTit"><srping:message key='drawing.board.label.11'/></div>
+                        <div class="slecBox"><a href="#"><srping:message key='drawing.board.label.12'/></a></div>
                     </div>
-<%--                    <div class="endBox"><a href="#">종료하기</a></div>--%>
-<%--                    <div class="stopBox"><a href="#">일시</br>정지</a></div>--%>
-<%--                    <div class="cancelBox"><a href="#">작업</br>취소</a></div>--%>
-                </div>
-            </c:if>
-            <div class="contsWrap">
-                <div class="topConts">
-                    <div class="timeWrap">
-                        <span class="timeTit"><srping:message key='drawing.board.button.01'/></span>
-                        <span class="time"><span><c:if test="${not empty workInfo}">${workInfo.WORK_START_DT}</c:if></span></span>
+                </c:if>
+                <c:if test="${not empty drawingInfo.currentWork}">
+                    <input type="hidden" name="curStatus" id="curStatus" value="work">
+                    <div class="contsTitWrap" id="workMainProgressConts" style="">
+                        <div class="contsTit"><srping:message key='drawing.board.label.13'/></div>
+                        <div class="right_sort">
+                            <button type="button" id="workCancelBtn" class="gradeMidBtn red"><srping:message key='drawing.board.button.06'/></button>
+                            <button type="button" id="workPuaseBtn" class="gradeMidBtn green"><srping:message key='drawing.board.button.07'/></button>
+                            <button type="button" id="workCompletelBtn" class="gradeMidBtn purple"><srping:message key='drawing.board.button.08'/></button>
+                        </div>
+    <%--                    <div class="endBox"><a href="#">종료하기</a></div>--%>
+    <%--                    <div class="stopBox"><a href="#">일시</br>정지</a></div>--%>
+    <%--                    <div class="cancelBox"><a href="#">작업</br>취소</a></div>--%>
                     </div>
-                    <div class="timeWrap">
-                        <span class="timeTit"><srping:message key='drawing.board.button.02'/></span>
-                        <span class="time"><span><c:if test="${not empty workInfo}">${workInfo.WORK_FINISH_DT}</c:if></span></span>
-                    </div>
-                    <div class="timeWrap">
-                        <span class="timeTit"><srping:message key='drawing.board.button.03'/></span>
-                        <span class="time"><c:if test="${not empty workInfo}">${workInfo.STOP_TIME}</c:if> &nbsp;<srping:message key='drawing.board.label.02'/></span>
-                    </div>
-                    <div class="timeWrap">
-                        <span class="timeTit"><srping:message key='drawing.board.button.04'/></span>
-                        <span class="time"><c:if test="${not empty workInfo}">${workInfo.WORK_TIME}</c:if> &nbsp;<srping:message key='drawing.board.label.02'/></span>
-                    </div>
-                </div>
-                <div class="middleConts">
-                    <div class="tbl">
-                        <table>
-                            <caption>관리번호, Part, 수량, 납기로 구분된 테이블</caption>
-                            <colgroup>
-                                <col width="288px">
-                                <col width="91px">
-                                <col width="111px">
-                                <col width="107px">
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th><srping:message key='drawing.board.label.03'/></th>
-                                <th><srping:message key='drawing.board.label.04'/></th>
-                                <th><srping:message key='drawing.board.label.05'/></th>
-                                <th><srping:message key='drawing.board.label.06'/></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td><div><c:if test="${not empty workInfo}">${workInfo.CONTROL_NUM}</c:if></div></td>
-                                <td><div><c:if test="${not empty workInfo}">${workInfo.PART_NUM}</c:if></div></td>
-                                <td><div><c:if test="${not empty workInfo}">${workInfo.ORDER_QTY}</c:if></div></td>
-                                <td><div><c:if test="${not empty workInfo}">${workInfo.INNER_DUE_DT}</c:if></div></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="share">
-                        <div class="shareTit"><srping:message key='drawing.board.label.07'/></div>
-                        <div class="shareConts"><c:if test="${not empty workInfo}">${workInfo.NOTE}</c:if></div>
-                    </div>
-                    <div class="qual">
-                        <div class="qualTit"><srping:message key='drawing.board.label.08'/></div>
-                        <div class="qualConts">
-                            <span><%--<img src="/barcode/code128/C000003844">--%></span>
+                </c:if>
+                <div class="contsWrap">
+                    <div class="topConts">
+                        <div class="timeWrap">
+                            <span class="timeTit"><srping:message key='drawing.board.button.01'/></span>
+                            <span class="time"><span><c:if test="${not empty workInfo}">${workInfo.WORK_START_DT}</c:if></span></span>
+                        </div>
+                        <div class="timeWrap">
+                            <span class="timeTit"><srping:message key='drawing.board.button.02'/></span>
+                            <span class="time"><span><c:if test="${not empty workInfo}">${workInfo.WORK_FINISH_DT}</c:if></span></span>
+                        </div>
+                        <div class="timeWrap">
+                            <span class="timeTit"><srping:message key='drawing.board.button.03'/></span>
+                            <span class="time"><c:if test="${not empty workInfo}">${workInfo.STOP_TIME}</c:if> &nbsp;<srping:message key='drawing.board.label.02'/></span>
+                        </div>
+                        <div class="timeWrap">
+                            <span class="timeTit"><srping:message key='drawing.board.button.04'/></span>
+                            <span class="time"><c:if test="${not empty workInfo}">${workInfo.WORK_TIME}</c:if> &nbsp;<srping:message key='drawing.board.label.02'/></span>
                         </div>
                     </div>
-                </div>
-                <div class="alertConts">
-                    <c:if test="${not empty workInfo && workInfo.MAIN_INSPECTION ne ''}">
-                        <span class="alertBox">${workInfo.MAIN_INSPECTION}</span>
-                    </c:if>
-                    <c:if test="${not empty workInfo && workInfo.EMERGENCY_YN eq 'Y'}">
-                        <span class="alertBox"><srping:message key='drawing.board.label.10'/></span>
-                    </c:if>
+                    <div class="middleConts">
+                        <div class="tbl">
+                            <table>
+                                <caption>관리번호, Part, 수량, 납기로 구분된 테이블</caption>
+                                <colgroup>
+                                    <col width="288px">
+                                    <col width="91px">
+                                    <col width="111px">
+                                    <col width="107px">
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th><srping:message key='drawing.board.label.03'/></th>
+                                    <th><srping:message key='drawing.board.label.04'/></th>
+                                    <th><srping:message key='drawing.board.label.05'/></th>
+                                    <th><srping:message key='drawing.board.label.06'/></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><div><c:if test="${not empty workInfo}">${workInfo.CONTROL_NUM}</c:if></div></td>
+                                    <td><div><c:if test="${not empty workInfo}">${workInfo.PART_NUM}</c:if></div></td>
+                                    <td><div><c:if test="${not empty workInfo}">${workInfo.ORDER_QTY}</c:if></div></td>
+                                    <td><div><c:if test="${not empty workInfo}">${workInfo.INNER_DUE_DT}</c:if></div></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="share">
+                            <div class="shareTit"><srping:message key='drawing.board.label.07'/></div>
+                            <div class="shareConts"><c:if test="${not empty workInfo}">${workInfo.NOTE}</c:if></div>
+                        </div>
+                        <div class="qual">
+                            <div class="qualTit"><srping:message key='drawing.board.label.08'/></div>
+                            <div class="qualConts">
+                                <span><%--<img src="/barcode/code128/C000003844">--%></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alertConts">
+                        <c:if test="${not empty workInfo && workInfo.MAIN_INSPECTION ne ''}">
+                            <span class="alertBox">${workInfo.MAIN_INSPECTION}</span>
+                        </c:if>
+                        <c:if test="${not empty workInfo && workInfo.EMERGENCY_YN eq 'Y'}">
+                            <span class="alertBox"><srping:message key='drawing.board.label.10'/></span>
+                        </c:if>
+                    </div>
                 </div>
             </div>
         </div>
@@ -393,7 +396,23 @@
 
     var $waitMeMainContainer;
 
+    $.fn.startWaitMe = function() {
+        $waitMeMainContainer = $('#waitMeContainerDiv').waitMe({});
+    };
+
+    $.fn.stopWaitMe = function() {
+        $waitMeMainContainer.waitMe('hide');
+    };
+
     $(function () {
+
+        $(document).ajaxStart(function() {
+            // show loader on start
+            $(this).startWaitMe();
+        }).ajaxSuccess(function() {
+            // hide loader on success
+            $(this).stopWaitMe();
+        });
 
         // 공통 SetTimeOut 변수
         let stopInterval;
@@ -405,14 +424,6 @@
             $(this).trigger(ev);
             return orig.apply(this, arguments);
         }
-
-        $.fn.startWaitMe = function() {
-            $waitMeMainContainer = $('#waitMeContainerDiv').waitMe({});
-        };
-
-        $.fn.stopWaitMe = function() {
-            $waitMeMainContainer.waitMe('hide');
-        };
 
         /** 메인 창에서 바코드 스캔 된 경우 **/
         /** 진행중인 작업이 없는 경우는 신규 작업 시작 처리 **/
@@ -812,7 +823,7 @@
         }
 
         function fnRemainTimeSet(seconds){
-            let html = "<srping:message key='drawing.board.alert.04'/> ("+seconds+")";
+            let html = seconds + " " + '<srping:message key='drawing.board.alert.04'/>';
             return html;
         }
 
