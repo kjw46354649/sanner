@@ -918,9 +918,7 @@
             <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
                 AND EXISTS (SELECT * FROM jmes.TBL_MCT_PLAN MP
                             WHERE A.CONTROL_SEQ = MP.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = MP.CONTROL_DETAIL_SEQ AND MP.DEL_YN = 'N'
-                                AND MP.EQUIP_SEQ IN <foreach collection="EQUIP_SEQ" item="item" separator="," open="(" close=")">
-                                                        #{item}
-                                                    </foreach>
+                                AND MP.EQUIP_SEQ = #{EQUIP_SEQ}
                             )
             </if>
             <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
@@ -933,14 +931,10 @@
                 AND UPPER(A.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
             </if>
             <if test="MATERIAL_DETAIL != null and MATERIAL_DETAIL != ''">
-                AND A.MATERIAL_DETAIL IN <foreach collection="MATERIAL_DETAIL" item="item" separator="," open="(" close=")">
-                                            #{item}
-                                        </foreach>
+                AND A.MATERIAL_KIND = #{MATERIAL_DETAIL}
             </if>
             <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
-                AND A.WORK_FACTORY IN <foreach collection="WORK_FACTORY" item="item" separator="," open="(" close=")">
-                                        #{item}
-                                    </foreach>
+                AND A.WORK_FACTORY = #{WORK_FACTORY}
             </if>
             <if test="BARCODE_NUM != null and BARCODE_NUM != ''">
                 AND EXISTS (SELECT 1 FROM jmes.TBL_CONTROL_BARCODE M
