@@ -991,6 +991,37 @@
         ORDER BY Z.CAM_SEQ, Z.SEQ
     </select>
 
+    <select id="selectStartMctCamCheck" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            CAM_SEQ, CASE WHEN A.FINISH_DT IS NULL THEN 'Y' ELSE 'N' END ALREADY_STARTED
+        FROM jmes.TBL_CAM A
+        WHERE 1 = 1
+          AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+          AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </select>
+
+    <insert id="insertCamWork"  parameterType="java.util.HashMap" >
+        <selectKey keyProperty="CAM_SEQ" resultType="integer" order="BEFORE">
+            SELECT NEXTVAL(SEQ_CAM) AS CAM_SEQ FROM DUAL
+        </selectKey>
+        INSERT INTO jmes.TBL_CAM
+        (CAM_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, START_DT, HISTORY_NOTE, NOTE, INSERT_ID)
+        VALUES
+        (#{CAM_SEQ}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}, NOW(), #{HISTORY_NOTE}, #{NOTE}, #{LOGIN_USER_ID})
+    </insert>
+
+    <insert id="updateCamWork"  parameterType="java.util.HashMap" >
+        UPDATE jmes.TBL_CAM
+        SET
+            FINISH_DT= NULL,
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE 1 = 1
+            AND CAM_SEQ = #{CAM_SEQ}
+            AND CONTROL_SEQ =  #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ =  #{CONTROL_DETAIL_SEQ}
+    </insert>
+
     <insert id="insertMctCamWork"  parameterType="java.util.HashMap" >
         <selectKey keyProperty="CAM_SEQ" resultType="integer" order="BEFORE">
             SELECT (CASE WHEN #{CAM_SEQ} IS NOT NULL THEN #{CAM_SEQ} ELSE NEXTVAL(SEQ_CAM) END) AS CAM_SEQ FROM DUAL

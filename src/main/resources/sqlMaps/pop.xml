@@ -67,7 +67,7 @@
                 IFNULL(A.PART_STATUS, SPACE(0)) AS PART_STATUS, <!-- CONTROL PART 현재 상태  -->
         	    A.INNER_WORK_FINISH_DT, <!-- 가공 완료 일시  -->
                 <!-- IFNULL(SF_GET_POP_PREV_POSITION(1, 'SEQ', A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ), SPACE(0)) AS POP_PREV_POSITION,  이전 POP SEQ -->
-                C.POP_VSEQ AS POP_PREV_POSITION, <!-- 이전 POP SEQ -->
+                C.POP_POSITION AS POP_PREV_POSITION, <!-- 이전 POP SEQ -->
                 IFNULL(A.OUTSIDE_YN, 'N') AS OUTSIDE_YN, <!-- 외주 가공 여부  -->
         	    (SELECT COUNT(*) FROM TBL_MCT_WORK T
         	        WHERE A.CONTROL_SEQ = T.CONTROL_SEQ
