@@ -67,7 +67,7 @@
 <script type="text/javascript" class="cssdesk" src="/resource/plugins/moment-2.11.0/min/moment.min.js"></script>
 
 <!-- Multi Select -->
-<%--<script type="text/javascript" src='/resource/plugins/multi_select/jquery.multi-select.js'></script>--%>
+<script type="text/javascript" src='/resource/plugins/multi_select/jquery.multi-select.js'></script>
 <script type="text/javascript" src='/resource/plugins/multiselect-master/scripts/helper.js'></script>
 <script type="text/javascript" src='/resource/plugins/multiselect-master/scripts/multiselect.core.js'></script>
 <script type="text/javascript" src='/resource/plugins/multiselect-master/scripts/multiselect.js'></script>

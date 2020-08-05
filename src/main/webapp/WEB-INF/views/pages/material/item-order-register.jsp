@@ -337,7 +337,7 @@
                 editable: function (ui) {return itemOrderRegisterGridCellEditable(ui);}
             },
             {title: '요청사항', align: "center", colModel: [
-                    {title: '요청사항', dataType: 'string', dataIndx: 'REQUEST_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, minWidth: 150,
+                    {title: '요청사항', dataType: 'html', dataIndx: 'REQUEST_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, minWidth: 150,
                         halign:'center', align: 'left',
                         editor: {
                             type: 'select',
@@ -347,18 +347,7 @@
                             options: fnGetCommCodeGridSelectBox('1026'),
                             attr: 'multiple',
                             init: function(ui) {
-                                let cellData = ui.cellData;
-
-                                $('.item_order_register_material_order_note').multiselect();
-
-                                if (cellData) {
-                                    cellData = cellData.split(',');
-                                    for (let i = 0, list = fnGetCommCodeGridSelectBox('1026'), LIST_LENGTH = list.length; i < LIST_LENGTH; i++) {
-                                        if(cellData.includes(list[i].text)) {
-                                            $('.item_order_register_material_order_note').multiselect().select(list[i].value);
-                                        }
-                                    }
-                                }
+                                $('.item_order_register_material_order_note').multiSelect();
                             },
                             getData: function(ui) {
                                 let clave = ui.$cell.find("select").val();
@@ -588,19 +577,8 @@
                             labelIndx: "text",
                             options: fnGetCommCodeGridSelectBox('1026'),
                             attr: 'multiple',
-                            init: function(ui) {
-                                let cellData = ui.cellData;
-
-                                $('.item_order_register_pop_material_order_note').multiselect();
-
-                                if (cellData) {
-                                    cellData = cellData.split(',');
-                                    for (let i = 0, list = fnGetCommCodeGridSelectBox('1026'), LIST_LENGTH = list.length; i < LIST_LENGTH; i++) {
-                                        if(cellData.includes(list[i].text)) {
-                                            $('.item_order_register_pop_material_order_note').multiselect().select(list[i].value);
-                                        }
-                                    }
-                                }
+                            init: function (ui) {
+                                $('.item_order_register_pop_material_order_note').multiSelect();
                             },
                             getData: function (ui) {
                                 let clave = ui.$cell.find("select").val();
@@ -793,19 +771,8 @@
                             labelIndx: "text",
                             options: fnGetCommCodeGridSelectBox('1026'),
                             attr: 'multiple',
-                            init: function(ui) {
-                                let cellData = ui.cellData;
-
-                                $('.item_order_register_pop_material_order_note').multiselect();
-
-                                if (cellData) {
-                                    cellData = cellData.split(',');
-                                    for (let i = 0, list = fnGetCommCodeGridSelectBox('1026'), LIST_LENGTH = list.length; i < LIST_LENGTH; i++) {
-                                        if(cellData.includes(list[i].text)) {
-                                            $('.item_order_register_pop_material_order_note').multiselect().select(list[i].value);
-                                        }
-                                    }
-                                }
+                            init: function (ui) {
+                                $('.item_order_register_pop_material_order_note').multiSelect();
                             },
                             getData: function (ui) {
                                 let clave = ui.$cell.find("select").val();
@@ -877,7 +844,7 @@
             height: '100%',
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'CONTROL_DETAIL_SEQ',
-                url: "/paramQueryGridSelectIncludeArray",
+                url: "/paramQueryGridSelect",
                 postData: fnFormToJsonArrayData('#item_order_register_search_form'),
                 getData: function (dataJSON) {
                     let data = dataJSON.data;
@@ -1137,7 +1104,7 @@
         });
 
         $("#btnItemOrderRegisterSave").on('click', function(){
-            let itemOrderRegisterInsertUpdateQueryList = ['insertUpdateItemOrderRegister'];
+            let itemOrderRegisterInsertUpdateQueryList = ['material.insertUpdateItemOrderRegister'];
             fnModifyPQGrid(itemOrderRegisterLeftGrid, itemOrderRegisterInsertUpdateQueryList, itemOrderRegisterInsertUpdateQueryList);
         });
 
