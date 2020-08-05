@@ -346,8 +346,23 @@
                             labelIndx: "text",
                             options: fnGetCommCodeGridSelectBox('1026'),
                             attr: 'multiple',
-                            init: function(ui) {
-                                $('.item_order_register_material_order_note').multiSelect();
+                            init: function (ui) {
+                                let cellData = ui.cellData;
+                                let codeList = [];
+
+                                if (cellData) {
+                                    cellData = cellData.split(',');
+                                    for (let i = 0, list = fnGetCommCodeGridSelectBox('1026'), LIST_LENGTH = list.length; i < LIST_LENGTH; i++) {
+                                        if (cellData.includes(list[i].text)) {
+                                            codeList.push(list[i].value);
+                                        }
+                                    }
+                                }
+                                ui.$editor.val(codeList).pqSelect({
+                                    checkbox: true,
+                                    multiplePlaceholder: "<spring:message code='com.form.top.sel.option'/>",
+                                    selectallText: "<spring:message code='com.form.top.all.option'/>"
+                                });
                             },
                             getData: function(ui) {
                                 let clave = ui.$cell.find("select").val();
@@ -578,7 +593,22 @@
                             options: fnGetCommCodeGridSelectBox('1026'),
                             attr: 'multiple',
                             init: function (ui) {
-                                $('.item_order_register_pop_material_order_note').multiSelect();
+                                let cellData = ui.cellData;
+                                let codeList = [];
+
+                                if (cellData) {
+                                    cellData = cellData.split(',');
+                                    for (let i = 0, list = fnGetCommCodeGridSelectBox('1026'), LIST_LENGTH = list.length; i < LIST_LENGTH; i++) {
+                                        if (cellData.includes(list[i].text)) {
+                                            codeList.push(list[i].value);
+                                        }
+                                    }
+                                }
+                                ui.$editor.val(codeList).pqSelect({
+                                    checkbox: true,
+                                    multiplePlaceholder: "<spring:message code='com.form.top.sel.option'/>",
+                                    selectallText: "<spring:message code='com.form.top.all.option'/>"
+                                });
                             },
                             getData: function (ui) {
                                 let clave = ui.$cell.find("select").val();
@@ -772,7 +802,22 @@
                             options: fnGetCommCodeGridSelectBox('1026'),
                             attr: 'multiple',
                             init: function (ui) {
-                                $('.item_order_register_pop_material_order_note').multiSelect();
+                                let cellData = ui.cellData;
+                                let codeList = [];
+
+                                if (cellData) {
+                                    cellData = cellData.split(',');
+                                    for (let i = 0, list = fnGetCommCodeGridSelectBox('1026'), LIST_LENGTH = list.length; i < LIST_LENGTH; i++) {
+                                        if (cellData.includes(list[i].text)) {
+                                            codeList.push(list[i].value);
+                                        }
+                                    }
+                                }
+                                ui.$editor.val(codeList).pqSelect({
+                                    checkbox: true,
+                                    multiplePlaceholder: "<spring:message code='com.form.top.sel.option'/>",
+                                    selectallText: "<spring:message code='com.form.top.all.option'/>"
+                                });
                             },
                             getData: function (ui) {
                                 let clave = ui.$cell.find("select").val();
