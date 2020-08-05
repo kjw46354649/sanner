@@ -17,6 +17,7 @@
 <link rel="stylesheet" type="text/css" href="/resource/plugins/jquery-ui-1.11.4/themes/smoothness/jquery-ui.min.css" />
 <!--ParamQuery Grid css files-->
 <link rel="stylesheet" type="text/css" href="/resource/plugins/paramquery/pqgrid.min.css" />
+<link rel="stylesheet" type="text/css" href="/resource/plugins/paramquery/pqSelect/pqselect.min.css" />
 <!--add pqgrid.ui.css for jQueryUI theme support-->
 <link rel="stylesheet" type="text/css" href="/resource/plugins/paramquery/pqgrid.ui.min.css" />
 <!--Bootstrap dependencies-->
