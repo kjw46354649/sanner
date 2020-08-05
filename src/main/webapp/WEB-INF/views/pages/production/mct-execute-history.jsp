@@ -330,9 +330,9 @@
                 <ul>
                     <li>
                         <span class="slt_wrap">
-                            <label class="label_100" for="COMP_CD">MCT 공장 구분</label>
-                            <select class="wd_200" name="COMP_CD" id="COMP_CD">
-                                <option value="">전체</option>
+                            <label class="label_100" for="FACTORY_AREA">MCT 공장 구분</label>
+                            <select class="wd_200" name="FACTORY_AREA" id="FACTORY_AREA">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1005}">
                                     <c:if test="${code.ETC2 == 'W'}">
                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -349,9 +349,9 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="CLOSE_VER">소재종류</label>
-                            <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
-                                <option value="">전체</option>
+                            <label class="label_100" for="MATERIAL_DETAIL">소재종류</label>
+                            <select class="wd_200" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1027}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -359,19 +359,24 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
-                            <label class="label_100" for="CLOSE_NOTE">후처리</label>
-                            <input type="text" class="wd_200" name="CLOSE_NOTE" id="CLOSE_NOTE">
+                            <label class="label_100" for="SURFACE_TREAT">표면처리</label>
+                             <select class="wd_200" name="SURFACE_TREAT" id="SURFACE_TREAT">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                <c:forEach var="code" items="${HighCode.H_1039}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
                         </span>
                     </li>
                     <li>
                         <span class="ipu_wrap">
                             <label class="label_100" for="CONTROL_NUM">관리번호</label>
-                            <input type="text" class="label_200"name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
+                            <input type="text" class="label_200" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="DRAWING_NUM">도면번호</label>
-                            <input type="text" class="label_200"name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
+                            <input type="text" class="label_200" name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
                         </span>
                         <span class="gubun"></span>
 <%--                        <span class="slt_wrap">--%>
@@ -382,9 +387,9 @@
 <%--                        </span>--%>
 <%--                        <span class="gubun"></span>--%>
                         <span class="slt_wrap">
-                            <label class="label_100" for="CLOSE_VER">형태</label>
-                            <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
-                                <option value="">전체</option>
+                            <label class="label_100" for="WORK_TYPE">형태</label>
+                            <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1033}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -400,18 +405,19 @@
                     </li>
                     <li>
                         <span class="slt_wrap trans_slt mg-right10">
-                            <select id="daySltd" name="daySltd" title="등록일시">
-                                <option value="1" selected="selected">수정일시</option>
+                            <select name="CAM_WORK_HISTORY_CONDITION" id="CAM_WORK_HISTORY_CONDITION">
+                                <option value=""><spring:message code="com.form.top.sel.option"/></option>
+                                <option value="1">수정일시</option>
                                 <option value="2">가공확정일시</option>
                             </select>
                         </span>
                         <div class="calendar_wrap">
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="mct_nc_execute_history_start_dt" id="mct_nc_execute_history_start_dt"><button type="button">달력선택</button>
+                                <input type="text" class="datepicker-input" name="mct_nc_execute_history_start_dt" id="mct_nc_execute_history_start_dt"><button type="button">달력선택</button>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="mct_nc_execute_history_end_dt" id="mct_nc_execute_history_end_dt" readonly><button type="button">달력선택</button>
+                                <input type="text" class="datepicker-input" name="mct_nc_execute_history_end_dt" id="mct_nc_execute_history_end_dt" readonly><button type="button">달력선택</button>
                             </span>
                             <%--<span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>--%>
                         </div>
@@ -429,9 +435,9 @@
                 <ul>
                     <li>
                         <span class="slt_wrap">
-                            <label class="label_100" for="COMP_CD">MCT 공장 구분</label>
+                            <label class="label_100" for="FACTORY_AREA">MCT 공장 구분</label>
                             <select class="wd_200" name="FACTORY_AREA" id="FACTORY_AREA" title="공장구분">
-                                <option value="">전체</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1005}">
                                     <c:if test="${code.ETC2 == 'W'}">
                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -443,14 +449,14 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="EQUIP_SEQ">NC NO.</label>
                             <select class="wd_200" name="EQUIP_SEQ" id="EQUIP_SEQ">
-                                <option value="">전체</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="CLOSE_VER">소재종류</label>
-                            <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
-                                <option value="">전체</option>
+                            <label class="label_100" for="MATERIAL_DETAIL">소재종류</label>
+                            <select class="wd_200" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1027}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -458,9 +464,9 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="CLOSE_VER">형태</label>
-                            <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
-                                <option value="">전체</option>
+                            <label class="label_100" for="WORK_TYPE">형태</label>
+                            <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1033}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -479,15 +485,15 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="CLOSE_VER">작업자</label>
+                            <label class="label_100" for="WORK_USER_ID">작업자</label>
                             <select class="wd_200" name="WORK_USER_ID" id="WORK_USER_ID">
-                                <option value="">전체</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                     </li>
                     <li>
                         <span class="slt_wrap trans_slt mg-right10">
-                            <label class="label_100" for="CLOSE_VER">작업일시</label>
+                            <label class="label_100">작업일시</label>
                             <%--<select id="daySltd" name="daySltd" title="등록일시">
                                 <option value="" selected="selected">등록일시</option>
                                 <option value="1">-ALL-</option>
@@ -496,11 +502,11 @@
                         </span>
                         <div class="calendar_wrap">
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="mct_dw_execute_history_start_dt" id="mct_dw_execute_history_start_dt"><button type="button">달력선택</button>
+                                <input type="text" class="datepicker-input" name="mct_dw_execute_history_start_dt" id="mct_dw_execute_history_start_dt"><button type="button">달력선택</button>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="mct_dw_execute_history_end_dt" id="mct_dw_execute_history_end_dt" readonly><button type="button">달력선택</button>
+                                <input type="text" class="datepicker-input" name="mct_dw_execute_history_end_dt" id="mct_dw_execute_history_end_dt" readonly><button type="button">달력선택</button>
                             </span>
 <%--                            <span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>--%>
                         </div>
@@ -623,7 +629,7 @@
                     return { cls: cls, text: text };
                 }
             },
-            {title: '가공<br>납기', minWidth: 15, width: 40, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
+            {title: '가공<br>납기', width: 40, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
             {title: '가공<br>완료', dataType: 'string', dataIndx: 'CNFRH'},
             {title: '긴<br>급', dataType: 'string', dataIndx: 'EMERGENCY_YN', minWidth: 15, width: 20},
             {title: '주<br>요', dataType: 'string', dataIndx: 'MAIN_INSPECTION', minWidth: 15, width: 20},
@@ -706,9 +712,9 @@
                         }
                     },
                     {title: '위치', datatype: 'string', dataIndx: 'WORK_DIRECTION'},
-                    {title: '작업내용', minWidth: 80, width: 80, datatype: 'string', dataIndx: 'WORK_DESC'},
-                    {title: '작업자', minWidth: 100, width: 100, datatype: 'string', dataIndx: 'WORK_USER_NM'},
-                    {title: '파일', minWidth: 60, width: 60, datatype: 'string', dataIndx: '',
+                    {title: '작업내용', width: 80, datatype: 'string', dataIndx: 'WORK_DESC'},
+                    {title: '작업자', width: 100, datatype: 'string', dataIndx: 'WORK_USER_NM'},
+                    {title: '파일', width: 80, datatype: 'string', dataIndx: '',
                         render: function (ui) {
                             let rowData = ui.rowData;
                             let iconFiles = '';
@@ -733,7 +739,7 @@
                             });
                         }
                     },
-                    {title: '비고 및 공유사항',  minWidth: 100, width: 150, datatype: 'string', dataIndx: 'NOTE'},
+                    {title: '비고 및 공유사항',  width: 150, datatype: 'string', dataIndx: 'NOTE'},
                     {title: 'Update', minWidth: 75, width: 75, datatype: 'string', dataIndx: 'CAM_FINISH_DT'}
                 ]
             }
@@ -777,7 +783,7 @@
                 $("#camWorkHistoryFrozen").html(frozenOts);
             },
             complete: function () {
-                this.flex();
+                // this.flex();
             }
         };
         let $ncPerformanceHistoryGrid;
@@ -1147,7 +1153,14 @@
             $("#cam_work_history_pop_form").find("#HISTORY_NOTE").attr('disabled', disableFlag);
             $("#cam_work_history_pop_form").find("#NOTE").attr('readonly', disableFlag);
             $("#cam_work_history_pop_form").find("#NOTE").attr('disabled', disableFlag);
-        }
+        };
+
+        $(".datepicker-input").each(function () {
+            $(this).datepicker({
+                dateFormat: 'yy/mm/dd',
+            });
+            $(this).datepicker('setDate', 'today');
+        });
 
         /* init */
     });

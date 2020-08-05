@@ -39,26 +39,27 @@
                         <span class="slt_wrap mg-right10">
                             <label class="label_100" for="SEL_OUTGOING_DATE_TYPE">구분</label>
                             <select class="wd_200" name="SEL_OUTGOING_DATE_TYPE" id="SEL_OUTGOING_DATE_TYPE">
-                               <option value="1">등록일시</option>
+                                <option value=""><spring:message code="com.form.top.sel.option"/></option>
+                                <option value="1">등록일시</option>
                             </select>
                         </span>
                         <span class="radio_box">
-                            <input reqcd="R" type="radio" name="SEL_OUTGOING_TERM" id="SEL_OUTGOING_TERM_1" value="0" ><label for="SEL_OUTGOING_TERM_1">오늘</label>
+                            <input reqcd="R" type="radio" name="SEL_OUTGOING_RETURN_TERM" id="SEL_OUTGOING_RETURN_TERM_1" value="0" ><label for="SEL_OUTGOING_RETURN_TERM_1">오늘</label>
                         </span>
                         <span class="radio_box">
-                            <input reqcd="R" type="radio" name="SEL_OUTGOING_TERM" id="SEL_OUTGOING_TERM_2" value="3"><label for="SEL_OUTGOING_TERM_2">~3일</label>
+                            <input reqcd="R" type="radio" name="SEL_OUTGOING_RETURN_TERM" id="SEL_OUTGOING_RETURN_TERM_2" value="3"><label for="SEL_OUTGOING_RETURN_TERM_2">~3일</label>
                         </span>
                         <span class="radio_box">
-                            <input reqcd="R" type="radio" name="SEL_OUTGOING_TERM" id="SEL_OUTGOING_TERM_3" value="7"><label for="SEL_OUTGOING_TERM_3">~1주일</label>
+                            <input reqcd="R" type="radio" name="SEL_OUTGOING_RETURN_TERM" id="SEL_OUTGOING_RETURN_TERM_3" value="7"><label for="SEL_OUTGOING_RETURN_TERM_3">~1주일</label>
                         </span>
                         <div class="calendar_wrap">
                             <span class="calendar_span">
-                                <input class="datepicker-input" type="text" name="SEL_ST_DT" id="SEL_ST_DT" placeholder="" value="" title="시작날짜" readonly>
+                                <input class="datepicker-input" type="text" name="SEL_ST_DT" id="SEL_OUTGOING_RETURN_ST_DT" placeholder="" value="" title="시작날짜" readonly>
 <%--                                <button type="button">달력선택</button>--%>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input class="datepicker-input" type="text" name="SEL_END_DT" id="SEL_END_DT" placeholder="" value="" title="종료날짜" readonly>
+                                <input class="datepicker-input" type="text" name="SEL_END_DT" id="SEL_OUTGOING_RETURN_END_DT" placeholder="" value="" title="종료날짜" readonly>
 <%--                                <button type="button">달력선택</button>--%>
                             </span>
                         </div>
@@ -105,11 +106,11 @@
     $(function () {
         'use strict';
 
-        $("#outgoing_history_form").find('#SEL_ST_DT').datepicker({dateFormat: 'yy/mm/dd'});
-        $("#outgoing_history_form").find('#SEL_END_DT').datepicker({dateFormat: 'yy/mm/dd'});
+        $("#outgoing_history_form").find('#SEL_OUTGOING_RETURN_ST_DT').datepicker({dateFormat: 'yy/mm/dd'});
+        $("#outgoing_history_form").find('#SEL_OUTGOING_RETURN_END_DT').datepicker({dateFormat: 'yy/mm/dd'});
         $("#outgoing_history_form").find(".datepicker-input").each(function(){ $(this).datepicker();});
         $("#outgoing_history_form").find(".datepicker-input").each(function(){ $(this).datepicker('setDate', 'today');});
-        $("#outgoing_history_form").find("#SEL_OUTGOING_TERM_1").trigger("click");
+        $("#outgoing_history_form").find("#SEL_OUTGOING_RETURN_TERM_1").trigger("click");
 
         let outgoingHistoryGridId01 = $("#outgoing_history_grid");
         let outgoingHistoryColModel01;
@@ -289,12 +290,12 @@
             outgoingHistoryGridId01.pqGrid("refreshDataAndView");
         });
 
-        $("#outgoing_history_form").find('[name=SEL_OUTGOING_TERM]').change(function () {
+        $("#outgoing_history_form").find('[name=SEL_OUTGOING_RETURN_TERM]').change(function () {
             let value = $(this).val(), today = new Date(), newDate = new Date();
 
             newDate.setDate(newDate.getDate() - value);
-            $("#outgoing_history_form").find('#SEL_ST_DT').val(newDate.yyyymmdd());
-            $("#outgoing_history_form").find('#SEL_END_DT').val(today.yyyymmdd());
+            $("#outgoing_history_form").find('#SEL_OUTGOING_RETURN_ST_DT').val(newDate.yyyymmdd());
+            $("#outgoing_history_form").find('#SEL_OUTGOING_RETURN_END_DT').val(today.yyyymmdd());
             // outgoingChangeDate(newDate, today);
 
         });

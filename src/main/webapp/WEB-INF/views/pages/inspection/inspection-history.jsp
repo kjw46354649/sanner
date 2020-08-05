@@ -30,8 +30,8 @@
                          </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="MATERIAL_DETAIL">소재종류</label>
-                            <select id="MATERIAL_DETAIL" name="MATERIAL_DETAIL" title="소재종류" class="wd_200">
+                            <label class="label_100" for="SEL_MATERIAL_DETAIL">소재종류</label>
+                            <select id="SEL_MATERIAL_DETAIL" name="SEL_MATERIAL_DETAIL" title="소재종류" class="wd_200">
                               <option value=""><spring:message code="com.form.top.all.option" /></option>
                               <c:forEach var="vlocale" items="${HighCode.H_1027}">
                                   <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
@@ -53,7 +53,7 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap">1040
                             <label class="label_100" for="SEL_INSPECT_GRADE_SELECT">검사결과등급</label>
-                            <input type="text" class="wd_200" name="SEL_INSPECT_GRADE_SELECT" id="SEL_INSPECT_GRADE_SELECT" placeholder="ALL(복수선택가능)" title="검사결과등급">
+                            <input type="text" class="wd_200" name="SEL_INSPECT_GRADE_SELECT" id="SEL_INSPECT_GRADE_SELECT" placeholder="<spring:message code='com.form.top.all.option' />(복수선택가능)" title="검사결과등급">
                             <input type="hidden" name="SEL_INSPECT_GRADE" id="SEL_INSPECT_GRADE">
                         </span>
                         <span class="gubun"></span>

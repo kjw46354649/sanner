@@ -34,7 +34,7 @@
                 <%--<span><srping:message key="drawing.login.user.department"/></span>--%>
                 <span>
                     <select id="DEPT" name="DEPT" title="부서">
-                        <option value="">전체</option>
+                        <option value=""><spring:message code="com.form.top.all.option"/></option>
                         <c:forEach var="code" items="${workerGroupList}">
                             <option value="${code.CODE_CD}">${code.CODE_NM}</option>
                         </c:forEach>

@@ -40,7 +40,9 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label for="SEL_EQUIP_NM" class="label_100">장비명</label>
-                            <input type="text" name="SEL_EQUIP_NM" id="SEL_EQUIP_NM" placeholder="장비명" value="" title="장비명" class="wd_200">
+                            <select class="wd_200" name="SEL_EQUIP_NM" id="SEL_EQUIP_NM" title="장비명" >
+                                <option value=""><spring:message code="com.form.top.all.option" /></option>
+                            </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -56,12 +58,15 @@
                     </li>
                     <li>
                         <span class="ipu_wrap"><label for="SEL_MAIN_USER_ID" class="label_100">담당자</label>
-                            <input type="text" name="SEL_MAIN_USER_ID" id="SEL_MAIN_USER_ID" placeholder="담당자" value="" title="담당자" class="wd_200">
+                            <select class="wd_200" name="SEL_MAIN_USER_ID" id="SEL_MAIN_USER_ID" title="담당자" >
+                                <option value=""><spring:message code="com.form.top.all.option" /></option>
+                            </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                              <label for="SEL_DAY_TYPE" class="label_100">날짜조회</label>
                             <select id="SEL_DAY_TYPE" name="SEL_DAY_TYPE" title="날짜조회" class="wd_100">
+                                <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                 <option value="1">구입시기</option>
 <%--                                <option value="2">정비일시</option>--%>
 <%--                                <option value="3">최근종료일시</option>--%>
@@ -69,16 +74,16 @@
                         </span>
                         <div class="calendar_wrap">
                             <span class="calendar_span">
-                                <input class="datepicker-input" type="text" name="SEL_ST_DT" id="SEL_ST_DT" placeholder="" value="" title="시작날짜">
+                                <input class="datepicker-input" type="text" name="SEL_ST_DT" id="SEL_MACHINE_MANAGE_ST_DT" placeholder="" value="" title="시작날짜">
 <%--                                <button type="button">달력선택</button>--%>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input class="datepicker-input" type="text" name="SEL_END_DT" id="SEL_END_DT" placeholder="" value="" title="종료날짜">
+                                <input class="datepicker-input" type="text" name="SEL_END_DT" id="SEL_MACHINE_MANAGE_END_DT" placeholder="" value="" title="종료날짜">
 <%--                                <button type="button">달력선택</button>--%>
                             </span>
                         </div>
-                        <span class="chk_box mg-left20">&nbsp;&nbsp;<input id="SEL_TERM_DT_USE" name="SEL_TERM_DT_USE" type="checkbox"><label for="SEL_TERM_DT_USE">선택</label></span>
+<%--                        <span class="chk_box mg-left20">&nbsp;&nbsp;<input id="SEL_TERM_DT_USE" name="SEL_TERM_DT_USE" type="checkbox"><label for="SEL_TERM_DT_USE">선택</label></span>--%>
                         <button type="button" class="right_float defaultBtn radius blue" id="searchBtn">검색</button>
                     </li>
                 </ul>
@@ -402,6 +407,12 @@
 
     $(function () {
         'use strict';
+        fnCommCodeDatasourceSelectBoxCreate($('#machine_manage_search_form').find('#SEL_MAIN_USER_ID'), 'all', {
+            'url': '/json-list', 'data': {'queryId': 'dataSource.getUserList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#machine_manage_search_form').find('#SEL_EQUIP_NM'), 'all', {
+            'url': '/json-list', 'data': {'queryId': 'dataSource.getEquipList'}
+        });
 
         /**  가공장비 그리드 선언 시작 **/
         currentPostData = fnFormToJsonArrayData('#machine_manage_search_form');
@@ -879,16 +890,15 @@
             $('#CURRENT_POPUP').modal('show');
         });
         $saveBtn.click(function(event){
-
-            if(confirm("저장 하시겠습니까?")){
+            fnConfirm(null, "저장 하시겠습니까?", function () {
                 // 그리드 데이터 폼에 넣기 to-do
                 let EQUIP_SEQ = $("#machine_manage_pop_form").find("#EQUIP_SEQ").val();
-                if(EQUIP_SEQ != ""){
+                if (EQUIP_SEQ != "") {
                     var gridInstance = $historyGrid.pqGrid('getInstance').grid;
                     var changes = gridInstance.getChanges({format: 'byVal'});
                     $("#machine_manage_pop_form").find("#historyGrid").val(JSON.stringify(changes));
                     // console.log("change",JSON.stringify(changes));
-                }else{
+                } else {
                     $("#machine_manage_pop_form").find("#historyGrid").val("");
                 }
                 //let data_history = $historyGrid.pqGrid('option', 'dataModel.data');
@@ -909,13 +919,10 @@
                     $('#CURRENT_POPUP').modal('hide');
                     $searchBtn.trigger("click");
                 }, parameters, '');
-
-            }
+            });
         });
-        $deleteBtn.click(function(event){
-            if(confirm("삭제하시겠습니까?")){
-
-
+        $deleteBtn.click(function (event) {
+            fnConfirm(null, "삭제하시겠습니까?", function () {
                 $("#machine_manage_pop_form").find("#queryId").val("machine.deleteMachineMaster");
                 let parameters = {
                     'url': '/json-update',
@@ -924,32 +931,25 @@
                 fnPostAjax(function (data, callFunctionParam) {
                     fnAlertMessageAutoClose('remove');
                 }, parameters, '');
-            };
+            });
         });
 
         $('#machine_manage_pop_form').find('#machine_manage_pop-close, #machine_manage_pop-close2').on('click', function () {
             $('#CURRENT_POPUP').modal('hide');
         });
-        $('#SEL_TERM_DT_USE').on('click', function(e) {
-            if ($(this).is(':checked')) {
-                $(this).val('Y');
-            }else {
-                $(this).val('N');
-            }
-        });
 
         $searchBtn.on('click', function(e) {
             let targetTab = $("#machine_manage_search_form").find("#SEL_EQUIP_KIND").val();
-            let SEL_TERM_DT_USE = $("#machine_manage_search_form").find("#SEL_TERM_DT_USE").val();
-            let SEL_ST_DT = $("#machine_manage_search_form").find("#SEL_ST_DT").val();
-            let SEL_END_DT = $("#machine_manage_search_form").find("#SEL_END_DT").val();
-
-            if(SEL_TERM_DT_USE == "Y"){
-                if(SEL_ST_DT == "" || SEL_END_DT == ""){
-                    alert("날짜 검색을 선택하셨습니다.\n시작날짜와 종료날짜를 선택하여 주십시오.");
-                    return;
-                }
-            }
+            // let SEL_TERM_DT_USE = $("#machine_manage_search_form").find("#SEL_TERM_DT_USE").val();
+            // let SEL_MACHINE_MANAGE_ST_DT = $("#machine_manage_search_form").find("#SEL_MACHINE_MANAGE_ST_DT").val();
+            // let SEL_MACHINE_MANAGE_END_DT = $("#machine_manage_search_form").find("#SEL_MACHINE_MANAGE_END_DT").val();
+            //
+            // if (SEL_TERM_DT_USE == "Y") {
+            //     if (SEL_MACHINE_MANAGE_ST_DT == "" || SEL_MACHINE_MANAGE_END_DT == "") {
+            //         alert("날짜 검색을 선택하셨습니다.\n시작날짜와 종료날짜를 선택하여 주십시오.");
+            //         return;
+            //     }
+            // }
 
             if(targetTab == "1"){
                 //$currentGrid = $('#' + currentGridId).pqGrid(currentObj);

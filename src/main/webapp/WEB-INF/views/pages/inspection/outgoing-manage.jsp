@@ -37,11 +37,20 @@
                         <span class="slt_wrap mg-right10">
                             <label class="label_100" for="SEL_OUTGOING_DATE_TYPE">구분</label>
                             <select class="wd_100" name="SEL_OUTGOING_DATE_TYPE" id="SEL_OUTGOING_DATE_TYPE">
-<%--                               <option value=""><spring:message code="com.form.top.all.option" /></option>--%>
+                               <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                 <c:forEach var="vlocale" items="${HighCode.H_1066}">
                                     <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
+                        </span>
+                        <span class="radio_box">
+                            <input reqcd="R" type="radio" name="SEL_OUTGOING_TERM" id="SEL_OUTGOING_TERM_1" value="0" ><label for="SEL_OUTGOING_TERM_1">오늘</label>
+                        </span>
+                        <span class="radio_box">
+                            <input reqcd="R" type="radio" name="SEL_OUTGOING_TERM" id="SEL_OUTGOING_TERM_2" value="3"><label for="SEL_OUTGOING_TERM_2">~3일</label>
+                        </span>
+                        <span class="radio_box">
+                            <input reqcd="R" type="radio" name="SEL_OUTGOING_TERM" id="SEL_OUTGOING_TERM_3" value="7"><label for="SEL_OUTGOING_TERM_3">~1주일</label>
                         </span>
                         <div class="calendar_wrap">
                             <span class="calendar_span">
@@ -58,7 +67,7 @@
                         <span class="txt_span"><label class="label_100" for="SEL_PART_NUM_VIEW_YN">Option</label></span>
 <%--                        <span class="chk_box"><input id="SEL_DELAY_TOP" name="SEL_DELAY_TOP" type="checkbox"><label for="SEL_DELAY_TOP">지연대상 항시 상단표시</label></span>--%>
                         <span class="chk_box"><input id="SEL_PART_NUM_VIEW_YN" name="SEL_PART_NUM_VIEW_YN" type="checkbox"><label for="SEL_PART_NUM_VIEW_YN">Part 단위 표시</label></span>
-                        <span class="chk_box"><input id="" name="" type="checkbox"><label for="">출고 완료 제외</label></span>
+                        <span class="chk_box"><input id="SEL_OUT_FINISH_YN" name="SEL_OUT_FINISH_YN" type="checkbox"><label for="SEL_OUT_FINISH_YN">출고 완료 제외</label></span>
                         <button type="button" class="right_float defaultBtn radius blue" id="outgoing_manage_search_btn">검색</button>
                     </li>
                 </ul>
@@ -1304,7 +1313,7 @@
             let ORG_REAL_OUT_QTY = $('#outgoing_manage_return_form').find('#ORG_REAL_OUT_QTY').val();
             let ERROR_QTY = $('#outgoing_manage_return_form').find('#ERROR_QTY').val();
 
-            console.log("ERROR_QTY", ERROR_QTY);
+            // console.log("ERROR_QTY", ERROR_QTY);
             if (type === "PLUS") {
                 if (parseInt(ORG_REAL_OUT_QTY) > parseInt(ERROR_QTY)) {
                     ERROR_QTY = parseInt(ERROR_QTY) + 1;
@@ -1508,7 +1517,7 @@
 
                         if (barcodeType == "L") {
                             fnJsonDataToForm("outgoing_manage_pop_type_label_form", dataInfo);
-                            console.log(dataInfo);
+                            // console.log(dataInfo);
                             $("#outgoing_manage_pop_type_label_form").find("#outgoing_manage_pop_type_label_form_view_1").html(dataInfo.QTY_INFO);
                             $("#outgoing_manage_pop_type_label_form").find("#outgoing_manage_pop_type_label_form_view_2").html(dataInfo.REMAIN_PACKING_CNT);
                             $("#outgoing_manage_pop_type_label_form").find("#outgoing_manage_pop_type_label_form_view_3").html(dataInfo.MY_PACKING_NUM);
@@ -1648,10 +1657,6 @@
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
 
-        $("#outBtn").on('click', function () {
-            fnAlert(null, "outBtn");
-
-        });
         $(document).on('click', '#outBtn', function (event) {
             let control_seq = event.target.dataset.control_seq;
             let control_detail_seq = event.target.dataset.control_detail_seq;

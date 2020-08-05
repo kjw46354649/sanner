@@ -337,14 +337,14 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="EQUIP_SEQ">NC NO.</label>
                             <select class="wd_200" name="EQUIP_SEQ" id="EQUIP_SEQ">
-                                <option value="">전체</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_50" for="MATERIAL_DETAIL">소재종류</label>
                             <select class="wd_200" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL">
-                                <option value="">전체</option>
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1027}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -712,6 +712,7 @@
                 }
             },
             load: function( event, ui ) {
+                //필터
                 var filterOpts = '<option value=\"\">All Fields</option>';
                 var frozenOts = '<option value="0">Selected</option>';
                 this.getColModel().forEach(function(column){
@@ -725,6 +726,8 @@
                 $("#mctResultManageFilterColumn").html(filterOpts);
                 $("#mctResultManageFrozen").empty();
                 $("#mctResultManageFrozen").html(frozenOts);
+                // footer
+                $('#machine_result_manage_grid-total-records').html(ui.dataModel.data.length);
             },
             change: function (evt, ui) {
                 let updateList = ui.updateList;

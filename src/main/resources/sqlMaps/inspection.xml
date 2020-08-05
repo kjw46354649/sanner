@@ -13,6 +13,7 @@
                 , X.EMERGENCY_YN, X.MAIN_INSPECTION, SF_GET_CODE_NM(1059, X.MAIN_INSPECTION, 'KR') AS MAIN_INSPECTION_NM
                 , X.MCT_WORK_SEQ, X.INSPECT_SEQ, Z.INSPECT_TYPE, Z.INSPECT_GRADE
                 , jmes.SF_GET_DATE_F(X.INNER_DUE_DT,'YY','') AS INNER_DUE_DT
+                , P.POP_POSITION
                 , P.POP_POSITION_NM AS POP_NM
                 , ( SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
                 , jmes.SF_GET_CODE_NM('1013', X.PART_STATUS, 'KR') AS PART_STATUS_NM
@@ -71,10 +72,10 @@
                         AND A.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                     </if>
                     <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null">
-                        AND A.CONTROL_NUM LIKE CONCAT('%', #{SEL_CONTROL_NUM}, '%')
+                        AND UPPER(A.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%')
                     </if>
                     <if test="SEL_DRAWING_NUM !='' and SEL_DRAWING_NUM != null">
-                        AND B.DRAWING_NUM = #{SEL_DRAWING_NUM}
+                        AND UPPER(B.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{SEL_DRAWING_NUM}), '%')
                     </if>
                     <if test="SEL_OUTSIDE_COMP_CD !='' and SEL_OUTSIDE_COMP_CD != null">
                         AND B.OUTSIDE_COMP_CD = #{SEL_OUTSIDE_COMP_CD}
@@ -91,14 +92,17 @@
                                                                                 WHERE 1 = 1
                                                                                     AND P.CONTROL_SEQ = G.CONTROL_SEQ
                                                                                     AND P.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ)
-                        <if test="SEL_POP_POSITION !='' and SEL_POP_POSITION != null">
-                            AND P.POP_POSITION = #{SEL_POP_POSITION}
-                        </if>
+                                                            <!-- <if test="SEL_POP_POSITION !='' and SEL_POP_POSITION != null"> -->
+<!--                                                                AND P.POP_POSITION = #{SEL_POP_POSITION}-->
+                                                            <!-- </if> -->
                     WHERE (X.OUT_FINISH_DT IS NULL OR X.NOT_RETURN_SETTLEMENT_CNT > 0)
             ) T
             WHERE 1=1
             <if test="SEL_INSPECT_GRADE or SEL_INSPECT_GRADE == true">
                 AND (T.INSPECT_GRADE IS NULL OR T.INSPECT_GRADE NOT IN ('GRD010','GRD020','GRD030'))  <!-- 검사완료품 제외를 체크하면 -->
+            </if>
+            <if test="SEL_POP_POSITION !='' and SEL_POP_POSITION != null">
+                AND T.POP_POSITION = #{SEL_POP_POSITION}
             </if>
         ORDER BY T.INNER_DUE_DT, T.CONTROL_SEQ, T.CONTROL_DETAIL_SEQ
     </select>
@@ -375,6 +379,7 @@
             , T.RETURN_QTY
             , jmes.SF_GET_DATE_F(T.RETURN_LAST_DT,'YY','') AS RETURN_LAST_DT
             , CASE WHEN T.RETURN_ING_CNT = 0 THEN jmes.SF_GET_DATE_F(T.RETURN_FINISH_DT,'YY','') END AS RETURN_FINISH_DT
+            , T.ORDER_PACKING_NUM_CNT
             , T.PACKING_CNT
             , T.Q_SEQ
             , T.Q_INSPECT_GRADE_NOTE
@@ -410,7 +415,12 @@
                 , jmes.SF_GET_CODE_NM('1039', X.SURFACE_TREAT, 'KR') AS SURFACE_TREAT_NM
                 , X.SIZE_TXT
                 , X.ORDER_QTY
-                , CASE WHEN X.ORDER_PACKING_NUM_CNT > 0 AND X.ORDER_PACKING_NUM_CNT <![CDATA[ < ]]> X.PACKING_CNT AND X.OUT_FINISH_DT IS NOT NULL THEN CONCAT('(',cast(X.ORDER_PACKING_NUM_CNT as char(1)),'/',X.PACKING_CNT,')') ELSE X.ORDER_OUT_QTY END AS OUT_QTY
+                , CASE
+                    WHEN X.ORDER_PACKING_NUM_CNT > 0 AND X.ORDER_PACKING_NUM_CNT <![CDATA[ < ]]> X.PACKING_CNT AND X.OUT_FINISH_DT IS NULL THEN CONCAT('(',cast(X.ORDER_PACKING_NUM_CNT as char(1)),'/',X.PACKING_CNT,')')
+                    WHEN X.ORDER_PACKING_NUM_CNT > 0 AND X.OUT_FINISH_DT IS NOT NULL THEN X.ORDER_QTY
+                    ELSE X.ORDER_OUT_QTY
+                END AS OUT_QTY
+                , X.ORDER_PACKING_NUM_CNT
                 , X.PACKING_CNT
                 , (SELECT COUNT(*) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ) AS Q_SEQ
                 , ( SELECT
@@ -500,13 +510,16 @@
                         AND A.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                     </if>
                     <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null">
-                        AND A.CONTROL_NUM LIKE CONCAT('%', #{SEL_CONTROL_NUM}, '%')
+                        AND UPPER(A.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%')
                     </if>
                     <if test="SEL_DRAWING_NUM !='' and SEL_DRAWING_NUM != null">
-                        AND B.DRAWING_NUM LIKE CONCAT('%', #{SEL_DRAWING_NUM}, '%')
+                        AND UPPER(B.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{SEL_DRAWING_NUM}), '%')
                     </if>
                     <if test="SEL_ORDER_NUM !='' and SEL_ORDER_NUM != null">
-                        AND C.ORDER_NUM LIKE CONCAT('%', #{SEL_ORDER_NUM}, '%')
+                        AND UPPER(C.ORDER_NUM) LIKE CONCAT('%', UPPER(#{SEL_ORDER_NUM}), '%')
+                    </if>
+                    <if test="SEL_OUT_FINISH_YN !='' and SEL_OUT_FINISH_YN != null">
+                        AND C.OUT_FINISH_DT IS NULL
                     </if>
             ) X LEFT OUTER JOIN jmes.TBL_INSPECT Z ON ( Z.INSPECT_SEQ = X.INSPECT_SEQ AND Z.INSPECT_TYPE = '1' OR Z.INSPECT_SEQ = X.INSPECT_SEQ AND Z.INSPECT_TYPE = '2' AND Z.ORDER_SEQ = X.ORDER_SEQ)
         ) T
@@ -514,24 +527,19 @@
         <if test="SEL_ST_DT !='' and SEL_ST_DT != null">
             <if test="SEL_END_DT !='' and SEL_END_DT != null">
                 <if test='SEL_OUTGOING_DATE_TYPE == "1"'>
-                    AND T.ORDER_DUE_DT BETWEEN REPLACE(#{SEL_ST_DT}, '/', SPACE(0)) AND REPLACE(#{SEL_END_DT}, '/', SPACE(0))    <!-- 요망납기 -->
+                    AND DATE_FORMAT(T.ORDER_DUE_DT, '%Y%m%d') BETWEEN REPLACE(#{SEL_ST_DT}, '/', SPACE(0)) AND REPLACE(#{SEL_END_DT}, '/', SPACE(0))    <!-- 요망납기 -->
                 </if>
                 <if test='SEL_OUTGOING_DATE_TYPE == "2"'>
-                    AND T.INNER_DUE_DT BETWEEN REPLACE(#{SEL_ST_DT}, '/', SPACE(0)) AND REPLACE(#{SEL_END_DT}, '/', SPACE(0))    <!-- 가공납기 -->
+                    AND DATE_FORMAT(T.INNER_DUE_DT, '%Y%m%d') BETWEEN REPLACE(#{SEL_ST_DT}, '/', SPACE(0)) AND REPLACE(#{SEL_END_DT}, '/', SPACE(0))    <!-- 가공납기 -->
                 </if>
                 <if test='SEL_OUTGOING_DATE_TYPE == "3"'>
-                    AND T.OUT_DT BETWEEN BETWEEN REPLACE(#{SEL_ST_DT}, '/', SPACE(0)) AND REPLACE(#{SEL_END_DT}, '/', SPACE(0))          <!-- 출고일시 -->
+                    AND DATE_FORMAT(T.OUT_FINISH_DT, '%Y%m%d')BETWEEN REPLACE(#{SEL_ST_DT}, '/', SPACE(0)) AND REPLACE(#{SEL_END_DT}, '/', SPACE(0))          <!-- 출고일시 -->
                 </if>
             </if>
         </if>
-        <choose>
-            <when  test="SEL_PART_NUM_VIEW_YN !='' and SEL_PART_NUM_VIEW_YN != null">
-
-            </when>
-            <otherwise>
-                AND PART_NUM IS NULL                            <!-- Part 단위표시가 체크가 안되어 있는 경우 -->
-            </otherwise>
-        </choose>
+        <if test="SEL_PART_NUM_VIEW_YN == null">
+            AND PART_NUM IS NULL    <!-- Part 단위표시가 체크가 안되어 있는 경우 -->
+        </if>
     </select>
 
 
@@ -1013,8 +1021,8 @@
             ORDER BY (X.POINT_1 + X.POINT_2 + X.POINT_3 + X.POINT_4 + X.POINT_5) DESC
     </select>
     <select id="selectOutgoingHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        -- 3. 출하 이력관리 쿼리
-        -- 기능설계서에서 누적칼럼 없애고 반품조치일 추가
+        <!-- 3. 출하 이력관리 쿼리 -->
+        <!-- 기능설계서에서 누적칼럼 없애고 반품조치일 추가 -->
         SELECT X.KEY_SEQ
             , X.CONTROL_SEQ
             , X.CONTROL_DETAIL_SEQ
@@ -1070,13 +1078,13 @@
                         AND B.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                     </if>
                     <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null">
-                        AND B.CONTROL_NUM LIKE CONCAT('%', #{SEL_CONTROL_NUM}, '%')
+                        AND UPPER(B.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%')
                     </if>
                     <if test="SEL_DRAWING_NUM !='' and SEL_DRAWING_NUM != null">
-                        AND C.DRAWING_NUM = #{SEL_DRAWING_NUM}
+                        AND UPPER(C.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{SEL_DRAWING_NUM}), '%')
                     </if>
                     <if test="SEL_ORDER_NUM !='' and SEL_ORDER_NUM != null">
-                        AND D.ORDER_NUM = #{SEL_ORDER_NUM}
+                        AND UPPER(D.ORDER_NUM) LIKE CONCAT('%', UPPER(#{SEL_ORDER_NUM}), '%')
                     </if>
                 UNION ALL
                 SELECT A.INSPECT_SEQ AS KEY_SEQ
@@ -1109,22 +1117,27 @@
                     AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
                     AND A.ORDER_SEQ = D.ORDER_SEQ
                     AND A.INSPECT_TYPE = '2'
-                    AND A.INSERT_DT BETWEEN STR_TO_DATE(REPLACE(#{SEL_ST_DT},'/',space(0)),'%Y%m%d') AND DATE_ADD(STR_TO_DATE(REPLACE(#{SEL_END_DT},'/',space(0)),'%Y%m%d'), INTERVAL+1 DAY) -- 인덱스 고려
+                    AND A.INSERT_DT BETWEEN STR_TO_DATE(REPLACE(#{SEL_ST_DT},'/',space(0)),'%Y%m%d') AND DATE_ADD(STR_TO_DATE(REPLACE(#{SEL_END_DT},'/',space(0)),'%Y%m%d'), INTERVAL+1 DAY) <!-- 인덱스 고려 -->
                     <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
                         AND B.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                     </if>
                     <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null">
-                        AND B.CONTROL_NUM LIKE CONCAT('%', #{SEL_CONTROL_NUM}, '%')
+                        AND UPPER(B.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%')
                     </if>
                     <if test="SEL_DRAWING_NUM !='' and SEL_DRAWING_NUM != null">
-                        AND C.DRAWING_NUM = #{SEL_DRAWING_NUM}
+                        AND UPPER(C.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{SEL_DRAWING_NUM}), '%')
                     </if>
                     <if test="SEL_ORDER_NUM !='' and SEL_ORDER_NUM != null">
-                        AND D.ORDER_NUM = #{SEL_ORDER_NUM}
+                        AND UPPER(D.ORDER_NUM) LIKE CONCAT('%', UPPER(#{SEL_ORDER_NUM}), '%')
                     </if>
             ) X
+        WHERE 1 = 1
+        <choose>
+            <when  test="SEL_OUTGOING_DATE_TYPE == 1">
+                AND DATE_FORMAT(X.INSERT_DT, '%Y/%m/%d') BETWEEN #{SEL_ST_DT} AND #{SEL_END_DT}
+            </when>
+        </choose>
         ORDER BY X.INSERT_DT DESC
-
     </select>
     <select id="selectInspectionHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         <!-- 2. 검사 이력관리 쿼리 -->
@@ -1158,7 +1171,7 @@
                     , jmes.SF_GET_CODE_NM('1059', X.MAIN_INSPECTION, 'KR') MAIN_INSPECTION_NM
                     , jmes.SF_GET_CODE_NM('1014', X.WORK_FACTORY, 'KR') AS WORK_FACTORY_NM
                     , SF_GET_DATE_F(X.INNER_WORK_FINISH_DT, '', '') AS WORK_FINISH_DT
-                    -- , (SELECT jmes.SF_GET_DATE_F(M.POP_DT,'YY','M') FROM jmes.TBL_POP M WHERE M.POP_POSITION = 'POP100' AND M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ ORDER BY M.POP_SEQ LIMIT 1) AS WORK_FINISH_DT
+                    <!-- , (SELECT jmes.SF_GET_DATE_F(M.POP_DT,'YY','M') FROM jmes.TBL_POP M WHERE M.POP_POSITION = 'POP100' AND M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ ORDER BY M.POP_SEQ LIMIT 1) AS WORK_FINISH_DT -->
                     , jmes.SF_GET_DATE_F(X.INNER_DUE_DT,'','') AS INNER_DUE_DT
                     , P.POP_POSITION_NM AS POP_NM
                     , jmes.SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM
@@ -1189,10 +1202,10 @@
                                 AND A.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                             </if>
                             <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null">
-                                AND A.CONTROL_NUM LIKE CONCAT('%', #{SEL_CONTROL_NUM}, '%')
+                                AND UPPER(A.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%')
                             </if>
                             <if test="SEL_DRAWING_NUM !='' and SEL_DRAWING_NUM != null">
-                                AND B.DRAWING_NUM = #{SEL_DRAWING_NUM}
+                                AND UPPER(B.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{SEL_DRAWING_NUM}), '%')
                             </if>
                             <if test="SEL_MATERIAL_DETAIL !='' and SEL_MATERIAL_DETAIL != null">
                                 AND B.MATERIAL_DETAIL = #{SEL_MATERIAL_DETAIL}
