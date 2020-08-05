@@ -1141,7 +1141,7 @@
             OUTSIDE_YN = #{OUTSIDE_YN},
         </if>
         <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
-            WORK_FACTORY = REPLACE(#{WORK_FACTORY}, 'null', NULL),
+            WORK_FACTORY = CASE WHEN #{WORK_FACTORY} = 'null' THEN NULL ELSE #{WORK_FACTORY} END,
         </if>
         <if test="MATERIAL_SUPPLY_YN != null and MATERIAL_SUPPLY_YN != ''">
             MATERIAL_SUPPLY_YN = IFNULL(#{MATERIAL_SUPPLY_YN}, 'N'),
