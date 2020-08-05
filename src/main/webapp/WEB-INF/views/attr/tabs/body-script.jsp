@@ -199,6 +199,47 @@
     };
 
     /**
+     * @description Ajax Post
+     * @param {function} callFunction - 리텅 Function 처리
+     * @param {object} params - 호출 URL에 Parameter 정보
+     * @param {*} callFunctionParam - 리텅 Function 전달 Parameter
+     */
+    let fnPostAjaxSound = function (callFunction, params, callFunctionParam) {
+        'use strict';
+        let callback = $.Callbacks();
+        let param = $.extend({url: null, data: ''}, params || {});
+
+        $.ajax({
+            type: 'POST',
+            url: param.url,
+            dataType: 'json',
+            data: param.data,
+            success: function (data, textStatus, jqXHR) {
+                if (textStatus === 'success') {
+                    successPlay();
+                    // if (data.exception === null) {
+                    callback.add(callFunction);
+                    callback.fire(data, callFunctionParam);
+                    // } else {
+                    <%--alert('<spring:message code='com.alert.default.failText' />');--%>
+                    // }
+                } else {
+                    failPlay();
+                    fnAlert(null, '<srping:message key="error.common"/>');
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                failPlay();
+                if ($waitMeMainContainer !== undefined) $(this).stopWaitMe();
+                // alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
+                // if (errorThrown == 'Forbidden') {
+                //     $(this).fnHiddenFormPageAction('/');
+                // }
+            }
+        });
+    };
+
+    /**
      * Normal File upload
      * */
     let fnFormDataFileUploadAjax = function (callFunction, formData, submitUrl) {

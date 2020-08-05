@@ -8,7 +8,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>J-MES POP</title>
+    <title>J-MES POP(Point Of Production)</title>
 	<!-- Firefox, Opera (Chrome and Safari say thanks but no thanks) -->
 	<link rel="shortcut icon" href="/favicon.ico">
 	<!-- Chrome, Safari, IE -->
@@ -46,18 +46,18 @@
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
-															<div class="txtWrap tab_black">NC-대형1</div>
+															<div class="txtWrap tab_black"></div>
 															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_3.png" alt="NCT"></div>
 														</div>
 														<div class="rightWrap">
 															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" alt=""></span></div>
-															<div class="nameWrap">노연마</div>
+																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px"  alt=""></span></div>
+															<div class="nameWrap"></div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">12'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
@@ -65,7 +65,7 @@
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
-															<div class="txtWrap tab_black">NC-대형2</div>
+															<div class="txtWrap tab_black"></div>
 															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_2.png" alt="선반"></div>
 														</div>
 														<div class="rightWrap">
@@ -75,8 +75,8 @@
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">12'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
@@ -115,12 +115,12 @@
 														<div class="rightWrap">
 															<div class="profileWrap">
 																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">노연마</div>
+															<div class="nameWrap"></div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">12'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
@@ -138,8 +138,8 @@
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">12'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
@@ -170,11 +170,11 @@
 														<div class="rightWrap">
 															<div class="profileWrap">
 																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">10노연마</div>
+															<div class="nameWrap"></div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName">C19-625-0799-001</span>
+														<span class="proName"></span>
 														<span class="proNum">9999'</span>
 													</div>
 												</div>
@@ -188,13 +188,13 @@
 														</div>
 														<div class="rightWrap">
 															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_logoff.png" alt=""></span></div>
+																<span><img src="/resource/asset/images/tv/img_logoff.png" width="75px" height="75px" alt=""></span></div>
 															<div class="nameWrap">9Log off</div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">8888'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
@@ -208,12 +208,12 @@
 														<div class="rightWrap">
 															<div class="profileWrap">
 																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">8노연마</div>
+															<div class="nameWrap">8</div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">7777'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
@@ -257,12 +257,12 @@
 														<div class="rightWrap">
 															<div class="profileWrap">
 																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">7노연마</div>
+															<div class="nameWrap">7</div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">7777'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
@@ -275,13 +275,13 @@
 														</div>
 														<div class="rightWrap">
 															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_logoff.png" alt=""></span></div>
+																<span><img src="/resource/asset/images/tv/img_logoff.png" width="75px" height="75px" alt=""></span></div>
 															<div class="nameWrap">6Log off</div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">7777'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
@@ -294,13 +294,13 @@
 														</div>
 														<div class="rightWrap">
 															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_logoff.png" alt=""></span></div>
+																<span><img src="/resource/asset/images/tv/img_logoff.png" width="75px" height="75px" alt=""></span></div>
 															<div class="nameWrap">5Log off</div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">7777'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
@@ -339,12 +339,12 @@
 														<div class="rightWrap">
 															<div class="profileWrap">
 																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">4노연마</div>
+															<div class="nameWrap">4</div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">7777'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
@@ -357,13 +357,13 @@
 														</div>
 														<div class="rightWrap">
 															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_logoff.png" alt=""></span></div>
+																<span><img src="/resource/asset/images/tv/img_logoff.png" width="75px" height="75px" alt=""></span></div>
 															<div class="nameWrap">3Log off</div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">7777'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
@@ -377,12 +377,12 @@
 														<div class="rightWrap">
 															<div class="profileWrap">
 																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">2노연마</div>
+															<div class="nameWrap">2</div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">7777'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
@@ -402,12 +402,12 @@
 														<div class="rightWrap">
 															<div class="profileWrap">
 																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">1노연마</div>
+															<div class="nameWrap">1</div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">7777'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
@@ -421,12 +421,12 @@
 														<div class="rightWrap">
 															<div class="profileWrap">
 																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">0노연마</div>
+															<div class="nameWrap">0</div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">7777'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
@@ -559,7 +559,7 @@
 										</ul>
 									</div>
 									<div class="page tab1" style="width: 880px">
-										<ul class="p_row" id="ARE04_1">
+										<ul class="p_row" id="ARE12_1">
 											<li class="p_col">
 												<div class="thumb thb_blue">
 													<div class="topDiv">
@@ -570,16 +570,16 @@
 														<div class="rightWrap">
 															<div class="profileWrap">
 																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">노연마</div>
+															<div class="nameWrap"></div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_green">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">9999'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE04_2">
+											<li class="p_col" id="ARE12_2">
 												<div class="thumb thb_blue">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -589,12 +589,12 @@
 														<div class="rightWrap">
 															<div class="profileWrap">
 																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">노연마</div>
+															<div class="nameWrap"></div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_green">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">12'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
@@ -629,7 +629,7 @@
 											</li>
 										</ul>
 										<ul class="p_row">
-											<li class="p_col" id="ARE04_3">
+											<li class="p_col" id="ARE12_3">
 												<div class="thumb thb_blue">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -639,16 +639,16 @@
 														<div class="rightWrap">
 															<div class="profileWrap">
 																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">노연마</div>
+															<div class="nameWrap"></div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_green">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">12'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE04_4">
+											<li class="p_col" id="ARE12_4">
 												<div class="thumb thb_blue">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -662,14 +662,14 @@
 														</div>
 													</div>
 													<div class="bottomDiv pro_green">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">12'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
 										</ul>
 										<ul class="p_row">
-											<li class="p_col" id="ARE04_5">
+											<li class="p_col" id="ARE12_5">
 												<div class="thumb thb_blue">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -679,16 +679,16 @@
 														<div class="rightWrap">
 															<div class="profileWrap">
 																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">노연마</div>
+															<div class="nameWrap"></div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_green">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">12'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE04_6">
+											<li class="p_col" id="ARE12_6">
 												<div class="thumb thb_blue">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -702,8 +702,8 @@
 														</div>
 													</div>
 													<div class="bottomDiv pro_green">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">12'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
@@ -734,12 +734,12 @@
 														<div class="rightWrap">
 															<div class="profileWrap">
 																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">노연마</div>
+															<div class="nameWrap"></div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_green">
-														<span class="proName" style="width: 190px">C19-625-0799-001</span>
-														<span class="proNum" >88988'</span>
+														<span class="proName" style="width: 190px"></span>
+														<span class="proNum" ></span>
 													</div>
 												</div>
 											</li>
@@ -757,8 +757,8 @@
 														</div>
 													</div>
 													<div class="bottomDiv pro_green">
-														<span class="proName" style="width: 190px">C19-625-0799-001</span>
-														<span class="proNum" >88988'</span>
+														<span class="proName" style="width: 190px"></span>
+														<span class="proNum" ></span>
 													</div>
 												</div>
 											</li>
@@ -776,8 +776,8 @@
 														</div>
 													</div>
 													<div class="bottomDiv pro_green">
-														<span class="proName" style="width: 190px">C19-625-0799-001</span>
-														<span class="proNum" >88988'</span>
+														<span class="proName" style="width: 190px"></span>
+														<span class="proNum" ></span>
 													</div>
 												</div>
 											</li>
@@ -823,12 +823,12 @@
 														<div class="rightWrap">
 															<div class="profileWrap">
 																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">노연마</div>
+															<div class="nameWrap"></div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_green">
-														<span class="proName" style="width: 190px">C19-625-0799-001</span>
-														<span class="proNum" >88988'</span>
+														<span class="proName" style="width: 190px"></span>
+														<span class="proNum" ></span>
 													</div>
 												</div>
 											</li>
@@ -846,8 +846,8 @@
 														</div>
 													</div>
 													<div class="bottomDiv pro_green">
-														<span class="proName" style="width: 190px">C19-625-0799-001</span>
-														<span class="proNum" >88988'</span>
+														<span class="proName" style="width: 190px"></span>
+														<span class="proNum" ></span>
 													</div>
 												</div>
 											</li>
@@ -885,12 +885,12 @@
 														<div class="rightWrap">
 															<div class="profileWrap">
 																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">노연마</div>
+															<div class="nameWrap"></div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_green">
-														<span class="proName" style="width: 190px">C19-625-0799-001</span>
-														<span class="proNum" >88988'</span>
+														<span class="proName" style="width: 190px"></span>
+														<span class="proNum" ></span>
 													</div>
 												</div>
 											</li>
@@ -908,8 +908,8 @@
 														</div>
 													</div>
 													<div class="bottomDiv pro_green">
-														<span class="proName" style="width: 190px">C19-625-0799-001</span>
-														<span class="proNum" >88988'</span>
+														<span class="proName" style="width: 190px"></span>
+														<span class="proNum" ></span>
 													</div>
 												</div>
 											</li>
@@ -940,12 +940,12 @@
 														<div class="rightWrap">
 															<div class="profileWrap">
 																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">노연마</div>
+															<div class="nameWrap"></div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">9999'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
@@ -961,12 +961,12 @@
 														<div class="rightWrap">
 															<div class="profileWrap">
 																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">노연마</div>
+															<div class="nameWrap"></div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">9999'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
@@ -1013,12 +1013,12 @@
 														<div class="rightWrap">
 															<div class="profileWrap">
 																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">노연마</div>
+															<div class="nameWrap"></div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName" style="width: 190px">C19-625-0799-001</span>
-														<span class="proNum" >88988'</span>
+														<span class="proName" style="width: 190px"></span>
+														<span class="proNum" ></span>
 													</div>
 												</div>
 											</li>
@@ -1036,8 +1036,8 @@
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName" style="width: 190px">C19-625-0799-001</span>
-														<span class="proNum" >88988'</span>
+														<span class="proName" style="width: 190px"></span>
+														<span class="proNum" ></span>
 													</div>
 												</div>
 											</li>
@@ -1082,12 +1082,12 @@
 														<div class="rightWrap">
 															<div class="profileWrap">
 																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">노연마</div>
+															<div class="nameWrap"></div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName" style="width: 190px">C19-625-0799-001</span>
-														<span class="proNum" >88988'</span>
+														<span class="proName" style="width: 190px"></span>
+														<span class="proNum" ></span>
 													</div>
 												</div>
 											</li>
@@ -1105,8 +1105,8 @@
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName" style="width: 190px">C19-625-0799-001</span>
-														<span class="proNum" >88988'</span>
+														<span class="proName" style="width: 190px"></span>
+														<span class="proNum" ></span>
 													</div>
 												</div>
 											</li>
@@ -1122,12 +1122,12 @@
 														<div class="rightWrap">
 															<div class="profileWrap">
 																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">노연마</div>
+															<div class="nameWrap"></div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName" style="width: 190px">C19-625-0799-001</span>
-														<span class="proNum" >88988'</span>
+														<span class="proName" style="width: 190px"></span>
+														<span class="proNum" ></span>
 													</div>
 												</div>
 											</li>
@@ -1214,12 +1214,12 @@
 														<div class="rightWrap">
 															<div class="profileWrap">
 																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">노연마</div>
+															<div class="nameWrap"></div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">9912'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
@@ -1262,12 +1262,12 @@
 														<div class="rightWrap">
 															<div class="profileWrap">
 																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">노연마</div>
+															<div class="nameWrap"></div>
 														</div>
 													</div>
 													<div class="bottomDiv pro_blue">
-														<span class="proName">C19-625-0799-001</span>
-														<span class="proNum">12'</span>
+														<span class="proName"></span>
+														<span class="proNum"></span>
 													</div>
 												</div>
 											</li>
@@ -1539,7 +1539,6 @@
 						$(this).find(".proNum").html('');
 					});
 
-
 					if (pop_list1 != '') {//pop
 						for (let i = 0; i < pop_list1.length; i++) {
 							let pop_position = pop_list1[i].POP_POSITION;
@@ -1693,9 +1692,6 @@
 		timer();
 		timer_alarm();
 	});
-
-
-
 
 </script>
 </body>

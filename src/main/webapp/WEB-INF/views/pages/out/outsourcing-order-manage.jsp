@@ -1544,34 +1544,33 @@
                     '    <tr>\n' +
                     '        <th rowspan="2" style="' + st_center + font_header + '">No.</th>\n' +
                     '        <th rowspan="2" style="width:200px; ' + st_center + font_header + '">관리번호</th>\n' +
-                    '        <th rowspan="2" style="width:200px; ' + st_center + font_header + '">도면번호</th>\n' +
                     '        <th rowspan="2" style="width:30px; ' + st_center + font_header + '">Part</th>\n' +
+                    '        <th rowspan="2" style="width:200px; ' + st_center + font_header + '">도면번호</th>\n' +
                     '        <th rowspan="2" style="width:120px; ' + st_center + font_header + '">규격</th>\n' +
-                    '        <th rowspan="2" style="width:120px;' + st_center + font_header + '">자재<br>종류</th>\n' +
-                    '        <th rowspan="2" style="width:120px;' + st_center + font_header + '">표면<br>처리</th>\n' +
-                    '        <th rowspan="2" style="width:80px;' + st_center + font_header + '">소재<br>제공</th>\n' +
-                    '        <th rowspan="2" style="width:80px;' + st_center + font_header + '">수량</th>\n' +
-                    '        <th colspan="5" style="width:300px;' + st_center + font_header + '">요청가공</th>\n' +
+                    '        <th rowspan="2" style="width:80px;' + st_center + font_header + '">소재종류</th>\n' +
+                    '        <th rowspan="2" style="width:80px;' + st_center + font_header + '">표면처리</th>\n' +
+                    '        <th rowspan="2" style="width:60px;' + st_center + font_header + '">소재<br>제공</th>\n' +
+                    '        <th rowspan="2" style="width:60px;' + st_center + font_header + '">수량</th>\n' +
+                    '        <th colspan="5" style="width:390px;' + st_center + font_header + '">요청가공</th>\n' +
                     '        <th rowspan="2" style="width:80px;' + st_center + font_header + '">요망<br>납기</th>\n' +
-                    '        <th rowspan="2" style="width:140px;' + st_center + font_header + '">비고</th>\n' +
                     '    </tr>\n' +
                     '    <tr>\n' +
-                    '        <th style="width:50px; ' + st_center + font_header + '">완제품</th>\n' +
+                    '        <th style="width:50px; ' + st_center + font_header + '">완성품</th>\n' +
                     '        <th style="width:50px; ' + st_center + font_header + '">가공</th>\n' +
                     '        <th style="width:50px; ' + st_center + font_header + '">연마</th>\n' +
-                    '        <th style="width:50px; ' + st_center + font_header + '">표면<br>처리</th>\n' +
-                    '        <th style="width:50px; ' + st_center + font_header + '">기타<br>사항</th>\n' +
+                    '        <th style="width:90px; ' + st_center + font_header + '">표면처리</th>\n' +
+                    '        <th style="width:150px; ' + st_center + font_header + '">기타사항</th>\n' +
                     '    </tr>\n' +
                     '</thead>\n' +
                     '<tbody>\n';
 
             let titleInfo = "";
             for (let i = 0, LIST_LENGTH = list.length; i < LIST_LENGTH; i++) {
-                let outsideMaterialSupplyYnChecked = list[i].OUTSIDE_MATERIAL_SUPPLY_YN === 'Y' ? 'V' : '';
-                let outsideRequestFinishYnChecked = list[i].OUTSIDE_REQUEST_FINISH_YN === 'Y' ? 'V' : '';
-                let outsideRequestProcessYnChecked = list[i].OUTSIDE_REQUEST_PROCESS_YN === 'Y' ? 'V' : '';
-                let outsideRequestGrindYnChecked = list[i].OUTSIDE_REQUEST_GRIND_YN === 'Y' ? 'V' : '';
-                let outsideRequestSurfaceYnChecked = list[i].OUTSIDE_REQUEST_SURFACE_YN === 'Y' ? 'V' : '';
+                let outsideMaterialSupplyYnChecked = list[i].OUTSIDE_MATERIAL_SUPPLY_YN === 'Y' ? 'O' : '';
+                let outsideRequestFinishYnChecked = list[i].OUTSIDE_REQUEST_FINISH_YN === 'Y' ? 'O' : '';
+                let outsideRequestProcessYnChecked = list[i].OUTSIDE_REQUEST_PROCESS_YN === 'Y' ? 'O' : '';
+                let outsideRequestGrindYnChecked = list[i].OUTSIDE_REQUEST_GRIND_YN === 'Y' ? 'O' : '';
+                let outsideRequestSurfaceYnChecked = list[i].OUTSIDE_REQUEST_SURFACE_YN === 'Y' ? 'O' : '';
                 let requestEtc = "";
                 if(list[i].OUTSIDE_REQUEST_ETC) requestEtc = list[i].OUTSIDE_REQUEST_ETC;
                 let outsideNote = "";
@@ -1580,27 +1579,29 @@
                 '    <tr>\n' +
                 '        <td style="' + st_center + '">' + list[i].ROW_NUM + '</td>\n' +
                 '        <td style="' + st_center + '">' + list[i].CONTROL_NUM + '</td>\n' +
-                '        <td style="' + st_center + '">' + list[i].DRAWING_NUM + '</td>\n' +
                 '        <td style="' + st_center + '">' + list[i].PART_NUM + '</td>\n' +
+                '        <td style="' + st_center + '">' + list[i].DRAWING_NUM + '</td>\n' +
                 '        <td style="' + st_center + '">' + list[i].SIZE_TXT + '</td>\n' +
                 '        <td style="' + st_center + '">' + list[i].MATERIAL_DETAIL_NM + '</td>\n' +
                 '        <td style="' + st_center + '">' + list[i].SURFACE_TREAT_NM + '</td>\n' +
+                '        <td style="' + st_center + '"> ' + outsideMaterialSupplyYnChecked + '</td>' +
                 '        <td style="' + st_center + '">' + list[i].CONTROL_PART_QTY + '</td>\n' +
-                '        <td style="' + st_center + '"> ' + outsideMaterialSupplyYnChecked + '</td>\n' +
                 '        <td style="' + st_center + '"> ' + outsideRequestFinishYnChecked + '</td>\n' +
                 '        <td style="' + st_center + '"> ' + outsideRequestProcessYnChecked +'</td>\n' +
                 '        <td style="' + st_center + '"> ' + outsideRequestGrindYnChecked + '</td>\n' +
                 '        <td style="' + st_center + '"> ' + outsideRequestSurfaceYnChecked + '</td>\n' +
                 '        <td style="' + st_center + '">' + requestEtc + '</td>\n' +
                 '        <td style="' + st_center + '">' + list[i].OUTSIDE_HOPE_DUE_DT + '</td>\n' +
-                '        <td style="' + st_center + '">' + outsideNote + '</td>\n' +
                 '    </tr>\n';
 
                 if(i == 0){
                     titleInfo = list[i].CONTROL_NUM;
                 }
             }
-            titleInfo = titleInfo + "외 - 총" + list.length + "품";
+            if(list.length <= 1)
+                titleInfo = titleInfo;
+            else
+                titleInfo = titleInfo + " 외 " + (list.length - 1) + "품";
             if(type == "request"){
                 $('#REQUEST_OUTSIDE_MAIL_FORM').find('#ROW_CNT').val(titleInfo);
             }else{

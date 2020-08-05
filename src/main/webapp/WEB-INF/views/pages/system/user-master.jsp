@@ -89,7 +89,7 @@
             {title: '직책', dataType: 'string', dataIndx: 'JOB_TITLE', width: 80},
             {title: '부서', dataType: 'string', dataIndx: 'DEPARTMENT_NM', width: 150},
             {title: '권한그룹', dataType: 'integer', dataIndx: 'ROLE_SEQ_NM', width: 150},
-            {title: '사용여부', dataType: 'select', dataIndx: 'DEL_YN_NM', width: 50}
+            {title: '삭제여부', dataType: 'select', dataIndx: 'DEL_YN_NM', width: 50}
         ];
 
         let userMasterObj = {

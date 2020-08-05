@@ -4,6 +4,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<audio id='fail_play' src='/resource/sound/fail.wav' controls autoplay muted="muted"></audio>
+<audio id='success_play' src='/resource/sound/success.wav' controls autoplay muted="muted"></audio>
 <form id="common_formdata_multi_upload_form" method="post">
     <input type="file" id="click_singfile_chose_btn" name="click_singfile_chose_btn" style="display: none;">
     <input type="file" id="click_multifile_chose_btn" name="click_multifile_chose_btn" multiple  style="display: none;">
@@ -444,7 +446,7 @@
                             <tr>
                                 <th scope="row">사용프린터</th>
                                 <td><input type="text" name="USER_PRINTER" id="USER_PRINTER" placeholder="사용프린터" value="" title="사용프린터" class="wd_130"></td>
-                                <th scope="row">사용여부</th>
+                                <th scope="row">삭제여부</th>
                                 <td>
                                     <select id="DEL_YN" name="DEL_YN" data-required="true" class="wd_130">
                                         <option value=""><spring:message code="com.form.top.sel.option" /></option>
@@ -488,10 +490,21 @@
     let g_ItemDetailPopGrid04;
     // let $camWorkManagePopGrid;
 
+
+    function failPlay() {
+        var audio = document.getElementById('fail_play');
+        audio.muted = false;
+        audio.play();
+    }
+
+    function successPlay() {
+        var audio = document.getElementById('success_play');
+        audio.muted = false;
+        audio.play();
+    }
+
     $(function() {
         'use strict';
-
-
 
         $("#user_info_pop").on('hide.bs.modal', function(){
             fnResetFrom("user_info_pop_form");
@@ -1693,4 +1706,5 @@
         e.stopPropagation();
         commonAlertPopup.hide();
     });
+
 </script>

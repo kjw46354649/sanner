@@ -8,7 +8,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>J-MES POP</title>
+    <title>J-MES MCT 가동현황</title>
 	<!-- Firefox, Opera (Chrome and Safari say thanks but no thanks) -->
 	<link rel="shortcut icon" href="/favicon.ico">
 	<!-- Chrome, Safari, IE -->
@@ -60,44 +60,44 @@
 											<li class="p_col" id="ARE01_1_1">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
 														<div class="inWrap on">
 															<a href="#a;">
-																<span>10/19<br>가2공</span>
-																<span><span class="txtB ellipsis">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+																<span><br></span>
+																<span><span class="txtB ellipsis"></span><br></span>
+																<span></span>
+																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 																<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 													</div>
@@ -106,20 +106,20 @@
 											<li class="p_col" id="ARE01_1_2">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-2</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
 														<div class="inWrap on">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
 															</a>
 														</div>
 													</div>
@@ -128,44 +128,44 @@
 											<li class="p_col" id="ARE01_1_3">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-3</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
 														<div class="inWrap on">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 																<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 													</div>
@@ -174,11 +174,11 @@
 											<li class="p_col" id="ARE01_1_4">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형4</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
@@ -189,26 +189,26 @@
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 																<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 													</div>
@@ -217,36 +217,36 @@
 											<li class="p_col" id="ARE01_1_5">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-5</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
 														<div class="inWrap on">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 													</div>
@@ -255,44 +255,44 @@
 											<li class="p_col" id="ARE01_1_6">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-6</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
 														<div class="inWrap on">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 																<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 													</div>
@@ -301,44 +301,44 @@
 											<li class="p_col" id="ARE01_1_7">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-7</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
 														<div class="inWrap on">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 																<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 													</div>
@@ -349,11 +349,11 @@
 											<li class="p_col" id="ARE01_2_1">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-21</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
@@ -368,11 +368,11 @@
 											<li class="p_col" id="ARE01_2_2">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
@@ -383,26 +383,26 @@
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 																<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 													</div>
@@ -411,36 +411,36 @@
 											<li class="p_col" id="ARE01_2_3">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
 														<div class="inWrap on">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 													</div>
@@ -449,36 +449,36 @@
 											<li class="p_col" id="ARE01_2_4">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
 														<div class="inWrap on">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 													</div>
@@ -487,36 +487,36 @@
 											<li class="p_col" id="ARE01_2_5">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-11</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
 														<div class="inWrap on">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 													</div>
@@ -525,44 +525,44 @@
 											<li class="p_col" id="ARE01_2_6">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-41</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
 														<div class="inWrap on">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 													</div>
@@ -571,44 +571,44 @@
 											<li class="p_col" id="ARE01_2_7">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-41</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
 														<div class="inWrap on">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 													</div>
@@ -640,44 +640,44 @@
 											<li class="p_col" id="ARE02_1_1">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
 														<div class="inWrap on">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 																<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 													</div>
@@ -686,20 +686,20 @@
 											<li class="p_col"  id="ARE02_1_2" style="margin-left:11px;">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
 														<div class="inWrap on">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
 															</a>
 														</div>
 													</div>
@@ -710,11 +710,11 @@
 											<li class="p_col">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
@@ -729,11 +729,11 @@
 											<li class="p_col"  id="ARE02_2_2" style="margin-left:11px;">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
@@ -744,26 +744,26 @@
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 																<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 													</div>
@@ -790,44 +790,44 @@
 											<li class="p_col" id="ARE11_1_1">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
 														<div class="inWrap on">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 																<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 													</div>
@@ -838,11 +838,11 @@
 											<li class="p_col" id="ARE11_2_1">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
@@ -875,44 +875,44 @@
 											<li class="p_col" id="ARE05_1_1">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
 														<div class="inWrap on">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 																<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 													</div>
@@ -923,11 +923,11 @@
 											<li class="p_col" id="ARE05_2_1">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
@@ -960,44 +960,44 @@
 											<li class="p_col" id="ARE06_1_1">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
 														<div class="inWrap on">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 																<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 													</div>
@@ -1006,20 +1006,20 @@
 											<li class="p_col"  id="ARE06_1_2" style="margin-left:11px;">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
 														<div class="inWrap on">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
 															</a>
 														</div>
 													</div>
@@ -1028,20 +1028,20 @@
 											<li class="p_col"  id="ARE06_1_3" style="margin-left:11px;">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
 														<div class="inWrap on">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
 															</a>
 														</div>
 													</div>
@@ -1052,11 +1052,11 @@
 											<li class="p_col" id="ARE06_2_1">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
@@ -1071,11 +1071,11 @@
 											<li class="p_col"  id="ARE06_2_2" style="margin-left:11px;">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
@@ -1086,26 +1086,26 @@
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 														<div class="inWrap">
 																<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span class="txtB ty2">15'</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span class="txtB ty2"></span>
 															</a>
 														</div>
 													</div>
@@ -1114,20 +1114,20 @@
 											<li class="p_col"  id="ARE06_2_3" style="margin-left:11px;">
 												<div class="statusWrap">
 													<div class="statusBar">
-														<div class="inBox">소형-1</div>
-														<div class="inBox">지광성</div>
+														<div class="inBox"></div>
+														<div class="inBox"></div>
 														<div class="inBox">
-															<div>12품 85EA</div>
-															<div class="txtY">22H 36M</div>
+															<div></div>
+															<div class="txtY"></div>
 														</div>
 													</div>
 													<div class="statusConts">
 														<div class="inWrap on">
 															<a href="#a;">
-																<span>10/19<br>가공</span>
-																<span><span class="txtB">C19-625-0799-04#1</span><br>1400*70*20&nbsp;&nbsp;SM45C</span>
-																<span>35ea</span>
-																<span><span class="txtR">15'</span><br>(<span class="txtB ty2">15'</span>)</span>
+																<span><br></span>
+																<span><span class="txtB"></span><br></span>
+																<span></span>
+																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
 															</a>
 														</div>
 													</div>

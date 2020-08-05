@@ -16,9 +16,18 @@
     <div class="toolWrap">
         <span class="barCode" id="processConfirmBarcodeSpan"><img src="<c:url value="/resource/asset/images/common/img_barcode_long.png"/>" alt="바코드" id="CONFIRM_ORDER_BARCODE_IMG" style="height: 32px;"></span>
         <span class="barCodeTxt"><label for="CONFIRM_ORDER_BARCODE_NUM"></label><input type="text" class="wd_270_barcode" name="CONFIRM_ORDER_BARCODE_NUM" id="CONFIRM_ORDER_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요" autocomplete="off"></span>
+        <button type="button" class="defaultBtn btn-100w orange" data-toggle="modal" data-target="#outsourcingConversionModal">외주 전환</button>
         <div class="right_float">
             <span class="refresh mg-left10"><button type="button" id="PROCESS_CONFIRM_REFRESH"><img src="<c:url value="/resource/asset/images/common/btn_refresh.png"/>" alt="새로고침"></button></span>
-            <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#outsourcingConversionModal">외주 전환</button>
+            <span>
+                <label class="label_50" for="TOP_PROCESS_CONFIRM_CORPORATION">발주처</label>
+                <select class="wd_100" name="TOP_PROCESS_CONFIRM_CORPORATION" id="TOP_PROCESS_CONFIRM_CORPORATION">
+                    <option value=""><spring:message code="com.form.top.all.option"/></option>
+                    <c:forEach var="code" items="${HighCode.H_1007}">
+                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                    </c:forEach>
+                </select>
+            </span>
             <button type="button" class="defaultBtn btn-100w" id="PROCESS_CONFIRM_DETAIL">상세정보 조회</button>
             <button type="button" class="defaultBtn btn-100w" id="PROCESS_CONFIRM_DRAWING_VIEW">도면 보기</button>
             <button type="button" class="defaultBtn btn-100w orange" id="PROCESS_CONFIRM_FULLSCREEN">FULL SCREEN</button>
@@ -27,6 +36,7 @@
     <div class="topLeftWrap left_float">
         <form class="form-inline" id="CONFIRM_ORDER_SEARCH_FORM" role="form" onsubmit="return false;" style="height: inherit;">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectConfirmOrderList">
+            <input type="hidden" name="ORDER_COMP_CD" id="CONFIRM_ORDER_CORPORATION" value="">
             <div style="height: inherit;">
                 <div>
                     <p class="d-inline-block">
@@ -35,12 +45,12 @@
                         <span id="CONFIRM_ORDER_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA )
                     </p>
                     <div class="d-inline-block right_float">
-                        <span>
-                            <label class="label_50" for="CONFIRM_ORDER_CORPORATION">발주처</label>
-                            <select class="wd_100" name="ORDER_COMP_CD" id="CONFIRM_ORDER_CORPORATION">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                            </select>
-                        </span>
+<%--                        <span>--%>
+<%--                            <label class="label_50" for="CONFIRM_ORDER_CORPORATION">발주처</label>--%>
+<%--                            <select class="wd_100" name="ORDER_COMP_CD" id="CONFIRM_ORDER_CORPORATION">--%>
+<%--                                <option value=""><spring:message code="com.form.top.all.option"/></option>--%>
+<%--                            </select>--%>
+<%--                        </span>--%>
                         <span>
                             <label class="label_50" for="CONFIRM_ORDER_MATERIAL">소재</label>
                             <select class="wd_100" name="MATERIAL_TYPE" id="CONFIRM_ORDER_MATERIAL">
@@ -61,6 +71,7 @@
     <div class="topRightWrap left_float">
         <form class="form-inline" id="PROCESS_CONFIRM_SEARCH_FORM" role="form" onsubmit="return false;" style="height: inherit;">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectProcessConfirmList">
+            <input type="hidden" name="ORDER_COMP_CD" id="PROCESS_CONFIRM_CORPORATION" value="">
             <div style="height: inherit;">
                 <div>
                     <p class="d-inline-block">
@@ -73,15 +84,15 @@
                             <input type="checkbox" name="EMERGENCY_YN"
                                    id="EMERGENCY_YN"><i></i> Show Only 긴급
                         </label>
-                        <span>
-                            <label class="label_50" for="PROCESS_CONFIRM_CORPORATION">발주처</label>
-                            <select class="wd_100" name="ORDER_COMP_CD" id="PROCESS_CONFIRM_CORPORATION">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1007}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
-                        </span>
+<%--                        <span>--%>
+<%--                            <label class="label_50" for="PROCESS_CONFIRM_CORPORATION">발주처</label>--%>
+<%--                            <select class="wd_100" name="ORDER_COMP_CD" id="PROCESS_CONFIRM_CORPORATION">--%>
+<%--                                <option value=""><spring:message code="com.form.top.all.option"/></option>--%>
+<%--                                <c:forEach var="code" items="${HighCode.H_1007}">--%>
+<%--                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>--%>
+<%--                                </c:forEach>--%>
+<%--                            </select>--%>
+<%--                        </span>--%>
                             <span>
                             <label class="label_50" for="PROCESS_CONFIRM_MATERIAL">소재</label>
                             <select class="wd_100" name="MATERIAL_TYPE" id="PROCESS_CONFIRM_MATERIAL">
@@ -102,6 +113,7 @@
     <div class="botLeftWrap left_float">
         <form class="form-inline" id="OUTSIDE_SEARCH_FORM" role="form" onsubmit="return false;" style="height: inherit;">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectOutsideProcessingList">
+            <input type="hidden" name="ORDER_COMP_CD" id="OUTSIDE_CORPORATION" value="">
             <div style="height: inherit;">
                 <div>
                     <p class="d-inline-block">
@@ -110,12 +122,12 @@
                         <span id="OUTSIDE_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA )
                     </p>
                     <div class="d-inline-block right_float">
-                        <span>
-                            <label class="label_50" for="OUTSIDE_CORPORATION">발주처</label>
-                            <select class="wd_100" name="ORDER_COMP_CD" id="OUTSIDE_CORPORATION">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                            </select>
-                        </span>
+<%--                        <span>--%>
+<%--                            <label class="label_50" for="OUTSIDE_CORPORATION">발주처</label>--%>
+<%--                            <select class="wd_100" name="ORDER_COMP_CD" id="OUTSIDE_CORPORATION">--%>
+<%--                                <option value=""><spring:message code="com.form.top.all.option"/></option>--%>
+<%--                            </select>--%>
+<%--                        </span>--%>
                         <span>
                             <label class="label_50" for="OUTSIDE_SUBCONTRACTOR">외주업체</label>
                             <select class="wd_100" name="OUTSIDE_COMP_CD" id="OUTSIDE_SUBCONTRACTOR">
@@ -133,6 +145,7 @@
     <div class="botRightWrap left_float">
         <form class="form-inline" id="PROCESS_COMPLETE_SEARCH_FORM" role="form" onsubmit="return false;" style="height: inherit;">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectProcessCompleteList">
+            <input type="hidden" name="ORDER_COMP_CD" id="PROCESS_COMPLETE_CORPORATION" value="">
             <div style="height: inherit;">
                 <div>
                     <p class="d-inline-block">
@@ -141,12 +154,12 @@
                         <span id="PROCESS_COMPLETE_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA )
                     </p>
                     <div class="d-inline-block right_float">
-                        <span>
-                            <label class="label_50" for="PROCESS_COMPLETE_CORPORATION">발주처</label>
-                            <select class="wd_100" name="ORDER_COMP_CD" id="PROCESS_COMPLETE_CORPORATION">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                            </select>
-                        </span>
+<%--                        <span>--%>
+<%--                            <label class="label_50" for="PROCESS_COMPLETE_CORPORATION">발주처</label>--%>
+<%--                            <select class="wd_100" name="ORDER_COMP_CD" id="PROCESS_COMPLETE_CORPORATION">--%>
+<%--                                <option value=""><spring:message code="com.form.top.all.option"/></option>--%>
+<%--                            </select>--%>
+<%--                        </span>--%>
                         <span>
                             <label class="label_50" for="PROCESS_COMPLETE_SUBCONTRACTOR">외주업체</label>
                             <select class="wd_100" name="OUTSIDE_COMP_CD" id="PROCESS_COMPLETE_SUBCONTRACTOR">
@@ -678,13 +691,14 @@
             }*/
             if (hasInStock(rowData)) {
                 fnAlert(null, '소재입고된 항목은 확정취소가 불가능합니다.');
+                failPlay();
                 return false;
             } else {
                 QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateControlPartStatus', 'orderMapper.createControlPartProgress']};
                 changes.queryIdList = QUERY_ID_ARRAY;
                 parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
 
-                fnPostAjax(function () {
+                fnPostAjaxSound(function () {
                     $confirmOrderGrid.pqGrid('refreshDataAndView');
                     $processConfirmGrid.pqGrid('refreshDataAndView');
                 }, parameters, '');
@@ -705,7 +719,7 @@
             changes.queryIdList = QUERY_ID_ARRAY;
             parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
 
-            fnPostAjax(function () {
+            fnPostAjaxSound(function () {
                 $confirmOrderGrid.pqGrid('refreshDataAndView');
                 $outsideGrid.pqGrid('refreshDataAndView');
             }, parameters, '');
@@ -733,24 +747,47 @@
             });
             $outsideGrid.pqGrid('refreshDataAndView');
         });
+        $('#PROCESS_COMPLETE_SEARCH_FORM').on('change', function() {
+            botRightPostData = fnFormToJsonArrayData('#PROCESS_COMPLETE_SEARCH_FORM');
+            $processCompleteGrid.pqGrid('option', 'dataModel.postData', function () {
+                return botRightPostData;
+            });
+            $processCompleteGrid.pqGrid('refreshDataAndView');
+        });
 
         /* init */
-        fnCommCodeDatasourceSelectBoxCreate($('#CONFIRM_ORDER_SEARCH_FORM').find('#CONFIRM_ORDER_CORPORATION'), 'all', {
+        fnCommCodeDatasourceSelectBoxCreate($('#TOP_PROCESS_CONFIRM_CORPORATION'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
-        fnCommCodeDatasourceSelectBoxCreate($('#PROCESS_CONFIRM_SEARCH_FORM').find('#PROCESS_CONFIRM_CORPORATION'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOrderCompanyList'}
+        $("#TOP_PROCESS_CONFIRM_CORPORATION").change(function(){
+            let corporation = this.value;
+            $('#CONFIRM_ORDER_SEARCH_FORM').find('#CONFIRM_ORDER_CORPORATION').val(corporation);
+            $('#PROCESS_CONFIRM_SEARCH_FORM').find('#PROCESS_CONFIRM_CORPORATION').val(corporation);
+            $('#OUTSIDE_SEARCH_FORM').find('#OUTSIDE_CORPORATION').val(corporation);
+            $('#PROCESS_COMPLETE_SEARCH_FORM').find('#PROCESS_COMPLETE_CORPORATION').val(corporation);
+
+            $('#CONFIRM_ORDER_SEARCH_FORM').trigger("change");
+            $('#PROCESS_CONFIRM_SEARCH_FORM').trigger("change");
+            $('#OUTSIDE_SEARCH_FORM').trigger("change");
+            $('#PROCESS_COMPLETE_SEARCH_FORM').trigger("change");
         });
-        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_SEARCH_FORM').find('#OUTSIDE_CORPORATION'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOrderCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#PROCESS_COMPLETE_SEARCH_FORM').find('#PROCESS_COMPLETE_CORPORATION'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOrderCompanyList'}
-        });
+        // fnCommCodeDatasourceSelectBoxCreate($('#CONFIRM_ORDER_SEARCH_FORM').find('#CONFIRM_ORDER_CORPORATION'), 'all', {
+        //     'url': '/json-list',
+        //     'data': {'queryId': 'dataSource.getOrderCompanyList'}
+        // });
+        // fnCommCodeDatasourceSelectBoxCreate($('#PROCESS_CONFIRM_SEARCH_FORM').find('#PROCESS_CONFIRM_CORPORATION'), 'all', {
+        //     'url': '/json-list',
+        //     'data': {'queryId': 'dataSource.getOrderCompanyList'}
+        // });
+        // fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_SEARCH_FORM').find('#OUTSIDE_CORPORATION'), 'all', {
+        //     'url': '/json-list',
+        //     'data': {'queryId': 'dataSource.getOrderCompanyList'}
+        // });
+        // fnCommCodeDatasourceSelectBoxCreate($('#PROCESS_COMPLETE_SEARCH_FORM').find('#PROCESS_COMPLETE_CORPORATION'), 'all', {
+        //     'url': '/json-list',
+        //     'data': {'queryId': 'dataSource.getOrderCompanyList'}
+        // });
         fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_SEARCH_FORM').find('#OUTSIDE_SUBCONTRACTOR'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
@@ -788,20 +825,17 @@
 
                 if (!(windowImageViewer === undefined || windowImageViewer.closed)) {
                     let rowData = selectedGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex});
-
                     callWindowImageViewer(rowData.IMG_GFILE_SEQ);
                 }
-
                 if(isNotBarcodeValid(barcodeNum, 'confirm')) {
                     this.value = '';
+                    failPlay();
                     return false;
                 }
-
                 let data = {'queryId': "common.selectControlBarcodeInfo", 'BARCODE_NUM': barcodeNum};
                 let parameters = {'url': '/json-info', 'data': data};
                 fnPostAjax(function (data) {
                     let dataInfo = data.info;
-
                     if (!(windowImageViewer === undefined || windowImageViewer.closed)) {
                         callWindowImageViewer(dataInfo.IMG_GFILE_SEQ);
                     }
@@ -863,17 +897,15 @@
         $("#OUTSOURCING_CONVERSION_BARCODE_NUM").on('keyup', function(e) {
             if (e.keyCode === 13) {
                 let barcodeNum = fnBarcodeKo2En(this.value);
-
                 if(isNotBarcodeValid(barcodeNum, 'conversion')) {
                     this.value = '';
+                    failPlay();
                     return false;
                 }
-
                 let data = {'queryId': "common.selectControlBarcodeInfo", 'BARCODE_NUM': barcodeNum};
                 let parameters = {'url': '/json-info', 'data': data};
                 fnPostAjax(function (data) {
                     let dataInfo = data.info;
-
                     if (!(windowImageViewer === undefined || windowImageViewer.closed)) {
                         callWindowImageViewer(dataInfo.IMG_GFILE_SEQ);
                     }
