@@ -8,6 +8,7 @@
             ROW_NUMBER () OVER () AS ROW_NUM,
             <include refid="orderMapper.control"/>,
             <include refid="orderMapper.controlPart"/>,
+            B.OUTSIDE_UNIT_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS OUTSIDE_TOTAL_AMT,
             C.OUTSIDE_REQUEST_SEQ,
             CASE
                 WHEN B.OUTSIDE_STATUS IN ('OST001', 'OST003', 'OST003') THEN SF_GET_DATE_F(C.INSERT_DT, 'YY', 'M')
@@ -33,6 +34,21 @@
             SF_GET_DATE_F(IF(TIMESTAMPDIFF(SECOND, H.INSERT_DT, H.UPDATE_DT) <![CDATA[ < ]]> 0, H.INSERT_DT, H.UPDATE_DT), 'YY', 'M') AS INSPECT_INSERT_UPDATE_DT <!-- 측정 일시 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
+                AND B.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
+            </if>
+            <if test="ITEM_NM != null and ITEM_NM != ''">
+                AND B.ITEM_NM LIKE CONCAT('%', UPPER(#{ITEM_NM}), '%')
+            </if>
+            <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
+                AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
+            </if>
+            <if test="OUTSIDE_STATUS != null and OUTSIDE_STATUS != ''">
+                AND B.OUTSIDE_STATUS = #{OUTSIDE_STATUS}
+            </if>
+            <if test="IN_STOCK != null and IN_STOCK != ''">
+                AND B.OUTSIDE_IN_DT IS NOT NULL
+            </if>
             LEFT OUTER JOIN TBL_OUTSIDE_REQUEST_DETAIL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
                                                             AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                                                             AND C.DEL_YN = 'N'
@@ -63,23 +79,11 @@
         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
-        <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
-            AND B.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
-        </if>
-        <if test="ITEM_NM != null and ITEM_NM != ''">
-            AND B.ITEM_NM LIKE CONCAT('%', UPPER(#{ITEM_NM}), '%')
-        </if>
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
             AND A.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
         </if>
         <if test="MODULE_NM != null and MODULE_NM != ''">
             AND A.MODULE_NM LIKE CONCAT('%', #{MODULE_NM}, '%')
-        </if>
-        <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
-            AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
-        </if>
-        <if test="OUTSIDE_STATUS != null and OUTSIDE_STATUS != ''">
-            AND B.OUTSIDE_STATUS = #{OUTSIDE_STATUS}
         </if>
         <choose>
             <!-- 확정일시 -->
@@ -99,9 +103,6 @@
                 AND DATE_FORMAT(B.OUTSIDE_IN_DT, '%Y/%m/%d') BETWEEN #{OUTSIDE_MANAGE_START_DATE} AND #{OUTSIDE_MANAGE_END_DATE}
             </when>
         </choose>
-        <if test="IN_STOCK != null and IN_STOCK != ''">
-            AND B.OUTSIDE_IN_DT IS NOT NULL
-        </if>
         ORDER BY A.CONTROL_SEQ, B.PART_NUM
     </select>
     

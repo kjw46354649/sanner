@@ -2678,6 +2678,7 @@
         $('#CONTROL_MANAGE_END_DATE_BUTTON').on('click', function () {
             $('#CONTROL_MANAGE_END_DATE').focus();
         });
+        console.log();
     });
 
 </script>
