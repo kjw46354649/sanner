@@ -1128,4 +1128,8 @@
         }
     };
 
+    $(document).on('click', '#DETAIL_VIEW', function () {
+        g_item_detail_pop_view('', '');
+    });
+
 </script>

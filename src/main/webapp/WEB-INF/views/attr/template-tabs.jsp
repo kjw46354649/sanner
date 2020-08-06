@@ -23,7 +23,10 @@
         <div class="bodyWrap" id="bodyWrap">
             <section class="containerBody">
                 <div class="navbarWrap">
-                    <div class="locationWrap"><%--<ul><li><a href="#a;">Home</a></li></ul>--%></div>
+                    <div class="locationWrap">
+                        <%--<ul><li><a href="#a;">Home</a></li></ul>--%>
+                        <button class="defaultBtn" style="position: absolute; top: 9px; right: 1%; background-color: #d6e5ff" id="DETAIL_VIEW">상세정보 조회</button>
+                    </div>
                 </div>
                 <div class="tabMenuWrap">
                     <ul class="tabMenu"></ul>
