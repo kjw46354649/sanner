@@ -193,7 +193,7 @@
             {title: 'No.', minWidth: 30, width: 30, align: 'right', dataType: 'integer', dataIndx: 'ROW_NUM'},
             {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자', dataIndx: 'COMP_NM'},
-            {title: '년도', dataIndx: 'YYYY'},
+            {title: '년도', dataIndx: 'YEAR'},
             {title: '분기', dataIndx: 'QUARTER'},
             {title: '마감월', dataIndx: 'FINISH_MONTH'},
             {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
