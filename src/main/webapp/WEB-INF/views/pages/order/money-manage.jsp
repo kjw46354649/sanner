@@ -528,18 +528,12 @@
                 $('#money_receive_status_total_records').html(totalRecords);
             },
             selectChange: function (event, ui) {
-                if (ui.selection.iCells.ranges[0] !== undefined) {
-                    moneyReceiveSelectedRowIndex = [];
-                    let moneyReceiveGridFirstRow = ui.selection.iCells.ranges[0].r1;
-                    let moneyReceiveGridLastRow = ui.selection.iCells.ranges[0].r2;
+                moneyReceiveSelectedRowIndex = [];
+                for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
+                    let firstRow = ui.selection._areas[i].r1;
+                    let lastRow = ui.selection._areas[i].r2;
 
-                    if (moneyReceiveGridFirstRow === moneyReceiveGridLastRow) {
-                        moneyReceiveSelectedRowIndex[0] = moneyReceiveGridFirstRow;
-                    } else {
-                        for (let i = moneyReceiveGridFirstRow; i <= moneyReceiveGridLastRow; i++) {
-                            moneyReceiveSelectedRowIndex.push(i);
-                        }
-                    }
+                    for (let i = firstRow; i <= lastRow; i++) moneyReceiveSelectedRowIndex.push(i);
                 }
             }
         };

@@ -267,7 +267,7 @@
     $(function () {
         'use strict';
 
-        let SelectedRowIndex = [];
+        let selectedRowIndex = [];
 
         let stockManageGridId01 = $("#stock_manage_grid");
         let stockManageColModel01;
@@ -514,7 +514,7 @@
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', minWidth: 250, width: 250, editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
         ];
         stockManageGridId01.pqGrid({
-            width: "100%", height: 710,
+            height: 700,
             postRenderInterval: -1, //call postRender synchronously.
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'INSIDE_STOCK_NUM',
@@ -562,25 +562,19 @@
                 $('#stock_manage_grid_records').html(totalRecords);
             },
             /*rowSelect: function (event, ui) {
-                SelectedRowIndex = [];
+                selectedRowIndex = [];
                 let selectList = ui.addList;
                 for (let i = 0; i < selectList.length; i++) {
-                    SelectedRowIndex.push(selectList[i].rowIndx);
+                    selectedRowIndex.push(selectList[i].rowIndx);
                 }
             },*/
             selectChange: function (event, ui) {
-                if (ui.selection.iCells.ranges[0] !== undefined) {
-                    SelectedRowIndex = [];
-                    let userMasterGridFirstRow = ui.selection.iCells.ranges[0].r1;
-                    let userMasterGridLastRow = ui.selection.iCells.ranges[0].r2;
+                selectedRowIndex = [];
+                for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
+                    let firstRow = ui.selection._areas[i].r1;
+                    let lastRow = ui.selection._areas[i].r2;
 
-                    if (userMasterGridFirstRow === userMasterGridLastRow) {
-                        SelectedRowIndex[0] = userMasterGridFirstRow;
-                    } else {
-                        for (let i = userMasterGridFirstRow; i <= userMasterGridLastRow; i++) {
-                            SelectedRowIndex.push(i);
-                        }
-                    }
+                    for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
                 }
             },
             change: function (evt, ui) {
@@ -763,25 +757,25 @@
             stockManageGridId01.pqGrid('addNodes', [{}], 0);
 
         });
-        $("#stock_manage_delete_btn").click(function(event){
-            if(SelectedRowIndex == "" || SelectedRowIndex == null){
-                alert("삭제할 데이터를 선택해 주십시오.");
+        $("#stock_manage_delete_btn").click(function () {
+            if (selectedRowIndex == "" || selectedRowIndex == null) {
+                fnAlert(null, "삭제할 데이터를 선택해 주십시오.");
                 return;
             }
             let rowCnt = "";
-            let INSIDE_STOCK_NUM ="";
-            for (let i = 0; i < SelectedRowIndex.length; i++) {
-                let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: SelectedRowIndex[i]});
-                INSIDE_STOCK_NUM += "'"+rowData["INSIDE_STOCK_NUM"]+"',";
+            let INSIDE_STOCK_NUM = "";
+            for (let i = 0; i < selectedRowIndex.length; i++) {
+                let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: selectedRowIndex[i]});
+                INSIDE_STOCK_NUM += "'" + rowData["INSIDE_STOCK_NUM"] + "',";
             }
-            INSIDE_STOCK_NUM = INSIDE_STOCK_NUM.substr(0 , INSIDE_STOCK_NUM.length-1);
+            INSIDE_STOCK_NUM = INSIDE_STOCK_NUM.substr(0, INSIDE_STOCK_NUM.length - 1);
 
             let deleteData = {
-                "url" : '/json-info',
-                'data' :
+                "url": '/json-info',
+                'data':
                     {
                         "queryId": 'material.selectInsideStockIn',
-                        "INSIDE_STOCK_NUM" : INSIDE_STOCK_NUM
+                        "INSIDE_STOCK_NUM": INSIDE_STOCK_NUM
                     }
             };
             fnPostAjaxAsync(function (data, callFunctionParam) {
@@ -812,7 +806,7 @@
             if(confirm("저장 하시겠습니까?")){
 
                 /*//step 1 java 에서 처리
-                let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: SelectedRowIndex});
+                let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: selectedRowIndex});
                 let V_ABBR_NM = "";
                 let MATERIAL_DETAIL = rowData["MATERIAL_DETAIL"];
                 let selectData1 = {

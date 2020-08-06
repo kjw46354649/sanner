@@ -299,18 +299,12 @@
                 $('#item_order_history_left_grid_records').html(data.length);
             },
             selectChange: function (event, ui) {
-                if (ui.selection.iCells.ranges[0] !== undefined) {
-                    itemOrderHistorySelectedRowIndex = [];
-                    let itemOrderHistoryGridFirstRow = ui.selection.iCells.ranges[0].r1;
-                    let itemOrderHistoryGridLastRow = ui.selection.iCells.ranges[0].r2;
+                itemOrderHistorySelectedRowIndex = [];
+                for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
+                    let firstRow = ui.selection._areas[i].r1;
+                    let lastRow = ui.selection._areas[i].r2;
 
-                    if (itemOrderHistoryGridFirstRow === itemOrderHistoryGridLastRow) {
-                        itemOrderHistorySelectedRowIndex[0] = itemOrderHistoryGridFirstRow;
-                    } else {
-                        for (let i = itemOrderHistoryGridFirstRow; i <= itemOrderHistoryGridLastRow; i++) {
-                            itemOrderHistorySelectedRowIndex.push(i);
-                        }
-                    }
+                    for (let i = firstRow; i <= lastRow; i++) itemOrderHistorySelectedRowIndex.push(i);
                 }
             },
             rowSelect: function( event, ui ) {

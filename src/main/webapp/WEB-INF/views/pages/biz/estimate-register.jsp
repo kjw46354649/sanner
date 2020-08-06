@@ -694,18 +694,12 @@
                 $('#estimate_register_top_grid_records').html(data.length);
             },
             selectChange: function (event, ui) {
-                if (ui.selection.iCells.ranges[0] !== undefined) {
-                    estimateRegisterSelectedRowIndex = [];
-                    let estimateRegisterGridFirstRow = ui.selection.iCells.ranges[0].r1;
-                    let estimateRegisterGridLastRow = ui.selection.iCells.ranges[0].r2;
+                estimateRegisterSelectedRowIndex = [];
+                for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
+                    let firstRow = ui.selection._areas[i].r1;
+                    let lastRow = ui.selection._areas[i].r2;
 
-                    if (estimateRegisterGridFirstRow === estimateRegisterGridLastRow) {
-                        estimateRegisterSelectedRowIndex[0] = estimateRegisterGridFirstRow;
-                    } else {
-                        for (let i = estimateRegisterGridFirstRow; i <= estimateRegisterGridLastRow; i++) {
-                            estimateRegisterSelectedRowIndex.push(i);
-                        }
-                    }
+                    for (let i = firstRow; i <= lastRow; i++) estimateRegisterSelectedRowIndex.push(i);
                 }
             },
             change: function( event, ui ) {

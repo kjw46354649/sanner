@@ -679,18 +679,12 @@
                 $('#in_warehouse_manage_manage_grid01_records').html(data.length);
             },
             selectChange: function (event, ui) {
-                if (ui.selection.iCells.ranges[0] !== undefined) {
-                    inWarehouseManageSelectedRowIndex = [];
-                    let itemOrderHistoryGridFirstRow = ui.selection.iCells.ranges[0].r1;
-                    let itemOrderHistoryGridLastRow = ui.selection.iCells.ranges[0].r2;
+                inWarehouseManageSelectedRowIndex = [];
+                for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
+                    let firstRow = ui.selection._areas[i].r1;
+                    let lastRow = ui.selection._areas[i].r2;
 
-                    if (itemOrderHistoryGridFirstRow === itemOrderHistoryGridLastRow) {
-                        inWarehouseManageSelectedRowIndex[0] = itemOrderHistoryGridFirstRow;
-                    } else {
-                        for (let i = itemOrderHistoryGridFirstRow; i <= itemOrderHistoryGridLastRow; i++) {
-                            inWarehouseManageSelectedRowIndex.push(i);
-                        }
-                    }
+                    for (let i = firstRow; i <= lastRow; i++) inWarehouseManageSelectedRowIndex.push(i);
                 }
             },
             rowSelect: function (event, ui) {

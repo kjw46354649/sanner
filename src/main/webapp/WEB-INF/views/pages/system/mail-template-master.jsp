@@ -153,18 +153,12 @@
             },
             toolbar: false,
             selectChange: function (event, ui) {
-                if (ui.selection.iCells.ranges[0] !== undefined) {
-                    userMasterSelectedRowIndex = [];
-                    let userMasterGridFirstRow = ui.selection.iCells.ranges[0].r1;
-                    let userMasterGridLastRow = ui.selection.iCells.ranges[0].r2;
+                userMasterSelectedRowIndex = [];
+                for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
+                    let firstRow = ui.selection._areas[i].r1;
+                    let lastRow = ui.selection._areas[i].r2;
 
-                    if (userMasterGridFirstRow === userMasterGridLastRow) {
-                        userMasterSelectedRowIndex[0] = userMasterGridFirstRow;
-                    } else {
-                        for (let i = userMasterGridFirstRow; i <= userMasterGridLastRow; i++) {
-                            userMasterSelectedRowIndex.push(i);
-                        }
-                    }
+                    for (let i = firstRow; i <= lastRow; i++) userMasterSelectedRowIndex.push(i);
                 }
             },
             cellDblClick: function (event, ui) {

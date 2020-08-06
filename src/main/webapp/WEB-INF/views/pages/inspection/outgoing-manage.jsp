@@ -834,18 +834,12 @@
                 $('#outgoing_manage_grid_records').html(totalRecords);
             },
             selectChange: function (event, ui) {
-                if (ui.selection.iCells.ranges[0] !== undefined) {
-                    outgoingManageSelectedRowIndex = [];
-                    let outgoingManageGridFirstRow = ui.selection.iCells.ranges[0].r1;
-                    let outgoingManageGridLastRow = ui.selection.iCells.ranges[0].r2;
+                outgoingManageSelectedRowIndex = [];
+                for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
+                    let firstRow = ui.selection._areas[i].r1;
+                    let lastRow = ui.selection._areas[i].r2;
 
-                    if (outgoingManageGridFirstRow === outgoingManageGridLastRow) {
-                        outgoingManageSelectedRowIndex[0] = outgoingManageGridFirstRow;
-                    } else {
-                        for (let i = outgoingManageGridFirstRow; i <= outgoingManageGridLastRow; i++) {
-                            outgoingManageSelectedRowIndex.push(i);
-                        }
-                    }
+                    for (let i = firstRow; i <= lastRow; i++) outgoingManageSelectedRowIndex.push(i);
                 }
             },
             change: function (event, ui) {
