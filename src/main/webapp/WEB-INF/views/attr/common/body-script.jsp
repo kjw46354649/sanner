@@ -67,10 +67,9 @@
 <script type="text/javascript" class="cssdesk" src="/resource/plugins/moment-2.11.0/min/moment.min.js"></script>
 
 <!-- Multi Select -->
-<script type="text/javascript" src='/resource/plugins/multi_select/jquery.multi-select.js'></script>
-<script type="text/javascript" src='/resource/plugins/multi_select/jquery.multi-select.min.js'></script>
-
-<script type="text/javascript" src='/resource/plugins/multiselect-master/multiselect.min.js'></script>
+<%--<script type="text/javascript" src='/resource/plugins/multi_select/jquery.multi-select.js'></script>--%>
+<%--<script type="text/javascript" src='/resource/plugins/multi_select/jquery.multi-select.min.js'></script>--%>
+<%--<script type="text/javascript" src='/resource/plugins/multiselect-master/multiselect.min.js'></script>--%>
 
 <!-- alertify -->
 <script type="text/javascript" src='/resource/plugins/alertifyjs/alertify.js'></script>
@@ -935,39 +934,23 @@
             async: false,
             success: function (data, textStatus, jqXHR) {
                 if (textStatus === 'success') {
-                   if(data.info != null && data.info.USE_YN == 'Y'){
-                       callback.add(callFunction);
-                       callback.fire(true, callFunctionParam);
-                       //callback(true);
-                       return;
-                   }else {
-                       let text = '<h4>' +
-                           '           <img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
-                           '               <span>최신 도면이 아닙니다. 사무실에 확인바랍니다.</span><br/>' +
-                           '               <span style=\'margin-left: 40px;\'>무시하고 강제로 진행하시겠습니까?</span>' +
-                           '       </h4>';
-                       $("#commonConfirmBodyHtml").html(text);
-                       commonConfirmPopup.show();
+                    if (data.info != null && data.info.USE_YN == 'Y') {
+                        callback.add(callFunction);
+                        callback.fire(true, callFunctionParam);
+                        //callback(true);
+                        return;
+                    } else {
+                        let text = '조회대상이 없습니다.';
 
-                       $("#commonConfirmYesBtn").unbind().click(function (e) {
-                           e.stopPropagation();
-                           commonConfirmPopup.hide();
-                           //$(this).startWaitMe();
-                           // $(".cadDrawingPrint").html(printHtml).trigger('create');
-                           callback.add(callFunction);
-                           callback.fire(true, callFunctionParam);
-                           return;
-                       });
-                       $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                           e.stopPropagation();
-                           commonConfirmPopup.hide();
-                           callback.add(callFunction);
-                           callback.fire(false, callFunctionParam);
-                           return;
-                       });
-                   }
+                        fnAlert(null, text, function () {
+                            e.stopPropagation();
+                            callback.add(callFunction);
+                            callback.fire(true, callFunctionParam);
+                            return;
+                        });
+                    }
                 } else {
-                    // alert('fail=[' + json.msg + ']111');
+                    // alert('fail=[' + json.msg + ']');
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
