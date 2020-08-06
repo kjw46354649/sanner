@@ -1753,7 +1753,7 @@ function(t) {
         freezeBorders: !0,
         calcDataIndxFromColIndx: !0,
         height: 400,
-        hoverMode: "null",
+        hoverMode: "row",
         locale: "en",
         maxColWidth: 2e3,
         minColWidth: 50,
