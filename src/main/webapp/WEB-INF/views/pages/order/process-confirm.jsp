@@ -773,7 +773,6 @@
             let parameters = {'url': '/processConfirmBarcodeInfo', 'data': {BARCODE_NUM: fnBarcodeKo2En(barcodeNum), TYPE: type}};
 
             fnPostAjaxAsync(function (data) {
-                flag = data.flag;
                 if (data.flag) {
                     fnConfirm(null, data.message, function () {}, null, 5);
                 }
