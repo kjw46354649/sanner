@@ -1804,8 +1804,8 @@
             COUNT(*) AS ITEM_NUMBER, <!-- 품수 -->
             SUM(B.UNIT_FINAL_AMT) AS UNIT_FINAL_AMT, <!-- 공급가 -->
             E.FINAL_NEGO_AMT,
-            SUM(B.UNIT_FINAL_AMT) * 0.1 AS VAT_AMOUNT, <!-- 부가세액 -->
-            SUM(B.UNIT_FINAL_AMT) + SUM(B.UNIT_FINAL_AMT) * 0.1 AS TOTAL_AMOUNT, <!-- 합계금액 -->
+            E.FINAL_NEGO_AMT * 0.1 AS VAT_AMOUNT, <!-- 부가세액 -->
+            E.FINAL_NEGO_AMT + E.FINAL_NEGO_AMT * 0.1 AS TOTAL_AMOUNT, <!-- 합계금액 -->
             E.CLOSE_NOTE <!-- 비고 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ

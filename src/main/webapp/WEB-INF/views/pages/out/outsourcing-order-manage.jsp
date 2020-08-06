@@ -587,13 +587,12 @@
             {
                 title: '외주<br>확정단가', width: 90, align: 'right', dataType: 'integer', dataIndx: 'OUTSIDE_UNIT_AMT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}, format: '#,###',
-                editable: true
-                // editable: function (ui) {
-                //     let rowData = ui.rowData;
-                //     return rowData.OUTSIDE_STATUS !== 'OST001';
-                // }
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+                    return rowData.OUTSIDE_STATUS !== 'OST001';
+                }
             },
-            {title: '금액<br>합계', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
+            {title: '금액<br>합계', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_TOTAL_AMT'},
             {title: '외주<br>종전가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DHLWNWHDWJSRK'},
             {
                 title: '원발주 정보', align: 'center', colModel: [
