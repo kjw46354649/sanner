@@ -494,7 +494,6 @@
             height: 700, width: "100%", selectionModel: { type: 'row', mode: 'single'} , swipeModel: {on: false}, collapsible: false,
             trackModel: {on: true}, resizable: false, flexWidth: false, scrollModel: { autoFit: true }, showTitle: false, rowHtHead: 15,
             numberCell: {title: 'No.'}, toolbar: false, columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' },
-            editModel: {clicksToEdit: 1},
             colModel: moneyReceiveStatusModel,
             dataModel: {
                 recIndx: "DEPOSIT_SEQ", location: "remote", dataType: "json", method: "POST", url: "/paramQueryGridSelect",
