@@ -487,16 +487,15 @@
 
                     }
                 }
-                if (ui.rowData.INSPECT_SEQ != undefined && ui.rowData.INSPECT_SEQ >0) {
+                if (ui.rowData.INSPECT_SEQ != undefined && ui.rowData.INSPECT_SEQ > 0) {
                     if (ui.dataIndx == 'CONTROL_SEQ_DELETE') {
-                        if(confirm("검사실적이 바로 삭제됩니다.\n삭제 하시겠습니까?")){
+                        fnConfirm(null, "검사실적이 바로 삭제됩니다.<br>삭제 하시겠습니까?", function () {
                             fnDeletePQGrid(inspectionManageGridId01, [rowIndx], "inspection.deleteInspectionMaster");
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 $("#inspection_manage_form").find("#queryId").val("inspection.selectInspectionList");
                                 $("#inspection_manage_search_btn").trigger("click");
                             }, 500);
-
-                        }
+                        });
                     }
                 }
             }
@@ -606,7 +605,7 @@
             fnPostAjax(function (data, callFunctionParam) {
                 let dataInfo = data.info;
                 if(dataInfo == null ) {
-                    alert("해당 데이터가 존재하지 않습니다.");
+                    fnAlert(null, "해당 데이터가 존재하지 않습니다.");
                     $('#inspection_manage_pop').modal('hide');
                 }else{
                     let emergencySpan = '';
@@ -678,7 +677,7 @@
 
             if(selINSPECT_GRADE == "GRD030" || selINSPECT_GRADE == "GRD040"){
                 if(selINSPECT_RESULT == ""){
-                    alert("검사코드는 필수 입력 값입니다.");
+                    fnAlert(null, "검사코드는 필수 입력 값입니다.");
                     return;
                 }
             }
@@ -717,7 +716,7 @@
             $(this).startWaitMe();
             fnPostAjax(function (data, callFunctionParam) {
                 $(this).stopWaitMe();
-                alert("등록이 완료되었습니다.");
+                fnAlert(null, "등록이 완료되었습니다.");
                 $('#inspection_manage_pop').modal('hide');
             }, parameters, '');
 
@@ -741,7 +740,7 @@
                         fnPostAjax(function (data, callFunctionParam) {
                             let dataInfo = data.info;
                             if (dataInfo == null) {
-                                alert("해당 바코드가 존재하지 않습니다.");
+                                fnAlert(null, "해당 바코드가 존재하지 않습니다.");
                                 return;
                             } else {
                                 let CONTROL_SEQ = dataInfo.CONTROL_SEQ;

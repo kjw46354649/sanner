@@ -502,7 +502,7 @@
                     $cell.find('#INSIDE_STOCK_QTY_OUT_ACTION').bind('click', function(e) {
                         e.preventDefault();
                         if (ui.rowData['INSIDE_STOCK_CURR_QTY'] <= 0){
-                            alert("출고할 재고수량이 없습니다.");
+                            fnAlert(null, "출고할 재고수량이 없습니다.");
                         }else{
                             $("#stock_manage_form").find("#popType").val("GRID_OUT");
                             $("#stock_manage_form").find("#V_INSIDE_STOCK_NUM").val(ui.rowData['INSIDE_STOCK_NUM']);
@@ -683,7 +683,7 @@
                 $("#stock_manage_pop_form").find("#LOC_SEQ").attr("disabled", true);
                 $("#stock_manage_pop_form").find("#inside_stock_qty_all_btn").prop('disabled', false);
             }else{
-                alert("error type");
+                fnAlert(null, "error type");
                 return;
             }
             $("#stock_manage_pop_form").find("#pop_title").html(pop_title);
@@ -729,12 +729,12 @@
             if(SEL_SIZE_SEARCH_TYPE == "1") {//Range
                 if (SEL_SIZE_SEARCH_TYPE_R_1 == "" || SEL_SIZE_SEARCH_TYPE_R_2 == "" || SEL_SIZE_SEARCH_TYPE_R_3 == ""
                     || SEL_SIZE_SEARCH_TYPE_R_4 == "" || SEL_SIZE_SEARCH_TYPE_R_5 == "" || SEL_SIZE_SEARCH_TYPE_R_6 == "") {
-                    alert("Range 검색을 선택하셨습니다.\n구간 입력값 모두를 입력하여 주십시오.");
+                    fnAlert(null, "Range 검색을 선택하셨습니다.\n구간 입력값 모두를 입력하여 주십시오.");
                     return;
                 }
             }else if(SEL_SIZE_SEARCH_TYPE == "2") {//Equal
                 if (SEL_SIZE_SEARCH_TYPE_E_1 == "" || SEL_SIZE_SEARCH_TYPE_E_2 == "" || SEL_SIZE_SEARCH_TYPE_E_3 == "") {
-                    alert("Equal 검색을 선택하셨습니다.\n각 입력값 모두를 입력하여 주십시오.");
+                    fnAlert(null, "Equal 검색을 선택하셨습니다.\n각 입력값 모두를 입력하여 주십시오.");
                     return;
                 }
             }
@@ -783,27 +783,27 @@
                 // console.log(rowCnt);
             }, deleteData, '');
 
-            if(rowCnt > 0){
-                alert("입고 이력이 존재 합니다.\n삭제를 위해서 관리자에게 문의 하십시오.");
+            if (rowCnt > 0) {
+                fnAlert(null, "입고 이력이 존재 합니다.<br>삭제를 위해서 관리자에게 문의 하십시오.");
                 return;
-            }else{
-                if(confirm("선택한 대상의 모든 정보가 삭제됩니다.\n진행하시겠습니까?")){
-                    fnDeletePQGrid(stockManageGridId01, SelectedRowIndex, "material.deleteInsideStock");
+            } else {
+                fnConfirm(null, "선택한 대상의 모든 정보가 삭제됩니다.<br>진행하시겠습니까?", function () {
+                    fnDeletePQGrid(stockManageGridId01, selectedRowIndex, "material.deleteInsideStock");
                     $("#stock_manage_search_btn").trigger("click");
-                }
+                });
             }
         });
 
-        $("#stock_manage_save_btn").click(function(event){
+        $("#stock_manage_save_btn").click(function (event) {
 
-            if(!fnGridValidation("stock_manage_grid")){
-                alert("그리드의 값이 올바르지 않습니다.");
+            if (!fnGridValidation("stock_manage_grid")) {
+                fnAlert(null, "그리드의 값이 올바르지 않습니다.");
                 return;
             }
-            if(false){
+            if (false) {
                 //to-do 규격 validation
             }
-            if(confirm("저장 하시겠습니까?")){
+            fnConfirm(null, "저장 하시겠습니까?", function () {
 
                 /*//step 1 java 에서 처리
                 let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: selectedRowIndex});
@@ -854,11 +854,11 @@
                     'data': {"stockGrid": JSON.stringify(changes)}
                 };
                 fnPostAjax(function (data, callFunctionParam) {
-                    alert('재고관리 정보가 저장되었습니다.');
+                    fnAlert(null, '재고관리 정보가 저장되었습니다.');
                     $("#stock_manage_search_btn").trigger("click");
                 }, parameters, '');
 
-            }
+            });
         });
         $('#inside_stock_pop_save_btn').on('click', function () {
             //규격 validation
@@ -1003,7 +1003,7 @@
 
             } else {
                 if(Number(compareQty) < Number(outQty)){
-                    alert("불출 수량을 확인 해 주세요.");
+                    fnAlert(null, "불출 수량을 확인 해 주세요.");
                     $(this).val(outQty.substring(0, outQty.length-1));
                     outQty = $(this).val();
                 }
@@ -1093,7 +1093,7 @@
                             fnPostAjax(function (data2, callFunctionParam) {
                                 let dataInfo2 = data2.info;
                                 if(dataInfo2 == null ) {
-                                    alert("도면번호가 존재하지 않습니다.");
+                                    fnAlert(null, "도면번호가 존재하지 않습니다.");
                                     fnResetFrom("stock_manage_pop_form");
                                     $('#stock_manage_pop').modal('hide');
                                 }else{

@@ -2151,7 +2151,6 @@
                 '    <span>이미 가공이 진행되고 있을 수 있습니다. 반드시 해당업체 확인 후에 진행바랍니다. 취소 진행 및 메일발송을 진행하시겠습니까?</span>\n' +
                 '</h4>';
 
-            // fnCommonConfirmBoxCreate(headHtml, message, yseBtn, noBtn);
             fnConfirm(null, message, function () {
                 let mailFlag = true;
                 let cancelMailRecipientData = $cancelMailRecipientGrid.pqGrid('option', 'dataModel.data');

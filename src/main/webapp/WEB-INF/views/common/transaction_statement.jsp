@@ -289,33 +289,11 @@
                     '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
                     '    <span>선택하신 ' + bCodePrintLen + '건을 처리합니다. \n진행하시겠습니까?</span>\n' +
                     '</h4>';
-                fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
                 fnConfirm(null, message, function () {
                     fnBarcodePrint(function (data) {
                         fnAlert(null, data.message);
                     }, barcodeList, '');
-                })
-
-                // let labelPrintConfirm = function (callback) {
-                //     commonConfirmPopup.show();
-                //     $("#commonConfirmYesBtn").unbind().click(function (e) {
-                //         e.stopPropagation();
-                //         commonConfirmPopup.hide();
-                //         callback(true);
-                //
-                //     });
-                //     $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                //         e.stopPropagation();
-                //         commonConfirmPopup.hide();
-                //     });
-                // };
-                // labelPrintConfirm(function (confirm) {
-                //     if (confirm) {
-                //         fnBarcodePrint(function (data, callFunctionParam) {
-                //             fnAlert(null, data.message);
-                //         }, barcodeList, '');
-                //     }
-                // });
+                });
             } else {
                 fnAlert(null, "출력할 바코드가 존재 하지 않습니다.");
             }
@@ -359,36 +337,17 @@
                 '    <img alt="alert" src="/resource/asset/images/work/alert.png" style="width: 32px; height: 32px;" >\n' +
                 '    <span>발주번호 ' + invoiceNumList[0] + ' 이 삭제됩니다. 진행하시겠습니까?</span>\n' +
                 '</h4>';
-            // fnCommonConfirmBoxCreate(headHtml, message, yseBtn, noBtn);
+
             fnConfirm(null, message, function () {
                 let parameters = {'url': '/removeInvoice', 'data': {INVOICE_NUM: invoiceNumList[0]}};
 
                 fnPostAjax(function () {
-                    fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");
-                    window.close();
-                    opener.$orderManagementGrid.pqGrid('refreshDataAndView');
+                    fnAlert(null, "<spring:message code='com.alert.default.remove.success'/>", function () {
+                        window.close();
+                        opener.$orderManagementGrid.pqGrid('refreshDataAndView');
+                    });
                 }, parameters, '');
             });
-            // let transactionStatementSubmitConfirm = function (callback) {
-            //     commonConfirmPopup.show();
-            //     $("#commonConfirmYesBtn").unbind().click(function (e) {
-            //         e.stopPropagation();
-            //         commonConfirmPopup.hide();
-            //         callback(true);
-            //
-            //     });
-            //     $(".commonConfirmCloseBtn").unbind().click(function (e) {
-            //         e.stopPropagation();
-            //         commonConfirmPopup.hide();
-            //     });
-            // };
-            // transactionStatementSubmitConfirm(function (confirm) {
-            //     if (confirm) {
-            //
-            //     }
-            // });
-
-
         });
         // 저장
         $('#TRANSACTION_STATEMENT_SAVE').on('click', function () {

@@ -1181,8 +1181,8 @@
         });
 
         // 업체상세 모달 delete
-        $systemCompanyRegisterDelBtn.click(function(event){
-            if(confirm("업체정보가 삭제됩니다.\n삭제 하시겠습니까?")) {
+        $systemCompanyRegisterDelBtn.click(function (event) {
+            fnConfirm(null, "업체정보가 삭제됩니다.<br>삭제 하시겠습니까?", function () {
                 $("#company_master_register_form").find("#queryId").val("systemMapper.deleteCompanyMaster");
                 let parameters = {
                     'url': '/json-update',
@@ -1193,7 +1193,7 @@
                     $companyMasterMainSearchBtn.trigger("click");
                     //fnAlertMessageAutoClose('remove');
                 }, parameters, '');
-            }
+            });
         });
 
         // 업체상세 모달 활성여부
@@ -1306,7 +1306,7 @@
         $("#company_master_register_form").find("#compnay_etc_attach_file_download").on('click', function () {
             let ETC_GFILE_SEQ = $("#company_master_register_form").find("#ETC_GFILE_SEQ").val();
             if(ETC_GFILE_SEQ == ""){
-                alert("저장된 파일이 없습니다.");
+                fnAlert(null, "저장된 파일이 없습니다.");
             }else{
                 fnFileDownloadFormPageAction(ETC_GFILE_SEQ);
             }

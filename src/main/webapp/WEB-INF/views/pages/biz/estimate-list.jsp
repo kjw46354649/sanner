@@ -834,7 +834,7 @@
             let EST_SEQ = "";
             let VERSION_UP_YN = $("#estimate_master_hidden_form #VERSION_UP_YN").val();
             if(VERSION_UP_YN == 'N') {
-                alert("이미 등록되어있습니다.");
+                fnAlert(null, "이미 등록되어있습니다.");
                 return false;
             }
 

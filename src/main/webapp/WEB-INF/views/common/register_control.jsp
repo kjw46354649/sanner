@@ -468,7 +468,7 @@
                             validationCheck(data);
                             changeCellColor(errorList, prevErrorList);
                             if (errorList.length) {
-                                alert(errorList.length + '건의 데이터가 올바르지 않습니다.');
+                                fnAlert(null, errorList.length + '건의 데이터가 올바르지 않습니다.');
                                 return false;
                             }
 
@@ -480,9 +480,10 @@
                             $(this).startWaitMe();
                             fnPostAjax(function () {
                                 $(this).stopWaitMe();
-                                fnAlert(null, '<spring:message code="com.alert.default.save.success" />');
-                                window.close();
-                                opener.$orderManagementGrid.pqGrid('refreshDataAndView');
+                                fnAlert(null, '<spring:message code="com.alert.default.save.success"/>', function () {
+                                    window.close();
+                                    opener.$orderManagementGrid.pqGrid('refreshDataAndView');
+                                });
                             }, parameters, '');
                         }
                     }
@@ -497,7 +498,7 @@
                             validationCheck(data);
                             changeCellColor(errorList, prevErrorList);
                             if (errorList.length) {
-                                alert(errorList.length + '건의 데이터가 올바르지 않습니다.');
+                                fnAlert(null, errorList.length + '건의 데이터가 올바르지 않습니다.');
                                 return false;
                             }
 
@@ -509,9 +510,10 @@
                             $(this).startWaitMe();
                             fnPostAjax(function () {
                                 $(this).stopWaitMe();
-                                fnAlert(null, '<spring:message code="com.alert.default.save.success" />');
-                                window.close();
-                                opener.$orderManagementGrid.pqGrid('refreshDataAndView');
+                                fnAlert(null, '<spring:message code="com.alert.default.save.success"/>', function () {
+                                    window.close();
+                                    opener.$orderManagementGrid.pqGrid('refreshDataAndView');
+                                });
                             }, parameters, '');
                         }
                     }

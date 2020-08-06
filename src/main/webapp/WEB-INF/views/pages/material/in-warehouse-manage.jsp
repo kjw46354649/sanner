@@ -918,7 +918,7 @@
             let compareQty = $("#in_warehouse_manage_out_popup_form #STOCK_QTY").val();
             let outQty = $(this).val();
             if(Number(compareQty) < Number(outQty)){
-                alert("불출 수량을 확인 해 주세요.");
+                fnAlert(null, "불출 수량을 확인 해 주세요.");
                 $(this).val(outQty.substring(0, outQty.length-1));
                 outQty = $(this).val();
             }
@@ -938,7 +938,7 @@
             let POP_REMAIN_QTY = $('#inWarehouseOutPopTable #REMAIN_QTY').val() == '' ? $('#inWarehouseOutPopTable #STOCK_QTY').val() : $('#inWarehouseOutPopTable #REMAIN_QTY').val();
             let POP_OUT_QTY = $("#inWarehouseOutPopTable #OUT_QTY").val() == '' ? '0' : $("#inWarehouseOutPopTable #OUT_QTY").val();
             if (POP_STOCK_QTY == "" || POP_STOCK_QTY == "0") {
-                alert("수량이 없습니다.");
+                fnAlert(null, "수량이 없습니다.");
                 return;
             }
             if (type == "PLUS") {
@@ -1004,7 +1004,7 @@
                         $("#btnInWarehouseManageManageSearch").trigger('click');
                         $("#btnInWarehouseManageOutSearch").trigger('click');
                     } else {
-                        alert("중복되는 리스트가 존재합니다.");
+                        fnAlert(null, "중복되는 리스트가 존재합니다.");
                     }
                 }, parameters, '');
             }
@@ -1043,7 +1043,7 @@
         $("#btnInWarehouseManageOutPopSave").on('click', function(){
             let OUT_QTY = $("#in_warehouse_manage_out_popup_form #OUT_QTY").val();
             if(OUT_QTY == '' || OUT_QTY == '0') {
-                alert("수량을 입력해 주세요.");
+                fnAlert(null, "수량을 입력해 주세요.");
                 return false;
             } else {
                 $("#in_warehouse_manage_out_popup_form #queryId").val("material.insertInWareHouseManageOutManual");
