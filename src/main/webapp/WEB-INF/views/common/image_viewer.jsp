@@ -58,7 +58,10 @@
             image.src = "/image/" + $("#image_seq").val();
             $viewer = new Viewer(image, {
                 backdrop: false,
+                button: false,
+                movable: false,
                 navbar: false,
+                transition: false,
                 viewed: function () {
                     // this.viewer.zoomTo(0.39).rotateTo(-90);
                 },
@@ -88,7 +91,7 @@
     function onImageViewStart(){
         if($viewer) $viewer.destroy();
         $('#dynamic').trigger("click");
-    };
+    }
 
 </script>
 </body>
