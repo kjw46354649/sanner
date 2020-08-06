@@ -152,14 +152,8 @@
                 $('#user_master_total_records').html(totalRecords);
             },
             toolbar: false,
-            selectChange: function (event, ui) {
-                userMasterSelectedRowIndex = [];
-                for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
-                    let firstRow = ui.selection._areas[i].r1;
-                    let lastRow = ui.selection._areas[i].r2;
-
-                    for (let i = firstRow; i <= lastRow; i++) userMasterSelectedRowIndex.push(i);
-                }
+            rowSelect: function (event, ui) {
+                userMasterSelectedRowIndex[0] = ui.addList[0].rowIndx;
             },
             cellDblClick: function (event, ui) {
                 let TEMPLATE_SEQ = ui.rowData.TEMPLATE_SEQ;
