@@ -76,7 +76,7 @@
                                 </c:forEach>
                             </select>
                         </span>
-                        <div class="calendar_wrap" style="width:542px; padding-left: 0">
+                        <div class="d-inline-block" style="width:542px">
                             <span class="calendar_span">
                                 <input type="text" title="달력정보" name="CONTROL_MANAGE_START_DATE" id="CONTROL_MANAGE_START_DATE"><button type="button" id="CONTROL_MANAGE_START_DATE_BUTTON">달력선택</button>
                             </span>
@@ -84,7 +84,6 @@
                             <span class="calendar_span">
                                 <input type="text" title="달력정보" name="CONTROL_MANAGE_END_DATE" id="CONTROL_MANAGE_END_DATE" readonly><button type="button" id="CONTROL_MANAGE_END_DATE_BUTTON">달력선택</button>
                             </span>
-                            <span class="chk_box" style="margin-left: 10px;"><input name="CHECK_BOX" id="CHECK_BOX" type="checkbox"><label for="CHECK_BOX">선택</label></span>
                         </div>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -654,10 +653,10 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP020';
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') /*&& rowData.WORK_TYPE !== 'WTP020'*/;
                 },
                 editor: {type: 'textbox', init: fnDateEditor},
-                render: function (ui) {
+                /*render: function (ui) {
                     let rowData = ui.rowData;
                     let cls = null;
 
@@ -667,7 +666,7 @@
 
                     return {cls: cls, text: controlManageFilterRender(ui)};
 
-                }
+                }*/
             },
             {
                 title: '외<br>주', minWidth: 15, width: 20, dataIndx: 'OUTSIDE_YN',
@@ -750,17 +749,16 @@
 
                     return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                 },
-                // render: function (ui) {
-                //     let cellData = ui.cellData;
-                //     let rowData = ui.rowData;
-                //     let cls = null, text = cellData;
-                //
-                //     if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
-                //         cls = 'bg-lightgray';
-                //     }
-                //
-                //     return {cls: cls, text: controlManageFilterRender(ui)};
-                // }
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let cls = null;
+
+                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
+                }
             },
             {
                 title: '최종<br>공급단가', width: 90, format: '#,###', dataIndx: 'UNIT_FINAL_AMT',
@@ -1151,7 +1149,8 @@
                     if (CALC_EST_UNIT_COST > 0) {
                         CALC_EST_UNIT_COST = numberWithCommas(CALC_EST_UNIT_COST);
                     }
-                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                    // if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                    if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                         cls = 'bg-lightgray';
                     }
 
@@ -1224,17 +1223,16 @@
 
                             return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
-                        // render: function (ui) {
-                        //     let cellData = ui.cellData;
-                        //     let rowData = ui.rowData;
-                        //     let cls = null, text = cellData;
-                        //
-                        //     if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
-                        //         cls = 'bg-lightgray';
-                        //     }
-                        //
-                        //     return {cls: cls, text: controlManageFilterRender(ui)};
-                        // }
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            let cls = null;
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: controlManageFilterRender(ui)};
+                        }
                     },
                     {
                         title: 'TM각비', format: '#,###', dataIndx: 'UNIT_TM_AMT',
@@ -2189,7 +2187,6 @@
             let compCdList = [];
             let orderCompCdList = [];
             let invoiceNumList = [];
-            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인';
 
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
@@ -2538,7 +2535,6 @@
                 return false;
             }
 
-            // let list = [];
             let controlSeqList = [];
             let compCdList = [];
             let orderCompCdList = [];
@@ -2547,8 +2543,6 @@
 
             for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-
-                // list.push(rowData);
                 controlSeqList.push(rowData.CONTROL_SEQ);
                 compCdList.push(rowData.COMP_CD);
                 orderCompCdList.push(rowData.ORDER_COMP_CD);
