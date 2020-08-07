@@ -542,7 +542,7 @@
         });
 
         $('#user_info_pop_form').find('#saveUserMasterBtn').on('click', function () {
-            if(confirm("저장 하시겠습니까?")){
+            fnConfirm(null, "저장 하시겠습니까?", function () {
                 let parameters = {
                     'url': '/json-update',
                     'data': $('#user_info_pop_form').serialize()
@@ -552,8 +552,7 @@
                     $('#user_info_pop').modal('hide');
                     $("#userMasterSearchBtn").trigger("click");
                 }, parameters, '');
-
-            }
+            });
         });
 
         /** 캐드 파일 업로드 시작 스크립트 **/
@@ -799,7 +798,7 @@
                 fnFormDataFileUploadAjax(function (data) {
                     let fileUploadDataList = data.fileUploadDataList;
                     if (fileUploadDataList.length <= 0) {
-                        alert("주문 정보가 없습니다. 주문 정보를 확인 해 주세요.");
+                        fnAlert(null, "주문 정보가 없습니다. 주문 정보를 확인 해 주세요.");
                         $(this).stopWaitMe();
                         return false;
                     }
@@ -1053,7 +1052,7 @@
                 let fileUploadList = data.fileUploadList;
                 let GFILE_SEQ = fileUploadList[0].GFILE_SEQ;
                 if (fileUploadList.length <= 0) {
-                    alert("주문 정보가 없습니다. 주문 정보를 확인 해 주세요.");
+                    fnAlert(null, "주문 정보가 없습니다. 주문 정보를 확인 해 주세요.");
                     return false;
                 }
                 let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GFILE_SEQ };

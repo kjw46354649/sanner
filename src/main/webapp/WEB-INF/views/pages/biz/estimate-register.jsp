@@ -694,18 +694,12 @@
                 $('#estimate_register_top_grid_records').html(data.length);
             },
             selectChange: function (event, ui) {
-                if (ui.selection.iCells.ranges[0] !== undefined) {
-                    estimateRegisterSelectedRowIndex = [];
-                    let estimateRegisterGridFirstRow = ui.selection.iCells.ranges[0].r1;
-                    let estimateRegisterGridLastRow = ui.selection.iCells.ranges[0].r2;
+                estimateRegisterSelectedRowIndex = [];
+                for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
+                    let firstRow = ui.selection._areas[i].r1;
+                    let lastRow = ui.selection._areas[i].r2;
 
-                    if (estimateRegisterGridFirstRow === estimateRegisterGridLastRow) {
-                        estimateRegisterSelectedRowIndex[0] = estimateRegisterGridFirstRow;
-                    } else {
-                        for (let i = estimateRegisterGridFirstRow; i <= estimateRegisterGridLastRow; i++) {
-                            estimateRegisterSelectedRowIndex.push(i);
-                        }
-                    }
+                    for (let i = firstRow; i <= lastRow; i++) estimateRegisterSelectedRowIndex.push(i);
                 }
             },
             change: function( event, ui ) {
@@ -1078,75 +1072,44 @@
             estimateRegisterReloadPageData();
         });
 
-        $("#btn_estimate_register_submit").on("click", function(){
+        $("#btn_estimate_register_submit").on("click", function () {
             fnEstimateRegisterSave('N');
 
-            //Confirm Box
-            let headHtml = "messsage", bodyHtml ="", yseBtn="예", noBtn="아니오";
-
             let autoEmailYn = estimateRegisterBotGrid.pqGrid('option', 'dataModel.data').length > 0 ? true : false;
-            if(autoEmailYn){
-                bodyHtml =
-                    '<h4>\n' +
-                    '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
-                    '<span>메일을 송신합니다. 계속 진행하시겠습니까?</span>' +
-                    '</h4>';
-            }else{
-                bodyHtml =
-                    '<h4>\n' +
-                    '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
-                    '<span>메일 송신 없이 완료처리만 진행합니다.\n 진행하시겠습니까?</span>' +
-                    '</h4>';
-            }
+            let message = autoEmailYn ? '메일을 송신합니다. 계속 진행하시겠습니까?' : '메일 송신 없이 완료처리만 진행합니다.<br>진행하시겠습니까?';
 
-            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-            let estimateRegisterSubmitConfirm = function(callback) {
-                commonConfirmPopup.show();
-                $("#commonConfirmYesBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                    callback(true);
-                    return;
-                });
-                $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                });
-            };
-            estimateRegisterSubmitConfirm(function(confirm){
-                if(confirm) {
-                    if (autoEmailYn) {
-                        let parameter = { 'queryId': 'estimate.selectEstimateMailNextSequence' };
-                        let parameters = {'url': '/json-list', 'data': parameter};
-                        fnPostAjaxAsync(function(data, callFunctionParam){
-                            let list = data.list[0];
-                            let MAIL_BOX_SEQ = list.MAIL_BOX_SEQ;
-                            $("#estimate_register_info_form #MAIL_BOX_SEQ").val(MAIL_BOX_SEQ);
-                            $("#estimate_register_info_form #queryId").val('mail.insertEstimateSubmitMail');
+            fnConfirm(null, message, function () {
+                if (autoEmailYn) {
+                    let parameter = {'queryId': 'estimate.selectEstimateMailNextSequence'};
+                    let parameters = {'url': '/json-list', 'data': parameter};
+                    fnPostAjaxAsync(function (data, callFunctionParam) {
+                        let list = data.list[0];
+                        let MAIL_BOX_SEQ = list.MAIL_BOX_SEQ;
+                        $("#estimate_register_info_form #MAIL_BOX_SEQ").val(MAIL_BOX_SEQ);
+                        $("#estimate_register_info_form #queryId").val('mail.insertEstimateSubmitMail');
+                        parameters = {
+                            'url': '/json-update',
+                            'data': $("#estimate_register_info_form").serialize()
+                        };
+                        fnPostAjaxAsync(function () {
+                            $("#estimate_register_info_form #queryId").val('estimate.updateEstimateMasterFinishWithMail');
                             parameters = {
                                 'url': '/json-update',
                                 'data': $("#estimate_register_info_form").serialize()
                             };
-                            fnPostAjaxAsync(function(){
-                                $("#estimate_register_info_form #queryId").val('estimate.updateEstimateMasterFinishWithMail');
-                                parameters = {
-                                    'url': '/json-update',
-                                    'data': $("#estimate_register_info_form").serialize()
-                                };
-                                fnPostAjaxAsync(estimateRegisterSaveCallBack, parameters, '');
-                                fnAlert(null,"제출 완료하였습니다.");
-                            }, parameters, '');
-
+                            fnPostAjaxAsync(estimateRegisterSaveCallBack, parameters, '');
+                            fnAlert(null, "제출 완료하였습니다.");
                         }, parameters, '');
-                    } else {
-                        $("#estimate_register_info_form #queryId").val('estimate.updateEstimateMasterFinish');
-                        let parameters = {
-                            'url': '/json-update',
-                            'data': $("#estimate_register_info_form").serialize()
-                        };
-                        fnPostAjaxAsync(estimateRegisterSaveCallBack, parameters, '');
-                        fnAlert(null,"완료처리 되었습니다.");
-                    }
+
+                    }, parameters, '');
+                } else {
+                    $("#estimate_register_info_form #queryId").val('estimate.updateEstimateMasterFinish');
+                    let parameters = {
+                        'url': '/json-update',
+                        'data': $("#estimate_register_info_form").serialize()
+                    };
+                    fnPostAjaxAsync(estimateRegisterSaveCallBack, parameters, '');
+                    fnAlert(null, "완료처리 되었습니다.");
                 }
             });
         });

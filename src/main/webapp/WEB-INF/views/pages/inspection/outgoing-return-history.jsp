@@ -234,11 +234,9 @@
                 let totalRecords = data.length;
                 $('#outgoing_history_grid_records').html(totalRecords);
             },
-            cellClick: function (event, ui)
-            {
+            cellClick: function (event, ui) {
                 let rowIndx = ui.rowIndx, $grid = this;
-                if (ui.rowData['LAST_YN'] == 'Y')
-                {
+                if (ui.rowData['LAST_YN'] == 'Y') {
                     if (ui.dataIndx == 'BTN_CANCEL') {
                         if (ui.rowData['OUT_RETURN_TYPE'] == '1')//출고
                         {
@@ -251,32 +249,24 @@
                             };
                             let parameters = {'url': '/json-manager', 'data': data};
                             fnPostAjax(function (data, callFunctionParam) {
-                                alert("취소가 완료되었습니다.");
+                                fnAlert(null, "취소가 완료되었습니다.");
                                 $("#outgoing_history_form").find("#queryId").val("inspection.selectOutgoingHistoryList");
                                 $("#outgoing_history_search_btn").trigger("click");
                             }, parameters, '');
-                        }else if (ui.rowData['OUT_RETURN_TYPE'] == '2'){//반품
+                        } else if (ui.rowData['OUT_RETURN_TYPE'] == '2') {//반품
                             let data = {
                                 'queryId': 'inspection.deleteOutgoingHistoryReturnCancelStep1',
                                 'INSPECT_SEQ': ui.rowData['KEY_SEQ']
                             };
-                            let parameters = {'url': '/json-remove', 'data': data };
+                            let parameters = {'url': '/json-remove', 'data': data};
                             fnPostAjax(function (data, callFunctionParam) {
-                                alert("취소가 완료되었습니다.");
+                                fnAlert(null, "취소가 완료되었습니다.");
                                 $("#outgoing_history_form").find("#queryId").val("inspection.selectOutgoingHistoryList");
                                 $("#outgoing_history_search_btn").trigger("click");
                             }, parameters, '');
-                        }else{//에러
-                            alert("type error : " + ui.rowData['OUT_RETURN_TYPE']);
+                        } else {//에러
+                            fnAlert(null, "type error : " + ui.rowData['OUT_RETURN_TYPE']);
                         }
-                        X.KEY_SEQ
-               , X.CONTROL_SEQ
-               , X.CONTROL_DETAIL_SEQ
-               , X.ORDER_SEQ
-               , X.OUT_RETURN_TYPE
-
-
-
                     }
                 }
             }

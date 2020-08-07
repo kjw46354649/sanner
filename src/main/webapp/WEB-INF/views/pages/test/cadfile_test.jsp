@@ -125,12 +125,12 @@
                         callback.add(callFunction);
                         callback.fire(jQuery.parseJSON(data));
                     } else {
-                        alert("업로드 중 문제가 발생하였습니다. 잠시후 작업해 주십시오.");
+                        fnAlert(null, "업로드 중 문제가 발생하였습니다. 잠시후 작업해 주십시오.");
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     if (!(waitMeMainContainer === undefined)) $(this).stopWaitMe();
-                    alert("업로드 중 문제가 발생하였습니다. 잠시후 작업해 주십시오.");
+                    fnAlert(null, "업로드 중 문제가 발생하였습니다. 잠시후 작업해 주십시오.");
                 }
             });
         };
@@ -236,7 +236,7 @@
                 let fileName = file.name;
                 let fileNameArr = fileName.split("\.");
                 if(fileNameArr[1].toUpperCase() != "DXF"){
-                    alert(" DXF 파일만 등록 가능합니다.");
+                    fnAlert(null, "DXF 파일만 등록 가능합니다.");
                     return;
                 }else{
                     formData.append("files", file);
@@ -246,7 +246,7 @@
             fnFormDataFileUploadAjax(function (data) {
                 let fileList = data.fileUploadList;
                 if(fileList.length <= 0){
-                    alert("파일 정보가 없습니다.");
+                    fnAlert(null, "파일 정보가 없습니다.");
                     return false;
                 }
                 // 도면 번호 없는 경우 삭제 처리

@@ -152,20 +152,8 @@
                 $('#user_master_total_records').html(totalRecords);
             },
             toolbar: false,
-            selectChange: function (event, ui) {
-                if (ui.selection.iCells.ranges[0] !== undefined) {
-                    userMasterSelectedRowIndex = [];
-                    let userMasterGridFirstRow = ui.selection.iCells.ranges[0].r1;
-                    let userMasterGridLastRow = ui.selection.iCells.ranges[0].r2;
-
-                    if (userMasterGridFirstRow === userMasterGridLastRow) {
-                        userMasterSelectedRowIndex[0] = userMasterGridFirstRow;
-                    } else {
-                        for (let i = userMasterGridFirstRow; i <= userMasterGridLastRow; i++) {
-                            userMasterSelectedRowIndex.push(i);
-                        }
-                    }
-                }
+            rowSelect: function (event, ui) {
+                userMasterSelectedRowIndex[0] = ui.addList[0].rowIndx;
             },
             cellDblClick: function (event, ui) {
                 let TEMPLATE_SEQ = ui.rowData.TEMPLATE_SEQ;

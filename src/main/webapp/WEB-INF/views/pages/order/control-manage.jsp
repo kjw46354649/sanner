@@ -2231,30 +2231,15 @@
                 return false;
             }
             if (compCdList.length > 1) {
-                bodyHtml =
-                    '<h4>\n' +
-                    '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                    '    <span>선택된 대상들의 발주사와 공급사는 동일해야 합니다.</span>\n' +
-                    '</h4>';
-                fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
+                fnAlert(null, '선택된 대상들의 사업자는 동일해야 합니다.');
                 return false;
             }
             if (orderCompCdList.length > 1) {
-                bodyHtml =
-                    '<h4>\n' +
-                    '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                    '    <span>선택된 대상들의 발주사와 공급사는 동일해야 합니다.</span>\n' +
-                    '</h4>';
-                fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
+                fnAlert(null, '선택된 대상들의 발주사는 동일해야 합니다.');
                 return false;
             }
             if (invoiceNumList.length > 1) {
-                bodyHtml =
-                    '<h4>\n' +
-                    '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                    '    <span>선택된 대상들의 거래명세 번호는 동일해야 합니다.</span>\n' +
-                    '</h4>';
-                fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
+                fnAlert(null, '선택된 대상들의 거래명세 번호는 동일해야 합니다.');
                 return false;
             }
 
@@ -2331,31 +2316,14 @@
                     selectControlPartInfo = curControlPartInfo;
                 }
             }
-            // let drawingBarcodePrintModalConfirm = function(callback){
-                let text = '<h4>' +
+
+                let message = '<h4>' +
                     '           <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
                     '               <span>' + selectControlPartCount + ' 건의 바코드 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
                     '       </h4>';
-            //     $('#commonConfirmBodyHtml').html(text);
-            //     commonConfirmPopup.show();
-            //     $('#commonConfirmYesBtn').unbind().click(function (e) {
-            //         e.stopPropagation();
-            //         commonConfirmPopup.hide();
-            //         callback(true);
-            //         return;
-            //     });
-            //     $('.commonConfirmCloseBtn').unbind().click(function(e) {
-            //         e.stopPropagation();
-            //         commonConfirmPopup.hide();
-            //     });
-            // };
-            // drawingBarcodePrintModalConfirm(function(confirm){
-            //     if(confirm){
-            //         printJS({printable:'/makeCadBarcodePrint?selectControlList='+encodeURI(selectControlList), type:'pdf', showModal:true});
-            //     }
-            // });
-            fnConfirm(null, text, function () {
-                printJS({printable:'/makeCadBarcodePrint?selectControlList='+encodeURI(selectControlList), type:'pdf', showModal:true});
+
+            fnConfirm(null, message, function () {
+                printJS({printable:'/makeCadBarcodePrint?selectControlList=' + encodeURI(selectControlList), type:'pdf', showModal:true});
             });
         });
         // 바코드 출력
@@ -2383,42 +2351,17 @@
                     formData.push(rowData.CONTROL_BARCODE_NUM);
                 }
             }
-            bodyHtml =
+            message =
                 '<h4>\n' +
                 '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
                 '    <span>선택하신 ' + selectControlPartCount + '건을 처리합니다. \n진행하시겠습니까?</span>\n' +
                 '</h4>';
-            // fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-            fnConfirm(null, bodyHtml, function () {
+
+            fnConfirm(null, message, function () {
                 fnBarcodePrint(function(data){
                     fnAlert(null, data.message);
                 }, formData, '');
             });
-            // let drawingBarcodeLabelPrintConfirm = function (callback) {
-            //     commonConfirmPopup.show();
-            //     $('#commonConfirmYesBtn').unbind().click(function (e) {
-            //         e.stopPropagation();
-            //         commonConfirmPopup.hide();
-            //         callback(true);
-            //         return;
-            //     });
-            //     $('.commonConfirmCloseBtn').unbind().click(function (e) {
-            //         e.stopPropagation();
-            //         commonConfirmPopup.hide();
-            //     });
-            // };
-            // drawingBarcodeLabelPrintConfirm(function (confirm) {
-            //     if (confirm) {
-                    // let formData = [];
-                    // for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
-                    //     let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-                    //     formData.push(rowData.CONTROL_BARCODE_NUM);
-                    // }
-                    // fnBarcodePrint(function(data, callFunctionParam){
-                    //     fnAlert(null, data.message);
-                    // }, formData, '');
-                // }
-            // });
         });
         // 라벨 출력
         $('#LABEL_PRINT').on('click', function () {
@@ -2450,39 +2393,16 @@
             }
             let bCodePrintLen = barcodeList.length;
             if (bCodePrintLen) {
-                // let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인', noBtn = '취소';
-                let bodyHtml =
+                let message =
                     '<h4>\n' +
                     '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
                     '    <span>선택하신 ' + bCodePrintLen + '건을 처리합니다. \n진행하시겠습니까?</span>\n' +
                     '</h4>';
-                fnConfirm(null, bodyHtml, function () {
+                fnConfirm(null, message, function () {
                     fnBarcodePrint(function (data) {
                         fnAlert(null, data.message);
                     }, barcodeList, '');
                 });
-                // fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-                // let labelPrintConfirm = function (callback) {
-                //     commonConfirmPopup.show();
-                //     $('#commonConfirmYesBtn').unbind().click(function (e) {
-                //         e.stopPropagation();
-                //         commonConfirmPopup.hide();
-                //         callback(true);
-                //         return;
-                //     });
-                //     $('.commonConfirmCloseBtn').unbind().click(function (e) {
-                //         e.stopPropagation();
-                //         commonConfirmPopup.hide();
-                //     });
-                // };
-                // labelPrintConfirm(function (confirm) {
-                //     if (confirm) {
-                //         fnBarcodePrint(function (data, callFunctionParam) {
-                //             fnAlert(null, data.message);
-                //         }, barcodeList, '');
-                //     }
-                // });
-
             } else {
                 fnAlert(null, '출력할 바코드가 존재 하지 않습니다.');
             }
@@ -2517,39 +2437,13 @@
             }
 
             // let drawingPrintModalConfirm = function(callback){
-                let text = '<h4>' +
-                    '           <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
-                    '               <span>' + selectedRowCount + ' 건의 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
-                    '       </h4>';
-                fnConfirm(null, text, function () {
-                    printJS({printable:'/makeCadPrint?imgGfileSeq='+encodeURI(imgGfileSeq), type:'pdf', showModal:true});
-                });
-                // $('#commonConfirmBodyHtml').html(text);
-                // commonConfirmPopup.show();
-                // $('#commonConfirmYesBtn').unbind().click(function (e) {
-                //     e.stopPropagation();
-                //     commonConfirmPopup.hide();
-                    // $(this).startWaitMe();
-                    // $('.cadDrawingPrint').html(printHtml).trigger('create');
-                    // callback(true);
-                    // return;
-                // });
-                // $('.commonConfirmCloseBtn').unbind().click(function(e) {
-                //     e.stopPropagation();
-                //     commonConfirmPopup.hide();
-                // });
-            // };
-            // drawingPrintModalConfirm(function(confirm){
-            //     if(confirm){
-                    // $(this).stopWaitMe();
-                    // printJS({printable:'/makeCadPrint?imgGfileSeq='+encodeURI(imgGfileSeq), type:'pdf', showModal:true});
-                    // let postData = { 'imgGfileSeq': imgGfileSeq};
-                    // let parameters = {'url': '/make_cad_print', 'data': postData};
-                    // fnPostAjax(function (data, callFunctionParam) {
-                    //     printJS('/image/' + data.GFILE_SEQ);
-                    // }, parameters, '');
-                // }
-            // });
+            let message = '<h4>' +
+                '           <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
+                '               <span>' + selectedRowCount + ' 건의 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
+                '       </h4>';
+            fnConfirm(null, message, function () {
+                printJS({printable: '/makeCadPrint?imgGfileSeq=' + encodeURI(imgGfileSeq), type: 'pdf', showModal: true});
+            });
         });
 
         $('#SUPPLY_UNIT_COST_APPLY').on('change', function () {
@@ -2678,7 +2572,5 @@
         $('#CONTROL_MANAGE_END_DATE_BUTTON').on('click', function () {
             $('#CONTROL_MANAGE_END_DATE').focus();
         });
-        console.log();
     });
-
 </script>

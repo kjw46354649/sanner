@@ -445,7 +445,7 @@
                         fnPostAjax(function (data, callFunctionParam) {
                             let dataInfo = data.info;
                             if(dataInfo == null ) {
-                                alert("해당 바코드가 존재하지 않습니다.");
+                                fnAlert(null, "해당 바코드가 존재하지 않습니다.");
                                 return;
                             }else{
                                 let parameters = {
@@ -456,7 +456,7 @@
                                     if(data.info){
                                         camWorkManagePop(data.info, true);
                                     }else{
-                                        alert("바코드를 확인 해 주십시오. 실적 등록 대상이 아닙니다.");
+                                        fnAlert(null, "바코드를 확인 해 주십시오. 실적 등록 대상이 아닙니다.");
                                         return;
                                     }
                                 }, parameters, '');
@@ -840,60 +840,46 @@
         });
 
         /* event */
-        $camWorkStartBtn.click(function(event) {
-            let headHtml = "CAM 작업 정보", yseBtn="예", noBtn="아니오";
-            let bodyHtml = "<h4><img style='width: 32px; height: 32px;' src='/resource/main/images/print.png'>&nbsp;&nbsp;<span>CAM 작업을 시작 하시겠습니까?</span></h4>";
-            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-            let camWorkStartSubmitConfirm = function(callback) {
-                commonConfirmPopup.show();
-                $("#commonConfirmYesBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                    callback(true);
-                    return;
-                });
-                $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                });
-            };
-            camWorkStartSubmitConfirm(function(confirm){
-                if(confirm) {
+        $camWorkStartBtn.click(function (event) {
+            let title = "CAM 작업 정보";
+            let message = "CAM 작업을 시작 하시겠습니까?";
 
-                    $(this).startWaitMe();
+            fnConfirm(title, message, function () {
+                $(this).startWaitMe();
 
-                    $("#cam_work_manage_pop_form").find("#actionType").val("start");
-                    let parameters = {
-                        'url': '/managerCamWork',
-                        'data': $('#cam_work_manage_pop_form').serialize()
+                $("#cam_work_manage_pop_form").find("#actionType").val("start");
+                let parameters = {
+                    'url': '/managerCamWork',
+                    'data': $('#cam_work_manage_pop_form').serialize()
+                };
+                fnPostAjax(function (data, callFunctionParam) {
+                    let infoParameters = {
+                        'url': '/json-info',
+                        'data': {
+                            'queryId': 'machine.selectResultManageList',
+                            'CONTROL_NUM': $('#cam_work_manage_pop_form').find('#CONTROL_NUM').val(),
+                            'CONTROL_DETAIL_SEQ': $('#cam_work_manage_pop_form').find('#CONTROL_DETAIL_SEQ').val()
+                        }
                     };
-                    fnPostAjax(function (data, callFunctionParam) {
-                        let infoParameters = {
-                            'url': '/json-info',
-                            'data': {'queryId': 'machine.selectResultManageList',
-                                'CONTROL_NUM': $('#cam_work_manage_pop_form').find('#CONTROL_NUM').val(),
-                                'CONTROL_DETAIL_SEQ': $('#cam_work_manage_pop_form').find('#CONTROL_DETAIL_SEQ').val()}
-                        };
-                        fnPostAjax(function (infoData, infoCallFunctionParam) {
-                            $(this).stopWaitMe();
-                            if(infoData.info){
-                                camWorkManagePop(infoData.info, false);
-                            }else{
-                                alert("관리번호를 확인 해 주십시오. 실적 등록 대상이 아닙니다.");
-                                return;
-                            }
-                        }, infoParameters, '');
-                        // $('#cam_work_manage_detail_pop').modal('hide');
-                        // $mctCamManageSearchBtn.trigger("click");
-                    }, parameters, '');
-                }
+                    fnPostAjax(function (infoData, infoCallFunctionParam) {
+                        $(this).stopWaitMe();
+                        if (infoData.info) {
+                            camWorkManagePop(infoData.info, false);
+                        } else {
+                            fnAlert(null, "관리번호를 확인 해 주십시오. 실적 등록 대상이 아닙니다.");
+                            return;
+                        }
+                    }, infoParameters, '');
+                    // $('#cam_work_manage_detail_pop').modal('hide');
+                    // $mctCamManageSearchBtn.trigger("click");
+                }, parameters, '');
             });
         });
 
         $camWorkTempSaveBtn.click(function(event) {
             let failMessage = camWorkStepSaveValidation();
             if(failMessage){
-                alert(failMessage);
+                fnAlert(null, failMessage);
                 return false;
             }
             $("#cam_work_manage_pop_form").find("#actionType").val("temp");
@@ -903,14 +889,14 @@
             };
             $camWorkTempSaveBtn.focus();
             fnPostAjax(function (data, callFunctionParam) {
-                alert("임시저장을 완료 하였습니다.");
+                fnAlert(null, "임시저장을 완료 하였습니다.");
             }, parameters, '');
         });
 
         $camWorkSaveAndCompleteBtn.click(function(event) {
             let failMessage = camWorkStepSaveValidation();
             if(failMessage){
-                alert(failMessage);
+                fnAlert(null, failMessage);
                 return false;
             }
             $("#cam_work_manage_pop_form").find("#actionType").val("complete");
@@ -926,35 +912,20 @@
         });
 
         $camWorkCancelBtn.click(function(event) {
-            let headHtml = "CAM 작업 정보", yseBtn="예", noBtn="아니오";
-            let bodyHtml = "<h4><img style='width: 32px; height: 32px;' src='/resource/main/images/print.png'>&nbsp;&nbsp;<span>CAM 작업을 취소 하시겠습니까?</span></h4>";
-            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-            let camWorkStartSubmitConfirm = function(callback) {
-                commonConfirmPopup.show();
-                $("#commonConfirmYesBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                    callback(true);
-                    return;
-                });
-                $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                });
-            };
-            camWorkStartSubmitConfirm(function(confirm){
-                if(confirm) {
-                    $("#cam_work_manage_pop_form").find("#actionType").val("cancel");
-                    let parameters = {
-                        'url': '/managerCamWork',
-                        'data': $('#cam_work_manage_pop_form').serialize()
-                    };
-                    $camWorkCancelBtn.focus();
-                    fnPostAjax(function (data, callFunctionParam) {
-                        $('#cam_work_manage_detail_pop').modal('hide');
-                        $mctCamManageSearchBtn.trigger("click");
-                    }, parameters, '');
-                }
+            let title = "CAM 작업 정보";
+            let message = "CAM 작업을 취소 하시겠습니까?";
+
+            fnConfirm(title, message, function () {
+                $("#cam_work_manage_pop_form").find("#actionType").val("cancel");
+                let parameters = {
+                    'url': '/managerCamWork',
+                    'data': $('#cam_work_manage_pop_form').serialize()
+                };
+                $camWorkCancelBtn.focus();
+                fnPostAjax(function (data, callFunctionParam) {
+                    $('#cam_work_manage_detail_pop').modal('hide');
+                    $mctCamManageSearchBtn.trigger("click");
+                }, parameters, '');
             });
         });
 

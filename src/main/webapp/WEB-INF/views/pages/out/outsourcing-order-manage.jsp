@@ -587,13 +587,12 @@
             {
                 title: '외주<br>확정단가', width: 90, align: 'right', dataType: 'integer', dataIndx: 'OUTSIDE_UNIT_AMT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}, format: '#,###',
-                editable: true
-                // editable: function (ui) {
-                //     let rowData = ui.rowData;
-                //     return rowData.OUTSIDE_STATUS !== 'OST001';
-                // }
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+                    return rowData.OUTSIDE_STATUS !== 'OST001';
+                }
             },
-            {title: '금액<br>합계', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
+            {title: '금액<br>합계', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_TOTAL_AMT'},
             {title: '외주<br>종전가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DHLWNWHDWJSRK'},
             {
                 title: '원발주 정보', align: 'center', colModel: [
@@ -683,13 +682,12 @@
                 $('#OUTSIDE_ORDER_MANAGE_RECORDS').html(data.length);
             },
             selectChange: function (event, ui) {
-                if (ui.selection.iCells.ranges[0] !== undefined) {
-                    selectedRowIndex = [];
-                    let firstRow = ui.selection.iCells.ranges[0].r1;
-                    let lastRow = ui.selection.iCells.ranges[0].r2;
+                selectedRowIndex = [];
+                for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
+                    let firstRow = ui.selection._areas[i].r1;
+                    let lastRow = ui.selection._areas[i].r2;
 
-                    if (firstRow === lastRow) selectedRowIndex[0] = firstRow;
-                    else for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
+                    for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
                 }
             },
             cellSave: function (evt, ui) {
@@ -1936,12 +1934,14 @@
                 }
             }
 
-            let parameters = {'url': '/modifyOutsideOrder', 'data': {data: JSON.stringify(list)}};
+            fnConfirm(null, '<spring:message code="com.alert.default.removeText"/>', function () {
+                let parameters = {'url': '/modifyOutsideOrder', 'data': {data: JSON.stringify(list)}};
 
-            fnPostAjax(function (data) {
-                fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");
-                $outsideOrderManageGrid.pqGrid('refreshDataAndView');
-            }, parameters, '');
+                fnPostAjax(function (data) {
+                    fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");
+                    $outsideOrderManageGrid.pqGrid('refreshDataAndView');
+                }, parameters, '');
+            });
         });
 
         $('.pop_close').on('click', function () {
@@ -2152,7 +2152,6 @@
                 '    <span>이미 가공이 진행되고 있을 수 있습니다. 반드시 해당업체 확인 후에 진행바랍니다. 취소 진행 및 메일발송을 진행하시겠습니까?</span>\n' +
                 '</h4>';
 
-            // fnCommonConfirmBoxCreate(headHtml, message, yseBtn, noBtn);
             fnConfirm(null, message, function () {
                 let mailFlag = true;
                 let cancelMailRecipientData = $cancelMailRecipientGrid.pqGrid('option', 'dataModel.data');

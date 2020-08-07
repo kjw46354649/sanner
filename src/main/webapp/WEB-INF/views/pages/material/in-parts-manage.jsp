@@ -270,9 +270,6 @@
         </div>
     </form>
 </div>
-<style>
-
-</style>
 <script type="text/javascript">
     $('#btnPlus').on('click', function(e) {
         calcQty("PLUS");
@@ -281,12 +278,11 @@
         calcQty("MINUS");
     });
     let calcQty = function(type){
-
         let POP_STOCK_QTY = $('#pop_form #POP_STOCK_QTY').html();
         let POP_CURR_QTY = $('#pop_form #POP_CURR_QTY').html();
         let POP_OUT_QTY = $("#pop_form #OUT_QTY").val();
         if(POP_STOCK_QTY == "" || POP_STOCK_QTY == "0"){
-            alert("수량이 없습니다.");
+            fnAlert(null, "수량이 없습니다.");
             return;
         }
         if(type == "PLUS"){
@@ -307,8 +303,7 @@
         $('#pop_form #OUT_QTY').val(POP_OUT_QTY);
         //console.log("POP_CURR_QTY",POP_CURR_QTY);
         //console.log("POP_OUT_QTY",POP_OUT_QTY);
-
-    }
+    };
     /**  선언 **/
     let SelectedRowIndex = [];
 
@@ -654,9 +649,9 @@
                 let rowIndx = ui.rowIndx, $grid = this;
 
                 if (ui.dataIndx == 'POPUP') {
-                    if (ui.rowData['CONSUMABLE_STOCK_SEQ'] > 0){
-                        alert("불출 팝업");
-                    }else{}
+                    if (ui.rowData['CONSUMABLE_STOCK_SEQ'] > 0) {
+                        fnAlert(null, "불출 팝업");
+                    }
                     return;
                 }
             }
@@ -720,7 +715,7 @@
 
             if(SEL_TERM_DT_USE == "Y"){
                 if(SEL_ST_DT == "" || SEL_END_DT == ""){
-                    alert("날짜 검색을 선택하셨습니다.\n시작날짜와 종료날짜를 선택하여 주십시오.");
+                    fnAlert(null, "날짜 검색을 선택하셨습니다.<br>시작날짜와 종료날짜를 선택하여 주십시오.");
                     return;
                 }
             }
@@ -738,7 +733,7 @@
                 } );
                 mainGridId02.pqGrid("refreshDataAndView");
             }else{
-                alert("탭 선택이 잘못되었습니다.");
+                fnAlert(null, "탭 선택이 잘못되었습니다.");
             }
 
         });
@@ -754,7 +749,7 @@
             mainGridId01.pqGrid('addNodes', [{"ACTIVE_YN":"Y"}], 0);
         });
         $("#mainLocBtn").click(function(event){
-            alert("위치정보관리 작업중");
+            fnAlert(null, "위치정보관리 작업중");
         });
 
         let gridValidation = function(targetGrid){
@@ -784,26 +779,23 @@
                 return true;
             }
 
-        }
-        $("#mainSaveBtn").click(function(event){
+        };
+        $("#mainSaveBtn").click(function (event) {
 
-            if(!gridValidation("main_grid_01")){
-                alert("그리드의 값이 올바르지 않습니다.");
+            if (!gridValidation("main_grid_01")) {
+                fnAlert(null, "그리드의 값이 올바르지 않습니다.");
                 return;
             }
 
-            if(confirm("저장 하시겠습니까?")){
+            fnConfirm(null, "저장 하시겠습니까?", function () {
                 // 그리드 데이터 폼에 넣기 to-do
-                let insertQueryList = ['material.insertConsumable','material.insertConsumableIn'];
-                let updateQueryList = ['material.updateConsumable','material.insertConsumableIn'];
+                let insertQueryList = ['material.insertConsumable', 'material.insertConsumableIn'];
+                let updateQueryList = ['material.updateConsumable', 'material.insertConsumableIn'];
                 fnModifyPQGrid(mainGridId01, insertQueryList, updateQueryList);
-
-
 
                 var gridInstance = mainGridId01.pqGrid('getInstance').grid;
                 var changes = gridInstance.getChanges({format: 'byVal'});
                 //$("#save_form").find("#mainGrid").val(JSON.stringify(changes));
-                console.log("change",JSON.stringify(changes));
                 return;
                 // let parameters = {
                 //     'url': '/managerEquip',
@@ -814,13 +806,12 @@
                 //     $('#PARTS_MANAGE_CURRENT_POPUP').modal('hide');
                 //     $searchBtn.trigger("click");
                 // }, parameters, '');
-
-            }
+            });
         });
 
         $("#mainDeleteBtn").click(function(event){
             if(SelectedRowIndex == "" || SelectedRowIndex == null){
-                alert("삭제할 데이터를 선택해 주십시오.");
+                fnAlert(null, "삭제할 데이터를 선택해 주십시오.");
                 return;
             }
             let rowCnt = "";
@@ -839,22 +830,22 @@
                 console.log(rowCnt);
             }, deleteData, '');
 
-            if(rowCnt > 0){
-                alert("입고 이력이 존재 합니다.\n삭제를 위해서 관리자에게 문의 하십시오.");
+            if (rowCnt > 0) {
+                fnAlert(null, "입고 이력이 존재 합니다.<br>삭제를 위해서 관리자에게 문의 하십시오.");
                 return;
-            }else{
-                if(confirm("자재관리가 바로 삭제됩니다.\n삭제 하시겠습니까?")){
+            } else {
+                fnConfirm(null, "자재관리가 바로 삭제됩니다.<br>삭제 하시겠습니까?", function () {
                     //$historyGrid.pqGrid('deleteRow', {'rowIndx': SelectedRowIndex});//rowIndx
                     fnDeletePQGrid(mainGridId01, SelectedRowIndex, "material.deleteConsumable");
-                }
+                });
             }
         });
         $('.pop_close, #partsCloseBtn').on('click', function(e) {
             $('#PARTS_MANAGE_CURRENT_POPUP').modal('hide');
         });
 
-        $('#partsPopSaveBtn').click(function(event){
-            if(confirm("불출 신청 하시겠습니까?")){
+        $('#partsPopSaveBtn').click(function (event) {
+            fnConfirm(null, "불출 신청 하시겠습니까?", function () {
 
                 $("#pop_form").find("#queryId").val("material.insertConsumableOut");
                 let parameters = {
@@ -862,13 +853,12 @@
                     'data': $('#pop_form').serialize()
                 };
                 fnPostAjax(function (data, callFunctionParam) {
-                    alert("불출 신청 되었습니다.");
+                    fnAlert(null, "불출 신청 되었습니다.");
                     $("#searchBtn").trigger('click');
                     $('#PARTS_MANAGE_CURRENT_POPUP').modal('hide');
 
                 }, parameters, '');
-
-            };
+            });
         });
 
         $("#inPartsManageFilterKeyword").on("keyup", function(e){
@@ -937,7 +927,7 @@
             let dataInfo = data.info;
 
             if(dataInfo == null ) {
-                alert("해당 정보가 없습니다. ")
+                fnAlert(null, "해당 정보가 없습니다. ");
                 $('#PARTS_MANAGE_CURRENT_POPUP').modal('hide');
             }else{
                 fnJsonDataToForm("pop_form", dataInfo);

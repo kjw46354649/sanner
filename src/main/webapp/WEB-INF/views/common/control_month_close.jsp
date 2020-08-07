@@ -243,27 +243,9 @@
             // rightGrid
             let parameters = {'url': '/createMonthClose', 'data': {data: JSON.stringify(postData)}};
             fnPostAjax(function (data, callFunctionParam) {
-                let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인';
-                bodyHtml =
-                    '<h4>\n' +
-                    '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                    '    <span>' + "<spring:message code='com.alert.default.save.success' />" + '</span>\n' +
-                    '</h4>';
-
-                fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
-
-                const controlMonthCloseSubmitConfirm = function (callback) {
-                    $("#commonAlertYesBtn").unbind().click(function (e) {
-                        e.stopPropagation();
-                        callback(true);
-                        return;
-                    });
-                };
-                controlMonthCloseSubmitConfirm(function (confirm) {
-                    if (confirm) {
-                        opener.$orderManagementGrid.pqGrid('refreshDataAndView');
-                        window.close();
-                    }
+                fnAlert(null, '<spring:message code="com.alert.default.save.success"/>', function () {
+                    opener.$orderManagementGrid.pqGrid('refreshDataAndView');
+                    window.close();
                 });
             }, parameters, '');
         });

@@ -868,7 +868,7 @@
 
             let EQUIP_SEQ = $("#machine_manage_pop_form").find("#EQUIP_SEQ").val();
             if(EQUIP_SEQ == ""){
-                alert("마스터 정보를 먼저 저장해 주십시오.");
+                fnAlert(null, "마스터 정보를 먼저 저장해 주십시오.");
                 return;
             }else{
                 $historyGrid.pqGrid('addNodes', [{"EQUIP_SEQ":EQUIP_SEQ}], 0);
@@ -964,7 +964,7 @@
                 } );
                 $etcGrid.pqGrid("refreshDataAndView");
             }else{
-                alert("탭 선택이 잘못되었습니다.");
+                fnAlert(null, "탭 선택이 잘못되었습니다.");
             }
 
         });

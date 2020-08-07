@@ -299,18 +299,12 @@
                 $('#item_order_history_left_grid_records').html(data.length);
             },
             selectChange: function (event, ui) {
-                if (ui.selection.iCells.ranges[0] !== undefined) {
-                    itemOrderHistorySelectedRowIndex = [];
-                    let itemOrderHistoryGridFirstRow = ui.selection.iCells.ranges[0].r1;
-                    let itemOrderHistoryGridLastRow = ui.selection.iCells.ranges[0].r2;
+                itemOrderHistorySelectedRowIndex = [];
+                for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
+                    let firstRow = ui.selection._areas[i].r1;
+                    let lastRow = ui.selection._areas[i].r2;
 
-                    if (itemOrderHistoryGridFirstRow === itemOrderHistoryGridLastRow) {
-                        itemOrderHistorySelectedRowIndex[0] = itemOrderHistoryGridFirstRow;
-                    } else {
-                        for (let i = itemOrderHistoryGridFirstRow; i <= itemOrderHistoryGridLastRow; i++) {
-                            itemOrderHistorySelectedRowIndex.push(i);
-                        }
-                    }
+                    for (let i = firstRow; i <= lastRow; i++) itemOrderHistorySelectedRowIndex.push(i);
                 }
             },
             rowSelect: function( event, ui ) {
@@ -485,56 +479,34 @@
          * 주문 취소
          */
         function itemOrderHistoryOrderCancel() {
-            let headHtml = "Information", bodyHtml ="", yseBtn="예", noBtn="아니오";
-            bodyHtml =
-                '<h4>\n' +
-                '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
-                '<span>주문을 취소하시겠습니까?</span>' +
-                '</h4>';
+            let message ="주문을 취소하시겠습니까?";
 
-            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-            let itemOrderRegisterPopSubmitConfirm = function(callback) {
-                commonConfirmPopup.show();
-                commonConfirmPopup.css("z-index", 99999999);
-                $("#commonConfirmYesBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                    callback(true);
-                    return;
-                });
-                $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                });
-            };
-            itemOrderRegisterPopSubmitConfirm(function(confirm) {
-                if (confirm) {
-                    let parameter = {
-                        'queryId': 'insertItemOrderRegisterMasterOrderHistory',
+            fnConfirm(null, message, function () {
+                let parameter = {
+                    'queryId': 'insertItemOrderRegisterMasterOrderHistory',
+                    'MATERIAL_ORDER_SEQ': $("#item_order_history_search_form #MATERIAL_ORDER_SEQ").val(),
+                };
+                let parameters = {'url': '/json-create', 'data': parameter};
+                fnPostAjax(function(data, callFunctionParam){
+                    parameter = {
+                        'queryId': 'updateItemOrderRegisterMaterialOrderCancel',
                         'MATERIAL_ORDER_SEQ': $("#item_order_history_search_form #MATERIAL_ORDER_SEQ").val(),
                     };
-                    let parameters = {'url': '/json-create', 'data': parameter};
-                    fnPostAjax(function(data, callFunctionParam){
+                    parameters = {'url': '/json-remove', 'data': parameter};
+                    fnPostAjax(function (data, callFunctionParam) {
                         parameter = {
-                            'queryId': 'updateItemOrderRegisterMaterialOrderCancel',
-                            'MATERIAL_ORDER_SEQ': $("#item_order_history_search_form #MATERIAL_ORDER_SEQ").val(),
+                            'queryId': 'updateItemOrderRegisterControlPartCancel',
+                            'CONCAT_SEQ': $("#item_order_history_search_form #CONCAT_SEQ").val(),
                         };
                         parameters = {'url': '/json-remove', 'data': parameter};
                         fnPostAjax(function (data, callFunctionParam) {
-                            parameter = {
-                                'queryId': 'updateItemOrderRegisterControlPartCancel',
-                                'CONCAT_SEQ': $("#item_order_history_search_form #CONCAT_SEQ").val(),
-                            };
-                            parameters = {'url': '/json-remove', 'data': parameter};
-                            fnPostAjax(function (data, callFunctionParam) {
-                                parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
-                                fnPostAjax(function(data, callFunctionParam){
-                                    $("#btnItemOrderHistorySearch").trigger('click');
-                                }, parameters, '');
+                            parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
+                            fnPostAjax(function(data, callFunctionParam){
+                                $("#btnItemOrderHistorySearch").trigger('click');
                             }, parameters, '');
                         }, parameters, '');
                     }, parameters, '');
-                }
+                }, parameters, '');
             });
         }
 

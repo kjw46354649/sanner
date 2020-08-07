@@ -1332,46 +1332,25 @@
             let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num").val();
 
             //Confirm Box
-            let headHtml = "Information", bodyHtml = "", yseBtn = "예", noBtn = "아니오";
-            bodyHtml =
-                '<h4>\n' +
-                '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
-                '<span>주문서를 삭제하시겠습니까?</span>' +
-                '</h4>';
+            let title = "Information";
+            let message = "주문서를 삭제하시겠습니까?";
 
-            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-            let itemOrderRegisterPopDeleteConfirm = function (callback) {
-                commonConfirmPopup.show();
-                commonConfirmPopup.css("z-index", 99999999);
-                $("#commonConfirmYesBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                    callback(true);
+            fnConfirm(title, message, function () {
+                let parameter = {
+                    'queryId': 'deleteItemOrderRegisterDeleteOrderManual',
+                    'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
+                };
+                let parameters = {'url': '/json-remove', 'data': parameter};
+                fnPostAjax(function (data, callFunctionParam) {
 
-                });
-                $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                });
-            };
-            itemOrderRegisterPopDeleteConfirm(function (confirm) {
-                if (confirm) {
-                    let parameter = {
-                        'queryId': 'deleteItemOrderRegisterDeleteOrderManual',
-                        'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
-                    };
-                    let parameters = {'url': '/json-remove', 'data': parameter};
-                    fnPostAjax(function(data, callFunctionParam){
-
-                        parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
-                        fnPostAjax(function(data, callFunctionParam){
-                            fnAlert(null,"취소 완료되었습니다.");
-                            if($("#item_order_register_popup").hasClass("in")){
-                                $("#item_order_register_popup").modal('hide');
-                            }
-                        }, parameters, '');
+                    parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
+                    fnPostAjax(function (data, callFunctionParam) {
+                        fnAlert(null, "취소 완료되었습니다.");
+                        if ($("#item_order_register_popup").hasClass("in")) {
+                            $("#item_order_register_popup").modal('hide');
+                        }
                     }, parameters, '');
-                }
+                }, parameters, '');
             });
         });
 
@@ -1467,94 +1446,63 @@
                     CONTROL_SEQ = CONTROL_SEQ === undefined ? "0" : CONTROL_SEQ;
                     CONTROL_DETAIL_SEQ = CONTROL_DETAIL_SEQ === undefined ? "0" : CONTROL_DETAIL_SEQ;
 
-                    concatSeqDataArray += "'"+CONTROL_SEQ+""+CONTROL_DETAIL_SEQ+"',";
-                    orderSeqDataArray += "'"+MATERIAL_ORDER_SEQ+"',";
+                    concatSeqDataArray += "'" + CONTROL_SEQ + "" + CONTROL_DETAIL_SEQ + "',";
+                    orderSeqDataArray += "'" + MATERIAL_ORDER_SEQ + "',";
 
                     // 소재 입고 상태
-                    if(ORDER_STATUS == 'MST003' || ORDER_STATUS == 'MST004') {
+                    if (ORDER_STATUS == 'MST003' || ORDER_STATUS == 'MST004') {
                         availableCancel = false;
                         continue;
                     }
 
                     // 소재 주문 상태
-                    if(ORDER_STATUS == 'MST002') {
+                    if (ORDER_STATUS == 'MST002') {
                         includeOrder = false;
-
                     }
                 }
             }
 
-            if( !availableCancel ) {
-                fnAlert(null,"소재주문상태를 확인 해 주세요.");
+            if (!availableCancel) {
+                fnAlert(null, "소재주문상태를 확인 해 주세요.");
                 return false;
             }
+            
+            let title = "Information";
+            let message = !includeOrder ? "이미 주문서가 발송된 대상도 포함되어 있습니다.<br>업체에 반드시 확인바랍니다.<br>취소를 진행하시겠습니까?" : "주문을 취소하시겠습니까?";
 
-            let headHtml = "Information", bodyHtml ="", yseBtn="예", noBtn="아니오";
-            if(!includeOrder){
-                bodyHtml =
-                    '<h4>\n' +
-                    '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
-                    '<span>이미 주문서가 발송된 대상도 포함되어 있습니다.</span><br>' +
-                    '<span style="position: relative; left: 41px"> 업체에 반드시 확인바랍니다.<br><br> 취소를 진행하시겠습니까?</span>' +
-                    '</h4>';
-            }else{
-                bodyHtml =
-                    '<h4>\n' +
-                    '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
-                    '<span>주문을 취소하시겠습니까?</span>' +
-                    '</h4>';
-            }
+            fnConfirm(title, message, function () {
+                let CONCAT_SEQ = concatSeqDataArray.substr(0 , concatSeqDataArray.length-1);
+                let ORDER_SEQ = orderSeqDataArray.substr(0 , orderSeqDataArray.length-1);
 
-            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-            let itemOrderRegisterPopSubmitConfirm = function(callback) {
-                commonConfirmPopup.show();
-                commonConfirmPopup.css("z-index", 99999999);
-                $("#commonConfirmYesBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                    callback(true);
+                $("#item_order_register_popup_form #CONCAT_SEQ").val(CONCAT_SEQ);
+                $("#item_order_register_popup_form #MATERIAL_ORDER_SEQ").val(ORDER_SEQ);
 
-                });
-                $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                });
-            };
-            itemOrderRegisterPopSubmitConfirm(function(confirm) {
-                if (confirm) {
-                    let CONCAT_SEQ = concatSeqDataArray.substr(0 , concatSeqDataArray.length-1);
-                    let ORDER_SEQ = orderSeqDataArray.substr(0 , orderSeqDataArray.length-1);
-
-                    $("#item_order_register_popup_form #CONCAT_SEQ").val(CONCAT_SEQ);
-                    $("#item_order_register_popup_form #MATERIAL_ORDER_SEQ").val(ORDER_SEQ);
-
-                    let parameter = {
-                        'queryId': 'insertItemOrderRegisterMasterOrderHistory',
+                let parameter = {
+                    'queryId': 'insertItemOrderRegisterMasterOrderHistory',
+                    'MATERIAL_ORDER_SEQ': ORDER_SEQ,
+                };
+                let parameters = {'url': '/json-create', 'data': parameter};
+                fnPostAjax(function(data, callFunctionParam){
+                    parameter = {
+                        'queryId': 'updateItemOrderRegisterMaterialOrderCancel',
                         'MATERIAL_ORDER_SEQ': ORDER_SEQ,
                     };
-                    let parameters = {'url': '/json-create', 'data': parameter};
+                    parameters = {'url': '/json-remove', 'data': parameter};
                     fnPostAjax(function(data, callFunctionParam){
                         parameter = {
-                            'queryId': 'updateItemOrderRegisterMaterialOrderCancel',
-                            'MATERIAL_ORDER_SEQ': ORDER_SEQ,
+                            'queryId': 'updateItemOrderRegisterControlPartCancel',
+                            'CONCAT_SEQ': CONCAT_SEQ,
                         };
                         parameters = {'url': '/json-remove', 'data': parameter};
                         fnPostAjax(function(data, callFunctionParam){
-                            parameter = {
-                                'queryId': 'updateItemOrderRegisterControlPartCancel',
-                                'CONCAT_SEQ': CONCAT_SEQ,
-                            };
-                            parameters = {'url': '/json-remove', 'data': parameter};
+                            parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
                             fnPostAjax(function(data, callFunctionParam){
-                                parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
-                                fnPostAjax(function(data, callFunctionParam){
-                                    fnAlert(null,"취소 완료되었습니다.");
-                                    $("#item_order_register_popup").modal('hide');
-                                }, parameters, '');
+                                fnAlert(null,"취소 완료되었습니다.");
+                                $("#item_order_register_popup").modal('hide');
                             }, parameters, '');
                         }, parameters, '');
                     }, parameters, '');
-                }
+                }, parameters, '');
             });
         }
 
@@ -1659,102 +1607,81 @@
             let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num").val();
 
             //Confirm Box
-            let headHtml = "Information", bodyHtml ="", yseBtn="예", noBtn="아니오";
-            bodyHtml =
-                '<h4>\n' +
-                '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
-                '<span>주문서를 발송하시겠습니까?</span>' +
-                '</h4>';
+            let title = "Information";
+            let message = "주문서를 발송하시겠습니까?";
 
-            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-            let itemOrderRegisterPopSubmitConfirm = function(callback) {
-                commonConfirmPopup.show();
-                commonConfirmPopup.css("z-index", 99999999);
-                $("#commonConfirmYesBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                    callback(true);
+            fnConfirm(title, message, function () {
+                let list = [];
+                let rowCount = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length;
+                for (let i = 0; i < rowCount; i++) {
+                    let rowData = itemOrderRegisterPopTopGrid.pqGrid('getRowData', {rowIndx: i});
+                    list.push(rowData);
+                }
 
-                });
-                $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                });
-            };
-            itemOrderRegisterPopSubmitConfirm(function(confirm){
-                if(confirm) {
-                    let list = [] ;
-                    let rowCount = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length;
-                    for (let i = 0; i < rowCount; i++) {
-                        let rowData = itemOrderRegisterPopTopGrid.pqGrid('getRowData', {rowIndx: i});
-                        list.push(rowData);
-                    }
-
-                    let changes = {
-                        'addList': list,
-                        'updateList': list
+                let changes = {
+                    'addList': list,
+                    'updateList': list
+                };
+                let QUERY_ID_ARRAY = {
+                    'insertQueryId': ['material.insertUpdateItemOrderRegisterPopStatus', 'material.insertItemOrderRegisterControlPartProgress'],
+                    'updateQueryId': ['material.updateItemOrderRegisterPartStatus', 'material.insertItemOrderRegisterControlPartProgress'],
+                };
+                changes.queryIdList = QUERY_ID_ARRAY;
+                let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
+                fnPostAjax(function (data, callFunctionParam) {
+                    let parameter = {
+                        'queryId': 'selectItemOrderRegisterPopMailTable',
+                        'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM
                     };
-                    let QUERY_ID_ARRAY = {
-                        'insertQueryId': ['material.insertUpdateItemOrderRegisterPopStatus','material.insertItemOrderRegisterControlPartProgress'],
-                        'updateQueryId': ['material.updateItemOrderRegisterPartStatus','material.insertItemOrderRegisterControlPartProgress'],
-                    };
-                    changes.queryIdList = QUERY_ID_ARRAY;
-                    let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
-                    fnPostAjax(function (data, callFunctionParam) {
-                        let parameter = {
-                            'queryId': 'selectItemOrderRegisterPopMailTable',
-                            'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM
-                        };
-                        let parameters = {'url': '/json-list', 'data': parameter};
-                        fnPostAjaxAsync(function (data, callFunctionParam) {
-                            let list = data.list;
-                            let compareCd = list[0].MATERIAL_COMP_CD;
-                            let compCd = "";
-                            let tableList = [];
-                            let innerTable = "";
+                    let parameters = {'url': '/json-list', 'data': parameter};
+                    fnPostAjaxAsync(function (data, callFunctionParam) {
+                        let list = data.list;
+                        let compareCd = list[0].MATERIAL_COMP_CD;
+                        let compCd = "";
+                        let tableList = [];
+                        let innerTable = "";
 
-                            for(var i=0; i<list.length; i++) {
-                                compCd = list[i].MATERIAL_COMP_CD;
-                                if(compareCd != compCd) {
-                                    innerTable = makeMailInnerTable(tableList);
-                                    let parameter = {
-                                        'queryId': 'insertItemOrderRegisterPopSubmitMail',
-                                        'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
-                                        'MATERIAL_COMP_CD': compareCd,
-                                        'INNER_TABLE': innerTable
-                                    };
-                                    let parameters = {'url': '/json-create', 'data': parameter};
-
-                                    tableList = [];
-                                    fnPostAjaxAsync(function (data, callFunctionParam) {
-                                    }, parameters, '');
-
-                                    compareCd = compCd;
-                                }
-                                tableList.push(list[i]);
-                            }
-
-                            innerTable = makeMailInnerTable(tableList);
-                            let parameter = {
-                                'queryId': 'insertItemOrderRegisterPopSubmitMail',
-                                'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
-                                'MATERIAL_COMP_CD': compareCd,
-                                'INNER_TABLE': innerTable
-                            };
-                            let parameters = {'url': '/json-create', 'data': parameter};
-                            fnPostAjaxAsync(function (data, callFunctionParam) {
+                        for (var i = 0; i < list.length; i++) {
+                            compCd = list[i].MATERIAL_COMP_CD;
+                            if (compareCd != compCd) {
+                                innerTable = makeMailInnerTable(tableList);
                                 let parameter = {
-                                    'queryId': 'updateItemOrderRegisterOrderStatus',
+                                    'queryId': 'insertItemOrderRegisterPopSubmitMail',
                                     'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
+                                    'MATERIAL_COMP_CD': compareCd,
+                                    'INNER_TABLE': innerTable
                                 };
-                                let parameters = {'url': '/json-update', 'data': parameter};
+                                let parameters = {'url': '/json-create', 'data': parameter};
+
+                                tableList = [];
                                 fnPostAjaxAsync(function (data, callFunctionParam) {
-                                    itemOrderRegisterPopOrderSheet('Y');
                                 }, parameters, '');
+
+                                compareCd = compCd;
+                            }
+                            tableList.push(list[i]);
+                        }
+
+                        innerTable = makeMailInnerTable(tableList);
+                        let parameter = {
+                            'queryId': 'insertItemOrderRegisterPopSubmitMail',
+                            'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
+                            'MATERIAL_COMP_CD': compareCd,
+                            'INNER_TABLE': innerTable
+                        };
+                        let parameters = {'url': '/json-create', 'data': parameter};
+                        fnPostAjaxAsync(function (data, callFunctionParam) {
+                            let parameter = {
+                                'queryId': 'updateItemOrderRegisterOrderStatus',
+                                'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
+                            };
+                            let parameters = {'url': '/json-update', 'data': parameter};
+                            fnPostAjaxAsync(function (data, callFunctionParam) {
+                                itemOrderRegisterPopOrderSheet('Y');
                             }, parameters, '');
                         }, parameters, '');
                     }, parameters, '');
-                }
+                }, parameters, '');
             });
         }
 
@@ -1762,49 +1689,31 @@
             let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num").val();
 
             //Confirm Box
-            let headHtml = "Information", bodyHtml ="", yseBtn="예", noBtn="아니오";
+            let title = "Information", message ="";
 
-            if(mailYn == 'Y') {
-                bodyHtml =
+            if (mailYn == 'Y') {
+                message =
                     '<h4>\n' +
                     '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
                     '<span>성공적으로 발송되었습니다. 주문서를 출력하시겠습니까?</span>' +
                     '</h4>';
             } else {
-                bodyHtml =
+                message =
                     '<h4>\n' +
                     '<img style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;\n' +
                     '<span>주문서를 출력하시겠습니까?</span>' +
                     '</h4>';
             }
 
+            fnConfirm(title, message, function () {
+                printJS({printable:'/makeItemOrderSheetPrint?MATERIAL_ORDER_NUM=' + encodeURI(MATERIAL_ORDER_NUM), type:'pdf', showModal:true});
 
-            fnCommonConfirmBoxCreate(headHtml, bodyHtml, yseBtn, noBtn);
-            let itemOrderRegisterPopSubmitConfirm = function(callback) {
-                commonConfirmPopup.show();
-                $("#commonConfirmYesBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                    callback(true);
-
+                itemOrderRegisterPopTopGrid.pqGrid('option', "dataModel.postData", function (ui) {
+                    return (fnFormToJsonArrayData('#item_order_register_popup_form'));
                 });
-                $(".commonConfirmCloseBtn").unbind().click(function (e) {
-                    e.stopPropagation();
-                    commonConfirmPopup.hide();
-                    $("#item_order_register_popup").modal('toggle');
-                });
-            };
-            itemOrderRegisterPopSubmitConfirm(function(confirm){
-                if(confirm) {
-                    printJS({printable:'/makeItemOrderSheetPrint?MATERIAL_ORDER_NUM='+encodeURI(MATERIAL_ORDER_NUM), type:'pdf', showModal:true});
+                itemOrderRegisterPopTopGrid.pqGrid('refreshDataAndView');
 
-                    itemOrderRegisterPopTopGrid.pqGrid('option', "dataModel.postData", function (ui) {
-                        return (fnFormToJsonArrayData('#item_order_register_popup_form'));
-                    });
-                    itemOrderRegisterPopTopGrid.pqGrid('refreshDataAndView');
-
-                    btnDisabled();
-                }
+                btnDisabled();
             });
         }
 

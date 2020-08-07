@@ -834,18 +834,12 @@
                 $('#outgoing_manage_grid_records').html(totalRecords);
             },
             selectChange: function (event, ui) {
-                if (ui.selection.iCells.ranges[0] !== undefined) {
-                    outgoingManageSelectedRowIndex = [];
-                    let outgoingManageGridFirstRow = ui.selection.iCells.ranges[0].r1;
-                    let outgoingManageGridLastRow = ui.selection.iCells.ranges[0].r2;
+                outgoingManageSelectedRowIndex = [];
+                for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
+                    let firstRow = ui.selection._areas[i].r1;
+                    let lastRow = ui.selection._areas[i].r2;
 
-                    if (outgoingManageGridFirstRow === outgoingManageGridLastRow) {
-                        outgoingManageSelectedRowIndex[0] = outgoingManageGridFirstRow;
-                    } else {
-                        for (let i = outgoingManageGridFirstRow; i <= outgoingManageGridLastRow; i++) {
-                            outgoingManageSelectedRowIndex.push(i);
-                        }
-                    }
+                    for (let i = firstRow; i <= lastRow; i++) outgoingManageSelectedRowIndex.push(i);
                 }
             },
             change: function (event, ui) {
@@ -1166,7 +1160,7 @@
             fnPostAjax(function (data) {
                 let dataInfo = data.info;
                 if (dataInfo == null) {
-                    alert("해당 데이터가 존재하지 않습니다.");
+                    fnAlert(null, "해당 데이터가 존재하지 않습니다.");
                     $('#outgoing_manage_pop_type_1').modal('hide');
                 } else {
                     fnJsonDataToForm("outgoing_manage_pop_type_1_form", dataInfo);
@@ -1378,9 +1372,9 @@
             let parameters = {'url': '/json-create', 'data': data };
             */
             if (outgoingManageSelectedRowIndex.length === 0) {
-                alert("출고등록할 항목을 선택하여 주십시오.");
+                fnAlert(null, "출고등록할 항목을 선택하여 주십시오.");
             } else {
-                if (confirm("선택항목을 출고등록 하시겠습니까?")) {
+                fnConfirm(null, "선택항목을 출고등록 하시겠습니까?", function () {
                     let list = [];
                     for (let i = 0; i < outgoingManageSelectedRowIndex.length; i++) {
                         let rowData = outgoingManageGridId01.pqGrid('getRowData', {rowIndx: outgoingManageSelectedRowIndex[i]});
@@ -1399,15 +1393,13 @@
 
 
                     fnPostAjax(function () {
-                        alert("등록이 완료되었습니다.");
+                        fnAlert(null, "등록이 완료되었습니다.");
                         fnResetFrom("outgoing_manage_pop_type_1_form");
                         $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
                         $("#outgoing_manage_search_btn").trigger("click");
                     }, parameters, '');
-                }
+                });
             }
-
-
         });
         $('#outgoing_manage_label_print_btn').on('click', function () {
             // let list = [];

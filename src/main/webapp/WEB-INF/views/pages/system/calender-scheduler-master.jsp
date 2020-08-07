@@ -36,7 +36,7 @@
             // If it is, then we know we clicked on the day number and not some other
             // part of the cell.
             if ($('.my-cell-overlay-day-corner').is(':hover')) {
-                alert('Click!');
+                fnAlert(null, 'Click!');
             }
         }
 
@@ -46,7 +46,7 @@
                 holidaySetting: {
                     text: '휴일정보 설정',
                     click: function() {
-                        alert('clicked the custom button!');
+                        fnAlert(null, 'clicked the custom button!');
                     }
                 }
             }
@@ -88,9 +88,9 @@
             , eventBackgroundColor : '#ffffff'
             // , events : eventData
             , eventClick : function(calEvent, jsEvent, view) {
-                alert('Event: ' + calEvent.title);
-                alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-                alert('View: ' + view.name);
+                fnAlert(null, 'Event: ' + calEvent.title);
+                fnAlert(null, 'Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+                fnAlert(null, 'View: ' + view.name);
                 // console.log("eventClick");
                 // console.log(date);
                 // console.log(jsEvent);
@@ -136,7 +136,7 @@
         schedulerCalendar.render();
 
         let fn_calDateClick = function(){
-            alert("test");
+            fnAlert(null, "test");
         };
 
     });

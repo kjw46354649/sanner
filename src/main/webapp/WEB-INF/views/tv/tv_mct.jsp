@@ -1477,11 +1477,11 @@
 					data: {},
 					success: function (data, textStatus, jqXHR) {
 						if (textStatus !== 'success') {
-							alert("시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.3");
+							fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.3");
 							return;
 						}
 						if (data == null) {
-							alert("시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.2");
+							fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.2");
 							return;
 						}
 
@@ -1733,7 +1733,7 @@
 
 					},
 					error: function (jqXHR, textStatus, errorThrown) {
-						alert("시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.");
+						fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.");
 					}
 				});
 			};
