@@ -26,9 +26,8 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="ORDER_COMP_CD">발주사</label>
-                            <select class="label_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="발주사">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                            </select>
+                            <input type="text" class="wd_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD" placeholder="<spring:message code='com.form.top.all.option' />(복수개 선택)" title="발주사" readonly>
+                            <input type="hidden" name="SEL_INSPECT_GRADE" id="SEL_INSPECT_GRADE">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
@@ -48,9 +47,7 @@
                     <li>
                         <span class="slt_wrap">
                             <label class="label_100" for="COMP_CD">사업자구분</label>
-                            <select class="label_200" name="COMP_CD" id="COMP_CD" title="사업자구분">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                            </select>
+                            <input type="text" class="wd_200" name="COMP_CD" id="COMP_CD" placeholder="<spring:message code='com.form.top.all.option'/>(복수개 선택)" title="사업자구분" readonly>
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
@@ -67,12 +64,7 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="MATERIAL_KIND">소재형태</label>
-                            <select class="label_200" name="MATERIAL_KIND" id="MATERIAL_KIND" title="소재형태">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1029}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
+                            <input type="text" class="wd_200" name="MATERIAL_KIND" id="MATERIAL_KIND" placeholder="<spring:message code='com.form.top.all.option'/>(복수개 선택)" title="소재형태" readonly>
                         </span>
                     </li>
                     <li>
@@ -104,12 +96,7 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="WORK_TYPE">작업형태</label>
-                            <select class="label_200" name="WORK_TYPE" id="WORK_TYPE" title="작업형태">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1033}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
+                            <input type="text" class="wd_200" name="WORK_TYPE" id="WORK_TYPE" placeholder="<spring:message code='com.form.top.all.option'/>(복수개 선택)" title="작업형태" readonly>
                         </span>
                     </li>
                     <li>
@@ -2472,15 +2459,72 @@
         $('#CONTROL_MANAGE_END_DATE').datepicker({dateFormat: 'yy/mm/dd'});
         $('#CONTROL_MANAGE_START_DATE').datepicker('setDate', 'today');
         $('#CONTROL_MANAGE_END_DATE').datepicker('setDate', 'today');
-        // setDatePickerToday();
-        fnCommCodeDatasourceSelectBoxCreate($('#CONTROL_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#CONTROL_MANAGE_SEARCH_FORM').find('#ORDER_COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOrderCompanyList'}
-        });
+        // 발주사
+        (function () {
+            let parameters = {'url': '/json-list', 'data': {'queryId': 'dataSource.getOrderCompanyList'}};
+
+            fnPostAjax(function (data) {
+                let comboData = [];
+
+                for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
+                    let obj = data.list[i];
+                    comboData.push({title: obj.text, id: obj.value, value: obj.value});
+                }
+
+                $('#CONTROL_MANAGE_SEARCH_FORM #ORDER_COMP_CD').comboTree({
+                    source : comboData,
+                    isMultiple: true,
+                    cascadeSelect: false
+                });
+            }, parameters, '');
+        })();
+        // 사업자
+        (function () {
+            let parameters = {'url': '/json-list', 'data': {'queryId': 'dataSource.getBusinessCompanyList'}};
+
+            fnPostAjax(function (data) {
+                let comboData = [];
+
+                for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
+                    let obj = data.list[i];
+                    comboData.push({title: obj.text, id: obj.value});
+                }
+
+                $('#CONTROL_MANAGE_SEARCH_FORM #COMP_CD').comboTree({
+                    source : comboData,
+                    isMultiple: true,
+                    cascadeSelect: false
+                });
+            }, parameters, '');
+        })();
+        // 소재형태
+        (function () {
+            let comboData = [];
+
+            <c:forEach var="vlocale" items="${HighCode.H_1029}">
+            comboData.push({title: '${vlocale.CODE_NM_KR}', id: '${vlocale.CODE_CD}'});
+            </c:forEach>
+
+            $('#CONTROL_MANAGE_SEARCH_FORM #MATERIAL_KIND').comboTree({
+                source: comboData,
+                isMultiple: true,
+                cascadeSelect: false
+            });
+        })();
+        // 작업형태
+        (function () {
+            let comboData = [];
+
+            <c:forEach var="vlocale" items="${HighCode.H_1033}">
+            comboData.push({title: '${vlocale.CODE_NM_KR}', id: '${vlocale.CODE_CD}'});
+            </c:forEach>
+
+            $('#CONTROL_MANAGE_SEARCH_FORM #WORK_TYPE').comboTree({
+                source: comboData,
+                isMultiple: true,
+                cascadeSelect: false
+            });
+        })();
 
         $orderManagementGrid = $('#' + gridId).pqGrid(obj);
         $orderManagementGrid.pqGrid('option', 'dataModel.postData', function () {

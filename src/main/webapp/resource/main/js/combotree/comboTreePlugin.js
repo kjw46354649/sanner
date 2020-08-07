@@ -23,6 +23,8 @@
     function ComboTree( element, options ) {
         this.elemInput = element;
         this._elemInput = $(element);
+        this._hiddenElemInput = $('<input type="hidden" name="HIDDEN_' + element.id + '" id="HIDDEN_' + element.id + '">');
+        this._elemInput.after(this._hiddenElemInput);
 
         this.options = $.extend( {}, defaults, options) ;
         
@@ -312,21 +314,25 @@
 
     ComboTree.prototype.refreshInputVal = function () {
         var tmpTitle = "";
-        
-        if (this.options.isMultiple) {
-            for (var i=0; i<this._selectedItems.length; i++){
-                tmpTitle += this._selectedItems[i].title;
-                if (i<this._selectedItems.length-1)
-                    tmpTitle += ", ";
-            }
-        }
-        else {
-            tmpTitle = this._selectedItem.title;
-        }
+        var tmpId = "";
 
+        if (this.options.isMultiple) {
+            for (var i = 0; i < this._selectedItems.length; i++) {
+                tmpTitle += this._selectedItems[i].title;
+                tmpId += "'" + this._selectedItems[i].id + "'";
+                if (i < this._selectedItems.length - 1) {
+                    tmpTitle += ", ";
+                    tmpId += ", ";
+                }
+            }
+        } else {
+            tmpTitle = this._selectedItem.title;
+            tmpId = this._selectedItem.id;
+        }
         this._elemInput.val(tmpTitle);
+        this._hiddenElemInput.val(tmpId);
         this._elemInput.trigger('change');
-    }
+    };
 
     ComboTree.prototype.dropDownMenuHover = function (itemSpan, withScroll) {
         this._elemItems.find('span.comboTreeItemHover').removeClass('comboTreeItemHover');

@@ -53,7 +53,7 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap">1040
                             <label class="label_100" for="SEL_INSPECT_GRADE_SELECT">검사결과등급</label>
-                            <input type="text" class="wd_200" name="SEL_INSPECT_GRADE_SELECT" id="SEL_INSPECT_GRADE_SELECT" placeholder="<spring:message code='com.form.top.all.option' />(복수선택가능)" title="검사결과등급">
+                            <input type="text" class="wd_200" name="SEL_INSPECT_GRADE_SELECT" id="SEL_INSPECT_GRADE_SELECT" placeholder="<spring:message code='com.form.top.all.option' />(복수개 선택)" title="검사결과등급">
                             <input type="hidden" name="SEL_INSPECT_GRADE" id="SEL_INSPECT_GRADE">
                         </span>
                         <span class="gubun"></span>

@@ -186,6 +186,30 @@
             SF_GET_DATE_F(IF(TIMESTAMPDIFF(SECOND, B.INSERT_DT, B.UPDATE_DT) <![CDATA[ < ]]> 0, B.INSERT_DT, B.UPDATE_DT), 'YY', 'M') AS CONTROL_PART_INSERT_UPDATE_DT <!-- 등록/업데이트 일시 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
+                AND B.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
+            </if>
+            <if test="ITEM_NM != null and ITEM_NM != ''">
+                AND B.ITEM_NM LIKE CONCAT('%', UPPER(#{ITEM_NM}), '%')
+            </if>
+            <if test="HIDDEN_WORK_TYPE != null and HIDDEN_WORK_TYPE != ''">
+                AND B.WORK_TYPE IN (${HIDDEN_WORK_TYPE})
+            </if>
+            <if test="HIDDEN_MATERIAL_KIND != null and HIDDEN_MATERIAL_KIND != ''">
+                AND B.MATERIAL_KIND IN (${HIDDEN_MATERIAL_KIND})
+            </if>
+            <if test="MATERIAL_SUPPLY_YN != null and MATERIAL_SUPPLY_YN != ''">
+                AND B.MATERIAL_SUPPLY_YN = 'Y'
+            </if>
+            <if test="OUTSIDE_YN != null and OUTSIDE_YN != ''">
+                AND B.OUTSIDE_YN = 'Y'
+            </if>
+            <if test="NO_UNIT_FINAL_AMT != null and NO_UNIT_FINAL_AMT != ''">
+                AND B.UNIT_FINAL_AMT IS NULL
+            </if>
+            <if test="HIDE_PART != null and HIDE_PART != ''">
+                AND B.PART_NUM IS NULL
+            </if>
             LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
                                                         AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
             <!-- LEFT OUTER JOIN TBL_CONTROL_BARCODE D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.DEL_YN = 'N' -->
@@ -212,20 +236,11 @@
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
              AND A.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
         </if>
-        <if test="COMP_CD != null and COMP_CD != ''">
-             AND A.COMP_CD = #{COMP_CD}
+        <if test="HIDDEN_COMP_CD != null and HIDDEN_COMP_CD != ''">
+             AND A.COMP_CD IN (${HIDDEN_COMP_CD})
         </if>
-        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-        </if>
-        <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
-             AND B.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
-        </if>
-        <if test="ITEM_NM != null and ITEM_NM != ''">
-             AND B.ITEM_NM LIKE CONCAT('%', UPPER(#{ITEM_NM}), '%')
-        </if>
-        <if test="WORK_TYPE != null and WORK_TYPE != ''">
-             AND B.WORK_TYPE = #{WORK_TYPE}
+        <if test="HIDDEN_ORDER_COMP_CD != null and HIDDEN_ORDER_COMP_CD != ''">
+             AND A.ORDER_COMP_CD IN (${HIDDEN_ORDER_COMP_CD})
         </if>
         <if test="ORDER_NUM != null and ORDER_NUM != ''">
              AND C.ORDER_NUM LIKE CONCAT('%', #{ORDER_NUM}, '%')
@@ -233,23 +248,8 @@
         <if test="ORDER_STATUS != null and ORDER_STATUS != ''">
              AND A.ORDER_STATUS = #{ORDER_STATUS}
         </if>
-        <if test="MATERIAL_KIND != null and MATERIAL_KIND != ''">
-            AND B.MATERIAL_KIND = #{MATERIAL_KIND}
-        </if>
-        <if test="MATERIAL_SUPPLY_YN != null and MATERIAL_SUPPLY_YN != ''">
-            AND B.MATERIAL_SUPPLY_YN = 'Y'
-        </if>
-        <if test="OUTSIDE_YN != null and OUTSIDE_YN != ''">
-            AND B.OUTSIDE_YN = 'Y'
-        </if>
-        <if test="NO_UNIT_FINAL_AMT != null and NO_UNIT_FINAL_AMT != ''">
-            AND B.UNIT_FINAL_AMT IS NULL
-        </if>
         <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
             AND A.EMERGENCY_YN = 'Y'
-        </if>
-        <if test="HIDE_PART != null and HIDE_PART != ''">
-            AND B.PART_NUM IS NULL
         </if>
         <choose>
             <!-- 주문 상태 -->
