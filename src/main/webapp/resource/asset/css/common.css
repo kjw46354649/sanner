@@ -240,6 +240,7 @@ option { font-size: 12px; }
 /* calendar */
 .calendar_span{ display: inline-block; position: relative; vertical-align: middle; }
 .calendar_span input{ background: #f3f3f3; color: #31393c; height: 26px; line-height: 24px; box-sizing:border-box; width: 152px }
+.calendar_span input:disabled { color: lightgray; }
 .calendar_span button { width: 42px; height: 24px; font-size: 0; background: #f3f3f3 url(../images/common/ico_calendar.png) no-repeat 50% 50%; border-left: 1px solid #e6e6e6; position: absolute; top: 1px; right: 1px; }
 
 /* gubun */

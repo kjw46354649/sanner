@@ -69,20 +69,21 @@
                     </li>
                     <li>
                         <span class="slt_wrap trans_slt" style="width: 120px;">
-                            <label for="CONTROL_SEARCH_CONDITION"></label><select name="CONTROL_SEARCH_CONDITION" id="CONTROL_SEARCH_CONDITION" style="width: inherit; text-align-last: center;">
-                                <option value=""><spring:message code="com.form.top.sel.option"/></option>
+                            <label for="CONTROL_SEARCH_CONDITION"></label>
+                                <select name="CONTROL_SEARCH_CONDITION" id="CONTROL_SEARCH_CONDITION" style="width: inherit; text-align-last: center;">
+                                    <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1047}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
-                            </select>
+                                </select>
                         </span>
                         <div class="d-inline-block" style="width:542px">
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="CONTROL_MANAGE_START_DATE" id="CONTROL_MANAGE_START_DATE"><button type="button" id="CONTROL_MANAGE_START_DATE_BUTTON">달력선택</button>
+                                <input type="text" title="달력정보" name="CONTROL_MANAGE_START_DATE" id="CONTROL_MANAGE_START_DATE" readonly disabled><button type="button" id="CONTROL_MANAGE_START_DATE_BUTTON">달력선택</button>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="CONTROL_MANAGE_END_DATE" id="CONTROL_MANAGE_END_DATE" readonly><button type="button" id="CONTROL_MANAGE_END_DATE_BUTTON">달력선택</button>
+                                <input type="text" title="달력정보" name="CONTROL_MANAGE_END_DATE" id="CONTROL_MANAGE_END_DATE" readonly disabled><button type="button" id="CONTROL_MANAGE_END_DATE_BUTTON">달력선택</button>
                             </span>
                         </div>
                         <span class="gubun"></span>
@@ -230,9 +231,9 @@
             {
                 title: '주문상태', align: 'center', colModel: [
                     {title: '상태', dataIndx: 'CONTROL_STATUS', hidden: true},
-                    {title: '상태', dataIndx: 'CONTROL_STATUS_NM'},
-                    {title: '', minWidth:15, width:20, dataType: 'integer', dataIndx: 'CONTROL_VER'},
-                    {title: '변경일시', width: 95, dataType: 'date', format: 'm/dd', dataIndx: 'CONTROL_STATUS_DT'}
+                    {title: '상태', minWidth: 30, dataIndx: 'CONTROL_STATUS_NM'},
+                    {title: '', minWidth: 20, dataType: 'integer', dataIndx: 'CONTROL_VER'},
+                    {title: '변경일', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'CONTROL_STATUS_DT'}
                 ]
             },
             {
@@ -241,7 +242,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
                 },
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1017')}
             },
@@ -254,7 +255,7 @@
                 }
             },
             {
-                title: '사업자<br>구분', dataIndx: 'COMP_CD',
+                title: '사업자<br>구분', width:75, dataIndx: 'COMP_CD',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -265,7 +266,7 @@
             },
             {title: '사업자<br>구분', dataIndx: 'COMP_CD_NM', hidden: true},
             {
-                title: '발주업체', dataIndx: 'ORDER_COMP_CD',
+                title: '발주업체', width:75, dataIndx: 'ORDER_COMP_CD',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -276,7 +277,7 @@
             },
             {title: '발주업체', dataIndx: 'ORDER_COMP_CD_NM', hidden: true},
             {
-                title: '비고', dataIndx: 'CONTROL_NOTE',
+                title: '비고', width:75, dataIndx: 'CONTROL_NOTE',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -569,7 +570,18 @@
                             return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
-                    {title: 'INV No.', width: 100, dataIndx: 'INVOICE_NUM'},
+                    {title: 'INV No.', width: 100, dataIndx: 'INVOICE_NUM',
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            let cls = null;
+
+                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: controlManageFilterRender(ui)};
+                        }
+                    },
                     {
                         title: '납품확인', width: 70, dataType: 'date', format: 'm/dd', dataIndx: 'DELIVERY_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
@@ -653,20 +665,9 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') /*&& rowData.WORK_TYPE !== 'WTP020'*/;
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002');
                 },
                 editor: {type: 'textbox', init: fnDateEditor},
-                /*render: function (ui) {
-                    let rowData = ui.rowData;
-                    let cls = null;
-
-                    if (rowData.WORK_TYPE === 'WTP020') {
-                        cls = 'bg-lightgray';
-                    }
-
-                    return {cls: cls, text: controlManageFilterRender(ui)};
-
-                }*/
             },
             {
                 title: '외<br>주', minWidth: 15, width: 20, dataIndx: 'OUTSIDE_YN',
@@ -914,6 +915,16 @@
                     let rowData = ui.rowData;
 
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
+                },
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let cls = null;
+
+                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -923,6 +934,16 @@
                     let rowData = ui.rowData;
 
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
+                },
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let cls = null;
+
+                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -932,6 +953,16 @@
                     let rowData = ui.rowData;
 
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
+                },
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let cls = null;
+
+                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -941,6 +972,16 @@
                     let rowData = ui.rowData;
 
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
+                },
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let cls = null;
+
+                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -950,6 +991,16 @@
                     let rowData = ui.rowData;
 
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
+                },
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let cls = null;
+
+                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -970,6 +1021,8 @@
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
+                    let rowData = ui.rowData;
+                    let cls = null;
 
                     if (cellData === undefined || cellData === '') {
                         return '';
@@ -980,11 +1033,15 @@
 
                         if (index < 0) {
                             index = COMPANY_STAFF.findIndex(function (element) {
-                                return element.value === cellData;
+                                return element.value === Number(cellData);
                             });
                         }
 
-                        return (index < 0) ? cellData : COMPANY_STAFF[index].text;
+                        if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                            cls = 'bg-lightgray';
+                        }
+
+                        return {cls: cls, text: (index < 0) ? cellData : COMPANY_STAFF[index].text};
                     }
                 }
             },
@@ -995,6 +1052,16 @@
                     let rowData = ui.rowData;
 
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
+                },
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let cls = null;
+
+                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -1095,7 +1162,7 @@
                 }
             },
             {
-                title: '열처리', width: 70, dataIndx: 'MATERIAL_FINISH_HEAT', hidden: true,
+                title: '열처리', width: 70, dataIndx: 'MATERIAL_FINISH_HEAT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -1424,7 +1491,7 @@
             {title: '라벨<br>출력일시', width: 120, dataType: 'date', /*format: 'mm/dd',*/ dataIndx: '', hidden: true},
             {
                 title: '품질현황', align: 'center', colModel: [
-                    {title: 'Seq.', minWidth: 30, width: 35, dataType: 'integer', dataIndx: 'INSPECT_SEQ'},
+                    {title: 'Seq.', minWidth: 30, width: 35, dataType: 'integer', dataIndx: 'INSPECT_NUM'},
                     {title: '등급', minWidth: 30, width: 35, dataIndx: 'INSPECT_GRADE_NM'},
                     {title: '불량/반품', minWidth: 30, width: 70, dataIndx: 'INSPECT_TYPE_NM', hidden: true},
                     {title: '불량코드', minWidth: 30, width: 70, dataIndx: 'INSPECT_RESULT_NM', hidden: true},
@@ -1652,7 +1719,7 @@
                 'PART_STATUS_NM', 'SIZE_TXT', 'INNER_WORK_FINISH_DT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'FINAL_AMT',
                 'WHDWJSRK', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE', 'ITEM_NM', 'ORDER_STAFF_SEQ',
                 'DESIGNER_NM', 'PREV_DRAWING_NUM', 'MATERIAL_DETAIL', 'MATERIAL_TYPE_NM', 'MATERIAL_KIND', 'SURFACE_TREAT',
-                'MATERIAL_NOTE', 'CALC_EST_UNIT_COST', 'POP_POSITION_NM', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER',
+                'MATERIAL_FINISH_HEAT', 'MATERIAL_NOTE', 'CALC_EST_UNIT_COST', 'POP_POSITION_NM', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER',
                 'DRAWING_UP_DT', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN',
                 'OUTSIDE_UNIT_AMT', 'OUTSIDE_IN_DT', 'DELIVERY_DT', 'IMG_GFILE_SEQ', 'CONTROL_PART_INSERT_UPDATE_DT'
             ];
@@ -1897,18 +1964,9 @@
                 data = grid.option('dataModel.data');
 
             let includeList = [
-                'CONTROL_NUM', 'CONTROL_NUM_BUTTON', 'PART_NUM', 'CONTROL_VER', 'COMP_CD',
-                'ORDER_COMP_CD', 'ORDER_STAFF_SEQ', 'DESIGNER_NM', 'CONTROL_NOTE', 'PROJECT_NM',
-                'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN',
-                'CONTROL_STATUS_NM'
+                'CONTROL_NUM', 'CONTROL_NUM_BUTTON', 'PART_NUM', 'CONTROL_VER', 'COMP_CD', 'ORDER_COMP_CD',
+                'CONTROL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_STATUS_NM'
             ];
-            // let excludeList = [
-            //     'INNER_DUE_DT', 'INNER_WORK_FINISH_DT', 'MATERIAL_DETAIL', 'MATERIAL_TYPE_NM', 'MATERIAL_KIND',
-            //     'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY',
-            //     'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'OUT_QTY', 'ORDER_OUT_FINISH_DT',
-            //     'DELIVERY_DT', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ'
-            // ]; //colModel
-
 
             while (i--) {
                 let dataIndx = colModelList[i].dataIndx,
@@ -2630,6 +2688,10 @@
         });
         $('#CONTROL_MANAGE_END_DATE_BUTTON').on('click', function () {
             $('#CONTROL_MANAGE_END_DATE').focus();
+        });
+
+        $('#CONTROL_SEARCH_CONDITION').on('change', function () {
+            $(this).val() === '' ? $('[id^=CONTROL_MANAGE][id$=DATE]').prop('disabled', true) : $('[id^=CONTROL_MANAGE][id$=DATE]').prop('disabled', false);
         });
     });
 </script>

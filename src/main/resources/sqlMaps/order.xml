@@ -163,7 +163,7 @@
             <!-- 출고일자 -->
             G.POP_POSITION_NM, <!-- 현재 위치 -->
             <!-- SF_GET_CODE_NM('1009', G.POP_POSITION, 'KR') AS POP_POSITION_NM,  현재 위치 -->
-            H.INSPECT_SEQ, <!-- SEQ -->
+            H.INSPECT_NUM, <!-- SEQ -->
             H.INSPECT_GRADE, <!-- 등급 -->
             SF_GET_CODE_NM('1040', H.INSPECT_GRADE, 'KR') AS INSPECT_GRADE_NM, <!-- 등급 -->
             H.INSPECT_TYPE, <!-- 불량/반품 -->
