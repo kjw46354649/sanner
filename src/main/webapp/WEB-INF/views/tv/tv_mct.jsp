@@ -24,7 +24,7 @@
 <body>
 	<div class="bodyWrap mct">
 		<div class="header">
-			<div class="left"><h1>MCT 가동 및 주요 현황</h1><a href="/" class="refresh">refresh</a></div>
+			<div class="left"><h1>MCT 가동 및 주요 현황</h1><a href="/tv/mct" class="refresh">refresh</a></div>
 			<div class="right">
 				<div class="infoTit">MCT 가동률</div>
 				<div class="infoContsWrap">

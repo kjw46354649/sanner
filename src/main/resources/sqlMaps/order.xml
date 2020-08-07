@@ -1343,8 +1343,7 @@
         <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
             A.EMERGENCY_YN DESC,
         </if>
-            A.CONTROL_SEQ,
-            B.PART_NUM
+            A.STATUS_DT DESC, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.PART_NUM
     </select>
 
     <select id="selectIsProcessAssembly" parameterType="java.util.HashMap" resultType="java.util.HashMap">

@@ -164,12 +164,12 @@
 <%--                                                    <option value=""><spring:message code="com.form.top.all.option"/></option>--%>
 <%--                                                </select>--%>
 <%--                                            </span>--%>
-                                            <span>
-                                                <label class="label_50" for="PROCESS_COMPLETE_SUBCONTRACTOR">외주업체</label>
-                                                <select class="wd_100" name="OUTSIDE_COMP_CD" id="PROCESS_COMPLETE_SUBCONTRACTOR">
-                                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                                </select>
-                                            </span>
+<%--                                            <span>--%>
+<%--                                                <label class="label_50" for="PROCESS_COMPLETE_SUBCONTRACTOR">외주업체</label>--%>
+<%--                                                <select class="wd_100" name="OUTSIDE_COMP_CD" id="PROCESS_COMPLETE_SUBCONTRACTOR">--%>
+<%--                                                    <option value=""><spring:message code="com.form.top.all.option"/></option>--%>
+<%--                                                </select>--%>
+<%--                                            </span>--%>
                                         </div>
                                         <hr>
                                     </div>
@@ -815,10 +815,10 @@
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
         });
-        fnCommCodeDatasourceSelectBoxCreate($('#PROCESS_COMPLETE_SEARCH_FORM').find('#PROCESS_COMPLETE_SUBCONTRACTOR'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
-        });
+        // fnCommCodeDatasourceSelectBoxCreate($('#PROCESS_COMPLETE_SEARCH_FORM').find('#PROCESS_COMPLETE_SUBCONTRACTOR'), 'all', {
+        //     'url': '/json-list',
+        //     'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
+        // });
         $confirmOrderGrid = $('#' + topLeftGridId).pqGrid(topLeftObj);
         $processConfirmGrid = $('#' + topRightGridId).pqGrid(topRightObj);
         $outsideGrid = $('#' + botLeftGridId).pqGrid(botLeftObj);

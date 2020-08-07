@@ -559,7 +559,7 @@
 										</ul>
 									</div>
 									<div class="page tab1" style="width: 880px">
-										<ul class="p_row" id="ARE12_1">
+										<ul class="p_row" id="ARE04_1">
 											<li class="p_col">
 												<div class="thumb thb_blue">
 													<div class="topDiv">
@@ -579,7 +579,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE12_2">
+											<li class="p_col" id="ARE04_2">
 												<div class="thumb thb_blue">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -629,7 +629,7 @@
 											</li>
 										</ul>
 										<ul class="p_row">
-											<li class="p_col" id="ARE12_3">
+											<li class="p_col" id="ARE04_3">
 												<div class="thumb thb_blue">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -648,7 +648,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE12_4">
+											<li class="p_col" id="ARE04_4">
 												<div class="thumb thb_blue">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -669,7 +669,7 @@
 											</li>
 										</ul>
 										<ul class="p_row">
-											<li class="p_col" id="ARE12_5">
+											<li class="p_col" id="ARE04_5">
 												<div class="thumb thb_blue">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -688,7 +688,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE12_6">
+											<li class="p_col" id="ARE04_6">
 												<div class="thumb thb_blue">
 													<div class="topDiv">
 														<div class="leftWrap">
