@@ -1020,7 +1020,7 @@
                     }
                 },
                 render: function (ui) {
-                    let cellData = ui.cellData;
+                    let cellData = ui.cellData || ' ';
                     let rowData = ui.rowData;
                     let cls = null;
 
