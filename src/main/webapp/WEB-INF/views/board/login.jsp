@@ -78,7 +78,7 @@
 
         $("#selectUserBtn").click(function () {
             if($("#drawing_login_form").find("#EQUIP_SEQ option:checked").val() == ""){
-                alert("<srping:message key='drawing.board.alert.08'/>");
+                fnAlert(null, "<srping:message key='drawing.board.alert.08'/>");
                 return false;
             }
             $("#drawing_login_form").find("#EQUIP_NM").val($("#drawing_login_form").find("#EQUIP_SEQ option:checked").text());

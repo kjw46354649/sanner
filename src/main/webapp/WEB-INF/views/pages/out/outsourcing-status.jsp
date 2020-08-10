@@ -359,7 +359,7 @@
         $('#OUTSOURCING_STATUS_TABS').tabs({
             activate: function (event, ui) {
                 ui.newPanel.find('.pq-grid').pqGrid('refresh');
-                $('#tab_100033 .topWrap').toggle();
+                $('#view_tab_10000303 .topWrap').toggle();
                 $('.out_status_save_id').toggle();
             }
         });

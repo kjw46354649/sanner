@@ -530,7 +530,6 @@
             rowHtHead: 15,
             numberCell: {title: 'No.'},
             selectionModel: {type: 'row', mode: 'single'},
-            hoverMode: 'row',
             // scrollModel: {autoFit: true},
             editModel: {clicksToEdit: 1},
             trackModel: {on: true},

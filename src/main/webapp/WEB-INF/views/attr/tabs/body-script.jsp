@@ -66,12 +66,6 @@
 <%--<script type="text/javascript" src='/resource/plugins/fullcalendar/moment/main.js'></script>--%>
 <script type="text/javascript" class="cssdesk" src="/resource/plugins/moment-2.11.0/min/moment.min.js"></script>
 
-<!-- Multi Select -->
-<%--<script type="text/javascript" src='/resource/plugins/multi_select/jquery.multi-select.js'></script>--%>
-<%--<script type="text/javascript" src='/resource/plugins/multiselect-master/scripts/helper.js'></script>--%>
-<%--<script type="text/javascript" src='/resource/plugins/multiselect-master/scripts/multiselect.core.js'></script>--%>
-<%--<script type="text/javascript" src='/resource/plugins/multiselect-master/scripts/multiselect.js'></script>--%>
-
 <!-- alertify -->
 <script type="text/javascript" src='/resource/plugins/alertifyjs/alertify.js'></script>
 
@@ -923,26 +917,12 @@
 
     };
 
-    /**
-     * Common Comfirm Box
-     * @param headHtml Confirm Header Text
-     * @param bodyHtml Confirm Body Html
-     * @param yesHtml Confirm Yes button Text
-     * @param noHtml Confirm No button Text
-     */
-    let fnCommonConfirmBoxCreate = function(headHtml, bodyHtml, yesHtml, noHtml){
-        $("#commonConfirmHeadHtml").html(headHtml);
-        $("#commonConfirmBodyHtml").html(bodyHtml);
-        $("#commonConfirmYesBtn").html(yesHtml);
-        $("#commonConfirmNoBtn").html(noHtml);
-    }
-
     let numberWithCommas = function(numberVal) {
         if(numberVal)
             return numberVal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         else
             return numberVal;
-    }
+    };
 
     let fnBarcodePrint = function (callFunction, formData, callFunctionParam) {
         'use strict';
@@ -1031,33 +1011,12 @@
         let gridInstance = grid.pqGrid('getInstance').grid;
         //추가 또는 수정된 값이 있으면 true
         if (gridInstance.isDirty()) {
-            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인';
-
-            bodyHtml =
-                '<h4>\n' +
-                '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                '    <span>현재 수정중인 작업을 완료 후 다시 실행해 주세요.</span>\n' +
-                '</h4>';
-
-            fnCommonAlertBoxCreate(headHtml, bodyHtml, yseBtn);
+            fnAlert(null, '현재 수정중인 작업을 완료 후 다시 실행해 주세요.');
             return true;
         } else {
             return false;
         }
     };
-
-    /**
-     * Common alert Box
-     * @param headHtml alert Header Text
-     * @param bodyHtml alert Body Html
-     * @param yesHtml alert Yes button Text
-     */
-    const fnCommonAlertBoxCreate = function(headHtml, bodyHtml, yesHtml){
-        $('#commonAlertHeadHtml').html(headHtml);
-        $('#commonAlertBodyHtml').html(bodyHtml);
-        $('#commonAlertYesBtn').html(yesHtml);
-        commonAlertPopup.show();
-    }
 
     function fnFilterHandler(gridId, filterKeywordId, filterConditionId, filterColumnId) {
         var value = $("#"+filterKeywordId).val(),

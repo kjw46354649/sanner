@@ -51,8 +51,3 @@
 
 <link rel="stylesheet" type="text/css" href="/resource/main/js/jquery-ui-timepicker-addon.css" />
 <link rel="stylesheet" type="text/css" href="/resource/main/js/combotree/style.css" />
-
-<!-- Multi Select -->
-<link rel="stylesheet" type="text/css" href="/resource/plugins/multi_select/example-styles.css" />
-<link rel="stylesheet" type="text/css" href="/resource/plugins/multiselect-master/styles/multiselect.css" />
-

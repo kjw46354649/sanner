@@ -340,6 +340,12 @@
             SF_GET_DATE_F(E.CLOSE_DT, 'YY', 'M') AS OUTSIDE_CLOSE_DT
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
+                AND B.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
+            </if>
+            <if test="ITEM_NM != null and ITEM_NM != ''">
+                AND B.ITEM_NM LIKE CONCAT('%', UPPER(#{ITEM_NM}), '%')
+            </if>
 <!--             LEFT OUTER JOIN TBL_OUTSIDE_REQUEST_DETAIL C ON B.CONTROL_SEQ = C.CONTROL_SEQ -->
 <!--                                                             AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ -->
 <!--                                                             AND C.DEL_YN = 'N' -->
@@ -356,12 +362,6 @@
         </if>
         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-        </if>
-        <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
-            AND B.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
-        </if>
-        <if test="ITEM_NM != null and ITEM_NM != ''">
-            AND B.ITEM_NM LIKE CONCAT('%', UPPER(#{ITEM_NM}), '%')
         </if>
 <!--        <if test="ORDER_NUM != null and ORDER_NUM != ''">-->
 <!--            AND C.ORDER_NUM LIKE CONCAT('%', #{ORDER_NUM}, '%')-->

@@ -163,7 +163,7 @@
             <!-- 출고일자 -->
             G.POP_POSITION_NM, <!-- 현재 위치 -->
             <!-- SF_GET_CODE_NM('1009', G.POP_POSITION, 'KR') AS POP_POSITION_NM,  현재 위치 -->
-            H.INSPECT_SEQ, <!-- SEQ -->
+            H.INSPECT_NUM, <!-- SEQ -->
             H.INSPECT_GRADE, <!-- 등급 -->
             SF_GET_CODE_NM('1040', H.INSPECT_GRADE, 'KR') AS INSPECT_GRADE_NM, <!-- 등급 -->
             H.INSPECT_TYPE, <!-- 불량/반품 -->
@@ -186,6 +186,30 @@
             SF_GET_DATE_F(IF(TIMESTAMPDIFF(SECOND, B.INSERT_DT, B.UPDATE_DT) <![CDATA[ < ]]> 0, B.INSERT_DT, B.UPDATE_DT), 'YY', 'M') AS CONTROL_PART_INSERT_UPDATE_DT <!-- 등록/업데이트 일시 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
+                AND B.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
+            </if>
+            <if test="ITEM_NM != null and ITEM_NM != ''">
+                AND B.ITEM_NM LIKE CONCAT('%', UPPER(#{ITEM_NM}), '%')
+            </if>
+            <if test="HIDDEN_WORK_TYPE != null and HIDDEN_WORK_TYPE != ''">
+                AND B.WORK_TYPE IN (${HIDDEN_WORK_TYPE})
+            </if>
+            <if test="HIDDEN_MATERIAL_KIND != null and HIDDEN_MATERIAL_KIND != ''">
+                AND B.MATERIAL_KIND IN (${HIDDEN_MATERIAL_KIND})
+            </if>
+            <if test="MATERIAL_SUPPLY_YN != null and MATERIAL_SUPPLY_YN != ''">
+                AND B.MATERIAL_SUPPLY_YN = 'Y'
+            </if>
+            <if test="OUTSIDE_YN != null and OUTSIDE_YN != ''">
+                AND B.OUTSIDE_YN = 'Y'
+            </if>
+            <if test="NO_UNIT_FINAL_AMT != null and NO_UNIT_FINAL_AMT != ''">
+                AND B.UNIT_FINAL_AMT IS NULL
+            </if>
+            <if test="HIDE_PART != null and HIDE_PART != ''">
+                AND B.PART_NUM IS NULL
+            </if>
             LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
                                                         AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
             <!-- LEFT OUTER JOIN TBL_CONTROL_BARCODE D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.DEL_YN = 'N' -->
@@ -212,20 +236,11 @@
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
              AND A.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
         </if>
-        <if test="COMP_CD != null and COMP_CD != ''">
-             AND A.COMP_CD = #{COMP_CD}
+        <if test="HIDDEN_COMP_CD != null and HIDDEN_COMP_CD != ''">
+             AND A.COMP_CD IN (${HIDDEN_COMP_CD})
         </if>
-        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-        </if>
-        <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
-             AND B.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
-        </if>
-        <if test="ITEM_NM != null and ITEM_NM != ''">
-             AND B.ITEM_NM LIKE CONCAT('%', UPPER(#{ITEM_NM}), '%')
-        </if>
-        <if test="WORK_TYPE != null and WORK_TYPE != ''">
-             AND B.WORK_TYPE = #{WORK_TYPE}
+        <if test="HIDDEN_ORDER_COMP_CD != null and HIDDEN_ORDER_COMP_CD != ''">
+             AND A.ORDER_COMP_CD IN (${HIDDEN_ORDER_COMP_CD})
         </if>
         <if test="ORDER_NUM != null and ORDER_NUM != ''">
              AND C.ORDER_NUM LIKE CONCAT('%', #{ORDER_NUM}, '%')
@@ -233,23 +248,8 @@
         <if test="ORDER_STATUS != null and ORDER_STATUS != ''">
              AND A.ORDER_STATUS = #{ORDER_STATUS}
         </if>
-        <if test="MATERIAL_KIND != null and MATERIAL_KIND != ''">
-            AND B.MATERIAL_KIND = #{MATERIAL_KIND}
-        </if>
-        <if test="MATERIAL_SUPPLY_YN != null and MATERIAL_SUPPLY_YN != ''">
-            AND B.MATERIAL_SUPPLY_YN = 'Y'
-        </if>
-        <if test="OUTSIDE_YN != null and OUTSIDE_YN != ''">
-            AND B.OUTSIDE_YN = 'Y'
-        </if>
-        <if test="NO_UNIT_FINAL_AMT != null and NO_UNIT_FINAL_AMT != ''">
-            AND B.UNIT_FINAL_AMT IS NULL
-        </if>
         <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
             AND A.EMERGENCY_YN = 'Y'
-        </if>
-        <if test="HIDE_PART != null and HIDE_PART != ''">
-            AND B.PART_NUM IS NULL
         </if>
         <choose>
             <!-- 주문 상태 -->
@@ -1434,9 +1434,26 @@
                                                                         FROM TBL_CONTROL_BARCODE
                                                                         WHERE 1 = 1
                                                                             AND BARCODE_NUM = #{BARCODE_NUM}
-                                                                            AND DEL_YN = 'N')) AS FLAG
+                                                                            AND DEL_YN = 'N')
+                            AND ORDER_STATUS = 'MST002'    <!-- 소재 주문 취소 -->
+                        ) AS FLAG
     </select>
 
+    <!-- 출고 확인 (바코드 스캔) -->
+    <select id="selectHasOut" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
+        SELECT EXISTS ( SELECT *
+                        FROM TBL_CONTROL A
+                            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                                AND (B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) IN (  SELECT CONTROL_SEQ, CONTROL_DETAIL_SEQ
+                                                                                FROM TBL_CONTROL_BARCODE
+                                                                                WHERE 1 = 1
+                                                                                    AND BARCODE_NUM = #{BARCODE_NUM}
+                                                                                    AND DEL_YN = 'N')
+                            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                                AND C.OUT_FINISH_DT IS NOT NULL
+                        WHERE 1 = 1
+                            AND A.DEL_YN = 'N') AS FLAG
+    </select>
 
     <update id="updateControlStatus" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL
@@ -1816,28 +1833,29 @@
             INNER JOIN TBL_MONTH_CLOSE_DETAIL D ON A.CONTROL_SEQ = D.CONTROL_SEQ
                                                    AND A.COMP_CD = D.COMP_CD
                                                    AND A.ORDER_COMP_CD = D.ORDER_COMP_CD
+                                            <choose>
+                                                <when test="RANGE_SEARCH != null and RANGE_SEARCH != ''">
+                                                    AND (D.CLOSE_MONTH BETWEEN  DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m') AND DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_RIGHT}, #{CLOSE_MONTH_RIGHT}), '%Y%m'), '%Y%m'))
+                                                </when>
+                                                <otherwise>
+                                                    AND D.CLOSE_MONTH <![CDATA[ >= ]]> DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m')
+                                                </otherwise>
+                                            </choose>
             INNER JOIN TBL_MONTH_CLOSE E ON D.CLOSE_MONTH = E.CLOSE_MONTH
                                             AND D.CLOSE_VER = E.CLOSE_VER
                                             AND D.COMP_CD = E.COMP_CD
                                             AND D.ORDER_COMP_CD = E.ORDER_COMP_CD
             WHERE 1 = 1
-        <if test="COMP_CD != null and COMP_CD != ''">
-            AND A.COMP_CD = #{COMP_CD}
-        </if>
-        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-            AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-        </if>
-        <if test="NOTE != null and NOTE != ''">
-            AND A.NOTE LIKE CONCAT('%', #{NOTE}, '%')
-        </if>
-        <choose>
-            <when test="RANGE_SEARCH != null and RANGE_SEARCH != ''">
-                AND (D.CLOSE_MONTH BETWEEN  DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m') AND DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_RIGHT}, #{CLOSE_MONTH_RIGHT}), '%Y%m'), '%Y%m'))
-            </when>
-            <otherwise>
-                AND D.CLOSE_MONTH <![CDATA[ >= ]]> DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m')
-            </otherwise>
-        </choose>
+                AND A.DEL_YN = 'N'
+            <if test="COMP_CD != null and COMP_CD != ''">
+                AND A.COMP_CD = #{COMP_CD}
+            </if>
+            <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+            </if>
+            <if test="NOTE != null and NOTE != ''">
+                AND A.NOTE LIKE CONCAT('%', #{NOTE}, '%')
+            </if>
         GROUP BY
             A.COMP_CD,
             A.ORDER_COMP_CD,
@@ -1902,7 +1920,7 @@
                     AND B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                     AND A.COMP_CD = D.COMP_CD AND A.ORDER_COMP_CD = D.ORDER_COMP_CD AND D.CLOSE_MONTH = E.CLOSE_MONTH AND D.CLOSE_VER = E.CLOSE_VER
                     AND A.CONTROL_SEQ = D.CONTROL_SEQ
-                    AND SUBSTR(D.CLOSE_MONTH, 1, 4) = '2020'
+                    AND SUBSTR(D.CLOSE_MONTH, 1, 4) = #{MONTH_SALE_YEAR}
                  GROUP BY A.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH
               ) G ON CONCAT(F.YYYY, F.MM) = G.CLOSE_MONTH
            WHERE F.YYYY = #{MONTH_SALE_YEAR}

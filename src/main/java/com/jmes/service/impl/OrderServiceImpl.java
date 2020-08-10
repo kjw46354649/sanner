@@ -273,9 +273,15 @@ public class OrderServiceImpl implements OrderService {
                 }
                 // 소재입고 확인
                 map.put("queryId", "orderMapper.selectHasInStockFromBarcode");
-                if (this.orderDao.getFlag(map)) {
+                if (this.orderDao.getFlag(map) && !flag) {
                     flag = true;
-                    message = "주문 확정 상태로 변경해주세요.";
+                    message = "소재 주문완료된 대상입니다.";
+                }
+                // 출고 확인
+                map.put("queryId", "orderMapper.selectHasOut");
+                if (this.orderDao.getFlag(map) && !flag) {
+                    flag = true;
+                    message = "이미 출고된 대상입니다.";
                 }
             }
 

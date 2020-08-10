@@ -408,7 +408,7 @@
         $("#CONTROL_SALES_STATUS_TABS").tabs({
             activate: function(event, ui) {
                 ui.newPanel.find('.pq-grid').pqGrid('refresh');
-                $('#view_tab_100025 .topWrap').toggle();
+                $('#view_tab_10000205 .topWrap').toggle();
                 $('#sales_status_save_id').toggle();
             }
         });

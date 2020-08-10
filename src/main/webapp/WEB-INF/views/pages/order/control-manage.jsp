@@ -26,9 +26,8 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="ORDER_COMP_CD">발주사</label>
-                            <select class="label_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="발주사">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                            </select>
+                            <input type="text" class="wd_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD" placeholder="<spring:message code='com.form.top.all.option' />(복수개 선택)" title="발주사" readonly>
+                            <input type="hidden" name="SEL_INSPECT_GRADE" id="SEL_INSPECT_GRADE">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
@@ -48,9 +47,7 @@
                     <li>
                         <span class="slt_wrap">
                             <label class="label_100" for="COMP_CD">사업자구분</label>
-                            <select class="label_200" name="COMP_CD" id="COMP_CD" title="사업자구분">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                            </select>
+                            <input type="text" class="wd_200" name="COMP_CD" id="COMP_CD" placeholder="<spring:message code='com.form.top.all.option'/>(복수개 선택)" title="사업자구분" readonly>
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
@@ -67,32 +64,27 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="MATERIAL_KIND">소재형태</label>
-                            <select class="label_200" name="MATERIAL_KIND" id="MATERIAL_KIND" title="소재형태">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1029}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
+                            <input type="text" class="wd_200" name="MATERIAL_KIND" id="MATERIAL_KIND" placeholder="<spring:message code='com.form.top.all.option'/>(복수개 선택)" title="소재형태" readonly>
                         </span>
                     </li>
                     <li>
                         <span class="slt_wrap trans_slt" style="width: 120px;">
-                            <label for="CONTROL_SEARCH_CONDITION"></label><select name="CONTROL_SEARCH_CONDITION" id="CONTROL_SEARCH_CONDITION" style="width: inherit; text-align-last: center;">
-                                <option value=""><spring:message code="com.form.top.sel.option"/></option>
+                            <label for="CONTROL_SEARCH_CONDITION"></label>
+                                <select name="CONTROL_SEARCH_CONDITION" id="CONTROL_SEARCH_CONDITION" style="width: inherit; text-align-last: center;">
+                                    <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1047}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
-                            </select>
+                                </select>
                         </span>
-                        <div class="calendar_wrap" style="width:542px; padding-left: 0">
+                        <div class="d-inline-block" style="width:542px">
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="CONTROL_MANAGE_START_DATE" id="CONTROL_MANAGE_START_DATE"><button type="button" id="CONTROL_MANAGE_START_DATE_BUTTON">달력선택</button>
+                                <input type="text" title="달력정보" name="CONTROL_MANAGE_START_DATE" id="CONTROL_MANAGE_START_DATE" readonly disabled><button type="button" id="CONTROL_MANAGE_START_DATE_BUTTON">달력선택</button>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="CONTROL_MANAGE_END_DATE" id="CONTROL_MANAGE_END_DATE" readonly><button type="button" id="CONTROL_MANAGE_END_DATE_BUTTON">달력선택</button>
+                                <input type="text" title="달력정보" name="CONTROL_MANAGE_END_DATE" id="CONTROL_MANAGE_END_DATE" readonly disabled><button type="button" id="CONTROL_MANAGE_END_DATE_BUTTON">달력선택</button>
                             </span>
-                            <span class="chk_box" style="margin-left: 10px;"><input name="CHECK_BOX" id="CHECK_BOX" type="checkbox"><label for="CHECK_BOX">선택</label></span>
                         </div>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -104,12 +96,7 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="WORK_TYPE">작업형태</label>
-                            <select class="label_200" name="WORK_TYPE" id="WORK_TYPE" title="작업형태">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1033}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
+                            <input type="text" class="wd_200" name="WORK_TYPE" id="WORK_TYPE" placeholder="<spring:message code='com.form.top.all.option'/>(복수개 선택)" title="작업형태" readonly>
                         </span>
                     </li>
                     <li>
@@ -244,9 +231,9 @@
             {
                 title: '주문상태', align: 'center', colModel: [
                     {title: '상태', dataIndx: 'CONTROL_STATUS', hidden: true},
-                    {title: '상태', dataIndx: 'CONTROL_STATUS_NM'},
-                    {title: '', minWidth:15, width:20, dataType: 'integer', dataIndx: 'CONTROL_VER'},
-                    {title: '변경일시', width: 95, dataType: 'date', format: 'm/dd', dataIndx: 'CONTROL_STATUS_DT'}
+                    {title: '상태', minWidth: 30, dataIndx: 'CONTROL_STATUS_NM'},
+                    {title: '', minWidth: 20, dataType: 'integer', dataIndx: 'CONTROL_VER'},
+                    {title: '변경일', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'CONTROL_STATUS_DT'}
                 ]
             },
             {
@@ -255,7 +242,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
                 },
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1017')}
             },
@@ -268,7 +255,7 @@
                 }
             },
             {
-                title: '사업자<br>구분', dataIndx: 'COMP_CD',
+                title: '사업자<br>구분', width:75, dataIndx: 'COMP_CD',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -279,7 +266,7 @@
             },
             {title: '사업자<br>구분', dataIndx: 'COMP_CD_NM', hidden: true},
             {
-                title: '발주업체', dataIndx: 'ORDER_COMP_CD',
+                title: '발주업체', width:75, dataIndx: 'ORDER_COMP_CD',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -290,7 +277,7 @@
             },
             {title: '발주업체', dataIndx: 'ORDER_COMP_CD_NM', hidden: true},
             {
-                title: '비고', dataIndx: 'CONTROL_NOTE',
+                title: '비고', width:75, dataIndx: 'CONTROL_NOTE',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -583,7 +570,18 @@
                             return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
-                    {title: 'INV No.', width: 100, dataIndx: 'INVOICE_NUM'},
+                    {title: 'INV No.', width: 100, dataIndx: 'INVOICE_NUM',
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            let cls = null;
+
+                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: controlManageFilterRender(ui)};
+                        }
+                    },
                     {
                         title: '납품확인', width: 70, dataType: 'date', format: 'm/dd', dataIndx: 'DELIVERY_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
@@ -667,20 +665,9 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP020';
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002');
                 },
                 editor: {type: 'textbox', init: fnDateEditor},
-                render: function (ui) {
-                    let rowData = ui.rowData;
-                    let cls = null;
-
-                    if (rowData.WORK_TYPE === 'WTP020') {
-                        cls = 'bg-lightgray';
-                    }
-
-                    return {cls: cls, text: controlManageFilterRender(ui)};
-
-                }
             },
             {
                 title: '외<br>주', minWidth: 15, width: 20, dataIndx: 'OUTSIDE_YN',
@@ -763,17 +750,16 @@
 
                     return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                 },
-                // render: function (ui) {
-                //     let cellData = ui.cellData;
-                //     let rowData = ui.rowData;
-                //     let cls = null, text = cellData;
-                //
-                //     if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
-                //         cls = 'bg-lightgray';
-                //     }
-                //
-                //     return {cls: cls, text: controlManageFilterRender(ui)};
-                // }
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let cls = null;
+
+                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
+                }
             },
             {
                 title: '최종<br>공급단가', width: 90, format: '#,###', dataIndx: 'UNIT_FINAL_AMT',
@@ -929,6 +915,16 @@
                     let rowData = ui.rowData;
 
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
+                },
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let cls = null;
+
+                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -938,6 +934,16 @@
                     let rowData = ui.rowData;
 
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
+                },
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let cls = null;
+
+                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -947,6 +953,16 @@
                     let rowData = ui.rowData;
 
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
+                },
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let cls = null;
+
+                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -956,6 +972,16 @@
                     let rowData = ui.rowData;
 
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
+                },
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let cls = null;
+
+                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -965,6 +991,16 @@
                     let rowData = ui.rowData;
 
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
+                },
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let cls = null;
+
+                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -984,7 +1020,9 @@
                     }
                 },
                 render: function (ui) {
-                    let cellData = ui.cellData;
+                    let cellData = ui.cellData || ' ';
+                    let rowData = ui.rowData;
+                    let cls = null;
 
                     if (cellData === undefined || cellData === '') {
                         return '';
@@ -995,11 +1033,15 @@
 
                         if (index < 0) {
                             index = COMPANY_STAFF.findIndex(function (element) {
-                                return element.value === cellData;
+                                return element.value === Number(cellData);
                             });
                         }
 
-                        return (index < 0) ? cellData : COMPANY_STAFF[index].text;
+                        if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                            cls = 'bg-lightgray';
+                        }
+
+                        return {cls: cls, text: (index < 0) ? cellData : COMPANY_STAFF[index].text};
                     }
                 }
             },
@@ -1010,6 +1052,16 @@
                     let rowData = ui.rowData;
 
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
+                },
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let cls = null;
+
+                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -1110,7 +1162,7 @@
                 }
             },
             {
-                title: '열처리', width: 70, dataIndx: 'MATERIAL_FINISH_HEAT', hidden: true,
+                title: '열처리', width: 70, dataIndx: 'MATERIAL_FINISH_HEAT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -1164,7 +1216,8 @@
                     if (CALC_EST_UNIT_COST > 0) {
                         CALC_EST_UNIT_COST = numberWithCommas(CALC_EST_UNIT_COST);
                     }
-                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                    // if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                    if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                         cls = 'bg-lightgray';
                     }
 
@@ -1237,17 +1290,16 @@
 
                             return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
                         },
-                        // render: function (ui) {
-                        //     let cellData = ui.cellData;
-                        //     let rowData = ui.rowData;
-                        //     let cls = null, text = cellData;
-                        //
-                        //     if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
-                        //         cls = 'bg-lightgray';
-                        //     }
-                        //
-                        //     return {cls: cls, text: controlManageFilterRender(ui)};
-                        // }
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            let cls = null;
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: controlManageFilterRender(ui)};
+                        }
                     },
                     {
                         title: 'TM각비', format: '#,###', dataIndx: 'UNIT_TM_AMT',
@@ -1439,7 +1491,7 @@
             {title: '라벨<br>출력일시', width: 120, dataType: 'date', /*format: 'mm/dd',*/ dataIndx: '', hidden: true},
             {
                 title: '품질현황', align: 'center', colModel: [
-                    {title: 'Seq.', minWidth: 30, width: 35, dataType: 'integer', dataIndx: 'INSPECT_SEQ'},
+                    {title: 'Seq.', minWidth: 30, width: 35, dataType: 'integer', dataIndx: 'INSPECT_NUM'},
                     {title: '등급', minWidth: 30, width: 35, dataIndx: 'INSPECT_GRADE_NM'},
                     {title: '불량/반품', minWidth: 30, width: 70, dataIndx: 'INSPECT_TYPE_NM', hidden: true},
                     {title: '불량코드', minWidth: 30, width: 70, dataIndx: 'INSPECT_RESULT_NM', hidden: true},
@@ -1500,24 +1552,8 @@
             sortModel: {on: false},
             load: function () {
                 autoMerge(this, true);
-                $orderManagementGrid.pqGrid('getInstance').grid.option('freezeCols', 24);
-                $orderManagementGrid.pqGrid('getInstance').grid.refresh();
 
                 let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
-                let filterOpts = '<option value=\"\">All Fields</option>';
-                let frozenOts = '<option value="0">Selected</option>';
-                this.getColModel().forEach(function (column) {
-                    let hiddenYn = column.hidden === undefined;
-                    if (hiddenYn && column.title) {
-                        filterOpts += '<option value="' + column.dataIndx + '">' + column.title + '</option>';
-                        frozenOts += '<option value="' + (column.leftPos + 1) + '">' + column.title + '</option>';
-                    }
-                });
-                $('#controlManageFilterColumn').empty();
-                $('#controlManageFilterColumn').html(filterOpts);
-                $('#controlManageFrozen').empty();
-                $('#controlManageFrozen').html(frozenOts);
-
                 $('#CONTROL_MANAGE_RECORDS').html(data.length);
             },
             cellClick: function (event, ui) {
@@ -1534,6 +1570,25 @@
 
                     for (let i = firstRow; i <= lastRow; i++) selectedOrderManagementRowIndex.push(i);
                 }
+            },
+            render: function () {
+                // 열 고정
+                this.option('freezeCols', 24);
+                // 필터 옵션 생성
+                let filterOpts = '<option value=\"\">All Fields</option>';
+                let frozenOts = '<option value="0">Selected</option>';
+
+                this.getColModel().forEach(function (column) {
+                    let hiddenYn = column.hidden === false || column.hidden === undefined;
+                    if (hiddenYn && column.title) {
+                        filterOpts += '<option value="' + column.dataIndx + '">' + column.title + '</option>';
+                        frozenOts += '<option value="' + (column.leftPos + 1) + '">' + column.title + '</option>';
+                    }
+                });
+                $('#controlManageFilterColumn').empty();
+                $('#controlManageFilterColumn').html(filterOpts);
+                $('#controlManageFrozen').empty();
+                $('#controlManageFrozen').html(frozenOts);
             },
             change: function (evt, ui) {
                 if (ui.source === 'paste') {
@@ -1640,6 +1695,94 @@
         /* variable */
 
         /* function */
+        const changeViewColumn = function (elementId) {
+            let $orderManagementGridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
+            let Cols = $orderManagementGridInstance.Columns();
+            let array = [];
+            const inputModeArray = [
+                'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN',
+                'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM',
+                'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'DELIVERY_DT', 'PART_UNIT_QTY',
+                'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ITEM_NM', 'ORDER_STAFF_SEQ', 'DESIGNER_NM', 'SIZE_TXT', 'WORK_TYPE', 'INNER_DUE_DT', 'OUTSIDE_YN',
+                'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE',
+                'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT', 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT',
+                'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE',
+                'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMOUNT', 'UNIT_FINAL_AMT', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM',
+                'LABEL_NOTE', 'PREV_DRAWING_NUM'
+            ];
+            const normalModeArray = [
+                'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD',
+                'CONTROL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM',
+                'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
+                'OUT_QTY', 'ORDER_OUT_FINISH_DT', 'INVOICE_NUM', 'PART_UNIT_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
+                'CONTROL_PART_QTY', 'WORK_TYPE', 'INNER_DUE_DT', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN',
+                'PART_STATUS_NM', 'SIZE_TXT', 'INNER_WORK_FINISH_DT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'FINAL_AMT',
+                'WHDWJSRK', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE', 'ITEM_NM', 'ORDER_STAFF_SEQ',
+                'DESIGNER_NM', 'PREV_DRAWING_NUM', 'MATERIAL_DETAIL', 'MATERIAL_TYPE_NM', 'MATERIAL_KIND', 'SURFACE_TREAT',
+                'MATERIAL_FINISH_HEAT', 'MATERIAL_NOTE', 'CALC_EST_UNIT_COST', 'POP_POSITION_NM', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER',
+                'DRAWING_UP_DT', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN',
+                'OUTSIDE_UNIT_AMT', 'OUTSIDE_IN_DT', 'DELIVERY_DT', 'IMG_GFILE_SEQ', 'CONTROL_PART_INSERT_UPDATE_DT'
+            ];
+            const closeModeArray = [
+                'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'INVOICE_NUM',
+                'MAIN_INSPECTION',
+                'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM',
+                'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'OUTSIDE_YN',
+                'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'INNER_WORK_FINISH_DT', 'MATERIAL_DETAIL', 'MATERIAL_TYPE_NM', 'MATERIAL_KIND',
+                'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
+                'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'OUT_QTY', 'ORDER_OUT_FINISH_DT',
+                'DELIVERY_DT', 'DETAIL_MACHINE_REQUIREMENT', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
+                'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
+                'UNIT_ETC_AMT', 'UNIT_AMT_NOTE',
+                'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'FINAL_AMT', 'WHDWJSRK', 'PROJECT_NM', 'ITEM_NM', 'ORDER_STAFF_SEQ',
+                'ORDER_STAFF_NM', 'PREV_DRAWING_NUM', 'PART_STATUS_NM',
+                'IMG_GFILE_SEQ', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN'
+            ];
+            const allModeArray = [
+                'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'ORDER_STAFF_SEQ',
+                'DESIGNER_NM', 'CONTROL_NOTE', 'INVOICE_NUM', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE',
+                'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT',
+                'WORK_TYPE', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'INNER_WORK_FINISH_DT', 'MATERIAL_DETAIL',
+                'MATERIAL_TYPE_NM', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY',
+                'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
+                'OUT_QTY', 'ORDER_OUT_FINISH_DT', 'DELIVERY_DT', 'DETAIL_MACHINE_REQUIREMENT', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND',
+                'MATERIAL_FINISH_HEAT', 'RKFH', 'SIZE_W_M', 'SIZE_H_M', 'SIZE_T_M', 'SIZE_D_M', 'SIZE_L_M',
+                'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
+                'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'CALC_EST_UNIT_COST', 'UNIT_FINAL_EST_AMT',
+                'UNIT_FINAL_AMT', 'FINAL_AMT', 'WHDWJSRK', 'PREV_DRAWING_NUM', 'POP_POSITION_NM', 'PART_STATUS_NM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER',
+                'DRAWING_UP_DT', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM', 'INSPECT_DESC',
+                'ERROR_ACTION_NM', 'ERROR_NOTE', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT',
+                'OUTSIDE_HOPE_DUE_DT', 'OUTSIDE_IN_DT', 'OUTSIDE_NOTE', 'dhlwnqnffidcode', 'dhlwnwhclqkddks',
+                'CONTROL_PART_INSERT_UPDATE_DT'
+            ];
+
+            switch (elementId) {
+                case 'CONTROL_MANAGE_INPUT_MODE':
+                    array = inputModeArray;
+                    break;
+                case 'CONTROL_MANAGE_NORMAL_MODE':
+                    array = normalModeArray;
+                    break;
+                case 'CONTROL_MANAGE_CLOSE_MODE':
+                    array = closeModeArray;
+                    break;
+                case 'CONTROL_MANAGE_ALL_MODE':
+                    array = allModeArray;
+                    break;
+            }
+
+            Cols.alter(function () {
+                Cols.each(function (col) {
+                    let flag = array.includes(col.dataIndx);
+                    flag = !flag;
+                    col.hidden = flag;
+                    if (flag === false && col.parent !== undefined) {
+                        col.parent.hidden = flag;
+                    }
+                });
+            });
+        };
+
         const getOrderStatusButton = function (event) {
             let controlStatus = event.target.dataset.control_status;
 
@@ -1821,18 +1964,9 @@
                 data = grid.option('dataModel.data');
 
             let includeList = [
-                'CONTROL_NUM', 'CONTROL_NUM_BUTTON', 'PART_NUM', 'CONTROL_VER', 'COMP_CD',
-                'ORDER_COMP_CD', 'ORDER_STAFF_SEQ', 'DESIGNER_NM', 'CONTROL_NOTE', 'PROJECT_NM',
-                'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN',
-                'CONTROL_STATUS_NM'
+                'CONTROL_NUM', 'CONTROL_NUM_BUTTON', 'PART_NUM', 'CONTROL_VER', 'COMP_CD', 'ORDER_COMP_CD',
+                'CONTROL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_STATUS_NM'
             ];
-            // let excludeList = [
-            //     'INNER_DUE_DT', 'INNER_WORK_FINISH_DT', 'MATERIAL_DETAIL', 'MATERIAL_TYPE_NM', 'MATERIAL_KIND',
-            //     'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY',
-            //     'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'OUT_QTY', 'ORDER_OUT_FINISH_DT',
-            //     'DELIVERY_DT', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ'
-            // ]; //colModel
-
 
             while (i--) {
                 let dataIndx = colModelList[i].dataIndx,
@@ -2097,93 +2231,23 @@
         });
 
         $('[name=CONTROL_MANAGE_VIEW]').on('click', function (event) {
-            let elementId = event.target.id;
-            let $orderManagementGridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
-            let Cols = $orderManagementGridInstance.Columns();
-            let array = [];
-            const inputModeArray = [
-                'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN',
-                'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM',
-                'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'DELIVERY_DT', 'PART_UNIT_QTY',
-                'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ITEM_NM', 'ORDER_STAFF_SEQ', 'DESIGNER_NM', 'SIZE_TXT', 'WORK_TYPE', 'INNER_DUE_DT', 'OUTSIDE_YN',
-                'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE',
-                'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT', 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT',
-                'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE',
-                'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMOUNT', 'UNIT_FINAL_AMT', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM',
-                'LABEL_NOTE', 'PREV_DRAWING_NUM'
-            ];
-            const normalModeArray = [
-                'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD',
-                'CONTROL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM',
-                'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
-                'OUT_QTY', 'ORDER_OUT_FINISH_DT', 'INVOICE_NUM', 'PART_UNIT_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
-                'CONTROL_PART_QTY', 'WORK_TYPE', 'INNER_DUE_DT', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN',
-                'PART_STATUS_NM', 'SIZE_TXT', 'INNER_WORK_FINISH_DT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'FINAL_AMT',
-                'WHDWJSRK', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE', 'ITEM_NM', 'ORDER_STAFF_SEQ',
-                'DESIGNER_NM', 'PREV_DRAWING_NUM', 'MATERIAL_DETAIL', 'MATERIAL_TYPE_NM', 'MATERIAL_KIND', 'SURFACE_TREAT',
-                'MATERIAL_NOTE', 'CALC_EST_UNIT_COST', 'POP_POSITION_NM', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER',
-                'DRAWING_UP_DT', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN',
-                'OUTSIDE_UNIT_AMT', 'OUTSIDE_IN_DT', 'DELIVERY_DT', 'IMG_GFILE_SEQ', 'CONTROL_PART_INSERT_UPDATE_DT'
-            ];
-            const closeModeArray = [
-                'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'INVOICE_NUM',
-                'MAIN_INSPECTION',
-                'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM',
-                'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'OUTSIDE_YN',
-                'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'INNER_WORK_FINISH_DT', 'MATERIAL_DETAIL', 'MATERIAL_TYPE_NM', 'MATERIAL_KIND',
-                'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
-                'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'OUT_QTY', 'ORDER_OUT_FINISH_DT',
-                'DELIVERY_DT', 'DETAIL_MACHINE_REQUIREMENT', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
-                'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
-                'UNIT_ETC_AMT', 'UNIT_AMT_NOTE',
-                'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'FINAL_AMT', 'WHDWJSRK', 'PROJECT_NM', 'ITEM_NM', 'ORDER_STAFF_SEQ',
-                'ORDER_STAFF_NM', 'PREV_DRAWING_NUM', 'PART_STATUS_NM',
-                'IMG_GFILE_SEQ', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN'
-            ];
-            const allModeArray = [
-                'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'ORDER_STAFF_SEQ',
-                'DESIGNER_NM', 'CONTROL_NOTE', 'INVOICE_NUM', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE',
-                'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT',
-                'WORK_TYPE', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'INNER_WORK_FINISH_DT', 'MATERIAL_DETAIL',
-                'MATERIAL_TYPE_NM', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY',
-                'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
-                'OUT_QTY', 'ORDER_OUT_FINISH_DT', 'DELIVERY_DT', 'DETAIL_MACHINE_REQUIREMENT', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND',
-                'MATERIAL_FINISH_HEAT', 'RKFH', 'SIZE_W_M', 'SIZE_H_M', 'SIZE_T_M', 'SIZE_D_M', 'SIZE_L_M',
-                'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
-                'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'CALC_EST_UNIT_COST', 'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMOUNT',
-                'UNIT_FINAL_AMT', 'FINAL_AMT', 'WHDWJSRK', 'PREV_DRAWING_NUM', 'POP_POSITION_NM', 'PART_STATUS_NM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER',
-                'DRAWING_UP_DT', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM', 'INSPECT_DESC',
-                'ERROR_ACTION_NM', 'ERROR_NOTE', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT',
-                'OUTSIDE_HOPE_DUE_DT', 'OUTSIDE_IN_DT', 'OUTSIDE_NOTE', 'dhlwnqnffidcode', 'dhlwnwhclqkddks',
-                'CONTROL_PART_INSERT_UPDATE_DT'
-            ];
+            // column
+            changeViewColumn(event.target.id);
+            // 필터 옵션 변경
+            let filterOpts = '<option value=\"\">All Fields</option>';
+            let frozenOts = '<option value="0">Selected</option>';
 
-            switch (elementId) {
-                case 'CONTROL_MANAGE_INPUT_MODE':
-                    array = inputModeArray;
-                    break;
-                case 'CONTROL_MANAGE_NORMAL_MODE':
-                    array = normalModeArray;
-                    break;
-                case 'CONTROL_MANAGE_CLOSE_MODE':
-                    array = closeModeArray;
-                    break;
-                case 'CONTROL_MANAGE_ALL_MODE':
-                    array = allModeArray;
-                    break;
-            }
-
-            Cols.alter(function () {
-                Cols.each(function (col) {
-                    let flag = array.includes(col.dataIndx);
-                    flag = !flag;
-                    col.hidden = flag;
-                    if (flag === false && col.parent !== undefined) {
-                        col.parent.hidden = flag;
-                    }
-                });
+            $orderManagementGrid.pqGrid('getInstance').grid.getColModel().forEach(function (column) {
+                let hiddenYn = column.hidden === false || column.hidden === undefined;
+                if (hiddenYn && column.title) {
+                    filterOpts += '<option value="' + column.dataIndx + '">' + column.title + '</option>';
+                    frozenOts += '<option value="' + (column.leftPos + 1) + '">' + column.title + '</option>';
+                }
             });
-
+            $('#controlManageFilterColumn').empty();
+            $('#controlManageFilterColumn').html(filterOpts);
+            $('#controlManageFrozen').empty();
+            $('#controlManageFrozen').html(frozenOts);
             //css 변경
             $(this).removeClass('virtual-disable').siblings('[name=CONTROL_MANAGE_VIEW]').addClass('virtual-disable');
             $orderManagementGrid.pqGrid('refreshView');
@@ -2202,7 +2266,6 @@
             let compCdList = [];
             let orderCompCdList = [];
             let invoiceNumList = [];
-            let headHtml = 'messsage', bodyHtml = '', yseBtn = '확인';
 
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
@@ -2472,15 +2535,72 @@
         $('#CONTROL_MANAGE_END_DATE').datepicker({dateFormat: 'yy/mm/dd'});
         $('#CONTROL_MANAGE_START_DATE').datepicker('setDate', 'today');
         $('#CONTROL_MANAGE_END_DATE').datepicker('setDate', 'today');
-        // setDatePickerToday();
-        fnCommCodeDatasourceSelectBoxCreate($('#CONTROL_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#CONTROL_MANAGE_SEARCH_FORM').find('#ORDER_COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOrderCompanyList'}
-        });
+        // 발주사
+        (function () {
+            let parameters = {'url': '/json-list', 'data': {'queryId': 'dataSource.getOrderCompanyList'}};
+
+            fnPostAjax(function (data) {
+                let comboData = [];
+
+                for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
+                    let obj = data.list[i];
+                    comboData.push({title: obj.text, id: obj.value, value: obj.value});
+                }
+
+                $('#CONTROL_MANAGE_SEARCH_FORM #ORDER_COMP_CD').comboTree({
+                    source : comboData,
+                    isMultiple: true,
+                    cascadeSelect: false
+                });
+            }, parameters, '');
+        })();
+        // 사업자
+        (function () {
+            let parameters = {'url': '/json-list', 'data': {'queryId': 'dataSource.getBusinessCompanyList'}};
+
+            fnPostAjax(function (data) {
+                let comboData = [];
+
+                for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
+                    let obj = data.list[i];
+                    comboData.push({title: obj.text, id: obj.value});
+                }
+
+                $('#CONTROL_MANAGE_SEARCH_FORM #COMP_CD').comboTree({
+                    source : comboData,
+                    isMultiple: true,
+                    cascadeSelect: false
+                });
+            }, parameters, '');
+        })();
+        // 소재형태
+        (function () {
+            let comboData = [];
+
+            <c:forEach var="vlocale" items="${HighCode.H_1029}">
+            comboData.push({title: '${vlocale.CODE_NM_KR}', id: '${vlocale.CODE_CD}'});
+            </c:forEach>
+
+            $('#CONTROL_MANAGE_SEARCH_FORM #MATERIAL_KIND').comboTree({
+                source: comboData,
+                isMultiple: true,
+                cascadeSelect: false
+            });
+        })();
+        // 작업형태
+        (function () {
+            let comboData = [];
+
+            <c:forEach var="vlocale" items="${HighCode.H_1033}">
+            comboData.push({title: '${vlocale.CODE_NM_KR}', id: '${vlocale.CODE_CD}'});
+            </c:forEach>
+
+            $('#CONTROL_MANAGE_SEARCH_FORM #WORK_TYPE').comboTree({
+                source: comboData,
+                isMultiple: true,
+                cascadeSelect: false
+            });
+        })();
 
         $orderManagementGrid = $('#' + gridId).pqGrid(obj);
         $orderManagementGrid.pqGrid('option', 'dataModel.postData', function () {
@@ -2494,7 +2614,6 @@
                 return false;
             }
 
-            // let list = [];
             let controlSeqList = [];
             let compCdList = [];
             let orderCompCdList = [];
@@ -2503,8 +2622,6 @@
 
             for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-
-                // list.push(rowData);
                 controlSeqList.push(rowData.CONTROL_SEQ);
                 compCdList.push(rowData.COMP_CD);
                 orderCompCdList.push(rowData.ORDER_COMP_CD);
@@ -2571,6 +2688,10 @@
         });
         $('#CONTROL_MANAGE_END_DATE_BUTTON').on('click', function () {
             $('#CONTROL_MANAGE_END_DATE').focus();
+        });
+
+        $('#CONTROL_SEARCH_CONDITION').on('change', function () {
+            $(this).val() === '' ? $('[id^=CONTROL_MANAGE][id$=DATE]').prop('disabled', true) : $('[id^=CONTROL_MANAGE][id$=DATE]').prop('disabled', false);
         });
     });
 </script>
