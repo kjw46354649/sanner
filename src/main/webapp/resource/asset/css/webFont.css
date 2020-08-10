@@ -51,3 +51,15 @@ url(../fonts/NotoSansKR-Black.woff2) format('woff2'),
 url(../fonts/NotoSansKR-Black.woff) format('woff'),
 url(../fonts/NotoSansKR-Black.otf) format('opentype');
 }
+
+@font-face {
+    font-family: PTSansNarrowB;
+    font-style: normal;
+    src: url(../fonts/PTSansNarrow-Bold.ttf);
+}
+
+@font-face {
+    font-family: PTSansNarrow;
+    font-style: normal;
+    src: url(../fonts/PTSansNarrow-Regular.ttf);
+}

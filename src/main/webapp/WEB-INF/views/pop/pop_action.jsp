@@ -23,14 +23,14 @@
     <link rel="stylesheet" href="/resource/plugins/paramquery/themes/bootstrap/pqgrid.css" />
     <link rel="stylesheet" href="/resource/plugins/dhtmlx/suite.css" />
     <!-- print -->
-    <link rel="stylesheet" type="text/css" href="/resource/asset/css/reset.css" />
     <link rel="stylesheet" type="text/css" href="/resource/asset/css/webFont.css" />
+    <link rel="stylesheet" type="text/css" href="/resource/asset/css/single_reset.css" />
     <link rel="stylesheet" type="text/css" href="/resource/asset/css/common.css" />
     <link rel="stylesheet" type="text/css" href="/resource/asset/css/layout.css" />
     <link rel="stylesheet" type="text/css" href="/resource/asset/css/style.css" />
 
     <link rel="stylesheet" type="text/css" href="/resource/asset/css/customer.css" />
-    <link rel="stylesheet" type="text/css"href="/resource/plugins/waitme/waitMe.css" />
+    <link rel="stylesheet" type="text/css" href="/resource/plugins/waitme/waitMe.css" />
 
     <link rel="stylesheet" type="text/css" href="/resource/main/js/jquery-ui-timepicker-addon.css" />
     <link rel="stylesheet" type="text/css" href="/resource/main/js/combotree/style.css" />
@@ -60,17 +60,34 @@
     <script type="text/javascript" src="/resource/plugins/dhtmlx/suite.min.js"></script>
     <!-- barcode -->
     <script type="text/javascript" src="/resource/plugins/scanner/onscan.js" ></script>
+
+    <!-- alertify -->
+    <script type="text/javascript" src='/resource/plugins/alertifyjs/alertify.js'></script>
+
     <style type="text/css">
-        .dhx_message__icon{
+
+        .success-icon-class .dhx_message__icon{
             color:#ffffff !important;
         }
-        .dhx_message__text{
+        .success-font-class .dhx_message__text{
             color: #ffffff !important;
         }
-        .dhx_message {
+        .success-msg-class{
             width: 100%;
             background-color: #0469fd !important;
         }
+
+        .fail-icon-class .dhx_message__icon{
+            color:#ffffff !important;
+        }
+        .fail-font-class .dhx_message__text{
+            color: #ffffff !important;
+        }
+        .fail-msg-class{
+            width: 100%;
+            background-color: #fd1015 !important;
+        }
+
         .dhx_message-container--top-right {
             top: 300px;
             right: 380px;
@@ -78,11 +95,12 @@
         }
         div.pq-grid *
         {
-            font-size: 20px;
+            font-size: 19px;
+            font-family: 'PTSansNarrow';
         }
-        .pq-grid-cell > .pq-td-div{
-        	max-height: 35px;
-        }
+        /*.pq-grid-cell > .pq-td-div{
+        /*	max-height: 35px;*/
+        /*}*/
         .pq-grid-number-cell {
             text-align: center !important;
         }
@@ -103,7 +121,7 @@
             <div class="conWrap">
                 <div class="titWrap">
                     <div class="left_float">
-                        <form id="pop_search_form" name="pop_search_form" method="POST">
+                        <form id="pop_search_form" name="pop_search_form" method="POST" onsubmit="return false;">
                             <input type="hidden" id="queryId" name="queryId" value="popMapper.selectPopList"/>
                             <input type="hidden" id="PART_STATUS" name="PART_STATUS" value=""/>
                             <input type="hidden" id="RECEIVE_YN" name="RECEIVE_YN" value=""/>
@@ -153,20 +171,21 @@
 
         var $waitMeMainContainer;
 
+        $.fn.startWaitMe = function() {
+            $waitMeMainContainer = $('#waitMeContainerDiv').waitMe({});
+        };
+
+        $.fn.stopWaitMe = function() {
+            $waitMeMainContainer.waitMe('hide');
+        };
+
         $(function () {
             'use strict';
 
-            $.fn.startWaitMe = function() {
-                $waitMeMainContainer = $('#waitMeContainerDiv').waitMe({});
-            };
-
-            $.fn.stopWaitMe = function() {
-                $waitMeMainContainer.waitMe('hide');
-            };
-
             onScan.attachTo(document.getElementById("popBarcode"), {
-                onScan: function(barcodeNum, iQty) {
-                    $(this).startWaitMe();
+                onScan: function(barcode, iQty) {
+                    // $(this).startWaitMe();
+                    let barcodeNum = fnBarcodeKo2En(barcode);
                     sendDrawingNum(barcodeNum);
                 }
             });
@@ -175,7 +194,7 @@
                 {title: '긴', minWidth: 25, width: 25, dataType: 'string', aligin: 'center', dataIndx: 'EMERGENCY_YN'},
                 {title: '가공납기', minWidth: 30, width: 85, datatype: 'string', dataIndx: 'INNER_DUE_DT'},
                 {title: '발주업체', minWidth: 30, width: 120, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-                {title: '관리번호', minWidth: 30, width: 310, align: 'left', dataType: 'string', dataIndx: 'CONTROL_NUM', },
+                {title: '관리번호', minWidth: 30, width: 310, align: 'center', dataType: 'string', dataIndx: 'CONTROL_NUM', },
                 {title: '규격', minWidth: 30, width: 160, dataType: 'string', dataIndx: 'SIZE_TXT', },
                 {title: '수량', minWidth: 30, width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY'},
                 {title: '위치일시', minWidth: 30, width: 120, dataType: 'string', dataIndx: 'POP_DT'},
@@ -186,6 +205,8 @@
                 width: "100%", height: 1720, collapsible: false, postRenderInterval: -1, //call postRender synchronously.
                 resizable: false, showTitle: false, strNoRows: g_noData, numberCell: {width:45, title: 'No'}, editable: false, scrollModel: { autoFit: false },
                 trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
+                rowHt: 35,
+                rowHtHead: 35,
                 colModel: popMasterColModel,
                 dataModel: {
                     recIndx: 'ROWNUM', location: 'remote', dataType: 'json', method: 'POST', url: '/popParamQueryGridSelect',
@@ -216,30 +237,31 @@
                     type: 'POST', url: "/popScanningBarcodePop", dataType: 'json',
                     data: $("#pop_search_form").serialize(),
                     success: function (data, textStatus, jqXHR) {
-                        $(this).stopWaitMe();
+                        // $(this).stopWaitMe();
                         $("#pop_search_form").find("#popBarcode").val('');
                         var returnCode = data.returnCode;
                         if (textStatus === 'success') {
                             if(returnCode == "RET00"){
                                 message = data.controlInfo + '\n' + data.locationInfo;
+                                showSuccessMessage(message);
                             }else{
                                 message = data.message;
+                                showFailMessage(message);
                             }
-                            showMessage(message);
                             $("#pop_search_form").find("#popBarcode").val('');
                             refreshData();
                         }else{
                             $("#pop_search_form").find("#popBarcode").val('');
                             message = "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.";
-                            showMessage(message);
+                            showFailMessage(message);
                             refreshData();
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        if (!($waitMeMainContainer === undefined)) $(this).stopWaitMe();
+                        // if (!($waitMeMainContainer === undefined)) $(this).stopWaitMe();
                         $("#pop_search_form").find("#popBarcode").val('');
                         message = "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.";
-                        showMessage(message);
+                        showFailMessage(message);
                         refreshData();
                     }
                 });
@@ -249,10 +271,17 @@
                 refreshData();
             });
 
-            $("#popBarcode").on('change', function(){
-                var barcode = $(this).val();
-                if( barcode.length == 10) {
-                    scanningBarcode();
+            // $("#popBarcode").on('change', function(){
+            //     var barcode = $(this).val();
+            //     if( barcode.length == 10) {
+            //         scanningBarcode();
+            //     }
+            // });
+
+            $("#popBarcode").on('keyup', function(e) {
+                if (e.keyCode === 13) {
+                    let barcodeNum = fnBarcodeKo2En(this.value);
+                    sendDrawingNum(barcodeNum);
                 }
             });
 
@@ -285,13 +314,18 @@
                 $popMasterGrid.pqGrid('option', "dataModel.postData", function (ui) {
                     return (fnFormToJsonArrayData('#pop_search_form'));
                 });
-                // $popMasterGrid.pqGrid('refreshDataAndView');
                 $popMasterGrid.pqGrid('refreshDataAndView');
             };
 
-            var showMessage = function(message){
+            var showSuccessMessage = function(message){
                 dhx.message({
-                   text: message, icon: "dxi-close", "expire": 2000, "position": "top-right", type:"myCss"
+                    text: message, icon: "dxi-close", "expire": 2000, "position": "top-right", css:"success-icon-class success-font-class success-msg-class"
+                });
+            }
+
+            var showFailMessage = function(message){
+                dhx.message({
+                    text: message, icon: "dxi-close", "expire": 10000, "position": "top-right", css:"fail-icon-class fail-font-class fail-msg-class"
                 });
             }
 
@@ -339,6 +373,26 @@
                 }
             }
             return elementArray;
+        };
+
+        /**
+         * @description 바코드 첫글자 영문 변환
+         * @param {string} text
+         * @returns {string} text
+         */
+        const fnBarcodeKo2En = function (text) {
+            let char = text.substring(0, 1);
+
+            switch (char) {
+                case 'ㅊ':
+                    char = 'C';
+                    break;
+                case 'ㅣ':
+                    char = 'L';
+                    break;
+            }
+
+            return (char + text.substring(1)).toUpperCase();
         };
     </script>
 </body>

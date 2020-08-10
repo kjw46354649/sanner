@@ -165,7 +165,16 @@
         SET
             LOGIN_USER_ID = #{USER_ID}
           , UPDATE_DT = NOW()
-          , UPDATE_ID = #{LOGIN_USER_ID}
+          , UPDATE_ID = #{USER_ID}
+        WHERE EQUIP_SEQ = #{EQUIP_SEQ}
+    </update>
+
+    <update id="updateRemoveEquipmentWorker"  parameterType="java.util.HashMap" >
+        UPDATE jmes.TBL_EQUIP
+        SET
+            LOGIN_USER_ID = null
+          , UPDATE_DT = NOW()
+          , UPDATE_ID = #{USER_ID}
         WHERE EQUIP_SEQ = #{EQUIP_SEQ}
     </update>
 

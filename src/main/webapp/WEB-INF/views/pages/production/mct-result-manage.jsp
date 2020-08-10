@@ -1050,6 +1050,11 @@
             if(disableFlag){    // 체크 처리
                 disableFlag = false;
                 $('#cam_work_manage_pop_form').find("input:checkbox[id='CAM_WORK_CHK_" + index + "']").prop("checked", true);
+                if($("#cam_work_manage_pop_form").find("select[name='CAM_WORK_USER_ID_" + index + "']").val() === ""){
+                    $("#cam_work_manage_pop_form").find("select[name='CAM_WORK_USER_ID_" + index + "']").each(function() {
+                        $(this).val('${authUserInfo.USER_ID}');
+                    });
+                }
                 <%--$("#cam_work_manage_pop_form").find("select[name='CAM_WORK_USER_ID_" + index + "']").each(function() {--%>
                 <%--    $(this).val('${authUserInfo.USER_ID}');--%>
                 <%--});--%>

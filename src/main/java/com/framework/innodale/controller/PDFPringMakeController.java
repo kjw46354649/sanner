@@ -113,7 +113,8 @@ public class PDFPringMakeController {
 
         Font headFont = new Font(bf, 8, Font.NORMAL);
         Font titleFont = new Font(bf, 6, Font.NORMAL);
-        Font boldFont = new Font(bf, 10, Font.BOLD);
+        Font boldFont = new Font(bf, 12, Font.BOLD);
+        Font qtyFont = new Font(bf, 14, Font.BOLD);
 
         PdfWriter.getInstance(document, out);
 
@@ -135,7 +136,7 @@ public class PDFPringMakeController {
             table.init();
 
             table.setWidthPercentage(100);
-            table.setWidths(new int[] {20, 2, 15, 15, 4, 11, 9, 10, 7, 4, 4, 6});
+            table.setWidths(new int[] {20, 2, 15, 15, 4, 11, 4, 15, 7, 4, 4, 6});
 
             BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String)controlInfo.get("BARCODE_NUM"), 110, 35);
             int width = bitMatrix.getWidth();
@@ -164,13 +165,13 @@ public class PDFPringMakeController {
             table.addCell(createCell((String)controlInfo.get("MATERIAL_TYPE_NM"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("WORK_TYPE_NM"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("MATERIAL_FINISH_HEAT"), 1, 1, headFont));
-            table.addCell(createCell((String)controlInfo.get("CONTROL_ORDER_QTY"), 1, 2, boldFont));
+            table.addCell(createCell((String)controlInfo.get("CONTROL_ORDER_QTY"), 1, 2, qtyFont));
             table.addCell(createCell("원칭", 1, 1, titleFont));
             table.addCell(createCell("대칭", 1, 1, titleFont));
             table.addCell(createCell("가공납기", 1, 1, titleFont));
 
             table.addCell(createCell((String)controlInfo.get("DRAWING_VER"), 1, 1, headFont));
-            table.addCell(createCell((String)controlInfo.get("CONTROL_NUM"), 2, 1, headFont));
+            table.addCell(createCell((String)controlInfo.get("CONTROL_NUM"), 2, 1, boldFont));
             table.addCell(createCell((String)controlInfo.get("PART_NUM"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("SURFACE_TREAT_NM"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("EMERGENCY_BARCODE_NM"), 1, 1, headFont));

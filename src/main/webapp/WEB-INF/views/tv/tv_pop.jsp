@@ -925,7 +925,7 @@
 								<div class="conWrap" style="width: 380px;">
 									<div class="tabmenu">
 										<ul>
-											<li><a href="#a;">2공장MCT</a></li>
+											<li><a href="#a;">JST</a></li>
 										</ul>
 									</div>
 									<div class="page tab1">
@@ -976,7 +976,7 @@
 												<div class="list" style="height: 180px;width: 286px;">
 													<div class="titleWrap">
 														<span class="f_txt">POP</span>
-														<span class="s_txt">2공장(<sapn id="CNT_POP080">0</sapn>)</span>
+														<span class="s_txt">JST(<sapn id="CNT_POP080">0</sapn>)</span>
 													</div>
 													<ul id="POP080" data-cnt="5">
 														<%--<li>이건 몇번?????</li>
@@ -998,7 +998,7 @@
 								<div class="conWrap" style="width: 890px;">
 									<div class="tabmenu">
 										<ul>
-											<li><a href="#a;">3공장MCT</a></li>
+											<li><a href="#a;">DMT</a></li>
 										</ul>
 									</div>
 									<div class="page tab1">
@@ -1045,7 +1045,7 @@
 												<div class="list" style="height: 100%">
 													<div class="titleWrap">
 														<span class="f_txt">POP</span>
-														<span class="s_txt">대형MCT(<sapn id="CNT_POP090">0</sapn>)</span>
+														<span class="s_txt">DMT(<sapn id="CNT_POP090">0</sapn>)</span>
 													</div>
 													<ul id="POP090" data-cnt="19">
 													<%--	<li>C19-625-0799-001</li>

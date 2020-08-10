@@ -1,4 +1,4 @@
-﻿@charset "utf-8";
+@charset "utf-8";
 
 /* IDA SYSTEM PUD */
 /* css Reset */
@@ -27,6 +27,17 @@ select::-ms-expand{display:none;}
 a{ color: inherit}
 iframe {border: 0; padding: 0; margin: 0; }
 select:focus,input[type="text"]:focus,input[type="password"]:focus,input[type="tel"]:focus,input[type="number"]:focus,textarea:focus{border:1px solid #999 !important;}
-* {-webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-     box-sizing: border-box; }
+
+/*bootstrap remove */
+* {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+*:before,
+*:after {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+audio {display:none;}

@@ -263,7 +263,7 @@
             <h4>기본정보</h4>
             <div class="list1">
                 <table class="rowStyle">
-                 <%--   <caption></caption>--%>
+                    <%--   <caption></caption>--%>
                     <colgroup>
                         <col width="10%">
                         <col width="*">
@@ -272,38 +272,38 @@
                         <col width="15%">
                         <col width="15%">
                     </colgroup>
-                     <tr>
-                         <th>관리번호</th>
-                         <td id="CONTROL_NUM_VIEW_T" class="red"></td>
-                         <th>도면번호</th>
-                         <td id="DRAWING_NUM_VIEW_T" class="red"></td>
-                         <th>납기</th>
-                         <td id="INNER_DUE_DT_VIEW_T" ></td>
-                     </tr>
-                     <tr>
-                         <th>품명</th>
-                         <td id="ITEM_NM_VIEW_T"></td>
-                         <th>소재종류</th>
-                         <td id="MATERIAL_DETAIL_NM_VIEW_T"></td>
-                         <th>수량(원칭,대칭)</th>
-                         <td id="ORDER_QTY_INFO_VIEW_T"></td>
-                     </tr>
-                     <tr>
-                         <th>규격</th>
-                         <td id="SIZE_TXT_VIEW_T"></td>
-                         <th>후처리</th>
-                         <td id="SURFACE_TREAT_NM_VIEW_T"></td>
-                         <th>가공형태</th>
-                         <td id="WORK_TYPE_NM_VIEW_T"></td>
-                     </tr>
-                     <tr>
-                         <th>진행상태</th>
-                         <td id="PART_STATUS_NM_VIEW_T"></td>
-                         <th>발주업체</th>
-                         <td id="ORDER_COMP_NM_VIEW_T"></td>
-                         <th>외주업체</th>
-                         <td id="OUTSIDE_COMP_NM_VIEW_T"></td>
-                     </tr>
+                    <tr>
+                        <th>관리번호</th>
+                        <td id="CONTROL_NUM_VIEW_T" class="red"></td>
+                        <th>도면번호</th>
+                        <td id="DRAWING_NUM_VIEW_T" class="red"></td>
+                        <th>주요검사</th>
+                        <td id="MAIN_INSPECTION_NM_VIEW_T" style="color: red;"></td>
+                    </tr>
+                    <tr>
+                        <th>품명</th>
+                        <td id="ITEM_NM_VIEW_T"></td>
+                        <th>가공납기</th>
+                        <td id="INNER_DUE_DT_VIEW_T" ></td>
+                        <th>수량(원칭,대칭)</th>
+                        <td id="ORDER_QTY_INFO_VIEW_T"></td>
+                    </tr>
+                    <tr>
+                        <th>규격 / 형태</th>
+                        <td id="SIZE_TXT_WORK_TYPE_NM_VIEW_T"></td>
+                        <th>소재종류</th>
+                        <td id="MATERIAL_DETAIL_NM_VIEW_T"></td>
+                        <th>표면처리</th>
+                        <td id="SURFACE_TREAT_NM_VIEW_T"></td>
+                    </tr>
+                    <tr>
+                        <th>발주업체</th>
+                        <td id="ORDER_COMP_NM_VIEW_T"></td>
+                        <th>외주업체</th>
+                        <td id="OUTSIDE_COMP_NM_VIEW_T"></td>
+                        <th>진행상태</th>
+                        <td id="PART_STATUS_NM_VIEW_T"></td>
+                    </tr>
                 </table>
             </div>
         </div>
@@ -1118,20 +1118,40 @@
                         let dataInfo = data.info;
                         if (dataInfo == null) {
                         } else {
+                            let emergencySpan = '';
                             //fnJsonDataToForm("outgoing_manage_return_form", dataInfo);
+
+                            // $("#outgoing_manage_return_form").find("#CONTROL_NUM" + "_VIEW_T").html(dataInfo.CONTROL_NUM);
+                            // $("#outgoing_manage_return_form").find("#DRAWING_NUM" + "_VIEW_T").html(dataInfo.DRAWING_NUM);
+                            // $("#outgoing_manage_return_form").find("#INNER_DUE_DT" + "_VIEW_T").html(dataInfo.INNER_DUE_DT);
+                            // $("#outgoing_manage_return_form").find("#ITEM_NM" + "_VIEW_T").html(dataInfo.ITEM_NM);
+                            // $("#outgoing_manage_return_form").find("#MATERIAL_DETAIL_NM" + "_VIEW_T").html(dataInfo.MATERIAL_DETAIL_NM);
+                            // $("#outgoing_manage_return_form").find("#ORDER_QTY_INFO" + "_VIEW_T").html(dataInfo.ORDER_QTY_INFO);
+                            // $("#outgoing_manage_return_form").find("#SIZE_TXT" + "_VIEW_T").html(dataInfo.SIZE_TXT);
+                            // $("#outgoing_manage_return_form").find("#SURFACE_TREAT_NM" + "_VIEW_T").html(dataInfo.SURFACE_TREAT_NM);
+                            // $("#outgoing_manage_return_form").find("#WORK_TYPE_NM" + "_VIEW_T").html(dataInfo.WORK_TYPE_NM);
+                            // $("#outgoing_manage_return_form").find("#PART_STATUS_NM" + "_VIEW_T").html(dataInfo.PART_STATUS_NM);
+                            // $("#outgoing_manage_return_form").find("#ORDER_COMP_NM" + "_VIEW_T").html(dataInfo.ORDER_COMP_NM);
+                            // $("#outgoing_manage_return_form").find("#OUTSIDE_COMP_NM" + "_VIEW_T").html(dataInfo.OUTSIDE_COMP_NM);
+
+                            console.log(dataInfo);
 
                             $("#outgoing_manage_return_form").find("#CONTROL_NUM" + "_VIEW_T").html(dataInfo.CONTROL_NUM);
                             $("#outgoing_manage_return_form").find("#DRAWING_NUM" + "_VIEW_T").html(dataInfo.DRAWING_NUM);
-                            $("#outgoing_manage_return_form").find("#INNER_DUE_DT" + "_VIEW_T").html(dataInfo.INNER_DUE_DT);
+                            $("#outgoing_manage_return_form").find("#MAIN_INSPECTION_NM" + "_VIEW_T").html(dataInfo.MAIN_INSPECTION_NM);
+                            if(dataInfo.EMERGENCY_YN === 'Y') {
+                                emergencySpan = '<span style="display: inline-block; margin: 0 5px; padding: 0px 7px; border: solid red; border-radius: 5px; color: red; text-align: center; font-size: 1rem;">긴급</span>';
+                            }
+                            $("#outgoing_manage_return_form").find("#INNER_DUE_DT" + "_VIEW_T").html(dataInfo.INNER_DUE_DT + emergencySpan);
                             $("#outgoing_manage_return_form").find("#ITEM_NM" + "_VIEW_T").html(dataInfo.ITEM_NM);
                             $("#outgoing_manage_return_form").find("#MATERIAL_DETAIL_NM" + "_VIEW_T").html(dataInfo.MATERIAL_DETAIL_NM);
                             $("#outgoing_manage_return_form").find("#ORDER_QTY_INFO" + "_VIEW_T").html(dataInfo.ORDER_QTY_INFO);
-                            $("#outgoing_manage_return_form").find("#SIZE_TXT" + "_VIEW_T").html(dataInfo.SIZE_TXT);
+                            $("#outgoing_manage_return_form").find("#SIZE_TXT_WORK_TYPE_NM" + "_VIEW_T").html(dataInfo.SIZE_TXT_WORK_TYPE_NM);
                             $("#outgoing_manage_return_form").find("#SURFACE_TREAT_NM" + "_VIEW_T").html(dataInfo.SURFACE_TREAT_NM);
-                            $("#outgoing_manage_return_form").find("#WORK_TYPE_NM" + "_VIEW_T").html(dataInfo.WORK_TYPE_NM);
                             $("#outgoing_manage_return_form").find("#PART_STATUS_NM" + "_VIEW_T").html(dataInfo.PART_STATUS_NM);
                             $("#outgoing_manage_return_form").find("#ORDER_COMP_NM" + "_VIEW_T").html(dataInfo.ORDER_COMP_NM);
                             $("#outgoing_manage_return_form").find("#OUTSIDE_COMP_NM" + "_VIEW_T").html(dataInfo.OUTSIDE_COMP_NM);
+
 
                         }
                     }, parameters, '');

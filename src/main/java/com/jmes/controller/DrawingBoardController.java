@@ -96,9 +96,17 @@ public class DrawingBoardController {
             machineInfo.put("EQUIP_SEQ", hashMap.get("EQUIP_SEQ"));
             machineInfo.put("EQUIP_NM", hashMap.get("EQUIP_NM"));
             machineInfo.put("FACTORY_AREA", hashMap.get("FACTORY_AREA"));
-
             /** 최종 Session 에 저장되는 정보 **/
             drawingInfo.put("machineInfo", machineInfo);
+
+            /** 사용자 정보가 있는 경우 장비의 사용자 정보를 로그아웃 처리 한다. **/
+            if(hashMap.containsKey("USER_ID") && !"".equals(hashMap.get("USER_ID"))) {
+                hashMap.put("queryId", "drawingMapper.updateRemoveEquipmentWorker");
+                this.innodaleService.update(hashMap);
+
+                session.removeAttribute("userInfo");
+
+            }
         }
 
         session.setAttribute("drawingInfo", drawingInfo);
@@ -114,7 +122,7 @@ public class DrawingBoardController {
     public String drawingBoard(Model model, HttpSession session, HttpServletRequest request) throws Exception {
 
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
-        HashMap<String, Object> drawingInfo = (HashMap<String, Object>)(request.getSession().getAttribute("drawingInfo"));
+        HashMap<String, Object> drawingInfo = (HashMap<String, Object>)(session.getAttribute("drawingInfo"));
 
         /** Session 정보가 없을 경우 첫 장비 선택 화면으로 이동 **/
         if(drawingInfo == null){
@@ -142,16 +150,15 @@ public class DrawingBoardController {
             userInfo.put("USER_NM", hashMap.get("USER_NM"));
             userInfo.put("USER_GFILE_SEQ", hashMap.get("USER_GFILE_SEQ"));
 
+            /** 장비 로그인 사용자 정보를 업데이트 한다. **/
+            machineInfo.put("USER_ID", userInfo.get("USER_ID"));
+            machineInfo.put("queryId", "drawingMapper.updateEquipmentWorker");
+            innodaleService.update(machineInfo);
+
             /** 최종 Session 에 저장되는 정보 **/
             drawingInfo.put("userInfo", userInfo);
 
         }
-
-        /** 장비 로그인 사용자 정보를 업데이트 한다. **/
-        machineInfo.put("USER_ID", userInfo.get("USER_ID"));
-        machineInfo.put("queryId", "drawingMapper.updateEquipmentWorker");
-        drawingInfo.put("lastWork",innodaleService.getInfo(machineInfo));
-
 
         /** 장비 정보를 기초로 최근 작업정보 **/
         machineInfo.put("queryId", "drawingMapper.selectDrawingBoardLastWork");

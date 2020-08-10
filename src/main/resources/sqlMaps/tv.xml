@@ -35,6 +35,7 @@
         FROM  jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
             AND A.DEL_YN = 'N'
+            AND A.OUT_FINISH_DT IS NULL
             AND B.PART_STATUS = 'PRO004'
         ORDER BY A.CONTROL_SEQ DESC
     </select>
@@ -46,6 +47,7 @@
         FROM  jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
             AND A.DEL_YN = 'N'
+            AND A.OUT_FINISH_DT IS NULL
             AND B.PART_STATUS = 'PRO001'
         ORDER BY A.CONTROL_SEQ DESC
     </select>
@@ -96,6 +98,7 @@
     <select id="selectMctAreInfoList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             EQUIP_SEQ, EQUIP_ID, EQUIP_NM,
+            (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID) AS USER_NM,
             FACTORY_AREA, LAYOUT_ROW, LAYOUT_COL
         FROM jmes.TBL_EQUIP X
         WHERE EQUIP_KIND = '1'
@@ -163,6 +166,7 @@
                                                 AND A.CONTROL_SEQ = C.CONTROL_SEQ
                                                 AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                                                 AND A.WORK_STATUS IN ('DBS010', 'DBS020')
+                                                AND B.OUT_FINISH_DT IS NULL
                                                 AND A.DEL_YN = 'N'
                                             UNION ALL
                                             -- PLAN
@@ -184,6 +188,7 @@
                                             WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                                                 AND A.CONTROL_SEQ = C.CONTROL_SEQ
                                                 AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                                                AND B.OUT_FINISH_DT IS NULL
                                                 AND A.DEL_YN = 'N'
                                         ) T
                                    ) Y

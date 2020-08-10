@@ -867,7 +867,7 @@
 								<div class="conWrap2">
 									<div class="tabmenu">
 										<ul>
-											<li><a href="#a;">2공장MCT</a></li>
+											<li><a href="#a;">JST</a></li>
 										</ul>
 									</div>
 									<div class="page tab1">
@@ -952,7 +952,7 @@
 								<div class="conWrap2">
 									<div class="tabmenu">
 										<ul>
-											<li><a href="#a;">3공장MCT</a></li>
+											<li><a href="#a;">DMT</a></li>
 										</ul>
 									</div>
 									<div class="page tab1">
@@ -1518,10 +1518,12 @@
 								let factory_area = mct_info_list[i].FACTORY_AREA;
 								let layout_row = mct_info_list[i].LAYOUT_ROW;
 								let layout_col = mct_info_list[i].LAYOUT_COL;
+								let user_nm = mct_info_list[i].USER_NM;
 
 								//$("#" + factory_area + "_" + layout_row + "_" + layout_col).attr("data-target",equip_seq);
 								$("#" + factory_area + "_" + layout_row + "_" + layout_col).find(".statusWrap").show();
 								$("#" + factory_area + "_" + layout_row + "_" + layout_col).find(".inBox:nth-child(1)").html(equip_nm);
+								$("#" + factory_area + "_" + layout_row + "_" + layout_col).find(".inBox:nth-child(2)").html(user_nm);
 
 							}
 						}
@@ -1548,7 +1550,7 @@
 
 								let $target = $("#" + factory_area + "_" + layout_row + "_" + layout_col);
 
-								$target.find(".inBox:nth-child(2)").html(user_nm);
+								// $target.find(".inBox:nth-child(2)").html(user_nm);
 								$target.find(".inBox:nth-child(3)").find('div:nth-child(1)').html(total_cnt_info + '&nbsp;' + total_part_qty_info);
 								$target.find(".inBox:nth-child(3)").find('div:nth-child(2)').html(total_plan_working_time_info);
 

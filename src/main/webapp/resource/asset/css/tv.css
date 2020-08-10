@@ -8,7 +8,7 @@ background: radial-gradient(44% 12%, circle cover, #2D5886 28%, #15293E 100%);pa
 height: 100vh;/* W3C */
 }
 .header{font-size: 0;;}
-.header h1{font-size: 53px; font-family: 'NotoKrB'; color: #fff; display: inline-block; padding-right: 30px}
+.header h1{font-size: 53px; font-family: 'PTSansNarrow'; color: #fff; display: inline-block; padding-right: 30px}
 .header .refresh{width: 62px; height: 60px; display: inline-block; font-size: 0; background: url(../images/tv/btn_refresh.png)no-repeat 0 0;vertical-align: bottom;}
 .pop .popWrap{padding-top: 20px;}
 .pop .popWrap .oneDepthRow{}
@@ -30,7 +30,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1301FE', endC
 .pop .popWrap .twoDepthIB .tabmenu{ position: absolute; top: 20px;}
 .pop .popWrap .twoDepthIB .tabmenu ul:after{content: ''; width: 0; height: 0; display: block; overflow: hidden; clear: both;}
 .pop .popWrap .twoDepthIB .tabmenu ul li{float: left;}
-.pop .popWrap .twoDepthIB .tabmenu ul li a{width:251px;height: 59px; font-size: 30px; font-family: 'NotoKrB'; color: #1a1a1a; text-align: center; line-height: 57px; border:1px solid #6c7072; border-bottom: 1px solid #fff; background: #fff; border-radius: 5px 5px 0 0;display: inline-block; box-sizing: border-box;}
+.pop .popWrap .twoDepthIB .tabmenu ul li a{width:251px;height: 59px; font-size: 30px; font-family: 'PTSansNarrow'; color: #1a1a1a; text-align: center; line-height: 57px; border:1px solid #6c7072; border-bottom: 1px solid #fff; background: #fff; border-radius: 5px 5px 0 0;display: inline-block; box-sizing: border-box;}
 .pop .popWrap .twoDepthIB .page{border:1px solid #6c7072;margin-top:58px;padding-bottom:21px;background:#fff;}
 .pop .popWrap .twoDepthIB .page .p_row:after{content: ''; width: 0; height: 0; display: block; overflow: hidden; clear: both;}
 .pop .popWrap .twoDepthIB .page .p_row{padding:21px 24px 0;}
@@ -46,7 +46,7 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 .pop .popWrap .twoDepthIB .page .p_row .p_col .thumb *{vertical-align: top;}
 .pop .popWrap .twoDepthIB .page .p_row .p_col .thumb .topDiv{font-size: 0;padding: 12px 0 1px 0;}
 .pop .popWrap .twoDepthIB .page .p_row .p_col .thumb .topDiv .leftWrap{margin:0 13px; display: inline-block; width: calc(50% - 26px);box-sizing: border-box;}
-.pop .popWrap .twoDepthIB .page .p_row .p_col .thumb .topDiv .leftWrap .txtWrap{height: 44px; text-align: center; font-size:22px; font-family: 'NotoKrM'; color: #fff; border:1px solid #1b1c1e; border-radius: 3px 3px 0 0;line-height: 42px;}
+.pop .popWrap .twoDepthIB .page .p_row .p_col .thumb .topDiv .leftWrap .txtWrap{height: 44px; text-align: center; font-size:22px; font-family: 'PTSansNarrow'; color: #fff; border:1px solid #1b1c1e; border-radius: 3px 3px 0 0;line-height: 42px;}
 .pop .popWrap .twoDepthIB .page .p_row .p_col .thumb .topDiv .leftWrap .imgWrap{text-align: center; background: url(../images/tv/bg_thumb.png)repeat-x 0 0;padding: 3px 0 2px;}
 .pop .popWrap .twoDepthIB .page .p_row .p_col .thumb .topDiv .rightWrap{margin:0 13px; display: inline-block; width: calc(50% - 26px);box-sizing: border-box;}
 .pop .popWrap .twoDepthIB .page .p_row .p_col .thumb .topDiv .profileWrap{text-align: center; padding:7px 0;}
@@ -57,10 +57,10 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 box-shadow: 0 3px 5px rgba(186,186,186,0.5);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */
 filter: progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=135, Color=#BABABA);overflow: hidden; /*IE 5.5-7*/
 }
-.pop .popWrap .twoDepthIB .page .p_row .p_col .thumb .topDiv .nameWrap{font-size: 22px; line-height: 30px; text-align: center; font-family: 'NotoKrB';color: #000;}
+.pop .popWrap .twoDepthIB .page .p_row .p_col .thumb .topDiv .nameWrap{font-size: 22px; line-height: 30px; text-align: center; font-family: 'PTSansNarrow';color: #000;}
 .pop .popWrap .twoDepthIB .page .p_row .p_col .thumb .bottomDiv{font-size: 0; height: 38px; box-sizing: border-box;border-radius: 0 0 5px 5px;}
-.pop .popWrap .twoDepthIB .page .p_row .p_col .thumb .bottomDiv .proName{display: inline-block; line-height: 36px; font-size: 19px; color: #000; font-family: 'NotoKrB'; text-align: center;width: 212px; background: url(../images/tv/bg_nameLine.png)no-repeat 100% 50%;}
-.pop .popWrap .twoDepthIB .page .p_row .p_col .thumb .bottomDiv .proNum{display: inline-block; line-height: 36px; font-size: 19px; color: #bc0000;font-family: 'NotoKrB'; text-align: center;width: 66px;}
+.pop .popWrap .twoDepthIB .page .p_row .p_col .thumb .bottomDiv .proName{display: inline-block; line-height: 36px; font-size: 19px; color: #000; font-family: 'PTSansNarrow'; text-align: center;width: 212px; background: url(../images/tv/bg_nameLine.png)no-repeat 100% 50%;}
+.pop .popWrap .twoDepthIB .page .p_row .p_col .thumb .bottomDiv .proNum{display: inline-block; line-height: 36px; font-size: 19px; color: #bc0000;font-family: 'PTSansNarrow'; text-align: center;width: 66px;}
 .pop .popWrap .twoDepthIB .page .p_row .p_col .list{ width: 100%; border-radius: 5px;border:1px solid #929292;
 -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=0, Color=#BDBDBD)";/*IE 8*/
 -moz-box-shadow: 0 3px 4px rgba(189,189,189,0.5);/*FF 3.5+*/
@@ -68,8 +68,8 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=135, Colo
 box-shadow: 0 3px 4px rgba(189,189,189,0.5);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */
 filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color=#BDBDBD); /*IE 5.5-7*/}
 .pop .popWrap .twoDepthIB .page .p_row .p_col .list .titleWrap{font-size: 0;background: #d6dce5;}
-.pop .popWrap .twoDepthIB .page .p_row .p_col .list .titleWrap .f_txt{display: inline-block; font-size: 22px;line-height: 37px; text-align: center; color: #1b1b1b; width: 88px; background: url(../images/tv/bg_nameLine.png)no-repeat 100% 50%;font-family: 'NotoKrB';}
-.pop .popWrap .twoDepthIB .page .p_row .p_col .list .titleWrap .s_txt{display: inline-block;font-size: 20px;line-height: 37px; text-align: center; color:#1b1b1b;font-family: 'NotoKrB';width: 192px;}
+.pop .popWrap .twoDepthIB .page .p_row .p_col .list .titleWrap .f_txt{display: inline-block; font-size: 22px;line-height: 37px; text-align: center; color: #1b1b1b; width: 88px; background: url(../images/tv/bg_nameLine.png)no-repeat 100% 50%;font-family: 'PTSansNarrow';}
+.pop .popWrap .twoDepthIB .page .p_row .p_col .list .titleWrap .s_txt{display: inline-block;font-size: 20px;line-height: 37px; text-align: center; color:#1b1b1b;font-family: 'PTSansNarrow';width: 192px;}
 .pop .popWrap .twoDepthIB .page .p_row .p_col .list ul li{text-align: center;font-size: 20px; color: #000; line-height: 28px; font-family: 'NotoKrM';}
 .pop .popWrap .twoDepthIB .page .p_row .p_col .list ul li:nth-child(even){background: #f3f3f3}
 
@@ -98,9 +98,9 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=1, Direction=135, Colo
 	font-size: 0; /*IE 5.5-7*/
 }
 .alarmList *{vertical-align: top;}
-.alarmList .dateTxt{display: inline-block; font-size: 24px; color: #175995; line-height: 52px; font-family: 'NotoKrB';width: 25%;text-align: center;}
+.alarmList .dateTxt{display: inline-block; font-size: 24px; color: #175995; line-height: 52px; font-family: 'PTSansNarrow';width: 25%;text-align: center;}
 .alarmList .progressTxt{display: inline-block; font-size: 24px; color: #223b51; line-height: 52px;width: 74%;}
-.alarmList .progressTxt b{color: #0b141c; font-family: 'NotoKrB';}
+.alarmList .progressTxt b{color: #0b141c; font-family: 'PTSansNarrow';}
 
 .alarmList:before {content: ''; width: 23px; height: 21px; position: absolute; top:10px; left: -23px; background: url(../images/tv/bg_list_arrow.png)no-repeat 0 0;}
 
@@ -124,7 +124,7 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=1, Direction=135, Colo
 .bodyWrap.mct .header .right .infoTit{font-size: 30px; color: #fff; line-height: 58px; position: relative; margin-right: 35px; float: left; padding-left: 67px;}
 .bodyWrap.mct .header .right .infoTit:before{content: ''; position: absolute; top: -5px; left: 0; background: url(../images/tv/pin.png) no-repeat 0 0; width: 57px; height: 63px;}
 .bodyWrap.mct .header .right .infoContsWrap{overflow:hidden;}
-.bodyWrap.mct .header .right .infoContsWrap div{width: auto; height: 58px; float: left; text-align: center; font-family: 'NotoKrB'; font-size: 0; color: #000;}
+.bodyWrap.mct .header .right .infoContsWrap div{width: auto; height: 58px; float: left; text-align: center; font-family: 'PTSansNarrow'; font-size: 0; color: #000;}
 .bodyWrap.mct .header .right .infoContsWrap div~div{margin-left: 15px;}
 .bodyWrap.mct .header .right .infoCont span:nth-child(1){background: url(../images/tv/bg_date.png) no-repeat 0 0; width: 165px; height: 58px; line-height:58px; color: #fff; display: inline-block; font-size: 24px;}
 .bodyWrap.mct .header .right .infoCont:nth-child(1) span:nth-child(1){width: 115px; background-size: 100% 100%;}
@@ -142,7 +142,7 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=1, Direction=135, Colo
 .pop .popWrap .twoDepthIB .page .p_row .p_col .statusWrap{width:100%;}
 .statusWrap .statusBar{height: 50px; line-height: 50px; color:#fff; font-size: 19px; text-align: center; font-family: 'NotoKrR';}
 .statusWrap .statusBar .inBox{float: left;}
-.statusWrap .statusBar .inBox:nth-child(1){width:120px; background-color: #11467e; font-size: 22px; font-family: 'NotoKrB';}
+.statusWrap .statusBar .inBox:nth-child(1){width:120px; background-color: #11467e; font-size: 22px; font-family: 'PTSansNarrow';}
 .statusWrap .statusBar .inBox:nth-child(2){width:100px; background-color: #195da4;}
 .statusWrap .statusBar .inBox:nth-child(3){width:270px; background-color: #094255;}
 .statusWrap .statusBar .inBox:nth-child(3) div{float:left; width:50%;}
@@ -153,10 +153,10 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=1, Direction=135, Colo
 .statusWrap .statusConts .inWrap~.inWrap{margin-top:6px;}
 .statusWrap .statusConts .inWrap>a>span{display: inline-block; font-size: 16px; line-height: 22px; text-align: center; width:15%; vertical-align: middle; color: #000;}
 .statusWrap .statusConts .inWrap>a>span:nth-child(2){width:55%;}
-.statusWrap .statusConts .inWrap>a>span:nth-child(2) .txtB{font-family: 'NotoKrB'; font-size: 18px;}
+.statusWrap .statusConts .inWrap>a>span:nth-child(2) .txtB{font-family: 'PTSansNarrow'; font-size: 18px;}
 .statusWrap .statusConts .inWrap .txtB.ty2{color: #2846b6;}
 .statusWrap .statusConts .inWrap .nodata{min-height: 58px !important; width:100%;}
-.statusWrap .statusConts .inWrap.on{font-family: 'NotoKrB'; padding: 0 30px; background-color: #e2f8fe; border: 2px solid #8ed4e6; height: 62px;}
+.statusWrap .statusConts .inWrap.on{font-family: 'PTSansNarrow'; padding: 0 30px; background-color: #e2f8fe; border: 2px solid #8ed4e6; height: 62px;}
 .statusWrap .statusConts .inWrap.ty2.on{background-color: #dae6fa; border: 2px solid #8eaee6;}
 .statusWrap .statusConts .inWrap.on>a>span{font-size: 18px; line-height: 24px; padding: 5px 0;}
 .statusWrap .statusConts .inWrap.on>a>span:nth-child(2) .txtB{color: #1233af; font-size: 20px;}
@@ -171,7 +171,7 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=1, Direction=135, Colo
 .statusTblWrap .statusTblBox~.statusTblBox{margin-left:50px;}
 .statusTblWrap .tblTitWrap{overflow:hidden; padding-bottom: 20px;}
 .statusTblWrap .tblTitWrap .tblTit{float: left; font-size: 30px; position: relative; padding-left: 63px;}
-.statusTblWrap .tblTitWrap .tblTit span{color: #14347a; font-family: 'NotoKrB';}
+.statusTblWrap .tblTitWrap .tblTit span{color: #14347a; font-family: 'PTSansNarrow';}
 .statusTblWrap .tblTitWrap .tblTit.ty3 span,.statusTblWrap .tblTitWrap .tblTit.ty4 span{color: #000;}
 .statusTblWrap .tblTitWrap .tblTit:before{content: ''; position: absolute; top: 0; left: 0; background: url(../images/tv/icon_1.png) no-repeat 0 0; width:48px; height: 48px;}
 .statusTblWrap .tblTitWrap .tblTit.ty2:before{background: url(../images/tv/icon_2.png) no-repeat 0 0;}
@@ -185,8 +185,8 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=1, Direction=135, Colo
 .statusTblWrap .tblWrap table tr:last-child td{border-bottom: 0;}
 .statusTblWrap .tblWrap table td.alignLeft{text-align: left; padding-left: 15px;}
 .statusTblWrap .tblWrap table td.txtR{color: #cb1c04;}
-.statusTblWrap .tblWrap table td.txtR.bold{font-family: 'NotoKrB';}
+.statusTblWrap .tblWrap table td.txtR.bold{font-family: 'PTSansNarrow';}
 .statusTblWrap .tblWrap table td .nodata{min-height: 48px;}
 .pop.ty2 .conWrap .percentWrap{position: absolute; top: 25px; left: 275px; font-size: 0;}
-.pop.ty2 .conWrap .percentWrap span{display: inline-block; width: 95px; height: 48px; line-height: 46px; font-size: 27px; color: #000; font-family: 'NotoKrB'; text-align: center; background-color: #fff; border: 1px solid #99a3a7; box-sizing: border-box;}
+.pop.ty2 .conWrap .percentWrap span{display: inline-block; width: 95px; height: 48px; line-height: 46px; font-size: 27px; color: #000; font-family: 'PTSansNarrow'; text-align: center; background-color: #fff; border: 1px solid #99a3a7; box-sizing: border-box;}
 .pop.ty2 .conWrap .percentWrap span~span{margin-left: 2px;}
