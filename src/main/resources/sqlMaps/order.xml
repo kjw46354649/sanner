@@ -138,17 +138,6 @@
         SF_GET_DATE_F(C.OUT_FINISH_DT, 'YYYY', '') AS ORDER_OUT_FINISH_DT <!-- 출고완료일 -->
     </sql>
 
-    <sql id="monthClose">
-        E.CLOSE_MONTH, <!-- 마감월 -->
-        DATE_FORMAT(STR_TO_DATE(E.CLOSE_MONTH, '%Y%m'), '%Y-%m') AS CLOSE_MONTH_TRAN, <!-- 마감 월 -->
-        E.CLOSE_VER, <!-- 차수 -->
-        CONCAT(E.CLOSE_VER, '건') AS CLOSE_VER_TRAN, <!-- 차수 -->
-        E.FINAL_NEGO_AMT, <!-- 최종공급금액 -->
-        E.CLOSE_NOTE, <!-- 월마감비고 -->
-        E.CLOSE_CONTROL_AMT, <!-- 월마감금액 -->
-        E.CLOSE_CONTROL_CNT <!-- 월마감품수 -->
-    </sql>
-
     <select id="selectControlManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.PART_NUM, C.ORDER_NUM) AS ROW_NUM,
@@ -622,117 +611,6 @@
             AND CLOSE_VER = #{CLOSE_VER}
     </update>
 
-    <insert id="createControlMaster" parameterType="java.util.HashMap" >
-        INSERT IGNORE INTO TBL_CONTROL (
-            CONTROL_SEQ,
-            CONTROL_NUM,
-            CONTROL_VER,
-            COMP_CD,
-            ORDER_COMP_CD,
-            ORDER_STAFF_SEQ,
-            DESIGNER_NM,
-            NOTE,
-            PROJECT_NM,
-            MODULE_NM,
-            DELIVERY_COMP_NM,
-            LABEL_NOTE,
-            MAIN_INSPECTION,
-            EMERGENCY_YN,
-            CONTROL_STATUS,
-            STATUS_DT
-            <!-- ,INSERT_ID -->
-        ) VALUES
-        <foreach collection="list" item="item" separator=",">
-        (
-            (SELECT IFNULL(MAX(A.CONTROL_SEQ), NEXTVAL(SEQ_CONTROL))
-            FROM TBL_CONTROL A
-            WHERE A.CONTROL_NUM = #{item.CONTROL_NUM}),
-            #{item.CONTROL_NUM},
-            0,
-            #{item.COMP_CD},
-            #{item.ORDER_COMP_CD},
-            SF_GET_STAFF_SEQ(#{item.ORDER_COMP_CD}, #{item.ORDER_STAFF_NM}),
-            #{item.DESIGNER_NM},
-            #{item.NOTE},
-            #{item.PROJECT_NM},
-            #{item.MODULE_NM},
-            #{item.DELIVERY_COMP_NM},
-            #{item.LABEL_NOTE},
-            #{item.MAIN_INSPECTION},
-            IFNULL(#{item.EMERGENCY_YN}, 'N'),
-            #{item.CONTROL_STATUS},
-            NOW()
-            <!-- ,INSERT_ID -->
-        )
-        </foreach>
-    </insert>
-
-    <!-- <insert id="createControlPart" parameterType="java.util.HashMap" >
-        INSERT INTO TBL_CONTROL_PART (
-            CONTROL_SEQ,
-            CONTROL_DETAIL_SEQ,
-            PART_NUM,
-            DRAWING_NUM,
-            DRAWING_VER,
-            PREV_DRAWING_NUM,
-            ITEM_NM,
-            WORK_TYPE,
-            OUTSIDE_YN,
-            WORK_FACTORY,
-            MATERIAL_SUPPLY_YN,
-            INNER_DUE_DT,
-            SIZE_TXT,
-            SIZE_TYPE,
-            SIZE_W,
-            SIZE_H,
-            SIZE_T,
-            SIZE_D,
-            SIZE_L,
-            MATERIAL_TYPE,
-            MATERIAL_DETAIL,
-            MATERIAL_KIND,
-            SURFACE_TREAT,
-            MATERIAL_NOTE,
-            PART_UNIT_QTY,
-            ORIGINAL_SIDE_QTY,
-            OTHER_SIDE_QTY,
-            UNIT_FINAL_EST_AMT,
-            UNIT_FINAL_AMT,
-            STATUS_DT
-        ) VALUES (
-            #{CONTROL_SEQ},
-            NEXTVAL(SEQ_CONTROL_PART),
-            #{PART_NUM},
-            #{DRAWING_NUM},
-            0,
-            #{PREV_DRAWING_NUM},
-            #{ITEM_NM},
-            #{WORK_TYPE},
-            IFNULL(#{OUTSIDE_YN}, 'N'),
-            #{WORK_FACTORY},
-            IFNULL(#{MATERIAL_SUPPLY_YN}, 'N'),
-            REPLACE(#{INNER_DUE_DT}, '/', SPACE(0)),
-            #{SIZE_TXT},
-            SF_GET_SIZE_TXT('SIZE_TYPE', #{SIZE_TXT}),
-            SF_GET_SIZE_TXT('SIZE_W', #{SIZE_TXT}),
-            SF_GET_SIZE_TXT('SIZE_H', #{SIZE_TXT}),
-            SF_GET_SIZE_TXT('SIZE_T', #{SIZE_TXT}),
-            SF_GET_SIZE_TXT('SIZE_D', #{SIZE_TXT}),
-            SF_GET_SIZE_TXT('SIZE_L', #{SIZE_TXT}),
-            SF_GET_ETC_CD(1027, #{MATERIAL_DETAIL}),
-            #{MATERIAL_DETAIL},
-            #{MATERIAL_KIND},
-            #{SURFACE_TREAT},
-            #{MATERIAL_NOTE},
-            #{PART_UNIT_QTY},
-            #{ORIGINAL_SIDE_QTY},
-            #{OTHER_SIDE_QTY},
-            REPLACE(#{UNIT_FINAL_EST_AMT}, ',', SPACE(0)),
-            REPLACE(#{UNIT_FINAL_AMT}, ',', SPACE(0)),
-            NOW()
-        )
-    </insert> -->
-
     <insert id="createControlPart" parameterType="java.util.HashMap" >
         INSERT INTO TBL_CONTROL_PART (
             CONTROL_SEQ,
@@ -958,27 +836,6 @@
         )
     </insert>
 
-    <insert id="createControlProgressList" parameterType="java.util.HashMap" >
-        INSERT INTO TBL_CONTROL_PROGRESS (
-            CONTROL_SEQ,
-            SEQ,
-            ORDER_STATUS,
-            STATUS_DT
-            <!-- ,INSERT_ID -->
-        ) VALUES
-        <foreach collection="list" item="item" separator=",">
-        (
-            (SELECT A.CONTROL_SEQ
-             FROM TBL_CONTROL A
-             WHERE A.CONTROL_NUM = #{item.CONTROL_NUM}),
-            NEXTVAL(SEQ_CONTROL_PROGRESS),
-            #{item.STATUS},
-            NOW()
-            <!-- ,NULL -->
-        )
-        </foreach>
-    </insert>
-
     <insert id="createControlPartProgress" parameterType="java.util.HashMap" >
         INSERT INTO TBL_CONTROL_PART_PROGRESS (
             CONTROL_SEQ,
@@ -1015,36 +872,6 @@
             #{LOGIN_USER_ID}
         FROM TBL_CONTROL_PART
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
-    </insert>
-
-    <insert id="createControlPartProgressList" parameterType="java.util.HashMap" >
-        INSERT INTO TBL_CONTROL_PART_PROGRESS (
-            CONTROL_SEQ,
-            CONTROL_DETAIL_SEQ,
-            SEQ,
-            PART_STATUS,
-            STATUS_DT
-        <!-- ,INSERT_ID, -->
-        ) VALUES
-        <foreach collection="list" item="item" separator=",">
-        (
-            (SELECT A.CONTROL_SEQ
-            FROM TBL_CONTROL A
-            WHERE A.CONTROL_NUM = #{item.CONTROL_NUM}),
-            (SELECT B.CONTROL_DETAIL_SEQ
-            FROM TBL_CONTROL_PART B
-                INNER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-            WHERE C.CONTROL_NUM = #{item.CONTROL_NUM}
-                  AND B.CONTROL_DETAIL_SEQ NOT IN (SELECT D.CONTROL_DETAIL_SEQ
-                                                   FROM TBL_CONTROL_PART_PROGRESS D
-                                                   WHERE D.CONTROL_SEQ = B.CONTROL_SEQ)
-            ORDER BY B.CONTROL_DETAIL_SEQ
-            LIMIT 1),
-            NEXTVAL(SEQ_CONTROL_PART_PROGRESS),
-            #{item.STATUS},
-            NOW()
-        )
-        </foreach>
     </insert>
 
     <update id="removeControl" parameterType="java.util.HashMap">
@@ -2701,5 +2528,4 @@
                                 AND Q.ORDER_SEQ = #{ORDER_SEQ}
                                 AND R.DEL_YN = 'N')
     </insert>
-
 </mapper>

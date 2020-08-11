@@ -3,8 +3,6 @@ package com.jmes.service.impl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.framework.innodale.dao.InnodaleDao;
-import com.jmes.dao.OrderDao;
-import com.jmes.dao.OutDao;
 import com.jmes.service.OutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,10 +16,6 @@ public class OutServiceImpl implements OutService {
 
     @Autowired
     private InnodaleDao innodaleDao;
-    @Autowired
-    public OrderDao orderDao;
-    @Autowired
-    public OutDao outDao;
 
     @Override
     public void modifyOutsideOrder(Map<String, Object> map) throws Exception {
@@ -38,7 +32,8 @@ public class OutServiceImpl implements OutService {
             hashMap.put("OUTSIDE_YN", "N");
             hashMap.put("OUTSIDE_STATUS", null);
 //            this.orderDao.updateControlMaster(hashMap);
-            this.orderDao.updateControlPart(hashMap);
+            hashMap.put("queryId", "orderMapper.updateControlPart");
+            this.innodaleDao.update(hashMap);
             hashMap.put("queryId", "outMapper.updateOutsideRequestDetailDelete");
             this.innodaleDao.update(hashMap);
         }
@@ -55,9 +50,12 @@ public class OutServiceImpl implements OutService {
 
         for (HashMap<String, Object> hashMap : jsonArray) {
             hashMap.put("OUTSIDE_STATUS", "OST004");
-            this.outDao.updateOutsideCloseRequest(hashMap);
-            this.outDao.createOutsideClose(hashMap);
-            this.outDao.createOutsideCloseHistory(hashMap);
+            hashMap.put("queryId", "outMapper.updateOutsideCloseRequest");
+            this.innodaleDao.update(hashMap);
+            hashMap.put("queryId", "outMapper.createOutsideClose");
+            this.innodaleDao.create(hashMap);
+            hashMap.put("queryId", "outMapper.createOutsideCloseHistory");
+            this.innodaleDao.create(hashMap);
         }
     }
 
