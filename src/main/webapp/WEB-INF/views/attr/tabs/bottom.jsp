@@ -970,7 +970,7 @@
         height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
         selectionModel : {type: 'row', mode: 'single'}, numberCell: {title: 'No.'}, dragColumns: {enabled: false},
         editable : false,
-        scrollModel: {autoFit: false}, trackModel: {on: true}, showBottom : true, postRenderInterval: -1, //call postRender synchronously.
+        scrollModel: {autoFit: true}, trackModel: {on: true}, showBottom : true, postRenderInterval: -1, //call postRender synchronously.
         columnTemplate: { align: 'center', halign: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
         colModel: commonFileDownUploadModel,
         dataModel: {

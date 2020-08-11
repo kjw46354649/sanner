@@ -33,7 +33,7 @@
         </form>
     </div>
     <div style="text-align: center; margin: 12px 0;">
-        <button type="button" class="defaultBtn grayPopGra" id="CONTROL_MANGE_CLOSE_BUTTON">닫기</button>
+        <button type="button" class="defaultBtn grayPopGra" id="CONTROL_DETAIL_CLOSE_BUTTON">닫기</button>
     </div>
 </div>
 
@@ -78,7 +78,7 @@
             {title: '표면<br>처리', dataIndx: 'SURFACE_TREAT'},
             {title: '파트<br>단위<br>수량', align: 'right', dataType: 'integer', dataIndx: 'PART_UNIT_QTY'},
             {title: '발주번호', width: 90, dataIndx: 'ORDER_NUM'},
-            // {title: '주문<br>수량', dataIndx: 'ITEM_QTY'},
+            {title: '수량', dataIndx: 'ORDER_QTY'},
             {
                 title: '대칭', align: 'center', colModel: [
                     {title: '원칭', align: 'right', dataType: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY'},
@@ -87,7 +87,7 @@
             },
             {title: '견적단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT'},
             {title: '공급단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
-            {title: '합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMOUNT'}
+            {title: '합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMT'}
         ];
         const detailListViewObj = {
             height: 650,
@@ -191,7 +191,7 @@
             $detailListViewGrid.pqGrid('option', 'height', size);
         }, 500));
 
-       $('#SALES_STATUS_DETAIL_LIST_VIEW_POPUP_CLOSE').on('click', function () {
+       $('#CONTROL_DETAIL_CLOSE_BUTTON').on('click', function () {
            window.close();
        });
     });
