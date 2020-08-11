@@ -179,23 +179,26 @@
                 '' <!-- 마감금액 -->
             FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                                            AND B.OUTSIDE_YN = 'Y'
+                                            AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-                                                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                                                   AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
             INNER JOIN TBL_OUTSIDE_CLOSE D ON B.CONTROL_SEQ = D.CONTROL_SEQ
                                             AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
                                             AND D.CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
             WHERE 1 = 1
-                AND A.COMP_CD = #{COMP_CD}
-                AND B.OUTSIDE_YN = 'Y'
-                AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}) X
+                AND A.DEL_YN = 'N'
+                AND A.COMP_CD = #{COMP_CD}) X
         GROUP BY
             X.COMP_CD,
             X.OUTSIDE_COMP_CD,
+            X.CLOSE_MONTH,
             X.CLOSE_VER
         ORDER BY
             X.COMP_CD,
             X.OUTSIDE_COMP_CD,
-            X.CLOSE_VER DESC
+            X.CLOSE_MONTH,
+            X.CLOSE_VER
     </select>
 
     <select id="selectOutsideCloseRightList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -270,7 +273,7 @@
             X.COMP_CD,
             X.OUTSIDE_COMP_CD,
             X.CLOSE_MONTH,
-            X.CLOSE_VER DESC
+            X.CLOSE_VER
     </select>
 
     <update id="updateOutsideCloseRequest" parameterType="java.util.HashMap">
@@ -327,6 +330,31 @@
             #{CONTROL_SEQ},
             #{CONTROL_DETAIL_SEQ}
         )
+    </insert>
+
+    <insert id="createOutsideCloseNote" parameterType="java.util.HashMap" >
+        INSERT INTO TBL_OUTSIDE_CLOSE_NOTE (
+            CLOSE_MONTH,
+            CLOSE_VER,
+            COMP_CD,
+            OUTSIDE_COMP_CD,
+            CLOSE_NOTE,
+            FINAL_NEGO_AMT,
+            INSERT_ID
+        ) VALUES (
+            #{CLOSE_MONTH},
+            #{CLOSE_VER},
+            #{COMP_CD},
+            #{OUTSIDE_COMP_CD},
+            #{CLOSE_NOTE},
+            #{FINAL_NEGO_AMT},
+            #{LOGIN_USER_ID}
+        ) ON DUPLICATE KEY
+            UPDATE
+                CLOSE_NOTE = #{CLOSE_NOTE},
+                FINAL_NEGO_AMT = #{FINAL_NEGO_AMT},
+                UPDATE_DT = NOW(),
+                UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
 
     <select id="selectOutsideCloseHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
