@@ -1891,10 +1891,15 @@
                 list.push(rowData);
             }
 
-            let parameters = {'url': '/createOutsideClose', 'data': {data: JSON.stringify(list)}};
+            let rightData = $outsideCloseRightGrid.pqGrid('option', 'dataModel.data');
+            let postData = {
+                'info-data': rightData,
+                'list-data': list
+            };
+
+            let parameters = {'url': '/createOutsideClose', 'data': {data: JSON.stringify(postData)}};
             fnPostAjax(function (data, callFunctionParam) {
                 $outsideOrderManageGrid.pqGrid('refreshDataAndView');
-                // $outsideCloseLeftGrid.pqGrid('refreshDataAndView');
                 $('#OUTSIDE_CLOSE_POPUP').modal('hide');
             }, parameters, '');
         });

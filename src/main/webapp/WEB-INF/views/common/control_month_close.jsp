@@ -97,7 +97,7 @@
             {title: '마감월', width: 70, dataIndx: 'CLOSE_MONTH_TRAN'},
             {title: '차수', dataIndx: 'CLOSE_VER'},
             {title: '품수', dataIndx: 'CNT'},
-            {title: '수량', dataIndx: 'CONTROL_PART_QTY'},
+            {title: '수량', dataIndx: 'CONTROL_ORDER_QTY'},
             {title: '공급가', width: 70, align: 'right', dataIndx: 'TOTAL_AMT'},
             {title: '마감금액', width: 70, align: 'right', dataIndx: 'FINAL_NEGO_AMT'}
         ];
@@ -130,7 +130,7 @@
             {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
             {title: '차수', dataIndx: 'CLOSE_VER_TRAN'},
             {title: '품수', dataIndx: 'CNT'},
-            {title: '수량', dataIndx: 'CONTROL_PART_QTY'},
+            {title: '수량', dataIndx: 'CONTROL_ORDER_QTY'},
             {title: '공급가', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
             {
                 title: '마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###',

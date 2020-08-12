@@ -426,7 +426,7 @@
         ];
 
         inspectionManageGridId01.pqGrid({
-            width: "100%", height: 740,
+            width: "100%", height: 730,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'INSIDE_STOCK_NUM',
                 url: "/paramQueryGridSelect",

@@ -36,8 +36,10 @@ public class OrderServiceImpl implements OrderService {
         hashMap.put("list", jsonMap);
         hashMap.put("IN_UID", uuid);
 
-        this.orderDao.createControlExcel(hashMap);
-        this.orderDao.createControlExcelBatch(hashMap);
+        hashMap.put("queryId", "orderMapper.createControlExcel");
+        this.innodaleDao.create(hashMap);
+        hashMap.put("queryId", "procedure.SP_CONTROL_EXCEL_BATCH");
+        this.innodaleDao.create(hashMap);
     }
 
     @Override
@@ -59,8 +61,10 @@ public class OrderServiceImpl implements OrderService {
         hashMap.put("list", jsonMap);
         hashMap.put("IN_UID", uuid);
 
-        this.orderDao.createControlExcel(hashMap);
-        this.orderDao.createControlExcelBatch(hashMap);
+        hashMap.put("queryId", "orderMapper.createControlExcel");
+        this.innodaleDao.create(hashMap);
+        hashMap.put("queryId", "procedure.SP_CONTROL_EXCEL_BATCH");
+        this.innodaleDao.create(hashMap);
     }
 
     @Override
@@ -121,16 +125,21 @@ public class OrderServiceImpl implements OrderService {
         if (listData != null && listData.size() > 0) {
             for (HashMap<String, Object> hashMap : listData) {
                 hashMap.put("CONTROL_STATUS", "ORD003");
-                this.orderDao.updateControlStatus(hashMap);
-                this.orderDao.createControlProgress(hashMap);
-                this.orderDao.createMonthClose(hashMap);
-                this.orderDao.createMonthCloseDetail(hashMap);
+                hashMap.put("queryId", "orderMapper.updateControlStatus");
+                this.innodaleDao.update(hashMap);
+                hashMap.put("queryId", "orderMapper.createControlProgress");
+                this.innodaleDao.create(hashMap);
+                hashMap.put("queryId", "orderMapper.createMonthClose");
+                this.innodaleDao.create(hashMap);
+                hashMap.put("queryId", "orderMapper.createMonthCloseDetail");
+                this.innodaleDao.create(hashMap);
             }
         }
 
         if (infoData != null && infoData.size() > 0) {
             for (HashMap<String, Object> hashMap : infoData) {
-                this.orderDao.updateMonthCloseFinalNego(hashMap);
+                hashMap.put("queryId", "orderMapper.updateMonthCloseFinalNego");
+                this.innodaleDao.update(hashMap);
             }
         }
     }
@@ -155,16 +164,21 @@ public class OrderServiceImpl implements OrderService {
         if (listData != null && listData.size() > 0) {
             for (HashMap<String, Object> hashMap : listData) {
                 hashMap.put("CONTROL_STATUS", null);
-                this.orderDao.deleteMonthCloseDetail(hashMap);
-                this.orderDao.deleteMonthClose(hashMap);
-                this.orderDao.updateControlStatus(hashMap);
-                this.orderDao.createControlProgress(hashMap);
+                hashMap.put("queryId", "orderMapper.deleteMonthCloseDetail");
+                this.innodaleDao.remove(hashMap);
+                hashMap.put("queryId", "orderMapper.deleteMonthClose");
+                this.innodaleDao.remove(hashMap);
+                hashMap.put("queryId", "orderMapper.updateControlStatus");
+                this.innodaleDao.update(hashMap);
+                hashMap.put("queryId", "orderMapper.createControlProgress");
+                this.innodaleDao.create(hashMap);
             }
         }
 
         if (infoData != null && infoData.size() > 0) {
             for (HashMap<String, Object> hashMap : infoData) {
-                this.orderDao.updateMonthCloseFinalNego(hashMap);
+                hashMap.put("queryId", "orderMapper.updateMonthCloseFinalNego");
+                this.innodaleDao.update(hashMap);
             }
         }
     }
@@ -191,25 +205,24 @@ public class OrderServiceImpl implements OrderService {
             for (HashMap<String, Object> hashMap : infoData) {
                 invoiceNum = (String) hashMap.get("INVOICE_NUM");
 
-                if (invoiceNum == "") {
-                    hashMap.put("queryId", "outMapper.createInvoiceNum");
+                if (invoiceNum.equals("")) {
                     invoiceNum = this.orderDao.createInvoiceNum(hashMap);
                     hashMap.put("INVOICE_NUM", invoiceNum);
                 }
-                this.orderDao.createInvoice(hashMap);
+                hashMap.put("queryId", "orderMapper.createInvoice");
+                this.innodaleDao.create(hashMap);
             }
         }
 
         if (listData != null && listData.size() > 0) {
             for (HashMap<String, Object> hashMap : listData) {
                 hashMap.put("INVOICE_NUM", invoiceNum);
-                this.orderDao.createInvoiceDetail(hashMap);
+                hashMap.put("queryId", "orderMapper.createInvoiceDetail");
+                this.innodaleDao.create(hashMap);
                 hashMap.put("queryId", "inspection.updateControlPartOrderPackingCnt1");
                 this.innodaleDao.update(hashMap);
-
                 hashMap.put("queryId", "inspection.updateControlPartOrderPackingCnt2");
                 this.innodaleDao.update(hashMap);
-
                 hashMap.put("queryId", "inspection.insertControlPartOrderPackingCnt3");
                 this.innodaleDao.create(hashMap);
             }
@@ -220,8 +233,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void removeInvoice(Map<String, Object> map) throws Exception {
-        this.orderDao.removeInvoiceDetail(map);
-        this.orderDao.removeInvoice(map);
+        map.put("queryId", "orderMapper.removeInvoiceDetail");
+        this.innodaleDao.remove(map);
+        map.put("queryId", "orderMapper.removeInvoice");
+        this.innodaleDao.remove(map);
     }
 
     @Override

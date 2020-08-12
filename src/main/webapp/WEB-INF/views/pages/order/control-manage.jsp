@@ -191,6 +191,8 @@
     <input type="hidden" id="template" name="template" value="control_estimate_list_template"/>
 </form>
 
+<input type="button" id="ATTACHMENT_BUTTON" style="display: none;">
+
 <script>
     var $orderManagementGrid;
     var selectedOrderManagementRowIndex = [];
@@ -285,7 +287,6 @@
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
                 }
             },
-
             {
                 title: '주요<br>검사', dataIndx: 'MAIN_INSPECTION',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
@@ -330,6 +331,26 @@
                     let cellData = ui.cellData;
 
                     return cellData === 'Y' ? cellData : '';
+                }
+            },
+            {title: '', minWidth: 30, dataIndx: 'ETC_GFILE_SEQ', styleHead: {'background':'#a9d3f5'},
+                render: function (ui) {
+                    return '<span class="floppyDisk" name="attachment" style="cursor: pointer"></span>';
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('[name=attachment]').bind('click', function () {
+                        if (fnIsGridEditing($orderManagementGrid)) {
+                            return false;
+                        }
+
+                        let GfileKey = ui.rowData.ETC_GFILE_SEQ;
+                        $('#common_file_download_form').find('#GFILE_SEQ').val(GfileKey);
+                        $('#ATTACHMENT_BUTTON').data('rowIndx', ui.rowIndx);
+                        $('#ATTACHMENT_BUTTON').data('GfileKey', GfileKey);
+                        commonFileDownUploadPopupCall(GfileKey, 'ATTACHMENT_BUTTON');
+                    });
                 }
             },
             {title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON', styleHead: {'background':'#a9d3f5'},
@@ -393,6 +414,7 @@
                         newRowData.OUT_QTY = null;
                         newRowData.ORDER_OUT_FINISH_DT = null;
                         newRowData.OUTSIDE_COMP_CD = null;
+                        newRowData.OUTSIDE_COMP_NM = null;
                         newRowData.OUTSIDE_ORDER_NUM = null;
                         newRowData.OUTSIDE_NOTE = null;
                         newRowData.OUTSIDE_MATERIAL_SUPPLY_YN = null;
@@ -1527,7 +1549,7 @@
         ];
         const obj = {
             minHeight: '100%',
-            height: 710,
+            height: 720,
             // virtualX: true,
             // virtualY: true,
             collapsible: false,
@@ -2010,7 +2032,6 @@
             let addList = gridInstance.getChanges().addList;
             let updateList = gridInstance.getChanges().updateList;
         };
-
         /* function */
 
         /* event */
@@ -2692,6 +2713,16 @@
 
         $('#CONTROL_SEARCH_CONDITION').on('change', function () {
             $(this).val() === '' ? $('[id^=CONTROL_MANAGE][id$=DATE]').prop('disabled', true) : $('[id^=CONTROL_MANAGE][id$=DATE]').prop('disabled', false);
+        });
+
+        $('#ATTACHMENT_BUTTON').on('click', function () {
+            let GfileKey = $('#common_file_download_form').find('#GFILE_SEQ').val();
+            let rowIndx = $('#ATTACHMENT_BUTTON').data('rowIndx');
+
+            if (GfileKey !== '' && GfileKey !== $('#ATTACHMENT_BUTTON').data('GfileKey')) {
+                $orderManagementGrid.pqGrid('updateRow', {rowIndx: rowIndx, row: {'ETC_GFILE_SEQ': GfileKey}, checkEditable: false});
+                $('#CONTROL_MANAGE_SAVE').click();
+            }
         });
     });
 </script>

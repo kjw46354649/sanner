@@ -464,6 +464,7 @@ table.boardList .txtP{color: #7030a0;}
 .doubleFilesIcon { display: inline-block; width: 17px;height: 17px; background: url(../images/common/ico_documents_files.png) no-repeat; background-size: 17px; }
 .textFileIcon { display: inline-block; width: 16px;height: 16px; background: url(../images/common/ico_text_file_.png) no-repeat; background-size: 16px; }
 .circleMinusIcon { display: inline-block; width: 16px;height: 16px; background: url(../images/common/minuscirclelinear.png) no-repeat; background-size: 16px; }
+.floppyDisk { display: inline-block; width: 17px;height: 17px; background: url(../images/common/floppy_disk.png) no-repeat; background-size: 17px; }
 
 .blink {
   -webkit-animation: blink 1s linear infinite alternate;

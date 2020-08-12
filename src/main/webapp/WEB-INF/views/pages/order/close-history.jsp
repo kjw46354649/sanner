@@ -200,7 +200,7 @@
             {
                 title: '마감 현황', align: 'center', colModel: [
                     {title: '마감월', dataIndx: 'CLOSE_MONTH', hidden: true},
-                    {title: '마감월', dataIndx: 'CLOSE_MONTH_TRAN'},
+                    {title: '마감월', width: 55, dataIndx: 'CLOSE_MONTH_TRAN'},
                     {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
                     {title: '차수', dataIndx: 'CLOSE_VER_TRAN'},
                     {title: '작성자', dataIndx: 'CLOSE_USER_ID', hidden: true},
@@ -210,7 +210,7 @@
             {title: '주문상태', align: 'center', colModel: [
                     {title: '상태', dataIndx: 'CONTROL_STATUS', hidden: true},
                     {title: '상태', dataIndx: 'CONTROL_STATUS_NM'},
-                    {title: '변경일시', minWidth: 100, dataIndx: 'CONTROL_STATUS_DT'}
+                    {title: '변경일시', width: 110, dataIndx: 'CONTROL_STATUS_DT'}
                 ]
             },
             {title: '사업자<br>구분', dataIndx: 'COMP_CD', hidden: true},
@@ -471,6 +471,7 @@
             rowHtHead: 15,
             numberCell: {title: 'No.'},
             // scrollModel: {autoFit: true},
+            selectionModel: {type: 'row', mode: 'single'},
             trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false ,render: closeHistoryFilterRender}, filterModel: { mode: 'OR' },
             colModel: colModel,
@@ -501,47 +502,10 @@
 
                 $('#CLOSE_HISTORY_RECORDS').html(data.length);
             },
-            cellClick: function (event, ui) {
-                if (ui.dataIndx === 'PART_NUM' && ui.rowData.WORK_NM === '가공조립') {
-                    let newRowData = fnCloneObj(ui.rowData);
-                    let data = $closeHistoryGrid.pqGrid('option', 'dataModel.data');
-                    let totalRecords = data.length;
-                    let newPartNum = 0;
-                    let newRowIndex = 0;
-
-                    for (let i = 0; i < totalRecords; i++) {
-                        if (data[i].CONTROL_SEQ === newRowData.CONTROL_SEQ) {
-                            newPartNum++;
-                            newRowIndex = data[i].pq_ri + 1;
-                        }
-                    }
-
-                    newRowData.ROW_NUM = totalRecords + 1;
-                    newRowData.PART_NUM = newPartNum;
-                    newRowData.WORK_NM = '가공';
-                    newRowData.WORK_TYPE = 'FCT01';
-
-                    $closeHistoryGrid.pqGrid('addRow', {
-                        newRow: newRowData,
-                        rowIndx: newRowIndex,
-                        checkEditable: false
-                    });
-                }
-
-                if (ui.dataIndx === 'ORDER_NUM_PLUS_BUTTON' && ui.rowData.WORK_NM === '가공조립') {
-                    let newRowData = fnCloneObj(ui.rowData);
-                    let data = $closeHistoryGrid.pqGrid('option', 'dataModel.data');
-                    let totalRecords = data.length;
-
-                    newRowData.ROW_NUM = totalRecords + 1;
-                    $closeHistoryGrid.pqGrid('addRow', {
-                        newRow: newRowData,
-                        rowIndx: ui.rowIndx + 1,
-                        checkEditable: false
-                    });
-                }
-            },
-            selectChange: function (event, ui) {
+            rowSelect: function (event, ui) {
+                selectedRowIndex[0] = ui.addList[0].rowIndx;
+            }
+            /*selectChange: function (event, ui) {
                 selectedRowIndex = [];
                 for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
                     let firstRow = ui.selection._areas[i].r1;
@@ -549,7 +513,7 @@
 
                     for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
                 }
-            }
+            }*/
         };
         let $controlCloseCancelLeftGrid;
         const controlCloseCancelLeftGridId = 'CONTROL_CLOSE_CANCEL_LEFT_GRID';
@@ -601,8 +565,8 @@
             {title: '마감월', width: 70, dataIndx: 'CLOSE_MONTH_TRAN'},
             {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
             {title: '차수', dataIndx: 'CLOSE_VER_TRAN'},
-            {title: '건수', dataIndx: 'CONTROL_PART_QTY', hidden: true},
-            {title: '건수', dataIndx: 'CONTROL_PART_QTY_TRAN'},
+            {title: '건수', dataIndx: 'CONTROL_ORDER_QTY', hidden: true},
+            {title: '건수', dataIndx: 'CONTROL_ORDER_QTY_TRAN'},
             {title: '공급가', width: 90, align: 'right', dataIndx: 'TOTAL_AMT'},
             {title: '마감금액', width: 90, align: 'right', dataIndx: 'FINAL_NEGO_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
         ];
