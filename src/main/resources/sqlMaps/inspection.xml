@@ -14,7 +14,7 @@
                 , X.MCT_WORK_SEQ, X.INSPECT_SEQ, Z.INSPECT_TYPE, Z.INSPECT_GRADE
                 , jmes.SF_GET_DATE_F(X.INNER_DUE_DT,'YY','') AS INNER_DUE_DT
                 , P.POP_POSITION
-                , SF_GET_CODE_NM(1009, P.POP_POSITION, 'KR') AS POP_NM, <!-- 현재 등록된 위치 -->
+                , SF_GET_CODE_NM(1009, P.POP_POSITION, 'KR') AS POP_NM <!-- 현재 등록된 위치 -->
                 , ( SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
                 , jmes.SF_GET_CODE_NM('1013', X.PART_STATUS, 'KR') AS PART_STATUS_NM
                 , X.CONTROL_NUM
@@ -292,7 +292,7 @@
 
     <select id="selectCommItemDetailInfoGrid2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.POP_SEQ
-            , SF_GET_CODE_NM(1009, A.POP_POSITION, 'KR') AS POP_POSITION_NM, <!-- 현재 등록된 위치 -->
+            , SF_GET_CODE_NM(1009, A.POP_POSITION, 'KR') AS POP_POSITION_NM <!-- 현재 등록된 위치 -->
             , jmes.SF_GET_DATE_F(A.POP_DT,'','M') AS POP_DT
         FROM jmes.TBL_POP A
         WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
@@ -1175,7 +1175,7 @@
                     <!-- , (SELECT jmes.SF_GET_DATE_F(M.POP_DT,'YY','M') FROM jmes.TBL_POP M WHERE M.POP_POSITION = 'POP100' AND M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ ORDER BY M.POP_SEQ LIMIT 1) AS WORK_FINISH_DT -->
                     , jmes.SF_GET_DATE_F(X.INNER_DUE_DT,'','') AS INNER_DUE_DT
                     <!-- , P.POP_POSITION_NM AS POP_NM  -->
-                    , SF_GET_CODE_NM(1009, P.POP_POSITION, 'KR') AS POP_NM, <!-- 현재 등록된 위치 -->
+                    , SF_GET_CODE_NM(1009, P.POP_POSITION, 'KR') AS POP_NM <!-- 현재 등록된 위치 -->
                     , jmes.SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM
                     , jmes.SF_GET_COMP_NM(X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
                     , jmes.SF_GET_CODE_NM('1013', X.PART_STATUS, 'KR') AS PART_STATUS_NM
