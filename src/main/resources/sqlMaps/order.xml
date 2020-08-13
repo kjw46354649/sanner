@@ -1302,7 +1302,7 @@
     <update id="updateOutsideConversion" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART
         SET
-            PART_STATUS = #{PART_STATUS},
+            PART_STATUS = CASE WHEN #{PART_STATUS} = 'null' THEN NULL ELSE #{PART_STATUS} END,
             OUTSIDE_YN = #{OUTSIDE_YN},
             WORK_FACTORY = NULL,
             STATUS_DT = NOW(),

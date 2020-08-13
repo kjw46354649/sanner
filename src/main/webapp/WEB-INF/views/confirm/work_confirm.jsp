@@ -730,7 +730,7 @@
 
         const updateOutsideConversion = function (rowData) {
             let newRowData = fnCloneObj(rowData);
-            newRowData.PART_STATUS = 'PRO001';
+            newRowData.PART_STATUS = 'null';
             newRowData.OUTSIDE_YN = 'Y';
             newRowData.WORK_FACTORY = null;
             let gridInstance = $processConfirmGrid.pqGrid('getInstance').grid;
