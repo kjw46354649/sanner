@@ -292,7 +292,7 @@
 
     <select id="selectCommItemDetailInfoGrid2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.POP_SEQ
-            , SF_GET_CODE_NM(1009, A.POP_POSITION, 'KR') AS POP_POSITION_NM, <!-- 현재 등록된 위치 -->
+            , SF_GET_CODE_NM(1009, A.POP_POSITION, 'KR') AS POP_POSITION_NM <!-- 현재 등록된 위치 -->
             , jmes.SF_GET_DATE_F(A.POP_DT,'','M') AS POP_DT
         FROM jmes.TBL_POP A
         WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
