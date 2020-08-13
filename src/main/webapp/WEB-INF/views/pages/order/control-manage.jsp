@@ -1985,41 +1985,83 @@
                 i = colModelList.length,
                 data = grid.option('dataModel.data');
 
-            let includeList = [
-                'CONTROL_NUM', 'CONTROL_NUM_BUTTON', 'PART_NUM', 'CONTROL_VER', 'COMP_CD', 'ORDER_COMP_CD',
-                'CONTROL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_STATUS_NM'
+            const partList = [
+                'CONTROL_NUM', 'CONTROL_NUM_BUTTON', 'PART_NUM', 'CONTROL_VER', 'COMP_CD', 'ORDER_COMP_CD','CONTROL_NOTE',
+                'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_STATUS_NM', 'ORDER_STAFF_SEQ', 'DESIGNER_NM', 'PROJECT_NM',
+                'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE', 'MAIN_INSPECTION', 'PRICE_CONFIRM'
             ];
+            const orderList = [
+                'PART_NUM', 'DRAWING_NUM', 'DRAWING_VER', 'DRAWING_UP_DT', 'PREV_DRAWING_NUM', 'ITEM_NM', 'WORK_TYPE',
+                'CONTROL_PART_QTY', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'SIZE_TXT',
+                'SIZE_TYPE', 'SIZE_W', 'SIZE_H', 'SIZE_T', 'SIZE_D', 'SIZE_L', 'SIZE_W_M', 'SIZE_H_M', 'SIZE_T_M',
+                'SIZE_D_M', 'SIZE_L_M', 'MATERIAL_TYPE', 'MATERIAL_TYPE_NM', 'MATERIAL_DETAIL', 'MATERIAL_KIND',
+                'SURFACE_TREAT', 'MATERIAL_NOTE', 'CALC_EST_UNIT_COST', 'PART_UNIT_QTY', 'ORIGINAL_SIDE_QTY',
+                'OTHER_SIDE_QTY', 'DETAIL_LATHE', 'DETAIL_SURFACE', 'DETAIL_CLAMPING', 'DETAIL_POCKET', 'DETAIL_DRILL',
+                'DETAIL_DIFFICULTY', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
+                'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT',
+                'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'UNIT_MATERIAL_AUTO_YN', 'UNIT_TM_AUTO_YN', 'UNIT_GRIND_AUTO_YN',
+                'UNIT_HEAT_AUTO_YN', 'UNIT_SURFACE_AUTO_YN', 'UNIT_PROCESS_AUTO_YN', 'UNIT_AMT_NOTE', 'UNIT_FINAL_EST_AMT',
+                'UNIT_FINAL_AMT', 'FINAL_AMT', 'DWG_GFILE_SEQ', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'IMG_GFILE_SEQ',
+                'VIEW_GFILE_SEQ', 'PART_STATUS', 'STATUS_DT', 'MCT_NOTE', 'MCT_WORK_TYPE', 'OUTSIDE_COMP_CD',
+                'OUTSIDE_COMP_NM', 'OUTSIDE_ORDER_NUM', 'OUTSIDE_NOTE', 'OUTSIDE_MATERIAL_SUPPLY_YN',
+                'OUTSIDE_REQUEST_FINISH_YN', 'OUTSIDE_REQUEST_PROCESS_YN', 'OUTSIDE_REQUEST_GRIND_YN',
+                'OUTSIDE_REQUEST_SURFACE_YN', 'OUTSIDE_REQUEST_ETC', 'OUTSIDE_HOPE_DUE_DT', 'OUTSIDE_UNIT_AMT',
+                'OUTSIDE_IN_DT', 'OUTSIDE_STATUS', 'OUTSIDE_STATUS_DT', 'INNER_WORK_FINISH_DT'
+            ];
+            const includeList = partList.concat(orderList);
 
             while (i--) {
                 let dataIndx = colModelList[i].dataIndx,
                     rc = 1,
                     j = data.length;
 
-                if (includeList.includes(dataIndx))
+                if (includeList.includes(dataIndx)) {
                     while (j--) {
                         let controlNum = data[j]['CONTROL_NUM'],
-                            controlNumPrev = data[j - 1] ? data[j - 1]['CONTROL_NUM'] : undefined; // 이전 데이터
+                            controlNumPrev = data[j - 1] ? data[j - 1]['CONTROL_NUM'] : undefined,
+                            cellData = data[j][dataIndx],
+                            cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] : undefined;
 
-                        if (controlNum === controlNumPrev) {
-                            let cellData = data[j][dataIndx], // cellData
-                                cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] : undefined; // 이전 데이터
-
-                            // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
-                            if (cellDataPrev !== undefined && cellData === cellDataPrev) {
-                                rc++;
+                        if (partList.includes(dataIndx)) {
+                            if (controlNum === controlNumPrev) {
+                                // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
+                                if (cellDataPrev !== undefined && cellData === cellDataPrev) {
+                                    rc++;
+                                }
+                            } else if (rc > 1) {
+                                /**
+                                 * r1: rowIndx of first row. 첫 번째 행의 rowIndx.
+                                 * c1: colIndx of first column. 첫 번째 열의 colIndx.
+                                 * rc: number of rows in the range. 범위 내 행 수.
+                                 * cc: number of columns in the range. 범위 내 열 수.
+                                 */
+                                mergeCellList.push({r1: j, c1: i, rc: rc, cc: 1});
+                                rc = 1;
                             }
-                        } else if (rc > 1) {
-                            /**
-                             * r1: rowIndx of first row. 첫 번째 행의 rowIndx.
-                             * c1: colIndx of first column. 첫 번째 열의 colIndx.
-                             * rc: number of rows in the range. 범위 내 행 수.
-                             * cc: number of columns in the range. 범위 내 열 수.
-                             */
-                            mergeCellList.push({r1: j, c1: i, rc: rc, cc: 1});
-                            rc = 1;
+                        } else if (orderList.includes(dataIndx)) {
+                            let controlDetailSeq = data[j]['CONTROL_DETAIL_SEQ'],
+                                controlDetailSeqPrev = data[j - 1] ? data[j - 1]['CONTROL_DETAIL_SEQ'] : undefined;
+
+                            if (controlNum === controlNumPrev && controlDetailSeq === controlDetailSeqPrev) {
+                                // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
+                                if (cellDataPrev !== undefined && cellData === cellDataPrev) {
+                                    rc++;
+                                }
+                            } else if (rc > 1) {
+                                /**
+                                 * r1: rowIndx of first row. 첫 번째 행의 rowIndx.
+                                 * c1: colIndx of first column. 첫 번째 열의 colIndx.
+                                 * rc: number of rows in the range. 범위 내 행 수.
+                                 * cc: number of columns in the range. 범위 내 열 수.
+                                 */
+                                mergeCellList.push({r1: j, c1: i, rc: rc, cc: 1});
+                                rc = 1;
+                            }
                         }
                     }
+                }
             }
+
             grid.option('mergeCells', mergeCellList);
             if (refresh) {
                 grid.refreshView();
