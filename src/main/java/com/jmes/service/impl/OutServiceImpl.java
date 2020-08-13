@@ -56,9 +56,6 @@ public class OutServiceImpl implements OutService {
         if (jsonMap.containsKey("info-data"))
             infoData = (ArrayList<HashMap<String, Object>>) jsonMap.get("info-data");
 
-        System.out.println(listData);
-        System.out.println(infoData);
-
         if (listData != null && listData.size() > 0) {
             for (HashMap<String, Object> hashMap : listData) {
                 hashMap.put("OUTSIDE_STATUS", "OST004");
@@ -185,19 +182,36 @@ public class OutServiceImpl implements OutService {
     public void removeOutsideClose(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
-        ArrayList<HashMap<String, Object>> jsonArray = null;
+        Map<String, Object> jsonMap = null;
+        ArrayList<HashMap<String, Object>> listData = null;
+        ArrayList<HashMap<String, Object>> infoData = null;
 
         if (jsonObject != null)
-            jsonArray = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<HashMap<String, Object>>>() {});
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<HashMap<String, Object>>() {});
 
-        for (HashMap<String, Object> hashMap : jsonArray) {
-            hashMap.put("queryId", "outMapper.updateCancelOutsideRequestStatus");
-            this.innodaleDao.update(hashMap);
-            hashMap.put("queryId", "outMapper.deleteOutsideClose");
-            this.innodaleDao.remove(hashMap);
-            hashMap.put("queryId", "outMapper.deleteOutsideCloseHistory");
-            this.innodaleDao.remove(hashMap);
-            //TODO: CLOSSE NOTE 삭제
+        if (jsonMap.containsKey("list-data"))
+            listData = (ArrayList<HashMap<String, Object>>) jsonMap.get("list-data");
+
+        if (jsonMap.containsKey("info-data"))
+            infoData = (ArrayList<HashMap<String, Object>>) jsonMap.get("info-data");
+
+        if (listData != null && listData.size() > 0) {
+            for (HashMap<String, Object> hashMap : listData) {
+                hashMap.put("OUTSIDE_STATUS", null);
+                hashMap.put("queryId", "orderMapper.updateControlPart");
+                this.innodaleDao.update(hashMap);
+                hashMap.put("queryId", "outMapper.deleteOutsideClose");
+                this.innodaleDao.remove(hashMap);
+                hashMap.put("queryId", "outMapper.deleteOutsideCloseNote");
+                this.innodaleDao.remove(hashMap);
+            }
+        }
+
+        if (infoData != null && infoData.size() > 0) {
+            for (HashMap<String, Object> hashMap : infoData) {
+                hashMap.put("queryId", "outMapper.updateOutsideCloseFinalNego");
+                this.innodaleDao.update(hashMap);
+            }
         }
     }
 }

@@ -1256,7 +1256,8 @@
             {title: '마감월', dataIndx: 'CLOSE_MONTH_TRAN'},
             {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
             {title: '차수', dataIndx: 'CLOSE_VER_TRAN'},
-            {title: '건수', dataIndx: 'ORDER_QTY'},
+            {title: '품수', dataIndx: 'CNT'},
+            {title: '건수', dataIndx: 'CONTROL_PART_QTY'},
             {title: '발주가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}, // 2020-06-08
             {title: '마감금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT'}
         ];
@@ -1289,7 +1290,7 @@
             {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
             {title: '차수', dataIndx: 'CLOSE_VER_TRAN'},
             {title: '품수', dataIndx: 'CNT'},
-            {title: '건수', dataIndx: 'ORDER_QTY'},
+            {title: '건수', dataIndx: 'CONTROL_PART_QTY'},
             {title: '발주가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}, // 2020-06-08
             {title: '마감금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
         ];

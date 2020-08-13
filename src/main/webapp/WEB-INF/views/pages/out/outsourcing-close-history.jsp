@@ -397,9 +397,10 @@
             {title: '마감월', width: 70, dataIndx: 'CLOSE_MONTH_TRAN'},
             {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
             {title: '차수', dataIndx: 'CLOSE_VER_TRAN'},
+            {title: '품수', dataIndx: 'CNT'},
             {title: '건수', dataIndx: 'CONTROL_PART_QTY'},
-            {title: '발주가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}
-            // {title: '마감금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CLOSE_CONTROL_AMT'}
+            {title: '발주가', width: 90, align: 'right', dataIndx: 'TOTAL_AMT'},
+            {title: '마감금액', width: 90, align: 'right', dataIndx: 'FINAL_NEGO_AMT'}
         ];
         const outsideCloseCancelLeftObj = {
             height: 300,
@@ -418,6 +419,10 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            scroll: function () {
+                let gridInstance = $outsideCloseCancelRightGrid.pqGrid('getInstance').grid;
+                gridInstance.scrollXY(this.scrollX(), this.scrollY());
             }
         };
         let $outsideCloseCancelRightGrid;
@@ -431,9 +436,10 @@
             {title: '마감월', width: 70, dataIndx: 'CLOSE_MONTH_TRAN'},
             {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
             {title: '차수', dataIndx: 'CLOSE_VER_TRAN', style: {'font-weight': 'bold', 'color': 'red'}},
+            {title: '품수', dataIndx: 'CNT', style: {'font-weight': 'bold', 'color': 'red'}},
             {title: '건수', dataIndx: 'CONTROL_PART_QTY', style: {'font-weight': 'bold', 'color': 'red'}},
-            {title: '발주가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT', style: {'font-weight': 'bold', 'color': 'red'}}
-            // {title: '마감금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CLOSE_CONTROL_AMT'}
+            {title: '발주가', width: 90, align: 'right', dataIndx: 'TOTAL_AMT', style: {'font-weight': 'bold', 'color': 'red'}},
+            {title: '마감금액', width: 90, align: 'right', dataIndx: 'FINAL_NEGO_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
         ];
         const outsideCloseCancelRightObj = {
             height: 300,
@@ -442,9 +448,10 @@
             showTitle: false,
             // scrollModel: {autoFit: true},
             rowHtHead: 15,
-            dragColumns: {enabled: false},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
-            colModel: outsideCloseCancelLeftColModel,
+            // dragColumns: {enabled: false},
+            editable: false,
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
+            colModel: outsideCloseCancelRightColModel,
             strNoRows: g_noData,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -452,6 +459,10 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            scroll: function () {
+                let gridInstance = $outsideCloseCancelLeftGrid.pqGrid('getInstance').grid;
+                gridInstance.scrollXY(this.scrollX(), this.scrollY());
             }
         };
         /* variable */
@@ -670,7 +681,13 @@
                 list.push(rowData);
             }
 
-            let parameters = {'url': '/removeOutsideClose', 'data': {data: JSON.stringify(list)}};
+            let rightData = $outsideCloseCancelRightGrid.pqGrid('option', 'dataModel.data');
+            let postData = {
+                'info-data': rightData,
+                'list-data': list
+            };
+
+            let parameters = {'url': '/removeOutsideClose', 'data': {data: JSON.stringify(postData)}};
             fnPostAjax(function (data, callFunctionParam) {
                 $('#OUTSIDE_CLOSE_CANCEL_POPUP').modal('hide');
                 $outsideCloseHistoryGrid.pqGrid('refreshDataAndView');

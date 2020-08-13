@@ -471,7 +471,7 @@
             rowHtHead: 15,
             numberCell: {title: 'No.'},
             // scrollModel: {autoFit: true},
-            selectionModel: {type: 'row', mode: 'single'},
+            // selectionModel: {type: 'row', mode: 'single'},
             trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false ,render: closeHistoryFilterRender}, filterModel: { mode: 'OR' },
             colModel: colModel,
@@ -502,10 +502,10 @@
 
                 $('#CLOSE_HISTORY_RECORDS').html(data.length);
             },
-            rowSelect: function (event, ui) {
-                selectedRowIndex[0] = ui.addList[0].rowIndx;
-            }
-            /*selectChange: function (event, ui) {
+            // rowSelect: function (event, ui) {
+            //     selectedRowIndex[0] = ui.addList[0].rowIndx;
+            // }
+            selectChange: function (event, ui) {
                 selectedRowIndex = [];
                 for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
                     let firstRow = ui.selection._areas[i].r1;
@@ -513,7 +513,7 @@
 
                     for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
                 }
-            }*/
+            }
         };
         let $controlCloseCancelLeftGrid;
         const controlCloseCancelLeftGridId = 'CONTROL_CLOSE_CANCEL_LEFT_GRID';
