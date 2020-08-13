@@ -134,10 +134,16 @@
     let estimateMasterBotGrid = $("#estimate_master_bot_grid");
 
     $(function () {
-        $('#dateOneIp').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#dateTwoIp').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#dateOneIp').datepicker('setDate', 'today');
-        $('#dateTwoIp').datepicker('setDate', 'today');
+        // $('#dateOneIp').datepicker({dateFormat: 'yy/mm/dd'});
+        // $('#dateTwoIp').datepicker({dateFormat: 'yy/mm/dd'});
+        // $('#dateOneIp').datepicker('setDate', 'today');
+        // $('#dateTwoIp').datepicker('setDate', 'today');
+
+        /** topWrap datepicker 처리 **/
+        $('#ESTIMATE_LIST_START_DT').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#ESTIMATE_LIST_END_DT').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#ESTIMATE_LIST_START_DT').datepicker('setDate', '-1M');
+        $('#ESTIMATE_LIST_END_DT').datepicker('setDate', 'today');
 
         let estimateMasterTopColModel= [
             //{title: 'No.', dataType: 'string', dataIndx: 'EST_SEQ'},
@@ -925,11 +931,6 @@
             }
         });
 
-        /** topWrap datepicker 처리 **/
-        $('#ESTIMATE_LIST_START_DT').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#ESTIMATE_LIST_END_DT').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#ESTIMATE_LIST_START_DT').datepicker('setDate', '-1M');
-        $('#ESTIMATE_LIST_END_DT').datepicker('setDate', 'today');
     });
 
     /** 그리드 버튼 처리 **/

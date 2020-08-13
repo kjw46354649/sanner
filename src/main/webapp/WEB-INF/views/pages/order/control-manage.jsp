@@ -2435,7 +2435,7 @@
                     formData.push(rowData.CONTROL_BARCODE_NUM);
                 }
             }
-            message =
+            let message =
                 '<h4>\n' +
                 '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
                 '    <span>선택하신 ' + selectControlPartCount + '건을 처리합니다. \n진행하시겠습니까?</span>\n' +
@@ -2623,11 +2623,12 @@
             });
         })();
 
+        // 화면 첫 로딩시에 조회 안되게 처리
         $orderManagementGrid = $('#' + gridId).pqGrid(obj);
-        $orderManagementGrid.pqGrid('option', 'dataModel.postData', function () {
-            return (fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM'));
-        });
-        $orderManagementGrid.pqGrid('refreshDataAndView');
+        // $orderManagementGrid.pqGrid('option', 'dataModel.postData', function () {
+        //     return (fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM'));
+        // });
+        // $orderManagementGrid.pqGrid('refreshDataAndView');
         /* init */
 
         $('#ESTIMATE_REGISTER_FROM_CONTROL').on('click', function (event) {
