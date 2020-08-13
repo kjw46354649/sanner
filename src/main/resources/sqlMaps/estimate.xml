@@ -79,10 +79,10 @@
            </if>
            <choose>
                <when test="DATE_CONDITION == 1">
-                    AND DATE_FORMAT(A.INSERT_DT, '%Y/%m/%d') BETWEEN #{dateOneIp} AND #{dateTwoIp}
+                    AND DATE_FORMAT(A.INSERT_DT, '%Y/%m/%d') BETWEEN #{ESTIMATE_LIST_START_DT} AND #{ESTIMATE_LIST_END_DT}
                 </when>
                 <when test="DATE_CONDITION == 2">
-                    AND DATE_FORMAT(A.SEND_DT, '%Y%m/%d') BETWEEN #{dateOneIp} AND #{dateTwoIp}
+                    AND DATE_FORMAT(A.SEND_DT, '%Y%m/%d') BETWEEN #{ESTIMATE_LIST_START_DT} AND #{ESTIMATE_LIST_END_DT}
                 </when>
            </choose>
         GROUP BY A.EST_SEQ

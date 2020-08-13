@@ -1517,9 +1517,10 @@
             table += "<td style='"+ st_center + font_header +"'>발주업체</td>";
             table += "<td style='"+ st_center + font_header +"'>공급업체</td>";
             table += "<td style='"+ st_center + font_header +"'>형태</td>";
-            table += "<td style='"+ st_center + font_header +"'>상세종류</td>";
-            table += "<td style='"+ st_center + font_header +"'>소재Size</td>";
-            table += "<td style='"+ st_center + font_header +"'>주문</td>";
+            table += "<td style='"+ st_center + font_header +"'>소재종류</td>";
+            table += "<td style='"+ st_center + font_header +"'>주문 Size</td>";
+            table += "<td style='"+ st_center + font_header +"'>수량</td>";
+            table += "<td style='"+ st_center + font_header +"'>요청사항</td>";
             table += "<td style='"+ st_center + font_header +"'>비고</td>";
             table += "<td style='"+ st_center + font_header +"'>납기</td>" + "</tr>";
 
@@ -1534,6 +1535,7 @@
                 table += "<td style='"+ st_center	+"'>"	+ list[i].MATERIAL_DETAIL_NM+"</td>";
                 table += "<td style='"+ st_center 	+"'>"	+ list[i].SIZE_TXT+"</td>";
                 table += "<td style='"+ st_center 	+"'>"	+ list[i].ORDER_QTY +"</td>";
+                table += "<td style='"+ st_center 	+"'>"	+ list[i].REQUEST_NOTE +"</td>";
                 table += "<td style='"+ st_center 	+"'>"	+ list[i].ORDER_NOTE +"</td>";
                 table += "<td style='"+ st_center	+"'>" 	+ list[i].ORDER_DT +"</td>";
                 table += "</tr>";

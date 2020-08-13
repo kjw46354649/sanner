@@ -1112,6 +1112,9 @@
 											</li>
 										</ul>
 										<ul class="p_row">
+											<li class="p_col">
+												<div class="nodata"></div>
+											</li>
 											<li class="p_col" id="ARE06_5">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
@@ -1130,9 +1133,6 @@
 														<span class="proNum" ></span>
 													</div>
 												</div>
-											</li>
-											<li class="p_col">
-												<div class="nodata"></div>
 											</li>
 										</ul>
 									</div>

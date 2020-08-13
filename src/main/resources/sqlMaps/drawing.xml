@@ -50,6 +50,7 @@
         SELECT A.USER_ID, A.USER_NM, IFNULL(A.PHOTO_GFILE_SEQ, SPACE(0)) AS PHOTO_GFILE_SEQ
         FROM TBL_USER A
         WHERE 1=1
+            AND A.DEL_YN = 'N'
             <if test="DEPARTMENT != null and DEPARTMENT != ''">
                 AND A.DEPARTMENT = #{DEPARTMENT}
             </if>
