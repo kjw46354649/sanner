@@ -2460,8 +2460,7 @@
 
     <update id="updateControlBarcodeRevision" parameterType="java.util.HashMap">
         UPDATE jmes.TBL_CONTROL_BARCODE SET DEL_YN = 'Y'
-        WHERE CONTROL_SEQ = #{CONTROL_SEQ} AND DEL_YN = 'N'
-        <!-- WHERE CONTROL_SEQ = (SELECT CONTROL_SEQ FROM  jmes.TBL_CONTROL WHERE CONTROL_SEQ = #{CONTROL_SEQ} AND CONTROL_VER >= 1) -->
+        WHERE CONTROL_SEQ = (SELECT CONTROL_SEQ FROM  jmes.TBL_CONTROL WHERE CONTROL_SEQ = #{CONTROL_SEQ} AND CONTROL_VER >= 1)
     </update>
 
     <insert id="insertControlBarcodeRevision" parameterType="java.util.HashMap">
@@ -2470,8 +2469,7 @@
           , B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.CONTROL_VER, B.DRAWING_VER
         FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-          AND A.CONTROL_SEQ = #{CONTROL_SEQ}
-          <!-- AND A.CONTROL_SEQ = (SELECT CONTROL_SEQ FROM  jmes.TBL_CONTROL WHERE CONTROL_SEQ = #{CONTROL_SEQ} AND CONTROL_VER >= 1) -->
+            AND A.CONTROL_SEQ = (SELECT CONTROL_SEQ FROM  jmes.TBL_CONTROL WHERE CONTROL_SEQ = #{CONTROL_SEQ} AND CONTROL_VER >= 1)
     </insert>
 
     <select id="selectControlCadBarcodeListList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
