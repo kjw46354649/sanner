@@ -557,14 +557,18 @@
             },
             {title: '외주납기', width: 70, dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor},
                 render: function (ui) {
-                    if (!ui.cellData) {
+                    if (ui.cellData) {
+                        let date = ui.cellData;
+
+                        return date.substring(5);
+                    } else {
                         let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
                         visibleDate.setDate(visibleDate.getDate() - 1);
                         return visibleDate.mmdd();
                     }
                 }
             },
-            {title: '입고일자', width: 100, dataIndx: 'OUTSIDE_IN_DT'},
+            {title: '입고일시', width: 100, dataIndx: 'OUTSIDE_IN_DT'},
             {
                 title: '외주<br>발주번호', dataIndx: 'OUTSIDE_ORDER_NUM',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
@@ -997,7 +1001,7 @@
             selectionModel: {type: 'row', mode: 'single'},
             rowHtHead: 15,
             dragColumns: {enabled: false},
-            editable: false,
+            // editable: false,
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
             colModel: mailRecipientColModel,
             toolbar: toolbar,

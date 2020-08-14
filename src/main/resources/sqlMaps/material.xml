@@ -537,7 +537,7 @@
             MATERIAL_COMP_CD, HOPE_DUE_DT, SIZE_TXT,
             SIZE_TYPE, SIZE_W, SIZE_H, SIZE_T, SIZE_D, SIZE_L, REQUEST_NOTE,
             MATERIAL_TYPE, MATERIAL_DETAIL, MATERIAL_KIND,
-            ORDER_NOTE, ORDER_QTY, ORDER_AMT,
+            ORDER_NOTE, ORDER_QTY, ORDER_AMT, NOTE,
             INSERT_DT, INSERT_ID
         )
         VALUES
@@ -556,7 +556,7 @@
             SF_GET_SIZE_TXT('SIZE_H', #{M_SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_T', #{M_SIZE_TXT}),
             SF_GET_SIZE_TXT('SIZE_D', #{M_SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_L', #{M_SIZE_TXT}), #{REQUEST_NOTE},
             #{MATERIAL_TYPE}, #{MATERIAL_DETAIL}, #{MATERIAL_KIND},
-            #{M_ORDER_NOTE}, #{M_ORDER_QTY}, #{ORDER_AMT},
+            #{M_ORDER_NOTE}, #{M_ORDER_QTY}, #{ORDER_AMT}, #{NOTE},
             NOW(), #{LOGIN_USER_ID}
         )
         ON DUPLICATE KEY UPDATE
@@ -577,6 +577,7 @@
             ORDER_NOTE = #{M_ORDER_NOTE},
             ORDER_QTY = #{M_ORDER_QTY},
             ORDER_STATUS = NULL,
+            NOTE = #{NOTE},
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID},
             CANCEL_DT = NULL,

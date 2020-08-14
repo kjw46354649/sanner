@@ -185,7 +185,7 @@
             {title: '상태변경<br>일시', minWidth: 70, dataIndx: 'PART_SATUS_DT'},
             {title: '외주업체', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
             {title: '외주업체', minWidth: 70, dataIndx: 'OUTSIDE_COMP_NM'},
-            {title: '입고일자', dataIndx: 'DLQRHDLFWK'},
+            {title: '입고일시', dataIndx: 'DLQRHDLFWK'},
             {title: '외주<br>발주번호', dataIndx: 'OUTSIDE_ORDER_NUM'},
             {title: '비고', dataIndx: 'OUTSIDE_NOTE'},
             {title: '비고(주문)', width: 150, dataIndx: 'CONTROL_NOTE'},
