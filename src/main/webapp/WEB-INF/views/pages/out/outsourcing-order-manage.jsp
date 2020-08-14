@@ -1708,6 +1708,7 @@
                 clearMailForm(event.currentTarget);
                 // 첨부파일 Element 초기화
                 clearMailFileAttachPopup($('#attachDragAndDrop1'),getCadUploadBlankHtml());
+                $('#REQUEST_OUTSIDE_MAIL_FORM #GFILE_SEQ').val('');
                 // 그리드 생성
                 $mailRecipientGrid = $('#' + mailRecipientGridId).pqGrid(mailRecipientObj);
                 $outsideProcessRequestGrid = $('#' + outsideProcessRequestGridId).pqGrid(outsideProcessRequestObj);
@@ -1745,6 +1746,7 @@
                 clearMailForm(event.currentTarget);
                 // 첨부파일 Element 초기화
                 clearMailFileAttachPopup($('#attachDragAndDrop2'),getCadUploadBlankHtml());
+                $('#CANCEL_REQUEST_OUTSIDE_MAIL_FORM #GFILE_SEQ').val('');
                 // 그리드 생성
                 $cancelMailRecipientGrid = $('#' + cancelMailRecipientGridId).pqGrid(cancelMailRecipientObj);
                 $cancelRequestOutsideGrid = $('#' + cancelRequestOutsideGridId).pqGrid(cancelRequestOutsideObj);
