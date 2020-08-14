@@ -278,12 +278,12 @@
             //     }
             // });
 
-            $("#popBarcode").on('keyup', function(e) {
-                if (e.keyCode === 13) {
-                    let barcodeNum = fnBarcodeKo2En(this.value);
-                    sendDrawingNum(barcodeNum);
-                }
-            });
+            // $("#popBarcode").on('keyup', function(e) {
+            //     if (e.keyCode === 13) {
+            //         let barcodeNum = fnBarcodeKo2En(this.value);
+            //         sendDrawingNum(barcodeNum);
+            //     }
+            // });
 
             $("#popBarcode").on('focus', function(){
                 $(this).attr('placeholder', '');
