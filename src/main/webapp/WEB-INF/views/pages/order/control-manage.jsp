@@ -1536,7 +1536,7 @@
                     {title: '외주단가', dataType: 'integer', dataIndx: 'OUTSIDE_UNIT_AMT'},
                     {title: '합계금액', dataType: 'integer', dataIndx: 'OUTSIDE_FINAL_AMT', hidden: true},
                     {title: '요망납기', dataType: 'date', format: 'm/dd', dataIndx: 'OUTSIDE_HOPE_DUE_DT', hidden: true},
-                    {title: '입고날짜', dataType: 'date', format: 'm/dd', dataIndx: 'OUTSIDE_IN_DT'},
+                    {title: '입고날짜', width: 60, dataType: 'string', dataIndx: 'OUTSIDE_IN_DT'},
                     {title: '비고', dataIndx: 'OUTSIDE_NOTE', hidden: true},
                     {title: '불량Code', dataIndx: 'dhlwnqnffidcode', hidden: true},
                     {title: '조치방안', dataIndx: 'dhlwnwhclqkddks', hidden: true}
