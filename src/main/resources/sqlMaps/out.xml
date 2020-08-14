@@ -11,7 +11,7 @@
             B.OUTSIDE_UNIT_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS OUTSIDE_TOTAL_AMT,
             C.OUTSIDE_REQUEST_SEQ,
             CASE
-                WHEN B.OUTSIDE_STATUS IN ('OST001', 'OST003', 'OST003') THEN SF_GET_DATE_F(C.INSERT_DT, 'YY', 'M')
+                WHEN B.OUTSIDE_STATUS IN ('OST001', 'OST003') THEN SF_GET_DATE_F(C.INSERT_DT, 'YY', 'M')
                 ELSE NULL
             END AS OUTSIDE_REQUEST_DT,
             H.INSPECT_SEQ, <!-- SEQ -->
@@ -61,7 +61,7 @@
                                                                     AND CONTROL_SEQ = B.CONTROL_SEQ
                                                                     AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
         WHERE 1 = 1
-            AND A.CONTROL_STATUS = 'ORD001' <!-- 확정 -->
+<!--            AND A.CONTROL_STATUS = 'ORD001' 확정 -->
             AND B.OUTSIDE_YN = 'Y'
             AND NOT EXISTS (SELECT *
                             FROM TBL_OUTSIDE_CLOSE

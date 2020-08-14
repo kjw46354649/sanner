@@ -185,7 +185,7 @@
             {title: '상태변경<br>일시', minWidth: 70, dataIndx: 'PART_SATUS_DT'},
             {title: '외주업체', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
             {title: '외주업체', minWidth: 70, dataIndx: 'OUTSIDE_COMP_NM'},
-            {title: '입고일시', dataIndx: 'DLQRHDLFWK'},
+            {title: '입고일시', dataIndx: 'OUTSIDE_IN_DT'},
             {title: '외주<br>발주번호', dataIndx: 'OUTSIDE_ORDER_NUM'},
             {title: '비고', dataIndx: 'OUTSIDE_NOTE'},
             {title: '비고(주문)', width: 150, dataIndx: 'CONTROL_NOTE'},
@@ -268,9 +268,9 @@
                     {title: '측정일시', dataIndx: 'CMRWJDDLFTL'}
                 ]
             },
-            {title: '원주문<br>확정 일시', minWidth: 70, dataIndx: 'CONTROL_STATUS'},
-            {title: '외주가공<br>요청일시.', minWidth: 70, dataIndx: 'OUTSIDE_REQUEST_DATE'},
-            {title: '외주가공<br>마감일시', minWidth: 70, dataIndx: 'OUTSIDE_FINISH_DATE'},
+            {title: '원주문<br>확정 일시', width: 100, dataIndx: 'CONTROL_STATUS'},
+            {title: '외주가공<br>요청일시.', width: 100, dataIndx: 'OUTSIDE_REQUEST_DATE'},
+            {title: '외주가공<br>마감일시', width: 100, dataIndx: 'OUTSIDE_FINISH_DATE'},
             {title: 'DXF', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'

@@ -439,8 +439,12 @@
 
     <update id="updateItemOrderRegisterPartStatus" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART
-        SET PART_STATUS = 'PRO004'
-        WHERE 1=1
+        SET
+            PART_STATUS = 'PRO004',
+            STATUS_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID},
+            UPDATE_DT = NOW()
+        WHERE 1 = 1
             AND CONTROL_SEQ = #{CONTROL_SEQ}
             AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </update>
@@ -456,11 +460,13 @@
         INSERT INTO TBL_CONTROL_PART_PROGRESS
             (CONTROL_SEQ, CONTROL_DETAIL_SEQ, SEQ, PART_STATUS, STATUS_DT, INSERT_ID)
         SELECT
-            CONTROL_SEQ, CONTROL_DETAIL_SEQ, NEXTVAL(SEQ_CONTROL_PART_PROGRESS), PART_STATUS, NOW(), #{LOGIN_USER_ID}
-        FROM TBL_CONTROL_PART
+            A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, NEXTVAL(SEQ_CONTROL_PART_PROGRESS), A.PART_STATUS, NOW(), #{LOGIN_USER_ID}
+        FROM TBL_CONTROL_PART A
         WHERE 1 = 1
-            AND CONTROL_SEQ = #{CONTROL_SEQ}
-            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND NOT EXISTS (SELECT * FROM TBL_CONTROL_PART_PROGRESS B WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                                AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND A.PART_STATUS = B.PART_STATUS)
     </insert>
 
     <update id="insertUpdateItemOrderRegister" parameterType="java.util.HashMap">
