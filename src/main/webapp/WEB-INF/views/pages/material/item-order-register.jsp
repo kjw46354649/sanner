@@ -9,7 +9,7 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="popup_container" id="item_order_register_popup" style="display: none;" data-backdrop="static">
-    <div class="layerPopup" style="height: fit-content;">
+    <div class="layerPopup" style="width:1132px; height: fit-content;">
         <h3>소재 주문</h3>
         <span style="padding-left: 30px;">
             <span class="barCode" id="itemOrderRegisterBarcodeSpan"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="itempOrderResgisterBarcodeImg" style="height: 32px;"></span>
@@ -673,6 +673,7 @@
                     });
                 }
             },
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, width: 120},
             {title: '', dataType: 'string', dataIndx: '', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {
                     let ORDER_STATUS = ui.rowData.ORDER_STATUS;
@@ -877,6 +878,7 @@
                     });
                 }
             },
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', width: 120, editable: false},
             {title: '', dataType: 'string', dataIndx: '', minWidth: 25, width: 25, editable: false,
                 render: function (ui) { return ''; }
             },
@@ -1295,7 +1297,7 @@
             for(let tempI=0; tempI<totalRecords; tempI++){
                 itemOrderRegisterPopTopGrid.pqGrid("updateRow", { 'rowIndx': tempI , row: { 'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM } });
             }
-            let itemOrderRegisterInsertUpdateQueryList = ['insertUpdateItemOrderRegisterPopSave'];
+            let itemOrderRegisterInsertUpdateQueryList = ['material.insertUpdateItemOrderRegisterPopSave'];
 
             let gridInstance = itemOrderRegisterPopTopGrid.pqGrid('getInstance').grid;
             if (gridInstance.isDirty()) {
@@ -1632,7 +1634,7 @@
                 let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
                 fnPostAjax(function (data, callFunctionParam) {
                     let parameter = {
-                        'queryId': 'selectItemOrderRegisterPopMailTable',
+                        'queryId': 'material.selectItemOrderRegisterPopMailTable',
                         'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM
                     };
                     let parameters = {'url': '/json-list', 'data': parameter};
@@ -1709,14 +1711,14 @@
 
             fnConfirm(title, message, function () {
                 printJS({printable:'/makeItemOrderSheetPrint?MATERIAL_ORDER_NUM=' + encodeURI(MATERIAL_ORDER_NUM), type:'pdf', showModal:true});
-
-                itemOrderRegisterPopTopGrid.pqGrid('option', "dataModel.postData", function (ui) {
-                    return (fnFormToJsonArrayData('#item_order_register_popup_form'));
-                });
-                itemOrderRegisterPopTopGrid.pqGrid('refreshDataAndView');
-
-                btnDisabled();
             });
+
+            itemOrderRegisterPopTopGrid.pqGrid('option', "dataModel.postData", function (ui) {
+                return (fnFormToJsonArrayData('#item_order_register_popup_form'));
+            });
+            itemOrderRegisterPopTopGrid.pqGrid('refreshDataAndView');
+
+            btnDisabled();
         }
 
         function btnDisabled() {

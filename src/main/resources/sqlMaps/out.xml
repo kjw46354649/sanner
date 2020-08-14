@@ -98,7 +98,7 @@
             <when test="OUTSIDE_SEARCH_CONDITION == 'OSC02'">
                 AND DATE_FORMAT(B.OUTSIDE_HOPE_DUE_DT, '%Y%m%d') BETWEEN #{OUTSIDE_MANAGE_START_DATE} AND #{OUTSIDE_MANAGE_END_DATE}
             </when>
-            <!-- 입고일자 -->
+            <!-- 입고일시 -->
             <when test="OUTSIDE_SEARCH_CONDITION == 'OSC03'">
                 AND DATE_FORMAT(B.OUTSIDE_IN_DT, '%Y/%m/%d') BETWEEN #{OUTSIDE_MANAGE_START_DATE} AND #{OUTSIDE_MANAGE_END_DATE}
             </when>
