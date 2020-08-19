@@ -131,10 +131,10 @@
                 <%--                <button type="button" class="defaultBtn btn-50w" data-toggle="modal" data-target="#CONTROL_CLOSE_POPUP">마감</button>--%>
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_DRAWING_VIEW">도면 View</button>
-                    <button type="button" class="defaultBtn btn-100w" id="DRAWING_PRINT">도면 출력</button>
-                    <button type="button" class="defaultBtn btn-100w" id="BARCODE_DRAWING_PRINT">바코드도면 출력</button>
-                    <button type="button" class="defaultBtn btn-100w" id="BARCODE_PRINT">바코드 출력</button>
-                    <button type="button" class="defaultBtn btn-100w" id="LABEL_PRINT">라벨 출력</button>
+                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_DRAWING_PRINT">도면 출력</button>
+                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_BARCODE_DRAWING_PRINT">바코드도면 출력</button>
+                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_BARCODE_PRINT">바코드 출력</button>
+                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_LABEL_PRINT">라벨 출력</button>
                 </div>
             </div>
             <div class="mg-top10">
@@ -2425,7 +2425,7 @@
             fnReportFormToHiddenFormPageAction('control_estimate_list_excel_download', '/downloadExcel');
         });
         // 바코드도면출력
-        $('#BARCODE_DRAWING_PRINT').on('click', function () {
+        $('#CONTROL_MANAGE_BARCODE_DRAWING_PRINT').on('click', function () {
             if (noSelectedRowAlert()) return false;
             let selectedRowCount = selectedOrderManagementRowIndex.length;
             let selectControlPartCount = 0;
@@ -2459,7 +2459,7 @@
             });
         });
         // 바코드 출력
-        $('#BARCODE_PRINT').on('click', function () {
+        $('#CONTROL_MANAGE_BARCODE_PRINT').on('click', function () {
             if (noSelectedRowAlert()) return false;
             let bodyHtml;
             let selectedRowCount = selectedOrderManagementRowIndex.length;
@@ -2496,7 +2496,7 @@
             });
         });
         // 라벨 출력
-        $('#LABEL_PRINT').on('click', function () {
+        $('#CONTROL_MANAGE_LABEL_PRINT').on('click', function () {
             if (noSelectedRowAlert()) return false;
 
             let barcodeList = [];
@@ -2555,7 +2555,7 @@
             callWindowImageViewer(rowData.IMG_GFILE_SEQ);
         });
         // 도면출력
-        $('#DRAWING_PRINT').on('click', function () {
+        $('#CONTROL_MANAGE_DRAWING_PRINT').on('click', function () {
             let selectedRowCount = selectedOrderManagementRowIndex.length;
             let imgGfileSeq = '';
             for (let i = 0; i < selectedRowCount; i++) {

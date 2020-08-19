@@ -1633,7 +1633,6 @@
         SELECT
             X.GROUP_KEY,
             ROW_NUMBER () OVER(ORDER BY X.COMP_NM, X.`YEAR`, X.QUARTER, X.FINISH_MONTH, X.ORDER_COMP_NM, X.CLOSE_VER) AS ROW_NUM,
-            X.ROW_NUM,
             X.COMP_CD,
             X.COMP_NM,
             X.CLOSE_MONTH,

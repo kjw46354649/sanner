@@ -61,6 +61,7 @@
                                                                     AND CONTROL_SEQ = B.CONTROL_SEQ
                                                                     AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
         WHERE 1 = 1
+            AND A.DEL_YN = 'N'
 <!--            AND A.CONTROL_STATUS = 'ORD001' 확정 -->
             AND B.OUTSIDE_YN = 'Y'
             AND NOT EXISTS (SELECT *
@@ -164,7 +165,7 @@
             X.CLOSE_VER,
             CONCAT(X.CLOSE_VER, '차') AS CLOSE_VER_TRAN,
             COUNT(*) AS CNT,
-            CONCAT(CAST(SUM(X.CONTROL_PART_QTY) AS CHAR), '건') AS CONTROL_PART_QTY,
+            CONCAT(CAST(SUM(X.CONTROL_PART_QTY) AS CHAR), 'EA') AS CONTROL_PART_QTY,
             FORMAT(SUM(X.TOTAL_AMT), 0) AS TOTAL_AMT,
             FORMAT(X.FINAL_NEGO_AMT, 0) AS FINAL_NEGO_AMT <!-- 마감 금액 -->
         FROM (
@@ -208,7 +209,7 @@
             X.CLOSE_VER,
             CONCAT(X.CLOSE_VER, '차') AS CLOSE_VER_TRAN,
             SUM(X.CNT) AS CNT,
-            CONCAT(CAST(SUM(X.CONTROL_PART_QTY) AS CHAR), '건') AS CONTROL_PART_QTY,
+            CONCAT(CAST(SUM(X.CONTROL_PART_QTY) AS CHAR), 'EA') AS CONTROL_PART_QTY,
             FORMAT(SUM(X.TOTAL_AMT), 0) AS TOTAL_AMT,
             FORMAT(SUM(X.FINAL_NEGO_AMT), 0) AS FINAL_NEGO_AMT
         FROM (
