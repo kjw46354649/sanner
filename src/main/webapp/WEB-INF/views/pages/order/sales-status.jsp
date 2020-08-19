@@ -50,7 +50,7 @@
                             <label class="label_100">마감년월</label>
                         </span>
                         <span class="chk_box"><select name="CLOSE_YEAR_LEFT" id="CLOSE_YEAR_LEFT"></select></span>
-                        <span class="chk_box"><select name="CLOSE_MONTH_LEFT" id="CLOSE_MONTH_LEFT"></select><span style="margin: 10px 0; vertical-align: middle; font-size: 1.4rem;"> &nbsp;&nbsp;~</span></span>
+                        <span class="chk_box"><select name="CLOSE_MONTH_LEFT" id="CLOSE_MONTH_LEFT"></select><span style="margin: 0 5px; vertical-align: middle; font-size: 1.4rem;">&nbsp;~&nbsp;</span></span>
                         <span class="chk_box"><select name="CLOSE_YEAR_RIGHT" id="CLOSE_YEAR_RIGHT" disabled></select></span>
                         <span class="chk_box"><select name="CLOSE_MONTH_RIGHT" id="CLOSE_MONTH_RIGHT" disabled></select></span>
                         <span class="chk_box" style="margin-left: 10px;"><input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH">
@@ -171,7 +171,7 @@
         let tab1PostData = fnFormToJsonArrayData('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM');
         const tab1ColModel = [
             {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
-            {title: 'No.', minWidth: 30, width: 30, align: 'right', dataType: 'integer', dataIndx: 'ROW_NUM'},
+            {title: 'No.', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'ROW_NUM'},
             {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자', dataIndx: 'COMP_NM'},
             {title: '년도', dataIndx: 'YEAR'},
@@ -251,10 +251,8 @@
         tab2PostData.MONTH_SALE_YEAR = CURRENT_YEAR;
         const tab2ColModel = [
             {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
-            {title: 'No.', minWidth: 30, width: 30, align: 'right', dataType: 'integer', dataIndx: 'ROW_NUM'},
+            {title: 'No.', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'ROW_NUM'},
             {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
-            // {title: 'CONTROL_TYPE', dataIndx: 'CONTROL_TYPE', hidden: true},
-            // {title: 'CONTROL_NM', dataIndx: 'CONTROL_NM'},
             {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자', dataIndx: 'COMP_NM'},
             {title: '발주업체', dataIndx: 'ORDER_COMP_CD', hidden: true},
@@ -319,9 +317,7 @@
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: tab2ColModel,
             groupModel: tab2GroupModel,
-            toolPanel: {
-                show: false  //show toolPanel initially.
-            },
+            toolPanel: {show: false},
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: tab2PostData, recIndx: 'ROW_NUM',
