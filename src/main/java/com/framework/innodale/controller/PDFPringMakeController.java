@@ -222,6 +222,10 @@ public class PDFPringMakeController {
         BaseColor headBackground = new BaseColor(217, 217, 217);
         PdfWriter.getInstance(document, out);
 
+        hashMap.put("queryId", "systemMapper.selectUserInfo");
+        hashMap.put("selUserId", hashMap.get("LOGIN_USER_ID"));
+        List<Map<String, Object>> userInfo = innodaleService.getList(hashMap);
+
         hashMap.put("queryId", "material.selectItemOrderRegisterPopTable");
         List<Map<String, Object>> infoList = innodaleService.getList(hashMap);
         List<Map<String, Object>> dataList = null;
@@ -230,48 +234,61 @@ public class PDFPringMakeController {
 
         document.open();
 
-        for(int j=0; j < infoList.size(); j++) {
+        for (int j = 0; j < infoList.size(); j++) {
+            String userPositionNm = "";
+            String userTel = "";
             HashMap<String, Object> map = new HashMap<String, Object>();
-
             hashMap.put("queryId", "material.selectItemOrderRegisterOrderSheetListPdf");
             hashMap.put("CONCAT_SEQ", infoList.get(j).get("CONCAT_SEQ"));
             dataList = innodaleService.getList(hashMap);
-            if(iCount > 0) document.newPage();
 
-            PdfPTable table = new PdfPTable(10);
+            if (userInfo.get(0).get("POSITION_NM") != null && !"".equals(userInfo.get(0).get("POSITION_NM"))) userPositionNm =  " " + userInfo.get(0).get("POSITION_NM");
+            if (userInfo.get(0).get("USER_TEL") != null && !"".equals(userInfo.get(0).get("USER_TEL"))) userTel = " / " + userInfo.get(0).get("USER_TEL");
+            if (iCount > 0) document.newPage();
+
+            PdfPTable table = new PdfPTable(9);
             table.init();
             table.setWidthPercentage(100);
-            table.setWidths(new int[] {3, 8, 10, 10, 20, 20, 6, 6, 20, 4});
+            table.setWidths(new int[]{3, 8, 10, 10, 6, 10, 10, 20, 30});
+
+            table.addCell(createCell("진성정밀 주문서", 5, 1, new Font(bf, 10, Font.BOLD)));
+            table.addCell(createCellBackground("담당자 / TEL", 2, 1, headFont, headBackground));
+            table.addCell(createCell((String) userInfo.get(0).get("USER_NM") + userPositionNm + userTel, 2, 1, contentsFont));
 
             table.addCell(createCellBackground("주문번호", 2, 1, headFont, headBackground));
-            table.addCell(createCell((String)infoList.get(j).get("MATERIAL_ORDER_NUM"), 2, 1, contentsFont));
-            table.addCell(createCellBackground("주문일자", 1, 1, headFont, headBackground));
-            table.addCell(createCell((String)infoList.get(j).get("ORDER_DT"), 1, 1, contentsFont));
-            table.addCell(createCellBackground("주문업체", 2, 1, headFont, headBackground));
-            table.addCell(createCell((String)infoList.get(j).get("MATERIAL_COMP_NM"), 2, 1, contentsFont));
+            table.addCell(createCell((String) infoList.get(j).get("MATERIAL_ORDER_NUM"), 3, 1, contentsFont));
+            table.addCell(createCellBackground("주문 일자", 1, 1, headFont, headBackground));
+            table.addCell(createCell((String) infoList.get(j).get("ORDER_DT"), 1, 1, contentsFont));
+            table.addCell(createCellBackground("공급업체", 1, 1, headFont, headBackground));
+            table.addCell(createCell((String) infoList.get(j).get("MATERIAL_COMP_NM"), 1, 1, contentsFont));
 
             table.addCell(createCellBackground("No", 1, 1, headFont, headBackground));
             table.addCell(createCellBackground("형태", 1, 1, headFont, headBackground));
-            table.addCell(createCellBackground("상세종류", 1, 1, headFont, headBackground));
-            table.addCell(createCellBackground("요청 소재", 1, 1, headFont, headBackground));
-            table.addCell(createCellBackground("요청사항", 1, 1, headFont, headBackground));
-            table.addCell(createCellBackground("비고", 1, 1, headFont, headBackground));
+            table.addCell(createCellBackground("소재종류", 1, 1, headFont, headBackground));
+            table.addCell(createCellBackground("Size", 1, 1, headFont, headBackground));
             table.addCell(createCellBackground("수량", 1, 1, headFont, headBackground));
-            table.addCell(createCellBackground("납기", 1, 1, headFont, headBackground));
+            table.addCell(createCellBackground("요청사항", 2, 1, headFont, headBackground));
+            table.addCell(createCellBackground("비고", 1, 1, headFont, headBackground));
+//            table.addCell(createCellBackground("납기", 1, 1, headFont, headBackground));
             table.addCell(createCellBackground("관리번호", 1, 1, headFont, headBackground));
-            table.addCell(createCellBackground("Part", 1, 1, headFont, headBackground));
+//            table.addCell(createCellBackground("Part", 1, 1, headFont, headBackground));
 
-            for(int i=0; i<dataList.size(); i++) {
-                table.addCell(createCell(""+(dataList.get(i).get("SEQ")), 1, 1, contentsFont));
-                table.addCell(createCell((String)dataList.get(i).get("MATERIAL_KIND_NM"), 1, 1, contentsFont));
-                table.addCell(createCell((String)dataList.get(i).get("MATERIAL_DETAIL_NM"), 1, 1, contentsFont));
-                table.addCell(createCell((String)dataList.get(i).get("SIZE_TXT"), 1, 1, contentsFont));
-                table.addCell(createCell((String)dataList.get(i).get("REQUEST_NOTE"), 1, 1, contentsFont));
-                table.addCell(createCell((String)dataList.get(i).get("ORDER_NOTE"), 1, 1, contentsFont));
-                table.addCell(createCell(""+dataList.get(i).get("ORDER_QTY"), 1, 1, contentsFont));
-                table.addCell(createCell((String)dataList.get(i).get("INNER_DUE_DT"), 1, 1, contentsFont));
-                table.addCell(createCell((String)dataList.get(i).get("CONTROL_NUM"), 1, 1, contentsFont));
-                table.addCell(createCell(""+dataList.get(i).get("PART_NUM"), 1, 1, contentsFont));
+            for (int i = 0; i < dataList.size(); i++) {
+                String partNum = "";
+                if (dataList.get(i).get("PART_NUM") != null && !"".equals(dataList.get(i).get("PART_NUM"))) {
+                    partNum = " #" + dataList.get(i).get("PART_NUM");
+                }
+
+                table.addCell(createCell("" + (dataList.get(i).get("SEQ")), 1, 1, contentsFont));
+                table.addCell(createCell((String) dataList.get(i).get("MATERIAL_KIND_NM"), 1, 1, contentsFont));
+                table.addCell(createCell((String) dataList.get(i).get("MATERIAL_DETAIL_NM"), 1, 1, contentsFont));
+                table.addCell(createCell((String) dataList.get(i).get("SIZE_TXT"), 1, 1, contentsFont));
+                table.addCell(createCell("" + dataList.get(i).get("ORDER_QTY"), 1, 1, contentsFont));
+                table.addCell(createCell((String) dataList.get(i).get("REQUEST_NOTE"), 2, 1, contentsFont));
+                table.addCell(createCell((String) dataList.get(i).get("ORDER_NOTE"), 1, 1, contentsFont));
+//                table.addCell(createCell((String) dataList.get(i).get("INNER_DUE_DT"), 1, 1, contentsFont));
+                table.addCell(createCell((String) dataList.get(i).get("CONTROL_NUM") + partNum, 1, 1, contentsFont));
+//                table.addCell(createCell("" + dataList.get(i).get("PART_NUM"), 1, 1, contentsFont));
             }
             document.add(table);
 
