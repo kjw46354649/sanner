@@ -113,7 +113,7 @@
                     <li>
                         <span>
                             <span class="ipu_wrap"><label class="label_100">Option</label></span>
-                            <span class="chk_box wd_100"><input name="EXCLUDE_ORDER_COMPLETED" id="EXCLUDE_ORDER_COMPLETED" type="checkbox"><label for="EXCLUDE_ORDER_COMPLETED"> 요청완료제외</label></span>
+                            <span class="chk_box wd_100"><input name="EXCLUDE_REQUEST_COMPLETED" id="EXCLUDE_REQUEST_COMPLETED" type="checkbox"><label for="EXCLUDE_REQUEST_COMPLETED"> 요청완료제외</label></span>
                             <span class="chk_box wd_100"><input name="IN_STOCK" id="IN_STOCK" type="checkbox"><label for="IN_STOCK"> 입고완료제외</label></span>
                             <span class="gubun"></span>
                             <span class="ipu_wrap">
