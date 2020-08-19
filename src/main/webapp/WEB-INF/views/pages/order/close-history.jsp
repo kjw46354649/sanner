@@ -134,6 +134,9 @@
             <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#CONTROL_CLOSE_CANCEL_POPUP">마감 취소</button>
             <button type="button" class="defaultBtn btn-100w" id="CONTROL_FINISH_CANCEL">종료 취소</button>
             <div class="rightSpan">
+                <button type="button" class="defaultBtn btn-100w" id="CLOSE_HISTORY_DRAWING_PRINT">도면 출력</button>
+                <button type="button" class="defaultBtn btn-100w" id="CLOSE_HISTORY_BARCODE_DRAWING_PRINT">바코드도면 출력</button>
+                <button type="button" class="defaultBtn btn-100w" id="BARCODE_PRINT">바코드 출력</button>
                 <button type="button" class="defaultBtn btn-100w" id="DRAWING_VIEW">도면 View</button>
                 <button type="button" class="defaultBtn btn-100w green" id="CONTROL_CLOSE_HISTORY_SAVE">저장</button>
             </div>
@@ -847,6 +850,92 @@
 
         $("#closeHistoryFrozen").on('change', function(e){
             fnFrozenHandler($closeHistoryGrid, $(this).val());
+        });
+        // 도면출력
+        $('#CLOSE_HISTORY_DRAWING_PRINT').on('click', function () {
+            let selectedRowCount = selectedRowIndex.length;
+            let imgGfileSeq = '';
+            for (let i = 0; i < selectedRowCount; i++) {
+                let rowData = $closeHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                if (!rowData.IMG_GFILE_SEQ) {
+                    fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
+                    return;
+                } else {
+                    imgGfileSeq += rowData.IMG_GFILE_SEQ + '^';
+                }
+            }
+
+            // let drawingPrintModalConfirm = function(callback){
+            let message = '<h4>' +
+                '           <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
+                '               <span>' + selectedRowCount + ' 건의 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
+                '       </h4>';
+            fnConfirm(null, message, function () {
+                printJS({printable: '/makeCadPrint?imgGfileSeq=' + encodeURI(imgGfileSeq), type: 'pdf', showModal: true});
+            });
+        });
+        // 바코드도면출력
+        $('#CLOSE_HISTORY_BARCODE_DRAWING_PRINT').on('click', function () {
+            if (noSelectedRowAlert()) return false;
+            let selectedRowCount = selectedRowIndex.length;
+            let selectControlPartCount = 0;
+            let selectControlPartInfo = '';
+            let selectControlList = '';
+            for (let i = 0; i < selectedRowCount; i++) {
+                let rowData = $closeHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                let curControlPartInfo = rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ;
+                if (!rowData.IMG_GFILE_SEQ) {
+                    fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
+                    return;
+                // } else if(rowData.WORK_TYPE != 'WTP020' && selectControlPartInfo != curControlPartInfo){
+                } else if(selectControlPartInfo !== curControlPartInfo){
+                    selectControlList += rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ + '^';
+                    selectControlPartCount++;
+                    selectControlPartInfo = curControlPartInfo;
+                }
+            }
+
+                let message = '<h4>' +
+                    '           <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
+                    '               <span>' + selectControlPartCount + ' 건의 바코드 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
+                    '       </h4>';
+
+            fnConfirm(null, message, function () {
+                printJS({printable:'/makeCadBarcodePrint?selectControlList=' + encodeURI(selectControlList), type:'pdf', showModal:true});
+            });
+        });
+        // 바코드 출력
+        $('#BARCODE_PRINT').on('click', function () {
+            if (noSelectedRowAlert()) return false;
+            let bodyHtml;
+            let selectedRowCount = selectedRowIndex.length;
+            let selectControlPartCount = 0;
+            let selectControlPartInfo = '';
+            let formData = [];
+            for (let i = 0; i < selectedRowCount; i++) {
+                let rowData = $closeHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                let curControlPartInfo = rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ;
+                if (!rowData.IMG_GFILE_SEQ) {
+                    fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
+                    return;
+                // } else if(rowData.WORK_TYPE != 'WTP020' && selectControlPartInfo != curControlPartInfo){
+                } else if(selectControlPartInfo != curControlPartInfo){
+                    selectControlPartCount++;
+                    selectControlPartInfo = curControlPartInfo;
+                    formData.push(rowData.CONTROL_BARCODE_NUM);
+                }
+            }
+            let message =
+                '<h4>\n' +
+                '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                '    <span>선택하신 ' + selectControlPartCount + '건을 처리합니다. \n진행하시겠습니까?</span>\n' +
+                '</h4>';
+
+            fnConfirm(null, message, function () {
+                fnBarcodePrint(function(data){
+                    fnAlert(null, data.message);
+                }, formData, '');
+            });
         });
         /* event */
 
