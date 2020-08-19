@@ -416,7 +416,7 @@
             },
             {title: '소재비고', width: 200, dataIndx: 'MATERIAL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {
-                title: '파트<br>단위<br>수량', dataIndx: 'PART_UNIT_QTY',
+                title: 'Part<br>Unit', dataIndx: 'PART_UNIT_QTY',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
             },
             {

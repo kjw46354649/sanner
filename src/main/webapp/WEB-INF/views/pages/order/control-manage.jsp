@@ -235,7 +235,13 @@
                     {title: '상태', dataIndx: 'CONTROL_STATUS', hidden: true},
                     {title: '상태', minWidth: 30, dataIndx: 'CONTROL_STATUS_NM'},
                     {title: '', minWidth: 20, dataType: 'integer', dataIndx: 'CONTROL_VER'},
-                    {title: '변경일', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'CONTROL_STATUS_DT'}
+                    {title: '변경일', dataIndx: 'CONTROL_STATUS_DT',
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+
+                            return cellData.substring(0, 5);
+                        }
+                    }
                 ]
             },
             {
@@ -331,26 +337,6 @@
                     let cellData = ui.cellData;
 
                     return cellData === 'Y' ? cellData : '';
-                }
-            },
-            {title: '', minWidth: 30, dataIndx: 'ETC_GFILE_SEQ', styleHead: {'background':'#a9d3f5'},
-                render: function (ui) {
-                    return '<span class="floppyDisk" name="attachment" style="cursor: pointer"></span>';
-                },
-                postRender: function (ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find('[name=attachment]').bind('click', function () {
-                        if (fnIsGridEditing($orderManagementGrid)) {
-                            return false;
-                        }
-
-                        let GfileKey = ui.rowData.ETC_GFILE_SEQ;
-                        $('#common_file_download_form').find('#GFILE_SEQ').val(GfileKey);
-                        $('#ATTACHMENT_BUTTON').data('rowIndx', ui.rowIndx);
-                        $('#ATTACHMENT_BUTTON').data('GfileKey', GfileKey);
-                        commonFileDownUploadPopupCall(GfileKey, 'ATTACHMENT_BUTTON');
-                    });
                 }
             },
             {title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON', styleHead: {'background':'#a9d3f5'},
@@ -1106,7 +1092,7 @@
                 }
             },
             {
-                title: '소재종류', width: 70, dataIndx: 'MATERIAL_DETAIL',
+                title: '소재종류', width: 80, dataIndx: 'MATERIAL_DETAIL',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -1159,7 +1145,7 @@
                 }
             },
             {
-                title: '표면<br>처리', dataIndx: 'SURFACE_TREAT',
+                title: '표면<br>처리', width: 80, dataIndx: 'SURFACE_TREAT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -1511,6 +1497,26 @@
             {title: 'Rev. 일시', width: 120, dataIndx: 'DRAWING_UP_DT'},
             {title: '바코드도면<br>출력일시', width: 120, dataType: 'date', /*format: 'mm/dd',*/ dataIndx: '', hidden: true},
             {title: '라벨<br>출력일시', width: 120, dataType: 'date', /*format: 'mm/dd',*/ dataIndx: '', hidden: true},
+            {title: '참<br>조', minWidth: 30, dataIndx: 'ETC_GFILE_SEQ', styleHead: {'background':'#a9d3f5'},
+                render: function (ui) {
+                    return '<span class="floppyDisk" name="attachment" style="cursor: pointer"></span>';
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('[name=attachment]').bind('click', function () {
+                        if (fnIsGridEditing($orderManagementGrid)) {
+                            return false;
+                        }
+
+                        let GfileKey = ui.rowData.ETC_GFILE_SEQ;
+                        $('#common_file_download_form').find('#GFILE_SEQ').val(GfileKey);
+                        $('#ATTACHMENT_BUTTON').data('rowIndx', ui.rowIndx);
+                        $('#ATTACHMENT_BUTTON').data('GfileKey', GfileKey);
+                        commonFileDownUploadPopupCall(GfileKey, 'ATTACHMENT_BUTTON');
+                    });
+                }
+            },
             {
                 title: '품질현황', align: 'center', colModel: [
                     {title: 'Seq.', minWidth: 30, width: 35, dataType: 'integer', dataIndx: 'INSPECT_NUM'},

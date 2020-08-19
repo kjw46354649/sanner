@@ -634,6 +634,9 @@
                     $("#inspect_grade_GRD010").trigger("click");
 
                 }
+
+                // 작성자 선택
+                $('#INSPECT_USER_ID').val('${authUserInfo.USER_ID}').prop('selected', true);
             }, parameters, '');
 
             //그리드 1
@@ -651,7 +654,7 @@
             } );
             inspectionManageGridIdPop02.pqGrid("refreshDataAndView");
 
-        })
+        });
         $("#inspection_manage_search_btn").on('click', function () {
             // console.log(fnFormToJsonArrayData('#inspection_manage_form'));
             inspectionManageGridId01.pqGrid("option", "dataModel.postData", function(ui){

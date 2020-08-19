@@ -137,25 +137,6 @@
     </div>
 </div>
 
-<div class="popup_container" id="SALES_STATUS_DETAIL_LIST_VIEW_POPUP" style="display: none;">
-    <div class="layerPopup">
-        <h3>상세 List 조회</h3>
-        <hr>
-        <button type="button" class="pop_close" name="SALES_STATUS_DETAIL_LIST_VIEW_POPUP_CLOSE">닫기</button>
-        <div>
-            <form class="form-inline" id="DETAIL_LIST_VIEW_FORM" role="form">
-                <input type="hidden" name="queryId" id="queryId" value="selectControlCloseLeftList">
-                <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
-                <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                <div id="DETAIL_LIST_VIEW_GRID"></div>
-            </form>
-        </div>
-        <div class="btnWrap">
-            <button type="button" class="defaultBtn grayPopGra" name="SALES_STATUS_DETAIL_LIST_VIEW_POPUP_CLOSE">닫기</button>
-        </div>
-    </div>
-</div>
-
 <script>
     var $closingHistoryGrid;
     var salesClosingHistoryRowIndex = [];
@@ -196,10 +177,10 @@
             {title: '년도', dataIndx: 'YEAR'},
             {title: '분기', dataIndx: 'QUARTER'},
             {title: '마감월', dataIndx: 'FINISH_MONTH'},
-            {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
-            {title: '차수', dataIndx: 'CLOSE_VER_TRAN'},
             {title: '발주사', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주사', dataIndx: 'ORDER_COMP_NM'},
+            {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
+            {title: '차수', dataIndx: 'CLOSE_VER_TRAN'},
             {title: '품수', dataIndx: 'ITEM_NUMBER', summary: {type: 'sum', edit: true},
                 render: function (ui) {
                     if(ui.rowData.pq_grandsummary) {
@@ -427,15 +408,7 @@
             $monthlySalesStatusGrid.pqGrid('refreshDataAndView');
         });
 
-        $('[name=SALES_STATUS_DETAIL_LIST_VIEW_POPUP_CLOSE]').on('click', function () {
-            $('#SALES_STATUS_DETAIL_LIST_VIEW_POPUP').modal('hide');
-        });
         /* init */
-        // $closingHistoryGrid.pqGrid('option', 'dataModel.postData', function () {
-        //     return (fnFormToJsonArrayData('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM'));
-        // });
-        // $closingHistoryGrid.pqGrid('refreshDataAndView');
-
         $closingHistoryGrid = $('#' + tab1GridId).pqGrid(tab1Obj);
         $monthlySalesStatusGrid = $('#' + tab2GridId).pqGrid(tab2Obj);
         /* init */

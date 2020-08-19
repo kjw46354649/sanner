@@ -198,8 +198,22 @@
     </div>
     <!-- 외주 전환 -->
 </div>
-
+<audio id='fail_play' src='/resource/sound/fail.wav' controls autoplay muted="muted"></audio>
+<audio id='success_play' src='/resource/sound/success.wav' controls autoplay muted="muted"></audio>
 <script>
+
+    function failPlay() {
+        var audio = document.getElementById('fail_play');
+        audio.muted = false;
+        audio.play();
+    }
+
+    function successPlay() {
+        var audio = document.getElementById('success_play');
+        audio.muted = false;
+        audio.play();
+    }
+
     $(function () {
         'use strict';
         let selectedRowIndex = [];
@@ -219,16 +233,11 @@
                 title: '주문상태', align: 'center', colModel: [
                     {title: '상태', dataIndx: 'CONTROL_STATUS', hidden: true},
                     {title: '상태', minWidth: 30, dataIndx: 'CONTROL_STATUS_NM'},
-                    {
-                        title: '변경일시', width: '12.5%', datatype: 'date', dataIndx: 'CONTROL_STATUS_DT',
-                        render: function (ui) {
-                            return ui.cellData.substring(2);
-                        }
-                    }
+                    {title: '변경일시', width: '10%', datatype: 'date', dataIndx: 'CONTROL_STATUS_DT'}
                 ]
             },
             {
-                title: '긴<br>급', minWidth: 30, dataIndx: 'EMERGENCY_YN',
+                title: '긴<br>급', minWidth: 30, width: 30, dataIndx: 'EMERGENCY_YN',
                 styleHead: {'font-weight': 'bold', 'color': 'red'},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -253,7 +262,7 @@
             },
             {title: '발주업체', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', width: '10%', dataIndx: 'ORDER_COMP_NM'},
-            {title: '', align: 'center', minWidth: 30,
+            {title: '', align: 'center', minWidth: 30, width: 30,
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
                         return '<span  class="doubleFilesIcon" name="detailView" style="cursor: pointer"></span>';
@@ -391,7 +400,6 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '주<br>요', dataIndx: 'MAIN_INSPECTION_NM'},
             {title: '작업<br>형태', width: '10%', dataIndx: 'WORK_TYPE_NM'},
             {title: '규격', width: '10%', dataIndx: 'SIZE_TXT'},
             {title: '소재<br>종류', width: '5%', dataIndx: 'MATERIAL_DETAIL_NM'},
@@ -495,7 +503,6 @@
             {title: '외주<br>납기', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
             {title: '발주<br>납기', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'ORDER_DUE_DT'},
             // {title: '가공<br>납기', width: '10%', dataIndx: 'INNER_DUE_DT'},
-            // {title: '주<br>요', width: '10%', dataType: 'select', dataIndx: 'MAIN_INSPECTION_NM'},
             {title: '작업<br>형태', minWidth: 40, dataIndx: 'WORK_TYPE_NM'},
             {title: '규격', width: '10%', dataIndx: 'SIZE_TXT'},
             {title: '소재<br>종류', width: '5%', dataIndx: 'MATERIAL_DETAIL_NM'},
@@ -591,12 +598,10 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '주<br>요', width: '10%', dataIndx: 'MAIN_INSPECTION_NM'},
             {title: '작업<br>형태', width: '10%', dataIndx: 'WORK_TYPE_NM'},
             {title: '규격', width: '10%', dataIndx: 'SIZE_TXT'},
             {title: '소재<br>종류', width: '5%', dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '표면<br>처리', width: '10%',  dataIndx: 'SURFACE_TREAT_NM'},
-            {title: '열<br>처리', dataIndx: 'MATERIAL_FINISH_HEAT_NM'},
             {title: '주문<br>수량', dataIndx: 'CONTROL_PART_QTY'},
             {
                 title: '가공완료<br>일시', width: '12.5%', dataType: 'date', dataIndx: 'INNER_WORK_FINISH_DT',
@@ -715,7 +720,7 @@
             changes.updateList.push(newRowData);
             let parameters;
 
-            QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateOutsideConversion']};
+            QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateOutsideConversion', 'orderMapper.updateOutsideConfirmDt']};
             changes.queryIdList = QUERY_ID_ARRAY;
             parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
 

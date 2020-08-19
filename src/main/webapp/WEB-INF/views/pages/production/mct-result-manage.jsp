@@ -375,9 +375,9 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="txt_span"><label class="label_50" for="">Option</label></span>
-                        <span class="chk_box"><input id="SEL_ASSEMBLY" name="SEL_ASSEMBLY" type="checkbox"><label for="SEL_ASSEMBLY">조립대상 포함</label></span>
-                        <span class="chk_box"><input id="SEL_OUTSIDE_YN" name="SEL_OUTSIDE_YN" type="checkbox"><label for="SEL_OUTSIDE_YN">외주대상 포함</label></span>
-                        <span class="chk_box"><input id="SEL_COMPLETED_YN" name="SEL_COMPLETED_YN" type="checkbox"><label for="SEL_COMPLETED_YN">가공완료 상태 제외</label></span>
+                        <span class="chk_box"><input id="SEL_ASSEMBLY" name="SEL_ASSEMBLY" type="checkbox"><label for="SEL_ASSEMBLY">조립포함</label></span>
+                        <span class="chk_box"><input id="SEL_OUTSIDE_YN" name="SEL_OUTSIDE_YN" type="checkbox"><label for="SEL_OUTSIDE_YN">외주포함</label></span>
+                        <span class="chk_box"><input id="SEL_COMPLETED_YN" name="SEL_COMPLETED_YN" type="checkbox" checked><label for="SEL_COMPLETED_YN">가공완료제외</label></span>
                         <button type="button" class="right_float defaultBtn radius blue" id="mctCamManageSearchBtn">검색</button>
                     </li>
                 </ul>
@@ -394,9 +394,9 @@
                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                     </c:forEach>
                 </select>
-                <label for="mctResultManageFrozen" class="label_50" style="font-size: 15px;">Fix</label>
+                <label for="mctResultManageFrozen" class="mg-left10 mg-right10" style="font-size: 15px;">Fix</label>
                 <select id="mctResultManageFrozen" name="mctResultManageFrozen"></select>
-                <span class="barCode" id="mctResultBarcodeSpan"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="mctResultBarcodeImg"></span>
+                <span class="barCode mg-left10 mg-right10" id="mctResultBarcodeSpan"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="mctResultBarcodeImg"></span>
                 <span class="barCodeTxt">&nbsp;<input type="text" class="wd_270_barcode" name="MCT_RESULT_BARCODE_NUM" id="MCT_RESULT_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요"></span>
                 <span class="rightSpan">
                     <button type="button" class="defaultBtn btn-120w" id="mctResultDetailViewBtn" >상세정보 조회</button>
@@ -505,10 +505,10 @@
             'data': {'queryId': 'machine.selectNCMachineList'}
         });
         machineResultManagecolModel = [
-            {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
+            {title: 'ROWNUM', dataIndx: 'ROWNUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-            {title: 'CAM<br>진행', dataType: 'string', dataIndx: 'CAM_STATUS',
+            {title: 'CAM<br>진행', dataIndx: 'CAM_STATUS',
                 render: function (ui) {
                     let rowData = ui.rowData;
                     let cls, text;
@@ -531,7 +531,7 @@
                     return { cls: cls, text: text };
                 }
             },
-            {title: 'CAM 작업 수행', minWidth: 100, width: 100, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'}, dataType: 'string', dataIndx: 'CAM_STATUS',
+            {title: 'CAM 작업 수행', minWidth: 100, width: 100, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'}, dataIndx: 'CAM_STATUS',
                 render: function (ui) {
                     let grid = this;
                     let $cell = grid.getCell(ui);
@@ -567,14 +567,45 @@
                     });
                 }
             },
-            {title: '납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', minWidth: 15, width: 60},
-            {title: '긴<br>급', dataType: 'string', dataIndx: 'EMERGENCY_YN', minWidth: 15, width: 20},
-            {title: '주<br>요', dataType: 'string', dataIndx: 'MAIN_INSPECTION', minWidth: 15, width: 20},
-            {title: '형<br>태', dataType: 'string', dataIndx: 'WORK_NM', minWidth: 15, width: 20},
+            {title: '가공확정<br>일시', dataIndx: 'SATAUS_DT', minWidth: 75, width: 75},
+            {title: '소재입고<br>일시', dataIndx: 'MATERIAL_RECEIPT_DT', minWidth: 75, width: 75},
+            {title: '긴<br>급', dataIndx: 'EMERGENCY_YN', minWidth: 15, width: 20},
+            {title: '주<br>요', dataIndx: 'MAIN_INSPECTION', minWidth: 15, width: 20},
+            {title: '형<br>태', dataIndx: 'WORK_NM', minWidth: 15, width: 20},
+            {title: '관리번호', dataIndx: 'CONTROL_NUM', minWidth: 50, width: 160},
+            {title: '파<br>트', dataIndx: 'PART_NUM', minWidth: 10, width: 30},
+            {title: '소재종류', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 40, width: 80},
+            {title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',
+                render: function (ui) {
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" id="imageView" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('#imageView').bind('click', function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
+            {title: '규격', dataIndx: 'STANDARD_SIZE', minWidth: 40, width: 80},
+            {title: '소재 Size', dataIndx: 'MATERAIL_ORDER_SIZE', minWidth: 40, width: 80},
+            {title: '가공납기', dataIndx: 'INNER_DUE_DT', minWidth: 15, width: 60},
+            {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', width: 50, editable: false,
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (!(cellData === '' || cellData === undefined)) {
+                        return ui.rowData.SYMMETRY ? cellData + '&nbsp;<span style="background-color: #C00000; color: white; font-size: 1.2rem; text-align: center; vertical-align: middle;">대</span>' : cellData;
+                    }
+                }
+            },
+            {title: '현재위치', dataIndx: 'POP_POSITION', minWidth: 20, width: 80},
+            {title: '진행상태', dataIndx: 'PART_STATUS', minWidth: 20, width: 80},
             {title: 'NC Plan', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 colModel: [
-                    {title: 'MCT_PLAN_SEQ', dataType: 'string', dataIndx: 'MCT_PLAN_SEQ', hidden: true},
-                    {title: 'NC No.', minWidth: 40, width: 60, datatype: 'string', dataIndx: 'EQUIP_SEQ', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                    {title: 'MCT_PLAN_SEQ', dataIndx: 'MCT_PLAN_SEQ', hidden: true},
+                    {title: 'NC No.', minWidth: 40, width: 60, dataIndx: 'EQUIP_SEQ', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: NC_MACHINE},
                         render: function (ui) {
                             let cellData = ui.cellData;
@@ -596,61 +627,30 @@
                     {title: 'E/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORKING_TIME', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
                 ]
             },
-            {title: 'MCT Actual', align: 'center',
-                colModel: [
-                    {title: '1', minWidth: 15, width: 50, datatype: 'string', dataIndx: 'WORK_EQUIP_NM_1'},
-                    {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORK_WORKING_TIME_1'},
-                    {title: 'STATUS_1', dataType: 'string', dataIndx: 'WORK_STATUS_1', hidden: true},
-                    {title: '2', minWidth: 15, width: 50, datatype: 'string', dataIndx: 'WORK_EQUIP_NM_2'},
-                    {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORK_WORKING_TIME_2'},
-                    {title: 'STATUS_2', dataType: 'string', dataIndx: 'WORK_STATUS_2', hidden: true},
-                    {title: '3', minWidth: 15, width: 50, datatype: 'string', dataIndx: 'WORK_EQUIP_NM_3'},
-                    {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORK_WORKING_TIME_3'},
-                    {title: 'STATUS_3', dataType: 'string', dataIndx: 'WORK_STATUS_3', hidden: true},
-                    {title: '4', minWidth: 15, width: 50, datatype: 'string', dataIndx: 'WORK_EQUIP_NM_4'},
-                    {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORK_WORKING_TIME_4'},
-                    {title: 'STATUS_4', dataType: 'string', dataIndx: 'WORK_STATUS_4', hidden: true},
-                ]
-            },
-            {title: '현재위치', dataType: 'string', dataIndx: 'POP_POSITION', minWidth: 20, width: 80},
-            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', minWidth: 20, width: 80},
-            {
-                title: '가공진행 현황', align: 'center', colModel: [
-                    {title: 'NC', datatype: 'integer', dataIndx: 'PROCESS_NC', minWidth: 20, width: 30},
-                    {title: '밀링', datatype: 'integer', dataIndx: 'PROCESS_MILLING', minWidth: 20, width: 30},
-                    {title: '선반', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_RACK', minWidth: 20, width: 30},
-                    {title: '연마', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_GRINDING', minWidth: 20, width: 30},
-                ]
-            },
-            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
-                render: function (ui) {
-                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
-                    return '';
-                },
-                postRender: function(ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find("#detailView").bind("click", function () {
-                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
-                    });
-                }
-            },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 50, width: 160},
-            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 10, width: 30},
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 40, width: 80},
-            {title: '수량', align: 'right', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 50},
-            {title: '규격', dataType: 'string', dataIndx: 'STANDARD_SIZE', minWidth: 40, width: 80},
-            {title: '소재 Size', dataType: 'string', dataIndx: 'MATERAIL_ORDER_SIZE', minWidth: 40, width: 80},
-            {title: '비고 기록사항', dataType: 'string', dataIndx: 'CONTROL_NOTE', minWidth: 40, width: 100},
-            // {title: '예상가공<br>시간(M)', dataType: 'integer', dataIndx: 'MCT_WORK_TIME', minWidth: 15, width: 50},
-            {title: '작업<br>구분', dataType: 'string', dataIndx: 'MCT_WORK_TYPE_NM', minWidth: 15, width: 50},
+            {title: '비고 기록사항', dataIndx: 'CONTROL_NOTE', minWidth: 40, width: 100},
             {
                 title: 'CAM 작업 실적', align: 'center', colModel: [
-                    {title: 'step', datatype: 'integer', dataIndx: 'CAM_STEP', minWidth: 30, width: 35},
-                    {title: '가공위치', datatype: 'string', dataIndx: 'WORK_DIRECTION', minWidth: 30, width: 50},
-                    {title: '작업내용', datatype: 'string', dataIndx: 'WORK_DESC', minWidth: 30, width: 80},
-                    {title: '작업자', datatype: 'string', dataIndx: 'WORK_USER_NM', minWidth: 30, width: 100},
-                    {title: '파일', datatype: 'string', dataIndx: '', minWidth: 30, width: 60,
+                    {title: 'step', datatype: 'integer', dataIndx: 'CAM_STEP', minWidth: 30, width: 35,
+                        render: function (ui) {
+                            if (ui.cellData) {
+                                return ('<button name="CAM_STEP"><u>' + ui.cellData + '</u></button>');
+                            }
+                        },
+                        postRender: function (ui) {
+                            let grid = this;
+                            let $cell = grid.getCell(ui);
+                            let rowData = ui.rowData;
+
+                            $cell.find('[name=CAM_STEP]').bind('click', function (e) {
+                                e.preventDefault();
+                                camWorkManagePop(rowData, true);
+                            });
+                        }
+                    },
+                    {title: '가공위치', dataIndx: 'WORK_DIRECTION', minWidth: 30, width: 50},
+                    // {title: '작업내용', dataIndx: 'WORK_DESC', minWidth: 30, width: 80},
+                    {title: '작업자', dataIndx: 'WORK_USER_NM', minWidth: 30, width: 100},
+                    /*{title: '파일', dataIndx: '', minWidth: 30, width: 60,
                         render: function (ui) {
                             let rowData = ui.rowData;
                             let iconFiles = '';
@@ -671,30 +671,76 @@
                                 fnSingleFileDownloadFormPageAction(rowData.NC_FILE_SEQ);
                             });
                         }
-                    },
-                    {title: '비고 및 공유사항', datatype: 'string', dataIndx: 'NOTE', minWidth: 100, width: 150},
-                    {title: '업데이트', datatype: 'string', dataIndx: 'CAM_FINISH_DT', minWidth: 75, width: 75}
+                    },*/
+                    // {title: '비고 및 공유사항', dataIndx: 'NOTE', minWidth: 100, width: 150},
+                    {title: '업데이트', dataIndx: 'CAM_FINISH_DT', minWidth: 75, width: 75}
                 ]
             },
-            {title: '이전<br>위치', dataType: 'string', dataIndx: 'POP_PREV_POSITION', minWidth: 70, width: 70},
+            {title: 'MCT Actual', align: 'center',
+                colModel: [
+                    {title: '1', minWidth: 15, width: 50, dataIndx: 'WORK_EQUIP_NM_1'},
+                    {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORK_WORKING_TIME_1'},
+                    {title: 'STATUS_1', dataIndx: 'WORK_STATUS_1', hidden: true},
+                    {title: '2', minWidth: 15, width: 50, dataIndx: 'WORK_EQUIP_NM_2'},
+                    {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORK_WORKING_TIME_2'},
+                    {title: 'STATUS_2', dataIndx: 'WORK_STATUS_2', hidden: true},
+                    {title: '3', minWidth: 15, width: 50, dataIndx: 'WORK_EQUIP_NM_3'},
+                    {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORK_WORKING_TIME_3'},
+                    {title: 'STATUS_3', dataIndx: 'WORK_STATUS_3', hidden: true},
+                    {title: '4', minWidth: 15, width: 50, dataIndx: 'WORK_EQUIP_NM_4'},
+                    {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORK_WORKING_TIME_4'},
+                    {title: 'STATUS_4', dataIndx: 'WORK_STATUS_4', hidden: true},
+                ]
+            },
             {
-                title: '과거 경험(NC 기준)', align: 'center', colModel: [
-                    {title: '1ea L/T', datatype: 'string', dataIndx: '1ea L/T', minWidth: 60, width: 60},
-                    {title: '날짜', datatype: 'string', dataIndx: '날짜', minWidth: 75, width: 75},
-                    {title: '수행자', datatype: 'string', dataIndx: '수행자', minWidth: 50, width: 50}
+                title: '가공진행 현황', align: 'center', colModel: [
+                    {title: 'NC', datatype: 'integer', dataIndx: 'PROCESS_NC', minWidth: 20, width: 30},
+                    {title: '밀링', datatype: 'integer', dataIndx: 'PROCESS_MILLING', minWidth: 20, width: 30},
+                    {title: '선반', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_RACK', minWidth: 20, width: 30},
+                    {title: '연마', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_GRINDING', minWidth: 20, width: 30},
                 ]
             },
-            {title: '가공확정<br>일시', dataType: 'string', dataIndx: 'SATAUS_DT', minWidth: 75, width: 75},
-            {title: '소재입고<br>일시', dataType: 'string', dataIndx: 'MATERIAL_RECEIPT_DT', minWidth: 75, width: 75},
+            {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false,
+                render: function (ui) {
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                    });
+                }
+            },
+            // {title: '예상가공<br>시간(M)', dataType: 'integer', dataIndx: 'MCT_WORK_TIME', minWidth: 15, width: 50},
+            {title: '작업<br>구분', dataIndx: 'MCT_WORK_TYPE_NM', minWidth: 15, width: 50},
+            {title: '이전<br>위치', dataIndx: 'POP_PREV_POSITION', minWidth: 70, width: 70},
+            {title: '1ea L/T', dataIndx: '1ea L/T', minWidth: 60, width: 60},
+            /*{
+                title: '과거 경험(NC 기준)', align: 'center', colModel: [
+                    {title: '1ea L/T', dataIndx: '1ea L/T', minWidth: 60, width: 60},
+                    {title: '날짜', dataIndx: '날짜', minWidth: 75, width: 75},
+                    {title: '수행자', dataIndx: '수행자', minWidth: 50, width: 50}
+                ]
+            },*/
             {
                 title: '품질현황', align: 'center', colModel: [
                     {title: 'Seq.', datatype: 'integer', dataIndx: 'INSPECT_STEP', minWidth: 30, width: 35},
-                    {title: '판정', datatype: 'string', dataIndx: 'INSPECT_GRADE', minWidth: 30, width: 35},
-                    {title: '불량코드', datatype: 'string', dataIndx: 'INSPECT_RESULT', minWidth: 30, width: 70},
-                    {title: '불량수량', datatype: 'string', dataIndx: 'ERROR_QTY', minWidth: 20, width: 55},
-                    {title: '불량원인', datatype: 'string', dataIndx: 'ERROR_REASON', minWidth: 30, width: 70},
-                    {title: '조치방안', datatype: 'string', dataIndx: 'ERROR_NOTE', minWidth: 30, width: 70},
-                    {title: '작성일자', datatype: 'string', dataIndx: 'INSPECT_DT', minWidth: 75, width: 75}
+                    {title: '판정', dataIndx: 'INSPECT_GRADE', minWidth: 30, width: 35},
+                    {title: '불량코드', dataIndx: 'INSPECT_RESULT', minWidth: 30, width: 70},
+                    {title: '불량수량', dataIndx: 'ERROR_QTY', minWidth: 20, width: 55,
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+
+                            if (rowData.INSPECT_GRADE === 'A') {
+                                return '';
+                            }
+                        }
+                    },
+                    {title: '불량원인', dataIndx: 'ERROR_REASON', minWidth: 30, width: 70},
+                    {title: '조치방안', dataIndx: 'ERROR_NOTE', minWidth: 30, width: 70},
+                    {title: '작성일자', dataIndx: 'INSPECT_DT', minWidth: 75, width: 75}
                 ]
             }
         ];

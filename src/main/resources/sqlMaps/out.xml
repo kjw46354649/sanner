@@ -16,7 +16,7 @@
             END AS OUTSIDE_REQUEST_DT,
             H.INSPECT_SEQ, <!-- SEQ -->
             H.INSPECT_GRADE, <!-- 등급 -->
-            SF_GET_CODE_NM('1040', H.INSPECT_GRADE, 'KR') AS INSPECT_GRADE_NM, <!-- 등급 -->
+            SF_GET_CODE_NM('1040', H.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM, <!-- 등급 -->
             H.INSPECT_TYPE, <!-- 불량/반품 -->
             CASE H.INSPECT_TYPE
                 WHEN '1' THEN '불량'
@@ -24,12 +24,12 @@
             END AS INSPECT_TYPE_NM, <!-- 불량/반품 -->
             H.INSPECT_RESULT, <!-- 불량코드 -->
             CASE H.INSPECT_TYPE
-                WHEN '1' THEN IF(H.INSPECT_GRADE = 'GRD040', SF_GET_CODE_NM('1020', H.INSPECT_RESULT, 'KR'), NULL)
-                WHEN '2' THEN SF_GET_CODE_NM('1021', H.INSPECT_RESULT, 'KR')
+                WHEN '1' THEN IF(H.INSPECT_GRADE = 'GRD040', SF_GET_CODE_NM('1020', H.INSPECT_RESULT, #{LOGIN_LOCALE}), NULL)
+                WHEN '2' THEN SF_GET_CODE_NM('1021', H.INSPECT_RESULT, #{LOGIN_LOCALE})
             END AS INSPECT_RESULT_NM,  <!-- 불량코드 -->
             H.INSPECT_DESC, <!-- 비고 -->
             H.ERROR_ACTION, <!-- 조치 -->
-            SF_GET_CODE_NM('1025', H.ERROR_ACTION, 'KR') AS ERROR_ACTION_NM, <!-- 조치 -->
+            SF_GET_CODE_NM('1025', H.ERROR_ACTION, #{LOGIN_LOCALE}) AS ERROR_ACTION_NM, <!-- 조치 -->
             H.ERROR_NOTE, <!-- 조치방안 -->
             SF_GET_DATE_F(IF(TIMESTAMPDIFF(SECOND, H.INSERT_DT, H.UPDATE_DT) <![CDATA[ < ]]> 0, H.INSERT_DT, H.UPDATE_DT), 'YY', 'M') AS INSPECT_INSERT_UPDATE_DT <!-- 측정 일시 -->
         FROM TBL_CONTROL A
@@ -868,8 +868,8 @@
             DEL_YN = 'Y',
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}
-        WHERE
-            OUTSIDE_REQUEST_SEQ = #{OUTSIDE_REQUEST_SEQ}
+        WHERE 1 = 1
+            AND OUTSIDE_REQUEST_SEQ = #{OUTSIDE_REQUEST_SEQ}
             AND CONTROL_SEQ = #{CONTROL_SEQ}
             AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </update>

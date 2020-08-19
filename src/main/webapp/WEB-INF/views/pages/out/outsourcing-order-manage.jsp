@@ -614,7 +614,7 @@
                     {title: '측정일시', dataIndx: 'INSPECT_INSERT_UPDATE_DT'}
                 ]
             },
-            {title: '원주문<br>확정 일시', width: 100, dataIndx: 'CONTROL_STATUS_DT'},
+            {title: '외주<br>확정 일시', width: 100, dataIndx: 'OUTSIDE_CONFIRM_DT'},
             {title: '외주가공<br>요청일시', width: 100, dataIndx: 'OUTSIDE_REQUEST_DT'},
             {
                 title: 'DXF', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35,

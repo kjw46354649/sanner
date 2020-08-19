@@ -322,7 +322,7 @@
             {title: '표면<br>처리', dataIndx: 'SURFACE_TREAT_NM'},
             {title: '열<br>처리', dataIndx: 'MATERIAL_FINISH_HEAT'},
             {title: '소재비고', dataIndx: 'MATERIAL_NOTE'},
-            {title: '파트<br>단위<br>수량', align: 'right', dataType: 'integer', dataIndx: 'PART_UNIT_QTY'},
+            {title: 'Part<br>Unit', dataType: 'integer', dataIndx: 'PART_UNIT_QTY'},
             // {title: '주문<br>수량', dataIndx: 'ITEM_QTY'},
             {
                 title: '대칭', align: 'center', colModel: [

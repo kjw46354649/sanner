@@ -226,8 +226,8 @@
             {dataIndx: 'IMG_GFILE_SEQ', hidden: true},
             {title: '긴', dataIndx: 'EMERGENCY_YN_NM', minWidth: 30, styleHead: {'color': 'red'}},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: '10%'},
-            {title: '납기', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'ORDER_DUE_DT'},
-            {title: '출고', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'DELIVERY_DT'},
+            {title: '납기', minWidth: 40, dataIndx: 'ORDER_DUE_DT'},
+            {title: '출고', minWidth: 40, dataIndx: 'DELIVERY_DT'},
             {title: '', align: 'center', minWidth: 30,
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)

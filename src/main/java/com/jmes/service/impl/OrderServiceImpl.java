@@ -102,6 +102,8 @@ public class OrderServiceImpl implements OrderService {
             this.innodaleDao.update(hashMap);
             hashMap.put("queryId", "orderMapper.createControlProgress");
             this.innodaleDao.create(hashMap);
+            hashMap.put("queryId", "orderMapper.updateOutsideConfirmDt");
+            this.innodaleDao.update(hashMap);
         }
     }
 

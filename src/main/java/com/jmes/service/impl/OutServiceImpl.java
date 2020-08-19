@@ -31,10 +31,11 @@ public class OutServiceImpl implements OutService {
             hashMap.put("PART_STATUS", null);
             hashMap.put("OUTSIDE_YN", "N");
             hashMap.put("OUTSIDE_STATUS", null);
-//            this.orderDao.updateControlMaster(hashMap);
             hashMap.put("queryId", "orderMapper.updateControlPart");
             this.innodaleDao.update(hashMap);
             hashMap.put("queryId", "outMapper.updateOutsideRequestDetailDelete");
+            this.innodaleDao.update(hashMap);
+            hashMap.put("queryId", "orderMapper.updateOutsideConfirmDt");
             this.innodaleDao.update(hashMap);
         }
     }
