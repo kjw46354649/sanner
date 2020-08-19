@@ -119,7 +119,7 @@
 
     <select id="selectTransactionStatementInfoExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM, <!-- 발주사 -->
+            SF_GET_COMP_FULL_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM, <!-- 발주사 Full Name -->
             B.COMP_NUM, <!-- 사업자번호(사업자등록번호) -->
             B.COMP_NM, <!-- 상호 -->
             B.CEO_NM, <!-- 대표이사 -->
@@ -129,6 +129,7 @@
             B.COMP_FAX,
             B.BUSINESS_TYPE, <!-- 업태 -->
             B.BUSINESS_ITEM, <!-- 종목 -->
+            CONCAT(B.BUSINESS_TYPE, ' / ', B.BUSINESS_ITEM) AS BUSINESS_TYPE_BUSINESS_ITEM,
             (SELECT SUM(B.UNIT_FINAL_AMT * C.ORDER_QTY)
             FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
@@ -158,9 +159,9 @@
             A.CONTROL_NUM, <!-- 관리번호 -->
             C.ORDER_NUM, <!-- 발주번호 -->
             B.DRAWING_NUM, <!-- 도면번호 -->
+            B.ITEM_NM, <!-- 품명 -->
+            CONCAT(B.DRAWING_NUM, '\n', B.ITEM_NM) AS DRAWING_NUM_ITEM_NM,
             B.SIZE_TXT, <!-- 규격 -->
-            <!-- SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR') AS CONTROL_STATUS_NM, -->
-            IFNULL(SF_GET_CODE_NM(1033, B.WORK_TYPE, 'KR'), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 이름 -->
             SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY,  <!-- 수량 -->
             B.UNIT_FINAL_AMT, <!-- 공급단가 -->
             B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT, <!-- 금액 계 -->
