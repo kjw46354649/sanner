@@ -231,7 +231,7 @@
             {title: 'No.', minWidth: 30, width: 30, align: 'right', dataType: 'integer', dataIndx: 'ROW_NUM'},
             {title: '사업자', minWidth: 30, width: 120, dataIndx: 'COMP_CD_NM'},
             {title: '발주처', minWidth: 30, width: 200, dataIndx: 'ORDER_COMP_NM'},
-            {title: '2020년 <BR>매출현황', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'SALE_AMT',
+            {title: '2020년<br>매출현황', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'SALE_AMT',
                 summary: {
                     type: "sum",
                     edit: true
@@ -259,13 +259,13 @@
                     },
                 ]
             },
-            {title: '전년도 총 <BR>미수금액', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'NOT_DEPOSIT_AMT',
+            {title: '전년도 총<br>미수금액', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'NOT_DEPOSIT_AMT',
                 summary: {
                     type: "sum",
                     edit: true
                 },
             },
-            {title: '총미수금 현황<BR>2020년', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'NOT_DEPOSIT_TOTAL_AMT',
+            {title: '총미수금 현황<br>2020년', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'NOT_DEPOSIT_TOTAL_AMT',
                 summary: {
                     type: "sum",
                     edit: true

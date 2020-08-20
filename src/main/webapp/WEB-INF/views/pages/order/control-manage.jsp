@@ -339,6 +339,15 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
+            {
+                title: '총장', dataType: 'integer', dataIndx: 'TOTAL_SHEET',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
+                }
+            },
             {title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON', styleHead: {'background':'#a9d3f5'},
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
@@ -740,7 +749,16 @@
             },
             {title: '진행상태', dataIndx: 'PART_STATUS', hidden: true},
             {title: '진행상태', dataIndx: 'PART_STATUS_NM'},
-            {title: '가공<br>완료', width: 70, dataType: 'date', format: 'm/dd', dataIndx: 'INNER_WORK_FINISH_DT'},
+            {
+                title: '가공<br>완료', width: 70, dataIndx: 'INNER_WORK_FINISH_DT',
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData) {
+                        return cellData.substring(0, 5);
+                    }
+                }
+            },
             {
                 title: '규격', width: 110, dataIndx: 'SIZE_TXT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
@@ -2747,6 +2765,7 @@
 
         $('#controlManageFilterKeyword').on('keyup', function(){
             fnFilterHandler($orderManagementGrid, 'controlManageFilterKeyword', 'controlManageFilterCondition', 'controlManageFilterColumn');
+            autoMerge($orderManagementGrid.pqGrid('getInstance').grid, true);
         });
 
         $('#controlManageFrozen').on('change', function(){

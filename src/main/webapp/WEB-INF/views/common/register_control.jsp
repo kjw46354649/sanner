@@ -213,6 +213,7 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
+            {title: '총장', dataType: 'integer', dataIndx: 'TOTAL_SHEET', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
             {
                 title: '관리번호', width: 200, dataIndx: 'CONTROL_NUM',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}

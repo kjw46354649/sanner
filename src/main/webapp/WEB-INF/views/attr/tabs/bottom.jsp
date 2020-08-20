@@ -4,8 +4,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<audio id='fail_play' src='/resource/sound/fail.wav' controls autoplay muted="muted"></audio>
-<audio id='success_play' src='/resource/sound/success.wav' controls autoplay muted="muted"></audio>
+<audio id='fail_play' src='/resource/sound/fail.wav'></audio>
+<audio id='success_play' src='/resource/sound/success.wav'></audio>
 <form id="common_formdata_multi_upload_form" method="post">
     <input type="file" id="click_singfile_chose_btn" name="click_singfile_chose_btn" style="display: none;">
     <input type="file" id="click_multifile_chose_btn" name="click_multifile_chose_btn" multiple  style="display: none;">
@@ -492,14 +492,18 @@
 
 
     function failPlay() {
-        var audio = document.getElementById('fail_play');
-        audio.muted = false;
+        let audio = document.getElementById('fail_play');
+        if (audio.currentTime > 0) {
+            audio.currentTime = 0;
+        }
         audio.play();
     }
 
     function successPlay() {
-        var audio = document.getElementById('success_play');
-        audio.muted = false;
+        let audio = document.getElementById('success_play');
+        if (audio.currentTime > 0) {
+            audio.currentTime = 0;
+        }
         audio.play();
     }
 

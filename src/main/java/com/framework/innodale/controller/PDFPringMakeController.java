@@ -136,7 +136,7 @@ public class PDFPringMakeController {
             table.init();
 
             table.setWidthPercentage(100);
-            table.setWidths(new int[] {20, 2, 15, 15, 4, 11, 4, 15, 7, 4, 4, 6});
+            table.setWidths(new int[] {20, 2, 16, 16, 5, 13, 4, 10, 7, 4, 4, 6});
 
             BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String)controlInfo.get("BARCODE_NUM"), 110, 35);
             int width = bitMatrix.getWidth();
@@ -161,8 +161,8 @@ public class PDFPringMakeController {
             table.addCell(createCell((String)controlInfo.get("CONTROL_VER"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("ORDER_COMP_NM"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("SIZE_TXT"), 1, 1, headFont));
-            table.addCell(createCell("Part", 1, 1, titleFont));
-            table.addCell(createCell((String)controlInfo.get("MATERIAL_TYPE_NM"), 1, 1, headFont));
+//            table.addCell(createCell("Part", 1, 1, titleFont));
+            table.addCell(createCell((String)controlInfo.get("SURFACE_TREAT_NM"), 2, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("WORK_TYPE_NM"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("MATERIAL_FINISH_HEAT"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("CONTROL_ORDER_QTY"), 1, 2, qtyFont));
@@ -171,9 +171,9 @@ public class PDFPringMakeController {
             table.addCell(createCell("가공납기", 1, 1, titleFont));
 
             table.addCell(createCell((String)controlInfo.get("DRAWING_VER"), 1, 1, headFont));
-            table.addCell(createCell((String)controlInfo.get("CONTROL_NUM"), 2, 1, boldFont));
-            table.addCell(createCell((String)controlInfo.get("PART_NUM"), 1, 1, headFont));
-            table.addCell(createCell((String)controlInfo.get("SURFACE_TREAT_NM"), 1, 1, headFont));
+            table.addCell(createCell((String)controlInfo.get("CONTROL_NUM_PART"), 2, 1, boldFont));
+            table.addCell(createCell((String)controlInfo.get("TOTAL_SHEET"), 1, 1, headFont));
+            table.addCell(createCell((String)controlInfo.get("MATERIAL_TYPE_NM"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("EMERGENCY_BARCODE_NM"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("MAIN_INSPECTION_NM"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("ORIGINAL_SIDE_QTY"), 1, 1, headFont));

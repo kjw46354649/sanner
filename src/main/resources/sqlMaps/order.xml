@@ -126,7 +126,7 @@
         SF_GET_DATE_F(B.OUTSIDE_STATUS_DT, '', 'M') AS OUTSIDE_STATUS_DT, <!-- 외주 상태변경일시 -->
         SF_GET_DATE_F(B.OUTSIDE_IN_DT, '', '') AS OUTSIDE_IN_DT, <!-- 외주 입고일시 -->
         SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY,
-        SF_GET_DATE_F(B.INNER_WORK_FINISH_DT, 'YYYY', '') AS INNER_WORK_FINISH_DT
+        SF_GET_DATE_F(B.INNER_WORK_FINISH_DT, '', 'M') AS INNER_WORK_FINISH_DT
     </sql>
 
     <sql id="controlPartOrder">
@@ -1385,7 +1385,7 @@
             <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
                 AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
             </if>
-        ORDER BY A.CONTROL_SEQ, B.PART_NUM
+        ORDER BY A.CONTROL_SEQ, B.PART_NUM, B.CONTROL_STATUS_DT DESC
     </select>
 
     <select id="selectProcessCompleteList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -2007,7 +2007,7 @@
                 </if>
             GROUP BY A.COMP_CD, A.ORDER_COMP_CD, DATE_FORMAT(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m'), '%Y')
             UNION ALL
-            -- 선택 년도 금액
+            <!-- 선택 년도 금액 -->
             SELECT
                 A.COMP_CD, A.ORDER_COMP_CD,
                 DATE_FORMAT(STR_TO_DATE(A.DEPOSIT_DT, '%Y%m%d'), '%Y') as CLOSE_YEAR,
@@ -2025,7 +2025,7 @@
                 </if>
             GROUP BY A.COMP_CD, A.ORDER_COMP_CD, DATE_FORMAT(STR_TO_DATE(A.DEPOSIT_DT, '%Y%m%d'), '%Y')
             UNION ALL
-            -- 전년동 미수 금액
+            <!-- 전년동 미수 금액 -->
             SELECT
                 A.COMP_CD, A.ORDER_COMP_CD,
                 #{MONEY_MANAGE_STATUS_YEAR} as CLOSE_YEAR,
@@ -2170,15 +2170,15 @@
                   A.INVOICE_NUM,
                   A.ORDER_STAFF_SEQ,
                   SF_GET_STAFF_NM(A.ORDER_STAFF_SEQ) AS ORDER_STAFF_NM,
-                  A.COMP_CD, -- 공급사
+                  A.COMP_CD, <!-- 공급사 -->
                   SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM,
-                  B.PACKING_CNT,  -- 품수
+                  B.PACKING_CNT, <!-- 품수 -->
                   C.UNIT_FINAL_AMT,
                   D.ORDER_QTY,
                   C.UNIT_FINAL_AMT * D.ORDER_QTY AS TOTAL_AMT,
                   A.INVOICE_TITLE,
-                  A.INVOICE_DT, -- UPDATED DT
-                  '' -- 출력일시
+                  A.INVOICE_DT, <!-- UPDATED DT -->
+                  '' <!-- 출력일시 -->
               FROM TBL_INVOICE A
                   INNER JOIN TBL_INVOICE_DETAIL B ON A.INVOICE_NUM = B.INVOICE_NUM
                   INNER JOIN TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ
@@ -2485,8 +2485,10 @@
             IFNULL(B.DRAWING_VER, SPACE(0)) AS DRAWING_VER, <!-- 도면번호 버전 -->
             IFNULL(SF_GET_COMP_NM(A.ORDER_COMP_CD), SPACE(0)) AS ORDER_COMP_NM, <!-- 발주업체 -->
             IFNULL(A.CONTROL_NUM, SPACE(0)) AS CONTROL_NUM, <!-- 관리번호 -->
+            CASE WHEN B.PART_NUM IS NULL THEN IFNULL(A.CONTROL_NUM, SPACE(0)) ELSE CONCAT(IFNULL(A.CONTROL_NUM, SPACE(0)), '#', B.PART_NUM) END AS CONTROL_NUM_PART, <!-- 관리번호 -->
             IFNULL(B.SIZE_TXT, SPACE(0)) AS SIZE_TXT, <!-- 규격 문자열 -->
             IFNULL(B.PART_NUM, SPACE(0)) AS PART_NUM, <!-- Part -->
+            CASE WHEN A.TOTAL_SHEET IS NULL THEN SPACE(0) ELSE CONCAT('/', A.TOTAL_SHEET) END AS TOTAL_SHEET, <!-- 총장 -->
             SF_GET_CODE_NM('1039', B.SURFACE_TREAT, #{LOGIN_LOCALE}) AS SURFACE_TREAT_NM, <!-- 표면처리 -->
             IFNULL(SF_GET_CODE_NM(1035, B.MATERIAL_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_TYPE_NM, <!-- 재질 -->
             IFNULL(SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류 -->

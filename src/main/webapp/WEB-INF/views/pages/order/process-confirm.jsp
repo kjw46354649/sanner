@@ -198,22 +198,7 @@
     </div>
     <!-- 외주 전환 -->
 </div>
-<audio id='fail_play' src='/resource/sound/fail.wav' controls autoplay muted="muted"></audio>
-<audio id='success_play' src='/resource/sound/success.wav' controls autoplay muted="muted"></audio>
 <script>
-
-    function failPlay() {
-        var audio = document.getElementById('fail_play');
-        audio.muted = false;
-        audio.play();
-    }
-
-    function successPlay() {
-        var audio = document.getElementById('success_play');
-        audio.muted = false;
-        audio.play();
-    }
-
     $(function () {
         'use strict';
         let selectedRowIndex = [];
@@ -237,7 +222,7 @@
                 ]
             },
             {
-                title: '긴<br>급', minWidth: 30, width: 30, dataIndx: 'EMERGENCY_YN',
+                title: '긴<br>급', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'EMERGENCY_YN',
                 styleHead: {'font-weight': 'bold', 'color': 'red'},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -262,7 +247,7 @@
             },
             {title: '발주업체', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', width: '10%', dataIndx: 'ORDER_COMP_NM'},
-            {title: '', align: 'center', minWidth: 30, width: 30,
+            {title: '', minWidth: 30, width: 30, maxWidth: 30,
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
                         return '<span  class="doubleFilesIcon" name="detailView" style="cursor: pointer"></span>';
@@ -277,7 +262,20 @@
                 }
             },
             {title: '관리번호', width: '23%', dataIndx: 'CONTROL_NUM'},
-            {title: '파<br>트', minWidth: 30, dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: '파<br>트', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: '', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'IMG_GFILE_SEQ', 
+                render: function (ui) {
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" name="imageView" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('[name=imageView]').bind('click', function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
             {title: '수행<br>공장', minWidth: 40, dataIndx: 'WORK_FACTORY_NM'},
             {
                 title: '자재<br>사급', minWidth: 35, dataIndx: 'MATERIAL_SUPPLY_YN',
@@ -287,15 +285,12 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '주문<br>수량', dataIndx: 'CONTROL_PART_QTY'},
+            {title: '주문<br>수량', maxWidth: 30, dataIndx: 'CONTROL_PART_QTY'},
             {title: '발주<br>납기', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'ORDER_DUE_DT'},
             {title: '가공<br>납기', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'INNER_DUE_DT'},
             {title: '작업<br>형태', minWidth: 40, dataIndx: 'WORK_TYPE_NM'},
-            {title: '규격', width: '10%', dataIndx: 'SIZE_TXT'},
-            {title: '소재<br>종류', width: '5%', dataIndx: 'MATERIAL_DETAIL_NM'},
-            // {title: '표면<br>처리', /*width: '10%',*/  dataIndx: 'SURFACE_TREAT_NM'},
-            // {title: '열<br>처리', dataIndx: 'MATERIAL_FINISH_HEAT_NM'},
-            // {title: '비고', /*width: '20%',*/ dataIndx: 'CONTROL_NOTE'}
+            {title: '규격', width: '7.5%', dataIndx: 'SIZE_TXT'},
+            {title: '소재<br>종류', width: '5%', dataIndx: 'MATERIAL_DETAIL_NM'}
         ];
         let topLeftObj = {
             height: '90%',
@@ -366,7 +361,7 @@
             {title: '발주업체', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', width: '10%', dataIndx: 'ORDER_COMP_NM'},
             {
-                title: '', align: 'center', minWidth: 30,
+                title: '', minWidth: 30, width: 30, maxWidth: 30,
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
                         return '<span  class="doubleFilesIcon" name="detailView" style="cursor: pointer"></span>';
@@ -381,7 +376,20 @@
                 }
             },
             {title: '관리번호', width: '23%', dataIndx: 'CONTROL_NUM'},
-            {title: '파<br>트', minWidth: 30, dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: '파<br>트', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: '', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'IMG_GFILE_SEQ', 
+                render: function (ui) {
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" name="imageView" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('[name=imageView]').bind('click', function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
             {title: '수행<br>공장', minWidth: 40, dataIndx: 'WORK_FACTORY_NM'},
             {
                 title: '자재<br>사급', minWidth: 35, dataIndx: 'MATERIAL_SUPPLY_YN',
@@ -393,7 +401,8 @@
             },
             {title: '요망<br>납기', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'ORDER_DUE_DT'},
             {title: '가공<br>납기', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'INNER_DUE_DT'},
-            {title: '긴<br>급', minWidth: 30, dataIndx: 'EMERGENCY_YN',
+            {
+                title: '긴<br>급', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'EMERGENCY_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -404,14 +413,9 @@
             {title: '규격', width: '10%', dataIndx: 'SIZE_TXT'},
             {title: '소재<br>종류', width: '5%', dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '표면<br>처리', width: '10%',  dataIndx: 'SURFACE_TREAT_NM'},
-            {title: '열<br>처리', dataIndx: 'MATERIAL_FINISH_HEAT_NM'},
-            {title: '주문<br>수량', dataIndx: 'CONTROL_PART_QTY'},
-            {
-                title: '가공확정일시', width: '12.5%', dataType: 'date', dataIndx: 'CONTROL_STATUS_DT',
-                render: function (ui) {
-                    return ui.cellData.substring(2);
-                }
-            }
+            {title: '열<br>처리', minWidth: 40, width: 40, maxWidth: 40, dataIndx: 'MATERIAL_FINISH_HEAT_NM'},
+            {title: '주문<br>수량', maxWidth: 30, dataIndx: 'CONTROL_PART_QTY'},
+            {title: '가공확정일시', width: '10%', dataType: 'date', dataIndx: 'CONTROL_STATUS_DT'}
         ];
         const topRightObj = {
             height: '90%',
@@ -462,7 +466,9 @@
             {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true},
             {title: '발주업체', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', width: '10%', dataIndx: 'ORDER_COMP_NM'},
-            {title: '긴<br>급', minWidth: 30, dataIndx: 'EMERGENCY_YN',
+            {title: '외주확정<br>일시', width: '10%', dataIndx: 'OUTSIDE_CONFIRM_DT'},
+            {
+                title: '긴<br>급', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'EMERGENCY_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -470,7 +476,7 @@
                 }
             },
             {
-                title: '', align: 'center', minWidth: 30,
+                title: '', align: 'center', minWidth: 30, width: 30, maxWidth: 30,
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
                         return '<span  class="doubleFilesIcon" name="detailView" style="cursor: pointer"></span>';
@@ -485,7 +491,20 @@
                 }
             },
             {title: '관리번호', width: '23%', dataIndx: 'CONTROL_NUM'},
-            {title: '파<br>트', minWidth: 30, dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: '파<br>트', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: '', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'IMG_GFILE_SEQ', 
+                render: function (ui) {
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" name="imageView" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('[name=imageView]').bind('click', function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
             {
                 title: '외주발송', align: 'center', colModel: [
                     {title: '업체명', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
@@ -507,8 +526,8 @@
             {title: '규격', width: '10%', dataIndx: 'SIZE_TXT'},
             {title: '소재<br>종류', width: '5%', dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '표면<br>처리', width: '10%',  dataIndx: 'SURFACE_TREAT_NM'},
-            {title: '열<br>처리', dataIndx: 'MATERIAL_FINISH_HEAT_NM'},
-            {title: '주문<br>수량', dataIndx: 'CONTROL_PART_QTY'}
+			{title: '열<br>처리', minWidth: 40, width: 40, maxWidth: 40, dataIndx: 'MATERIAL_FINISH_HEAT_NM'},
+            {title: '주문<br>수량', maxWidth: 30, dataIndx: 'CONTROL_PART_QTY'}
         ];
         const botLeftObj = {
             height: '85%',
@@ -560,11 +579,11 @@
             {title: '진행상태', dataIndx: 'PART_STATUS', hidden: true},
             {title: '진행상태', width:'10%', dataIndx: 'PART_STATUS_NM'},
             {title: '현재위치', width:'10%', dataIndx: 'LAST_POP_POSITION'},
-            {title: '검사<br>실적', dataIndx: 'INSPECT_GRADE_NM'},
+            {title: '검사<br>실적', maxWidth: 30, dataIndx: 'INSPECT_GRADE_NM'},
             {title: '발주업체', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', width: '10%', dataIndx: 'ORDER_COMP_NM'},
             {
-                title: '', align: 'center', minWidth: 30,
+                title: '', align: 'center', minWidth: 30, width: 30, maxWidth: 30,
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
                         return '<span  class="doubleFilesIcon" name="detailView" style="cursor: pointer"></span>';
@@ -579,7 +598,20 @@
                 }
             },
             {title: '관리번호', width: '23%', dataIndx: 'CONTROL_NUM'},
-            {title: '파<br>트', minWidth: 30, dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: '파<br>트', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: '', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'IMG_GFILE_SEQ', 
+                render: function (ui) {
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" name="imageView" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('[name=imageView]').bind('click', function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
             {title: '수행<br>공장', minWidth: 40, dataIndx: 'WORK_FACTORY_NM'},
             {
                 title: '자재<br>사급', minWidth: 35, dataIndx: 'MATERIAL_SUPPLY_YN',
@@ -591,24 +623,20 @@
             },
             {title: '요망<br>납기', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'ORDER_DUE_DT'},
             {title: '가공<br>납기', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'INNER_DUE_DT'},
-            {title: '긴<br>급', minWidth: 30, dataIndx: 'EMERGENCY_YN',
+            {
+                title: '긴<br>급', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'EMERGENCY_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '작업<br>형태', width: '10%', dataIndx: 'WORK_TYPE_NM'},
+            {title: '작업<br>형태', minWidth: 40, dataIndx: 'WORK_TYPE_NM'},
             {title: '규격', width: '10%', dataIndx: 'SIZE_TXT'},
             {title: '소재<br>종류', width: '5%', dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '표면<br>처리', width: '10%',  dataIndx: 'SURFACE_TREAT_NM'},
-            {title: '주문<br>수량', dataIndx: 'CONTROL_PART_QTY'},
-            {
-                title: '가공완료<br>일시', width: '12.5%', dataType: 'date', dataIndx: 'INNER_WORK_FINISH_DT',
-                render: function (ui) {
-                    return ui.cellData.substring(2);
-                }
-            },
+            {title: '주문<br>수량', maxWidth: 30, dataIndx: 'CONTROL_PART_QTY'},
+            {title: '가공완료<br>일시', width: '10%', dataIndx: 'INNER_WORK_FINISH_DT'},
         ];
         const botRightObj = {
             height: '85%',

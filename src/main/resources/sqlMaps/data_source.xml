@@ -41,6 +41,7 @@
         WHERE 1 = 1
             AND ORDER_COMPANY_YN = 'Y'
             AND DEL_YN = 'N'
+        ORDER BY COMP_NM
     </select>
 
     <select id="getBusinessCompanyList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
