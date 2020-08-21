@@ -924,6 +924,9 @@
         <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
             EMERGENCY_YN = IFNULL(#{EMERGENCY_YN}, 'N'),
         </if>
+        <if test="TOTAL_SHEET != null and TOTAL_SHEET != ''">
+            TOTAL_SHEET = #{TOTAL_SHEET},
+        </if>
         <if test="CONTROL_STATUS != null and CONTROL_STATUS != ''">
             CONTROL_STATUS = #{CONTROL_STATUS},
         </if>
@@ -1166,7 +1169,7 @@
         <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
             A.EMERGENCY_YN DESC,
         </if>
-            A.STATUS_DT DESC, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.PART_NUM
+            CONTROL_STATUS_DT DESC, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.PART_NUM
     </select>
 
     <select id="selectIsProcessAssembly" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -1385,7 +1388,7 @@
             <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
                 AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
             </if>
-        ORDER BY A.CONTROL_SEQ, B.PART_NUM, B.CONTROL_STATUS_DT DESC
+        ORDER BY A.CONTROL_SEQ, B.PART_NUM, CONTROL_STATUS_DT DESC
     </select>
 
     <select id="selectProcessCompleteList" parameterType="java.util.HashMap" resultType="java.util.HashMap">

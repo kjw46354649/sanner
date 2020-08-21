@@ -286,8 +286,8 @@
                 }
             },
             {title: '주문<br>수량', maxWidth: 30, dataIndx: 'CONTROL_PART_QTY'},
-            {title: '발주<br>납기', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'ORDER_DUE_DT'},
-            {title: '가공<br>납기', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'INNER_DUE_DT'},
+            {title: '발주<br>납기', minWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT'},
+            {title: '가공<br>납기', minWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT'},
             {title: '작업<br>형태', minWidth: 40, dataIndx: 'WORK_TYPE_NM'},
             {title: '규격', width: '7.5%', dataIndx: 'SIZE_TXT'},
             {title: '소재<br>종류', width: '5%', dataIndx: 'MATERIAL_DETAIL_NM'}
@@ -399,8 +399,8 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '요망<br>납기', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'ORDER_DUE_DT'},
-            {title: '가공<br>납기', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'INNER_DUE_DT'},
+            {title: '요망<br>납기', minWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT'},
+            {title: '가공<br>납기', minWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT'},
             {
                 title: '긴<br>급', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'EMERGENCY_YN',
                 render: function (ui) {
@@ -519,8 +519,8 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '외주<br>납기', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
-            {title: '발주<br>납기', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'ORDER_DUE_DT'},
+            {title: '외주<br>납기', minWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
+            {title: '발주<br>납기', minWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT'},
             // {title: '가공<br>납기', width: '10%', dataIndx: 'INNER_DUE_DT'},
             {title: '작업<br>형태', minWidth: 40, dataIndx: 'WORK_TYPE_NM'},
             {title: '규격', width: '10%', dataIndx: 'SIZE_TXT'},
@@ -621,8 +621,8 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '요망<br>납기', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'ORDER_DUE_DT'},
-            {title: '가공<br>납기', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'INNER_DUE_DT'},
+            {title: '요망<br>납기', minWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT'},
+            {title: '가공<br>납기', minWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT'},
             {
                 title: '긴<br>급', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'EMERGENCY_YN',
                 render: function (ui) {

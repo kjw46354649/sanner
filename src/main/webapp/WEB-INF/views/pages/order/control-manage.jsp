@@ -542,7 +542,7 @@
                         }
                     },
                     {
-                        title: '납기', width: 70, dataType: 'date', format: 'm/dd', dataIndx: 'ORDER_DUE_DT',
+                        title: '납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -575,7 +575,7 @@
                         }
                     },
                     {
-                        title: '출고일자', dataType: 'date', format: 'm/dd', dataIndx: 'ORDER_OUT_FINISH_DT',
+                        title: '출고일자', dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_OUT_FINISH_DT',
                         render: function (ui) {
                             let rowData = ui.rowData;
                             let cls = null;
@@ -600,7 +600,7 @@
                         }
                     },
                     {
-                        title: '납품확인', width: 70, dataType: 'date', format: 'm/dd', dataIndx: 'DELIVERY_DT',
+                        title: '납품확인', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'DELIVERY_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                         editor: {type: 'textbox', init: fnDateEditor},
                         editable: function (ui) {
@@ -677,7 +677,7 @@
             {title: '작업<br>형태', dataIndx: 'WORK_TYPE_NM', hidden: true},
 
             {
-                title: '가공납기', width: 70, dataType: 'date', format: 'm/dd', dataIndx: 'INNER_DUE_DT',
+                title: '가공납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -1559,7 +1559,7 @@
                     },
                     {title: '외주단가', dataType: 'integer', dataIndx: 'OUTSIDE_UNIT_AMT'},
                     {title: '합계금액', dataType: 'integer', dataIndx: 'OUTSIDE_FINAL_AMT', hidden: true},
-                    {title: '요망납기', dataType: 'date', format: 'm/dd', dataIndx: 'OUTSIDE_HOPE_DUE_DT', hidden: true},
+                    {title: '요망납기', dataType: 'date', format: 'mm/dd', dataIndx: 'OUTSIDE_HOPE_DUE_DT', hidden: true},
                     {title: '입고날짜', dataIndx: 'OUTSIDE_IN_DT'},
                     {title: '비고', dataIndx: 'OUTSIDE_NOTE', hidden: true},
                     {title: '불량Code', dataIndx: 'dhlwnqnffidcode', hidden: true},
@@ -1597,6 +1597,8 @@
             },
             sortModel: {on: false},
             load: function () {
+                if($('#controlManageFilterKeyword').val() !== '')
+                    fnFilterHandler($orderManagementGrid, 'controlManageFilterKeyword', 'controlManageFilterCondition', 'controlManageFilterColumn');
                 autoMerge(this, true);
 
                 let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
@@ -2766,6 +2768,9 @@
         $('#controlManageFilterKeyword').on('keyup', function(){
             fnFilterHandler($orderManagementGrid, 'controlManageFilterKeyword', 'controlManageFilterCondition', 'controlManageFilterColumn');
             autoMerge($orderManagementGrid.pqGrid('getInstance').grid, true);
+
+            let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
+            $('#CONTROL_MANAGE_RECORDS').html(data.length);
         });
 
         $('#controlManageFrozen').on('change', function(){

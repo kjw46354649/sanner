@@ -399,7 +399,8 @@
             , T.OUTSIDE_IN_DT
             , T.Q_INSPECT_GRADE_NM
             , T.Q_DT
-            , T.CONTROL_STATUS_DT
+            , T.CONTROL_CONFIRM_DT
+            , T.CONTROL_CLOSE_DT
         FROM (
             SELECT
                   X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.ORDER_SEQ, X.INSPECT_SEQ
@@ -467,7 +468,8 @@
                 , X.OUTSIDE_IN_DT
                 , jmes.SF_GET_CODE_NM('1040', Z.INSPECT_GRADE, #{LOGIN_LOCALE}) AS Q_INSPECT_GRADE_NM
                 , jmes.SF_GET_DATE_F(Z.INSERT_DT,'','M') AS Q_DT
-                , X.CONTROL_STATUS_DT
+                , X.CONTROL_CONFIRM_DT
+                , X.CONTROL_CLOSE_DT
             FROM (
                 SELECT
                     C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, C.ORDER_SEQ
@@ -500,7 +502,26 @@
                     , jmes.SF_GET_CODE_NM('1014', B.WORK_FACTORY, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM
                     , jmes.SF_GET_MATERIAL_RECEIPT_DT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS MATERIAL_RECEIPT_DT
                     , jmes.SF_GET_DATE_F(B.OUTSIDE_IN_DT, '', 'M') AS OUTSIDE_IN_DT
-                    , jmes.SF_GET_DATE_F(A.STATUS_DT, 'YYYY', '') AS CONTROL_STATUS_DT
+                    , (SELECT jmes.SF_GET_DATE_F(AA.STATUS_DT, 'YYYY', '')
+                        FROM TBL_CONTROL_PROGRESS AA
+                        WHERE 1 = 1
+                            AND A.CONTROL_SEQ = AA.CONTROL_SEQ
+                            AND AA.SEQ = (
+                                            SELECT MAX(SEQ)
+                                            FROM TBL_CONTROL_PROGRESS BB
+                                            WHERE 1 = 1
+                                                AND AA.CONTROL_SEQ = BB.CONTROL_SEQ
+                                                AND BB.ORDER_STATUS = 'ORD001')) AS CONTROL_CONFIRM_DT <!-- 확정 일자 -->
+                    , (SELECT jmes.SF_GET_DATE_F(AA.STATUS_DT, 'YYYY', '')
+                        FROM TBL_CONTROL_PROGRESS AA
+                        WHERE 1 = 1
+                            AND A.CONTROL_SEQ = AA.CONTROL_SEQ
+                            AND AA.SEQ = (
+                                            SELECT MAX(SEQ)
+                                            FROM TBL_CONTROL_PROGRESS BB
+                                            WHERE 1 = 1
+                                                AND AA.CONTROL_SEQ = BB.CONTROL_SEQ
+                                                AND BB.ORDER_STATUS = 'ORD003')) AS CONTROL_CLOSE_DT <!-- 확정 일자 -->
                 FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER C
                 WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                     AND A.CONTROL_SEQ = C.CONTROL_SEQ
@@ -517,6 +538,9 @@
                     </if>
                     <if test="SEL_DRAWING_NUM !='' and SEL_DRAWING_NUM != null">
                         AND UPPER(B.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{SEL_DRAWING_NUM}), '%')
+                    </if>
+                    <if test="SEL_OUTSIDE_COMP_CD !='' and SEL_OUTSIDE_COMP_CD != null">
+                        AND B.OUTSIDE_COMP_CD = #{SEL_OUTSIDE_COMP_CD}
                     </if>
                     <if test="SEL_ORDER_NUM !='' and SEL_ORDER_NUM != null">
                         AND UPPER(C.ORDER_NUM) LIKE CONCAT('%', UPPER(#{SEL_ORDER_NUM}), '%')
@@ -539,7 +563,7 @@
                     AND DATE_FORMAT(T.OUT_FINISH_DT, '%Y%m%d') BETWEEN REPLACE(#{SEL_ST_DT}, '/', SPACE(0)) AND REPLACE(#{SEL_END_DT}, '/', SPACE(0))          <!-- 출고일시 -->
                 </if>
                 <if test='SEL_OUTGOING_DATE_TYPE == "4"'>
-                    AND DATE_FORMAT(T.CONTROL_STATUS_DT, '%Y%m%d') BETWEEN REPLACE(#{SEL_ST_DT}, '/', SPACE(0)) AND REPLACE(#{SEL_END_DT}, '/', SPACE(0))          <!-- 확정일시 -->
+                    AND DATE_FORMAT(T.CONTROL_CONFIRM_DT, '%Y%m%d') BETWEEN REPLACE(#{SEL_ST_DT}, '/', SPACE(0)) AND REPLACE(#{SEL_END_DT}, '/', SPACE(0))          <!-- 확정일시 -->
                 </if>
             </if>
         </if>

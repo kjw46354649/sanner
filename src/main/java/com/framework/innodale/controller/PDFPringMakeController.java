@@ -251,7 +251,7 @@ public class PDFPringMakeController {
             table.setWidthPercentage(100);
             table.setWidths(new int[]{3, 8, 10, 10, 6, 10, 10, 20, 30});
 
-            table.addCell(createCell("진성정밀 주문서", 5, 1, new Font(bf, 10, Font.BOLD)));
+            table.addCell(createCell("진성정밀 주문서", 5, 1, new Font(bf, 12, Font.BOLD)));
             table.addCell(createCellBackground("담당자 / TEL", 2, 1, headFont, headBackground));
             table.addCell(createCell((String) userInfo.get(0).get("USER_NM") + userPositionNm + userTel, 2, 1, contentsFont));
 

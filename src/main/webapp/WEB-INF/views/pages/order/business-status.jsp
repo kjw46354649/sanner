@@ -244,7 +244,7 @@
             },
             {title: '관리번호', dataIndx: 'CONTROL_NUM', width: 180},
             {
-                title: '', minWidth: 30, dataIndx: 'DRAWING_NUM_BUTTON', styleHead: {'background': '#a9d3f5'},
+                title: '', minWidth: 30, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
                     if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" name="imageView" style="cursor: pointer"></span>'
                 },
