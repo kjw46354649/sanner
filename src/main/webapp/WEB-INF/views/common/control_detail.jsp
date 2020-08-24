@@ -32,6 +32,9 @@
             <div id="DETAIL_LIST_VIEW_GRID"></div>
         </form>
     </div>
+    <div class="right_sort">
+        전체 조회 건수 (Total : <span id="DETAIL_LIST_VIEW_RECORDS" style="color: #00b3ee">0</span>)
+    </div>
     <div style="text-align: center; margin: 12px 0;">
         <button type="button" class="defaultBtn grayPopGra" id="CONTROL_DETAIL_CLOSE_BUTTON">닫기</button>
     </div>
@@ -66,17 +69,30 @@
                     });
                 }
             },
-            {title: '관리번호', width: 100, dataIndx: 'CONTROL_NUM'},
+            {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',
+                render: function (ui) {
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" id="imageView" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('#imageView').bind('click', function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
             {title: '도면번호', width: 120, dataIndx: 'DRAWING_NUM'},
             {title: '품명', width: 110, dataIndx: 'ITEM_NM'},
             {title: '작업<br>형태', width: 110, dataIndx: 'WORK_NM'},
             {title: '외주', dataIndx: 'OUTSIDE_YN'},
             {title: '자재<br>사급', dataIndx: 'OUTSIDE_YN'},
-            {title: '규격', dataIndx: 'SIZE_TXT'},
-            {title: '소재<br>종류', width: 70, dataIndx: 'MATERIAL_DETAIL'},
-            {title: '표면<br>처리', dataIndx: 'SURFACE_TREAT'},
-            {title: '파트<br>단위<br>수량', align: 'right', dataType: 'integer', dataIndx: 'PART_UNIT_QTY'},
+            {title: '규격', width: 110, dataIndx: 'SIZE_TXT'},
+            {title: '소재<br>종류', width: 80, dataIndx: 'MATERIAL_DETAIL'},
+            {title: '표면<br>처리', width: 80, dataIndx: 'SURFACE_TREAT'},
+            {title: 'Part<br>Unit', dataType: 'integer', dataIndx: 'PART_UNIT_QTY'},
             {title: '발주번호', width: 90, dataIndx: 'ORDER_NUM'},
             {title: '수량', dataIndx: 'ORDER_QTY'},
             {
@@ -87,11 +103,12 @@
             },
             {title: '견적단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT'},
             {title: '공급단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
-            {title: '합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMT'}
+            {title: '합계금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMT'}
         ];
         const detailListViewObj = {
             height: 650,
             collapsible: false,
+            postRenderInterval: -1,
             resizable: false,
             showTitle: false,
             rowHtHead: 15,
@@ -105,6 +122,14 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            render: function () {
+                // 열 고정
+                this.option('freezeCols', 9);
+            },
+            load: function () {
+                let data = $detailListViewGrid.pqGrid('option', 'dataModel.data');
+                $('#DETAIL_LIST_VIEW_RECORDS').html(data.length);
             }
         };
        const $detailListViewGrid = $('#' + detailListViewGridId).pqGrid(detailListViewObj);

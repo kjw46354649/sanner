@@ -148,7 +148,7 @@ public class ExcelController {
             }
 
             // 정보성 쿼리.
-            paramMap.put("queryId", "selectItemOrderRegisterPopTable");
+            paramMap.put("queryId", "material.selectItemOrderRegisterPopTable");
             infoList = innodaleService.getList(paramMap);
             for(int j=0; j < infoList.size(); j++) {
                 HashMap<String, Object> map = new HashMap<String, Object>();

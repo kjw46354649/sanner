@@ -175,19 +175,19 @@
             // {title: 'OUTSIDE_REQUEST_SEQ', dataType: 'integer', dataIndx: 'OUTSIDE_REQUEST_SEQ', hidden: true},
             {title: 'CLOSE_VER', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CLOSE_VER', hidden: true},
             {title: 'PART_STATUS', dataIndx: 'PART_STATUS', hidden: true},
-            {title: '마감월', dataIndx: 'OUTSIDE_CLOSE_MONTH'},
-            {title: '차수', dataIndx: 'OUTSIDE_CLOSE_VER'},
+            {title: '마감월', width: 60, dataIndx: 'OUTSIDE_CLOSE_MONTH'},
+            {title: '차수', minWidth: 30, dataIndx: 'OUTSIDE_CLOSE_VER'},
             {title: '사업자<br>구분', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자<br>구분', minWidth: 70, dataIndx: 'COMP_NM'},
-            {title: '외주<br>구분', dataIndx: 'OUTSIDE_YN'},
-            {title: '원발주<br>상태', minWidth: 70, dataIndx: 'CONTROL_PART_STATUS'},
+            {title: '사업자<br>구분', width: 70, dataIndx: 'COMP_NM'},
+            {title: '외주<br>구분', minWidth: 30, dataIndx: 'OUTSIDE_YN'},
+            {title: '원발주<br>상태', width: 70, dataIndx: 'CONTROL_PART_STATUS'},
             {title: '외주<br>발주상태', dataIndx: 'DHLWNQKFWNTKDXO', hidden: true},
-            {title: '상태변경<br>일시', minWidth: 70, dataIndx: 'PART_SATUS_DT'},
+            {title: '상태변경<br>일시', width: 70, dataIndx: 'PART_SATUS_DT'},
             {title: '외주업체', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
-            {title: '외주업체', minWidth: 70, dataIndx: 'OUTSIDE_COMP_NM'},
-            {title: '입고일시', dataIndx: 'DLQRHDLFWK'},
+            {title: '외주업체', width: 70, dataIndx: 'OUTSIDE_COMP_NM'},
+            {title: '입고일시', dataIndx: 'OUTSIDE_IN_DT'},
             {title: '외주<br>발주번호', dataIndx: 'OUTSIDE_ORDER_NUM'},
-            {title: '비고', dataIndx: 'OUTSIDE_NOTE'},
+            {title: '비고', width: 150, dataIndx: 'OUTSIDE_NOTE'},
             {title: '비고(주문)', width: 150, dataIndx: 'CONTROL_NOTE'},
             {title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON',
                 render: function (ui) {
@@ -203,7 +203,7 @@
                     });
                 }
             },
-            {title: '관리번호', width: 150, dataIndx: 'CONTROL_NUM'},
+            {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM'},
             {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
@@ -219,7 +219,7 @@
             },
             {title: '도면번호', width: 90, dataIndx: 'DRAWING_NUM'},
             {title: '파<br>트', dataIndx: 'PART_NUM'},
-            {title: '품명', minWidth: 70, dataIndx: 'ITEM_NM'},
+            {title: '품명', width: 70, dataIndx: 'ITEM_NM'},
             {title: '규격', minWidth: 100, dataIndx: 'SIZE_TXT'},
             {title: '표면처리', dataIndx: 'SURFACE_TREAT_NM'},
             {title: '규격', minWidth: 90, dataIndx: 'SIZE_TXT'},
@@ -254,7 +254,7 @@
             {title: '외주<br>종전가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DHLWNWHDWJSRK'},
             {
                 title: '원발주 정보', align: 'center', colModel: [
-                    {title: '납기', minWidth: 70, dataIndx: 'INNER_DUE_DT'},
+                    {title: '납기', width: 70, dataIndx: 'INNER_DUE_DT'},
                     {title: '공급단가', dataIndx: 'UNIT_FINAL_AMT'},
                     {title: '발주처', dataIndx: 'ORDER_COMP_CD'},
                     {title: '발주처', dataIndx: 'ORDER_COMP_NM'}
@@ -268,9 +268,9 @@
                     {title: '측정일시', dataIndx: 'CMRWJDDLFTL'}
                 ]
             },
-            {title: '원주문<br>확정 일시', minWidth: 70, dataIndx: 'CONTROL_STATUS'},
-            {title: '외주가공<br>요청일시.', minWidth: 70, dataIndx: 'OUTSIDE_REQUEST_DATE'},
-            {title: '외주가공<br>마감일시', minWidth: 70, dataIndx: 'OUTSIDE_FINISH_DATE'},
+            {title: '원주문<br>확정 일시', width: 100, dataIndx: 'CONTROL_STATUS'},
+            {title: '외주가공<br>요청일시.', width: 100, dataIndx: 'OUTSIDE_REQUEST_DATE'},
+            {title: '외주가공<br>마감일시', width: 100, dataIndx: 'OUTSIDE_FINISH_DATE'},
             {title: 'DXF', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'

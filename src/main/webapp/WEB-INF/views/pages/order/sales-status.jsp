@@ -50,7 +50,7 @@
                             <label class="label_100">마감년월</label>
                         </span>
                         <span class="chk_box"><select name="CLOSE_YEAR_LEFT" id="CLOSE_YEAR_LEFT"></select></span>
-                        <span class="chk_box"><select name="CLOSE_MONTH_LEFT" id="CLOSE_MONTH_LEFT"></select><span style="margin: 10px 0; vertical-align: middle; font-size: 1.4rem;"> &nbsp;&nbsp;~</span></span>
+                        <span class="chk_box"><select name="CLOSE_MONTH_LEFT" id="CLOSE_MONTH_LEFT"></select><span style="margin: 0 5px; vertical-align: middle; font-size: 1.4rem;">&nbsp;~&nbsp;</span></span>
                         <span class="chk_box"><select name="CLOSE_YEAR_RIGHT" id="CLOSE_YEAR_RIGHT" disabled></select></span>
                         <span class="chk_box"><select name="CLOSE_MONTH_RIGHT" id="CLOSE_MONTH_RIGHT" disabled></select></span>
                         <span class="chk_box" style="margin-left: 10px;"><input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH">
@@ -137,25 +137,6 @@
     </div>
 </div>
 
-<div class="popup_container" id="SALES_STATUS_DETAIL_LIST_VIEW_POPUP" style="display: none;">
-    <div class="layerPopup">
-        <h3>상세 List 조회</h3>
-        <hr>
-        <button type="button" class="pop_close" name="SALES_STATUS_DETAIL_LIST_VIEW_POPUP_CLOSE">닫기</button>
-        <div>
-            <form class="form-inline" id="DETAIL_LIST_VIEW_FORM" role="form">
-                <input type="hidden" name="queryId" id="queryId" value="selectControlCloseLeftList">
-                <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
-                <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                <div id="DETAIL_LIST_VIEW_GRID"></div>
-            </form>
-        </div>
-        <div class="btnWrap">
-            <button type="button" class="defaultBtn grayPopGra" name="SALES_STATUS_DETAIL_LIST_VIEW_POPUP_CLOSE">닫기</button>
-        </div>
-    </div>
-</div>
-
 <script>
     var $closingHistoryGrid;
     var salesClosingHistoryRowIndex = [];
@@ -190,16 +171,16 @@
         let tab1PostData = fnFormToJsonArrayData('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM');
         const tab1ColModel = [
             {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
-            {title: 'No.', minWidth: 30, width: 30, align: 'right', dataType: 'integer', dataIndx: 'ROW_NUM'},
+            {title: 'No.', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'ROW_NUM'},
             {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자', dataIndx: 'COMP_NM'},
             {title: '년도', dataIndx: 'YEAR'},
             {title: '분기', dataIndx: 'QUARTER'},
             {title: '마감월', dataIndx: 'FINISH_MONTH'},
-            {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
-            {title: '차수', dataIndx: 'CLOSE_VER_TRAN'},
             {title: '발주사', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주사', dataIndx: 'ORDER_COMP_NM'},
+            {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
+            {title: '차수', dataIndx: 'CLOSE_VER_TRAN'},
             {title: '품수', dataIndx: 'ITEM_NUMBER', summary: {type: 'sum', edit: true},
                 render: function (ui) {
                     if(ui.rowData.pq_grandsummary) {
@@ -270,10 +251,8 @@
         tab2PostData.MONTH_SALE_YEAR = CURRENT_YEAR;
         const tab2ColModel = [
             {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
-            {title: 'No.', minWidth: 30, width: 30, align: 'right', dataType: 'integer', dataIndx: 'ROW_NUM'},
+            {title: 'No.', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'ROW_NUM'},
             {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
-            // {title: 'CONTROL_TYPE', dataIndx: 'CONTROL_TYPE', hidden: true},
-            // {title: 'CONTROL_NM', dataIndx: 'CONTROL_NM'},
             {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자', dataIndx: 'COMP_NM'},
             {title: '발주업체', dataIndx: 'ORDER_COMP_CD', hidden: true},
@@ -338,9 +317,7 @@
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: tab2ColModel,
             groupModel: tab2GroupModel,
-            toolPanel: {
-                show: false  //show toolPanel initially.
-            },
+            toolPanel: {show: false},
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: tab2PostData, recIndx: 'ROW_NUM',
@@ -427,15 +404,7 @@
             $monthlySalesStatusGrid.pqGrid('refreshDataAndView');
         });
 
-        $('[name=SALES_STATUS_DETAIL_LIST_VIEW_POPUP_CLOSE]').on('click', function () {
-            $('#SALES_STATUS_DETAIL_LIST_VIEW_POPUP').modal('hide');
-        });
         /* init */
-        // $closingHistoryGrid.pqGrid('option', 'dataModel.postData', function () {
-        //     return (fnFormToJsonArrayData('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM'));
-        // });
-        // $closingHistoryGrid.pqGrid('refreshDataAndView');
-
         $closingHistoryGrid = $('#' + tab1GridId).pqGrid(tab1Obj);
         $monthlySalesStatusGrid = $('#' + tab2GridId).pqGrid(tab2Obj);
         /* init */

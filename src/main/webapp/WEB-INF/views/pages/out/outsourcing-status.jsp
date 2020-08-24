@@ -55,14 +55,14 @@
                         <span class="ipu_wrap">
                             <label class="label_100">마감년월</label>
                         </span>
-                        <span class="chk_box">
-                            <label for="OUTSIDE_CLOSE_YEAR_LEFT"></label><select name="CLOSE_YEAR_LEFT" id="OUTSIDE_CLOSE_YEAR_LEFT" style="width: 100px; margin-right: 5px;"></select>
-                            <label for="OUTSIDE_CLOSE_MONTH_LEFT"></label><select name="CLOSE_MONTH_LEFT" id="OUTSIDE_CLOSE_MONTH_LEFT" style="width: 80px; margin-right: 10px;"></select>
-                        </span>
-                        <span style="vertical-align: middle; font-size: 1.4rem;">~</span>
-                        <span class="chk_box">
-                            <label for="CLOSE_YEAR_RIGHT"></label><select name="CLOSE_YEAR_RIGHT" id="CLOSE_YEAR_RIGHT" disabled style="width:100px; margin-right: 5px;" ></select>
-                            <label for="CLOSE_MONTH_RIGHT"></label><select name="CLOSE_MONTH_RIGHT" id="CLOSE_MONTH_RIGHT" disabled style="width:80px;"></select>
+                        <select name="CLOSE_YEAR_LEFT" id="OUTSIDE_CLOSE_YEAR_LEFT"></select>
+                        <select name="CLOSE_MONTH_LEFT" id="OUTSIDE_CLOSE_MONTH_LEFT"></select>
+                        <span style="margin: 0 5px; vertical-align: middle; font-size: 1.4rem;">&nbsp;~&nbsp;</span>
+                        <select name="CLOSE_YEAR_RIGHT" id="CLOSE_YEAR_RIGHT" disabled></select>
+                        <select name="CLOSE_MONTH_RIGHT" id="CLOSE_MONTH_RIGHT" disabled></select>
+                        <span class="chk_box" style="margin-left: 10px;">
+                            <input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH">
+                            <label for="RANGE_SEARCH"> Range 검색</label>
                         </span>
                         <button type="button" class="right_float defaultBtn radius blue" id="TAB1_SEARCH">검색</button>
                     </li>
@@ -148,9 +148,10 @@
         tab1PostData.CLOSE_YEAR_LEFT = YEAR;
         tab1PostData.CLOSE_MONTH_LEFT = MONTH;
         const tab1ColModel = [
-            {title: 'ROW_NUM', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ROW_NUM', hidden: true},
-            {title: '사업자 구분', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자 구분', dataIndx: 'COMP_NM'},
+            {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
+            {title: 'No.', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'ROW_NUM'},
+            {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
+            {title: '사업자', dataIndx: 'COMP_NM'},
             {title: '년도', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '분기', dataIndx: 'QUARTER'},
             {title: '마감월', dataIndx: 'FINISH_MONTH'},
@@ -181,7 +182,7 @@
             header:false,
             headerMenu: false,
             indent: 10,
-            dataIndx: ['COMP_CD'],
+            dataIndx: ['GROUP_KEY'],
             summaryInTitleRow: '',
             summaryEdit: false,
             // showSummary: [true], //to display summary at end of every group.
@@ -195,9 +196,8 @@
             collapsible: false,
             resizable: false,
             showTitle: false,
-            strNoRows: g_noData,
             rowHtHead: 15,
-            numberCell: {title: 'No.'},
+            numberCell: {show: false},
             scrollModel: {autoFit: true},
             trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center',  editable: false},
@@ -210,13 +210,16 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
-            }
+            },
+            summaryTitle: {sum: '{0}'},
         };
         let $monthlyOutsideStatusGrid;
         const tab2GridId = 'MONTHLY_OUTSIDE_STATUS_GRID';
         let tab2PostData = fnFormToJsonArrayData('#MONTH_OUTSIDE_STATUS_SEARCH_FORM');
         tab2PostData.YEAR = YEAR;
         const tab2ColModel = [
+            {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
+            {title: 'No.', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'ROW_NUM'},
             {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자', dataIndx: 'COMP_NM'},
             {title: '발주업체', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
@@ -254,13 +257,13 @@
                     {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_12_SUM_AMT', summary: {type: 'sum'}},
                 ]
             },
-            {title: '합계', dataIndx: 'TOTAL_AMT'}
+            {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}
         ];
         const tab2GroupModel = {
             on: true, header:false,
             headerMenu: false,
             indent: 10,
-            dataIndx: ['COMP_CD'],
+            dataIndx: ['GROUP_KEY'],
             summaryInTitleRow: '',
             summaryEdit: false,
             // showSummary: [true], //to display summary at end of every group.
@@ -274,9 +277,8 @@
             collapsible: false,
             resizable: false,
             showTitle: false,
-            strNoRows: g_noData,
             rowHtHead: 15,
-            numberCell: {title: 'No.'},
+            numberCell: {show: false},
             scrollModel: {autoFit: true},
             // trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
@@ -289,7 +291,8 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
-            }
+            },
+            summaryTitle: {sum: '{0}'}
         };
         /* variable */
 
@@ -331,6 +334,7 @@
 
         fnAppendSelectboxYear('OUTSIDE_CLOSE_YEAR_LEFT', 10);
         fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH_LEFT');
+        $('#OUTSIDE_CLOSE_MONTH_LEFT').val('01').prop('selected', true);
         fnAppendSelectboxYear('CLOSE_YEAR_RIGHT', 10);
         fnAppendSelectboxMonth('CLOSE_MONTH_RIGHT');
         fnAppendSelectboxYear('YEAR', 10);

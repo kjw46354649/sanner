@@ -113,7 +113,8 @@
                     <li>
                         <span>
                             <span class="ipu_wrap"><label class="label_100">Option</label></span>
-                            <span class="chk_box wd_200"><input name="IN_STOCK" id="IN_STOCK" type="checkbox"><label for="IN_STOCK"> 입고완료</label></span>
+                            <span class="chk_box wd_100"><input name="EXCLUDE_REQUEST_COMPLETED" id="EXCLUDE_REQUEST_COMPLETED" type="checkbox"><label for="EXCLUDE_REQUEST_COMPLETED"> 요청완료제외</label></span>
+                            <span class="chk_box wd_100"><input name="IN_STOCK" id="IN_STOCK" type="checkbox"><label for="IN_STOCK"> 입고완료제외</label></span>
                             <span class="gubun"></span>
                             <span class="ipu_wrap">
                                 <label class="label_100" for="AMOUNT_SUM">금액총합계</label>
@@ -545,7 +546,7 @@
                         }
                     },
                     {
-                        title: '기타사항', dataIndx: 'OUTSIDE_REQUEST_ETC',
+                        title: '기타사항', width: 90, dataIndx: 'OUTSIDE_REQUEST_ETC',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -570,31 +571,19 @@
             },
             {title: '입고일시', width: 100, dataIndx: 'OUTSIDE_IN_DT'},
             {
-                title: '외주<br>발주번호', dataIndx: 'OUTSIDE_ORDER_NUM',
+                title: '외주<br>발주번호', width:90, dataIndx: 'OUTSIDE_ORDER_NUM',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: true
-                // editable: function (ui) {
-                //     let rowData = ui.rowData;
-                //
-                //     return rowData.OUTSIDE_STATUS !== 'OST001';
-                // }
             },
             {
                 title: '비고', width: 90, dataIndx: 'OUTSIDE_NOTE',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: true
-                // editable: function (ui) {
-                //     let rowData = ui.rowData;
-                //     return rowData.OUTSIDE_STATUS !== 'OST001';
-                // }
             },
             {
                 title: '외주<br>확정단가', width: 90, align: 'right', dataType: 'integer', dataIndx: 'OUTSIDE_UNIT_AMT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}, format: '#,###',
-                editable: function (ui) {
-                    let rowData = ui.rowData;
-                    return rowData.OUTSIDE_STATUS !== 'OST001';
-                }
+                editable: true
             },
             {title: '금액<br>합계', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_TOTAL_AMT'},
             {title: '외주<br>종전가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DHLWNWHDWJSRK'},
@@ -614,8 +603,8 @@
                     {title: '측정일시', dataIndx: 'INSPECT_INSERT_UPDATE_DT'}
                 ]
             },
-            {title: '원주문<br>확정 일시', width: 130, dataIndx: 'CONTROL_STATUS_DT'},
-            {title: '외주가공<br>요청일시', width: 130, dataIndx: 'OUTSIDE_REQUEST_DT'},
+            {title: '외주<br>확정 일시', width: 100, dataIndx: 'OUTSIDE_CONFIRM_DT'},
+            {title: '외주가공<br>요청일시', width: 100, dataIndx: 'OUTSIDE_REQUEST_DT'},
             {
                 title: 'DXF', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35,
                 render: function (ui) {
@@ -667,11 +656,15 @@
                     return {data: dataJSON.data};
                 }
             },
-            load: function () {
+            render: function () {
+                // 열 고정
+                this.option('freezeCols', 19);
+                // 필터 옵션 생성
                 let filterOpts = '<option value=\"\">All Fields</option>';
                 let frozenOts = '<option value="0">Selected</option>';
+
                 this.getColModel().forEach(function (column) {
-                    let hiddenYn = column.hidden === undefined;
+                    let hiddenYn = column.hidden === false || column.hidden === undefined;
                     if (hiddenYn && column.title) {
                         filterOpts += '<option value="' + column.dataIndx + '">' + column.title + '</option>';
                         frozenOts += '<option value="' + (column.leftPos + 1) + '">' + column.title + '</option>';
@@ -1261,7 +1254,7 @@
             {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
             {title: '차수', dataIndx: 'CLOSE_VER_TRAN'},
             {title: '품수', dataIndx: 'CNT'},
-            {title: '건수', dataIndx: 'CONTROL_PART_QTY'},
+            {title: '수량', dataIndx: 'CONTROL_PART_QTY'},
             {title: '발주가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}, // 2020-06-08
             {title: '마감금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT'}
         ];
@@ -1294,7 +1287,7 @@
             {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
             {title: '차수', dataIndx: 'CLOSE_VER_TRAN'},
             {title: '품수', dataIndx: 'CNT'},
-            {title: '건수', dataIndx: 'CONTROL_PART_QTY'},
+            {title: '수량', dataIndx: 'CONTROL_PART_QTY'},
             {title: '발주가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}, // 2020-06-08
             {title: '마감금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
         ];

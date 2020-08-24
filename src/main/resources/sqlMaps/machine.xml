@@ -678,7 +678,7 @@
             <!-- SF_GET_POP_PREV_POSITION(2, 'NM', A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS POP_PREV_POSITION,  이전 위치 -->
             jmes.SF_GET_DATE_F(A.STATUS_DT, '', 'M') AS SATAUS_DT, <!-- 확정 일시 -->
             jmes.SF_GET_MATERIAL_RECEIPT_DT(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MATERIAL_RECEIPT_DT, <!-- 소재 입고 일시 -->
-            J.INSPECT_SEQ AS INSPECT_STEP, <!-- 풀질 스탭 -->
+            J.INSPECT_SEQ AS INSPECT_STEP, <!-- 품질 스탭 -->
             SF_GET_CODE_NM(1040, J.INSPECT_GRADE, 'EN') AS INSPECT_GRADE,
             CASE WHEN J.INSPECT_RESULT LIKE 'QCC%' THEN SF_GET_CODE_NM(1019, J.INSPECT_RESULT, 'EN')
                  WHEN J.INSPECT_RESULT LIKE 'QCD%' THEN SF_GET_CODE_NM(1020, J.INSPECT_RESULT, 'EN')
@@ -687,7 +687,7 @@
             J.ERROR_QTY, <!-- 불량 수량 -->
             SF_GET_CODE_NM(1032, J.ERROR_REASON, 'EN') AS ERROR_REASON, <!-- 불량 원인 -->
             J.ERROR_NOTE, <!-- 불량 조치방안 -->
-            jmes.SF_GET_DATE_F(J.INSERT_DT, '', '') AS INSPECT_DT, <!-- 풀질현황 -->
+            jmes.SF_GET_DATE_F(J.INSERT_DT, '', '') AS INSPECT_DT, <!-- 품질현황 -->
             K.MCT_PLAN_SEQ, <!-- 계획 장비 번호 -->
             K.EQUIP_SEQ, <!-- 계획 장비 번호 -->
             L.EQUIP_ID, <!-- 계획 장비 아이디 -->
@@ -824,7 +824,7 @@
         SELECT
             ROW_NUMBER () OVER () AS ROWNUM,
             A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.DXF_GFILE_SEQ, A.PDF_GFILE_SEQ, A.IMG_GFILE_SEQ,
-            jmes.SF_GET_DATE_F(A.INNER_DUE_DT, 'YY', '') AS INNER_DUE_DT, <!-- 내부가공납기 -->
+            jmes.SF_GET_DATE_F(A.INNER_DUE_DT, '', '') AS INNER_DUE_DT, <!-- 내부가공납기 -->
             CASE WHEN IFNULL(B.EMERGENCY_YN, 'N') = 'Y' THEN '긴' ELSE SPACE(0) END AS EMERGENCY_YN, <!-- 긴급 -->
             CASE WHEN IFNULL(B.MAIN_INSPECTION, 'N') = 'Y' THEN '주' ELSE SPACE(0) END AS MAIN_INSPECTION, <!-- 주요 검사품 -->
             CASE WHEN A.WORK_TYPE = 'WTP030' THEN '수' WHEN A.WORK_TYPE = 'WTP040' THEN '재' END AS WORK_NM, <!-- 형태 -->
@@ -891,7 +891,7 @@
             <!--  SF_GET_POP_PREV_POSITION(2, 'NM', A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS POP_PREV_POSITION, 이전 위치 -->
             jmes.SF_GET_DATE_F(A.STATUS_DT, '', 'M') AS SATAUS_DT, <!-- 확정 일시 -->
             jmes.SF_GET_MATERIAL_RECEIPT_DT(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MATERIAL_RECEIPT_DT, <!-- 소재 입고 일시 -->
-            J.INSPECT_SEQ AS INSPECT_STEP, <!-- 풀질 스탭 -->
+            J.INSPECT_NUM AS INSPECT_STEP, <!-- 품질 스탭 -->
             SF_GET_CODE_NM(1040, J.INSPECT_GRADE, 'EN') AS INSPECT_GRADE,
             CASE WHEN J.INSPECT_RESULT LIKE 'QCC%' THEN SF_GET_CODE_NM(1019, J.INSPECT_RESULT, 'EN')
                  WHEN J.INSPECT_RESULT LIKE 'QCD%' THEN SF_GET_CODE_NM(1020, J.INSPECT_RESULT, 'EN')
@@ -900,7 +900,7 @@
             J.ERROR_QTY, <!-- 불량 수량 -->
             SF_GET_CODE_NM(1032, J.ERROR_REASON, 'EN') AS ERROR_REASON, <!-- 불량 원인 -->
             J.ERROR_NOTE, <!-- 불량 조치방안 -->
-            jmes.SF_GET_DATE_F(J.INSERT_DT, '', '') AS INSPECT_DT, <!-- 풀질현황 -->
+            jmes.SF_GET_DATE_F(J.INSERT_DT, '', '') AS INSPECT_DT, <!-- 품질현황 -->
             K.MCT_PLAN_SEQ, <!-- 계획 장비 번호 -->
             K.EQUIP_SEQ, <!-- 계획 장비 번호 -->
             L.EQUIP_ID, <!-- 계획 장비 아이디 -->
@@ -914,7 +914,9 @@
                 AND R.DRAWING_NUM = A.DRAWING_NUM
               ORDER BY Q.SEQ DESC
               LIMIT 1
-            ) AS WORK_HISTORY_INFO <!-- 과거 경험 -->
+            ) AS WORK_HISTORY_INFO, <!-- 과거 경험 -->
+            IF(A.ORIGINAL_SIDE_QTY AND A.OTHER_SIDE_QTY, TRUE, FALSE) AS SYMMETRY, <!-- 대칭 -->
+            A.IMG_GFILE_SEQ <!-- IMG 파일그룹번호 -->
         FROM jmes.TBL_CONTROL_PART A
             INNER JOIN jmes.TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.CONTROL_STATUS = 'ORD001' <!-- 주문확정 -->
             LEFT OUTER JOIN jmes.TBL_POP C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
@@ -987,7 +989,9 @@
                 )
             </if>
         GROUP BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
-        ORDER BY B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), A.INNER_DUE_DT
+        ORDER BY
+            CASE CAM_STATUS WHEN 'CWS020' THEN 0 WHEN 'CWS010' THEN 1 WHEN 'CWS030' THEN 2 END,
+            SATAUS_DT DESC, B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), A.INNER_DUE_DT
     </select>
 
     <select id="selectCamMasterInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">

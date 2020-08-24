@@ -44,13 +44,13 @@
                             </select>
                         </span>
                         <span class="radio_box">
-                            <input reqcd="R" type="radio" name="SEL_OUTGOING_TERM" id="SEL_OUTGOING_TERM_1" value="0" ><label for="SEL_OUTGOING_TERM_1">오늘</label>
+                            <input reqcd="R" type="radio" name="SEL_OUTGOING_TERM" id="SEL_OUTGOING_TERM_1" value="today" ><label for="SEL_OUTGOING_TERM_1">오늘</label>
                         </span>
                         <span class="radio_box">
-                            <input reqcd="R" type="radio" name="SEL_OUTGOING_TERM" id="SEL_OUTGOING_TERM_2" value="3"><label for="SEL_OUTGOING_TERM_2">~3일</label>
+                            <input reqcd="R" type="radio" name="SEL_OUTGOING_TERM" id="SEL_OUTGOING_TERM_2" value="week"><label for="SEL_OUTGOING_TERM_2">±1주</label>
                         </span>
                         <span class="radio_box">
-                            <input reqcd="R" type="radio" name="SEL_OUTGOING_TERM" id="SEL_OUTGOING_TERM_3" value="7"><label for="SEL_OUTGOING_TERM_3">~1주일</label>
+                            <input reqcd="R" type="radio" name="SEL_OUTGOING_TERM" id="SEL_OUTGOING_TERM_3" value="month"><label for="SEL_OUTGOING_TERM_3">±1개월</label>
                         </span>
                         <div class="calendar_wrap">
                             <span class="calendar_span">
@@ -64,10 +64,14 @@
                             </span>
                         </div>
                         <span class="gubun"></span>
-                        <span class="txt_span"><label class="label_100" for="SEL_PART_NUM_VIEW_YN">Option</label></span>
+                        <span class="txt_span"><label for="SEL_PART_NUM_VIEW_YN" style="margin-right: 5px;">Option</label></span>
 <%--                        <span class="chk_box"><input id="SEL_DELAY_TOP" name="SEL_DELAY_TOP" type="checkbox"><label for="SEL_DELAY_TOP">지연대상 항시 상단표시</label></span>--%>
                         <span class="chk_box"><input id="SEL_PART_NUM_VIEW_YN" name="SEL_PART_NUM_VIEW_YN" type="checkbox"><label for="SEL_PART_NUM_VIEW_YN">Part 단위 표시</label></span>
                         <span class="chk_box"><input id="SEL_OUT_FINISH_YN" name="SEL_OUT_FINISH_YN" type="checkbox"><label for="SEL_OUT_FINISH_YN">출고 완료 제외</label></span>
+                        <span class="ipu_wrap">
+                            <label class="label_80" for="SEL_OUTSIDE_COMP_CD" style="width: 85px !important;">외주업체</label>
+                            <input type="text" class="wd_200" name="SEL_OUTSIDE_COMP_CD" id="SEL_OUTSIDE_COMP_CD" title="외주업체">
+                        </span>
                         <button type="button" class="right_float defaultBtn radius blue" id="outgoing_manage_search_btn">검색</button>
                     </li>
                 </ul>
@@ -596,6 +600,16 @@
             {title: 'CONTROL_SEQ', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'INSPECT_SEQ', dataIndx: 'INSPECT_SEQ', hidden: true},
+            {
+                title: '확정<br>일자', dataIndx: 'CONTROL_CONFIRM_DT', width: 60,
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if(cellData) {
+                        return cellData.substring(5);
+                    }
+                }
+            },
             {title: '발주처', dataIndx: 'ORDER_COMP_NM', width: 80},
             {title: '', align: 'center', dataIndx: '', minWidth: 30,
                 render: function (ui) {
@@ -739,6 +753,16 @@
             },
             {title: '가공<br>납기', dataIndx: 'INNER_DUE_DT', width: 60},
             {title: '가공<br>완료', dataIndx: 'WORK_FINISH_DT', width: 60},
+            {
+                title: '마감<br>일자', dataIndx: 'CONTROL_CLOSE_DT', width: 60,
+                 render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if(cellData) {
+                        return cellData.substring(5);
+                    }
+                }
+            },
             {title: '수행<br>공장', dataIndx: 'WORK_FACTORY_NM', width: 50},
             {title: '외주업체', dataIndx: 'OUTSIDE_COMP_NM', width: 80},
             {title: '진행상태', dataIndx: 'PART_STATUS_NM', width: 100},
@@ -789,6 +813,29 @@
                 ]
             }
         ];
+
+        $("#outgoing_manage_form").find('[name=SEL_OUTGOING_TERM]').change(function () {
+            let value = $(this).val(), today = new Date(), newDate = new Date();
+            console.log(value);
+            switch (value) {
+                case "today":
+                    break;
+                case "week":
+                    newDate.setDate(newDate.getDate() - 7);
+                    today.setDate(today.getDate() + 7);
+                    break;
+                case "month":
+                    newDate.setMonth(newDate.getMonth() - 1);
+                    today.setMonth(today.getMonth() + 1);
+                    break;
+            }
+
+            $("#outgoing_manage_form").find('#SEL_ST_DT').val(newDate.yyyymmdd());
+            $("#outgoing_manage_form").find('#SEL_END_DT').val(today.yyyymmdd());
+        });
+
+        $('#SEL_OUTGOING_TERM_2').click();
+
         outgoingManageGridId01.pqGrid({
             width: "100%", height: 740,
             dataModel: {
@@ -1262,16 +1309,6 @@
             });
             outgoingManageGridId01.pqGrid("refreshDataAndView");
         });
-        $("#outgoing_manage_form").find('[name=SEL_OUTGOING_TERM]').change(function () {
-            let value = $(this).val(), today = new Date(), newDate = new Date();
-
-            newDate.setDate(newDate.getDate() - value);
-            $("#outgoing_manage_form").find('#SEL_ST_DT').val(newDate.yyyymmdd());
-            $("#outgoing_manage_form").find('#SEL_END_DT').val(today.yyyymmdd());
-            // outgoingChangeDate(newDate, today);
-
-        });
-
 
         $(".datepicker-input").each(function () {
             $(this).datepicker({dateFormat: 'yy/mm/dd'});
@@ -1771,8 +1808,5 @@
             $('#outgoing_manage_pop_type_1_form').find('#NEW_OUT_QTY').val(NEW_OUT_QTY);
         });
     });
-
-
-
 
 </script>

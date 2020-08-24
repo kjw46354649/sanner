@@ -131,10 +131,10 @@
                 <%--                <button type="button" class="defaultBtn btn-50w" data-toggle="modal" data-target="#CONTROL_CLOSE_POPUP">마감</button>--%>
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_DRAWING_VIEW">도면 View</button>
-                    <button type="button" class="defaultBtn btn-100w" id="DRAWING_PRINT">도면 출력</button>
-                    <button type="button" class="defaultBtn btn-100w" id="BARCODE_DRAWING_PRINT">바코드도면 출력</button>
-                    <button type="button" class="defaultBtn btn-100w" id="BARCODE_PRINT">바코드 출력</button>
-                    <button type="button" class="defaultBtn btn-100w" id="LABEL_PRINT">라벨 출력</button>
+                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_DRAWING_PRINT">도면 출력</button>
+                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_BARCODE_DRAWING_PRINT">바코드도면 출력</button>
+                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_BARCODE_PRINT">바코드 출력</button>
+                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_LABEL_PRINT">라벨 출력</button>
                 </div>
             </div>
             <div class="mg-top10">
@@ -235,7 +235,13 @@
                     {title: '상태', dataIndx: 'CONTROL_STATUS', hidden: true},
                     {title: '상태', minWidth: 30, dataIndx: 'CONTROL_STATUS_NM'},
                     {title: '', minWidth: 20, dataType: 'integer', dataIndx: 'CONTROL_VER'},
-                    {title: '변경일', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'CONTROL_STATUS_DT'}
+                    {title: '변경일', dataIndx: 'CONTROL_STATUS_DT',
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+
+                            return cellData.substring(0, 5);
+                        }
+                    }
                 ]
             },
             {
@@ -333,24 +339,13 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '', minWidth: 30, dataIndx: 'ETC_GFILE_SEQ', styleHead: {'background':'#a9d3f5'},
-                render: function (ui) {
-                    return '<span class="floppyDisk" name="attachment" style="cursor: pointer"></span>';
-                },
-                postRender: function (ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find('[name=attachment]').bind('click', function () {
-                        if (fnIsGridEditing($orderManagementGrid)) {
-                            return false;
-                        }
+            {
+                title: '총장', dataType: 'integer', dataIndx: 'TOTAL_SHEET',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
 
-                        let GfileKey = ui.rowData.ETC_GFILE_SEQ;
-                        $('#common_file_download_form').find('#GFILE_SEQ').val(GfileKey);
-                        $('#ATTACHMENT_BUTTON').data('rowIndx', ui.rowIndx);
-                        $('#ATTACHMENT_BUTTON').data('GfileKey', GfileKey);
-                        commonFileDownUploadPopupCall(GfileKey, 'ATTACHMENT_BUTTON');
-                    });
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
                 }
             },
             {title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON', styleHead: {'background':'#a9d3f5'},
@@ -547,7 +542,7 @@
                         }
                     },
                     {
-                        title: '납기', width: 70, dataType: 'date', format: 'm/dd', dataIndx: 'ORDER_DUE_DT',
+                        title: '납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -580,7 +575,7 @@
                         }
                     },
                     {
-                        title: '출고일자', dataType: 'date', format: 'm/dd', dataIndx: 'ORDER_OUT_FINISH_DT',
+                        title: '출고일자', dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_OUT_FINISH_DT',
                         render: function (ui) {
                             let rowData = ui.rowData;
                             let cls = null;
@@ -605,7 +600,7 @@
                         }
                     },
                     {
-                        title: '납품확인', width: 70, dataType: 'date', format: 'm/dd', dataIndx: 'DELIVERY_DT',
+                        title: '납품확인', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'DELIVERY_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                         editor: {type: 'textbox', init: fnDateEditor},
                         editable: function (ui) {
@@ -682,7 +677,7 @@
             {title: '작업<br>형태', dataIndx: 'WORK_TYPE_NM', hidden: true},
 
             {
-                title: '가공납기', width: 70, dataType: 'date', format: 'm/dd', dataIndx: 'INNER_DUE_DT',
+                title: '가공납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -754,7 +749,16 @@
             },
             {title: '진행상태', dataIndx: 'PART_STATUS', hidden: true},
             {title: '진행상태', dataIndx: 'PART_STATUS_NM'},
-            {title: '가공<br>완료', width: 70, dataType: 'date', format: 'm/dd', dataIndx: 'INNER_WORK_FINISH_DT'},
+            {
+                title: '가공<br>완료', width: 70, dataIndx: 'INNER_WORK_FINISH_DT',
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData) {
+                        return cellData.substring(0, 5);
+                    }
+                }
+            },
             {
                 title: '규격', width: 110, dataIndx: 'SIZE_TXT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
@@ -1106,7 +1110,7 @@
                 }
             },
             {
-                title: '소재종류', width: 70, dataIndx: 'MATERIAL_DETAIL',
+                title: '소재종류', width: 80, dataIndx: 'MATERIAL_DETAIL',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -1159,7 +1163,7 @@
                 }
             },
             {
-                title: '표면<br>처리', dataIndx: 'SURFACE_TREAT',
+                title: '표면<br>처리', width: 80, dataIndx: 'SURFACE_TREAT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -1511,6 +1515,26 @@
             {title: 'Rev. 일시', width: 120, dataIndx: 'DRAWING_UP_DT'},
             {title: '바코드도면<br>출력일시', width: 120, dataType: 'date', /*format: 'mm/dd',*/ dataIndx: '', hidden: true},
             {title: '라벨<br>출력일시', width: 120, dataType: 'date', /*format: 'mm/dd',*/ dataIndx: '', hidden: true},
+            {title: '참<br>조', minWidth: 30, dataIndx: 'ETC_GFILE_SEQ', styleHead: {'background':'#a9d3f5'},
+                render: function (ui) {
+                    return '<span class="floppyDisk" name="attachment" style="cursor: pointer"></span>';
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('[name=attachment]').bind('click', function () {
+                        if (fnIsGridEditing($orderManagementGrid)) {
+                            return false;
+                        }
+
+                        let GfileKey = ui.rowData.ETC_GFILE_SEQ;
+                        $('#common_file_download_form').find('#GFILE_SEQ').val(GfileKey);
+                        $('#ATTACHMENT_BUTTON').data('rowIndx', ui.rowIndx);
+                        $('#ATTACHMENT_BUTTON').data('GfileKey', GfileKey);
+                        commonFileDownUploadPopupCall(GfileKey, 'ATTACHMENT_BUTTON');
+                    });
+                }
+            },
             {
                 title: '품질현황', align: 'center', colModel: [
                     {title: 'Seq.', minWidth: 30, width: 35, dataType: 'integer', dataIndx: 'INSPECT_NUM'},
@@ -1535,8 +1559,8 @@
                     },
                     {title: '외주단가', dataType: 'integer', dataIndx: 'OUTSIDE_UNIT_AMT'},
                     {title: '합계금액', dataType: 'integer', dataIndx: 'OUTSIDE_FINAL_AMT', hidden: true},
-                    {title: '요망납기', dataType: 'date', format: 'm/dd', dataIndx: 'OUTSIDE_HOPE_DUE_DT', hidden: true},
-                    {title: '입고날짜', width: 60, dataType: 'string', dataIndx: 'OUTSIDE_IN_DT'},
+                    {title: '요망납기', dataType: 'date', format: 'mm/dd', dataIndx: 'OUTSIDE_HOPE_DUE_DT', hidden: true},
+                    {title: '입고날짜', dataIndx: 'OUTSIDE_IN_DT'},
                     {title: '비고', dataIndx: 'OUTSIDE_NOTE', hidden: true},
                     {title: '불량Code', dataIndx: 'dhlwnqnffidcode', hidden: true},
                     {title: '조치방안', dataIndx: 'dhlwnwhclqkddks', hidden: true}
@@ -1573,6 +1597,8 @@
             },
             sortModel: {on: false},
             load: function () {
+                if($('#controlManageFilterKeyword').val() !== '')
+                    fnFilterHandler($orderManagementGrid, 'controlManageFilterKeyword', 'controlManageFilterCondition', 'controlManageFilterColumn');
                 autoMerge(this, true);
 
                 let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
@@ -2419,7 +2445,7 @@
             fnReportFormToHiddenFormPageAction('control_estimate_list_excel_download', '/downloadExcel');
         });
         // 바코드도면출력
-        $('#BARCODE_DRAWING_PRINT').on('click', function () {
+        $('#CONTROL_MANAGE_BARCODE_DRAWING_PRINT').on('click', function () {
             if (noSelectedRowAlert()) return false;
             let selectedRowCount = selectedOrderManagementRowIndex.length;
             let selectControlPartCount = 0;
@@ -2453,7 +2479,7 @@
             });
         });
         // 바코드 출력
-        $('#BARCODE_PRINT').on('click', function () {
+        $('#CONTROL_MANAGE_BARCODE_PRINT').on('click', function () {
             if (noSelectedRowAlert()) return false;
             let bodyHtml;
             let selectedRowCount = selectedOrderManagementRowIndex.length;
@@ -2490,7 +2516,7 @@
             });
         });
         // 라벨 출력
-        $('#LABEL_PRINT').on('click', function () {
+        $('#CONTROL_MANAGE_LABEL_PRINT').on('click', function () {
             if (noSelectedRowAlert()) return false;
 
             let barcodeList = [];
@@ -2549,7 +2575,7 @@
             callWindowImageViewer(rowData.IMG_GFILE_SEQ);
         });
         // 도면출력
-        $('#DRAWING_PRINT').on('click', function () {
+        $('#CONTROL_MANAGE_DRAWING_PRINT').on('click', function () {
             let selectedRowCount = selectedOrderManagementRowIndex.length;
             let imgGfileSeq = '';
             for (let i = 0; i < selectedRowCount; i++) {
@@ -2741,6 +2767,10 @@
 
         $('#controlManageFilterKeyword').on('keyup', function(){
             fnFilterHandler($orderManagementGrid, 'controlManageFilterKeyword', 'controlManageFilterCondition', 'controlManageFilterColumn');
+            autoMerge($orderManagementGrid.pqGrid('getInstance').grid, true);
+
+            let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
+            $('#CONTROL_MANAGE_RECORDS').html(data.length);
         });
 
         $('#controlManageFrozen').on('change', function(){

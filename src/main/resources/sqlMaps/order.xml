@@ -20,15 +20,15 @@
         IFNULL(A.DELIVERY_COMP_NM, SPACE(0)) AS DELIVERY_COMP_NM, <!-- 납품처 -->
         IFNULL(A.LABEL_NOTE, SPACE(0)) AS LABEL_NOTE, <!-- 라벨비고 -->
         IFNULL(A.MAIN_INSPECTION, SPACE(0)) AS MAIN_INSPECTION, <!-- 주요검사품 -->
-        IFNULL(SF_GET_CODE_NM(1042, A.MAIN_INSPECTION, 'EN'), SPACE(0)) AS MAIN_INSPECTION_NM, <!-- 주요검사품 -->
+        IFNULL(SF_GET_CODE_NM(1042, A.MAIN_INSPECTION, #{LOGIN_LOCALE}), SPACE(0)) AS MAIN_INSPECTION_NM, <!-- 주요검사품 -->
         A.EMERGENCY_YN, <!-- 긴급 -->
         CASE WHEN IFNULL(A.EMERGENCY_YN, 'N') = 'Y' THEN '긴급' ELSE SPACE(0) END AS EMERGENCY_BARCODE_NM, <!-- 바코드 긴급 -->
         A.CONTROL_STATUS, <!-- 주문관리상태 -->
-        IFNULL(SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR'), SPACE(0)) AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
-        IFNULL(SF_GET_DATE_F(A.STATUS_DT, 'YYYY', 'M'), SPACE(0)) AS CONTROL_STATUS_DT, <!-- 주문관리 상태확정일 -->
+        IFNULL(SF_GET_CODE_NM(1038, A.CONTROL_STATUS, #{LOGIN_LOCALE}), SPACE(0)) AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
+        IFNULL(SF_GET_DATE_F(A.STATUS_DT, '', 'M'), SPACE(0)) AS CONTROL_STATUS_DT, <!-- 주문관리 상태확정일 -->
         A.EST_SEQ, <!-- 견적일련번호 -->
         IFNULL(A.PRICE_CONFIRM, SPACE(0)) AS PRICE_CONFIRM, <!-- 단가확인 -->
-        IFNULL(SF_GET_CODE_NM(1017, PRICE_CONFIRM, 'KR'), SPACE(0)) AS PRICE_CONFIRM_NM, <!-- 단가확인 -->
+        IFNULL(SF_GET_CODE_NM(1017, PRICE_CONFIRM, #{LOGIN_LOCALE}), SPACE(0)) AS PRICE_CONFIRM_NM, <!-- 단가확인 -->
         IFNULL(A.OUT_FINISH_DT, SPACE(0)) AS CONTROL_OUT_FINISH_DT <!-- 주문관리 출고완료일 -->
     </sql>
 
@@ -41,10 +41,10 @@
         B.PREV_DRAWING_NUM, <!-- 변경전 도면번호 -->
         B.ITEM_NM, <!-- 품명 -->
         B.WORK_TYPE, <!-- 작업형태 -->
-        IFNULL(SF_GET_CODE_NM(1033, B.WORK_TYPE, 'KR'), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
+        IFNULL(SF_GET_CODE_NM(1033, B.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
         B.OUTSIDE_YN, <!-- 외주 -->
         B.WORK_FACTORY, <!-- 수행공장 -->
-        SF_GET_CODE_NM(1014, B.WORK_FACTORY, 'KR') AS WORK_FACTORY_NM, <!-- 수행공장 -->
+        SF_GET_CODE_NM(1014, B.WORK_FACTORY, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM, <!-- 수행공장 -->
         B.MATERIAL_SUPPLY_YN, <!-- 소재사급 -->
         IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'YYYY', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 가공납기 -->
         IFNULL(B.SIZE_TXT, SPACE(0)) AS SIZE_TXT, <!-- 규격 문자열 -->
@@ -60,13 +60,13 @@
         B.SIZE_D_M, <!-- 예상 규격 지름 -->
         B.SIZE_L_M, <!-- 예상 규격 길이 -->
         B.MATERIAL_TYPE, <!-- 재질 -->
-        IFNULL(SF_GET_CODE_NM(1035, B.MATERIAL_TYPE, 'KR'), SPACE(0)) AS MATERIAL_TYPE_NM, <!-- 재질 -->
+        IFNULL(SF_GET_CODE_NM(1035, B.MATERIAL_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_TYPE_NM, <!-- 재질 -->
         B.MATERIAL_DETAIL, <!-- 소재 종류 -->
-        IFNULL(SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, 'KR'), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류 -->
+        IFNULL(SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류 -->
         B.MATERIAL_KIND, <!-- 소재 형태 -->
-        IFNULL(SF_GET_CODE_NM(1029, B.MATERIAL_KIND, 'KR'), SPACE(0)) AS MATERIAL_KIND_NM, <!-- 소재 형태 -->
+        IFNULL(SF_GET_CODE_NM(1029, B.MATERIAL_KIND, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_KIND_NM, <!-- 소재 형태 -->
         B.SURFACE_TREAT, <!-- 표면처리 -->
-        SF_GET_CODE_NM('1039', B.SURFACE_TREAT, 'KR') AS SURFACE_TREAT_NM,  <!-- 표면 처리 -->
+        SF_GET_CODE_NM('1039', B.SURFACE_TREAT, #{LOGIN_LOCALE}) AS SURFACE_TREAT_NM,  <!-- 표면 처리 -->
         IFNULL(B.MATERIAL_FINISH_HEAT, SPACE(0)) AS MATERIAL_FINISH_HEAT, <!-- 열처리 -->
         B.MATERIAL_NOTE, <!-- 소재비고 -->
         B.PART_UNIT_QTY, <!-- Part단위수량 -->
@@ -104,7 +104,7 @@
         B.IMG_GFILE_SEQ, <!-- IMG 파일그룹번호 -->
         B.ETC_GFILE_SEQ,
         B.PART_STATUS, <!-- PART 상태 -->
-        SF_GET_CODE_NM(1013, B.PART_STATUS, 'KR') AS PART_STATUS_NM, <!-- PART 상태 -->
+        SF_GET_CODE_NM(1013, B.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS_NM, <!-- PART 상태 -->
         SF_GET_DATE_F(B.STATUS_DT, 'YY', 'M') AS PART_STATUS_DT, <!-- PART 상태확정일 -->
         B.MCT_NOTE, <!-- MCT_가공계획비고 -->
         B.MCT_WORK_TYPE, <!-- MCT_작업구분 -->
@@ -120,12 +120,13 @@
         B.OUTSIDE_REQUEST_ETC, <!-- 외주 요청가공 기타사항 -->
         SF_GET_DATE_F(B.OUTSIDE_HOPE_DUE_DT, 'YYYY', '') AS OUTSIDE_HOPE_DUE_DT, <!-- 외주 요망납기 -->
         B.OUTSIDE_UNIT_AMT, <!-- 외주 확정단가 -->
+        SF_GET_DATE_F(B.OUTSIDE_CONFIRM_DT, 'YY', 'M') AS OUTSIDE_CONFIRM_DT, <!-- 외주 확정일시 -->
         B.OUTSIDE_STATUS, <!-- 외주 가공요청상태 -->
-        SF_GET_CODE_NM(1031, B.OUTSIDE_STATUS, 'KR') AS OUTSIDE_STATUS_NM, <!-- 외주 가공요청상태 -->
+        SF_GET_CODE_NM(1031, B.OUTSIDE_STATUS, #{LOGIN_LOCALE}) AS OUTSIDE_STATUS_NM, <!-- 외주 가공요청상태 -->
         SF_GET_DATE_F(B.OUTSIDE_STATUS_DT, '', 'M') AS OUTSIDE_STATUS_DT, <!-- 외주 상태변경일시 -->
-        SF_GET_DATE_F(B.OUTSIDE_IN_DT, 'YY', '') AS OUTSIDE_IN_DT, <!-- 외주 입고일시 -->
+        SF_GET_DATE_F(B.OUTSIDE_IN_DT, '', '') AS OUTSIDE_IN_DT, <!-- 외주 입고일시 -->
         SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY,
-        SF_GET_DATE_F(B.INNER_WORK_FINISH_DT, 'YYYY', '') AS INNER_WORK_FINISH_DT
+        SF_GET_DATE_F(B.INNER_WORK_FINISH_DT, '', 'M') AS INNER_WORK_FINISH_DT
     </sql>
 
     <sql id="controlPartOrder">
@@ -151,10 +152,10 @@
             B.UNIT_FINAL_AMT * SF_GET_CONTROL_ORDER_QTY(B.CONTROL_SEQ, C.ORDER_SEQ) AS FINAL_AMT, <!-- 합계 금액 -->
             (SELECT SUM(OUT_QTY) FROM TBL_OUT WHERE CONTROL_SEQ = C.CONTROL_SEQ AND CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND ORDER_SEQ = C.ORDER_SEQ) AS OUT_QTY, <!-- 출고 -->
             <!-- 출고일자 -->
-            SF_GET_CODE_NM('1009', G.POP_POSITION, 'KR') AS POP_POSITION_NM,  <!-- 현재 위치 -->
+            SF_GET_CODE_NM('1009', G.POP_POSITION, #{LOGIN_LOCALE}) AS POP_POSITION_NM,  <!-- 현재 위치 -->
             H.INSPECT_NUM, <!-- SEQ -->
             H.INSPECT_GRADE, <!-- 등급 -->
-            SF_GET_CODE_NM('1040', H.INSPECT_GRADE, 'KR') AS INSPECT_GRADE_NM, <!-- 등급 -->
+            SF_GET_CODE_NM('1040', H.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM, <!-- 등급 -->
             H.INSPECT_TYPE, <!-- 불량/반품 -->
             CASE H.INSPECT_TYPE
                 WHEN '1' THEN '불량'
@@ -162,12 +163,12 @@
             END AS INSPECT_TYPE_NM, <!-- 불량/반품 -->
             H.INSPECT_RESULT, <!-- 불량코드 -->
             CASE H.INSPECT_TYPE
-                WHEN '1' THEN IF(H.INSPECT_GRADE = 'GRD040', SF_GET_CODE_NM('1020', H.INSPECT_RESULT, 'KR'), NULL)
-                WHEN '2' THEN SF_GET_CODE_NM('1021', H.INSPECT_RESULT, 'KR')
+                WHEN '1' THEN IF(H.INSPECT_GRADE = 'GRD040', SF_GET_CODE_NM('1020', H.INSPECT_RESULT, #{LOGIN_LOCALE}), NULL)
+                WHEN '2' THEN SF_GET_CODE_NM('1021', H.INSPECT_RESULT, #{LOGIN_LOCALE})
             END AS INSPECT_RESULT_NM,  <!-- 불량코드 -->
             H.INSPECT_DESC, <!-- 비고 -->
             H.ERROR_ACTION, <!-- 조치 -->
-            SF_GET_CODE_NM('1025', H.ERROR_ACTION, 'KR') AS ERROR_ACTION_NM, <!-- 조치 -->
+            SF_GET_CODE_NM('1025', H.ERROR_ACTION, #{LOGIN_LOCALE}) AS ERROR_ACTION_NM, <!-- 조치 -->
             H.ERROR_NOTE, <!-- 조치방안 -->
             (SELECT D.BARCODE_NUM FROM TBL_CONTROL_BARCODE D WHERE B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.DEL_YN = 'N') AS CONTROL_BARCODE_NUM,
             <!-- D.BARCODE_NUM AS CONTROL_BARCODE_NUM, 주문관리바코드번호(도면라벨) -->
@@ -923,6 +924,9 @@
         <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
             EMERGENCY_YN = IFNULL(#{EMERGENCY_YN}, 'N'),
         </if>
+        <if test="TOTAL_SHEET != null and TOTAL_SHEET != ''">
+            TOTAL_SHEET = #{TOTAL_SHEET},
+        </if>
         <if test="CONTROL_STATUS != null and CONTROL_STATUS != ''">
             CONTROL_STATUS = #{CONTROL_STATUS},
         </if>
@@ -1109,9 +1113,9 @@
                 OUTSIDE_STATUS_DT = NULL,
             </when>
         </choose>
-        <if test="OUTSIDE_IN_DT != null and OUTSIDE_IN_DT != ''">
-            OUTSIDE_IN_DT = #{OUTSIDE_IN_DT},
-        </if>
+<!--        <if test="OUTSIDE_IN_DT != null and OUTSIDE_IN_DT != ''">-->
+<!--            OUTSIDE_IN_DT = #{OUTSIDE_IN_DT},-->
+<!--        </if>-->
             STATUS_DT = NOW(),
             UPDATE_DT = NOW()
             <!-- ,UPDATE_ID #{UPDATE_ID} -->
@@ -1165,7 +1169,7 @@
         <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
             A.EMERGENCY_YN DESC,
         </if>
-            A.STATUS_DT DESC, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.PART_NUM
+            CONTROL_STATUS_DT DESC, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.PART_NUM
     </select>
 
     <select id="selectIsProcessAssembly" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -1340,7 +1344,7 @@
             ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.PART_NUM) AS ROW_NUM,
             <include refid="control"/>,
             <include refid="controlPart"/>,
-            SF_GET_CODE_NM(1009, D.POP_POSITION, 'KR') AS LAST_POP_POSITION <!-- 현재 등록된 위치 -->
+            SF_GET_CODE_NM(1009, D.POP_POSITION, #{LOGIN_LOCALE}) AS LAST_POP_POSITION <!-- 현재 등록된 위치 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                 AND IFNULL(B.OUTSIDE_YN, 'N') = 'N'
@@ -1384,7 +1388,7 @@
             <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
                 AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
             </if>
-        ORDER BY A.CONTROL_SEQ, B.PART_NUM
+        ORDER BY A.CONTROL_SEQ, B.PART_NUM, CONTROL_STATUS_DT DESC
     </select>
 
     <select id="selectProcessCompleteList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -1392,8 +1396,8 @@
             ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.PART_NUM) AS ROW_NUM,
             <include refid="control"/>,
             <include refid="controlPart"/>,
-            SF_GET_CODE_NM(1040, C.INSPECT_GRADE, 'KR') AS INSPECT_GRADE_NM,
-            SF_GET_CODE_NM(1009, D.POP_POSITION, 'KR') AS LAST_POP_POSITION <!-- 현재 등록된 위치 -->
+            SF_GET_CODE_NM(1040, C.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM,
+            SF_GET_CODE_NM(1009, D.POP_POSITION, #{LOGIN_LOCALE}) AS LAST_POP_POSITION <!-- 현재 등록된 위치 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                 AND B.WORK_TYPE != 'WTP020'
@@ -1631,7 +1635,7 @@
     <select id="selectSalesClosingHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             X.GROUP_KEY,
-            X.ROW_NUM,
+            ROW_NUMBER () OVER(ORDER BY X.COMP_NM, X.`YEAR`, X.QUARTER, X.FINISH_MONTH, X.ORDER_COMP_NM, X.CLOSE_VER) AS ROW_NUM,
             X.COMP_CD,
             X.COMP_NM,
             X.CLOSE_MONTH,
@@ -1651,7 +1655,6 @@
         FROM (
             SELECT
                 1 AS GROUP_KEY,
-                ROW_NUMBER () OVER (ORDER BY A.COMP_CD, D.CLOSE_MONTH, D.CLOSE_VER, A.ORDER_COMP_CD) AS ROW_NUM,
                 A.COMP_CD,
                 SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM,
                 D.CLOSE_MONTH,
@@ -1704,10 +1707,12 @@
             X.CLOSE_MONTH,
             X.CLOSE_VER
         ORDER BY
-            X.COMP_CD,
-            X.CLOSE_MONTH,
-            X.CLOSE_VER,
-            X.ORDER_COMP_CD
+            X.COMP_NM,
+            X.`YEAR`,
+            X.QUARTER,
+            X.FINISH_MONTH,
+            X.ORDER_COMP_NM,
+            X.CLOSE_VER
     </select>
 
     <select id="selectMonthSaleStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -1719,23 +1724,23 @@
                WHEN STATUS_TYPE = '1' THEN '입금'
                ELSE '매출'
            END STATUS_TYPE,
-           SUM(CASE WHEN Z.MM = '01' THEN Z.AMT ELSE 0 END) AS `01_AMT`,
-           SUM(CASE WHEN Z.MM = '02' THEN Z.AMT ELSE 0 END) AS `02_AMT`,
-           SUM(CASE WHEN Z.MM = '03' THEN Z.AMT ELSE 0 END) AS `03_AMT`,
-           SUM(CASE WHEN Z.MM IN ('01', '02', '03') THEN Z.AMT ELSE 0 END) AS `03_SUM_AMT`,
-           SUM(CASE WHEN Z.MM = '04' THEN Z.AMT ELSE 0 END) AS `04_AMT`,
-           SUM(CASE WHEN Z.MM = '05' THEN Z.AMT ELSE 0 END) AS `05_AMT`,
-           SUM(CASE WHEN Z.MM = '06' THEN Z.AMT ELSE 0 END) AS `06_AMT`,
-           SUM(CASE WHEN Z.MM IN ('04', '05', '06') THEN Z.AMT ELSE 0 END) AS `06_SUM_AMT`,
-           SUM(CASE WHEN Z.MM = '07' THEN Z.AMT ELSE 0 END) AS `07_AMT`,
-           SUM(CASE WHEN Z.MM = '08' THEN Z.AMT ELSE 0 END) AS `08_AMT`,
-           SUM(CASE WHEN Z.MM = '09' THEN Z.AMT ELSE 0 END) AS `09_AMT`,
-           SUM(CASE WHEN Z.MM IN ('07', '08', '09') THEN Z.AMT ELSE 0 END) AS `09_SUM_AMT`,
-           SUM(CASE WHEN Z.MM = '10' THEN Z.AMT ELSE 0 END) AS `10_AMT`,
-           SUM(CASE WHEN Z.MM = '11' THEN Z.AMT ELSE 0 END) AS `11_AMT`,
-           SUM(CASE WHEN Z.MM = '12' THEN Z.AMT ELSE 0 END) AS `12_AMT`,
-           SUM(CASE WHEN Z.MM IN ('10', '11', '12') THEN Z.AMT ELSE 0 END) AS `12_SUM_AMT`,
-           SUM(Z.AMT) AS `TOTAL_AMT`
+           CASE WHEN Z.MM = '01' THEN Z.AMT ELSE 0 END AS `01_AMT`,
+           CASE WHEN Z.MM = '02' THEN Z.AMT ELSE 0 END AS `02_AMT`,
+           CASE WHEN Z.MM = '03' THEN Z.AMT ELSE 0 END AS `03_AMT`,
+           CASE WHEN Z.MM IN ('01', '02', '03') THEN Z.AMT ELSE 0 END AS `03_SUM_AMT`,
+           CASE WHEN Z.MM = '04' THEN Z.AMT ELSE 0 END AS `04_AMT`,
+           CASE WHEN Z.MM = '05' THEN Z.AMT ELSE 0 END AS `05_AMT`,
+           CASE WHEN Z.MM = '06' THEN Z.AMT ELSE 0 END AS `06_AMT`,
+           CASE WHEN Z.MM IN ('04', '05', '06') THEN Z.AMT ELSE 0 END AS `06_SUM_AMT`,
+           CASE WHEN Z.MM = '07' THEN Z.AMT ELSE 0 END AS `07_AMT`,
+           CASE WHEN Z.MM = '08' THEN Z.AMT ELSE 0 END AS `08_AMT`,
+           CASE WHEN Z.MM = '09' THEN Z.AMT ELSE 0 END AS `09_AMT`,
+           CASE WHEN Z.MM IN ('07', '08', '09') THEN Z.AMT ELSE 0 END AS `09_SUM_AMT`,
+           CASE WHEN Z.MM = '10' THEN Z.AMT ELSE 0 END AS `10_AMT`,
+           CASE WHEN Z.MM = '11' THEN Z.AMT ELSE 0 END AS `11_AMT`,
+           CASE WHEN Z.MM = '12' THEN Z.AMT ELSE 0 END AS `12_AMT`,
+           CASE WHEN Z.MM IN ('10', '11', '12') THEN Z.AMT ELSE 0 END AS `12_SUM_AMT`,
+           Z.AMT AS `TOTAL_AMT`
         FROM (
            SELECT
               F.YYYY, F.MM, G.STATUS_TYPE, G.COMP_CD, G.ORDER_COMP_CD, G.CLOSE_MONTH, G.AMT
@@ -1863,12 +1868,12 @@
                 A.CONTROL_SEQ,
                 B.CONTROL_DETAIL_SEQ,
                 C.ORDER_SEQ,
-                SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR') AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
+                SF_GET_CODE_NM(1038, A.CONTROL_STATUS, #{LOGIN_LOCALE}) AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
                 A.CONTROL_NUM, <!-- 관리번호 -->
                 C.ORDER_NUM, <!-- 발주번호 -->
                 B.DRAWING_NUM, <!-- 도면번호 -->
                 B.SIZE_TXT, <!-- 규격 -->
-                IFNULL(SF_GET_CODE_NM(1033, B.WORK_TYPE, 'KR'), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
+                IFNULL(SF_GET_CODE_NM(1033, B.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
                 B.UNIT_FINAL_AMT, <!-- 최종공급단가 -->
                 SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY,
                 SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY, <!-- 수량 -->
@@ -1892,12 +1897,12 @@
                 A.CONTROL_SEQ,
                 B.CONTROL_DETAIL_SEQ,
                 C.ORDER_SEQ,
-                SF_GET_CODE_NM(1038, A.CONTROL_STATUS, 'KR') AS CONTROL_STATUS_NM,
+                SF_GET_CODE_NM(1038, A.CONTROL_STATUS, #{LOGIN_LOCALE}) AS CONTROL_STATUS_NM,
                 A.CONTROL_NUM, <!-- 관리번호 -->
                 C.ORDER_NUM,
                 B.DRAWING_NUM,
                 B.SIZE_TXT,
-                IFNULL(SF_GET_CODE_NM(1033, B.WORK_TYPE, 'KR'), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
+                IFNULL(SF_GET_CODE_NM(1033, B.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
                 B.UNIT_FINAL_AMT,
                 SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY,
                 SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY, <!-- 수량 -->
@@ -2005,7 +2010,7 @@
                 </if>
             GROUP BY A.COMP_CD, A.ORDER_COMP_CD, DATE_FORMAT(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m'), '%Y')
             UNION ALL
-            -- 선택 년도 금액
+            <!-- 선택 년도 금액 -->
             SELECT
                 A.COMP_CD, A.ORDER_COMP_CD,
                 DATE_FORMAT(STR_TO_DATE(A.DEPOSIT_DT, '%Y%m%d'), '%Y') as CLOSE_YEAR,
@@ -2023,7 +2028,7 @@
                 </if>
             GROUP BY A.COMP_CD, A.ORDER_COMP_CD, DATE_FORMAT(STR_TO_DATE(A.DEPOSIT_DT, '%Y%m%d'), '%Y')
             UNION ALL
-            -- 전년동 미수 금액
+            <!-- 전년동 미수 금액 -->
             SELECT
                 A.COMP_CD, A.ORDER_COMP_CD,
                 #{MONEY_MANAGE_STATUS_YEAR} as CLOSE_YEAR,
@@ -2098,7 +2103,7 @@
             A.ORDER_COMP_CD,
             (SELECT Z.COMP_NM FORM FROM jmes.TBL_COMPANY Z WHERE Z.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM,
             A.DEPOSIT_DT, DATE_FORMAT(STR_TO_DATE(A.DEPOSIT_DT, '%Y%m%d'), '%Y-%m-%d') AS DEPOSIT_DATE, A.DEPOSIT_AMT,
-            A.DEPOSIT_TYPE, jmes.SF_GET_CODE_NM('1074', A.DEPOSIT_TYPE, 'KR') AS DEPOSIT_TYPE_NM,
+            A.DEPOSIT_TYPE, jmes.SF_GET_CODE_NM('1074', A.DEPOSIT_TYPE, #{LOGIN_LOCALE}) AS DEPOSIT_TYPE_NM,
             A.DUE_DT, DATE_FORMAT(STR_TO_DATE(A.DUE_DT, '%Y%m%d'), '%Y-%m-%d') AS DUE_DATE,
             CASE WHEN IFNULL(A.DUE_DT, '99991231') <![CDATA[ <= ]]> DATE_FORMAT(NOW(), '%Y%m%d') AND DEPOSIT_TYPE IN ('2', '3') THEN 'Y' ELSE 'N' END OVER_DATE_YN,
             A.DUE_PAY_YN, A.DUE_PAY_AMT, A.NOTE
@@ -2168,15 +2173,15 @@
                   A.INVOICE_NUM,
                   A.ORDER_STAFF_SEQ,
                   SF_GET_STAFF_NM(A.ORDER_STAFF_SEQ) AS ORDER_STAFF_NM,
-                  A.COMP_CD, -- 공급사
+                  A.COMP_CD, <!-- 공급사 -->
                   SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM,
-                  B.PACKING_CNT,  -- 품수
+                  B.PACKING_CNT, <!-- 품수 -->
                   C.UNIT_FINAL_AMT,
                   D.ORDER_QTY,
                   C.UNIT_FINAL_AMT * D.ORDER_QTY AS TOTAL_AMT,
                   A.INVOICE_TITLE,
-                  A.INVOICE_DT, -- UPDATED DT
-                  '' -- 출력일시
+                  A.INVOICE_DT, <!-- UPDATED DT -->
+                  '' <!-- 출력일시 -->
               FROM TBL_INVOICE A
                   INNER JOIN TBL_INVOICE_DETAIL B ON A.INVOICE_NUM = B.INVOICE_NUM
                   INNER JOIN TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ
@@ -2291,12 +2296,12 @@
             A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.IMG_GFILE_SEQ,
             CASE WHEN IFNULL(A.EMERGENCY_YN, 'N') = 'Y' THEN '긴' ELSE SPACE(0) END EMERGENCY_YN_NM,
             A.ORDER_COMP_CD, SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM,
-            DATE_FORMAT(STR_TO_DATE(C.ORDER_DUE_DT, '%Y%m%d'), '%m-%d') as ORDER_DUE_DT,
-            DATE_FORMAT(STR_TO_DATE(C.DELIVERY_DT, '%Y%m%d'), '%m-%d') as DELIVERY_DT,
+            SF_GET_DATE_F(C.ORDER_DUE_DT, '', '') AS ORDER_DUE_DT, <!-- 발주납기 -->
+            SF_GET_DATE_F(C.DELIVERY_DT, '', '') AS DELIVERY_DT, <!-- 발주정보_납품확인 -->
             A.CONTROL_NUM, C.ORDER_QTY, C.ORDER_NUM,
-            SF_GET_CODE_NM('1013', B.PART_STATUS, 'EN') AS PART_STATUS,
-            SF_GET_CODE_NM(1009, D.POP_POSITION, 'KR') AS LAST_POP_POSITION, <!-- 현재 등록된 위치 -->
-            G.INSPECT_GRADE, jmes.SF_GET_CODE_NM('1040', G.INSPECT_GRADE, 'KR') AS INSPECT_GRADE_NM, <!-- 등급 --> F.USER_NM, H.STAFF_NM
+            SF_GET_CODE_NM(1013, B.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS,
+            SF_GET_CODE_NM(1009, D.POP_POSITION, #{LOGIN_LOCALE}) AS LAST_POP_POSITION, <!-- 현재 등록된 위치 -->
+            G.INSPECT_GRADE, jmes.SF_GET_CODE_NM('1040', G.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM, <!-- 등급 --> F.USER_NM, H.STAFF_NM
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_NUM IS NULL
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
@@ -2311,12 +2316,13 @@
             LEFT OUTER JOIN TBL_INSPECT G ON C.CONTROL_SEQ = G.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ  AND G.INSPECT_TYPE =  '1'
                AND G.INSPECT_SEQ = (SELECT MAX(X.INSPECT_SEQ) FROM TBL_INSPECT X WHERE G.CONTROL_SEQ = X.CONTROL_SEQ AND G.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ  AND G.INSPECT_TYPE =  '1')
         WHERE 1 = 1
-            <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-                AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-            </if>
-            <if test="ORDER_STAFF_SEQ != null and ORDER_STAFF_SEQ != ''">
-                AND A.ORDER_STAFF_SEQ = #{ORDER_STAFF_SEQ}
-            </if>
+            AND A.DEL_YN = 'N'
+        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+            AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+        </if>
+        <if test="ORDER_STAFF_SEQ != null and ORDER_STAFF_SEQ != ''">
+            AND A.ORDER_STAFF_SEQ = #{ORDER_STAFF_SEQ}
+        </if>
         ORDER BY C.ORDER_DUE_DT, A.ORDER_COMP_CD
     </select>
 
@@ -2354,7 +2360,7 @@
             DATE_FORMAT(STR_TO_DATE(C.ORDER_DUE_DT, '%Y%m%d'), '%m-%d') as ORDER_DUE_DT,
             DATE_FORMAT(STR_TO_DATE(A.OUT_FINISH_DT, '%Y%m%d'), '%m-%d') as OUT_FINISH_DT,
             F.COMP_NM, A.CONTROL_NUM, SUM(C.ORDER_QTY) AS ORDER_QTY,
-            SF_GET_CODE_NM('1013', B.PART_STATUS, 'EN') AS PART_STATUS
+            SF_GET_CODE_NM('1013', B.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS
         FROM TBL_CONTROL A
                  INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_NUM IS NULL
                  INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
@@ -2373,7 +2379,7 @@
             DATE_FORMAT(STR_TO_DATE(C.ORDER_DUE_DT, '%Y%m%d'), '%m-%d') as ORDER_DUE_DT,
             DATE_FORMAT(STR_TO_DATE(A.OUT_FINISH_DT, '%Y%m%d'), '%m-%d') as OUT_FINISH_DT,
             F.COMP_NM, A.CONTROL_NUM, SUM(C.ORDER_QTY) AS ORDER_QTY,
-            SF_GET_CODE_NM('1013', B.PART_STATUS, 'EN') AS PART_STATUS, G.USER_NM
+            SF_GET_CODE_NM('1013', B.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS, G.USER_NM
         FROM TBL_CONTROL A
                  INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_NUM IS NULL
                  INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
@@ -2393,7 +2399,7 @@
             DATE_FORMAT(STR_TO_DATE(C.ORDER_DUE_DT, '%Y%m%d'), '%m-%d') as ORDER_DUE_DT,
             DATE_FORMAT(STR_TO_DATE(A.OUT_FINISH_DT, '%Y%m%d'), '%m-%d') as OUT_FINISH_DT,
             F.COMP_NM, A.CONTROL_NUM, SUM(C.ORDER_QTY) AS ORDER_QTY,
-            SF_GET_CODE_NM('1013', B.PART_STATUS, 'EN') AS PART_STATUS, G.USER_NM
+            SF_GET_CODE_NM('1013', B.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS, G.USER_NM
         FROM TBL_CONTROL A
                  INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_NUM IS NULL
                  INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
@@ -2451,8 +2457,8 @@
             SET A.CONTROL_VER = A.CONTROL_VER + 1, A.UPDATE_DT = NOW(), A.UPDATE_ID = #{LOGIN_USER_ID}
         WHERE 1 = 1
             AND A.CONTROL_SEQ = #{CONTROL_SEQ}
-            AND #{CONTROL_STATUS} = 'ORD001'
-            AND EXISTS (SELECT * FROM TBL_CONTROL B WHERE A.CONTROL_SEQ = B.CONTROL_SEQ AND IFNULL(B.CONTROL_STATUS, 'ORD002') = 'ORD002' AND B.CONTROL_VER > 0)
+            AND 'ORD001' = #{CONTROL_STATUS}
+            AND EXISTS (SELECT * FROM TBL_CONTROL B WHERE A.CONTROL_SEQ = B.CONTROL_SEQ AND IFNULL(B.CONTROL_STATUS, 'ORD002') = 'ORD002')
     </update>
 
     <update id="updateControlBarcodeRevision" parameterType="java.util.HashMap">
@@ -2482,15 +2488,17 @@
             IFNULL(B.DRAWING_VER, SPACE(0)) AS DRAWING_VER, <!-- 도면번호 버전 -->
             IFNULL(SF_GET_COMP_NM(A.ORDER_COMP_CD), SPACE(0)) AS ORDER_COMP_NM, <!-- 발주업체 -->
             IFNULL(A.CONTROL_NUM, SPACE(0)) AS CONTROL_NUM, <!-- 관리번호 -->
+            CASE WHEN B.PART_NUM IS NULL THEN IFNULL(A.CONTROL_NUM, SPACE(0)) ELSE CONCAT(IFNULL(A.CONTROL_NUM, SPACE(0)), '#', B.PART_NUM) END AS CONTROL_NUM_PART, <!-- 관리번호 -->
             IFNULL(B.SIZE_TXT, SPACE(0)) AS SIZE_TXT, <!-- 규격 문자열 -->
             IFNULL(B.PART_NUM, SPACE(0)) AS PART_NUM, <!-- Part -->
-            SF_GET_CODE_NM('1039', B.SURFACE_TREAT, 'KR') AS SURFACE_TREAT_NM, <!-- 표면처리 -->
-            IFNULL(SF_GET_CODE_NM(1035, B.MATERIAL_TYPE, 'KR'), SPACE(0)) AS MATERIAL_TYPE_NM, <!-- 재질 -->
-            IFNULL(SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, 'KR'), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류 -->
-            IFNULL(SF_GET_CODE_NM(1033, B.WORK_TYPE, 'KR'), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
+            CASE WHEN A.TOTAL_SHEET IS NULL THEN SPACE(0) ELSE CONCAT('/', A.TOTAL_SHEET) END AS TOTAL_SHEET, <!-- 총장 -->
+            SF_GET_CODE_NM('1039', B.SURFACE_TREAT, #{LOGIN_LOCALE}) AS SURFACE_TREAT_NM, <!-- 표면처리 -->
+            IFNULL(SF_GET_CODE_NM(1035, B.MATERIAL_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_TYPE_NM, <!-- 재질 -->
+            IFNULL(SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류 -->
+            IFNULL(SF_GET_CODE_NM(1033, B.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
             CASE WHEN IFNULL(A.EMERGENCY_YN, 'N') = 'Y' THEN '긴급' ELSE SPACE(0) END AS EMERGENCY_BARCODE_NM, <!-- 바코드 긴급 -->
             IFNULL(B.MATERIAL_FINISH_HEAT, SPACE(0)) AS MATERIAL_FINISH_HEAT, <!-- 열처리 -->
-            IFNULL(SF_GET_CODE_NM(1042, A.MAIN_INSPECTION, 'EN'), SPACE(0)) AS MAIN_INSPECTION_NM, <!-- 주요검사품 -->
+            IFNULL(SF_GET_CODE_NM(1042, A.MAIN_INSPECTION, #{LOGIN_LOCALE}), SPACE(0)) AS MAIN_INSPECTION_NM, <!-- 주요검사품 -->
             CONCAT(IFNULL(SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), 0), " EA") AS CONTROL_ORDER_QTY, <!-- 주문 수량 -->
             IFNULL(B.ORIGINAL_SIDE_QTY, SPACE(0)) AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
             IFNULL(B.OTHER_SIDE_QTY, SPACE(0)) AS OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
@@ -2564,4 +2572,23 @@
                                 AND Q.ORDER_SEQ = #{ORDER_SEQ}
                                 AND R.DEL_YN = 'N')
     </insert>
+
+    <update id="updateOutsideConfirmDt" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART A
+            INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+        SET
+            A.OUTSIDE_CONFIRM_DT =  CASE
+                                        WHEN B.CONTROL_STATUS = 'ORD001' AND A.OUTSIDE_YN = 'Y' THEN NOW()
+                                        WHEN B.CONTROL_STATUS = 'ORD001' AND A.OUTSIDE_YN = 'N' THEN NULL
+                                        WHEN B.CONTROL_STATUS = 'ORD002'                        THEN NULL
+                                    END,
+            A.UPDATE_DT = NOW(),
+            A.UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE 1 = 1
+            AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND B.DEL_YN = 'N'
+            AND EXISTS(SELECT * FROM TBL_CONTROL B
+                        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ AND B.CONTROL_STATUS IN ('ORD001', 'ORD002') AND B.DEL_YN = 'N')
+    </update>
 </mapper>
