@@ -25,8 +25,9 @@ public class MailSenderService {
     @Autowired
     MailSenderAgent mailSenderAgent;
 
-   	@Async
-	@Scheduled(fixedRate=60000)  // 30 secound,	1000 = 1sec
+    /** 비동기 방식으로 20초 간격을 두고서 실행 처리 **/
+   	// @Async
+	@Scheduled(fixedRate=20000)  // 30 secound,	1000 = 1sec
     public void manageMailSenderActionService(){
 
         log.info("manageMailSenderActionService start");

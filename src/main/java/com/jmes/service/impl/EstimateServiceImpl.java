@@ -31,8 +31,7 @@ public class EstimateServiceImpl implements EstimateService {
         estimateDao.insertEstimateMaster(hashMap);
 
         if (jsonDetail != null) {
-            jsonMap = objectMapper.readValue(jsonDetail, new TypeReference<ArrayList<Map<String, Object>>>() {
-            });
+            jsonMap = objectMapper.readValue(jsonDetail, new TypeReference<ArrayList<Map<String, Object>>>() {});
         }
 
         for(int i=0; i<jsonMap.size(); i++) {
@@ -44,8 +43,7 @@ public class EstimateServiceImpl implements EstimateService {
         }
 
         if (jsonReceive != null) {
-            jsonMap = objectMapper.readValue(jsonReceive, new TypeReference<ArrayList<Map<String, Object>>>() {
-            });
+            jsonMap = objectMapper.readValue(jsonReceive, new TypeReference<ArrayList<Map<String, Object>>>() {});
         }
 
         for(int i=0; i<jsonMap.size(); i++) {

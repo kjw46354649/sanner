@@ -449,3 +449,11 @@ button:disabled {
 .userLayerPopup .userResultWrap99 .leftWrap { height: 150px; width: 30%; float: left; }
 .userLayerPopup .userResultWrap99 .rightWrap { height: 150px; width: 70%; float: right; }
 .userLayerPopup .userResultWrap99 .btnWrap {margin-top: 20px;text-align: center;}
+
+.controlAmountSummaryUnActive {
+    background-color: #dedede;
+}
+
+.controlAmountSummaryActive {
+    background-color: #ffffff;
+}

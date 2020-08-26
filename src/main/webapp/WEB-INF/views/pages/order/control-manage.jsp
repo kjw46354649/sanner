@@ -88,9 +88,12 @@
                         </div>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="UNIT_FINAL_AMT">단가</label>
-                            <select class="label_200" name="UNIT_FINAL_AMT" id="UNIT_FINAL_AMT" title="단가">
+                            <label class="label_100" for="UNIT_PRICE_CONFIRM">단가확인</label>
+                            <select class="label_200" name="UNIT_PRICE_CONFIRM" id="UNIT_PRICE_CONFIRM" title="단가확인">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                <c:forEach var="code" items="${HighCode.H_1017}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
                             </select>
                         </span>
                         <span class="gubun"></span>
@@ -107,6 +110,10 @@
                             <span class="chk_box"><input name="NO_UNIT_FINAL_AMT" id="NO_UNIT_FINAL_AMT" type="checkbox"><label for="NO_UNIT_FINAL_AMT"> 未단가</label></span>
                             <span class="chk_box"><input name="EMERGENCY_YN" id="EMERGENCY_YN" type="checkbox"><label for="EMERGENCY_YN"> 긴급</label></span>
                             <span class="chk_box"><input name="HIDE_PART" id="HIDE_PART" type="checkbox"><label for="HIDE_PART"> part 숨기기</label></span>
+                        </span>
+                        <span class="gubun"></span>
+                        <span id="amount_summary_area" class="slt_wrap controlAmountSummaryUnActive" style="margin-left:150px; padding-left: 10px;">
+                            <span class="chk_box"><input name="AMOUNT_SUMMARY" id="AMOUNT_SUMMARY" type="checkbox"><label for="AMOUNT_SUMMARY" id="amount_summary_html"> 공급 금액 합계 : 0</label></span>
                         </span>
                     </li>
                 </ul>
@@ -1600,9 +1607,9 @@
                 if($('#controlManageFilterKeyword').val() !== '')
                     fnFilterHandler($orderManagementGrid, 'controlManageFilterKeyword', 'controlManageFilterCondition', 'controlManageFilterColumn');
                 autoMerge(this, true);
-
                 let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
                 $('#CONTROL_MANAGE_RECORDS').html(data.length);
+                amountSummaryHtml();
             },
             cellClick: function (event, ui) {
                 supplyUnitCostInit(); // 공급단가적용 초기화
@@ -1833,7 +1840,6 @@
 
         const getOrderStatusButton = function (event) {
             let controlStatus = event.target.dataset.control_status;
-
             confrimOrderStatus(controlStatus);
         };
 
@@ -1860,7 +1866,6 @@
 
             // 중복제거
             controlSeqList = [...new Set(controlSeqList)];
-
             let message =
                 '<h4>\n' +
                 '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
@@ -2797,5 +2802,29 @@
                 $('#CONTROL_MANAGE_SAVE').click();
             }
         });
+
+        $('#CONTROL_MANAGE_SEARCH_FORM').find('#AMOUNT_SUMMARY').on('click', function(){
+            amountSummaryHtml();
+        });
+
+        function amountSummaryHtml() {
+            $('#CONTROL_MANAGE_SEARCH_FORM').find('#amount_summary_html').html("공급 금액 합계 : 0");
+            $('#CONTROL_MANAGE_SEARCH_FORM').find('#amount_summary_area').removeClass("controlAmountSummaryActive");
+            $('#CONTROL_MANAGE_SEARCH_FORM').find('#amount_summary_area').addClass("controlAmountSummaryUnActive");
+            let amountSummaryChk = $('#CONTROL_MANAGE_SEARCH_FORM').find('#AMOUNT_SUMMARY').is(":checked");
+            if(amountSummaryChk) {
+                let totalAmount = 0;
+                let gridData = $orderManagementGrid.pqGrid('option', 'dataModel.data');
+                $.each(gridData, function (key, rowData) {
+                    if (rowData.FINAL_AMT) {
+                        totalAmount += parseFloat(rowData.FINAL_AMT);
+                    }
+                });
+                let totalAmountCurrency = pq.formatNumber(totalAmount, "#,###,###");
+                $('#CONTROL_MANAGE_SEARCH_FORM').find('#amount_summary_area').addClass("controlAmountSummaryActive");
+                $('#CONTROL_MANAGE_SEARCH_FORM').find('#amount_summary_html').html("공급 금액 합계 : " + totalAmountCurrency);
+            }
+        }
+
     });
 </script>

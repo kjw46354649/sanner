@@ -450,7 +450,7 @@
                             }else{
                                 let parameters = {
                                     'url': '/json-info',
-                                    'data': {'queryId': 'machine.selectResultManageList', 'BARCODE_NUM': barcodeN}
+                                    'data': {'queryId': 'machine.selectResultManagePopInfo', 'BARCODE_NUM': barcodeN}
                                 };
                                 fnPostAjax(function (data, callFunctionParam) {
                                     if(data.info){
@@ -882,7 +882,7 @@
 
         $("#cam_work_manage_detail_pop").find('.cam_work_manage_detail_pop_close').on('click', function () {
             $('#cam_work_manage_detail_pop').modal('hide');
-            $mctCamManageSearchBtn.trigger("click");
+            // $mctCamManageSearchBtn.trigger("click");
         });
 
         /* event */
@@ -902,7 +902,7 @@
                     let infoParameters = {
                         'url': '/json-info',
                         'data': {
-                            'queryId': 'machine.selectResultManageList',
+                            'queryId': 'machine.selectResultManagePopInfo',
                             'CONTROL_NUM': $('#cam_work_manage_pop_form').find('#CONTROL_NUM').val(),
                             'CONTROL_DETAIL_SEQ': $('#cam_work_manage_pop_form').find('#CONTROL_DETAIL_SEQ').val()
                         }
@@ -911,6 +911,7 @@
                         $(this).stopWaitMe();
                         if (infoData.info) {
                             camWorkManagePop(infoData.info, false);
+                            $mctCamManageSearchBtn.trigger("click");
                         } else {
                             fnAlert(null, "관리번호를 확인 해 주십시오. 실적 등록 대상이 아닙니다.");
                             return;
@@ -936,6 +937,7 @@
             $camWorkTempSaveBtn.focus();
             fnPostAjax(function (data, callFunctionParam) {
                 fnAlert(null, "임시저장을 완료 하였습니다.");
+                $mctCamManageSearchBtn.trigger("click");
             }, parameters, '');
         });
 
@@ -952,7 +954,9 @@
             };
             $camWorkSaveAndCompleteBtn.focus();
             fnPostAjax(function (data, callFunctionParam) {
-                $('#cam_work_manage_detail_pop').modal('hide');
+                let controlNum = $('#cam_work_manage_pop_form').find('#CONTROL_NUM').val();
+                let controlDetailSeq = $('#cam_work_manage_pop_form').find('#CONTROL_DETAIL_SEQ').val();
+                fnPopLoadControlPartInfo(controlNum, controlDetailSeq);
                 $mctCamManageSearchBtn.trigger("click");
             }, parameters, '');
         });
@@ -969,11 +973,42 @@
                 };
                 $camWorkCancelBtn.focus();
                 fnPostAjax(function (data, callFunctionParam) {
-                    $('#cam_work_manage_detail_pop').modal('hide');
+                    let controlNum = $('#cam_work_manage_pop_form').find('#CONTROL_NUM').val();
+                    let controlDetailSeq = $('#cam_work_manage_pop_form').find('#CONTROL_DETAIL_SEQ').val();
+                    fnPopLoadControlPartInfo(controlNum, controlDetailSeq);
                     $mctCamManageSearchBtn.trigger("click");
                 }, parameters, '');
             });
         });
+
+        /**
+         * @description Ajax Post
+         * @param {function} callFunction - 리텅 Function 처리
+         * @param {object} params - 호출 URL에 Parameter 정보
+         * @param {*} callFunctionParam - 리텅 Function 전달 Parameter
+         */
+        let fnPopLoadControlPartInfo = function (controlNum, controlDetailSeq) {
+            'use strict';
+
+            $(this).startWaitMe();
+            let infoParameters = {
+                'url': '/json-info',
+                'data': {
+                    'queryId': 'machine.selectResultManagePopInfo',
+                    'CONTROL_NUM': controlNum,
+                    'CONTROL_DETAIL_SEQ': controlDetailSeq
+                }
+            };
+            fnPostAjax(function (infoData, infoCallFunctionParam) {
+                $(this).stopWaitMe();
+                if (infoData.info) {
+                    camWorkManagePop(infoData.info, false);
+                } else {
+                    fnAlert(null, "관리번호를 확인 해 주십시오. 실적 등록 대상이 아닙니다.");
+                    return;
+                }
+            }, infoParameters, '');
+        };
 
         $mctCamManageSearchBtn.click(function(event) {
             $mctResultManageGrid.pqGrid('option', 'dataModel.postData', function (ui) {

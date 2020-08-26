@@ -1042,8 +1042,6 @@
 
                 $("#estimate_register_info_form #queryId").val('insertEstimateMaster');
                 $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
-
-
                 let detail_data = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data');
                 //let mail_data = $("#EMAIL_CONTENT_TXT").val();
                 let mail_data = CKEDITOR.instances.EMAIL_CONTENT_TXT.getData();

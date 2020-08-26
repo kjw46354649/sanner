@@ -129,6 +129,15 @@
                             <span class="calendar_span">
                                 <input type="text" title="달력정보" name="ITEM_ORDER_REGISTER_END_DATE" id="ITEM_ORDER_REGISTER_END_DATE" readonly><button type="button" id="ITEM_ORDER_REGISTER_END_DATE_BUTTON">달력선택</button>
                             </span>
+                            <span class="radio_box" style="margin-left:10px;">
+                                <input reqcd="R" type="radio" name="SEL_ITEM_ORDER_REGISTER_TERM" id="SEL_ITEM_ORDER_REGISTER_TERM_DAY" value="today" ><label for="SEL_ITEM_ORDER_REGISTER_TERM_DAY">오늘</label>
+                            </span>
+                            <span class="radio_box">
+                                <input reqcd="R" type="radio" name="SEL_ITEM_ORDER_REGISTER_TERM" id="SEL_ITEM_ORDER_REGISTER_TERM_WEEK" value="week"><label for="SEL_ITEM_ORDER_REGISTER_TERM_WEEK">-1주</label>
+                            </span>
+                            <span class="radio_box">
+                                <input reqcd="R" type="radio" name="SEL_ITEM_ORDER_REGISTER_TERM" id="SEL_ITEM_ORDER_REGISTER_TERM_MONTH" value="month"><label for="SEL_ITEM_ORDER_REGISTER_TERM_MONTH">-1개월</label>
+                            </span>
                         </div>
                         <span class="gubun"></span>
                         <span>
@@ -249,6 +258,35 @@
                 onClose: function () { this.focus(); }
             });
         };
+
+        $('#ITEM_ORDER_REGISTER_START_DATE').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#ITEM_ORDER_REGISTER_END_DATE').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#ITEM_ORDER_REGISTER_START_DATE').datepicker('setDate', 'today');
+        $('#ITEM_ORDER_REGISTER_END_DATE').datepicker('setDate', 'today');
+
+        /** 공통 코드 이외의 처리 부분 **/
+        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#M_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
+        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
+
+        $("#item_order_register_search_form").find('[name=SEL_ITEM_ORDER_REGISTER_TERM]').change(function () {
+             let value = $(this).val(), today = new Date(), newDate = new Date();
+             console.log(value);
+             switch (value) {
+                 case "today":
+                     break;
+                 case "week":
+                     newDate.setDate(newDate.getDate() - 7);
+                     break;
+                 case "month":
+                     newDate.setMonth(newDate.getMonth() - 1);
+                     break;
+             }
+             $("#item_order_register_search_form").find('#ITEM_ORDER_REGISTER_START_DATE').val(newDate.yyyymmdd());
+             $("#item_order_register_search_form").find('#ITEM_ORDER_REGISTER_END_DATE').val(today.yyyymmdd());
+        });
+
+        $("#item_order_register_search_form").find('#SEL_ITEM_ORDER_REGISTER_TERM_WEEK').click();
 
         let itemOrderRegisterLeftColModel= [
             {title: '가공 확정일시', dataType: 'date', dataIndx: 'STATUS_DT', width: 75, editable: false},
@@ -1819,15 +1857,6 @@
             }
         }
 
-        $('#ITEM_ORDER_REGISTER_START_DATE').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#ITEM_ORDER_REGISTER_END_DATE').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#ITEM_ORDER_REGISTER_START_DATE').datepicker('setDate', 'today');
-        $('#ITEM_ORDER_REGISTER_END_DATE').datepicker('setDate', 'today');
-        
-        /** 공통 코드 이외의 처리 부분 **/
-        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
-        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#M_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
-        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
     });
 
     // topWrap 확장 함수

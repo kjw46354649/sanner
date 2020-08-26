@@ -68,14 +68,14 @@
         )
         SELECT
             #{MAIL_BOX_SEQ}, A.EMAIL_TITLE, A.EMAIL_CONTENT,
-            '진성정밀', 'jins-2002@daum.net', C.COMP_EMAIL,
+            '진성정밀', 'jins-2002@daum.net', GROUP_CONCAT(B.RECEIVER_EMAIL) AS RECV_EMAIL,
             '' AS CC_EMAIL, '' AS HCC_EMAIL, A.ETC_GFILE_SEQ,
             'EMSTS001', 'N', 0,
             A.EST_SEQ, NOW(), #{USER_ID}
         FROM jmes.TBL_ESTIMATE A
-            INNER JOIN TBL_COMPANY B ON A.COMP_CD = B.COMP_CD
-            INNER JOIN TBL_COMPANY C ON A.ORDER_COMP_CD = C.COMP_CD
-        WHERE EST_SEQ = #{EST_SEQ}
+            LEFT OUTER JOIN jmes.TBL_ESTIMATE_RECEIVER B ON A.EST_SEQ = B.EST_SEQ
+        WHERE A.EST_SEQ = #{EST_SEQ}
+        GROUP BY A.EST_SEQ
     </insert>
 
     <insert id="insertItemOrderRegisterPopSubmitMail" parameterType="java.util.HashMap">

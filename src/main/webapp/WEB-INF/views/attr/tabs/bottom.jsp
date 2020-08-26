@@ -1316,9 +1316,8 @@
 
             console.log(dataInfo);
 
-            if(!dataInfo) {
-                $("#g_item_detail_pop_form").find(".list1").find(".rowStyle").find("td").html('');
-            }else{
+            $("#g_item_detail_pop_form").find(".list1").find(".rowStyle").find("td").html('');
+            if(dataInfo) {
                 //fnJsonDataToForm("stock_manage_pop_form", dataInfo);
                 $("#g_item_detail_pop_form").find("#CONTROL_NUM").html(dataInfo.CONTROL_NUM);
                 $("#g_item_detail_pop_form").find("#DRAWING_NUM").html(dataInfo.DRAWING_NUM);
