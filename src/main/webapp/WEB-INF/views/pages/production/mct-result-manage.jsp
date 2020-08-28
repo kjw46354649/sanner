@@ -572,6 +572,19 @@
             {title: '긴<br>급', dataIndx: 'EMERGENCY_YN', minWidth: 15, width: 20},
             {title: '주<br>요', dataIndx: 'MAIN_INSPECTION', minWidth: 15, width: 20},
             {title: '형<br>태', dataIndx: 'WORK_NM', minWidth: 15, width: 20},
+            {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false,
+                render: function (ui) {
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                    });
+                }
+            },
             {title: '관리번호', dataIndx: 'CONTROL_NUM', minWidth: 50, width: 160},
             {title: '파<br>트', dataIndx: 'PART_NUM', minWidth: 10, width: 30},
             {title: '소재종류', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 40, width: 80},
@@ -699,19 +712,6 @@
                     {title: '선반', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_RACK', minWidth: 20, width: 30},
                     {title: '연마', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_GRINDING', minWidth: 20, width: 30},
                 ]
-            },
-            {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false,
-                render: function (ui) {
-                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
-                    return '';
-                },
-                postRender: function(ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find("#detailView").bind("click", function () {
-                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
-                    });
-                }
             },
             // {title: '예상가공<br>시간(M)', dataType: 'integer', dataIndx: 'MCT_WORK_TIME', minWidth: 15, width: 50},
             {title: '작업<br>구분', dataIndx: 'MCT_WORK_TYPE_NM', minWidth: 15, width: 50},
