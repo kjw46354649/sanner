@@ -802,7 +802,7 @@
         });
 
         $('#CONTROL_CLOSE_HISTORY_SAVE').on('click', function () {
-            const updateQueryList = ['orderMapper.updateControlPart', 'orderMapper.updateMonthCloseDetailNote'];
+            const updateQueryList = ['orderMapper.updateControlPartFromCloseHistory', 'orderMapper.updateMonthCloseDetailNote'];
 
             fnModifyPQGrid($closeHistoryGrid, [], updateQueryList);
         });

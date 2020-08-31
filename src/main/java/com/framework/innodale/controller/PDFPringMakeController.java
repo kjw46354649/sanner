@@ -136,7 +136,7 @@ public class PDFPringMakeController {
             table.init();
 
             table.setWidthPercentage(100);
-            table.setWidths(new int[] {20, 2, 16, 16, 5, 13, 4, 10, 7, 4, 4, 6});
+            table.setWidths(new int[] {20, 2, 16, 16, 6, 12, 4, 10, 7, 4, 4, 6});
 
             BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String)controlInfo.get("BARCODE_NUM"), 110, 35);
             int width = bitMatrix.getWidth();

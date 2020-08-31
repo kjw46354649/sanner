@@ -1767,7 +1767,7 @@
             ];
             const normalModeArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD',
-                'CONTROL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM',
+                'CONTROL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN', 'TOTAL_SHEET', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM',
                 'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
                 'OUT_QTY', 'ORDER_OUT_FINISH_DT', 'INVOICE_NUM', 'PART_UNIT_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
                 'CONTROL_PART_QTY', 'WORK_TYPE', 'INNER_DUE_DT', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN',
@@ -1796,7 +1796,8 @@
             const allModeArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'ORDER_STAFF_SEQ',
                 'DESIGNER_NM', 'CONTROL_NOTE', 'INVOICE_NUM', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE',
-                'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT',
+                'MAIN_INSPECTION', 'EMERGENCY_YN', 'TOTAL_SHEET', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM',
+                'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT',
                 'WORK_TYPE', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'INNER_WORK_FINISH_DT', 'MATERIAL_DETAIL',
                 'MATERIAL_TYPE_NM', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY',
                 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
@@ -2031,7 +2032,7 @@
                 'DETAIL_DIFFICULTY', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
                 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT',
                 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'UNIT_MATERIAL_AUTO_YN', 'UNIT_TM_AUTO_YN', 'UNIT_GRIND_AUTO_YN',
-                'UNIT_HEAT_AUTO_YN', 'UNIT_SURFACE_AUTO_YN', 'UNIT_PROCESS_AUTO_YN', 'UNIT_AMT_NOTE', 'UNIT_FINAL_EST_AMT',
+                'UNIT_HEAT_AUTO_YN', 'UNIT_SURFACE_AUTO_YN', 'UNIT_PROCESS_AUTO_YN', 'UNIT_AMT _NOTE', 'UNIT_FINAL_EST_AMT',
                 'UNIT_FINAL_AMT', 'FINAL_AMT', 'DWG_GFILE_SEQ', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'IMG_GFILE_SEQ',
                 'VIEW_GFILE_SEQ', 'PART_STATUS', 'STATUS_DT', 'MCT_NOTE', 'MCT_WORK_TYPE', 'OUTSIDE_COMP_CD',
                 'OUTSIDE_COMP_NM', 'OUTSIDE_ORDER_NUM', 'OUTSIDE_NOTE', 'OUTSIDE_MATERIAL_SUPPLY_YN',
@@ -2120,7 +2121,7 @@
 
         $('#CONTROL_MANAGE_SAVE').on('click', function () {
             const insertQueryList = ['orderMapper.createControlPart', 'orderMapper.createControlPartOrder', 'orderMapper.createControlBarcode', 'orderMapper.createOutBarcode'];
-            const updateQueryList = ['orderMapper.updateControlMaster', 'orderMapper.updateControlPart', 'orderMapper.updateControlPartOrder'];
+            const updateQueryList = ['orderMapper.updateControlFromControlManage', 'orderMapper.updateControlPartFromControlManage', 'orderMapper.updateControlPartOrder'];
 
             fnModifyPQGrid($orderManagementGrid, insertQueryList, updateQueryList);
         });
@@ -2282,13 +2283,14 @@
             let selectedRowCount = selectedOrderManagementRowIndex.length;
 
             for (let i = 0; i < selectedRowCount; i++) {
-                // let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
 
                 // TODO: 필수데이터가 입력되어 있어야만 확정 가능
-                // if (rowData.OUTSIDE_YN === 'Y') {
-                //     // fnAlert(null, '외주가 ‘Y’ 인 상태에서는 외주관리화면에서 대상을 먼저 삭제해야만 확정취소가 가능');
-                //     // return false;
-                // }
+                if (fnIsEmpty(rowData.PDF_GFILE_SEQ)) {
+                    //TODO: 문구 수정
+                    fnAlert(null, 'PDF확장자 파일 도면을 등록 후 다시 시도해주세요.');
+                    return false;
+                }
             }
 
             getOrderStatusButton(event);

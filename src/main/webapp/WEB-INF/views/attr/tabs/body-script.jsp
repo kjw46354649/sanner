@@ -445,6 +445,12 @@
             changes.queryIdList = QUERY_ID_ARRAY;
             parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
 
+            // const replacer = function (key, value) {
+            //     return value === undefined ? null : value;
+            // };
+            //
+            // parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes, replacer)}};
+
             fnPostAjax(function (data, callFunctionParam) {
                 grid.pqGrid('refreshDataAndView');
             }, parameters, '');
@@ -1126,6 +1132,15 @@
                     'transitionOff': true
                 }).show().autoOk(autoOk);
         }
+    };
+
+
+    /**
+     * 문자열이 빈 문자열인지 체크하여 결과값을 리턴한다.
+     * @param str {String} 체크할 문자열
+     */
+    const fnIsEmpty =  function(str){
+        return str === undefined || str === null || str === '';
     };
 
     $(document).on('click', '#DETAIL_VIEW', function () {
