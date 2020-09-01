@@ -24,23 +24,27 @@
 <body>
 	<div class="bodyWrap mct">
 		<div class="header">
-			<div class="left"><h1>MCT 가동 및 주요 현황</h1><a href="/tv/mct" class="refresh">refresh</a></div>
-			<div class="right">
-				<div class="infoTit">MCT 가동률</div>
-				<div class="infoContsWrap">
+			<div class="left">
+				<h1 class="title">MCT 가동 및 주요 현황</h1>
+				<div class="infoTit infoContsWrap">
 					<div class="infoCont">
 						<span>현재</span>
-						<span class="txtB">82%</span>
+<%--						<span class="txtB">82%</span>--%>
+						<span class="txtB"></span>
 					</div>
 					<div class="infoCont">
 						<span>3일간 평균</span>
-						<span class="txtR">68%</span>
+						<span class="txtR"></span>
 					</div>
 					<div class="infoCont">
-						<span>2月 평균</span>
-						<span>72%</span>
+						<span>月 평균</span>
+						<span></span>
 					</div>
 				</div>
+				<a href="/tv/mct" class="refresh">refresh</a>
+			</div>
+			<div class="right">
+				<div class="infoTit"><img src="/resource/asset/images/common/logo-02.png"> &nbsp;&nbsp;진성정밀 & (주)제이에스하이테크</div>
 			</div>
 		</div>
 		<section class="contents pop ty2">
