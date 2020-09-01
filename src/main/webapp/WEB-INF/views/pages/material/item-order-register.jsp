@@ -23,6 +23,10 @@
                     <input type="text" name="" id="item_order_register_material_order_num" value="" style="background: lightgrey;" readonly>
                     <input type="hidden" name="" id="item_order_register_material_order_num_temp" value="">
                 </span>
+                <span class="list_t" style="width: 100px;">작성자</span>
+                <span style="width: 103px;">
+                    <select id="ORDER_USER_ID" name="ORDER_USER_ID" title="작성자" class="wd_100"></select>
+                </span>
                 <div style="line-height: 45px; display: none; padding-right: 5px;" class="d-inline right_float" id="orderNotCompleteBtnBox">
                     <button type="button" class="defaultBtn radius" id="btnItemOrderRegisterPopAdd">추가</button>
                     <button type="button" class="defaultBtn radius green" id="btnItemOrderRegisterPopSave">저장</button>
@@ -268,6 +272,8 @@
         fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
         fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#M_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
         fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}});
+
+        fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_popup").find("#ORDER_USER_ID"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}});
 
         $("#item_order_register_search_form").find('[name=SEL_ITEM_ORDER_REGISTER_TERM]').change(function () {
              let value = $(this).val(), today = new Date(), newDate = new Date();
@@ -750,7 +756,8 @@
             },*/
             {title: '', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
-            {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', hidden: true}
+            {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', hidden: true},
+            {title: '', dataType: 'string', dataIndx: 'ORDER_USER_ID', hidden: true}
         ];
 
         let itemOrderRegisterPopTopColModel_enabled= [
@@ -922,7 +929,8 @@
             },
             {title: '', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
-            {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', hidden: true}
+            {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', hidden: true},
+            {title: '', dataType: 'string', dataIndx: 'ORDER_USER_ID', hidden: true}
         ];
 
         itemOrderRegisterLeftGrid.pqGrid({
@@ -1119,10 +1127,13 @@
                     //this.flex();
                     let data = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data');
                     let MATERIAL_ORDER_NUM = "";
+                    let ORDER_USER_ID = "";
+                    let ORDER_STATUS = "";
                     if(data.length > 0) {
                         $('#item_order_register_popup_top_grid_records').html(data.length);
-
                         MATERIAL_ORDER_NUM = data[0].MATERIAL_ORDER_NUM === undefined ? "" : data[0].MATERIAL_ORDER_NUM;
+                        ORDER_USER_ID = data[0].ORDER_USER_ID === undefined ? "" : data[0].ORDER_USER_ID;
+                        ORDER_STATUS = data[0].ORDER_STATUS === undefined ? "" : data[0].ORDER_STATUS;
                     }
                     setTimeout(function(){
                         let parameters = {'url': '/json-list', 'data': {'queryId': 'selectItemOrderRegisterNextMaterialOrderNum'}};
@@ -1135,7 +1146,14 @@
                                 $("#item_order_register_material_order_num_temp").val(MATERIAL_ORDER_NUM);
                                 $("#item_order_register_material_order_num").val(MATERIAL_ORDER_NUM);
                             }
-
+                            if(ORDER_STATUS === 'MST002' || ORDER_STATUS === 'MST004')
+                                if(ORDER_USER_ID){
+                                    $("#item_order_register_popup").find("#ORDER_USER_ID").val(ORDER_USER_ID);
+                                }else{
+                                    $("#item_order_register_popup").find("#ORDER_USER_ID").val('');
+                                }
+                            else
+                                $("#item_order_register_popup").find("#ORDER_USER_ID").val('${authUserInfo.USER_ID}');
                             makeInnerTable();
                         }, parameters, '');
                     }, 900);
@@ -1330,10 +1348,11 @@
             $("#item_order_register_popup_form #queryId").val("selectItemOrderRegisterPopListNum");
 
             let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num_temp").val();
+            let ORDER_USER_ID = $("#item_order_register_popup").find("#ORDER_USER_ID").val();
             let data = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data');
             let totalRecords = data.length;
             for(let tempI=0; tempI<totalRecords; tempI++){
-                itemOrderRegisterPopTopGrid.pqGrid("updateRow", { 'rowIndx': tempI , row: { 'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM } });
+                itemOrderRegisterPopTopGrid.pqGrid("updateRow", { 'rowIndx': tempI , row: { 'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM, 'ORDER_USER_ID': ORDER_USER_ID } });
             }
             let itemOrderRegisterInsertUpdateQueryList = ['material.insertUpdateItemOrderRegisterPopSave'];
 
@@ -1370,7 +1389,6 @@
 
         $("#btnItemOrderRegisterPopDelete").on('click', function() {
             let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num").val();
-
             //Confirm Box
             let title = "Information";
             let message = "주문서를 삭제하시겠습니까?";
@@ -1406,6 +1424,7 @@
             let rowDataArray = "";
             let orderList = [];
             let MATERIAL_ORDER_NUM = "";
+            // let ORDER_USER_ID = "";
             if(itemOrderRegisterSelectedRowIndex) {
                 let selectedRowCount = itemOrderRegisterSelectedRowIndex.length;
                 for (let i = 0; i < selectedRowCount; i++) {
@@ -1414,6 +1433,7 @@
                     rowDataArray += "'" + CONTROL_SEQ + "" + CONTROL_DETAIL_SEQ + "',";
 
                     MATERIAL_ORDER_NUM = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).MATERIAL_ORDER_NUM;
+                    // ORDER_USER_ID = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).ORDER_USER_ID;
                     orderList.push(MATERIAL_ORDER_NUM);
 
                 }
@@ -1435,6 +1455,7 @@
                     $("#item_order_register_popup_form #queryId").val("selectItemOrderRegisterPopListNum");
                     $("#item_order_register_popup_form #CONCAT_SEQ").val("");
                     $("#item_order_register_popup_form #MATERIAL_ORDER_NUM").val(MATERIAL_ORDER_NUM);
+                    //$("#item_order_register_popup").find("#ORDER_USER_ID").val(ORDER_USER_ID);
                 }
             } else {
                 $("#item_order_register_popup_form #queryId").val("selectItemOrderRegisterPopListSeq");
@@ -1773,6 +1794,7 @@
 
             $("#orderNotCompleteBtnBox").css('display', 'none');
             $("#orderCompleteBtnBox").css('display', 'none');
+            $("#item_order_register_popup").find("#ORDER_USER_ID").attr('disabled', false);
 
             if(MATERIAL_ORDER_NUM == ""){
                 $("#btnItemOrderRegisterPopAdd").attr('disabled', false);
@@ -1781,17 +1803,20 @@
 
                 $("#btnItemOrderRegisterPopDelete").css('display', 'none');
                 $("#orderNotCompleteBtnBox").css('display', 'block');
+                $("#item_order_register_popup").find("#ORDER_USER_ID").attr('disabled', false);
             }else{
                 if(ORDER_STATUS == 'MST002' || ORDER_STATUS == 'MST004') {
                     $("#btnItemOrderRegisterPopAdd").attr('disabled', true);
                     $("#btnItemOrderRegisterPopSave").attr('disabled', true);
                     $("#btnItemOrderRegisterPopSubmit").attr('disabled', true);
+                    $("#item_order_register_popup").find("#ORDER_USER_ID").attr('disabled', true);
 
                     $("#orderCompleteBtnBox").css('display', 'block');
                 }else{
                     $("#btnItemOrderRegisterPopAdd").attr('disabled', false);
                     $("#btnItemOrderRegisterPopSave").attr('disabled', false);
                     $("#btnItemOrderRegisterPopSubmit").attr('disabled', false);
+                    $("#item_order_register_popup").find("#ORDER_USER_ID").attr('disabled', false);
 
                     $("#orderNotCompleteBtnBox").css('display', 'block');
                 }

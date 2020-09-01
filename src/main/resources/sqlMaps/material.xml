@@ -330,7 +330,7 @@
                 END AS M_ORDER_QTY,
                 F.ORDER_NOTE AS M_ORDER_NOTE, CASE WHEN F.SIZE_TXT IS NOT NULL THEN F.SIZE_TXT ELSE B.SIZE_TXT END AS M_SIZE_TXT,
                 DATE_FORMAT(STR_TO_DATE(F.HOPE_DUE_DT, '%Y%m%d'), '%Y-%m-%d') AS HOPE_DUE_DT,
-                F.ORDER_STATUS, F.NOTE
+                F.ORDER_STATUS, F.NOTE, F.ORDER_USER_ID
             FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.WORK_TYPE != 'WTP020'
                     AND B.PART_STATUS IN( 'PRO002', 'PRO004', 'PRO006' ) AND B.OUTSIDE_YN = 'N'
@@ -373,7 +373,7 @@
                 IFNULL(SF_GET_STOCK_OUT(F.MATERIAL_ORDER_SEQ, 'QTY'), 0) AS M_ORDER_QTY,
                 F.ORDER_NOTE AS M_ORDER_NOTE, CASE WHEN F.SIZE_TXT IS NOT NULL THEN F.SIZE_TXT ELSE B.SIZE_TXT END AS M_SIZE_TXT,
                 DATE_FORMAT(STR_TO_DATE(F.HOPE_DUE_DT, '%Y%m%d'), '%Y-%m-%d') AS HOPE_DUE_DT,
-                F.ORDER_STATUS, F.NOTE
+                F.ORDER_STATUS, F.NOTE, F.ORDER_USER_ID
             FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.WORK_TYPE != 'WTP020'
                     AND B.PART_STATUS IN( 'PRO002', 'PRO004', 'PRO006' ) AND B.OUTSIDE_YN = 'N'
@@ -401,7 +401,7 @@
                 F.ORDER_QTY AS M_ORDER_QTY,
                 F.ORDER_NOTE AS M_ORDER_NOTE, F.SIZE_TXT AS M_SIZE_TXT,
                 DATE_FORMAT(STR_TO_DATE(F.HOPE_DUE_DT, '%Y%m%d'), '%Y-%m-%d') AS HOPE_DUE_DT,
-                F.ORDER_STATUS, F.NOTE
+                F.ORDER_STATUS, F.NOTE, F.ORDER_USER_ID
             FROM TBL_MATERIAL_ORDER F
             WHERE 1=1
                 AND NOT EXISTS (SELECT * FROM TBL_CONTROL_PART X WHERE X.CONTROL_SEQ = F.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ)
@@ -425,7 +425,7 @@
                 IFNULL(SF_GET_STOCK_OUT(F.MATERIAL_ORDER_SEQ, 'QTY'), 0) AS M_ORDER_QTY,
                 F.ORDER_NOTE AS M_ORDER_NOTE, F.SIZE_TXT AS M_SIZE_TXT,
                 DATE_FORMAT(STR_TO_DATE(F.HOPE_DUE_DT, '%Y%m%d'), '%Y-%m-%d') AS HOPE_DUE_DT,
-                F.ORDER_STATUS, F.NOTE
+                F.ORDER_STATUS, F.NOTE, F.ORDER_USER_ID
             FROM TBL_MATERIAL_ORDER F
             WHERE 1=1
                 AND NOT EXISTS (SELECT * FROM TBL_CONTROL_PART X WHERE X.CONTROL_SEQ = F.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ)
@@ -451,7 +451,9 @@
 
     <update id="updateItemOrderRegisterOrderStatus" parameterType="java.util.HashMap">
         UPDATE TBL_MATERIAL_ORDER
-        SET SEND_DT = NOW()
+        SET SEND_DT = NOW(),
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE 1=1
             AND MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
     </update>
@@ -476,7 +478,7 @@
             MATERIAL_COMP_CD, HOPE_DUE_DT, SIZE_TXT,
             SIZE_TYPE, SIZE_W, SIZE_H, SIZE_T, SIZE_D, SIZE_L, REQUEST_NOTE,
             MATERIAL_TYPE, MATERIAL_DETAIL, MATERIAL_KIND,
-            ORDER_NOTE, ORDER_QTY, ORDER_AMT,
+            ORDER_NOTE, ORDER_QTY, ORDER_AMT, ORDER_USER_ID,
             ORDER_STATUS, ORDER_DT, IN_DT, CANCEL_DT, NOTE,
             INSERT_DT, INSERT_ID, CANCEL_USER_ID
         )
@@ -496,7 +498,7 @@
             SF_GET_SIZE_TXT('SIZE_H', #{M_SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_T', #{M_SIZE_TXT}),
             SF_GET_SIZE_TXT('SIZE_D', #{M_SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_L', #{M_SIZE_TXT}), #{REQUEST_NOTE},
             #{MATERIAL_TYPE}, #{MATERIAL_DETAIL}, #{MATERIAL_KIND},
-            #{M_ORDER_NOTE}, #{M_ORDER_QTY}, #{ORDER_AMT},
+            #{M_ORDER_NOTE}, #{M_ORDER_QTY}, #{ORDER_AMT}, #{ORDER_USER_ID},
             #{ORDER_STATUS}, #{ORDER_DT}, #{IN_DT}, #{CANCEL_DT}, #{NOTE},
             NOW(), #{LOGIN_USER_ID}, #{CANCEL_USER_ID}
         )
@@ -516,6 +518,7 @@
             MATERIAL_KIND = #{MATERIAL_KIND},
             ORDER_NOTE = #{M_ORDER_NOTE},
             ORDER_QTY = #{M_ORDER_QTY},
+            ORDER_USER_ID = #{ORDER_USER_ID},
             NOTE = #{NOTE},
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}
@@ -543,7 +546,7 @@
             MATERIAL_COMP_CD, HOPE_DUE_DT, SIZE_TXT,
             SIZE_TYPE, SIZE_W, SIZE_H, SIZE_T, SIZE_D, SIZE_L, REQUEST_NOTE,
             MATERIAL_TYPE, MATERIAL_DETAIL, MATERIAL_KIND,
-            ORDER_NOTE, ORDER_QTY, ORDER_AMT, NOTE,
+            ORDER_NOTE, ORDER_QTY, ORDER_AMT, ORDER_USER_ID, NOTE,
             INSERT_DT, INSERT_ID
         )
         VALUES
@@ -562,7 +565,7 @@
             SF_GET_SIZE_TXT('SIZE_H', #{M_SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_T', #{M_SIZE_TXT}),
             SF_GET_SIZE_TXT('SIZE_D', #{M_SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_L', #{M_SIZE_TXT}), #{REQUEST_NOTE},
             #{MATERIAL_TYPE}, #{MATERIAL_DETAIL}, #{MATERIAL_KIND},
-            #{M_ORDER_NOTE}, #{M_ORDER_QTY}, #{ORDER_AMT}, #{NOTE},
+            #{M_ORDER_NOTE}, #{M_ORDER_QTY}, #{ORDER_AMT}, #{ORDER_USER_ID}, #{NOTE},
             NOW(), #{LOGIN_USER_ID}
         )
         ON DUPLICATE KEY UPDATE
@@ -582,6 +585,7 @@
             MATERIAL_KIND = #{MATERIAL_KIND},
             ORDER_NOTE = #{M_ORDER_NOTE},
             ORDER_QTY = #{M_ORDER_QTY},
+            ORDER_USER_ID = #{ORDER_USER_ID},
             ORDER_STATUS = NULL,
             NOTE = #{NOTE},
             UPDATE_DT = NOW(),
@@ -597,7 +601,7 @@
             MATERIAL_COMP_CD, HOPE_DUE_DT, SIZE_TXT,
             SIZE_TYPE, SIZE_W, SIZE_H, SIZE_T, SIZE_D, SIZE_L, REQUEST_NOTE,
             MATERIAL_TYPE, MATERIAL_DETAIL, MATERIAL_KIND,
-            ORDER_NOTE, ORDER_QTY, ORDER_AMT,
+            ORDER_NOTE, ORDER_QTY, ORDER_AMT, ORDER_USER_ID,
             ORDER_STATUS, ORDER_DT,
             INSERT_DT, INSERT_ID
         )
@@ -617,7 +621,7 @@
             SF_GET_SIZE_TXT('SIZE_H', #{M_SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_T', #{M_SIZE_TXT}),
             SF_GET_SIZE_TXT('SIZE_D', #{M_SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_L', #{M_SIZE_TXT}), #{REQUEST_NOTE},
             #{MATERIAL_TYPE}, #{MATERIAL_DETAIL}, #{MATERIAL_KIND},
-            #{M_ORDER_NOTE}, #{M_ORDER_QTY}, #{ORDER_AMT},
+            #{M_ORDER_NOTE}, #{M_ORDER_QTY}, #{ORDER_AMT}, #{ORDER_USER_ID},
             'MST002', NOW(),
             NOW(), #{LOGIN_USER_ID}
         )
@@ -638,6 +642,7 @@
             MATERIAL_KIND = #{MATERIAL_KIND},
             ORDER_NOTE = #{M_ORDER_NOTE},
             ORDER_QTY = #{M_ORDER_QTY},
+            ORDER_USER_ID = #{ORDER_USER_ID},
             ORDER_DT = NOW(),
             ORDER_STATUS = 'MST002',
             UPDATE_DT = NOW(),
@@ -677,14 +682,18 @@
 
     <delete id="deleteItemOrderRegisterCancelOrderManual" parameterType="java.util.HashMap">
         UPDATE TBL_MATERIAL_ORDER
-        SET MATERIAL_ORDER_NUM = NULL
+        SET MATERIAL_ORDER_NUM = NULL,
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE 1=1
             AND MATERIAL_ORDER_SEQ = #{MATERIAL_ORDER_SEQ}
     </delete>
 
     <delete id="deleteItemOrderRegisterDeleteOrderManual" parameterType="java.util.HashMap">
         UPDATE TBL_MATERIAL_ORDER
-        SET MATERIAL_ORDER_NUM = NULL
+        SET MATERIAL_ORDER_NUM = NULL,
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE 1=1
             AND MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
     </delete>

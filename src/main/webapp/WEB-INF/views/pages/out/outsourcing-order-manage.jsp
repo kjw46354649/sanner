@@ -432,7 +432,7 @@
                     });
                 }
             },
-            {title: '관리번호', width: 150, dataIndx: 'CONTROL_NUM'},
+            {title: '관리번호', width: 160, dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', minWidth: 30, dataIndx: 'PART_NUM'},
             {title: '', minWidth: 30, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
@@ -452,7 +452,6 @@
             {title: '규격', width: 70, dataIndx: 'SIZE_TXT'},
             {title: '소재종류', width:70, dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '표면처리', width:90, dataIndx: 'SURFACE_TREAT_NM'},
-            {title: '수량', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY'},
             {title: '사급<br>여부', minWidth: 30, width: 40, dataIndx: 'MATERIAL_SUPPLY_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -566,14 +565,24 @@
                     }
                 }
             },
-            {title: '입고일시', width: 100, dataIndx: 'OUTSIDE_IN_DT'},
             {
-                title: '외주<br>발주번호', width:90, dataIndx: 'OUTSIDE_ORDER_NUM',
+                title: '비고', width: 90, dataIndx: 'OUTSIDE_NOTE',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: true
             },
+            {title: '입고일시', width: 100, dataIndx: 'OUTSIDE_IN_DT'},
+            {title: '수량', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY'},
             {
-                title: '비고', width: 90, dataIndx: 'OUTSIDE_NOTE',
+                title: '원발주 정보', align: 'center', colModel: [
+                    {title: '납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT', render: function (ui) {}},
+                    {title: '견적단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT'},
+                    {title: '공급단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
+                    {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true},
+                    {title: '발주처', width: 70, dataIndx: 'ORDER_COMP_NM'}
+                ]
+            },
+            {
+                title: '외주<br>발주번호', width:90, dataIndx: 'OUTSIDE_ORDER_NUM',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: true
             },
@@ -584,15 +593,6 @@
             },
             {title: '금액<br>합계', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_TOTAL_AMT'},
             {title: '외주<br>종전가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DHLWNWHDWJSRK'},
-            {
-                title: '원발주 정보', align: 'center', colModel: [
-                    {title: '납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT', render: function (ui) {}},
-                    {title: '견적단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT'},
-                    {title: '공급단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
-                    {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true},
-                    {title: '발주처', width: 70, dataIndx: 'ORDER_COMP_NM'}
-                ]
-            },
             {
                 title: '품질결과', align: 'center', colModel: [
                     {title: 'Seq.', minWidth: 30, width: 35, datatype: 'integer', dataIndx: 'INSPECT_SEQ'},
@@ -1373,7 +1373,6 @@
                 outsideCompCdList.push(rowData.OUTSIDE_COMP_CD);
             }
             // 중복제거
-
             compCdList = [...new Set(compCdList)];
             outsideCompCdList = [...new Set(outsideCompCdList)];
 

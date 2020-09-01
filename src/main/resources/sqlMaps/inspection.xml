@@ -106,6 +106,7 @@
             </if>
         ORDER BY T.INNER_DUE_DT, T.CONTROL_SEQ, T.CONTROL_DETAIL_SEQ
     </select>
+
     <select id="selectInspectionPopInfoBasic" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
           , CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM, ' # ', B.PART_NUM) END AS CONTROL_NUM

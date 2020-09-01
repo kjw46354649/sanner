@@ -29,7 +29,8 @@
         A.EST_SEQ, <!-- 견적일련번호 -->
         IFNULL(A.PRICE_CONFIRM, SPACE(0)) AS PRICE_CONFIRM, <!-- 단가확인 -->
         IFNULL(SF_GET_CODE_NM(1017, PRICE_CONFIRM, #{LOGIN_LOCALE}), SPACE(0)) AS PRICE_CONFIRM_NM, <!-- 단가확인 -->
-        IFNULL(A.OUT_FINISH_DT, SPACE(0)) AS CONTROL_OUT_FINISH_DT <!-- 주문관리 출고완료일 -->
+        IFNULL(A.OUT_FINISH_DT, SPACE(0)) AS CONTROL_OUT_FINISH_DT, <!-- 주문관리 출고완료일 -->
+        IFNULL(A.TOTAL_SHEET, SPACE(0)) AS TOTAL_SHEET
     </sql>
 
     <sql id="controlPart">
@@ -2250,6 +2251,7 @@
             UNIT_FINAL_AMT,
             PREV_DRAWING_NUM,
             CONTROL_STATUS,
+            TOTAL_SHEET,
             INSERT_ID
         ) VALUES
         <foreach collection="list" item="item" separator=",">
@@ -2293,6 +2295,7 @@
             CAST(REPLACE(#{item.UNIT_FINAL_AMT}, ',' ,SPACE(0)) AS INTEGER),
             #{item.PREV_DRAWING_NUM},
             #{item.CONTROL_STATUS},
+            #{item.TOTAL_SHEET},
             #{LOGIN_USER_ID}
         )
         </foreach>
@@ -2464,7 +2467,7 @@
         WHERE 1 = 1
             AND A.CONTROL_SEQ = #{CONTROL_SEQ}
             AND 'ORD001' = #{CONTROL_STATUS}
-            AND EXISTS (SELECT * FROM TBL_CONTROL B WHERE A.CONTROL_SEQ = B.CONTROL_SEQ AND IFNULL(B.CONTROL_STATUS, 'ORD002') = 'ORD002')
+            AND EXISTS (SELECT * FROM TBL_CONTROL B WHERE A.CONTROL_SEQ = B.CONTROL_SEQ AND B.CONTROL_STATUS = 'ORD002')
     </update>
 
     <update id="updateControlBarcodeRevision" parameterType="java.util.HashMap">
@@ -2497,15 +2500,21 @@
             CASE WHEN B.PART_NUM IS NULL THEN IFNULL(A.CONTROL_NUM, SPACE(0)) ELSE CONCAT(IFNULL(A.CONTROL_NUM, SPACE(0)), '#', B.PART_NUM) END AS CONTROL_NUM_PART, <!-- 관리번호 -->
             IFNULL(B.SIZE_TXT, SPACE(0)) AS SIZE_TXT, <!-- 규격 문자열 -->
             IFNULL(B.PART_NUM, SPACE(0)) AS PART_NUM, <!-- Part -->
-            CASE WHEN A.TOTAL_SHEET IS NULL THEN SPACE(0) ELSE A.TOTAL_SHEET END AS TOTAL_SHEET, <!-- 총장 -->
-            SF_GET_CODE_NM('1039', B.SURFACE_TREAT, #{LOGIN_LOCALE}) AS SURFACE_TREAT_NM, <!-- 표면처리 -->
+            CASE WHEN A.TOTAL_SHEET IS NULL THEN SPACE(0) ELSE CONCAT('/', A.TOTAL_SHEET) END AS TOTAL_SHEET, <!-- 총장 -->
+            CASE WHEN B.SURFACE_TREAT IS NOT NULL AND B.MATERIAL_NOTE IS NOT NULL THEN
+                     CONCAT(SF_GET_CODE_NM('1039', B.SURFACE_TREAT, #{LOGIN_LOCALE}), ', ', IFNULL(B.MATERIAL_NOTE, SPACE(0)))
+                 WHEN B.SURFACE_TREAT IS NOT NULL AND B.MATERIAL_NOTE IS NULL THEN
+                     SF_GET_CODE_NM('1039', B.SURFACE_TREAT, #{LOGIN_LOCALE})
+                 WHEN B.SURFACE_TREAT IS NULL AND B.MATERIAL_NOTE IS NOT NULL THEN
+                    B.MATERIAL_NOTE
+            END AS SURFACE_TREAT_NM, <!-- 표면처리 -->
             IFNULL(SF_GET_CODE_NM(1035, B.MATERIAL_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_TYPE_NM, <!-- 재질 -->
             IFNULL(SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류 -->
             IFNULL(SF_GET_CODE_NM(1033, B.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
             CASE WHEN IFNULL(A.EMERGENCY_YN, 'N') = 'Y' THEN '긴급' ELSE SPACE(0) END AS EMERGENCY_BARCODE_NM, <!-- 바코드 긴급 -->
             IFNULL(B.MATERIAL_FINISH_HEAT, SPACE(0)) AS MATERIAL_FINISH_HEAT, <!-- 열처리 -->
             IFNULL(SF_GET_CODE_NM(1059, A.MAIN_INSPECTION, #{LOGIN_LOCALE}), SPACE(0)) AS MAIN_INSPECTION_NM, <!-- 주요검사품 -->
-            CONCAT(IFNULL(SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), 0), " EA") AS CONTROL_ORDER_QTY, <!-- 주문 수량 -->
+            CONCAT(IFNULL(SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), 0), SPACE(0)) AS CONTROL_ORDER_QTY, <!-- 주문 수량 -->
             IFNULL(B.ORIGINAL_SIDE_QTY, SPACE(0)) AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
             IFNULL(B.OTHER_SIDE_QTY, SPACE(0)) AS OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
             IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'MM', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 가공납기 -->

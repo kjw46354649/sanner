@@ -266,6 +266,8 @@
                 <input id="ERROR_QTY" name="ERROR_QTY" type="hidden" value="">
                 <input id="ERROR_REASON" name="ERROR_REASON" type="hidden" value="">
                 <input id="RE_BARCODE_NUM" name="RE_BARCODE_NUM" type="hidden" value="">
+                <input id="WORK_MINUTE" name="WORK_MINUTE" type="hidden" value="${workInfo.WORK_MINUTE}">
+                <input id="WORK_SECOND" name="WORK_SECOND" type="hidden" value="${workInfo.WORK_SECOND}">
             </form>
             <form id="re_start_work_info_form" name="re_start_work_info_form">
                 <input id="CONTROL_SEQ" name="CONTROL_SEQ" type="hidden" value="${reStartWorkinfo.CONTROL_SEQ}">
@@ -334,11 +336,17 @@
                         </div>
                         <div class="timeWrap">
                             <span class="timeTit"><srping:message key='drawing.board.button.03'/></span>
-                            <span class="time"><c:if test="${not empty workInfo}">${workInfo.STOP_TIME}</c:if> &nbsp;<srping:message key='drawing.board.label.02'/></span>
+                            <span class="time" id="stopTimeInfo">
+                                <c:if test="${not empty workInfo}">${workInfo.STOP_MINUTE}</c:if> &nbsp;<srping:message key='drawing.board.label.02'/>
+                                <c:if test="${not empty workInfo}">${workInfo.STOP_SECOND}</c:if> &nbsp;<srping:message key='drawing.board.label.01'/>
+                            </span>
                         </div>
                         <div class="timeWrap">
                             <span class="timeTit"><srping:message key='drawing.board.button.04'/></span>
-                            <span class="time"><c:if test="${not empty workInfo}">${workInfo.WORK_TIME}</c:if> &nbsp;<srping:message key='drawing.board.label.02'/></span>
+                            <span class="time" id="workTimeInfo">
+                                <c:if test="${not empty workInfo}">${workInfo.WORK_MINUTE}</c:if> &nbsp;<srping:message key='drawing.board.label.02'/>
+                                <c:if test="${not empty workInfo}">${workInfo.WORK_SECOND}</c:if> &nbsp;<srping:message key='drawing.board.label.01'/>
+                            </span>
                         </div>
                     </div>
                     <div class="middleConts">
@@ -417,6 +425,7 @@
 
         // 공통 SetTimeOut 변수
         let stopInterval;
+        let workTimeInterval;
 
         // 스타일 변경 이벤트
         var ev = new $.Event('style'),
@@ -482,6 +491,7 @@
                 $(".bodyWrap").addClass("modal-open-body");
             }, parameters, '');
         });
+
         $("#drawing_worker_stop_popup").bind('style', function(e) {
             let style =  $(this).attr('style');
             let display = style.split(":")[1];
@@ -500,8 +510,8 @@
                         minutes = 0;
                         hours++;
                     }
-                    $("#stopSeconds").html(seconds +"초");
-                    $("#stopMinutes").html(minutes +"분");
+                    $("#stopSeconds").html(seconds + '<srping:message key='drawing.board.label.01'/>');
+                    $("#stopMinutes").html(minutes + '<srping:message key='drawing.board.label.02'/>');
                 }, 1000);
                 $("#drawing_worker_stop_popup").bind('style', function(e) {
                     let style =  $(this).attr('style');
@@ -829,6 +839,21 @@
         }
 
         let setFocusBody = function(){
+            $("#bodyWrap").focus();
+            let minutes = $("#drawing_action_form").find("#WORK_MINUTE").val();
+            let seconds = $("#drawing_action_form").find("#WORK_SECOND").val();
+            let dataType = $("#drawing_action_form").find("#DATA_TYPE").val();
+            if( dataType === "CUR"){
+                workTimeInterval = setInterval(function() {
+                    seconds++;
+                    if(seconds == 60){
+                        seconds = 0;
+                        minutes++;
+                    }
+                    let workTimeHtml = minutes + '<srping:message key='drawing.board.label.02'/>' + '&nbsp;' + seconds + '<srping:message key='drawing.board.label.01'/>'
+                    $("#workTimeInfo").html(workTimeHtml);
+                }, 1000);
+            }
             $("#bodyWrap").focus();
         }
 

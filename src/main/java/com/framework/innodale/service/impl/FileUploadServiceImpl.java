@@ -151,7 +151,7 @@ public class FileUploadServiceImpl implements FileUploadService {
                 String originalFullName = multipartFile.getOriginalFilename();
                 String mappingDrawingNum = originalFullName.substring(0, originalFullName.lastIndexOf(".")).toUpperCase();
                 if(mappingDrawingNum.indexOf("_") > 0)
-                mappingDrawingNum = mappingDrawingNum.substring(0, mappingDrawingNum.lastIndexOf("_")).toUpperCase();
+                    mappingDrawingNum = mappingDrawingNum.substring(0, mappingDrawingNum.indexOf("_")).toUpperCase();
                 String originalExtName = originalFullName.substring(originalFullName.lastIndexOf(".") + 1).toLowerCase();
 
                 if ("PDF".equalsIgnoreCase(originalExtName) || "DXF".equalsIgnoreCase(originalExtName)) {
@@ -318,7 +318,7 @@ public class FileUploadServiceImpl implements FileUploadService {
             if("DXF".equalsIgnoreCase(originalExtName)){
                 String mappingDrawingNum = originalFullName.substring(0, originalFullName.lastIndexOf(".")).toUpperCase();
                 if(mappingDrawingNum.indexOf("_") > 0)
-                mappingDrawingNum = mappingDrawingNum.substring(0, mappingDrawingNum.lastIndexOf("_")).toUpperCase();
+                mappingDrawingNum = mappingDrawingNum.substring(0, mappingDrawingNum.indexOf("_")).toUpperCase();
                 if(mappingDrawingNum.equalsIgnoreCase(pdfMappingDrawingNum)){
                     return true;
                 }

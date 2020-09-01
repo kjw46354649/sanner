@@ -25,6 +25,10 @@
             AND B.CONTROL_SEQ = D.CONTROL_SEQ
             AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
             AND C.DEL_YN = 'N'
+            AND NOT EXISTS (SELECT 1 FROM jmes.TBL_CONTROL_PART E
+                          WHERE D.CONTROL_SEQ = E.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
+                              AND E.PART_STATUS = 'PRO018' AND E.WORK_TYPE = 'WTP050'
+            )
         ORDER BY B.POP_SEQ DESC
     </select>
 

@@ -4,11 +4,13 @@ import com.framework.innodale.component.CommonUtility;
 import com.framework.innodale.component.CreateBarcodeStream;
 import com.framework.innodale.service.InnodaleService;
 import com.google.zxing.common.BitMatrix;
+import com.itextpdf.layout.borders.Border;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import javafx.scene.paint.Color;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -111,10 +113,13 @@ public class PDFPringMakeController {
         String fontPath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.font.path") + "/malgun/malgun.ttf";
         BaseFont bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 
-        Font headFont = new Font(bf, 8, Font.NORMAL);
-        Font titleFont = new Font(bf, 6, Font.NORMAL);
+        Font headFont = new Font(bf, 10, Font.NORMAL);
+        Font headBoldFont = new Font(bf, 10, Font.BOLD);
+        Font titleFont = new Font(bf, 7, Font.NORMAL);
         Font boldFont = new Font(bf, 12, Font.BOLD);
-        Font qtyFont = new Font(bf, 14, Font.BOLD);
+        Font bodyFont = new Font(bf, 12, Font.NORMAL);
+        Font qtyFont = new Font(bf, 13, Font.BOLD);
+        Font qtySmallFont = new Font(bf, 8, Font.BOLD);
 
         PdfWriter.getInstance(document, out);
 
@@ -132,13 +137,13 @@ public class PDFPringMakeController {
 
             if(iCount > 0) document.newPage();
 
-            PdfPTable table = new PdfPTable(12);
+            PdfPTable table = new PdfPTable(13);
             table.init();
 
             table.setWidthPercentage(100);
-            table.setWidths(new int[] {20, 2, 16, 16, 6, 12, 4, 10, 7, 4, 4, 6});
+            table.setWidths(new int[] {22, 2, 15, 15, 5, 9, 9, 8, 5, 3, 4, 4, 7});
 
-            BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String)controlInfo.get("BARCODE_NUM"), 110, 35);
+            BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String)controlInfo.get("BARCODE_NUM"), 90, 35);
             int width = bitMatrix.getWidth();
             int height = bitMatrix.getHeight();
             // Converting BitMatrix to Buffered Image
@@ -165,20 +170,21 @@ public class PDFPringMakeController {
             table.addCell(createCell((String)controlInfo.get("SURFACE_TREAT_NM"), 2, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("WORK_TYPE_NM"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("MATERIAL_FINISH_HEAT"), 1, 1, headFont));
-            table.addCell(createCell((String)controlInfo.get("CONTROL_ORDER_QTY"), 1, 2, qtyFont));
+            table.addCell(createQtyCell((String)controlInfo.get("CONTROL_ORDER_QTY"), 1, 2, qtyFont));
+            table.addCell(createEACell("EA", 1, 2, qtySmallFont));
             table.addCell(createCell("원칭", 1, 1, titleFont));
             table.addCell(createCell("대칭", 1, 1, titleFont));
             table.addCell(createCell("가공납기", 1, 1, titleFont));
 
             table.addCell(createCell((String)controlInfo.get("DRAWING_VER"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("CONTROL_NUM_PART"), 2, 1, boldFont));
-            table.addCell(createCell((String)controlInfo.get("TOTAL_SHEET"), 1, 1, headFont));
+            table.addCell(createCell((String)controlInfo.get("TOTAL_SHEET"), 1, 1, bodyFont));
             table.addCell(createCell((String)controlInfo.get("MATERIAL_TYPE_NM"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("EMERGENCY_BARCODE_NM"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("MAIN_INSPECTION_NM"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("ORIGINAL_SIDE_QTY"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("OTHER_SIDE_QTY"), 1, 1, headFont));
-            table.addCell(createCell((String)controlInfo.get("INNER_DUE_DT"), 1, 1, headFont));
+            table.addCell(createCell((String)controlInfo.get("INNER_DUE_DT"), 1, 1, headBoldFont));
 
             document.add(table);
 
@@ -310,6 +316,33 @@ public class PDFPringMakeController {
     	return cell;
     }
 
+    private static PdfPCell createQtyCell(String content, int colspan, int rowspan, Font font) {
+        PdfPCell cell = new PdfPCell(new Phrase(content, font));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        // cell.setBorder(PdfPCell.NO_BORDER);
+        cell.setBorder(Rectangle.BOTTOM | Rectangle.TOP);
+        // cell.setBorderColorLeft();
+        cell.setColspan(colspan);
+        cell.setRowspan(rowspan);
+        cell.setFixedHeight(20f);
+        return cell;
+    }
+
+    private static PdfPCell createEACell(String content, int colspan, int rowspan, Font font) {
+        PdfPCell cell = new PdfPCell(new Phrase(content, font));
+        cell.setVerticalAlignment(Element.ALIGN_BOTTOM);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setPaddingBottom(14);
+        // cell.setBorder(PdfPCell.NO_BORDER);
+        cell.setBorder(Rectangle.BOTTOM | Rectangle.TOP);
+        // cell.setBorderColorLeft();
+        cell.setColspan(colspan);
+        cell.setRowspan(rowspan);
+        cell.setFixedHeight(20f);
+        return cell;
+    }
+
     private static PdfPCell createCellBackground(String content, int colspan, int rowspan, Font font, BaseColor color) {
         PdfPCell cell = new PdfPCell(new Phrase(content, font));
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -328,7 +361,8 @@ public class PDFPringMakeController {
         cell.setColspan(colspan);
         cell.setRowspan(rowspan);
         cell.setFixedHeight(40f);
-        cell.setPadding(0);
+        cell.setPaddingLeft(2);
+        cell.setPaddingRight(2);
         return cell;
     }
 

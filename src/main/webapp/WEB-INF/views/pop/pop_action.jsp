@@ -185,6 +185,7 @@
             onScan.attachTo(document.getElementById("popBarcode"), {
                 onScan: function(barcode, iQty) {
                     // $(this).startWaitMe();
+                    $("#pop_search_form").find("#popBarcode").val('');
                     let barcodeNum = fnBarcodeKo2En(barcode);
                     sendDrawingNum(barcodeNum);
                 }
@@ -235,10 +236,9 @@
                 var message = "";
                 $.ajax({
                     type: 'POST', url: "/popScanningBarcodePop", dataType: 'json',
-                    data: $("#pop_search_form").serialize(),
+                    data: { 'popLocation': $("#pop_search_form").find("#popLocation").val(), 'popBarcode': barcodeNum},
                     success: function (data, textStatus, jqXHR) {
                         // $(this).stopWaitMe();
-                        $("#pop_search_form").find("#popBarcode").val('');
                         var returnCode = data.returnCode;
                         if (textStatus === 'success') {
                             if(returnCode == "RET00"){
@@ -248,10 +248,8 @@
                                 message = data.message;
                                 showFailMessage(message);
                             }
-                            $("#pop_search_form").find("#popBarcode").val('');
                             refreshData();
                         }else{
-                            $("#pop_search_form").find("#popBarcode").val('');
                             message = "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.";
                             showFailMessage(message);
                             refreshData();
@@ -259,7 +257,6 @@
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         // if (!($waitMeMainContainer === undefined)) $(this).stopWaitMe();
-                        $("#pop_search_form").find("#popBarcode").val('');
                         message = "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.";
                         showFailMessage(message);
                         refreshData();
