@@ -929,15 +929,16 @@
         UPDATE TBL_CONTROL_PART
         SET
             OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}, <!-- 외주업체 -->
+            OUTSIDE_NOTE = #{OUTSIDE_NOTE} <!-- 비고 -->
             OUTSIDE_MATERIAL_SUPPLY_YN = IFNULL(#{OUTSIDE_MATERIAL_SUPPLY_YN}, 'N'), <!-- 소재 제공 -->
             OUTSIDE_REQUEST_FINISH_YN = IFNULL(#{OUTSIDE_REQUEST_FINISH_YN}, 'N'), <!-- 완제품 -->
             OUTSIDE_REQUEST_PROCESS_YN = IFNULL(#{OUTSIDE_REQUEST_PROCESS_YN}, 'N'), <!-- 가공 -->
             OUTSIDE_REQUEST_GRIND_YN = IFNULL(#{OUTSIDE_REQUEST_GRIND_YN}, 'N'), <!-- 연마 -->
             OUTSIDE_REQUEST_SURFACE_YN = IFNULL(#{OUTSIDE_REQUEST_SURFACE_YN}, 'N'), <!-- 표면 -->
-            OUTSIDE_REQUEST_ETC = #{OUTSIDE_REQUEST_ETC}, <!-- 표면 -->
-            OUTSIDE_HOPE_DUE_DT = #{OUTSIDE_HOPE_DUE_DT}, <!-- 외주납기 -->
+            OUTSIDE_REQUEST_ETC = #{OUTSIDE_REQUEST_ETC}, <!-- 기타사항 -->
+            OUTSIDE_HOPE_DUE_DT = DATE_FORMAT(#{OUTSIDE_HOPE_DUE_DT}, '%Y%m%d'), <!-- 외주납기 -->
             OUTSIDE_ORDER_NUM = #{OUTSIDE_ORDER_NUM}, <!-- 외주 발주번호 -->
-            OUTSIDE_UNIT_AMT = #{OUTSIDE_UNIT_AMT}, <!-- 외주 확정단가 -->
+            OUTSIDE_UNIT_AMT = REPLACE(#{OUTSIDE_UNIT_AMT}, ',', SPACE(0)), <!-- 외주 확정단가 -->
             UPDATE_DT = NOW()
         WHERE 1 = 1
             AND CONTROL_SEQ = #{CONTROL_SEQ}

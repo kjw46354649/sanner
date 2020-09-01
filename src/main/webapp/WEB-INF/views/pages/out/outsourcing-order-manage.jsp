@@ -1916,7 +1916,7 @@
         });
 
         $('#OUTSIDE_ORDER_MANAGE_SAVE').on('click', function () {
-            const updateQueryList = ['orderMapper.updateControlPartOutsourcingOrderManage'];
+            const updateQueryList = ['outMapper.updateControlPartOutsourcingOrderManage'];
 
             fnModifyPQGrid($outsideOrderManageGrid, [], updateQueryList);
         });
