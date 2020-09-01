@@ -597,29 +597,29 @@
         /**  작동로그 그리드 선언 시작 선언만 해놓고 작업은 업무 협의 되면 진행. **/
         logPostData = fnFormToJsonArrayData('#machine_manage_search_form');
         logColModel = [
-            {title: '관리번호', dataType: 'string', dataIndx: 'EQUIP_ID'},
-            // {title: '재질', dataType: 'string', dataIndx: 'EQUIP_ID'},
-            // {title: '규격', dataType: 'string', dataIndx: 'EQUIP_ID'},
-            // {title: '수량', dataType: 'string', dataIndx: 'EQUIP_ID'},
-            // {title: '시작일시', dataType: 'string', dataIndx: 'EQUIP_ID'},
-            // {title: '작업자', dataType: 'string', dataIndx: 'EQUIP_ID'},
-            // {title: '종료일시', dataType: 'string', dataIndx: 'EQUIP_ID'},
-            // {title: '작업자', dataType: 'string', dataIndx: 'EQUIP_ID'},
-            // {title: '정지시간', dataType: 'string', dataIndx: 'EQUIP_ID'},
-            {title: '작업시간', dataType: 'string', dataIndx: 'SEQ'}
+            {title: 'RNUM', dataType: 'string', dataIndx: 'RNUM', hidden:true},
+            {title: '공정', dataType: 'string', dataIndx: 'PROCESS_TYPE_NM', width: 60, editable: false},
+            {title: '기기명', dataType: 'string', dataIndx: 'EQUIP_NM', width: 95, editable: false},
+            {title: '상태', dataType: 'string', dataIndx: 'WORK_STATUS', width: 60, editable: false},
+            {title: '시작', dataType: 'string', dataIndx: 'WORK_START_DT', width: 105, editable: false},
+            {title: '종료', dataType: 'string', dataIndx: 'WORK_FINISH_DT', width: 105, editable: false},
+            {title: '소요시간', dataType: 'string', dataIndx: 'WORKING_TIME', width: 95, editable: false},
+            {title: '작업자', dataType: 'string', dataIndx: 'WORK_USER', width: 95, editable: false},
+            {title: '수량', dataType: 'string', dataIndx: 'FINISH_QTY', width: 95, editable: false},
+            {title: '불량', dataType: 'string', dataIndx: 'ERROR_QTY', width: 95, editable: false}
         ];
         logObj = {
-            width: "100%",
-            height: 250, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
-            selectionModel : {type: 'row', mode: 'single'}, editable : false, rowHtHead: 15,
-            numberCell: {title: 'No.', styleHead: {'vertical-align':'middle'}}, dragColumns: {enabled: false},
-            scrollModel: {autoFit: true}, trackModel: {on: true},
-            columnTemplate: {
-                align: 'center',
-                halign: 'center',
-                hvalign: 'center', valign: 'center', //to vertically center align the header cells.
-                editable: false
-            },
+            width: "100%", height: 250,
+            strNoRows: g_noData,
+            columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
+            scrollModel: {autoFit: true},
+            numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
+            selectionModel: { type: 'row', mode: 'single'} ,
+            swipeModel: {on: false},
+            showTitle: false,
+            collapsible: false,
+            resizable: false,
+            trackModel: {on: true},
             colModel: logColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -795,15 +795,11 @@
                     return {data: dataJSON.data};
                 }
             },
-            columnTemplate: {
-                align: 'center',
-                halign: 'center',
-                hvalign: 'center', valign: 'center'
-            },
+            strNoRows: g_noData,
+            columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
             scrollModel: {autoFit: true},
-            rowHtHead: 15,
-            numberCell: {width: 30, title: "No", show: true, styleHead: {'vertical-align': 'middle'}},
-            selectionModel: {type: 'row', mode: 'single'},
+            numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
+            selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
             showTitle: false,
             collapsible: false,
@@ -1041,9 +1037,11 @@
                 if($("#machine_manage_search_form").find("#SEL_EQUIP_KIND").val() === '1'){
                     $("#machine_manage_pop_form").find("#addHistoryBtn").hide();
                     $("#machine_manage_pop_form").find("#deleteHistoryBtn").hide();
-                }
 
-                $("#machine_manage_pop_form").find("#queryId").val("machine.selectMachineHistoryList");
+                    $("#machine_manage_pop_form").find("#queryId").val("machine.selectMachineLogList");
+                }else{
+                    $("#machine_manage_pop_form").find("#queryId").val("machine.selectMachineHistoryList");
+                }
 
                 $logGrid = $('#' + logGridId).pqGrid(logObj);
                 $logGrid.pqGrid("option", "dataModel.postData", function(ui){

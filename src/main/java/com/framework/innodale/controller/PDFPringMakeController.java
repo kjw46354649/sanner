@@ -141,9 +141,9 @@ public class PDFPringMakeController {
             table.init();
 
             table.setWidthPercentage(100);
-            table.setWidths(new int[] {20, 2, 16, 16, 5, 9, 8, 8, 6, 3, 4, 4, 7});
+            table.setWidths(new int[] {22, 2, 15, 15, 5, 9, 9, 8, 5, 3, 4, 4, 7});
 
-            BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String)controlInfo.get("BARCODE_NUM"), 110, 35);
+            BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String)controlInfo.get("BARCODE_NUM"), 90, 35);
             int width = bitMatrix.getWidth();
             int height = bitMatrix.getHeight();
             // Converting BitMatrix to Buffered Image
@@ -361,7 +361,8 @@ public class PDFPringMakeController {
         cell.setColspan(colspan);
         cell.setRowspan(rowspan);
         cell.setFixedHeight(40f);
-        cell.setPadding(0);
+        cell.setPaddingLeft(2);
+        cell.setPaddingRight(2);
         return cell;
     }
 
