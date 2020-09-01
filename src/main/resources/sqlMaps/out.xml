@@ -929,7 +929,7 @@
         UPDATE TBL_CONTROL_PART
         SET
             OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}, <!-- 외주업체 -->
-            OUTSIDE_NOTE = #{OUTSIDE_NOTE} <!-- 비고 -->
+            OUTSIDE_NOTE = #{OUTSIDE_NOTE}, <!-- 비고 -->
             OUTSIDE_MATERIAL_SUPPLY_YN = IFNULL(#{OUTSIDE_MATERIAL_SUPPLY_YN}, 'N'), <!-- 소재 제공 -->
             OUTSIDE_REQUEST_FINISH_YN = IFNULL(#{OUTSIDE_REQUEST_FINISH_YN}, 'N'), <!-- 완제품 -->
             OUTSIDE_REQUEST_PROCESS_YN = IFNULL(#{OUTSIDE_REQUEST_PROCESS_YN}, 'N'), <!-- 가공 -->
