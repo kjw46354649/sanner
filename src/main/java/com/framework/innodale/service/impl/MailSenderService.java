@@ -36,7 +36,8 @@ public class MailSenderService {
 
         try{
             // 운영 서버인 경우만 메일 발송 처리 된다.
-            if(CommonUtility.isScheduleRunning()){
+             if(CommonUtility.isScheduleRunning()){
+//            if(true){
 
                 // Demon Key 생성, 자동화 발신 이메일 정보만 UPDATE 한다.
                 hashMap.put("SKEY", CommonUtility.getUUIDString("mail"));

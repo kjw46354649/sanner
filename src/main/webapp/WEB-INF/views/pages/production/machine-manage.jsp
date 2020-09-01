@@ -213,7 +213,7 @@
                 <div class="resultWrap99 list99">
                     <div class="leftWrap" style="margin-top: 16px;">
                         <input type="hidden" id="PHOTO_GFILE_SEQ" name="PHOTO_GFILE_SEQ" value="">
-                        <img src="/image/999" id="PHOTO_GFILE_SRC" width="400px" alt="장비사진" style="border:1px solid #707070">
+                        <img src="/image/999" id="PHOTO_GFILE_SRC" width="400px" alt="장비사진" style="width: 400px; border:1px solid #707070">
                         <div class="btnWrap">
                             <button type="button" id="photo_upload" class="defaultBtn">사진변경하기</button>
                         </div>
@@ -1017,12 +1017,16 @@
             $("#MACHINE_MANAGE_ETC_BOX").toggle();
 
             let selTab = ui.newPanel.selector;
+
             if(selTab == "#_TAB1"){
                 $("#machine_manage_search_form").find("#SEL_EQUIP_KIND").val("1");
 
             }else if(selTab == "#_TAB2"){
                 $("#machine_manage_search_form").find("#SEL_EQUIP_KIND").val("2");
             }
+            $("#machine_manage_pop_form").find("#addHistoryBtn").show();
+            $("#machine_manage_pop_form").find("#deleteHistoryBtn").show();
+
             $searchBtn.trigger('click');
 
         }
@@ -1031,10 +1035,13 @@
         activate: function(event, ui) {
             ui.newPanel.find('.pq-grid').pqGrid('refresh');
             let selTab = ui.newPanel.selector;
-            $("#machine_manage_pop_form").find("#addHistoryBtn").hide();
-            $("#machine_manage_pop_form").find("#deleteHistoryBtn").hide();
 
             if(selTab == "#_TAB3"){
+
+                if($("#machine_manage_search_form").find("#SEL_EQUIP_KIND").val() === '1'){
+                    $("#machine_manage_pop_form").find("#addHistoryBtn").hide();
+                    $("#machine_manage_pop_form").find("#deleteHistoryBtn").hide();
+                }
 
                 $("#machine_manage_pop_form").find("#queryId").val("machine.selectMachineHistoryList");
 
@@ -1046,6 +1053,9 @@
 
             }else if(selTab == "#_TAB4"){
 
+                $("#machine_manage_pop_form").find("#addHistoryBtn").show();
+                $("#machine_manage_pop_form").find("#deleteHistoryBtn").show();
+
                 $("#machine_manage_pop_form").find("#queryId").val("machine.selectMachineHistoryList");
 
                 $historyGrid = $('#' + historyGridId).pqGrid(historyObj);
@@ -1054,11 +1064,7 @@
                 } );
                 $historyGrid.pqGrid("refreshDataAndView");
 
-                $("#machine_manage_pop_form").find("#addHistoryBtn").show();
-                $("#machine_manage_pop_form").find("#deleteHistoryBtn").show();
             }
-
-
         }
     });
     $("#CURRENT_POPUP").on('hide.bs.modal', function(){
@@ -1108,6 +1114,9 @@
                 $("#machine_manage_pop_form").find("#EQUIP_KIND_NM").html("가공장비");
                 $("#machine_manage_pop_form").find("#_TAB3_TITLE").show();
 
+                $("#machine_manage_pop_form").find("#addHistoryBtn").hide();
+                $("#machine_manage_pop_form").find("#deleteHistoryBtn").hide();
+
                 // $("#machine_manage_pop_form").find("#_TAB3_TITLE").find("a").trigger("click");
             }else if(equip_kind == "2"){
                 $('a[href="#_TAB4"]').click();
@@ -1115,11 +1124,12 @@
                 $("#machine_manage_pop_form").find("#EQUIP_KIND_NM").html("기타장비");
                 $("#machine_manage_pop_form").find("#_TAB3_TITLE").hide();
 
+                $("#machine_manage_pop_form").find("#addHistoryBtn").show();
+                $("#machine_manage_pop_form").find("#deleteHistoryBtn").show();
+
+
                 // $("#machine_manage_pop_form").find("#_TAB4_TITLE").find("a").trigger("click");
             }
-
-            $("#machine_manage_pop_form").find("#addHistoryBtn").hide();
-            $("#machine_manage_pop_form").find("#deleteHistoryBtn").hide();
 
             $("#machine_manage_pop_form").find("#queryId").val("machine.selectMachineLogList");
             //$logGrid = $('#' + logGridId).pqGrid(logObj);

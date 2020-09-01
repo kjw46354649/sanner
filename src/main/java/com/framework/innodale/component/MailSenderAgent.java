@@ -15,6 +15,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -70,11 +71,9 @@ public class MailSenderAgent {
                     for(Map<String, Object> fileInfo : attachFileList){
                         String file = (String)fileInfo.get("FILE_PATH");
                         File fsr = new File(file);
-                        message.addAttachment((String)fileInfo.get("ORGINAL_FILE_NM"), fsr);
+                        message.addAttachment(MimeUtility.encodeText((String)fileInfo.get("ORGINAL_FILE_NM")), fsr);
                     }
-
                 }
-
             };
         };
 

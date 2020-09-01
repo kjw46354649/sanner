@@ -587,6 +587,7 @@
             },
             {title: '관리번호', dataIndx: 'CONTROL_NUM', minWidth: 50, width: 160},
             {title: '파<br>트', dataIndx: 'PART_NUM', minWidth: 10, width: 30},
+            {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
             {title: '소재종류', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 40, width: 80},
             {title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
@@ -714,6 +715,25 @@
                 ]
             },
             // {title: '예상가공<br>시간(M)', dataType: 'integer', dataIndx: 'MCT_WORK_TIME', minWidth: 15, width: 50},
+            {title: '참<br>조', minWidth: 30, dataIndx: 'ETC_GFILE_SEQ', styleHead: {'background':'#a9d3f5'},
+                render: function (ui) {
+                    return '<span class="floppyDisk" name="attachment" style="cursor: pointer"></span>';
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('[name=attachment]').bind('click', function () {
+                        if (fnIsGridEditing($mctResultManageGrid)) {
+                            return false;
+                        }
+                        let GfileKey = ui.rowData.ETC_GFILE_SEQ;
+                        $('#common_file_download_form').find('#GFILE_SEQ').val(GfileKey);
+                        $('#ATTACHMENT_BUTTON').data('rowIndx', ui.rowIndx);
+                        $('#ATTACHMENT_BUTTON').data('GfileKey', GfileKey);
+                        commonFileDownUploadPopupCall(GfileKey, 'ATTACHMENT_BUTTON');
+                    });
+                }
+            },
             {title: '작업<br>구분', dataIndx: 'MCT_WORK_TYPE_NM', minWidth: 15, width: 50},
             {title: '이전<br>위치', dataIndx: 'POP_PREV_POSITION', minWidth: 70, width: 70},
             {title: '1ea L/T', dataIndx: '1ea L/T', minWidth: 60, width: 60},
@@ -774,6 +794,9 @@
                 $("#mctResultManageFrozen").html(frozenOts);
                 // footer
                 $('#machine_result_manage_grid-total-records').html(ui.dataModel.data.length);
+            },
+            render: function () {
+                this.option('freezeCols', 13);
             },
             change: function (evt, ui) {
                 let updateList = ui.updateList;

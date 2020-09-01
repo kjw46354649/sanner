@@ -62,12 +62,12 @@
 .timeWrap:nth-child(2){}
 .timeWrap:nth-child(3){margin-left: 0; background: url(../images/work/bg_st_1_on.png) no-repeat 0 0;}
 .timeWrap:nth-child(3),.timeWrap:nth-child(4){margin-top:5px;}
-.timeTit{font-size: 22px; position: relative; padding-left: 46px;font-weight: bold;}
+.timeTit{font-size: 22px; position: relative; padding-left: 36px;font-weight: bold;}
 .timeTit:before{content: ''; position: absolute; top: -3px; left: 0; background: url(../images/work/icon_1.png) no-repeat 0 0; width: 29px; height: 29px;}
 .timeWrap:nth-child(2) .timeTit:before{background: url(../images/work/icon_2.png) no-repeat 0 0;}
 .timeWrap:nth-child(3) .timeTit:before{background: url(../images/work/icon_3.png) no-repeat 0 0;}
 .timeWrap:nth-child(4) .timeTit:before{background: url(../images/work/icon_4.png) no-repeat 0 0;}
-.time{font-size: 24px; color: #2d2d2d;margin-left: 25px;}
+.time{font-size: 24px; color: #2d2d2d;margin-left: 15px;}
 .middleConts>div~div{margin-top:2px;}
 .tbl,.share,.qual{padding: 2px; text-align: center; color: #000; overflow: hidden; border: 1px solid #c2c2c2; border-radius: 5px; background: linear-gradient(to bottom, #fff, #f4f4f4);}
 .tbl table th{background: url(../images/work/bg_th.png) no-repeat 0 0; height: 44px; line-height: 44px; font-size: 20px; color: #000;font-weight: bold;}
