@@ -255,6 +255,7 @@
             {
                 title: '원발주 정보', align: 'center', colModel: [
                     {title: '납기', width: 70, dataIndx: 'INNER_DUE_DT'},
+                    {title: '견적단가', dataIndx: 'UNIT_FINAL_EST_AMT'},
                     {title: '공급단가', dataIndx: 'UNIT_FINAL_AMT'},
                     {title: '발주처', dataIndx: 'ORDER_COMP_CD'},
                     {title: '발주처', dataIndx: 'ORDER_COMP_NM'}
