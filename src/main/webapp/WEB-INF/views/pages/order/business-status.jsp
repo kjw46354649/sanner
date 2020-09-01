@@ -160,8 +160,8 @@
                         }
                     });
                 },
-                color: "#333bff",   // an option!
-                textColor: '#fff' // an option!
+                // color: "#333bff",   // an option!
+                textColor: '#000000' // an option!
             }]
             // , events: function (info, successCallback, failureCallback) {
             //     $.ajax({
@@ -292,8 +292,8 @@
         let businessEmergencyColModel = [
             {dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-            {title: '납기', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'INNER_DUE_DT'},
-            {title: '출고', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'OUT_FINISH_DT'},
+            {title: '납기', minWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT'},
+            {title: '출고', minWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'OUT_FINISH_DT'},
             {title: '발주처', dataIndx: 'ORDER_COMP_NM', width: 80},
             {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
@@ -321,7 +321,7 @@
             colModel: businessEmergencyColModel,
             dataModel: {
                 recIndx: 'ROW_NUM', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'tvMapper.selectMctGrid2List'},
+                postData: {'queryId': 'orderMapper.selectBusinessEmergencyList'},
                 getData: function (response, textStatus, jqXHR) {
                     return {data: response.data};
                 }
@@ -338,8 +338,8 @@
         let businessOverOrderColModel = [
             {dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-            {title: '납기', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'INNER_DUE_DT'},
-            {title: '출고', minWidth: 40, dataType: 'date', format: 'm/dd', dataIndx: 'OUT_FINISH_DT'},
+            {title: '납기', minWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT'},
+            {title: '출고', minWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'OUT_FINISH_DT'},
             {title: '발주처', dataIndx: 'ORDER_COMP_NM', width: 80},
             {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
@@ -368,7 +368,7 @@
             colModel: businessOverOrderColModel,
             dataModel: {
                 recIndx: 'ROW_NUM', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'tvMapper.selectMctGrid3List'},
+                postData: {'queryId': 'orderMapper.selectBusinessOverOrderList'},
                 getData: function (response, textStatus, jqXHR) {
                     return {data: response.data};
                 }

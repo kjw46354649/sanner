@@ -20,7 +20,7 @@
         IFNULL(A.DELIVERY_COMP_NM, SPACE(0)) AS DELIVERY_COMP_NM, <!-- 납품처 -->
         IFNULL(A.LABEL_NOTE, SPACE(0)) AS LABEL_NOTE, <!-- 라벨비고 -->
         IFNULL(A.MAIN_INSPECTION, SPACE(0)) AS MAIN_INSPECTION, <!-- 주요검사품 -->
-        IFNULL(SF_GET_CODE_NM(1042, A.MAIN_INSPECTION, #{LOGIN_LOCALE}), SPACE(0)) AS MAIN_INSPECTION_NM, <!-- 주요검사품 -->
+        IFNULL(SF_GET_CODE_NM(1059, A.MAIN_INSPECTION, #{LOGIN_LOCALE}), SPACE(0)) AS MAIN_INSPECTION_NM, <!-- 주요검사품 -->
         A.EMERGENCY_YN, <!-- 긴급 -->
         CASE WHEN IFNULL(A.EMERGENCY_YN, 'N') = 'Y' THEN '긴급' ELSE SPACE(0) END AS EMERGENCY_BARCODE_NM, <!-- 바코드 긴급 -->
         A.CONTROL_STATUS, <!-- 주문관리상태 -->
@@ -1062,7 +1062,7 @@
         <if test="UNIT_FINAL_AMT != null and UNIT_FINAL_AMT != ''">
             UNIT_FINAL_AMT = REPLACE(#{UNIT_FINAL_AMT}, ',', SPACE(0)),
         </if>
-        <if test="ETC_GFILE_SEQ != ''">
+        <if test="ETC_GFILE_SEQ != null and ETC_GFILE_SEQ != ''">
             ETC_GFILE_SEQ = #{ETC_GFILE_SEQ},
         </if>
         <if test="PART_STATUS != ''">
@@ -2340,14 +2340,12 @@
     <select id="businessMonthOutgoingList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             DATE_FORMAT(STR_TO_DATE(C.ORDER_DUE_DT, '%Y%m%d'), '%Y-%m-%d') as `start`,
-            CONCAT(F.COMP_NM, ' (', SUM(IFNULL(D.FINISH_QTY, 0)), '/',
-                IFNULL( CASE
-                            WHEN MAX(E.PACKING_NUM) IS NULL THEN SUM(E.OUT_QTY)
-                            WHEN MAX(E.PACKING_NUM) IS NOT NULL AND C.OUT_FINISH_DT IS NOT NULL THEN SUM(C.ORDER_QTY)
-                            ELSE 0
-                        END, 0), '/',
-               IFNULL(SUM(C.ORDER_QTY), 0), ')'
-            ) AS `title`
+            CONCAT(F.COMP_NM, '  ', SUM(IFNULL(E.OUT_QTY, 0)), ' / ', SUM(IFNULL(C.ORDER_QTY, 0))) AS `title`,
+            CASE
+                WHEN SUM(IFNULL(E.OUT_QTY, 0)) = SUM(IFNULL(C.ORDER_QTY, 0)) THEN '#E1F7FF' <!-- 출고가 모두 완료되었을 때 -->
+                WHEN SUM(IFNULL(E.OUT_QTY, 0)) <![CDATA[ < ]]> SUM(IFNULL(C.ORDER_QTY, 0)) THEN '#FFFDA9' <!-- 아직 출고가 완료되지 않은상태 -->
+                WHEN (SUM(IFNULL(E.OUT_QTY, 0)) <![CDATA[ < ]]> SUM(IFNULL(C.ORDER_QTY, 0))) AND STR_TO_DATE(C.ORDER_DUE_DT, '%Y%m%d') <![CDATA[ <= ]]> NOW()  THEN '#FFECDD' <!-- 오늘날짜가 지났는데 하나라도 출고완료되지 않은상태 -->
+            END AS 'color'
         FROM TBL_CONTROL A
             INNER JOIN TBL_COMPANY F ON A.ORDER_COMP_CD = F.COMP_CD
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_NUM IS NULL
@@ -2515,7 +2513,7 @@
             IFNULL(SF_GET_CODE_NM(1033, B.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
             CASE WHEN IFNULL(A.EMERGENCY_YN, 'N') = 'Y' THEN '긴급' ELSE SPACE(0) END AS EMERGENCY_BARCODE_NM, <!-- 바코드 긴급 -->
             IFNULL(B.MATERIAL_FINISH_HEAT, SPACE(0)) AS MATERIAL_FINISH_HEAT, <!-- 열처리 -->
-            IFNULL(SF_GET_CODE_NM(1042, A.MAIN_INSPECTION, #{LOGIN_LOCALE}), SPACE(0)) AS MAIN_INSPECTION_NM, <!-- 주요검사품 -->
+            IFNULL(SF_GET_CODE_NM(1059, A.MAIN_INSPECTION, #{LOGIN_LOCALE}), SPACE(0)) AS MAIN_INSPECTION_NM, <!-- 주요검사품 -->
             CONCAT(IFNULL(SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), 0), SPACE(0)) AS CONTROL_ORDER_QTY, <!-- 주문 수량 -->
             IFNULL(B.ORIGINAL_SIDE_QTY, SPACE(0)) AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
             IFNULL(B.OTHER_SIDE_QTY, SPACE(0)) AS OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
@@ -2608,4 +2606,241 @@
             AND EXISTS(SELECT * FROM TBL_CONTROL B
                         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ AND B.CONTROL_STATUS IN ('ORD001', 'ORD002') AND B.DEL_YN = 'N')
     </update>
+
+    <update id="updateControlPartFromCloseHistory" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            UNIT_FINAL_EST_AMT = REPLACE(#{UNIT_FINAL_EST_AMT, jdbcType=VARCHAR}, ',', SPACE(0)),
+            UNIT_FINAL_AMT = REPLACE(#{UNIT_FINAL_AMT, jdbcType=VARCHAR}, ',', SPACE(0)),
+            UPDATE_DT = NOW()
+        WHERE 1 = 1
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </update>
+
+    <update id="updateControlPartFromControlManage" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            PART_NUM = #{PART_NUM},
+            DRAWING_NUM = #{DRAWING_NUM},
+        <!--     DRAWING_VER = NULL, -->
+        <!--     DRAWING_UP_DT = NULL, -->
+            PREV_DRAWING_NUM = #{PREV_DRAWING_NUM},
+            ITEM_NM = #{ITEM_NM},
+            WORK_TYPE = #{WORK_TYPE},
+            OUTSIDE_YN = IFNULL(OUTSIDE_YN, 'N'),
+            WORK_FACTORY = #{WORK_FACTORY},
+            MATERIAL_SUPPLY_YN = IFNULL(MATERIAL_SUPPLY_YN, 'N'),
+            INNER_DUE_DT = DATE_FORMAT(REPLACE(NULL, '/', SPACE(0)), '%Y%m%d'),
+            SIZE_TXT = #{SIZE_TXT},
+            SIZE_TYPE = SF_GET_SIZE_TXT('SIZE_TYPE', #{SIZE_TXT}),
+            SIZE_W = SF_GET_SIZE_TXT('SIZE_W', #{SIZE_TXT}),
+            SIZE_H = SF_GET_SIZE_TXT('SIZE_H', #{SIZE_TXT}),
+            SIZE_T = SF_GET_SIZE_TXT('SIZE_T', #{SIZE_TXT}),
+            SIZE_D = SF_GET_SIZE_TXT('SIZE_D', #{SIZE_TXT}),
+            SIZE_L = SF_GET_SIZE_TXT('SIZE_L', #{SIZE_TXT}),
+        <!--     SIZE_W_M = NULL, -->
+        <!--     SIZE_H_M = NULL, -->
+        <!--     SIZE_T_M = NULL, -->
+        <!--     SIZE_D_M = NULL, -->
+        <!--     SIZE_L_M = NULL, -->
+            MATERIAL_TYPE = #{MATERIAL_TYPE},
+            MATERIAL_DETAIL = #{MATERIAL_DETAIL},
+            MATERIAL_KIND = #{MATERIAL_KIND},
+            SURFACE_TREAT = #{SURFACE_TREAT},
+            MATERIAL_NOTE = #{MATERIAL_NOTE},
+            PART_UNIT_QTY = #{PART_UNIT_QTY},
+            ORIGINAL_SIDE_QTY = #{ORIGINAL_SIDE_QTY},
+            OTHER_SIDE_QTY = #{OTHER_SIDE_QTY},
+        <!--     DETAIL_LATHE = NULL, -->
+        <!--     DETAIL_SURFACE = NULL, -->
+        <!--     DETAIL_CLAMPING = NULL, -->
+        <!--     DETAIL_POCKET = NULL, -->
+        <!--     DETAIL_DRILL = NULL, -->
+        <!--     DETAIL_DIFFICULTY = NULL, -->
+            MATERIAL_FINISH_TM = #{MATERIAL_FINISH_TM},
+            MATERIAL_FINISH_GRIND = #{MATERIAL_FINISH_GRIND},
+            MATERIAL_FINISH_HEAT = #{MATERIAL_FINISH_HEAT},
+            UNIT_MATERIAL_AMT = #{UNIT_MATERIAL_AMT},
+            UNIT_TM_AMT = #{UNIT_TM_AMT},
+            UNIT_GRIND_AMT = #{UNIT_GRIND_AMT},
+            UNIT_HEAT_AMT = #{UNIT_HEAT_AMT},
+            UNIT_SURFACE_AMT = #{UNIT_SURFACE_AMT},
+            UNIT_PROCESS_AMT = #{UNIT_PROCESS_AMT},
+            UNIT_ETC_AMT = #{UNIT_ETC_AMT},
+            UNIT_MATERIAL_AUTO_YN = IFNULL(#{UNIT_MATERIAL_AUTO_YN}, 'N'),
+            UNIT_TM_AUTO_YN = IFNULL(#{UNIT_TM_AUTO_YN}, 'N'),
+            UNIT_GRIND_AUTO_YN = IFNULL(#{UNIT_GRIND_AUTO_YN}, 'N'),
+            UNIT_HEAT_AUTO_YN = IFNULL(#{UNIT_HEAT_AUTO_YN}, 'N'),
+            UNIT_SURFACE_AUTO_YN = IFNULL(#{UNIT_SURFACE_AUTO_YN}, 'N'),
+            UNIT_PROCESS_AUTO_YN = IFNULL(#{UNIT_PROCESS_AUTO_YN}, 'N'),
+            UNIT_AMT_NOTE = #{UNIT_AMT_NOTE},
+            UNIT_FINAL_EST_AMT = #{UNIT_FINAL_EST_AMT},
+            UNIT_FINAL_AMT = #{UNIT_FINAL_AMT},
+            DWG_GFILE_SEQ = #{DWG_GFILE_SEQ},
+        <!--     DXF_GFILE_SEQ = NULL, -->
+        <!--     PDF_GFILE_SEQ = NULL, -->
+        <!--     IMG_GFILE_SEQ = NULL, -->
+        <!--     VIEW_GFILE_SEQ = NULL, -->
+        <!--     ETC_GFILE_SEQ = NULL, -->
+        <!--     PART_STATUS = NULL, -->
+        <!--     STATUS_DT = NULL, -->
+        <!--     MCT_NOTE = NULL, -->
+        <!--     MCT_WORK_TYPE = 'WCL010', -->
+        <!--     OUTSIDE_COMP_CD = NULL, -->
+        <!--     OUTSIDE_ORDER_NUM = NULL, -->
+        <!--     OUTSIDE_NOTE = NULL, -->
+        <!--     OUTSIDE_MATERIAL_SUPPLY_YN = 'N', -->
+        <!--     OUTSIDE_REQUEST_FINISH_YN = 'N', -->
+        <!--     OUTSIDE_REQUEST_PROCESS_YN = 'Y', -->
+        <!--     OUTSIDE_REQUEST_GRIND_YN = 'N', -->
+        <!--     OUTSIDE_REQUEST_SURFACE_YN = 'N', -->
+        <!--     OUTSIDE_REQUEST_ETC = NULL, -->
+        <!--     OUTSIDE_HOPE_DUE_DT = NULL, -->
+        <!--     OUTSIDE_UNIT_AMT = NULL, -->
+        <!--     OUTSIDE_CONFIRM_DT = NULL, -->
+        <!--     OUTSIDE_IN_DT = NULL, -->
+        <!--     OUTSIDE_STATUS = NULL, -->
+        <!--     OUTSIDE_STATUS_DT = NULL, -->
+        <!--     INNER_WORK_FINISH_DT = NULL, -->
+        <!--     INSERT_DT = current_timestamp(), -->
+        <!--     INSERT_ID = NULL, -->
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE 1 = 1
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+        <choose>
+            <when test="CONTROL_DETAIL_SEQ != null and CONTROL_DETAIL_SEQ != ''">
+                AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            </when>
+            <otherwise>
+                AND CONTROL_DETAIL_SEQ = (  SELECT A.CONTROL_DETAIL_SEQ
+                                            FROM TBL_CONTROL_PART A
+                                            WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
+                                            AND A.PART_NUM = #{PART_NUM})
+            </otherwise>
+        </choose>
+    </update>
+
+    <update id="updateControlFromControlManage" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL
+        SET
+            CONTROL_NUM = #{CONTROL_NUM},
+        <!--     CONTROL_VER = 0, -->
+            COMP_CD = #{COMP_CD},
+            ORDER_COMP_CD = #{ORDER_COMP_CD},
+            ORDER_STAFF_SEQ = #{ORDER_STAFF_SEQ},
+            DESIGNER_NM = #{DESIGNER_NM},
+            NOTE = #{CONTROL_NOTE},
+            PROJECT_NM = #{PROJECT_NM},
+            MODULE_NM = #{MODULE_NM},
+            DELIVERY_COMP_NM = #{DELIVERY_COMP_NM},
+            LABEL_NOTE = #{LABEL_NOTE},
+            MAIN_INSPECTION = #{MAIN_INSPECTION},
+            EMERGENCY_YN = IFNULL(#{EMERGENCY_YN}, 'N'),
+            TOTAL_SHEET = #{TOTAL_SHEET},
+        <!--     CONTROL_STATUS = NULL, -->
+        <!--     STATUS_DT = NULL, -->
+        <!--     EST_SEQ = NULL, -->
+        <!--     DEL_YN = 'N', -->
+            PRICE_CONFIRM = #{PRICE_CONFIRM},
+        <!--     OUT_FINISH_DT = NULL, -->
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+    </update>
+
+    <select id="selectBusinessEmergencyList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        <!-- 하단 그리드 2 (긴급주문 진행현황) -->
+        SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
+            , jmes.SF_GET_DATE_F(X.ORDER_DUE_DT,'YYYY','') AS ORDER_DUE_DT
+            , jmes.SF_GET_DATE_F(X.OUT_FINISH_DT,'YYYY','') AS OUT_FINISH_DT
+            , X.ORDER_COMP_NM
+            , X.CONTROL_PART_INFO
+            , X.CONTROL_PART_QTY, CONCAT(X.CONTROL_PART_QTY,'ea') AS CONTROL_PART_QTY_INFO
+            , X.PART_STATUS_NM
+        FROM (  <!-- 출고일 없는경우 -->
+                SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                    , C.ORDER_DUE_DT
+                    , A.OUT_FINISH_DT
+                    , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
+                    , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
+                    , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY
+                    , jmes.SF_GET_CODE_NM('1013', B.PART_STATUS, 'KR') AS PART_STATUS_NM
+                FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER C
+                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                    AND B.CONTROL_SEQ = C.CONTROL_SEQ
+                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                    AND A.DEL_YN = 'N'
+                    <!-- AND A.CONTROL_STATUS IN ('ORD001','ORD003') -->
+                    AND A.EMERGENCY_YN = 'Y'
+                    AND A.OUT_FINISH_DT IS NULL
+                    AND C.ORDER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')
+<!--                 UNION ALL -->
+<!--                 SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ -->
+<!--                     , B.INNER_DUE_DT -->
+<!--                     , A.OUT_FINISH_DT -->
+<!--                     , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM -->
+<!--                     , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO -->
+<!--                     , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY -->
+<!--                     , jmes.SF_GET_CODE_NM('1013', B.PART_STATUS, 'KR') AS PART_STATUS_NM -->
+<!--                 FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B -->
+<!--                 WHERE A.CONTROL_SEQ = B.CONTROL_SEQ -->
+<!--                     AND A.DEL_YN = 'N' -->
+<!--                     AND A.CONTROL_STATUS IN ('ORD001','ORD003') -->
+<!--                     AND A.EMERGENCY_YN = 'Y' -->
+<!--                     AND A.OUT_FINISH_DT IS NOT NULL -->
+<!--                     AND B.INNER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d') -->
+<!--                     AND B.INNER_DUE_DT > DATE_ADD(NOW(), INTERVAL -3 DAY) -->
+            ) X
+        ORDER BY X.ORDER_DUE_DT, <!-- CASE WHEN X.OUT_FINISH_DT IS NULL THEN 1 ELSE 2 END, --> X.CONTROL_PART_INFO
+    </select>
+
+    <select id="selectBusinessOverOrderList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        <!-- 하단 그리드 3 (납기지연목록) -->
+        SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
+            , jmes.SF_GET_DATE_F(X.ORDER_DUE_DT,'YYYY','') AS ORDER_DUE_DT
+            , jmes.SF_GET_DATE_F(X.OUT_FINISH_DT,'YYYY','') AS OUT_FINISH_DT
+            , X.ORDER_COMP_NM
+            , X.CONTROL_PART_INFO
+            , X.CONTROL_PART_QTY, CONCAT(X.CONTROL_PART_QTY,'ea') AS CONTROL_PART_QTY_INFO
+            , X.PART_STATUS_NM
+            , X.CHARGE_USER_NM
+        FROM (  <!-- 출고일 없는경우 -->
+                SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                    , C.ORDER_DUE_DT
+                    , A.OUT_FINISH_DT
+                    , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
+                    , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
+                    , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY
+                    , jmes.SF_GET_CODE_NM('1013', B.PART_STATUS, 'KR') AS PART_STATUS_NM
+                    , (SELECT M.USER_NM FROM jmes.TBL_USER M, jmes.TBL_COMPANY N WHERE M.USER_ID = N.CHARGE_USER_ID AND N.COMP_CD = A.ORDER_COMP_CD) AS CHARGE_USER_NM
+                FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER C
+                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                    AND B.CONTROL_SEQ = C.CONTROL_SEQ
+                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                    AND A.DEL_YN = 'N'
+                    AND A.CONTROL_STATUS IN ('ORD001','ORD003')
+                    AND A.OUT_FINISH_DT IS NULL
+                    AND C.ORDER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')
+<!--                 UNION ALL -->
+<!--                 SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ -->
+<!--                     , B.INNER_DUE_DT -->
+<!--                     , A.OUT_FINISH_DT -->
+<!--                     , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM -->
+<!--                     , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO -->
+<!--                     , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY -->
+<!--                     , jmes.SF_GET_CODE_NM('1013', B.PART_STATUS, 'KR') AS PART_STATUS_NM -->
+<!--                     , (SELECT M.USER_NM FROM jmes.TBL_USER M, jmes.TBL_COMPANY N WHERE M.USER_ID = N.CHARGE_USER_ID AND N.COMP_CD = A.ORDER_COMP_CD) AS CHARGE_USER_NM -->
+<!--                 FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B -->
+<!--                 WHERE A.CONTROL_SEQ = B.CONTROL_SEQ -->
+<!--                     AND A.DEL_YN = 'N' -->
+<!--                     AND A.CONTROL_STATUS IN ('ORD001','ORD003') -->
+<!--                     AND A.OUT_FINISH_DT IS NOT NULL -->
+<!--                     AND B.INNER_DUE_DT  <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d') -->
+<!--                     AND B.INNER_DUE_DT > DATE_ADD(NOW(), INTERVAL -3 DAY) -->
+            ) X
+        ORDER BY X.ORDER_DUE_DT, <!-- CASE WHEN X.OUT_FINISH_DT IS NULL THEN 1 ELSE 2 END, --> X.CONTROL_PART_INFO
+    </select>
+
 </mapper>
