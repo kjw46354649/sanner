@@ -202,3 +202,9 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=1, Direction=135, Colo
 .pop.ty2 .conWrap .percentWrap{position: absolute; top: 25px; left: 275px; font-size: 0;}
 .pop.ty2 .conWrap .percentWrap span{display: inline-block; width: 95px; height: 48px; line-height: 46px; font-size: 27px; color: #000; font-family: 'PTSansNarrow'; text-align: center; background-color: #fff; border: 1px solid #99a3a7; box-sizing: border-box;}
 .pop.ty2 .conWrap .percentWrap span~span{margin-left: 2px;}
+
+.pop.ty2 .conWrap2 .percentWrap{position: absolute; top: 20px; left: 260px; font-size: 0;}
+.pop.ty2 .conWrap2 .percentWrap span{display: inline-block; width: 90px; height: 42px; line-height: 42px; font-size: 25px; color: #000; font-family: 'PTSansNarrow'; text-align: center; background-color: #fff; border: 1px solid #99a3a7; box-sizing: border-box;}
+.pop.ty2 .conWrap2 .percentWrap span~span{margin-left: 2px;}
+.bodyWrap.mct .header .right .infoCont span.txtB,.pop.ty2 .conWrap2 .percentWrap span.txtB{color: #0056a8;}
+.bodyWrap.mct .header .right .infoCont span.txtR,.pop.ty2 .conWrap2 .percentWrap span.txtR{color: #670000;}

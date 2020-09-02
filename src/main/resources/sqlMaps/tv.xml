@@ -67,26 +67,20 @@
             , Y.CONTROL_PART_INFO
             , Y.WORKING_TIME
             , (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID) AS USER_NM
-            <!-- , (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = Y.WORK_USER_ID) AS USER_NM -->
             , (SELECT M.PHOTO_GFILE_SEQ FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID) AS USER_PHOTO_GFILE_SEQ
-            <!--, (SELECT M.PHOTO_GFILE_SEQ FROM jmes.TBL_USER M WHERE M.USER_ID = Y.WORK_USER_ID) AS USER_PHOTO_GFILE_SEQ -->
         FROM jmes.TBL_EQUIP X
-             LEFT OUTER JOIN (  SELECT B.EQUIP_SEQ
-                                    , B.WORK_USER_ID
-                                    , CONCAT(C.WORKING_TIME,'''') AS WORKING_TIME
-                                    , (SELECT CASE WHEN N.PART_NUM IS NULL THEN M.CONTROL_NUM
-                                                   ELSE CONCAT(M.CONTROL_NUM,'#',N.PART_NUM)
-                                              END
-                                        FROM jmes.TBL_CONTROL M, jmes.TBL_CONTROL_PART N
-                                        WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                            AND N.CONTROL_SEQ = B.CONTROL_SEQ
-                                            AND N.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                                       ) AS CONTROL_PART_INFO
-                                FROM jmes.TBL_MCT_WORK B
-                                        LEFT OUTER JOIN jmes.TBL_MCT_PLAN C ON B.EQUIP_SEQ = C.EQUIP_SEQ AND B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                                WHERE B.WORK_STATUS IN ('DBS010', 'DBS020')
-                                    AND B.DEL_YN = 'N') Y
-                    ON X.EQUIP_SEQ = Y.EQUIP_SEQ
+            LEFT OUTER JOIN (
+                SELECT A.EQUIP_SEQ
+                    , SF_GET_DRAWING_WORK_TIME('W_MINUTE', A.MCT_WORK_SEQ) AS WORKING_TIME
+                    , CASE WHEN C.PART_NUM IS NULL THEN B.CONTROL_NUM ELSE CONCAT(B.CONTROL_NUM, '#', C.PART_NUM) END AS CONTROL_PART_INFO
+                FROM jmes.TBL_MCT_WORK A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C
+                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                    AND A.CONTROL_SEQ = C.CONTROL_SEQ
+                    AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                    AND A.WORK_STATUS IN ('DBS010', 'DBS020')
+                    AND B.OUT_FINISH_DT IS NULL
+                    AND A.DEL_YN = 'N'
+            ) Y ON X.EQUIP_SEQ = Y.EQUIP_SEQ
         WHERE X.EQUIP_KIND = '1'
             AND X.DEL_YN = 'N'
             AND X.LAYOUT_SORT IS NOT NULL
@@ -117,6 +111,8 @@
             , X.EQUIP_ID
             , X.EQUIP_NM
             , X.FACTORY_AREA
+            , Y.CONTROL_SEQ
+            , Y.CONTROL_DETAIL_SEQ
             , (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID) AS USER_NM
             , IFNULL(Y.TOTAL_CNT,0) AS TOTAL_CNT, CONCAT(IFNULL(Y.TOTAL_CNT,0),'품') AS TOTAL_CNT_INFO
             , IFNULL(Y.TOTAL_PART_QTY,0) AS TOTAL_PART_QTY, CONCAT(IFNULL(Y.TOTAL_PART_QTY,0),'EA') AS TOTAL_PART_QTY_INFO
@@ -133,10 +129,13 @@
             , IFNULL(Y.PLAN_WORKING_TIME,0) AS PLAN_WORKING_TIME, CONCAT('(',IFNULL(Y.PLAN_WORKING_TIME,0),'''',')') AS PLAN_WORKING_TIME_INFO
             , X.LAYOUT_ROW
             , X.LAYOUT_COL
+            , Y.IMG_GFILE_SEQ
         FROM jmes.TBL_EQUIP X
                 LEFT OUTER JOIN ( SELECT COUNT(*) OVER (PARTITION BY T.EQUIP_SEQ) AS TOTAL_CNT
                                         , SUM(T.PART_QTY) OVER (PARTITION BY T.EQUIP_SEQ) AS TOTAL_PART_QTY
                                         , SUM(PLAN_WORKING_TIME) OVER (PARTITION BY T.EQUIP_SEQ) AS TOTAL_PLAN_WORKING_TIME
+                                        , T.CONTROL_SEQ
+                                        , T.CONTROL_DETAIL_SEQ
                                         , T.WORK_PLAN_TYPE
                                         , T.KEY_SEQ
                                         , T.EQUIP_SEQ
@@ -149,8 +148,11 @@
                                         , T.PART_QTY
                                         , T.WORKING_TIME
                                         , T.PLAN_WORKING_TIME
+                                        , T.IMG_GFILE_SEQ
                                   FROM (    -- 드로잉보드 진행
                                             SELECT '1' AS WORK_PLAN_TYPE
+                                                , C.CONTROL_SEQ
+                                                , C.CONTROL_DETAIL_SEQ
                                                 , A.MCT_WORK_SEQ AS KEY_SEQ
                                                 , A.EQUIP_SEQ
                                                 , C.INNER_DUE_DT
@@ -160,10 +162,10 @@
                                                 , C.SIZE_TXT
                                                 , jmes.SF_GET_CODE_NM('1027', C.MATERIAL_DETAIL, 'KR') AS MATERIAL_DETAIL_NM
                                                 , jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS PART_QTY
-                                                , (SELECT SUM(TIMESTAMPDIFF(MINUTE,M.WORK_START_DT, IFNULL(M.WORK_STOP_DT,NOW()))) FROM jmes.TBL_MCT_WORK_TIME M WHERE M.MCT_WORK_SEQ = A.MCT_WORK_SEQ ) AS WORKING_TIME
-                                                , IFNULL(T.WORKING_TIME,0) AS PLAN_WORKING_TIME
+                                                , SF_GET_DRAWING_WORK_TIME('W_MINUTE', A.MCT_WORK_SEQ) AS WORKING_TIME
+                                                , 0 AS PLAN_WORKING_TIME
+                                                , C.IMG_GFILE_SEQ
                                             FROM jmes.TBL_MCT_WORK A
-                                                        LEFT OUTER JOIN jmes.TBL_MCT_PLAN T ON T.EQUIP_SEQ = A.EQUIP_SEQ AND T.CONTROL_SEQ = A.CONTROL_SEQ AND T.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
                                                 , jmes.TBL_CONTROL B
                                                 , jmes.TBL_CONTROL_PART C
                                             WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
@@ -172,9 +174,14 @@
                                                 AND A.WORK_STATUS IN ('DBS010', 'DBS020')
                                                 AND B.OUT_FINISH_DT IS NULL
                                                 AND A.DEL_YN = 'N'
+                                                AND EXISTS (SELECT 1 FROM jmes.TBL_EQUIP D WHERE A.EQUIP_SEQ = D.EQUIP_SEQ AND D.EQUIP_KIND = '1' AND D.DEL_YN = 'N'
+                                                    AND D.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
+                                                )
                                             UNION ALL
                                             -- PLAN
                                             SELECT '2' AS WORK_PLAN_TYPE
+                                                , C.CONTROL_SEQ
+                                                , C.CONTROL_DETAIL_SEQ
                                                 , A.MCT_PLAN_SEQ AS KEY_SEQ
                                                 , A.EQUIP_SEQ
                                                 , C.INNER_DUE_DT
@@ -186,6 +193,7 @@
                                                 , jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS PART_QTY
                                                 , 0 AS WORKING_TIME
                                                 , IFNULL(A.WORKING_TIME,0) AS PLAN_WORKING_TIME
+                                                , C.IMG_GFILE_SEQ
                                             FROM jmes.TBL_MCT_PLAN A
                                                 , jmes.TBL_CONTROL B
                                                 , jmes.TBL_CONTROL_PART C
@@ -194,6 +202,9 @@
                                                 AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                                                 AND B.OUT_FINISH_DT IS NULL
                                                 AND A.DEL_YN = 'N'
+                                                AND EXISTS (SELECT 1 FROM jmes.TBL_EQUIP D WHERE A.EQUIP_SEQ = D.EQUIP_SEQ AND D.EQUIP_KIND = '1' AND D.DEL_YN = 'N'
+                                                    AND D.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
+                                                )
                                         ) T
                                    ) Y
                             ON X.EQUIP_SEQ = Y.EQUIP_SEQ
@@ -202,116 +213,86 @@
     </select>
     <select id="selectMctGrid1List" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         -- 하단 그리드 1 (불량/반품 발생 현황)
-        SELECT X.INSPECT_SEQ
-            , jmes.SF_GET_DATE_F(Y.INSERT_DT,'YY','') AS INSPECT_DT
+        SELECT
+            COUNT(*) OVER (PARTITION BY 1) AS TOTAL_COUNT
+            , jmes.SF_GET_DATE_F(Z.INSERT_DT,'YY','') AS INSPECT_DT
             , ( SELECT N.COMP_NM
                 FROM jmes.TBL_CONTROL M, jmes.TBL_COMPANY N
                 WHERE M.ORDER_COMP_CD = N.COMP_CD
-                    AND M.CONTROL_SEQ = Y.CONTROL_SEQ) AS ORDER_COMP_NM
-            , jmes.SF_GET_CONTROL_PART_INFO(Y.CONTROL_SEQ, Y.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
-            , CASE WHEN Y.INSPECT_TYPE = '1' THEN '불량'
-                   WHEN Y.INSPECT_TYPE = '2' THEN '반품'
+                    AND M.CONTROL_SEQ = Z.CONTROL_SEQ) AS ORDER_COMP_NM
+            , jmes.SF_GET_CONTROL_PART_INFO(Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
+            , CASE WHEN Z.INSPECT_TYPE = '1' THEN '불량'
+                   WHEN Z.INSPECT_TYPE = '2' THEN '반품'
               END AS ERROR_TYPE
-            , Y.ERROR_QTY, CONCAT(Y.ERROR_QTY,'ea') AS ERROR_QTY_INFO
-            , (SELECT jmes.SF_GET_DATE_F(M.INNER_DUE_DT,'YY','') FROM jmes.TBL_CONTROL_PART M WHERE M.CONTROL_SEQ = Y.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = Y.CONTROL_DETAIL_SEQ) AS INNER_DUE_DT
-            , CASE WHEN Y.INSPECT_TYPE = '1' THEN jmes.SF_GET_CODE_NM('1020', Y.INSPECT_RESULT, 'KR')
-                   WHEN Y.INSPECT_TYPE = '2' THEN jmes.SF_GET_CODE_NM('1021', Y.INSPECT_RESULT, 'KR')
+            , Z.ERROR_QTY, CONCAT(Z.ERROR_QTY,'ea') AS ERROR_QTY_INFO
+            , (SELECT jmes.SF_GET_DATE_F(M.INNER_DUE_DT,'YY','') FROM jmes.TBL_CONTROL_PART M WHERE M.CONTROL_SEQ = Z.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ) AS INNER_DUE_DT
+            , CASE WHEN Z.INSPECT_TYPE = '1' THEN jmes.SF_GET_CODE_NM('1020', Z.INSPECT_RESULT, 'KR')
+                   WHEN Z.INSPECT_TYPE = '2' THEN jmes.SF_GET_CODE_NM('1021', Z.INSPECT_RESULT, 'KR')
               END AS INSPECT_RESULT_NM
-            , jmes.SF_GET_CODE_NM('1025', Y.ERROR_ACTION, 'KR') AS ERROR_ACTION_NM
-        FROM (  SELECT A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, MAX(A.INSPECT_SEQ) AS INSPECT_SEQ
-                FROM jmes.TBL_INSPECT A
-                GROUP BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
-             ) X, jmes.TBL_INSPECT Y
-        WHERE X.INSPECT_SEQ = Y.INSPECT_SEQ
-            AND ((Y.INSPECT_TYPE = '1' AND Y.INSPECT_GRADE = 'GRD040') OR (Y.INSPECT_TYPE = '2' AND Y.RETURN_SETTLEMENT_DT IS NULL))
-        ORDER BY X.INSPECT_SEQ DESC
+            , jmes.SF_GET_CODE_NM('1025', Z.ERROR_ACTION, 'KR') AS ERROR_ACTION_NM
+        FROM (
+        	SELECT
+        		A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.INSPECT_TYPE, A.ERROR_QTY, A.INSPECT_RESULT, A.ERROR_ACTION, A.INSERT_DT
+        	FROM jmes.TBL_INSPECT A
+        	WHERE A.INSPECT_TYPE = '1' AND A.INSPECT_GRADE = 'GRD040'
+        		AND A.INSPECT_SEQ = (SELECT MAX(B.INSPECT_SEQ) FROM jmes.TBL_INSPECT B WHERE B.INSPECT_TYPE = '1' AND A.CONTROL_SEQ = B.CONTROL_SEQ
+        			AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+        			GROUP BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+        		)
+        	UNION ALL
+        	SELECT
+        		A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.INSPECT_TYPE, A.ERROR_QTY, A.INSPECT_RESULT, A.ERROR_ACTION, A.INSERT_DT
+        	FROM jmes.TBL_INSPECT A
+        	WHERE A.INSPECT_TYPE = '2' AND A.RETURN_SETTLEMENT_DT IS NULL
+        )Z
+        GROUP BY Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ, Z.INSPECT_TYPE
+        ORDER BY Z.INSERT_DT DESC
+        LIMIT 5
     </select>
     <select id="selectMctGrid2List" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         -- 하단 그리드 2 (긴급주문 진행현황)
-        SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
-            , jmes.SF_GET_DATE_F(X.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT
-            , jmes.SF_GET_DATE_F(X.OUT_FINISH_DT,'YYYY','') AS OUT_FINISH_DT
-            , X.ORDER_COMP_NM
-            , X.CONTROL_PART_INFO
-            , X.CONTROL_PART_QTY, CONCAT(X.CONTROL_PART_QTY,'ea') AS CONTROL_PART_QTY_INFO
-            , X.PART_STATUS_NM
-        FROM (  -- 출고일 없는경우
-                SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
-                    , B.INNER_DUE_DT
-                    , A.OUT_FINISH_DT
-                    , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
-                    , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
-                    , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY
-                    , jmes.SF_GET_CODE_NM('1013', B.PART_STATUS, 'KR') AS PART_STATUS_NM
-                FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
-                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                    AND A.DEL_YN = 'N'
-                    -- AND A.CONTROL_STATUS IN ('ORD001','ORD003')
-                    AND A.EMERGENCY_YN = 'Y'
-                    AND A.OUT_FINISH_DT IS NULL
-                    AND B.INNER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')
-                UNION ALL
-                SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
-                    , B.INNER_DUE_DT
-                    , A.OUT_FINISH_DT
-                    , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
-                    , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
-                    , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY
-                    , jmes.SF_GET_CODE_NM('1013', B.PART_STATUS, 'KR') AS PART_STATUS_NM
-                FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
-                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                    AND A.DEL_YN = 'N'
-                    -- AND A.CONTROL_STATUS IN ('ORD001','ORD003')
-                    AND A.EMERGENCY_YN = 'Y'
-                    AND A.OUT_FINISH_DT IS NOT NULL
-                    AND B.INNER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')
-                    AND B.INNER_DUE_DT > DATE_ADD(NOW(), INTERVAL -3 DAY)
-            ) X
-        ORDER BY CASE WHEN X.OUT_FINISH_DT IS NULL THEN 1 ELSE 2 END, X.INNER_DUE_DT, X.CONTROL_PART_INFO
+        SELECT
+            COUNT(*) OVER (PARTITION BY 1) AS TOTAL_COUNT
+        	, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+            , jmes.SF_GET_DATE_F(B.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT
+            , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
+            , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
+            , CONCAT(jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ),'ea') AS CONTROL_PART_QTY_INFO
+            , jmes.SF_GET_CODE_NM('1013', B.PART_STATUS, 'KR') AS PART_STATUS_NM
+            , SF_GET_CODE_NM(1009, C.POP_POSITION, 'KR') AS POP_POSITION_NM
+        FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
+        	LEFT OUTER JOIN jmes.TBL_POP C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+        		AND C.POP_SEQ = (SELECT MAX(D.POP_SEQ) FROM jmes.TBL_POP D WHERE C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+        					GROUP BY D.CONTROL_SEQ, D.CONTROL_DETAIL_SEQ)
+        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+            -- AND A.CONTROL_STATUS IN ('ORD001','ORD003')
+            AND A.DEL_YN = 'N'
+            AND A.EMERGENCY_YN = 'Y'
+            AND IFNULL(B.OUTSIDE_YN, 'N') = 'N'
+            AND B.INNER_WORK_FINISH_DT IS NULL
+        ORDER BY B.INNER_DUE_DT, A.ORDER_COMP_CD, A.CONTROL_NUM
+        LIMIT 5
     </select>
     <select id="selectMctGrid3List" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        -- 하단 그리드 3 (납기지연목록)
-        SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
-            , jmes.SF_GET_DATE_F(X.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT
-            , jmes.SF_GET_DATE_F(X.OUT_FINISH_DT,'YYYY','') AS OUT_FINISH_DT
-            , X.ORDER_COMP_NM
-            , X.CONTROL_PART_INFO
-            , X.CONTROL_PART_QTY, CONCAT(X.CONTROL_PART_QTY,'ea') AS CONTROL_PART_QTY_INFO
-            , X.PART_STATUS_NM
-            , X.CHARGE_USER_NM
-        FROM (  -- 출고일 없는경우
-                SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
-                    , B.INNER_DUE_DT
-                    , A.OUT_FINISH_DT
-                    , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
-                    , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
-                    , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY
-                    , jmes.SF_GET_CODE_NM('1013', B.PART_STATUS, 'KR') AS PART_STATUS_NM
-                    , (SELECT M.USER_NM FROM jmes.TBL_USER M, jmes.TBL_COMPANY N WHERE M.USER_ID = N.CHARGE_USER_ID AND N.COMP_CD = A.ORDER_COMP_CD) AS CHARGE_USER_NM
-                FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
-                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                    AND A.DEL_YN = 'N'
-                    AND A.CONTROL_STATUS IN ('ORD001','ORD003')
-                    AND A.OUT_FINISH_DT IS NULL
-                    AND B.INNER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')
-                UNION ALL
-                SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
-                    , B.INNER_DUE_DT
-                    , A.OUT_FINISH_DT
-                    , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
-                    , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
-                    , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY
-                    , jmes.SF_GET_CODE_NM('1013', B.PART_STATUS, 'KR') AS PART_STATUS_NM
-                    , (SELECT M.USER_NM FROM jmes.TBL_USER M, jmes.TBL_COMPANY N WHERE M.USER_ID = N.CHARGE_USER_ID AND N.COMP_CD = A.ORDER_COMP_CD) AS CHARGE_USER_NM
-                FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
-                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                    AND A.DEL_YN = 'N'
-                    AND A.CONTROL_STATUS IN ('ORD001','ORD003')
-                    AND A.OUT_FINISH_DT IS NOT NULL
-                    AND B.INNER_DUE_DT  <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')
-                    AND B.INNER_DUE_DT > DATE_ADD(NOW(), INTERVAL -3 DAY)
-            ) X
-        ORDER BY CASE WHEN X.OUT_FINISH_DT IS NULL THEN 1 ELSE 2 END, X.INNER_DUE_DT, X.CONTROL_PART_INFO
+        -- 하단 그리드 3 (가공지연목록)
+        SELECT
+            COUNT(*) OVER (PARTITION BY 1) AS TOTAL_COUNT
+            , B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+            , jmes.SF_GET_DATE_F(B.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT
+            , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
+            , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
+            , CONCAT(jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ),' ea') AS CONTROL_PART_QTY_INFO
+            , jmes.SF_GET_CODE_NM('1013', B.PART_STATUS, 'KR') AS PART_STATUS_NM
+            , (SELECT M.USER_NM FROM jmes.TBL_USER M, jmes.TBL_COMPANY N WHERE M.USER_ID = N.CHARGE_USER_ID AND N.COMP_CD = A.ORDER_COMP_CD) AS CHARGE_USER_NM
+        FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
+        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+            AND A.DEL_YN = 'N'
+            AND A.CONTROL_STATUS IN ('ORD001','ORD003')
+            AND A.OUT_FINISH_DT IS NULL
+            AND B.INNER_WORK_FINISH_DT IS NULL
+            AND B.INNER_DUE_DT <![CDATA[ <= ]]> DATE_FORMAT(NOW(),'%Y%m%d')
+        ORDER BY B.INNER_DUE_DT, A.ORDER_COMP_CD, A.CONTROL_NUM
+        LIMIT 5
     </select>
     <select id="selectMctGrid4List" parameterType="java.util.HashMap" resultType="java.util.HashMap">
             select '1' as data1 from dual

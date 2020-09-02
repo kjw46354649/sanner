@@ -18,8 +18,15 @@
     <link href="/resource/asset/css/common.css" rel="stylesheet" type="text/css" />
     <link href="/resource/asset/css/layout.css" rel="stylesheet" type="text/css" />
     <link href="/resource/asset/css/tv2.css" rel="stylesheet" type="text/css" />
+	<!-- alertify -->
+	<link rel="stylesheet" type="text/css" href="/resource/plugins/alertifyjs/css/alertify.css" />
+	<link rel="stylesheet" type="text/css" href="/resource/plugins/alertifyjs/css/themes/default.css" />
+
     <script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
+
+	<!-- alertify -->
+	<script type="text/javascript" src='/resource/plugins/alertifyjs/alertify.js'></script>
 </head>
 <body>
 	<div class="bodyWrap">
@@ -1501,6 +1508,26 @@
 		</section>
 	</div>
 <script>
+
+	/**
+	 * @title {String or DOMElement} The dialog title.
+	 * @message {String or DOMElement} The dialog contents.
+	 * @onok {Function} Invoked when the user clicks OK button or closes the dialog.
+	 *
+	 * fnAlert(null,"<h1>안녕하세요</h1>", function () {alert('확인 클릭')});
+	 *
+	 */
+	const fnAlert = function (title, message, onok) {
+		alertify.alert()
+			.setting({
+				'title': title,
+				'message': message,
+				'onok': onok,
+				'movable': false,
+				'transitionOff': true
+			}).show();
+	};
+
 	$(function () {
 		let getData = function () {
 			'use strict';
@@ -1531,6 +1558,7 @@
 						$(this).empty();
 					});
 					$('[id^=ARE]').each(function () {
+
 						$(this).find(".leftWrap").find(".txtWrap").html('');
 						$(this).find(".rightWrap").find(".nameWrap").html('Log off');
 						$(this).find(".rightWrap").find("img").attr("src", "/resource/asset/images/tv/img_logoff.png");
@@ -1620,6 +1648,7 @@
 				$("#CNT_" + popPosition).html(totalCnt);
 			}
 		}
+
 		let curr_seq = 0;
 		let getAlarm = function () {
 					'use strict';

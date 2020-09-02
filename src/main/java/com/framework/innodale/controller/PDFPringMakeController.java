@@ -117,6 +117,7 @@ public class PDFPringMakeController {
         Font headBoldFont = new Font(bf, 10, Font.BOLD);
         Font titleFont = new Font(bf, 7, Font.NORMAL);
         Font boldFont = new Font(bf, 12, Font.BOLD);
+        Font bigBoldFont = new Font(bf, 11, Font.BOLD);
         Font bodyFont = new Font(bf, 12, Font.NORMAL);
         Font qtyFont = new Font(bf, 13, Font.BOLD);
         Font qtySmallFont = new Font(bf, 8, Font.BOLD);
@@ -177,7 +178,12 @@ public class PDFPringMakeController {
             table.addCell(createCell("가공납기", 1, 1, titleFont));
 
             table.addCell(createCell((String)controlInfo.get("DRAWING_VER"), 1, 1, headFont));
-            table.addCell(createCell((String)controlInfo.get("CONTROL_NUM_PART"), 2, 1, boldFont));
+            String controlNumPart = (String)controlInfo.get("CONTROL_NUM_PART");
+            if(controlNumPart.length() <= 22){
+                table.addCell(createCell((String)controlInfo.get("CONTROL_NUM_PART"), 2, 1, boldFont));
+            }else{
+                table.addCell(createCell((String)controlInfo.get("CONTROL_NUM_PART"), 2, 1, bigBoldFont));
+            }
             table.addCell(createCell((String)controlInfo.get("TOTAL_SHEET"), 1, 1, bodyFont));
             table.addCell(createCell((String)controlInfo.get("MATERIAL_TYPE_NM"), 1, 1, headFont));
             table.addCell(createCell((String)controlInfo.get("EMERGENCY_BARCODE_NM"), 1, 1, headFont));
