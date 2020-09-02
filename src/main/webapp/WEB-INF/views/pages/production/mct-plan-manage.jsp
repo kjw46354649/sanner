@@ -44,6 +44,7 @@
                     <li id="layout_1_4" style="min-width: 500px;"></li>
                     <li id="layout_1_5" style="min-width: 500px;"></li>
                     <li id="layout_1_6" style="min-width: 500px;"></li>
+                    <li id="layout_1_7" style="min-width: 500px;"></li>
                 </ul>
                 <ul>
                     <li id="layout_2_1" style="min-width: 500px;"></li>
@@ -52,6 +53,7 @@
                     <li id="layout_2_4" style="min-width: 500px;"></li>
                     <li id="layout_2_5" style="min-width: 500px;"></li>
                     <li id="layout_2_6" style="min-width: 500px;"></li>
+                    <li id="layout_2_7" style="min-width: 500px;"></li>
                 </ul>
             </div>
         </div>
@@ -174,7 +176,9 @@
         const insertQueryList = ['machine.insertMctPlan'];
         const updateQueryList = ['machine.updateMctPlan'];
         const deleteQueryList = ['machine.deleteMctPlan'];
-        let $processPlanGrid1, $processPlanGrid2, $processPlanGrid3, $processPlanGrid4, $processPlanGrid5, $processPlanGrid6, $processPlanGrid7, $processPlanGrid8, $processPlanGrid9, $processPlanGrid10, $processPlanGrid11;
+        let $processPlanGrid1, $processPlanGrid2, $processPlanGrid3, $processPlanGrid4, $processPlanGrid5,
+            $processPlanGrid6, $processPlanGrid7, $processPlanGrid8, $processPlanGrid9, $processPlanGrid10,
+            $processPlanGrid11, $processPlanGrid12, $processPlanGrid13, $processPlanGrid14;
         const processPlanGrid1Id = 'PROCESS_PLAN_GRID1';
         const processPlanGrid2Id = 'PROCESS_PLAN_GRID2';
         const processPlanGrid3Id = 'PROCESS_PLAN_GRID3';
@@ -186,6 +190,9 @@
         const processPlanGrid9Id = 'PROCESS_PLAN_GRID9';
         const processPlanGrid10Id = 'PROCESS_PLAN_GRID10';
         const processPlanGrid11Id = 'PROCESS_PLAN_GRID11';
+        const processPlanGrid12Id = 'PROCESS_PLAN_GRID12';
+        const processPlanGrid13Id = 'PROCESS_PLAN_GRID13';
+        const processPlanGrid14Id = 'PROCESS_PLAN_GRID14';
 
         const createDynamicForm = function (row, col, order, equipSeq, equipNm) {
             let str = '';
@@ -668,6 +675,9 @@
             $processPlanGrid9.pqGrid('refreshDataAndView');
             $processPlanGrid10.pqGrid('refreshDataAndView');
             $processPlanGrid11.pqGrid('refreshDataAndView');
+            $processPlanGrid12.pqGrid('refreshDataAndView');
+            $processPlanGrid13.pqGrid('refreshDataAndView');
+            $processPlanGrid14.pqGrid('refreshDataAndView');
         };
 
         const refreshTargetGrid = function () {
@@ -817,6 +827,9 @@
             const processPlanPostData9 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC9_PLAN_FORM')}};
             const processPlanPostData10 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC10_PLAN_FORM')}};
             const processPlanPostData11 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC11_PLAN_FORM')}};
+            const processPlanPostData12 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC12_PLAN_FORM')}};
+            const processPlanPostData13 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC13_PLAN_FORM')}};
+            const processPlanPostData14 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC14_PLAN_FORM')}};
 
             const processPlanObj1 = $.extend(true, {}, planObj, processPlanPostData1);
             const processPlanObj2 = $.extend(true, {}, planObj, processPlanPostData2);
@@ -829,6 +842,9 @@
             const processPlanObj9 = $.extend(true, {}, planObj, processPlanPostData9);
             const processPlanObj10 = $.extend(true, {}, planObj, processPlanPostData10);
             const processPlanObj11 = $.extend(true, {}, planObj, processPlanPostData11);
+            const processPlanObj12 = $.extend(true, {}, planObj, processPlanPostData12);
+            const processPlanObj13 = $.extend(true, {}, planObj, processPlanPostData13);
+            const processPlanObj14 = $.extend(true, {}, planObj, processPlanPostData14);
 
             $processPlanGrid1 = $('#' + processPlanGrid1Id).pqGrid(processPlanObj1);
             $processPlanGrid2 = $('#' + processPlanGrid2Id).pqGrid(processPlanObj2);
@@ -841,6 +857,9 @@
             $processPlanGrid9 = $('#' + processPlanGrid9Id).pqGrid(processPlanObj9);
             $processPlanGrid10 = $('#' + processPlanGrid10Id).pqGrid(processPlanObj10);
             $processPlanGrid11 = $('#' + processPlanGrid11Id).pqGrid(processPlanObj11);
+            $processPlanGrid12 = $('#' + processPlanGrid12Id).pqGrid(processPlanObj12);
+            $processPlanGrid13 = $('#' + processPlanGrid13Id).pqGrid(processPlanObj13);
+            $processPlanGrid14 = $('#' + processPlanGrid14Id).pqGrid(processPlanObj14);
         };
         /* function */
 
@@ -884,9 +903,7 @@
         $('#MCT_TARGET_SAVE').on('click', function () {
             // console.count();
             fnModifyPQGrid($processTargetGrid, [], ['machine.updateMctTarget', 'machine.insertMctPlan']);
-            setTimeout(function () {
-                refreshMctPlanGrids();
-            }, 1000);
+            setTimeout(refreshMctPlanGrids, 1000);
         });
 
         /*$('#mctPlanManageFilterKeyword').on('keyup', function(e){

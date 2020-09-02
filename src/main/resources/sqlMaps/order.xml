@@ -23,6 +23,7 @@
         IFNULL(SF_GET_CODE_NM(1059, A.MAIN_INSPECTION, #{LOGIN_LOCALE}), SPACE(0)) AS MAIN_INSPECTION_NM, <!-- 주요검사품 -->
         A.EMERGENCY_YN, <!-- 긴급 -->
         CASE WHEN IFNULL(A.EMERGENCY_YN, 'N') = 'Y' THEN '긴급' ELSE SPACE(0) END AS EMERGENCY_BARCODE_NM, <!-- 바코드 긴급 -->
+        IFNULL(A.TOTAL_SHEET, SPACE(0)) AS TOTAL_SHEET, <!-- 총장 -->
         A.CONTROL_STATUS, <!-- 주문관리상태 -->
         IFNULL(SF_GET_CODE_NM(1038, A.CONTROL_STATUS, #{LOGIN_LOCALE}), SPACE(0)) AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
         IFNULL(SF_GET_DATE_F(A.STATUS_DT, '', 'M'), SPACE(0)) AS CONTROL_STATUS_DT, <!-- 주문관리 상태확정일 -->
@@ -38,96 +39,96 @@
         IFNULL(B.PART_NUM, SPACE(0)) AS PART_NUM, <!-- Part -->
         IFNULL(B.DRAWING_NUM, SPACE(0)) AS DRAWING_NUM, <!-- 도면번호 -->
         IFNULL(B.DRAWING_VER, SPACE(0)) AS DRAWING_VER, <!-- 도면번호 버전 -->
-        SF_GET_DATE_F(B.DRAWING_UP_DT, 'YY', 'M') AS DRAWING_UP_DT, <!-- 도면업로드시간 -->
-        B.PREV_DRAWING_NUM, <!-- 변경전 도면번호 -->
-        B.ITEM_NM, <!-- 품명 -->
-        B.WORK_TYPE, <!-- 작업형태 -->
+        IFNULL(SF_GET_DATE_F(B.DRAWING_UP_DT, 'YY', 'M'), SPACE(0)) AS DRAWING_UP_DT, <!-- 도면업로드시간 -->
+        IFNULL(B.PREV_DRAWING_NUM, SPACE(0)) AS PREV_DRAWING_NUM, <!-- 변경전 도면번호 -->
+        IFNULL(B.ITEM_NM, SPACE(0)) AS ITEM_NM, <!-- 품명 -->
+        IFNULL(B.WORK_TYPE, SPACE(0)) AS WORK_TYPE, <!-- 작업형태 -->
         IFNULL(SF_GET_CODE_NM(1033, B.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
-        B.OUTSIDE_YN, <!-- 외주 -->
-        B.WORK_FACTORY, <!-- 수행공장 -->
-        SF_GET_CODE_NM(1014, B.WORK_FACTORY, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM, <!-- 수행공장 -->
-        B.MATERIAL_SUPPLY_YN, <!-- 소재사급 -->
+        IFNULL(B.OUTSIDE_YN, SPACE(0)) AS OUTSIDE_YN, <!-- 외주 -->
+        IFNULL(B.WORK_FACTORY, SPACE(0)) AS WORK_FACTORY, <!-- 수행공장 -->
+        IFNULL(SF_GET_CODE_NM(1014, B.WORK_FACTORY, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_FACTORY_NM, <!-- 수행공장 -->
+        IFNULL(B.MATERIAL_SUPPLY_YN, SPACE(0)) AS MATERIAL_SUPPLY_YN, <!-- 소재사급 -->
         IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'YYYY', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 가공납기 -->
         IFNULL(B.SIZE_TXT, SPACE(0)) AS SIZE_TXT, <!-- 규격 문자열 -->
-        B.SIZE_TYPE, <!-- 규격 타입 -->
-        B.SIZE_W, <!-- 규격 가로 -->
-        B.SIZE_H, <!-- 규격 세로 -->
-        B.SIZE_T, <!-- 규격 두께 -->
-        B.SIZE_D, <!-- 규격 지름 -->
-        B.SIZE_L, <!-- 규격 길이 -->
-        B.SIZE_W_M, <!-- 예상규격 가로 -->
-        B.SIZE_H_M, <!-- 예상규격 세로 -->
-        B.SIZE_T_M, <!-- 예상 규격 두께 -->
-        B.SIZE_D_M, <!-- 예상 규격 지름 -->
-        B.SIZE_L_M, <!-- 예상 규격 길이 -->
-        B.MATERIAL_TYPE, <!-- 재질 -->
+        IFNULL(B.SIZE_TYPE, SPACE(0)) AS SIZE_TYPE, <!-- 규격 타입 -->
+        IFNULL(B.SIZE_W, SPACE(0)) AS SIZE_W, <!-- 규격 가로 -->
+        IFNULL(B.SIZE_H, SPACE(0)) AS SIZE_H, <!-- 규격 세로 -->
+        IFNULL(B.SIZE_T, SPACE(0)) AS SIZE_T, <!-- 규격 두께 -->
+        IFNULL(B.SIZE_D, SPACE(0)) AS SIZE_D, <!-- 규격 지름 -->
+        IFNULL(B.SIZE_L, SPACE(0)) AS SIZE_L, <!-- 규격 길이 -->
+        IFNULL(B.SIZE_W_M, SPACE(0)) AS SIZE_W_M, <!-- 예상규격 가로 -->
+        IFNULL(B.SIZE_H_M, SPACE(0)) AS SIZE_H_M, <!-- 예상규격 세로 -->
+        IFNULL(B.SIZE_T_M, SPACE(0)) AS SIZE_T_M, <!-- 예상 규격 두께 -->
+        IFNULL(B.SIZE_D_M, SPACE(0)) AS SIZE_D_M, <!-- 예상 규격 지름 -->
+        IFNULL(B.SIZE_L_M, SPACE(0)) AS SIZE_L_M, <!-- 예상 규격 길이 -->
+        IFNULL(B.MATERIAL_TYPE, SPACE(0)) AS MATERIAL_TYPE, <!-- 재질 -->
         IFNULL(SF_GET_CODE_NM(1035, B.MATERIAL_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_TYPE_NM, <!-- 재질 -->
-        B.MATERIAL_DETAIL, <!-- 소재 종류 -->
+        IFNULL(B.MATERIAL_DETAIL, SPACE(0)) AS MATERIAL_DETAIL, <!-- 소재 종류 -->
         IFNULL(SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류 -->
-        B.MATERIAL_KIND, <!-- 소재 형태 -->
+        IFNULL(B.MATERIAL_KIND, SPACE(0)) AS MATERIAL_KIND, <!-- 소재 형태 -->
         IFNULL(SF_GET_CODE_NM(1029, B.MATERIAL_KIND, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_KIND_NM, <!-- 소재 형태 -->
-        B.SURFACE_TREAT, <!-- 표면처리 -->
-        SF_GET_CODE_NM('1039', B.SURFACE_TREAT, #{LOGIN_LOCALE}) AS SURFACE_TREAT_NM,  <!-- 표면 처리 -->
+        IFNULL(B.SURFACE_TREAT, SPACE(0)) AS SURFACE_TREAT, <!-- 표면처리 -->
+        IFNULL(SF_GET_CODE_NM(1039, B.SURFACE_TREAT, #{LOGIN_LOCALE}), SPACE(0)) AS SURFACE_TREAT_NM,  <!-- 표면 처리 -->
         IFNULL(B.MATERIAL_FINISH_HEAT, SPACE(0)) AS MATERIAL_FINISH_HEAT, <!-- 열처리 -->
-        B.MATERIAL_NOTE, <!-- 소재비고 -->
-        B.PART_UNIT_QTY, <!-- Part단위수량 -->
+        IFNULL(B.MATERIAL_NOTE, SPACE(0)) AS MATERIAL_NOTE, <!-- 소재비고 -->
+        IFNULL(B.PART_UNIT_QTY, SPACE(0)) AS PART_UNIT_QTY, <!-- Part단위수량 -->
         IFNULL(B.ORIGINAL_SIDE_QTY, SPACE(0)) AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
         IFNULL(B.OTHER_SIDE_QTY, SPACE(0)) AS OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
-        B.DETAIL_LATHE, <!-- 상세가공요건_선반 -->
-        B.DETAIL_SURFACE, <!-- 상세가공요건_가공면 -->
-        B.DETAIL_CLAMPING, <!-- 상세가공요건_클램핑 -->
-        B.DETAIL_POCKET, <!-- 상세가공요건_포켓 -->
-        B.DETAIL_DRILL, <!-- 상세가공요건_드릴 -->
-        B.DETAIL_DIFFICULTY, <!-- 상세가공요건_난도 -->
-        B.MATERIAL_FINISH_TM, <!-- 소재마감_TM각비 -->
-        B.MATERIAL_FINISH_GRIND, <!-- 소재마감_연마 -->
-        B.MATERIAL_FINISH_HEAT, <!-- 소재마감_열처리 -->
-        B.UNIT_MATERIAL_AMT, <!-- 항목별단가_소재비 -->
-        B.UNIT_TM_AMT, <!-- 항목별단가_TM각비 -->
-        B.UNIT_GRIND_AMT, <!-- 항목별단가_연마비 -->
-        B.UNIT_HEAT_AMT, <!-- 항목별단가_열처리 -->
-        B.UNIT_SURFACE_AMT, <!-- 항목별단가_표면처리 -->
-        B.UNIT_PROCESS_AMT, <!-- 항목별단가_가공비 -->
-        B.UNIT_ETC_AMT, <!-- 항목별단가_기타추가 -->
-        B.UNIT_MATERIAL_AUTO_YN, <!-- 항목별단가 소재비 자동여부 -->
-        B.UNIT_TM_AUTO_YN, <!-- 항목별단가 TM각비 자동여부 -->
-        B.UNIT_GRIND_AUTO_YN, <!-- 항목별단가 연마비 자동여부 -->
-        B.UNIT_HEAT_AUTO_YN, <!-- 항목별단가 열처리 자동여부 -->
-        B.UNIT_SURFACE_AUTO_YN, <!-- 항목별단가 표면처리 자동여부 -->
-        B.UNIT_PROCESS_AUTO_YN, <!-- 항목별단가 가공비 자동여부 -->
-        B.UNIT_AMT_NOTE, <!-- 항목별단가_견적비고 -->
-        B.UNIT_FINAL_EST_AMT, <!-- 최종견적단가 -->
-        B.UNIT_FINAL_AMT, <!-- 최종공급단가 -->
+        IFNULL(B.DETAIL_LATHE, SPACE(0)) AS DETAIL_LATHE, <!-- 상세가공요건_선반 -->
+        IFNULL(B.DETAIL_SURFACE, SPACE(0)) AS DETAIL_SURFACE, <!-- 상세가공요건_가공면 -->
+        IFNULL(B.DETAIL_CLAMPING, SPACE(0)) AS DETAIL_CLAMPING, <!-- 상세가공요건_클램핑 -->
+        IFNULL(B.DETAIL_POCKET, SPACE(0)) AS DETAIL_POCKET, <!-- 상세가공요건_포켓 -->
+        IFNULL(B.DETAIL_DRILL, SPACE(0)) AS DETAIL_DRILL, <!-- 상세가공요건_드릴 -->
+        IFNULL(B.DETAIL_DIFFICULTY, SPACE(0)) AS DETAIL_DIFFICULTY, <!-- 상세가공요건_난도 -->
+        IFNULL(B.MATERIAL_FINISH_TM, SPACE(0)) AS MATERIAL_FINISH_TM, <!-- 소재마감_TM각비 -->
+        IFNULL(B.MATERIAL_FINISH_GRIND, SPACE(0)) AS MATERIAL_FINISH_GRIND, <!-- 소재마감_연마 -->
+        IFNULL(B.MATERIAL_FINISH_HEAT, SPACE(0)) AS MATERIAL_FINISH_HEAT, <!-- 소재마감_열처리 -->
+        IFNULL(B.UNIT_MATERIAL_AMT, SPACE(0)) AS UNIT_MATERIAL_AMT, <!-- 항목별단가_소재비 -->
+        IFNULL(B.UNIT_TM_AMT, SPACE(0)) AS UNIT_TM_AMT, <!-- 항목별단가_TM각비 -->
+        IFNULL(B.UNIT_GRIND_AMT, SPACE(0)) AS UNIT_GRIND_AMT, <!-- 항목별단가_연마비 -->
+        IFNULL(B.UNIT_HEAT_AMT, SPACE(0)) AS UNIT_HEAT_AMT, <!-- 항목별단가_열처리 -->
+        IFNULL(B.UNIT_SURFACE_AMT, SPACE(0)) AS UNIT_SURFACE_AMT, <!-- 항목별단가_표면처리 -->
+        IFNULL(B.UNIT_PROCESS_AMT, SPACE(0)) AS UNIT_PROCESS_AMT, <!-- 항목별단가_가공비 -->
+        IFNULL(B.UNIT_ETC_AMT, SPACE(0)) AS UNIT_ETC_AMT, <!-- 항목별단가_기타추가 -->
+        IFNULL(B.UNIT_MATERIAL_AUTO_YN, SPACE(0)) AS UNIT_MATERIAL_AUTO_YN, <!-- 항목별단가 소재비 자동여부 -->
+        IFNULL(B.UNIT_TM_AUTO_YN, SPACE(0)) AS UNIT_TM_AUTO_YN, <!-- 항목별단가 TM각비 자동여부 -->
+        IFNULL(B.UNIT_GRIND_AUTO_YN, SPACE(0)) AS UNIT_GRIND_AUTO_YN, <!-- 항목별단가 연마비 자동여부 -->
+        IFNULL(B.UNIT_HEAT_AUTO_YN, SPACE(0)) AS UNIT_HEAT_AUTO_YN, <!-- 항목별단가 열처리 자동여부 -->
+        IFNULL(B.UNIT_SURFACE_AUTO_YN, SPACE(0)) AS UNIT_SURFACE_AUTO_YN, <!-- 항목별단가 표면처리 자동여부 -->
+        IFNULL(B.UNIT_PROCESS_AUTO_YN, SPACE(0)) AS UNIT_PROCESS_AUTO_YN, <!-- 항목별단가 가공비 자동여부 -->
+        IFNULL(B.UNIT_AMT_NOTE, SPACE(0)) AS UNIT_AMT_NOTE, <!-- 항목별단가_견적비고 -->
+        IFNULL(B.UNIT_FINAL_EST_AMT, SPACE(0)) AS UNIT_FINAL_EST_AMT, <!-- 최종견적단가 -->
+        IFNULL(B.UNIT_FINAL_AMT, SPACE(0)) AS UNIT_FINAL_AMT, <!-- 최종공급단가 -->
         <!-- 합계 금액 -->
-        B.DWG_GFILE_SEQ, <!-- DWG 파일그룹번호 -->
-        B.DXF_GFILE_SEQ, <!-- DXF 파일그룹번호 -->
-        B.PDF_GFILE_SEQ, <!-- PDF 파일그룹번호 -->
-        B.IMG_GFILE_SEQ, <!-- IMG 파일그룹번호 -->
-        B.ETC_GFILE_SEQ,
-        B.PART_STATUS, <!-- PART 상태 -->
-        SF_GET_CODE_NM(1013, B.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS_NM, <!-- PART 상태 -->
-        SF_GET_DATE_F(B.STATUS_DT, 'YY', 'M') AS PART_STATUS_DT, <!-- PART 상태확정일 -->
-        B.MCT_NOTE, <!-- MCT_가공계획비고 -->
-        B.MCT_WORK_TYPE, <!-- MCT_작업구분 -->
-        B.OUTSIDE_COMP_CD, <!-- 외주업체 -->
-        SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM, <!-- 외주업체 -->
-        B.OUTSIDE_ORDER_NUM, <!-- 외주발주번호 -->
-        B.OUTSIDE_NOTE, <!-- 외주 비고 -->
-        B.OUTSIDE_MATERIAL_SUPPLY_YN, <!-- 외주 소재제공 여부 -->
-        B.OUTSIDE_REQUEST_FINISH_YN, <!-- 외주 요청가공 완제품 -->
-        B.OUTSIDE_REQUEST_PROCESS_YN, <!-- 외주 요청가공 가공 -->
-        B.OUTSIDE_REQUEST_GRIND_YN, <!-- 외주 요청가공 연마 -->
-        B.OUTSIDE_REQUEST_SURFACE_YN, <!-- 외주 요청가공 표면처리 -->
-        B.OUTSIDE_REQUEST_ETC, <!-- 외주 요청가공 기타사항 -->
-        SF_GET_DATE_F(B.OUTSIDE_HOPE_DUE_DT, 'YYYY', '') AS OUTSIDE_HOPE_DUE_DT, <!-- 외주 요망납기 -->
-        B.OUTSIDE_UNIT_AMT, <!-- 외주 확정단가 -->
-        SF_GET_DATE_F(B.OUTSIDE_CONFIRM_DT, 'YY', 'M') AS OUTSIDE_CONFIRM_DT, <!-- 외주 확정일시 -->
-        B.OUTSIDE_STATUS, <!-- 외주 가공요청상태 -->
-        SF_GET_CODE_NM(1031, B.OUTSIDE_STATUS, #{LOGIN_LOCALE}) AS OUTSIDE_STATUS_NM, <!-- 외주 가공요청상태 -->
-        SF_GET_DATE_F(B.OUTSIDE_STATUS_DT, '', 'M') AS OUTSIDE_STATUS_DT, <!-- 외주 상태변경일시 -->
-        SF_GET_DATE_F(B.OUTSIDE_IN_DT, '', '') AS OUTSIDE_IN_DT, <!-- 외주 입고일시 -->
-        SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY,
-        SF_GET_DATE_F(B.INNER_WORK_FINISH_DT, '', 'M') AS INNER_WORK_FINISH_DT
+        IFNULL(B.DWG_GFILE_SEQ, SPACE(0)) AS DWG_GFILE_SEQ, <!-- DWG 파일그룹번호 -->
+        IFNULL(B.DXF_GFILE_SEQ, SPACE(0)) AS DXF_GFILE_SEQ, <!-- DXF 파일그룹번호 -->
+        IFNULL(B.PDF_GFILE_SEQ, SPACE(0)) AS PDF_GFILE_SEQ, <!-- PDF 파일그룹번호 -->
+        IFNULL(B.IMG_GFILE_SEQ, SPACE(0)) AS IMG_GFILE_SEQ, <!-- IMG 파일그룹번호 -->
+        IFNULL(B.ETC_GFILE_SEQ, SPACE(0)) AS ETC_GFILE_SEQ,
+        IFNULL(B.PART_STATUS, SPACE(0)) AS PART_STATUS, <!-- PART 상태 -->
+        IFNULL(SF_GET_CODE_NM(1013, B.PART_STATUS, #{LOGIN_LOCALE}), SPACE(0)) AS PART_STATUS_NM, <!-- PART 상태 -->
+        IFNULL(SF_GET_DATE_F(B.STATUS_DT, 'YY', 'M'), SPACE(0)) AS PART_STATUS_DT, <!-- PART 상태확정일 -->
+        IFNULL(B.MCT_NOTE, SPACE(0)) AS MCT_NOTE, <!-- MCT_가공계획비고 -->
+        IFNULL(B.MCT_WORK_TYPE, SPACE(0)) AS MCT_WORK_TYPE, <!-- MCT_작업구분 -->
+        IFNULL(B.OUTSIDE_COMP_CD, SPACE(0)) AS OUTSIDE_COMP_CD, <!-- 외주업체 -->
+        IFNULL(SF_GET_COMP_NM(B.OUTSIDE_COMP_CD), SPACE(0)) AS OUTSIDE_COMP_NM, <!-- 외주업체 -->
+        IFNULL(B.OUTSIDE_ORDER_NUM, SPACE(0)) AS OUTSIDE_ORDER_NUM, <!-- 외주발주번호 -->
+        IFNULL(B.OUTSIDE_NOTE, SPACE(0)) AS OUTSIDE_NOTE, <!-- 외주 비고 -->
+        IFNULL(B.OUTSIDE_MATERIAL_SUPPLY_YN, SPACE(0)) AS OUTSIDE_MATERIAL_SUPPLY_YN, <!-- 외주 소재제공 여부 -->
+        IFNULL(B.OUTSIDE_REQUEST_FINISH_YN, SPACE(0)) AS OUTSIDE_REQUEST_FINISH_YN, <!-- 외주 요청가공 완제품 -->
+        IFNULL(B.OUTSIDE_REQUEST_PROCESS_YN, SPACE(0)) AS OUTSIDE_REQUEST_PROCESS_YN, <!-- 외주 요청가공 가공 -->
+        IFNULL(B.OUTSIDE_REQUEST_GRIND_YN, SPACE(0)) AS OUTSIDE_REQUEST_GRIND_YN, <!-- 외주 요청가공 연마 -->
+        IFNULL(B.OUTSIDE_REQUEST_SURFACE_YN, SPACE(0)) AS OUTSIDE_REQUEST_SURFACE_YN, <!-- 외주 요청가공 표면처리 -->
+        IFNULL(B.OUTSIDE_REQUEST_ETC, SPACE(0)) AS OUTSIDE_REQUEST_ETC, <!-- 외주 요청가공 기타사항 -->
+        IFNULL(SF_GET_DATE_F(B.OUTSIDE_HOPE_DUE_DT, 'YYYY', ''), SPACE(0)) AS OUTSIDE_HOPE_DUE_DT, <!-- 외주 요망납기 -->
+        IFNULL(B.OUTSIDE_UNIT_AMT, SPACE(0)) AS OUTSIDE_UNIT_AMT, <!-- 외주 확정단가 -->
+        IFNULL(SF_GET_DATE_F(B.OUTSIDE_CONFIRM_DT, 'YY', 'M'), SPACE(0)) AS OUTSIDE_CONFIRM_DT, <!-- 외주 확정일시 -->
+        IFNULL(B.OUTSIDE_STATUS, SPACE(0)) AS OUTSIDE_STATUS, <!-- 외주 가공요청상태 -->
+        IFNULL(SF_GET_CODE_NM(1031, B.OUTSIDE_STATUS, #{LOGIN_LOCALE}), SPACE(0)) AS OUTSIDE_STATUS_NM, <!-- 외주 가공요청상태 -->
+        IFNULL(SF_GET_DATE_F(B.OUTSIDE_STATUS_DT, '', 'M'), SPACE(0)) AS OUTSIDE_STATUS_DT, <!-- 외주 상태변경일시 -->
+        IFNULL(SF_GET_DATE_F(B.OUTSIDE_IN_DT, '', ''), SPACE(0)) AS OUTSIDE_IN_DT, <!-- 외주 입고일시 -->
+        IFNULL(SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), SPACE(0)) AS CONTROL_PART_QTY,
+        IFNULL(SF_GET_DATE_F(B.INNER_WORK_FINISH_DT, '', 'M'), SPACE(0)) AS INNER_WORK_FINISH_DT
     </sql>
 
     <sql id="controlPartOrder">
@@ -147,34 +148,61 @@
             <include refid="control"/>,
             <include refid="controlPart"/>,
             <include refid="controlPartOrder"/>,
+            CASE WHEN IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_TM_AMT, 0) + IFNULL(B.UNIT_GRIND_AMT, 0) + IFNULL(B.UNIT_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0) > 0
+                THEN FORMAT(IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_TM_AMT, 0) + IFNULL(B.UNIT_GRIND_AMT, 0) + IFNULL(B.UNIT_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0), 0)
+                ELSE SPACE(0)
+            END AS CALC_EST_UNIT_COST,
             LAG(B.WORK_TYPE, 1) OVER(PARTITION BY A.CONTROL_NUM ORDER BY A.CONTROL_SEQ, B.PART_NUM, C.ORDER_NUM) AS LAG_WORK_TYPE,
-            F.INVOICE_NUM, <!-- 인보이스번호 -->
-            B.UNIT_FINAL_EST_AMT * SF_GET_CONTROL_ORDER_QTY(B.CONTROL_SEQ, C.ORDER_SEQ) AS EST_TOTAL_AMOUNT, <!-- 견적 합계 금액 -->
-            B.UNIT_FINAL_AMT * SF_GET_CONTROL_ORDER_QTY(B.CONTROL_SEQ, C.ORDER_SEQ) AS FINAL_AMT, <!-- 합계 금액 -->
+            CONCAT(A.CONTROL_NUM, ':', IFNULL(B.PART_NUM, 0)) AS CONTROL_NUM_BUTTON, <!-- 상세보기 merge 용도 -->
+            CONCAT(B.DRAWING_NUM, ':', IFNULL(B.PART_NUM, 0)) AS DRAWING_NUM_BUTTON,
+            CONCAT(B.WORK_TYPE, ':', IFNULL(B.PART_NUM, 0)) AS ORDER_NUM_PLUS_BUTTON, <!-- -->
+            CONCAT(B.WORK_TYPE, ':', IFNULL(B.PART_NUM, 0)) AS DETAIL_MACHINE_REQUIREMENT, <!-- -->
+            IFNULL(F.INVOICE_NUM, SPACE(0)) AS INVOICE_NUM, <!-- 인보이스번호 -->
+            IFNULL(B.UNIT_FINAL_EST_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), SPACE(0)) AS EST_TOTAL_AMOUNT, <!-- 견적 합계 금액 -->
+            IFNULL(B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), SPACE(0)) AS FINAL_AMT, <!-- 합계 금액 -->
+            IFNULL(B.OUTSIDE_UNIT_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), SPACE(0)) AS OUTSIDE_FINAL_AMT, <!-- 외주 합계 금액 --> <!-- 외주가 아닌 대상은 OUTSIDE_UNIT_AMT가 없다고 가정 -->
             (SELECT SUM(OUT_QTY) FROM TBL_OUT WHERE CONTROL_SEQ = C.CONTROL_SEQ AND CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND ORDER_SEQ = C.ORDER_SEQ) AS OUT_QTY, <!-- 출고 -->
-            <!-- 출고일자 -->
             SF_GET_CODE_NM('1009', G.POP_POSITION, #{LOGIN_LOCALE}) AS POP_POSITION_NM,  <!-- 현재 위치 -->
-            H.INSPECT_NUM, <!-- SEQ -->
-            H.INSPECT_GRADE, <!-- 등급 -->
-            SF_GET_CODE_NM('1040', H.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM, <!-- 등급 -->
-            H.INSPECT_TYPE, <!-- 불량/반품 -->
+            IFNULL(
+            (SELECT BB.UNIT_FINAL_AMT
+            FROM TBL_CONTROL AA
+                INNER JOIN TBL_CONTROL_PART BB ON AA.CONTROL_SEQ = BB.CONTROL_SEQ
+            WHERE 1 = 1
+                AND AA.DEL_YN = 'N'
+                AND AA.OUT_FINISH_DT IS NOT NULL
+                AND A.ORDER_COMP_CD = AA.COMP_CD AND B.SIZE_TXT = BB.SIZE_TXT
+            ORDER BY AA.OUT_FINISH_DT DESC
+            LIMIT 1
+            ), SPACE(0)) AS PREVIOUS_PRICE, <!-- 종전가 -->
+            IFNULL(H.INSPECT_NUM, SPACE(0)) AS INSPECT_NUM, <!-- SEQ -->
+            IFNULL(H.INSPECT_GRADE, SPACE(0)) AS INSPECT_GRADE, <!-- 등급 -->
+            IFNULL(SF_GET_CODE_NM('1040', H.INSPECT_GRADE, #{LOGIN_LOCALE}), SPACE(0)) AS INSPECT_GRADE_NM, <!-- 등급 -->
+            IFNULL(H.INSPECT_TYPE, SPACE(0)) AS INSPECT_TYPE, <!-- 불량/반품 -->
+            IFNULL(
             CASE H.INSPECT_TYPE
                 WHEN '1' THEN '불량'
                 WHEN '2' THEN '반품'
-            END AS INSPECT_TYPE_NM, <!-- 불량/반품 -->
-            H.INSPECT_RESULT, <!-- 불량코드 -->
+            END, SPACE(0)) AS INSPECT_TYPE_NM, <!-- 불량/반품 -->
+            IFNULL(H.INSPECT_RESULT, SPACE(0)) AS INSPECT_RESULT, <!-- 불량코드 -->
+            IFNULL(
             CASE H.INSPECT_TYPE
                 WHEN '1' THEN IF(H.INSPECT_GRADE = 'GRD040', SF_GET_CODE_NM('1020', H.INSPECT_RESULT, #{LOGIN_LOCALE}), NULL)
                 WHEN '2' THEN SF_GET_CODE_NM('1021', H.INSPECT_RESULT, #{LOGIN_LOCALE})
-            END AS INSPECT_RESULT_NM,  <!-- 불량코드 -->
-            H.INSPECT_DESC, <!-- 비고 -->
-            H.ERROR_ACTION, <!-- 조치 -->
-            SF_GET_CODE_NM('1025', H.ERROR_ACTION, #{LOGIN_LOCALE}) AS ERROR_ACTION_NM, <!-- 조치 -->
-            H.ERROR_NOTE, <!-- 조치방안 -->
+            END, SPACE(0)) AS INSPECT_RESULT_NM,  <!-- 불량코드 -->
+            IFNULL(H.INSPECT_DESC, SPACE(0)) AS INSPECT_DESC, <!-- 비고 -->
+            IFNULL(H.ERROR_ACTION, SPACE(0)) AS ERROR_ACTION, <!-- 조치 -->
+            IFNULL(SF_GET_CODE_NM('1025', H.ERROR_ACTION, #{LOGIN_LOCALE}), SPACE(0)) AS ERROR_ACTION_NM, <!-- 조치 -->
+            IFNULL(H.ERROR_NOTE, SPACE(0)) AS ERROR_NOTE, <!-- 조치방안 -->
+            IFNULL(
+            CASE H.INSPECT_TYPE
+                WHEN '1' THEN IF(H.INSPECT_GRADE = 'GRD040', SF_GET_CODE_NM('1020', H.INSPECT_RESULT, #{LOGIN_LOCALE}), NULL)
+                WHEN '2' THEN SF_GET_CODE_NM('1021', H.INSPECT_RESULT, #{LOGIN_LOCALE})
+            END, SPACE(0)) AS OUTSIDE_INSPECT_RESULT_NM,  <!-- 불량코드 -->
+            IFNULL(H.ERROR_NOTE, SPACE(0)) AS OUTSIDE_ERROR_NOTE, <!-- 조치방안 -->
             (SELECT D.BARCODE_NUM FROM TBL_CONTROL_BARCODE D WHERE B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.DEL_YN = 'N') AS CONTROL_BARCODE_NUM,
             <!-- D.BARCODE_NUM AS CONTROL_BARCODE_NUM, 주문관리바코드번호(도면라벨) -->
             <!-- E.BARCODE_NUM AS LABEL_BARCODE_NUM, 라벨바코드번호(박스라벨) -->
-            SF_GET_DATE_F(IF(TIMESTAMPDIFF(SECOND, B.INSERT_DT, B.UPDATE_DT) <![CDATA[ < ]]> 0, B.INSERT_DT, B.UPDATE_DT), 'YY', 'M') AS CONTROL_PART_INSERT_UPDATE_DT <!-- 등록/업데이트 일시 -->
+            IFNULL(SF_GET_DATE_F(IF(TIMESTAMPDIFF(SECOND, B.INSERT_DT, B.UPDATE_DT) <![CDATA[ < ]]> 0, B.INSERT_DT, B.UPDATE_DT), 'YY', 'M'), SPACE(0)) AS CONTROL_PART_INSERT_UPDATE_DT <!-- 등록/업데이트 일시 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
@@ -1595,7 +1623,18 @@
             CONCAT(C.CLOSE_VER, '건') AS CLOSE_VER_TRAN, <!-- 차수 -->
             C.INSERT_ID AS CLOSE_USER_ID,
             SF_GET_USER_NM(C.INSERT_ID) AS CLOSE_USER_NM,
-            C.CLOSE_DETAIL_NOTE
+            C.CLOSE_DETAIL_NOTE,
+            IFNULL(
+            (SELECT BB.UNIT_FINAL_AMT
+            FROM TBL_CONTROL AA
+                INNER JOIN TBL_CONTROL_PART BB ON AA.CONTROL_SEQ = BB.CONTROL_SEQ
+            WHERE 1 = 1
+                AND AA.DEL_YN = 'N'
+                AND AA.OUT_FINISH_DT IS NOT NULL
+                AND A.ORDER_COMP_CD = AA.COMP_CD AND B.SIZE_TXT = BB.SIZE_TXT
+            ORDER BY AA.OUT_FINISH_DT DESC
+            LIMIT 1
+            ), SPACE(0)) AS PREVIOUS_PRICE <!-- 종전가 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             LEFT OUTER JOIN TBL_MONTH_CLOSE_DETAIL C ON A.COMP_CD = C.COMP_CD
