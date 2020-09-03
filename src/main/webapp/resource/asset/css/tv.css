@@ -9,7 +9,7 @@ height: 100vh;/* W3C */
 }
 .header{font-size: 0;;}
 .header h1{font-size: 53px; font-family: 'PTSansNarrow'; color: #fff; display: inline-block; padding-right: 30px}
-.header .refresh{width: 62px; height: 60px; display: inline-block; font-size: 0; background: url(../images/tv/btn_refresh.png)no-repeat 0 0;vertical-align: bottom;}
+.header .refresh{width: 62px; margin-top: 12px; height: 60px; display: inline-block; font-size: 0; background: url(../images/tv/btn_refresh.png)no-repeat 0 0;vertical-align: bottom;}
 .pop .popWrap{padding-top: 20px;}
 .pop .popWrap .oneDepthRow{}
 .pop .popWrap .oneDepthRow .oneDepthIB{ margin-bottom: 32px;}
@@ -120,15 +120,27 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=1, Direction=135, Colo
 
 .bodyWrap.mct{padding-right:60px;}
 .bodyWrap.mct .header .left{float: left;}
+.bodyWrap.mct .header .left .title{position: relative; float: left;}
+.bodyWrap.mct .header .left .infoTit{font-size: 30px; color: #fff; line-height: 50px; position: relative; margin-right: 35px; float: left; padding-left: 67px;}
+.bodyWrap.mct .header .left .infoTit:before{content: ''; position: absolute; top: -5px; left: 0; width: 57px; height: 63px;}
+.bodyWrap.mct .header .left .infoContsWrap{overflow:hidden; padding-top: 13px;}
+.bodyWrap.mct .header .left .infoContsWrap div{width: auto; height: 50px; float: left; text-align: center; font-family: 'PTSansNarrow'; font-size: 0; color: #000;}
+.bodyWrap.mct .header .left .infoContsWrap div~div{margin-left: 15px;}
+.bodyWrap.mct .header .left .infoCont span:nth-child(1){background: url(../images/tv/bg_date.png) no-repeat 0 0; width: 165px; height: 50px; line-height:50px; color: #fff; display: inline-block; font-size: 24px;}
+.bodyWrap.mct .header .left .infoCont:nth-child(1) span:nth-child(1){width: 115px; background-size: 100% 100%;}
+.bodyWrap.mct .header .left .infoCont span:nth-child(2){background: url(../images/tv/bg_per.png) no-repeat 0 0; width: 114px; height: 50px; line-height:50px; display: inline-block; font-size: 24px; vertical-align: top;}
+.bodyWrap.mct .header .left .infoCont span.txtB,.pop.ty2 .conWrap .percentWrap span.txtB{color: #0056a8;}
+.bodyWrap.mct .header .left .infoCont span.txtR,.pop.ty2 .conWrap .percentWrap span.txtR{color: #670000;}
+
 .bodyWrap.mct .header .right{float: right; padding-top: 10px;}
-.bodyWrap.mct .header .right .infoTit{font-size: 30px; color: #fff; line-height: 58px; position: relative; margin-right: 35px; float: left; padding-left: 67px;}
+.bodyWrap.mct .header .right .infoTit{font-size: 30px; color: #fff; line-height: 58px; position: relative; margin-right: 10px; float: left; padding-left: 67px;}
 .bodyWrap.mct .header .right .infoTit:before{content: ''; position: absolute; top: -5px; left: 0; background: url(../images/tv/pin.png) no-repeat 0 0; width: 57px; height: 63px;}
 .bodyWrap.mct .header .right .infoContsWrap{overflow:hidden;}
 .bodyWrap.mct .header .right .infoContsWrap div{width: auto; height: 58px; float: left; text-align: center; font-family: 'PTSansNarrow'; font-size: 0; color: #000;}
 .bodyWrap.mct .header .right .infoContsWrap div~div{margin-left: 15px;}
-.bodyWrap.mct .header .right .infoCont span:nth-child(1){background: url(../images/tv/bg_date.png) no-repeat 0 0; width: 165px; height: 58px; line-height:58px; color: #fff; display: inline-block; font-size: 24px;}
+.bodyWrap.mct .header .right .infoCont span:nth-child(1){background: url(../images/tv/bg_date.png) no-repeat 0 0; width: 165px; height: 50px; line-height:50px; color: #fff; display: inline-block; font-size: 24px;}
 .bodyWrap.mct .header .right .infoCont:nth-child(1) span:nth-child(1){width: 115px; background-size: 100% 100%;}
-.bodyWrap.mct .header .right .infoCont span:nth-child(2){background: url(../images/tv/bg_per.png) no-repeat 0 0; width: 114px; height: 58px; line-height:58px; display: inline-block; font-size: 24px; vertical-align: top;}
+.bodyWrap.mct .header .right .infoCont span:nth-child(2){background: url(../images/tv/bg_per.png) no-repeat 0 0; width: 114px; height: 50px; line-height:50px; display: inline-block; font-size: 24px; vertical-align: top;}
 .bodyWrap.mct .header .right .infoCont span.txtB,.pop.ty2 .conWrap .percentWrap span.txtB{color: #0056a8;}
 .bodyWrap.mct .header .right .infoCont span.txtR,.pop.ty2 .conWrap .percentWrap span.txtR{color: #670000;}
 .pop .popWrap .oneDepthRow .oneDepthIB .twoDepthCol .pro{ max-width: 100%; width: 100%;}
@@ -146,7 +158,7 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=1, Direction=135, Colo
 .statusWrap .statusBar .inBox:nth-child(2){width:100px; background-color: #195da4;}
 .statusWrap .statusBar .inBox:nth-child(3){width:270px; background-color: #094255;}
 .statusWrap .statusBar .inBox:nth-child(3) div{float:left; width:50%;}
-.statusWrap .statusBar .inBox:nth-child(3) div:first-child{background: url(../images/tv/bg_line.png) no-repeat 100% 50%;}
+/*.statusWrap .statusBar .inBox:nth-child(3) div:first-child{ background: url(../images/tv/bg_line.png) no-repeat 100% 50%;}*/
 .statusWrap .statusBar .inBox:nth-child(3) .txtY{color:#fff100;}
 .statusWrap .statusConts{padding:6px; box-sizing: border-box; background-color: #f5fcfe; overflow: hidden; border: 1px solid #5483b3; height: 250px;}
 .statusWrap .statusConts .inWrap{width:100%; height:52px; border: 2px solid #d8e9ee; border-radius: 10px; box-sizing: border-box; background-color: #fff; font-size:0; padding: 2px 30px;}
@@ -190,3 +202,9 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=1, Direction=135, Colo
 .pop.ty2 .conWrap .percentWrap{position: absolute; top: 25px; left: 275px; font-size: 0;}
 .pop.ty2 .conWrap .percentWrap span{display: inline-block; width: 95px; height: 48px; line-height: 46px; font-size: 27px; color: #000; font-family: 'PTSansNarrow'; text-align: center; background-color: #fff; border: 1px solid #99a3a7; box-sizing: border-box;}
 .pop.ty2 .conWrap .percentWrap span~span{margin-left: 2px;}
+
+.pop.ty2 .conWrap2 .percentWrap{position: absolute; top: 20px; left: 260px; font-size: 0;}
+.pop.ty2 .conWrap2 .percentWrap span{display: inline-block; width: 90px; height: 42px; line-height: 42px; font-size: 25px; color: #000; font-family: 'PTSansNarrow'; text-align: center; background-color: #fff; border: 1px solid #99a3a7; box-sizing: border-box;}
+.pop.ty2 .conWrap2 .percentWrap span~span{margin-left: 2px;}
+.bodyWrap.mct .header .right .infoCont span.txtB,.pop.ty2 .conWrap2 .percentWrap span.txtB{color: #0056a8;}
+.bodyWrap.mct .header .right .infoCont span.txtR,.pop.ty2 .conWrap2 .percentWrap span.txtR{color: #670000;}
