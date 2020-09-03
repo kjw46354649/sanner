@@ -230,13 +230,9 @@ public class PDFPringMakeController {
         BaseFont bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 
         Font headFont = new Font(bf, 8, Font.BOLD);
-        Font contentsFont = new Font(bf, 7, Font.NORMAL);
+        Font contentsFont = new Font(bf, 8, Font.NORMAL);
         BaseColor headBackground = new BaseColor(217, 217, 217);
         PdfWriter.getInstance(document, out);
-
-        hashMap.put("queryId", "systemMapper.selectUserInfo");
-        hashMap.put("selUserId", hashMap.get("LOGIN_USER_ID"));
-        List<Map<String, Object>> userInfo = innodaleService.getList(hashMap);
 
         hashMap.put("queryId", "material.selectItemOrderRegisterPopTable");
         List<Map<String, Object>> infoList = innodaleService.getList(hashMap);
@@ -254,8 +250,8 @@ public class PDFPringMakeController {
             hashMap.put("CONCAT_SEQ", infoList.get(j).get("CONCAT_SEQ"));
             dataList = innodaleService.getList(hashMap);
 
-            if (userInfo.get(0).get("POSITION_NM") != null && !"".equals(userInfo.get(0).get("POSITION_NM"))) userPositionNm =  " " + userInfo.get(0).get("POSITION_NM");
-            if (userInfo.get(0).get("USER_TEL") != null && !"".equals(userInfo.get(0).get("USER_TEL"))) userTel = " / " + userInfo.get(0).get("USER_TEL");
+            if (infoList.get(0).get("POSITION_NM") != null && !"".equals(infoList.get(0).get("POSITION_NM"))) userPositionNm =  " " + infoList.get(0).get("POSITION_NM");
+            if (infoList.get(0).get("USER_TEL") != null && !"".equals(infoList.get(0).get("USER_TEL"))) userTel = " / " + infoList.get(0).get("USER_TEL");
             if (iCount > 0) document.newPage();
 
             PdfPTable table = new PdfPTable(9);
@@ -265,7 +261,7 @@ public class PDFPringMakeController {
 
             table.addCell(createCell("진성정밀 주문서", 5, 1, new Font(bf, 12, Font.BOLD)));
             table.addCell(createCellBackground("담당자 / TEL", 2, 1, headFont, headBackground));
-            table.addCell(createCell((String) userInfo.get(0).get("USER_NM") + userPositionNm + userTel, 2, 1, contentsFont));
+            table.addCell(createCell((String) infoList.get(0).get("USER_NM") + userPositionNm + userTel, 2, 1, contentsFont));
 
             table.addCell(createCellBackground("주문번호", 2, 1, headFont, headBackground));
             table.addCell(createCell((String) infoList.get(j).get("MATERIAL_ORDER_NUM"), 3, 1, contentsFont));
@@ -319,6 +315,9 @@ public class PDFPringMakeController {
     	cell.setColspan(colspan);
     	cell.setRowspan(rowspan);
     	cell.setFixedHeight(20f);
+        cell.setPaddingTop(0);
+    	cell.setPaddingBottom(0);
+    	cell.setUseAscender(true);
     	return cell;
     }
 
@@ -332,6 +331,9 @@ public class PDFPringMakeController {
         cell.setColspan(colspan);
         cell.setRowspan(rowspan);
         cell.setFixedHeight(20f);
+        cell.setPaddingTop(0);
+    	cell.setPaddingBottom(0);
+        cell.setUseAscender(true);
         return cell;
     }
 
@@ -357,6 +359,9 @@ public class PDFPringMakeController {
         cell.setRowspan(rowspan);
         cell.setFixedHeight(20f);
         cell.setBackgroundColor(color);
+        cell.setPaddingTop(0);
+    	cell.setPaddingBottom(0);
+    	cell.setUseAscender(true);
         return cell;
     }
 

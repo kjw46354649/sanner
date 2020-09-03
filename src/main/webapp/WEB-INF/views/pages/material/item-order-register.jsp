@@ -24,8 +24,11 @@
                     <input type="hidden" name="" id="item_order_register_material_order_num_temp" value="">
                 </span>
                 <span class="list_t" style="width: 100px;">작성자</span>
-                <span style="width: 103px;">
+                <span style="width: 100px;">
                     <select id="ORDER_USER_ID" name="ORDER_USER_ID" title="작성자" class="wd_100"></select>
+                </span>
+                <span id="item_order_register_popup_order_datetime" style="display: none; border: none; margin-left: 80px;">
+                    주문일시 : 2020/05/13 17:23
                 </span>
                 <div style="line-height: 45px; display: none; padding-right: 5px;" class="d-inline right_float" id="orderNotCompleteBtnBox">
                     <button type="button" class="defaultBtn radius" id="btnItemOrderRegisterPopAdd">추가</button>
@@ -693,7 +696,7 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 120, editable: false, styleHead: {'font-weight': 'bold','color': 'red'},
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 180, editable: false, styleHead: {'font-weight': 'bold','color': 'red'},
                 render: function(ui){
                     let WORK_TYPE = ui.rowData.WORK_TYPE == undefined ? '' : ui.rowData.WORK_TYPE;
                     let returnVal = ui.cellData;
@@ -717,7 +720,7 @@
                     });
                 }
             },
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, width: 120},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, width: 60},
             {title: '', dataType: 'string', dataIndx: '', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {
                     let ORDER_STATUS = ui.rowData.ORDER_STATUS;
@@ -751,9 +754,7 @@
                     });
                 }
             },
-            /*{title: '납기', dataType: 'string', dataIndx: 'HOPE_DUE_DT', width: 150,
-                editable: true, editor: { type: 'textbox', init: dateEditor }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
-            },*/
+            {title: '입고일시', dataIndx: 'IN_DT', width: 100, editable: false},
             {title: '', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', hidden: true},
@@ -899,7 +900,7 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 120, editable: false,
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 180, editable: false,
                 render: function(ui){
                     let WORK_TYPE = ui.rowData.WORK_TYPE == undefined ? '' : ui.rowData.WORK_TYPE;
                     let returnVal = ui.cellData;
@@ -923,10 +924,11 @@
                     });
                 }
             },
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', width: 120, editable: false},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', width: 60, editable: false},
             {title: '', dataType: 'string', dataIndx: '', minWidth: 25, width: 25, editable: false,
                 render: function (ui) { return ''; }
             },
+            {title: '입고일시', dataIndx: 'IN_DT', width: 100, editable: false},
             {title: '', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', hidden: true},
@@ -1135,26 +1137,47 @@
                         ORDER_USER_ID = data[0].ORDER_USER_ID === undefined ? "" : data[0].ORDER_USER_ID;
                         ORDER_STATUS = data[0].ORDER_STATUS === undefined ? "" : data[0].ORDER_STATUS;
                     }
-                    setTimeout(function(){
-                        let parameters = {'url': '/json-list', 'data': {'queryId': 'selectItemOrderRegisterNextMaterialOrderNum'}};
+                    setTimeout(function () {
+                        let parameters = {
+                            'url': '/json-list',
+                            'data': {'queryId': 'material.selectItemOrderRegisterNextMaterialOrderNum'}
+                        };
                         fnPostAjaxAsync(function (data, callFunctionParam) {
                             let list = data.list[0];
-                            if(MATERIAL_ORDER_NUM == '' || MATERIAL_ORDER_NUM == undefined){
+                            if (MATERIAL_ORDER_NUM == '' || MATERIAL_ORDER_NUM == undefined) {
                                 MATERIAL_ORDER_NUM = list.MATERIAL_ORDER_NUM;
                                 $("#item_order_register_material_order_num_temp").val(MATERIAL_ORDER_NUM);
-                            }else{
+                            } else {
                                 $("#item_order_register_material_order_num_temp").val(MATERIAL_ORDER_NUM);
                                 $("#item_order_register_material_order_num").val(MATERIAL_ORDER_NUM);
                             }
-                            if(ORDER_STATUS === 'MST002' || ORDER_STATUS === 'MST004')
-                                if(ORDER_USER_ID){
+                            if (ORDER_STATUS === 'MST002' || ORDER_STATUS === 'MST004')
+                                if (ORDER_USER_ID) {
                                     $("#item_order_register_popup").find("#ORDER_USER_ID").val(ORDER_USER_ID);
-                                }else{
+                                } else {
                                     $("#item_order_register_popup").find("#ORDER_USER_ID").val('');
                                 }
                             else
                                 $("#item_order_register_popup").find("#ORDER_USER_ID").val('${authUserInfo.USER_ID}');
                             makeInnerTable();
+                        }, parameters, '');
+                        // 주문일시 가져오기
+                        parameters = {
+                            'url': '/json-info',
+                            'data': {
+                                queryId: 'material.selectItemOrderRegisterOrderDatetime',
+                                MATERIAL_ORDER_NUM: $("#item_order_register_material_order_num").val()
+                            }
+                        };
+                        fnPostAjaxAsync(function (data, callFunctionParam) {
+                            let info = data.info;
+
+                            if (fnIsEmpty(info)) {
+                                $('#item_order_register_popup_order_datetime').hide();
+                            } else {
+                                $('#item_order_register_popup_order_datetime').html('주문일시 : ' + info.ORDER_DT);
+                                $('#item_order_register_popup_order_datetime').show();
+                            }
                         }, parameters, '');
                     }, 900);
                     btnDisabled();
@@ -1617,7 +1640,7 @@
             var row_span2 ="rowspan='2'";
 
             let parameter = {
-                'queryId': 'selectItemOrderRegisterPopTable',
+                'queryId': 'material.selectItemOrderRegisterPopTable',
                 'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM
             };
             let parameters = {'url': '/json-list', 'data': parameter};

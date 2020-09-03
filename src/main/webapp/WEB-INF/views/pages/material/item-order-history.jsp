@@ -114,6 +114,7 @@
             {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_NM', width: 100, sortable: false } ,
             {title: '총수량', dataType: 'string', dataIndx: 'ORDER_QTY', sortable: false } ,
             {title: '주문일시', dataType: 'date', dataIndx: 'ORDER_DT', width: 120, sortable: false },
+            {title: '작성자', dataIndx: 'ORDER_USER_NM', width: 120, sortable: false },
             {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_CD' , hidden: true, sortable: false }
         ];
 
@@ -281,7 +282,6 @@
                 }
             },
             columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
-            scrollModel: {autoFit: false},
             numberCell: {width: 30, title: "No", show: true },
             selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},

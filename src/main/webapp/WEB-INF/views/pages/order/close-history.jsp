@@ -410,8 +410,8 @@
             {title: '견적<br>합계금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'EST_TOTAL_AMOUNT'},
             {title: '최종<br>공급단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
             {title: '합계금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMT'},
-            {title: '종전가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'WHDWJSRK'},
-            {title: '변경전<br>도면번호', minWidth: 120, dataIndx: 'PREV_DRAWING_NUM', colModel: []},
+            {title: '종전가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PREVIOUS_PRICE'},
+            {title: '변경전<br>도면번호', minWidth: 120, dataIndx: 'PREV_DRAWING_NUM'},
             {
                 title: 'DXF', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
                 render: function (ui) {
