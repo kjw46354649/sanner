@@ -1357,7 +1357,7 @@
 						$(this).find(".inBox:nth-child(3)").find('div:nth-child(2)').html('&nbsp;');
 
 						$(this).find(".statusWrap").hide();
-						//$(this).find(".statusConts").find('.inWrap').empty();
+						// $(this).find(".statusConts").find('.inWrap').empty();
 						$(this).find(".statusConts").empty();
 
 					});
@@ -1407,23 +1407,25 @@
 
 							let $target = $("#" + factory_area + "_" + layout_row + "_" + layout_col);
 
+							// console.log("#" + factory_area + "_" + layout_row + "_" + layout_col + " " + control_part_info);
+
 							// $target.find(".inBox:nth-child(2)").html(user_nm);
 							$target.find(".inBox:nth-child(3)").find('div:nth-child(1)').html(total_cnt_info + '&nbsp;' + total_part_qty_info);
 							$target.find(".inBox:nth-child(3)").find('div:nth-child(2)').html(total_plan_working_time_info);
 
-						let divHtml = '<div class="inWrap">';
-							divHtml += '<a href="javascript:callWindowImageViewer(' + imageSeq + ');">';
-							divHtml += '	<span>'+inner_due_dt+'<br>'+work_type_nm+'</span>';
-							divHtml += '	<span><span class="txtB ellipsis" style="font-size: 17px;">'+control_part_info+'</span><br>'+size_txt+'&nbsp;&nbsp;'+material_detail_nm+'</span>';
-							divHtml += '	<span>'+part_qty+'</span>';
-							// divHtml += '	<span><span class="txtR">'+working_time_info+'</span><br><span class="txtB ty2">'+plan_working_time_info+'</span></span>';
-							if(work_plan_type == 1) {
-								divHtml += '	<span><span class="txtR">'+working_time_info+'</span></span>';
-							} else if(work_plan_type == 2) {
-								divHtml += '	<span><span class="txtB ty2">'+plan_working_time_info+'</span></span>';
-							}
-							divHtml += '</a>';
-							divHtml += '</div>';
+							let divHtml = '<div class="inWrap">';
+								divHtml += '<a href="javascript:callWindowImageViewer(' + imageSeq + ');">';
+								divHtml += '	<span>'+inner_due_dt+'<br>'+work_type_nm+'</span>';
+								divHtml += '	<span><span class="txtB ellipsis" style="font-size: 17px;">'+control_part_info+'</span><br>'+size_txt+'&nbsp;&nbsp;'+material_detail_nm+'</span>';
+								divHtml += '	<span>'+part_qty+'</span>';
+								// divHtml += '	<span><span class="txtR">'+working_time_info+'</span><br><span class="txtB ty2">'+plan_working_time_info+'</span></span>';
+								if(work_plan_type == 1) {
+									divHtml += '	<span><span class="txtR">'+working_time_info+'</span></span>';
+								} else if(work_plan_type == 2) {
+									divHtml += '	<span><span class="txtB ty2">'+plan_working_time_info+'</span></span>';
+								}
+								divHtml += '</a>';
+								divHtml += '</div>';
 
 							if($target.find(".statusConts").find('.inWrap').length >= 4){
 							}else{

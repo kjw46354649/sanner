@@ -64,7 +64,7 @@
         SELECT
             DATE_FORMAT(CURDATE(), '%Y년 %m월 %d일') AS DATE,
             SF_GET_COMP_NM(#{COMP_CD}) AS COMP_NM,
-            IF(#{ORDER_STAFF_SEQ} = 'undefined', SF_GET_STAFF_NM(NULL), SF_GET_STAFF_NM(#{ORDER_STAFF_SEQ})) AS ORDER_STAFF_NM, <!-- TODO: 확인 -->
+            ifnull(IF(#{ORDER_STAFF_SEQ} = 'undefined', SF_GET_STAFF_NM(NULL), SF_GET_STAFF_NM(#{ORDER_STAFF_SEQ})), SPACE(0)) AS ORDER_STAFF_NM, <!-- TODO: 확인 -->
             SUM(X.CONTROL_PART_QTY) AS CONTROL_PART_QTY,
             SUM(X.TOTAL) AS TOTAL
         FROM (
@@ -76,7 +76,6 @@
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             WHERE 1 = 1
                 AND A.DEL_YN = 'N'
-                AND A.CONTROL_STATUS = 'ORD001'
                 AND B.OUTSIDE_YN = 'Y'
                 AND B.CONTROL_SEQ IN (${CONTROL_SEQ})
                 AND B.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})
@@ -107,7 +106,6 @@
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
         WHERE 1 = 1
             AND A.DEL_YN = 'N'
-            AND A.CONTROL_STATUS = 'ORD001'
             AND B.OUTSIDE_YN = 'Y'
             AND B.CONTROL_SEQ IN (${CONTROL_SEQ})
             AND B.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})

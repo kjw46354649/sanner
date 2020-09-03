@@ -1822,14 +1822,12 @@
 
             for (let i = 0, CONTROL_SEQ_LIST_LENGTH = controlSeqList.length; i < CONTROL_SEQ_LIST_LENGTH; i++) {
                 controlSeqStr += controlSeqList[i];
-
                 if (i < CONTROL_SEQ_LIST_LENGTH - 1) {
                     controlSeqStr += ',';
                 }
             }
             for (let i = 0, CONTROL_DETAIL_SEQ_LIST_LENGTH = controlDetailSeqList.length; i < CONTROL_DETAIL_SEQ_LIST_LENGTH; i++) {
                 controlDetailSeqStr += controlDetailSeqList[i];
-
                 if (i < CONTROL_DETAIL_SEQ_LIST_LENGTH - 1) {
                     controlDetailSeqStr += ',';
                 }
