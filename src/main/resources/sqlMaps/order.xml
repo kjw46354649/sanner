@@ -846,7 +846,7 @@
         FROM DUAL
         WHERE
             #{ORDER_QTY} IS NOT NULL
-            AND NOT EXISTS (SELECT * FROM TBL_CONTROL_PART_ORDER WHERE ORDER_NUM = #{ORDER_NUM})
+            AND NOT EXISTS (SELECT * FROM TBL_CONTROL_PART_ORDER WHERE ORDER_NUM = #{ORDER_NUM} AND CONTROL_SEQ = #{CONTROL_SEQ})
     </insert>
 
     <insert id="createControlProgress" parameterType="java.util.HashMap" >
