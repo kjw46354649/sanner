@@ -603,8 +603,7 @@
 	        UPDATE
 	            CLOSE_NOTE = #{CLOSE_NOTE},
                 CLOSE_CONTROL_AMT = #{CLOSE_CONTROL_AMT},
-	            CLOSE_DT = NOW(),
-		        UPDATE_DT = NOW()
+	            CLOSE_DT = NOW()
     </insert>
 
     <insert id="createMonthCloseDetail" parameterType="java.util.HashMap" >
@@ -624,7 +623,14 @@
             #{CONTROL_SEQ},
             #{CLOSE_DETAIL_NOTE}
         FROM DUAL
-        WHERE #{WORK_TYPE} <![CDATA[ <> ]]> 'WTP050'
+        WHERE NOT EXISTS (  SELECT *
+                            FROM TBL_MONTH_CLOSE_DETAIL
+                            WHERE 1 = 1
+                                AND COMP_CD = #{COMP_CD}
+                                AND CLOSE_MONTH = #{CLOSE_MONTH}
+                                AND ORDER_COMP_CD = #{ORDER_COMP_CD}
+                                AND CLOSE_VER = #{CLOSE_VER}
+                                AND CONTROL_SEQ = #{CONTROL_SEQ})
     </insert>
 
     <update id="updateMonthCloseFinalNego" parameterType="java.util.HashMap">
