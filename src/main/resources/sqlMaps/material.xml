@@ -147,7 +147,7 @@
 		    AND Z.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
         </if>
         <if test="ORDER_STATUS != '' and ORDER_STATUS != null">
-            AND Z.ORDER_STATUS IN (${ORDER_STATUS})
+            AND IFNULL(Z.ORDER_STATUS, 'NULL') IN (${ORDER_STATUS})
         </if>
         <choose>
             <when test="ITEM_ORDER_REGISTER_CONDITION =='IOM010'">
