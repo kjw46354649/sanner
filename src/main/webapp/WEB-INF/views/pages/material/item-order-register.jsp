@@ -628,7 +628,7 @@
                     }
                 }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
-            {title: '보유소재 충당수량', align: "center", colModel: [
+            {title: '주문요청사항', align: "center", colModel: [
                     {   title: '요청사항', dataType: 'string', dataIndx: 'REQUEST_NOTE', minWidth: 150,
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                         halign:'center', align: 'left',
@@ -838,7 +838,7 @@
                     }
                 }
             },
-            {title: '보유소재 충당수량', align: "center", colModel: [
+            {title: '주문요청사항', align: "center", colModel: [
                     {   title: '요청사항', dataType: 'string', dataIndx: 'REQUEST_NOTE', minWidth: 150, width: 150, editable: false,
                         halign:'center', align: 'left',
                         editor: {
