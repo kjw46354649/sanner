@@ -23,7 +23,9 @@
 
     <select id="selectItemOrderRegisterList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-			Z.* ,ROW_NUMBER() OVER() AS ROWNUM
+			Z.* ,
+			SF_GET_CODE_NM('1009', X.POP_POSITION, #{LOGIN_LOCALE}) AS POP_POSITION_NM, <!-- 현재 등록된 위치 -->
+			ROW_NUMBER() OVER() AS ROWNUM
 		FROM
         (
 			SELECT
@@ -114,6 +116,11 @@
 				AND NOT EXISTS (SELECT * FROM TBL_CONTROL_PART X WHERE X.CONTROL_SEQ = F.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ)
 			GROUP BY F.MATERIAL_ORDER_SEQ
 		) Z
+		    LEFT OUTER JOIN jmes.TBL_POP X ON X.CONTROL_SEQ = Z.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ
+                AND X.POP_SEQ = (SELECT MAX(K.POP_SEQ)
+                                FROM jmes.TBL_POP K
+                                WHERE K.CONTROL_SEQ = X.CONTROL_SEQ AND K.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
+                                GROUP BY K.CONTROL_SEQ, K.CONTROL_DETAIL_SEQ)
 		WHERE 1=1
         <if test="COMP_CD !='' and COMP_CD != null">
             AND Z.COMP_CD = #{COMP_CD}
@@ -150,7 +157,9 @@
                 AND DATE_FORMAT(Z.M_ORDER_DT, '%Y/%m/%d') BETWEEN #{ITEM_ORDER_REGISTER_START_DATE} AND #{ITEM_ORDER_REGISTER_END_DATE}
             </when>
         </choose>
-        ORDER BY Z.MATERIAL_ORDER_NUM ASC, Z.M_COMP_CD, Z.CONTROL_NUM, Z.PART_NUM
+        ORDER BY
+            CASE Z.ORDER_STATUS WHEN 'MST001' THEN 3    WHEN 'MST002' THEN 4    WHEN 'MST003' THEN 2    WHEN 'MST004' THEN 6    WHEN 'MST005' THEN 5    ELSE 1 <!-- NULL --> END,
+            Z.STATUS_DT DESC, Z.MATERIAL_ORDER_NUM, Z.M_COMP_CD, Z.CONTROL_NUM, Z.PART_NUM
     </select>
 
     <select id="selectItemOrderRegisterDetail" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -867,7 +876,7 @@
                     ORDER_STATUS, jmes.SF_GET_DATE_F(ORDER_DT,'YY','') AS ORDER_DT,
                     CASE WHEN IN_DT IS NOT NULL THEN 'Y' ELSE 'N' END IN_YN,
                     SF_GET_DATE_F(IN_DT, 'YY', 'M') IN_DT, SF_GET_DATE_F(CANCEL_DT, 'YY', 'M') CANCEL_DT,
-                    A.INSERT_DT, A.INSERT_ID, A.UPDATE_DT, A.UPDATE_ID,SF_GET_DATE_F(A.IN_DT,'YYYY','M') AS IN_DT
+                    A.INSERT_DT, A.INSERT_ID, A.UPDATE_DT, A.UPDATE_ID,
                     CANCEL_USER_ID
                 FROM TBL_MATERIAL_ORDER A
                     INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ

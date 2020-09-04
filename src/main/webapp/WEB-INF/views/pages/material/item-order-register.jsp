@@ -149,9 +149,9 @@
                         <span class="gubun"></span>
                         <span>
                             <span class="ipu_wrap"><label class="label_100">Option</label></span>
-                            <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="ORDER_WAIT_YN" value="MST001"><label for="ORDER_WAIT_YN"> 소재주문대기</label></span>
-                            <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="ORDER_YN" value="MST002"><label for="ORDER_YN"> 주문완료</label></span>
-<%--                            <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="IN_YN" value="MST004"><label for="IN_YN"> 입고</label></span>--%>
+                            <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="ORDER_WAIT_YN" value="NULL,MST003" checked><label for="ORDER_WAIT_YN"> 주문대기</label></span>
+                            <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="ORDER_YN" value="MST001,MST002" checked><label for="ORDER_YN"> 주문완료</label></span>
+                            <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="IN_YN" value="MST004,MST005"><label for="IN_YN"> 입고완료</label></span>
                         </span>
                     </li>
                 </ul>
@@ -285,7 +285,7 @@
                  case "today":
                      break;
                  case "week":
-                     newDate.setDate(newDate.getDate() - 7);
+                     newDate.setDate(newDate.getDate() - 6);
                      break;
                  case "month":
                      newDate.setMonth(newDate.getMonth() - 1);
@@ -301,6 +301,7 @@
             {title: '가공 확정일시', dataType: 'date', dataIndx: 'STATUS_DT', width: 75, editable: false},
             {title: '가공 확정일시(조회 조건용)', dataType: 'date', dataIndx: 'STATUS_DT_CONDITION', width: 75, editable: false, hidden: true},
             {title: '소재주문<br>상태', dataType: 'string', dataIndx: 'M_STATUS_NM', width: 60, editable: false},
+            {title: '현재위치', dataIndx: 'POP_POSITION_NM', width: 80, editable: false},
             {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
@@ -1952,7 +1953,8 @@
             if (index > 0) {
                 checkedValue += ', ';
             }
-            checkedValue += '\'' + $(this).val() + '\'';
+
+            checkedValue += '\'' + $(this).val().replace(',', '\', \'') + '\'';
         });
         $('#ORDER_STATUS').val(checkedValue);
     });
