@@ -30,11 +30,13 @@ public class TvController {
     @Autowired
     private MessageSource messageSource;
 
+    @RequestMapping(value="/tv/test")
+    public String messageTest(Model model, HttpServletRequest request, Locale locale) throws Exception {
+        return "tv/message";
+    }
+
     @RequestMapping(value="/tv/pop")
     public String popAction(Model model, HttpServletRequest request, Locale locale) throws Exception {
-
-        System.out.println("12312312312 pop page submit");
-
         return "tv/tv_pop";
     }
 
@@ -73,9 +75,6 @@ public class TvController {
 
     @RequestMapping(value="/tv/mct")
        public String mctAction(Model model, HttpServletRequest request, Locale locale) throws Exception {
-
-           System.out.println("12312312312 mct page submit");
-
            return "tv/tv_mct";
        }
 
