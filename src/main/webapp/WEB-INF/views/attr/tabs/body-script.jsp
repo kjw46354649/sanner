@@ -69,6 +69,9 @@
 <!-- alertify -->
 <script type="text/javascript" src='/resource/plugins/alertifyjs/alertify.js'></script>
 
+<!-- underscore -->
+<script type="text/javascript" src='/resource/main/js/libs/underscore-min.js'></script>
+
 <script type='text/javascript'>
 
     var g_code;

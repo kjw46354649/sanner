@@ -350,7 +350,7 @@
             });
         });
         // 저장
-        $('#TRANSACTION_STATEMENT_SAVE').on('click', function () {
+        $('#TRANSACTION_STATEMENT_SAVE').on('click', _.debounce(function () {
             let tempList = [];
             let infoPostData = fnFormToJsonArrayData('#TRANSACTION_STATEMENT_FORM');
             let listPostData = $transactionStatementGrid.pqGrid('option', 'dataModel.data');
@@ -368,7 +368,7 @@
                 $transactionStatementGrid.pqGrid('refreshDataAndView');
                 opener.$orderManagementGrid.pqGrid('refreshDataAndView');
             }, parameters, '');
-        });
+        }, 500));
         // 엑셀 출력
         $('#TRANSACTION_STATEMENT_EXPORT').on('click', function () {
             let controlSeqList = [];
