@@ -130,11 +130,17 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
         /** pop path **/
         passList.add("/pop");
         passList.add("/scanningBarcodePop");
-        passList.add("/tv/pop");
-        passList.add("/tv/pop/data");
-        passList.add("/tv/pop/alarm");
-        passList.add("/tv/mct");
-        passList.add("/tv/mct/data");
+//        passList.add("/tv/pop");
+//        passList.add("/tv/pop/data");
+//        passList.add("/tv/pop/alarm");
+//        passList.add("/tv/mct");
+//        passList.add("/tv/mct/data");
+
+        /** websocket **/
+//        passList.add("/tv/test");
+        passList.add("/jmes-socket");
+        passList.add("/topic");
+        passList.add("/app");
 
 
 
@@ -154,7 +160,7 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
         passList.add("/paramQueryGridSelect");
         passList.add("/uploadControlCadFilesTesting");
 
-        String patterns[] = {"/image", "/barcode", "/static", "/downloadGfile", "/downloadfile", "/drawing", "/pop"};
+        String patterns[] = {"/image", "/barcode", "/static", "/downloadGfile", "/downloadfile", "/drawing", "/pop", "/tv"};
 
         if(passList.contains(url)) return true;
 

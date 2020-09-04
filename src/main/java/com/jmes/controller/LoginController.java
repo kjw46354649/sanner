@@ -78,6 +78,7 @@ public class LoginController {
             else
                 model.addAttribute("message", 		messageSource.getMessage("index.error.login.default", null, RequestContextUtils.getLocale(request)));			// "로그인 할 수 없습니다. 잠시 후 다시 시도하시기 바랍니다.";
         }
+
         return "jsonView";
     }
 
