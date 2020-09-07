@@ -71,6 +71,9 @@
                     }
                 }
             },
+            {title: 'DXF File Download YN', dataType: 'select', width: '10%', dataIndx: 'DXF_FILE_DOWNLOAD_YN',
+                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')}
+            },
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'}
         ];
         // let authorityGroupToolbar = {

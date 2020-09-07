@@ -419,6 +419,7 @@
         SELECT ROLE_SEQ,
                ROLE_NM,
                DEL_YN,
+               DXF_FILE_DOWNLOAD_YN,
                SF_GET_CODE_NM(1042, DEL_YN, 'EN') AS DEL_YN_NM,
                NOTE
         FROM TBL_ROLE
@@ -433,16 +434,16 @@
             ROLE_SEQ,
             ROLE_NM,
             DEL_YN,
+            DXF_FILE_DOWNLOAD_YN,
             NOTE,
-            INSERT_DT
-            <!-- ,INSERT_ID -->
+            INSERT_ID
         ) VALUES(
             #{ROLE_SEQ},
             #{ROLE_NM},
             #{DEL_YN},
+            #{DXF_FILE_DOWNLOAD_YN},
             #{NOTE},
-            NOW()
-            <!-- ,NULL -->
+            #{LOGIN_USER_ID}
         )
 	</insert>
 
@@ -450,9 +451,10 @@
         UPDATE TBL_ROLE
         SET ROLE_NM = #{ROLE_NM},
             DEL_YN = #{DEL_YN},
+            DXF_FILE_DOWNLOAD_YN = #{DXF_FILE_DOWNLOAD_YN},
             NOTE = #{NOTE},
-            UPDATE_DT = NOW()
-            <!-- ,UPDATE_ID = 'USER_ID' -->
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE ROLE_SEQ = #{ROLE_SEQ}
    </update>
 
