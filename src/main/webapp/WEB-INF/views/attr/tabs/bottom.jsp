@@ -128,14 +128,14 @@
 </form>
 <!-- 제품상세정보 layer popup : S -->
 <div class="popup_container g_item_detail_pop" id="g_item_detail_pop" style="display: none;">
-    <form class="form-inline" id="g_item_detail_pop_form" name="g_item_detail_pop_form" role="form">
+    <form class="form-inline" id="g_item_detail_pop_form" name="g_item_detail_pop_form" role="form" onsubmit="return false;">
         <input type="hidden" id="queryId" name="queryId" value="inspection.selectCommItemDetailInfo"/>
         <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value=""/>
         <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
 <%--        <input type="hidden" id="CAM_INFO_YN" name="CAM_INFO_YN" value=""/>--%>
         <div class="layerPopup">
             <h3>제품상세정보</h3>
-            <button type="button" class="pop_close mg-top10 mg-right8" id="popClose2">닫기</button>
+            <button type="button" class="pop_close mt-10 mr-8" id="popClose2">닫기</button>
 <%--            <span class="right">--%>
 <%--                <span class="barCode" ><img src="/resource/asset/images/common/img_barcode.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>--%>
 <%--                <span class="barCodeTxt" >&nbsp;<input type="text" class="wd_270_barcode" style="height: 39px;" name="g_item_detail_pop_barcode_num" id="g_item_detail_pop_barcode_num" placeholder="도면의 바코드를 스캔해 주세요"></span>--%>
@@ -154,7 +154,14 @@
                       <span class="barCodeTxt" >&nbsp;<input type="text" class="wd_270_barcode hg_30"  name="g_item_detail_pop_barcode_num" id="g_item_detail_pop_barcode_num" placeholder="도면의 바코드를 스캔해 주세요"></span>
                     </ul>
                  </div>
-                <h4>기본정보</h4>
+                <div class="d-flex align-items-center">
+                    <h4>기본정보</h4>
+                    <div class="btnWrap ml-auto mb-10">
+                        <button id="CAD_DOWNLOAD" class="d-none defaultBtn">캐드파일</button>
+                        <button id="DRAWING_VIEW" class="defaultBtn">도면보기</button>
+                        <button id="WORK_HISTORY_INFO" class="defaultBtn">유사주문 수행기록</button>
+                    </div>
+                </div>
                 <div class="list1">
                     <table class="rowStyle" style="table-layout: fixed;">
                         <colgroup>
@@ -168,58 +175,76 @@
                         <tr>
                             <th>관리번호</th>
                             <td id="CONTROL_NUM" class="red"></td>
-                            <th>도면번호</th>
-                            <td id="DRAWING_NUM" class="red"></td>
+                            <th>작업형태</th>
+                            <td id="WORK_TYPE_NM"></td>
                             <th>가공납기</th>
                             <td id="INNER_DUE_DT"></td>
                         </tr>
                         <tr>
+                            <th>도면번호</th>
+                            <td id="DRAWING_NUM" class="red"></td>
+                            <th>수량(원,대)</th>
+                            <td id="ORDER_QTY_INFO"></td>
+                            <th class="antiquewhite">진행상태</th>
+                            <td id="PART_STATUS_NM"></td>
+                        </tr>
+                        <tr>
                             <th>품명</th>
                             <td id="ITEM_NM"></td>
-                            <th >모듈</th>
-                            <td id="MODULE_NM" style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap;"></td>
-                            <th>수량(원칭,대칭)</th>
-                            <td id="ORDER_QTY_INFO"></td>
-                        </tr>
-                        <tr>
                             <th>규격</th>
                             <td id="SIZE_TXT"></td>
-                            <th>소재Size</th>
-                            <td id="MATERIAL_SIZE_TXT" style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap;"></td>
-                            <th>가공형태</th>
-                            <td id="WORK_TYPE_NM"></td>
+                            <th class="antiquewhite">현재위치</th>
+                            <td id="POP_POSITION_NM"></td>
+                            <%--<th>소재Size</th>--%>
+                            <%--<td id="MATERIAL_SIZE_TXT" style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap;"></td>--%>
                         </tr>
                         <tr>
+                            <th>모듈</th>
+                            <td id="MODULE_NM" style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap;"></td>
                             <th>소재종류</th>
                             <td id="MATERIAL_DETAIL_NM"></td>
-                            <th>후처리</th>
+                            <th class="antiquewhite">가공확정 일시</th>
+                            <td id="PROCESS_CONFIRM_DT"></td>
+                            <%--<th>소재주문상태</th>--%>
+                            <%--<td id="MATERIAL_ORDER_STATUS_NM"></td>--%>
+                        </tr>
+                        <tr>
+                            <th>프로젝트</th>
+                            <td id="PROJECT_NM"></td>
+                            <th>표면처리</th>
                             <td id="SURFACE_TREAT_NM"></td>
-                            <th>소재주문상태</th>
-                            <td id="MATERIAL_ORDER_STATUS_NM"></td>
+                            <th class="antiquewhite">소재주문 일시</th>
+                            <td id="MATERIAL_ORDER_DT"></td>
+                            <%--<th>도면수정Rev.</th>--%>
+                            <%--<td id="DRAWING_VER"></td>--%>
+                            <%--<th>도면파일</th>--%>
+                            <%--<td id="DXF_GFILE_SEQ"></td>--%>
                         </tr>
                         <tr>
-                            <th>진행상태</th>
-                            <td id="PART_STATUS_NM"></td>
-                            <th>도면수정Rev.</th>
-                            <td id="DRAWING_VER"></td>
-                            <th>도면파일</th>
-                            <td id="DXF_GFILE_SEQ"></td>
-                        </tr>
-                        <tr>
-                            <th>발주업체</th>
+                            <th class="palegoldenrod">발주업체</th>
                             <td id="ORDER_COMP_NM"></td>
-                            <th>설계자</th>
-                            <td id="DESIGNER_NM"></td>
-                            <th>외주여부/업체</th>
-                            <td id="OUTSIDE_INFO_OUTSIDE_COMP_NM"></td>
+                            <th>외주구분/업체</th>
+                            <td id="OUTSIDE_INFO"></td>
+                            <th class="antiquewhite">소재입고 일시</th>
+                            <td id="MATERIAL_IN_DT"></td>
                         </tr>
                         <tr>
-                            <th>확정일자</th>
+                            <th class="palegoldenrod">설계자</th>
+                            <td id="DESIGNER_NM"></td>
+                            <th>외주요청 일시</th>
+                            <td id="OUTSIDE_PROCESS_CONFIRM_DT"></td>
+                            <th class="antiquewhite blueviolet">가공완료 일시</th>
+                            <td id="PROCESS_FINISH_DT" class="blueviolet"></td>
+                            <%--<th>과거수행경험</th>--%>
+                            <%--<td id="WORK_HISTORY_INFO"></td>--%>
+                        </tr>
+                        <tr>
+                            <th class="palegoldenrod">주문확정</th>
                             <td id="CONTROL_CONFIRM_DT"></td>
-                            <th>출고일자</th>
-                            <td id="OUT_FINISH_DT"></td>
-                            <th>과거수행경험</th>
-                            <td id="WORK_HISTORY_INFO"></td>
+                            <th>외주입고 일시</th>
+                            <td id="OUTSIDE_IN_DT"></td>
+                            <th class="antiquewhite blueviolet">출고완료 일시</th>
+                            <td id="OUT_FINISH_DT" class="blueviolet"></td>
                         </tr>
 
                     </table>
@@ -1312,52 +1337,79 @@
         };
         fnPostAjax(function (data, callFunctionParam) {
             fnResetFrom("g_item_detail_pop_form");
+            $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").addClass('d-none');
+            $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").removeAttr('onClick');
+            $("#g_item_detail_pop_form").find("#DRAWING_VIEW").removeAttr('onClick');
+            $("#g_item_detail_pop_form").find("#WORK_HISTORY_INFO").removeAttr('onClick');
             let dataInfo = data.info;
 
-            console.log(dataInfo);
+            // console.log(dataInfo);
 
             $("#g_item_detail_pop_form").find(".list1").find(".rowStyle").find("td").html('');
             if(dataInfo) {
                 //fnJsonDataToForm("stock_manage_pop_form", dataInfo);
                 $("#g_item_detail_pop_form").find("#CONTROL_NUM").html(dataInfo.CONTROL_NUM);
-                $("#g_item_detail_pop_form").find("#DRAWING_NUM").html(dataInfo.DRAWING_NUM);
+                $("#g_item_detail_pop_form").find("#WORK_TYPE_NM").html(dataInfo.WORK_TYPE_NM);
                 $("#g_item_detail_pop_form").find("#INNER_DUE_DT").html(dataInfo.INNER_DUE_DT);
 
-                $("#g_item_detail_pop_form").find("#ITEM_NM").html(dataInfo.ITEM_NM);
-                $("#g_item_detail_pop_form").find("#MODULE_NM").html(dataInfo.MODULE_NM);
+                $("#g_item_detail_pop_form").find("#DRAWING_NUM").html(dataInfo.DRAWING_NUM);
                 $("#g_item_detail_pop_form").find("#ORDER_QTY_INFO").html(dataInfo.ORDER_QTY_INFO);
-
-                $("#g_item_detail_pop_form").find("#SIZE_TXT").html(dataInfo.SIZE_TXT);
-                $("#g_item_detail_pop_form").find("#MATERIAL_SIZE_TXT").html(dataInfo.MATERIAL_SIZE_TXT);
-                $("#g_item_detail_pop_form").find("#WORK_TYPE_NM").html(dataInfo.WORK_TYPE_NM);
-
-                $("#g_item_detail_pop_form").find("#MATERIAL_DETAIL_NM").html(dataInfo.MATERIAL_DETAIL_NM);
-                $("#g_item_detail_pop_form").find("#SURFACE_TREAT_NM").html(dataInfo.SURFACE_TREAT_NM);
-                $("#g_item_detail_pop_form").find("#MATERIAL_ORDER_STATUS_NM").html(dataInfo.MATERIAL_ORDER_STATUS_NM);
-
                 $("#g_item_detail_pop_form").find("#PART_STATUS_NM").html(dataInfo.PART_STATUS_NM);
-                $("#g_item_detail_pop_form").find("#DRAWING_VER").html(dataInfo.DRAWING_VER);
 
-                let filedownlod = "";
-                if(dataInfo.DXF_GFILE_SEQ != "" && dataInfo.DXF_GFILE_SEQ != undefined){
-                    filedownlod = "<button type='button' class='smallBtn red' onclick=\"javascript:fnFileDownloadFormPageAction('" + dataInfo.DXF_GFILE_SEQ + "');\"><i class='fa fa-trash'></i><span >다운로드</span></button>";
-                }
-                $("#g_item_detail_pop_form").find("#DXF_GFILE_SEQ").html(filedownlod);
+                $("#g_item_detail_pop_form").find("#ITEM_NM").html(dataInfo.ITEM_NM);
+                $("#g_item_detail_pop_form").find("#SIZE_TXT").html(dataInfo.SIZE_TXT);
+                $("#g_item_detail_pop_form").find("#POP_POSITION_NM").html(dataInfo.POP_POSITION_NM);
+
+                $("#g_item_detail_pop_form").find("#MODULE_NM").html(dataInfo.MODULE_NM);
+                $("#g_item_detail_pop_form").find("#MATERIAL_DETAIL_NM").html(dataInfo.MATERIAL_DETAIL_NM);
+                $("#g_item_detail_pop_form").find("#PROCESS_CONFIRM_DT").html(dataInfo.PROCESS_CONFIRM_DT);
+
+                $("#g_item_detail_pop_form").find("#PROJECT_NM").html(dataInfo.PROJECT_NM);
+                $("#g_item_detail_pop_form").find("#SURFACE_TREAT_NM").html(dataInfo.SURFACE_TREAT_NM);
+                $("#g_item_detail_pop_form").find("#MATERIAL_ORDER_DT").html(dataInfo.MATERIAL_ORDER_DT);
+
+                // $("#g_item_detail_pop_form").find("#MATERIAL_ORDER_STATUS_NM").html(dataInfo.MATERIAL_ORDER_STATUS_NM);
+                // $("#g_item_detail_pop_form").find("#DRAWING_VER").html(dataInfo.DRAWING_VER);
+                // $("#g_item_detail_pop_form").find("#MATERIAL_SIZE_TXT").html(dataInfo.MATERIAL_SIZE_TXT);
+
+                // let filedownlod = "";
+                // if (dataInfo.DXF_GFILE_SEQ != "" && dataInfo.DXF_GFILE_SEQ != undefined) {
+                //     filedownlod = "<button type='button' class='smallBtn red' onclick=\"javascript:fnFileDownloadFormPageAction('" + dataInfo.DXF_GFILE_SEQ + "');\"><i class='fa fa-trash'></i><span >다운로드</span></button>";
+                // }
+                // $("#g_item_detail_pop_form").find("#DXF_GFILE_SEQ").html(filedownlod);
 
                 $("#g_item_detail_pop_form").find("#ORDER_COMP_NM").html(dataInfo.ORDER_COMP_NM);
+                $("#g_item_detail_pop_form").find("#OUTSIDE_INFO").html(dataInfo.OUTSIDE_INFO);
+                $("#g_item_detail_pop_form").find("#MATERIAL_IN_DT").html(dataInfo.MATERIAL_IN_DT);
+
                 $("#g_item_detail_pop_form").find("#DESIGNER_NM").html(dataInfo.DESIGNER_NM);
-                $("#g_item_detail_pop_form").find("#OUTSIDE_INFO_OUTSIDE_COMP_NM").html(dataInfo.OUTSIDE_INFO);
+                $("#g_item_detail_pop_form").find("#OUTSIDE_PROCESS_CONFIRM_DT").html(dataInfo.OUTSIDE_PROCESS_CONFIRM_DT);
+                $("#g_item_detail_pop_form").find("#PROCESS_FINISH_DT").html(dataInfo.PROCESS_FINISH_DT);
 
                 $("#g_item_detail_pop_form").find("#CONTROL_CONFIRM_DT").html(dataInfo.CONTROL_CONFIRM_DT);
+                $("#g_item_detail_pop_form").find("#OUTSIDE_IN_DT").html(dataInfo.OUTSIDE_IN_DT);
                 $("#g_item_detail_pop_form").find("#OUT_FINISH_DT").html(dataInfo.OUT_FINISH_DT);
 
-                let camPopHtml = "";
-                if(dataInfo.WORK_HISTORY_INFO != "" && dataInfo.WORK_HISTORY_INFO != undefined){
-                    camPopHtml = dataInfo.WORK_HISTORY_INFO + "  ";
-                    camPopHtml += "<button type='button' class='smallBtn yellow' onclick=\"javascript:g_item_detail_pop_cam_pop('" + dataInfo.CONTROL_SEQ + "','" + dataInfo.CONTROL_DETAIL_SEQ + "');\"><i class='fa fa-trash'></i><span >조회</span></button>";
+                // TODO: 권한 확인
+                if (fnIsEmpty(dataInfo.DXF_GFILE_SEQ)) {
+                    $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").attr('onClick', 'fnAlert(null, "도면파일이 없습니다.");');
+                    $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").removeClass('d-none');
+                } else {
+                    $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").attr('onClick', 'fnFileDownloadFormPageAction(' + dataInfo.DXF_GFILE_SEQ + ');');
+                    $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").removeClass('d-none');
                 }
 
-                $("#g_item_detail_pop_form").find("#WORK_HISTORY_INFO").html(camPopHtml);
+                if (fnIsEmpty(dataInfo.IMG_GFILE_SEQ)) {
+                    $("#g_item_detail_pop_form").find("#DRAWING_VIEW").attr('onClick', 'fnAlert(null, "도면파일이 없습니다.");');
+                } else {
+                    $("#g_item_detail_pop_form").find("#DRAWING_VIEW").attr('onClick', 'callWindowImageViewer(' + dataInfo.IMG_GFILE_SEQ + ');');
+                }
+
+                if (fnIsEmpty(dataInfo.WORK_HISTORY_INFO)) {
+                    $("#g_item_detail_pop_form").find("#WORK_HISTORY_INFO").attr('onClick', 'fnAlert(null, "유사주문 수행기록이 없습니다.");');
+                } else {
+                    $("#g_item_detail_pop_form").find("#WORK_HISTORY_INFO").attr('onClick', "g_item_detail_pop_cam_pop('" + dataInfo.CONTROL_SEQ + "','" + dataInfo.CONTROL_DETAIL_SEQ + "');");
+                }
 
                 /** CAM 작업 여부에 따른 버튼 표시 **/
                 // if(dataInfo.CAM_STATUS == "CWS010" || dataInfo.CAM_STATUS == "CWS030"){ <!-- 대기 중일때 처리 -->
