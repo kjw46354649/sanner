@@ -18,7 +18,7 @@
             <input type="hidden" name="queryId" id="queryId" value="machine.selectEquipId">
             <div class="hWrap">
                 <h2 style="height: 42px; line-height: 42px;">MCT 가공 계획 현황</h2>
-                <span class="slt_wrap namePlusSlt mg-left20">
+                <span class="slt_wrap namePlusSlt ml-20">
                         <label for="FACTORY_AREA">MCT 센터</label>
                         <select name="FACTORY_AREA" id="FACTORY_AREA">
                         <c:forEach var="code" items="${HighCode.H_1005}">
@@ -28,7 +28,7 @@
                         </c:forEach>
                         </select>
                 </span>
-                <span class="refresh mg-left10"><button type="button" id="MCT_PLAN_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
+                <span class="refresh ml-10"><button type="button" id="MCT_PLAN_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
                 <span class="buttonWrap" style="padding: 8px 0px 0px 0px;">
                     <button type="button" class="defaultBtn black" id="MCT_PLAN_MANAGE_DRAWING_VIEW">도면보기</button>
                     <!-- <button type="button" class="defaultBtn sky">레이아웃관리</button> -->
@@ -64,7 +64,7 @@
             <form id="MCT_PROCESS_TARGET_FORM" role="form">
                 <input type="hidden" name="queryId" id="queryId" value="machine.selectWorkPlanGridList">
 
-                <span class="slt_wrap mg-left20">
+                <span class="slt_wrap ml-20">
                     <label class="label_50" for="FACTORY_CLASSIFY">공장구분</label>
                     <select class="wd_70" name="FACTORY_CLASSIFY" id="FACTORY_CLASSIFY" title="공장구분">
                         <option value=""><spring:message code="com.form.top.all.option"/></option>
@@ -135,7 +135,7 @@
                         <input type="checkbox" name="INCLUDE_PROCESSING" id="INCLUDE_PROCESSING">
                         <label class="label_80" for="INCLUDE_PROCESSING">가공 완료 포함</label>
                     </span>
-                <span class="refresh mg-left10"><button type="button" id="MCT_TARGET_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
+                <span class="refresh ml-10"><button type="button" id="MCT_TARGET_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
 <%--                <div style="margin: 0 0 10px 20px;">--%>
 
 <%--                </div>--%>

@@ -15,8 +15,8 @@
             <span class="barCode" id="itemOrderRegisterBarcodeSpan"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="itempOrderResgisterBarcodeImg" style="height: 32px;"></span>
             <span class="barCodeTxt"><label for="itempOrderResgisterBarcodeNum"></label><input type="text" class="wd_270_barcode" id="itempOrderResgisterBarcodeNum" placeholder="도면의 바코드를 스캔해 주세요"></span>
         </span>
-        <button type="button" class="pop_close mg-top10 mg-right8" data-dismiss="modal">닫기</button>
-        <div class="t_area mg-top10">
+        <button type="button" class="pop_close mt-10 mr-8" data-dismiss="modal">닫기</button>
+        <div class="t_area mt-10">
             <div class="t_h">
                 <span class="list_t" style="width: 192px;">소재주문번호</span>
                 <span style="width: 203px;">
@@ -42,7 +42,7 @@
                 </div>
             </div>
         </div>
-        <div class="h_area mg-bottom10">
+        <div class="h_area mb-10">
 
         </div>
         <form class="form-inline" role="form" id="item_order_register_popup_form" name="item_order_register_popup_form">

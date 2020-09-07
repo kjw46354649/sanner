@@ -122,7 +122,7 @@
         <button type="button" class="topWrap_btn" id="CONTROL_MANAGE_TOPWRAP_BTN">펼치기 / 접기</button>
     </div>
     <div class="bottomWrap row1_bottomWrap">
-        <div class="hWrap mg-bottom10">
+        <div class="hWrap mb-10">
             <div>
                 <button type="button" class="defaultBtn btn-100w" id="NEW_ORDER_REGISTRATION">신규 주문 등록</button>
                 <button type="button" class="defaultBtn btn-100w" id="DRAWING_REGISTRATION">도면 등록</button>
@@ -144,7 +144,7 @@
                     <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_LABEL_PRINT">라벨 출력</button>
                 </div>
             </div>
-            <div class="mg-top10">
+            <div class="mt-10">
                 <div class="d-inline">
                     <label for="controlManageFilterKeyword"></label><input type="text" id="controlManageFilterKeyword" placeholder="Enter your keyword">
                     <label for="controlManageFilterColumn"></label><select id="controlManageFilterColumn"></select>

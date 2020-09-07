@@ -11,7 +11,7 @@
 <div class="popup_container" id="in_warehouse_manage_out_popup" style="display: none;">
     <div class="layerPopup" style="height: fit-content;">
         <h3 style="margin-bottom: 10px;">소재 불출 진행</h3>
-        <button type="button" class="pop_close mg-top10 mg-right8" data-dismiss="modal">닫기</button>
+        <button type="button" class="pop_close mt-10 mr-8" data-dismiss="modal">닫기</button>
         <br/>
         <form class="form-inline" role="form" id="in_warehouse_manage_out_popup_form" name="in_warehouse_manage_out_popup_form" method="POST">
             <input type="hidden" id="queryId" name="queryId" value="insertInWarehouseManageOutPop"/>
@@ -83,14 +83,14 @@
 <div class="popup_container" id="in_warehouse_manage_scan_barcode_popup" style="display: none;">
     <div class="layerPopup" style="height: fit-content;">
         <h3>소재 불출 진행</h3>
-        <button type="button" class="pop_close mg-top10 mg-right8" data-dismiss="modal">닫기</button>
+        <button type="button" class="pop_close mt-10 mr-8" data-dismiss="modal">닫기</button>
         <form class="form-inline" role="form" id="in_warehouse_manage_scan_barcode_popup_form" name="in_warehouse_manage_scan_barcode_popup_form" method="POST">
             <input type="hidden" id="queryId" name="queryId" value="material.selectInWarehousePop"/>
             <input type="hidden" id="TYPE" name="TYPE" value=""/>
             <input type="hidden" id="MY_MAT_OUT_SEQ" name="MY_MAT_OUT_SEQ"/>
             <input type="hidden" id="BARCODE_NUM" name="BARCODE_NUM"/>
             <div class="tableWrap">
-                <div class="h_area mg-bottom10">
+                <div class="h_area mb-10">
                     <span class="buttonWrap" id="inspect_method_btn">
                         <span style="height: 30px;float: left;">&nbsp;</span>
                     </span>

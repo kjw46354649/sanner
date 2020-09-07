@@ -317,7 +317,7 @@
 
         <div class="layerPopup">
             <h3>CAM 작업 상세 조회</h3>
-            <button type="button" class="pop_close mg-top10 mg-right8" id="g_item_detail_pop_cam_pop_grid_pop_close2">닫기</button>
+            <button type="button" class="pop_close mt-10 mr-8" id="g_item_detail_pop_cam_pop_grid_pop_close2">닫기</button>
             <div class="qualityWrap">
                 <div class="h_area">
 
@@ -364,11 +364,11 @@
 <div class="popup_container" id="common_warehouse_manage_popup" style="display: none;">
     <div class="layerPopup" style="height: fit-content; width: 700px;">
         <h3>위치정보관리</h3>
-        <button type="button" class="pop_close mg-top10 mg-right8" data-dismiss="modal">닫기</button>
+        <button type="button" class="pop_close mt-10 mr-8" data-dismiss="modal">닫기</button>
         <form class="form-inline" role="form" id="common_warehouse_manage_popup_form">
             <input type="hidden" id="queryId" name="queryId" value="material.selectCommonWarehouseManageList">
             <input type="hidden" id="LOC_SEQ" name="LOC_SEQ" value="">
-            <div class="t_area mg-top10">
+            <div class="t_area mt-10">
                 <div class="t_h">
                     <span class="list_t" style="width: 110px;">창고명</span>
                     <span style="width: 190px;">
@@ -385,7 +385,7 @@
                     </div>
                 </div>
             </div>
-            <div class="h_area mg-bottom10">
+            <div class="h_area mb-10">
 
             </div>
             <h2>&nbsp;</h2>
@@ -410,7 +410,7 @@
         <input type="hidden" id="selUserId" name="selUserId" value="">
         <div class="userLayerPopup">
             <h3>사용자 정보</h3>
-            <button type="button" class="pop_close mg-top10 mg-right8" id="user_info_pop_close2">닫기</button>
+            <button type="button" class="pop_close mt-10 mr-8" id="user_info_pop_close2">닫기</button>
             <div class="qualityWrap">
                 <div class="userResultWrap99 userInfoList99">
                     <div class="leftWrap" style="margin-top: 16px;">

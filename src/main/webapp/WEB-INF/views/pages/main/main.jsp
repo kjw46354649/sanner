@@ -130,20 +130,20 @@
                 <form class="form-inline" id="main_master_search_form" name="main_master_search_form" role="form">
                     <input type="hidden" name="queryId" id="queryId" value="main.selectMainTodayMCTList">
                     <h2>금일 가공 대상 List</h2>
-                    <span class="chk_box mg-left20"></span>
-                    <span class="slt_wrap mg-left10">
+                    <span class="chk_box ml-20"></span>
+                    <span class="slt_wrap ml-10">
                         <input type="checkbox" id="NOTEXISTS_INNER_WORK_FINISH_DT_CHK"><label for="pr_ex">&nbsp;&nbsp;가공완료제외</label>
                         <select class="wd_150" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
                             <option value=""><spring:message code="com.form.top.all.option"/></option>
                         </select>
-                        <select class="label_150 mg-left10" name="MATERIAL_TYPE" id="MATERIAL_TYPE" title="재질">
+                        <select class="label_150 ml-10" name="MATERIAL_TYPE" id="MATERIAL_TYPE" title="재질">
                             <option value=""><spring:message code="com.form.top.all.option"/></option>
                             <c:forEach var="code" items="${HighCode.H_1035}">
                                 <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                             </c:forEach>
                         </select>
                     </span>
-                    <span class="ipu_wrap mg-left10"><label for="dateSltd">조회일자</label><input type="text" name="INNER_DUE_DT" id="INNER_DUE_DT" placeholder="" value="" class="wd_150" title="조회일자"></span>
+                    <span class="ipu_wrap ml-10"><label for="dateSltd">조회일자</label><input type="text" name="INNER_DUE_DT" id="INNER_DUE_DT" placeholder="" value="" class="wd_150" title="조회일자"></span>
                     <span class="refresh"><a href="#a;"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></a></span>
                 </form>
             </div>

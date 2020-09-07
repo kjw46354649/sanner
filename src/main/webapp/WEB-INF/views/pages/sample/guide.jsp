@@ -101,7 +101,7 @@
 							<input type="text" name="dateTwoIp" id="dateTwoIp" placeholder="" value="" title="달력정보"><button type="button">달력선택</button>
 						</span>
 					</div>
-					<span class="slt_wrap namePlusSlt mg-left25">
+					<span class="slt_wrap namePlusSlt ml-25">
 						<label for="prSltd">견적서 추출</label>
 						<select id="prSltd" name="prSltd" title="견적서 추출">
 							<option value="" selected="selected">견적서 추출1</option>
@@ -169,7 +169,7 @@
 						</ul>
 					</div>
 					<br />
-					<span class="txt_span bold  mg-top20">테이블</span>
+					<span class="txt_span bold  mt-20">테이블</span>
 					<table class="boardList">
 						<caption>집계기간, 전체 검사현황(양품, 불량), 1공장(양품, 불량), 2공장(양품, 불량), 3공장(양품, 불량), 출고, 반품으로 구분된 신규 발주 현황</caption>
 						<colgroup>
@@ -264,7 +264,7 @@
 							</tr>
 						</tbody>
 					</table>
-					<table class="rowStyle mg-top20">
+					<table class="rowStyle mt-20">
 						<caption></caption>
 						<tr>
 							<th scope="row">업체</th>
@@ -286,7 +286,7 @@
 							<td><span>SM45C 70*20*15 4EA</span></td>
 						</tr>
 					</table>
-					<table class="colStyle mg-top20">
+					<table class="colStyle mt-20">
 						<caption></caption>
 						<tr>
 							<th scope="col" class="t_w1"><input id="pr_ex" type="checkbox"></th>

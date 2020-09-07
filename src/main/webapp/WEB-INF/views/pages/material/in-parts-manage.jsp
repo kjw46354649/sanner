@@ -72,7 +72,7 @@
                         </span>
                     </li>
                     <li>
-                        <span class="slt_wrap mg-right10">
+                        <span class="slt_wrap mr-10">
                              <label for="SEL_DAY_TYPE" class="label_100">날짜조회</label>
                             <select id="SEL_DAY_TYPE" name="SEL_DAY_TYPE" title="날짜조회" class="wd_100">
                                 <option value="1">입력일시</option>
@@ -98,7 +98,7 @@
                                 <button type="button" id="MATERIAL_CONSUMABLE_END_DT_BUTTON">달력선택</button>
                             </span>
                         </div>
-<%--                        <span class="chk_box mg-left20">&nbsp;&nbsp;<input id="SEL_TERM_DT_USE" name="SEL_TERM_DT_USE" type="checkbox"><label for="SEL_TERM_DT_USE">선택</label></span>--%>
+<%--                        <span class="chk_box ml-20">&nbsp;&nbsp;<input id="SEL_TERM_DT_USE" name="SEL_TERM_DT_USE" type="checkbox"><label for="SEL_TERM_DT_USE">선택</label></span>--%>
                         <button type="button" class="right_float defaultBtn radius blue" id="searchBtn">검색</button>
                     </li>
                 </ul>
@@ -183,7 +183,7 @@
         <input type="hidden" id="STOCK_QTY" name="STOCK_QTY" value="">
         <div class="layerPopup consumablePop">
             <h3>자재/소모품 불출</h3>
-            <button type="button" class="pop_close mg-top10 mg-right8" >닫기</button>
+            <button type="button" class="pop_close mt-10 mr-8" >닫기</button>
             <div class="h_area">
 
             </div>

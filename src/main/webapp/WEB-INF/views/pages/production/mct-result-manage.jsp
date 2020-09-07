@@ -24,7 +24,7 @@
         <div class="layerPopup">
             <div class="h_area">
                 <h3>CAM 작업 관리</h3>
-                <button type="button" class="pop_close cam_work_manage_detail_pop_close mg-top10 mg-right8">닫기</button>
+                <button type="button" class="pop_close cam_work_manage_detail_pop_close mt-10 mr-8">닫기</button>
             </div>
             <div class="qualityWrap">
                 <h4>관리번호</h4>
@@ -394,9 +394,9 @@
                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                     </c:forEach>
                 </select>
-                <label for="mctResultManageFrozen" class="mg-left10 mg-right10" style="font-size: 15px;">Fix</label>
+                <label for="mctResultManageFrozen" class="ml-10 mr-10" style="font-size: 15px;">Fix</label>
                 <select id="mctResultManageFrozen" name="mctResultManageFrozen"></select>
-                <span class="barCode mg-left10 mg-right10" id="mctResultBarcodeSpan"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="mctResultBarcodeImg"></span>
+                <span class="barCode ml-10 mr-10" id="mctResultBarcodeSpan"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="mctResultBarcodeImg"></span>
                 <span class="barCodeTxt">&nbsp;<input type="text" class="wd_270_barcode" name="MCT_RESULT_BARCODE_NUM" id="MCT_RESULT_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요"></span>
                 <span class="rightSpan">
                     <button type="button" class="defaultBtn btn-120w" id="mctResultDetailViewBtn" >상세정보 조회</button>

@@ -72,7 +72,7 @@
             <div class="d-inline">
                 <button type="button" class="defaultBtn" id="btnEstimateListNewEstimate">신규 작성</button>
                 <button type="button" class="defaultBtn" id="btnEstimateListNewVersion">차수 생성</button>
-                <%--<span class="chk_box mg-left15"><input id="chkEstimateListDetail" type="checkbox"><label for="chkEstimateListDetail"> 견적상세요건</label></span>--%>
+                <%--<span class="chk_box ml-15"><input id="chkEstimateListDetail" type="checkbox"><label for="chkEstimateListDetail"> 견적상세요건</label></span>--%>
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn radius red" id="btnEstimateListDelete">삭제</button>
                     <%--<button type="button" class="defaultBtn radius green" id="btnEstimateListSave">저장</button>--%>

@@ -16,7 +16,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <title>거래 명세표</title>
+    <title>상세 List 조회</title>
 </head>
 <body>
 <div style="padding: 10px;">

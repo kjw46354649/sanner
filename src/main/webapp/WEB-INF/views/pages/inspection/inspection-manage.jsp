@@ -109,7 +109,7 @@
 
         <div class="layerPopup">
             <h3>품질 실적 등록</h3>
-            <button type="button" class="pop_close mg-top10 mg-right8" id="popClose2">닫기</button>
+            <button type="button" class="pop_close mt-10 mr-8" id="popClose2">닫기</button>
             <div class="qualityWrap">
                 <div class="h_area">
 					<span class="buttonWrap" id="inspect_method_btn">

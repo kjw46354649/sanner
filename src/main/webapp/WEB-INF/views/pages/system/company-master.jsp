@@ -103,7 +103,7 @@
 
         <div class="layerPopup sysCompPopup">
             <h3>업체상세정보</h3>
-            <button type="button" class="pop_close mg-top10 mg-right8" id="system-company-pop-close2">닫기</button>
+            <button type="button" class="pop_close mt-10 mr-8" id="system-company-pop-close2">닫기</button>
             <div class="qualityWrap">
                 <div class="h_area">
                     <div class="right_sort ">
@@ -113,7 +113,7 @@
 
                 </div>
                 <div class="resultWrap99 list99" style="height: 440px;">
-                    <div class="leftWrap mg-top15">
+                    <div class="leftWrap mt-15">
                         <input type="hidden" id="LOGO_GFILE_SEQ" name="LOGO_GFILE_SEQ" value="">
                         <img src="/image/999" id="LOGO_GFILE_SRC" width="388px" height="150px" alt="사진" style="border:1px solid #707070; width: 388px !important; height:150px !important;">
                         <div class="btnWrap">

@@ -83,7 +83,7 @@
 <%--                                <button type="button">달력선택</button>--%>
                             </span>
                         </div>
-<%--                        <span class="chk_box mg-left20">&nbsp;&nbsp;<input id="SEL_TERM_DT_USE" name="SEL_TERM_DT_USE" type="checkbox"><label for="SEL_TERM_DT_USE">선택</label></span>--%>
+<%--                        <span class="chk_box ml-20">&nbsp;&nbsp;<input id="SEL_TERM_DT_USE" name="SEL_TERM_DT_USE" type="checkbox"><label for="SEL_TERM_DT_USE">선택</label></span>--%>
                         <button type="button" class="right_float defaultBtn radius blue" id="searchBtn">검색</button>
                     </li>
                 </ul>
@@ -200,7 +200,7 @@
         <input type="hidden" id="historyGrid" name="historyGrid" value="" >
         <div class="layerPopup">
             <h3>장비상세정보</h3>
-            <button type="button" class="pop_close mg-top10 mg-right8" id="machine_manage_pop-close2">닫기</button>
+            <button type="button" class="pop_close mt-10 mr-8" id="machine_manage_pop-close2">닫기</button>
             <div class="qualityWrap">
                 <div class="h_area">
 					<div class="right_sort ">

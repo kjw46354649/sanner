@@ -36,7 +36,7 @@
 
                     </li>
                     <li>
-                        <span class="slt_wrap mg-right10">
+                        <span class="slt_wrap mr-10">
                             <label class="label_100" for="SEL_OUTGOING_DATE_TYPE">구분</label>
                             <select class="wd_200" name="SEL_OUTGOING_DATE_TYPE" id="SEL_OUTGOING_DATE_TYPE">
                                 <option value=""><spring:message code="com.form.top.sel.option"/></option>

@@ -23,7 +23,7 @@
         <div class="layerPopup">
             <div class="h_area">
                 <h3>CAM 작업 관리</h3>
-                <button type="button" class="pop_close cam_work_history_detail_pop_close mg-top10 mg-right8">닫기</button>
+                <button type="button" class="pop_close cam_work_history_detail_pop_close mt-10 mr-8">닫기</button>
             </div>
             <div class="qualityWrap">
                 <h4>관리번호</h4>
@@ -404,7 +404,7 @@
                         </span>
                     </li>
                     <li>
-                        <span class="slt_wrap trans_slt mg-right10">
+                        <span class="slt_wrap trans_slt mr-10">
                             <select name="CAM_WORK_HISTORY_CONDITION" id="CAM_WORK_HISTORY_CONDITION">
                                 <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                 <option value="1">수정일시</option>
@@ -492,7 +492,7 @@
                         </span>
                     </li>
                     <li>
-                        <span class="slt_wrap trans_slt mg-right10">
+                        <span class="slt_wrap trans_slt mr-10">
                             <label class="label_100">작업일시</label>
                             <%--<select id="daySltd" name="daySltd" title="등록일시">
                                 <option value="" selected="selected">등록일시</option>

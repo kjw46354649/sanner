@@ -62,7 +62,7 @@
                         <button type="button" class="defaultBtn radius blue authorizedBtn" id="btn_estimate_register_submit">제출</button>
                     </div>
                 </div>
-                <%--<span class="chk_box mg-left15"><input id="chkEstimateRegisterDetail" type="checkbox"><label for="chkEstimateRegisterDetail"> 견적상세요건</label></span>--%>
+                <%--<span class="chk_box ml-15"><input id="chkEstimateRegisterDetail" type="checkbox"><label for="chkEstimateRegisterDetail"> 견적상세요건</label></span>--%>
             </div>
         </div>
     </div>

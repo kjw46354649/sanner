@@ -34,7 +34,7 @@
                         </span>
                     </li>
                     <li>
-                        <span class="slt_wrap mg-right10">
+                        <span class="slt_wrap mr-10">
                             <label class="label_100" for="SEL_OUTGOING_DATE_TYPE">구분</label>
                             <select class="wd_100" name="SEL_OUTGOING_DATE_TYPE" id="SEL_OUTGOING_DATE_TYPE">
                                <option value=""><spring:message code="com.form.top.sel.option"/></option>
@@ -122,10 +122,10 @@
 <div class="popup_container inspection " id="outgoing_manage_return_complete_pop" style="display: none;">
         <div class="layerPopup" style="height: 545px">
             <h3>반품 현황 조회</h3>
-            <button type="button" class="pop_close mg-top10 mg-right8" id="outgoing_manage_return_complete_pop_close2">닫기</button>
+            <button type="button" class="pop_close mt-10 mr-8" id="outgoing_manage_return_complete_pop_close2">닫기</button>
             <%--<button type="button" class="pop_close">닫기</button>--%>
 <%--                <h4>기본정보</h4>--%>
-            <div class="h_area mg-bottom10">
+            <div class="h_area mb-10">
 
             </div>
             <div class="list1">
@@ -158,10 +158,10 @@
         .greenPopGra { background: #4d8d1a; border: 1px solid #4d8d1a; color: #fff; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#2B89FA)";/*IE 8*/ width: 100px; height: 30px; font-size: 15px;}--%>
     <div class="layerPopup" style="height: 530px">
         <h3>반품실적등록</h3>
-        <button type="button" class="pop_close mg-top10 mg-right8" id="outgoing_manage_return_pop_close2">닫기</button>
+        <button type="button" class="pop_close mt-10 mr-8" id="outgoing_manage_return_pop_close2">닫기</button>
         <%--<button type="button" class="pop_close">닫기</button>--%>
         <div class="qualityWrap">
-            <div class="h_area mg-bottom10">
+            <div class="h_area mb-10">
 
             </div>
             <div class="t_area">

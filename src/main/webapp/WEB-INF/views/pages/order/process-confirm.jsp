@@ -18,7 +18,7 @@
         <span class="barCodeTxt"><label for="CONFIRM_ORDER_BARCODE_NUM"></label><input type="text" class="wd_270_barcode" name="CONFIRM_ORDER_BARCODE_NUM" id="CONFIRM_ORDER_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요" autocomplete="off"></span>
         <button type="button" class="defaultBtn btn-100w orange" data-toggle="modal" data-target="#outsourcingConversionModal">외주 전환</button>
         <div class="right_float">
-            <span class="refresh mg-left10"><button type="button" id="PROCESS_CONFIRM_REFRESH"><img src="<c:url value="/resource/asset/images/common/btn_refresh.png"/>" alt="새로고침"></button></span>
+            <span class="refresh ml-10"><button type="button" id="PROCESS_CONFIRM_REFRESH"><img src="<c:url value="/resource/asset/images/common/btn_refresh.png"/>" alt="새로고침"></button></span>
             <span>
                 <label class="label_50" for="TOP_PROCESS_CONFIRM_CORPORATION">발주처</label>
                 <select class="wd_100" name="TOP_PROCESS_CONFIRM_CORPORATION" id="TOP_PROCESS_CONFIRM_CORPORATION">

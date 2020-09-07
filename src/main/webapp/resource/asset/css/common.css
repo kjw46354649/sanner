@@ -334,33 +334,27 @@ table.boardList .txtP{color: #7030a0;}
 .pd-bottom30{padding-bottom: 30px !important}
 
 /* margin */
-.mg-left5{margin-left: 5px !important}
-.mg-left10{margin-left: 10px !important}
-.mg-left15{margin-left: 15px !important}
-.mg-left20{margin-left: 20px !important}
-.mg-left25{margin-left: 25px !important}
-.mg-left30{margin-left: 30px !important}
+.ml-auto{margin-left: auto !important}
+.ml-5{margin-left: 5px !important}
+.ml-10{margin-left: 10px !important}
+.ml-15{margin-left: 15px !important}
+.ml-20{margin-left: 20px !important}
+.ml-25{margin-left: 25px !important}
 
-.mg-right5{margin-right: 5px !important}
-.mg-right8{margin-right: 8px !important}
-.mg-right10{margin-right: 10px !important}
-.mg-right15{margin-right: 15px !important}
-.mg-right20{margin-right: 20px !important}
-.mg-right25{margin-right: 25px !important}
-.mg-right30{margin-right: 30px !important}
+.mr-auto{margin-right: auto !important}
+.mr-5{margin-right: 5px !important}
+.mr-8{margin-right: 8px !important}
+.mr-10{margin-right: 10px !important}
+.mr-15{margin-right: 15px !important}
+.mr-20{margin-right: 20px !important}
 
-.mg-top10{margin-top: 10px !important}
-.mg-top15{margin-top: 15px !important}
-.mg-top17{margin-top: 17px !important}
-.mg-top20{margin-top: 20px !important}
-.mg-top25{margin-top: 25px !important}
-.mg-top30{margin-top: 30px !important}
+.mt-10{margin-top: 10px !important}
+.mt-15{margin-top: 15px !important}
+.mt-20{margin-top: 20px !important}
 
-.mg-bottom10{margin-bottom: 10px !important}
-.mg-bottom15{margin-bottom: 15px !important}
-.mg-bottom20{margin-bottom: 20px !important}
-.mg-bottom25{margin-bottom: 25px !important}
-.mg-bottom30{margin-bottom: 30px !important}
+.mb-10{margin-bottom: 10px !important}
+.mb-15{margin-bottom: 15px !important}
+.mb-20{margin-bottom: 20px !important}
 
 /* width */
 .wd_50{width:50px !important;}
