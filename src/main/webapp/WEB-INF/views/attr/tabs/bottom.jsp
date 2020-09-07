@@ -1336,9 +1336,12 @@
             'data': fnFormToJsonArrayData('g_item_detail_pop_form')
         };
         fnPostAjax(function (data, callFunctionParam) {
+            let dxfFileDownloadYn = '${authUserInfo.DXF_FILE_DOWNLOAD_YN}';
             fnResetFrom("g_item_detail_pop_form");
-            $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").addClass('d-none');
-            $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").removeAttr('onClick');
+            if(dxfFileDownloadYn === 'Y') {
+                $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").addClass('d-none');
+                $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").removeAttr('onClick');
+            }
             $("#g_item_detail_pop_form").find("#DRAWING_VIEW").removeAttr('onClick');
             $("#g_item_detail_pop_form").find("#WORK_HISTORY_INFO").removeAttr('onClick');
             let dataInfo = data.info;
@@ -1390,14 +1393,16 @@
                 $("#g_item_detail_pop_form").find("#OUTSIDE_IN_DT").html(dataInfo.OUTSIDE_IN_DT);
                 $("#g_item_detail_pop_form").find("#OUT_FINISH_DT").html(dataInfo.OUT_FINISH_DT);
 
-                // TODO: 권한 확인
-                if (fnIsEmpty(dataInfo.DXF_GFILE_SEQ)) {
-                    $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").attr('onClick', 'fnAlert(null, "도면파일이 없습니다.");');
-                    $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").removeClass('d-none');
-                } else {
-                    $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").attr('onClick', 'fnFileDownloadFormPageAction(' + dataInfo.DXF_GFILE_SEQ + ');');
-                    $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").removeClass('d-none');
+                if(dxfFileDownloadYn === 'Y') {
+                    if (fnIsEmpty(dataInfo.DXF_GFILE_SEQ)) {
+                        $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").attr('onClick', 'fnAlert(null, "도면파일이 없습니다.");');
+                        $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").removeClass('d-none');
+                    } else {
+                        $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").attr('onClick', 'fnFileDownloadFormPageAction(' + dataInfo.DXF_GFILE_SEQ + ');');
+                        $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").removeClass('d-none');
+                    }
                 }
+
 
                 if (fnIsEmpty(dataInfo.IMG_GFILE_SEQ)) {
                     $("#g_item_detail_pop_form").find("#DRAWING_VIEW").attr('onClick', 'fnAlert(null, "도면파일이 없습니다.");');
