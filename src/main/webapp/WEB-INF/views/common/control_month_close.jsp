@@ -96,8 +96,8 @@
             {title: '마감월', dataIndx: 'CLOSE_MONTH', hidden: true},
             {title: '마감월', width: 70, dataIndx: 'CLOSE_MONTH_TRAN'},
             {title: '차수', dataIndx: 'CLOSE_VER'},
-            {title: '품수', dataIndx: 'CNT'},
-            {title: '수량', dataIndx: 'CONTROL_ORDER_QTY'},
+            {title: '품수', dataType: 'integer', format: '#,###', dataIndx: 'CNT'},
+            {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_ORDER_QTY'},
             {title: '공급가', width: 70, align: 'right', dataIndx: 'TOTAL_AMT'},
             {title: '마감금액', width: 70, align: 'right', dataIndx: 'FINAL_NEGO_AMT'}
         ];
@@ -199,14 +199,14 @@
                     let closeVer = data.list.length > 0 && data.list[0] !== null ? data.list[0].MAX_CLOSE_VER : 1;
                     $('#CONTROL_MONTH_CLOSE_FORM #CLOSE_VER').val(closeVer).prop('selected', true);
                 }, parameters, '');
-
-                let controlMonthCloseLeftPostData = fnFormToJsonArrayData('#CONTROL_MONTH_CLOSE_FORM');
-                controlMonthCloseLeftPostData.queryId = 'orderMapper.selectControlCloseLeftList';
-                $controlMonthCloseLeftGrid.pqGrid('option', 'dataModel.postData', function () {
-                    return controlMonthCloseLeftPostData;
-                });
-                $controlMonthCloseLeftGrid.pqGrid('refreshDataAndView');
             }
+
+            let controlMonthCloseLeftPostData = fnFormToJsonArrayData('#CONTROL_MONTH_CLOSE_FORM');
+            controlMonthCloseLeftPostData.queryId = 'orderMapper.selectControlCloseLeftList';
+            $controlMonthCloseLeftGrid.pqGrid('option', 'dataModel.postData', function () {
+                return controlMonthCloseLeftPostData;
+            });
+            $controlMonthCloseLeftGrid.pqGrid('refreshDataAndView');
 
             let controlMonthCloseRightPostData = fnFormToJsonArrayData('#CONTROL_MONTH_CLOSE_FORM');
             controlMonthCloseRightPostData.queryId = 'orderMapper.selectControlCloseRightList';
