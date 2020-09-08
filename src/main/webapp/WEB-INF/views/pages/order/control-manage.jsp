@@ -2221,17 +2221,22 @@
 
 
         $('#CONTROL_MONTH_CLOSE').on('click', function () {
+            let compCdList = [];
+            let orderCompCdList = [];
+            let selectedRowCount = selectedOrderManagementRowIndex.length;
+
             if (noSelectedRowAlert()) {
                 return false;
             }
             if (fnIsGridEditing($orderManagementGrid)) {
                 return false;
             }
+            if (selectedRowCount > 300) {
+                fnAlert(null, '300건까지 선택하여 마감 가능합니다.');
+                return false;
+            }
 
-            let compCdList = [];
-            let orderCompCdList = [];
-
-            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+            for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
 
                 compCdList.push(rowData.COMP_CD);

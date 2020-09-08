@@ -224,14 +224,25 @@
         });
 
         $('#CONTROL_MONTH_CLOSE_YES').on('click', function () {
-            let selectedRowCount = opener.selectedOrderManagementRowIndex.length;
             let list = [];
+            let CLOSE_VER = $('#CLOSE_VER').val();
+            let CLOSE_MONTH = $('#CONTROL_MONTH_CLOSE_YEAR').val() + $('#CONTROL_MONTH_CLOSE_MONTH').val();
 
-            for (let i = 0; i < selectedRowCount; i++) {
+            for (let i = 0, selectedRowCount = opener.selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = opener.$orderManagementGrid.pqGrid('getRowData', {rowIndx: opener.selectedOrderManagementRowIndex[i]});
-                rowData.CLOSE_VER = $('#CLOSE_VER').val();
-                rowData.CLOSE_MONTH = $('#CONTROL_MONTH_CLOSE_YEAR').val() + $('#CONTROL_MONTH_CLOSE_MONTH').val();
-                list.push(rowData);
+                let tempObject = {
+                    CONTROL_STATUS: rowData.CONTROL_STATUS,
+                    CONTROL_SEQ: rowData.CONTROL_SEQ,
+                    COMP_CD: rowData.COMP_CD,
+                    CLOSE_MONTH: CLOSE_MONTH,
+                    ORDER_COMP_CD: rowData.ORDER_COMP_CD,
+                    CLOSE_VER: CLOSE_VER,
+                    CLOSE_NOTE: rowData.CLOSE_NOTE,
+                    CLOSE_CONTROL_AMT: rowData.CLOSE_CONTROL_AMT,
+                    CLOSE_DETAIL_NOTE: rowData.CLOSE_DETAIL_NOTE,
+                    FINAL_NEGO_AMT: rowData.FINAL_NEGO_AMT
+                };
+                list.push(tempObject);
             }
 
             let rightData = $controlMonthCloseRightGrid.pqGrid('option', 'dataModel.data');
