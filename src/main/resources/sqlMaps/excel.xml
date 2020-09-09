@@ -152,7 +152,35 @@
     </select>
 
     <select id="selectTransactionStatementListExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
+        WITH RECURSIVE EMPTY_TBL AS (
+            SELECT
+                1 AS ROWNUM,
+                NULL AS CONTROL_NUM,
+                NULL AS ORDER_NUM,
+                NULL AS DRAWING_NUM,
+                NULL AS ITEM_NM,
+                NULL DRAWING_NUM_ITEM_NM,
+                NULL AS SIZE_TXT,
+                NULL AS CONTROL_ORDER_QTY,
+                NULL AS UNIT_FINAL_AMT,
+                NULL AS TOTAL_AMT,
+                NULL AS NOTE
+            UNION ALL
+            SELECT
+                ROWNUM + 1,
+                NULL AS CONTROL_NUM,
+                NULL AS ORDER_NUM,
+                NULL AS DRAWING_NUM,
+                NULL AS ITEM_NM,
+                NULL DRAWING_NUM_ITEM_NM,
+                NULL AS SIZE_TXT,
+                NULL AS CONTROL_ORDER_QTY,
+                NULL AS UNIT_FINAL_AMT,
+                NULL AS TOTAL_AMT,
+                NULL AS NOTE
+            FROM EMPTY_TBL WHERE ROWNUM <![CDATA[ < ]]> 25
+        ), EXCEL_LIST AS (
+         SELECT
             ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, C.ORDER_NUM) AS ROWNUM,
             A.CONTROL_NUM, <!-- 관리번호 -->
             C.ORDER_NUM, <!-- 발주번호 -->
@@ -160,7 +188,7 @@
             B.ITEM_NM, <!-- 품명 -->
             CONCAT(B.DRAWING_NUM, '\n', B.ITEM_NM) AS DRAWING_NUM_ITEM_NM,
             B.SIZE_TXT, <!-- 규격 -->
-            SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY,  <!-- 수량 -->
+            SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY, <!-- 수량 -->
             B.UNIT_FINAL_AMT, <!-- 공급단가 -->
             B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT, <!-- 금액 계 -->
             D.NOTE <!-- 비고 -->
@@ -173,7 +201,31 @@
         WHERE 1 = 1
             AND D.INVOICE_NUM = #{INVOICE_NUM}
             AND B.WORK_TYPE != 'WTP050'
-        ORDER BY A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, C.ORDER_NUM
+        ), EXCEL_LIST_COUNT AS (
+            SELECT COUNT(*) AS CNT
+            FROM EXCEL_LIST
+        )
+        SELECT *
+        FROM EXCEL_LIST
+        UNION
+        SELECT ROWNUM + CNT,
+                NULL AS CONTROL_NUM,
+                NULL AS ORDER_NUM,
+                NULL AS DRAWING_NUM,
+                NULL AS ITEM_NM,
+                NULL DRAWING_NUM_ITEM_NM,
+                NULL AS SIZE_TXT,
+                NULL AS CONTROL_ORDER_QTY,
+                NULL AS UNIT_FINAL_AMT,
+                NULL AS TOTAL_AMT,
+                NULL AS NOTE
+        FROM EMPTY_TBL, EXCEL_LIST_COUNT
+        WHERE
+            ROWNUM <![CDATA[ <= ]]>
+                CASE
+                    WHEN EXCEL_LIST_COUNT.CNT <![CDATA[ < ]]> 25 THEN 25 - (EXCEL_LIST_COUNT.CNT % 25)
+                    ELSE 0
+                END
     </select>
 
     <select id="selectControlEstimateDetailListExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
