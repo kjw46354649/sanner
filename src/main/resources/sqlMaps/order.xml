@@ -1648,7 +1648,14 @@
                                                         AND A.CONTROL_SEQ = C.CONTROL_SEQ
         WHERE 1 = 1
             AND A.DEL_YN = 'N'
-            AND A.CONTROL_STATUS IN ('ORD003', 'ORD004')
+            <choose>
+                <when  test="CONTROL_STATUS !='' and CONTROL_STATUS != null">
+                    AND A.CONTROL_STATUS IN (${CONTROL_STATUS})
+                </when>
+                <otherwise>
+                    AND A.CONTROL_STATUS IN ('ORD003', 'ORD004')
+                </otherwise>
+            </choose>
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
             AND UPPER(A.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
         </if>
@@ -1672,6 +1679,9 @@
         </if>
         <if test="MODULE_NM != null and MODULE_NM != ''">
             AND UPPER(A.MODULE_NM) LIKE CONCAT('%', UPPER(#{MODULE_NM}), '%')
+        </if>
+        <if test="CLOSE_YEAR != null and CLOSE_YEAR != '' and CLOSE_MONTH != null and CLOSE_MONTH != ''">
+            AND ((A.CONTROL_STATUS = 'ORD003' AND C.CLOSE_MONTH = CONCAT(#{CLOSE_YEAR}, #{CLOSE_MONTH})) OR (A.CONTROL_STATUS = 'ORD004' AND DATE_FORMAT(A.STATUS_DT, '%Y%m') = CONCAT(#{CLOSE_YEAR}, #{CLOSE_MONTH})))
         </if>
         ORDER BY
         <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">

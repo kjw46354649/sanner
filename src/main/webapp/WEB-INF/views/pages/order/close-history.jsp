@@ -16,6 +16,7 @@
     <div class="topWrap">
         <form class="form-inline" id="CLOSE_HISTORY_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectCloseHistoryList">
+            <input type="hidden" name="CONTROL_STATUS" id="CONTROL_STATUS">
             <div class="none_gubunWrap row4_topWrap">
                 <ul>
                     <li>
@@ -102,8 +103,8 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label class="label_100">조회 Option</label></span>
                         <span class="wd_200" style="display: inline-block;">
-                            <span class="chk_box"><input type="checkbox" name="DEADLINE" id="DEADLINE"><label for="DEADLINE">마감</label></span>
-                            <span class="chk_box"><input type="checkbox" name="END" id="END"><label for="END">종료</label></span>
+                            <span class="chk_box"><input type="checkbox" name="CONTROL_STATUS_CONDITION" id="DEADLINE" checked value="ORD003"><label for="DEADLINE">마감</label></span>
+                            <span class="chk_box"><input type="checkbox" name="CONTROL_STATUS_CONDITION" id="END" checked value="ORD004"><label for="END">종료</label></span>
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label class="label_100">항목 Option</label></span>
@@ -516,6 +517,23 @@
 
                     for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
                 }
+            },
+            beforePaste: function (evt, ui) {
+                let CM = this.getColModel(),
+                    rows = ui.rows,
+                    area = ui.areas[0],
+                    //r1 = area.r1,
+                    c1 = area.c1;
+                for (let i = 0; i < rows.length; i++) {
+                    let row = rows[i];
+                    for (let j = 0; j < row.length; j++) {
+                        let column = CM[j + c1],
+                            dt = column.dataType;
+                        if (dt == "integer" || dt == "float") {
+                            row[j] = row[j].replace(/[^(\d|\.)]/g, "");
+                        }
+                    }
+                }
             }
         };
         let $controlCloseCancelLeftGrid;
@@ -706,6 +724,13 @@
                 if(index > -1) val = options[index].text;
             }
             if (val) {
+                if (ui.column.dataType === 'integer') {
+                    val = numberWithCommas(val);
+                } else if (ui.column.dataType === 'date' && ui.column.format !== undefined) {
+                    let o = new Date(val);
+                    val = o && !isNaN(o.getTime()) && $.datepicker.formatDate(ui.column.format, o);
+                }
+
                 var condition = $("#closeHistoryFilterCondition :selected").val(),
                     valUpper = val.toString().toUpperCase(),
                     txt = $("#closeHistoryFilterKeyword").val(),
@@ -936,6 +961,18 @@
                     fnAlert(null, data.message);
                 }, formData, '');
             });
+        });
+
+        $('[name=CONTROL_STATUS_CONDITION]').on('change', function () {
+            let checkedValue = '';
+            $("input[name=CONTROL_STATUS_CONDITION]:checked").each(function (index) {
+                if (index > 0) {
+                    checkedValue += ', ';
+                }
+                checkedValue += '\'' + $(this).val() + '\'';
+            });
+            $('#CONTROL_STATUS').val(checkedValue);
+            console.log(checkedValue)
         });
         /* event */
 
