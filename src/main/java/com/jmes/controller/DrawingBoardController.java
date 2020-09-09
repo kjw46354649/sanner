@@ -1,6 +1,9 @@
 package com.jmes.controller;
 
 import com.framework.innodale.component.CommonUtility;
+import com.framework.innodale.entity.ActionType;
+import com.framework.innodale.entity.MessageType;
+import com.framework.innodale.entity.NotificationMessage;
 import com.framework.innodale.service.InnodaleService;
 import com.jmes.service.DrawingBoardService;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
@@ -8,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +36,9 @@ public class DrawingBoardController {
 
     @Autowired
     public DrawingBoardService drawingBoardService;
+
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     /**
      * Json List
@@ -104,8 +111,13 @@ public class DrawingBoardController {
                 hashMap.put("queryId", "drawingMapper.updateRemoveEquipmentWorker");
                 this.innodaleService.update(hashMap);
 
-                session.removeAttribute("userInfo");
+                /** 로그인 정보를 알람 처리한다. **/
+                HashMap<String, Object> alarmHashMap = new HashMap<String, Object>();
+                alarmHashMap.put("USER_ID", hashMap.get("USER_ID"));
+                alarmHashMap.put("EQUIP_SEQ", machineInfo.get("EQUIP_SEQ"));
+                simpMessagingTemplate.convertAndSend("/topic/worker", getNotificationUserMessage(alarmHashMap, ActionType.WK_LOGOUT));
 
+                session.removeAttribute("userInfo");
             }
         }
 
@@ -155,9 +167,14 @@ public class DrawingBoardController {
             machineInfo.put("queryId", "drawingMapper.updateEquipmentWorker");
             innodaleService.update(machineInfo);
 
+            /** 로그인 정보를 알람 처리한다. **/
+            HashMap<String, Object> alarmHashMap = new HashMap<String, Object>();
+            alarmHashMap.put("USER_ID", userInfo.get("USER_ID"));
+            alarmHashMap.put("EQUIP_SEQ", machineInfo.get("EQUIP_SEQ"));
+            simpMessagingTemplate.convertAndSend("/topic/worker", getNotificationUserMessage(alarmHashMap, ActionType.WK_LOGIN));
+
             /** 최종 Session 에 저장되는 정보 **/
             drawingInfo.put("userInfo", userInfo);
-
         }
 
         /** 장비 정보를 기초로 최근 작업정보 **/
@@ -198,6 +215,13 @@ public class DrawingBoardController {
 
         drawingBoardService.managerDrawingBoardStart(hashMap);
 
+        HashMap<String, Object> alarmHashMap = new HashMap<String, Object>();
+        alarmHashMap.put("CONTROL_SEQ", hashMap.get("CONTROL_SEQ"));
+        alarmHashMap.put("CONTROL_DETAIL_SEQ", hashMap.get("CONTROL_DETAIL_SEQ"));
+        alarmHashMap.put("MCT_WORK_SEQ", hashMap.get("MCT_WORK_SEQ"));
+        alarmHashMap.put("EQUIP_SEQ", machineInfo.get("EQUIP_SEQ"));
+        simpMessagingTemplate.convertAndSend("/topic/drawing", getNotificationMessage(alarmHashMap, ActionType.DB_START, "가공시작"));
+
         return "jsonView";
     }
 
@@ -215,6 +239,13 @@ public class DrawingBoardController {
         hashMap.put("userInfo", userInfo);
 
         drawingBoardService.managerDrawingBoardPause(hashMap);
+
+        HashMap<String, Object> alarmHashMap = new HashMap<String, Object>();
+        alarmHashMap.put("CONTROL_SEQ", hashMap.get("CONTROL_SEQ"));
+        alarmHashMap.put("CONTROL_DETAIL_SEQ", hashMap.get("CONTROL_DETAIL_SEQ"));
+        alarmHashMap.put("MCT_WORK_SEQ", hashMap.get("MCT_WORK_SEQ"));
+        alarmHashMap.put("EQUIP_SEQ", machineInfo.get("EQUIP_SEQ"));
+        simpMessagingTemplate.convertAndSend("/topic/drawing", getNotificationMessage(alarmHashMap, ActionType.DB_PAUSE, "일시정지"));
 
         return "jsonView";
     }
@@ -234,6 +265,13 @@ public class DrawingBoardController {
 
         drawingBoardService.managerDrawingBoardRestart(hashMap);
 
+        HashMap<String, Object> alarmHashMap = new HashMap<String, Object>();
+        alarmHashMap.put("CONTROL_SEQ", hashMap.get("CONTROL_SEQ"));
+        alarmHashMap.put("CONTROL_DETAIL_SEQ", hashMap.get("CONTROL_DETAIL_SEQ"));
+        alarmHashMap.put("MCT_WORK_SEQ", hashMap.get("MCT_WORK_SEQ"));
+        alarmHashMap.put("EQUIP_SEQ", machineInfo.get("EQUIP_SEQ"));
+        simpMessagingTemplate.convertAndSend("/topic/drawing", getNotificationMessage(alarmHashMap, ActionType.DB_RESTART, "작업재개"));
+
         return "jsonView";
     }
 
@@ -251,6 +289,13 @@ public class DrawingBoardController {
         hashMap.put("userInfo", userInfo);
 
         drawingBoardService.managerDrawingBoardComplete(hashMap);
+
+        HashMap<String, Object> alarmHashMap = new HashMap<String, Object>();
+        alarmHashMap.put("CONTROL_SEQ", hashMap.get("CONTROL_SEQ"));
+        alarmHashMap.put("CONTROL_DETAIL_SEQ", hashMap.get("CONTROL_DETAIL_SEQ"));
+        alarmHashMap.put("MCT_WORK_SEQ", hashMap.get("MCT_WORK_SEQ"));
+        alarmHashMap.put("EQUIP_SEQ", machineInfo.get("EQUIP_SEQ"));
+        simpMessagingTemplate.convertAndSend("/topic/drawing", getNotificationMessage(alarmHashMap, ActionType.DB_COMPLETE, "작업완료"));
 
         return "jsonView";
     }
@@ -270,7 +315,67 @@ public class DrawingBoardController {
 
         drawingBoardService.managerDrawingBoardCancel(hashMap);
 
+        HashMap<String, Object> alarmHashMap = new HashMap<String, Object>();
+        alarmHashMap.put("CONTROL_SEQ", hashMap.get("CONTROL_SEQ"));
+        alarmHashMap.put("CONTROL_DETAIL_SEQ", hashMap.get("CONTROL_DETAIL_SEQ"));
+        alarmHashMap.put("MCT_WORK_SEQ", hashMap.get("MCT_WORK_SEQ"));
+        alarmHashMap.put("EQUIP_SEQ", machineInfo.get("EQUIP_SEQ"));
+        simpMessagingTemplate.convertAndSend("/topic/drawing", getNotificationMessage(alarmHashMap, ActionType.DB_CANCEL, "작업취소"));
+
         return "jsonView";
+    }
+
+    private NotificationMessage getNotificationMessage(HashMap<String, Object> hashMap, ActionType actionType, String CONTEXT03) throws Exception{
+
+        hashMap.put("queryId", "common.selectAlarmControlInformation");
+        Map<String, Object> alarmInfo = this.innodaleService.getInfo(hashMap);
+
+        NotificationMessage notificationMessage = new NotificationMessage();
+
+        notificationMessage.setType(MessageType.DRAWING);
+        notificationMessage.setActionType(actionType);
+        notificationMessage.setContent01((String) alarmInfo.get("CONTEXT01"));
+        notificationMessage.setContent02((String) alarmInfo.get("CONTEXT02"));
+        notificationMessage.setContent03(CONTEXT03);
+
+        getNotificationEquipMessage(notificationMessage, alarmInfo);
+
+        return notificationMessage;
+    }
+
+    private NotificationMessage getNotificationUserMessage(HashMap<String, Object> hashMap, ActionType actionType) throws Exception{
+
+        hashMap.put("queryId", "common.selectAlarmUserInformation");
+        Map<String, Object> alarmInfo = this.innodaleService.getInfo(hashMap);
+
+        NotificationMessage notificationMessage = new NotificationMessage();
+
+        /** 사용자 정보 셋팅 */
+        notificationMessage.setType(MessageType.WORKER);
+        notificationMessage.setActionType(actionType);
+        notificationMessage.setUserNm((String) alarmInfo.get("USER_NM"));
+        notificationMessage.setUserId((String) alarmInfo.get("USER_ID"));
+        notificationMessage.setUserImageSeq((int) alarmInfo.get("PHOTO_GFILE_SEQ"));
+
+        getNotificationEquipMessage(notificationMessage, alarmInfo);
+
+        return notificationMessage;
+    }
+
+    private void getNotificationEquipMessage(NotificationMessage notificationMessage, Map<String, Object> alarmInfo) throws Exception{
+        /** 머신 정보 셋팅 **/
+        notificationMessage.setContent04("(" + (String) alarmInfo.get("EQUIP_NM") + ")");
+        notificationMessage.setEquipSeq((int) alarmInfo.get("EQUIP_SEQ"));
+        notificationMessage.setEquipId( (String) alarmInfo.get("EQUIP_ID"));
+        notificationMessage.setEquipNm( (String) alarmInfo.get("EQUIP_NM"));
+        notificationMessage.setEquipCol((int) alarmInfo.get("LAYOUT_COL"));
+        notificationMessage.setEquipRow((int) alarmInfo.get("LAYOUT_ROW"));
+        notificationMessage.setEquipPosition((int) alarmInfo.get("LAYOUT_SORT"));
+        notificationMessage.setFactoryArea((String) alarmInfo.get("FACTORY_AREA"));
+
+        if(alarmInfo.containsKey("WORK_MINUTE"))
+            notificationMessage.setsMinute((int) alarmInfo.get("WORK_MINUTE"));
+
     }
 
 }

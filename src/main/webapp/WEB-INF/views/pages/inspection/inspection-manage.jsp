@@ -715,7 +715,7 @@
             // }, parameters, '');
             $("#inspection_manage_pop_form").find("#queryId").val("inspection.insertInspectionMaster");
 
-            let parameters = {'url': '/json-create', 'data': $("#inspection_manage_pop_form").serialize() };
+            let parameters = {'url': '/inspectionCreate', 'data': $("#inspection_manage_pop_form").serialize() };
             $(this).startWaitMe();
             fnPostAjax(function (data, callFunctionParam) {
                 $(this).stopWaitMe();

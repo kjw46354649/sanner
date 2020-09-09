@@ -1313,19 +1313,18 @@
 	 *
 	 */
 	const fnAlert = function (title, message, onok) {
-		alertify.alert()
-			.setting({
-				'title': title,
-				'message': message,
-				'onok': onok,
-				'movable': false,
-				'transitionOff': true
-			}).show();
+		alertify.alert().setting({
+			'title': title,
+			'message': message,
+			'onok': onok,
+			'movable': false,
+			'transitionOff': true
+		}).show();
 	};
 
 	$(function () {
 
-		let getData = function () {
+		let getInitData = function () {
 			'use strict';
 
 			$.ajax({
@@ -1402,14 +1401,9 @@
 							let part_qty = ( mct_list[i].PART_QTY != undefined ) ? mct_list[i].PART_QTY : '' ;
 							let working_time_info = ( mct_list[i].WORKING_TIME_INFO != undefined ) ? mct_list[i].WORKING_TIME_INFO : '' ;
 							let plan_working_time_info =( mct_list[i].PLAN_WORKING_TIME_INFO != undefined ) ? mct_list[i].PLAN_WORKING_TIME_INFO : '' ;
-
 							let imageSeq =( mct_list[i].IMG_GFILE_SEQ != undefined ) ? mct_list[i].IMG_GFILE_SEQ : '' ;
-
 							let $target = $("#" + factory_area + "_" + layout_row + "_" + layout_col);
 
-							// console.log("#" + factory_area + "_" + layout_row + "_" + layout_col + " " + control_part_info);
-
-							// $target.find(".inBox:nth-child(2)").html(user_nm);
 							$target.find(".inBox:nth-child(3)").find('div:nth-child(1)').html(total_cnt_info + '&nbsp;' + total_part_qty_info);
 							$target.find(".inBox:nth-child(3)").find('div:nth-child(2)').html(total_plan_working_time_info);
 
@@ -1438,7 +1432,6 @@
 							}
 
 						}
-
 						//현재 가동중인게 없을경우 넣어준다 공간. 색 다르게
 						$('.statusConts').each(function () {
 							if($(this).find(".statusConts").find('.inWrap').length >= 4){
@@ -1565,58 +1558,195 @@
 			});
 		};
 
-		let setPopData = function (popPosition, liInfo, totalCnt) {
-			if (popPosition != "") {
-				let maxCnt = $("#" + popPosition).attr("data-cnt");
-				let targetCnt = $("#" + popPosition).find("li").length;
-				if (maxCnt > targetCnt) {
-					$("#" + popPosition).append("<li class=\"ellipsis\">" + liInfo + "</li>jung67");
+		let getTableData = function () {
+			'use strict';
+
+			$.ajax({
+				type: 'POST', url: "/tv/mct/gridDataList", dataType: 'json', data: {},
+				success: function (data, textStatus, jqXHR) {
+					if (textStatus !== 'success' || data == null) {
+						fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.2");
+						return;
+					}
+					let grid_list1 = data.grid_list1;//불량/반품
+					let grid_list2 = data.grid_list2;//긴급주문
+					let grid_list3 = data.grid_list3;//납기지연목록
+
+					$("#grid1").empty();
+					$("#grid2").empty();
+					$("#grid3").empty();
+
+					if (grid_list1 != '') {
+						let totalCount = 0;
+						for (let i = 0; i < grid_list1.length; i++) {
+							totalCount = grid_list1[i].TOTAL_COUNT;
+							let inspect_dt = grid_list1[i].INSPECT_DT == undefined ? "" : grid_list1[i].INSPECT_DT;
+							let order_comp_nm = grid_list1[i].ORDER_COMP_NM == undefined ? "" : grid_list1[i].ORDER_COMP_NM;
+							let control_part_info = grid_list1[i].CONTROL_PART_INFO == undefined ? "" : grid_list1[i].CONTROL_PART_INFO;
+							let error_type = grid_list1[i].ERROR_TYPE == undefined ? "" : grid_list1[i].ERROR_TYPE;
+							let error_qty_info = grid_list1[i].ERROR_QTY_INFO == undefined ? "" : grid_list1[i].ERROR_QTY_INFO;
+							let inner_due_dt = grid_list1[i].INNER_DUE_DT == undefined ? "" : grid_list1[i].INNER_DUE_DT;
+							let inspect_result_nm = grid_list1[i].INSPECT_RESULT_NM == undefined ? "" : grid_list1[i].INSPECT_RESULT_NM;
+							let error_action_nm = grid_list1[i].ERROR_ACTION_NM == undefined ? "" : grid_list1[i].ERROR_ACTION_NM;
+
+							let grid1Html = '<tr>';
+								grid1Html += '<td>' + (i+1) +'</td>';
+								grid1Html += '<td>'+ inspect_dt + '</td>';
+								grid1Html += '<td>'+ order_comp_nm + '</td>';
+								grid1Html += '<td class="alignLeft ellipsis">'+ control_part_info + '</td>';
+								grid1Html += '<td class="txtR">'+ error_type + '</td>';
+								grid1Html += '<td class="txtR">'+ error_qty_info + '</td>';
+								grid1Html += '<td>'+ inner_due_dt + '</td>';
+								grid1Html += '<td>'+ inspect_result_nm + '</td>';
+								grid1Html += '<td class="ellipsis">'+ error_action_nm + '</td>';
+								grid1Html += '</tr>';
+
+							$("#grid1").append(grid1Html);
+							if((i+1) == 5){
+								break;
+							}
+						}
+						$("#grid1_total").html("(total: " + totalCount + ")");
+					} else {
+						for (let i = 0; i < 5; i++) {
+							let grid1Html = '<tr><td colspan="8"></td></tr>';
+							$("#grid1").append(grid1Html);
+						}
+						$("#grid1_total").html("(total: 0)");
+					}
+
+					if (grid_list2 != '') {
+						let totalCount = 0;
+						for (let i = 0; i < grid_list2.length; i++) {
+							totalCount = grid_list2[i].TOTAL_COUNT;
+							let inner_due_dt = grid_list2[i].INNER_DUE_DT == undefined ? "" : grid_list2[i].INNER_DUE_DT;
+							let order_comp_nm = grid_list2[i].ORDER_COMP_NM == undefined ? "" : grid_list2[i].ORDER_COMP_NM;
+							let control_part_info = grid_list2[i].CONTROL_PART_INFO == undefined ? "" : grid_list2[i].CONTROL_PART_INFO;
+							let control_part_qty_info = grid_list2[i].CONTROL_PART_QTY_INFO == undefined ? "" : grid_list2[i].CONTROL_PART_QTY_INFO;
+							let part_status_nm = grid_list2[i].PART_STATUS_NM == undefined ? "" : grid_list2[i].PART_STATUS_NM;
+							let pop_position_nm = grid_list2[i].POP_POSITION_NM == undefined ? "" : grid_list2[i].POP_POSITION_NM;
+
+							let grid2Html = '<tr>';
+								grid2Html += '<td>' + (i+1) +'</td>';
+								grid2Html += '<td class="txtR bold">'+ inner_due_dt + '</td>';
+								grid2Html += '<td class="ellipsis">'+ order_comp_nm + '</td>';
+								grid2Html += '<td class="alignLeft ellipsis">'+ control_part_info + '</td>';
+								grid2Html += '<td>'+ control_part_qty_info + '</td>';
+								grid2Html += '<td class="ellipsis">'+ part_status_nm + '</td>';
+								grid2Html += '<td>'+ pop_position_nm + '</td>';
+								grid2Html += '</tr>';
+
+							$("#grid2").append(grid2Html);
+							if((i+1) == 5){
+								break;
+							}
+						}
+						$("#grid2_total").html("(total: " + totalCount + ")");
+					}  else {
+						for (let i = 0; i < 5; i++) {
+							let grid2Html = '<tr><td colspan="8"></td></tr>';
+							$("#grid2").append(grid2Html);
+						}
+						$("#grid2_total").html("(total: 0)");
+					}
+
+					if (grid_list3 != '') {
+						let totalCount = 0;
+						for (let i = 0; i < grid_list3.length; i++) {
+
+							totalCount = grid_list3[i].TOTAL_COUNT;
+							let inner_due_dt = grid_list3[i].INNER_DUE_DT == undefined ? "" : grid_list3[i].INNER_DUE_DT;
+							let order_comp_nm = grid_list3[i].ORDER_COMP_NM == undefined ? "" : grid_list3[i].ORDER_COMP_NM;
+							let control_part_info = grid_list3[i].CONTROL_PART_INFO == undefined ? "" : grid_list3[i].CONTROL_PART_INFO;
+							let control_part_qty_info = grid_list3[i].CONTROL_PART_QTY_INFO == undefined ? "" : grid_list3[i].CONTROL_PART_QTY_INFO;
+							let part_status_nm = grid_list3[i].PART_STATUS_NM == undefined ? "" : grid_list3[i].PART_STATUS_NM;
+							let charge_user_nm = grid_list3[i].CHARGE_USER_NM == undefined ? "" : grid_list3[i].CHARGE_USER_NM;
+
+							let grid3Html = '<tr>';
+								grid3Html += '<td>' + (i+1) +'</td>';
+								grid3Html += '<td class="txtR bold">'+ inner_due_dt + '</td>';
+								grid3Html += '<td class="alignLeft ellipsis">'+ order_comp_nm + '</td>';
+								grid3Html += '<td class="alignLeft ellipsis">'+ control_part_info + '</td>';
+								grid3Html += '<td>'+ control_part_qty_info + '</td>';
+								grid3Html += '<td>'+ part_status_nm + '</td>';
+								grid3Html += '<td>'+ charge_user_nm + '</td>';
+								grid3Html += '</tr>';
+							$("#grid3").append(grid3Html);
+							if((i+1) == 5){
+								break;
+							}
+						}
+						$("#grid3_total").html("(total: " + totalCount + ")");
+					} else {
+						for (let i = 0; i < 5; i++) {
+							let grid3Html = '<tr><td colspan="8"></td></tr>';
+							$("#grid3").append(grid3Html);
+						}
+						$("#grid3_total").html("(total: 0)");
+					}
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.");
 				}
-				$("#CNT_" + popPosition).html(totalCnt);
-			}
+			});
 		};
 
+		// function jmesConnect() {
+		//     let socket = new SockJS('/jmes-ws');
+		//     stompClient = Stomp.over(socket);
+		//     stompClient.connect({}, function (frame) {
+		//         console.log('Connected: ' + frame);
+		// 		stompClient.subscribe('/topic/drawing', function (notificationMessage) {
+		// 			let messageData = JSON.parse(notificationMessage.body);
+        //             console.log(messageData);
+		// 			// drawingMessageProcess(messageData);
+		// 		});
+		// 		stompClient.subscribe('/topic/worker', function (notificationMessage) {
+		// 			let messageData = JSON.parse(notificationMessage.body);
+        //             console.log(messageData);
+		// 			// workerMessageProcess(messageData);
+		// 		});
+		//     });
+		// }
 
 		let setIntervalTimer;
 		let timer = function(){
 			// let selVal = 60;//1분
-			let selVal = 30;//1분
+			let selVal = 60;//1분
 			let timesec = 1000;//1초
 			setIntervalTimer = setInterval(function() {
-				getData();
+				getInitData();
 			}, timesec*selVal);
 		};
 
-		getData();
+		getInitData();
 		timer();
 
 		$(document).on('click', 'a[href="#a;"]', function(e){
 			e.preventDefault();
 		});
 
-		Date.prototype.format = function (f) {
-			if (!this.valueOf()) return ' ';
-
-			let d = this;
-
-			return f.replace(/(Y|c|e)/gi, function ($1) {
-				switch ($1) {
-					case 'Y':
-						return d.getFullYear(); // Year with 4 digits.
-					case "c":
-						return d.getMonth() + 1; // Month with 1 or 2 digits.
-					case "e":
-						return d.getDate(); // Day with 1 or 2 digits.
-					default:
-						return $1;
-				}
-			});
-		};
-
-		const TODAY = new Date();
-		const TWO_DAYS_LATER = new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate() + 2);
-
-		$('.tblDate').html(TODAY.format('Y/c/e') + '~' + TWO_DAYS_LATER.format('c/e'));
+		// Date.prototype.format = function (f) {
+		// 	if (!this.valueOf()) return ' ';
+		// 	let d = this;
+		// 	return f.replace(/(Y|c|e)/gi, function ($1) {
+		// 		switch ($1) {
+		// 			case 'Y':
+		// 				return d.getFullYear(); // Year with 4 digits.
+		// 			case "c":
+		// 				return d.getMonth() + 1; // Month with 1 or 2 digits.
+		// 			case "e":
+		// 				return d.getDate(); // Day with 1 or 2 digits.
+		// 			default:
+		// 				return $1;
+		// 		}
+		// 	});
+		// };
+		//
+		// const TODAY = new Date();
+		// const TWO_DAYS_LATER = new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate() + 2);
+		//
+		// $('.tblDate').html(TODAY.format('Y/c/e') + '~' + TWO_DAYS_LATER.format('c/e'));
 	});
 </script>
 </body>

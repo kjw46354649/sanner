@@ -235,6 +235,7 @@
          		AND A.DEL_YN = 'N'
         ) X
    </select>
+
    <select id="selectBarcodePrintOutCheck" parameterType="java.util.HashMap" resultType="java.util.HashMap">
        SELECT
         CASE WHEN A.PACKING_NUM = (SELECT B.PACKING_CNT FROM jmes.TBL_CONTROL_PART_ORDER B WHERE B.CONTROL_SEQ = A.CONTROL_SEQ  AND B.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND B.ORDER_SEQ = A.ORDER_SEQ ) THEN 'Y' ELSE 'N' END AS USE_YN
@@ -242,6 +243,47 @@
        WHERE A.BARCODE_NUM = #{BARCODE_NUM}
        AND A.DEL_YN = 'N'
    </select>
+
+    <select id="selectAlarmInspectionInformation" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            CONCAT('[', DATE_FORMAT(NOW(), '%m/%d %H:%i:%s'), '] ') AS CONTEXT01,
+            CONCAT(B.CONTROL_NUM, CASE WHEN A.PART_NUM IS NOT NULL THEN CONCAT(' #', A.PART_NUM) ELSE SPACE(0) END) AS CONTEXT02,
+            '검사완료' AS CONTEXT03,
+            CONCAT('등급 ', SF_GET_CODE_NM(1040, #{INSPECT_GRADE}, #{LOGIN_LOCALE})) AS CONTEXT04
+        FROM TBL_CONTROL_PART A
+            INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+        WHERE 1 = 1
+            AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </select>
+
+    <select id="selectAlarmControlInformation" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            CONCAT('[', DATE_FORMAT(NOW(), '%m/%d %H:%i:%s'), '] ') AS CONTEXT01,
+            CONCAT(B.CONTROL_NUM, CASE WHEN A.PART_NUM IS NOT NULL THEN CONCAT(' #', A.PART_NUM) ELSE SPACE(0) END) AS CONTEXT02,
+            D.EQUIP_SEQ, D.EQUIP_ID, D.EQUIP_NM, D.LAYOUT_COL, D.LAYOUT_ROW, D.LAYOUT_SORT, D.FACTORY_AREA,
+            IFNULL(SF_GET_DRAWING_WORK_TIME('W_MINUTE', #{MCT_WORK_SEQ}), 0) AS WORK_MINUTE
+        FROM TBL_CONTROL_PART A
+            INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            LEFT OUTER JOIN (SELECT #{CONTROL_SEQ} AS CONTROL_SEQ, C.EQUIP_SEQ, C.EQUIP_ID, C.EQUIP_NM, C.LAYOUT_COL, C.LAYOUT_ROW, C.LAYOUT_SORT, C.FACTORY_AREA
+                FROM TBL_EQUIP C WHERE C.EQUIP_SEQ = #{EQUIP_SEQ} AND C.DEL_YN = 'N'
+            ) D ON D.CONTROL_SEQ = A.CONTROL_SEQ
+        WHERE 1 = 1
+            AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </select>
+
+    <select id="selectAlarmUserInformation" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.USER_ID, A.USER_NM, A.PHOTO_GFILE_SEQ,
+            D.EQUIP_SEQ, D.EQUIP_ID, D.EQUIP_NM, D.LAYOUT_COL, D.LAYOUT_ROW, D.LAYOUT_SORT, D.FACTORY_AREA
+        FROM TBL_USER A
+            LEFT OUTER JOIN (SELECT #{USER_ID} AS USER_ID, C.EQUIP_SEQ, C.EQUIP_ID, C.EQUIP_NM, C.LAYOUT_COL, C.LAYOUT_ROW, C.LAYOUT_SORT, C.FACTORY_AREA
+                FROM TBL_EQUIP C WHERE C.EQUIP_SEQ = #{EQUIP_SEQ} AND C.DEL_YN = 'N'
+            ) D ON D.USER_ID = A.USER_ID
+        WHERE 1=1
+            AND A.USER_ID = #{USER_ID}
+    </select>
 
 
 </mapper>

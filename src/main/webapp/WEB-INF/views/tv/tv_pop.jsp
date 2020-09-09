@@ -24,9 +24,12 @@
 
     <script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
-
 	<!-- alertify -->
 	<script type="text/javascript" src='/resource/plugins/alertifyjs/alertify.js'></script>
+
+	<!-- socket -->
+	<script type="text/javascript" src='/resource/plugins/socket/sockjs.min.js'></script>
+	<script type="text/javascript" src='/resource/plugins/stomp/stomp.min.js'></script>
 </head>
 <body>
 	<div class="bodyWrap">
@@ -93,21 +96,7 @@
 														<span class="f_txt">POP</span>
 														<span class="s_txt">대형MCT(<sapn id="CNT_POP030">0</sapn>)</span>
 													</div>
-													<ul id="POP030" data-cnt="12">
-														<%--<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>
-														<li>C19-625-0799-001</li>--%>
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-0011234</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>319-625-0799-001</li>-->
-
-													</ul>
+													<ul id="POP030" data-cnt="12"></ul>
 												</div>
 											</li>
 										</ul>
@@ -231,20 +220,7 @@
 														<span class="f_txt">POP</span>
 														<span class="s_txt" >소형MCT1(<sapn id="CNT_POP010">0</sapn>)</span>
 													</div>
-													<ul id="POP010" data-cnt="12">
-													<%--	<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>
-														<li>C19-625-0799-001</li>--%>
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-0011234</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>319-625-0799-001</li>-->
-													</ul>
+													<ul id="POP010" data-cnt="12"></ul>
 												</div>
 											</li>
 											<li class="p_col" style="width: 240px;">
@@ -317,20 +293,7 @@
 														<span class="f_txt">POP</span>
 														<span class="s_txt">소형MCT2(<sapn id="CNT_POP020">0</sapn>)</span>
 													</div>
-													<ul id="POP020" data-cnt="12">
-														<%--<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>--%>
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-0011234</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>319-625-0799-001</li>-->
-													</ul>
+													<ul id="POP020" data-cnt="12"></ul>
 												</div>
 											</li>
 										</ul>
@@ -459,27 +422,7 @@
 														<span class="f_txt">POP</span>
 														<span class="s_txt" >후가공(<sapn id="CNT_POP150">0</sapn>)</span>
 													</div>
-													<ul id="POP150" data-cnt="19">
-														<%--<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>
-														<li>C19-625-0799-001</li>--%>
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-0011234</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-0011234</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-0011234</li>-->
-<!--														<li>C19-625-0799-0011234</li>-->
-													</ul>
+													<ul id="POP150" data-cnt="19"></ul>
 												</div>
 											</li>
 										</ul>
@@ -490,27 +433,7 @@
 														<span class="f_txt">POP</span>
 														<span class="s_txt" >표면처리(<sapn id="CNT_POP160">0</sapn>)</span>
 													</div>
-													<ul id="POP160" data-cnt="19">
-														<%--<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>--%>
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-0011234</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-0011234</li>-->
-<!--														<li>C19-625-0799-0011234</li>-->
-													</ul>
+													<ul id="POP160" data-cnt="19"></ul>
 												</div>
 											</li>
 										</ul>
@@ -521,27 +444,7 @@
 <!--														<span class="f_txt">POP</span>-->
 														<span class="s_txt" style="width: 239px;">외주진행(<sapn id="CNT_POP9991">0</sapn>)</span>
 													</div>
-													<ul id="POP9991" data-cnt="19">
-													<%--	<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>
-														<li>C19-625-0799-0011234</li>--%>
-													</ul>
+													<ul id="POP9991" data-cnt="19"></ul>
 												</div>
 											</li>
 										</ul>
@@ -611,27 +514,7 @@
 														<span class="f_txt">POP</span>
 														<span class="s_txt">선반/연마실(<sapn id="CNT_POP060">0</sapn>)</span>
 													</div>
-													<ul id="POP060" data-cnt="20">
-													<%--	<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>
-														<li>C19-625-0799-001</li>
-														<li>319-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>
-														<li>C19-625-0799-001</li>--%>
-<!--														<li>319-625-0799-001</li>-->
-<!--														<li>C19-625-0799-0011234</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>319-625-0799-001</li>-->
-<!--														<li>C19-625-0799-0011234</li>-->
-													</ul>
+													<ul id="POP060" data-cnt="20"></ul>
 												</div>
 											</li>
 										</ul>
@@ -794,28 +677,7 @@
 														<span class="f_txt">POP</span>
 														<span class="s_txt"  >사상(<sapn id="CNT_POP050">0</sapn>)</span>
 													</div>
-													<ul id="POP050" data-cnt="19">
-														<%--<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>
-														<li>C19-625-0799-001</li>
-														<li>319-625-0799-001</li>--%>
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-0011234</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>319-625-0799-001</li>-->
-
-													</ul>
+													<ul id="POP050" data-cnt="19"></ul>
 												</div>
 											</li>
 										</ul>
@@ -864,20 +726,7 @@
 														<span class="f_txt">POP</span>
 														<span class="s_txt" >밀링(<sapn id="CNT_POP040">0</sapn>)</span>
 													</div>
-													<ul id="POP040" data-cnt="12">
-													<%--	<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>--%>
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-0011234</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-													</ul>
+													<ul id="POP040" data-cnt="12"></ul>
 												</div>
 											</li>
 										</ul>
@@ -985,13 +834,7 @@
 														<span class="f_txt">POP</span>
 														<span class="s_txt">JST(<sapn id="CNT_POP080">0</sapn>)</span>
 													</div>
-													<ul id="POP080" data-cnt="5">
-														<%--<li>이건 몇번?????</li>
-														<li>C19-625-0799-001</li>--%>
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-													</ul>
+													<ul id="POP080" data-cnt="5"></ul>
 												</div>
 											</li>
 										</ul>
@@ -1054,27 +897,7 @@
 														<span class="f_txt">POP</span>
 														<span class="s_txt">DMT(<sapn id="CNT_POP090">0</sapn>)</span>
 													</div>
-													<ul id="POP090" data-cnt="19">
-													<%--	<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>
-														<li>C19-625-0799-001</li>
-														<li>319-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>--%>
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-0011234</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>319-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-													</ul>
+													<ul id="POP090" data-cnt="19"></ul>
 												</div>
 											</li>
 										</ul>
@@ -1159,44 +982,7 @@
 							<li class="twoDepthIB pro27">
 								<div class="alarm">
 									<h2>Event Alarm</h2>
-									<ul id="alarm_list">
-										<%--<li class="alarmList">
-											<span class="dateTxt">[02/10 14:30:42]</span>
-											<span class="progressTxt ellipsis"><b>검사 완료 (등급 C) </b> : C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)</span>
-										</li>
-										<li class="alarmList">
-											<span class="dateTxt">[02/10 14:30:42]</span>
-											<span class="progressTxt ellipsis"><b>검사 완료 (등급 C) </b> : C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)</span>
-										</li>
-										<li class="alarmList">
-											<span class="dateTxt">[02/10 14:30:42]</span>
-											<span class="progressTxt ellipsis"><b>검사 완료 (등급 C) </b> : C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)</span>
-										</li>
-										<li class="alarmList">
-											<span class="dateTxt">[02/10 14:30:42]</span>
-											<span class="progressTxt ellipsis"><b>검사 완료 (등급 C) </b> : C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)</span>
-										</li>
-										<li class="alarmList">
-											<span class="dateTxt">[02/10 14:30:42]</span>
-											<span class="progressTxt ellipsis"><b>검사 완료 (등급 C) </b> : C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)</span>
-										</li>
-										<li class="alarmList">
-											<span class="dateTxt">[02/10 14:30:42]</span>
-											<span class="progressTxt ellipsis"><b>검사 완료 (등급 C) </b> : C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)</span>
-										</li>
-										<li class="alarmList">
-											<span class="dateTxt">[02/10 14:30:42]</span>
-											<span class="progressTxt ellipsis"><b>검사 완료 (등급 C) </b> : C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)</span>
-										</li>
-										<li class="alarmList">
-											<span class="dateTxt">[02/10 14:30:42]</span>
-											<span class="progressTxt ellipsis"><b>검사 완료 (등급 C) </b> : C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)</span>
-										</li>
-										<li class="alarmList">
-											<span class="dateTxt">[02/10 14:30:42]</span>
-											<span class="progressTxt ellipsis"><b>검사 완료 (등급 C) </b> : C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)C19-625-0793-15 (35 EA)</span>
-										</li>--%>
-									</ul>
+									<ul id="alarm_list"></ul>
 								</div>
 							</li>
 							<!--3줄 1단 이벤트 알람 마지막 -->
@@ -1236,25 +1022,7 @@
 														<span class="f_txt">POP</span>
 														<span class="s_txt">정밀MCT(<sapn id="CNT_POP070">0</sapn>)</span>
 													</div>
-													<ul id="POP070" data-cnt="17">
-													<%--	<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-0011234</li>
-														<li>C19-625-0799-001</li>--%>
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-0011234</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-													</ul>
+													<ul id="POP070" data-cnt="17"></ul>
 												</div>
 											</li>
 										</ul>
@@ -1301,14 +1069,7 @@
 														<span class="f_txt">POP</span>
 														<span class="s_txt">교정/마감실(<sapn id="CNT_POP130">0</sapn>)</span>
 													</div>
-													<ul id="POP130" data-cnt="6">
-														<%--<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>--%>
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-													</ul>
+													<ul id="POP130" data-cnt="6"></ul>
 												</div>
 											</li>
 											<li class="p_col">
@@ -1317,14 +1078,7 @@
 														<span class="f_txt">POP</span>
 														<span class="s_txt">교면교정장(<sapn id="CNT_POP140">0</sapn>)</span>
 													</div>
-													<ul id="POP140" data-cnt="6">
-														<%--<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>--%>
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-													</ul>
+													<ul id="POP140" data-cnt="6"></ul>
 												</div>
 											</li>
 										</ul>
@@ -1344,12 +1098,7 @@
 														<span class="f_txt">POP</span>
 														<span class="s_txt">2층창고(<sapn id="CNT_POP170">0</sapn>)</span>
 													</div>
-													<ul id="POP170" data-cnt="4">
-													<%--	<li>이건 몇번?????</li>
-														<li>C19-625-0799-001</li>--%>
-<!--														<li>C19-625-0799-0011234</li>-->
-<!--														<li>C19-625-0799-0011234</li>-->
-													</ul>
+													<ul id="POP170" data-cnt="4"></ul>
 												</div>
 											</li>
 										</ul>
@@ -1374,25 +1123,7 @@
 														<span class="f_txt">POP</span>
 														<span class="s_txt">출하대기장(<sapn id="CNT_POP110">0</sapn>)</span>
 													</div>
-													<ul id="POP110" data-cnt="17">
-														<%--<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>--%>
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-													</ul>
+													<ul id="POP110" data-cnt="17"></ul>
 												</div>
 											</li>
 											<li class="p_col" style="width: 48.0%">
@@ -1401,25 +1132,7 @@
 														<span class="f_txt">POP</span>
 														<span class="s_txt">출하대기장(<sapn id="CNT_POP120">0</sapn>)</span>
 													</div>
-													<ul id="POP120" data-cnt="17">
-<%--														<li>C19-625-0799-001</li>--%>
-<%--														<li>C19-625-0799-001</li>--%>
-<%--														<li>C19-625-0799-001</li>--%>
-<%--														<li>C19-625-0799-001</li>--%>
-<%--														<li>C19-625-0799-001</li>--%>
-<%--														<li>C19-625-0799-001</li>--%>
-<%--														<li>C19-625-0799-001</li>--%>
-<%--														<li>C19-625-0799-001</li>--%>
-<%--														<li>C19-625-0799-001</li>--%>
-<%--														<li>C19-625-0799-001</li>--%>
-<%--														<li>C19-625-0799-001</li>--%>
-<%--														<li>C19-625-0799-001</li>--%>
-<%--														<li>C19-625-0799-001</li>--%>
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-													</ul>
+													<ul id="POP120" data-cnt="17"></ul>
 												</div>
 											</li>
 										</ul>
@@ -1445,52 +1158,15 @@
 														<span class="f_txt">POP</span>
 														<span class="s_txt">검사실(<sapn id="CNT_POP100">0</sapn>)</span>
 													</div>
-													<ul id="POP100" data-cnt="17">
-														<%--<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>--%>
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-													</ul>
+													<ul id="POP100" data-cnt="17"></ul>
 												</div>
 											</li>
 											<li class="p_col" style="width: 48.0%">
 												<div class="list" style="height: 516px">
 													<div class="titleWrap">
-<!--														<span class="f_txt">&nbsp;</span>-->
 														<span class="s_txt" style="width: 239px;">소재대기(<sapn id="CNT_POP9992">0</sapn>)</span>
 													</div>
-													<ul id="POP9992" data-cnt="17">
-														<%--<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>
-														<li>C19-625-0799-001</li>--%>
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-<!--														<li>C19-625-0799-001</li>-->
-													</ul>
+													<ul id="POP9992" data-cnt="17"></ul>
 												</div>
 											</li>
 										</ul>
@@ -1518,29 +1194,25 @@
 	 *
 	 */
 	const fnAlert = function (title, message, onok) {
-		alertify.alert()
-			.setting({
-				'title': title,
-				'message': message,
-				'onok': onok,
-				'movable': false,
-				'transitionOff': true
-			}).show();
+		alertify.alert().setting({
+			'title': title,
+			'message': message,
+			'onok': onok,
+			'movable': false,
+			'transitionOff': true
+		}).show();
 	};
 
 	$(function () {
-		let getData = function () {
+
+		let getInitData = function () {
 			'use strict';
 
 			$.ajax({
 				type: 'POST', url: "/tv/pop/data", dataType: 'json',
 				data: {},
 				success: function (data, textStatus, jqXHR) {
-					if (textStatus !== 'success') {
-						fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.3");
-						return;
-					}
-					if (data == null) {
+					if (textStatus !== 'success' || data === null) {
 						fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.2");
 						return;
 					}
@@ -1626,11 +1298,96 @@
 									$target.find(".proNum").html(working_time + "'");
 								}
 							}
-
                         }
                     }
-					//console.log(m_list);
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.");
+				}
+			});
+		};
 
+		let getWorkDrawingData = function () {
+			'use strict';
+			$.ajax({
+				type: 'POST', url: "/tv/pop/schedulerPopDrawingData", dataType: 'json', data: {},
+				success: function (data, textStatus, jqXHR) {
+					if (textStatus !== 'success' || data == null) {
+						fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.2");
+						return;
+					}
+					let pop_list2 = data.pop_list2;//소재대기
+					if (pop_list2 != '') {//소재대기
+						let pop_position = 'POP9992';
+						$("#" + pop_position).empty();
+						for (let i = 0; i < pop_list2.length; i++) {
+							let control_part_info = pop_list2[i].CONTROL_PART_INFO;
+							let total_cnt = pop_list2[i].TOTAL_CNT;
+							setPopData(pop_position, control_part_info, total_cnt);
+						}
+					}
+					let pop_list3 = data.pop_list3;//외주진행
+					if (pop_list3 != '') {//외주
+						let pop_position = 'POP9991';
+						$("#" + pop_position).empty();
+						for (let i = 0; i < pop_list3.length; i++) {
+							let control_part_info = pop_list3[i].CONTROL_PART_INFO;
+							let total_cnt = pop_list3[i].TOTAL_CNT;
+							setPopData(pop_position, control_part_info, total_cnt);
+						}
+					}
+					let m_list = data.m_list;//장비
+					$('[id^=ARE]').each(function () {
+						$(this).find(".proName").html('');
+						$(this).find(".proName").removeClass("ellipsis");
+						$(this).find(".proNum").html('');
+					});
+					if (m_list != '') {//장비
+						for (let i = 0; i < m_list.length; i++) {
+							let factory_area = m_list[i].FACTORY_AREA;
+							let layout_sort = m_list[i].LAYOUT_SORT;
+							let control_part_info = m_list[i].CONTROL_PART_INFO;
+							let working_time = m_list[i].WORKING_TIME;
+
+							let $target = $("#" + factory_area+"_"+layout_sort);
+							if($target.length > 0){
+								if(control_part_info != undefined) {
+									$target.find(".proName").addClass("ellipsis");
+									$target.find(".proName").html(control_part_info);
+								}
+								if(working_time != undefined) {
+									$target.find(".proNum").html(working_time + "'");
+								}
+							}
+						}
+					}
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.");
+				}
+			});
+		};
+
+		let getPopLocationData = function (popLocation, limit) {
+			'use strict';
+			$.ajax({
+				type: 'POST', url: "/tv/pop/popLocationData", dataType: 'json',
+				data: {"POP_POSITION":popLocation, "LIMIT":limit},
+				success: function (data, textStatus, jqXHR) {
+					if (textStatus !== 'success' || data == null) {
+						fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.2");
+						return;
+					}
+					let pop_list = data.pop_list; //pop
+					if (pop_list) {//pop
+						let pop_position = pop_list[0].POP_POSITION;
+						$("#" + pop_position).empty();
+						for (let i = 0; i < pop_list.length; i++) {
+							let control_part_info = pop_list[i].CONTROL_PART_INFO;
+							let total_cnt = pop_list[i].TOTAL_CNT;
+							setPopData(pop_position, control_part_info, total_cnt);
+						}
+					}
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.");
@@ -1647,79 +1404,104 @@
 				}
 				$("#CNT_" + popPosition).html(totalCnt);
 			}
+		};
+
+		/** 일반 알람 처리 **/
+		let alarmMessageProcess = function(messageData){
+			let maxCnt = 8;
+			if (messageData) {
+				let messBody = messageData.content02 + " -> " + messageData.content03;
+				if(messageData.content04) messBody += "     (" + messageData.content04 + ")";
+				if($(".alarmList").length > maxCnt) $(".alarmList").last().remove();
+
+				let alarmMsg  = '<li class="alarmList">';
+					alarmMsg += '	<span class="dateTxt">'+ messageData.content01 +'</span>';
+					alarmMsg += '	<span class="progressTxt ellipsis"><b>' + messBody + ' </b></span>';
+					alarmMsg += '</li>';
+				$("#alarm_list").prepend($(alarmMsg).fadeIn(2000));
+			}
+		};
+
+		/** POP 알람을 정보 실시간 처리 **/
+		let popMessageProcess = function(messageData){
+			alarmMessageProcess(messageData);
+
+			let popPosition = messageData.popPosition;
+			let limit = $("#" + popPosition).attr("data-cnt");
+			getPopLocationData(popPosition, limit);
+		};
+
+		/** DRAWING BOARD 정보 실시간 처리 **/
+		let drawingMessageProcess = function(messageData){
+			alarmMessageProcess(messageData);
+			let actionType = messageData.actionType;
+			let $target = $("#" + messageData.factoryArea + "_" + messageData.equipPosition);
+			if(actionType === 'DB_COMPLETE') {
+				$target.find(".proName").removeClass("ellipsis");
+				$target.find(".proName").html('');
+				$target.find(".proNum").html('');
+			}else{
+				$target.find(".proName").addClass("ellipsis");
+				$target.find(".proName").html(messageData.content02);
+				$target.find(".proNum").html(messageData.sMinute + "'");
+			}
+		};
+
+		/** 작업자 로그인 정보 실시간 처리 **/
+		let workerMessageProcess = function(messageData){
+			if(messageData){
+				let actionType = messageData.actionType;
+				let $target = $("#" + messageData.factoryArea + "_" + messageData.equipPosition);
+				if(actionType === 'WK_LOGIN') {
+					if (messageData.userNm != undefined) $target.find(".rightWrap").find(".nameWrap").html(messageData.userNm);
+					if (messageData.userImageSeq != undefined) $target.find(".rightWrap").find("img").attr("src", "/image/" + messageData.userImageSeq);
+				}else{
+					if (messageData.userNm != undefined) $target.find(".rightWrap").find(".nameWrap").html('Log off');
+					if (messageData.userImageSeq != undefined) $target.find(".rightWrap").find("img").attr("src", "/resource/asset/images/tv/img_logoff.png");
+				}
+			}
+		};
+
+		function jmesConnect() {
+		    let socket = new SockJS('/jmes-ws');
+		    stompClient = Stomp.over(socket);
+		    stompClient.connect({}, function (frame) {
+		        console.log('Connected: ' + frame);
+		        stompClient.subscribe('/topic/pop', function (notificationMessage) {
+		            let messageData = JSON.parse(notificationMessage.body);
+		            //console.log(messageData);
+		            popMessageProcess(messageData);
+		        });
+				stompClient.subscribe('/topic/drawing', function (notificationMessage) {
+					let messageData = JSON.parse(notificationMessage.body);
+                    //console.log(messageData);
+					drawingMessageProcess(messageData);
+				});
+				stompClient.subscribe('/topic/worker', function (notificationMessage) {
+					let messageData = JSON.parse(notificationMessage.body);
+                    //console.log(messageData);
+					workerMessageProcess(messageData);
+				});
+				stompClient.subscribe('/topic/alarm', function (notificationMessage) {
+					let messageData = JSON.parse(notificationMessage.body);
+                    //console.log(messageData);
+					alarmMessageProcess(messageData);
+				});
+		    });
 		}
 
-		let curr_seq = 0;
-		let getAlarm = function () {
-					'use strict';
-
-					$.ajax({
-						type: 'POST', url: "/tv/pop/alarm", dataType: 'json',
-						data: {"SEQ":curr_seq},
-						success: function (data, textStatus, jqXHR) {
-							if (textStatus !== 'success') {
-								fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.3");
-								return;
-							}
-							if (data == null) {
-								fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.2");
-								return;
-							}
-
-							let alarm_list = data.alarm_list;
-							let maxCnt = 9;
-							if (alarm_list != '') {
-								for (let i = 0; i < alarm_list.length; i++) {
-									let data1 = alarm_list[i].DATA1;
-									let data2 = alarm_list[i].DATA2;
-									let data3 = alarm_list[i].DATA3;
-									let SEQ = alarm_list[i].SEQ;
-									curr_seq = SEQ;
-
-								let al = '<li class="alarmList">';
-									al += '<span class="dateTxt">[' + data1 + ']</span>';
-									al += '<span class="progressTxt ellipsis"><b>' + data2 + ' </b> : ' + data3 + '</span>';
-									al += '</li>';
-
-                                    if($(".alarmList").length >= maxCnt){
-                                        $(".alarmList").last().remove();
-                                    }
-
-									$("#alarm_list").prepend($(al).fadeIn(2000));
-								}
-							}
-
-						},
-						error: function (jqXHR, textStatus, errorThrown) {
-							fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.");
-						}
-					});
-				};
-		let getAllData = function(){
-			getData();
-			getAlarm();
-		};
 		let setIntervalTimer;
 		let timer = function(){
 			let selVal = 60;//1분
 			let timesec = 1000;//1초
 			setIntervalTimer = setInterval(function() {
-				getData();
+				getWorkDrawingData();
 			}, timesec*selVal);
 		};
 
-		let setIntervalTimer_alarm;
-		let timer_alarm = function(){
-			let selVal = 5;//1분
-			let timesec = 1000;//1초
-			setIntervalTimer_alarm = setInterval(function() {
-				getAlarm();
-			}, timesec*selVal);
-		};
-
-		getAllData();
+		getInitData();
+		jmesConnect();
 		timer();
-		timer_alarm();
 	});
 
 </script>

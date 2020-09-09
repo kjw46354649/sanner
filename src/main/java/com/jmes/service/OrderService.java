@@ -23,4 +23,6 @@ public interface OrderService {
     void removeInvoice(Map<String, Object> map) throws Exception;
 
     void processConfirmBarcodeInfo(Model model, Map<String, Object> map) throws Exception;
+
+    void updateControlConfirmProcess(Map<String, Object> map) throws Exception;
 }
