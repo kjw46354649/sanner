@@ -794,11 +794,12 @@
         // 팝업창 열려 있는지 확인
         if(typeof(windowImageViewer)=='undefined' || windowImageViewer.closed) {
             windowImageViewer = window.open("/imageViewer", "jmesImageViewChildForm", "width=1024, height=768, resizable = no, scrollbars = no");
-            windowImageViewer.onload = function(){
-                $(windowImageViewer.window.document).find("#image_seq").val(imageSeq);
-                windowImageViewer.onImageViewStart();
-            }
-            return;
+            windowImageViewer.onload = function () {
+                setTimeout(function () {
+                    $(windowImageViewer.window.document).find("#image_seq").val(imageSeq);
+                    windowImageViewer.onImageViewStart();
+                }, 500);
+            };
         }else {
             windowImageViewer.focus();
             setTimeout(function() {

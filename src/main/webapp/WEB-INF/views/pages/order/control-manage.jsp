@@ -1663,18 +1663,19 @@
                     }
                 }
 
-                if (ui.source === 'edit') {
+                if (ui.source === 'edit' || ui.source === 'clear') {
                     let rowIndx = ui.updateList[0].rowIndx;
                     let data = ui.updateList[0].rowData;
                     let newRow = ui.updateList[0].newRow;
                     let row;
 
                     // 항목별 계산견적 단가
-                    const estimateArray = ['UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'ORDER_QTY', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT'];
+                    const estimateArray = ['UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'ORDER_QTY', 'UNIT_FINAL_AMT'];
                     let estimateFlag = false;
                     for (let value of estimateArray) {
                         if (newRow.hasOwnProperty(value)) {
                             estimateFlag = true;
+                            break;
                         }
                     }
 
@@ -1696,9 +1697,10 @@
                         calculateEstimateAmount += UNIT_PROCESS_AMT;
                         calculateEstimateAmount += UNIT_ETC_AMT;
 
-                        let unitFinalEstimateAmount = ui.updateList[0].newRow.UNIT_FINAL_EST_AMT || calculateEstimateAmount; // 최종 견적단가
-                        let estimatedTotalAmount = unitFinalEstimateAmount * CONTROL_PART_QTY; // 견적 합계 금액
-                        let unitFinalAmount = ui.updateList[0].newRow.UNIT_FINAL_AMT || unitFinalEstimateAmount; // 최종 공급단가
+                        // let unitFinalEstimateAmount = ui.updateList[0].newRow.UNIT_FINAL_EST_AMT || calculateEstimateAmount; // 최종 견적단가
+                        // let estimatedTotalAmount = unitFinalEstimateAmount * CONTROL_PART_QTY; // 견적 합계 금액
+                        let unitFinalAmount = ui.updateList[0].newRow.UNIT_FINAL_AMT || 0; // 최종 공급단가
+                        // let unitFinalAmount = ui.updateList[0].newRow.UNIT_FINAL_AMT || unitFinalEstimateAmount; // 최종 공급단가
                         let finalAmount = unitFinalAmount * CONTROL_PART_QTY;// 합계 금액
 
                         if (ui.updateList[0].newRow.UNIT_FINAL_AMT) {
@@ -1722,7 +1724,7 @@
                             } else {
                                 row = {
                                     'CALC_EST_UNIT_COST': calculateEstimateAmount, // 계산 견적단가
-                                    'UNIT_FINAL_EST_AMT': unitFinalEstimateAmount, // 최종 견적단가
+                                    // 'UNIT_FINAL_EST_AMT': unitFinalEstimateAmount, // 최종 견적단가
                                     // 'EST_TOTAL_AMOUNT': estimatedTotalAmount, // 견적 합계금액 = 최종 견적단가 * 발주수량
                                     'UNIT_FINAL_AMT': unitFinalAmount, // 최종 공급단가
                                     'FINAL_AMT': finalAmount // 합계 금액 = 최종 공급단가 * 발주수량
@@ -2024,7 +2026,7 @@
                 'CONTROL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN', 'TOTAL_SHEET', 'CONTROL_STATUS_NM',
                 'CONTROL_STATUS_DT', 'ORDER_STAFF_SEQ', 'DESIGNER_NM', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM',
                 'LABEL_NOTE', 'MAIN_INSPECTION', 'PRICE_CONFIRM', 'ORDER_OUT_FINISH_DT', 'CONTROL_PART_INSERT_UPDATE_DT',
-                'INVOICE_NUM', 'DRAWING_NUM_BUTTON'
+                'DRAWING_NUM_BUTTON'
             ];
             const partList = [
                 'PART_NUM', 'DRAWING_NUM', 'ORDER_NUM_PLUS_BUTTON', 'DRAWING_VER', 'DRAWING_UP_DT', 'PREV_DRAWING_NUM', 'ITEM_NM', 'WORK_TYPE',
@@ -2045,7 +2047,8 @@
                 'OUTSIDE_REQUEST_SURFACE_YN', 'OUTSIDE_REQUEST_ETC', 'OUTSIDE_HOPE_DUE_DT', 'OUTSIDE_UNIT_AMT',
                 'OUTSIDE_FINAL_AMT', 'OUTSIDE_IN_DT', 'OUTSIDE_STATUS', 'OUTSIDE_STATUS_DT', 'INNER_WORK_FINISH_DT',
                 'INSPECT_NUM', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM', 'INSPECT_DESC',
-                'ERROR_ACTION_NM', 'ERROR_NOTE', 'OUTSIDE_INSPECT_RESULT_NM', 'OUTSIDE_ERROR_NOTE', 'PREVIOUS_PRICE'
+                'ERROR_ACTION_NM', 'ERROR_NOTE', 'OUTSIDE_INSPECT_RESULT_NM', 'OUTSIDE_ERROR_NOTE', 'PREVIOUS_PRICE',
+                'INVOICE_NUM'
             ];
             const includeList = controlList.concat(partList);
 
