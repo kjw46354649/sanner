@@ -1,9 +1,13 @@
 package com.jmes.service.impl;
 
 import com.framework.innodale.dao.InnodaleDao;
+import com.framework.innodale.entity.ActionType;
+import com.framework.innodale.entity.MessageType;
+import com.framework.innodale.entity.NotificationMessage;
 import com.jmes.dao.PopDao;
 import com.jmes.service.PopService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -18,6 +22,9 @@ public class PopServiceImpl implements PopService {
 
     @Autowired
     public PopDao popDao;
+
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     /**
      *         // 첫번째 바코드 인식
@@ -90,7 +97,6 @@ public class PopServiceImpl implements PopService {
         }else {
 
             /** 추가 되어야 할 데이터 **/
-            String currentPopLocation = (String) controlPartInfo.get("POP_CUR_POSITION"); // 현재 위치
             String prevPopLocation = (String) controlPartInfo.get("POP_PREV_POSITION"); // 이전 pop 위치
             String createPRO005 = (String) controlPartInfo.get("PRO005"); // 소재 입고 상태 처리
             String createPRO019 = (String) controlPartInfo.get("PRO019"); // 외주 가공 입고 상태 처리
@@ -104,6 +110,15 @@ public class PopServiceImpl implements PopService {
                 model.addAttribute("returnCode", "RET99");
                 model.addAttribute("message", "이미 등록된 도면 입니다. 확인 바랍니다."); // 현재와 같은 Location 스캔 처리
             } else {
+
+                NotificationMessage notificationMessage = new NotificationMessage();
+
+                notificationMessage.setType(MessageType.POP);
+                notificationMessage.setPopPosition(popLocation);
+                notificationMessage.setContent01((String) controlPartInfo.get("CONTEXT01"));
+                notificationMessage.setContent02((String) controlPartInfo.get("CONTEXT02"));
+                notificationMessage.setContent03((String) controlPartInfo.get("CONTEXT03"));
+
                 // 모도면이 POP 바코드 스캔 되면 조립전환 상태를 추가 한다.
                 if (createPRO018 != null && !"".equals(createPRO018)) {
                     controlPartInfo.put("PART_STATUS", createPRO018);
@@ -111,7 +126,7 @@ public class PopServiceImpl implements PopService {
                     innodaleDao.create(controlPartInfo);
 
                     // TODO  Part 가 있는 경우 Part 상태를 조립전환으로 변경해야 한다.
-                    //      -- PART 에서 가공 이력이 있는 경우 PART 공일시를 업데이트 한다.
+                    //      -- PART 에서 가공 이력이 있는 경우 PART 가공 완료 일시를 업데이트 한다.
                     controlPartInfo.put("queryId", "popMapper.insertControlPartChildProgressStatus");
                     innodaleDao.create(controlPartInfo);
 
@@ -131,6 +146,8 @@ public class PopServiceImpl implements PopService {
                     controlPartInfo.put("ORDER_STATUS", "MST004");
                     controlPartInfo.put("queryId", "popMapper.updatePopMaterialOrderStatus");
                     innodaleDao.update(controlPartInfo);
+
+                    notificationMessage.setContent04("소재입고");
                 }
 
                 // 외주 가공 요청 이후에 POP 스캔시에 외주 입고 처리
@@ -143,6 +160,8 @@ public class PopServiceImpl implements PopService {
                     // Part 외주 입고, 상태 업데이트
                     controlPartInfo.put("queryId", "popMapper.updateControlPartOutsideInDate");
                     innodaleDao.update(controlPartInfo);
+
+                    notificationMessage.setContent04("외주입고");
                 }
 
                 // 가공완료 상태 업데이트
@@ -150,6 +169,7 @@ public class PopServiceImpl implements PopService {
                     controlPartInfo.put("PART_STATUS", createPRO009);
                     controlPartInfo.put("queryId", "popMapper.insertControlPartProgressStatus");
                     innodaleDao.create(controlPartInfo);
+
                 }
 
                 // 후가공 상태 업데이트
@@ -170,6 +190,8 @@ public class PopServiceImpl implements PopService {
                 if (innerWorkFinishDt != null && "Y".equals(innerWorkFinishDt)) {
                     controlPartInfo.put("queryId", "popMapper.updateControlPartInnerWorkFinishDtStatus");
                     innodaleDao.create(controlPartInfo);
+
+                    notificationMessage.setContent04("가공완료");
                 }
 
                 // 검사실 스캔, 후가공 스캔, 표면 처리 스캔시 PART 상태도 변경 처리 한다.
@@ -182,9 +204,14 @@ public class PopServiceImpl implements PopService {
                     if ("POP150".equals(popLocation)) {
                         // 후가공 스캔시 후가공 입고
                         controlPartInfo.put("PART_STATUS", "PRO012");
+
+                        notificationMessage.setContent04("후 가공 입고");
+
                     } else if ("POP160".equals(popLocation)) {
                         // 표면 처리 스캔시 표면처리 입고
                         controlPartInfo.put("PART_STATUS", "PRO014");
+
+                        notificationMessage.setContent04("표면 처리 입고");
                     }
                     controlPartInfo.put("queryId", "popMapper.insertControlPartProgressStatus");
                     innodaleDao.create(controlPartInfo);
@@ -209,6 +236,9 @@ public class PopServiceImpl implements PopService {
                 model.addAttribute("returnCode", "RET00");
                 model.addAttribute("controlInfo", controlInfo);
                 model.addAttribute("locationInfo", locationInfo);
+
+                simpMessagingTemplate.convertAndSend("/topic/pop", notificationMessage);
+
             }
         }
     }

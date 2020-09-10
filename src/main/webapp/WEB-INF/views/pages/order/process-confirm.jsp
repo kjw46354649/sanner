@@ -729,7 +729,7 @@
             } else {
                 QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateControlPartStatus', 'orderMapper.createControlPartProgress']};
                 changes.queryIdList = QUERY_ID_ARRAY;
-                parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
+                parameters = {'url': '/processControlConfirmProcess', 'data': {data: JSON.stringify(changes)}};
 
                 fnPostAjaxSound(function () {
                     $confirmOrderGrid.pqGrid('refreshDataAndView');

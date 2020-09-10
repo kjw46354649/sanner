@@ -68,7 +68,6 @@ public class PopController {
     public String popScanningBarcodePop(Model model, HttpServletRequest request) throws Exception {
 
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
-
         popService.createScanningBarcodePop(model, hashMap);
 
         return "jsonView";

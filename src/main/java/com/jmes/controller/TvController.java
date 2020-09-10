@@ -63,12 +63,32 @@ public class TvController {
         return "jsonView";
     }
 
-    @RequestMapping(value = "/tv/pop/alarm", method = RequestMethod.POST)
-    public String alarmData(Model model, HttpServletRequest request, HttpSession session) throws Exception {
+    @RequestMapping(value = "/tv/pop/schedulerPopDrawingData", method = RequestMethod.POST)
+    public String schedulerPopDrawingData(Model model, HttpServletRequest request, HttpSession session) throws Exception {
         Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
-        hashMap.put("queryId","tvMapper.selectTvAlarmList");
-        List<Map<String, Object>> alarm_list = this.innodaleService.getList(hashMap);
-        model.addAttribute("alarm_list", alarm_list);
+
+        hashMap.put("queryId","tvMapper.selectTvMachineList");//장비
+        List<Map<String, Object>> m_list = this.innodaleService.getList(hashMap);
+        model.addAttribute("m_list", m_list);
+
+        hashMap.put("queryId","tvMapper.selectTvPopList2");//소재대기
+        List<Map<String, Object>> pop_list2 = this.innodaleService.getList(hashMap);
+        model.addAttribute("pop_list2", pop_list2);
+
+        hashMap.put("queryId","tvMapper.selectTvPopList3");//외주진행
+        List<Map<String, Object>> pop_list3 = this.innodaleService.getList(hashMap);
+        model.addAttribute("pop_list3", pop_list3);
+
+        return "jsonView";
+    }
+
+    @RequestMapping(value = "/tv/pop/popLocationData", method = RequestMethod.POST)
+    public String popLocationData(Model model, HttpServletRequest request, HttpSession session) throws Exception {
+        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+
+        hashMap.put("queryId","tvMapper.selectTvPopList");//장비
+        List<Map<String, Object>> m_list = this.innodaleService.getList(hashMap);
+        model.addAttribute("pop_list", m_list);
 
         return "jsonView";
     }
@@ -103,12 +123,41 @@ public class TvController {
        List<Map<String, Object>> grid_list3 = this.innodaleService.getList(hashMap);
        model.addAttribute("grid_list3", grid_list3);
 
-       hashMap.put("queryId","tvMapper.selectMctInfo");//mct가동률 및 기타.
-       Map<String, Object> mct_info = this.innodaleService.getInfo(hashMap);
-       model.addAttribute("mct_info", mct_info);
+//       hashMap.put("queryId","tvMapper.selectMctInfo");//mct가동률 및 기타.
+//       Map<String, Object> mct_info = this.innodaleService.getInfo(hashMap);
+//       model.addAttribute("mct_info", mct_info);
 
        return "jsonView";
    }
 
+   @RequestMapping(value = "/tv/mct/gridDataList", method = RequestMethod.POST)
+   public String gridDataList(Model model, HttpServletRequest request, HttpSession session) throws Exception {
+       Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+
+        hashMap.put("queryId","tvMapper.selectMctGrid1List");//불량/반품
+        List<Map<String, Object>> grid_list1 = this.innodaleService.getList(hashMap);
+        model.addAttribute("grid_list1", grid_list1);
+
+       hashMap.put("queryId","tvMapper.selectMctGrid2List");//긴급주문
+       List<Map<String, Object>> grid_list2 = this.innodaleService.getList(hashMap);
+       model.addAttribute("grid_list2", grid_list2);
+
+       hashMap.put("queryId","tvMapper.selectMctGrid3List");//납기지연 목록
+       List<Map<String, Object>> grid_list3 = this.innodaleService.getList(hashMap);
+       model.addAttribute("grid_list3", grid_list3);
+
+       return "jsonView";
+   }
+
+   @RequestMapping(value = "/tv/mct/machineDrawingData", method = RequestMethod.POST)
+   public String machineDrawingData(Model model, HttpServletRequest request, HttpSession session) throws Exception {
+       Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+
+       hashMap.put("queryId","tvMapper.selectMctAreList");//mct info
+       List<Map<String, Object>> mct_drawing_list = this.innodaleService.getList(hashMap);
+       model.addAttribute("mct_drawing_list", mct_drawing_list);
+
+       return "jsonView";
+   }
 
 }

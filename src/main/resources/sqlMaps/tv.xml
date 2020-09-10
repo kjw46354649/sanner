@@ -23,6 +23,9 @@
         WHERE A.POP_SEQ = B.POP_SEQ
             AND B.CONTROL_SEQ = C.CONTROL_SEQ
             AND B.CONTROL_SEQ = D.CONTROL_SEQ
+            <if test="POP_POSITION != null and POP_POSITION != ''">
+                AND B.POP_POSITION = #{POP_POSITION}
+            </if>
             AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
             AND C.DEL_YN = 'N'
             AND NOT EXISTS (SELECT 1 FROM jmes.TBL_CONTROL_PART E
@@ -30,6 +33,9 @@
                               AND E.PART_STATUS = 'PRO018' AND E.WORK_TYPE = 'WTP050'
             )
         ORDER BY B.POP_SEQ DESC
+        <if test="LIMIT != null and LIMIT != ''">
+            LIMIT ${LIMIT}
+        </if>
     </select>
 
     <select id="selectTvPopList2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -86,6 +92,7 @@
             AND X.LAYOUT_SORT IS NOT NULL
         ORDER BY X.FACTORY_AREA, X.LAYOUT_SORT
     </select>
+
     <select id="selectTvAlarmList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             SEQ, DATA1, DATA2, DATA3
@@ -100,9 +107,9 @@
             FACTORY_AREA, LAYOUT_ROW, LAYOUT_COL
         FROM jmes.TBL_EQUIP X
         WHERE EQUIP_KIND = '1'
-        AND DEL_YN = 'N'
-        AND LAYOUT_ROW IS NOT NULL
-        AND LAYOUT_COL IS NOT NULL
+            AND DEL_YN = 'N'
+            AND LAYOUT_ROW IS NOT NULL
+            AND LAYOUT_COL IS NOT NULL
         ORDER BY FACTORY_AREA, LAYOUT_ROW, LAYOUT_COL
     </select>
     <select id="selectMctAreList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -172,8 +179,11 @@
                                                 AND A.CONTROL_SEQ = C.CONTROL_SEQ
                                                 AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                                                 AND A.WORK_STATUS IN ('DBS010', 'DBS020')
-                                                AND B.OUT_FINISH_DT IS NULL
+                                                <!-- AND B.OUT_FINISH_DT IS NULL -->
                                                 AND A.DEL_YN = 'N'
+                                                <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
+                                                    AND A.EQUIP_SEQ = #{EQUIP_SEQ}
+                                                </if>
                                                 AND EXISTS (SELECT 1 FROM jmes.TBL_EQUIP D WHERE A.EQUIP_SEQ = D.EQUIP_SEQ AND D.EQUIP_KIND = '1' AND D.DEL_YN = 'N'
                                                     AND D.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
                                                 )
@@ -200,8 +210,11 @@
                                             WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                                                 AND A.CONTROL_SEQ = C.CONTROL_SEQ
                                                 AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                                                AND B.OUT_FINISH_DT IS NULL
+                                                <!-- AND B.OUT_FINISH_DT IS NULL -->
                                                 AND A.DEL_YN = 'N'
+                                                <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
+                                                    AND A.EQUIP_SEQ = #{EQUIP_SEQ}
+                                                </if>
                                                 AND EXISTS (SELECT 1 FROM jmes.TBL_EQUIP D WHERE A.EQUIP_SEQ = D.EQUIP_SEQ AND D.EQUIP_KIND = '1' AND D.DEL_YN = 'N'
                                                     AND D.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
                                                 )
@@ -209,8 +222,12 @@
                                    ) Y
                             ON X.EQUIP_SEQ = Y.EQUIP_SEQ
         WHERE Y.KEY_SEQ IS NOT NULL
+            <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
+                AND X.EQUIP_SEQ = #{EQUIP_SEQ}
+            </if>
         ORDER BY X.FACTORY_AREA, X.LAYOUT_ROW, X.LAYOUT_COL, Y.WORK_PLAN_TYPE, Y.INNER_DUE_DT, Y.CONTROL_PART_INFO
     </select>
+
     <select id="selectMctGrid1List" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         -- 하단 그리드 1 (불량/반품 발생 현황)
         SELECT

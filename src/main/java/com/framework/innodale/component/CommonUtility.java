@@ -11,6 +11,7 @@ import java.net.InetAddress;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class CommonUtility {
@@ -63,11 +64,11 @@ public class CommonUtility {
             if (values.length == 1) {
                 paramMap.put(key, values[0].trim());
 
-//                System.out.println("key=[" + key + "][" + values[0].trim() + "]");
+                System.out.println("key=[" + key + "][" + values[0].trim() + "]");
             } else {
                 paramMap.put(key, values);
 
-//                System.out.println("key=[" + key + "][" + values + "]");
+                System.out.println("key=[" + key + "][" + values + "]");
             }
         }
 
@@ -78,7 +79,7 @@ public class CommonUtility {
             Object obj = request.getAttribute(key);
             if(obj instanceof java.lang.String){
 
-//                System.out.println("key=[" + key + "][" + obj + "]");
+                System.out.println("key=[" + key + "][" + obj + "]");
 
                 paramMap.put(key, obj);
             }
@@ -240,30 +241,6 @@ public class CommonUtility {
         return Double.parseDouble(sData);
 
     }
-
-    /**
-     * 메일 Template에서 Html 코드를 가지고 온다.
-     * @param velocityEngine
-     * @param template
-     * @param model
-     * @param locale info
-     * @return
-     * @throws VelocityException
-     */
-    /*public static String getVelocityEmailCont(VelocityEngine velocityEngine, String template, Map<String, Object> model, String localeNat) throws VelocityException {
-
-    	String localePath = "en";
-    	if("vi".equals(localeNat) || "vi_VN".equals(localeNat)){
-    		localePath = "vi";
-		}else if("ja".equals(localeNat) || "ja_JP".equals(localeNat)){
-			localePath = "ja";
-		}else{
-			localePath = "en";
-		}
-
-		String templateLocation = "template" + File.separator + localePath + File.separator + template + ".vm";
-		return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, templateLocation, "UTF-8", model);
-	}*/
 
     /**
      *  주어진 숫자의 왼쪽에 모자란 길이만큼 문자 '0'으로 채워서 돌려 준다.
@@ -526,6 +503,11 @@ public class CommonUtility {
         } else {
             return "linux";
         }
+    }
+
+    public static String getCurrentAlarmDate(String dateFormat) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
+        return simpleDateFormat.format(new Date());
     }
 
 }

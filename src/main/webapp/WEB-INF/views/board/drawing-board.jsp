@@ -269,7 +269,7 @@
                 <input id="WORK_MINUTE" name="WORK_MINUTE" type="hidden" value="${workInfo.WORK_MINUTE}">
                 <input id="WORK_SECOND" name="WORK_SECOND" type="hidden" value="${workInfo.WORK_SECOND}">
             </form>
-            <form id="re_start_work_info_form" name="re_start_work_info_form">
+            <form id="re_start_work_info_form" name="re_start_work_info_form" method="POST" onsubmit="return false;">
                 <input id="CONTROL_SEQ" name="CONTROL_SEQ" type="hidden" value="${reStartWorkinfo.CONTROL_SEQ}">
                 <input id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" type="hidden" value="${reStartWorkinfo.CONTROL_DETAIL_SEQ}">
                 <input id="CONTROL_NUM" name="CONTROL_NUM" type="hidden" value="${reStartWorkinfo.CONTROL_NUM}">
@@ -517,7 +517,7 @@
                     let style =  $(this).attr('style');
                     let display = style.split(":")[1];
                     if( display.indexOf("block") > 0){
-                        $("#workRestartBtn").trigger("click");
+                        // $("#workRestartBtn").trigger("click");
                         clearTimeout(stopInterval);
                     }
                 });

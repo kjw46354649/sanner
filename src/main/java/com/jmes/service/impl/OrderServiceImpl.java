@@ -6,9 +6,13 @@ import java.util.UUID;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.framework.innodale.dao.InnodaleDao;
+import com.framework.innodale.entity.ActionType;
+import com.framework.innodale.entity.MessageType;
+import com.framework.innodale.entity.NotificationMessage;
 import com.jmes.dao.OrderDao;
 import com.jmes.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -20,6 +24,8 @@ public class OrderServiceImpl implements OrderService {
     private InnodaleDao innodaleDao;
     @Autowired
     public OrderDao orderDao;
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     @Override
     public void createNewOrder(Map<String, Object> map) throws Exception {
@@ -92,6 +98,7 @@ public class OrderServiceImpl implements OrderService {
             jsonArray = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<HashMap<String, Object>>>() {});
 
         for (HashMap<String, Object> hashMap : jsonArray) {
+
             hashMap.put("queryId", "orderMapper.updateControlRevision");
             this.innodaleDao.update(hashMap);
             hashMap.put("queryId", "orderMapper.updateControlBarcodeRevision");
@@ -104,6 +111,7 @@ public class OrderServiceImpl implements OrderService {
             this.innodaleDao.create(hashMap);
             hashMap.put("queryId", "orderMapper.updateOutsideConfirmDt");
             this.innodaleDao.update(hashMap);
+
         }
     }
 
@@ -304,6 +312,52 @@ public class OrderServiceImpl implements OrderService {
 
             model.addAttribute("flag", flag);
             model.addAttribute("message", message);
+        }
+    }
+
+    @Override
+    public void updateControlConfirmProcess(Map<String, Object> map) throws Exception {
+
+        String jsonObject = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+        HashMap<String, Object> queryIdList = null;
+
+        ArrayList<HashMap<String, Object>> updateList = null;
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        if (jsonMap.containsKey("updateList"))
+            updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+
+        if (jsonMap.containsKey("queryIdList"))
+            queryIdList = (HashMap<String, Object>) jsonMap.get("queryIdList");
+
+        if (updateList != null && updateList.size() > 0) {
+            ArrayList<String> queryId = (ArrayList<String>) queryIdList.get("updateQueryId");
+
+            for (HashMap<String, Object> hashMap : updateList) {
+                for (int i = 0, queryCount = queryId.size(); i < queryCount; i++) {
+                    hashMap.put("queryId", queryId.get(i));
+                    this.innodaleDao.updateGrid(hashMap);
+                }
+
+                if("PRO002".equals(hashMap.get("PART_STATUS"))) {
+                    /** 관리번호 가공 확정인 경우 알람 처리 한다. **/
+                    hashMap.put("queryId", "common.selectAlarmControlInformation");
+                    Map<String, Object> alarmInfo = this.innodaleDao.getInfo(hashMap);
+
+                    NotificationMessage notificationMessage = new NotificationMessage();
+
+                    notificationMessage.setType(MessageType.POP);
+                    notificationMessage.setContent01((String) alarmInfo.get("CONTEXT01"));
+                    notificationMessage.setContent02((String) alarmInfo.get("CONTEXT02"));
+                    notificationMessage.setContent03("가공확정");
+
+                    simpMessagingTemplate.convertAndSend("/topic/alarm", notificationMessage);
+                }
+            }
         }
     }
 }

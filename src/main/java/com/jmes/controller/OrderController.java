@@ -110,7 +110,7 @@ public class OrderController {
     }
 
     /**
-     * @description
+     * @description 가공확정에서 Barcode 체크 처리
      * @param model
      * @param request
      * @return
@@ -120,6 +120,16 @@ public class OrderController {
     public String processConfirmBarcodeInfo(Model model, HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
         this.orderService.processConfirmBarcodeInfo(model, map);
+        return "jsonView";
+    }
+
+    /**
+     * 가공확정 (알람 처리를 위해서 별도 Controller 처리 함
+     */
+    @RequestMapping(value = "/processControlConfirmProcess", method = RequestMethod.POST)
+    public String processControlConfirmProcess(HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+        this.orderService.updateControlConfirmProcess(map);
         return "jsonView";
     }
 }
