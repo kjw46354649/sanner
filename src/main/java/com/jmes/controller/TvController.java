@@ -130,7 +130,7 @@ public class TvController {
        return "jsonView";
    }
 
-    @RequestMapping(value = "/tv/mct/gridDataList", method = RequestMethod.POST)
+   @RequestMapping(value = "/tv/mct/gridDataList", method = RequestMethod.POST)
    public String gridDataList(Model model, HttpServletRequest request, HttpSession session) throws Exception {
        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
 
@@ -149,5 +149,15 @@ public class TvController {
        return "jsonView";
    }
 
+   @RequestMapping(value = "/tv/mct/machineDrawingData", method = RequestMethod.POST)
+   public String machineDrawingData(Model model, HttpServletRequest request, HttpSession session) throws Exception {
+       Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+
+       hashMap.put("queryId","tvMapper.selectMctAreList");//mct info
+       List<Map<String, Object>> mct_drawing_list = this.innodaleService.getList(hashMap);
+       model.addAttribute("mct_drawing_list", mct_drawing_list);
+
+       return "jsonView";
+   }
 
 }

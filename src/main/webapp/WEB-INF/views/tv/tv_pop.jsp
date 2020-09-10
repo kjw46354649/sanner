@@ -1436,6 +1436,10 @@
 			alarmMessageProcess(messageData);
 			let actionType = messageData.actionType;
 			let $target = $("#" + messageData.factoryArea + "_" + messageData.equipPosition);
+
+			console.log("drawingMessageProcess");
+			console.log(messageData);
+
 			if(actionType === 'DB_COMPLETE') {
 				$target.find(".proName").removeClass("ellipsis");
 				$target.find(".proName").html('');
@@ -1465,7 +1469,7 @@
 		function jmesConnect() {
 		    let socket = new SockJS('/jmes-ws');
 		    stompClient = Stomp.over(socket);
-		    stompClient.connect({}, function (frame) {
+			stompClient.connect({}, (frame) => {
 		        console.log('Connected: ' + frame);
 		        stompClient.subscribe('/topic/pop', function (notificationMessage) {
 		            let messageData = JSON.parse(notificationMessage.body);
@@ -1487,7 +1491,11 @@
                     //console.log(messageData);
 					alarmMessageProcess(messageData);
 				});
-		    });
+			}, () => {
+				setTimeout(() => {
+					jmesConnect();
+				}, 5000);
+			});
 		}
 
 		let setIntervalTimer;

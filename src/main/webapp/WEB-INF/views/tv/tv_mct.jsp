@@ -26,6 +26,10 @@
     <script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
 	<!-- alertify -->
 	<script type="text/javascript" src='/resource/plugins/alertifyjs/alertify.js'></script>
+
+	<!-- socket -->
+	<script type="text/javascript" src='/resource/plugins/socket/sockjs.min.js'></script>
+	<script type="text/javascript" src='/resource/plugins/stomp/stomp.min.js'></script>
 </head>
 <body>
 	<div class="bodyWrap mct">
@@ -1283,7 +1287,8 @@
 	</div>
 <script>
 
-	var windowImageViewer;
+	let windowImageViewer;
+	let machineListData;
 
 	function callWindowImageViewer(imageSeq)
 	{
@@ -1331,66 +1336,107 @@
 				type: 'POST', url: "/tv/mct/data", dataType: 'json',
 				data: {},
 				success: function (data, textStatus, jqXHR) {
-					if (textStatus !== 'success') {
-						fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.3");
-						return;
-					}
-					if (data == null) {
+					if (textStatus !== 'success' || data == null) {
 						fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.2");
 						return;
 					}
 
-					let mct_info_list = data.mct_info_list;//mct info
-					let mct_list = data.mct_list;//mct
-					let grid_list1 = data.grid_list1;//불량/반품
-					let grid_list2 = data.grid_list2;//긴급주문
-					let grid_list3 = data.grid_list3;//납기지연목록
-					let mct_info = data.mct_info;//mct 가동률 및 기타
+					machineListData = data.mct_info_list;//mct info
+					// let mct_list = data.mct_list;//mct
 
 					//init
 					$('[id^=ARE]').each(function () {
-
 						$(this).find(".inBox:nth-child(1)").html('&nbsp;');
 						$(this).find(".inBox:nth-child(2)").html('&nbsp;');
 						$(this).find(".inBox:nth-child(3)").find('div:nth-child(1)').html('&nbsp;');
 						$(this).find(".inBox:nth-child(3)").find('div:nth-child(2)').html('&nbsp;');
-
 						$(this).find(".statusWrap").hide();
-						// $(this).find(".statusConts").find('.inWrap').empty();
 						$(this).find(".statusConts").empty();
-
 					});
-					$("#grid1").empty();
-					$("#grid2").empty();
-					$("#grid3").empty();
 
 					//mct info
-					if (mct_info_list != '') {
-						for (let i = 0; i < mct_info_list.length; i++) {
-							//let equip_seq = mct_info_list[i].EQUIP_SEQ;
-							let equip_nm = mct_info_list[i].EQUIP_NM;
-							let factory_area = mct_info_list[i].FACTORY_AREA;
-							let layout_row = mct_info_list[i].LAYOUT_ROW;
-							let layout_col = mct_info_list[i].LAYOUT_COL;
-							let user_nm = mct_info_list[i].USER_NM;
+					getReLoadWorkData('init');
 
-							//$("#" + factory_area + "_" + layout_row + "_" + layout_col).attr("data-target",equip_seq);
-							$("#" + factory_area + "_" + layout_row + "_" + layout_col).find(".statusWrap").show();
-							$("#" + factory_area + "_" + layout_row + "_" + layout_col).find(".inBox:nth-child(1)").html(equip_nm);
-							$("#" + factory_area + "_" + layout_row + "_" + layout_col).find(".inBox:nth-child(2)").html(user_nm);
+					createGrid1(data.grid_list1);	//불량/반품
+					createGrid2(data.grid_list2);	//긴급주문
+					createGrid3(data.grid_list3);	//납기지연목록
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.");
+				}
+			});
+		};
 
-						}
+		let getReLoadWorkData = function (sType) {
+			'use strict';
+
+			//mct info
+			if (machineListData != '') {
+				for (let i = 0; i < machineListData.length; i++) {
+
+					let equip_seq = machineListData[i].EQUIP_SEQ;
+					let equip_nm = machineListData[i].EQUIP_NM;
+					let factory_area = machineListData[i].FACTORY_AREA;
+					let layout_row = machineListData[i].LAYOUT_ROW;
+					let layout_col = machineListData[i].LAYOUT_COL;
+					let user_nm = machineListData[i].USER_NM;
+
+					if(sType === 'init') {
+						$("#" + factory_area + "_" + layout_row + "_" + layout_col).find(".statusWrap").show();
+						$("#" + factory_area + "_" + layout_row + "_" + layout_col).find(".inBox:nth-child(1)").html(equip_nm);
+						$("#" + factory_area + "_" + layout_row + "_" + layout_col).find(".inBox:nth-child(2)").html(user_nm);
 					}
+					// 장비의 작업 정보 조회
+					getReLoadDrawingData(equip_seq, factory_area, layout_row, layout_col);
+
+				}
+			}
+		};
+
+		let getReLoadTableData = function () {
+			'use strict';
+
+			$.ajax({
+				type: 'POST', url: "/tv/mct/gridDataList", dataType: 'json', data: {},
+				success: function (data, textStatus, jqXHR) {
+					if (textStatus !== 'success' || data == null) {
+						fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.2");
+						return;
+					}
+					createGrid1(data.grid_list1);	//불량/반품
+					createGrid2(data.grid_list2);	//긴급주문
+					createGrid3(data.grid_list3);	//납기지연목록
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.");
+				}
+			});
+		};
+
+		/** DRAWING BOARD 정보 실시간 처리 **/
+		let getReLoadDrawingData = function (equipSeq, factoryArea,  equipRow, equipCol) {
+			'use strict';
+			$.ajax({
+				type: 'POST', url: "/tv/mct/machineDrawingData", dataType: 'json',
+				data: {"EQUIP_SEQ": equipSeq},
+				success: function (data, textStatus, jqXHR) {
+					if (textStatus !== 'success' || data == null) {
+						fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.2");
+						return;
+					}
+					let $target = $("#" + factoryArea + "_" + equipRow + "_" + equipCol);
+					$target.find(".statusConts").empty();
+					let mct_list = data.mct_drawing_list; //mct
 					if (mct_list != '') {
+
+						let total_cnt_info = mct_list[0].TOTAL_CNT_INFO;
+						let total_part_qty_info = mct_list[0].TOTAL_PART_QTY_INFO;
+						let total_plan_working_time_info = mct_list[0].TOTAL_PLAN_WORKING_TIME_INFO;//여기까지 상단
+
+						$target.find(".inBox:nth-child(3)").find('div:nth-child(1)').html(total_cnt_info + '&nbsp;' + total_part_qty_info);
+						$target.find(".inBox:nth-child(3)").find('div:nth-child(2)').html(total_plan_working_time_info);
+
 						for (let i = 0; i < mct_list.length; i++) {
-							//let EQUIP_SEQ = mct_list[i].EQUIP_SEQ;
-							let factory_area = mct_list[i].FACTORY_AREA;
-							let layout_row = mct_list[i].LAYOUT_ROW;
-							let layout_col = mct_list[i].LAYOUT_COL;
-							let user_nm = mct_list[i].USER_NM;
-							let total_cnt_info = mct_list[i].TOTAL_CNT_INFO;
-							let total_part_qty_info = mct_list[i].TOTAL_PART_QTY_INFO;
-							let total_plan_working_time_info = mct_list[i].TOTAL_PLAN_WORKING_TIME_INFO;//여기까지 상단
 
 							let work_plan_type = ( mct_list[i].WORK_PLAN_TYPE != undefined ) ? mct_list[i].WORK_PLAN_TYPE : '' ;//1:작동중, 나머지:계획
 							let inner_due_dt = ( mct_list[i].INNER_DUE_DT != undefined ) ? mct_list[i].INNER_DUE_DT : '' ;
@@ -1402,10 +1448,6 @@
 							let working_time_info = ( mct_list[i].WORKING_TIME_INFO != undefined ) ? mct_list[i].WORKING_TIME_INFO : '' ;
 							let plan_working_time_info =( mct_list[i].PLAN_WORKING_TIME_INFO != undefined ) ? mct_list[i].PLAN_WORKING_TIME_INFO : '' ;
 							let imageSeq =( mct_list[i].IMG_GFILE_SEQ != undefined ) ? mct_list[i].IMG_GFILE_SEQ : '' ;
-							let $target = $("#" + factory_area + "_" + layout_row + "_" + layout_col);
-
-							$target.find(".inBox:nth-child(3)").find('div:nth-child(1)').html(total_cnt_info + '&nbsp;' + total_part_qty_info);
-							$target.find(".inBox:nth-child(3)").find('div:nth-child(2)').html(total_plan_working_time_info);
 
 							let divHtml = '<div class="inWrap">';
 								divHtml += '<a href="javascript:callWindowImageViewer(' + imageSeq + ');">';
@@ -1443,114 +1485,6 @@
 							}
 						});
 					}
-					if (grid_list1 != '') {
-						let totalCount = 0;
-						for (let i = 0; i < grid_list1.length; i++) {
-							totalCount = grid_list1[i].TOTAL_COUNT;
-							let inspect_dt = grid_list1[i].INSPECT_DT == undefined ? "" : grid_list1[i].INSPECT_DT;
-							let order_comp_nm = grid_list1[i].ORDER_COMP_NM == undefined ? "" : grid_list1[i].ORDER_COMP_NM;
-							let control_part_info = grid_list1[i].CONTROL_PART_INFO == undefined ? "" : grid_list1[i].CONTROL_PART_INFO;
-							let error_type = grid_list1[i].ERROR_TYPE == undefined ? "" : grid_list1[i].ERROR_TYPE;
-							let error_qty_info = grid_list1[i].ERROR_QTY_INFO == undefined ? "" : grid_list1[i].ERROR_QTY_INFO;
-							let inner_due_dt = grid_list1[i].INNER_DUE_DT == undefined ? "" : grid_list1[i].INNER_DUE_DT;
-							let inspect_result_nm = grid_list1[i].INSPECT_RESULT_NM == undefined ? "" : grid_list1[i].INSPECT_RESULT_NM;
-							let error_action_nm = grid_list1[i].ERROR_ACTION_NM == undefined ? "" : grid_list1[i].ERROR_ACTION_NM;
-
-							let grid1Html = '<tr>';
-								grid1Html += '<td>' + (i+1) +'</td>';
-								grid1Html += '<td>'+ inspect_dt + '</td>';
-								grid1Html += '<td>'+ order_comp_nm + '</td>';
-								grid1Html += '<td class="alignLeft ellipsis">'+ control_part_info + '</td>';
-								grid1Html += '<td class="txtR">'+ error_type + '</td>';
-								grid1Html += '<td class="txtR">'+ error_qty_info + '</td>';
-								grid1Html += '<td>'+ inner_due_dt + '</td>';
-								grid1Html += '<td>'+ inspect_result_nm + '</td>';
-								grid1Html += '<td class="ellipsis">'+ error_action_nm + '</td>';
-								grid1Html += '</tr>';
-
-							$("#grid1").append(grid1Html);
-							if((i+1) == 5){
-								break;
-							}
-						}
-						$("#grid1_total").html("(total: " + totalCount + ")");
-					} else {
-						for (let i = 0; i < 5; i++) {
-							let grid1Html = '<tr><td colspan="8"></td></tr>';
-							$("#grid1").append(grid1Html);
-						}
-						$("#grid1_total").html("(total: 0)");
-					}
-
-					if (grid_list2 != '') {
-						let totalCount = 0;
-						for (let i = 0; i < grid_list2.length; i++) {
-							totalCount = grid_list2[i].TOTAL_COUNT;
-							let inner_due_dt = grid_list2[i].INNER_DUE_DT == undefined ? "" : grid_list2[i].INNER_DUE_DT;
-							let order_comp_nm = grid_list2[i].ORDER_COMP_NM == undefined ? "" : grid_list2[i].ORDER_COMP_NM;
-							let control_part_info = grid_list2[i].CONTROL_PART_INFO == undefined ? "" : grid_list2[i].CONTROL_PART_INFO;
-							let control_part_qty_info = grid_list2[i].CONTROL_PART_QTY_INFO == undefined ? "" : grid_list2[i].CONTROL_PART_QTY_INFO;
-							let part_status_nm = grid_list2[i].PART_STATUS_NM == undefined ? "" : grid_list2[i].PART_STATUS_NM;
-							let pop_position_nm = grid_list2[i].POP_POSITION_NM == undefined ? "" : grid_list2[i].POP_POSITION_NM;
-
-							let grid2Html = '<tr>';
-								grid2Html += '<td>' + (i+1) +'</td>';
-								grid2Html += '<td class="txtR bold">'+ inner_due_dt + '</td>';
-								grid2Html += '<td class="ellipsis">'+ order_comp_nm + '</td>';
-								grid2Html += '<td class="alignLeft ellipsis">'+ control_part_info + '</td>';
-								grid2Html += '<td>'+ control_part_qty_info + '</td>';
-								grid2Html += '<td class="ellipsis">'+ part_status_nm + '</td>';
-								grid2Html += '<td>'+ pop_position_nm + '</td>';
-								grid2Html += '</tr>';
-
-							$("#grid2").append(grid2Html);
-							if((i+1) == 5){
-								break;
-							}
-						}
-						$("#grid2_total").html("(total: " + totalCount + ")");
-					}  else {
-						for (let i = 0; i < 5; i++) {
-							let grid2Html = '<tr><td colspan="8"></td></tr>';
-							$("#grid2").append(grid2Html);
-						}
-						$("#grid2_total").html("(total: 0)");
-					}
-
-					if (grid_list3 != '') {
-						let totalCount = 0;
-						for (let i = 0; i < grid_list3.length; i++) {
-
-							totalCount = grid_list3[i].TOTAL_COUNT;
-							let inner_due_dt = grid_list3[i].INNER_DUE_DT == undefined ? "" : grid_list3[i].INNER_DUE_DT;
-							let order_comp_nm = grid_list3[i].ORDER_COMP_NM == undefined ? "" : grid_list3[i].ORDER_COMP_NM;
-							let control_part_info = grid_list3[i].CONTROL_PART_INFO == undefined ? "" : grid_list3[i].CONTROL_PART_INFO;
-							let control_part_qty_info = grid_list3[i].CONTROL_PART_QTY_INFO == undefined ? "" : grid_list3[i].CONTROL_PART_QTY_INFO;
-							let part_status_nm = grid_list3[i].PART_STATUS_NM == undefined ? "" : grid_list3[i].PART_STATUS_NM;
-							let charge_user_nm = grid_list3[i].CHARGE_USER_NM == undefined ? "" : grid_list3[i].CHARGE_USER_NM;
-
-							let grid3Html = '<tr>';
-								grid3Html += '<td>' + (i+1) +'</td>';
-								grid3Html += '<td class="txtR bold">'+ inner_due_dt + '</td>';
-								grid3Html += '<td class="alignLeft ellipsis">'+ order_comp_nm + '</td>';
-								grid3Html += '<td class="alignLeft ellipsis">'+ control_part_info + '</td>';
-								grid3Html += '<td>'+ control_part_qty_info + '</td>';
-								grid3Html += '<td>'+ part_status_nm + '</td>';
-								grid3Html += '<td>'+ charge_user_nm + '</td>';
-								grid3Html += '</tr>';
-							$("#grid3").append(grid3Html);
-							if((i+1) == 5){
-								break;
-							}
-						}
-						$("#grid3_total").html("(total: " + totalCount + ")");
-					} else {
-						for (let i = 0; i < 5; i++) {
-							let grid3Html = '<tr><td colspan="8"></td></tr>';
-							$("#grid3").append(grid3Html);
-						}
-						$("#grid3_total").html("(total: 0)");
-					}
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.");
@@ -1558,195 +1492,180 @@
 			});
 		};
 
-		let getTableData = function () {
-			'use strict';
+		let createGrid1 = function(grid_list1){
+			$("#grid1").empty();
+			if (grid_list1 != '') {
+				let totalCount = 0;
+				for (let i = 0; i < grid_list1.length; i++) {
+					totalCount = grid_list1[i].TOTAL_COUNT;
+					let inspect_dt = grid_list1[i].INSPECT_DT == undefined ? "" : grid_list1[i].INSPECT_DT;
+					let order_comp_nm = grid_list1[i].ORDER_COMP_NM == undefined ? "" : grid_list1[i].ORDER_COMP_NM;
+					let control_part_info = grid_list1[i].CONTROL_PART_INFO == undefined ? "" : grid_list1[i].CONTROL_PART_INFO;
+					let error_type = grid_list1[i].ERROR_TYPE == undefined ? "" : grid_list1[i].ERROR_TYPE;
+					let error_qty_info = grid_list1[i].ERROR_QTY_INFO == undefined ? "" : grid_list1[i].ERROR_QTY_INFO;
+					let inner_due_dt = grid_list1[i].INNER_DUE_DT == undefined ? "" : grid_list1[i].INNER_DUE_DT;
+					let inspect_result_nm = grid_list1[i].INSPECT_RESULT_NM == undefined ? "" : grid_list1[i].INSPECT_RESULT_NM;
+					let error_action_nm = grid_list1[i].ERROR_ACTION_NM == undefined ? "" : grid_list1[i].ERROR_ACTION_NM;
 
-			$.ajax({
-				type: 'POST', url: "/tv/mct/gridDataList", dataType: 'json', data: {},
-				success: function (data, textStatus, jqXHR) {
-					if (textStatus !== 'success' || data == null) {
-						fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.2");
-						return;
+					let grid1Html = '<tr>';
+						grid1Html += '<td>' + (i+1) +'</td>';
+						grid1Html += '<td>'+ inspect_dt + '</td>';
+						grid1Html += '<td>'+ order_comp_nm + '</td>';
+						grid1Html += '<td class="alignLeft ellipsis">'+ control_part_info + '</td>';
+						grid1Html += '<td class="txtR">'+ error_type + '</td>';
+						grid1Html += '<td class="txtR">'+ error_qty_info + '</td>';
+						grid1Html += '<td>'+ inner_due_dt + '</td>';
+						grid1Html += '<td>'+ inspect_result_nm + '</td>';
+						grid1Html += '<td class="ellipsis">'+ error_action_nm + '</td>';
+						grid1Html += '</tr>';
+
+					$("#grid1").append(grid1Html);
+					if((i+1) == 5){
+						break;
 					}
-					let grid_list1 = data.grid_list1;//불량/반품
-					let grid_list2 = data.grid_list2;//긴급주문
-					let grid_list3 = data.grid_list3;//납기지연목록
-
-					$("#grid1").empty();
-					$("#grid2").empty();
-					$("#grid3").empty();
-
-					if (grid_list1 != '') {
-						let totalCount = 0;
-						for (let i = 0; i < grid_list1.length; i++) {
-							totalCount = grid_list1[i].TOTAL_COUNT;
-							let inspect_dt = grid_list1[i].INSPECT_DT == undefined ? "" : grid_list1[i].INSPECT_DT;
-							let order_comp_nm = grid_list1[i].ORDER_COMP_NM == undefined ? "" : grid_list1[i].ORDER_COMP_NM;
-							let control_part_info = grid_list1[i].CONTROL_PART_INFO == undefined ? "" : grid_list1[i].CONTROL_PART_INFO;
-							let error_type = grid_list1[i].ERROR_TYPE == undefined ? "" : grid_list1[i].ERROR_TYPE;
-							let error_qty_info = grid_list1[i].ERROR_QTY_INFO == undefined ? "" : grid_list1[i].ERROR_QTY_INFO;
-							let inner_due_dt = grid_list1[i].INNER_DUE_DT == undefined ? "" : grid_list1[i].INNER_DUE_DT;
-							let inspect_result_nm = grid_list1[i].INSPECT_RESULT_NM == undefined ? "" : grid_list1[i].INSPECT_RESULT_NM;
-							let error_action_nm = grid_list1[i].ERROR_ACTION_NM == undefined ? "" : grid_list1[i].ERROR_ACTION_NM;
-
-							let grid1Html = '<tr>';
-								grid1Html += '<td>' + (i+1) +'</td>';
-								grid1Html += '<td>'+ inspect_dt + '</td>';
-								grid1Html += '<td>'+ order_comp_nm + '</td>';
-								grid1Html += '<td class="alignLeft ellipsis">'+ control_part_info + '</td>';
-								grid1Html += '<td class="txtR">'+ error_type + '</td>';
-								grid1Html += '<td class="txtR">'+ error_qty_info + '</td>';
-								grid1Html += '<td>'+ inner_due_dt + '</td>';
-								grid1Html += '<td>'+ inspect_result_nm + '</td>';
-								grid1Html += '<td class="ellipsis">'+ error_action_nm + '</td>';
-								grid1Html += '</tr>';
-
-							$("#grid1").append(grid1Html);
-							if((i+1) == 5){
-								break;
-							}
-						}
-						$("#grid1_total").html("(total: " + totalCount + ")");
-					} else {
-						for (let i = 0; i < 5; i++) {
-							let grid1Html = '<tr><td colspan="8"></td></tr>';
-							$("#grid1").append(grid1Html);
-						}
-						$("#grid1_total").html("(total: 0)");
-					}
-
-					if (grid_list2 != '') {
-						let totalCount = 0;
-						for (let i = 0; i < grid_list2.length; i++) {
-							totalCount = grid_list2[i].TOTAL_COUNT;
-							let inner_due_dt = grid_list2[i].INNER_DUE_DT == undefined ? "" : grid_list2[i].INNER_DUE_DT;
-							let order_comp_nm = grid_list2[i].ORDER_COMP_NM == undefined ? "" : grid_list2[i].ORDER_COMP_NM;
-							let control_part_info = grid_list2[i].CONTROL_PART_INFO == undefined ? "" : grid_list2[i].CONTROL_PART_INFO;
-							let control_part_qty_info = grid_list2[i].CONTROL_PART_QTY_INFO == undefined ? "" : grid_list2[i].CONTROL_PART_QTY_INFO;
-							let part_status_nm = grid_list2[i].PART_STATUS_NM == undefined ? "" : grid_list2[i].PART_STATUS_NM;
-							let pop_position_nm = grid_list2[i].POP_POSITION_NM == undefined ? "" : grid_list2[i].POP_POSITION_NM;
-
-							let grid2Html = '<tr>';
-								grid2Html += '<td>' + (i+1) +'</td>';
-								grid2Html += '<td class="txtR bold">'+ inner_due_dt + '</td>';
-								grid2Html += '<td class="ellipsis">'+ order_comp_nm + '</td>';
-								grid2Html += '<td class="alignLeft ellipsis">'+ control_part_info + '</td>';
-								grid2Html += '<td>'+ control_part_qty_info + '</td>';
-								grid2Html += '<td class="ellipsis">'+ part_status_nm + '</td>';
-								grid2Html += '<td>'+ pop_position_nm + '</td>';
-								grid2Html += '</tr>';
-
-							$("#grid2").append(grid2Html);
-							if((i+1) == 5){
-								break;
-							}
-						}
-						$("#grid2_total").html("(total: " + totalCount + ")");
-					}  else {
-						for (let i = 0; i < 5; i++) {
-							let grid2Html = '<tr><td colspan="8"></td></tr>';
-							$("#grid2").append(grid2Html);
-						}
-						$("#grid2_total").html("(total: 0)");
-					}
-
-					if (grid_list3 != '') {
-						let totalCount = 0;
-						for (let i = 0; i < grid_list3.length; i++) {
-
-							totalCount = grid_list3[i].TOTAL_COUNT;
-							let inner_due_dt = grid_list3[i].INNER_DUE_DT == undefined ? "" : grid_list3[i].INNER_DUE_DT;
-							let order_comp_nm = grid_list3[i].ORDER_COMP_NM == undefined ? "" : grid_list3[i].ORDER_COMP_NM;
-							let control_part_info = grid_list3[i].CONTROL_PART_INFO == undefined ? "" : grid_list3[i].CONTROL_PART_INFO;
-							let control_part_qty_info = grid_list3[i].CONTROL_PART_QTY_INFO == undefined ? "" : grid_list3[i].CONTROL_PART_QTY_INFO;
-							let part_status_nm = grid_list3[i].PART_STATUS_NM == undefined ? "" : grid_list3[i].PART_STATUS_NM;
-							let charge_user_nm = grid_list3[i].CHARGE_USER_NM == undefined ? "" : grid_list3[i].CHARGE_USER_NM;
-
-							let grid3Html = '<tr>';
-								grid3Html += '<td>' + (i+1) +'</td>';
-								grid3Html += '<td class="txtR bold">'+ inner_due_dt + '</td>';
-								grid3Html += '<td class="alignLeft ellipsis">'+ order_comp_nm + '</td>';
-								grid3Html += '<td class="alignLeft ellipsis">'+ control_part_info + '</td>';
-								grid3Html += '<td>'+ control_part_qty_info + '</td>';
-								grid3Html += '<td>'+ part_status_nm + '</td>';
-								grid3Html += '<td>'+ charge_user_nm + '</td>';
-								grid3Html += '</tr>';
-							$("#grid3").append(grid3Html);
-							if((i+1) == 5){
-								break;
-							}
-						}
-						$("#grid3_total").html("(total: " + totalCount + ")");
-					} else {
-						for (let i = 0; i < 5; i++) {
-							let grid3Html = '<tr><td colspan="8"></td></tr>';
-							$("#grid3").append(grid3Html);
-						}
-						$("#grid3_total").html("(total: 0)");
-					}
-				},
-				error: function (jqXHR, textStatus, errorThrown) {
-					fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.");
 				}
-			});
+				$("#grid1_total").html("(total: " + totalCount + ")");
+			} else {
+				for (let i = 0; i < 5; i++) {
+					let grid1Html = '<tr><td colspan="8"></td></tr>';
+					$("#grid1").append(grid1Html);
+				}
+				$("#grid1_total").html("(total: 0)");
+			}
 		};
 
-		// function jmesConnect() {
-		//     let socket = new SockJS('/jmes-ws');
-		//     stompClient = Stomp.over(socket);
-		//     stompClient.connect({}, function (frame) {
-		//         console.log('Connected: ' + frame);
-		// 		stompClient.subscribe('/topic/drawing', function (notificationMessage) {
-		// 			let messageData = JSON.parse(notificationMessage.body);
-        //             console.log(messageData);
-		// 			// drawingMessageProcess(messageData);
-		// 		});
-		// 		stompClient.subscribe('/topic/worker', function (notificationMessage) {
-		// 			let messageData = JSON.parse(notificationMessage.body);
-        //             console.log(messageData);
-		// 			// workerMessageProcess(messageData);
-		// 		});
-		//     });
-		// }
+		let createGrid2 = function(grid_list2){
+			$("#grid2").empty();
+			if (grid_list2 != '') {
+				let totalCount = 0;
+				for (let i = 0; i < grid_list2.length; i++) {
+					totalCount = grid_list2[i].TOTAL_COUNT;
+					let inner_due_dt = grid_list2[i].INNER_DUE_DT == undefined ? "" : grid_list2[i].INNER_DUE_DT;
+					let order_comp_nm = grid_list2[i].ORDER_COMP_NM == undefined ? "" : grid_list2[i].ORDER_COMP_NM;
+					let control_part_info = grid_list2[i].CONTROL_PART_INFO == undefined ? "" : grid_list2[i].CONTROL_PART_INFO;
+					let control_part_qty_info = grid_list2[i].CONTROL_PART_QTY_INFO == undefined ? "" : grid_list2[i].CONTROL_PART_QTY_INFO;
+					let part_status_nm = grid_list2[i].PART_STATUS_NM == undefined ? "" : grid_list2[i].PART_STATUS_NM;
+					let pop_position_nm = grid_list2[i].POP_POSITION_NM == undefined ? "" : grid_list2[i].POP_POSITION_NM;
 
-		let setIntervalTimer;
-		let timer = function(){
+					let grid2Html = '<tr>';
+						grid2Html += '<td>' + (i+1) +'</td>';
+						grid2Html += '<td class="txtR bold">'+ inner_due_dt + '</td>';
+						grid2Html += '<td class="ellipsis">'+ order_comp_nm + '</td>';
+						grid2Html += '<td class="alignLeft ellipsis">'+ control_part_info + '</td>';
+						grid2Html += '<td>'+ control_part_qty_info + '</td>';
+						grid2Html += '<td class="ellipsis">'+ part_status_nm + '</td>';
+						grid2Html += '<td>'+ pop_position_nm + '</td>';
+						grid2Html += '</tr>';
+
+					$("#grid2").append(grid2Html);
+					if((i+1) == 5){
+						break;
+					}
+				}
+				$("#grid2_total").html("(total: " + totalCount + ")");
+			}  else {
+				for (let i = 0; i < 5; i++) {
+					let grid2Html = '<tr><td colspan="8"></td></tr>';
+					$("#grid2").append(grid2Html);
+				}
+				$("#grid2_total").html("(total: 0)");
+			}
+		};
+
+		let createGrid3 = function(grid_list3){
+			$("#grid3").empty();
+			if (grid_list3 != '') {
+				let totalCount = 0;
+				for (let i = 0; i < grid_list3.length; i++) {
+
+					totalCount = grid_list3[i].TOTAL_COUNT;
+					let inner_due_dt = grid_list3[i].INNER_DUE_DT == undefined ? "" : grid_list3[i].INNER_DUE_DT;
+					let order_comp_nm = grid_list3[i].ORDER_COMP_NM == undefined ? "" : grid_list3[i].ORDER_COMP_NM;
+					let control_part_info = grid_list3[i].CONTROL_PART_INFO == undefined ? "" : grid_list3[i].CONTROL_PART_INFO;
+					let control_part_qty_info = grid_list3[i].CONTROL_PART_QTY_INFO == undefined ? "" : grid_list3[i].CONTROL_PART_QTY_INFO;
+					let part_status_nm = grid_list3[i].PART_STATUS_NM == undefined ? "" : grid_list3[i].PART_STATUS_NM;
+					let charge_user_nm = grid_list3[i].CHARGE_USER_NM == undefined ? "" : grid_list3[i].CHARGE_USER_NM;
+
+					let grid3Html = '<tr>';
+						grid3Html += '<td>' + (i+1) +'</td>';
+						grid3Html += '<td class="txtR bold">'+ inner_due_dt + '</td>';
+						grid3Html += '<td class="alignLeft ellipsis">'+ order_comp_nm + '</td>';
+						grid3Html += '<td class="alignLeft ellipsis">'+ control_part_info + '</td>';
+						grid3Html += '<td>'+ control_part_qty_info + '</td>';
+						grid3Html += '<td>'+ part_status_nm + '</td>';
+						grid3Html += '<td>'+ charge_user_nm + '</td>';
+						grid3Html += '</tr>';
+					$("#grid3").append(grid3Html);
+					if((i+1) == 5){
+						break;
+					}
+				}
+				$("#grid3_total").html("(total: " + totalCount + ")");
+			} else {
+				for (let i = 0; i < 5; i++) {
+					let grid3Html = '<tr><td colspan="8"></td></tr>';
+					$("#grid3").append(grid3Html);
+				}
+				$("#grid3_total").html("(total: 0)");
+			}
+		};
+
+		/** 작업자 로그인 정보 실시간 처리 **/
+		let workerMessageProcess = function(messageData){
+			if(messageData){
+				let actionType = messageData.actionType;
+				let $target = $("#" + messageData.factoryArea + "_" + messageData.equipRow + "_" + messageData.equipCol);
+				if(actionType === 'WK_LOGIN') {
+					$target.find(".inBox:nth-child(2)").html(messageData.userNm);
+				}else{
+					$target.find(".inBox:nth-child(2)").html('&nbsp;');
+				}
+			}
+		};
+
+		function jmesConnect() {
+		    let socket = new SockJS('/jmes-ws');
+		    stompClient = Stomp.over(socket);
+			stompClient.connect({}, (frame) => {
+		        console.log('Connected: ' + frame);
+				stompClient.subscribe('/topic/drawing', function (notificationMessage) {
+					let messageData = JSON.parse(notificationMessage.body);
+					getReLoadDrawingData(messageData.equipSeq, messageData.factoryArea, messageData.equipRow, messageData.equipCol);
+				});
+				stompClient.subscribe('/topic/worker', function (notificationMessage) {
+					let messageData = JSON.parse(notificationMessage.body);
+					workerMessageProcess(messageData);
+				});
+		    }, () => {
+			  	setTimeout(() => {
+					jmesConnect();
+			  	}, 5000);
+			});
+		}
+
+		let setGridSchedulerIntervalTimer;
+		let gridSchedulerTimer = function(){
 			// let selVal = 60;//1분
-			let selVal = 60;//1분
-			let timesec = 1000;//1초
-			setIntervalTimer = setInterval(function() {
-				getInitData();
+			let selVal = 5;// 분
+			let timesec = 60000;//60초
+			setGridSchedulerIntervalTimer = setInterval(function() {
+				getReLoadTableData();
+			}, timesec*selVal);
+		};
+
+		let setWorkSchedulerIntervalTimer;
+		let workSchedulerTimer = function(){
+			let selVal = 1;// 분
+			let timesec = 60000;//60초
+			setWorkSchedulerIntervalTimer = setInterval(function() {
+				getReLoadWorkData('scheduler');
 			}, timesec*selVal);
 		};
 
 		getInitData();
-		timer();
-
-		$(document).on('click', 'a[href="#a;"]', function(e){
-			e.preventDefault();
-		});
-
-		// Date.prototype.format = function (f) {
-		// 	if (!this.valueOf()) return ' ';
-		// 	let d = this;
-		// 	return f.replace(/(Y|c|e)/gi, function ($1) {
-		// 		switch ($1) {
-		// 			case 'Y':
-		// 				return d.getFullYear(); // Year with 4 digits.
-		// 			case "c":
-		// 				return d.getMonth() + 1; // Month with 1 or 2 digits.
-		// 			case "e":
-		// 				return d.getDate(); // Day with 1 or 2 digits.
-		// 			default:
-		// 				return $1;
-		// 		}
-		// 	});
-		// };
-		//
-		// const TODAY = new Date();
-		// const TWO_DAYS_LATER = new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate() + 2);
-		//
-		// $('.tblDate').html(TODAY.format('Y/c/e') + '~' + TWO_DAYS_LATER.format('c/e'));
+		jmesConnect();
+		gridSchedulerTimer();
+		workSchedulerTimer();
 	});
 </script>
 </body>

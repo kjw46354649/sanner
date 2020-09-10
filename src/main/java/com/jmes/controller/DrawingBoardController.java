@@ -218,7 +218,7 @@ public class DrawingBoardController {
         HashMap<String, Object> alarmHashMap = new HashMap<String, Object>();
         alarmHashMap.put("CONTROL_SEQ", hashMap.get("CONTROL_SEQ"));
         alarmHashMap.put("CONTROL_DETAIL_SEQ", hashMap.get("CONTROL_DETAIL_SEQ"));
-        alarmHashMap.put("MCT_WORK_SEQ", hashMap.get("MCT_WORK_SEQ"));
+        // alarmHashMap.put("MCT_WORK_SEQ", hashMap.get("MCT_WORK_SEQ"));
         alarmHashMap.put("EQUIP_SEQ", machineInfo.get("EQUIP_SEQ"));
         simpMessagingTemplate.convertAndSend("/topic/drawing", getNotificationMessage(alarmHashMap, ActionType.DB_START, "가공시작"));
 
