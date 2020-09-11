@@ -159,85 +159,92 @@
 
     <select id="selectOutsideCloseLeftList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            X.COMP_CD,
-            SF_GET_COMP_NM(X.COMP_CD) AS COMP_NM,
-            X.OUTSIDE_COMP_CD,
-            SF_GET_COMP_NM(X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM,
-            X.CLOSE_MONTH,
-            DATE_FORMAT(STR_TO_DATE(X.CLOSE_MONTH, '%Y%m'), '%Y.%m월') AS CLOSE_MONTH_TRAN,
-            X.CLOSE_VER,
-            CONCAT(X.CLOSE_VER, '차') AS CLOSE_VER_TRAN,
-            COUNT(*) AS CNT,
-            CONCAT(CAST(SUM(X.CONTROL_PART_QTY) AS CHAR), 'EA') AS CONTROL_PART_QTY,
-            FORMAT(SUM(X.TOTAL_AMT), 0) AS TOTAL_AMT,
-            FORMAT(X.FINAL_NEGO_AMT, 0) AS FINAL_NEGO_AMT <!-- 마감 금액 -->
+            X.COMP_CD, <!-- 사업자 -->
+            SF_GET_COMP_NM(X.COMP_CD) AS COMP_NM, <!-- 사업자 -->
+            X.OUTSIDE_COMP_CD, <!-- 외주업체(대상업체) -->
+            CONCAT('\'', X.OUTSIDE_COMP_CD, '\'') AS OUTSIDE_COMP_CD_QUOTATION, <!-- 외주업체(대상업체) -->
+            SF_GET_COMP_NM(X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM, <!-- 외주업체(대상업체) -->
+            X.CLOSE_MONTH, <!-- 마감 월 -->
+            SUBSTR(X.CLOSE_MONTH, 1, 4) AS OUTSIDE_CLOSE_YEAR,
+            SUBSTR(X.CLOSE_MONTH, 5, 2) AS OUTSIDE_CLOSE_MONTH,
+            DATE_FORMAT(STR_TO_DATE(X.CLOSE_MONTH, '%Y%m'), '%Y.%m월') AS CLOSE_MONTH_TRAN,  <!-- 마감 월 -->
+            MAX(X.CLOSE_VER) AS CLOSE_VER,  <!-- 차수 -->
+            CONCAT(MAX(X.CLOSE_VER), '차') AS VIEW_CLOSE_VER, <!-- 차수 -->
+            COUNT(*) AS CNT, <!-- 품수 -->
+            CONCAT(CAST(SUM(X.CONTROL_PART_QTY) AS CHAR), ' EA') AS CONTROL_PART_QTY, <!-- 수량 -->
+            FORMAT(SUM(X.OUTSIDE_TOTAL_AMT), 0) AS OUTSIDE_TOTAL_AMT, <!-- 외주 금액 -->
+            FORMAT(X.FINAL_NEGO_AMT, 0) AS FINAL_NEGO_AMT, <!-- 마감 금액 -->
+            MAX(X.CLOSE_VER) AS NEW_CLOSE_VER,  <!-- 신규 차수 -->
+            0 AS UPDATE_CLOSE_VER <!-- 업데이트 차수(화면에서 신규차수 선택용도) -->
         FROM (
             SELECT
-                A.COMP_CD,
+                #{COMP_CD} AS COMP_CD,
                 B.OUTSIDE_COMP_CD,
                 SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM,
-                C.CLOSE_MONTH,
-                DATE_FORMAT(STR_TO_DATE(C.CLOSE_MONTH, '%Y%m'), '%Y.%m월' ) AS CLOSE_MONTH_TRAN,
-                C.CLOSE_VER,
-                B.UNIT_FINAL_AMT,
+                CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH}) AS CLOSE_MONTH,
+                IFNULL((SELECT MAX(AA.CLOSE_VER)
+                        FROM TBL_OUTSIDE_CLOSE AA
+                            INNER JOIN TBL_OUTSIDE_CLOSE_NOTE BB ON AA.CLOSE_MONTH = BB.CLOSE_MONTH  AND AA.CLOSE_VER = BB.CLOSE_VER
+                                AND BB.OUTSIDE_COMP_CD IN (SELECT OUTSIDE_COMP_CD FROM TBL_CONTROL_PART N WHERE N.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ}))
+                        WHERE 1 = 1
+                            AND AA.CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
+                            AND B.OUTSIDE_COMP_CD = BB.OUTSIDE_COMP_CD), 0) + 1 AS CLOSE_VER,
+                B.OUTSIDE_UNIT_AMT,
                 SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY,
-                B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT, <!-- 발주가 -->
-                D.FINAL_NEGO_AMT <!-- 마감금액 -->
+                B.OUTSIDE_UNIT_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS OUTSIDE_TOTAL_AMT, <!-- 외주 금액 -->
+                B.OUTSIDE_UNIT_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS FINAL_NEGO_AMT
             FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                    AND B.OUTSIDE_YN = 'Y'
-                    AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
-                INNER JOIN TBL_OUTSIDE_CLOSE C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                    AND B.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})
+                LEFT OUTER JOIN TBL_OUTSIDE_CLOSE C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                     AND C.CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
-                INNER JOIN TBL_OUTSIDE_CLOSE_NOTE D ON A.COMP_CD = D.COMP_CD
-                    AND B.OUTSIDE_COMP_CD = D.OUTSIDE_COMP_CD
-                    AND C.CLOSE_MONTH = D.CLOSE_MONTH
-                    AND C.CLOSE_VER = D.CLOSE_VER
             WHERE 1 = 1
-                AND A.DEL_YN = 'N'
-                AND A.COMP_CD = #{COMP_CD}) X
+                AND A.DEL_YN = 'N') X
         GROUP BY X.COMP_CD, X.OUTSIDE_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER
         ORDER BY X.COMP_CD, X.OUTSIDE_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER
     </select>
 
     <select id="selectOutsideCloseRightList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
+            SUM(X.STATUS) AS STATUS, <!-- 1: 변경X, 2: 추가, 3: 변경 -->
             X.COMP_CD,
             SF_GET_COMP_NM(X.COMP_CD) AS COMP_NM,
             X.OUTSIDE_COMP_CD,
+            CONCAT('\'', X.OUTSIDE_COMP_CD, '\'') AS OUTSIDE_COMP_CD_QUOTATION, <!-- 외주업체(대상업체) -->
             SF_GET_COMP_NM(X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM,
             X.CLOSE_MONTH,
             DATE_FORMAT(STR_TO_DATE(X.CLOSE_MONTH, '%Y%m'), '%Y.%m월') AS CLOSE_MONTH_TRAN,
             X.CLOSE_VER,
             CONCAT(X.CLOSE_VER, '차') AS CLOSE_VER_TRAN,
             SUM(X.CNT) AS CNT,
-            CONCAT(CAST(SUM(X.CONTROL_PART_QTY) AS CHAR), 'EA') AS CONTROL_PART_QTY,
-            FORMAT(SUM(X.TOTAL_AMT), 0) AS TOTAL_AMT,
-            FORMAT(SUM(X.FINAL_NEGO_AMT), 0) AS FINAL_NEGO_AMT
+            CONCAT(CAST(SUM(X.CONTROL_PART_QTY) AS CHAR), ' EA') AS CONTROL_PART_QTY,
+            SUM(X.OUTSIDE_TOTAL_AMT) AS OUTSIDE_TOTAL_AMT,
+            SUM(X.FINAL_NEGO_AMT) AS FINAL_NEGO_AMT
         FROM (
             SELECT
+                P.STATUS,
                 P.COMP_CD,
                 P.OUTSIDE_COMP_CD,
                 P.CLOSE_MONTH,
                 COUNT(*) AS CNT,
                 P.CLOSE_VER,
                 SUM(P.CONTROL_PART_QTY) AS CONTROL_PART_QTY,
-                SUM(P.TOTAL_AMT) AS TOTAL_AMT,
+                SUM(P.OUTSIDE_TOTAL_AMT) AS OUTSIDE_TOTAL_AMT,
                 P.FINAL_NEGO_AMT
             FROM (
                 SELECT
+                    1 AS STATUS,
                     A.COMP_CD,
                     B.OUTSIDE_COMP_CD,
                     C.CLOSE_MONTH,
                     C.CLOSE_VER,
                     SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY,
-                    B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT,
+                    B.OUTSIDE_UNIT_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS OUTSIDE_TOTAL_AMT,
                     D.FINAL_NEGO_AMT
                 FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                     AND B.OUTSIDE_YN = 'Y'
-                    AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
+                    AND B.OUTSIDE_COMP_CD IN (${OUTSIDE_COMP_CD_QUOTATION})
                 INNER JOIN TBL_OUTSIDE_CLOSE C ON B.CONTROL_SEQ = C.CONTROL_SEQ
                     AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                     AND C.CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
@@ -251,32 +258,48 @@
             GROUP BY P.COMP_CD, P.OUTSIDE_COMP_CD, P.CLOSE_MONTH, P.CLOSE_VER
             UNION ALL
             SELECT
+                Q.STATUS,
                 Q.COMP_CD,
                 Q.OUTSIDE_COMP_CD,
                 Q.CLOSE_MONTH,
                 COUNT(*) AS CNT,
                 Q.CLOSE_VER,
                 SUM(Q.CONTROL_PART_QTY) AS CONTROL_PART_QTY,
-                SUM(Q.TOTAL_AMT) AS TOTAL_AMT,
+                SUM(Q.OUTSIDE_TOTAL_AMT) AS OUTSIDE_TOTAL_AMT,
                 SUM(Q.FINAL_NEGO_AMT) AS FINAL_NEGO_AMT
             FROM (
                 SELECT
-                    A.COMP_CD,
+                    2 AS STATUS,
+                    #{COMP_CD} AS COMP_CD,
                     B.OUTSIDE_COMP_CD,
                     CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH}) AS CLOSE_MONTH,
-                    #{CLOSE_VER} AS CLOSE_VER,
+                    <choose>
+                        <when test="CLOSE_VER !='' and CLOSE_VER != null">
+                            #{CLOSE_VER} AS CLOSE_VER,
+                        </when>
+                        <otherwise>
+                            IFNULL(( SELECT MAX(AA.CLOSE_VER)
+                                    FROM TBL_OUTSIDE_CLOSE AA
+                                        INNER JOIN TBL_OUTSIDE_CLOSE_NOTE BB ON AA.CLOSE_MONTH = BB.CLOSE_MONTH  AND AA.CLOSE_VER = BB.CLOSE_VER
+                                            AND BB.OUTSIDE_COMP_CD IN (SELECT OUTSIDE_COMP_CD FROM TBL_CONTROL_PART N WHERE N.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ}))
+                                    WHERE 1 = 1
+                                        AND AA.CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
+                                        AND B.OUTSIDE_COMP_CD = BB.OUTSIDE_COMP_CD), 0) + 1 AS CLOSE_VER,
+                        </otherwise>
+                    </choose>
                     SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY,
-                    B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT,
-                    B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS FINAL_NEGO_AMT
+                    B.OUTSIDE_UNIT_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS OUTSIDE_TOTAL_AMT,
+                    B.OUTSIDE_UNIT_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS FINAL_NEGO_AMT
                 FROM TBL_CONTROL A
                     INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                 WHERE 1 = 1
+                    AND A.DEL_YN = 'N'
                     AND B.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})
                     AND NOT EXISTS (SELECT *
                                     FROM TBL_CONTROL AA
                                     INNER JOIN TBL_CONTROL_PART BB ON AA.CONTROL_SEQ = BB.CONTROL_SEQ
                                         AND BB.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})
-                                        AND BB.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
+                                        AND BB.OUTSIDE_COMP_CD IN (${OUTSIDE_COMP_CD_QUOTATION})
                                     INNER JOIN TBL_OUTSIDE_CLOSE CC ON BB.CONTROL_SEQ = CC.CONTROL_SEQ
                                         AND BB.CONTROL_DETAIL_SEQ = CC.CONTROL_DETAIL_SEQ
                                         AND CC.CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
