@@ -1627,7 +1627,6 @@
 		    let socket = new SockJS('/jmes-ws');
 		    stompClient = Stomp.over(socket);
 			stompClient.connect({}, (frame) => {
-		        console.log('Connected: ' + frame);
 				stompClient.subscribe('/topic/drawing', function (notificationMessage) {
 					let messageData = JSON.parse(notificationMessage.body);
 					getReLoadDrawingData(messageData.equipSeq, messageData.factoryArea, messageData.equipRow, messageData.equipCol);

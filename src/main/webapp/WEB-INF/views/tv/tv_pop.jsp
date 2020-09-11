@@ -1436,10 +1436,6 @@
 			alarmMessageProcess(messageData);
 			let actionType = messageData.actionType;
 			let $target = $("#" + messageData.factoryArea + "_" + messageData.equipPosition);
-
-			console.log("drawingMessageProcess");
-			console.log(messageData);
-
 			if(actionType === 'DB_COMPLETE') {
 				$target.find(".proName").removeClass("ellipsis");
 				$target.find(".proName").html('');
@@ -1470,7 +1466,6 @@
 		    let socket = new SockJS('/jmes-ws');
 		    stompClient = Stomp.over(socket);
 			stompClient.connect({}, (frame) => {
-		        console.log('Connected: ' + frame);
 		        stompClient.subscribe('/topic/pop', function (notificationMessage) {
 		            let messageData = JSON.parse(notificationMessage.body);
 		            //console.log(messageData);
