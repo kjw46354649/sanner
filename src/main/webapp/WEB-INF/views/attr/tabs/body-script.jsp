@@ -752,8 +752,18 @@
      * @description 레퍼런스 참조 없는 배열 복사(deep copy)
      * @param obj
      */
-    let fnCloneObj = function (obj) {
-        return {...obj}
+    const fnCloneObj = function (obj) {
+        if (obj === null || typeof obj !== 'object') {
+            return obj;
+        }
+
+        const result = Array.isArray(obj) ? [] : {};
+
+        for (let key of Object.keys(obj)) {
+            result[key] = fnCloneObj(obj[key])
+        }
+
+        return result;
     };
 
     /**
@@ -1145,6 +1155,23 @@
      */
     const fnIsEmpty =  function(str){
         return str === undefined || str === null || str === '';
+    };
+
+    /**
+     * @description 속성으로 객체 분류하기
+     * @param objectArray
+     * @param property
+     * @returns {*}
+     */
+    const fnGroupBy = function (objectArray, property) {
+        return objectArray.reduce(function (acc, obj) {
+            var key = obj[property];
+            if (!acc[key]) {
+                acc[key] = [];
+            }
+            acc[key].push(obj);
+            return acc;
+        }, {});
     };
 
     $(document).on('click', '#DETAIL_VIEW', function () {

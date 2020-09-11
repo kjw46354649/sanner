@@ -304,12 +304,6 @@
                 <input type="hidden" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
                 <div class="leftbuttonWrap">
                     <div class="d-inline-block">
-                        <label for="OUTSIDE_CLOSE_POP_COMP_CD"></label>
-                        <select name="COMP_CD" id="OUTSIDE_CLOSE_POP_COMP_CD">
-                            <option></option>
-                        </select>
-                    </div>
-                    <div class="d-inline-block">
                         <label for="OUTSIDE_CLOSE_POP_YEAR"></label>
                         <select name="OUTSIDE_CLOSE_YEAR" id="OUTSIDE_CLOSE_POP_YEAR">
                             <option></option>
@@ -319,6 +313,15 @@
                         <label for="OUTSIDE_CLOSE_POP_MONTH"></label>
                         <select name="OUTSIDE_CLOSE_MONTH" id="OUTSIDE_CLOSE_POP_MONTH">
                             <option></option>
+                        </select>
+                    </div>
+                    <div class="d-inline-block">
+                        <label for="CLOSE_VER"></label><select name="CLOSE_VER" id="CLOSE_VER">
+                            <option value="1">1차</option>
+                            <option value="2">2차</option>
+                            <option value="3">3차</option>
+                            <option value="4">4차</option>
+                            <option value="5">5차</option>
                         </select>
                     </div>
                 </div>
@@ -1360,57 +1363,45 @@
             let selectedRowCount = selectedRowIndex.length;
             let controlDetailSeqList = [];
             let compCdList = [];
-            let outsideCompCdList = [];
+            let coCompCdList = [];
             let controlDetailSeqStr = '';
-            let compCdStr = '';
-            let outsideCompCdStr = '';
 
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $outsideOrderManageGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
 
                 controlDetailSeqList.push(rowData.CONTROL_DETAIL_SEQ);
                 compCdList.push(rowData.COMP_CD);
-                outsideCompCdList.push(rowData.OUTSIDE_COMP_CD);
+                coCompCdList.push(rowData.OUTSIDE_COMP_CD);
             }
             // 중복제거
-            compCdList = [...new Set(compCdList)];
-            outsideCompCdList = [...new Set(outsideCompCdList)];
+            compCdList = compCdList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
+            coCompCdList = coCompCdList.filter(function (element, index, array) {
+                return array.indexOf(element) === index;
+            });
 
-            for (let i = 0, LENGTH = controlDetailSeqList.length; i < LENGTH; i++) {
+            for (let i = 0; i < controlDetailSeqList.length; i++) {
                 controlDetailSeqStr += controlDetailSeqList[i];
 
-                if (i < LENGTH - 1) {
+                if (i < controlDetailSeqList.length - 1) {
                     controlDetailSeqStr += ',';
-                }
-            }
-            for (let i = 0, LENGTH = compCdList.length; i < LENGTH; i++) {
-                compCdStr += compCdList[i];
-
-                if (i < LENGTH - 1) {
-                    compCdStr += ',';
-                }
-            }
-            for (let i = 0, LENGTH = outsideCompCdList.length; i < LENGTH; i++) {
-                outsideCompCdStr += outsideCompCdList[i];
-
-                if (i < LENGTH - 1) {
-                    outsideCompCdStr += ',';
                 }
             }
 
             $('#OUTSIDE_CLOSE_FORM > #CONTROL_DETAIL_SEQ').val(controlDetailSeqStr);
-            $('#OUTSIDE_CLOSE_FORM > #COMP_CD').val(compCdStr);
-            $('#OUTSIDE_CLOSE_FORM > #OUTSIDE_COMP_CD').val(outsideCompCdStr);
+            $('#OUTSIDE_CLOSE_FORM > #COMP_CD').val(compCdList[0]);
+            $('#OUTSIDE_CLOSE_FORM > #OUTSIDE_COMP_CD').val(coCompCdList[0]);
 
             if (open) {
                 // 마지막 마감 차수 가져오기
-                /*let postData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_FORM');
+                let postData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_FORM');
                 postData.queryId = 'outMapper.selectOutSideCloseVer';
                 let parameters = {'url': '/json-list', 'data': postData};
                 fnPostAjaxAsync(function (data) {
                     let closeVer = data.list.length > 0 ? data.list[0].MAX_CLOSE_VER : 1;
                     $('#OUTSIDE_CLOSE_FORM #CLOSE_VER').val(closeVer).prop('selected', true);
-                }, parameters, '');*/
+                }, parameters, '');
 
                 let outsideCloseLeftPostData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_FORM');
                 outsideCloseLeftPostData.queryId = 'orderMapper.selectControlCloseLeftList';
@@ -1822,12 +1813,14 @@
 
             for (let i = 0, CONTROL_SEQ_LIST_LENGTH = controlSeqList.length; i < CONTROL_SEQ_LIST_LENGTH; i++) {
                 controlSeqStr += controlSeqList[i];
+
                 if (i < CONTROL_SEQ_LIST_LENGTH - 1) {
                     controlSeqStr += ',';
                 }
             }
             for (let i = 0, CONTROL_DETAIL_SEQ_LIST_LENGTH = controlDetailSeqList.length; i < CONTROL_DETAIL_SEQ_LIST_LENGTH; i++) {
                 controlDetailSeqStr += controlDetailSeqList[i];
+
                 if (i < CONTROL_DETAIL_SEQ_LIST_LENGTH - 1) {
                     controlDetailSeqStr += ',';
                 }
@@ -1865,10 +1858,10 @@
                     fnAlert(null, '선택된 대상들의 사업자는 동일해야 합니다.');
                     return false;
                 }
-                // if (outsideCompCdList.length > 1) {
-                //     fnAlert(null, '선택된 대상들의 협력업체는 동일해야 합니다.');
-                //     return false;
-                // }
+                if (outsideCompCdList.length > 1) {
+                    fnAlert(null, '선택된 대상들의 협력업체는 동일해야 합니다.');
+                    return false;
+                }
 
                 fnAppendSelectboxYear('OUTSIDE_CLOSE_POP_YEAR', 3);
                 fnAppendSelectboxMonth('OUTSIDE_CLOSE_POP_MONTH', CURRENT_YEAR);
@@ -2054,10 +2047,6 @@
         fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM').find('#OUTSIDE_COMP_CD'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOutsourceProcessCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_CLOSE_FORM').find('#OUTSIDE_CLOSE_POP_COMP_CD'), null, {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
         });
 
         $outsideOrderManageGrid = $('#' + gridId).pqGrid(obj);
