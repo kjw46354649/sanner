@@ -134,9 +134,9 @@
                                     </c:forEach>
                                 </select>
                             </span>
-                            <span class="wd_200">&nbsp;</span>
+                            <span class="wd_100">&nbsp;</span>
                             <span class="ipu_wrap"><img id="barCodeImg" class="barCodeImg" src="/resource/asset/images/common/img_barcode_long.png"  style="height: 50px;" alt="바코드"></span>
-                            <span class="ipu_wrap" style="padding-left: 10px;"><input type="text" name="popBarcode" id="popBarcode" class="popBarcode" placeholder="읽기 불가능 모드" value="" title="바코드번호" style="ime-mode:inactive;"></span>
+                            <span class="ipu_wrap" style="padding-left: 10px;"><input type="text" name="popBarcode" id="popBarcode" class="popBarcode" placeholder="읽기 불가능 모드" value="" title="바코드번호" style="ime-mode:inactive; width: 200px;"></span>
                         </form>
                     </div>
                     <div class="right_float">
