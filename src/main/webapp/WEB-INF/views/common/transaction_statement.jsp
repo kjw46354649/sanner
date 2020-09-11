@@ -381,7 +381,9 @@
             for (let i = 0, selectedRowCount = opener.selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = opener.$orderManagementGrid.pqGrid('getRowData', {rowIndx: opener.selectedOrderManagementRowIndex[i]});
 
-                invoiceNumList.push(rowData.INVOICE_NUM);
+                compCdList[i] = rowData.COMP_CD;
+                orderCompCdList[i] = rowData.ORDER_COMP_CD;
+                invoiceNumList[i] = rowData.INVOICE_NUM;
             }
 
             invoiceNumList = invoiceNumList.filter(function (element, index, array) {
@@ -394,9 +396,7 @@
             }
 
             for (let i = 0, DATA_LENGTH = data.length; i < DATA_LENGTH; i++) {
-                controlSeqList.push(data[i].CONTROL_SEQ);
-                compCdList.push(data[i].COMP_CD);
-                orderCompCdList.push(data[i].ORDER_COMP_CD);
+                controlSeqList[i] = data[i].CONTROL_SEQ;
             }
 
             // 중복제거

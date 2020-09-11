@@ -152,80 +152,57 @@
     </select>
 
     <select id="selectTransactionStatementListExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        WITH RECURSIVE EMPTY_TBL AS (
-            SELECT
-                1 AS ROWNUM,
-                NULL AS CONTROL_NUM,
-                NULL AS ORDER_NUM,
-                NULL AS DRAWING_NUM,
-                NULL AS ITEM_NM,
-                NULL DRAWING_NUM_ITEM_NM,
-                NULL AS SIZE_TXT,
-                NULL AS CONTROL_ORDER_QTY,
-                NULL AS UNIT_FINAL_AMT,
-                NULL AS TOTAL_AMT,
-                NULL AS NOTE
-            UNION ALL
-            SELECT
-                ROWNUM + 1,
-                NULL AS CONTROL_NUM,
-                NULL AS ORDER_NUM,
-                NULL AS DRAWING_NUM,
-                NULL AS ITEM_NM,
-                NULL DRAWING_NUM_ITEM_NM,
-                NULL AS SIZE_TXT,
-                NULL AS CONTROL_ORDER_QTY,
-                NULL AS UNIT_FINAL_AMT,
-                NULL AS TOTAL_AMT,
-                NULL AS NOTE
-            FROM EMPTY_TBL WHERE ROWNUM <![CDATA[ < ]]> 25
-        ), EXCEL_LIST AS (
-         SELECT
-            ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, C.ORDER_NUM) AS ROWNUM,
-            A.CONTROL_NUM, <!-- 관리번호 -->
-            C.ORDER_NUM, <!-- 발주번호 -->
-            B.DRAWING_NUM, <!-- 도면번호 -->
-            B.ITEM_NM, <!-- 품명 -->
-            CONCAT(B.DRAWING_NUM, '\n', B.ITEM_NM) AS DRAWING_NUM_ITEM_NM,
-            B.SIZE_TXT, <!-- 규격 -->
-            SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY, <!-- 수량 -->
-            B.UNIT_FINAL_AMT, <!-- 공급단가 -->
-            B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT, <!-- 금액 계 -->
-            D.NOTE <!-- 비고 -->
-        FROM TBL_CONTROL A
-        INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-        LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-                                                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-        INNER JOIN TBL_INVOICE_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ
-                                           AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-        WHERE 1 = 1
-            AND D.INVOICE_NUM = #{INVOICE_NUM}
-            AND B.WORK_TYPE != 'WTP050'
-        ), EXCEL_LIST_COUNT AS (
-            SELECT COUNT(*) AS CNT
-            FROM EXCEL_LIST
-        )
-        SELECT *
-        FROM EXCEL_LIST
-        UNION
-        SELECT ROWNUM + CNT,
-                NULL AS CONTROL_NUM,
-                NULL AS ORDER_NUM,
-                NULL AS DRAWING_NUM,
-                NULL AS ITEM_NM,
-                NULL DRAWING_NUM_ITEM_NM,
-                NULL AS SIZE_TXT,
-                NULL AS CONTROL_ORDER_QTY,
-                NULL AS UNIT_FINAL_AMT,
-                NULL AS TOTAL_AMT,
-                NULL AS NOTE
-        FROM EMPTY_TBL, EXCEL_LIST_COUNT
-        WHERE
-            ROWNUM <![CDATA[ <= ]]>
-                CASE
-                    WHEN EXCEL_LIST_COUNT.CNT <![CDATA[ < ]]> 25 THEN 25 - (EXCEL_LIST_COUNT.CNT % 25)
-                    ELSE 0
-                END
+        SELECT
+           E.ROWNUM,
+            MAX(CONTROL_NUM) AS CONTROL_NUM,
+            MAX(ORDER_NUM) AS ORDER_NUM,
+            MAX(DRAWING_NUM) AS DRAWING_NUM,
+            MAX(ITEM_NM) AS ITEM_NM,
+            MAX(DRAWING_NUM_ITEM_NM) AS DRAWING_NUM_ITEM_NM,
+            MAX(SIZE_TXT) AS SIZE_TXT,
+            MAX(CONTROL_ORDER_QTY) AS CONTROL_ORDER_QTY,
+            MAX(UNIT_FINAL_AMT) AS UNIT_FINAL_AMT,
+            MAX(TOTAL_AMT) AS TOTAL_AMT,
+            MAX(NOTE) AS NOTE
+        FROM (
+           SELECT
+               ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, C.ORDER_NUM) AS ROWNUM,
+               A.CONTROL_NUM,
+               C.ORDER_NUM,
+               B.DRAWING_NUM,
+               B.ITEM_NM,
+               CONCAT(B.DRAWING_NUM, '\n', B.ITEM_NM) AS DRAWING_NUM_ITEM_NM,
+               B.SIZE_TXT,
+               SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY,
+               B.UNIT_FINAL_AMT,
+               B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT,
+               D.NOTE
+           FROM TBL_CONTROL A
+              INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+              LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+              INNER JOIN TBL_INVOICE_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+           WHERE 1 = 1
+               AND D.INVOICE_NUM = #{INVOICE_NUM}
+               AND B.WORK_TYPE != 'WTP050'
+           UNION ALL
+           SELECT
+               A.SEQ AS ROWNUM,
+               NULL AS CONTROL_NUM,
+               NULL AS ORDER_NUM,
+               NULL AS DRAWING_NUM,
+               NULL AS ITEM_NM,
+               NULL AS  DRAWING_NUM_ITEM_NM,
+               NULL AS SIZE_TXT,
+               NULL AS CONTROL_ORDER_QTY,
+               NULL AS UNIT_FINAL_AMT,
+               NULL AS  TOTAL_AMT,
+               NULL AS NOTE
+           FROM TBL_YYYYMMDD A
+           WHERE
+               1 = 1
+               AND A.SEQ <![CDATA[ <= ]]> 25
+        ) E
+        GROUP BY E.ROWNUM
     </select>
 
     <select id="selectControlEstimateDetailListExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
