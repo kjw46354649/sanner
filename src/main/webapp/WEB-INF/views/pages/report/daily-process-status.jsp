@@ -68,7 +68,7 @@
 </div>
 
 <div class="popup_container" id="TARGET_AMOUNT_REGISTER_POPUP" style="display: none;">
-    <div class="controlCloseLayerPopup" style="width: 1536px; height: 648px;">
+    <div class="controlCloseLayerPopup" style="width: 768px; height: 540px;">
         <h3>목표 금액 설정</h3>
         <hr>
         <button type="button" class="pop_close" name="TARGET_AMOUNT_REGISTER_CLOSE">닫기</button>
@@ -183,7 +183,6 @@
             },
             rowSelect: function (event, ui) {
                 //TODO: rightGird refresh
-                console.log(ui);
                 // let highCd = ui.addList[0].rowData.HIGH_CD;
                 // $("#common_code_search_form").find("#HIGH_CD").val(highCd);
                 // $dailyProcessStatusRightGrid.pqGrid("option", "dataModel.postData", function(ui){
@@ -290,7 +289,7 @@
         let targetAmountRegisterPostData = fnFormToJsonArrayData('#TARGET_AMOUNT_REGISTER_FORM');
         const targetAmountRegisterColModel = [
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
-            {title: '', dataIndx: 'YYYYMM'},
+            {title: '대상년월', dataIndx: 'YYYYMM'},
             {title: '대상공장', dataIndx: 'WORK_FACTORY', hidden: true},
             {title: '대상공장', dataIndx: 'WORK_FACTORY_NM'},
             {
@@ -353,7 +352,6 @@
 
         /* event */
         $('#DAILY_PROCESS_STATUS_LEFT_SEARCH_FORM').on('change', function () {
-           console.count();
             $dailyProcessStatusLeftGrid.pqGrid('option', 'dataModel.postData', function () {
                 return fnFormToJsonArrayData('#DAILY_PROCESS_STATUS_LEFT_SEARCH_FORM');
             });
@@ -388,7 +386,6 @@
         });
         
         $('#TARGET_AMOUNT_REGISTER_FORM').on('change', function () {
-           console.count();
             $targetAmountRegisterGrid.pqGrid('option', 'dataModel.postData', function () {
                 return fnFormToJsonArrayData('#TARGET_AMOUNT_REGISTER_FORM');
             });
@@ -396,7 +393,6 @@
         });
 
         $('#DAILY_PROCESS_STATUS_TARGET_AMOUNT_SAVE').on('click', function () {
-            console.count();
             const insertQueryList = ['reportMapper.createTargetAmount'];
             const updateQueryList = ['reportMapper.createTargetAmount'];
 
