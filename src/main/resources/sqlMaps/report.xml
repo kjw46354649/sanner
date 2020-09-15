@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="reportMapper">
+    <select id="selectDailyProcessStatusLeftList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT 1
+    </select>
+
+    <select id="selectDailyProcessStatusRightList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT 1
+    </select>
+
+    <select id="selectTargetAmountRegisterList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            ROW_NUMBER () OVER (ORDER BY A.YYYY, A.MM) AS ROW_NUM,
+            DATE_FORMAT(STR_TO_DATE(CONCAT(A.YYYY, A.MM), '%Y%m'), '%Y/%m') AS YYYYMM,
+            #{WORK_FACTORY} AS WORK_FACTORY,
+            SF_GET_CODE_NM('1014', #{WORK_FACTORY}, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM,
+            B.GOAL_AMT
+        FROM TBL_YYYYMMDD A
+            LEFT OUTER JOIN TBL_SALES_GOAL B ON CONCAT(A.YYYY, A.MM) = B.YYYYMM
+                AND B.WORK_FACTORY = #{WORK_FACTORY}
+        WHERE 1 = 1
+            AND A.YYYY = #{YEAR}
+        GROUP BY A.YYYY, A.MM, B.WORK_FACTORY
+    </select>
+
+    <insert id="createTargetAmount" parameterType="java.util.HashMap" >
+        INSERT INTO TBL_SALES_GOAL (
+            YYYYMM,
+            WORK_FACTORY,
+            GOAL_AMT,
+            INSERT_ID
+        ) VALUES (
+            REPLACE(#{YYYYMM}, '/', SPACE(0)),
+            #{WORK_FACTORY},
+            #{GOAL_AMT},
+            #{LOGIN_USER_ID}
+        ) ON DUPLICATE KEY
+	        UPDATE
+	            GOAL_AMT = #{GOAL_AMT},
+                UPDATE_DT = NOW(),
+	            UPDATE_ID = #{LOGIN_USER_ID}
+    </insert>
+
+<!--    <update id="updateDailyProcessStatusLeft" parameterType="java.util.HashMap">-->
+<!--        UPDATE TBL_CONTROL_PART-->
+<!--        SET-->
+<!--            UNIT_FINAL_EST_AMT = REPLACE(#{UNIT_FINAL_EST_AMT, jdbcType=VARCHAR}, ',', SPACE(0)),-->
+<!--            UNIT_FINAL_AMT = REPLACE(#{UNIT_FINAL_AMT, jdbcType=VARCHAR}, ',', SPACE(0)),-->
+<!--            UPDATE_DT = NOW()-->
+<!--        WHERE 1 = 1-->
+<!--            AND CONTROL_SEQ = #{CONTROL_SEQ}-->
+<!--            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}-->
+<!--    </update>-->
+</mapper>

@@ -1899,7 +1899,7 @@
             A.ORDER_COMP_CD, <!-- 발주사 -->
             SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM , <!-- 발주사 -->
             A.COMP_CD, <!-- 공급사 -->
-            SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM, <!-- 공급사 -->
+            (SELECT IFNULL(M.COMP_NM2, M.COMP_NM) FROM TBL_COMPANY M WHERE M.COMP_CD = A.COMP_CD) AS COMP_NM, <!-- 공급사 Full Name -->
             E.INVOICE_NUM, <!-- 인보이스 넘버 -->
             FORMAT(SUM(B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ)), 0)  AS TOTAL_AMT <!-- 금액 합계 -->
         FROM TBL_CONTROL A
@@ -2737,7 +2737,7 @@
         <!--     PDF_GFILE_SEQ = NULL, -->
         <!--     IMG_GFILE_SEQ = NULL, -->
         <!--     VIEW_GFILE_SEQ = NULL, -->
-        <!--     ETC_GFILE_SEQ = NULL, -->
+            ETC_GFILE_SEQ = #{ETC_GFILE_SEQ},
         <!--     PART_STATUS = NULL, -->
         <!--     STATUS_DT = NULL, -->
         <!--     MCT_NOTE = NULL, -->

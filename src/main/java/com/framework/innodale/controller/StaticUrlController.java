@@ -202,4 +202,17 @@ public class StaticUrlController {
     public String controlDetailController(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
         return "/common/control_detail";
     }
+
+    /**
+     * 월간 상세현황 상세 List
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/monthReportDetail")
+    public String monthReportDetailController(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return "/common/month_report_detail";
+    }
 }

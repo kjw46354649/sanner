@@ -14,7 +14,7 @@
                 WHEN B.OUTSIDE_STATUS IN ('OST001', 'OST003') THEN SF_GET_DATE_F(C.INSERT_DT, 'YY', 'M')
                 ELSE NULL
             END AS OUTSIDE_REQUEST_DT,
-            H.INSPECT_SEQ, <!-- SEQ -->
+            H.INSPECT_NUM,
             H.INSPECT_GRADE, <!-- 등급 -->
             SF_GET_CODE_NM('1040', H.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM, <!-- 등급 -->
             H.INSPECT_TYPE, <!-- 불량/반품 -->

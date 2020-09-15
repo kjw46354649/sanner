@@ -1515,11 +1515,17 @@
             {title: '라벨<br>출력일시', width: 120, dataType: 'date', /*format: 'mm/dd',*/ dataIndx: '', hidden: true},
             {title: '참<br>조', minWidth: 30, dataIndx: 'ETC_GFILE_SEQ', styleHead: {'background':'#a9d3f5'},
                 render: function (ui) {
-                    return '<span class="floppyDisk" name="attachment" style="cursor: pointer"></span>';
+                    let cellData = ui.cellData;
+                    let cls = cellData ? null : 'bg-lightgray';
+                    let text = '<span class="floppyDisk" name="attachment" style="cursor: pointer"></span>';
+
+                    return {cls: cls, text: text};
                 },
                 postRender: function (ui) {
                     let grid = this,
-                        $cell = grid.getCell(ui);
+                        $cell = grid.getCell(ui),
+                        rowData = ui.rowData;
+
                     $cell.find('[name=attachment]').bind('click', function () {
                         if (fnIsGridEditing($orderManagementGrid)) {
                             return false;
@@ -1529,6 +1535,11 @@
                         $('#common_file_download_form').find('#GFILE_SEQ').val(GfileKey);
                         $('#ATTACHMENT_BUTTON').data('rowIndx', ui.rowIndx);
                         $('#ATTACHMENT_BUTTON').data('GfileKey', GfileKey);
+                        if (rowData.ETC_GFILE_SEQ) {
+                            $("#common_file_download_form #deleteYn").val(true);
+                        } else {
+                            $("#common_file_download_form #deleteYn").val(false);
+                        }
                         commonFileDownUploadPopupCall(GfileKey, 'ATTACHMENT_BUTTON');
                     });
                 }
@@ -1796,7 +1807,7 @@
                 'PREVIOUS_PRICE', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE', 'ITEM_NM', 'ORDER_STAFF_SEQ',
                 'DESIGNER_NM', 'PREV_DRAWING_NUM', 'MATERIAL_DETAIL', 'MATERIAL_TYPE_NM', 'MATERIAL_KIND', 'SURFACE_TREAT',
                 'MATERIAL_FINISH_HEAT', 'MATERIAL_NOTE', 'CALC_EST_UNIT_COST', 'POP_POSITION_NM', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER',
-                'DRAWING_UP_DT', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN',
+                'DRAWING_UP_DT', 'INSPECT_NUM', 'INSPECT_GRADE_NM', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN',
                 'OUTSIDE_UNIT_AMT', 'OUTSIDE_IN_DT', 'DELIVERY_DT', 'IMG_GFILE_SEQ', 'CONTROL_PART_INSERT_UPDATE_DT'
             ];
             const closeModeArray = [
@@ -1827,7 +1838,7 @@
                 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
                 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'CALC_EST_UNIT_COST', 'UNIT_FINAL_EST_AMT',
                 'UNIT_FINAL_AMT', 'FINAL_AMT', 'PREVIOUS_PRICE', 'PREV_DRAWING_NUM', 'POP_POSITION_NM', 'PART_STATUS_NM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER',
-                'DRAWING_UP_DT', 'INSPECT_SEQ', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM', 'INSPECT_DESC',
+                'DRAWING_UP_DT', 'ETC_GFILE_SEQ', 'INSPECT_NUM', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM', 'INSPECT_DESC',
                 'ERROR_ACTION_NM', 'ERROR_NOTE', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT',
                 'OUTSIDE_HOPE_DUE_DT', 'OUTSIDE_IN_DT', 'OUTSIDE_NOTE', 'OUTSIDE_INSPECT_RESULT_NM', 'OUTSIDE_ERROR_NOTE',
                 'CONTROL_PART_INSERT_UPDATE_DT'
