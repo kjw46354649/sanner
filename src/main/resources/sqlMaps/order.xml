@@ -107,7 +107,7 @@
         IFNULL(B.ETC_GFILE_SEQ, SPACE(0)) AS ETC_GFILE_SEQ,
         IFNULL(B.PART_STATUS, SPACE(0)) AS PART_STATUS, <!-- PART 상태 -->
         IFNULL(SF_GET_CODE_NM(1013, B.PART_STATUS, #{LOGIN_LOCALE}), SPACE(0)) AS PART_STATUS_NM, <!-- PART 상태 -->
-        IFNULL(SF_GET_DATE_F(B.STATUS_DT, 'YY', 'M'), SPACE(0)) AS PART_STATUS_DT, <!-- PART 상태확정일 -->
+        IFNULL(SF_GET_DATE_F(B.STATUS_DT, '', 'M'), SPACE(0)) AS PART_STATUS_DT, <!-- PART 상태확정일 -->
         IFNULL(B.MCT_NOTE, SPACE(0)) AS MCT_NOTE, <!-- MCT_가공계획비고 -->
         IFNULL(B.MCT_WORK_TYPE, SPACE(0)) AS MCT_WORK_TYPE, <!-- MCT_작업구분 -->
         IFNULL(B.OUTSIDE_COMP_CD, SPACE(0)) AS OUTSIDE_COMP_CD, <!-- 외주업체 -->
@@ -2298,6 +2298,7 @@
             PART_UNIT_QTY,
             ORIGINAL_SIDE_QTY,
             OTHER_SIDE_QTY,
+            MATERIAL_FINISH_HEAT,
             ORDER_NUM,
             ORDER_QTY,
             ORDER_DUE_DT,
@@ -2342,6 +2343,7 @@
             #{item.PART_UNIT_QTY},
             #{item.ORIGINAL_SIDE_QTY},
             #{item.OTHER_SIDE_QTY},
+            #{item.MATERIAL_FINISH_HEAT},
             #{item.ORDER_NUM},
             #{item.ORDER_QTY},
             #{item.ORDER_DUE_DT},
@@ -2684,7 +2686,7 @@
             ITEM_NM = #{ITEM_NM},
             WORK_TYPE = #{WORK_TYPE},
             OUTSIDE_YN = IFNULL(#{OUTSIDE_YN}, 'N'),
-            WORK_FACTORY = #{WORK_FACTORY},
+            WORK_FACTORY = CASE WHEN #{WORK_FACTORY} = 'null' THEN NULL ELSE #{WORK_FACTORY} END,
             MATERIAL_SUPPLY_YN = IFNULL(#{MATERIAL_SUPPLY_YN}, 'N'),
             INNER_DUE_DT = DATE_FORMAT(#{INNER_DUE_DT}, '%Y%m%d'),
             SIZE_TXT = #{SIZE_TXT},

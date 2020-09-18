@@ -987,6 +987,7 @@
         });
         fnAppendSelectboxYear('CLOSE_HISTORY_CLOSE_YEAR', 10);
         fnAppendSelectboxMonth('CLOSE_HISTORY_CLOSE_MONTH');
+        $('#CLOSE_HISTORY_CLOSE_MONTH').append(new Option('<spring:message code="com.form.top.all.option" />', ''));
         $('#CLOSE_HISTORY_CLOSE_MONTH').val(postData.CLOSE_MONTH);
         $closeHistoryGrid = $('#' + gridId).pqGrid(obj);
         /* init */

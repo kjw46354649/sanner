@@ -20,8 +20,8 @@
                     <li>
                         <span class="slt_wrap">
                             <label class="label_100">조회년월</label>
-                            <select class="wd_100" class="two" name="CLOSE_YEAR" id="CLOSE_HISTORY_CLOSE_YEAR"></select>
-                            <select class="wd_100" class="two" name="CLOSE_MONTH" id="CLOSE_HISTORY_CLOSE_MONTH"></select>
+                            <select class="wd_100" class="two" name="YEAR" id="MONTHLY_DETAIL_STATUS_YEAR"></select>
+                            <select class="wd_100" class="two" name="MONTH" id="MONTHLY_DETAIL_STATUS_MONTH"></select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -37,9 +37,11 @@
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
-                        <button type="button" class="defaultBtn radius blue" id="CLOSE_HISTORY_SEARCH">발주처별 현황</button>
-                        <button type="button" class="defaultBtn radius blue" id="PROCESS_TARGET_LIST">가공대상 List</button>
-                        <button type="button" class="right_float defaultBtn radius green" id="CLOSE_HISTORY_SEARCH">저장</button>
+                        <div class="d-inline-block right_float">
+                            <button type="button" class="defaultBtn radius blue ml-15" id="PROCESS_TARGET_LIST-1">발주처별 현황</button>
+                            <button type="button" class="defaultBtn radius blue ml-15" id="PROCESS_TARGET_LIST">가공대상 List</button>
+                            <button type="button" class="defaultBtn radius green ml-15" id="MONTHLY_DETAIL_STATUS_SAVE">저장</button>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -54,21 +56,34 @@
             <div class="conWrap">
                 <div id="MONTHLY_DETAIL_STATUS_GRID"></div>
                 <div class="right_sort">
-                    전체 조회 건수 (Total : <span id="CONTROL_MANAGE_RECORDS" style="color: #00b3ee">0</span>)
+<%--                    전체 조회 건수 (Total : <span id="CONTROL_MANAGE_RECORDS" style="color: #00b3ee">0</span>)--%>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<form id="PROCESS_TARGET_BEFORE_FORM">
+    <input type="hidden" name="DT" id="DT">
+    <input type="hidden" name="COMP_CD" id="COMP_CD">
+    <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
+    <input type="hidden" name="FACTORY_CLASSIFY_YN" id="FACTORY_CLASSIFY_YN">
+    <input type="hidden" name="OUTSIDE_YN" id="OUTSIDE_YN">
+    <input type="hidden" name="OUT_FINISH_YN" id="OUT_FINISH_YN">
+    <input type="hidden" name="DELAY_YN" id="DELAY_YN">
+</form>
+
 <script>
+    var isProcessTargetListButtonClick = false;
     $(function () {
         'use strict';
         /* init */
         let monthReportDetailPopup;
         //TODO: change element id
-        fnAppendSelectboxYear('CLOSE_HISTORY_CLOSE_YEAR', 10);
-        fnAppendSelectboxMonth('CLOSE_HISTORY_CLOSE_MONTH');
+        fnAppendSelectboxYear('MONTHLY_DETAIL_STATUS_YEAR', 10);
+        fnAppendSelectboxMonth('MONTHLY_DETAIL_STATUS_MONTH');
+        $('#MONTHLY_DETAIL_STATUS_MONTH').val(CURRENT_MONTH < 9 ? '0' + (CURRENT_MONTH + 1) : CURRENT_MONTH + 1).prop('selected', true);
+
         fnCommCodeDatasourceSelectBoxCreate($('#MONTHLY_DETAIL_STATUS_SEARCH_FORM').find('#COMP_CD'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getBusinessCompanyList'}
@@ -82,58 +97,237 @@
         let postData = fnFormToJsonArrayData('#MONTHLY_DETAIL_STATUS_SEARCH_FORM');
         const colModel = [
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
-            {title: '날짜', dataIndx: 'ROW_NUM'},
-            {title: '요일', dataIndx: 'ROW_NUM'},
+            {title: 'COMP_CD', dataIndx: 'COMP_CD', hidden: true},
+            {title: 'ORDER_COMP_CD', dataIndx: 'ORDER_COMP_CD', hidden: true},
+            {title: 'DT', dataIndx: 'DT', hidden: true},
+            {title: '날짜', dataIndx: 'CAL_DT_NM'},
+            {title: '요일', dataIndx: 'WEEK_DAY_NM'},
             {
                 title: '납품대상', align: 'center', colModel: [
-                    {title: '품', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_STATUS'},
-                    {title: 'EA', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_STATUS_NM', style: {'background': '#D6DCE4'}}
+                    {
+                        title: '품', dataType: 'integer', format: '#,###', dataIndx: 'PART_CNT',
+                        style: {'text-decoration': 'underline', 'cursor': 'pointer'},
+                        postRender: function (ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui);
+                            let rowData = ui.rowData;
+
+                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                                $cell.bind("click", function () {
+                                    isProcessTargetListButtonClick = false;
+
+                                    changeProcessTargetBeforeForm(rowData.DT);
+                                    openNewWindowMonthReportDetail();
+                                });
+                            }
+                        }
+                    },
+                    {
+                        title: 'EA', dataType: 'integer', format: '#,###', dataIndx: 'PART_QTY',
+                        style: {'background': '#D6DCE4', 'text-decoration': 'underline', 'cursor': 'pointer'},
+                        postRender: function (ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui);
+                            let rowData = ui.rowData;
+
+                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                                $cell.bind('click', function () {
+                                    isProcessTargetListButtonClick = false;
+
+                                    changeProcessTargetBeforeForm(rowData.DT);
+                                    openNewWindowMonthReportDetail();
+                                });
+                            }
+                        }
+                    }
                 ]
             },
             {
                 title: '외주지정', align: 'center', colModel: [
-                    {title: '품', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_STATUS'},
-                    {title: 'EA', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_STATUS_NM', style: {'background': '#D6DCE4'}}
+                    {
+                        title: '품', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_CNT',
+                        style: {'text-decoration': 'underline', 'cursor': 'pointer'},
+                        postRender: function (ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui);
+                            let rowData = ui.rowData;
+
+                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                                $cell.bind("click", function () {
+                                    isProcessTargetListButtonClick = false;
+
+                                    changeProcessTargetBeforeForm(rowData.DT, '', 'Y');
+                                    openNewWindowMonthReportDetail();
+                                });
+                            }
+                        }
+                    },
+                    {
+                        title: 'EA', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_QTY',
+                        style: {'background': '#D6DCE4', 'text-decoration': 'underline', 'cursor': 'pointer'},
+                        postRender: function (ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui);
+                            let rowData = ui.rowData;
+
+                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                                $cell.bind('click', function () {
+                                    isProcessTargetListButtonClick = false;
+
+                                    changeProcessTargetBeforeForm(rowData.DT, '', 'Y');
+                                    openNewWindowMonthReportDetail();
+                                });
+                            }
+                        }
+                    }
                 ]
             },
             {
                 title: '가공완료', align: 'center', colModel: [
-                    {title: '품', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_STATUS'},
-                    {title: 'EA', dataType: 'integer', format: '#,###', dataIndx: 'profits', style: {'background': '#D6DCE4', 'text-decoration': 'underline'}}
+                    {
+                        title: '품', dataType: 'integer', format: '#,###', dataIndx: 'INNER_WORK_FINISH_CNT',
+                        style: {'text-decoration': 'underline', 'cursor': 'pointer'},
+                        postRender: function (ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui);
+                            let rowData = ui.rowData;
+
+                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                                $cell.bind("click", function () {
+                                    isProcessTargetListButtonClick = false;
+
+                                    changeProcessTargetBeforeForm(rowData.DT, 'Y');
+                                    openNewWindowMonthReportDetail();
+                                });
+                            }
+                        }
+                    },
+                    {
+                        title: 'EA', dataType: 'integer', format: '#,###', dataIndx: 'INNER_WORK_FINISH_QTY',
+                        style: {'background': '#D6DCE4', 'text-decoration': 'underline', 'cursor': 'pointer'},
+                        postRender: function (ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui);
+                            let rowData = ui.rowData;
+
+                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                                $cell.bind('click', function () {
+                                    isProcessTargetListButtonClick = false;
+
+                                    changeProcessTargetBeforeForm(rowData.DT, 'Y');
+                                    openNewWindowMonthReportDetail();
+                                });
+                            }
+                        }
+                    }
+                ]
+            },
+           {
+                title: '출고완료', align: 'center', colModel: [
+                    {
+                        title: '품', dataType: 'integer', format: '#,###', dataIndx: 'OUT_FINISH_CNT',
+                        style: {'text-decoration': 'underline', 'cursor': 'pointer'},
+                        postRender: function (ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui);
+                            let rowData = ui.rowData;
+
+                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                                $cell.bind("click", function () {
+                                    isProcessTargetListButtonClick = false;
+
+                                    changeProcessTargetBeforeForm(rowData.DT, '', '', 'Y');
+                                    openNewWindowMonthReportDetail();
+                                });
+                            }
+                        }
+                    },
+                    {
+                        title: 'EA', dataType: 'integer', format: '#,###', dataIndx: 'OUT_FINISH_QTY',
+                        style: {'background': '#D6DCE4', 'text-decoration': 'underline', 'cursor': 'pointer'},
+                        postRender: function (ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui);
+                            let rowData = ui.rowData;
+
+                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                                $cell.bind('click', function () {
+                                    isProcessTargetListButtonClick = false;
+
+                                    changeProcessTargetBeforeForm(rowData.DT, '', '', 'Y');
+                                    openNewWindowMonthReportDetail();
+                                });
+                            }
+                        }
+                    }
                 ]
             },
             {
                 title: '지연현황', align: 'center', colModel: [
-                    {title: '품', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_STATUS'},
-                    {title: 'EA', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_STATUS_NM', style: {'background': '#D6DCE4'}}
+                    {
+                        title: '품', dataType: 'integer', format: '#,###', dataIndx: 'LATE_CNT',
+                        style: {'text-decoration': 'underline', 'cursor': 'pointer'},
+                        postRender: function (ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui);
+                            let rowData = ui.rowData;
+
+                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                                $cell.bind("click", function () {
+                                    isProcessTargetListButtonClick = false;
+
+                                    changeProcessTargetBeforeForm(rowData.DT, '', '', '', 'Y');
+                                    openNewWindowMonthReportDetail();
+                                });
+                            }
+                        }
+                    },
+                    {
+                        title: 'EA', dataType: 'integer', format: '#,###', dataIndx: 'LATE_QTY',
+                        style: {'background': '#D6DCE4', 'text-decoration': 'underline', 'cursor': 'pointer'},
+                        postRender: function (ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui);
+                            let rowData = ui.rowData;
+
+                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                                $cell.bind('click', function () {
+                                    isProcessTargetListButtonClick = false;
+
+                                    changeProcessTargetBeforeForm(rowData.DT, '', '', '', 'Y');
+                                    openNewWindowMonthReportDetail();
+                                });
+                            }
+                        }
+                    }
                 ]
             },
-            {title: '지연율', dataIndx: 'ROW_NUM', style: {'background': '#FFD966'}},
-            {title: '외주율<br>(수량)', dataIndx: 'ROW_NUM', style: {'background': '#FFD966'}},
-            {title: '매출<br>예상금액', dataType: 'integer', format: '#,###', dataIndx: 'ROW_NUM'},
-            {title: '목표금액', dataType: 'integer', format: '#,###', dataIndx: 'ROW_NUM'},
-            {title: '달성율', dataIndx: 'ROW_NUM', style: {'background': '#D9E1F2'}},
-            {title: '기존<br>근무', dataType: 'integer', format: '#,###', dataIndx: 'ROW_NUM'},
+            {title: '지연율', dataIndx: 'LATE_RATIO', style: {'background': '#FFD966'}},
+            {title: '외주율<br>(수량)', dataIndx: 'OUTSIDE_RATIO', style: {'background': '#FFD966'}},
+            {title: '매출<br>예상금액', dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT'},
+            {title: '목표금액', dataType: 'integer', format: '#,###', dataIndx: 'DT_GOAL_AMT'},
+            {title: '달성율', dataIndx: 'GOAL_RATIO', style: {'background': '#D9E1F2'}},
             {
                 title: '부적합', align: 'center', colModel: [
-                    {title: '품', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_STATUS', style: {'background': '#FFF2CC'}},
-                    {title: 'EA', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_STATUS_NM', style: {'background': '#D6DCE4'}}
+                    {title: '품', dataType: 'integer', format: '#,###', dataIndx: 'ERROR_CNT', style: {'background': '#FFF2CC'}},
+                    {title: 'EA', dataType: 'integer', format: '#,###', dataIndx: 'ERROR_QTY', style: {'background': '#D6DCE4'}}
                 ]
             },
             {
                 title: '반품건수', align: 'center', colModel: [
-                    {title: '품', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_STATUS', style: {'background': '#FFF2CC'}},
-                    {title: 'EA', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_STATUS_NM', style: {'background': '#D6DCE4'}}
+                    {title: '품', dataType: 'integer', format: '#,###', dataIndx: 'RETURN_CNT', style: {'background': '#FFF2CC'}},
+                    {title: 'EA', dataType: 'integer', format: '#,###', dataIndx: 'RETURN_QTY', style: {'background': '#D6DCE4'}}
                 ]
             },
             {
-                title: '비고', dataIndx: 'ROW_NUM', editable: true,
+                title: '비고', dataIndx: 'NOTE', editable: true,
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
             }
         ];
         const obj = {
             height: 800,
             collapsible: false,
+            postRenderInterval: -1,
             resizable: false,
             showTitle: false,
             rowHtHead: 15,
@@ -144,60 +338,42 @@
             editable: false,
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
             colModel: colModel,
-            // dataModel: {
-            //     location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-            //     postData: postData,
-            //     recIndx: 'ROW_NUM',
-            //     getData: function (dataJSON) {
-            //         return {data: dataJSON.data};
-            //     }
-            // },
-            dataModel: { data:  [
-            { rank: 1, company: 'Exxon Mobil', revenues: 339938.0, profits: 36130.0 },
-            { rank: 2, company: 'Wal-Mart Stores', revenues: 315654.0, profits: 11231.0 },
-            { rank: 3, company: 'Royal Dutch Shell', revenues: 306731.0, profits: 25311.0 },
-            { rank: 4, company: 'BP', revenues: 267600.0, profits: 22341.0 },
-            { rank: 5, company: 'General Motors', revenues: 192604.0, profits: -10567.0 },
-            { rank: 6, company: 'Chevron', revenues: 189481.0, profits: 14099.0 },
-            { rank: 7, company: 'DaimlerChrysler', revenues: 186106.3, profits: 3536.3 },
-            { rank: 8, company: 'Toyota Motor', revenues: 185805.0, profits: 12119.6 },
-            { rank: 9, company: 'Ford Motor', revenues: 177210.0, profits: 2024.0 },
-            { rank: 10, company: 'ConocoPhillips', revenues: 166683.0, profits: 13529.0 },
-            { rank: 11, company: 'General Electric', revenues: 157153.0, profits: 16353.0 },
-            { rank: 12, company: 'Total', revenues: 152360.7, profits: 15250.0 },
-            { rank: 13, company: 'ING Group', revenues: 138235.3, profits: 8958.9 },
-            { rank: 14, company: 'Citigroup', revenues: 131045.0, profits: 24589.0 },
-            { rank: 15, company: 'AXA', revenues: 129839.2, profits: 5186.5 },
-            { rank: 16, company: 'Allianz', revenues: 121406.0, profits: 5442.4 },
-            { rank: 17, company: 'Volkswagen', revenues: 118376.6, profits: 1391.7 },
-            { rank: 18, company: 'Fortis', revenues: 112351.4, profits: 4896.3 },
-            { rank: 19, company: 'Crédit Agricole', revenues: 110764.6, profits: 7434.3 },
-            { rank: 20, company: 'American Intl. Group', revenues: 108905.0, profits: 10477.0 }
-        ]},
-            // load: function (event, ui) {
-            //     if (ui.dataModel.data.length > 0) {
-            //         $dailyProcessStatusLeftGrid.pqGrid('setSelection', {rowIndx: 0});
-            //     }
-            // },
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: postData, recIndx: 'ROW_NUM',
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            },
             rowInit: function (ui) {
-                switch (ui.rowData.rank) {
-                    // 합계
-                    case 1:
+                if (ui.rowData.WEEK_DAY_NM === '일') {
+                    return {style: {'color': 'red'}};
+                }
+
+                switch (ui.rowData.CAL_DT_NM) {
+                    case '합계':
                         return {style: {'background': 'yellow'}};
-                    // 총계
-                    case 2:
-                        return {style: {'background': '#FFEF99'}};
+                    case '총계':
+                        return {style: {'background': '#FFE699'}};
                 }
             }
         };
-        const $dailyProcessStatusRightGrid = $('#' + gridId).pqGrid(obj);
+        const $monthlyDetailStatusGrid = $('#' + gridId).pqGrid(obj);
         /* init */
 
         /* function */
+        const changeProcessTargetBeforeForm = function (a, c = '', d = '', e = '', f = '') {
+            $('#PROCESS_TARGET_BEFORE_FORM > #DT').val(a);
+            $('#PROCESS_TARGET_BEFORE_FORM > #FACTORY_CLASSIFY_YN').val(c);
+            $('#PROCESS_TARGET_BEFORE_FORM > #OUTSIDE_YN').val(d);
+            $('#PROCESS_TARGET_BEFORE_FORM > #OUT_FINISH_YN').val(e);
+            $('#PROCESS_TARGET_BEFORE_FORM > #DELAY_YN').val(f);
+        };
+
         const openNewWindowMonthReportDetail = function (rowData) {
             let url = '/monthReportDetail';
             // 팝업 사이즈
-            let nWidth = 1440;
+            let nWidth = 1728;
             let nHeight = 770;
             let winWidth = document.body.clientWidth;
             let winHeight = document.body.clientHeight;
@@ -224,12 +400,29 @@
         /* function */
 
         /* evnet */
-        $('#PROCESS_TARGET_LIST').on('click', function () {
+        $('#MONTHLY_DETAIL_STATUS_SEARCH_FORM').on('change', function () {
+            $('#PROCESS_TARGET_BEFORE_FORM > #COMP_CD').val($('#MONTHLY_DETAIL_STATUS_SEARCH_FORM').find('#COMP_CD').val());
+            $('#PROCESS_TARGET_BEFORE_FORM > #ORDER_COMP_CD').val($('#MONTHLY_DETAIL_STATUS_SEARCH_FORM').find('#ORDER_COMP_CD').val());
 
+            $monthlyDetailStatusGrid.pqGrid('option', 'dataModel.postData', function () {
+                return fnFormToJsonArrayData('#MONTHLY_DETAIL_STATUS_SEARCH_FORM');
+            });
+            $monthlyDetailStatusGrid.pqGrid('refreshDataAndView');
+        });
+
+        $('#MONTHLY_DETAIL_STATUS_SAVE').on('click', function () {
+          const updateQueryList = ['reportMapper.insertUpdateWorkingDayNote'];
+
+            fnModifyPQGrid($monthlyDetailStatusGrid, [], updateQueryList);
+       });
+
+        $('#PROCESS_TARGET_LIST-1').on('click', function () {
+            fnAlert(null, '개발중');
         });
 
         $('#PROCESS_TARGET_LIST').on('click', function () {
-           console.count();
+           isProcessTargetListButtonClick = true;
+
            openNewWindowMonthReportDetail();
         });
         /* evnet */

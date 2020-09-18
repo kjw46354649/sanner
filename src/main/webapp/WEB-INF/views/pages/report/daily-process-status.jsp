@@ -18,8 +18,8 @@
             <input type="hidden" name="queryId" id="queryId" value="reportMapper.selectDailyProcessStatusLeftList">
             <div class="slt_wrap">
                 <label class="label_100">조회년월</label>
-                <select class="wd_100" class="two" name="CLOSE_YEAR" id="DAILY_PROCESS_STATUS_YEAR"></select>
-                <select class="wd_100" class="two" name="CLOSE_MONTH" id="DAILY_PROCESS_STATUS_MONTH"></select>
+                <select class="wd_100" class="two" name="YEAR" id="DAILY_PROCESS_STATUS_YEAR"></select>
+                <select class="wd_100" class="two" name="MONTH" id="DAILY_PROCESS_STATUS_MONTH"></select>
             </div>
             <span class="gubun"></span>
             <span class="slt_wrap">
@@ -51,6 +51,8 @@
     <div class="rightWrap left_float">
         <form class="form-inline" id="DAILY_PROCESS_STATUS_RIGHT_SEARCH_FORM" role="form" onsubmit="return false;" style="height: inherit;">
             <input type="hidden" name="queryId" id="queryId" value="reportMapper.selectDailyProcessStatusRightList">
+            <input type="hidden" name="DT" id="DT">
+            <input type="hidden" name="WORK_FACTORY" id="WORK_FACTORY">
             <div style="height: inherit;">
                 <div class="d-flex align-items-center">
                     <div>
@@ -115,6 +117,8 @@
         // TODO: element name 변경
         fnAppendSelectboxYear('DAILY_PROCESS_STATUS_YEAR', 10);
         fnAppendSelectboxMonth('DAILY_PROCESS_STATUS_MONTH');
+        $('#DAILY_PROCESS_STATUS_MONTH').val(CURRENT_MONTH < 9 ? '0' + (CURRENT_MONTH + 1) : CURRENT_MONTH + 1).prop('selected', true);
+
         (function (id, severalYears) {
             $('#' + id).empty();
             let date = new Date();
@@ -132,26 +136,27 @@
         let leftPostData = fnFormToJsonArrayData('#DAILY_PROCESS_STATUS_LEFT_SEARCH_FORM');
         const leftColModel = [
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
-            {title: '날짜', dataIndx: 'ROW_NUM'},
-            {title: '요일', dataIndx: 'ROW_NUM'},
+            {title: 'DT', dataIndx: 'DT', hidden: true},
+            {title: '날짜', minWidth: 40, maxWidth: 40, dataIndx: 'CAL_DT_NM'},
+            {title: '요일', minWidth: 30, maxWidth: 30, dataIndx: 'WEEK_DAY_NM'},
             {
                 title: '가공완료', align: 'center', colModel: [
-                    {title: '품수', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_STATUS'},
-                    {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_STATUS_NM'}
+                    {title: '품수', maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'PART_CNT'},
+                    {title: '수량', maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'PART_QTY'}
                 ]
             },
-            {title: '예상금액', dataType: 'integer', format: '#,###', dataIndx: 'ROW_NUM'},
-            {title: '목표금액', dataType: 'integer', format: '#,###', dataIndx: 'ROW_NUM'},
-            {title: '달성비율', dataIndx: 'ROW_NUM'},
-            {title: '기존근무', dataType: 'integer', format: '#,###', dataIndx: 'ROW_NUM'},
+            {title: '예상금액', dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT'},
+            {title: '목표금액', dataType: 'integer', format: '#,###', dataIndx: 'DT_GOAL_AMT'},
+            {title: '달성비율', maxWidth: 50, dataIndx: 'GOAL_RATIO'},
+            {title: '기준근무', maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'WORKING_TIME'},
             {
                 title: '부적합', align: 'center', colModel: [
-                    {title: '품수', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_STATUS'},
-                    {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_STATUS_NM'}
+                    {title: '품수', maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ERROR_CNT'},
+                    {title: '수량', maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ERROR_QTY'}
                 ]
             },
             {
-                title: '비고', dataIndx: 'ROW_NUM', editable: true,
+                title: '비고', dataIndx: 'NOTE', editable: true,
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
             }
         ];
@@ -176,26 +181,36 @@
                     return {data: dataJSON.data};
                 }
             },
-            load: function (event, ui) {
-                if (ui.dataModel.data.length > 0) {
-                    // $dailyProcessStatusLeftGrid.pqGrid('setSelection', {rowIndx: 0});
+            complete: function (event, ui) {
+                const data = $dailyProcessStatusLeftGrid.pqGrid('option', 'dataModel.data');
+
+                if (data.length > 0) {
+                    $dailyProcessStatusLeftGrid.pqGrid('setSelection', {rowIndx: 0});
                 }
             },
             rowSelect: function (event, ui) {
-                //TODO: rightGird refresh
-                // let highCd = ui.addList[0].rowData.HIGH_CD;
-                // $("#common_code_search_form").find("#HIGH_CD").val(highCd);
-                // $dailyProcessStatusRightGrid.pqGrid("option", "dataModel.postData", function(ui){
-                //     return fnFormToJsonArrayData('common_code_search_form');
-                // } );
-                // $dailyProcessStatusRightGrid.pqGrid("refreshDataAndView");
+                if (!(ui.addList[0].rowData.CAL_DT_NM === '합계' || ui.addList[0].rowData.CAL_DT_NM === '총계')) {
+                    const rowData = ui.addList[0].rowData;
+                    const dt = rowData.DT || null;
+                    const workFactory = rowData.WORK_FACTORY || null;
+                    $("#DAILY_PROCESS_STATUS_RIGHT_SEARCH_FORM").find("#DT").val(dt);
+                    $("#DAILY_PROCESS_STATUS_RIGHT_SEARCH_FORM").find("#WORK_FACTORY").val(workFactory);
+                    $dailyProcessStatusRightGrid.pqGrid("option", "dataModel.postData", function(ui){
+                        return fnFormToJsonArrayData('DAILY_PROCESS_STATUS_RIGHT_SEARCH_FORM');
+                    } );
+                    $dailyProcessStatusRightGrid.pqGrid("refreshDataAndView");
+                }
             },
             rowInit: function (ui) {
-                switch (ui.rowData.STATUS) {
-                    case 2:
+                if (ui.rowData.WEEK_DAY_NM === '일') {
+                    return {style: {'color': 'red'}};
+                }
+
+                switch (ui.rowData.CAL_DT_NM) {
+                    case '합계':
                         return {style: {'background': 'yellow'}};
-                    case 3:
-                        return {style: {'background': 'green'}};
+                    case '총계':
+                        return {style: {'background': '#FFE699'}};
                 }
             }
         };
@@ -204,16 +219,12 @@
         let rightPostData = fnFormToJsonArrayData('#DAILY_PROCESS_STATUS_RIGHT_SEARCH_FORM');
         const rightColModel = [
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
+            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: '발주업체', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', width:75, dataIndx: 'ORDER_COMP_NM'},
             {title: '수행<br>공장', dataIndx: 'WORK_FACTORY', hidden: true},
             {title: '수행<br>공장', dataIndx: 'WORK_FACTORY_NM'},
-            {
-                title: '가공완료', align: 'center', colModel: [
-                    {title: '품수', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_STATUS'},
-                    {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_STATUS_NM'}
-                ]
-            },
             {
                 title: '', minWidth: 30, dataIndx: 'CONTROL_NUM_BUTTON',
                 render: function (ui) {
@@ -231,46 +242,46 @@
             },
             {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', minWidth: 25, dataType: 'integer', format: '#,###', dataIndx: 'PART_NUM'},
-            {title: '', dataIndx: ''},
             {title: '가공<br>납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT'},
-            {title: '발주량', dataIndx: 'ORDER_QTY'},
-            {title: '가공완료<br>일시', width: 70, dataIndx: 'INNER_WORK_FINISH_DT'},
-            {title: '소요<br>시간', dataIndx: ''},
+            {title: '발주량', dataIndx: 'PART_QTY'},
+            {title: '가공완료<br>일시', width: 80, dataIndx: 'INNER_WORK_FINISH_DT'},
+            {title: '소요<br>시간', dataIndx: 'WORK_TIME'},
             {
-                title: '예상단가', dataType: 'integer', format: '#,###', dataIndx: '', editable: true,
+                title: '예상단가', dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT', editable: true,
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
             },
-            {title: '합계금액', dataIndx: ''},
+            {title: '합계금액', dataIndx: 'TOTAL_AMT'},
             {
-                title: 'P/H', dataType: 'integer', format: '#,###', dataIndx: '',
+                title: 'P/H', dataType: 'integer', format: '#,###', dataIndx: 'PRICE_PER_HOUR',
                 style: {'color': 'blue'}
             },
             {
                 title: '단가정보', align: 'center', colModel: [
-                    {title: '종전가', dataType: 'integer', format: '#,###', dataIndx: 'a', hidden: true},
-                    {title: '견적가', dataType: 'integer', format: '#,###', dataIndx: 'b', hidden: true},
-                    {title: '공급가', dataType: 'integer', format: '#,###', dataIndx: 'c', hidden: true}
+                    {title: '종전가', dataType: 'integer', format: '#,###', dataIndx: 'PREV_UNIT_FINAL_AMT', hidden: true},
+                    {title: '견적가', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', hidden: true},
+                    {title: '공급가', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', hidden: true}
                 ]
             },
             {
                 title: '검사결과', align: 'center', colModel: [
-                    {title: '등급', dataIndx: ''},
-                    {title: '검사코드', dataIndx: ''}
+                    {title: '등급', dataIndx: 'INSPECT_GRADE_NM'},
+                    {title: '검사코드', dataIndx: 'INSPECT_RESULT_NM'}
                 ]
             },
-            {title: '부적합<br>수량', dataIndx: ''},
+            {title: '부적합<br>수량', dataIndx: 'ERROR_QTY'},
             {
-                title: '비고', dataIndx: '', editable: true,
+                title: '비고', dataIndx: 'NOTE', editable: true,
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
             }
         ];
         const rightObj = {
             height: '94%',
             collapsible: false,
+            postRenderInterval: -1,
             resizable: false,
             showTitle: false,
             rowHtHead: 15,
-            numberCell: {title: 'No.', show: false},
+            numberCell: {title: 'No.'},
             // scrollModel: {autoFit: true},
             trackModel: {on: true},
             selectionModel: {type: 'row', mode: 'single'},
@@ -278,7 +289,7 @@
             colModel: rightColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: rightPostData,
+                postData: rightPostData, recIndx: 'ROW_NUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -344,7 +355,7 @@
         const changeViewColumn = function (checked) {
             const $dailyProcessStatusRightGridInstance = $dailyProcessStatusRightGrid.pqGrid('getInstance').grid;
             const Cols = $dailyProcessStatusRightGridInstance.Columns();
-            const array = ['a','b','c'];
+            const array = ['PREV_UNIT_FINAL_AMT','UNIT_FINAL_EST_AMT','UNIT_FINAL_AMT'];
             const parameter = checked ? 'diShow' : 'diHide';
             Cols.hide({[parameter]: array});
         };
@@ -359,12 +370,12 @@
         });
 
         $('#DAILY_PROCESS_STATUS_LEFT_SAVE').on('click', function () {
-            const updateQueryList = ['reportMapper.updateDailyProcessStatusLeft'];
+            const updateQueryList = ['reportMapper.insertUpdateWorkingDayNote'];
 
             fnModifyPQGrid($dailyProcessStatusLeftGrid, [], updateQueryList);
         });
         $('#DAILY_PROCESS_STATUS_RIGHT_SAVE').on('click', function () {
-            const updateQueryList = ['reportMapper.updateDailyProcessStatusRight'];
+            const updateQueryList = ['reportMapper.updateControlNote', 'reportMapper.updateControlPartForecastUnitAmt'];
 
             fnModifyPQGrid($dailyProcessStatusRightGrid, [], updateQueryList);
         });

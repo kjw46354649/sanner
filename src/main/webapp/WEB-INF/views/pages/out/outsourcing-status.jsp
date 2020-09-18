@@ -116,7 +116,7 @@
                     <a href="#OUTSIDE_CLOSE_STATUS" data-toggle="tab" aria-expanded="true">마감현황</a>
                 </li>
                 <li>
-                    <a href="#MONTHLY_OUTSIDE_STATUS" data-toggle="tab" aria-expanded="false">월별 매출현황</a>
+                    <a href="#MONTHLY_OUTSIDE_STATUS" data-toggle="tab" aria-expanded="false">월별 현황</a>
                 </li>
                 <div class="right_float out_status_save_id">
                     <button type="button" class="defaultBtn green" style="font-weight:normal;" id="OUTSIDE_CLOSE_STATUS_SAVE">저장</button>
@@ -230,7 +230,7 @@
                     {title: '1월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_01_AMT', summary: {type: 'sum'}},
                     {title: '2월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_02_AMT', summary: {type: 'sum'}},
                     {title: '3월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_03_AMT', summary: {type: 'sum'}},
-                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_03_SUM_AMT', summary: {type: 'sum'}},
+                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_03_SUM_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
                 ]
             },
             {
@@ -238,7 +238,7 @@
                     {title: '4월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_04_AMT', summary: {type: 'sum'}},
                     {title: '5월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_05_AMT', summary: {type: 'sum'}},
                     {title: '6월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_06_AMT', summary: {type: 'sum'}},
-                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_06_SUM_AMT', summary: {type: 'sum'}},
+                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_06_SUM_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
                 ]
             },
             {
@@ -246,7 +246,7 @@
                     {title: '7월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_07_AMT', summary: {type: 'sum'}},
                     {title: '8월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_08_AMT', summary: {type: 'sum'}},
                     {title: '9월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_09_AMT', summary: {type: 'sum'}},
-                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_09_SUM_AMT', summary: {type: 'sum'}},
+                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_09_SUM_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
                 ]
             },
             {
@@ -254,10 +254,10 @@
                     {title: '10월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_10_AMT', summary: {type: 'sum'}},
                     {title: '11월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_11_AMT', summary: {type: 'sum'}},
                     {title: '12월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_12_AMT', summary: {type: 'sum'}},
-                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_12_SUM_AMT', summary: {type: 'sum'}},
+                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_12_SUM_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
                 ]
             },
-            {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'}
+            {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT', style: {'font-weight': 'bold'}}
         ];
         const tab2GroupModel = {
             on: true, header:false,

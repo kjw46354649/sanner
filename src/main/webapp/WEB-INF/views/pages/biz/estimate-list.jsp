@@ -953,15 +953,28 @@
     });
 
     /** 화면 이동 처리 **/
-    $(document).on('click', '#estimateRegisterPage', function(event){
+    $(document).on('click', '#estimateRegisterPage', function (event) {
+        let timer;
+        let count = 0;
         let seq = event.target.dataset.seq;
-        let status = event.target.dataset.status;
+        // let status = event.target.dataset.status;
         $("a[pid='" + $("#estimateNo").val() + "']").trigger("click");
-        setTimeout(function(){
-            $("#estimate_version_up_sequence_form #hidden_est_seq").val(seq);
-            $("#estimateRegisterReloadBtn").trigger('click');
-        }, 800)
-        event.preventDefault();
+
+        const clickEstimateRegisterReloadBtn = function () {
+            timer = setInterval(function () {
+                $("#estimate_version_up_sequence_form #hidden_est_seq").val(seq);
+                $("#estimateRegisterReloadBtn").trigger('click');
+
+                if ($('#view_tab_10000102').length > 0 || count > 2) {
+                    clearInterval(timer);
+                } else {
+                    clickEstimateRegisterReloadBtn();
+                }
+                count++;
+            }, 1000);
+        };
+
+        clickEstimateRegisterReloadBtn();
     });
 
 
