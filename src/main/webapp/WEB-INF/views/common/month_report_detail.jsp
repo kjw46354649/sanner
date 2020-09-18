@@ -242,10 +242,6 @@
                     return {data: dataJSON.data};
                 }
             },
-            render: function () {
-                // 열 고정
-                this.option('freezeCols', 9);
-            },
             load: function () {
                 let data = $monthReportDetailListViewGrid.pqGrid('option', 'dataModel.data');
                 $('#MONTH_REPORT_DETAIL_LIST_VIEW_RECORDS').html(data.length);
