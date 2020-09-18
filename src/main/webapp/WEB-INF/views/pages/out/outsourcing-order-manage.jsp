@@ -113,8 +113,8 @@
                     <li>
                         <span>
                             <span class="ipu_wrap"><label class="label_100">Option</label></span>
-                            <span class="chk_box wd_100"><input name="EXCLUDE_REQUEST_COMPLETED" id="EXCLUDE_REQUEST_COMPLETED" type="checkbox"><label for="EXCLUDE_REQUEST_COMPLETED"> 요청완료제외</label></span>
-                            <span class="chk_box wd_100"><input name="IN_STOCK" id="IN_STOCK" type="checkbox"><label for="IN_STOCK"> 입고완료제외</label></span>
+                            <span class="chk_box wd_100"><input name="EXCLUDE_REQUEST_COMPLETED" id="EXCLUDE_REQUEST_COMPLETED" type="checkbox" checked><label for="EXCLUDE_REQUEST_COMPLETED"> 요청완료제외</label></span>
+                            <span class="chk_box wd_100"><input name="IN_STOCK" id="IN_STOCK" type="checkbox" checked><label for="IN_STOCK"> 입고완료제외</label></span>
                             <span class="gubun"></span>
                             <span class="ipu_wrap">
                                 <label class="label_100" for="AMOUNT_SUM">금액총합계</label>
@@ -570,7 +570,7 @@
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: true
             },
-            {title: '입고일시', width: 100, dataIndx: 'OUTSIDE_IN_DT'},
+            {title: '입고일시', width: 100, dataIndx: 'OUTSIDE_IN_DT2'},
             {title: '수량', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY'},
             {
                 title: '원발주 정보', align: 'center', colModel: [
@@ -862,7 +862,7 @@
                     });
                 }
             },
-            {title: '도면번호', minWidth: 120, dataIndx: 'DRAWING_NUM', editable: true},
+            {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM', editable: true},
             {title: '파<br>트', minWidth:30, dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '규격', minWidth: 110, dataIndx: 'SIZE_TXT', editable: true},
             {title: '자재<br>종류', minWidth: 70, dataIndx: 'MATERIAL_DETAIL',
@@ -1300,6 +1300,7 @@
             dragColumns: {enabled: false},
             editable: false,
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
+            editModel: {clicksToEdit: 1},
             colModel: outsideCloseLeftColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -2178,7 +2179,7 @@
         /* init */
         $('#OUTSIDE_MANAGE_START_DATE').datepicker({dateFormat: 'yy/mm/dd'});
         $('#OUTSIDE_MANAGE_END_DATE').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#OUTSIDE_MANAGE_START_DATE').datepicker('setDate', 'today');
+        $('#OUTSIDE_MANAGE_START_DATE').datepicker('setDate', new Date(CURRENT_YEAR, CURRENT_MONTH, TODAY.getDate() - 7));
         $('#OUTSIDE_MANAGE_END_DATE').datepicker('setDate', 'today');
 
         fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {

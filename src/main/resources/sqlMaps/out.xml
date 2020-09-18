@@ -8,6 +8,7 @@
             ROW_NUMBER () OVER () AS ROW_NUM,
             <include refid="orderMapper.control"/>,
             <include refid="orderMapper.controlPart"/>,
+            SF_GET_DATE_F(B.OUTSIDE_IN_DT, '', 'M') AS OUTSIDE_IN_DT2,
             B.OUTSIDE_UNIT_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS OUTSIDE_TOTAL_AMT,
             C.OUTSIDE_REQUEST_SEQ,
             CASE
@@ -90,9 +91,13 @@
             AND A.MODULE_NM LIKE CONCAT('%', #{MODULE_NM}, '%')
         </if>
         <choose>
-            <!-- 확정일시 -->
+            <!-- 주문확정일 -->
             <when test="OUTSIDE_SEARCH_CONDITION == 'OSC00'">
                 AND DATE_FORMAT(A.STATUS_DT, '%Y/%m/%d') BETWEEN #{OUTSIDE_MANAGE_START_DATE} AND #{OUTSIDE_MANAGE_END_DATE}
+            </when>
+             <!-- 외주확정일 -->
+            <when test="OUTSIDE_SEARCH_CONDITION == 'OSC04'">
+                AND DATE_FORMAT(B.OUTSIDE_CONFIRM_DT, '%Y/%m/%d') BETWEEN #{OUTSIDE_MANAGE_START_DATE} AND #{OUTSIDE_MANAGE_END_DATE}
             </when>
             <!-- 외주요청일시 -->
             <when test="OUTSIDE_SEARCH_CONDITION == 'OSC01'">
@@ -407,10 +412,24 @@
             ROW_NUMBER () OVER () AS ROW_NUM,
             <include refid="orderMapper.control"/>,
             <include refid="orderMapper.controlPart"/>,
-<!--             C.OUTSIDE_REQUEST_SEQ, -->
+            SF_GET_DATE_F(B.OUTSIDE_IN_DT, '', 'M') AS OUTSIDE_IN_DT2,
             DATE_FORMAT(STR_TO_DATE(E.CLOSE_MONTH, '%Y%m'), '%Y.%m') AS OUTSIDE_CLOSE_MONTH,
             E.CLOSE_VER AS OUTSIDE_CLOSE_VER,
-            SF_GET_DATE_F(E.CLOSE_DT, 'YY', 'M') AS OUTSIDE_CLOSE_DT
+            SF_GET_DATE_F(E.CLOSE_DT, 'YY', 'M') AS OUTSIDE_CLOSE_DT,
+            SF_GET_COMP_NM(F.COMP_CD) AS OUTSIDE_CLOSE_COMP_NM,
+            H.INSPECT_NUM, <!-- SEQ -->
+            H.INSPECT_GRADE, <!-- 등급 -->
+            SF_GET_CODE_NM('1040', H.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM, <!-- 등급 -->
+            H.INSPECT_RESULT, <!-- 불량코드 -->
+            CASE H.INSPECT_TYPE
+                WHEN '1' THEN IF(H.INSPECT_GRADE = 'GRD040', SF_GET_CODE_NM('1020', H.INSPECT_RESULT, #{LOGIN_LOCALE}), NULL)
+                WHEN '2' THEN SF_GET_CODE_NM('1021', H.INSPECT_RESULT, #{LOGIN_LOCALE})
+            END AS INSPECT_RESULT_NM,  <!-- 불량코드 -->
+            SF_GET_DATE_F(H.INSERT_DT, '', 'M') AS INSPECT_DT,
+            SF_GET_DATE_F(B.OUTSIDE_CONFIRM_DT, '', 'M') AS OUTSIDE_CONFIRM_DT2, <!-- 외주 확정일시 -->
+            (SELECT CASE WHEN B.OUTSIDE_STATUS IN ('OST001', 'OST003', 'OST004') THEN SF_GET_DATE_F(INSERT_DT, '', 'M') ELSE NULL END AS OUTSIDE_REQUEST_DT
+            FROM TBL_OUTSIDE_REQUEST_DETAIL
+            WHERE B.CONTROL_SEQ = CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = CONTROL_DETAIL_SEQ AND DEL_YN = 'N') AS OUTSIDE_REQUEST_DT
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                 AND B.OUTSIDE_STATUS = 'OST004'
@@ -426,6 +445,15 @@
 <!--             LEFT OUTER JOIN TBL_OUTSIDE_REQUEST D ON C.OUTSIDE_REQUEST_SEQ = D.OUTSIDE_REQUEST_SEQ -->
             LEFT OUTER JOIN TBL_OUTSIDE_CLOSE E ON B.CONTROL_SEQ = E.CONTROL_SEQ
                                                    AND B.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_OUTSIDE_CLOSE_NOTE F ON E.CLOSE_MONTH = F.CLOSE_MONTH
+                                                        AND E.CLOSE_VER = F.CLOSE_VER
+            LEFT OUTER JOIN TBL_INSPECT H ON B.CONTROL_SEQ = H.CONTROL_SEQ
+                                                     AND B.CONTROL_DETAIL_SEQ = H.CONTROL_DETAIL_SEQ
+                                                     AND H.INSPECT_SEQ = (SELECT MAX(INSPECT_SEQ)
+                                                                        FROM TBL_INSPECT
+                                                                        WHERE 1 = 1
+                                                                            AND CONTROL_SEQ = B.CONTROL_SEQ
+                                                                            AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
         WHERE 1 = 1
             AND A.DEL_YN = 'N'
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">

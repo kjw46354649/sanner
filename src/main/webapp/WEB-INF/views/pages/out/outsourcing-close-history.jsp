@@ -175,21 +175,25 @@
             // {title: 'OUTSIDE_REQUEST_SEQ', dataType: 'integer', dataIndx: 'OUTSIDE_REQUEST_SEQ', hidden: true},
             {title: 'CLOSE_VER', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CLOSE_VER', hidden: true},
             {title: 'PART_STATUS', dataIndx: 'PART_STATUS', hidden: true},
-            {title: '마감월', width: 60, dataIndx: 'OUTSIDE_CLOSE_MONTH'},
-            {title: '차수', minWidth: 30, dataIndx: 'OUTSIDE_CLOSE_VER'},
-            {title: '사업자<br>구분', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자<br>구분', width: 70, dataIndx: 'COMP_NM'},
-            {title: '외주<br>구분', minWidth: 30, dataIndx: 'OUTSIDE_YN'},
-            {title: '원발주<br>상태', width: 70, dataIndx: 'CONTROL_PART_STATUS'},
-            {title: '외주<br>발주상태', dataIndx: 'DHLWNQKFWNTKDXO', hidden: true},
-            {title: '상태변경<br>일시', width: 70, dataIndx: 'PART_SATUS_DT'},
+            {
+                title: '마감 정보', align: 'center', colModel: [
+                    {title: '마감월', width: 60, dataIndx: 'OUTSIDE_CLOSE_MONTH'},
+                    {title: '차수', minWidth: 30, dataIndx: 'OUTSIDE_CLOSE_VER'},
+                    {title: '마감사업자', width: 70, dataIndx: 'OUTSIDE_CLOSE_COMP_NM'}
+                ]
+            },
+            {title: '원발주<br>사업자구분', dataIndx: 'COMP_CD', hidden: true},
+            {title: '원발주<br>사업자구분', width: 70, dataIndx: 'COMP_NM'},
+            {title: '외주<br>발주', minWidth: 30, dataIndx: 'OUTSIDE_YN'},
+            {title: '원발주<br>상태', width: 70, dataIndx: 'PART_STATUS_NM'},
+            {title: '외주<br>발주상태', dataIndx: 'OUTSIDE_STATUS', hidden: true},
+            {title: '외주<br>발주상태', width: 70, dataIndx: 'OUTSIDE_STATUS_NM'},
+            {title: '상태변경<br>일시', width: 70, dataIndx: 'PART_STATUS_DT'},
             {title: '외주업체', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
             {title: '외주업체', width: 70, dataIndx: 'OUTSIDE_COMP_NM'},
-            {title: '입고일시', dataIndx: 'OUTSIDE_IN_DT'},
-            {title: '외주<br>발주번호', dataIndx: 'OUTSIDE_ORDER_NUM'},
-            {title: '비고', width: 150, dataIndx: 'OUTSIDE_NOTE'},
             {title: '비고(주문)', width: 150, dataIndx: 'CONTROL_NOTE'},
-            {title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON',
+            {
+                title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON',
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
                         return '<span  class="doubleFilesIcon" name="detailView" style="cursor: pointer"></span>';
@@ -204,6 +208,8 @@
                 }
             },
             {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM'},
+            {title: '파<br>트', dataIndx: 'PART_NUM'},
+            {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
             {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
@@ -217,22 +223,25 @@
                     });
                 }
             },
-            {title: '도면번호', width: 90, dataIndx: 'DRAWING_NUM'},
-            {title: '파<br>트', dataIndx: 'PART_NUM'},
-            {title: '품명', width: 70, dataIndx: 'ITEM_NM'},
-            {title: '규격', minWidth: 100, dataIndx: 'SIZE_TXT'},
-            {title: '표면처리', dataIndx: 'SURFACE_TREAT_NM'},
-            {title: '규격', minWidth: 90, dataIndx: 'SIZE_TXT'},
-            {title: '소재<br>종류', minWidth: 90, dataIndx: 'MATERIAL_DETAIL_NM'},
-            // {title: '수량', dataIndx: 'ITEM_QTY'},
-            {title: '사급<br>여부', dataIndx: 'MATERIAL_SUPPLY_YN',
+            {title: '작업<br>형태', width: 70, dataIndx: 'WORK_TYPE_NM'},
+            {title: '규격', width: 70, dataIndx: 'SIZE_TXT'},
+            {title: '소재종류', width:70, dataIndx: 'MATERIAL_DETAIL_NM'},
+            {title: '표면처리', width:90, dataIndx: 'SURFACE_TREAT_NM'},
+            {title: '주문<br>수량', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY'},
+            {
+                title: '대칭', align: 'center', colModel: [
+                    {title: '원칭', dataIndx: 'ORIGINAL_SIDE_QTY'},
+                    {title: '대칭', dataIndx: 'OTHER_SIDE_QTY'}
+                ]
+            },
+             {title: '원발주<br>사급', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '소재<br>제공', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
+            {title: '소재<br>사급', dataIndx: 'MATERIAL_SUPPLY_YN',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -244,34 +253,33 @@
                     {title: '완제품', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN'},
                     {title: '가공', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN'},
                     {title: '연마', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN'},
-                    {title: '표면처리', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN'},
+                    {title: '표면', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN'},
                     {title: '기타사항', dataIndx: 'OUTSIDE_REQUEST_ETC'}
                 ]
             },
-            {title: '요망납기', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
-            {title: '외주<br>확정단가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_UNIT_AMT'},
-            {title: '금액<br>합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
-            {title: '외주<br>종전가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DHLWNWHDWJSRK'},
+            {title: '외주<br>납기', dataType: 'date', format: 'mm/dd', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
+            {title: '비고', width: 150, dataIndx: 'OUTSIDE_NOTE'},
+            {title: '입고일시', width: 100, dataIndx: 'OUTSIDE_IN_DT2'},
+            {
+                title: '대칭', align: 'center', colModel: [
+                    {title: '원칭', dataIndx: 'ORIGINAL_SIDE_QTY'},
+                    {title: '대칭', dataIndx: 'OTHER_SIDE_QTY'}
+                ]
+            },
+            {title: '주문<br>수량', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY'},
             {
                 title: '원발주 정보', align: 'center', colModel: [
                     {title: '납기', width: 70, dataIndx: 'INNER_DUE_DT'},
-                    {title: '견적단가', dataIndx: 'UNIT_FINAL_EST_AMT'},
+                    // {title: '견적단가', dataIndx: 'UNIT_FINAL_EST_AMT'},
                     {title: '공급단가', dataIndx: 'UNIT_FINAL_AMT'},
-                    {title: '발주처', dataIndx: 'ORDER_COMP_CD'},
+                    {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true},
                     {title: '발주처', dataIndx: 'ORDER_COMP_NM'}
                 ]
             },
-            {
-                title: '품질결과', align: 'center', hidden: true, colModel: [
-                    {title: 'Seq.', dataIndx: 'Seq.'},
-                    {title: '결과', dataIndx: 'RUFRHK'},
-                    {title: '불량코드', dataIndx: 'QNFFIDZHEM'},
-                    {title: '측정일시', dataIndx: 'CMRWJDDLFTL'}
-                ]
-            },
-            {title: '원주문<br>확정 일시', width: 100, dataIndx: 'CONTROL_STATUS'},
-            {title: '외주가공<br>요청일시.', width: 100, dataIndx: 'OUTSIDE_REQUEST_DATE'},
-            {title: '외주가공<br>마감일시', width: 100, dataIndx: 'OUTSIDE_FINISH_DATE'},
+            {title: '외주<br>발주번호', dataIndx: 'OUTSIDE_ORDER_NUM'},
+            {title: '외주<br>확정단가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_UNIT_AMT'},
+            {title: '금액<br>합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
+            {title: '외주<br>종전가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DHLWNWHDWJSRK'},
             {title: 'DXF', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'
@@ -286,19 +294,35 @@
                 }
             },
             {
-                title: 'PDF', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
-                render: function (ui) {
-                    if (ui.cellData) return '<span id="imageView" class="redFileImageICon" style="cursor: pointer"></span>'
-                },
-                postRender: function (ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find("#imageView").bind("click", function () {
-                        let rowData = ui.rowData;
-                        fnFileDownloadFormPageAction(rowData.PDF_GFILE_SEQ);
-                    });
-                }
-            }
+                title: '품질결과', align: 'center', colModel: [
+                    {title: 'Seq.', dataIndx: 'INSPECT_NUM.'},
+                    {title: '등급', dataIndx: 'INSPECT_GRADE_NM'},
+                    {title: '불량코드', dataIndx: 'INSPECT_RESULT_NM'},
+                    {title: '측정일시', dataIndx: 'INSPECT_DT'}
+                ]
+            },
+            {title: '외주가공<br>확정일시', width: 100, dataIndx: 'OUTSIDE_CONFIRM_DT2'},
+            {title: '외주가공<br>요청일시', width: 100, dataIndx: 'OUTSIDE_REQUEST_DT'},
+            // {title: '품명', width: 70, dataIndx: 'ITEM_NM'},
+            // {title: '소재<br>종류', minWidth: 90, dataIndx: 'MATERIAL_DETAIL_NM'},
+            // {title: '수량', dataIndx: 'ITEM_QTY'},
+            // {title: '원주문<br>확정 일시', width: 100, dataIndx: 'CONTROL_STATUS'},
+            // {title: '외주가공<br>마감일시', width: 100, dataIndx: 'OUTSIDE_FINISH_DATE'},
+            //
+            // {
+            //     title: 'PDF', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
+            //     render: function (ui) {
+            //         if (ui.cellData) return '<span id="imageView" class="redFileImageICon" style="cursor: pointer"></span>'
+            //     },
+            //     postRender: function (ui) {
+            //         let grid = this,
+            //             $cell = grid.getCell(ui);
+            //         $cell.find("#imageView").bind("click", function () {
+            //             let rowData = ui.rowData;
+            //             fnFileDownloadFormPageAction(rowData.PDF_GFILE_SEQ);
+            //         });
+            //     }
+            // }
         ];
         const obj = {
             minHeight: '100%',
@@ -564,6 +588,13 @@
                 if(index > -1) val = options[index].text;
             }
             if (val) {
+                if (ui.column.dataType === 'integer') {
+                    val = numberWithCommas(val);
+                } else if (ui.column.dataType === 'date' && ui.column.format !== undefined) {
+                    let o = new Date(val);
+                    val = o && !isNaN(o.getTime()) && $.datepicker.formatDate(ui.column.format, o);
+                }
+
                 var condition = $("#outsourcingCloseHistoryFilterCondition :selected").val(),
                     valUpper = val.toString().toUpperCase(),
                     txt = $("#outsourcingCloseHistoryFilterKeyword").val(),

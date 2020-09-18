@@ -39,6 +39,7 @@
         const materialDetailList = fnGetCommCodeGridSelectBox('1027');
         const materialKindList = fnGetCommCodeGridSelectBox('1029');
         const surfaceTreatList = fnGetCommCodeGridSelectBox('1039');
+        const materialFinishHeatList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
         const BUSINESS_COMPANY = fnCommCodeDatasourceGridSelectBoxCreate({
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getBusinessCompanyList'}
@@ -412,6 +413,30 @@
                     }
                 }
             },
+            {
+                title: '열처리', width: 70, dataIndx: 'MATERIAL_FINISH_HEAT', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030')},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === '' || cellData === undefined) {
+                        return '';
+                    } else {
+                        let materialFinishHeat = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
+                        let index = materialFinishHeat.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = materialFinishHeat.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : materialFinishHeat[index].text;
+                    }
+                }
+            },
             {title: '소재비고', width: 200, dataIndx: 'MATERIAL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {
                 title: 'Part<br>Unit', dataIndx: 'PART_UNIT_QTY',
@@ -560,6 +585,7 @@
                         let materialDetail = null;
                         let materialKind = null;
                         let surfaceTreat = null;
+                        let materialFinishHeat = null;
 
                         // 단가확인
                         if (newRowData.PRICE_CONFIRM !== undefined) {
@@ -640,17 +666,26 @@
 
                             if (index >= 0) surfaceTreat = surfaceTreatList[index].value;
                         }
+                        // 열처리
+                        if (newRowData.MATERIAL_FINISH_HEAT !== undefined) {
+                            let index = materialFinishHeatList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_FINISH_HEAT;
+                            });
 
-                        ui.addList[i].newRow.PRICE_CONFIRM = priceConfirm ;
-                        ui.addList[i].newRow.COMP_CD = compCd ;
-                        ui.addList[i].newRow.ORDER_COMP_CD = orderCompCd ;
-                        ui.addList[i].newRow.ORDER_STAFF_SEQ = orderStaffSeq ;
-                        ui.addList[i].newRow.MAIN_INSPECTION = mainInspection ;
-                        ui.addList[i].newRow.WORK_TYPE = workType ;
-                        ui.addList[i].newRow.WORK_FACTORY = workFactory ;
-                        ui.addList[i].newRow.MATERIAL_DETAIL = materialDetail ;
-                        ui.addList[i].newRow.MATERIAL_KIND = materialKind ;
-                        ui.addList[i].newRow.SURFACE_TREAT = surfaceTreat ;
+                            if (index >= 0) materialFinishHeat = materialFinishHeatList[index].value;
+                        }
+
+                        ui.addList[i].newRow.PRICE_CONFIRM = priceConfirm;
+                        ui.addList[i].newRow.COMP_CD = compCd;
+                        ui.addList[i].newRow.ORDER_COMP_CD = orderCompCd;
+                        ui.addList[i].newRow.ORDER_STAFF_SEQ = orderStaffSeq;
+                        ui.addList[i].newRow.MAIN_INSPECTION = mainInspection;
+                        ui.addList[i].newRow.WORK_TYPE = workType;
+                        ui.addList[i].newRow.WORK_FACTORY = workFactory;
+                        ui.addList[i].newRow.MATERIAL_DETAIL = materialDetail;
+                        ui.addList[i].newRow.MATERIAL_KIND = materialKind;
+                        ui.addList[i].newRow.SURFACE_TREAT = surfaceTreat;
+                        ui.addList[i].newRow.MATERIAL_FINISH_HEAT = materialFinishHeat;
                     }
 
                     for (let i = 0, updateLength = ui.updateList.length; i < updateLength; i++) {
@@ -667,6 +702,7 @@
                         let materialDetail = null;
                         let materialKind = null;
                         let surfaceTreat = null;
+                        let materialFinishHeat = null;
 
                         // 단가확인
                         if (newRowData.PRICE_CONFIRM !== undefined) {
@@ -775,6 +811,17 @@
                             if (index >= 0) {
                                 surfaceTreat = surfaceTreatList[index].value;
                                 tempNewRow.SURFACE_TREAT = surfaceTreat;
+                            }
+                        }
+                        // 열처리
+                        if (newRowData.MATERIAL_FINISH_HEAT !== undefined) {
+                            let index = materialFinishHeatList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_FINISH_HEAT;
+                            });
+
+                            if (index >= 0) {
+                                materialFinishHeat = materialFinishHeatList[index].value;
+                                tempNewRow.MATERIAL_FINISH_HEAT = materialFinishHeat;
                             }
                         }
 
@@ -924,6 +971,14 @@
                 });
 
                 if (index < 0) addErrorList(rowIndex, 'SURFACE_TREAT');
+            }
+            // 열처리
+            if (rowData.MATERIAL_FINISH_HEAT !== undefined && rowData.MATERIAL_FINISH_HEAT !== null && rowData.MATERIAL_FINISH_HEAT !== '') {
+                let index = materialFinishHeatList.findIndex(function (element) {
+                    return element.value === rowData.MATERIAL_FINISH_HEAT;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'MATERIAL_FINISH_HEAT');
             }
         };
 
