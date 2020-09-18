@@ -56,7 +56,7 @@
             <div class="conWrap">
                 <div id="MONTHLY_DETAIL_STATUS_GRID"></div>
                 <div class="right_sort">
-                    전체 조회 건수 (Total : <span id="CONTROL_MANAGE_RECORDS" style="color: #00b3ee">0</span>)
+<%--                    전체 조회 건수 (Total : <span id="CONTROL_MANAGE_RECORDS" style="color: #00b3ee">0</span>)--%>
                 </div>
             </div>
         </div>
