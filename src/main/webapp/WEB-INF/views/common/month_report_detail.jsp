@@ -127,8 +127,8 @@
         });
 
         if (opener.isProcessTargetListButtonClick) {
-            $('#MONTH_REPORT_DETAIL_START_DATE').datepicker('setDate', new Date(CURRENT_YEAR, CURRENT_MONTH - 1));
-            $('#MONTH_REPORT_DETAIL_END_DATE').datepicker('setDate', new Date(CURRENT_YEAR, CURRENT_MONTH + 2));
+            $('#MONTH_REPORT_DETAIL_START_DATE').datepicker('setDate', new Date(CURRENT_YEAR, CURRENT_MONTH - 1, TODAY.getDate()));
+            $('#MONTH_REPORT_DETAIL_END_DATE').datepicker('setDate', new Date(CURRENT_YEAR, CURRENT_MONTH + 2, TODAY.getDate()));
             $('#MONTH_REPORT_DETAIL_LIST_VIEW_FORM #COMP_CD').val('').prop('selected', true);
             $('#MONTH_REPORT_DETAIL_LIST_VIEW_FORM #ORDER_COMP_CD').val('').prop('selected', true);
             $('#MONTH_REPORT_DETAIL_LIST_VIEW_FORM #FACTORY_CLASSIFY_YN').val('N').prop('selected', true);
