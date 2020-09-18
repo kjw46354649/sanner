@@ -22,6 +22,8 @@
 	<link rel="stylesheet" type="text/css" href="/resource/plugins/alertifyjs/css/alertify.css" />
 	<link rel="stylesheet" type="text/css" href="/resource/plugins/alertifyjs/css/themes/default.css" />
 
+	<link rel="stylesheet" type="text/css" href="/resource/plugins/animate-css/animate.css" />
+
     <script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
 	<!-- alertify -->
@@ -1230,7 +1232,7 @@
 						$(this).empty();
 					});
 					$('[id^=ARE]').each(function () {
-
+						$(this).find(".leftWrap").removeClass('');
 						$(this).find(".leftWrap").find(".txtWrap").html('');
 						$(this).find(".rightWrap").find(".nameWrap").html('Log off');
 						$(this).find(".rightWrap").find("img").attr("src", "/resource/asset/images/tv/img_logoff.png");
@@ -1283,6 +1285,8 @@
 							if($target.length > 0){
 								if(equip_nm != undefined) {
 									$target.find(".leftWrap").find(".txtWrap").html(equip_nm);
+									if(m_list[i].WORK_STATUS)
+										$target.find(".leftWrap").addClass(m_list[i].WORK_STATUS);
 								}
 								if(user_nm != undefined) {
 									$target.find(".rightWrap").find(".nameWrap").html(user_nm);
@@ -1291,8 +1295,8 @@
 									$target.find(".rightWrap").find("img").attr("src", "/image/" + user_photo_gfile_seq);
 								}
 								if(control_part_info != undefined) {
-									$target.find(".proName").addClass("ellipsis");
 									$target.find(".proName").html(control_part_info);
+									$target.find(".proName").addClass("ellipsis");
 								}
 								if(working_time != undefined) {
 									$target.find(".proNum").html(working_time + "'");
@@ -1400,7 +1404,7 @@
 				let maxCnt = $("#" + popPosition).attr("data-cnt");
 				let targetCnt = $("#" + popPosition).find("li").length;
 				if (maxCnt > targetCnt) {
-					$("#" + popPosition).append("<li class=\"ellipsis\">" + liInfo + "</li>");
+					$("#" + popPosition).append("<li class=\"ellipsis\" >" + liInfo + "</li>");
 				}
 				$("#CNT_" + popPosition).html(totalCnt);
 			}
@@ -1413,7 +1417,6 @@
 				let messBody = messageData.content02 + " -> " + messageData.content03;
 				if(messageData.content04) messBody += "     (" + messageData.content04 + ")";
 				if($(".alarmList").length > maxCnt) $(".alarmList").last().remove();
-
 				let alarmMsg  = '<li class="alarmList">';
 					alarmMsg += '	<span class="dateTxt">'+ messageData.content01 +'</span>';
 					alarmMsg += '	<span class="progressTxt ellipsis"><b>' + messBody + ' </b></span>';
@@ -1427,8 +1430,25 @@
 			alarmMessageProcess(messageData);
 
 			let popPosition = messageData.popPosition;
+			let prePopPosition = messageData.prePopPosition;
+
+			// $("#" + popPosition).removeClass("animated flash");
 			let limit = $("#" + popPosition).attr("data-cnt");
+
+			if(prePopPosition){
+				let preLimit = $("#" + prePopPosition).attr("data-cnt");
+				// $("#" + prePopPosition).removeClass("animated flash");
+				getPopLocationData(prePopPosition, preLimit);
+			}
+
 			getPopLocationData(popPosition, limit);
+			if(prePopPosition) $("#" + prePopPosition).addClass("animated flash");
+			$("#" + popPosition).addClass("animated flash");
+
+			setInterval(function() {
+				if(prePopPosition) $("#" + prePopPosition).removeClass("animated flash");
+				$("#" + popPosition).removeClass("animated flash");
+			}, 500);
 		};
 
 		/** DRAWING BOARD 정보 실시간 처리 **/
@@ -1436,15 +1456,38 @@
 			alarmMessageProcess(messageData);
 			let actionType = messageData.actionType;
 			let $target = $("#" + messageData.factoryArea + "_" + messageData.equipPosition);
-			if(actionType === 'DB_COMPLETE') {
-				$target.find(".proName").removeClass("ellipsis");
-				$target.find(".proName").html('');
-				$target.find(".proNum").html('');
-			}else{
-				$target.find(".proName").addClass("ellipsis");
-				$target.find(".proName").html(messageData.content02);
-				$target.find(".proNum").html(messageData.sMinute + "'");
+
+			switch (actionType){
+				case 'DB_CANCEL' :
+			    case 'DB_COMPLETE' :
+					$target.find(".proName").html('');
+					$target.find(".proNum").html('');
+					$target.find(".proName").removeClass("ellipsis animated fadeInLeft");
+					$target.find(".leftWrap").removeClass("machine-run-background machine-pause-background");
+			        break;
+				case 'DB_PAUSE' :
+					$target.find(".leftWrap").removeClass("machine-run-background");
+					$target.find(".leftWrap").addClass("machine-pause-background");
+					break;
+				case 'DB_START' :
+					$target.find(".proName").html(messageData.content02);
+					$target.find(".proNum").html(messageData.sMinute + "'");
+					$target.find(".proName").addClass("ellipsis animated fadeInLeft ");
+				case 'DB_RESTART' :
+					$target.find(".leftWrap").removeClass("machine-pause-background");
+					$target.find(".leftWrap").addClass("machine-run-background");
+					break;
 			}
+
+			// if(actionType === 'DB_COMPLETE') {
+			// 	$target.find(".proName").html('');
+			// 	$target.find(".proNum").html('');
+			// 	$target.find(".proName").removeClass("ellipsis animated fadeInLeft ");
+			// }else{
+			// 	$target.find(".proName").html(messageData.content02);
+			// 	$target.find(".proNum").html(messageData.sMinute + "'");
+			// 	$target.find(".proName").addClass("ellipsis animated fadeInLeft ");
+			// }
 		};
 
 		/** 작업자 로그인 정보 실시간 처리 **/

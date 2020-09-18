@@ -115,6 +115,7 @@ public class PopServiceImpl implements PopService {
 
                 notificationMessage.setType(MessageType.POP);
                 notificationMessage.setPopPosition(popLocation);
+                notificationMessage.setPrePopPosition(prevPopLocation);
                 notificationMessage.setContent01((String) controlPartInfo.get("CONTEXT01"));
                 notificationMessage.setContent02((String) controlPartInfo.get("CONTEXT02"));
                 notificationMessage.setContent03((String) controlPartInfo.get("CONTEXT03"));

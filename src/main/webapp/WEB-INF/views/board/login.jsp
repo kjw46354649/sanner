@@ -37,14 +37,18 @@
             <div class="loginWrap">
                 <ul>
                     <li>
-                        <select id="FACTORY_AREA" name="FACTORY_AREA" title="메뉴선택">
+                        <select id="FACTORY_AREA" name="FACTORY_AREA" title="공장 선택">
                             <c:forEach var="code" items="${areaList}">
                                 <option value="${code.CODE_CD}" <c:if test="${FACTORY_AREA eq code.CODE_CD}">selected="selected"</c:if> >${code.CODE_NM}</option>
                             </c:forEach>
                         </select>
                     </li>
                     <li>
-                        <select id="EQUIP_SEQ" name="EQUIP_SEQ" title="메뉴선택"></select>
+                        <select id="EQUIP_SEQ" name="EQUIP_SEQ" title="장비 선택">
+                            <c:forEach var="code" items="${equipList}">
+                                <option value="${code.EQUIP_SEQ}" <c:if test="${EQUIP_SEQ eq code.EQUIP_SEQ}">selected="selected"</c:if> >${code.EQUIP_NM}</option>
+                            </c:forEach>
+                        </select>
                     </li>
                 </ul>
                 <p class="txt"><srping:message key="drawing.login.plz"/></p>
@@ -64,6 +68,8 @@
 <script type='text/javascript'>
 
     let equipment = $("#drawing_login_form").find("#EQUIP_SEQ");
+    let selEquipList = '${equipList}';
+
     $(function () {
 
         $('#local_ko').click(function(){
@@ -103,8 +109,6 @@
                 }
             });
         });
-
-        $("#FACTORY_AREA").trigger("change");
     });
 
 </script>
