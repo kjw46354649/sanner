@@ -3,11 +3,180 @@
 
 <mapper namespace="reportMapper">
     <select id="selectDailyProcessStatusLeftList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT 1
+        SELECT ROW_NUMBER () OVER(ORDER BY Z.WEEK_SEQ IS NULL ASC, Z.WEEK_SEQ, Z.DT IS NULL ASC, Z.DT) AS ROW_NUM
+            , #{WORK_FACTORY} AS WORK_FACTORY     <!-- 고정조건 -->
+            , Z.WEEK_SEQ
+            , Z.DT
+            , CASE WHEN Z.WEEK_SEQ IS NULL THEN '총계'
+                   WHEN Z.DT IS NULL THEN '합계'
+                   ELSE CONCAT(DATE_FORMAT(STR_TO_DATE(Z.DT,'%Y%m%d'),'%e'),'일')
+              END AS CAL_DT_NM
+            , CASE WHEN Z.DT IS NULL THEN ''
+                   WHEN DATE_FORMAT(STR_TO_DATE(Z.DT,'%Y%m%d'),'%w') = '0' THEN '일'
+                   WHEN DATE_FORMAT(STR_TO_DATE(Z.DT,'%Y%m%d'),'%w') = '1' THEN '월'
+                   WHEN DATE_FORMAT(STR_TO_DATE(Z.DT,'%Y%m%d'),'%w') = '2' THEN '화'
+                   WHEN DATE_FORMAT(STR_TO_DATE(Z.DT,'%Y%m%d'),'%w') = '3' THEN '수'
+                   WHEN DATE_FORMAT(STR_TO_DATE(Z.DT,'%Y%m%d'),'%w') = '4' THEN '목'
+                   WHEN DATE_FORMAT(STR_TO_DATE(Z.DT,'%Y%m%d'),'%w') = '5' THEN '금'
+                   WHEN DATE_FORMAT(STR_TO_DATE(Z.DT,'%Y%m%d'),'%w') = '6' THEN '토'
+              END AS WEEK_DAY_NM
+            , Z.PART_CNT
+            , Z.PART_QTY
+            , Z.FORECAST_UNIT_AMT
+            , Z.DT_GOAL_AMT
+            , CASE WHEN IFNULL(Z.DT_GOAL_AMT,0) = 0 THEN NULL ELSE ROUND(IFNULL(Z.FORECAST_UNIT_AMT,0) / IFNULL(Z.DT_GOAL_AMT,0) * 100,1) END AS GOAL_RATIO
+            , Z.WORKING_TIME
+            , Z.ERROR_CNT
+            , Z.ERROR_QTY
+            , (SELECT M.NOTE FROM jmes.TBL_WORKING_DAY_NOTE M WHERE M.WORKING_DT = Z.DT) AS NOTE
+        FROM (  SELECT X.WEEK_SEQ
+                    , X.DT
+                    , SUM(IFNULL(Y.PART_CNT,0)) AS PART_CNT
+                    , SUM(IFNULL(Y.PART_QTY,0)) AS PART_QTY
+                    , SUM(IFNULL(Y.FORECAST_UNIT_AMT,0)) AS FORECAST_UNIT_AMT
+                    , SUM(IFNULL(X.DT_GOAL_AMT,0)) AS DT_GOAL_AMT
+                    , SUM(IFNULL(X.WORKING_TIME,0)) AS WORKING_TIME
+                    , SUM(IFNULL(Y.ERROR_CNT,0)) AS ERROR_CNT
+                    , SUM(IFNULL(Y.ERROR_QTY,0)) AS ERROR_QTY
+                FROM (  SELECT F.DT
+                            , DATE_FORMAT(STR_TO_DATE(F.DT,'%Y%m%d'),'%u') AS WEEK_SEQ
+                            , CASE WHEN F.WEEK_DAY > 0 THEN (   SELECT ROUND(M.GOAL_AMT / N.DT_CNT,0) AS DT_GOAL_AMT
+                                                                FROM (  SELECT SUM(GOAL_AMT) AS GOAL_AMT
+                                                                        FROM jmes.TBL_SALES_GOAL M
+                                                                        WHERE YYYYMM = CONCAT(#{YEAR}, #{MONTH})           <!-- 고정조건 -->
+                                                                        <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+                                                                            AND WORK_FACTORY = #{WORK_FACTORY}   <!-- 가변조건 -->
+                                                                        </if>
+                                                                      ) M
+                                                                    , ( SELECT COUNT(*) AS DT_CNT
+                                                                        FROM jmes.TBL_YYYYMMDD A
+                                                                        WHERE A.DT LIKE CONCAT(#{YEAR}, #{MONTH},'%')    <!-- 고정조건 -->
+                                                                            AND DATE_FORMAT(STR_TO_DATE(A.DT,'%Y%m%d'),'%w') > 0
+                                                                      ) N
+                                                              )
+                              END AS DT_GOAL_AMT
+                            , ( SELECT M.WORKING_TIME
+                                FROM jmes.TBL_WORKING_WEEK_TIME M
+                                WHERE M.WORK_FACTORY = #{WORK_FACTORY}   <!-- 고정조건 -->
+                                    AND M.WEEK_DAY = F.WEEK_DAY
+                              ) AS WORKING_TIME
+                        FROM (  SELECT A.DT
+                                    , DATE_FORMAT(STR_TO_DATE(A.DT,'%Y%m%d'),'%w') AS WEEK_DAY
+                                FROM jmes.TBL_YYYYMMDD A
+                                WHERE A.DT LIKE CONCAT(#{YEAR}, #{MONTH},'%')  <!-- 고정조건 -->
+                              ) F
+                     ) X LEFT OUTER JOIN (  SELECT P.WORKING_FINISH_DT
+                                                , SUM(P.PART_CNT) AS PART_CNT
+                                                , SUM(P.PART_QTY) AS PART_QTY
+                                                , SUM(P.FORECAST_UNIT_AMT) AS FORECAST_UNIT_AMT
+                                                , SUM(P.ERROR_CNT) AS ERROR_CNT
+                                                , SUM(P.ERROR_QTY) AS ERROR_QTY
+                                            FROM (  SELECT A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
+                                                        , DATE_FORMAT(DATE_ADD(A.INNER_WORK_FINISH_DT, INTERVAL -1 * CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
+                                                        , 1 AS PART_CNT
+                                                        , jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS PART_QTY
+                                                        , IFNULL(A.FORECAST_UNIT_AMT,0) AS FORECAST_UNIT_AMT
+                                                        , ROW_NUMBER() OVER (PARTITION BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ ORDER BY B.INSPECT_SEQ) AS INSPECT_RNUM
+                                                        , CASE WHEN B.INSPECT_GRADE = 'GRD040' THEN 1 ELSE 0 END AS ERROR_CNT
+                                                        , CASE WHEN B.INSPECT_GRADE = 'GRD040' THEN B.ERROR_QTY ELSE 0 END AS ERROR_QTY
+                                                    FROM jmes.TBL_CONTROL_PART A LEFT OUTER JOIN jmes.TBL_INSPECT B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND B.INSPECT_TYPE = '1'
+                                                    WHERE A.WORK_TYPE != 'WTP020'
+                                                    <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+                                                        AND WORK_FACTORY = #{WORK_FACTORY}   <!-- 가변조건 -->
+                                                    </if>
+                                                        AND A.INNER_WORK_FINISH_DT >= DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT) MINUTE)     <!-- 고정조건 -->
+                                                        AND A.INNER_WORK_FINISH_DT <![CDATA[ < ]]> DATE_ADD(DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL 1 MONTH), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT) MINUTE)      <!-- 고정조건 -->
+                                                        AND NOT EXISTS (SELECT 1 FROM jmes.TBL_CONTROL M WHERE M.CONTROL_SEQ = A.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'Y')
+                                                  ) P
+                                            WHERE P.INSPECT_RNUM = 1
+                                            GROUP BY P.WORKING_FINISH_DT
+                                         ) Y ON X.DT = Y.WORKING_FINISH_DT
+                GROUP BY X.WEEK_SEQ, X.DT WITH ROLLUP
+            ) Z
+        ORDER BY Z.WEEK_SEQ IS NULL ASC, Z.WEEK_SEQ, Z.DT IS NULL ASC, Z.DT
     </select>
 
     <select id="selectDailyProcessStatusRightList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT 1
+        SELECT Z.CONTROL_SEQ
+            , Z.CONTROL_DETAIL_SEQ
+            , ROW_NUMBER() OVER(ORDER BY Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ ) AS ROW_NUM
+            , Z.ORDER_COMP_NM
+            , Z.WORK_FACTORY_NM
+            , Z.CONTROL_NUM
+            , Z.PART_NUM
+            , Z.INNER_DUE_DT
+            , Z.PART_QTY
+            , Z.INNER_WORK_FINISH_DT
+            , ROUND(Z.WORK_TIME / 60,1) AS WORK_TIME
+            , Z.FORECAST_UNIT_AMT
+            , Z.PART_QTY * Z.FORECAST_UNIT_AMT AS TOTAL_AMT
+            , CASE WHEN IFNULL(Z.WORK_TIME,0) = 0 THEN NULL ELSE Z.PART_QTY * Z.FORECAST_UNIT_AMT / (Z.WORK_TIME / 60 / 60) END AS PRICE_PER_HOUR
+            , CASE WHEN Z.PREV_DRAWING_NUM IS NOT NULL THEN (   SELECT M.UNIT_FINAL_AMT
+                                                                FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N
+                                                                WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                                                    AND N.CONTROL_STATUS = 'ORD003'
+                                                                    AND N.DEL_YN = 'N'
+                                                                    AND M.DRAWING_NUM = Z.PREV_DRAWING_NUM
+                                                                ORDER BY M.CONTROL_SEQ DESC
+                                                                LIMIT 1)
+                   ELSE (   SELECT M.UNIT_FINAL_AMT
+                            FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N
+                            WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                AND N.CONTROL_STATUS = 'ORD003'
+                                AND N.DEL_YN = 'N'
+                                AND N.CONTROL_SEQ != Z.CONTROL_SEQ
+                                AND M.DRAWING_NUM = Z.DRAWING_NUM
+                            ORDER BY M.CONTROL_SEQ DESC
+                            LIMIT 1)
+              END AS PREV_UNIT_FINAL_AMT
+            , Z.UNIT_FINAL_EST_AMT
+            , Z.UNIT_FINAL_AMT
+            , Z.INSPECT_GRADE_NM
+            , Z.INSPECT_RESULT_NM
+            , Z.ERROR_QTY
+            , Z.NOTE
+        FROM (  SELECT P.CONTROL_SEQ
+                    , P.CONTROL_DETAIL_SEQ
+                    , jmes.SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM
+                    , jmes.SF_GET_CODE_NM('1014',Y.WORK_FACTORY,#{LOGIN_LOCALE}) AS WORK_FACTORY_NM   <!-- 언어조건 -->
+                    , X.CONTROL_NUM
+                    , Y.PART_NUM
+                    , jmes.SF_GET_DATE_F(Y.INNER_DUE_DT,'','') AS INNER_DUE_DT
+                    , P.PART_QTY
+                    , jmes.SF_GET_DATE_F(Y.INNER_WORK_FINISH_DT,'','M') AS INNER_WORK_FINISH_DT
+                    , (SELECT ROUND(SUM(jmes.SF_GET_DRAWING_WORK_TIME('WORK',M.MCT_WORK_SEQ)),0) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = P.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = P.CONTROL_DETAIL_SEQ) AS WORK_TIME
+                    , Y.FORECAST_UNIT_AMT
+                    , Y.UNIT_FINAL_EST_AMT
+                    , Y.UNIT_FINAL_AMT
+                    , jmes.SF_GET_CODE_NM('1040',P.INSPECT_GRADE,#{LOGIN_LOCALE}) AS INSPECT_GRADE_NM   <!-- 언어조건 -->
+                    , jmes.SF_GET_CODE_NM('1020',P.INSPECT_RESULT,#{LOGIN_LOCALE}) AS INSPECT_RESULT_NM   <!-- 언어조건 -->
+                    , P.ERROR_QTY
+                    , X.NOTE
+                    , Y.DRAWING_NUM
+                    , Y.PREV_DRAWING_NUM
+                FROM (  SELECT A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
+                            , DATE_FORMAT(DATE_ADD(A.INNER_WORK_FINISH_DT, INTERVAL -1 * CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
+                            , jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS PART_QTY
+                            , IFNULL(A.FORECAST_UNIT_AMT,0) AS FORECAST_UNIT_AMT
+                            , ROW_NUMBER() OVER (PARTITION BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ ORDER BY B.INSPECT_SEQ) AS INSPECT_RNUM
+                            , B.INSPECT_GRADE
+                            , B.INSPECT_RESULT
+                            , CASE WHEN B.INSPECT_GRADE = 'GRD040' THEN B.ERROR_QTY ELSE 0 END AS ERROR_QTY
+                        FROM jmes.TBL_CONTROL_PART A LEFT OUTER JOIN jmes.TBL_INSPECT B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND B.INSPECT_TYPE = '1'
+                        WHERE A.INNER_WORK_FINISH_DT IS NOT NULL
+                            AND A.INNER_WORK_FINISH_DT >= DATE_ADD(STR_TO_DATE(#{DT},'%Y%m%d'), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT) MINUTE)                        <!-- 고정조건 -->
+                            AND A.INNER_WORK_FINISH_DT <![CDATA[ < ]]> DATE_ADD(DATE_ADD(STR_TO_DATE(#{DT},'%Y%m%d'), INTERVAL 1 DAY), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT) MINUTE)   <!-- 고정조건 -->
+                      ) P, jmes.TBL_CONTROL X, jmes.TBL_CONTROL_PART Y
+                WHERE P.CONTROL_SEQ = X.CONTROL_SEQ
+                    AND P.CONTROL_SEQ = Y.CONTROL_SEQ
+                    AND P.CONTROL_DETAIL_SEQ = Y.CONTROL_DETAIL_SEQ
+                    AND P.INSPECT_RNUM = 1
+                    AND X.DEL_YN = 'N'
+                    AND Y.WORK_TYPE != 'WTP020'
+                <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+                    AND Y.WORK_FACTORY = #{WORK_FACTORY}   <!-- 가변조건 -->
+                </if>
+            ) Z
     </select>
 
     <select id="selectTargetAmountRegisterList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -43,14 +212,362 @@
 	            UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
 
-<!--    <update id="updateDailyProcessStatusLeft" parameterType="java.util.HashMap">-->
-<!--        UPDATE TBL_CONTROL_PART-->
-<!--        SET-->
-<!--            UNIT_FINAL_EST_AMT = REPLACE(#{UNIT_FINAL_EST_AMT, jdbcType=VARCHAR}, ',', SPACE(0)),-->
-<!--            UNIT_FINAL_AMT = REPLACE(#{UNIT_FINAL_AMT, jdbcType=VARCHAR}, ',', SPACE(0)),-->
-<!--            UPDATE_DT = NOW()-->
-<!--        WHERE 1 = 1-->
-<!--            AND CONTROL_SEQ = #{CONTROL_SEQ}-->
-<!--            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}-->
-<!--    </update>-->
+    <insert id="insertUpdateWorkingDayNote" parameterType="java.util.HashMap" >
+        INSERT INTO TBL_WORKING_DAY_NOTE (
+            WORKING_DT,
+            NOTE,
+            INSERT_ID
+        ) VALUES (
+            #{DT},
+            #{NOTE},
+            #{LOGIN_USER_ID}
+        ) ON DUPLICATE KEY
+	        UPDATE
+	            NOTE = #{NOTE},
+                UPDATE_DT = NOW(),
+	            UPDATE_ID = #{LOGIN_USER_ID}
+    </insert>
+
+    <update id="updateControlNote" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL
+        SET
+            NOTE = #{NOTE},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+    </update>
+
+    <update id="updateControlPartForecastUnitAmt" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            FORECAST_UNIT_AMT = #{FORECAST_UNIT_AMT},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE 1 = 1
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </update>
+
+    <update id="updateControlPartSizeTxt" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            SIZE_TXT = #{SIZE_TXT},
+            SIZE_TYPE = SF_GET_SIZE_TXT('SIZE_TYPE', #{SIZE_TXT}),
+            SIZE_W = SF_GET_SIZE_TXT('SIZE_W', #{SIZE_TXT}),
+            SIZE_H = SF_GET_SIZE_TXT('SIZE_H', #{SIZE_TXT}),
+            SIZE_T = SF_GET_SIZE_TXT('SIZE_T', #{SIZE_TXT}),
+            SIZE_D = SF_GET_SIZE_TXT('SIZE_D', #{SIZE_TXT}),
+            SIZE_L = SF_GET_SIZE_TXT('SIZE_L', #{SIZE_TXT}),
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE 1 = 1
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </update>
+
+    <select id="selectMonthlyDetailStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER () OVER (ORDER BY Z.WEEK_SEQ IS NULL ASC, Z.WEEK_SEQ, Z.DT IS NULL ASC, Z.DT) AS ROW_NUM
+            , #{COMP_CD} AS COMP_CD         <!-- 인자값을 위한 조건변수 -->
+            , #{ORDER_COMP_CD} AS ORDER_COMP_CD    <!-- 인자값을 위한 조건변수 -->
+            , Z.WEEK_SEQ 
+            , Z.DT
+            , CASE WHEN Z.WEEK_SEQ IS NULL THEN '총계'
+                   WHEN Z.DT IS NULL THEN '합계'
+                   ELSE CONCAT(DATE_FORMAT(STR_TO_DATE(Z.DT,'%Y%m%d'),'%e'),'일')
+              END AS CAL_DT_NM            
+            , CASE WHEN Z.DT IS NULL THEN ''
+                   WHEN DATE_FORMAT(STR_TO_DATE(Z.DT,'%Y%m%d'),'%w') = 0 THEN '일'
+                   WHEN DATE_FORMAT(STR_TO_DATE(Z.DT,'%Y%m%d'),'%w') = 1 THEN '월'
+                   WHEN DATE_FORMAT(STR_TO_DATE(Z.DT,'%Y%m%d'),'%w') = 2 THEN '화'
+                   WHEN DATE_FORMAT(STR_TO_DATE(Z.DT,'%Y%m%d'),'%w') = 3 THEN '수'
+                   WHEN DATE_FORMAT(STR_TO_DATE(Z.DT,'%Y%m%d'),'%w') = 4 THEN '목'
+                   WHEN DATE_FORMAT(STR_TO_DATE(Z.DT,'%Y%m%d'),'%w') = 5 THEN '금'
+                   WHEN DATE_FORMAT(STR_TO_DATE(Z.DT,'%Y%m%d'),'%w') = 6 THEN '토'
+              END AS WEEK_DAY_NM
+            , Z.PART_CNT
+            , Z.PART_QTY
+            , Z.OUTSIDE_CNT
+            , Z.OUTSIDE_QTY
+            , Z.INNER_WORK_FINISH_CNT
+            , Z.INNER_WORK_FINISH_QTY
+            , Z.OUT_FINISH_CNT
+            , Z.OUT_FINISH_QTY
+            , Z.LATE_CNT
+            , Z.LATE_QTY
+            , CASE WHEN IFNULL(Z.PART_CNT,0) = 0 THEN NULL ELSE Z.LATE_CNT / Z.PART_CNT * 100 END AS LATE_RATIO
+            , CASE WHEN IFNULL(Z.PART_CNT,0) = 0 THEN NULL ELSE Z.OUTSIDE_CNT / Z.PART_CNT * 100 END AS OUTSIDE_RATIO
+            , Z.FORECAST_UNIT_AMT
+            , Z.DT_GOAL_AMT
+            , CASE WHEN IFNULL(Z.DT_GOAL_AMT,0) = 0 THEN NULL ELSE ROUND(IFNULL(Z.FORECAST_UNIT_AMT,0) / IFNULL(Z.DT_GOAL_AMT,0) * 100,1) END AS GOAL_RATIO
+            , Z.ERROR_CNT
+            , Z.ERROR_QTY
+            , Z.RETURN_CNT
+            , Z.RETURN_QTY
+            , (SELECT M.NOTE FROM jmes.TBL_WORKING_DAY_NOTE M WHERE M.WORKING_DT = Z.DT) AS NOTE
+        FROM (  SELECT X.WEEK_SEQ 
+                    , X.DT        
+                    , SUM(IFNULL(Y.PART_CNT,0)) AS PART_CNT
+                    , SUM(IFNULL(Y.PART_QTY,0)) AS PART_QTY
+                    , SUM(IFNULL(Y.OUTSIDE_CNT,0)) AS OUTSIDE_CNT
+                    , SUM(IFNULL(Y.OUTSIDE_QTY,0)) AS OUTSIDE_QTY
+                    , SUM(IFNULL(Y.INNER_WORK_FINISH_CNT,0)) AS INNER_WORK_FINISH_CNT
+                    , SUM(IFNULL(Y.INNER_WORK_FINISH_QTY,0)) AS INNER_WORK_FINISH_QTY
+                    , SUM(IFNULL(Y.OUT_FINISH_CNT,0)) AS OUT_FINISH_CNT
+                    , SUM(IFNULL(Y.OUT_FINISH_QTY,0)) AS OUT_FINISH_QTY
+                    , SUM(IFNULL(Y.LATE_CNT,0)) AS LATE_CNT
+                    , SUM(IFNULL(Y.LATE_QTY,0)) AS LATE_QTY
+                    , SUM(IFNULL(Y.FORECAST_UNIT_AMT,0)) AS FORECAST_UNIT_AMT
+                    , SUM(IFNULL(X.DT_GOAL_AMT,0)) AS DT_GOAL_AMT
+                    , SUM(IFNULL(Y.ERROR_CNT,0)) AS ERROR_CNT
+                    , SUM(IFNULL(Y.ERROR_QTY,0)) AS ERROR_QTY
+                    , SUM(IFNULL(Y.RETURN_CNT,0)) AS RETURN_CNT
+                    , SUM(IFNULL(Y.RETURN_QTY,0)) AS RETURN_QTY
+                FROM (  SELECT F.DT
+                            , DATE_FORMAT(STR_TO_DATE(F.DT,'%Y%m%d'),'%u') AS WEEK_SEQ                                        
+                            , CASE WHEN F.WEEK_DAY > 0 THEN (   SELECT ROUND(M.GOAL_AMT / N.DT_CNT,0) AS DT_GOAL_AMT
+                                                                FROM (  SELECT SUM(GOAL_AMT) AS GOAL_AMT
+                                                                        FROM jmes.TBL_SALES_GOAL M
+                                                                        WHERE YYYYMM = CONCAT(#{YEAR}, #{MONTH})           <!-- 고정조건 -->
+                                                                      ) M
+                                                                    , ( SELECT COUNT(*) AS DT_CNT    
+                                                                        FROM jmes.TBL_YYYYMMDD A 
+                                                                        WHERE A.DT LIKE CONCAT(CONCAT(#{YEAR}, #{MONTH}),'%')    <!-- 고정조건 -->
+                                                                            AND DATE_FORMAT(STR_TO_DATE(A.DT,'%Y%m%d'),'%w') > 0
+                                                                      ) N                                                        
+                                                              ) 
+                              END AS DT_GOAL_AMT
+                        FROM (  SELECT A.DT
+                                    , DATE_FORMAT(STR_TO_DATE(A.DT,'%Y%m%d'),'%w') AS WEEK_DAY                                        
+                                FROM jmes.TBL_YYYYMMDD A
+                                WHERE A.DT LIKE CONCAT(CONCAT(#{YEAR}, #{MONTH}),'%')  <!-- 고정조건 -->
+                              ) F
+                     ) X LEFT OUTER JOIN (  SELECT T.ORDER_DUE_DT
+                                                , SUM(T.PART_CNT) AS PART_CNT
+                                                , SUM(T.PART_QTY) AS PART_QTY
+                                                , SUM(CASE WHEN T.OUTSIDE_YN = 'Y' THEN 1 ELSE 0 END) AS OUTSIDE_CNT
+                                                , SUM(CASE WHEN T.OUTSIDE_YN = 'Y' THEN T.PART_QTY ELSE 0 END) AS OUTSIDE_QTY
+                                                , SUM(CASE WHEN T.INNER_WORK_FINISH_YN = 'Y' THEN 1 ELSE 0 END) AS INNER_WORK_FINISH_CNT
+                                                , SUM(CASE WHEN T.INNER_WORK_FINISH_YN = 'Y' THEN T.PART_QTY ELSE 0 END) AS INNER_WORK_FINISH_QTY
+                                                , SUM(CASE WHEN T.OUT_FINISH_YN = 'Y' THEN 1 ELSE 0 END) AS OUT_FINISH_CNT
+                                                , SUM(CASE WHEN T.OUT_FINISH_YN = 'Y' THEN T.PART_QTY ELSE 0 END) AS OUT_FINISH_QTY
+                                                , SUM(CASE WHEN T.OUT_FINISH_DT > T.ORDER_DUE_DT THEN 1 ELSE 0 END) AS LATE_CNT
+                                                , SUM(CASE WHEN T.OUT_FINISH_DT > T.ORDER_DUE_DT THEN T.PART_QTY ELSE 0 END) AS LATE_QTY
+                                                , SUM(T.FORECAST_UNIT_AMT) AS FORECAST_UNIT_AMT
+                                                , SUM(T.ERROR_CNT) AS ERROR_CNT
+                                                , SUM(T.ERROR_QTY) AS ERROR_QTY
+                                                , SUM(CASE WHEN T.RETURN_QTY > 0 THEN 1 ELSE 0 END) AS RETURN_CNT
+                                                , SUM(T.RETURN_QTY) AS RETURN_QTY
+                                            FROM (  SELECT P.CONTROL_SEQ
+                                                        , P.CONTROL_DETAIL_SEQ
+                                                        , P.ORDER_DUE_DT
+                                                        , P.PART_CNT
+                                                        , P.PART_QTY
+                                                        , P.OUTSIDE_YN
+                                                        , P.INNER_WORK_FINISH_YN
+                                                        , P.OUT_FINISH_YN
+                                                        , P.OUT_FINISH_DT
+                                                        , P.FORECAST_UNIT_AMT
+                                                        , P.ERROR_CNT
+                                                        , P.ERROR_QTY
+                                                        , ( SELECT SUM(M.ERROR_QTY)
+                                                            FROM jmes.TBL_INSPECT M 
+                                                            WHERE M.CONTROL_SEQ = P.CONTROL_SEQ 
+                                                                AND M.CONTROL_DETAIL_SEQ = P.CONTROL_DETAIL_SEQ 
+                                                                AND M.INSPECT_TYPE = '2'
+                                                                AND M.INSPECT_GRADE IN ('GRD050', 'GRD060')
+                                                           ) AS RETURN_QTY
+                                                    FROM (  SELECT C.CONTROL_SEQ
+                                                                , C.CONTROL_DETAIL_SEQ
+                                                                , A.ORDER_DUE_DT
+                                                                , 1 AS PART_CNT
+                                                                , jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS PART_QTY
+                                                                , C.OUTSIDE_YN    
+                                                                , CASE WHEN C.INNER_WORK_FINISH_DT IS NULL THEN 'N' ELSE 'Y' END AS INNER_WORK_FINISH_YN
+                                                                , CASE WHEN B.OUT_FINISH_DT IS NULL THEN 'N' ELSE 'Y' END AS OUT_FINISH_YN
+                                                                , DATE_FORMAT(B.OUT_FINISH_DT,'%Y%m%d') AS OUT_FINISH_DT
+                                                                , C.FORECAST_UNIT_AMT
+                                                                , ROW_NUMBER() OVER (PARTITION BY C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ ORDER BY D.INSPECT_SEQ) AS INSPECT_RNUM
+                                                                , CASE WHEN D.INSPECT_GRADE = 'GRD040' THEN 1 ELSE 0 END AS ERROR_CNT
+                                                                , CASE WHEN D.INSPECT_GRADE = 'GRD040' THEN D.ERROR_QTY ELSE 0 END AS ERROR_QTY            
+                                                            FROM (  SELECT M.CONTROL_SEQ
+                                                                        , MAX(M.ORDER_DUE_DT) AS ORDER_DUE_DT
+                                                                    FROM jmes.TBL_CONTROL_PART_ORDER M
+                                                                    GROUP BY M.CONTROL_SEQ
+                                                                    HAVING MAX(M.ORDER_DUE_DT) LIKE '202008%'
+                                                                  ) A
+                                                                , jmes.TBL_CONTROL B      
+                                                                , jmes.TBL_CONTROL_PART C 
+                                                                        LEFT OUTER JOIN jmes.TBL_INSPECT D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.INSPECT_TYPE = '1'                 
+                                                            WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                                                                AND A.CONTROL_SEQ = C.CONTROL_SEQ    
+                                                                AND B.DEL_YN = 'N'
+                                                                AND C.WORK_TYPE != 'WTP020'
+                                                            <if test="COMP_CD != null and COMP_CD != ''">
+                                                                AND B.COMP_CD = #{COMP_CD}          <!-- 가변조건 -->
+                                                            </if>
+                                                            <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                                                                AND B.ORDER_COMP_CD = #{ORDER_COMP_CD}          <!-- 가변조건 -->
+                                                            </if>
+                                                        ) P
+                                                    WHERE P.INSPECT_RNUM = 1
+                                                 ) T
+                                            GROUP BY T.ORDER_DUE_DT
+                                        ) Y ON X.DT = Y.ORDER_DUE_DT
+                GROUP BY X.WEEK_SEQ, X.DT WITH ROLLUP
+            ) Z
+        ORDER BY Z.WEEK_SEQ IS NULL ASC, Z.WEEK_SEQ, Z.DT IS NULL ASC, Z.DT    
+    </select>
+
+    <select id="selectMonthlyReportDetailList1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT Z.CONTROL_SEQ
+            , Z.CONTROL_DETAIL_SEQ
+            , ROW_NUMBER() OVER(ORDER BY Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ ) AS RNUM
+            , Z.ORDER_COMP_NM
+            , Z.CONTROL_NUM
+            , Z.PART_NUM
+            , Z.SIZE_TXT
+            , Z.MATERIAL_DETAIL_NM
+            , Z.WORK_TYPE_NM
+            , Z.ORDER_DUE_DT
+            , Z.PART_QTY
+            , Z.PART_STATUS_NM
+            , Z.WORK_FACTORY_NM
+            , Z.INNER_WORK_FINISH_DT
+            , Z.WORK_TIME
+            , Z.OUTSIDE_COMP_NM
+            , Z.OUTSIDE_IN_DT
+            , Z.OUT_FINISH_DT
+            , Z.FORECAST_UNIT_AMT
+            , Z.PART_QTY * Z.FORECAST_UNIT_AMT AS TOTAL_AMT
+            , CASE WHEN IFNULL(Z.WORK_TIME,0) = 0 THEN NULL ELSE Z.PART_QTY * Z.FORECAST_UNIT_AMT / (Z.WORK_TIME / 60 / 60) END AS PRICE_PER_HOUR
+            , CASE WHEN Z.PREV_DRAWING_NUM IS NOT NULL THEN (   SELECT M.UNIT_FINAL_AMT
+                                                                FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N
+                                                                WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                                                    AND N.CONTROL_STATUS = 'ORD003'
+                                                                    AND N.DEL_YN = 'N'
+                                                                    AND M.DRAWING_NUM = Z.PREV_DRAWING_NUM
+                                                                ORDER BY M.CONTROL_SEQ DESC
+                                                                LIMIT 1)
+                   ELSE (   SELECT M.UNIT_FINAL_AMT
+                            FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N
+                            WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                AND N.CONTROL_STATUS = 'ORD003'
+                                AND N.DEL_YN = 'N'
+                                AND N.CONTROL_SEQ != Z.CONTROL_SEQ
+                                AND M.DRAWING_NUM = Z.DRAWING_NUM
+                            ORDER BY M.CONTROL_SEQ DESC
+                            LIMIT 1)
+              END AS PREV_UNIT_FINAL_AMT
+            , Z.UNIT_FINAL_EST_AMT
+            , Z.UNIT_FINAL_AMT
+            , Z.INSPECT_GRADE_NM
+            , Z.INSPECT_RESULT_NM
+            , Z.ERROR_QTY
+            , Z.RETURN_QTY
+            , Z.NOTE
+        FROM (  SELECT P.CONTROL_SEQ
+                    , P.CONTROL_DETAIL_SEQ
+                    , jmes.SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM
+                    , X.CONTROL_NUM
+                    , Y.PART_NUM
+                    , Y.SIZE_TXT
+                    , jmes.SF_GET_CODE_NM('1027',Y.MATERIAL_DETAIL,#{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM   <!-- 언어조건 -->
+                    , jmes.SF_GET_CODE_NM('1033',Y.WORK_TYPE,#{LOGIN_LOCALE}) AS WORK_TYPE_NM   <!-- 언어조건 -->
+                    , jmes.SF_GET_DATE_F(P.ORDER_DUE_DT,'','') AS ORDER_DUE_DT
+                    , P.PART_QTY
+                    , jmes.SF_GET_CODE_NM(1013, Y.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS_NM      <!-- 언어조건 -->
+                    , jmes.SF_GET_CODE_NM('1014',Y.WORK_FACTORY,#{LOGIN_LOCALE}) AS WORK_FACTORY_NM   <!-- 언어조건 -->
+                    , jmes.SF_GET_DATE_F(Y.INNER_WORK_FINISH_DT,'','M') AS INNER_WORK_FINISH_DT
+                    , (SELECT ROUND(SUM(jmes.SF_GET_DRAWING_WORK_TIME('WORK',M.MCT_WORK_SEQ)),0) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = P.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = P.CONTROL_DETAIL_SEQ) AS WORK_TIME
+                    , CASE WHEN P.OUTSIDE_YN = 'Y' THEN jmes.SF_GET_COMP_NM(Y.OUTSIDE_COMP_CD) END AS OUTSIDE_COMP_NM
+                    , CASE WHEN P.OUTSIDE_YN = 'Y' THEN jmes.SF_GET_DATE_F(Y.OUTSIDE_IN_DT,'','M') END AS OUTSIDE_IN_DT
+                    , jmes.SF_GET_DATE_F(P.OUT_FINISH_DT,'','M') AS OUT_FINISH_DT
+                    , Y.FORECAST_UNIT_AMT
+                    , Y.UNIT_FINAL_EST_AMT
+                    , Y.UNIT_FINAL_AMT
+                    , jmes.SF_GET_CODE_NM('1040',P.INSPECT_GRADE,#{LOGIN_LOCALE}) AS INSPECT_GRADE_NM   <!-- 언어조건 -->
+                    , jmes.SF_GET_CODE_NM('1020',P.INSPECT_RESULT,#{LOGIN_LOCALE}) AS INSPECT_RESULT_NM   <!-- 언어조건 -->
+                    , P.ERROR_QTY
+                    , ( SELECT SUM(M.ERROR_QTY)
+                        FROM jmes.TBL_INSPECT M
+                        WHERE M.CONTROL_SEQ = P.CONTROL_SEQ
+                            AND M.CONTROL_DETAIL_SEQ = P.CONTROL_DETAIL_SEQ
+                            AND M.INSPECT_TYPE = '2'
+                            AND M.INSPECT_GRADE IN ('GRD050', 'GRD060')
+                       ) AS RETURN_QTY
+                    , X.NOTE
+                    , Y.DRAWING_NUM
+                    , Y.PREV_DRAWING_NUM
+                FROM (  SELECT C.CONTROL_SEQ
+                            , C.CONTROL_DETAIL_SEQ
+                            , A.ORDER_DUE_DT
+                            , 1 AS PART_CNT
+                            , jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS PART_QTY
+                            , C.OUTSIDE_YN
+                            , CASE WHEN C.INNER_WORK_FINISH_DT IS NULL THEN 'N' ELSE 'Y' END AS INNER_WORK_FINISH_YN
+                            , CASE WHEN B.OUT_FINISH_DT IS NULL THEN 'N' ELSE 'Y' END AS OUT_FINISH_YN
+                            , DATE_FORMAT(B.OUT_FINISH_DT,'%Y%m%d') AS OUT_FINISH_DT
+                            , C.FORECAST_UNIT_AMT
+                            , ROW_NUMBER() OVER (PARTITION BY C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ ORDER BY D.INSPECT_SEQ) AS INSPECT_RNUM
+                            , D.INSPECT_GRADE
+                            , D.INSPECT_RESULT
+                            , CASE WHEN D.INSPECT_GRADE = 'GRD040' THEN D.ERROR_QTY ELSE 0 END AS ERROR_QTY
+                        FROM (  SELECT M.CONTROL_SEQ
+                                    , MAX(M.ORDER_DUE_DT) AS ORDER_DUE_DT
+                                FROM jmes.TBL_CONTROL_PART_ORDER M
+                                GROUP BY M.CONTROL_SEQ
+                                HAVING MAX(M.ORDER_DUE_DT) BETWEEN REPLACE(#{MONTH_REPORT_DETAIL_START_DATE}, '/', SPACE(0)) AND REPLACE(#{MONTH_REPORT_DETAIL_END_DATE}, '/', SPACE(0))
+                              ) A
+                            , jmes.TBL_CONTROL B
+                            , jmes.TBL_CONTROL_PART C
+                                    LEFT OUTER JOIN jmes.TBL_INSPECT D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.INSPECT_TYPE = '1'
+                        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                            AND A.CONTROL_SEQ = C.CONTROL_SEQ
+                            AND B.DEL_YN = 'N'
+                            AND C.WORK_TYPE != 'WTP020'
+                        <if test="COMP_CD != null and COMP_CD != ''">
+                            AND B.COMP_CD = #{COMP_CD}          <!-- 가변조건 -->
+                        </if>
+                        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                            AND B.ORDER_COMP_CD = #{ORDER_COMP_CD}          <!-- 가변조건 -->
+                        </if>
+                        <choose>
+                            <when test='FACTORY_CLASSIFY_YN == "Y"'>
+                                AND C.INNER_WORK_FINISH_DT IS NOT NULL      <!-- 가변조건(가공완료) -->
+                            </when>
+                            <when test='FACTORY_CLASSIFY_YN == "N"'>
+                                AND C.INNER_WORK_FINISH_DT IS NULL
+                            </when>
+                        </choose>
+                        <choose>
+                            <when test='OUTSIDE_YN == "Y"'>
+                                AND IFNULL(C.OUTSIDE_YN,'N') = 'Y'          <!-- 가변조건(외주대상) -->
+                            </when>
+                            <when test='OUTSIDE_YN == "N"'>
+                                AND IFNULL(C.OUTSIDE_YN,'N') = 'N'
+                            </when>
+                        </choose>
+                        <choose>
+                            <when test='OUT_FINISH_YN == "Y"'>
+                                AND B.OUT_FINISH_DT IS NOT NULL             <!-- 가변조건(출고완료) -->
+                            </when>
+                            <when test='OUT_FINISH_YN == "N"'>
+                                AND B.OUT_FINISH_DT IS  NULL
+                            </when>
+                        </choose>
+                        <choose>
+                            <when test='DELAY_YN == "Y"'>
+                                AND B.OUT_FINISH_DT > A.ORDER_DUE_DT        <!-- 가변조건(지연여부) -->
+                            </when>
+                            <when test='DELAY_YN == "N"'>
+                                AND B.OUT_FINISH_DT <![CDATA[ < ]]> A.ORDER_DUE_DT
+                            </when>
+                        </choose>
+                    ) P, jmes.TBL_CONTROL X, jmes.TBL_CONTROL_PART Y
+                WHERE P.CONTROL_SEQ = X.CONTROL_SEQ
+                    AND P.CONTROL_SEQ = Y.CONTROL_SEQ
+                    AND P.CONTROL_DETAIL_SEQ = Y.CONTROL_DETAIL_SEQ
+                    AND P.INSPECT_RNUM = 1
+            ) Z
+    </select>
 </mapper>
