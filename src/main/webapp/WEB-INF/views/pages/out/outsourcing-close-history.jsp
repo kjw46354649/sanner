@@ -161,6 +161,7 @@
         'use strict';
         fnAppendSelectboxYear('OUTSIDE_CLOSE_YEAR', 10);
         fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH');
+        $('#OUTSIDE_CLOSE_MONTH').append(new Option('<spring:message code="com.form.top.all.option" />', ''));
         $('#OUTSIDE_CLOSE_MONTH').val(CURRENT_MONTH < 9 ? '0' + CURRENT_MONTH : CURRENT_MONTH).prop('selected', true);
         /* variable */
         let selectedRowIndex = [];
