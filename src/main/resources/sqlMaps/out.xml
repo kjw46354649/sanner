@@ -456,6 +456,9 @@
                                                                             AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
         WHERE 1 = 1
             AND A.DEL_YN = 'N'
+        <if test="OUTSIDE_CLOSE_YEAR != null and OUTSIDE_CLOSE_YEAR != '' and OUTSIDE_CLOSE_MONTH != null and OUTSIDE_CLOSE_MONTH != ''">
+            AND E.CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
+        </if>
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
             AND A.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
         </if>
