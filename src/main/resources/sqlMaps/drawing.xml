@@ -3,11 +3,21 @@
 
 <mapper namespace="drawingMapper">
 
+    <select id="selectDrawingEquipmentInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT EQUIP_SEQ, EQUIP_NM, FACTORY_AREA
+        FROM TBL_EQUIP
+        WHERE 1 = 1
+            AND EQUIP_KIND = '1'
+          	AND PROCESS_TYPE IN ('MPR010', 'MPR020', 'MPR030', 'MPR040')
+            AND DEL_YN ='N'
+            AND EQUIP_NM = #{EQUIP_NM}
+    </select>
+
     <select id="selectDrawingAreaList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
         	A.CODE_CD, B.CODE_NM
         FROM TBL_CODE A
-        	INNER JOIN TBL_CODE_LANG B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'KO' THEN 'KR' ELSE 'EN' END
+        	INNER JOIN TBL_CODE_LANG B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'EN' THEN 'EN' ELSE 'KR' END
         WHERE 1 = 1
         	AND A.HIGH_CD = '1005'
         	AND A.ETC3 = 'D'
@@ -28,7 +38,7 @@
         SELECT
             A.CODE_CD, B.CODE_NM
         FROM TBL_CODE A
-            INNER JOIN TBL_CODE_LANG B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'KO' THEN 'KR' ELSE 'EN' END
+            INNER JOIN TBL_CODE_LANG B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'EN' THEN 'EN' ELSE 'KR' END
         WHERE 1 = 1
             AND A.HIGH_CD = '1061'
         ORDER BY A.SORT_NUM
@@ -38,7 +48,7 @@
         SELECT
             A.CODE_CD, B.CODE_NM
         FROM TBL_CODE A
-            INNER JOIN TBL_CODE_LANG B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'KO' THEN 'KR' ELSE 'EN' END
+            INNER JOIN TBL_CODE_LANG B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'EN' THEN 'EN' ELSE 'KR' END
         WHERE 1 = 1
             AND A.HIGH_CD = '1015'
         ORDER BY A.SORT_NUM

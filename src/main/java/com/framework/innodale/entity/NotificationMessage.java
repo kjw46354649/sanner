@@ -38,12 +38,17 @@ public class NotificationMessage {
 
     /** pop 정보 **/
     private String popPosition;
+    private String prePopPostion;
 
     /** 장비 가공 작업 시간 (분) **/
     private int sMinute;
 
     /** 기타 정보 **/
     private int totalCount;
+
+    public String getPrePopPosition() { return prePopPostion; }
+
+    public void setPrePopPosition(String prePopPostion) { this.prePopPostion = prePopPostion; }
 
     public int getsMinute() { return sMinute; }
 

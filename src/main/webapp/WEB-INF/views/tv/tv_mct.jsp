@@ -632,8 +632,8 @@
 									</div>
 									<div class="percentWrap">
 										<span class="txtB">0%</span>
-										<span class="txtR">0%</span>
-										<span>0%</span>
+										<span class="txtR">&nbsp;</span>
+										<span>&nbsp;</span>
 									</div>
 								</div>
 							</li>
@@ -787,8 +787,8 @@
 									</div>
 									<div class="percentWrap">
 										<span class="txtB">0%</span>
-										<span class="txtR">0%</span>
-										<span>0%</span>
+										<span class="txtR">&nbsp;</span>
+										<span>&nbsp;</span>
 									</div>
 								</div>
 							</li>
@@ -872,8 +872,8 @@
 									</div>
 									<div class="percentWrap">
 										<span class="txtB">0%</span>
-										<span class="txtR">0%</span>
-										<span>0%</span>
+										<span class="txtR">&nbsp;</span>
+										<span>&nbsp;</span>
 									</div>
 								</div>
 							</li>
@@ -957,8 +957,8 @@
 									</div>
 									<div class="percentWrap">
 										<span class="txtB">0%</span>
-										<span class="txtR">0%</span>
-										<span>0%</span>
+										<span class="txtR">&nbsp;</span>
+										<span>&nbsp;</span>
 									</div>
 								</div>
 							</li>
@@ -1151,8 +1151,8 @@
 									</div>
 									<div class="percentWrap">
 										<span class="txtB">0%</span>
-										<span class="txtR">0%</span>
-										<span>0%</span>
+										<span class="txtR">&nbsp;</span>
+										<span>&nbsp;</span>
 									</div>
 								</div>
 							</li>

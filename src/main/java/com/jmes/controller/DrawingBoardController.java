@@ -14,12 +14,14 @@ import org.springframework.context.MessageSource;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -60,21 +62,59 @@ public class DrawingBoardController {
         return "jsonView";
     }
 
-    @RequestMapping(value="/drawing")
-    public String drawingLogin(Model model, HttpSession session, HttpServletRequest request) throws Exception {
-        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+    @RequestMapping(value="/drawing/{equipNm}")
+    public String drawingTargetEquip(@PathVariable("equipNm") String equipNm, Model model) throws Exception {
+        logger.info("pop page submit");
+
+        Map<String, Object> hashMap = new HashMap<String, Object>();
+
         hashMap.put("queryId", "drawingMapper.selectDrawingAreaList");
         model.addAttribute("areaList", this.innodaleService.getList(hashMap));
 
+        hashMap.put("EQUIP_NM", equipNm);
+        hashMap.put("queryId", "drawingMapper.selectDrawingEquipmentInfo");
+        Map<String, Object> machineInfo = this.innodaleService.getInfo(hashMap);
+
+        hashMap.put("queryId", "drawingMapper.selectDrawingEquipment");
+        hashMap.put("FACTORY_AREA", machineInfo.get("FACTORY_AREA"));
+        model.addAttribute("equipList", this.innodaleService.getList(hashMap));
+
+        model.addAttribute("FACTORY_AREA", machineInfo.get("FACTORY_AREA"));
+        model.addAttribute("EQUIP_SEQ", machineInfo.get("EQUIP_SEQ"));
+
+        return "board/login";
+    }
+
+    @RequestMapping(value="/drawing")
+    public String drawingLogin(Model model, HttpSession session, HttpServletRequest request) throws Exception {
+        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+
         HashMap<String, Object> drawingInfo = (HashMap<String, Object>)(request.getSession().getAttribute("drawingInfo"));
+
+        hashMap.put("queryId", "drawingMapper.selectDrawingAreaList");
+        List<Map<String, Object>> areaList = this.innodaleService.getList(hashMap);
+        model.addAttribute("areaList", areaList);
+
+        if(areaList.size() > 0){
+            HashMap<String, Object> areaInfo = (HashMap)areaList.get(0);
+            hashMap.put("FACTORY_AREA", areaInfo.get("CODE_CD"));
+
+            model.addAttribute("FACTORY_AREA", areaInfo.get("CODE_CD"));
+        }
 
         if(drawingInfo != null){
             /** 장비 선택 정보 **/
             HashMap<String, Object> machineInfo = (HashMap<String, Object>)drawingInfo.get("machineInfo");
+
             model.addAttribute("EQUIP_SEQ", machineInfo.get("EQUIP_SEQ"));
             model.addAttribute("FACTORY_AREA", machineInfo.get("FACTORY_AREA"));
+
+            hashMap.put("FACTORY_AREA", machineInfo.get("FACTORY_AREA"));
         }
 
+        /** 장비 리스트를 조회한다. */
+        hashMap.put("queryId", "drawingMapper.selectDrawingEquipment");
+        model.addAttribute("equipList", this.innodaleService.getList(hashMap));
 
         /** Session clear **/
         if(session.getAttribute("drawingInfo") != null){
@@ -364,7 +404,7 @@ public class DrawingBoardController {
 
     private void getNotificationEquipMessage(NotificationMessage notificationMessage, Map<String, Object> alarmInfo) throws Exception{
         /** 머신 정보 셋팅 **/
-        notificationMessage.setContent04("(" + (String) alarmInfo.get("EQUIP_NM") + ")");
+        notificationMessage.setContent04((String) alarmInfo.get("EQUIP_NM"));
         notificationMessage.setEquipSeq((int) alarmInfo.get("EQUIP_SEQ"));
         notificationMessage.setEquipId( (String) alarmInfo.get("EQUIP_ID"));
         notificationMessage.setEquipNm( (String) alarmInfo.get("EQUIP_NM"));
