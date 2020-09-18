@@ -419,9 +419,9 @@
     </select>
 
     <select id="selectMonthlyReportDetailList1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT Z.CONTROL_SEQ
+        SELECT ROW_NUMBER() OVER(ORDER BY Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ ) AS ROW_NUM
+            , Z.CONTROL_SEQ
             , Z.CONTROL_DETAIL_SEQ
-            , ROW_NUMBER() OVER(ORDER BY Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ ) AS RNUM
             , Z.ORDER_COMP_NM
             , Z.CONTROL_NUM
             , Z.PART_NUM
