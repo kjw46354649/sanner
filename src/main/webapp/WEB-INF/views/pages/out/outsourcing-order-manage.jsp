@@ -2108,9 +2108,9 @@
             $('#CANCEL_REQUEST_OUTSIDE_POPUP').modal('hide');
         });
 
-        $('#CANCEL_REQUEST_OUTSIDE_SAVE_SUBMIT').on('click', function (){
+        $('#CANCEL_REQUEST_OUTSIDE_SAVE_SUBMIT').on('click', _.debounce(function (){
             cancelRequestOutsideConfirm();
-        });
+        }, 500));
         /* 가공 취소 요청 */
 
         /* 외주가공요청 파일 업로드 */
@@ -2222,7 +2222,7 @@
             'data': {'queryId': 'dataSource.getOutsourceProcessCompanyList'}
         });
 
-        $('#REQUEST_OUTSIDE_SAVE_SUBMIT').on('click', function (){
+        $('#REQUEST_OUTSIDE_SAVE_SUBMIT').on('click', _.debounce(function () {
             let mailFlag = true;
             let outsideCompCd = $('#REQUEST_OUTSIDE_MAIL_FORM').find('#OUTSIDE_COMP_CD').val();
             let mailRecipientData = $mailRecipientGrid.pqGrid('option', 'dataModel.data');
@@ -2289,7 +2289,7 @@
                 $('#REQUEST_OUTSIDE_POPUP').modal('hide');
                 $outsideOrderManageGrid.pqGrid('refreshDataAndView');
             }, parameters, '');
-        });
+        }, 500));
 
         $('#REQUEST_OUTSIDE_MAIL_FORM #OUTSIDE_COMP_CD').on('change', function () {
             // 메일 수신처 가져오기

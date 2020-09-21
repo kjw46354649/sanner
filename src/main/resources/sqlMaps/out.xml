@@ -35,6 +35,7 @@
             SF_GET_DATE_F(IF(TIMESTAMPDIFF(SECOND, H.INSERT_DT, H.UPDATE_DT) <![CDATA[ < ]]> 0, H.INSERT_DT, H.UPDATE_DT), 'YY', 'M') AS INSPECT_INSERT_UPDATE_DT <!-- 측정 일시 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                AND B.OUTSIDE_YN = 'Y'
             <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
                 AND B.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
             </if>
@@ -67,7 +68,6 @@
         WHERE 1 = 1
             AND A.DEL_YN = 'N'
 <!--            AND A.CONTROL_STATUS = 'ORD001' 확정 -->
-            AND B.OUTSIDE_YN = 'Y'
             AND NOT EXISTS (SELECT *
                             FROM TBL_OUTSIDE_CLOSE
                             WHERE CONTROL_SEQ = B.CONTROL_SEQ AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
@@ -400,7 +400,7 @@
     <update id="updateOutsideCloseFinalNego" parameterType="java.util.HashMap">
         UPDATE TBL_OUTSIDE_CLOSE_NOTE
         SET
-            FINAL_NEGO_AMT = #{FINAL_NEGO_AMT}
+            FINAL_NEGO_AMT = REPLACE(REPLACE(#{FINAL_NEGO_AMT}, ',', SPACE(0)), '-', 0)
         WHERE CLOSE_MONTH = #{CLOSE_MONTH}
             AND CLOSE_VER = #{CLOSE_VER}
             AND COMP_CD = #{COMP_CD}
@@ -429,7 +429,9 @@
             SF_GET_DATE_F(B.OUTSIDE_CONFIRM_DT, '', 'M') AS OUTSIDE_CONFIRM_DT2, <!-- 외주 확정일시 -->
             (SELECT CASE WHEN B.OUTSIDE_STATUS IN ('OST001', 'OST003', 'OST004') THEN SF_GET_DATE_F(INSERT_DT, '', 'M') ELSE NULL END AS OUTSIDE_REQUEST_DT
             FROM TBL_OUTSIDE_REQUEST_DETAIL
-            WHERE B.CONTROL_SEQ = CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = CONTROL_DETAIL_SEQ AND DEL_YN = 'N') AS OUTSIDE_REQUEST_DT
+            WHERE B.CONTROL_SEQ = CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = CONTROL_DETAIL_SEQ AND DEL_YN = 'N'
+            ORDER BY INSERT_DT DESC
+            LIMIT 1) AS OUTSIDE_REQUEST_DT
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                 AND B.OUTSIDE_STATUS = 'OST004'
@@ -456,9 +458,14 @@
                                                                             AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
         WHERE 1 = 1
             AND A.DEL_YN = 'N'
-        <if test="OUTSIDE_CLOSE_YEAR != null and OUTSIDE_CLOSE_YEAR != '' and OUTSIDE_CLOSE_MONTH != null and OUTSIDE_CLOSE_MONTH != ''">
-            AND E.CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
-        </if>
+            <choose>
+                <when test="OUTSIDE_CLOSE_YEAR != null and OUTSIDE_CLOSE_YEAR != '' and OUTSIDE_CLOSE_MONTH != null and OUTSIDE_CLOSE_MONTH != ''">
+                    AND E.CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
+                </when>
+                <when test="OUTSIDE_CLOSE_YEAR != null and OUTSIDE_CLOSE_YEAR != '' and OUTSIDE_CLOSE_MONTH == null">
+                    AND SUBSTRING(E.CLOSE_MONTH, 1, 4) = #{OUTSIDE_CLOSE_YEAR}
+                </when>
+            </choose>
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
             AND A.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
         </if>

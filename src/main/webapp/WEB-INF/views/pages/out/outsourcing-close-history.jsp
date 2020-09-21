@@ -465,7 +465,8 @@
             {title: '품수', dataIndx: 'CNT', style: {'font-weight': 'bold', 'color': 'red'}},
             {title: '건수', dataIndx: 'CONTROL_PART_QTY', style: {'font-weight': 'bold', 'color': 'red'}},
             {title: '발주가', width: 90, align: 'right', dataIndx: 'TOTAL_AMT', style: {'font-weight': 'bold', 'color': 'red'}},
-            {title: '마감금액', width: 90, align: 'right', dataIndx: 'FINAL_NEGO_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
+            {title: '마감금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT',
+                styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
         ];
         const outsideCloseCancelRightObj = {
             height: 300,

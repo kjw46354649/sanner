@@ -202,7 +202,7 @@
             (SELECT D.BARCODE_NUM FROM TBL_CONTROL_BARCODE D WHERE B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.DEL_YN = 'N') AS CONTROL_BARCODE_NUM,
             <!-- D.BARCODE_NUM AS CONTROL_BARCODE_NUM, 주문관리바코드번호(도면라벨) -->
             <!-- E.BARCODE_NUM AS LABEL_BARCODE_NUM, 라벨바코드번호(박스라벨) -->
-            IFNULL(SF_GET_DATE_F(IF(TIMESTAMPDIFF(SECOND, B.INSERT_DT, B.UPDATE_DT) <![CDATA[ < ]]> 0, B.INSERT_DT, B.UPDATE_DT), 'YY', 'M'), SPACE(0)) AS CONTROL_PART_INSERT_UPDATE_DT <!-- 등록/업데이트 일시 -->
+            SF_GET_DATE_F(CASE WHEN IFNULL(TIMESTAMPDIFF(SECOND, B.INSERT_DT, B.UPDATE_DT), -1) <![CDATA[ < ]]> 0 THEN B.INSERT_DT ELSE B.UPDATE_DT END, 'YY', 'M') AS CONTROL_PART_INSERT_UPDATE_DT <!-- 등록/업데이트 일시 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
@@ -2616,15 +2616,16 @@
             INNER JOIN TBL_MONTH_CLOSE_DETAIL D ON A.CONTROL_SEQ = D.CONTROL_SEQ
                                                    AND A.COMP_CD = D.COMP_CD
                                                    AND A.ORDER_COMP_CD = D.ORDER_COMP_CD
+                                                   AND D.COMP_CD = #{COMP_CD}
+                                                   AND D.CLOSE_MONTH = #{CLOSE_MONTH}
+                                                   AND D.ORDER_COMP_CD = #{ORDER_COMP_CD}
+                                                   AND D.CLOSE_VER = #{CLOSE_VER}
             INNER JOIN TBL_MONTH_CLOSE E ON D.CLOSE_MONTH = E.CLOSE_MONTH
                                             AND D.CLOSE_VER = E.CLOSE_VER
                                             AND D.COMP_CD = E.COMP_CD
                                             AND D.ORDER_COMP_CD = E.ORDER_COMP_CD
         WHERE 1 = 1
-            AND D.COMP_CD = #{COMP_CD}
-            AND D.CLOSE_MONTH = #{CLOSE_MONTH}
-            AND D.ORDER_COMP_CD = #{ORDER_COMP_CD}
-            AND D.CLOSE_VER = #{CLOSE_VER}
+            AND A.DEL_YN = 'N'
     </select>
 
     <insert id="createOutBarcode" parameterType="java.util.HashMap">
