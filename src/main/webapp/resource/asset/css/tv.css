@@ -208,3 +208,22 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=1, Direction=135, Colo
 .pop.ty2 .conWrap2 .percentWrap span~span{margin-left: 2px;}
 .bodyWrap.mct .header .right .infoCont span.txtB,.pop.ty2 .conWrap2 .percentWrap span.txtB{color: #0056a8;}
 .bodyWrap.mct .header .right .infoCont span.txtR,.pop.ty2 .conWrap2 .percentWrap span.txtR{color: #670000;}
+
+.machine-run-background{
+    background-image: repeating-linear-gradient(90deg, #b6ffeb 0%, #fffecc 35%, #fcd2d2 70%, #c3cdff 100%) !important;
+    animation:slidebg 15s linear infinite;
+}
+
+.machine-pause-background{
+   background-image: linear-gradient(90deg, #b6ffeb 0%, #fffecc 35%, #fcd2d2 70%, #c3cdff 100%) !important;
+}
+
+@keyframes slidebg {
+  to { background-position:20vw; }
+}
+
+/* This changes all the animations globaly */
+:root {
+  --animate-duration: 800ms;
+  --animate-delay: 0.9s;
+}

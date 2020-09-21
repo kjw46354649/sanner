@@ -1421,7 +1421,8 @@
 					alarmMsg += '	<span class="dateTxt">'+ messageData.content01 +'</span>';
 					alarmMsg += '	<span class="progressTxt ellipsis"><b>' + messBody + ' </b></span>';
 					alarmMsg += '</li>';
-				$("#alarm_list").prepend($(alarmMsg).fadeIn(2000));
+				// $("#alarm_list").prepend($(alarmMsg).fadeIn(2000));
+				$("#alarm_list").prepend($(alarmMsg));
 			}
 		};
 
