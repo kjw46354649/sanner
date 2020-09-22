@@ -489,6 +489,30 @@ div.drawingTit,span.drawingTit{background-color: #e8f0f0; font-family: 'NotoKrB'
 .daily_process_status label { font-size: 1.2rem; color: #343434;}
 .daily_process_status hr { display: block; border: 0; border-top: 1px solid #e2e2e2; margin: 10px 0; }
 
+
+.triangle {display:inline-block; width:0; height:0; border-style:solid; border-width:15px;}
+.triangle.left {border-color:transparent #3399FF transparent transparent;}
+.triangle.right {border-color:transparent transparent transparent #3399FF;}
+
+#statusByClientModal table.tg {border-collapse:collapse;border-spacing:0;margin:0px auto;font-size: small;color: black;}
+#statusByClientModal table.tg > thead > tr > th {border: 1px solid black; padding:10px 5px; background-color: #C0C0C0; text-align: center; font-weight: bold;}
+#statusByClientModal table.tg > tbody > tr > td:first-child{min-width: 70px; text-align: left;}
+#statusByClientModal table.tg > tbody > tr > td {max-width: 50px; border: 1px solid black; overflow:hidden; padding:10px 5px; text-overflow: ellipsis; white-space: nowrap; text-align: center;}
+#statusByClientModal table.tg > thead > tr:first-child > th:nth-child(2n + 3) {background-color: #EAEAEA;}
+#statusByClientModal table.tg > thead > tr:first-child > th:nth-child(7n + 9) {background-color: #FCE4D6;} /* sunday */
+#statusByClientModal table.tg > thead > tr:last-child > th:nth-child(6n + 1) {background-color: #EAEAEA;}
+#statusByClientModal table.tg > thead > tr:last-child > th:nth-child(6n + 2) {background-color: #EAEAEA;}
+#statusByClientModal table.tg > thead > tr:last-child > th:nth-child(6n + 3) {background-color: #EAEAEA;}
+#statusByClientModal table.tg > thead > tr:last-child > th:nth-child(21n + 19) {background-color: #FCE4D6;} /* sunday */
+#statusByClientModal table.tg > thead > tr:last-child > th:nth-child(21n + 20) {background-color: #FCE4D6;} /* sunday */
+#statusByClientModal table.tg > thead > tr:last-child > th:nth-child(21n + 21) {background-color: #FCE4D6;} /* sunday */
+#statusByClientModal table.tg > tbody > tr > td:nth-child(6n + 3) {background-color: #EAEAEA;}
+#statusByClientModal table.tg > tbody > tr > td:nth-child(6n + 4) {background-color: #EAEAEA;}
+#statusByClientModal table.tg > tbody > tr > td:nth-child(6n + 5) {background-color: #EAEAEA;}
+#statusByClientModal table.tg > tbody > tr > td:nth-child(21n + 21) {background-color: #FCE4D6;} /* sunday */
+#statusByClientModal table.tg > tbody > tr > td:nth-child(21n + 22) {background-color: #FCE4D6;} /* sunday */
+#statusByClientModal table.tg > tbody > tr > td:nth-child(21n + 23) {background-color: #FCE4D6;} /* sunday */
+
 /** grid color setting **/
 /*.pq-grid-row > .pq-grid-number-cell, .pq-grid-number-col {*/
 /*    border-width: thin;*/
