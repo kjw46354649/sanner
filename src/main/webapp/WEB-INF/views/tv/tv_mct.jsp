@@ -82,7 +82,7 @@
 														</div>
 													</div>
 													<div class="statusConts">
-														<div class="inWrap on">
+														<div class="inWrap on machine-run-background">
 															<a href="#a;">
 																<span><br></span>
 																<span><span class="txtB ellipsis"></span><br></span>
@@ -1449,8 +1449,17 @@
 							let working_time_info = ( mct_list[i].WORKING_TIME_INFO != undefined ) ? mct_list[i].WORKING_TIME_INFO : '' ;
 							let plan_working_time_info =( mct_list[i].PLAN_WORKING_TIME_INFO != undefined ) ? mct_list[i].PLAN_WORKING_TIME_INFO : '' ;
 							let imageSeq =( mct_list[i].IMG_GFILE_SEQ != undefined ) ? mct_list[i].IMG_GFILE_SEQ : '' ;
+							let workStatus =( mct_list[i].WORK_STATUS != undefined ) ? mct_list[i].WORK_STATUS : '' ;
 
-							let divHtml = '<div class="inWrap">';
+							let divHtml = '';
+								if(work_plan_type == 1) {
+									if(workStatus == "DBS020")
+										divHtml +=  '<div class="inWrap machine-run-background">';
+									else if(workStatus == "DBS010")
+										divHtml +=  '<div class="inWrap machine-pause-background">';
+								}else{
+									divHtml +=  '<div class="inWrap">';
+								}
 								divHtml += '<a href="javascript:callWindowImageViewer(' + imageSeq + ');">';
 								divHtml += '	<span>'+inner_due_dt+'<br>'+work_type_nm+'</span>';
 								divHtml += '	<span><span class="txtB ellipsis" style="font-size: 17px;">'+control_part_info+'</span><br>'+size_txt+'&nbsp;&nbsp;'+material_detail_nm+'</span>';

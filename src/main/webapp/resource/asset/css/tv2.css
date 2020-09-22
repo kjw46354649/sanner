@@ -205,9 +205,18 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=1, Direction=135, Colo
 .pop .popWrap .twoDepthIB.pro14 .page .p_row .p_col{ float: left; width:48.0%; margin-right: 17px; background: #fff; }
 
 
+/*.machine-run-background{*/
+/*   background-image: linear-gradient(90deg, #00C0FF 0%, #FFCF00 49%, #FC4F4F 80%, #00C0FF 100%) !important;*/
+/*   animation:slidebg 10s linear infinite;*/
+/*}*/
+
+/*.machine-pause-background{*/
+/*   background-image: linear-gradient(90deg, #00C0FF 0%, #FFCF00 49%, #FC4F4F 80%, #00C0FF 100%) !important;*/
+/*}*/
+
 .machine-run-background{
-   background-image: linear-gradient(90deg, #00C0FF 0%, #FFCF00 49%, #FC4F4F 80%, #00C0FF 100%) !important;
-   animation:slidebg 10s linear infinite;
+    background-image: repeating-linear-gradient(90deg, #00C0FF 0%, #FFCF00 49%, #FC4F4F 80%, #00C0FF 100%) !important;
+    animation:slidebg 15s linear infinite;
 }
 
 .machine-pause-background{

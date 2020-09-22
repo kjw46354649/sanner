@@ -141,6 +141,7 @@
             , X.LAYOUT_ROW
             , X.LAYOUT_COL
             , Y.IMG_GFILE_SEQ
+            , Y.WORK_STATUS
         FROM jmes.TBL_EQUIP X
                 LEFT OUTER JOIN ( SELECT COUNT(*) OVER (PARTITION BY T.EQUIP_SEQ) AS TOTAL_CNT
                                         , SUM(T.PART_QTY) OVER (PARTITION BY T.EQUIP_SEQ) AS TOTAL_PART_QTY
@@ -160,6 +161,7 @@
                                         , T.WORKING_TIME
                                         , T.PLAN_WORKING_TIME
                                         , T.IMG_GFILE_SEQ
+                                        , T.WORK_STATUS
                                   FROM (    -- 드로잉보드 진행
                                             SELECT '1' AS WORK_PLAN_TYPE
                                                 , C.CONTROL_SEQ
@@ -176,6 +178,7 @@
                                                 , SF_GET_DRAWING_WORK_TIME('W_MINUTE', A.MCT_WORK_SEQ) AS WORKING_TIME
                                                 , 0 AS PLAN_WORKING_TIME
                                                 , C.IMG_GFILE_SEQ
+                                                , A.WORK_STATUS
                                             FROM jmes.TBL_MCT_WORK A
                                                 , jmes.TBL_CONTROL B
                                                 , jmes.TBL_CONTROL_PART C
@@ -208,6 +211,7 @@
                                                 , 0 AS WORKING_TIME
                                                 , IFNULL(A.WORKING_TIME,0) AS PLAN_WORKING_TIME
                                                 , C.IMG_GFILE_SEQ
+                                                , '' AS WORK_STATUS
                                             FROM jmes.TBL_MCT_PLAN A
                                                 , jmes.TBL_CONTROL B
                                                 , jmes.TBL_CONTROL_PART C
