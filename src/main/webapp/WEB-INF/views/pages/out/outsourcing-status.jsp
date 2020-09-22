@@ -20,7 +20,7 @@
                 <ul>
                     <li>
                         <span class="slt_wrap">
-                            <label class="label_100" for="COMP_CD">사업자</label>
+                            <label class="label_100" for="COMP_CD">매입 사업자</label>
                             <select class="wd_200" name="COMP_CD" id="COMP_CD">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
@@ -58,8 +58,8 @@
                         <select name="CLOSE_YEAR_LEFT" id="OUTSIDE_CLOSE_YEAR_LEFT"></select>
                         <select name="CLOSE_MONTH_LEFT" id="OUTSIDE_CLOSE_MONTH_LEFT"></select>
                         <span style="margin: 0 5px; vertical-align: middle; font-size: 1.4rem;">&nbsp;~&nbsp;</span>
-                        <select name="CLOSE_YEAR_RIGHT" id="CLOSE_YEAR_RIGHT" disabled></select>
-                        <select name="CLOSE_MONTH_RIGHT" id="CLOSE_MONTH_RIGHT" disabled></select>
+                        <select name="CLOSE_YEAR_RIGHT" id="OUTSIDE_CLOSE_YEAR_RIGHT" disabled></select>
+                        <select name="CLOSE_MONTH_RIGHT" id="OUTSIDE_CLOSE_MONTH_RIGHT" disabled></select>
                         <span class="chk_box" style="margin-left: 10px;">
                             <input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH">
                             <label for="RANGE_SEARCH"> Range 검색</label>
@@ -135,6 +135,8 @@
 </div>
 
 <script>
+    var $outsideCloseStatusGrid;
+    var outsideCloseStatusRowIndex = [];
     $(function () {
         'use strict';
         /* variable */
@@ -142,39 +144,51 @@
         const YEAR = TODAY.getFullYear();
         const MONTH = TODAY.getMonth() + 1;
 
-        let $outsideCloseStatusGrid;
         const tab1GridId = 'OUTSIDE_CLOSE_STATUS_GRID';
         let tab1PostData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM');
         tab1PostData.CLOSE_YEAR_LEFT = YEAR;
         tab1PostData.CLOSE_MONTH_LEFT = MONTH;
         const tab1ColModel = [
             {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
+            {title: 'CLOSE_MONTH', dataIndx: 'CLOSE_MONTH', hidden: true},
+            {title: 'CLOSE_VER', dataType: 'integer', dataIndx: 'CLOSE_VER', hidden: true},
             {title: 'No.', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'ROW_NUM'},
-            {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자', dataIndx: 'COMP_NM'},
-            {title: '년도', dataIndx: 'ORDER_COMP_CD', hidden: true},
+            {title: '매입 사업자', dataIndx: 'COMP_CD', hidden: true},
+            {title: '매입 사업자', dataIndx: 'COMP_NM'},
+            {title: '년도', dataIndx: 'YEAR'},
             {title: '분기', dataIndx: 'QUARTER'},
             {title: '마감월', dataIndx: 'FINISH_MONTH'},
-            {title: '차수', dataIndx: 'CLOSE_VER'},
+            {title: '차수', dataIndx: 'VIEW_CLOSE_VER'},
             {title: '외주업체', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
             {title: '외주업체', dataIndx: 'OUTSIDE_COMP_NM'},
             {title: '품수', dataIndx: 'ITEM_NUMBER', summary: {type: 'sum', edit: true},
                 render: function (ui) {
-                    if(ui.rowData.pq_grandsummary) {
+                    if (ui.rowData.pq_grandsummary) {
                         return ui.cellData;
                     } else {
-                        return ("<a data-toggle='modal' data-refform='DETAIL_LIST_VIEW_POPUP'><u>" + ui.cellData + "</u></a>");
+                        return ('<button name="SALES_STATUS_CONTROL_DETAIL_VIEW"><u>' + ui.cellData + '</u></button>');
                     }
-                }
+                },
+                // postRender: function (ui) {
+                //     let grid = this,
+                //         $cell = grid.getCell(ui);
+                //     $cell.find('[name=SALES_STATUS_CONTROL_DETAIL_VIEW]').bind('click', function () {
+                //         let rowData = ui.rowData;
+                //         openNewWindowControlDetail(rowData);
+                //     });
+                // }
             },
-            {title: '외주 발주 금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', summary: {type: 'sum', edit: true}},
-            {title: '원 발주<br>금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', summary: {type: 'sum', edit: true}}, // 2020-06-07 add
-            {title: '외주<br>공급가액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', summary: {type: 'sum', edit: true}}, // 2020-06-07 add
-            {title: '외주<br>마감 금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', summary: {type: 'sum', edit: true}}, // 2020-06-07 add
+            {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_PART_QTY'},
+            {title: '원 발주<br>금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORIGINAL_ORDER_AMT', summary: {type: 'sum', edit: true}},
+            {title: '외주<br>발주 금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_ORDER_AMT', summary: {type: 'sum', edit: true}},
+            {
+                title: '외주<br>마감 금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT', editable: true,
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                summary: {type: 'sum', edit: true}
+            },
             {title: '부가세', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'VAT_AMOUNT', summary: {type: 'sum', edit: true}},
-            {title: '부가세<br>합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'VAT_AMOUNT', summary: {type: 'sum', edit: true}}, // 2020-06-07 add
-            {title: '업데이트<br>일시', dataIndx: 'VAT_AMOUNT'}, // 2020-06-07 add
-            // {title: '합계금액', dataIndx: 'TOTAL_AMOUNT'},
+            {title: '부가세<br>합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMOUNT', summary: {type: 'sum', edit: true}},
+            {title: '업데이트<br>일시', dataIndx: 'OUTISDE_CLOSE_NOTE_INSERT_UPDATE_DT'},
             {title: '비고', dataIndx: 'CLOSE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
         ];
         const tab1GroupModel = {
@@ -196,8 +210,10 @@
             collapsible: false,
             resizable: false,
             showTitle: false,
+            postRenderInterval: -1,
             rowHtHead: 15,
             numberCell: {show: false},
+            selectionModel: {type: 'row', mode: 'single'},
             scrollModel: {autoFit: true},
             trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center',  editable: false},
@@ -212,6 +228,9 @@
                 }
             },
             summaryTitle: {sum: '{0}'},
+            rowSelect: function (event, ui) {
+                outsideCloseStatusRowIndex = ui.addList[0].rowIndx;
+            },
         };
         let $monthlyOutsideStatusGrid;
         const tab2GridId = 'MONTHLY_OUTSIDE_STATUS_GRID';
@@ -294,7 +313,39 @@
             },
             summaryTitle: {sum: '{0}'}
         };
+
+        let controlDetailPopup;
         /* variable */
+
+        /* funciton */
+        const openNewWindowControlDetail = function (rowData) {
+            let url = '/controlDetail';
+            // 팝업 사이즈
+            let nWidth = 1400;
+            let nHeight = 770;
+            let winWidth = document.body.clientWidth;
+            let winHeight = document.body.clientHeight;
+            let winX = window.screenX || window.screenLeft || 0;
+            let winY = window.screenY || window.screenTop || 0;
+            let nLeft = winX + (winWidth - nWidth) / 2;
+            let nTop = winY + (winHeight - nHeight) / 2;
+
+            let strOption = '';
+            strOption += 'left=' + nLeft + 'px,';
+            strOption += 'top=' + nTop + 'px,';
+            strOption += 'width=' + nWidth + 'px,';
+            strOption += 'height=' + nHeight + 'px,';
+            strOption += 'toolbar=no,menubar=no,location=no,resizable=no,status=yes';
+
+            // 최초 클릭이면 팝업을 띄운다.
+            if (controlDetailPopup === undefined || controlDetailPopup.closed) {
+                controlDetailPopup = window.open(url, '', strOption);
+            } else {
+                controlDetailPopup.focus();
+            }
+        };
+        /* funciton */
+
 
         $('#TAB1_SEARCH').on('click', function () {
             tab1PostData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM');
@@ -335,28 +386,29 @@
         fnAppendSelectboxYear('OUTSIDE_CLOSE_YEAR_LEFT', 10);
         fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH_LEFT');
         $('#OUTSIDE_CLOSE_MONTH_LEFT').val('01').prop('selected', true);
-        fnAppendSelectboxYear('CLOSE_YEAR_RIGHT', 10);
-        fnAppendSelectboxMonth('CLOSE_MONTH_RIGHT');
+        fnAppendSelectboxYear('OUTSIDE_CLOSE_YEAR_RIGHT', 10);
+        fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH_RIGHT');
         fnAppendSelectboxYear('YEAR', 10);
 
         $('#OUTSIDE_CLOSE_YEAR_LEFT').on('change', function () {
             fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH_LEFT', this.value);
         });
-        $('#CLOSE_YEAR_RIGHT').on('change', function () {
-            fnAppendSelectboxMonth('CLOSE_MONTH_RIGHT', this.value);
+        $('#OUTSIDE_CLOSE_YEAR_RIGHT').on('change', function () {
+            fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH_RIGHT', this.value);
         });
         $('#RANGE_SEARCH').on('change', function () {
             if ($(this).prop('checked')) {
-                $('#CLOSE_YEAR_RIGHT').prop('disabled', false);
-                $('#CLOSE_MONTH_RIGHT').prop('disabled', false);
+                $('#OUTSIDE_CLOSE_YEAR_RIGHT').prop('disabled', false);
+                $('#OUTSIDE_CLOSE_MONTH_RIGHT').prop('disabled', false);
             } else {
-                $('#CLOSE_YEAR_RIGHT').prop('disabled', true);
-                $('#CLOSE_MONTH_RIGHT').prop('disabled', true);
+                $('#OUTSIDE_CLOSE_YEAR_RIGHT').prop('disabled', true);
+                $('#OUTSIDE_CLOSE_MONTH_RIGHT').prop('disabled', true);
             }
         });
 
         $('#OUTSIDE_CLOSE_STATUS_SAVE').on('click', function () {
-            const updateQueryList = ['orderMapper.updateControlMaster', 'outMapper.updateOutsideCloseNote'];
+            const updateQueryList = ['outMapper.updateOutsideCloseNote'];
+
             fnModifyPQGrid($outsideCloseStatusGrid, [], updateQueryList);
         });
 
