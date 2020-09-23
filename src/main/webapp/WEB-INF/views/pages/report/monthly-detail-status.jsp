@@ -38,7 +38,7 @@
                             </select>
                         </span>
                         <div class="d-inline-block right_float">
-                            <button type="button" class="defaultBtn radius blue ml-15" id="PROCESS_TARGET_LIST-1">발주처별 현황</button>
+                            <button type="button" class="defaultBtn radius blue ml-15" data-toggle="modal" data-target="#statusByClientModal">발주처별 현황</button>
                             <button type="button" class="defaultBtn radius blue ml-15" id="PROCESS_TARGET_LIST">가공대상 List</button>
                             <button type="button" class="defaultBtn radius green ml-15" id="MONTHLY_DETAIL_STATUS_SAVE">저장</button>
                         </div>
@@ -63,6 +63,61 @@
     </div>
 </div>
 
+<div class="modal" id="statusByClientModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width: 1536px; height: 864px">
+        <div class="modal-content" style="height: inherit;">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size: large; font-weight: bold">상세 List 조회</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -21.5px">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" <%--style="height: px"--%>>
+                <div>
+                    <span class="slt_wrap">
+                    <label class="label_50" for="ORDER_COMP_CD">발주처</label>
+                    <select class="wd_100" name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="발주처">
+                        <option value=""><spring:message code="com.form.top.all.option"/></option>
+                    </select>
+                    </span>
+                </div>
+                <div>
+                    <div class="d-flex align-items-center mt-10">
+                        <div>
+                            <button class="triangle left mr-10" id="previous"></button>
+                            <span style="font-size: small">조회 주차 변경</span>
+                            <button class="triangle right ml-10" id="next"></button>
+                        </div>
+                        <div class="ml-auto"></div>
+                    </div>
+                    <div class="mt-10" style="height: 650px; overflow: auto;">
+                        <table class="tg">
+                            <thead>
+                              <tr>
+                                <th rowspan="2">발주처</th>
+                                <th colspan="3">8/3(월)</th>
+                              </tr>
+                              <tr>
+                                <th class="tg-ul38 tg-ul38">납기<br>대상</th>
+                                <th class="tg-ul38 tg-ul38 blue">가공<br>완료</th>
+                                <th class="tg-ul38 red">남은<br>품수</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div></div>
+            </div>
+            <div class="modal-footer" style="text-align: center !important">
+                <button type="button" class="defaultBtn grayPopGra" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <form id="PROCESS_TARGET_BEFORE_FORM">
     <input type="hidden" name="DT" id="DT">
     <input type="hidden" name="COMP_CD" id="COMP_CD">
@@ -79,7 +134,7 @@
         'use strict';
         /* init */
         let monthReportDetailPopup;
-        //TODO: change element id
+        let startDt, endDt; // 발주처별 현황
         fnAppendSelectboxYear('MONTHLY_DETAIL_STATUS_YEAR', 10);
         fnAppendSelectboxMonth('MONTHLY_DETAIL_STATUS_MONTH');
         $('#MONTHLY_DETAIL_STATUS_MONTH').val(CURRENT_MONTH < 9 ? '0' + (CURRENT_MONTH + 1) : CURRENT_MONTH + 1).prop('selected', true);
@@ -92,7 +147,11 @@
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
-        
+        fnCommCodeDatasourceSelectBoxCreate($('#statusByClientModal').find('#ORDER_COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOrderCompanyList'}
+        });
+
         const gridId = 'MONTHLY_DETAIL_STATUS_GRID';
         let postData = fnFormToJsonArrayData('#MONTHLY_DETAIL_STATUS_SEARCH_FORM');
         const colModel = [
@@ -362,6 +421,71 @@
         /* init */
 
         /* function */
+        const createThead = function () {
+            let parameter = {'url': '/json-list', 'data': {'queryId': 'reportMapper.selectStatusByClientTableHeader', START_DT: startDt, END_DT: endDt}};
+            fnPostAjaxAsync(function (data) {
+                let firstRow = '';
+                let secondRow = '';
+                let dummy = '<th>납기<br>대상</th>\n' +
+                            '<th class="text-blue">가공<br>완료</th>\n' +
+                            '<th class="text-red">남은<br>품수</th>';
+                if (!fnIsEmpty(data.list)) {
+                    firstRow += '<th rowspan="2">발주처</th>';
+                    firstRow += '<th rowspan="2">집계항목</th>'
+                    for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
+                        const rowData = data.list[i];
+
+                        if (rowData.TODAY_YN === 'Y'){
+                            firstRow += '<th colspan="3" style="background-color: #FFE699">' + rowData.F_DT + rowData.DAY + '</th>';
+                            secondRow += '<th style="background-color: #FFE699">납기<br>대상</th>\n' +
+                                    '<th class="text-blue" style="background-color: #FFE699">가공<br>완료</th>\n' +
+                                    '<th class="text-red" style="background-color: #FFE699">남은<br>품수</th>';
+                        } else {
+                            firstRow += '<th colspan="3">' + rowData.F_DT + rowData.DAY + '</th>';
+                            secondRow += dummy;
+                        }
+                    }
+                }
+                $('table.tg > thead > tr:first').html(firstRow);
+                $('table.tg > thead > tr:last').html(secondRow);
+            }, parameter, '');
+        };
+
+        const createTbody = function () {
+            const orderCompCd = $('#statusByClientModal').find('#ORDER_COMP_CD').val();
+            const parameter = {'url': '/json-list', 'data': {'queryId': 'reportMapper.selectStatusByClientTableList', START_DT: startDt, END_DT: endDt, ORDER_COMP_CD: orderCompCd}};
+
+            fnPostAjaxAsync(function (data) {
+                let row = '';
+                if (!fnIsEmpty(data.list)) {
+                    for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
+                        const rowData = data.list[i];
+
+                        row += '<tr>';
+                        if (i % 2 === 0) {
+                            row += '<td title="' + rowData.COMP_NM + '" rowspan="2">' + rowData.COMP_NM + '</td>';
+                        } else {
+                            row += '<td title="' + rowData.COMP_NM + '" style="display: none">' + rowData.COMP_NM + '</td>';
+                        }
+                        row += '<td>' + rowData.SUB_TYPE_NM + '</td>';
+                        for (let j = 1; j <= 28; j++) {
+                            row += '<td title="' + rowData['ORDER_' +  j] + '">' + rowData['ORDER_' +  j] + '</td>';
+                            row += '<td title="' + rowData['FINISH_' +  j] + '" class="text-blue">' + rowData['FINISH_' +  j] + '</td>';
+                            row += '<td title="' + rowData['REMAIN_' +  j] + '" class="text-red">' + rowData['REMAIN_' +  j] + '</td>';
+                        }
+                        row += '</tr>';
+                    }
+                    // TODO: 합계·총계 row background-color
+                }
+                $('table.tg > tbody').html(row);
+            }, parameter, '');
+        };
+
+        const createOrderStateTable = function () {
+            createThead();
+            createTbody();
+        };
+
         const changeProcessTargetBeforeForm = function (a, c = '', d = '', e = '', f = '') {
             $('#PROCESS_TARGET_BEFORE_FORM > #DT').val(a);
             $('#PROCESS_TARGET_BEFORE_FORM > #FACTORY_CLASSIFY_YN').val(c);
@@ -416,8 +540,52 @@
             fnModifyPQGrid($monthlyDetailStatusGrid, [], updateQueryList);
        });
 
-        $('#PROCESS_TARGET_LIST-1').on('click', function () {
-            fnAlert(null, '개발중');
+        $('#statusByClientModal').on({
+            'show.bs.modal': function () {
+            let parameter = {'url': '/json-info', 'data': {'queryId': 'reportMapper.selectGetDate'}};
+
+            fnPostAjaxAsync(function (data) {
+                if (!fnIsEmpty(data.info)) {
+                    startDt = data.info.START_DT;
+                    endDt = data.info.END_DT;
+                }
+            }, parameter, '');
+
+            createOrderStateTable();
+            },
+            'hide.bs.modal': function () {
+
+            }
+        });
+
+        $('#statusByClientModal').find('#previous').on('click', function () {
+            let parameter = {'url': '/json-info', 'data': {'queryId': 'reportMapper.selectGetPreviousDate', 'START_DT': startDt}};
+
+            fnPostAjaxAsync(function (data) {
+                if (!fnIsEmpty(data.info)) {
+                    startDt = data.info.START_DT;
+                    endDt = data.info.END_DT;
+                }
+            }, parameter, '');
+
+            createOrderStateTable();
+        });
+
+        $('#statusByClientModal').find('#next').on('click', function () {
+            let parameter = {'url': '/json-info', 'data': {'queryId': 'reportMapper.selectGetNextDate', 'START_DT': startDt}};
+
+            fnPostAjaxAsync(function (data) {
+                if (!fnIsEmpty(data.info)) {
+                    startDt = data.info.START_DT;
+                    endDt = data.info.END_DT;
+                }
+            }, parameter, '');
+
+            createOrderStateTable();
+        });
+
+        $('#statusByClientModal').find('#ORDER_COMP_CD').on('change', function () {
+            createTbody();
         });
 
         $('#PROCESS_TARGET_LIST').on('click', function () {

@@ -493,3 +493,7 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+/* color */
+.text-blue { color: blue; }
+.text-red { color: red; }

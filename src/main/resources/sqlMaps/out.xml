@@ -483,78 +483,92 @@
     </select>
 
     <select id="selectOutsideCloseStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-            1 AS GROUP_KEY,
-            ROW_NUMBER () OVER (ORDER BY SF_GET_COMP_NM(A.COMP_CD), D.CLOSE_MONTH) AS ROW_NUM,
-            A.COMP_CD,
-            SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM,
-            SUBSTR(D.CLOSE_MONTH, 1, 4) AS `YEAR`,
-            CONCAT(QUARTER(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m')), '분기') AS QUARTER,
-            CONCAT(SUBSTR(D.CLOSE_MONTH, 5), '월') AS FINISH_MONTH,
-            CONCAT(D.CLOSE_VER, '차') AS CLOSE_VER, /* 차수 */
-            B.OUTSIDE_COMP_CD,
-            SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM,
-            SUM(C.ORDER_QTY) AS ITEM_NUMBER,
-            SUM(B.UNIT_FINAL_AMT) AS UNIT_FINAL_AMT,
-            SUM(B.UNIT_FINAL_AMT) * 0.1 AS VAT_AMOUNT,
-            SUM(B.UNIT_FINAL_AMT) + SUM(B.UNIT_FINAL_AMT) * 0.1 AS TOTAL_AMOUNT,
-            E.CLOSE_NOTE
-        FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-                                                   AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-            INNER JOIN TBL_OUTSIDE_CLOSE D ON B.CONTROL_SEQ = D.CONTROL_SEQ
-                                              AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-            LEFT OUTER JOIN TBL_OUTSIDE_CLOSE_NOTE E ON A.COMP_CD = E.COMP_CD
-                                                        AND B.OUTSIDE_COMP_CD = E.OUTSIDE_COMP_CD
-                                                        AND D.CLOSE_MONTH = E.CLOSE_MONTH
-                                                        AND D.CLOSE_VER = E.CLOSE_VER
-        WHERE 1 = 1
-        <choose>
-            <when test="RANGE_SEARCH != null and RANGE_SEARCH != ''">
-                AND (D.CLOSE_MONTH BETWEEN  DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m') AND DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_RIGHT}, #{CLOSE_MONTH_RIGHT}), '%Y%m'), '%Y%m'))
-            </when>
-            <otherwise>
-                AND D.CLOSE_MONTH <![CDATA[ > ]]> DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m')
-            </otherwise>
-        </choose>
-        <choose>
-            <when test="CLOSE_VER != null and CLOSE_VER != ''">
-                AND D.CLOSE_VER = #{CLOSE_VER}
-            </when>
-            <otherwise>
-                AND D.CLOSE_VER = (SELECT MAX(CLOSE_VER)
-                                   FROM TBL_OUTSIDE_CLOSE
-                                   WHERE
-                                        D.CLOSE_MONTH = CLOSE_MONTH
-                                        AND D.CONTROL_SEQ = CONTROL_SEQ
-                                        AND D.CONTROL_DETAIL_SEQ = CONTROL_DETAIL_SEQ)
-            </otherwise>
-        </choose>
-        <if test="COMP_CD != null and COMP_CD != ''">
-            AND A.COMP_CD = #{COMP_CD}
-        </if>
-        <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
-            AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
-        </if>
-        <if test="CLOSE_NOTE != null and CLOSE_NOTE != ''">
-            AND D.CLOSE_NOTE LIKE CONCAT('%', #{CLOSE_NOTE}, '%')
-        </if>
+        SELECT 1 AS GROUP_KEY
+            , ROW_NUMBER () OVER (ORDER BY SF_GET_COMP_NM(X.COMP_CD), X.CLOSE_MONTH) AS ROW_NUM
+            , X.COMP_CD
+            , SF_GET_COMP_NM(X.COMP_CD) AS COMP_NM
+            , X.CLOSE_MONTH
+            , SUBSTR(X.CLOSE_MONTH, 1, 4) AS `YEAR`
+            , CONCAT(QUARTER(STR_TO_DATE(X.CLOSE_MONTH, '%Y%m')), '분기') AS QUARTER
+            , CONCAT(SUBSTR(X.CLOSE_MONTH, 5), '월') AS FINISH_MONTH
+            , X.CLOSE_VER
+            , CONCAT(X.CLOSE_VER, '차') AS VIEW_CLOSE_VER
+            , X.OUTSIDE_COMP_CD
+            , SF_GET_COMP_NM(X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
+            , COUNT(*) AS ITEM_NUMBER
+            , SUM(X.CONTROL_PART_QTY) AS CONTROL_PART_QTY
+            , SUM(X.ORIGINAL_ORDER_AMT) AS ORIGINAL_ORDER_AMT
+            , SUM(X.OUTSIDE_ORDER_AMT) AS OUTSIDE_ORDER_AMT
+            , X.FINAL_NEGO_AMT
+            , X.VAT_AMOUNT
+            , X.TOTAL_AMOUNT
+            , X.OUTISDE_CLOSE_NOTE_INSERT_UPDATE_DT
+            , X.CLOSE_NOTE
+        FROM (
+                SELECT E.COMP_CD
+                    , D.CLOSE_MONTH
+                    , D.CLOSE_VER
+                    , B.OUTSIDE_COMP_CD
+                    , SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY
+                    , B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS ORIGINAL_ORDER_AMT <!-- 원 발주 금액 -->
+                    , B.OUTSIDE_UNIT_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS OUTSIDE_ORDER_AMT <!-- 외주 발주 금액 -->
+                    , E.FINAL_NEGO_AMT <!-- 외주 마감 금액 -->
+                    , E.FINAL_NEGO_AMT * 0.1 AS VAT_AMOUNT <!-- 부가세 -->
+                    , E.FINAL_NEGO_AMT + E.FINAL_NEGO_AMT * 0.1 AS TOTAL_AMOUNT <!-- 부가세 합계금액 -->
+                    , SF_GET_DATE_F(CASE WHEN IFNULL(TIMESTAMPDIFF(SECOND, E.INSERT_DT, E.UPDATE_DT), -1) <![CDATA[ < ]]> 0 THEN E.INSERT_DT ELSE E.UPDATE_DT END, 'YY', 'M') AS OUTISDE_CLOSE_NOTE_INSERT_UPDATE_DT <!-- 업데이트 일시 -->
+                    , E.CLOSE_NOTE
+                FROM TBL_CONTROL A
+                    INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ AND B.OUTSIDE_YN = 'Y'
+                        <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
+                            AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
+                        </if>
+                    INNER JOIN TBL_OUTSIDE_CLOSE D ON D.CONTROL_SEQ = B.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                                    <choose>
+                                                        <when test="RANGE_SEARCH != null and RANGE_SEARCH != ''">
+                                                            AND (D.CLOSE_MONTH BETWEEN  DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m') AND DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_RIGHT}, #{CLOSE_MONTH_RIGHT}), '%Y%m'), '%Y%m'))
+                                                        </when>
+                                                        <otherwise>
+                                                            AND D.CLOSE_MONTH <![CDATA[ > ]]> DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m')
+                                                        </otherwise>
+                                                    </choose>
+                                                    <choose>
+                                                        <when test="CLOSE_VER != null and CLOSE_VER != ''">
+                                                            AND D.CLOSE_VER = #{CLOSE_VER}
+                                                        </when>
+                                                        <otherwise>
+                                                            AND D.CLOSE_VER = (SELECT MAX(CLOSE_VER)
+                                                                               FROM TBL_OUTSIDE_CLOSE
+                                                                               WHERE
+                                                                                    D.CLOSE_MONTH = CLOSE_MONTH
+                                                                                    AND D.CONTROL_SEQ = CONTROL_SEQ
+                                                                                    AND D.CONTROL_DETAIL_SEQ = CONTROL_DETAIL_SEQ)
+                                                        </otherwise>
+                                                    </choose>
+                                                    <if test="CLOSE_NOTE != null and CLOSE_NOTE != ''">
+                                                        AND D.CLOSE_NOTE LIKE CONCAT('%', #{CLOSE_NOTE}, '%')
+                                                    </if>
+                    INNER JOIN TBL_OUTSIDE_CLOSE_NOTE E ON E.COMP_CD = A.COMP_CD
+                                                           AND E.OUTSIDE_COMP_CD = B.OUTSIDE_COMP_CD
+                                                           AND E.CLOSE_MONTH = D.CLOSE_MONTH
+                                                           AND E.CLOSE_VER = D.CLOSE_VER
+                                                           <if test="COMP_CD != null and COMP_CD != ''">
+                                                                AND E.COMP_CD = #{COMP_CD}
+                                                           </if>
+                WHERE 1 = 1
+                    AND A.DEL_YN = 'N'
+
+        ) X
         GROUP BY
-            A.COMP_CD,
-            B.OUTSIDE_COMP_CD,
-            D.CLOSE_MONTH,
-            D.CLOSE_VER
+            X.COMP_CD, X.OUTSIDE_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER
         ORDER BY
-            SF_GET_COMP_NM(A.COMP_CD),
-            `YEAR`,
-            FINISH_MONTH
+            COMP_NM, OUTSIDE_COMP_NM, X.CLOSE_MONTH, X.CLOSE_VER
     </select>
 
     <update id="updateOutsideCloseNote" parameterType="java.util.HashMap">
         UPDATE jmes.TBL_OUTSIDE_CLOSE_NOTE
         SET
-            CLOSE_NOTE = #{CLOSE_NOTE}
+            CLOSE_NOTE = #{CLOSE_NOTE},
+            FINAL_NEGO_AMT = #{FINAL_NEGO_AMT}
         WHERE CLOSE_MONTH = #{CLOSE_MONTH}
             AND CLOSE_VER = #{CLOSE_VER}
             AND COMP_CD = #{COMP_CD}
