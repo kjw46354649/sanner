@@ -446,9 +446,9 @@
 <!--                                                             AND C.DEL_YN = 'N' -->
 <!--             LEFT OUTER JOIN TBL_OUTSIDE_REQUEST D ON C.OUTSIDE_REQUEST_SEQ = D.OUTSIDE_REQUEST_SEQ -->
             LEFT OUTER JOIN TBL_OUTSIDE_CLOSE E ON B.CONTROL_SEQ = E.CONTROL_SEQ
-                                                   AND B.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
+                                AND B.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
             LEFT OUTER JOIN TBL_OUTSIDE_CLOSE_NOTE F ON E.CLOSE_MONTH = F.CLOSE_MONTH
-                                                        AND E.CLOSE_VER = F.CLOSE_VER
+                                AND E.CLOSE_VER = F.CLOSE_VER AND A.COMP_CD = F.COMP_CD AND A.ORDER_COMP_CD = F.OUTSIDE_COMP_CD
             LEFT OUTER JOIN TBL_INSPECT H ON B.CONTROL_SEQ = H.CONTROL_SEQ
                                                      AND B.CONTROL_DETAIL_SEQ = H.CONTROL_DETAIL_SEQ
                                                      AND H.INSPECT_SEQ = (SELECT MAX(INSPECT_SEQ)
@@ -479,6 +479,7 @@
 <!--            AND C.ORDER_NUM LIKE CONCAT('%', #{ORDER_NUM}, '%')-->
 <!--        </if>-->
             <!-- AND E.OUTSIDE_STATUS = 'OST004' -->
+        ORDER BY E.CLOSE_MONTH, E.CLOSE_VER, A.COMP_CD, A.ORDER_COMP_CD, A.CONTROL_NUM, B.PART_NUM
     </select>
 
     <select id="selectOutsideCloseStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
