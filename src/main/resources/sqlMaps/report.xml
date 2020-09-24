@@ -571,7 +571,7 @@
             ) Z
     </select>
 
-    <select id="selectWorkTimeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    <select id="selectWorkingWeekTimeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT ROW_NUMBER () OVER() AS ROW_NUM
             , WORK_FACTORY
             , SF_GET_CODE_NM('1014', WORK_FACTORY, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM
@@ -586,6 +586,17 @@
         GROUP BY WORK_FACTORY
         ORDER BY WORK_FACTORY
     </select>
+
+    <update id="updateWorkingWeekTime" parameterType="java.util.HashMap">
+        UPDATE TBL_WORKING_WEEK_TIME
+        SET
+            WORKING_TIME = #{WORKING_TIME},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE 1 = 1
+            AND WORK_FACTORY = #{WORK_FACTORY}
+            AND WEEK_DAY = #{WEEK_DAY}
+    </update>
 
     <select id="selectGetDate" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         <!-- 최초 -->
@@ -895,4 +906,5 @@
         GROUP BY M.COMP_CD, M.COMP_NM, N.SUB_TYPE
         ORDER BY M.COMP_CD, N.SUB_TYPE
     </select>
+
 </mapper>
