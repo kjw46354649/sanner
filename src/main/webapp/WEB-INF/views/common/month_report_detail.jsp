@@ -94,6 +94,7 @@
         </div>
         <div class="ml-auto">
             <button type="button" class="defaultBtn btn-100w green" id="MONTH_REPORT_DETAIL_LIST_VIEW_SAVE">저장</button>
+            <button type="button" class="defaultBtn btn-70w blue" id="MONTH_REPORT_DETAIL_LIST_VIEW_SEARCH">검색</button>
         </div>
     </div>
 
@@ -173,16 +174,7 @@
             },
             {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', minWidth: 25, dataType: 'integer', format: '#,###', dataIndx: 'PART_NUM'},
-            {title: '???', dataIndx: ''},
-            {
-                title: '규격', width: 110, dataIndx: 'SIZE_TXT',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
-                editable: function (ui) {
-                    let rowData = ui.rowData;
-
-                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
-                }
-            },
+            {title: '규격', width: 110, dataIndx: 'SIZE_TXT'},
             {title: '소재<br>종류', width: 80, dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '작업<br>형태', dataIndx: 'WORK_TYPE_NM'},
             {title: '발주<br>납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT'},
@@ -266,7 +258,7 @@
             window.close();
         });
 
-        $('#MONTH_REPORT_DETAIL_LIST_VIEW_FORM').on('change', function () {
+        $('#MONTH_REPORT_DETAIL_LIST_VIEW_SEARCH').on('click', function () {
             $monthReportDetailListViewGrid.pqGrid('option', 'dataModel.postData', function () {
                 return fnFormToJsonArrayData('#MONTH_REPORT_DETAIL_LIST_VIEW_FORM');
             });
@@ -274,7 +266,7 @@
         });
 
         $('#MONTH_REPORT_DETAIL_LIST_VIEW_SAVE').on('click', function () {
-           const updateQueryList = ['reportMapper.updateControlPartSizeTxt', 'reportMapper.updateControlPartForecastUnitAmt', 'reportMapper.updateControlNote'];
+           const updateQueryList = ['reportMapper.updateControlPartForecastUnitAmt', 'reportMapper.updateControlNote'];
 
             fnModifyPQGrid($monthReportDetailListViewGrid, [], updateQueryList);
         });
