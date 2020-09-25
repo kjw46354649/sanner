@@ -844,6 +844,8 @@
 
             fnPostAjaxAsync(function (data) {
                 if (data.flag) {
+                    flag = data.flag;
+
                     fnConfirm(null, data.message, function () {}, null, 5);
                 }
             }, parameters, '');
