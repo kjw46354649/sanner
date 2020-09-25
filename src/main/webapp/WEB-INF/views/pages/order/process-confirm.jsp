@@ -250,7 +250,7 @@
             {title: '', minWidth: 30, width: 30, maxWidth: 30,
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
-                        return '<span  class="doubleFilesIcon" name="detailView" style="cursor: pointer"></span>';
+                        return '<span  class="shareIcon" name="detailView" style="cursor: pointer"></span>';
                 },
                 postRender: function (ui) {
                     let grid = this,
@@ -265,7 +265,7 @@
             {title: '파<br>트', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'IMG_GFILE_SEQ', 
                 render: function (ui) {
-                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" name="imageView" style="cursor: pointer"></span>'
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="fileSearchIcon" name="imageView" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
                     let grid = this,
@@ -364,7 +364,7 @@
                 title: '', minWidth: 30, width: 30, maxWidth: 30,
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
-                        return '<span  class="doubleFilesIcon" name="detailView" style="cursor: pointer"></span>';
+                        return '<span  class="shareIcon" name="detailView" style="cursor: pointer"></span>';
                 },
                 postRender: function (ui) {
                     let grid = this,
@@ -379,7 +379,7 @@
             {title: '파<br>트', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'IMG_GFILE_SEQ', 
                 render: function (ui) {
-                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" name="imageView" style="cursor: pointer"></span>'
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="fileSearchIcon" name="imageView" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
                     let grid = this,
@@ -479,7 +479,7 @@
                 title: '', align: 'center', minWidth: 30, width: 30, maxWidth: 30,
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
-                        return '<span  class="doubleFilesIcon" name="detailView" style="cursor: pointer"></span>';
+                        return '<span  class="shareIcon" name="detailView" style="cursor: pointer"></span>';
                 },
                 postRender: function (ui) {
                     let grid = this,
@@ -494,7 +494,7 @@
             {title: '파<br>트', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'IMG_GFILE_SEQ', 
                 render: function (ui) {
-                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" name="imageView" style="cursor: pointer"></span>'
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="fileSearchIcon" name="imageView" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
                     let grid = this,
@@ -586,7 +586,7 @@
                 title: '', align: 'center', minWidth: 30, width: 30, maxWidth: 30,
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
-                        return '<span  class="doubleFilesIcon" name="detailView" style="cursor: pointer"></span>';
+                        return '<span  class="shareIcon" name="detailView" style="cursor: pointer"></span>';
                 },
                 postRender: function (ui) {
                     let grid = this,
@@ -601,7 +601,7 @@
             {title: '파<br>트', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'IMG_GFILE_SEQ', 
                 render: function (ui) {
-                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" name="imageView" style="cursor: pointer"></span>'
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="fileSearchIcon" name="imageView" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
                     let grid = this,

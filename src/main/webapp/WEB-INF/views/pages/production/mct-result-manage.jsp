@@ -574,7 +574,7 @@
             {title: '형<br>태', dataIndx: 'WORK_NM', minWidth: 15, width: 20},
             {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
-                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
                     return '';
                 },
                 postRender: function(ui) {
@@ -591,7 +591,7 @@
             {title: '소재종류', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 40, width: 80},
             {title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
-                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" id="imageView" style="cursor: pointer"></span>'
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="fileSearchIcon" id="imageView" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
                     let grid = this,
@@ -717,7 +717,11 @@
             // {title: '예상가공<br>시간(M)', dataType: 'integer', dataIndx: 'MCT_WORK_TIME', minWidth: 15, width: 50},
             {title: '참<br>조', minWidth: 30, dataIndx: 'ETC_GFILE_SEQ', styleHead: {'background':'#a9d3f5'},
                 render: function (ui) {
-                    return '<span class="floppyDisk" name="attachment" style="cursor: pointer"></span>';
+                    let cellData = ui.cellData;
+                    let cls = cellData ? 'floppyDiskAble' : 'floppyDiskDisable';
+                    let text = '<span class="' + cls + '" name="attachment" style="cursor: pointer"></span>';
+
+                    return {text: text};
                 },
                 postRender: function (ui) {
                     let grid = this,
