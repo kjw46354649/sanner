@@ -215,4 +215,18 @@ public class StaticUrlController {
     public String monthReportDetailController(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
         return "/common/month_report_detail";
     }
+
+
+    /**
+     * 외주현황 상세 List
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/outsideDetail")
+    public String outsideDetailController(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return "/common/outside_detail";
+    }
 }

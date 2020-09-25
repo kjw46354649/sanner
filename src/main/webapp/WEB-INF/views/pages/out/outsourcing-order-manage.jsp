@@ -559,9 +559,11 @@
 
                         return date.substring(5);
                     } else {
-                        let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
-                        visibleDate.setDate(visibleDate.getDate() - 1);
-                        return visibleDate.mmdd();
+                        if (!fnIsEmpty(ui.rowData.INNER_DUE_DT)) {
+                            let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
+                            visibleDate.setDate(visibleDate.getDate() - 1);
+                            return visibleDate.mmdd();
+                        }
                     }
                 }
             },
@@ -949,10 +951,16 @@
             },
             {title: '외주<br>요망납기', datatype: 'date', dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor},
                 render: function (ui) {
-                    if(!ui.cellData) {
-                        let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
-                        visibleDate.setDate(visibleDate.getDate() - 3);
-                        return visibleDate.mmdd();
+                    if (ui.cellData) {
+                        let date = ui.cellData;
+
+                        return date.substring(5);
+                    } else {
+                        if (!fnIsEmpty(ui.rowData.INNER_DUE_DT)) {
+                            let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
+                            visibleDate.setDate(visibleDate.getDate() - 1);
+                            return visibleDate.mmdd();
+                        }
                     }
                 }
             },

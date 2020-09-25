@@ -33,6 +33,7 @@
             </span>
             <span class="ipu_wrap right_float">
                 <button type="button" class="defaultBtn radius blue" data-toggle="modal" data-target="#TARGET_AMOUNT_REGISTER_POPUP">목표금액 설정</button>
+                <button type="button" class="defaultBtn radius blue ml-10" id="DAILY_PROCESS_STATUS_SEARCH">검색</button>
             </span>
         </form>
     </div>
@@ -56,7 +57,7 @@
             <div style="height: inherit;">
                 <div class="d-flex align-items-center">
                     <div>
-                        <span class="chk_box"><input name="VIEW_UNIT_PRICE_INFORMATION" id="VIEW_UNIT_PRICE_INFORMATION" type="checkbox"><label for="VIEW_UNIT_PRICE_INFORMATION"> 단가정보 보기</label></span>
+<%--                        <span class="chk_box"><input name="VIEW_UNIT_PRICE_INFORMATION" id="VIEW_UNIT_PRICE_INFORMATION" type="checkbox"><label for="VIEW_UNIT_PRICE_INFORMATION"> 단가정보 보기</label></span>--%>
                     </div>
                     <div class="ml-auto">
                         <button type="button" class="defaultBtn btn-100w green" id="DAILY_PROCESS_STATUS_RIGHT_SAVE">저장</button>
@@ -156,8 +157,13 @@
                 ]
             },
             {
-                title: '비고', dataIndx: 'NOTE', editable: true,
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+                title: '비고', dataIndx: 'NOTE',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    const rowData = ui.rowData;
+
+                    return !(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계');
+                }
             }
         ];
         const leftObj = {
@@ -257,9 +263,9 @@
             },
             {
                 title: '단가정보', align: 'center', colModel: [
-                    {title: '종전가', dataType: 'integer', format: '#,###', dataIndx: 'PREV_UNIT_FINAL_AMT', hidden: true},
-                    {title: '견적가', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', hidden: true},
-                    {title: '공급가', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', hidden: true}
+                    {title: '종전가', dataType: 'integer', format: '#,###', dataIndx: 'PREV_UNIT_FINAL_AMT'},
+                    {title: '견적가', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT'},
+                    {title: '공급가', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'}
                 ]
             },
             {
@@ -352,17 +358,17 @@
         /* init */
 
         /* function */
-        const changeViewColumn = function (checked) {
-            const $dailyProcessStatusRightGridInstance = $dailyProcessStatusRightGrid.pqGrid('getInstance').grid;
-            const Cols = $dailyProcessStatusRightGridInstance.Columns();
-            const array = ['PREV_UNIT_FINAL_AMT','UNIT_FINAL_EST_AMT','UNIT_FINAL_AMT'];
-            const parameter = checked ? 'diShow' : 'diHide';
-            Cols.hide({[parameter]: array});
-        };
+        // const changeViewColumn = function (checked) {
+        //     const $dailyProcessStatusRightGridInstance = $dailyProcessStatusRightGrid.pqGrid('getInstance').grid;
+        //     const Cols = $dailyProcessStatusRightGridInstance.Columns();
+        //     const array = ['PREV_UNIT_FINAL_AMT','UNIT_FINAL_EST_AMT','UNIT_FINAL_AMT'];
+        //     const parameter = checked ? 'diShow' : 'diHide';
+        //     Cols.hide({[parameter]: array});
+        // };
         /* function */
 
         /* event */
-        $('#DAILY_PROCESS_STATUS_LEFT_SEARCH_FORM').on('change', function () {
+        $('#DAILY_PROCESS_STATUS_SEARCH').on('click', function () {
             $dailyProcessStatusLeftGrid.pqGrid('option', 'dataModel.postData', function () {
                 return fnFormToJsonArrayData('#DAILY_PROCESS_STATUS_LEFT_SEARCH_FORM');
             });
@@ -379,9 +385,9 @@
 
             fnModifyPQGrid($dailyProcessStatusRightGrid, [], updateQueryList);
         });
-        $('#VIEW_UNIT_PRICE_INFORMATION').on('click', function () {
-            changeViewColumn(this.checked);
-        });
+        // $('#VIEW_UNIT_PRICE_INFORMATION').on('click', function () {
+        //     changeViewColumn(this.checked);
+        // });
 
         $('#TARGET_AMOUNT_REGISTER_POPUP').on({
             'show.bs.modal': function () {

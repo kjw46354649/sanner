@@ -41,6 +41,7 @@
                             <button type="button" class="defaultBtn radius blue ml-15" data-toggle="modal" data-target="#statusByClientModal">발주처별 현황</button>
                             <button type="button" class="defaultBtn radius blue ml-15" id="PROCESS_TARGET_LIST">가공대상 List</button>
                             <button type="button" class="defaultBtn radius green ml-15" id="MONTHLY_DETAIL_STATUS_SAVE">저장</button>
+                            <button type="button" class="defaultBtn radius blue ml-15" id="MONTHLY_DETAIL_STATUS_SEARCH">조회</button>
                         </div>
                     </li>
                 </ul>
@@ -159,12 +160,12 @@
             {title: 'COMP_CD', dataIndx: 'COMP_CD', hidden: true},
             {title: 'ORDER_COMP_CD', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: 'DT', dataIndx: 'DT', hidden: true},
-            {title: '날짜', dataIndx: 'CAL_DT_NM'},
-            {title: '요일', dataIndx: 'WEEK_DAY_NM'},
+            {title: '날짜', minWidth: 40, maxWidth: 40, dataIndx: 'CAL_DT_NM'},
+            {title: '요일', minWidth: 30, maxWidth: 30, dataIndx: 'WEEK_DAY_NM'},
             {
                 title: '납품대상', align: 'center', colModel: [
                     {
-                        title: '품', dataType: 'integer', format: '#,###', dataIndx: 'PART_CNT',
+                        title: '품', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'PART_CNT',
                         style: {'text-decoration': 'underline', 'cursor': 'pointer'},
                         postRender: function (ui) {
                             let grid = this,
@@ -182,8 +183,18 @@
                         }
                     },
                     {
-                        title: 'EA', dataType: 'integer', format: '#,###', dataIndx: 'PART_QTY',
+                        title: 'EA', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'PART_QTY',
                         style: {'background': '#D6DCE4', 'text-decoration': 'underline', 'cursor': 'pointer'},
+                        render: function (ui) {
+                            const rowData = ui.rowData;
+
+                            switch (rowData.CAL_DT_NM) {
+                                case '합계':
+                                    return {style: {'background': 'yellow'}};
+                                case '총계':
+                                    return {style: {'background': '#FFE699'}};
+                            }
+                        },
                         postRender: function (ui) {
                             let grid = this,
                                 $cell = grid.getCell(ui);
@@ -204,7 +215,7 @@
             {
                 title: '외주지정', align: 'center', colModel: [
                     {
-                        title: '품', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_CNT',
+                        title: '품', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_CNT',
                         style: {'text-decoration': 'underline', 'cursor': 'pointer'},
                         postRender: function (ui) {
                             let grid = this,
@@ -222,8 +233,18 @@
                         }
                     },
                     {
-                        title: 'EA', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_QTY',
+                        title: 'EA', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_QTY',
                         style: {'background': '#D6DCE4', 'text-decoration': 'underline', 'cursor': 'pointer'},
+                        render: function (ui) {
+                            const rowData = ui.rowData;
+
+                            switch (rowData.CAL_DT_NM) {
+                                case '합계':
+                                    return {style: {'background': 'yellow'}};
+                                case '총계':
+                                    return {style: {'background': '#FFE699'}};
+                            }
+                        },
                         postRender: function (ui) {
                             let grid = this,
                                 $cell = grid.getCell(ui);
@@ -244,7 +265,7 @@
             {
                 title: '가공완료', align: 'center', colModel: [
                     {
-                        title: '품', dataType: 'integer', format: '#,###', dataIndx: 'INNER_WORK_FINISH_CNT',
+                        title: '품', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'INNER_WORK_FINISH_CNT',
                         style: {'text-decoration': 'underline', 'cursor': 'pointer'},
                         postRender: function (ui) {
                             let grid = this,
@@ -262,8 +283,18 @@
                         }
                     },
                     {
-                        title: 'EA', dataType: 'integer', format: '#,###', dataIndx: 'INNER_WORK_FINISH_QTY',
+                        title: 'EA', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'INNER_WORK_FINISH_QTY',
                         style: {'background': '#D6DCE4', 'text-decoration': 'underline', 'cursor': 'pointer'},
+                        render: function (ui) {
+                            const rowData = ui.rowData;
+
+                            switch (rowData.CAL_DT_NM) {
+                                case '합계':
+                                    return {style: {'background': 'yellow'}};
+                                case '총계':
+                                    return {style: {'background': '#FFE699'}};
+                            }
+                        },
                         postRender: function (ui) {
                             let grid = this,
                                 $cell = grid.getCell(ui);
@@ -284,7 +315,7 @@
            {
                 title: '출고완료', align: 'center', colModel: [
                     {
-                        title: '품', dataType: 'integer', format: '#,###', dataIndx: 'OUT_FINISH_CNT',
+                        title: '품', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'OUT_FINISH_CNT',
                         style: {'text-decoration': 'underline', 'cursor': 'pointer'},
                         postRender: function (ui) {
                             let grid = this,
@@ -302,8 +333,18 @@
                         }
                     },
                     {
-                        title: 'EA', dataType: 'integer', format: '#,###', dataIndx: 'OUT_FINISH_QTY',
+                        title: 'EA', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'OUT_FINISH_QTY',
                         style: {'background': '#D6DCE4', 'text-decoration': 'underline', 'cursor': 'pointer'},
+                        render: function (ui) {
+                            const rowData = ui.rowData;
+
+                            switch (rowData.CAL_DT_NM) {
+                                case '합계':
+                                    return {style: {'background': 'yellow'}};
+                                case '총계':
+                                    return {style: {'background': '#FFE699'}};
+                            }
+                        },
                         postRender: function (ui) {
                             let grid = this,
                                 $cell = grid.getCell(ui);
@@ -324,7 +365,7 @@
             {
                 title: '지연현황', align: 'center', colModel: [
                     {
-                        title: '품', dataType: 'integer', format: '#,###', dataIndx: 'LATE_CNT',
+                        title: '품', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'LATE_CNT',
                         style: {'text-decoration': 'underline', 'cursor': 'pointer'},
                         postRender: function (ui) {
                             let grid = this,
@@ -342,8 +383,18 @@
                         }
                     },
                     {
-                        title: 'EA', dataType: 'integer', format: '#,###', dataIndx: 'LATE_QTY',
+                        title: 'EA', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'LATE_QTY',
                         style: {'background': '#D6DCE4', 'text-decoration': 'underline', 'cursor': 'pointer'},
+                        render: function (ui) {
+                            const rowData = ui.rowData;
+
+                            switch (rowData.CAL_DT_NM) {
+                                case '합계':
+                                    return {style: {'background': 'yellow'}};
+                                case '총계':
+                                    return {style: {'background': '#FFE699'}};
+                            }
+                        },
                         postRender: function (ui) {
                             let grid = this,
                                 $cell = grid.getCell(ui);
@@ -361,21 +412,105 @@
                     }
                 ]
             },
-            {title: '지연율', dataIndx: 'LATE_RATIO', style: {'background': '#FFD966'}},
-            {title: '외주율<br>(수량)', dataIndx: 'OUTSIDE_RATIO', style: {'background': '#FFD966'}},
-            {title: '매출<br>예상금액', dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT'},
-            {title: '목표금액', dataType: 'integer', format: '#,###', dataIndx: 'DT_GOAL_AMT'},
-            {title: '달성율', dataIndx: 'GOAL_RATIO', style: {'background': '#D9E1F2'}},
+            {
+                title: '지연율', minWidth: 50, maxWidth: 50, dataIndx: 'LATE_RATIO', style: {'background': '#FFD966'},
+                render: function (ui) {
+                    const rowData = ui.rowData;
+
+                    switch (rowData.CAL_DT_NM) {
+                        case '합계':
+                            return {style: {'background': 'yellow'}};
+                        case '총계':
+                            return {style: {'background': '#FFE699'}};
+                    }
+                }
+            },
+            {
+                title: '외주율<br>(수량)', minWidth: 50, maxWidth: 50, dataIndx: 'OUTSIDE_RATIO', style: {'background': '#FFD966'},
+                render: function (ui) {
+                    const rowData = ui.rowData;
+
+                    switch (rowData.CAL_DT_NM) {
+                        case '합계':
+                            return {style: {'background': 'yellow'}};
+                        case '총계':
+                            return {style: {'background': '#FFE699'}};
+                    }
+                }
+            },
+            {title: '매출<br>예상금액', minWidth: 100, maxWidth: 100,dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT'},
+            {title: '목표금액', minWidth: 100, maxWidth: 100, dataType: 'integer', format: '#,###', dataIndx: 'DT_GOAL_AMT'},
+            {
+                title: '달성율', minWidth: 50, maxWidth: 50, dataIndx: 'GOAL_RATIO', style: {'background': '#D9E1F2'},
+                render: function (ui) {
+                    const rowData = ui.rowData;
+
+                    switch (rowData.CAL_DT_NM) {
+                        case '합계':
+                            return {style: {'background': 'yellow'}};
+                        case '총계':
+                            return {style: {'background': '#FFE699'}};
+                    }
+                },
+            },
             {
                 title: '부적합', align: 'center', colModel: [
-                    {title: '품', dataType: 'integer', format: '#,###', dataIndx: 'ERROR_CNT', style: {'background': '#FFF2CC'}},
-                    {title: 'EA', dataType: 'integer', format: '#,###', dataIndx: 'ERROR_QTY', style: {'background': '#D6DCE4'}}
+                    {
+                        title: '품', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ERROR_CNT', style: {'background': '#FFF2CC'},
+                        render: function (ui) {
+                            const rowData = ui.rowData;
+
+                            switch (rowData.CAL_DT_NM) {
+                                case '합계':
+                                    return {style: {'background': 'yellow'}};
+                                case '총계':
+                                    return {style: {'background': '#FFE699'}};
+                            }
+                        }
+                    },
+                    {
+                        title: 'EA', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ERROR_QTY', style: {'background': '#D6DCE4'},
+                        render: function (ui) {
+                            const rowData = ui.rowData;
+
+                            switch (rowData.CAL_DT_NM) {
+                                case '합계':
+                                    return {style: {'background': 'yellow'}};
+                                case '총계':
+                                    return {style: {'background': '#FFE699'}};
+                            }
+                        }
+                    }
                 ]
             },
             {
                 title: '반품건수', align: 'center', colModel: [
-                    {title: '품', dataType: 'integer', format: '#,###', dataIndx: 'RETURN_CNT', style: {'background': '#FFF2CC'}},
-                    {title: 'EA', dataType: 'integer', format: '#,###', dataIndx: 'RETURN_QTY', style: {'background': '#D6DCE4'}}
+                    {
+                        title: '품', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'RETURN_CNT', style: {'background': '#FFF2CC'},
+                        render: function (ui) {
+                            const rowData = ui.rowData;
+
+                            switch (rowData.CAL_DT_NM) {
+                                case '합계':
+                                    return {style: {'background': 'yellow'}};
+                                case '총계':
+                                    return {style: {'background': '#FFE699'}};
+                            }
+                        }
+                    },
+                    {
+                        title: 'EA', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'RETURN_QTY', style: {'background': '#D6DCE4'},
+                        render: function (ui) {
+                            const rowData = ui.rowData;
+
+                            switch (rowData.CAL_DT_NM) {
+                                case '합계':
+                                    return {style: {'background': 'yellow'}};
+                                case '총계':
+                                    return {style: {'background': '#FFE699'}};
+                            }
+                        }
+                    }
                 ]
             },
             {
@@ -527,7 +662,9 @@
         $('#MONTHLY_DETAIL_STATUS_SEARCH_FORM').on('change', function () {
             $('#PROCESS_TARGET_BEFORE_FORM > #COMP_CD').val($('#MONTHLY_DETAIL_STATUS_SEARCH_FORM').find('#COMP_CD').val());
             $('#PROCESS_TARGET_BEFORE_FORM > #ORDER_COMP_CD').val($('#MONTHLY_DETAIL_STATUS_SEARCH_FORM').find('#ORDER_COMP_CD').val());
+        });
 
+        $('#MONTHLY_DETAIL_STATUS_SEARCH').on('click', function () {
             $monthlyDetailStatusGrid.pqGrid('option', 'dataModel.postData', function () {
                 return fnFormToJsonArrayData('#MONTHLY_DETAIL_STATUS_SEARCH_FORM');
             });

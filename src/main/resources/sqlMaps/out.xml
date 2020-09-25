@@ -52,7 +52,7 @@
                 AND B.OUTSIDE_IN_DT IS NOT NULL
             </if>
             <if test="EXCLUDE_REQUEST_COMPLETED != null and EXCLUDE_REQUEST_COMPLETED != ''">
-                AND B.OUTSIDE_STATUS NOT IN ('OST001', 'OST003')
+                AND (B.OUTSIDE_STATUS NOT IN ('OST001', 'OST003') OR B.OUTSIDE_STATUS IS  NULL)
             </if>
             LEFT OUTER JOIN TBL_OUTSIDE_REQUEST_DETAIL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
                                                             AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
@@ -556,7 +556,6 @@
                                                            </if>
                 WHERE 1 = 1
                     AND A.DEL_YN = 'N'
-
         ) X
         GROUP BY
             X.COMP_CD, X.OUTSIDE_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER
@@ -1020,5 +1019,36 @@
             AND CONTROL_SEQ = #{CONTROL_SEQ}
             AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </update>
+
+    <select id="selectOutsideDetailList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            <include refid="orderMapper.control"/>,
+            <include refid="orderMapper.controlPart"/>,
+            DATE_FORMAT(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m'), '%Y.%m') AS OUTSIDE_CLOSE_MONTH, <!-- 마감 월 -->
+            D.CLOSE_VER AS OUTSIDE_CLOSE_VER,
+            SF_GET_COMP_NM(E.COMP_CD) AS OUTSIDE_CLOSE_COMP_NM, <!-- 매입 사업자 -->
+            SF_GET_DATE_F(B.OUTSIDE_IN_DT, '', 'M') AS OUTSIDE_IN_DT2,
+            B.OUTSIDE_UNIT_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS OUTSIDE_TOTAL_AMT,
+            (SELECT SF_GET_DATE_F(INSERT_DT, 'YY', 'M')
+            FROM TBL_OUTSIDE_REQUEST_DETAIL
+            WHERE 1 = 1
+                AND CONTROL_SEQ = B.CONTROL_SEQ AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                AND DEL_YN = 'N'
+            ORDER BY INSERT_DT DESC
+            LIMIT 1) AS OUTSIDE_REQUEST_DT
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ AND B.OUTSIDE_YN = 'Y'
+            INNER JOIN TBL_OUTSIDE_CLOSE D ON D.CONTROL_SEQ = B.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                AND D.CLOSE_MONTH = #{CLOSE_MONTH}
+                AND D.CLOSE_VER = #{CLOSE_VER}
+            INNER JOIN TBL_OUTSIDE_CLOSE_NOTE E ON E.COMP_CD = A.COMP_CD
+                                                   AND E.OUTSIDE_COMP_CD = B.OUTSIDE_COMP_CD
+                                                   AND E.CLOSE_MONTH = D.CLOSE_MONTH
+                                                   AND E.CLOSE_VER = D.CLOSE_VER
+                                                   AND E.COMP_CD = #{COMP_CD}
+                                                   AND E.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
+        WHERE 1 = 1
+            AND A.DEL_YN = 'N'
+    </select>
 
 </mapper>

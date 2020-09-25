@@ -248,23 +248,6 @@
             AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </update>
 
-    <update id="updateControlPartSizeTxt" parameterType="java.util.HashMap">
-        UPDATE TBL_CONTROL_PART
-        SET
-            SIZE_TXT = #{SIZE_TXT},
-            SIZE_TYPE = SF_GET_SIZE_TXT('SIZE_TYPE', #{SIZE_TXT}),
-            SIZE_W = SF_GET_SIZE_TXT('SIZE_W', #{SIZE_TXT}),
-            SIZE_H = SF_GET_SIZE_TXT('SIZE_H', #{SIZE_TXT}),
-            SIZE_T = SF_GET_SIZE_TXT('SIZE_T', #{SIZE_TXT}),
-            SIZE_D = SF_GET_SIZE_TXT('SIZE_D', #{SIZE_TXT}),
-            SIZE_L = SF_GET_SIZE_TXT('SIZE_L', #{SIZE_TXT}),
-            UPDATE_DT = NOW(),
-            UPDATE_ID = #{LOGIN_USER_ID}
-        WHERE 1 = 1
-            AND CONTROL_SEQ = #{CONTROL_SEQ}
-            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-    </update>
-
     <select id="selectMonthlyDetailStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT ROW_NUMBER () OVER (ORDER BY Z.WEEK_SEQ IS NULL ASC, Z.WEEK_SEQ, Z.DT IS NULL ASC, Z.DT) AS ROW_NUM
             , #{COMP_CD} AS COMP_CD         <!-- 인자값을 위한 조건변수 -->
@@ -571,7 +554,7 @@
             ) Z
     </select>
 
-    <select id="selectWorkTimeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    <select id="selectWorkingWeekTimeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT ROW_NUMBER () OVER() AS ROW_NUM
             , WORK_FACTORY
             , SF_GET_CODE_NM('1014', WORK_FACTORY, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM
@@ -586,6 +569,17 @@
         GROUP BY WORK_FACTORY
         ORDER BY WORK_FACTORY
     </select>
+
+    <update id="updateWorkingWeekTime" parameterType="java.util.HashMap">
+        UPDATE TBL_WORKING_WEEK_TIME
+        SET
+            WORKING_TIME = #{WORKING_TIME},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE 1 = 1
+            AND WORK_FACTORY = #{WORK_FACTORY}
+            AND WEEK_DAY = #{WEEK_DAY}
+    </update>
 
     <select id="selectGetDate" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         <!-- 최초 -->
@@ -895,4 +889,5 @@
         GROUP BY M.COMP_CD, M.COMP_NM, N.SUB_TYPE
         ORDER BY M.COMP_CD, N.SUB_TYPE
     </select>
+
 </mapper>

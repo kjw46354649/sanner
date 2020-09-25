@@ -166,17 +166,17 @@
                     if (ui.rowData.pq_grandsummary) {
                         return ui.cellData;
                     } else {
-                        return ('<button name="SALES_STATUS_CONTROL_DETAIL_VIEW"><u>' + ui.cellData + '</u></button>');
+                        return ('<button name="SALES_STATUS_OUTSIDE_DETAIL_VIEW"><u>' + ui.cellData + '</u></button>');
                     }
                 },
-                // postRender: function (ui) {
-                //     let grid = this,
-                //         $cell = grid.getCell(ui);
-                //     $cell.find('[name=SALES_STATUS_CONTROL_DETAIL_VIEW]').bind('click', function () {
-                //         let rowData = ui.rowData;
-                //         openNewWindowControlDetail(rowData);
-                //     });
-                // }
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('[name=SALES_STATUS_OUTSIDE_DETAIL_VIEW]').bind('click', function () {
+                        let rowData = ui.rowData;
+                        openNewWindowControlDetail(rowData);
+                    });
+                }
             },
             {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_PART_QTY'},
             {title: '원 발주<br>금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORIGINAL_ORDER_AMT', summary: {type: 'sum', edit: true}},
@@ -319,7 +319,7 @@
 
         /* funciton */
         const openNewWindowControlDetail = function (rowData) {
-            let url = '/controlDetail';
+            let url = '/outsideDetail';
             // 팝업 사이즈
             let nWidth = 1400;
             let nHeight = 770;
