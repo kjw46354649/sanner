@@ -1325,7 +1325,7 @@
             {
                 title: '', maxWidth: 50, dataType: 'integer', dataIndx: 'STATUS',
                 render: function (ui) {
-                    const cellData = ui.cellData;
+                    let cellData = ui.cellData;
                     let text = '';
 
                     switch (cellData) {
@@ -1646,15 +1646,15 @@
                 let outsideRequestProcessYnChecked = list[i].OUTSIDE_REQUEST_PROCESS_YN === 'Y' ? '○' : '';
                 let outsideRequestGrindYnChecked = list[i].OUTSIDE_REQUEST_GRIND_YN === 'Y' ? '○' : '';
                 let outsideRequestSurfaceYnChecked = list[i].OUTSIDE_REQUEST_SURFACE_YN === 'Y' ? '○' : '';
-                const sideQtyYnChecked = ''; // 대칭가공
+                let sideQtyYnChecked = ''; // 대칭가공
                 let requestEtc = list[i].OUTSIDE_REQUEST_ETC || '';
                 // let outsideNote = list[i].OUTSIDE_NOTE || '';
                 let sideQtyText = '';
 
                 if (list[i].ORIGINAL_SIDE_QTY || list[i].OTHER_SIDE_QTY) {
                     sideQtyYnChecked = '○';
-                    const originalSideQty = list[i].ORIGINAL_SIDE_QTY || 0;
-                    const otherSideQty = list[i].OTHER_SIDE_QTY || 0;
+                    let originalSideQty = list[i].ORIGINAL_SIDE_QTY || 0;
+                    let otherSideQty = list[i].OTHER_SIDE_QTY || 0;
                     sideQtyText = '(원' + originalSideQty + ', 대' + otherSideQty + ')';
                 }
 
