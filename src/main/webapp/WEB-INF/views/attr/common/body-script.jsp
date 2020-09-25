@@ -968,10 +968,8 @@
                         let text = '조회대상이 없습니다.';
 
                         fnAlert(null, text, function () {
-                            e.stopPropagation();
                             callback.add(callFunction);
                             callback.fire(true, callFunctionParam);
-                            return;
                         });
                     }
                 } else {
