@@ -1000,14 +1000,10 @@
                         callback.add(callFunction);
                         callback.fire(true, callFunctionParam);
                         //callback(true);
-                        return;
                     } else {
                         let text = '조회대상이 없습니다.';
 
-                        fnAlert(null, text, function () {
-                            callback.add(callFunction);
-                            callback.fire(true, callFunctionParam);
-                        });
+                        fnAlert(null, text);
                     }
                 } else {
                     // alert('fail=[' + json.msg + ']');
