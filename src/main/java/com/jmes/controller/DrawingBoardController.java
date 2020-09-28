@@ -62,6 +62,55 @@ public class DrawingBoardController {
         return "jsonView";
     }
 
+    /**
+     * Drawing barcode Info
+     */
+    @RequestMapping(value = "/drawing/barcode",  method= RequestMethod.POST)
+    public String drawingBarcodeInfo(Model model, HttpServletRequest request, HttpSession session) throws Exception {
+
+        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+
+        Map<String, Object> controlPartInfo = innodaleService.getInfo(hashMap);
+
+        if(controlPartInfo == null){
+            model.addAttribute("returnCode", "RET99");
+            model.addAttribute("message", "사무실에 확인 바랍니다. (Contact Admin Please)"); // 정보가 없는 경우
+        }else{
+
+            /** 추가 되어야 할 데이터 **/
+            String chkPop = (String) controlPartInfo.get("CHE_POP");      // pop 선작업이 필요한 경우
+            String chkPro002 = (String) controlPartInfo.get("CHE_PRO002");   // NULL 이 아닌경우 가공 확정 이후 DRAWING 작업 가능
+            String chkVer = (String) controlPartInfo.get("CHE_VER");      // 최선 바코드 정보와 스캔 바코드의 DRAWING_NUM 가 다른경우
+            String chkDelYn = (String) controlPartInfo.get("CHE_DEL_YN");   // 주문 정보가 삭제된 경우
+            String chkCancelYn = (String) controlPartInfo.get("CHE_CANCEL_YN");// 주문 취소가 된 경우
+
+            String controlInfo = (String) controlPartInfo.get("CONTROL_INFO"); // 일자
+
+            if("X".equals(chkDelYn)){
+                model.addAttribute("returnCode", "RET99");
+                model.addAttribute("message", controlInfo.replaceAll("DEL_", "") + " 삭제된 주문입니다. (Order Deleted.)"); // 삭제 처리 주문
+            }else if("X".equals(chkCancelYn)){
+                model.addAttribute("returnCode", "RET99");
+                model.addAttribute("message", controlInfo + " 취소 주문입니다. (Order Canceled.)"); // 주문 취소 상태
+            }else if("X".equals(chkVer)){
+                model.addAttribute("returnCode", "RET99");
+                model.addAttribute("message", controlInfo + " Error, Check the Drawing Please."); // 도면 번호가 다른 경우 처리
+            }else if("X".equals(chkPro002)){
+                model.addAttribute("returnCode", "RET98");
+                model.addAttribute("message", controlInfo + " 가공 미확정 상태, 사무실에 확인 바랍니다. (Contact Admin Please)"); // 외주 가공 이외의 경우는 가공 확정 상태가 없는 경우 처리
+            }else if("X".equals(chkPop)) {
+                model.addAttribute("returnCode", "RET99");
+                model.addAttribute("message", controlInfo + " POP를 먼저 찍어 주세요. (Scan POP First)"); // 현재와 같은 Location 스캔 처리
+            }else {
+
+                model.addAttribute("info", controlPartInfo);
+                model.addAttribute("returnCode", "RET00");
+            }
+        }
+
+        return "jsonView";
+    }
+
     @RequestMapping(value="/drawing/{equipNm}")
     public String drawingTargetEquip(@PathVariable("equipNm") String equipNm, Model model) throws Exception {
         logger.info("pop page submit");
