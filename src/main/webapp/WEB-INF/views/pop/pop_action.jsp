@@ -241,8 +241,11 @@
                         // $(this).stopWaitMe();
                         var returnCode = data.returnCode;
                         if (textStatus === 'success') {
-                            if(returnCode == "RET00"){
+                            if(returnCode == "RET00") {
                                 message = data.controlInfo + '\n' + data.locationInfo;
+                                showSuccessMessage(message);
+                            }else if(returnCode == "RET01"){
+                                message = data.message;
                                 showSuccessMessage(message);
                             }else{
                                 message = data.message;
@@ -329,7 +332,7 @@
             /** 30초마다 그리드 재조회 **/
             setInterval(function() {
                 refreshData();
-            }, 1000 * 10);
+            }, 1000 * 30);
 
             $("#popBarcode").focus();
 

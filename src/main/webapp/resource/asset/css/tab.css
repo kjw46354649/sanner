@@ -49,7 +49,8 @@
 .logStatus button{background: url(../images/work/bg_onoff.png) no-repeat 0 0; width: 160px; height: 47px; line-height: 47px; font-size: 24px; color: #fff; font-weight:bold; margin: 35px 0 28px;}
 .logInWrap .langBtn{padding-top:0;}
 .rightWorkWrap{width: 690px; float: right; padding: 37px 30px 30px 0;}
-.workInWrap{background-color: #fff; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; padding: 24px 0 19px 0;}
+.rightDbWorkWrap{width: 690px; float: right; padding: 37px 30px 0px 0;}
+.workInWrap{background-color: #fff; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; padding: 24px 0 14px 0;}
 .contsTitWrap,.topConts,.middleConts{padding: 0 29px; overflow: hidden;}
 .contsTit{font-size: 24px; color: #000; position: relative; padding-left: 35px; float: left;font-weight: bold;}
 .contsTit:before{content: ''; position: absolute; top: 0; left: 0; width: 25px; height: 25px; background: url(../images/common/chk.png) no-repeat 0 0;background-size: 100% auto;}
@@ -70,15 +71,20 @@
 .time{font-size: 24px; color: #2d2d2d;margin-left: 15px;}
 .middleConts>div~div{margin-top:2px;}
 .tbl,.share,.qual{padding: 2px; text-align: center; color: #000; overflow: hidden; border: 1px solid #c2c2c2; border-radius: 5px; background: linear-gradient(to bottom, #fff, #f4f4f4);}
-.tbl table th{background: url(../images/work/bg_th.png) no-repeat 0 0; height: 44px; line-height: 44px; font-size: 20px; color: #000;font-weight: bold;}
-.tbl table th:nth-child(2),.tbl table th:nth-child(3){background: url(../images/work/bg_th_2.png) no-repeat 0 0;}
-.tbl table th:last-child{background: url(../images/work/bg_th_3.png) no-repeat 0 0;}
+/*.tbl table th{background: url(../images/work/bg_th.png) no-repeat 0 0; height: 44px; line-height: 44px; font-size: 20px; color: #000;font-weight: bold;}*/
+/*.tbl table th:nth-child(2),.tbl table th:nth-child(3){background: url(../images/work/bg_th_2.png) no-repeat 0 0;}*/
+/*.tbl table th:last-child{background: url(../images/work/bg_th_3.png) no-repeat 0 0;}*/
+
+.tbl table th{background-color: #c6c4c4; height: 44px; line-height: 44px; font-size: 20px; color: #000;font-weight: bold;}
+.tbl table th:nth-child(2),.tbl table th:nth-child(3){background-color: #c6c4c4;}
+.tbl table th:last-child{background-color: #c6c4c4;}
+
 .tbl table th~th,.tbl table td~td{border-left: 1px solid #9b9b9b;}
 .tbl table td div{background: url(../images/work/bg_td.png) no-repeat 0 0; background-size: 100% 100% !important; height: 44px; line-height: 44px; margin: 8px 8px 6px; font-size: 21px; font-weight: bold;}
 .tbl table td:first-child div{margin: 8px 8px 6px 6px;}
 .tbl table td:last-child div{margin: 8px 6px 8px 8px;}
-.tbl table td:nth-child(1) div{width: 271px;}
-.tbl table td:nth-child(2) div{width: 71px; background: url(../images/work/bg_td_2.png) no-repeat 0 0; }
+.tbl table td:nth-child(1) div{width: 367px;}
+.tbl table td:nth-child(2) div{width: 90px; background: url(../images/work/bg_td_2.png) no-repeat 0 0; }
 .tbl table td:nth-child(3) div,.tbl table td:nth-child(4) div{width: 91px; background: url(../images/work/bg_td_3.png) no-repeat 0 0; }
 .share div, .qual div{float: left; font-size: 20px;}
 .shareTit,.qualTit{font-weight: bold; background: url(../images/work/bg_st_2.png) no-repeat 0 0; width: 70px; height: 104px; line-height: 104px; background-size: 100% 100%;}
@@ -89,11 +95,12 @@
 .qualConts span.txtR{background: url(../images/work/bg_st_4_2.png) no-repeat 0 0; width: 113px; color: #b50000; font-weight: bold;}
 .qualConts span:nth-child(3){background: url(../images/work/bg_st_4_3.png) no-repeat 0 0; width: 313px; text-align: left; }
 .qualConts span~span{margin-left: 6px;}
-.alertConts{padding: 19px 19px 0px 30px; font-size: 0;}
+/*.alertConts{padding: 19px 19px 0px 30px; font-size: 0;}*/
+.alertConts{padding: 7px 19px 0px 30px; font-size: 0;}
 .alertBox{display: inline-block; width: 107px; height: 35px; line-height: 35px; font-size: 14px; font-weight: bold; color: #756363; background-color: #fef2fd; border: 1px solid #ee2e52; box-shadow: 0 0 3px 2px rgba(238,46,82,0.2);  position: relative; padding-left: 37px; border-radius: 5px;}
 .alertBox:before{content: ''; position: absolute; top: 4px; left: 7px; width: 24px; height: 22px; background: url(../images/work/alert.png) no-repeat 0 0;}
 .alertBox~.alertBox{margin-left: 13px;}
-.alertBox:nth-child(2){width: 77px;}
+/*.alertBox:nth-child(2){width: 77px;}*/
 
 .close {
     float: right;

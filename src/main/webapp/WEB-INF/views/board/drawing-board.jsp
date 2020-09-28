@@ -40,7 +40,7 @@
         }
         .dhx_message {
             width: 100%;
-            background-color: #0469fd !important;
+            background-color: #fd0005 !important;
         }
         .dhx_message-container--top-right {
             top: 300px;
@@ -301,7 +301,7 @@
                 </div>
             </form>
         </div>
-        <div class="rightWorkWrap">
+        <div class="rightDbWorkWrap">
             <div class="workInWrap">
                 <c:if test="${empty drawingInfo.currentWork}">
                     <input type="hidden" name="curStatus" id="curStatus" value="stop">
@@ -315,9 +315,9 @@
                     <div class="contsTitWrap" id="workMainProgressConts" style="">
                         <div class="contsTit"><srping:message key='drawing.board.label.13'/></div>
                         <div class="right_sort">
-                            <button type="button" id="workCancelBtn" class="gradeMidBtn red"><srping:message key='drawing.board.button.06'/></button>
-                            <button type="button" id="workPuaseBtn" class="gradeMidBtn green"><srping:message key='drawing.board.button.07'/></button>
-                            <button type="button" id="workCompletelBtn" class="gradeMidBtn purple"><srping:message key='drawing.board.button.08'/></button>
+                            <button type="button" id="workCancelBtn" class="graDbBtn red"><srping:message key='drawing.board.button.06'/></button>&nbsp;
+                            <button type="button" id="workPuaseBtn" class="graDbBtn yellow"><srping:message key='drawing.board.button.07'/></button>&nbsp;
+                            <button type="button" id="workCompletelBtn" class="graDbBtn purple"><srping:message key='drawing.board.button.08'/></button>
                         </div>
     <%--                    <div class="endBox"><a href="#">종료하기</a></div>--%>
     <%--                    <div class="stopBox"><a href="#">일시</br>정지</a></div>--%>
@@ -354,15 +354,14 @@
                             <table>
                                 <caption>관리번호, Part, 수량, 납기로 구분된 테이블</caption>
                                 <colgroup>
-                                    <col width="288px">
-                                    <col width="91px">
-                                    <col width="111px">
+                                    <col width="383px">
+                                    <col width="107px">
+<%--                                    <col width="111px">--%>
                                     <col width="107px">
                                 </colgroup>
                                 <thead>
                                 <tr>
                                     <th><srping:message key='drawing.board.label.03'/></th>
-                                    <th><srping:message key='drawing.board.label.04'/></th>
                                     <th><srping:message key='drawing.board.label.05'/></th>
                                     <th><srping:message key='drawing.board.label.06'/></th>
                                 </tr>
@@ -370,8 +369,8 @@
                                 <tbody>
                                 <tr>
                                     <td><div><c:if test="${not empty workInfo}">${workInfo.CONTROL_NUM}</c:if></div></td>
-                                    <td><div><c:if test="${not empty workInfo}">${workInfo.PART_NUM}</c:if></div></td>
-                                    <td><div><c:if test="${not empty workInfo}">${workInfo.ORDER_QTY}</c:if></div></td>
+<%--                                    <td><div><c:if test="${not empty workInfo}">${workInfo.PART_NUM}</c:if></div></td>--%>
+                                    <td><div><c:if test="${not empty workInfo}">${workInfo.ORDER_QTY_INFO}</c:if></div></td>
                                     <td><div><c:if test="${not empty workInfo}">${workInfo.INNER_DUE_DT}</c:if></div></td>
                                 </tr>
                                 </tbody>
@@ -394,6 +393,9 @@
                         </c:if>
                         <c:if test="${not empty workInfo && workInfo.EMERGENCY_YN eq 'Y'}">
                             <span class="alertBox"><srping:message key='drawing.board.label.10'/></span>
+                        </c:if>
+                        <c:if test="${not empty workInfo && workInfo.SIDE_YN eq 'Y'}">
+                            <span class="alertBox"><srping:message key='drawing.board.label.18'/></span>
                         </c:if>
                     </div>
                 </div>
@@ -441,33 +443,28 @@
                                     신규 바코드 경우 현재 작업중인 내용 종료 처리 하고 자동으로 신규 작업 시작 처리 **/
         onScan.attachTo(document, {
             onScan: function(barcodeNum, iQty) {
-                if(fnBarcodePrintCheck(barcodeNum)){
-                    let curStatus = $("#curStatus").val();
-                    if(curStatus == "stop"){
-                        let parameters = {
-                            'url': '/drawing-json-info',
-                            'data': { 'queryId': 'drawingMapper.selectDrawingBarcodeScanInfo', 'BARCODE_NUM': barcodeNum}
-                        };
-                        fnPostAjax(function (data, callFunctionParam) {
-                            if(data.info != null){
-                                // if(!checkDoubleWorkControl(data.info.CONTROL_SEQ, data.info.CONTROL_DETAIL_SEQ)){
-                                //     return false;
-                                // }
-                                startWork(data.info);
-                            }else{
-                               showMessage("<srping:message key='drawing.board.alert.01'/>");
-                               return false;
-                            }
-                        }, parameters, '');
-                    }else if(curStatus == "work" && barcodeNum == $("#BARCODE_NUM").val()){
-                        $("#workCompletelBtn").trigger('click');
-                    }else {
-                        $("#singleComplete").hide();
-                        $("#continueComplete").show();
-                        $("#drawing_action_form").find("#RE_BARCODE_NUM").val(barcodeNum);
-                        $("#workCompletelBtn").trigger('click');
+                let parameters = {
+                    'url': '/drawing/barcode',
+                    'data': { 'queryId': 'drawingMapper.selectDrawingBarcodeScanInfo', 'BARCODE_NUM': barcodeNum}
+                };
+                fnPostAjax(function (data, callFunctionParam) {
+                    let returnCode = data.returnCode;
+                    if(returnCode == "RET00") {
+                        if(curStatus == "stop"){
+                            startWork(data.info);
+                        }else if(curStatus == "work" && barcodeNum == $("#BARCODE_NUM").val()){
+                            $("#workCompletelBtn").trigger('click');
+                        }else {
+                            $("#singleComplete").hide();
+                            $("#continueComplete").show();
+                            $("#drawing_action_form").find("#RE_BARCODE_NUM").val(barcodeNum);
+                            $("#workCompletelBtn").trigger('click');
+                        }
+                    }else{
+                        showMessage(data.message);
+                        return false;
                     }
-                }
+                }, parameters, '');
             }
         });
 
@@ -886,43 +883,6 @@
                text: message, icon: "dxi-close", "expire": 2000, "position": "top-right", type:"myCss"
             });
         }
-
-        let fnBarcodePrintCheck = function(barcodeNumber){
-            //메세지
-            let returnVal = false;
-            let barcodeType = barcodeNumber.charAt(0).toUpperCase();
-            if(barcodeType == "L") {//라벨
-                showMessage("<srping:message key='drawing.board.alert.02'/>");
-                return returnVal;
-            }
-            $.ajax({
-                type: 'POST', url: '/drawing-json-info', dataType: 'json', async: false,
-                data: { 'queryId': 'common.selectBarcodePrintControlCheck', 'BARCODE_NUM': barcodeNumber},
-                success: function (data, textStatus, jqXHR) {
-                    if (textStatus === 'success') {
-                        if(data.info){
-                            let partStatus = data.info.PART_STATUS;
-                            if(partStatus == "" || partStatus == "PRO001" || partStatus == "PRO003" || partStatus == "PRO004" || partStatus == "PRO012" || partStatus == "PRO014") {
-                                showMessage("<srping:message key='drawing.board.alert.07'/>");
-                            } else if(data.info.USE_YN == 'Y') {
-                                returnVal = true;
-                            } else {
-                                showMessage("<srping:message key='drawing.board.alert.01'/>");
-                            }
-                        }else{
-                            showMessage("<srping:message key='drawing.board.alert.01'/>");
-                        }
-                    } else {
-                        showMessage("<srping:message key='error.common'/>");
-                    }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    showMessage("<srping:message key='error.common'/>");
-                    return false;
-                }
-            });
-            return returnVal;
-        };
 
         /** 공통 처리 스크립트
          * @description Ajax Post

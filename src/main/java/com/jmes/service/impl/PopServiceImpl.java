@@ -85,19 +85,10 @@ public class PopServiceImpl implements PopService {
         if(controlPartInfo == null){
             model.addAttribute("returnCode", "RET98");
             model.addAttribute("message", "도면에 문제가 있습니다. 도면 확인 바랍니다."); // 정보가 없는 경우
-        }else if(controlPartInfo.get("CONTROL_SEQ") == null){
-            model.addAttribute("returnCode", "RET98");
-            model.addAttribute("message", "도면에 문제가 있습니다. 도면 확인 바랍니다."); // 정보가 없는 경우
-        }else if("X".equals(controlPartInfo.get("CHE_OUT001"))){
-            model.addAttribute("returnCode", "RET98");
-            model.addAttribute("message", "외주 가공은 주문 확정 이후에 스캔 가능합니다."); // 외주 이면서 확정 상태가 아닌 경우
-        }else if("X".equals(controlPartInfo.get("CHE_PRO002"))){
-            model.addAttribute("returnCode", "RET98");
-            model.addAttribute("message", "가공 확정 이후에 스캔 가능합니다."); // 외주 가공 이외의 경우는 가공 확정 상태가 없는 경우 처리
-        }else {
+        }else{
 
             /** 추가 되어야 할 데이터 **/
-            String prevPopLocation = (String) controlPartInfo.get("POP_PREV_POSITION"); // 이전 pop 위치
+            String prevPopLocation = (String) controlPartInfo.get("POP_PREV_POSITION"); // 이전 pop 위치 이름
             String createPRO005 = (String) controlPartInfo.get("PRO005"); // 소재 입고 상태 처리
             String createPRO019 = (String) controlPartInfo.get("PRO019"); // 외주 가공 입고 상태 처리
             String createPRO009 = (String) controlPartInfo.get("PRO009"); // 가공완료 상태 처리
@@ -105,20 +96,38 @@ public class PopServiceImpl implements PopService {
             String createPRO015 = (String) controlPartInfo.get("PRO015"); // 표면처리 완료 상태 처리
             String createPRO018 = (String) controlPartInfo.get("PRO018"); // 모도면 상태 처리
             String innerWorkFinishDt = (String) controlPartInfo.get("INNER_WORK_FINISH_DT"); // 가공완료 일시 처리 여부
+            String context01 = (String) controlPartInfo.get("CONTEXT01"); // 일자
+            String context02 = (String) controlPartInfo.get("CONTEXT02"); // CONTROL_NUM INFO
+            String context03 = (String) controlPartInfo.get("CONTEXT03"); // 현재 pop 위치명
 
-            if (popLocation.equals(prevPopLocation)) {
+            if("X".equals(controlPartInfo.get("CHE_DEL_YN"))){
                 model.addAttribute("returnCode", "RET99");
-                model.addAttribute("message", "이미 등록된 도면 입니다. 확인 바랍니다."); // 현재와 같은 Location 스캔 처리
-            } else {
+                model.addAttribute("message", context02.replaceAll("DEL_", "") + " 삭제된 주문입니다. (Order Deleted.)"); // 삭제 처리 주문
+            }else if("X".equals(controlPartInfo.get("CHE_CANCEL_YN"))){
+                model.addAttribute("returnCode", "RET99");
+                model.addAttribute("message", context02 + " 취소 주문입니다. (Order Canceled.)"); // 주문 취소 상태
+            }else if("X".equals(controlPartInfo.get("CHE_VER"))){
+                model.addAttribute("returnCode", "RET99");
+                model.addAttribute("message", context02 + " Error, Check the Drawing Please."); // 도면 번호가 다른 경우 처리
+            }else if("X".equals(controlPartInfo.get("CHE_OUT001"))){
+                model.addAttribute("returnCode", "RET99");
+                model.addAttribute("message", context02 + " 가공 미확정 상태, 사무실에 확인 바랍니다. (Contact Admin Please)"); // 외주 이면서 확정 상태가 아닌 경우
+            }else if("X".equals(controlPartInfo.get("CHE_PRO002"))){
+                model.addAttribute("returnCode", "RET98");
+                model.addAttribute("message", context02 + " 가공 미확정 상태, 사무실에 확인 바랍니다. (Contact Admin Please)"); // 외주 가공 이외의 경우는 가공 확정 상태가 없는 경우 처리
+            }else if (popLocation.equals(prevPopLocation)) {
+                model.addAttribute("returnCode", "RET01");
+                model.addAttribute("message", context02 + " " + context03 + " Already Existed."); // 현재와 같은 Location 스캔 처리
+            }else {
 
                 NotificationMessage notificationMessage = new NotificationMessage();
 
                 notificationMessage.setType(MessageType.POP);
                 notificationMessage.setPopPosition(popLocation);
                 notificationMessage.setPrePopPosition(prevPopLocation);
-                notificationMessage.setContent01((String) controlPartInfo.get("CONTEXT01"));
-                notificationMessage.setContent02((String) controlPartInfo.get("CONTEXT02"));
-                notificationMessage.setContent03((String) controlPartInfo.get("CONTEXT03"));
+                notificationMessage.setContent01(context01);
+                notificationMessage.setContent02(context02);
+                notificationMessage.setContent03(context03);
 
                 // 모도면이 POP 바코드 스캔 되면 조립전환 상태를 추가 한다.
                 if (createPRO018 != null && !"".equals(createPRO018)) {
@@ -197,11 +206,11 @@ public class PopServiceImpl implements PopService {
 
                 // 검사실 스캔, 후가공 스캔, 표면 처리 스캔시 PART 상태도 변경 처리 한다.
                 if ("POP150".equals(popLocation) || "POP160".equals(popLocation)) {
-//                if ("POP100".equals(popLocation) || "POP150".equals(popLocation) || "POP160".equals(popLocation)) {
-//                    if ("POP100".equals(popLocation)) {
-//                        // 검사실 스캔시 작업 완료대기
-//                        controlPartInfo.put("PART_STATUS", "PRO009");
-//                    } else
+                    //                if ("POP100".equals(popLocation) || "POP150".equals(popLocation) || "POP160".equals(popLocation)) {
+                    //                    if ("POP100".equals(popLocation)) {
+                    //                        // 검사실 스캔시 작업 완료대기
+                    //                        controlPartInfo.put("PART_STATUS", "PRO009");
+                    //                    } else
                     if ("POP150".equals(popLocation)) {
                         // 후가공 스캔시 후가공 입고
                         controlPartInfo.put("PART_STATUS", "PRO012");
@@ -228,18 +237,17 @@ public class PopServiceImpl implements PopService {
                 innodaleDao.create(controlPartInfo);
 
 
-                hashMap.put("queryId", "popMapper.selectScanBarcodeInfo");
-                Map<String, Object> scanBarcodeInfo = innodaleDao.getInfo(hashMap);
-
-                String controlInfo = (String) scanBarcodeInfo.get("CONTROL_NUM_NM"); // 관리번호 정보
-                String locationInfo = (String) scanBarcodeInfo.get("CHECK_POSITION_NM");   // POP 정보
+//                hashMap.put("queryId", "popMapper.selectScanBarcodeInfo");
+//                Map<String, Object> scanBarcodeInfo = innodaleDao.getInfo(hashMap);
+//
+//                String controlInfo = (String) scanBarcodeInfo.get("CONTROL_NUM_NM"); // 관리번호 정보
+//                String locationInfo = (String) scanBarcodeInfo.get("CHECK_POSITION_NM");   // POP 정보
 
                 model.addAttribute("returnCode", "RET00");
-                model.addAttribute("controlInfo", controlInfo);
-                model.addAttribute("locationInfo", locationInfo);
+                model.addAttribute("controlInfo", context02);
+                model.addAttribute("locationInfo", context03);
 
                 simpMessagingTemplate.convertAndSend("/topic/pop", notificationMessage);
-
             }
         }
     }
