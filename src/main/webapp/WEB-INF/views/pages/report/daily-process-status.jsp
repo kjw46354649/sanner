@@ -216,7 +216,7 @@
                     case '합계':
                         return {style: {'background': 'yellow'}};
                     case '총계':
-                        return {style: {'background': '#FFE699'}};
+                        return {style: {'background': 'moccasin'}};
                 }
             }
         };
@@ -235,7 +235,7 @@
                 title: '', minWidth: 30, dataIndx: 'CONTROL_NUM_BUTTON',
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
-                        return '<span  class="doubleFilesIcon" name="detailView" style="cursor: pointer"></span>';
+                        return '<span  class="shareIcon" name="detailView" style="cursor: pointer"></span>';
                 },
                 postRender: function (ui) {
                     let grid = this,

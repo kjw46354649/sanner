@@ -421,7 +421,7 @@
             {title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON',
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
-                        return '<span  class="doubleFilesIcon" name="detailView" style="cursor: pointer"></span>';
+                        return '<span  class="shareIcon" name="detailView" style="cursor: pointer"></span>';
                 },
                 postRender: function (ui) {
                     let grid = this,
@@ -436,7 +436,7 @@
             {title: '파<br>트', minWidth: 30, dataIndx: 'PART_NUM'},
             {title: '', minWidth: 30, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
-                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" id="imageView" style="cursor: pointer"></span>'
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="fileSearchIcon" id="imageView" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
                     let grid = this,
@@ -839,7 +839,7 @@
             {title: 'OUTSIDE_REQUEST_SEQ', dataType: 'integer', dataIndx: 'OUTSIDE_REQUEST_SEQ', hidden: true},
             {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
-                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
                     return '';
                 },
                 postRender: function(ui) {
@@ -853,7 +853,7 @@
             {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM', editable: true},
             {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {
-                    if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
+                    if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
                     let grid = this,
@@ -1116,7 +1116,7 @@
             {title: 'OUTSIDE_REQUEST_SEQ', dataType: 'integer', dataIndx: 'OUTSIDE_REQUEST_SEQ', hidden: true},
             {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
-                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
                     return '';
                 },
                 postRender: function(ui) {
@@ -1130,7 +1130,7 @@
             {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM', editable: true},
             {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {
-                    if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
+                    if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
                     let grid = this,

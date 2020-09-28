@@ -115,6 +115,7 @@
                         </div>--%>
                         <span class="gubun"></span>
                         <button type="button" class="right_float defaultBtn radius blue" id="inspection_history_search_btn">검색</button>
+                        <button type="button" class="right_float" id="inspection_history_export_btn" style="position: absolute; right: 78px; bottom: 7px;"><img src="/resource/asset/images/common/export_excel.png"></button>
                     </li>
                 </ul>
             </div>
@@ -134,6 +135,7 @@
                 <select id="inspectionHistoryFrozen" name="inspectionHistoryFrozen">
                 </select>
                 <div class="rightSpan">
+                    <button type="button" class="defaultBtn btn-100w" id="inspection_history_barcode_drawing_print">바코드도면 출력</button>
                     <button type="button" class="defaultBtn" id="inspection_history_detail_btn">상세정보 조회</button>
                 </div>
             </div>
@@ -188,7 +190,7 @@
             // },
             {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25,
                 render: function (ui) {
-                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
                     return '';
                 },
                 postRender: function(ui) {
@@ -203,7 +205,7 @@
             {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 40, width: 40},
             {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30,
                 render: function (ui) {
-                    if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
+                    if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
                     let grid = this,
@@ -271,7 +273,7 @@
             filterModel: { mode: 'OR' },
             //scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
-            selectionModel: { type: 'row', mode: 'single'} ,
+            // selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
             showTitle: false,
             collapsible: false,
@@ -298,6 +300,15 @@
                 let data = inspectionHistoryGridId01.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
                 $('#inspection_history_grid_records').html(totalRecords);
+            },
+            selectChange: function (event, ui) {
+                SelectedRowIndex = [];
+                for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
+                    let firstRow = ui.selection._areas[i].r1;
+                    let lastRow = ui.selection._areas[i].r2;
+
+                    for (let i = firstRow; i <= lastRow; i++) SelectedRowIndex.push(i);
+                }
             }
         });
         /**  리스트 그리드 선언 끝 **/
@@ -378,6 +389,58 @@
                 return val;
             }
         }
+
+        $('#inspection_history_export_btn').on('click', function () {
+            inspectionHistoryGridId01.pqGrid('getInstance').grid.exportData({
+                url: "/exportData",
+                filename: 'Inspection_history',
+                format: 'xlsx',
+                // zip: $("#export_zip").prop("checked"),
+                nopqdata: true, //applicable for JSON export.
+                render: true
+            });
+        });
+
+        const noSelectedRowAlert = function () {
+            if (SelectedRowIndex.length > 0) {
+                return false;
+            } else {
+                fnAlert(null, '하나 이상 선택해주세요');
+                return true;
+            }
+        };
+        
+        // 바코드도면출력
+        $('#inspection_history_barcode_drawing_print').on('click', function () {
+            if (noSelectedRowAlert()) return false;
+            let selectedRowCount = SelectedRowIndex.length;
+            let selectControlPartCount = 0;
+            let selectControlPartInfo = '';
+            let selectControlList = '';
+            for (let i = 0; i < selectedRowCount; i++) {
+                let rowData = inspectionHistoryGridId01.pqGrid('getRowData', {rowIndx: SelectedRowIndex[i]});
+                let curControlPartInfo = rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ;
+
+                if (!rowData.IMG_GFILE_SEQ) {
+                    fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
+                    return;
+                    // } else if(rowData.WORK_TYPE != 'WTP020' && selectControlPartInfo != curControlPartInfo){
+                } else if (selectControlPartInfo !== curControlPartInfo) {
+                    selectControlList += rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ + '^';
+                    selectControlPartCount++;
+                    selectControlPartInfo = curControlPartInfo;
+                }
+            }
+
+                let message = '<h4>' +
+                    '           <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
+                    '               <span>' + selectControlPartCount + ' 건의 바코드 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
+                    '       </h4>';
+
+            fnConfirm(null, message, function () {
+                printJS({printable:'/makeCadBarcodePrint?selectControlList=' + encodeURI(selectControlList), type:'pdf', showModal:true});
+            });
+        });
     });
 
 

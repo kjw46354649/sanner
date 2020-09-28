@@ -48,9 +48,10 @@
                             </select>
                         </span>
                         <span class="gubun"></span>
-                        <span class="txt_span"><label class="label_100" for="SEL_INSPECT_GRADE">Option</label></span>
-                        <span class="chk_box"><input id="SEL_INSPECT_GRADE" name="SEL_INSPECT_GRADE" type="checkbox"><label for="SEL_INSPECT_GRADE">검사완료품 제외</label></span>
-                        <span class="chk_box"><input id="SEL_OUTSIDE_YN" name="SEL_OUTSIDE_YN" type="checkbox"><label for="SEL_OUTSIDE_YN">외주대상 제외</label></span>
+                        <span class="txt_span"><label class="label_100" for="INSPECTION_MANAGE_SEL_INSPECT_GRADE">Option</label></span>
+                        <span class="chk_box"><input id="INSPECTION_MANAGE_SEL_INSPECT_GRADE" name="SEL_INSPECT_GRADE" type="checkbox" checked><label for="INSPECTION_MANAGE_SEL_INSPECT_GRADE">검사완료제외</label></span>
+                        <span class="chk_box"><input id="INSPECTION_MANAGE_SEL_OUTSIDE_YN" name="SEL_OUTSIDE_YN" type="checkbox" checked><label for="INSPECTION_MANAGE_SEL_OUTSIDE_YN">외주제외</label></span>
+                        <span class="chk_box"><input id="INSPECTION_MANAGE_SEL_INNER_WORK_FINISH_YN" name="SEL_INNER_WORK_FINISH_YN" type="checkbox" checked><label for="INSPECTION_MANAGE_SEL_INNER_WORK_FINISH_YN">가공완료</label></span>
                         <button type="button" class="right_float defaultBtn radius blue" id="inspection_manage_search_btn">검색</button>
                     </li>
                 </ul>
@@ -326,7 +327,7 @@
             // },
             {title: '', align: 'center', dataType: 'string', dataIndx: 'DETAIL_INFO', width: 30, minWidth: 30, editable: false,
                 render: function (ui) {
-                    if (ui.rowData.CONTROL_SEQ > 0) return '<span id="detailView" class="doubleFilesIcon"></span>';
+                    if (ui.rowData.CONTROL_SEQ > 0) return '<span id="detailView" class="shareIcon"></span>';
                     return '';
                 },
                 postRender: function(ui) {
@@ -341,7 +342,7 @@
             {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 40, width: 40, editable: false},
             {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {
-                    if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
+                    if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
                     let grid = this,

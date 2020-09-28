@@ -197,7 +197,7 @@
                 title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON',
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
-                        return '<span  class="doubleFilesIcon" name="detailView" style="cursor: pointer"></span>';
+                        return '<span  class="shareIcon" name="detailView" style="cursor: pointer"></span>';
                 },
                 postRender: function (ui) {
                     let grid = this,
@@ -213,7 +213,7 @@
             {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
             {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {
-                    if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
+                    if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
                     let grid = this,

@@ -112,7 +112,7 @@
             {title: '주문상태', dataIndx: 'CONTROL_STATUS_NM'},
             {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false, hidden: true,
                 render: function (ui) {
-                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
                     return '';
                 },
                 postRender: function(ui) {
@@ -127,7 +127,7 @@
             {title: '발주번호', dataIndx: 'ORDER_NUM'},
             {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {
-                    if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
+                    if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
                     let grid = this,

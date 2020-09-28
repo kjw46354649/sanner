@@ -126,7 +126,7 @@
     <input type="hidden" id="paramData" name="paramData" value=""/>
     <input type="hidden" id="template" name="template" value="estimate_list_template"/>
 </form>
-<!-- 제품상세정보 layer popup : S -->
+<!-- 주문상세정보 layer popup : S -->
 <div class="popup_container g_item_detail_pop" id="g_item_detail_pop" style="display: none;">
     <form class="form-inline" id="g_item_detail_pop_form" name="g_item_detail_pop_form" role="form" onsubmit="return false;">
         <input type="hidden" id="queryId" name="queryId" value="inspection.selectCommItemDetailInfo"/>
@@ -134,7 +134,7 @@
         <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
 <%--        <input type="hidden" id="CAM_INFO_YN" name="CAM_INFO_YN" value=""/>--%>
         <div class="layerPopup">
-            <h3>제품상세정보</h3>
+            <h3>주문상세정보</h3>
             <button type="button" class="pop_close mt-10 mr-8" id="popClose2">닫기</button>
 <%--            <span class="right">--%>
 <%--                <span class="barCode" ><img src="/resource/asset/images/common/img_barcode.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>--%>
@@ -165,34 +165,34 @@
                 <div class="list1">
                     <table class="rowStyle" style="table-layout: fixed;">
                         <colgroup>
-                            <col width="8%">
-                            <col width="18%">
                             <col width="10%">
-                            <col width="16%">
+                            <col width="25%">
                             <col width="10%">
-                            <col width="16%">
+                            <col width="15%">
+                            <col width="10%">
+                            <col width="10%">
                         </colgroup>
                         <tr>
                             <th>관리번호</th>
                             <td id="CONTROL_NUM" class="red"></td>
-                            <th>작업형태</th>
-                            <td id="WORK_TYPE_NM"></td>
+                            <th>형태/수량(원,대)</th>
+                            <td id="WORK_TYPE_NM_ORDER_QTY_INFO"></td>
                             <th>가공납기</th>
                             <td id="INNER_DUE_DT"></td>
                         </tr>
                         <tr>
                             <th>도면번호</th>
                             <td id="DRAWING_NUM" class="red"></td>
-                            <th>수량(원,대)</th>
-                            <td id="ORDER_QTY_INFO"></td>
+                            <th>규격</th>
+                            <td id="SIZE_TXT"></td>
                             <th class="antiquewhite">진행상태</th>
                             <td id="PART_STATUS_NM"></td>
                         </tr>
                         <tr>
                             <th>품명</th>
                             <td id="ITEM_NM"></td>
-                            <th>규격</th>
-                            <td id="SIZE_TXT"></td>
+                            <th>소재종류</th>
+                            <td id="MATERIAL_DETAIL_NM"></td>
                             <th class="antiquewhite">현재위치</th>
                             <td id="POP_POSITION_NM"></td>
                             <%--<th>소재Size</th>--%>
@@ -201,8 +201,8 @@
                         <tr>
                             <th>모듈</th>
                             <td id="MODULE_NM" style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap;"></td>
-                            <th>소재종류</th>
-                            <td id="MATERIAL_DETAIL_NM"></td>
+                            <th>표면처리</th>
+                            <td id="SURFACE_TREAT_NM"></td>
                             <th class="antiquewhite">가공확정 일시</th>
                             <td id="PROCESS_CONFIRM_DT"></td>
                             <%--<th>소재주문상태</th>--%>
@@ -211,8 +211,8 @@
                         <tr>
                             <th>프로젝트</th>
                             <td id="PROJECT_NM"></td>
-                            <th>표면처리</th>
-                            <td id="SURFACE_TREAT_NM"></td>
+                            <th>외주확정 일시</th>
+                            <td id="OUTSIDE_CONFIRM_DT"></td>
                             <th class="antiquewhite">소재주문 일시</th>
                             <td id="MATERIAL_ORDER_DT"></td>
                             <%--<th>도면수정Rev.</th>--%>
@@ -221,26 +221,26 @@
                             <%--<td id="DXF_GFILE_SEQ"></td>--%>
                         </tr>
                         <tr>
-                            <th class="palegoldenrod">발주업체</th>
-                            <td id="ORDER_COMP_NM"></td>
-                            <th>외주구분/업체</th>
-                            <td id="OUTSIDE_INFO"></td>
+                            <th class="palegoldenrod">발주처/설계자</th>
+                            <td id="ORDER_COMP_NM_DESIGNER_NM"></td>
+                            <th>외주업체명</th>
+                            <td id="OUTSIDE_COMP_NM"></td>
                             <th class="antiquewhite">소재입고 일시</th>
                             <td id="MATERIAL_IN_DT"></td>
                         </tr>
                         <tr>
-                            <th class="palegoldenrod">설계자</th>
-                            <td id="DESIGNER_NM"></td>
+                            <th class="palegoldenrod">주문 확정</th>
+                            <td id="CONTROL_CONFIRM_DT"></td>
                             <th>외주요청 일시</th>
                             <td id="OUTSIDE_PROCESS_CONFIRM_DT"></td>
                             <th class="antiquewhite blueviolet">가공완료 일시</th>
                             <td id="PROCESS_FINISH_DT" class="blueviolet"></td>
                             <%--<th>과거수행경험</th>--%>
-                            <%--<td id="WORK_HISTORY_INFO"></td>--%>
+                                <%--<td id="WORK_HISTORY_INFO"></td>--%>
                         </tr>
                         <tr>
-                            <th class="palegoldenrod">주문확정</th>
-                            <td id="CONTROL_CONFIRM_DT"></td>
+                            <th class="palegoldenrod">주요 검사</th>
+                            <td id="MAIN_INSPECTION_NM"></td>
                             <th>외주입고 일시</th>
                             <td id="OUTSIDE_IN_DT"></td>
                             <th class="antiquewhite blueviolet">출고완료 일시</th>
@@ -301,7 +301,7 @@
         </div>
     </form>
 </div>
-<!-- 제품상세정보 layer popup : E -->
+<!-- 주문상세정보 layer popup : E -->
 <!-- CAM 상세정보 layer popup : S -->
 <div class="popup_container g_item_detail_pop_cam_pop" id="g_item_detail_pop_cam_pop" style="display: none;">
     <form class="form-inline" id="g_item_detail_pop_cam_pop_form" name="g_item_detail_pop_cam_pop_form" role="form">
@@ -1105,15 +1105,15 @@
     let g_ItemDetailPopGridId01 =  $("#g_item_detail_pop_grid_01");
     let g_ItemDetailPopColModel01 = [
         {title: 'RNUM', dataType: 'string', dataIndx: 'RNUM', hidden:true},
-        {title: '공정', dataType: 'string', dataIndx: 'PROCESS_TYPE_NM', width: 60, editable: false},
-        {title: '기기명', dataType: 'string', dataIndx: 'EQUIP_NM', width: 95, editable: false},
-        {title: '상태', dataType: 'string', dataIndx: 'WORK_STATUS', width: 60, editable: false},
-        {title: '시작', dataType: 'string', dataIndx: 'WORK_START_DT', width: 105, editable: false},
-        {title: '종료', dataType: 'string', dataIndx: 'WORK_FINISH_DT', width: 105, editable: false},
-        {title: '소요시간', dataType: 'string', dataIndx: 'WORKING_TIME', width: 95, editable: false},
-        {title: '작업자', dataType: 'string', dataIndx: 'WORK_USER', width: 95, editable: false},
-        {title: '수량', dataType: 'string', dataIndx: 'FINISH_QTY', width: 95, editable: false},
-        {title: '불량', dataType: 'string', dataIndx: 'ERROR_QTY', width: 95, editable: false}
+        {title: '공정', dataType: 'string', dataIndx: 'PROCESS_TYPE_NM', width: 60},
+        {title: '기기명', dataType: 'string', dataIndx: 'EQUIP_NM', width: 95},
+        {title: '상태', dataType: 'string', dataIndx: 'WORK_STATUS', width: 60},
+        {title: '시작', dataType: 'string', dataIndx: 'WORK_START_DT', minWidth: 75, width: 100},
+        {title: '종료', dataType: 'string', dataIndx: 'WORK_FINISH_DT', minWidth: 75, width: 100},
+        {title: '소요시간', dataType: 'string', dataIndx: 'WORKING_TIME', width: 95},
+        {title: '작업자', dataType: 'string', dataIndx: 'WORK_USER', width: 95},
+        {title: '수량', dataType: 'string', dataIndx: 'FINISH_QTY', width: 95},
+        {title: '불량', dataType: 'string', dataIndx: 'ERROR_QTY', width: 95}
     ];
     //g_ItemDetailPopGridId01.pqGrid({
     let g_ItemDetailPopObj01 = {
@@ -1128,6 +1128,7 @@
             }
         },
         strNoRows: g_noData,
+        editable: false,
         columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
         scrollModel: {autoFit: true},
         numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
@@ -1279,17 +1280,17 @@
     let g_ItemDetailPopGridId05 =  $("#g_item_detail_pop_grid_05");
     let g_ItemDetailPopColModel05 = [
         {title: 'Q_SEQ', dataType: 'string', dataIndx: 'Q_SEQ', hidden:true},
-        {title: '작성자', dataType: 'string', dataIndx: 'Q_INSPECT_USER_NM', width: 95, editable: false},
-        {title: '측정방법', dataType: 'string', dataIndx: 'Q_INSPECT_METHOD_NM', width: 95, editable: false},
-        {title: '반품일', dataType: 'string', dataIndx: 'Q_RETURN_DT', width: 95, editable: false},
-        {title: '등급', dataType: 'string', dataIndx: 'Q_INSPECT_GRADE_NOTE', width: 95, editable: false},
-        {title: '수량', dataType: 'string', dataIndx: 'Q_ERROR_QTY', width: 95, editable: false},
-        {title: '불량코드', dataType: 'string', dataIndx: 'Q_INSPECT_RESULT_NM', width: 95, editable: false},
-        {title: '상세및비고', dataType: 'string', dataIndx: 'Q_INSPECT_DESC', width: 95, editable: false},
-        {title: '원인', dataType: 'string', dataIndx: 'Q_ERROR_REASON_NM', width: 95, editable: false},
-        {title: '조치', dataType: 'string', dataIndx: 'Q_ERROR_ACTION_NM', width: 95, editable: false},
-        {title: '조치방안', dataType: 'string', dataIndx: 'Q_ERROR_NOTE', width: 95, editable: false},
-        {title: '작성일자', dataType: 'string', dataIndx: 'Q_DT', width: 95, editable: false}
+        {title: '작성자', dataType: 'string', dataIndx: 'Q_INSPECT_USER_NM', width: 95},
+        {title: '측정방법', dataType: 'string', dataIndx: 'Q_INSPECT_METHOD_NM', width: 95},
+        {title: '반품일', dataType: 'string', dataIndx: 'Q_RETURN_DT', minWidth: 90, width: 95},
+        {title: '등급', dataType: 'string', dataIndx: 'Q_INSPECT_GRADE_NOTE', width: 95},
+        {title: '수량', dataType: 'string', dataIndx: 'Q_ERROR_QTY', width: 95},
+        {title: '불량코드', dataType: 'string', dataIndx: 'Q_INSPECT_RESULT_NM', width: 95},
+        {title: '상세및비고', dataType: 'string', dataIndx: 'Q_INSPECT_DESC', width: 95},
+        {title: '원인', dataType: 'string', dataIndx: 'Q_ERROR_REASON_NM', width: 95},
+        {title: '조치', dataType: 'string', dataIndx: 'Q_ERROR_ACTION_NM', width: 95},
+        {title: '조치방안', dataType: 'string', dataIndx: 'Q_ERROR_NOTE', width: 95},
+        {title: '작성일자', dataType: 'string', dataIndx: 'Q_DT', minWidth: 90, width: 95}
     ];
     let g_ItemDetailPopObj05 = {
         width: "100%", height: 120,
@@ -1302,6 +1303,7 @@
             }
         },
         strNoRows: g_noData,
+        editable: false,
         columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
         scrollModel: {autoFit: true},
         numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
@@ -1346,29 +1348,30 @@
             $("#g_item_detail_pop_form").find("#WORK_HISTORY_INFO").removeAttr('onClick');
             let dataInfo = data.info;
 
-            // console.log(dataInfo);
-
             $("#g_item_detail_pop_form").find(".list1").find(".rowStyle").find("td").html('');
             if(dataInfo) {
+                const emergencySpanElement = dataInfo.EMERGENCY_YN === 'Y' ? '<span class="mark">긴급</span>' : '';
+                const materialFinishHeatSpanElement = dataInfo.MATERIAL_FINISH_HEAT === '열처리' ? '<span class="mark">열처리</span>' : '';
+
                 //fnJsonDataToForm("stock_manage_pop_form", dataInfo);
                 $("#g_item_detail_pop_form").find("#CONTROL_NUM").html(dataInfo.CONTROL_NUM);
-                $("#g_item_detail_pop_form").find("#WORK_TYPE_NM").html(dataInfo.WORK_TYPE_NM);
-                $("#g_item_detail_pop_form").find("#INNER_DUE_DT").html(dataInfo.INNER_DUE_DT);
+                $("#g_item_detail_pop_form").find("#WORK_TYPE_NM_ORDER_QTY_INFO").html(dataInfo.WORK_TYPE_NM_ORDER_QTY_INFO);
+                $("#g_item_detail_pop_form").find("#INNER_DUE_DT").html(dataInfo.INNER_DUE_DT + emergencySpanElement);
 
                 $("#g_item_detail_pop_form").find("#DRAWING_NUM").html(dataInfo.DRAWING_NUM);
-                $("#g_item_detail_pop_form").find("#ORDER_QTY_INFO").html(dataInfo.ORDER_QTY_INFO);
+                $("#g_item_detail_pop_form").find("#SIZE_TXT").html(dataInfo.SIZE_TXT);
                 $("#g_item_detail_pop_form").find("#PART_STATUS_NM").html(dataInfo.PART_STATUS_NM);
 
                 $("#g_item_detail_pop_form").find("#ITEM_NM").html(dataInfo.ITEM_NM);
-                $("#g_item_detail_pop_form").find("#SIZE_TXT").html(dataInfo.SIZE_TXT);
+                $("#g_item_detail_pop_form").find("#MATERIAL_DETAIL_NM").html(dataInfo.MATERIAL_DETAIL_NM + materialFinishHeatSpanElement);
                 $("#g_item_detail_pop_form").find("#POP_POSITION_NM").html(dataInfo.POP_POSITION_NM);
 
                 $("#g_item_detail_pop_form").find("#MODULE_NM").html(dataInfo.MODULE_NM);
-                $("#g_item_detail_pop_form").find("#MATERIAL_DETAIL_NM").html(dataInfo.MATERIAL_DETAIL_NM);
+                $("#g_item_detail_pop_form").find("#SURFACE_TREAT_NM").html(dataInfo.SURFACE_TREAT_NM);
                 $("#g_item_detail_pop_form").find("#PROCESS_CONFIRM_DT").html(dataInfo.PROCESS_CONFIRM_DT);
 
                 $("#g_item_detail_pop_form").find("#PROJECT_NM").html(dataInfo.PROJECT_NM);
-                $("#g_item_detail_pop_form").find("#SURFACE_TREAT_NM").html(dataInfo.SURFACE_TREAT_NM);
+                $("#g_item_detail_pop_form").find("#OUTSIDE_CONFIRM_DT").html(dataInfo.OUTSIDE_CONFIRM_DT);
                 $("#g_item_detail_pop_form").find("#MATERIAL_ORDER_DT").html(dataInfo.MATERIAL_ORDER_DT);
 
                 // $("#g_item_detail_pop_form").find("#MATERIAL_ORDER_STATUS_NM").html(dataInfo.MATERIAL_ORDER_STATUS_NM);
@@ -1381,15 +1384,16 @@
                 // }
                 // $("#g_item_detail_pop_form").find("#DXF_GFILE_SEQ").html(filedownlod);
 
-                $("#g_item_detail_pop_form").find("#ORDER_COMP_NM").html(dataInfo.ORDER_COMP_NM);
-                $("#g_item_detail_pop_form").find("#OUTSIDE_INFO").html(dataInfo.OUTSIDE_INFO);
+                $("#g_item_detail_pop_form").find("#ORDER_COMP_NM_DESIGNER_NM").html(dataInfo.ORDER_COMP_NM_DESIGNER_NM);
+                $("#g_item_detail_pop_form").find("#OUTSIDE_COMP_NM").html(dataInfo.OUTSIDE_COMP_NM);
                 $("#g_item_detail_pop_form").find("#MATERIAL_IN_DT").html(dataInfo.MATERIAL_IN_DT);
 
-                $("#g_item_detail_pop_form").find("#DESIGNER_NM").html(dataInfo.DESIGNER_NM);
+                // $("#g_item_detail_pop_form").find("#DESIGNER_NM").html(dataInfo.DESIGNER_NM);
+                $("#g_item_detail_pop_form").find("#CONTROL_CONFIRM_DT").html(dataInfo.CONTROL_CONFIRM_DT);
                 $("#g_item_detail_pop_form").find("#OUTSIDE_PROCESS_CONFIRM_DT").html(dataInfo.OUTSIDE_PROCESS_CONFIRM_DT);
                 $("#g_item_detail_pop_form").find("#PROCESS_FINISH_DT").html(dataInfo.PROCESS_FINISH_DT);
 
-                $("#g_item_detail_pop_form").find("#CONTROL_CONFIRM_DT").html(dataInfo.CONTROL_CONFIRM_DT);
+                $("#g_item_detail_pop_form").find("#MAIN_INSPECTION_NM").html(dataInfo.MAIN_INSPECTION_NM);
                 $("#g_item_detail_pop_form").find("#OUTSIDE_IN_DT").html(dataInfo.OUTSIDE_IN_DT);
                 $("#g_item_detail_pop_form").find("#OUT_FINISH_DT").html(dataInfo.OUT_FINISH_DT);
 
@@ -1402,7 +1406,6 @@
                         $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").removeClass('d-none');
                     }
                 }
-
 
                 if (fnIsEmpty(dataInfo.IMG_GFILE_SEQ)) {
                     $("#g_item_detail_pop_form").find("#DRAWING_VIEW").attr('onClick', 'fnAlert(null, "도면파일이 없습니다.");');

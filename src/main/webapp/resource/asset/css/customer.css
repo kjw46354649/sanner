@@ -249,6 +249,7 @@
 .g_item_detail_pop .layerPopup .worker {display: inline-block; line-height:23px; font-size: 13px; background-color: #73139b;color: #fff; padding-left: 10px; padding-right: 5px; text-align: center; }
 .g_item_detail_pop .layerPopup .work_info {display: inline-block;font-size: 14px; font-family: 'NotoKrB'; color: #000; }
 .g_item_detail_pop .namePlusSlt label { padding: 0 5px; background: #f3f3f3; border: 1px solid #e6e6e6; border-right: 0; border-radius: 3px 0 0 3px; box-sizing: border-box; }
+.g_item_detail_pop span.mark { padding: 0 5px; margin-left: 5px; border: 1px solid black; border-radius: 3px; background-color: moccasin; font-size: 1.2rem; text-align: center; vertical-align: middle; }
 
 .g_item_detail_pop_cam_pop .layerPopup{height: 490px;}
 

@@ -358,7 +358,7 @@
             {title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON', styleHead: {'background':'#a9d3f5'},
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
-                        return '<span  class="doubleFilesIcon" name="detailView" style="cursor: pointer"></span>';
+                        return '<span  class="shareIcon" name="detailView" style="cursor: pointer"></span>';
                 },
                 postRender: function (ui) {
                     let grid = this,
@@ -442,7 +442,7 @@
             },
             {title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON', styleHead: {'background':'#a9d3f5'},
                 render: function (ui) {
-                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" id="imageView" style="cursor: pointer"></span>';
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="fileSearchIcon" id="imageView" style="cursor: pointer"></span>';
                     else return '';
                 },
                 postRender: function (ui) {
@@ -1516,10 +1516,10 @@
             {title: '참<br>조', minWidth: 30, dataIndx: 'ETC_GFILE_SEQ', styleHead: {'background':'#a9d3f5'},
                 render: function (ui) {
                     let cellData = ui.cellData;
-                    let cls = cellData ? null : 'bg-lightgray';
-                    let text = '<span class="floppyDisk" name="attachment" style="cursor: pointer"></span>';
+                    let cls = cellData ? 'floppyDiskAble' : 'floppyDiskDisable';
+                    let text = '<span class="' + cls + '" name="attachment" style="cursor: pointer"></span>';
 
-                    return {cls: cls, text: text};
+                    return {text: text};
                 },
                 postRender: function (ui) {
                     let grid = this,

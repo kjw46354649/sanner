@@ -637,7 +637,7 @@
             {title: '', dataType: 'string', dataIndx: 'CONTROL_NUM_BUTTON', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
-                        return '<span  class="doubleFilesIcon" name="detailView" style="cursor: pointer"></span>';
+                        return '<span  class="shareIcon" name="detailView" style="cursor: pointer"></span>';
                 },
                 postRender: function (ui) {
                     let grid = this,
@@ -652,7 +652,7 @@
             {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 10, width: 30},
             {title: '', minWidth: 25, width: 25, dataType: 'string', dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
-                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" id="imageView" style="cursor: pointer"></span>'
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="fileSearchIcon" id="imageView" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
                     let grid = this,
@@ -798,7 +798,7 @@
             {title: 'NC명', minWidth: 20, width: 80, dataType: 'string', dataIndx: 'EQUIP_NM'},
             {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
-                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
                     return '';
                 },
                 postRender: function(ui) {
@@ -813,7 +813,7 @@
             {title: '파<br>트', minWidth: 20, width: 20, dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {
-                    if (ui.cellData) return '<span id="imageView" class="magnifyingGlassIcon" style="cursor: pointer"></span>'
+                    if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
                     let grid = this,

@@ -436,6 +436,7 @@ table.boardList .txtP{color: #7030a0;}
 .bg-yellow { background-color: #ffff00; }
 .bg-orange { background-color: #ffc000; }
 .bg-lightcoral { background-color: lightcoral; }
+.bg-moccasin {background-color: moccasin; }
 
 .pq-grid-col, .pq-grid-row>.pq-grid-cell {
   overflow: hidden;
@@ -464,11 +465,11 @@ table.boardList .txtP{color: #7030a0;}
 /** cam file TEST **/
 .greenFileImageICon { display: inline-block; width: 17px;height: 17px; background: url(../images/common/file_icon_green.png) no-repeat 0 0;  background-size: 16px 16px}
 .desktopIcon { display: inline-block; width: 16px;height: 16px; background: url(../images/common/ico_desktop.png) no-repeat 0 0; background-size: 16px; }
-.magnifyingGlassIcon { display: inline-block; width: 17px;height: 17px; background: url(../images/common/file_search_outline_icon.png) no-repeat; background-size: 17px; }
-.doubleFilesIcon { display: inline-block; width: 17px;height: 17px; background: url(../images/common/ico_documents_files.png) no-repeat; background-size: 17px; }
-.textFileIcon { display: inline-block; width: 16px;height: 16px; background: url(../images/common/ico_text_file_.png) no-repeat; background-size: 16px; }
+.fileSearchIcon { display: inline-block; width: 17px;height: 20px; background: url(../images/common/file_search.png) no-repeat; background-size: 17px; }
+.shareIcon { display: inline-block; width: 17px;height: 17px; background: url(../images/common/share.png) no-repeat; background-size: 17px; }
 .circleMinusIcon { display: inline-block; width: 16px;height: 16px; background: url(../images/common/minuscirclelinear.png) no-repeat; background-size: 16px; }
-.floppyDisk { display: inline-block; width: 17px;height: 17px; background: url(../images/common/floppy_disk.png) no-repeat; background-size: 17px; }
+.floppyDiskAble { display: inline-block; width: 17px;height: 17px; background: url(../images/common/floppy_disk_able.png) no-repeat; background-size: 17px; }
+.floppyDiskDisable { display: inline-block; width: 17px;height: 17px; background: url(../images/common/floppy_disk_disalbe.png) no-repeat; background-size: 17px; }
 
 .blink {
   -webkit-animation: blink 1s linear infinite alternate;

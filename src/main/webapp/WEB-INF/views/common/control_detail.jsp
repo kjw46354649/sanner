@@ -58,7 +58,7 @@
             {title: '모듈명', dataIndx: 'MODULE_NM'},
             {title: '', align: 'center', minWidth: 25, 
                 render: function (ui) {
-                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="doubleFilesIcon" style="cursor: pointer"></span>';
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
                     return '';
                 },
                 postRender: function(ui) {
@@ -73,7 +73,7 @@
             {title: '파<br>트', dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
-                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="magnifyingGlassIcon" id="imageView" style="cursor: pointer"></span>'
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="fileSearchIcon" id="imageView" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
                     let grid = this,
