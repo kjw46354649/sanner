@@ -1078,7 +1078,7 @@
 												<div class="list" style="height: 209px;">
 													<div class="titleWrap">
 														<span class="f_txt">POP</span>
-														<span class="s_txt">교면교정장(<sapn id="CNT_POP140">0</sapn>)</span>
+														<span class="s_txt">바이브레터실(<sapn id="CNT_POP140">0</sapn>)</span>
 													</div>
 													<ul id="POP140" data-cnt="6"></ul>
 												</div>

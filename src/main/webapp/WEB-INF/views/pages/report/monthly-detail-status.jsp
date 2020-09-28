@@ -553,6 +553,42 @@
             }
         };
         const $monthlyDetailStatusGrid = $('#' + gridId).pqGrid(obj);
+
+        const colModel1 = [
+            {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true},
+            {title: '집계항목', dataIndx: 'DT', hidden: true},
+            {
+                title: '09/14(월)', align: 'center', colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'PART_CNT',
+                        style: {'text-decoration': 'underline', 'cursor': 'pointer'},
+                        render: function (ui) {
+                            const rowData = ui.rowData;
+
+                            if (rowData.TODAY_YN === 'Y') {
+                                return {cls: 'bg-moccasin'};
+                            }
+                        }
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'PART_CNT',
+                        style: {'text-decoration': 'underline', 'cursor': 'pointer'},
+                        render: function (ui) {
+
+                        }
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'PART_CNT',
+                        style: {'text-decoration': 'underline', 'cursor': 'pointer'},
+                        render: function (ui) {
+
+                        }
+                    },
+                ]
+            }
+
+        ];
+
         /* init */
 
         /* function */
@@ -570,7 +606,7 @@
                     for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
                         const rowData = data.list[i];
 
-                        if (rowData.TODAY_YN === 'Y'){
+                        if (rowData.TODAY_YN === 'Y') {
                             firstRow += '<th colspan="3" style="background-color: #FFE699">' + rowData.F_DT + rowData.DAY + '</th>';
                             secondRow += '<th style="background-color: #FFE699">납기<br>대상</th>\n' +
                                     '<th class="text-blue" style="background-color: #FFE699">가공<br>완료</th>\n' +

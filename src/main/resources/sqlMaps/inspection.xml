@@ -67,7 +67,13 @@
                         , (SELECT COUNT(*) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.INSPECT_TYPE = '2' AND M.RETURN_SETTLEMENT_DT IS NULL) AS NOT_RETURN_SETTLEMENT_CNT
                     FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
                     WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                    AND A.DEL_YN = 'N'
+                        AND A.DEL_YN = 'N'
+                        AND (EXISTS (SELECT *
+                                    FROM TBL_CONTROL_PART_PROGRESS
+                                    WHERE 1 = 1
+                                        AND CONTROL_SEQ = B.CONTROL_SEQ
+                                        AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                        AND PART_STATUS = 'PRO002') OR B.OUTSIDE_CONFIRM_DT IS NOT NULL)
                     <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
                         AND A.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                     </if>
@@ -82,6 +88,9 @@
                     </if>
                     <if test="SEL_OUTSIDE_YN or SEL_OUTSIDE_YN == true">
                         AND IFNULL(B.OUTSIDE_YN,0) = 'N'  <!-- 외주대상 제외 체크하면 -->
+                    </if>
+                    <if test="SEL_INNER_WORK_FINISH_YN == 'true'">
+                        AND B.INNER_WORK_FINISH_DT IS NOT NULL
                     </if>
                     ) X LEFT OUTER JOIN jmes.TBL_MCT_WORK Y ON Y.MCT_WORK_SEQ = X.MCT_WORK_SEQ
                         LEFT OUTER JOIN jmes.TBL_INSPECT Z ON Z.INSPECT_SEQ = X.INSPECT_SEQ
@@ -205,70 +214,79 @@
         SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
           , CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM, ' # ', IFNULL(B.PART_NUM, SPACE(0))) END AS CONTROL_NUM
           , CASE WHEN B.DRAWING_VER IS NULL THEN B.DRAWING_NUM ELSE CONCAT(B.DRAWING_NUM, ' (', B.DRAWING_VER, ')') END AS DRAWING_NUM
-          , CONCAT(IFNULL(jmes.SF_GET_DATE_F(B.INNER_DUE_DT,'YYYY',''), SPACE(0)), CASE WHEN IFNULL(A.EMERGENCY_YN, 'N') = 'Y' THEN '긴급' ELSE SPACE(0) END) AS INNER_DUE_DT
+          , jmes.SF_GET_DATE_F(B.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT
+          , IFNULL(A.EMERGENCY_YN, 'N') AS EMERGENCY_YN
           , B.ITEM_NM
           , A.PROJECT_NM <!-- 프로젝트 -->
           , A.MODULE_NM
-          , CASE WHEN IFNULL(B.ORIGINAL_SIDE_QTY,0) + IFNULL(B.OTHER_SIDE_QTY,0) > 0
-                    THEN CONCAT(IFNULL(jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), 0),' (',IFNULL(B.ORIGINAL_SIDE_QTY,0),',',IFNULL(B.OTHER_SIDE_QTY,0),')')
-                 ELSE jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ)
-            END ORDER_QTY_INFO
+          , jmes.SF_GET_CODE_NM('1059', A.MAIN_INSPECTION, #{LOGIN_LOCALE}) AS MAIN_INSPECTION_NM <!-- 주요검사품 -->
+<!--          , CASE WHEN IFNULL(B.ORIGINAL_SIDE_QTY,0) + IFNULL(B.OTHER_SIDE_QTY,0) > 0 -->
+<!--                     THEN CONCAT(IFNULL(jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), 0),' (',IFNULL(B.ORIGINAL_SIDE_QTY,0),',',IFNULL(B.OTHER_SIDE_QTY,0),')') -->
+<!--                  ELSE jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) -->
+<!--             END ORDER_QTY_INFO -->
+          , CASE WHEN jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) > 0 THEN (CASE WHEN IFNULL(B.ORIGINAL_SIDE_QTY,0) + IFNULL(B.OTHER_SIDE_QTY,0) > 0 THEN CONCAT(jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, 'EN'), ' / ', IFNULL(jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), 0),' (',IFNULL(B.ORIGINAL_SIDE_QTY,0),',',IFNULL(B.OTHER_SIDE_QTY,0),')')
+                                                                                                       ELSE CONCAT(jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, 'EN'), ' / ', jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ))
+                                                                                                  END)
+                 ELSE jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, 'EN')
+            END AS WORK_TYPE_NM_ORDER_QTY_INFO
           , B.SIZE_TXT
-          , jmes.SF_GET_MATERIAL_SIZE_TXT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS MATERIAL_SIZE_TXT
-          , jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
+<!--          , jmes.SF_GET_MATERIAL_SIZE_TXT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS MATERIAL_SIZE_TXT -->
+<!--          , jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM -->
           , jmes.SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
           , jmes.SF_GET_CODE_NM('1039', B.SURFACE_TREAT, #{LOGIN_LOCALE}) AS SURFACE_TREAT_NM
-          , CASE WHEN B.MATERIAL_SUPPLY_YN = 'Y' THEN '사급'
-                 ELSE (SELECT jmes.SF_GET_CODE_NM('1033', M.ORDER_STATUS, #{LOGIN_LOCALE}) FROM jmes.TBL_MATERIAL_ORDER M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
-            END AS MATERIAL_ORDER_STATUS_NM
+<!--          , CASE WHEN B.MATERIAL_SUPPLY_YN = 'Y' THEN '사급' -->
+<!--                 ELSE (SELECT jmes.SF_GET_CODE_NM('1033', M.ORDER_STATUS, #{LOGIN_LOCALE}) FROM jmes.TBL_MATERIAL_ORDER M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) -->
+<!--            END AS MATERIAL_ORDER_STATUS_NM -->
           , jmes.SF_GET_CODE_NM('1013', B.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS_NM
-          , B.DRAWING_VER
+<!--          , B.DRAWING_VER -->
           , B.DXF_GFILE_SEQ, B.PDF_GFILE_SEQ, B.IMG_GFILE_SEQ       <!-- 확인필요 -->
-          , SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM
-          , A.DESIGNER_NM
-          , CASE WHEN B.OUTSIDE_YN = 'Y' THEN CONCAT('Y / ', IFNULL(SF_GET_COMP_NM(B.OUTSIDE_COMP_CD), SPACE(0)))
-                 ELSE B.OUTSIDE_YN
-            END AS OUTSIDE_INFO
+<!--          , SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM -->
+<!--          , A.DESIGNER_NM -->
+          , CASE WHEN A.DESIGNER_NM IS NULL THEN SF_GET_COMP_NM(A.ORDER_COMP_CD)
+                 ELSE CONCAT(SF_GET_COMP_NM(A.ORDER_COMP_CD), ' / ', A.DESIGNER_NM)
+            END AS ORDER_COMP_NM_DESIGNER_NM
           , SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
           , CASE WHEN A.CONTROL_STATUS IN ('ORD001','ORD003','ORD004') THEN (SELECT jmes.SF_GET_DATE_F(MAX(M.STATUS_DT),'YYYY','M') FROM jmes.TBL_CONTROL_PROGRESS M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.ORDER_STATUS = 'ORD001') END AS CONTROL_CONFIRM_DT
           , jmes.SF_GET_DATE_F(A.OUT_FINISH_DT,'','M') AS OUT_FINISH_DT
-          , ( SELECT CONCAT(IFNULL(jmes.SF_GET_DATE_F(Q.INSERT_DT,'YYYY',''), SPACE(0)),' / ', IFNULL((SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = Q.WORK_USER_ID), SPACE(0)))
-              FROM jmes.TBL_CAM P, jmes.TBL_CAM_DETAIL Q, jmes.TBL_CONTROL_PART R
-              WHERE P.CAM_SEQ = Q.CAM_SEQ
-                AND P.CONTROL_SEQ = R.CONTROL_SEQ
-                AND P.CONTROL_DETAIL_SEQ = R.CONTROL_DETAIL_SEQ
-                AND R.DRAWING_NUM = B.DRAWING_NUM
-              ORDER BY Q.SEQ DESC
-              LIMIT 1
-            ) AS WORK_HISTORY_INFO,
-            CASE WHEN C.START_DT IS NOT NULL AND C.FINISH_DT IS NOT NULL THEN 'CWS030'  <!-- 완료 상태 -->
-                WHEN C.START_DT IS NOT NULL AND C.FINISH_DT IS NULL THEN 'CWS020'   <!-- 진행중 상태 -->
-                ELSE 'CWS010'   <!-- 대기 상태 -->
+<!--          , ( SELECT CONCAT(IFNULL(jmes.SF_GET_DATE_F(Q.INSERT_DT,'YYYY',''), SPACE(0)),' / ', IFNULL((SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = Q.WORK_USER_ID), SPACE(0))) -->
+<!--              FROM jmes.TBL_CAM P, jmes.TBL_CAM_DETAIL Q, jmes.TBL_CONTROL_PART R -->
+<!--              WHERE P.CAM_SEQ = Q.CAM_SEQ -->
+<!--                AND P.CONTROL_SEQ = R.CONTROL_SEQ -->
+<!--                AND P.CONTROL_DETAIL_SEQ = R.CONTROL_DETAIL_SEQ -->
+<!--                AND R.DRAWING_NUM = B.DRAWING_NUM -->
+<!--              ORDER BY Q.SEQ DESC -->
+<!--              LIMIT 1 -->
+<!--            ) AS WORK_HISTORY_INFO, -->
+          , CASE WHEN C.START_DT IS NOT NULL AND C.FINISH_DT IS NOT NULL THEN 'CWS030'  <!-- 완료 상태 -->
+                 WHEN C.START_DT IS NOT NULL AND C.FINISH_DT IS NULL THEN 'CWS020'   <!-- 진행중 상태 -->
+                 ELSE 'CWS010'   <!-- 대기 상태 -->
             END CAM_STATUS <!-- CAM 작업 상태 -->
-        , CASE WHEN A.CONTROL_STATUS IN ('ORD001','ORD003','ORD004') THEN ( SELECT jmes.SF_GET_DATE_F(MAX(M.STATUS_DT), '', 'M')
-                                                                            FROM jmes.TBL_CONTROL_PART_PROGRESS M
-                                                                            WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.PART_STATUS = 'PRO002')
-          END AS PROCESS_CONFIRM_DT <!-- 가공확정 일시 -->
-        , CASE WHEN A.CONTROL_STATUS IN ('ORD001','ORD003','ORD004') THEN ( SELECT jmes.SF_GET_DATE_F(MAX(M.STATUS_DT), '', 'M')
-                                                                            FROM jmes.TBL_CONTROL_PART_PROGRESS M
-                                                                            WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.PART_STATUS = 'PRO009')
-          END AS PROCESS_FINISH_DT <!-- 가공완료 일시 -->
-        , CASE WHEN B.OUTSIDE_STATUS IN ('OST001', 'OST003', 'OST004') THEN (   SELECT jmes.SF_GET_DATE_F(MAX(M.INSERT_DT), '', 'M')
+          , CASE WHEN A.CONTROL_STATUS IN ('ORD001','ORD003','ORD004') THEN ( SELECT jmes.SF_GET_DATE_F(MAX(M.STATUS_DT), '', 'M')
+                                                                              FROM jmes.TBL_CONTROL_PART_PROGRESS M
+                                                                              WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.PART_STATUS = 'PRO002')
+            END AS PROCESS_CONFIRM_DT <!-- 가공확정 일시 -->
+          , CASE WHEN A.CONTROL_STATUS IN ('ORD001','ORD003','ORD004') THEN ( SELECT jmes.SF_GET_DATE_F(MAX(M.STATUS_DT), '', 'M')
+                                                                              FROM jmes.TBL_CONTROL_PART_PROGRESS M
+                                                                              WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.PART_STATUS = 'PRO009')
+            END AS PROCESS_FINISH_DT <!-- 가공완료 일시 -->
+          , CASE WHEN B.OUTSIDE_STATUS IN ('OST001', 'OST003', 'OST004') THEN ( SELECT jmes.SF_GET_DATE_F(MAX(M.INSERT_DT), '', 'M')
                                                                                 FROM jmes.TBL_OUTSIDE_REQUEST_DETAIL M
                                                                                 WHERE DEL_YN = 'N' AND M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ)
-          END AS OUTSIDE_PROCESS_CONFIRM_DT <!-- 외주요청 일시 -->
-        , jmes.SF_GET_DATE_F(B.OUTSIDE_IN_DT, '', 'M') AS OUTSIDE_IN_DT <!-- 외주입고 일시 -->
-        , CASE WHEN A.CONTROL_STATUS IN ('ORD001','ORD003','ORD004') THEN (SELECT jmes.SF_GET_DATE_F(MAX(M.ORDER_DT), '', 'M')
-                                                                           FROM jmes.TBL_MATERIAL_ORDER M
-                                                                           WHERE B.CONTROL_SEQ = M.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ) END AS MATERIAL_ORDER_DT <!-- 소재주문 일시 -->
-        , CASE WHEN A.CONTROL_STATUS IN ('ORD001','ORD003','ORD004') THEN (SELECT jmes.SF_GET_DATE_F(MAX(M.IN_DT), '', 'M')
-                                                                           FROM jmes.TBL_MATERIAL_ORDER M
-                                                                           WHERE B.CONTROL_SEQ = M.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ) END AS MATERIAL_IN_DT  <!-- 소재입고 일시 -->
-        , ( SELECT SF_GET_CODE_NM('1009', POP_POSITION, #{LOGIN_LOCALE})
-            FROM jmes.TBL_POP M
-            WHERE  B.CONTROL_SEQ = M.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ
-                AND M.POP_SEQ = (SELECT MAX(K.POP_SEQ) FROM jmes.TBL_POP K WHERE K.CONTROL_SEQ = M.CONTROL_SEQ
-                                    AND K.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ GROUP BY K.CONTROL_SEQ, K.CONTROL_DETAIL_SEQ)) AS POP_POSITION_NM
+            END AS OUTSIDE_PROCESS_CONFIRM_DT <!-- 외주요청 일시 -->
+          , jmes.SF_GET_DATE_F(B.OUTSIDE_IN_DT, '', 'M') AS OUTSIDE_IN_DT <!-- 외주입고 일시 -->
+          , CASE WHEN A.CONTROL_STATUS IN ('ORD001','ORD003','ORD004') THEN (SELECT jmes.SF_GET_DATE_F(MAX(M.ORDER_DT), '', 'M')
+                                                                             FROM jmes.TBL_MATERIAL_ORDER M
+                                                                             WHERE B.CONTROL_SEQ = M.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ) END AS MATERIAL_ORDER_DT <!-- 소재주문 일시 -->
+          , CASE WHEN A.CONTROL_STATUS IN ('ORD001','ORD003','ORD004') THEN (SELECT jmes.SF_GET_DATE_F(MAX(M.IN_DT), '', 'M')
+                                                                             FROM jmes.TBL_MATERIAL_ORDER M
+                                                                             WHERE B.CONTROL_SEQ = M.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ) END AS MATERIAL_IN_DT  <!-- 소재입고 일시 -->
+          , ( SELECT SF_GET_CODE_NM('1009', POP_POSITION, #{LOGIN_LOCALE})
+              FROM jmes.TBL_POP M
+              WHERE  B.CONTROL_SEQ = M.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ
+                  AND M.POP_SEQ = (SELECT MAX(K.POP_SEQ) FROM jmes.TBL_POP K WHERE K.CONTROL_SEQ = M.CONTROL_SEQ
+                                      AND K.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ GROUP BY K.CONTROL_SEQ, K.CONTROL_DETAIL_SEQ)) AS POP_POSITION_NM
+          , jmes.SF_GET_DATE_F(OUTSIDE_CONFIRM_DT, '', 'M') AS OUTSIDE_CONFIRM_DT <!-- 외주확정 일시 -->
+          , CASE WHEN B.MATERIAL_FINISH_HEAT = 'FNL030' THEN '열처리' ELSE SPACE(0) END AS MATERIAL_FINISH_HEAT
         FROM jmes.TBL_CONTROL A , jmes.TBL_CONTROL_PART B
             LEFT OUTER JOIN jmes.TBL_CAM C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
@@ -356,7 +374,12 @@
           , (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = A.INSPECT_USER_ID) AS Q_INSPECT_USER_NM
           , jmes.SF_GET_CODE_NM('1060', A.INSPECT_METHOD, #{LOGIN_LOCALE}) AS Q_INSPECT_METHOD_NM
           , CASE WHEN A.INSPECT_TYPE = '2' THEN jmes.SF_GET_DATE_F(A.INSERT_DT,'YY','M') END AS Q_RETURN_DT
-          , (SELECT NOTE FROM jmes.TBL_CODE WHERE HIGH_CD = '1040' AND CODE_CD = A.INSPECT_GRADE) AS Q_INSPECT_GRADE_NOTE
+          , CONCAT(CASE A.INSPECT_GRADE
+                WHEN 'GRD010' OR 'GRD020' OR 'GRO030' THEN '적합'
+                WHEN 'GRD040' THEN '부적합'
+                WHEN 'GRD050' OR 'GRD060' THEN '반품'
+            END, '(', jmes.SF_GET_CODE_NM('1040', A.INSPECT_GRADE, #{LOGIN_LOCALE}), ')') AS Q_INSPECT_GRADE_NOTE
+<!--           , (SELECT NOTE FROM jmes.TBL_CODE WHERE HIGH_CD = '1040' AND CODE_CD = A.INSPECT_GRADE) AS Q_INSPECT_GRADE_NOTE -->
           , CASE WHEN A.INSPECT_TYPE = '1' THEN ( SELECT IFNULL(SUM(N.ORDER_QTY) * M.PART_UNIT_QTY,0)
                                                   FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL_PART_ORDER N
                                                   WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
@@ -365,7 +388,7 @@
                                                     AND M.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
                                                 ) - IFNULL(A.ERROR_QTY,0)
             END AS Q_OK_QTY
-          , A.ERROR_QTY AS Q_ERROR_QTY
+          , CASE WHEN A.INSPECT_GRADE = 'GRD040' THEN A.ERROR_QTY END AS Q_ERROR_QTY
           , CASE WHEN A.INSPECT_TYPE = '1' THEN CASE WHEN A.INSPECT_GRADE = 'GRD040' THEN jmes.SF_GET_CODE_NM('1020', A.INSPECT_RESULT, #{LOGIN_LOCALE}) END
                  WHEN A.INSPECT_TYPE = '2' THEN jmes.SF_GET_CODE_NM('1021', A.INSPECT_RESULT, #{LOGIN_LOCALE})
             END AS Q_INSPECT_RESULT_NM
@@ -1219,6 +1242,7 @@
             , jmes.SF_GET_CODE_NM('1025', W.ERROR_ACTION, #{LOGIN_LOCALE}) AS Q_ERROR_ACTION_NM
             , W.ERROR_NOTE AS Q_ERROR_NOTE
             , jmes.SF_GET_DATE_F(W.INSERT_DT,'YY','M') AS Q_DT
+            , V.IMG_GFILE_SEQ
         FROM (  SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
                     , CASE WHEN IFNULL(X.EMERGENCY_YN, 'N') = 'Y' THEN '긴' ELSE SPACE(0) END AS EMERGENCY_YN
                     , jmes.SF_GET_CODE_NM('1059', X.MAIN_INSPECTION, #{LOGIN_LOCALE}) MAIN_INSPECTION_NM
@@ -1240,6 +1264,7 @@
                     , jmes.SF_GET_CONTROL_PART_QTY(X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ) AS ORDER_QTY
                     , X.SIZE_TXT
                     , X.NOTE
+                    , X.IMG_GFILE_SEQ
                 FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
                             , A.ORDER_COMP_CD , A.EMERGENCY_YN , A.MAIN_INSPECTION
                             , B.WORK_FACTORY
@@ -1248,6 +1273,7 @@
                             , B.MATERIAL_DETAIL, B.WORK_TYPE, B.MATERIAL_TYPE
                             , B.PART_UNIT_QTY, B.SIZE_TXT, A.NOTE, B.INNER_WORK_FINISH_DT
                             , (SELECT MAX(M.POP_SEQ) FROM jmes.TBL_POP M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS POP_SEQ
+                            , B.IMG_GFILE_SEQ
                         FROM jmes.TBL_CONTROL A
                             , jmes.TBL_CONTROL_PART B
                         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ

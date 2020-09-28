@@ -68,9 +68,11 @@
 <%--                        <span class="chk_box"><input id="SEL_DELAY_TOP" name="SEL_DELAY_TOP" type="checkbox"><label for="SEL_DELAY_TOP">지연대상 항시 상단표시</label></span>--%>
                         <span class="chk_box"><input id="SEL_PART_NUM_VIEW_YN" name="SEL_PART_NUM_VIEW_YN" type="checkbox"><label for="SEL_PART_NUM_VIEW_YN">Part 단위 표시</label></span>
                         <span class="chk_box"><input id="SEL_OUT_FINISH_YN" name="SEL_OUT_FINISH_YN" type="checkbox"><label for="SEL_OUT_FINISH_YN">출고 완료 제외</label></span>
-                        <span class="ipu_wrap">
-                            <label class="label_80" for="SEL_OUTSIDE_COMP_CD" style="width: 85px !important;">외주업체</label>
-                            <input type="text" class="wd_200" name="SEL_OUTSIDE_COMP_CD" id="SEL_OUTSIDE_COMP_CD" title="외주업체">
+                        <span class="slt_wrap">
+                            <label class="label_80" for="SEL_OUTSIDE_COMP_CD">외주업체</label>
+                            <select class="wd_200" name="SEL_OUTSIDE_COMP_CD" id="SEL_OUTSIDE_COMP_CD">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                            </select>
                         </span>
                         <button type="button" class="right_float defaultBtn radius blue" id="outgoing_manage_search_btn">검색</button>
                     </li>
@@ -841,7 +843,7 @@
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'ORDER_SEQ',
                 url: "/paramQueryGridSelect",
-                postData: fnFormToJsonArrayData('outgoing_manage_form'),
+                postData: {'queryId': 'dataSource.emptyGrid'},
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -1705,6 +1707,10 @@
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
+        fnCommCodeDatasourceSelectBoxCreate($('#outgoing_manage_form').find('#SEL_OUTSIDE_COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOutsourceProcessCompanyList'}
+        });
 
         $(document).on('click', '#outBtn', function (event) {
             let control_seq = event.target.dataset.control_seq;
@@ -1806,6 +1812,12 @@
             $('#outgoing_manage_pop_type_1_form').find('#outgoing_manage_pop_type_1_form_view_2').html(restQty);
             $('#outgoing_manage_pop_type_1_form').find('#NEW_OUT_QTY_VIEW').val(NEW_OUT_QTY);
             $('#outgoing_manage_pop_type_1_form').find('#NEW_OUT_QTY').val(NEW_OUT_QTY);
+        });
+
+        $('#SEL_OUTGOING_DATE_TYPE').val(4); // 확정일자 Default 검색조건
+
+        $('#SEL_OUTGOING_DATE_TYPE').on('change', function () {
+            $(this).val() === '' ? $('[id^=SEL][id$=DT]').prop('disabled', true) : $('[id^=SEL][id$=DT]').prop('disabled', false);
         });
     });
 

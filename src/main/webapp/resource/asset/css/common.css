@@ -434,6 +434,7 @@ table.boardList .txtP{color: #7030a0;}
 .bg-yellow { background-color: #ffff00; }
 .bg-orange { background-color: #ffc000; }
 .bg-lightcoral { background-color: lightcoral; }
+.bg-moccasin {background-color: moccasin; }
 
 .pq-grid-col, .pq-grid-row>.pq-grid-cell {
   overflow: hidden;

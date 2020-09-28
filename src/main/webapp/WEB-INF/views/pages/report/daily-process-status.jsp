@@ -216,7 +216,7 @@
                     case '합계':
                         return {style: {'background': 'yellow'}};
                     case '총계':
-                        return {style: {'background': '#FFE699'}};
+                        return {style: {'background': 'moccasin'}};
                 }
             }
         };
