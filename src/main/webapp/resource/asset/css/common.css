@@ -465,7 +465,7 @@ table.boardList .txtP{color: #7030a0;}
 /** cam file TEST **/
 .greenFileImageICon { display: inline-block; width: 17px;height: 17px; background: url(../images/common/file_icon_green.png) no-repeat 0 0;  background-size: 16px 16px}
 .desktopIcon { display: inline-block; width: 16px;height: 16px; background: url(../images/common/ico_desktop.png) no-repeat 0 0; background-size: 16px; }
-.fileSearchIcon { display: inline-block; width: 17px;height: 20px; background: url(../images/common/file_search.png) no-repeat; background-size: 17px; }
+.fileSearchIcon { display: inline-block; width: 17px; height: 17px; background: url(../images/common/file_search.png) no-repeat; background-size: contain; }
 .shareIcon { display: inline-block; width: 17px;height: 17px; background: url(../images/common/share.png) no-repeat; background-size: 17px; }
 .circleMinusIcon { display: inline-block; width: 16px;height: 16px; background: url(../images/common/minuscirclelinear.png) no-repeat; background-size: 16px; }
 .floppyDiskAble { display: inline-block; width: 17px;height: 17px; background: url(../images/common/floppy_disk_able.png) no-repeat; background-size: 17px; }
