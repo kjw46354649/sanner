@@ -1525,6 +1525,11 @@
                             } else {
                                 let CONTROL_SEQ = dataInfo.CONTROL_SEQ;
                                 let CONTROL_DETAIL_SEQ = dataInfo.CONTROL_DETAIL_SEQ;
+                                g_ItemDetailPopGridId01.pqGrid('destroy');
+                                g_ItemDetailPopGridId02.pqGrid('destroy');
+                                g_ItemDetailPopGridId03.pqGrid('destroy');
+                                g_ItemDetailPopGridId04.pqGrid('destroy');
+                                g_ItemDetailPopGridId05.pqGrid('destroy');
                                 g_item_detail_pop_view(CONTROL_SEQ, CONTROL_DETAIL_SEQ);
                             }
                         }, parameters, '');
