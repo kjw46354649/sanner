@@ -924,9 +924,6 @@
             A.IMG_GFILE_SEQ <!-- IMG 파일그룹번호 -->
         FROM jmes.TBL_CONTROL_PART A
             INNER JOIN jmes.TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.CONTROL_STATUS = 'ORD001' <!-- 주문확정 -->
-            <if test='SEL_COMPLETED_YN != null'>
-                AND B.OUT_FINISH_DT IS NULL
-            </if>
             LEFT OUTER JOIN jmes.TBL_POP C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                 AND C.POP_SEQ = (SELECT MAX(C.POP_SEQ) FROM jmes.TBL_POP K WHERE K.CONTROL_SEQ = C.CONTROL_SEQ
                                                                              AND K.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ GROUP BY C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ
@@ -945,6 +942,9 @@
         WHERE 1 = 1
             <if test='SEL_ASSEMBLY == null'>
                 AND A.WORK_TYPE NOT IN ('WTP020')
+            </if>
+            <if test='SEL_COMPLETED_YN != null'>
+                AND A.INNER_WORK_FINISH_DT IS NULL
             </if>
             <choose>
                 <when test='SEL_OUTSIDE_YN != null'>

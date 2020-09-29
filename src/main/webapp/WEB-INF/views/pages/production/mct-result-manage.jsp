@@ -800,7 +800,7 @@
                 $('#machine_result_manage_grid-total-records').html(ui.dataModel.data.length);
             },
             render: function () {
-                this.option('freezeCols', 13);
+                this.option('freezeCols', 14);
             },
             change: function (evt, ui) {
                 let updateList = ui.updateList;
