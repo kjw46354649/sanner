@@ -129,22 +129,37 @@
             <div class="hWrap">
                 <form class="form-inline" id="main_master_search_form" name="main_master_search_form" role="form">
                     <input type="hidden" name="queryId" id="queryId" value="main.selectMainTodayMCTList">
-                    <h2>금일 가공 대상 List</h2>
+                    <h2>가공 대상 List</h2>
                     <span class="chk_box ml-20"></span>
                     <span class="slt_wrap ml-10">
-                        <input type="checkbox" id="NOTEXISTS_INNER_WORK_FINISH_DT_CHK"><label for="pr_ex">&nbsp;&nbsp;가공완료제외</label>
+                        <input type="checkbox" name="NOTEXISTS_INNER_WORK_FINISH_DT_CHK" id="NOTEXISTS_INNER_WORK_FINISH_DT_CHK" checked><label for="NOTEXISTS_INNER_WORK_FINISH_DT_CHK">&nbsp;&nbsp;가공완료제외</label>
+                    </span>
+                    <span class="slt_wrap ml-10">
+                        <label for="MATERIAL_TYPE">발주처</label>
                         <select class="wd_150" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
                             <option value=""><spring:message code="com.form.top.all.option"/></option>
                         </select>
-                        <select class="label_150 ml-10" name="MATERIAL_TYPE" id="MATERIAL_TYPE" title="재질">
+                    </span>
+                    <span class="slt_wrap ml-10">
+                        <label for="MATERIAL_TYPE">재질</label>
+                        <select class="label_150" name="MATERIAL_TYPE" id="MATERIAL_TYPE" title="재질">
                             <option value=""><spring:message code="com.form.top.all.option"/></option>
                             <c:forEach var="code" items="${HighCode.H_1035}">
                                 <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                             </c:forEach>
                         </select>
                     </span>
-                    <span class="ipu_wrap ml-10"><label for="dateSltd">조회일자</label><input type="text" name="INNER_DUE_DT" id="INNER_DUE_DT" placeholder="" value="" class="wd_150" title="조회일자"></span>
-                    <span class="refresh"><a href="#a;"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></a></span>
+                    <span class="slt_wrap ml-10">
+                        <label for="WORK_FACTORY">수행공장</label>
+                        <select class="wd_150" name="WORK_FACTORY" id="WORK_FACTORY" title="수행공장">
+                            <option value=""><spring:message code="com.form.top.all.option"/></option>
+                            <c:forEach var="code" items="${HighCode.H_1014}">
+                                <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                            </c:forEach>
+                        </select>
+                    </span>
+<%--                    <span class="ipu_wrap ml-10"><label for="dateSltd">조회일자</label><input type="text" name="INNER_DUE_DT" id="INNER_DUE_DT" placeholder="" value="" class="wd_150" title="조회일자"></span>--%>
+                    <span class="refresh"><button type="button" id="main_refresh"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
                 </form>
             </div>
             <div class="conWrap">
@@ -165,7 +180,6 @@
 
     $(function () {
         'use strict';
-
         $('#main_master_search_form').find('#INNER_DUE_DT').datepicker({dateFormat: 'yy/mm/dd'});
         $('#main_master_search_form').find('#INNER_DUE_DT').datepicker('setDate', 'today');
 
@@ -175,12 +189,13 @@
         });
 
         let mainMasterColModel = [
+            {title: '공장', minWidth: 40, dataIndx: 'WORK_FACTORY_NM'},
+            {title: '가공<br>납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', width: 50, minWidth: 40},
+            {title: '가공<br>완료', dataType: 'string', dataIndx: 'LAST_PRODUCT_COMPLETE_DT', width: 50, minWidth: 40},
             {title: '긴<br>급', dataType: 'string', dataIndx: 'EMERGENCY_YN_NM', width: 25, minWidth: 25},
             {title: '불<br>량', dataType: 'string', dataIndx: 'FAIL_STATUS', width: 20, minWidth: 25},
-            {title: '가공납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', width: 50, minWidth: 40},
-            {title: 'NC계획', dataType: 'string', dataIndx: 'LAST_MCT_PLAN', width: 60},
-            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 100},
-            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+            {title: 'NC<br>계획', dataType: 'string', dataIndx: 'LAST_MCT_PLAN', width: 60},
+            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
                     return '';
@@ -193,14 +208,25 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 200, minWidth: 150},
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 150},
             {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', width: 25, minWidth: 25},
-            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', width: 80, minWidth: 50},
-            {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY', width: 60, minWidth: 50},
-            {title: '가공완료', dataType: 'string', dataIndx: 'LAST_PRODUCT_COMPLETE_DT', width: 50, minWidth: 40},
+            {title: '', dataIndx: ''},
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', width: 80, minWidth: 50},
+            {
+                title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY', width: 50,
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (!(fnIsEmpty(cellData))) {
+                        return ui.rowData.SYMMETRY ? cellData + '&nbsp;<span style="background-color: #C00000; color: white; font-size: 1.2rem; text-align: center; vertical-align: middle;">대</span>' : cellData;
+                    }
+                }
+            },
+            {title: '가공확정', dataIndx: 'PROCESS_CONFIRM_DT', width: 80},
+            {title: '소재입고', dataIndx: 'MATERIAL_RECEIPT_DT', width: 80},
             {title: '현재위치', dataType: 'string', dataIndx: 'LAST_POP_POSITION', width: 80, minWidth: 40},
             {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', width: 80, minWidth: 40},
-            {title: '영업담당', dataType: 'string', dataIndx: 'DELIVERY_COMP_NM', width: 80, minWidth: 40}
+            {title: '영업담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', width: 50}
         ];
 
         let mainMasterObj = {
@@ -211,7 +237,7 @@
             trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: mainMasterColModel,
             dataModel: {
-                recIndx: 'ROW_NUM', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: fnFormToJsonArrayData('main_master_search_form'),
                 getData: function (response, textStatus, jqXHR) {
                     return {data: response.data};
@@ -230,6 +256,10 @@
             $mainMasterGrid.pqGrid('option', 'dataModel.postData', function () {
                 return (fnFormToJsonArrayData('#main_master_search_form'));
             });
+            $mainMasterGrid.pqGrid('refreshDataAndView');
+        });
+
+        $('#main_refresh').on('click', function () {
             $mainMasterGrid.pqGrid('refreshDataAndView');
         });
     });

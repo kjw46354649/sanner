@@ -143,7 +143,7 @@
             GROUP BY D.INVOICE_NUM) AS TOTAL_AMT, <!-- 금액 합계 -->
             A.INVOICE_NUM, <!-- INV No. -->
             A.INVOICE_TITLE,
-            SF_GET_DATE_F(NOW(),'YYYY','M') AS DATE
+            DATE_FORMAT(NOW(), '%Y-%m-%d') AS DATE
         FROM TBL_INVOICE A
             INNER JOIN TBL_COMPANY B ON A.COMP_CD = B.COMP_CD
         WHERE INVOICE_NUM IN (SELECT INVOICE_NUM
