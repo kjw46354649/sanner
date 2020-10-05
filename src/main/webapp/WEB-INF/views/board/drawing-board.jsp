@@ -397,6 +397,9 @@
                         <c:if test="${not empty workInfo && workInfo.SIDE_YN eq 'Y'}">
                             <span class="alertBox"><srping:message key='drawing.board.label.18'/></span>
                         </c:if>
+                        <c:if test="${(empty workInfo || (workInfo.MAIN_INSPECTION eq '' &&  orkInfo.EMERGENCY_YN ne 'Y' && workInfo.SIDE_YN ne 'Y'))}">
+                            <span style="height: 35px; line-height: 35px;">&nbsp; &nbsp;</span>
+                        </c:if>
                     </div>
                 </div>
             </div>
@@ -449,6 +452,7 @@
                 };
                 fnPostAjax(function (data, callFunctionParam) {
                     let returnCode = data.returnCode;
+                    let curStatus = $("#curStatus").val();
                     if(returnCode == "RET00") {
                         if(curStatus == "stop"){
                             startWork(data.info);

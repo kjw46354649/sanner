@@ -96,7 +96,9 @@
                                 </colgroup>
                                 <tr>
                                     <th><input type="checkbox" id="CAM_WORK_CHK_01" name="CAM_WORK_CHK_01" class="statusConfig camworkChekbox" ></th>
-                                    <th colspan="2">Step 1</th>
+                                    <th colspan="2">Step 1
+                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('01');"><i class='fa fa-trash'></i><span >reset</span></button></span>
+                                    </th>
                                 </tr>
                                 <tr><th>위치</th>
                                     <td colspan="2">
@@ -138,7 +140,9 @@
                                 </colgroup>
                                 <tr>
                                     <th><input type="checkbox" id="CAM_WORK_CHK_02" name="CAM_WORK_CHK_02" class="statusConfig camworkChekbox" ></th>
-                                    <th colspan="2">Step 2</th>
+                                    <th colspan="2">Step 2
+                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('02');"><i class='fa fa-trash'></i><span >reset</span></button></span>
+                                    </th>
                                 </tr>
                                 <tr><th>위치</th>
                                     <td colspan="2">
@@ -180,7 +184,9 @@
                                 </colgroup>
                                 <tr>
                                     <th><input type="checkbox" id="CAM_WORK_CHK_03" name="CAM_WORK_CHK_03" class="statusConfig camworkChekbox" ></th>
-                                    <th colspan="2">Step 3</th>
+                                    <th colspan="2">Step 3
+                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('03');"><i class='fa fa-trash'></i><span >reset</span></button></span>
+                                    </th>
                                 </tr>
                                 <tr><th>위치</th>
                                     <td colspan="2">
@@ -222,7 +228,9 @@
                                 </colgroup>
                                 <tr>
                                     <th><input type="checkbox" id="CAM_WORK_CHK_04" name="CAM_WORK_CHK_04" class="statusConfig camworkChekbox" ></th>
-                                    <th colspan="2">Step 4</th>
+                                    <th colspan="2">Step 4
+                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('04');"><i class='fa fa-trash'></i><span >reset</span></button></span>
+                                    </th>
                                 </tr>
                                 <tr><th>위치</th>
                                     <td colspan="2">
@@ -264,7 +272,9 @@
                                 </colgroup>
                                 <tr>
                                     <th><input type="checkbox" id="CAM_WORK_CHK_05" name="CAM_WORK_CHK_05" class="statusConfig camworkChekbox" ></th>
-                                    <th colspan="2">Step 5</th>
+                                    <th colspan="2">Step 5
+                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('05');"><i class='fa fa-trash'></i><span >reset</span></button></span>
+                                    </th>
                                 </tr>
                                 <tr><th>위치</th>
                                     <td colspan="2">
@@ -567,8 +577,8 @@
                     });
                 }
             },
-            {title: '가공확정<br>일시', dataIndx: 'SATAUS_DT', minWidth: 75, width: 75},
-            {title: '소재입고<br>일시', dataIndx: 'MATERIAL_RECEIPT_DT', minWidth: 75, width: 75},
+            {title: '가공확정<br>일시', dataIndx: 'SATAUS_DT', minWidth: 75, width: 100},
+            {title: '소재입고<br>일시', dataIndx: 'MATERIAL_RECEIPT_DT', minWidth: 75, width: 100},
             {title: '긴<br>급', dataIndx: 'EMERGENCY_YN', minWidth: 15, width: 20},
             {title: '주<br>요', dataIndx: 'MAIN_INSPECTION', minWidth: 15, width: 20},
             {title: '형<br>태', dataIndx: 'WORK_NM', minWidth: 15, width: 20},
@@ -585,9 +595,8 @@
                     });
                 }
             },
-            {title: '관리번호', dataIndx: 'CONTROL_NUM', minWidth: 50, width: 160},
+            {title: '관리번호', dataIndx: 'CONTROL_NUM', minWidth: 50, width: 170},
             {title: '파<br>트', dataIndx: 'PART_NUM', minWidth: 10, width: 30},
-            {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
             {title: '소재종류', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 40, width: 80},
             {title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
@@ -602,6 +611,7 @@
                     });
                 }
             },
+            {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
             {title: '규격', dataIndx: 'STANDARD_SIZE', minWidth: 40, width: 80},
             {title: '소재 Size', dataIndx: 'MATERAIL_ORDER_SIZE', minWidth: 40, width: 80},
             {title: '가공납기', dataIndx: 'INNER_DUE_DT', minWidth: 15, width: 60},
@@ -638,7 +648,7 @@
                             }
                         }
                     },
-                    {title: 'E/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORKING_TIME', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
+                    {title: 'E/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'PLAN_WORKING_TIME', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
                 ]
             },
             {title: '비고 기록사항', dataIndx: 'CONTROL_NOTE', minWidth: 40, width: 100},
@@ -691,29 +701,37 @@
                 ]
             },
             {title: 'MCT Actual', align: 'center',
-                colModel: [
-                    {title: '1', minWidth: 15, width: 50, dataIndx: 'WORK_EQUIP_NM_1'},
-                    {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORK_WORKING_TIME_1'},
-                    {title: 'STATUS_1', dataIndx: 'WORK_STATUS_1', hidden: true},
-                    {title: '2', minWidth: 15, width: 50, dataIndx: 'WORK_EQUIP_NM_2'},
-                    {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORK_WORKING_TIME_2'},
-                    {title: 'STATUS_2', dataIndx: 'WORK_STATUS_2', hidden: true},
-                    {title: '3', minWidth: 15, width: 50, dataIndx: 'WORK_EQUIP_NM_3'},
-                    {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORK_WORKING_TIME_3'},
-                    {title: 'STATUS_3', dataIndx: 'WORK_STATUS_3', hidden: true},
-                    {title: '4', minWidth: 15, width: 50, dataIndx: 'WORK_EQUIP_NM_4'},
-                    {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORK_WORKING_TIME_4'},
-                    {title: 'STATUS_4', dataIndx: 'WORK_STATUS_4', hidden: true},
+                 colModel: [
+                     {title: '공정', minWidth: 50, width: 50, datatype: 'string', dataIndx: 'NC_WORK_TYPE'},
+                     {title: '기기명', minWidth: 40, width: 60, datatype: 'string', dataIndx: 'EQUIP_NM'},
+                     {title: '작업자', minWidth: 40, width: 80, dataType: 'string', dataIndx: 'NC_WORK_USER_NM'},
+                     {title: 'R/T', minWidth: 40, width: 40, dataType: 'string', align: 'right', dataIndx: 'WORKING_TIME'},
                 ]
             },
-            {
-                title: '가공진행 현황', align: 'center', colModel: [
-                    {title: 'NC', datatype: 'integer', dataIndx: 'PROCESS_NC', minWidth: 20, width: 30},
-                    {title: '밀링', datatype: 'integer', dataIndx: 'PROCESS_MILLING', minWidth: 20, width: 30},
-                    {title: '선반', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_RACK', minWidth: 20, width: 30},
-                    {title: '연마', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_GRINDING', minWidth: 20, width: 30},
-                ]
-            },
+            // {title: 'MCT Actual', align: 'center',
+            //     colModel: [
+            //         {title: '1', minWidth: 15, width: 50, dataIndx: 'WORK_EQUIP_NM_1'},
+            //         {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORK_WORKING_TIME_1'},
+            //         {title: 'STATUS_1', dataIndx: 'WORK_STATUS_1', hidden: true},
+            //         {title: '2', minWidth: 15, width: 50, dataIndx: 'WORK_EQUIP_NM_2'},
+            //         {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORK_WORKING_TIME_2'},
+            //         {title: 'STATUS_2', dataIndx: 'WORK_STATUS_2', hidden: true},
+            //         {title: '3', minWidth: 15, width: 50, dataIndx: 'WORK_EQUIP_NM_3'},
+            //         {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORK_WORKING_TIME_3'},
+            //         {title: 'STATUS_3', dataIndx: 'WORK_STATUS_3', hidden: true},
+            //         {title: '4', minWidth: 15, width: 50, dataIndx: 'WORK_EQUIP_NM_4'},
+            //         {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORK_WORKING_TIME_4'},
+            //         {title: 'STATUS_4', dataIndx: 'WORK_STATUS_4', hidden: true},
+            //     ]
+            // },
+            // {
+            //     title: '가공진행 현황', align: 'center', colModel: [
+            //         {title: 'NC', datatype: 'integer', dataIndx: 'PROCESS_NC', minWidth: 20, width: 30},
+            //         {title: '밀링', datatype: 'integer', dataIndx: 'PROCESS_MILLING', minWidth: 20, width: 30},
+            //         {title: '선반', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_RACK', minWidth: 20, width: 30},
+            //         {title: '연마', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_GRINDING', minWidth: 20, width: 30},
+            //     ]
+            // },
             // {title: '예상가공<br>시간(M)', dataType: 'integer', dataIndx: 'MCT_WORK_TIME', minWidth: 15, width: 50},
             {title: '참<br>조', minWidth: 30, dataIndx: 'ETC_GFILE_SEQ', styleHead: {'background':'#a9d3f5'},
                 render: function (ui) {
@@ -875,10 +893,27 @@
                     for (let i = 0; i < data.list.length; i++) {
                         let fileHtml = "";
                         if(rowData.CAM_STATUS === "CWS020"){
-                            fileHtml = "<a href='/downloadfile/" + data.list[i].CAM_FILE_SEQ + "' download>" + data.list[i].CAM_FILE_NM + "</a><br>" +
-                                "<a href='/downloadfile/" + data.list[i].NC_FILE_SEQ + "' download>" + data.list[i].NC_FILE_NM + "</a>";
+                            if(data.list[i].CAM_FILE_SEQ){
+                                fileHtml += "<a href='/downloadfile/" + data.list[i].CAM_FILE_SEQ + "' download>" + data.list[i].CAM_FILE_NM + "</a>";
+                            }else{
+                                fileHtml += "&nbsp;";
+                            }
+                            if(data.list[i].NC_FILE_SEQ){
+                                fileHtml += "<br><a href='/downloadfile/" + data.list[i].NC_FILE_SEQ + "' download>" + data.list[i].NC_FILE_NM + "</a>";
+                            }else{
+                                fileHtml += "<br>&nbsp;";
+                            }
                         }else {
-                            fileHtml = "" + data.list[i].CAM_FILE_NM + "<br>" + "" + data.list[i].NC_FILE_NM;
+                            if(data.list[i].CAM_FILE_SEQ){
+                                fileHtml += "" + data.list[i].CAM_FILE_NM;
+                            }else{
+                                fileHtml += "&nbsp;";
+                            }
+                            if(data.list[i].NC_FILE_SEQ){
+                                fileHtml += "<br>" + "" + data.list[i].NC_FILE_NM;
+                            }else{
+                                fileHtml += "<br>&nbsp;";
+                            }
                         }
                         camWorkStepStatusConfig("0" + icount, true);
                         $('#cam_work_manage_detail_pop').find("#CAM_WORK_SEQ_0" + icount).val(data.list[i].SEQ);
@@ -1075,6 +1110,7 @@
                         if(j>0) fileHtml +="<br>";
                         fileHtml += "<a href='/downloadfile/" + fileUploadList[j].FILE_SEQ + "' download>" + fileUploadList[j].ORGINAL_FILE_NM + "</a>";
                     }
+                    if(fileUploadList.length === 1) fileHtml +="<br>";
                     $("#cam_work_manage_pop_form").find("#CAM_WORK_FILE_" + idxNum).html(fileHtml);
                     $("#cam_work_manage_pop_form").find("#CAM_WORK_GFILE_SEQ_" + idxNum).val(GFILE_SEQ);
                 }, formData, '');
@@ -1185,6 +1221,9 @@
             $("#cam_work_manage_pop_form").find("select[name*='" + index + "']").attr('readonly', disableFlag);
             $("#cam_work_manage_pop_form").find("select[name*='" + index + "']").attr('disabled', disableFlag);
 
+            $('#cam_work_manage_pop_form').find("input:checkbox[id='CAM_WORK_CHK_" + index + "']").attr('readonly', false);
+            $('#cam_work_manage_pop_form').find("input:checkbox[id='CAM_WORK_CHK_" + index + "']").attr('disabled', false);
+
             // $("#cam_work_manage_pop_form").find("#CAM_WORK_CHK_" + index).attr('readonly', false);
             // $("#cam_work_manage_pop_form").find("#CAM_WORK_CHK_" + index).attr('disabled', false);
 
@@ -1217,7 +1256,6 @@
             $("#cam_work_manage_pop_form").find("#NOTE").attr('disabled', disableCheck);
         }
 
-        /* event */
         function mctResultManageFilterRender(ui) {
             let val = ui.cellData == undefined ? "" : ui.cellData,
                 options = ui.column.editor == undefined ? "" : ui.column.editor.options;
@@ -1267,6 +1305,15 @@
 
         $mctResultManageGrid = $('#' + machineResultManageGridId).pqGrid(machineResultManageObj);
     });
+
+    /* event */
+    function resetMctResult(index){
+        $("#cam_work_manage_pop_form").find("#CAM_WORK_DIRECTION_" + index).val($("#cam_work_manage_pop_form").find("#CAM_WORK_DIRECTION_" + index).find('option:first').val());
+        $("#cam_work_manage_pop_form").find("#CAM_WORK_DESC_" + index).val('');
+        $("#cam_work_manage_pop_form").find("#CAM_WORK_DESIGN_QTY_" + index).val('');
+        $("#cam_work_manage_pop_form").find("#CAM_WORK_USER_ID_" + index).val('${authUserInfo.USER_ID}');
+        $("#cam_work_manage_pop_form").find("#CAM_WORK_FILE_" + index).html('&nbsp;</br>&nbsp;');
+    }
 
 
 </script>

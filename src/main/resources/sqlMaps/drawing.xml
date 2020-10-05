@@ -340,34 +340,34 @@
 
     <select id="selectDrawingBarcodeScanInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            CONCAT(Z.CONTROL_NUM, CASE WHEN Z.PART_NUM IS NOT NULL THEN CONCAT(' #', Z.PART_NUM) ELSE SPACE(0) END) AS CONTROL_INFO,
-            Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ, Z.CONTROL_NUM, Z.PART_NUM,
-            jmes.SF_GET_CONTROL_PART_QTY(Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ) AS ORDER_QTY, -- 수량 -->
-            jmes.SF_GET_DATE_F(Z.INNER_DUE_DT, '', '') AS INNER_DUE_DT,  -- 내부가공납기 -->
-            CASE WHEN Z.PART_STATUS IN ('PRO001', 'PRO004', 'PRO012', 'PRO014') THEN 'X' ELSE '' END CHE_POP, <!-- pop 선작업이 필요한 경우 -->
-            CASE WHEN Z.PART_STATUS IS NOT NULL AND PRO002 IS NULL THEN 'X' ELSE '' END AS CHE_PRO002, <!-- NULL 이 아닌경우 가공 확정 이후 DRAWING 작업 가능 -->
-            CASE WHEN Z.SCAN_BARCODE_NUM != Z.CURR_BARCODE_NUM THEN 'X' ELSE '' END AS CHE_VER, <!-- 최선 바코드 정보와 스캔 바코드의 DRAWING_NUM 가 다른경우 -->
-            CASE WHEN Z.DEL_YN = 'Y' THEN 'X' ELSE '' END AS CHE_DEL_YN, <!-- 주문 정보가 삭제된 경우  -->
-            CASE WHEN Z.CONTROL_STATUS = 'ORD002' THEN 'X' ELSE '' END AS CHE_CANCEL_YN <!-- 주문 취소가 된 경우  -->
-        FROM (
-            SELECT
-                A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, H.CONTROL_NUM, A.PART_NUM, A.INNER_DUE_DT,
-                IFNULL(H.CONTROL_STATUS, SPACE(0)) AS CONTROL_STATUS, <!-- CONTROL 상태 -->
-                IFNULL(A.PART_STATUS, SPACE(0)) AS PART_STATUS, <!-- CONTROL PART 현재 상태  -->
-                A.INNER_WORK_FINISH_DT, <!-- 가공 완료 일시  -->
-                IFNULL(A.OUTSIDE_YN, 'N') AS OUTSIDE_YN, <!-- 외주 가공 여부  -->
-                B.BARCODE_NUM AS SCAN_BARCODE_NUM, B.CONTROL_VER AS SCAN_CONTROL_VER,  B.DRAWING_VER AS SCAN_DRAWING_VER, <!-- 바코드 스캔 정보 -->
-                D.BARCODE_NUM AS CURR_BARCODE_NUM, D.CONTROL_VER AS CURR_CONTROL_VER,  D.DRAWING_VER AS CURR_DRAWING_VER, <!-- 바코드 최선 정보 -->
-                MAX(P.PART_STATUS) AS PRO002, H.DEL_YN <!-- 주문정보 삭제 유무 -->
-            FROM TBL_CONTROL_PART A
-                INNER JOIN TBL_CONTROL H ON A.CONTROL_SEQ = H.CONTROL_SEQ  <!-- 확정 상태 -->
-                INNER JOIN TBL_CONTROL_BARCODE B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                    AND B.BARCODE_NUM = #{BARCODE_NUM} <!-- 현재 찍힌 바코드 -->
-                LEFT OUTER JOIN TBL_CONTROL_BARCODE D ON A.CONTROL_SEQ = D.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.DEL_YN = 'N'
-                LEFT OUTER JOIN TBL_CONTROL_PART_PROGRESS P ON A.CONTROL_SEQ = P.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = P.CONTROL_DETAIL_SEQ AND P.PART_STATUS = 'PRO002' <!-- 가공 확정 존재 유무 주문 -->
-                    AND P.SEQ > IFNULL((SELECT MAX(E.SEQ) FROM TBL_CONTROL_PART_PROGRESS E WHERE P.CONTROL_SEQ = E.CONTROL_SEQ AND P.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ AND E.PART_STATUS IS NULL), 0)
-            WHERE 1=1
-        ) Z
+                    CONCAT(Z.CONTROL_NUM, CASE WHEN Z.PART_NUM IS NOT NULL THEN CONCAT(' #', Z.PART_NUM) ELSE SPACE(0) END) AS CONTROL_INFO,
+                    Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ, Z.CONTROL_NUM, Z.PART_NUM,
+                    jmes.SF_GET_CONTROL_PART_QTY(Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ) AS ORDER_QTY, -- 수량 -->
+                    jmes.SF_GET_DATE_F(Z.INNER_DUE_DT, '', '') AS INNER_DUE_DT,  -- 내부가공납기 -->
+                    CASE WHEN Z.PART_STATUS IN ('PRO001', 'PRO004', 'PRO012', 'PRO014') THEN 'X' ELSE '' END CHE_POP, <!-- pop 선작업이 필요한 경우 -->
+                    CASE WHEN Z.PART_STATUS IS NOT NULL AND PRO002 IS NULL THEN 'X' ELSE '' END AS CHE_PRO002, <!-- NULL 이 아닌경우 가공 확정 이후 DRAWING 작업 가능 -->
+                    CASE WHEN Z.SCAN_BARCODE_NUM != Z.CURR_BARCODE_NUM THEN 'X' ELSE '' END AS CHE_VER, <!-- 최선 바코드 정보와 스캔 바코드의 DRAWING_NUM 가 다른경우 -->
+                    CASE WHEN Z.DEL_YN = 'Y' THEN 'X' ELSE '' END AS CHE_DEL_YN, <!-- 주문 정보가 삭제된 경우  -->
+                    CASE WHEN Z.CONTROL_STATUS = 'ORD002' THEN 'X' ELSE '' END AS CHE_CANCEL_YN <!-- 주문 취소가 된 경우  -->
+                FROM (
+                    SELECT
+                        A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, H.CONTROL_NUM, A.PART_NUM, A.INNER_DUE_DT,
+                        IFNULL(H.CONTROL_STATUS, SPACE(0)) AS CONTROL_STATUS, <!-- CONTROL 상태 -->
+                        IFNULL(A.PART_STATUS, SPACE(0)) AS PART_STATUS, <!-- CONTROL PART 현재 상태  -->
+                        A.INNER_WORK_FINISH_DT, <!-- 가공 완료 일시  -->
+                        IFNULL(A.OUTSIDE_YN, 'N') AS OUTSIDE_YN, <!-- 외주 가공 여부  -->
+                        B.BARCODE_NUM AS SCAN_BARCODE_NUM, B.CONTROL_VER AS SCAN_CONTROL_VER,  B.DRAWING_VER AS SCAN_DRAWING_VER, <!-- 바코드 스캔 정보 -->
+                        D.BARCODE_NUM AS CURR_BARCODE_NUM, D.CONTROL_VER AS CURR_CONTROL_VER,  D.DRAWING_VER AS CURR_DRAWING_VER, <!-- 바코드 최선 정보 -->
+                        MAX(P.PART_STATUS) AS PRO002, H.DEL_YN <!-- 주문정보 삭제 유무 -->
+                    FROM TBL_CONTROL_PART A
+                        INNER JOIN TBL_CONTROL H ON A.CONTROL_SEQ = H.CONTROL_SEQ  <!-- 확정 상태 -->
+                        INNER JOIN TBL_CONTROL_BARCODE B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                            AND B.BARCODE_NUM = #{BARCODE_NUM} <!-- 현재 찍힌 바코드 -->
+                        LEFT OUTER JOIN TBL_CONTROL_BARCODE D ON A.CONTROL_SEQ = D.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.DEL_YN = 'N'
+                        LEFT OUTER JOIN TBL_CONTROL_PART_PROGRESS P ON A.CONTROL_SEQ = P.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = P.CONTROL_DETAIL_SEQ AND P.PART_STATUS = 'PRO002' <!-- 가공 확정 존재 유무 주문 -->
+                            AND P.SEQ > IFNULL((SELECT MAX(E.SEQ) FROM TBL_CONTROL_PART_PROGRESS E WHERE P.CONTROL_SEQ = E.CONTROL_SEQ AND P.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ AND E.PART_STATUS IS NULL), 0)
+                    WHERE 1=1
+                ) Z
     </select>
 
 </mapper>

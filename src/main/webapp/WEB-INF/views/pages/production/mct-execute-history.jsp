@@ -128,7 +128,7 @@
                             <input type="hidden" id="CAM_WORK_SEQ_01" name="CAM_WORK_SEQ_01" value="">
                             <input type="hidden" id="CAM_WORK_GFILE_SEQ_01" name="CAM_WORK_GFILE_SEQ_01" value="">
                         </li>
-                        <li style="list-style-type: none; float: left; padding-left: 4px;">
+                        <li style="list-style-type: none; float: left; padding-left: 5px;">
                             <table class="mctWorkStyle" idx="02">
                                 <colgroup>
                                     <col width="20%">
@@ -170,7 +170,7 @@
                             <input type="hidden" id="CAM_WORK_SEQ_02" name="CAM_WORK_SEQ_02" value="">
                             <input type="hidden" id="CAM_WORK_GFILE_SEQ_02" name="CAM_WORK_GFILE_SEQ_02" value="">
                         </li>
-                        <li style="list-style-type: none; float: left; padding-left: 4px;">
+                        <li style="list-style-type: none; float: left; padding-left: 5px;">
                             <table class="mctWorkStyle" idx="03">
                                 <colgroup>
                                     <col width="20%">
@@ -212,7 +212,7 @@
                             <input type="hidden" id="CAM_WORK_SEQ_03" name="CAM_WORK_SEQ_03" value="">
                             <input type="hidden" id="CAM_WORK_GFILE_SEQ_03" name="CAM_WORK_GFILE_SEQ_03" value="">
                         </li>
-                        <li style="list-style-type: none; float: left; padding-left: 4px;">
+                        <li style="list-style-type: none; float: right; padding-right: 5px;">
                             <table class="mctWorkStyle" idx="04">
                                 <colgroup>
                                     <col width="20%">
@@ -254,7 +254,7 @@
                             <input type="hidden" id="CAM_WORK_SEQ_04" name="CAM_WORK_SEQ_04" value="">
                             <input type="hidden" id="CAM_WORK_GFILE_SEQ_04" name="CAM_WORK_GFILE_SEQ_04" value="">
                         </li>
-                        <li style="list-style-type: none; float: left; padding-left: 4px;">
+                        <li style="list-style-type: none; float: right; padding-right: 5px;">
                             <table class="mctWorkStyle" idx="05">
                                 <colgroup>
                                     <col width="20%">
@@ -303,14 +303,14 @@
                         <table class="rowStyle">
                             <colgroup><col width="100%"></colgroup>
                             <tr><th style="color:#162f2f; text-align: center;">경험 기록사항(Lessons Learned)</th></tr>
-                            <tr><td><textarea id="HISTORY_NOTE" name="HISTORY_NOTE" rows="3" cols="73" class="statusConfig" style="resize: none;"></textarea></td></tr>
+                            <tr><td><textarea id="HISTORY_NOTE" name="HISTORY_NOTE" rows="3" cols="65" class="statusConfig" style="resize: none;"></textarea></td></tr>
                         </table>
                     </div>
                     <div class="conWrapRightPop50">
                         <table class="rowStyle">
                             <colgroup><col width="100%"></colgroup>
                             <tr><th style="color:#162f2f; text-align: center;">비고 및 공유사항</th></tr>
-                            <tr><td><textarea id="NOTE" name="NOTE" rows="3" cols="73" class="statusConfig" style="resize: none;"></textarea></td></tr>
+                            <tr><td><textarea id="NOTE" name="NOTE" rows="3" cols="65" class="statusConfig" style="resize: none;"></textarea></td></tr>
                         </table>
                     </div>
                 </div>
@@ -406,18 +406,18 @@
                     <li>
                         <span class="slt_wrap trans_slt mr-10">
                             <select name="CAM_WORK_HISTORY_CONDITION" id="CAM_WORK_HISTORY_CONDITION">
-                                <option value=""><spring:message code="com.form.top.sel.option"/></option>
+                                <%--<option value=""><spring:message code="com.form.top.sel.option"/></option>--%>
                                 <option value="1">수정일시</option>
-                                <option value="2">가공확정일시</option>
+                                <option value="2" selected>가공확정일시</option>
                             </select>
                         </span>
                         <div class="calendar_wrap">
                             <span class="calendar_span">
-                                <input type="text" class="datepicker-input" name="mct_nc_execute_history_start_dt" id="mct_nc_execute_history_start_dt"><button type="button">달력선택</button>
+                                <input type="text" name="mct_nc_execute_history_start_dt" id="mct_nc_execute_history_start_dt"><button type="button">달력선택</button>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input type="text" class="datepicker-input" name="mct_nc_execute_history_end_dt" id="mct_nc_execute_history_end_dt" readonly><button type="button">달력선택</button>
+                                <input type="text" name="mct_nc_execute_history_end_dt" id="mct_nc_execute_history_end_dt" readonly><button type="button">달력선택</button>
                             </span>
                             <%--<span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>--%>
                         </div>
@@ -502,11 +502,11 @@
                         </span>
                         <div class="calendar_wrap">
                             <span class="calendar_span">
-                                <input type="text" class="datepicker-input" name="mct_dw_execute_history_start_dt" id="mct_dw_execute_history_start_dt"><button type="button">달력선택</button>
+                                <input type="text" name="mct_dw_execute_history_start_dt" id="mct_dw_execute_history_start_dt"><button type="button">달력선택</button>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input type="text" class="datepicker-input" name="mct_dw_execute_history_end_dt" id="mct_dw_execute_history_end_dt" readonly><button type="button">달력선택</button>
+                                <input type="text" name="mct_dw_execute_history_end_dt" id="mct_dw_execute_history_end_dt" readonly><button type="button">달력선택</button>
                             </span>
 <%--                            <span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>--%>
                         </div>
@@ -565,6 +565,17 @@
 <script>
     $(function () {
         'use strict';
+
+        $('#mct_nc_execute_history_start_dt').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#mct_nc_execute_history_end_dt').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#mct_nc_execute_history_start_dt').datepicker('setDate', new Date(CURRENT_YEAR, CURRENT_MONTH, TODAY.getDate() - 30));
+        $('#mct_nc_execute_history_end_dt').datepicker('setDate', 'today');
+
+        $('#mct_dw_execute_history_start_dt').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#mct_dw_execute_history_end_dt').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#mct_dw_execute_history_start_dt').datepicker('setDate', new Date(CURRENT_YEAR, CURRENT_MONTH, TODAY.getDate() - 7));
+        $('#mct_dw_execute_history_end_dt').datepicker('setDate', 'today');
+
         /** function **/
         fnCommCodeDatasourceSelectBoxCreate($('#NC_PERFORMANCE_HISTORY_SEARCH_FORM').find('#EQUIP_SEQ'), 'all', {
             'url': '/json-list', 'data': {'queryId': 'dataSource.getMctEquipList'}
@@ -629,8 +640,8 @@
                     return { cls: cls, text: text };
                 }
             },
-            {title: '가공<br>납기', width: 40, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
-            {title: '가공<br>완료', dataType: 'string', dataIndx: 'CNFRH'},
+            {title: '가공<br>납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
+            {title: '가공<br>완료', width: 70, dataType: 'string', dataIndx: 'INNER_WORK_FINISH_DT'},
             {title: '긴<br>급', dataType: 'string', dataIndx: 'EMERGENCY_YN', minWidth: 15, width: 20},
             {title: '주<br>요', dataType: 'string', dataIndx: 'MAIN_INSPECTION', minWidth: 15, width: 20},
             {title: '형<br>태', dataType: 'string', dataIndx: 'WORK_NM', minWidth: 15, width: 20},
@@ -663,34 +674,36 @@
                     });
                 }
             },
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 40, width: 80},
+            {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 40, width: 100},
             {title: '수량', align: 'right', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 50},
-            {title: '규격', dataType: 'string', dataIndx: 'STANDARD_SIZE', minWidth: 40, width: 80},
-            {title: '소재 Size', dataType: 'string', dataIndx: 'MATERAIL_ORDER_SIZE', minWidth: 40, width: 80},
+            {title: '규격', dataType: 'string', dataIndx: 'STANDARD_SIZE', minWidth: 40, width: 100},
+            {title: '소재 Size', dataType: 'string', dataIndx: 'MATERAIL_ORDER_SIZE', minWidth: 40, width: 120},
             {title: 'MCT Actual', align: 'center',
-                colModel: [
-                    {title: '1', minWidth: 50, width: 50, datatype: 'string', dataIndx: 'WORK_EQUIP_NM_1'},
-                    {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORK_WORKING_TIME_1'},
-                    {title: 'STATUS_1', dataType: 'string', dataIndx: 'WORK_STATUS_1', hidden: true},
-                    {title: '2', minWidth: 50, width: 50, datatype: 'string', dataIndx: 'WORK_EQUIP_NM_2'},
-                    {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORK_WORKING_TIME_2'},
-                    {title: 'STATUS_2', dataType: 'string', dataIndx: 'WORK_STATUS_2', hidden: true},
-                    {title: '3', minWidth: 50, width: 50, datatype: 'string', dataIndx: 'WORK_EQUIP_NM_3'},
-                    {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORK_WORKING_TIME_3'},
-                    {title: 'STATUS_3', dataType: 'string', dataIndx: 'WORK_STATUS_3', hidden: true},
-                    {title: '4', minWidth: 50, width: 50, datatype: 'string', dataIndx: 'WORK_EQUIP_NM_4'},
-                    {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORK_WORKING_TIME_4'},
-                    {title: 'STATUS_4', dataType: 'string', dataIndx: 'WORK_STATUS_4', hidden: true},
+                 colModel: [
+                     {title: '공정', minWidth: 50, width: 50, datatype: 'string', dataIndx: 'NC_WORK_TYPE'},
+                     {title: '기기명', minWidth: 40, width: 60, datatype: 'string', dataIndx: 'EQUIP_NM'},
+                     {title: '작업자', minWidth: 40, width: 80, dataType: 'string', dataIndx: 'NC_WORK_USER_NM'},
+                     {title: 'R/T', minWidth: 40, width: 40, dataType: 'string', align: 'right', dataIndx: 'WORKING_TIME'},
+            //         {title: '2', minWidth: 50, width: 50, datatype: 'string', dataIndx: 'WORK_EQUIP_NM_2'},
+            //         {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORK_WORKING_TIME_2'},
+            //         {title: 'STATUS_2', dataType: 'string', dataIndx: 'WORK_STATUS_2', hidden: true},
+            //         {title: '3', minWidth: 50, width: 50, datatype: 'string', dataIndx: 'WORK_EQUIP_NM_3'},
+            //         {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORK_WORKING_TIME_3'},
+            //         {title: 'STATUS_3', dataType: 'string', dataIndx: 'WORK_STATUS_3', hidden: true},
+            //         {title: '4', minWidth: 50, width: 50, datatype: 'string', dataIndx: 'WORK_EQUIP_NM_4'},
+            //         {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORK_WORKING_TIME_4'},
+            //         {title: 'STATUS_4', dataType: 'string', dataIndx: 'WORK_STATUS_4', hidden: true},
                 ]
             },
-            {
-                title: '가공진행 현황', align: 'center', colModel: [
-                    {title: 'NC', datatype: 'integer', dataIndx: 'PROCESS_NC', minWidth: 20, width: 30},
-                    {title: '밀링', datatype: 'integer', dataIndx: 'PROCESS_MILLING', minWidth: 20, width: 30},
-                    {title: '선반', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_RACK', minWidth: 20, width: 30},
-                    {title: '연마', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_GRINDING', minWidth: 20, width: 30},
-                ]
-            },
+            // {
+            //     title: '가공진행 현황', align: 'center', colModel: [
+            //         {title: 'NC', datatype: 'integer', dataIndx: 'PROCESS_NC', minWidth: 20, width: 30},
+            //         {title: '밀링', datatype: 'integer', dataIndx: 'PROCESS_MILLING', minWidth: 20, width: 30},
+            //         {title: '선반', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_RACK', minWidth: 20, width: 30},
+            //         {title: '연마', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_GRINDING', minWidth: 20, width: 30},
+            //     ]
+            // },
             {
                 title: 'CAM 작업 실적', align: 'center', colModel: [
                     {title: 'step', minWidth: 30, width: 35, datatype: 'integer', dataIndx: 'CAM_STEP',
@@ -707,14 +720,14 @@
                             let rowData = ui.rowData;
                             $cell.find('#CAM_WORK_HISTORY_ACTION').bind('click', function(e) {
                                 e.preventDefault();
-                                camWorkHistoryPop(rowData);
+                                camWorkHistoryCallPop(rowData);
                             });
                         }
                     },
                     {title: '위치', datatype: 'string', dataIndx: 'WORK_DIRECTION'},
-                    {title: '작업내용', width: 80, datatype: 'string', dataIndx: 'WORK_DESC'},
-                    {title: '작업자', width: 100, datatype: 'string', dataIndx: 'WORK_USER_NM'},
-                    {title: '파일', width: 80, datatype: 'string', dataIndx: '',
+                    {title: '작업내용', width: 100, datatype: 'string', dataIndx: 'WORK_DESC'},
+                    {title: '작업자', width: 110, datatype: 'string', dataIndx: 'WORK_USER_NM'},
+                    {title: '파일', width: 100, datatype: 'string', dataIndx: '',
                         render: function (ui) {
                             let rowData = ui.rowData;
                             let iconFiles = '';
@@ -739,7 +752,7 @@
                             });
                         }
                     },
-                    {title: '비고 및 공유사항',  width: 150, datatype: 'string', dataIndx: 'NOTE'},
+                    {title: '비고 및 공유사항',  width: 180, datatype: 'string', dataIndx: 'NOTE'},
                     {title: 'Update', minWidth: 75, width: 75, datatype: 'string', dataIndx: 'CAM_FINISH_DT'}
                 ]
             }
@@ -1076,9 +1089,26 @@
             callWindowImageViewer($("#cam_work_history_pop_form").find("#DXF_GFILE_SEQ").val());
         });
 
+        let camWorkHistoryCallPop = function(rowData) {
+            let infoParameters = {
+                'url': '/json-info',
+                'data': {
+                    'queryId': 'machine.selectResultManagePopInfo',
+                    'CONTROL_NUM': rowData.CONTROL_NUM, 'CONTROL_DETAIL_SEQ': rowData.CONTROL_DETAIL_SEQ
+                }
+            };
+            fnPostAjax(function (infoData, infoCallFunctionParam) {
+                if (infoData.info) {
+                    camWorkHistoryPop(infoData.info);
+                } else {
+                    fnAlert(null, "관리번호를 확인 해 주십시오. 실적 등록 대상이 아닙니다.");
+                    return;
+                }
+            }, infoParameters, '');
+        }
+
         let camWorkHistoryPop = function(rowData) {
             fnResetFrom('cam_work_history_pop_form');
-
             $("#cam_work_history_pop_form").find("#CONTROL_SEQ").val(rowData.CONTROL_SEQ);
             $("#cam_work_history_pop_form").find("#CONTROL_DETAIL_SEQ").val(rowData.CONTROL_DETAIL_SEQ);
             $("#cam_work_history_pop_form").find("#DXF_GFILE_SEQ").val(rowData.DXF_GFILE_SEQ);
