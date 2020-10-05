@@ -5,55 +5,57 @@
 
     <select id="selectMainTodayMCTList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ROW_NUMBER() OVER() AS ROW_NUM,
             A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ,
-            CASE WHEN A.EMERGENCY_YN = 'Y' THEN '긴' ELSE '' END EMERGENCY_YN_NM,
-            '' as FAIL_STATUS,
-            SF_GET_DATE_F(B.INNER_DUE_DT, '', '') as INNER_DUE_DT,
-            F.EQUIP_SEQ AS LAST_MCT_PLAN,
-            A.ORDER_COMP_CD, SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM,
-            A.CONTROL_NUM, B.PART_NUM, B.MATERIAL_TYPE,
-            IFNULL(SF_GET_CODE_NM(1035, B.MATERIAL_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_TYPE_NM,
-            CASE WHEN B.PART_NUM IS NOT NULL THEN B.PART_UNIT_QTY * SF_GET_CONTROL_ORDER_QTY(A.CONTROL_SEQ, '') ELSE C.ORDER_QTY END AS ORDER_QTY,
-            SF_GET_DATE_F(B.INNER_WORK_FINISH_DT, '', '') as LAST_PRODUCT_COMPLETE_DT,
-            SF_GET_CODE_NM(1009, D.POP_POSITION, 'KR') AS LAST_POP_POSITION, <!-- 현재 등록된 위치 -->
-            SF_GET_CODE_NM('1013', B.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS,
-            A.DELIVERY_COMP_NM
+            SF_GET_CODE_NM('1014', B.WORK_FACTORY, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM, <!--  공장 -->
+            SF_GET_DATE_F(B.INNER_DUE_DT, '', '') AS INNER_DUE_DT, <!-- 가공 납기 -->
+            SF_GET_DATE_F(B.INNER_WORK_FINISH_DT, '', '') AS LAST_PRODUCT_COMPLETE_DT, <!-- 가공 완료 -->
+            CASE WHEN A.EMERGENCY_YN = 'Y' THEN '긴' ELSE '' END EMERGENCY_YN_NM, <!-- 긴급 -->
+            CASE H.INSPECT_GRADE WHEN 'GRD040' THEN '불' WHEN 'GRD050' THEN '반' WHEN 'GRD060' THEN '반' END AS FAIL_STATUS, <!-- 불량 -->
+            SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM, <!-- 작업 형태 -->
+            (SELECT EQUIP_ID FROM TBL_EQUIP WHERE EQUIP_SEQ = F.EQUIP_SEQ AND DEL_YN = 'N') AS LAST_MCT_PLAN, <!-- NC 계획 -->
+            A.CONTROL_NUM, <!-- 관리번호 -->
+            B.PART_NUM,  <!-- 파트 -->
+            SF_GET_CODE_NM('1035', B.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM, <!-- 소재 종류 -->
+            B.SIZE_TXT, <!-- 규격 -->
+            CASE WHEN B.PART_NUM IS NOT NULL THEN B.PART_UNIT_QTY * SF_GET_CONTROL_ORDER_QTY(A.CONTROL_SEQ, '') ELSE C.ORDER_QTY END AS ORDER_QTY, <!-- 수량 -->
+            CASE WHEN B.ORIGINAL_SIDE_QTY AND B.OTHER_SIDE_QTY THEN TRUE ELSE FALSE END AS SYMMETRY, <!-- 대칭 -->
+            CASE WHEN A.CONTROL_STATUS IN ('ORD001','ORD003','ORD004') THEN ( SELECT jmes.SF_GET_DATE_F(MAX(M.STATUS_DT), '', 'M')
+                                                                              FROM jmes.TBL_CONTROL_PART_PROGRESS M
+                                                                              WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.PART_STATUS = 'PRO002')
+            END AS PROCESS_CONFIRM_DT,<!-- 가공확정 -->
+            SF_GET_MATERIAL_RECEIPT_DT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS MATERIAL_RECEIPT_DT, <!-- 소재 입고 일시 -->
+            <!-- A.ORDER_COMP_CD, SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM, -->
+            SF_GET_CODE_NM('1009', D.POP_POSITION, #{LOGIN_LOCALE}) AS LAST_POP_POSITION, <!-- 현재 등록된 위치 -->
+            SF_GET_CODE_NM('1013', B.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS, <!-- 진행상태 -->
+            SF_GET_STAFF_NM(A.ORDER_STAFF_SEQ) AS ORDER_STAFF_NM <!-- 구매담당자(영업 담당자)  -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                <choose>
-                    <when  test="NOTEXISTS_INNER_WORK_FINISH_DT_CHK !='' and NOTEXISTS_INNER_WORK_FINISH_DT_CHK != null">
-                        AND (
-                            (B.INNER_DUE_DT = STR_TO_DATE(#{INNER_DUE_DT}, '%Y/%m/%d') AND B.INNER_WORK_FINISH_DT IS NULL)
-                            OR
-                            (B.INNER_DUE_DT <![CDATA[ <= ]]> STR_TO_DATE(#{INNER_DUE_DT}, '%Y/%m/%d') AND IFNULL(A.EMERGENCY_YN, 'N') = 'Y'
-                                AND B.INNER_WORK_FINISH_DT IS NULL)
-                        )
-                    </when>
-                    <otherwise>
-                        AND (
-                            (B.INNER_DUE_DT = STR_TO_DATE(#{INNER_DUE_DT}, '%Y/%m/%d'))
-                            OR
-                            (B.INNER_DUE_DT <![CDATA[ <= ]]> STR_TO_DATE(#{INNER_DUE_DT}, '%Y/%m/%d') AND IFNULL(A.EMERGENCY_YN, 'N') = 'Y'
-                                AND B.INNER_WORK_FINISH_DT IS NULL)
-                        )
-                    </otherwise>
-                </choose>
+                AND B.OUTSIDE_YN = 'N' <!-- 외주대상 제외 -->
+                AND B.INNER_DUE_DT <![CDATA[ <= ]]> DATE_FORMAT(NOW(), '%Y%m%d')
+                <if test="NOTEXISTS_INNER_WORK_FINISH_DT_CHK != null and NOTEXISTS_INNER_WORK_FINISH_DT_CHK != ''">
+                    AND B.INNER_WORK_FINISH_DT IS NULL
+                </if>
+                <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+                    AND B.WORK_FACTORY = #{WORK_FACTORY}
+                </if>
                 <if test="MATERIAL_TYPE != null and MATERIAL_TYPE != ''">
                     AND B.MATERIAL_TYPE = #{MATERIAL_TYPE}
                 </if>
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                AND C.OUT_FINISH_DT IS NULL <!-- 출하완료 제외 -->
             LEFT OUTER JOIN TBL_POP D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
                 AND D.POP_SEQ = (SELECT MAX(E.POP_SEQ) FROM TBL_POP E WHERE E.CONTROL_SEQ = D.CONTROL_SEQ AND E.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ)
             LEFT OUTER JOIN TBL_MCT_PLAN F ON B.CONTROL_SEQ = F.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ AND F.DEL_YN = 'N'
                 AND F.MCT_PLAN_SEQ = (SELECT MAX(G.MCT_PLAN_SEQ) FROM TBL_MCT_PLAN G WHERE G.CONTROL_SEQ = F.CONTROL_SEQ AND G.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ )
+            LEFT OUTER JOIN TBL_INSPECT H ON B.CONTROL_SEQ = H.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = H.CONTROL_DETAIL_SEQ
+                AND H.INSPECT_SEQ = (SELECT MAX(INSPECT_SEQ) FROM TBL_INSPECT I WHERE I.INSPECT_SEQ = H.INSPECT_SEQ AND I.CONTROL_SEQ = H.CONTROL_SEQ AND I.CONTROL_DETAIL_SEQ = H.CONTROL_DETAIL_SEQ)
         WHERE 1 = 1
             AND A.DEL_YN = 'N'
             <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
                 AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
             </if>
             <!-- AND NOT EXISTS (SELECT * FROM TBL_OUT H WHERE H.CONTROL_SEQ = B.CONTROL_SEQ AND H.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND OUT_DT IS NOT NULL) -->
-        ORDER BY A.EMERGENCY_YN DESC, B.INNER_DUE_DT, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+        ORDER BY FAIL_STATUS DESC, A.EMERGENCY_YN DESC, B.INNER_DUE_DT, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
     </select>
 
 </mapper>
