@@ -74,14 +74,18 @@
                 </button>
             </div>
             <div class="modal-body" <%--style="height: px"--%>>
-                <div>
-                    <span class="slt_wrap">
-                    <label class="label_50" for="ORDER_COMP_CD">발주처</label>
-                    <select class="wd_100" name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="발주처">
-                        <option value=""><spring:message code="com.form.top.all.option"/></option>
-                    </select>
-                    </span>
-                </div>
+                <form class="form-inline" id="STATUS_BY_CLIENT_FORM" role="form" onsubmit="return false;">
+                    <input type="hidden" name="queryId" id="queryId" value="reportMapper.selectStatusByClientTableList">
+                    <input type="hidden" name="START_DT" id="START_DT">
+                    <input type="hidden" name="END_DT" id="END_DT">
+                    <div>
+                        <span class="slt_wrap">
+                            <label class="label_50" for="ORDER_COMP_CD">발주처</label>
+                            <input type="text" class="wd_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD" placeholder="<spring:message code='com.form.top.all.option' />(복수개 선택)" title="발주처" readonly>
+                        </span>
+                        <span class="slt_wrap ml-10"><input type="checkbox" name="NOTEXISTS_INNER_WORK_FINISH_DT_CHK" id="NOTEXISTS_INNER_WORK_FINISH_DT_CHK" checked><label class="ml-5" for="NOTEXISTS_INNER_WORK_FINISH_DT_CHK">only data</label></span>
+                    </div>
+                </form>
                 <div>
                     <div class="d-flex align-items-center mt-10">
                         <div>
@@ -91,24 +95,7 @@
                         </div>
                         <div class="ml-auto"></div>
                     </div>
-                    <div class="mt-10" style="height: 650px; overflow: auto;">
-                        <table class="tg">
-                            <thead>
-                              <tr>
-                                <th rowspan="2">발주처</th>
-                                <th colspan="3">8/3(월)</th>
-                              </tr>
-                              <tr>
-                                <th class="tg-ul38 tg-ul38">납기<br>대상</th>
-                                <th class="tg-ul38 tg-ul38 blue">가공<br>완료</th>
-                                <th class="tg-ul38 red">남은<br>품수</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <div class="mt-10" id="STATUS_BY_CLIENT_GRID"></div>
                 </div>
                 <div></div>
             </div>
@@ -148,10 +135,24 @@
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
-        fnCommCodeDatasourceSelectBoxCreate($('#statusByClientModal').find('#ORDER_COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOrderCompanyList'}
-        });
+        (function () {
+            let parameters = {'url': '/json-list', 'data': {'queryId': 'dataSource.getOrderCompanyList'}};
+
+            fnPostAjax(function (data) {
+                let comboData = [];
+
+                for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
+                    let obj = data.list[i];
+                    comboData.push({title: obj.text, id: obj.value, value: obj.value});
+                }
+
+                $('#statusByClientModal').find('#ORDER_COMP_CD').comboTree({
+                    source: comboData,
+                    isMultiple: true,
+                    cascadeSelect: false
+                });
+            }, parameters, '');
+        })();
 
         const gridId = 'MONTHLY_DETAIL_STATUS_GRID';
         let postData = fnFormToJsonArrayData('#MONTHLY_DETAIL_STATUS_SEARCH_FORM');
@@ -554,107 +555,631 @@
         };
         const $monthlyDetailStatusGrid = $('#' + gridId).pqGrid(obj);
 
-        const colModel1 = [
-            {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '집계항목', dataIndx: 'DT', hidden: true},
+        const statusByClientId = 'STATUS_BY_CLIENT_GRID';
+        let statusByClientPostData = fnFormToJsonArrayData('#STATUS_BY_CLIENT_FORM');
+        const statusByClientColModel = [
+            {title: '발주처', width: 90, dataIndx: 'COMP_NM'},
+            {title: '집계항목', width: 60, dataIndx: 'SUB_TYPE_NM'},
             {
-                title: '09/14(월)', align: 'center', colModel: [
+                title: '09/14(월)', align: 'center',
+                colModel: [
                     {
-                        title: '납기<br>대상', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'PART_CNT',
-                        style: {'text-decoration': 'underline', 'cursor': 'pointer'},
-                        render: function (ui) {
-                            const rowData = ui.rowData;
-
-                            if (rowData.TODAY_YN === 'Y') {
-                                return {cls: 'bg-moccasin'};
-                            }
-                        }
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_1',
+                        style: {'background': '#EAEAEA'},
                     },
                     {
-                        title: '가공<br>완료', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'PART_CNT',
-                        style: {'text-decoration': 'underline', 'cursor': 'pointer'},
-                        render: function (ui) {
-
-                        }
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_1',
+                        styleHead: {'color': 'blue'},
+                        style: {'background': '#EAEAEA', 'color': 'blue'}
                     },
                     {
-                        title: '남은<br>품수', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'PART_CNT',
-                        style: {'text-decoration': 'underline', 'cursor': 'pointer'},
-                        render: function (ui) {
-
-                        }
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_1',
+                        styleHead: {'color': 'red'},
+                        style: {'background': '#EAEAEA', 'color': 'red'}
+                    },
+                ]
+            },
+            {
+                title: '09/15(화)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_2',
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_2',
+                        styleHead: {'color': 'blue'},
+                        style: {'color': 'blue'},
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_2',
+                        styleHead: {'color': 'red'},
+                        style: {'color': 'red'},
+                    },
+                ]
+            },
+            {
+                title: '09/16(수)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_3',
+                        style: {'background': '#EAEAEA'},
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_3',
+                        styleHead: {'color': 'blue'},
+                        style: {'background': '#EAEAEA', 'color': 'blue'}
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_3',
+                        styleHead: {'color': 'red'},
+                        style: {'background': '#EAEAEA', 'color': 'red'}
+                    },
+                ]
+            },
+            {
+                title: '09/17(목)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_4',
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_4',
+                        styleHead: {'color': 'blue'},
+                        style: {'color': 'blue'},
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_4',
+                        styleHead: {'color': 'red'},
+                        style: {'color': 'red'},
+                    },
+                ]
+            },
+            {
+                title: '09/18(금)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_5',
+                        style: {'background': '#EAEAEA'},
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_5',
+                        styleHead: {'color': 'blue'},
+                        style: {'background': '#EAEAEA', 'color': 'blue'}
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_5',
+                        styleHead: {'color': 'red'},
+                        style: {'background': '#EAEAEA', 'color': 'red'}
+                    },
+                ]
+            },
+            {
+                title: '09/19(토)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_6',
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_6',
+                        styleHead: {'color': 'blue'},
+                        style: {'color': 'blue'},
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_6',
+                        styleHead: {'color': 'red'},
+                        style: {'color': 'red'},
+                    },
+                ]
+            },
+            {
+                title: '09/20(일)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_7',
+                        style: {'background': '#FCE4D6'},
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_7',
+                        styleHead: {'color': 'blue'},
+                        style: {'background': '#FCE4D6', 'color': 'blue'},
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_7',
+                        styleHead: {'color': 'red'},
+                        style: {'background': '#FCE4D6', 'color': 'red'},
+                    },
+                ]
+            },
+            {
+                title: '09/21(월)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_8',
+                        style: {'background': '#EAEAEA'},
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_8',
+                        styleHead: {'color': 'blue'},
+                        style: {'background': '#EAEAEA', 'color': 'blue'}
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_8',
+                        styleHead: {'color': 'red'},
+                        style: {'background': '#EAEAEA', 'color': 'red'}
+                    },
+                ]
+            },
+            {
+                title: '09/22(화)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_9',
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_9',
+                        styleHead: {'color': 'blue'},
+                        style: {'color': 'blue'},
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_9',
+                        styleHead: {'color': 'red'},
+                        style: {'color': 'red'},
+                    },
+                ]
+            },
+            {
+                title: '09/23(수)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_10',
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_10',
+                        styleHead: {'color': 'blue'},
+                        style: {'background': '#EAEAEA', 'color': 'blue'}
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_10',
+                        styleHead: {'color': 'red'},
+                        style: {'background': '#EAEAEA', 'color': 'red'}
+                    },
+                ]
+            },
+            {
+                title: '09/24(목)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_11',
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_11',
+                        styleHead: {'color': 'blue'},
+                        style: {'color': 'blue'},
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_11',
+                        styleHead: {'color': 'red'},
+                        style: {'color': 'red'},
+                    },
+                ]
+            },
+            {
+                title: '09/25(금)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_12',
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_12',
+                        styleHead: {'color': 'blue'},
+                        style: {'background': '#EAEAEA', 'color': 'blue'}
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_12',
+                        styleHead: {'color': 'red'},
+                        style: {'background': '#EAEAEA', 'color': 'red'}
+                    },
+                ]
+            },
+            {
+                title: '09/26(토)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_13',
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_13',
+                        styleHead: {'color': 'blue'},
+                        style: {'color': 'blue'},
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_13',
+                        styleHead: {'color': 'red'},
+                        style: {'color': 'red'},
+                    },
+                ]
+            },
+            {
+                title: '09/27(일)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_14',
+                        style: {'background': '#FCE4D6'}
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_14',
+                        styleHead: {'color': 'blue'},
+                        style: {'background': '#FCE4D6', 'color': 'blue'},
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_14',
+                        styleHead: {'color': 'red'},
+                        style: {'background': '#FCE4D6', 'color': 'red'},
+                    },
+                ]
+            },
+            {
+                title: '09/28(월)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_15',
+                        style: {'background': '#EAEAEA'},
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_15',
+                        styleHead: {'color': 'blue'},
+                        style: {'background': '#EAEAEA', 'color': 'blue'}
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_15',
+                        styleHead: {'color': 'red'},
+                        style: {'background': '#EAEAEA', 'color': 'red'}
+                    },
+                ]
+            },
+            {
+                title: '09/29(화)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_16',
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_16',
+                        styleHead: {'color': 'blue'},
+                        style: {'color': 'blue'},
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_16',
+                        styleHead: {'color': 'red'},
+                        style: {'color': 'red'},
+                    },
+                ]
+            },
+            {
+                title: '09/30(수)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_17',
+                        style: {'background': '#EAEAEA'},
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_17',
+                        styleHead: {'color': 'blue'},
+                        style: {'background': '#EAEAEA', 'color': 'blue'}
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_17',
+                        styleHead: {'color': 'red'},
+                        style: {'background': '#EAEAEA', 'color': 'red'}
+                    },
+                ]
+            },
+            {
+                title: '10/01(목)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_18',
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_18',
+                        styleHead: {'color': 'blue'},
+                        style: {'color': 'blue'},
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_18',
+                        styleHead: {'color': 'red'},
+                        style: {'color': 'red'},
+                    },
+                ]
+            },
+            {
+                title: '10/02(금)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_19',
+                        style: {'background': '#EAEAEA'},
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_19',
+                        styleHead: {'color': 'blue'},
+                        style: {'background': '#EAEAEA', 'color': 'blue'}
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_19',
+                        styleHead: {'color': 'red'},
+                        style: {'background': '#EAEAEA', 'color': 'red'}
+                    },
+                ]
+            },
+            {
+                title: '10/03(토)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_20',
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_20',
+                        styleHead: {'color': 'blue'},
+                        style: {'color': 'blue'},
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_20',
+                        styleHead: {'color': 'red'},
+                        style: {'color': 'red'},
+                    },
+                ]
+            },
+            {
+                title: '10/04(일)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_21',
+                        style: {'background': '#FCE4D6'}
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_21',
+                        styleHead: {'color': 'blue'},
+                        style: {'background': '#FCE4D6', 'color': 'blue'},
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_21',
+                        styleHead: {'color': 'red'},
+                        style: {'background': '#FCE4D6', 'color': 'red'},
+                    },
+                ]
+            },
+            {
+                title: '10/05(월)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_22',
+                        style: {'background': '#EAEAEA'},
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_22',
+                        styleHead: {'color': 'blue'},
+                        style: {'background': '#EAEAEA', 'color': 'blue'}
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_22',
+                        styleHead: {'color': 'red'},
+                        style: {'background': '#EAEAEA', 'color': 'red'}
+                    },
+                ]
+            },
+            {
+                title: '10/06(화)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_23',
+                        // style: {'background': '#EAEAEA'},
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_23',
+                        styleHead: {'color': 'blue'},
+                        style: {'color': 'blue'},
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_23',
+                        styleHead: {'color': 'red'},
+                        style: {'color': 'red'},
+                    },
+                ]
+            },
+            {
+                title: '10/07(수)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_24',
+                        style: {'background': '#EAEAEA'},
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_24',
+                        styleHead: {'color': 'blue'},
+                        style: {'background': '#EAEAEA', 'color': 'blue'}
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_24',
+                        styleHead: {'color': 'red'},
+                        style: {'background': '#EAEAEA', 'color': 'red'}
+                    },
+                ]
+            },
+            {
+                title: '10/08(목)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_25',
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_25',
+                        style: {'color': 'blue'}
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_25',
+                        style: {'color': 'red'}
+                    },
+                ]
+            },
+            {
+                title: '10/09(금)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_26',
+                        style: {'background': '#EAEAEA'},
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_26',
+                        styleHead: {'color': 'blue'},
+                        style: {'background': '#EAEAEA', 'color': 'blue'}
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_26',
+                        styleHead: {'color': 'red'},
+            style: {'background': '#EAEAEA', 'color': 'red'}
+                    },
+                ]
+            },
+            {
+                title: '10/10(토)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_27',
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_27',
+                        styleHead: {'color': 'blue'},
+                        style: {'color': 'blue'},
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_27',
+                        styleHead: {'color': 'red'},
+                        style: {'color': 'red'},
+                    },
+                ]
+            },
+            {
+                title: '10/11(일)', align: 'center',
+                colModel: [
+                    {
+                        title: '납기<br>대상', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ORDER_28',
+                        style: {'background': '#FCE4D6'}
+                    },
+                    {
+                        title: '가공<br>완료', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'FINISH_28',
+                        styleHead: {'color': 'blue'},
+                        style: {'background': '#FCE4D6', 'color': 'blue'},
+                    },
+                    {
+                        title: '남은<br>품수', minWidth: 40, width: 40, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'REMAIN_28',
+                        styleHead: {'color': 'red'},
+                        style: {'background': '#FCE4D6', 'color': 'red'},
                     },
                 ]
             }
-
         ];
+        const statusByClientObj = {
+            height: 650,
+            collapsible: false,
+            postRenderInterval: -1,
+            resizable: false,
+            showTitle: false,
+            rowHtHead: 15,
+            numberCell: {title: 'No.', show: false},
+            // scrollModel: {autoFit: true},
+            // trackModel: {on: true},
+            // selectionModel: {type: 'row', mode: 'single'},
+            editable: false,
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
+            colModel: statusByClientColModel,
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: statusByClientPostData,
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            },
+            load: function () {
+                const autoMerge = function (grid, refresh) {
+                    let mc = [],
+                        CM = grid.option('colModel'),
+                        i = CM.length,
+                        data = grid.option('dataModel.data');
 
+                    while (i--) {
+                        let dataIndx = CM[i].dataIndx,
+                            rc = 1,
+                            j = data.length;
+
+                        while (j--) {
+                            let cd = data[j][dataIndx],
+                                cd_prev = data[j - 1] ? data[j - 1][dataIndx] : undefined;
+                            if (cd_prev !== undefined && cd == cd_prev) {
+                                rc++;
+                            } else if (rc > 1) {
+                                mc.push({r1: j, c1: i, rc: rc, cc: 1});
+                                rc = 1;
+                            }
+                        }
+                    }
+                    grid.option('mergeCells', mc);
+                    if (refresh) {
+                        grid.refreshView();
+                    }
+                };
+                autoMerge(this, true);
+            },
+            render: function () {
+                // 열 고정
+                this.option('freezeCols', 2);
+            },
+            rowInit: function (ui) {
+                switch (ui.rowData.COMP_NM) {
+                    case '합계':
+                        return {style: {'background': 'yellow'}};
+                    case '총계':
+                        return {style: {'background': '#FFE699'}};
+                }
+            }
+        };
+        let $statusByClientGrid;
         /* init */
 
         /* function */
-        const createThead = function () {
+        const changeThead = function () {
             let parameter = {'url': '/json-list', 'data': {'queryId': 'reportMapper.selectStatusByClientTableHeader', START_DT: startDt, END_DT: endDt}};
-            fnPostAjaxAsync(function (data) {
-                let firstRow = '';
-                let secondRow = '';
-                let dummy = '<th>납기<br>대상</th>\n' +
-                            '<th class="text-blue">가공<br>완료</th>\n' +
-                            '<th class="text-red">남은<br>품수</th>';
-                if (!fnIsEmpty(data.list)) {
-                    firstRow += '<th rowspan="2">발주처</th>';
-                    firstRow += '<th rowspan="2">집계항목</th>'
-                    for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
-                        const rowData = data.list[i];
-
-                        if (rowData.TODAY_YN === 'Y') {
-                            firstRow += '<th colspan="3" style="background-color: #FFE699">' + rowData.F_DT + rowData.DAY + '</th>';
-                            secondRow += '<th style="background-color: #FFE699">납기<br>대상</th>\n' +
-                                    '<th class="text-blue" style="background-color: #FFE699">가공<br>완료</th>\n' +
-                                    '<th class="text-red" style="background-color: #FFE699">남은<br>품수</th>';
-                        } else {
-                            firstRow += '<th colspan="3">' + rowData.F_DT + rowData.DAY + '</th>';
-                            secondRow += dummy;
-                        }
-                    }
-                }
-                $('table.tg > thead > tr:first').html(firstRow);
-                $('table.tg > thead > tr:last').html(secondRow);
-            }, parameter, '');
-        };
-
-        const createTbody = function () {
-            const orderCompCd = $('#statusByClientModal').find('#ORDER_COMP_CD').val();
-            const parameter = {'url': '/json-list', 'data': {'queryId': 'reportMapper.selectStatusByClientTableList', START_DT: startDt, END_DT: endDt, ORDER_COMP_CD: orderCompCd}};
 
             fnPostAjaxAsync(function (data) {
-                let row = '';
-                if (!fnIsEmpty(data.list)) {
-                    for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
-                        const rowData = data.list[i];
+                let colModel = $statusByClientGrid.pqGrid('getInstance').grid.option('colModel');
 
-                        row += '<tr>';
-                        if (i % 2 === 0) {
-                            row += '<td title="' + rowData.COMP_NM + '" rowspan="2">' + rowData.COMP_NM + '</td>';
-                        } else {
-                            row += '<td title="' + rowData.COMP_NM + '" style="display: none">' + rowData.COMP_NM + '</td>';
-                        }
-                        row += '<td>' + rowData.SUB_TYPE_NM + '</td>';
-                        for (let j = 1; j <= 28; j++) {
-                            row += '<td title="' + rowData['ORDER_' +  j] + '">' + rowData['ORDER_' +  j] + '</td>';
-                            row += '<td title="' + rowData['FINISH_' +  j] + '" class="text-blue">' + rowData['FINISH_' +  j] + '</td>';
-                            row += '<td title="' + rowData['REMAIN_' +  j] + '" class="text-red">' + rowData['REMAIN_' +  j] + '</td>';
-                        }
-                        row += '</tr>';
+                for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
+                    const rowData = data.list[i];
+                    colModel[i + 2].title = rowData.F_DT + rowData.DAY;
+                    colModel[i + 2].styleHead = {};
+                    colModel[i + 2].colModel[0].styleHead = {};
+                    colModel[i + 2].colModel[1].styleHead = {'color': 'blue'};
+                    colModel[i + 2].colModel[2].styleHead = {'color': 'red'};
+
+                    if (rowData.TODAY_YN === 'Y') {
+                        colModel[i + 2].styleHead = {'background': '#FCE4D6'};
+                        colModel[i + 2].colModel[0].styleHead = {'background': '#FCE4D6'};
+                        colModel[i + 2].colModel[1].styleHead = {'background': '#FCE4D6', 'color': 'blue'};
+                        colModel[i + 2].colModel[2].styleHead = {'background': '#FCE4D6', 'color': 'red'};
                     }
-                    // TODO: 합계·총계 row background-color
                 }
-                $('table.tg > tbody').html(row);
-            }, parameter, '');
+            }, parameter);
         };
 
-        const createOrderStateTable = function () {
-            createThead();
-            createTbody();
+        const changeTbody = function () {
+            $statusByClientGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+                return fnFormToJsonArrayData('#STATUS_BY_CLIENT_FORM');
+            });
+            $statusByClientGrid.pqGrid('refreshDataAndView');
+        };
+
+        const changeOrderStateTable = function () {
+            changeThead();
+            changeTbody();
         };
 
         const changeProcessTargetBeforeForm = function (a, c = '', d = '', e = '', f = '') {
@@ -692,6 +1217,13 @@
                 //TODO: research
             }
         };
+
+        const setDate = function (data) {
+            if (!fnIsEmpty(data.info)) {
+                startDt = data.info.START_DT;
+                endDt = data.info.END_DT;
+            }
+        };
         /* function */
 
         /* evnet */
@@ -718,13 +1250,11 @@
             let parameter = {'url': '/json-info', 'data': {'queryId': 'reportMapper.selectGetDate'}};
 
             fnPostAjaxAsync(function (data) {
-                if (!fnIsEmpty(data.info)) {
-                    startDt = data.info.START_DT;
-                    endDt = data.info.END_DT;
-                }
+                setDate(data);
             }, parameter, '');
 
-            createOrderStateTable();
+            $statusByClientGrid = $('#' + statusByClientId).pqGrid(statusByClientObj);
+            changeThead();
             },
             'hide.bs.modal': function () {
 
@@ -735,30 +1265,28 @@
             let parameter = {'url': '/json-info', 'data': {'queryId': 'reportMapper.selectGetPreviousDate', 'START_DT': startDt}};
 
             fnPostAjaxAsync(function (data) {
-                if (!fnIsEmpty(data.info)) {
-                    startDt = data.info.START_DT;
-                    endDt = data.info.END_DT;
-                }
+                setDate(data);
             }, parameter, '');
 
-            createOrderStateTable();
+            changeOrderStateTable();
         });
 
         $('#statusByClientModal').find('#next').on('click', function () {
             let parameter = {'url': '/json-info', 'data': {'queryId': 'reportMapper.selectGetNextDate', 'START_DT': startDt}};
 
             fnPostAjaxAsync(function (data) {
-                if (!fnIsEmpty(data.info)) {
-                    startDt = data.info.START_DT;
-                    endDt = data.info.END_DT;
-                }
+                setDate(data);
             }, parameter, '');
 
-            createOrderStateTable();
+            changeOrderStateTable();
         });
 
-        $('#statusByClientModal').find('#ORDER_COMP_CD').on('change', function () {
-            createTbody();
+        $('#STATUS_BY_CLIENT_FORM').on('change', function () {
+            try {
+                changeOrderStateTable();
+            } catch (e) {
+                console.log(e);
+            }
         });
 
         $('#PROCESS_TARGET_LIST').on('click', function () {

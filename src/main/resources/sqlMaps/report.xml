@@ -628,7 +628,6 @@
     </select>
 
     <select id="selectStatusByClientTableList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        <!-- 상단 헤더 -->
         SELECT M.COMP_CD
             , M.COMP_NM
             , N.SUB_TYPE
@@ -724,7 +723,7 @@
                         WHERE A.ORDER_COMPANY_YN = 'Y'
                             AND A.ACTIVE_YN = 'Y'
                         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-                            AND A.COMP_CD = #{ORDER_COMP_CD} <!-- 가변조건 -->
+                            AND A.COMP_CD IN (${HIDDEN_ORDER_COMP_CD}) <!-- 가변조건 -->
                         </if>
                         UNION ALL
                         SELECT 'TOTAL' AS COMP_CD, '합계' AS COMP_NM
@@ -868,7 +867,7 @@
                                                                         AND B.DEL_YN = 'N'
                                                                         AND C.WORK_TYPE != 'WTP020'
                                                                     <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-                                                                        AND B.ORDER_COMP_CD = #{ORDER_COMP_CD} <!-- 가변조건 -->
+                                                                        AND B.ORDER_COMP_CD IN (${HIDDEN_ORDER_COMP_CD}) <!-- 가변조건 -->
                                                                     </if>
                                                                   ) P
                                                             GROUP BY P.ORDER_COMP_CD, P.ORDER_DUE_DT
