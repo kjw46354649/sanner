@@ -1257,7 +1257,7 @@
             changeThead();
             },
             'hide.bs.modal': function () {
-
+                $statusByClientGrid.pqGrid('destroy');
             }
         });
 
