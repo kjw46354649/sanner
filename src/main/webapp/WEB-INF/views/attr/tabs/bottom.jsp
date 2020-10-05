@@ -166,11 +166,11 @@
                     <table class="rowStyle" style="table-layout: fixed;">
                         <colgroup>
                             <col width="10%">
-                            <col width="25%">
+                            <col width="15%">
                             <col width="10%">
                             <col width="15%">
                             <col width="10%">
-                            <col width="10%">
+                            <col width="15%">
                         </colgroup>
                         <tr>
                             <th>관리번호</th>
@@ -1340,10 +1340,8 @@
         fnPostAjax(function (data, callFunctionParam) {
             let dxfFileDownloadYn = '${authUserInfo.DXF_FILE_DOWNLOAD_YN}';
             fnResetFrom("g_item_detail_pop_form");
-            if(dxfFileDownloadYn === 'Y') {
-                $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").addClass('d-none');
-                $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").removeAttr('onClick');
-            }
+            $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").addClass('d-none');
+            $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").removeAttr('onClick');
             $("#g_item_detail_pop_form").find("#DRAWING_VIEW").removeAttr('onClick');
             $("#g_item_detail_pop_form").find("#WORK_HISTORY_INFO").removeAttr('onClick');
             let dataInfo = data.info;
@@ -1397,7 +1395,7 @@
                 $("#g_item_detail_pop_form").find("#OUTSIDE_IN_DT").html(dataInfo.OUTSIDE_IN_DT);
                 $("#g_item_detail_pop_form").find("#OUT_FINISH_DT").html(dataInfo.OUT_FINISH_DT);
 
-                if(dxfFileDownloadYn === 'Y') {
+                if (dxfFileDownloadYn === 'Y') {
                     if (fnIsEmpty(dataInfo.DXF_GFILE_SEQ)) {
                         $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").attr('onClick', 'fnAlert(null, "도면파일이 없습니다.");');
                         $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").removeClass('d-none');
@@ -1475,7 +1473,7 @@
         g_ItemDetailPopObj05.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
         g_ItemDetailPopGridId05.pqGrid(g_ItemDetailPopObj05);
         $("#g_item_detail_pop_form").find("#g_item_detail_pop_barcode_num").focus();
-    }
+    };
 
     $("#g_item_detail_pop").on('hide.bs.modal', function(){
         fnResetFrom("g_item_detail_pop_form");
