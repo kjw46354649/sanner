@@ -1224,6 +1224,8 @@
             if (!fnIsEmpty(data.info)) {
                 startDt = data.info.START_DT;
                 endDt = data.info.END_DT;
+                $('#STATUS_BY_CLIENT_FORM > #START_DT').val(startDt);
+                $('#STATUS_BY_CLIENT_FORM > #END_DT').val(endDt);
             }
         };
         /* function */
@@ -1256,7 +1258,7 @@
             }, parameter, '');
 
             $statusByClientGrid = $('#' + statusByClientId).pqGrid(statusByClientObj);
-            changeThead();
+            changeOrderStateTable();
             },
             'hide.bs.modal': function () {
                 $statusByClientGrid.pqGrid('destroy');
