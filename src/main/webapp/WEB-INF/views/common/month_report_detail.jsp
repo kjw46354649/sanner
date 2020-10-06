@@ -93,13 +93,17 @@
             </form>
         </div>
         <div class="ml-auto">
-            <button type="button" class="defaultBtn btn-100w green" id="MONTH_REPORT_DETAIL_LIST_VIEW_SAVE">저장</button>
-            <button type="button" class="defaultBtn btn-70w blue" id="MONTH_REPORT_DETAIL_LIST_VIEW_SEARCH">검색</button>
+            <button type="button" class="defaultBtn radius blue" id="MONTH_REPORT_DETAIL_LIST_VIEW_SEARCH">검색</button>
         </div>
     </div>
-
     <hr style="display: block; border: 1px solid #e0e2e6; margin: 7px;">
-
+    <div class="d-flex align-items-center">
+        <div></div>
+        <div class="ml-auto">
+            <button type="button" class="defaultBtn btn-100w green" id="MONTH_REPORT_DETAIL_LIST_VIEW_SAVE">저장</button>
+        </div>
+    </div>
+    <hr style="display: block; border: 1px solid #e2e2e2; margin: 7px;">
     <div>
         <div id="DETAIL_LIST_VIEW_GRID"></div>
     </div>
@@ -173,7 +177,29 @@
                 }
             },
             {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM'},
-            {title: '파<br>트', minWidth: 25, dataType: 'integer', format: '#,###', dataIndx: 'PART_NUM'},
+            {
+                title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM',
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
+                }
+            },
+            {
+                title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',
+                render: function (ui) {
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="fileSearchIcon" id="imageView" style="cursor: pointer"></span>';
+                    else return '';
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('#imageView').bind('click', function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
             {title: '규격', width: 110, dataIndx: 'SIZE_TXT'},
             {title: '소재<br>종류', width: 80, dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '작업<br>형태', dataIndx: 'WORK_TYPE_NM'},
@@ -237,7 +263,11 @@
             load: function () {
                 let data = $monthReportDetailListViewGrid.pqGrid('option', 'dataModel.data');
                 $('#MONTH_REPORT_DETAIL_LIST_VIEW_RECORDS').html(data.length);
-            }
+            },
+            render: function () {
+                // 열 고정
+                this.option('freezeCols', 9);
+            },
         };
        const $monthReportDetailListViewGrid = $('#' + detailListViewGridId).pqGrid(monthReportDetailListViewObj);
        /* init */

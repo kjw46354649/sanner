@@ -86,7 +86,7 @@
                                                     </if>
                                                         AND A.INNER_WORK_FINISH_DT >= DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT) MINUTE)     <!-- 고정조건 -->
                                                         AND A.INNER_WORK_FINISH_DT <![CDATA[ < ]]> DATE_ADD(DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL 1 MONTH), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT) MINUTE)      <!-- 고정조건 -->
-                                                        AND NOT EXISTS (SELECT 1 FROM jmes.TBL_CONTROL M WHERE M.CONTROL_SEQ = A.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'Y')
+                                                        AND NOT EXISTS (SELECT 1 FROM jmes.TBL_CONTROL M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.DEL_YN = 'Y')
                                                   ) P
                                             WHERE P.INSPECT_RNUM = 1
                                             GROUP BY P.WORKING_FINISH_DT
@@ -97,13 +97,13 @@
     </select>
 
     <select id="selectDailyProcessStatusRightList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT Z.CONTROL_SEQ
+        SELECT ROW_NUMBER() OVER(ORDER BY Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ ) AS ROW_NUM
+            , Z.CONTROL_SEQ
             , Z.CONTROL_DETAIL_SEQ
-            , ROW_NUMBER() OVER(ORDER BY Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ ) AS ROW_NUM
+            , Z.IMG_GFILE_SEQ
             , Z.ORDER_COMP_NM
             , Z.WORK_FACTORY_NM
-            , Z.CONTROL_NUM
-            , Z.PART_NUM
+            , CASE WHEN Z.PART_NUM IS NULL THEN Z.CONTROL_NUM ELSE CONCAT(Z.CONTROL_NUM, ' #', Z.PART_NUM) END AS CONTROL_NUM
             , Z.INNER_DUE_DT
             , Z.PART_QTY
             , Z.INNER_WORK_FINISH_DT
@@ -137,6 +137,7 @@
             , Z.NOTE
         FROM (  SELECT P.CONTROL_SEQ
                     , P.CONTROL_DETAIL_SEQ
+                    , P.IMG_GFILE_SEQ
                     , jmes.SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM
                     , jmes.SF_GET_CODE_NM('1014',Y.WORK_FACTORY,#{LOGIN_LOCALE}) AS WORK_FACTORY_NM   <!-- 언어조건 -->
                     , X.CONTROL_NUM
@@ -154,7 +155,7 @@
                     , X.NOTE
                     , Y.DRAWING_NUM
                     , Y.PREV_DRAWING_NUM
-                FROM (  SELECT A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
+                FROM (  SELECT A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.IMG_GFILE_SEQ
                             , DATE_FORMAT(DATE_ADD(A.INNER_WORK_FINISH_DT, INTERVAL -1 * CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
                             , jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS PART_QTY
                             , IFNULL(A.FORECAST_UNIT_AMT,0) AS FORECAST_UNIT_AMT
@@ -376,7 +377,7 @@
                                                                         , MAX(M.ORDER_DUE_DT) AS ORDER_DUE_DT
                                                                     FROM jmes.TBL_CONTROL_PART_ORDER M
                                                                     GROUP BY M.CONTROL_SEQ
-                                                                    HAVING MAX(M.ORDER_DUE_DT) LIKE '202008%'
+                                                                    HAVING MAX(M.ORDER_DUE_DT) LIKE CONCAT(CONCAT(#{YEAR}, #{MONTH}),'%')  <!-- 고정조건 -->
                                                                   ) A
                                                                 , jmes.TBL_CONTROL B      
                                                                 , jmes.TBL_CONTROL_PART C 
@@ -406,7 +407,9 @@
             , Z.CONTROL_SEQ
             , Z.CONTROL_DETAIL_SEQ
             , Z.ORDER_COMP_NM
-            , Z.CONTROL_NUM
+            , CASE WHEN Z.PART_NUM IS NULL THEN Z.CONTROL_NUM ELSE CONCAT(Z.CONTROL_NUM, ' #', Z.PART_NUM) END AS CONTROL_NUM
+            , Z.DRAWING_NUM
+            , Z.IMG_GFILE_SEQ
             , Z.PART_NUM
             , Z.SIZE_TXT
             , Z.MATERIAL_DETAIL_NM
@@ -481,6 +484,7 @@
                     , X.NOTE
                     , Y.DRAWING_NUM
                     , Y.PREV_DRAWING_NUM
+                    , Y.IMG_GFILE_SEQ
                 FROM (  SELECT C.CONTROL_SEQ
                             , C.CONTROL_DETAIL_SEQ
                             , A.ORDER_DUE_DT
@@ -540,7 +544,7 @@
                         </choose>
                         <choose>
                             <when test='DELAY_YN == "Y"'>
-                                AND B.OUT_FINISH_DT > A.ORDER_DUE_DT        <!-- 가변조건(지연여부) -->
+                                AND DATE_FORMAT(B.OUT_FINISH_DT,'%Y%m%d') > A.ORDER_DUE_DT        <!-- 가변조건(지연여부) -->
                             </when>
                             <when test='DELAY_YN == "N"'>
                                 AND B.OUT_FINISH_DT <![CDATA[ < ]]> A.ORDER_DUE_DT

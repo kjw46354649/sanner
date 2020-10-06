@@ -32,7 +32,7 @@
                 </select>
             </span>
             <span class="ipu_wrap right_float">
-                <button type="button" class="defaultBtn radius blue ml-10" id="DAILY_PROCESS_STATUS_SEARCH">검색</button>
+                <button type="button" class="defaultBtn radius blue" id="DAILY_PROCESS_STATUS_SEARCH">검색</button>
             </span>
         </form>
     </div>
@@ -148,8 +148,8 @@
             },
             {title: '예상금액', dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT'},
             {title: '목표금액', dataType: 'integer', format: '#,###', dataIndx: 'DT_GOAL_AMT'},
-            {title: '달성비율', maxWidth: 50, dataIndx: 'GOAL_RATIO'},
-            {title: '기준근무', maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'WORKING_TIME'},
+            {title: '달성<br>비율', minWidth: 40, maxWidth: 40, dataIndx: 'GOAL_RATIO'},
+            {title: '기준<br>근무', minWidth: 40, maxWidth: 40, dataType: 'integer', format: '#,###', dataIndx: 'WORKING_TIME'},
             {
                 title: '부적합', align: 'center', colModel: [
                     {title: '품수', maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ERROR_CNT'},
@@ -230,9 +230,9 @@
             {title: '발주업체', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', width:75, dataIndx: 'ORDER_COMP_NM'},
             {title: '수행<br>공장', dataIndx: 'WORK_FACTORY', hidden: true},
-            {title: '수행<br>공장', dataIndx: 'WORK_FACTORY_NM'},
+            {title: '수행<br>공장', minWidth: 40, maxWidth: 40, dataIndx: 'WORK_FACTORY_NM'},
             {
-                title: '', minWidth: 30, dataIndx: 'CONTROL_NUM_BUTTON',
+                title: '', minWidth: 30, maxWidth: 30, dataIndx: 'CONTROL_NUM_BUTTON',
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
                         return '<span  class="shareIcon" name="detailView" style="cursor: pointer"></span>';
@@ -247,34 +247,48 @@
                 }
             },
             {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM'},
-            {title: '파<br>트', minWidth: 25, dataType: 'integer', format: '#,###', dataIndx: 'PART_NUM'},
-            {title: '가공<br>납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT'},
-            {title: '발주량', dataIndx: 'PART_QTY'},
-            {title: '가공완료<br>일시', width: 80, dataIndx: 'INNER_WORK_FINISH_DT'},
-            {title: '소요<br>시간', dataIndx: 'WORK_TIME'},
             {
-                title: '예상단가', dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT', editable: true,
+                title: '', minWidth: 30, maxWidth: 30, dataIndx: 'DRAWING_NUM_BUTTON',
+                render: function (ui) {
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="fileSearchIcon" id="imageView" style="cursor: pointer"></span>';
+                    else return '';
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('#imageView').bind('click', function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
+            {title: '가공<br>납기', minWidth: 40, maxWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT'},
+            {title: '발주량', minWidth: 40, maxWidth: 40, dataIndx: 'PART_QTY'},
+            {title: '가공완료<br>일시', minWidth: 75, maxWidth: 75, dataIndx: 'INNER_WORK_FINISH_DT'},
+            {title: '소요<br>시간', maxWidth: 55, dataIndx: 'WORK_TIME'},
+            {
+                title: '예상단가', minWidth: 65, dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT', editable: true,
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
             },
-            {title: '합계금액', dataIndx: 'TOTAL_AMT'},
+            {title: '합계금액', minWidth: 65, dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
             {
                 title: 'P/H', dataType: 'integer', format: '#,###', dataIndx: 'PRICE_PER_HOUR',
                 style: {'color': 'blue'}
             },
             {
                 title: '단가정보', align: 'center', colModel: [
-                    {title: '종전가', dataType: 'integer', format: '#,###', dataIndx: 'PREV_UNIT_FINAL_AMT'},
-                    {title: '견적가', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT'},
-                    {title: '공급가', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'}
+                    {title: '종전가', maxWidth: 55, dataType: 'integer', format: '#,###', dataIndx: 'PREV_UNIT_FINAL_AMT'},
+                    {title: '견적가', maxWidth: 55, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT'},
+                    {title: '공급가', maxWidth: 55, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'}
                 ]
             },
             {
                 title: '검사결과', align: 'center', colModel: [
-                    {title: '등급', dataIndx: 'INSPECT_GRADE_NM'},
-                    {title: '검사코드', dataIndx: 'INSPECT_RESULT_NM'}
+                    {title: '등급', minWidth: 40, maxWidth: 40, dataIndx: 'INSPECT_GRADE_NM'},
+                    {title: '검사코드', maxWidth: 95, dataIndx: 'INSPECT_RESULT_NM'}
                 ]
             },
-            {title: '부적합<br>수량', dataIndx: 'ERROR_QTY'},
+            {title: '부적합<br>수량', minWidth:40, maxWidth: 40, dataIndx: 'ERROR_QTY'},
             {
                 title: '비고', dataIndx: 'NOTE', editable: true,
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
@@ -288,9 +302,9 @@
             showTitle: false,
             rowHtHead: 15,
             numberCell: {title: 'No.'},
-            // scrollModel: {autoFit: true},
+            scrollModel: {autoFit: true},
             trackModel: {on: true},
-            selectionModel: {type: 'row', mode: 'single'},
+            // selectionModel: {type: 'row', mode: 'single'},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: rightColModel,
             dataModel: {
@@ -299,7 +313,12 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
-            }
+            },
+            editorKeyDown: function(evt, ui){
+                if (evt.keyCode === 13) { //enter key.
+                    evt.originalEvent.keyCode = 40; //disguise down key.
+                }
+            },
         };
 
         const targetAmountRegisterGridId = 'TARGET_AMOUNT_REGISTER_GRID';
@@ -384,6 +403,10 @@
             const updateQueryList = ['reportMapper.updateControlNote', 'reportMapper.updateControlPartForecastUnitAmt'];
 
             fnModifyPQGrid($dailyProcessStatusRightGrid, [], updateQueryList);
+            //FIXME: 변경된 데이터의 cell만 reload
+            setTimeout(function () {
+                $dailyProcessStatusLeftGrid.pqGrid('refreshDataAndView');
+            }, 1000);
         });
         // $('#VIEW_UNIT_PRICE_INFORMATION').on('click', function () {
         //     changeViewColumn(this.checked);

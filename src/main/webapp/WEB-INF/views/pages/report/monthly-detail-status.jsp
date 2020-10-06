@@ -38,7 +38,7 @@
                             </select>
                         </span>
                         <div class="d-inline-block right_float">
-                            <button type="button" class="defaultBtn radius blue ml-15" id="MONTHLY_DETAIL_STATUS_SEARCH">검색</button>
+                            <button type="button" class="defaultBtn radius blue" id="MONTHLY_DETAIL_STATUS_SEARCH">검색</button>
                         </div>
                     </li>
                 </ul>
@@ -522,7 +522,7 @@
             }
         ];
         const obj = {
-            height: 800,
+            height: 770,
             collapsible: false,
             postRenderInterval: -1,
             resizable: false,
@@ -1196,7 +1196,7 @@
             let url = '/monthReportDetail';
             // 팝업 사이즈
             let nWidth = 1728;
-            let nHeight = 770;
+            let nHeight = 820;
             let winWidth = document.body.clientWidth;
             let winHeight = document.body.clientHeight;
             let winX = window.screenX || window.screenLeft || 0;
@@ -1215,8 +1215,8 @@
             if (monthReportDetailPopup === undefined || monthReportDetailPopup.closed) {
                 monthReportDetailPopup = window.open(url, '', strOption);
             } else {
+                monthReportDetailPopup.location.reload();
                 monthReportDetailPopup.focus();
-                //TODO: research
             }
         };
 
