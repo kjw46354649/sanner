@@ -291,7 +291,7 @@
                 AND DATE_FORMAT(B.UPDATE_DT, '%Y/%m/%d') BETWEEN #{CONTROL_MANAGE_START_DATE} AND #{CONTROL_MANAGE_END_DATE}
             </when>
         </choose>
-        ORDER BY A.CONTROL_SEQ, B.PART_NUM, C.ORDER_NUM
+        ORDER BY A.CONTROL_NUM, B.PART_NUM, C.ORDER_NUM
     </select>
 
     <select id="selectControlCloseVer" parameterType="java.util.HashMap" resultType="java.util.HashMap">
