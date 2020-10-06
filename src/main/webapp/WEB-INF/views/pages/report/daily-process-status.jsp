@@ -32,7 +32,6 @@
                 </select>
             </span>
             <span class="ipu_wrap right_float">
-                <button type="button" class="defaultBtn radius blue" data-toggle="modal" data-target="#TARGET_AMOUNT_REGISTER_POPUP">목표금액 설정</button>
                 <button type="button" class="defaultBtn radius blue ml-10" id="DAILY_PROCESS_STATUS_SEARCH">검색</button>
             </span>
         </form>
@@ -60,6 +59,7 @@
 <%--                        <span class="chk_box"><input name="VIEW_UNIT_PRICE_INFORMATION" id="VIEW_UNIT_PRICE_INFORMATION" type="checkbox"><label for="VIEW_UNIT_PRICE_INFORMATION"> 단가정보 보기</label></span>--%>
                     </div>
                     <div class="ml-auto">
+                        <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#TARGET_AMOUNT_REGISTER_POPUP">목표금액 설정</button>
                         <button type="button" class="defaultBtn btn-100w green" id="DAILY_PROCESS_STATUS_RIGHT_SAVE">저장</button>
                     </div>
                 </div>
@@ -72,7 +72,7 @@
 
 <div class="popup_container" id="TARGET_AMOUNT_REGISTER_POPUP" style="display: none;">
     <div class="controlCloseLayerPopup" style="width: 768px; height: 540px;">
-        <h3>목표 금액 설정</h3>
+        <h3>목표금액 설정</h3>
         <hr>
         <button type="button" class="pop_close" name="TARGET_AMOUNT_REGISTER_CLOSE">닫기</button>
         <form class="form-inline" id="TARGET_AMOUNT_REGISTER_FORM" role="form">

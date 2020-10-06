@@ -630,6 +630,7 @@
     <select id="selectStatusByClientTableList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT M.COMP_CD
             , M.COMP_NM
+            , M.ORDER_COMP_CD
             , N.SUB_TYPE
             , CASE WHEN N.SUB_TYPE = 'PART_CNT' THEN '품수' ELSE 'EA' END AS SUB_TYPE_NM
             , IFNULL(MAX(CASE WHEN N.SUB_TYPE = 'PART_CNT' THEN ORDER_CNT_1 ELSE ORDER_QTY_1 END),0) AS ORDER_1, IFNULL(MAX(CASE WHEN N.SUB_TYPE = 'PART_CNT' THEN FINISH_CNT_1 ELSE FINISH_QTY_1  END),0) AS FINISH_1, IFNULL(MAX(CASE WHEN N.SUB_TYPE = 'PART_CNT' THEN REMAIN_CNT_1 ELSE REMAIN_QTY_1 END),0) AS REMAIN_1
@@ -662,6 +663,7 @@
             , IFNULL(MAX(CASE WHEN N.SUB_TYPE = 'PART_CNT' THEN ORDER_CNT_28 ELSE ORDER_QTY_28 END),0) AS ORDER_28, IFNULL(MAX(CASE WHEN N.SUB_TYPE = 'PART_CNT' THEN FINISH_CNT_28 ELSE FINISH_QTY_28  END),0) AS FINISH_28, IFNULL(MAX(CASE WHEN N.SUB_TYPE = 'PART_CNT' THEN REMAIN_CNT_28 ELSE REMAIN_QTY_21 END),0) AS REMAIN_28
         FROM (  SELECT V.COMP_CD
                     , V.COMP_NM
+                    , W.ORDER_COMP_CD
                     , W.ORDER_CNT_1, W.FINISH_CNT_1, W.REMAIN_CNT_1
                     , W.ORDER_CNT_2, W.FINISH_CNT_2, W.REMAIN_CNT_2
                     , W.ORDER_CNT_3, W.FINISH_CNT_3, W.REMAIN_CNT_3
@@ -885,6 +887,10 @@
                                           ) W ON V.COMP_CD = W.ORDER_COMP_CD
                 ) M
              , ( SELECT 'PART_CNT' AS SUB_TYPE FROM DUAL UNION ALL SELECT 'PART_QTY' AS SUB_TYPE FROM DUAL) N
+        WHERE 1 = 1
+            <if test="ONLY_DATA_CHK != null and ONLY_DATA_CHK != ''">
+            AND M.ORDER_COMP_CD IS NOT NULL     <!-- 가변조건 -->
+            </if>
         GROUP BY M.COMP_CD, M.COMP_NM, N.SUB_TYPE
         ORDER BY M.COMP_CD, N.SUB_TYPE
     </select>

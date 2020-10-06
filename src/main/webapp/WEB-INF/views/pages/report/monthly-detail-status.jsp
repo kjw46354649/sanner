@@ -38,10 +38,7 @@
                             </select>
                         </span>
                         <div class="d-inline-block right_float">
-                            <button type="button" class="defaultBtn radius blue ml-15" data-toggle="modal" data-target="#statusByClientModal">발주처별 현황</button>
-                            <button type="button" class="defaultBtn radius blue ml-15" id="PROCESS_TARGET_LIST">가공대상 List</button>
-                            <button type="button" class="defaultBtn radius green ml-15" id="MONTHLY_DETAIL_STATUS_SAVE">저장</button>
-                            <button type="button" class="defaultBtn radius blue ml-15" id="MONTHLY_DETAIL_STATUS_SEARCH">조회</button>
+                            <button type="button" class="defaultBtn radius blue ml-15" id="MONTHLY_DETAIL_STATUS_SEARCH">검색</button>
                         </div>
                     </li>
                 </ul>
@@ -49,8 +46,13 @@
         </form>
     </div>
     <div class="bottomWrap row1_bottomWrap">
-        <div class="<%--hWrap --%>mb-10">
+        <div class="d-flex align-items-center hWrap mb-10">
             <div>
+                <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#statusByClientModal">발주처별 현황</button>
+                <button type="button" class="defaultBtn btn-100w" id="PROCESS_TARGET_LIST">가공대상 List</button>
+            </div>
+            <div class="ml-auto">
+                <button type="button" class="defaultBtn btn-100w green" id="MONTHLY_DETAIL_STATUS_SAVE">저장</button>
             </div>
         </div>
         <div class="tableWrap">
@@ -83,7 +85,7 @@
                             <label class="label_50" for="ORDER_COMP_CD">발주처</label>
                             <input type="text" class="wd_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD" placeholder="<spring:message code='com.form.top.all.option' />(복수개 선택)" title="발주처" readonly>
                         </span>
-                        <span class="slt_wrap ml-10"><input type="checkbox" name="NOTEXISTS_INNER_WORK_FINISH_DT_CHK" id="NOTEXISTS_INNER_WORK_FINISH_DT_CHK" checked><label class="ml-5" for="NOTEXISTS_INNER_WORK_FINISH_DT_CHK">only data</label></span>
+                        <span class="slt_wrap ml-10"><input type="checkbox" name="ONLY_DATA_CHK" id="ONLY_DATA_CHK" checked><label class="ml-5" for="ONLY_DATA_CHK">only data</label></span>
                     </div>
                 </form>
                 <div>
