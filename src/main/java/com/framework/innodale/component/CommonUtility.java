@@ -64,11 +64,11 @@ public class CommonUtility {
             if (values.length == 1) {
                 paramMap.put(key, values[0].trim());
 
-                System.out.println("key=[" + key + "][" + values[0].trim() + "]");
+                if(!CommonUtility.isScheduleRunning()) System.out.println("key=[" + key + "][" + values[0].trim() + "]");
             } else {
                 paramMap.put(key, values);
 
-                System.out.println("key=[" + key + "][" + values + "]");
+                if(!CommonUtility.isScheduleRunning()) System.out.println("key=[" + key + "][" + values + "]");
             }
         }
 
@@ -79,7 +79,7 @@ public class CommonUtility {
             Object obj = request.getAttribute(key);
             if(obj instanceof java.lang.String){
 
-                System.out.println("key=[" + key + "][" + obj + "]");
+                if(!CommonUtility.isScheduleRunning()) System.out.println("key=[" + key + "][" + obj + "]");
 
                 paramMap.put(key, obj);
             }
@@ -105,7 +105,7 @@ public class CommonUtility {
         Locale localInfo = (Locale)(request.getSession().getAttribute("LocalInfo"));
         paramMap.put("LOGIN_LOCALE",	 localInfo.getDefault().toString().toUpperCase());
 
-//        System.out.println("############# LOGIN_LOCALE=[" + localInfo.getDefault().toString().toUpperCase() + "]");
+        if(!CommonUtility.isScheduleRunning()) System.out.println("############# LOGIN_LOCALE=[" + localInfo.getDefault().toString().toUpperCase() + "]");
 
 
         //device_code : ACCESS IP, VENDOR, ID, NAME, DEPT_CODE

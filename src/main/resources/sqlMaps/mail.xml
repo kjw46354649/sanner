@@ -68,7 +68,7 @@
         )
         SELECT
             #{MAIL_BOX_SEQ}, A.EMAIL_TITLE, A.EMAIL_CONTENT,
-            '진성정밀', 'jins-2002@daum.net', GROUP_CONCAT(B.RECEIVER_EMAIL) AS RECV_EMAIL,
+            '진성정밀', 'jins-2002@hanmail.net', GROUP_CONCAT(B.RECEIVER_EMAIL) AS RECV_EMAIL,
             '' AS CC_EMAIL, '' AS HCC_EMAIL, A.ETC_GFILE_SEQ,
             'EMSTS001', 'N', 0,
             A.EST_SEQ, NOW(), #{USER_ID}
@@ -99,7 +99,7 @@
 					, '%INNER_TABLE%', IFNULL(#{INNER_TABLE}, SPACE(0)))
             AS TEMPLATE_CONTENT,
             '진성정밀' AS SEND_NAME,
-            'jins-2002@daum.net' AS SEND_EMAIL,
+            'jins-2002@hanmail.net' AS SEND_EMAIL,
             C.COMP_EMAIL AS RECV_EMAIL,
             CC_EMAIL, '' AS HCC_EMAIL, #{GFILE_SEQ}, #{MAIL_TYPE},
             'EMSTS001', 'N' AS DEL_YN, A.TEMPLATE_SEQ,
@@ -126,7 +126,7 @@
         )
         SELECT
             NEXTVAL(SEQ_MAIL),  REPLACE(REPLACE(REPLACE(REPLACE(TEMPLATE_TITLE, '%CURRENT_TIME%', DATE_FORMAT(NOW(), '%y-%m-%d %H:%i')), '%COMP_CD%', SF_GET_COMP_NM(#{COMP_CD})), '%ROW_NUM%', #{ROW_CNT}), '%OUTSIDE_COMP_CD%', SF_GET_COMP_NM(#{OUTSIDE_COMP_CD})),  REPLACE(#{EMAIL_CONTENT_TXT}, 'undefined', SPACE(0)),
-            '진성정밀', 'jins-2002@daum.net', #{RECEPTION}, #{REFERENCE}, '', #{GFILE_SEQ}, NOW(), #{MAIL_TYPE},
+            '진성정밀', 'jins-2002@hanmail.net', #{RECEPTION}, #{REFERENCE}, '', #{GFILE_SEQ}, NOW(), #{MAIL_TYPE},
             'EMSTS001', #{SKEY}, #{ERROR_NOTE}, 'N', TEMPLATE_SEQ,
             #{REF_KEY}, #{REF_01}, #{REF_02}, #{REF_03}, #{REF_04}, #{REF_05},
             NOW(), #{LOGIN_USER_ID}

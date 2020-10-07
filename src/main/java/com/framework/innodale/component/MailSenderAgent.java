@@ -42,7 +42,7 @@ public class MailSenderAgent {
 
                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-                message.setReplyTo(new InternetAddress(environment.getRequiredProperty("smtp_useremail")));
+                // message.setReplyTo(new InternetAddress(environment.getRequiredProperty("smtp_useremail")));
                 message.setFrom(environment.getRequiredProperty("smtp_useremail"), environment.getRequiredProperty("smtp_username"));
 //                message.setFrom((String)mailInfo.get("SEND_EMAIL"), (String)mailInfo.get("SEND_NAME"));
 

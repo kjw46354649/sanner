@@ -155,7 +155,7 @@ public class ApplicationContextConfig {
         mailSender.setHost(environment.getRequiredProperty("smtp_host"));
         mailSender.setPort(Integer.parseInt(environment.getRequiredProperty("smtp_port")));
 
-        mailSender.setUsername(environment.getRequiredProperty("smtp_username"));
+        mailSender.setUsername(environment.getRequiredProperty("smtp_userid"));
         mailSender.setPassword(environment.getRequiredProperty("smtp_userpawd"));
 
         Properties props = mailSender.getJavaMailProperties();

@@ -1,7 +1,6 @@
 package com.jmes.controller;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
-import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,7 +37,7 @@ public class ExportDataController {
     }
 
     @RequestMapping(value = "/exportData", method = RequestMethod.GET)
-    public void exportData(String pq_filename, HttpServletRequest request, HttpServletResponse response) throws IOException, Base64DecodingException {
+    public void exportData(String pq_filename, HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession ses = request.getSession(true);
         System.out.println((String)ses.getAttribute("pq_filename"));
         if ( ((String)ses.getAttribute("pq_filename")).equals(pq_filename) ) {
