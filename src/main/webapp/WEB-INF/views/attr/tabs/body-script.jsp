@@ -68,9 +68,10 @@
 
 <!-- alertify -->
 <script type="text/javascript" src='/resource/plugins/alertifyjs/alertify.js'></script>
-
 <!-- underscore -->
 <script type="text/javascript" src='/resource/main/js/libs/underscore-min.js'></script>
+<!-- paramquery export excel  -->
+<script type="text/javascript" src='/resource/plugins/FileSaver/FileSaver.js'></script>
 
 <script type='text/javascript'>
 

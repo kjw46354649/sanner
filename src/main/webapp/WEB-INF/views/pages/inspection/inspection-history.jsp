@@ -391,14 +391,21 @@
         }
 
         $('#inspection_history_export_btn').on('click', function () {
-            inspectionHistoryGridId01.pqGrid('getInstance').grid.exportData({
-                url: "/exportData",
-                filename: 'Inspection_history',
-                format: 'xlsx',
-                // zip: $("#export_zip").prop("checked"),
-                nopqdata: true, //applicable for JSON export.
-                render: true
-            });
+            var blob = inspectionHistoryGridId01.pqGrid('getInstance').grid.exportData({
+                    //url: "/pro/demos/exportData",
+                    format: 'xlsx',
+                    render: true,
+                    type: 'blob'
+                });
+            saveAs(blob, "pqGrid.xlsx" );
+            // inspectionHistoryGridId01.pqGrid('getInstance').grid.exportData({
+            //     url: "/exportData",
+            //     filename: 'Inspection_history',
+            //     format: 'xlsx',
+            //     // zip: $("#export_zip").prop("checked"),
+            //     nopqdata: true, //applicable for JSON export.
+            //     render: true
+            // });
         });
 
         const noSelectedRowAlert = function () {
