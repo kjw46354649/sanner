@@ -58,6 +58,8 @@
     $(function () {
         'use strict';
         /* init */
+        $('#MONTH_REPORT_DETAIL_LIST_VIEW_FORM #DT').val($(opener.document).find('#PROCESS_TARGET_BEFORE_FORM > #DT').val());
+
         const detailListViewGridId = 'DETAIL_LIST_VIEW_GRID';
         const monthReportInspectionDetailListViewPostData = fnFormToJsonArrayData('#MONTH_REPORT_DETAIL_LIST_VIEW_FORM');
         const monthReportInspectionDetailListViewColModel = [
@@ -131,7 +133,7 @@
             // dataModel: {data: qwe}
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {queryId: 'reportMapper.selectMonthlyReportInspectionDetailList'},
+                postData: monthReportInspectionDetailListViewPostData,
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
