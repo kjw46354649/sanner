@@ -31,8 +31,18 @@
             </form>
         </div>
         <div class="ml-auto">
+            <button type="button" class="defaultBtn radius blue" id="MONTH_REPORT_DETAIL_LIST_VIEW_SEARCH">검색</button>
         </div>
     </div>
+    <hr style="display: block; border: 1px solid #e0e2e6; margin: 7px;">
+    <div class="d-flex align-items-center">
+        <div></div>
+        <div class="ml-auto">
+            <span class="chk_box"><input name="VIEW_UNIT_PRICE_INFORMATION_1" id="VIEW_UNIT_PRICE_INFORMATION_1" type="checkbox"><label for="VIEW_UNIT_PRICE_INFORMATION_1"> 단가정보</label></span>
+            <button type="button" class="defaultBtn btn-100w green" id="MONTH_REPORT_DETAIL_LIST_VIEW_SAVE">저장</button>
+        </div>
+    </div>
+    <hr style="display: block; border: 1px solid #e2e2e2; margin: 7px;">
     <div>
         <div id="DETAIL_LIST_VIEW_GRID"></div>
     </div>
@@ -48,8 +58,6 @@
     $(function () {
         'use strict';
         /* init */
-        $('#MONTH_REPORT_DETAIL_LIST_VIEW_FORM #DT').val($(opener.document).find('#PROCESS_TARGET_BEFORE_FORM > #DT').val());
-
         const detailListViewGridId = 'DETAIL_LIST_VIEW_GRID';
         const monthReportInspectionDetailListViewPostData = fnFormToJsonArrayData('#MONTH_REPORT_DETAIL_LIST_VIEW_FORM');
         const monthReportInspectionDetailListViewColModel = [
@@ -123,7 +131,7 @@
             // dataModel: {data: qwe}
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: monthReportInspectionDetailListViewPostData,
+                postData: {queryId: 'reportMapper.selectMonthlyReportInspectionDetailList'},
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
